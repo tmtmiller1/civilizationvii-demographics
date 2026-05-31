@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ja_JP"><Text>人口統計</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ja_JP"><Text>ターンごとの歴史グラフ、ワールドファクトブック、グローバル関係リング、紛争ガントチャート、そして遭遇したすべての文明のトライアンフ進捗バーを表示します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ja_JP"><Text>人口統計</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ja_JP"><Text>人口統計</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ja_JP"><Text>時系列スコア</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ja_JP"><Text>サンプラーによるリアルタイム履歴。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="ja_JP"><Text>閉じる</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ja_JP"><Text>こんにちは。これが読めれば、ハーネスは正常に動作しています。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ja_JP"><Text>スコア</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ja_JP"><Text>国庫</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ja_JP"><Text>GPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="ja_JP"><Text>1ターンあたりのゴールド収入（純額）。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ja_JP"><Text>入植地</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ja_JP"><Text>テクノロジー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ja_JP"><Text>社会制度</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ja_JP"><Text>総合的な国力スコアで、勝利画面で使用されるものと同じ数値です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="ja_JP"><Text>現在の国庫残高。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="ja_JP"><Text>所有する都市と町の総数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ja_JP"><Text>現在の時代のツリーで完全に研究されたテクノロジーノードの数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ja_JP"><Text>現在の時代のツリーで完全にアンロックされた社会制度ノードの数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ja_JP"><Text>GDP</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ja_JP"><Text>疑似リアルな国内総生産。1ターンあたりの産出の加重合計（生産力1.0、ゴールド1.0、科学1.2、文化1.2、食料0.5、影響力1.5）に経過ターン数を掛け、ドルに換算したものです。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ja_JP"><Text>PPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの生産力 — 都市が建設するもの。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ja_JP"><Text>科学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの科学 — テクノロジー研究を推進します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ja_JP"><Text>文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの文化 — 社会制度の進捗を推進します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ja_JP"><Text>作物産出</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ja_JP"><Text>全入植地における1ターンあたりの純食料産出。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ja_JP"><Text>外交的支持</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ja_JP"><Text>国際的評判の総計。遭遇したすべての主要文明との関係スコアの加重合計（同盟 +5、協力的 +3、友好的 +2、中立 0、非友好的 -2、敵対的 -3、戦争中 -5）に、宗主国となっている都市国家からの減衰させた寄与（0.3倍）を加えたものです。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ja_JP"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ja_JP"><Text>市民の総数から指数的に導出された、換算後の実世界人口。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ja_JP"><Text>IPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ja_JP"><Text>HPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの純幸福度産出。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="ja_JP"><Text>1ターンあたりに生成される純外交影響力。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="ja_JP"><Text>進行中の取引</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="ja_JP"><Text>このリーダーが関与する有効な外交アクション、外交活動、制裁、スパイ活動。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="ja_JP"><Text>交易路</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="ja_JP"><Text>このプレイヤーの都市から出ている有効な交易路の数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="ja_JP"><Text>領土面積</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="ja_JP"><Text>所有する領土の総面積（平方キロメートル）で、支配しているヘクスタイルから換算されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="ja_JP"><Text>歴史データ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="ja_JP"><Text>ワールドファクトブック</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ja_JP"><Text>グローバル関係</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ja_JP"><Text>オプション</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ja_JP"><Text>経済</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ja_JP"><Text>国力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="ja_JP"><Text>知識 &amp; 影響力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="ja_JP"><Text>トライアンフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="ja_JP"><Text>資源</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="ja_JP"><Text>紛争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="ja_JP"><Text>戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ja_JP"><Text>レーダー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="ja_JP"><Text>競争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="ja_JP"><Text>達成度</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="ja_JP"><Text>時系列トライアンフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="ja_JP"><Text>上限使用率</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="ja_JP"><Text>このプレイヤーが使用した入植地上限の割合。100%は上限に達していることを意味します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="ja_JP"><Text>時代の進捗</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="ja_JP"><Text>現在の時代がどれだけ終わりに近づいているか。すべての文明で共通です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="ja_JP"><Text>危機段階</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="ja_JP"><Text>現在の危機段階（0 = なし、3 = 危機のピーク）。ゲーム全体で共通の値です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ja_JP"><Text>積み上げ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ja_JP"><Text>合計</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="ja_JP"><Text>ボーナス</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="ja_JP"><Text>帝国</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="ja_JP"><Text>都市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="ja_JP"><Text>工場</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="ja_JP"><Text>財宝</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="ja_JP"><Text>軍事力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="ja_JP"><Text>このプレイヤーのすべての軍事ユニット（陸上、海上、航空編成）の戦闘力の合計。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="ja_JP"><Text>遺産</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="ja_JP"><Text>このプレイヤーが全時代を通じて建設した遺産の総数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="ja_JP"><Text>（未実装）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="ja_JP"><Text>対 世界</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="ja_JP"><Text>指標</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="ja_JP"><Text>値</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="ja_JP"><Text>順位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ja_JP"><Text>凡例に未遭遇の文明を表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ja_JP"><Text>グラフの線を平滑化（3ターン移動平均）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ja_JP"><Text>排除された文明を表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="ja_JP"><Text>履歴を消去</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="ja_JP"><Text>今すぐサンプルを更新</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="ja_JP"><Text>未遭遇の文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="ja_JP"><Text>この文明とはまだ遭遇していません。実際の名前を表示するには、オプションで「未遭遇の文明と都市国家の名前を表示」を有効にしてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="ja_JP"><Text>未遭遇の都市国家</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ja_JP"><Text>この都市国家とはまだ遭遇していません。実際の名前を表示するには、オプションで「未遭遇の文明と都市国家の名前を表示」を有効にしてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ja_JP"><Text>未遭遇の文明と都市国家の名前を表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ja_JP"><Text>オフ（既定）の場合、まだ遭遇していない文明と都市国家は、グラフ、ファクトブック、グローバル関係リングにおいて汎用の「未遭遇」プレースホルダーとして表示されます。</Text></Replace>
     </LocalizedText>
 </Database>

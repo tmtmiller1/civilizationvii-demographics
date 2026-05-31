@@ -61,5 +61,221 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="zh_Hans_CN">
             <Text>拥有的公民总数。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="zh_Hans_CN">
+            <Text>GDP</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="zh_Hans_CN">
+            <Text>伪真实国内生产总值。按各回合产出加权求和（生产力 1.0、金币 1.0、科学 1.2、文化 1.2、食物 0.5、影响力 1.5），乘以已经过的回合数并换算为美元。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="zh_Hans_CN">
+            <Text>每回合生产力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="zh_Hans_CN">
+            <Text>每回合生产力——你的城市所建造的产出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="zh_Hans_CN">
+            <Text>科学</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="zh_Hans_CN">
+            <Text>每回合科学——推动科技研究。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="zh_Hans_CN">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="zh_Hans_CN">
+            <Text>每回合文化——推动公民进度。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="zh_Hans_CN">
+            <Text>作物产量</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="zh_Hans_CN">
+            <Text>所有定居点每回合的净食物产出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="zh_Hans_CN">
+            <Text>外交支持度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="zh_Hans_CN">
+            <Text>国际声誉总和。对所有已遇主要文明的加权关系分数求和（结盟 +5、有益 +3、友好 +2、中立 0、不友好 -2、敌对 -3、交战 -5），再加上你担任宗主的城邦的衰减（0.3 倍）贡献。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="zh_Hans_CN">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="zh_Hans_CN">
+            <Text>按比例换算的现实世界人口，由公民总数以指数方式推算得出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="zh_Hans_CN">
+            <Text>每回合影响力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="zh_Hans_CN">
+            <Text>每回合幸福度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="zh_Hans_CN">
+            <Text>每回合净幸福度产出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="zh_Hans_CN">
+            <Text>每回合产生的净外交影响力。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="zh_Hans_CN">
+            <Text>进行中的协议</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="zh_Hans_CN">
+            <Text>涉及该领袖的活跃外交行动、事业、制裁和间谍活动。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="zh_Hans_CN">
+            <Text>贸易路线</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="zh_Hans_CN">
+            <Text>从该玩家城市出发的活跃贸易路线数量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="zh_Hans_CN">
+            <Text>陆地面积</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="zh_Hans_CN">
+            <Text>拥有的领土总面积（平方公里），由所控制的六边形地块换算而来。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="zh_Hans_CN">
+            <Text>历史数据</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="zh_Hans_CN">
+            <Text>世界年鉴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="zh_Hans_CN">
+            <Text>全球关系</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="zh_Hans_CN">
+            <Text>选项</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="zh_Hans_CN">
+            <Text>经济</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="zh_Hans_CN">
+            <Text>实力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="zh_Hans_CN">
+            <Text>知识与影响力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="zh_Hans_CN">
+            <Text>成就</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="zh_Hans_CN">
+            <Text>资源</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="zh_Hans_CN">
+            <Text>冲突</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="zh_Hans_CN">
+            <Text>战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="zh_Hans_CN">
+            <Text>雷达图</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="zh_Hans_CN">
+            <Text>竞速</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="zh_Hans_CN">
+            <Text>完成度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="zh_Hans_CN">
+            <Text>成就随时间变化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="zh_Hans_CN">
+            <Text>上限利用率</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="zh_Hans_CN">
+            <Text>该玩家已使用的定居点上限百分比。100% 表示已达上限。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="zh_Hans_CN">
+            <Text>时代进度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="zh_Hans_CN">
+            <Text>当前时代距离结束的接近程度。对所有文明相同。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="zh_Hans_CN">
+            <Text>危机阶段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="zh_Hans_CN">
+            <Text>当前危机阶段（0 = 无，3 = 危机顶峰）。全局数值。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="zh_Hans_CN">
+            <Text>堆叠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="zh_Hans_CN">
+            <Text>总计</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="zh_Hans_CN">
+            <Text>加成</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="zh_Hans_CN">
+            <Text>帝国</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="zh_Hans_CN">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="zh_Hans_CN">
+            <Text>工厂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="zh_Hans_CN">
+            <Text>珍宝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="zh_Hans_CN">
+            <Text>军事实力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="zh_Hans_CN">
+            <Text>该玩家所有军事单位（陆军、海军和空军编队）的战斗力总和。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="zh_Hans_CN">
+            <Text>该玩家在所有时代建造的奇观总数。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="zh_Hans_CN">
+            <Text>（尚未实现）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="zh_Hans_CN">
+            <Text>对比世界</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="zh_Hans_CN">
+            <Text>指标</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="zh_Hans_CN">
+            <Text>数值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="zh_Hans_CN">
+            <Text>排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="zh_Hans_CN">
+            <Text>在图例中显示未遇文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="zh_Hans_CN">
+            <Text>平滑图表曲线（3 回合移动平均）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="zh_Hans_CN">
+            <Text>显示已淘汰文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="zh_Hans_CN">
+            <Text>清除历史记录</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="zh_Hans_CN">
+            <Text>立即刷新采样</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="zh_Hans_CN">
+            <Text>未遇文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="zh_Hans_CN">
+            <Text>你尚未遇见该文明。在选项中启用“显示未遇文明和城邦的名称”以显示真实名称。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="zh_Hans_CN">
+            <Text>未遇城邦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="zh_Hans_CN">
+            <Text>你尚未遇见该城邦。在选项中启用“显示未遇文明和城邦的名称”以显示真实名称。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="zh_Hans_CN">
+            <Text>显示未遇文明和城邦的名称</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="zh_Hans_CN">
+            <Text>关闭时（默认），你尚未遇见的文明和城邦在图表、年鉴和全球关系环中显示为通用的“未遇”占位符。</Text>
+        </Replace>
     </LocalizedText>
 </Database>

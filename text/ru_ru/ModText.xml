@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ru_RU"><Text>Демография</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ru_RU"><Text>Исторические графики по ходам, всемирный справочник, кольца глобальных отношений, диаграмма Ганта конфликтов и встроенные индикаторы прогресса триумфов для каждой встреченной цивилизации.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ru_RU"><Text>Демография</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ru_RU"><Text>Демография</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ru_RU"><Text>Очки с течением времени</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ru_RU"><Text>Живая история из сэмплера.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="ru_RU"><Text>Закрыть</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ru_RU"><Text>Здравствуйте. Если вы это читаете, значит, оснастка работает.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ru_RU"><Text>Очки</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ru_RU"><Text>Казна</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ru_RU"><Text>Зол./ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="ru_RU"><Text>Доход золота за ход (чистый).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ru_RU"><Text>Поселения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ru_RU"><Text>Технологии</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ru_RU"><Text>Соц. институты</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ru_RU"><Text>Совокупный показатель мощи — то же число, что используется на экране победы.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="ru_RU"><Text>Текущий баланс казны.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="ru_RU"><Text>Общее число принадлежащих вам городов и поселков.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ru_RU"><Text>Число полностью изученных узлов технологий в дереве текущей эпохи.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ru_RU"><Text>Число полностью открытых узлов соц. институтов в дереве текущей эпохи.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ru_RU"><Text>ВВП</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ru_RU"><Text>Псевдореалистичный валовой внутренний продукт. Взвешенная сумма доходов за ход (Производство 1.0, Золото 1.0, Наука 1.2, Культура 1.2, Еда 0.5, Влияние 1.5), умноженная на число прошедших ходов и приведенная к долларам.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ru_RU"><Text>Пр-во/ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ru_RU"><Text>Производство за ход — то, что строят ваши города.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ru_RU"><Text>Наука</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ru_RU"><Text>Наука за ход — двигает исследование технологий.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ru_RU"><Text>Культура</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ru_RU"><Text>Культура за ход — двигает прогресс соц. институтов.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ru_RU"><Text>Урожайность</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ru_RU"><Text>Чистое производство еды за ход по всем поселениям.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ru_RU"><Text>Дипломатическое одобрение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ru_RU"><Text>Совокупная международная репутация. Сумма взвешенных показателей отношений со всеми встреченными крупными цивилизациями (Союзники +5, Содействие +3, Дружелюбие +2, Нейтралитет 0, Недружелюбие -2, Враждебность -3, Война -5) плюс ослабленный (0.3x) вклад от городов-государств, где вы являетесь сюзереном.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ru_RU"><Text>Население</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ru_RU"><Text>Масштабированное реальное население, экспоненциально выведенное из общего числа граждан.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ru_RU"><Text>Влн./ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ru_RU"><Text>Дов./ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="ru_RU"><Text>Чистый прирост довольства за ход.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="ru_RU"><Text>Чистое дипломатическое влияние, производимое за ход.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="ru_RU"><Text>Текущие соглашения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="ru_RU"><Text>Активные дипломатические действия, начинания, санкции и шпионаж с участием этого лидера.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="ru_RU"><Text>Торговые пути</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="ru_RU"><Text>Число активных торговых путей, выходящих из городов этого игрока.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="ru_RU"><Text>Площадь территории</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="ru_RU"><Text>Общая принадлежащая территория в квадратных километрах, рассчитанная из контролируемых клеток-шестиугольников.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="ru_RU"><Text>Исторические данные</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="ru_RU"><Text>Всемирный справочник</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ru_RU"><Text>Глобальные отношения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ru_RU"><Text>Настройки</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ru_RU"><Text>Экономика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ru_RU"><Text>Мощь</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="ru_RU"><Text>Знания и влияние</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="ru_RU"><Text>Триумфы</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="ru_RU"><Text>Ресурсы</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="ru_RU"><Text>Конфликты</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="ru_RU"><Text>Войны</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ru_RU"><Text>Радар</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="ru_RU"><Text>Гонка</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="ru_RU"><Text>Завершение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="ru_RU"><Text>Триумфы с течением времени</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="ru_RU"><Text>Использование лимита</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="ru_RU"><Text>Процент лимита поселений, который использовал этот игрок. 100% означает достижение предела.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="ru_RU"><Text>Прогресс эпохи</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="ru_RU"><Text>Насколько близка текущая эпоха к завершению. Одинаково для всех цивилизаций.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="ru_RU"><Text>Стадия кризиса</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="ru_RU"><Text>Текущая стадия кризиса (0 = нет, 3 = пик кризиса). Общее для всей игры значение.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ru_RU"><Text>С накоплением</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ru_RU"><Text>Всего</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="ru_RU"><Text>Бонус</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="ru_RU"><Text>Империя</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="ru_RU"><Text>Город</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="ru_RU"><Text>Фабрика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="ru_RU"><Text>Сокровище</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="ru_RU"><Text>Военная мощь</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="ru_RU"><Text>Суммарная боевая мощь всех военных юнитов этого игрока (сухопутных, морских и воздушных соединений).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="ru_RU"><Text>Чудеса</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="ru_RU"><Text>Общее число чудес, построенных этим игроком за все эпохи.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="ru_RU"><Text>(еще не реализовано)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="ru_RU"><Text>в сравнении с миром</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="ru_RU"><Text>Показатель</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="ru_RU"><Text>Значение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="ru_RU"><Text>Ранг</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ru_RU"><Text>Показывать невстреченные цивилизации в легенде</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ru_RU"><Text>Сглаживать линии графиков (скользящее среднее по 3 ходам)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ru_RU"><Text>Показывать уничтоженные цивилизации</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="ru_RU"><Text>Очистить историю</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="ru_RU"><Text>Обновить выборку сейчас</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="ru_RU"><Text>Невстреченная цивилизация</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="ru_RU"><Text>Вы еще не встретили эту цивилизацию. Включите «Показывать названия невстреченных цивилизаций и городов-государств» в настройках, чтобы раскрыть настоящие названия.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="ru_RU"><Text>Невстреченный город-государство</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ru_RU"><Text>Вы еще не встретили этот город-государство. Включите «Показывать названия невстреченных цивилизаций и городов-государств» в настройках, чтобы раскрыть настоящие названия.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ru_RU"><Text>Показывать названия невстреченных цивилизаций и городов-государств</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ru_RU"><Text>Когда отключено (по умолчанию), цивилизации и города-государства, которые вы еще не встретили, отображаются как обобщенные заполнители «Невстреченные» на графиках, в справочнике и в кольцах глобальных отношений.</Text></Replace>
     </LocalizedText>
 </Database>
