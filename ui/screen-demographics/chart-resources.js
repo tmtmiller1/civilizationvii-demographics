@@ -386,19 +386,19 @@ function drawStackBands(svg, points, bands, L) {
  */
 function mountStackAxisTitles(wrap, L, W, H, yAxisLabel) {
   const xTitle = document.createElement("div");
-  xTitle.className = "demographics-chart-axis-title demographics-chart-axis-x";
-  xTitle.style.position = "absolute";
+  xTitle.className =
+    "demographics-chart-axis-title demographics-chart-axis-x demographics-resources-axis-title demographics-resources-axis-x";
+  // Per-axis geometry stays inline.
   xTitle.style.left = ((L.padL + L.innerW / 2) / W) * 100 + "%";
   xTitle.style.top = ((H - 4) / H) * 100 + "%";
-  xTitle.style.transform = "translate(-50%, -100%)";
   xTitle.textContent = "Time (turn / year)";
   wrap.appendChild(xTitle);
   const yTitle = document.createElement("div");
-  yTitle.className = "demographics-chart-axis-title demographics-chart-axis-y";
-  yTitle.style.position = "absolute";
+  yTitle.className =
+    "demographics-chart-axis-title demographics-chart-axis-y demographics-resources-axis-title demographics-resources-axis-y";
+  // Per-axis geometry stays inline.
   yTitle.style.left = (12 / W) * 100 + "%";
   yTitle.style.top = ((L.padT + L.innerH / 2) / H) * 100 + "%";
-  yTitle.style.transform = "translate(-50%, -50%) rotate(-90deg)";
   yTitle.textContent = yAxisLabel;
   wrap.appendChild(yTitle);
 }
@@ -415,11 +415,10 @@ function mountStackAxisTitles(wrap, L, W, H, yAxisLabel) {
 function mountStackXTickLabels(wrap, ticks, W, H) {
   ticks.forEach((tick) => {
     const div = document.createElement("div");
-    div.className = "demographics-chart-x-tick";
-    div.style.position = "absolute";
+    div.className = "demographics-chart-x-tick demographics-resources-x-tick";
+    // Per-tick geometry stays inline.
     div.style.left = (tick.x / W) * 100 + "%";
     div.style.top = (tick.labelY / H) * 100 + "%";
-    div.style.transform = "translateX(-50%)";
     if (getXAxisMode() !== "year") {
       appendTickTurn(div, tick.t);
     }
@@ -463,8 +462,8 @@ function mountStackLegend(wrap, bands, points, L, W, H) {
   const gx = L.padL + L.innerW + 16;
   bands.forEach((band) => {
     const div = document.createElement("div");
-    div.className = "demographics-chart-line-label";
-    div.style.position = "absolute";
+    div.className = "demographics-chart-line-label demographics-resources-legend-label";
+    // Per-band geometry stays inline.
     div.style.left = (gx / W) * 100 + "%";
     div.style.top = (gy / H) * 100 + "%";
 
