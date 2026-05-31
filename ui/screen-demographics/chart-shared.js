@@ -11,7 +11,7 @@ import { getPalette } from "/demographics/ui/demographics-palette.js";
  * @typedef {import("/demographics/ui/screen-demographics/chart-line.js").ChartOptions} ChartOptions
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger; no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

@@ -44,7 +44,7 @@ import { DemographicsSettings } from "/demographics/ui/demographics-settings.js"
  * @property {Record<string, any>} eliminated Elimination bookkeeping.
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

@@ -96,7 +96,7 @@ function shouldSampleThisTurn(turn) {
   return true;
 }
 
-let DEMOGRAPHICS_DEBUG = true;
+let DEMOGRAPHICS_DEBUG = false;
 /**
  * Verbose debug logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
@@ -106,12 +106,12 @@ function vlog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
 }
 /**
- * Informational logger; always emits.
+ * Informational logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
  * @returns {void}
  */
 function ilog(...a) {
-  console.warn("[Demographics.sampler]", ...a);
+  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
 }
 /**
  * Error logger; always emits.

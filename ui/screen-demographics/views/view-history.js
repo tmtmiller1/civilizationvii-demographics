@@ -112,7 +112,7 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @property {() => void} [requestReload] Re-render the active view.
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
