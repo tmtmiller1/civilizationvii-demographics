@@ -90,9 +90,10 @@ echo "==> Verifying modinfo at zip root"
 echo "==> Zipping $ZIP_PATH"
 ( cd "$DIST_DIR" && zip -qr "$ZIP_NAME" demographics )
 
-# Sanity-check zip contents.
+# Sanity-check zip contents. `|| true` guards against SIGPIPE (exit 141) when
+# `head` closes the pipe early under `set -o pipefail` — harmless here.
 echo "==> Zip contents (first 20 entries):"
-unzip -l "$ZIP_PATH" | head -25
+unzip -l "$ZIP_PATH" | head -25 || true
 
 SIZE="$(du -h "$ZIP_PATH" | cut -f1)"
 
