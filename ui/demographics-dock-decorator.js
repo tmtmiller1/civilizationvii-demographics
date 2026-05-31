@@ -15,10 +15,40 @@
 // Coherent's CSS parser does not honor data: URIs in background-image
 // for fs://-loaded stylesheets, so the asset must be shipped as a file.
 
+/**
+ * The vanilla subsystem-dock panel handle passed to a decorator factory. Only
+ * the surface this decorator touches is modeled; the rest is the untyped
+ * engine boundary.
+ * @typedef {Object} SubSystemDockPanel
+ * @property {(opts: DockButtonOptions) => (HTMLElement | null | undefined)} [addButton]
+ *   Adds a button to the dock, returning the created element.
+ */
+
+/**
+ * Options accepted by {@link SubSystemDockPanel.addButton}.
+ * @typedef {Object} DockButtonOptions
+ * @property {string} tooltip Localization key for the hover tooltip.
+ * @property {string} modifierClass Class added to the inner `.ssb__button-icon` div.
+ * @property {() => void} callback Activation handler.
+ * @property {string[]} class Extra classes for the button element.
+ * @property {string} audio Activate-cue audio ref.
+ * @property {string} focusedAudio Focus-cue audio ref.
+ */
+
 const DBG = true;
+/**
+ * Debug logger, no-op unless {@link DBG} is set.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.dock]", ...a);
 }
+/**
+ * Error logger; always emits.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function derr(...a) {
   console.error("[Demographics.dock]", ...a);
 }
@@ -27,6 +57,11 @@ dlog("module evaluating");
 
 const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 
+/**
+ * Inject the one-time `<style>` that paints our dock-button icon from the
+ * file-shipped SVG. Idempotent: re-runs are a no-op once the style exists.
+ * @returns {void}
+ */
 function injectIconStyle() {
   if (document.getElementById("demographics-dock-icon-style")) return;
   const style = document.createElement("style");
@@ -45,16 +80,33 @@ function injectIconStyle() {
   dlog("icon style injected (fs:// url)");
 }
 
-class DemographicsDockDecorator {
+/**
+ * Decorator for the vanilla subsystem dock that adds the Demographics button
+ * and opens the Demographics screen when it is activated.
+ */
+export class DemographicsDockDecorator {
+  /**
+   * @param {SubSystemDockPanel} val The panel handle supplied by the factory.
+   */
   constructor(val) {
     dlog("constructor called; panel keys:", val ? Object.keys(val).slice(0, 10) : "(no val)");
+    /** @type {SubSystemDockPanel} */
     this._panel = val;
   }
 
+  /**
+   * Lifecycle hook fired before the panel attaches.
+   * @returns {void}
+   */
   beforeAttach() {
     dlog("beforeAttach");
   }
 
+  /**
+   * Lifecycle hook fired after the panel attaches: paints the icon style and
+   * registers our dock button.
+   * @returns {void}
+   */
   afterAttach() {
     dlog("afterAttach: about to call this._panel.addButton");
     try {
@@ -62,6 +114,14 @@ class DemographicsDockDecorator {
     } catch (e) {
       derr("injectIconStyle threw:", e);
     }
+    this._addDockButton();
+  }
+
+  /**
+   * Add the Demographics button to the dock, defensively. Never throws.
+   * @returns {void}
+   */
+  _addDockButton() {
     try {
       if (!this._panel || typeof this._panel.addButton !== "function") {
         derr("panel.addButton missing; aborting");
@@ -81,19 +141,32 @@ class DemographicsDockDecorator {
     }
   }
 
+  /**
+   * Lifecycle hook fired before the panel detaches.
+   * @returns {void}
+   */
   beforeDetach() {
     dlog("beforeDetach");
   }
+  /**
+   * Lifecycle hook fired after the panel detaches.
+   * @returns {void}
+   */
   afterDetach() {
     dlog("afterDetach");
   }
 
+  /**
+   * Button activation handler: dynamic-imports the engine context manager and
+   * pushes the Demographics screen. Never throws.
+   * @returns {void}
+   */
   openScreen() {
     dlog("button activated; about to push screen-demographics");
     try {
       import("/core/ui/context-manager/context-manager.js")
         .then((m) => {
-          const ContextManager = m.default || m.ContextManager || m;
+          const ContextManager = /** @type {any} */ (m.default || m.ContextManager || m);
           ContextManager.push("screen-demographics", { singleton: true, createMouseGuard: true });
           dlog("ContextManager.push returned");
         })

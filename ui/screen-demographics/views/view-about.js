@@ -9,11 +9,56 @@
 // panels, two-column grids, and dividers so the page reads like a
 // designed reference rather than a wall of text.
 
+/**
+ * A tone key controlling the accent color of a badge / threshold card.
+ * @typedef {"good"|"warn"|"bad"} Tone
+ */
+
+/**
+ * One row of the "channels tested" grid: a `[label, result]` tuple.
+ * @typedef {[string, string]} ChannelEntry
+ */
+
+/**
+ * One "what would unblock this" card entry.
+ * @typedef {Object} UnblockerEntry
+ * @property {string} h Card heading text.
+ * @property {string} d Card body HTML.
+ */
+
+/**
+ * One CSV size-threshold card entry.
+ * @typedef {Object} ThresholdEntry
+ * @property {string} mark The size band label (e.g. "< 2 MB").
+ * @property {string} desc What the mod does in that band.
+ * @property {Tone} tone Accent tone for the card.
+ */
+
+/**
+ * Options accepted by {@link panel}.
+ * @typedef {Object} PanelOpts
+ * @property {string} [badge] Optional badge text shown beside the title.
+ * @property {Tone} [badgeTone] Accent tone for the badge.
+ */
+
+/**
+ * Render context handed to {@link render}. The About view reads nothing off it
+ * today, but it keeps the `render(host, ctx)` shape shared with the other views.
+ * @typedef {Object} AboutCtx
+ * @property {DemoHistory} [history] The full persisted history blob (unused here).
+ */
+
 const DBG = true;
+/**
+ * Debug logger, no-op unless {@link DBG} is set.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-about]", ...a);
 }
 
+/** @type {ChannelEntry[]} */
 const CROSS_AGE_CHANNELS = [
   ["GameTutorial.setProperty", "wiped at age transition"],
   ["Players[pid].Tutorial.setProperty", "wiped at age transition"],
@@ -42,6 +87,7 @@ const CROSS_AGE_CHANNELS = [
   ["Local file I/O / fetch / coui://", "no JS file-write surface present"]
 ];
 
+/** @type {UnblockerEntry[]} */
 const CROSS_AGE_UNBLOCKERS = [
   {
     h: "Activate Modding.setModProperty",
@@ -61,6 +107,7 @@ const CROSS_AGE_UNBLOCKERS = [
   }
 ];
 
+/** @type {ThresholdEntry[]} */
 const CSV_SIZE_THRESHOLDS = [
   { mark: "< 2 MB", desc: "full clipboard + full log dump", tone: "good" },
   {
@@ -71,6 +118,7 @@ const CSV_SIZE_THRESHOLDS = [
   { mark: "> 8 MB", desc: "refused; lower History sample cap in Options and retry", tone: "bad" }
 ];
 
+/** @type {string[]} */
 const CSV_EXPECTED_SIZES = [
   "Standard speed, 10 civs, full game (~500 turns) → <b>~1.5&nbsp;MB</b>. Well under all limits.",
   "Marathon speed (~1500 turns), 10 civs → <b>~4&nbsp;MB</b>. Soft path (clipboard OK, log summary only).",
@@ -82,10 +130,10 @@ const C_GOLD = "#f3c34c";
 const C_GOLD_DIM = "rgba(201,162,76,0.55)";
 const C_CREAM = "#e5d2ac";
 const C_BODY = "#d6d8dc";
-const C_MUTED = "#9aa0aa";
 const C_PANEL_BG = "rgba(18, 20, 24, 0.55)";
 const C_PANEL_BD = "rgba(168,132,90,0.35)";
 
+/** @type {Record<Tone, string>} */
 const TONE_COLORS = {
   good: "#7fc28a",
   warn: "#e6b34d",
@@ -94,12 +142,21 @@ const TONE_COLORS = {
 
 // ───────────────────────── element factories ─────────────────────────
 
+/**
+ * Create a `<div>` with an optional inline `cssText`.
+ * @param {string} [css] Inline CSS to apply via `style.cssText`.
+ * @returns {HTMLElement} The new div element.
+ */
 function elDiv(css) {
   const d = document.createElement("div");
   if (css) d.style.cssText = css;
   return d;
 }
 
+/**
+ * Build the page header block (eyebrow + title + intro blurb).
+ * @returns {HTMLElement} The header wrapper element.
+ */
 function pageHeader() {
   const wrap = elDiv(
     "display:flex;flex-direction:column;align-items:flex-start;" +
@@ -140,6 +197,34 @@ function pageHeader() {
   return wrap;
 }
 
+/**
+ * Append the optional title-row badge to a panel's title wrapper.
+ * @param {HTMLElement} titleWrap The title-row element to append into.
+ * @param {PanelOpts} opts Panel options carrying the badge text/tone.
+ * @returns {void}
+ */
+function appendPanelBadge(titleWrap, opts) {
+  if (!opts.badge) return;
+  const badge = elDiv(
+    "color:" +
+      (TONE_COLORS[opts.badgeTone ?? "good"] || C_CREAM) +
+      ";" +
+      "font-family:TitleFont, BodyFont, sans-serif;font-size:0.78rem;" +
+      "font-weight:700;text-transform:uppercase;letter-spacing:0.14em;" +
+      "padding:0.18rem 0.55rem;border:1px solid currentColor;border-radius:1rem;" +
+      "white-space:nowrap;"
+  );
+  badge.textContent = opts.badge;
+  titleWrap.appendChild(badge);
+}
+
+/**
+ * Build a card panel with a title row and optional tone badge. Content is
+ * appended by the caller.
+ * @param {string} title The panel heading text.
+ * @param {PanelOpts} [opts] Optional badge text/tone.
+ * @returns {HTMLElement} The panel card element.
+ */
 function panel(title, opts = {}) {
   const card = elDiv(
     "background:" +
@@ -170,23 +255,16 @@ function panel(title, opts = {}) {
   );
   h.textContent = title;
   titleWrap.appendChild(h);
-  if (opts.badge) {
-    const badge = elDiv(
-      "color:" +
-        (TONE_COLORS[opts.badgeTone] || C_CREAM) +
-        ";" +
-        "font-family:TitleFont, BodyFont, sans-serif;font-size:0.78rem;" +
-        "font-weight:700;text-transform:uppercase;letter-spacing:0.14em;" +
-        "padding:0.18rem 0.55rem;border:1px solid currentColor;border-radius:1rem;" +
-        "white-space:nowrap;"
-    );
-    badge.textContent = opts.badge;
-    titleWrap.appendChild(badge);
-  }
+  appendPanelBadge(titleWrap, opts);
   card.appendChild(titleWrap);
   return card;
 }
 
+/**
+ * Build an uppercase sub-section label.
+ * @param {string} label The label text.
+ * @returns {HTMLElement} The sub-section label element.
+ */
 function subSection(label) {
   const el = elDiv(
     "color:" +
@@ -199,6 +277,11 @@ function subSection(label) {
   return el;
 }
 
+/**
+ * Build a lead paragraph whose content is set as HTML.
+ * @param {string} html The paragraph HTML.
+ * @returns {HTMLElement} The lead paragraph element.
+ */
 function lead(html) {
   const el = elDiv(
     "color:" + C_BODY + ";font-size:0.98rem;line-height:1.55;margin:0.2rem 0 0.6rem;"
@@ -207,7 +290,44 @@ function lead(html) {
   return el;
 }
 
-// Two-column channel grid styled as a clean table with alternating row tone.
+/**
+ * Build one `[key, value]` row pair for {@link channelGrid}.
+ * @param {ChannelEntry} entry The `[label, result]` tuple.
+ * @param {number} i Row index (drives the alternating background).
+ * @returns {[HTMLElement, HTMLElement]} The key cell and value cell.
+ */
+function channelRow(entry, i) {
+  const [label, result] = entry;
+  const bg = i % 2 === 0 ? "rgba(28,32,40,0.45)" : "rgba(18,20,24,0.45)";
+  const k = elDiv(
+    "color:" +
+      C_CREAM +
+      ";font-family:Consolas,'Courier New',monospace;" +
+      "font-size:0.88rem;padding:0.45rem 0.85rem;background:" +
+      bg +
+      ";" +
+      "white-space:nowrap;border-right:1px solid " +
+      C_PANEL_BD +
+      ";"
+  );
+  k.textContent = label;
+  const v = elDiv(
+    "color:" +
+      C_BODY +
+      ";font-size:0.92rem;line-height:1.4;" +
+      "padding:0.45rem 0.85rem;background:" +
+      bg +
+      ";"
+  );
+  v.textContent = result;
+  return [k, v];
+}
+
+/**
+ * Two-column channel grid styled as a clean table with alternating row tone.
+ * @param {ChannelEntry[]} rows The `[label, result]` tuples.
+ * @returns {HTMLElement} The grid element.
+ */
 function channelGrid(rows) {
   const grid = elDiv(
     "display:grid;" +
@@ -217,104 +337,116 @@ function channelGrid(rows) {
       C_PANEL_BD +
       ";border-radius:0.2rem;overflow:hidden;"
   );
-  rows.forEach(([label, result], i) => {
-    const bg = i % 2 === 0 ? "rgba(28,32,40,0.45)" : "rgba(18,20,24,0.45)";
-    const k = elDiv(
-      "color:" +
-        C_CREAM +
-        ";font-family:Consolas,'Courier New',monospace;" +
-        "font-size:0.88rem;padding:0.45rem 0.85rem;background:" +
-        bg +
-        ";" +
-        "white-space:nowrap;border-right:1px solid " +
-        C_PANEL_BD +
-        ";"
-    );
-    k.textContent = label;
-    const v = elDiv(
-      "color:" +
-        C_BODY +
-        ";font-size:0.92rem;line-height:1.4;" +
-        "padding:0.45rem 0.85rem;background:" +
-        bg +
-        ";"
-    );
-    v.textContent = result;
+  rows.forEach((entry, i) => {
+    const [k, v] = channelRow(entry, i);
     grid.appendChild(k);
     grid.appendChild(v);
   });
   return grid;
 }
 
-// Numbered unblocker cards in a 2-column grid.
+/**
+ * Build one numbered unblocker card.
+ * @param {UnblockerEntry} it The unblocker entry.
+ * @param {number} i Zero-based index (the displayed number is `i + 1`).
+ * @returns {HTMLElement} The card element.
+ */
+function unblockerCard(it, i) {
+  const card = elDiv(
+    "background:rgba(18,20,24,0.55);" +
+      "border:1px solid " +
+      C_PANEL_BD +
+      ";border-radius:0.2rem;" +
+      "padding:0.85rem 1rem 0.9rem;display:flex;gap:0.85rem;"
+  );
+  const num = elDiv(
+    "color:" +
+      C_GOLD +
+      ";font-family:TitleFont, BodyFont, sans-serif;" +
+      "font-size:1.4rem;font-weight:700;line-height:1;flex-shrink:0;" +
+      "min-width:1.8rem;"
+  );
+  num.textContent = String(i + 1);
+  const text = elDiv("flex:1;");
+  const h = elDiv(
+    "color:" +
+      C_CREAM +
+      ";font-family:TitleFont, BodyFont, sans-serif;" +
+      "font-size:0.98rem;font-weight:700;margin-bottom:0.25rem;line-height:1.25;"
+  );
+  h.textContent = it.h;
+  const d = elDiv("color:" + C_BODY + ";font-size:0.9rem;line-height:1.5;");
+  d.innerHTML = it.d;
+  text.appendChild(h);
+  text.appendChild(d);
+  card.appendChild(num);
+  card.appendChild(text);
+  return card;
+}
+
+/**
+ * Numbered unblocker cards in a 2-column grid.
+ * @param {UnblockerEntry[]} items The unblocker entries.
+ * @returns {HTMLElement} The grid element.
+ */
 function unblockerGrid(items) {
   const grid = elDiv("display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;");
   items.forEach((it, i) => {
-    const card = elDiv(
-      "background:rgba(18,20,24,0.55);" +
-        "border:1px solid " +
-        C_PANEL_BD +
-        ";border-radius:0.2rem;" +
-        "padding:0.85rem 1rem 0.9rem;display:flex;gap:0.85rem;"
-    );
-    const num = elDiv(
-      "color:" +
-        C_GOLD +
-        ";font-family:TitleFont, BodyFont, sans-serif;" +
-        "font-size:1.4rem;font-weight:700;line-height:1;flex-shrink:0;" +
-        "min-width:1.8rem;"
-    );
-    num.textContent = String(i + 1);
-    const text = elDiv("flex:1;");
-    const h = elDiv(
-      "color:" +
-        C_CREAM +
-        ";font-family:TitleFont, BodyFont, sans-serif;" +
-        "font-size:0.98rem;font-weight:700;margin-bottom:0.25rem;line-height:1.25;"
-    );
-    h.textContent = it.h;
-    const d = elDiv("color:" + C_BODY + ";font-size:0.9rem;line-height:1.5;");
-    d.innerHTML = it.d;
-    text.appendChild(h);
-    text.appendChild(d);
-    card.appendChild(num);
-    card.appendChild(text);
-    grid.appendChild(card);
+    grid.appendChild(unblockerCard(it, i));
   });
   return grid;
 }
 
-// CSV size threshold rows — color-coded mark + description.
+/**
+ * Build one color-coded CSV size-threshold card.
+ * @param {ThresholdEntry} row The threshold entry.
+ * @returns {HTMLElement} The card element.
+ */
+function sizeThresholdCard(row) {
+  const { mark, desc, tone } = row;
+  const card = elDiv(
+    "background:rgba(18,20,24,0.55);" +
+      "border:1px solid " +
+      C_PANEL_BD +
+      ";border-radius:0.2rem;" +
+      "border-top:3px solid " +
+      (TONE_COLORS[tone] || C_CREAM) +
+      ";" +
+      "padding:0.85rem 1rem 0.9rem;"
+  );
+  const m = elDiv(
+    "color:" +
+      (TONE_COLORS[tone] || C_CREAM) +
+      ";" +
+      "font-family:TitleFont, BodyFont, sans-serif;" +
+      "font-size:1.05rem;font-weight:700;margin-bottom:0.35rem;letter-spacing:0.03em;"
+  );
+  m.textContent = mark;
+  const d = elDiv("color:" + C_BODY + ";font-size:0.9rem;line-height:1.45;");
+  d.textContent = desc;
+  card.appendChild(m);
+  card.appendChild(d);
+  return card;
+}
+
+/**
+ * CSV size threshold rows — color-coded mark + description.
+ * @param {ThresholdEntry[]} rows The threshold entries.
+ * @returns {HTMLElement} The grid element.
+ */
 function sizeThresholdGrid(rows) {
   const grid = elDiv("display:grid;grid-template-columns:repeat(3, 1fr);gap:0.9rem;");
-  rows.forEach(({ mark, desc, tone }) => {
-    const card = elDiv(
-      "background:rgba(18,20,24,0.55);" +
-        "border:1px solid " +
-        C_PANEL_BD +
-        ";border-radius:0.2rem;" +
-        "border-top:3px solid " +
-        (TONE_COLORS[tone] || C_CREAM) +
-        ";" +
-        "padding:0.85rem 1rem 0.9rem;"
-    );
-    const m = elDiv(
-      "color:" +
-        (TONE_COLORS[tone] || C_CREAM) +
-        ";" +
-        "font-family:TitleFont, BodyFont, sans-serif;" +
-        "font-size:1.05rem;font-weight:700;margin-bottom:0.35rem;letter-spacing:0.03em;"
-    );
-    m.textContent = mark;
-    const d = elDiv("color:" + C_BODY + ";font-size:0.9rem;line-height:1.45;");
-    d.textContent = desc;
-    card.appendChild(m);
-    card.appendChild(d);
-    grid.appendChild(card);
+  rows.forEach((row) => {
+    grid.appendChild(sizeThresholdCard(row));
   });
   return grid;
 }
 
+/**
+ * Build the "expected sizes" bullet list (HTML list items, no bullets).
+ * @param {string[]} items Per-item HTML strings.
+ * @returns {HTMLElement} The `<ul>` element.
+ */
 function expectedList(items) {
   const ul = document.createElement("ul");
   ul.style.cssText =
@@ -337,16 +469,18 @@ function expectedList(items) {
 
 // ───────────────────────── render ─────────────────────────
 
-export function render(host, _ctx) {
-  while (host.firstChild) host.removeChild(host.firstChild);
-
-  // Host is a flex column (.demographics-view-host: flex:1; display:flex;
-  // flex-direction:column; min-height:0). To actually scroll inside it the
-  // scroll container must itself be flex:1 + min-height:0 + overflow-y:auto.
-  // Fill the full width (no max-width / centering — empty side gutters were
-  // the "wasted space on the tab" complaint), with generous side padding so
-  // content never touches the surrounding parchment frame.
-  const scroll = elDiv(
+/**
+ * Build the scroll container that fills the host and owns the page padding.
+ * Host is a flex column (`.demographics-view-host`: flex:1; display:flex;
+ * flex-direction:column; min-height:0). To actually scroll inside it the
+ * scroll container must itself be flex:1 + min-height:0 + overflow-y:auto.
+ * Fills the full width (no max-width / centering — empty side gutters were the
+ * "wasted space on the tab" complaint), with generous side padding so content
+ * never touches the surrounding parchment frame.
+ * @returns {HTMLElement} The scroll container element.
+ */
+function buildScroll() {
+  return elDiv(
     "flex:1 1 auto;min-height:0;width:100%;" +
       "overflow-y:auto;overflow-x:hidden;" +
       "padding:1.6rem 2.5rem 2.5rem;" +
@@ -355,15 +489,14 @@ export function render(host, _ctx) {
       ";" +
       "text-align:left;box-sizing:border-box;"
   );
-  host.appendChild(scroll);
+}
 
-  scroll.appendChild(pageHeader());
-
-  // ─── Cross-age graphs panel ─────────────────────────────────────────
-  const crossAge = panel("Cross-Age Graphs", {
-    badge: "Blocked by engine",
-    badgeTone: "bad"
-  });
+/**
+ * Append the three explanatory lead paragraphs to the Cross-Age panel.
+ * @param {HTMLElement} crossAge The panel element to append into.
+ * @returns {void}
+ */
+function appendCrossAgeProse(crossAge) {
   crossAge.appendChild(
     lead(
       '<b style="color:' +
@@ -404,13 +537,30 @@ export function render(host, _ctx) {
         ';">Current&nbsp;Age</b> on the chart toolbar.'
     )
   );
+}
+
+/**
+ * Build the "Cross-Age Graphs" panel: prose + channels grid + unblocker grid.
+ * @returns {HTMLElement} The populated panel element.
+ */
+function buildCrossAgePanel() {
+  const crossAge = panel("Cross-Age Graphs", {
+    badge: "Blocked by engine",
+    badgeTone: "bad"
+  });
+  appendCrossAgeProse(crossAge);
   crossAge.appendChild(subSection("Channels tested"));
   crossAge.appendChild(channelGrid(CROSS_AGE_CHANNELS));
   crossAge.appendChild(subSection("What would unblock this"));
   crossAge.appendChild(unblockerGrid(CROSS_AGE_UNBLOCKERS));
-  scroll.appendChild(crossAge);
+  return crossAge;
+}
 
-  // ─── CSV export panel ────────────────────────────────────────────────
+/**
+ * Build the "CSV Export" panel: prose + size thresholds + expected sizes.
+ * @returns {HTMLElement} The populated panel element.
+ */
+function buildCsvPanel() {
   const csv = panel("CSV Export", {
     badge: "Clipboard-routed",
     badgeTone: "warn"
@@ -449,8 +599,25 @@ export function render(host, _ctx) {
 
   csv.appendChild(subSection("Expected sizes"));
   csv.appendChild(expectedList(CSV_EXPECTED_SIZES));
+  return csv;
+}
 
-  scroll.appendChild(csv);
+/**
+ * Render the About view into `host`. Clears the host, builds the scroll
+ * container, then appends the page header and the two reference panels.
+ * @param {HTMLElement} host The view host element (cleared and repopulated).
+ * @param {AboutCtx} _ctx Render context (unused by this view).
+ * @returns {void}
+ */
+export function render(host, _ctx) {
+  while (host.firstChild) host.removeChild(host.firstChild);
+
+  const scroll = buildScroll();
+  host.appendChild(scroll);
+
+  scroll.appendChild(pageHeader());
+  scroll.appendChild(buildCrossAgePanel());
+  scroll.appendChild(buildCsvPanel());
 
   dlog("about view mounted");
 }

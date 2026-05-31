@@ -19,18 +19,40 @@
 //
 // Every accessor is cited to vanilla Civ7 source in demographics-sampler.js.
 
+// The per-player sampler context passed to every accessor/scale function.
+// It is the untyped engine boundary: every field can be undefined and is
+// read defensively, so it is kept loose on purpose.
+/**
+ * @typedef {Object<string, any>} MetricCtx
+ */
+
 const DBG = true;
+/**
+ * Debug logger, no-op unless {@link DBG} is set.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.metrics]", ...a);
 }
 
+/**
+ * Coerce a value to a finite number, or `undefined` if it isn't one.
+ * @param {*} v Candidate value.
+ * @returns {number | undefined} The number, or undefined.
+ */
 function safeNum(v) {
   return typeof v === "number" && isFinite(v) ? v : undefined;
 }
 
 // ---- format helpers ------------------------------------------------------
 
-// 1234567 -> "1.23M". Handles negatives & sub-1000 values without suffix.
+/**
+ * Format a number with a magnitude suffix, e.g. `1234567` → `"1.23M"`. Handles
+ * negatives and sub-1000 values (no suffix). Non-finite input renders as `"—"`.
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
 export function formatBigNumber(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
   const sign = n < 0 ? "-" : "";
@@ -42,27 +64,53 @@ export function formatBigNumber(n) {
   return sign + String(Math.round(a));
 }
 
+/**
+ * Format a value as currency, prefixing {@link formatBigNumber} with `"$"`.
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
 export function formatCurrency(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
   return "$" + formatBigNumber(n);
 }
 
+/**
+ * Format an area value as a rounded, comma-grouped count suffixed with `" km²"`.
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
 export function formatArea(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
   return formatCount(Math.round(n)) + " km²";
 }
 
+/**
+ * Format a value as a rounded integer percentage suffixed with `"%"`.
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
 export function formatPercent(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
   return Math.round(n) + "%";
 }
 
+/**
+ * Format a value as a rounded integer with comma thousands-separators.
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
 export function formatCount(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
   // Add comma thousands-separators without locale ambiguity.
   return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+/**
+ * Format a value as a signed per-turn rate, e.g. `"+12.3/turn"`. Values over
+ * 100 are truncated to whole numbers; smaller values keep one decimal.
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
 export function formatSignedRate(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
   const r = (n >= 0 ? "+" : "") + (Math.abs(n) > 100 ? Math.trunc(n) : Math.trunc(n * 10) / 10);
@@ -71,6 +119,18 @@ export function formatSignedRate(n) {
 
 // ---- scaling helpers -----------------------------------------------------
 
+/**
+ * Resolve the active turn from a primary then fallback context, defaulting to 1.
+ * @param {MetricCtx | null | undefined} primary Preferred context.
+ * @param {MetricCtx | null | undefined} fallback Fallback context.
+ * @returns {number} A positive turn number (1 if neither supplies one).
+ */
+function resolveTurn(primary, fallback) {
+  if (primary && typeof primary.turn === "number" && primary.turn > 0) return primary.turn;
+  if (fallback && typeof fallback.turn === "number" && fallback.turn > 0) return fallback.turn;
+  return 1;
+}
+
 // Scaled population: turn-aware, sublinear, and empirically tuned for realism.
 // Calibrated to roughly:
 //   T=1   pop=4   →  ~350K  (small early city)
@@ -78,14 +138,16 @@ export function formatSignedRate(n) {
 //   T=100 pop=40  →  ~18M   (mid exploration)
 //   T=200 pop=100 →  ~350M  (industrialised modern empire)
 // This avoids excessive values in Antiquity and tracks real-world growth.
+/**
+ * Scale a raw population count into a turn-aware "realistic" figure.
+ * @param {number} raw Raw per-civ population total.
+ * @param {MetricCtx} [scaleCtx] Per-player scale context (turn fallback).
+ * @param {MetricCtx} [ctx] Per-player accessor context (preferred turn source).
+ * @returns {number} The scaled population (0 for non-positive/invalid input).
+ */
 function scalePopulation(raw, scaleCtx, ctx) {
   if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
-  const turn =
-    ctx && typeof ctx.turn === "number" && ctx.turn > 0
-      ? ctx.turn
-      : scaleCtx && typeof scaleCtx.turn === "number" && scaleCtx.turn > 0
-        ? scaleCtx.turn
-        : 1;
+  const turn = resolveTurn(ctx, scaleCtx);
   // Tuned formula: pop^1.11 × 90000 × 1.009^turn
   return Math.pow(raw, 1.11) * 90000 * Math.pow(1.009, turn);
 }
@@ -96,24 +158,26 @@ function scalePopulation(raw, scaleCtx, ctx) {
 // `scaleCtx` is the per-player ctx (sampler passes the player ctx as both
 // arguments at call sites); we also accept a third `ctx` arg as the spec
 // describes, falling back to scaleCtx for turn lookup.
+/**
+ * Scale a raw weighted-yield sum into a $billions-scale GDP figure.
+ * @param {number} raw Weighted per-turn yield sum from {@link gdpAccessor}.
+ * @param {MetricCtx} [scaleCtx] Per-player scale context (turn fallback).
+ * @param {MetricCtx} [ctx] Per-player accessor context (preferred turn source).
+ * @returns {number} The scaled GDP (0 for invalid input).
+ */
 function scaleGDP(raw, scaleCtx, ctx) {
   if (typeof raw !== "number" || !isFinite(raw)) return 0;
   // Always synthesize: raw weighted-yield sum × turn × 1e6 → $billions.
   // The earlier branch that returned victoryPointsEconomic unscaled
   // produced the "drop to zero" artifact (see gdpAccessor for context).
-  const src =
-    ctx && typeof ctx.turn === "number"
-      ? ctx
-      : scaleCtx && typeof scaleCtx.turn === "number"
-        ? scaleCtx
-        : null;
-  const turn = src && typeof src.turn === "number" && src.turn > 0 ? src.turn : 1;
+  const turn = resolveTurn(ctx, scaleCtx);
   return raw * turn * 1000000;
 }
 
 // GDP weighting — research-informed values describing the relative
 // "value per point" of each yield (production = base unit of 1.0).
 // See README/spec for rationale.
+/** @type {Record<string, number>} */
 const GDP_WEIGHTS = {
   gold: 1.0,
   production: 1.0,
@@ -123,42 +187,58 @@ const GDP_WEIGHTS = {
   science: 1.2
 };
 
+/**
+ * Resolve the six yields {@link gdpAccessor} weights, each coerced to a finite
+ * number or `undefined` (so callers can detect a wholly-empty sample).
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {(number | undefined)[]} `[gold, production, food, diplomacy, culture, science]`.
+ */
+function gdpYields(ctx) {
+  return [
+    safeNum(ctx.yieldGold),
+    safeNum(ctx.yieldProduction),
+    safeNum(ctx.yieldFood),
+    safeNum(ctx.yieldDiplomacy),
+    safeNum(ctx.yieldCulture),
+    safeNum(ctx.yieldScience)
+  ];
+}
+
+/**
+ * Whether every element of an array is `undefined`.
+ * @param {(number | undefined)[]} values The values to test.
+ * @returns {boolean} True if all entries are undefined.
+ */
+function allUndefined(values) {
+  return values.every((v) => v === undefined);
+}
+
+/**
+ * Synthesize a player's GDP from weighted per-turn yields.
+ *
+ * Always synthesize GDP from weighted per-turn yields. Earlier code tried to
+ * switch to `player.Victories.getPointsForVictoryType(VICTORY_ECONOMIC_MODERN)`
+ * once it became available in the Modern age, but those "real" victory points
+ * start at single-digit values (1, 2, 3...) while the synthesized GDP is on a
+ * $billions scale. The instant a civ earned their first economic victory point,
+ * the accessor swapped paths and the line collapsed from ~$8B to ~$3 — looking
+ * like a hard drop to zero on the chart. Each civ hit that first VP at a
+ * different turn, hence the "every civilization drops to zero at varying times"
+ * symptom. Keeping the synthesis path exclusive ensures a continuous magnitude
+ * from antiquity through modern.
+ *
+ * If every yield came back undefined we have NO real data for this player this
+ * turn (Stats API not ready yet — common on the first sample after a saved-game
+ * resume). Return undefined so the sampler omits gdp from the snapshot entirely.
+ * The chart's `spanGaps:true` will connect across the gap with a straight
+ * segment, which is far less jarring than a sudden plunge to $0 that an explicit
+ * `return 0` produced.
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number | undefined} The weighted yield sum, or undefined if no data.
+ */
 function gdpAccessor(ctx) {
-  // Always synthesize GDP from weighted per-turn yields. Earlier code
-  // tried to switch to `player.Victories.getPointsForVictoryType(
-  // VICTORY_ECONOMIC_MODERN)` once it became available in the Modern
-  // age, but those "real" victory points start at single-digit values
-  // (1, 2, 3...) while the synthesized GDP is on a $billions scale.
-  // The instant a civ earned their first economic victory point, the
-  // accessor swapped paths and the line collapsed from ~$8B to ~$3 —
-  // looking like a hard drop to zero on the chart. Each civ hit that
-  // first VP at a different turn, hence the "every civilization drops
-  // to zero at varying times" symptom.
-  //
-  // Keeping the synthesis path exclusive ensures a continuous magnitude
-  // from antiquity through modern.
-  const g = safeNum(ctx.yieldGold);
-  const p = safeNum(ctx.yieldProduction);
-  const f = safeNum(ctx.yieldFood);
-  const i = safeNum(ctx.yieldDiplomacy);
-  const c = safeNum(ctx.yieldCulture);
-  const s = safeNum(ctx.yieldScience);
-  // If every yield came back undefined we have NO real data for this
-  // player this turn (Stats API not ready yet — common on the first
-  // sample after a saved-game resume). Return undefined so the sampler
-  // omits gdp from the snapshot entirely. The chart's `spanGaps:true`
-  // will connect across the gap with a straight segment, which is far
-  // less jarring than a sudden plunge to $0 that an explicit `return 0`
-  // produced (the earlier "always return 0" fix was the source of the
-  // GDP graph appearing not to survive a save reload).
-  if (
-    g === undefined &&
-    p === undefined &&
-    f === undefined &&
-    i === undefined &&
-    c === undefined &&
-    s === undefined
-  ) {
+  const [g, p, f, i, c, s] = gdpYields(ctx);
+  if (allUndefined([g, p, f, i, c, s])) {
     return undefined;
   }
   return (
@@ -172,24 +252,22 @@ function gdpAccessor(ctx) {
 }
 
 // Land area: tile count × 7000 km² per Civ7 hex (small map ≈ Earth scale).
+/**
+ * Scale a raw owned-tile count into km² of land area.
+ * @param {number} raw Owned tile count.
+ * @returns {number} The scaled area (0 for invalid input).
+ */
 function scaleLandArea(raw /*, scaleCtx, ctx */) {
   if (typeof raw !== "number" || !isFinite(raw)) return 0;
   return raw * 7000;
 }
 
-// Approval: ((happinessNet / settlements) + 10) / 20 × 100 clamped [0,100].
-// Uses ctx.settlementsCount as the divisor; if missing/zero, returns
-// undefined (which the sampler will skip).
-function scaleApproval(raw, _scaleCtx, ctx) {
-  const settlements = safeNum(ctx?.settlementsCount);
-  if (!settlements || settlements <= 0) return undefined;
-  const ratio = raw / settlements;
-  const pct = ((ratio + 10) / 20) * 100;
-  if (!isFinite(pct)) return undefined;
-  return Math.max(0, Math.min(100, pct));
-}
-
 // Score heuristic fallback: techs + civics + 2*settlements + gold/100.
+/**
+ * Heuristic Score fallback when the engine `Stats.getScore()` path is unavailable.
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number} The heuristic score.
+ */
 function scoreFallback(ctx) {
   const techs = safeNum(ctx.techsCount) || 0;
   const civics = safeNum(ctx.civicsCount) || 0;
@@ -198,8 +276,107 @@ function scoreFallback(ctx) {
   return techs + civics + 2 * settlements + Math.floor(gold / 100);
 }
 
+/**
+ * Score accessor: prefer the engine `Stats.getScore()`, else the heuristic.
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number} The civilization score.
+ */
+function scoreAccessor(ctx) {
+  try {
+    const s = ctx.stats;
+    if (s && typeof s.getScore === "function") {
+      const v = s.getScore();
+      if (safeNum(v) !== undefined) return v;
+    }
+  } catch (_e) {
+    /* fall through */
+  }
+  return scoreFallback(ctx);
+}
+
+/**
+ * Civics accessor: defaults an undefined count to 0 so a turn-1 civ still plots.
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number} The civics count (0 when unavailable).
+ */
+function civicsAccessor(ctx) {
+  const v = safeNum(ctx.civicsCount);
+  return v === undefined ? 0 : v;
+}
+
+/**
+ * Settlement-cap-utilization accessor: settlements / cap × 100.
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number | undefined} The utilization percent, or undefined.
+ */
+function settlementCapPctAccessor(ctx) {
+  const n = safeNum(ctx.numSettlements);
+  const cap = safeNum(ctx.settlementCap);
+  if (n === undefined || !cap || cap <= 0) return undefined;
+  return (n / cap) * 100;
+}
+
+/**
+ * Crisis-stage accessor: shift engine 0-based stages up by 1 (and -1 → 0).
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number | undefined} The display stage, or undefined.
+ */
+function crisisStageAccessor(ctx) {
+  const s = safeNum(ctx.crisisStage);
+  if (s === undefined) return undefined;
+  return s < 0 ? 0 : s + 1;
+}
+
+/**
+ * Land-area accessor: defaults undefined owned-tiles to 0 so a settler-only
+ * civ still plots at y=0.
+ * @param {MetricCtx} ctx Per-player accessor context.
+ * @returns {number} The owned-tile count (0 when unavailable).
+ */
+function landAccessor(ctx) {
+  const v = safeNum(ctx.tilesOwned);
+  return v === undefined ? 0 : v;
+}
+
+/**
+ * Format the Diplomatic Approval reputation aggregate (signed, one decimal).
+ * @param {number} n Reputation value.
+ * @returns {string} The formatted string.
+ */
+function formatApproval(n) {
+  if (typeof n !== "number" || !isFinite(n)) return "—";
+  return (n >= 0 ? "+" : "") + Math.round(n * 10) / 10;
+}
+
+/**
+ * Format a rounded value to a count (e.g. score, treasury, settlements).
+ * @param {number} n Value to format.
+ * @returns {string} The formatted string.
+ */
+function formatRoundedCount(n) {
+  return formatCount(Math.round(n));
+}
+
+/**
+ * Format a crisis stage value into its user-facing label.
+ * @param {number} n Display stage value.
+ * @returns {string} The stage label.
+ */
+function formatCrisisStage(n) {
+  const v = Math.max(0, Math.round(n));
+  if (v === 0) return "Pre-Crisis";
+  if (v === 1) return "Stage 1 (Begins)";
+  if (v === 2) return "Stage 2 (Intensifies)";
+  if (v === 3) return "Stage 3 (Culminates)";
+  if (v >= 4) return "Stage 4 (Ends)";
+  return "Stage " + v;
+}
+
 // ---- metric registry -----------------------------------------------------
 
+// Most entries conform to {MetricDef}, but the six hidden triumph counters
+// intentionally omit `label`/`format`, so the array isn't annotated as
+// MetricDef[] (that would flag those entries under strict checkJs).
 export const METRICS = [
   // ---- canonical / "raw" ---------------------------------------------
   {
@@ -208,19 +385,8 @@ export const METRICS = [
     title: "Civilization Score",
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP",
-    accessor: (ctx) => {
-      try {
-        const s = ctx.stats;
-        if (s && typeof s.getScore === "function") {
-          const v = s.getScore();
-          if (safeNum(v) !== undefined) return v;
-        }
-      } catch (e) {
-        /* fall through */
-      }
-      return scoreFallback(ctx);
-    },
-    format: (n) => formatCount(Math.round(n)),
+    accessor: scoreAccessor,
+    format: formatRoundedCount,
     unit: "points"
   },
   {
@@ -229,8 +395,12 @@ export const METRICS = [
     title: "Treasury",
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Treasury gold.
+     */
     accessor: (ctx) => safeNum(ctx.gold),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "gold",
     // yield-icons.xml:65-72 — blp:Yield_Gold (64px).
     unitIcon: "blp:Yield_Gold"
@@ -242,6 +412,10 @@ export const METRICS = [
     title: "Gold Per Turn",
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net gold per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldGold),
     format: formatSignedRate,
     unit: "gold / turn",
@@ -253,8 +427,12 @@ export const METRICS = [
     title: "Settlements (cities + towns)",
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Settlement count.
+     */
     accessor: (ctx) => safeNum(ctx.settlementsCount),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "cities"
   },
   {
@@ -263,8 +441,12 @@ export const METRICS = [
     title: "Technologies Researched",
     category: "science",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Researched-tech count.
+     */
     accessor: (ctx) => safeNum(ctx.techsCount),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "techs"
   },
   {
@@ -279,11 +461,8 @@ export const METRICS = [
     // series (chart.js:80 requires isFinite). Default to 0 so the
     // turn-1 sample plots at y=0 with a legend entry, rather than
     // showing no line/label at all.
-    accessor: (ctx) => {
-      const v = safeNum(ctx.civicsCount);
-      return v === undefined ? 0 : v;
-    },
-    format: (n) => formatCount(Math.round(n)),
+    accessor: civicsAccessor,
+    format: formatRoundedCount,
     unit: "civics"
   },
 
@@ -311,6 +490,10 @@ export const METRICS = [
     title: "Crop Yield (food per turn)",
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net food per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldFood),
     format: formatSignedRate,
     unit: "food / turn",
@@ -326,6 +509,10 @@ export const METRICS = [
     title: "Production Per Turn",
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net production per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldProduction),
     format: formatSignedRate,
     unit: "production / turn",
@@ -339,6 +526,10 @@ export const METRICS = [
     title: "Science Per Turn",
     category: "knowledge",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net science per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldScience),
     format: formatSignedRate,
     unit: "science / turn",
@@ -352,6 +543,10 @@ export const METRICS = [
     title: "Culture Per Turn",
     category: "knowledge",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net culture per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldCulture),
     format: formatSignedRate,
     unit: "culture / turn",
@@ -368,11 +563,12 @@ export const METRICS = [
     title: "Diplomatic Approval (international reputation)",
     category: "diplomacy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Diplomatic approval aggregate.
+     */
     accessor: (ctx) => safeNum(ctx.diplomaticApproval),
-    format: (n) => {
-      if (typeof n !== "number" || !isFinite(n)) return "—";
-      return (n >= 0 ? "+" : "") + Math.round(n * 10) / 10;
-    },
+    format: formatApproval,
     unit: "reputation"
   },
   {
@@ -382,6 +578,10 @@ export const METRICS = [
     title: "Population (scaled millions)",
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Raw total population.
+     */
     accessor: (ctx) => safeNum(ctx.totalPopulation),
     scale: scalePopulation,
     format: formatBigNumber,
@@ -396,6 +596,10 @@ export const METRICS = [
     title: "Influence Per Turn",
     category: "diplomacy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net influence per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldDiplomacy),
     format: formatSignedRate,
     // yield-icons.xml:185-193 maps YIELD_DIPLOMACY to blp:yield_influence.
@@ -409,6 +613,10 @@ export const METRICS = [
     title: "Happiness Per Turn",
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Net happiness per turn.
+     */
     accessor: (ctx) => safeNum(ctx.yieldHappiness),
     format: formatSignedRate,
     unit: "happiness / turn"
@@ -419,6 +627,10 @@ export const METRICS = [
     title: "Active Diplomatic Deals",
     category: "diplomacy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Ongoing deal count.
+     */
     accessor: (ctx) => safeNum(ctx.ongoingDealsCount),
     format: formatCount,
     unit: "deals"
@@ -430,6 +642,10 @@ export const METRICS = [
     title: "Active Trade Routes",
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Active trade-route count.
+     */
     accessor: (ctx) => safeNum(ctx.tradeRoutesCount),
     format: formatCount,
     unit: "routes"
@@ -443,8 +659,12 @@ export const METRICS = [
     title: "Military Power (combined unit strength)",
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Combined military power.
+     */
     accessor: (ctx) => safeNum(ctx.militaryPower),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "strength"
   },
   {
@@ -456,8 +676,12 @@ export const METRICS = [
     title: "Wonders Constructed",
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Wonder count.
+     */
     accessor: (ctx) => safeNum(ctx.wondersCount),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "wonders"
   },
   // ── Civ7 Test of Time triumph counts ───────────────────────────────
@@ -474,6 +698,10 @@ export const METRICS = [
     category: "age",
     factbookHidden: true,
     hidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Cultural triumph count.
+     */
     accessor: (ctx) => safeNum(ctx.triumphsCultural)
   },
   {
@@ -481,6 +709,10 @@ export const METRICS = [
     category: "age",
     factbookHidden: true,
     hidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Diplomatic triumph count.
+     */
     accessor: (ctx) => safeNum(ctx.triumphsDiplomatic)
   },
   {
@@ -488,6 +720,10 @@ export const METRICS = [
     category: "age",
     factbookHidden: true,
     hidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Economic triumph count.
+     */
     accessor: (ctx) => safeNum(ctx.triumphsEconomic)
   },
   {
@@ -495,6 +731,10 @@ export const METRICS = [
     category: "age",
     factbookHidden: true,
     hidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Scientific triumph count.
+     */
     accessor: (ctx) => safeNum(ctx.triumphsScientific)
   },
   {
@@ -502,6 +742,10 @@ export const METRICS = [
     category: "age",
     factbookHidden: true,
     hidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Militaristic triumph count.
+     */
     accessor: (ctx) => safeNum(ctx.triumphsMilitaristic)
   },
   {
@@ -509,6 +753,10 @@ export const METRICS = [
     category: "age",
     factbookHidden: true,
     hidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Expansionist triumph count.
+     */
     accessor: (ctx) => safeNum(ctx.triumphsExpansionist)
   },
   // Settlement cap utilization: settlements / cap × 100.
@@ -519,12 +767,7 @@ export const METRICS = [
     title: "Settlement Cap Utilization",
     category: "age",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP",
-    accessor: (ctx) => {
-      const n = safeNum(ctx.numSettlements);
-      const cap = safeNum(ctx.settlementCap);
-      if (n === undefined || !cap || cap <= 0) return undefined;
-      return (n / cap) * 100;
-    },
+    accessor: settlementCapPctAccessor,
     format: formatPercent,
     unit: "%"
   },
@@ -554,20 +797,8 @@ export const METRICS = [
     // Display-side we want the user-facing label "Stage 1" when the engine
     // says 0 (the first active stage). Shift every value up by 1 so the
     // Y axis range becomes 0..4 and engine=-1 plots cleanly as Y=0.
-    accessor: (ctx) => {
-      const s = safeNum(ctx.crisisStage);
-      if (s === undefined) return undefined;
-      return s < 0 ? 0 : s + 1;
-    },
-    format: (n) => {
-      const v = Math.max(0, Math.round(n));
-      if (v === 0) return "Pre-Crisis";
-      if (v === 1) return "Stage 1 (Begins)";
-      if (v === 2) return "Stage 2 (Intensifies)";
-      if (v === 3) return "Stage 3 (Culminates)";
-      if (v >= 4) return "Stage 4 (Ends)";
-      return "Stage " + v;
-    },
+    accessor: crisisStageAccessor,
+    format: formatCrisisStage,
     unit: "stage"
   },
   // ── Resources page metrics ─────────────────────────────────────────
@@ -577,8 +808,12 @@ export const METRICS = [
     label: "Resources",
     title: "Total Assigned Resources",
     category: "resources",
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Total assigned resources.
+     */
     accessor: (ctx) => safeNum(ctx.resourcesTotal),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "resources"
   },
   {
@@ -587,8 +822,12 @@ export const METRICS = [
     title: "Bonus Resources Assigned",
     category: "resources",
     factbookHidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Bonus resources assigned.
+     */
     accessor: (ctx) => safeNum(ctx.resourcesBonus),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "bonus"
   },
   {
@@ -597,8 +836,12 @@ export const METRICS = [
     title: "Empire Resources Assigned",
     category: "resources",
     factbookHidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Empire resources assigned.
+     */
     accessor: (ctx) => safeNum(ctx.resourcesEmpire),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "empire"
   },
   {
@@ -607,8 +850,12 @@ export const METRICS = [
     title: "City Resources Assigned",
     category: "resources",
     factbookHidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} City resources assigned.
+     */
     accessor: (ctx) => safeNum(ctx.resourcesCity),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "city"
   },
   {
@@ -617,8 +864,12 @@ export const METRICS = [
     title: "Factory Resources (Modern age)",
     category: "resources",
     factbookHidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Factory resources assigned.
+     */
     accessor: (ctx) => safeNum(ctx.resourcesFactory),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "factory"
   },
   {
@@ -627,8 +878,12 @@ export const METRICS = [
     title: "Treasure Resources (Exploration / Distant Lands)",
     category: "resources",
     factbookHidden: true,
+    /**
+     * @param {MetricCtx} ctx Per-player accessor context.
+     * @returns {number | undefined} Treasure resources assigned.
+     */
     accessor: (ctx) => safeNum(ctx.resourcesTreasure),
-    format: (n) => formatCount(Math.round(n)),
+    format: formatRoundedCount,
     unit: "treasure"
   },
   {
@@ -641,10 +896,7 @@ export const METRICS = [
     // Turn-1 fix: when the player has no cities yet, sumOwnedTiles
     // (sampler) returns undefined. Default to 0 so a settler-only civ
     // still appears at y=0 km² on turn 1 with a legend entry.
-    accessor: (ctx) => {
-      const v = safeNum(ctx.tilesOwned);
-      return v === undefined ? 0 : v;
-    },
+    accessor: landAccessor,
     scale: scaleLandArea,
     format: formatArea,
     // format() already appends "km²" to every value; keep unit short
@@ -653,8 +905,15 @@ export const METRICS = [
   }
 ];
 
+/**
+ * Look up a metric definition by id, falling back to the first metric.
+ * @param {string} id Metric id.
+ * @returns {MetricDef} The matching metric, or `METRICS[0]`.
+ */
 export function getMetric(id) {
-  return METRICS.find((m) => m.id === id) || METRICS[0];
+  // The catalog's inferred element type is looser than MetricDef (the hidden
+  // triumph entries omit `label`); cast at this boundary.
+  return /** @type {MetricDef} */ (METRICS.find((m) => m.id === id) || METRICS[0]);
 }
 
 dlog("metrics module loaded; registry size=", METRICS.length);
