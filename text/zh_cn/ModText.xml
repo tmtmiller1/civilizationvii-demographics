@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <ChineseText>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+            <Text>人口统计</Text>
+        </Row>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+            <Text>每回合历史图表、世界年鉴、全球关系环、冲突甘特图，以及每个已遇文明的原生成就进度条。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+            <Text>人口统计</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+            <Text>人口统计</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+            <Text>分数随时间变化</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+            <Text>采样器实时历史。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+            <Text>关闭</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+            <Text>你好。如果你能看到这句话，系统正常。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+            <Text>分数</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+            <Text>金库</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+            <Text>每回合金币</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+            <Text>每回合净金币收入。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+            <Text>定居点</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+            <Text>科技</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+            <Text>公民</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+            <Text>综合实力分数，与胜利界面一致。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+            <Text>当前金库余额。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+            <Text>拥有的城市和城镇总数。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+            <Text>拥有的科技总数。</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP">
+            <Text>拥有的公民总数。</Text>
+        </Row>
+    </ChineseText>
+</Database>

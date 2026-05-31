@@ -1,0 +1,45 @@
+{
+  "ordinal": {
+    "1": "제1차",
+    "2": "제2차",
+    "3": "제3차",
+    "4": "제4차",
+    "5": "제5차",
+    "n": "제{n}차"
+  },
+  "templates": {
+    "worldWar": "제{roman}차 세계 대전",
+    "greatWar": "{A} 대 {B} 대전 (+{n} 문명)",
+    "tripartite": "3국 전쟁 {A}–{B}–{C}",
+    "bilateral": "{ordinal} {A}–{B} 전쟁"
+  },
+  "ui": {
+    "attackers": "공격측:",
+    "defenders": "방어측:",
+    "declaredBy": "선전국:",
+    "years": "년",
+    "turns": "턴",
+    "concluded": "종결",
+    "ongoing": "진행 중"
+  },
+  "civAdjectives": {
+    "America": "아메리카",
+    "Arabia": "아라비아",
+    "Aztec": "아즈텍",
+    "China": "중국",
+    "Egypt": "이집트",
+    "England": "잉글랜드",
+    "France": "프랑스",
+    "Germany": "독일",
+    "Greece": "그리스",
+    "India": "인도",
+    "Iroquois": "이로쿼이",
+    "Japan": "일본",
+    "Ottoman": "오스만 제국",
+    "Persia": "페르시아",
+    "Rome": "로마",
+    "Russia": "러시아",
+    "Siam": "시암",
+    "Songhai": "송가이"
+  }
+}
