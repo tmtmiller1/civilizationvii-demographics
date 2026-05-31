@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="pt_BR"><Text>Demografia</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="pt_BR"><Text>Gráficos históricos por turno, almanaque mundial, anéis de relações globais, gráfico de Gantt de conflitos e barras de progresso de Triunfos nativos para cada civilização conhecida.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="pt_BR"><Text>Demografia</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="pt_BR"><Text>Demografia</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="pt_BR"><Text>Pontuação ao longo do tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="pt_BR"><Text>Histórico em tempo real do amostrador.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="pt_BR"><Text>Fechar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="pt_BR"><Text>Olá. Se você consegue ler isto, o sistema está funcionando.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="pt_BR"><Text>Pontuação</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="pt_BR"><Text>Tesouro</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="pt_BR"><Text>OPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="pt_BR"><Text>Renda de Ouro por turno (líquida).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="pt_BR"><Text>Assentamentos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="pt_BR"><Text>Tecnologias</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="pt_BR"><Text>Cívicos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="pt_BR"><Text>Pontuação de poder composta, o mesmo número usado na tela de Vitória.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="pt_BR"><Text>Saldo atual do tesouro.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="pt_BR"><Text>Número total de cidades e vilas que você possui.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="pt_BR"><Text>Número de nós de tecnologia totalmente pesquisados na árvore da era atual.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="pt_BR"><Text>Número de nós cívicos totalmente desbloqueados na árvore da era atual.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="pt_BR"><Text>PIB</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="pt_BR"><Text>Produto interno bruto pseudorrealista. Soma ponderada dos rendimentos por turno (Produção 1,0, Ouro 1,0, Ciência 1,2, Cultura 1,2, Comida 0,5, Influência 1,5), multiplicada pelos turnos decorridos e convertida em dólares.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="pt_BR"><Text>PPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="pt_BR"><Text>Produção por turno — o que suas cidades constroem.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="pt_BR"><Text>Ciência</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="pt_BR"><Text>Ciência por turno — impulsiona a pesquisa de tecnologias.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="pt_BR"><Text>Cultura</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="pt_BR"><Text>Cultura por turno — impulsiona o progresso dos cívicos.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="pt_BR"><Text>Produção Agrícola</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="pt_BR"><Text>Produção líquida de comida por turno em todos os assentamentos.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="pt_BR"><Text>Aprovação Diplomática</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="pt_BR"><Text>Agregado de reputação internacional. Soma das pontuações de relacionamento ponderadas entre todas as civilizações principais conhecidas (Aliada +5, Prestativa +3, Amigável +2, Neutra 0, Antipática -2, Hostil -3, Em Guerra -5) mais uma contribuição amortecida (0,3x) das cidades-estado das quais você é suserano.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="pt_BR"><Text>População</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="pt_BR"><Text>População real escalonada, derivada exponencialmente da contagem total de cidadãos.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="pt_BR"><Text>IPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="pt_BR"><Text>FPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="pt_BR"><Text>Rendimento líquido de Felicidade por turno.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="pt_BR"><Text>Influência diplomática líquida gerada por turno.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="pt_BR"><Text>Acordos em Andamento</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="pt_BR"><Text>Ações diplomáticas, empreendimentos, sanções e espionagem ativos envolvendo este líder.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="pt_BR"><Text>Rotas Comerciais</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="pt_BR"><Text>Número de rotas comerciais ativas que partem das cidades deste jogador.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="pt_BR"><Text>Área Territorial</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="pt_BR"><Text>Território total possuído em quilômetros quadrados, escalonado a partir dos hexágonos controlados.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="pt_BR"><Text>Dados Históricos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="pt_BR"><Text>Almanaque Mundial</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="pt_BR"><Text>Relações Globais</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="pt_BR"><Text>Opções</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="pt_BR"><Text>Economia</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="pt_BR"><Text>Poder</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="pt_BR"><Text>Conhecimento &amp; Influência</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="pt_BR"><Text>Triunfos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="pt_BR"><Text>Recursos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="pt_BR"><Text>Conflitos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="pt_BR"><Text>Guerras</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="pt_BR"><Text>Radar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="pt_BR"><Text>Corrida</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="pt_BR"><Text>Conclusão</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="pt_BR"><Text>Triunfos ao Longo do Tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="pt_BR"><Text>Uso do Limite</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="pt_BR"><Text>Porcentagem do limite de assentamentos que este jogador utilizou. 100% significa que está no limite.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="pt_BR"><Text>Progresso da Era</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="pt_BR"><Text>Quão próxima a era atual está do fim. Igual para todas as civilizações.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="pt_BR"><Text>Estágio da Crise</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="pt_BR"><Text>Estágio atual da crise (0 = nenhum, 3 = crise máxima). Valor válido para todo o jogo.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="pt_BR"><Text>Empilhado</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="pt_BR"><Text>Total</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="pt_BR"><Text>Bônus</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="pt_BR"><Text>Império</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="pt_BR"><Text>Cidade</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="pt_BR"><Text>Fábrica</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="pt_BR"><Text>Tesouro</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="pt_BR"><Text>Poderio Militar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="pt_BR"><Text>Soma da força de combate de todas as unidades militares deste jogador (formações terrestres, navais e aéreas).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="pt_BR"><Text>Maravilhas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="pt_BR"><Text>Total de maravilhas construídas por este jogador em todas as eras.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="pt_BR"><Text>(ainda não implementado)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="pt_BR"><Text>vs. mundo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="pt_BR"><Text>Métrica</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="pt_BR"><Text>Valor</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="pt_BR"><Text>Classificação</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="pt_BR"><Text>Mostrar civilizações desconhecidas na legenda</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="pt_BR"><Text>Suavizar linhas do gráfico (média móvel de 3 turnos)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="pt_BR"><Text>Mostrar civilizações eliminadas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="pt_BR"><Text>Limpar histórico</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="pt_BR"><Text>Atualizar amostra agora</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="pt_BR"><Text>Civilização Desconhecida</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="pt_BR"><Text>Você ainda não conheceu esta civilização. Ative "Mostrar nomes de civilizações e cidades-estado desconhecidas" nas Opções para revelar os nomes reais.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="pt_BR"><Text>Cidade-Estado Desconhecida</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="pt_BR"><Text>Você ainda não conheceu esta cidade-estado. Ative "Mostrar nomes de civilizações e cidades-estado desconhecidas" nas Opções para revelar os nomes reais.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="pt_BR"><Text>Mostrar nomes de civilizações e cidades-estado desconhecidas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="pt_BR"><Text>Quando desativado (padrão), civilizações e cidades-estado que você ainda não conheceu são exibidas como espaços reservados genéricos "Desconhecido" nos gráficos, no almanaque e nos anéis de relações globais.</Text></Replace>
     </LocalizedText>
 </Database>

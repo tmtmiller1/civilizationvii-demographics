@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
     <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ko_KR"><Text>인구 통계</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ko_KR"><Text>턴별 역사 그래프, 세계 정보 자료집, 글로벌 관계 링, 분쟁 간트 차트, 그리고 만난 모든 문명의 네이티브 위업 진행 막대를 제공합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ko_KR"><Text>인구 통계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ko_KR"><Text>인구 통계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ko_KR"><Text>시간에 따른 점수</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ko_KR"><Text>샘플러로부터 실시간 기록.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="ko_KR"><Text>닫기</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ko_KR"><Text>안녕하세요. 이 글이 보인다면 하니스가 정상 작동 중입니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ko_KR"><Text>점수</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ko_KR"><Text>국고</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ko_KR"><Text>GPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="ko_KR"><Text>턴당 금 수입(순).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ko_KR"><Text>정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ko_KR"><Text>기술</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ko_KR"><Text>사회 제도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ko_KR"><Text>승리 화면에서 사용하는 것과 동일한 종합 국력 점수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="ko_KR"><Text>현재 국고 잔액.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="ko_KR"><Text>보유한 도시와 마을의 총 개수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ko_KR"><Text>현재 시대 트리에서 완전히 연구된 기술 노드의 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ko_KR"><Text>현재 시대 트리에서 완전히 잠금 해제된 사회 제도 노드의 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ko_KR"><Text>GDP</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ko_KR"><Text>유사 현실적 국내 총생산. 턴당 산출량의 가중 합계(생산력 1.0, 금 1.0, 과학 1.2, 문화 1.2, 식량 0.5, 영향력 1.5)에 경과한 턴 수를 곱하고 달러 단위로 환산한 값.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ko_KR"><Text>PPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ko_KR"><Text>턴당 생산력 — 도시가 건설하는 것.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 과학 — 기술 연구를 촉진합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ko_KR"><Text>문화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 문화 — 사회 제도 진행을 촉진합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ko_KR"><Text>작물 산출량</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ko_KR"><Text>모든 정착지에 걸친 턴당 순 식량 산출량.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ko_KR"><Text>외교 지지도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ko_KR"><Text>국제 평판 총합. 만난 모든 주요 문명과의 가중 관계 점수의 합계(동맹 +5, 우호적 +3, 친근 +2, 중립 0, 비우호적 -2, 적대적 -3, 전쟁 중 -5)에 종주국으로 있는 도시 국가로부터의 감쇠된(0.3배) 기여분을 더한 값.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ko_KR"><Text>인구</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ko_KR"><Text>총 시민 수에서 지수적으로 도출된, 환산된 실제 세계 인구.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ko_KR"><Text>IPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ko_KR"><Text>HPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="ko_KR"><Text>턴당 순 행복도 산출량.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="ko_KR"><Text>턴당 생성되는 순 외교 영향력.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="ko_KR"><Text>진행 중인 거래</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="ko_KR"><Text>이 지도자가 관련된 활성 외교 활동, 활동 계획, 제재, 첩보 활동.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="ko_KR"><Text>교역로</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="ko_KR"><Text>이 플레이어의 도시에서 출발하는 활성 교역로의 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="ko_KR"><Text>영토 면적</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="ko_KR"><Text>통제 중인 육각 타일로부터 환산한, 보유 영토 총 면적(제곱킬로미터).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="ko_KR"><Text>역사 데이터</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="ko_KR"><Text>세계 정보 자료집</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ko_KR"><Text>글로벌 관계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ko_KR"><Text>옵션</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ko_KR"><Text>경제</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ko_KR"><Text>국력</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="ko_KR"><Text>지식 &amp; 영향력</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="ko_KR"><Text>위업</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="ko_KR"><Text>자원</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="ko_KR"><Text>분쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="ko_KR"><Text>전쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ko_KR"><Text>레이더</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="ko_KR"><Text>경쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="ko_KR"><Text>완료</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="ko_KR"><Text>시간에 따른 위업</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="ko_KR"><Text>상한 활용도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="ko_KR"><Text>이 플레이어가 사용한 정착지 상한의 백분율. 100%는 한계에 도달했음을 의미합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="ko_KR"><Text>시대 진행도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="ko_KR"><Text>현재 시대가 종료에 얼마나 가까운지. 모든 문명에 동일하게 적용됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="ko_KR"><Text>위기 단계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="ko_KR"><Text>현재 위기 단계(0 = 없음, 3 = 최고조 위기). 게임 전체에 적용되는 값.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ko_KR"><Text>누적</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ko_KR"><Text>합계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="ko_KR"><Text>보너스</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="ko_KR"><Text>제국</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="ko_KR"><Text>도시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="ko_KR"><Text>공장</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="ko_KR"><Text>보물</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="ko_KR"><Text>군사력</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="ko_KR"><Text>이 플레이어의 모든 군사 유닛(육군, 해군, 공군 편성)에 걸친 전투력의 합계.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="ko_KR"><Text>불가사의</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="ko_KR"><Text>이 플레이어가 모든 시대에 걸쳐 건설한 불가사의의 총 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="ko_KR"><Text>(아직 구현되지 않음)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="ko_KR"><Text>세계 대비</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="ko_KR"><Text>지표</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="ko_KR"><Text>값</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="ko_KR"><Text>순위</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ko_KR"><Text>범례에 만나지 않은 문명 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ko_KR"><Text>차트 선 부드럽게(3턴 이동 평균)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ko_KR"><Text>제거된 문명 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="ko_KR"><Text>기록 지우기</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="ko_KR"><Text>지금 샘플 새로 고침</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="ko_KR"><Text>만나지 않은 문명</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="ko_KR"><Text>아직 이 문명을 만나지 않았습니다. 실제 이름을 표시하려면 옵션에서 "만나지 않은 문명 및 도시 국가의 이름 표시"를 활성화하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="ko_KR"><Text>만나지 않은 도시 국가</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ko_KR"><Text>아직 이 도시 국가를 만나지 않았습니다. 실제 이름을 표시하려면 옵션에서 "만나지 않은 문명 및 도시 국가의 이름 표시"를 활성화하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ko_KR"><Text>만나지 않은 문명 및 도시 국가의 이름 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ko_KR"><Text>꺼져 있을 때(기본값) 아직 만나지 않은 문명과 도시 국가는 차트, 정보 자료집, 글로벌 관계 링에서 일반적인 "만나지 않음" 자리 표시자로 표시됩니다.</Text></Replace>
     </LocalizedText>
 </Database>

@@ -58,5 +58,224 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="es_ES">
             <Text>Número total de tecnologías poseídas.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="es_ES">
+            <Text>Número de nodos cívicos completamente desbloqueados en el árbol de la era actual.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="es_ES">
+            <Text>PIB</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="es_ES">
+            <Text>Producto interior bruto pseudorrealista. Suma ponderada de los rendimientos por turno (Producción 1.0, Oro 1.0, Ciencia 1.2, Cultura 1.2, Alimentos 0.5, Influencia 1.5), multiplicada por los turnos transcurridos y escalada a dólares.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="es_ES">
+            <Text>PPT</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="es_ES">
+            <Text>Producción por turno: lo que construyen tus ciudades.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="es_ES">
+            <Text>Ciencia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="es_ES">
+            <Text>Ciencia por turno: impulsa la investigación de tecnologías.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="es_ES">
+            <Text>Cultura</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="es_ES">
+            <Text>Cultura por turno: impulsa el progreso de los cívicos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="es_ES">
+            <Text>Rendimiento agrícola</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="es_ES">
+            <Text>Producción neta de alimentos por turno en todos los asentamientos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="es_ES">
+            <Text>Aprobación diplomática</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="es_ES">
+            <Text>Agregado de reputación internacional. Suma de las puntuaciones de relación ponderadas con todas las civilizaciones principales encontradas (Aliada +5, Servicial +3, Amistosa +2, Neutral 0, Antipática -2, Hostil -3, En guerra -5) más una contribución amortiguada (0.3x) de las ciudades estado de las que eres protector.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="es_ES">
+            <Text>Población</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="es_ES">
+            <Text>Población real escalada, derivada exponencialmente del recuento total de ciudadanos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="es_ES">
+            <Text>IPT</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="es_ES">
+            <Text>HPT</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="es_ES">
+            <Text>Rendimiento neto de felicidad por turno.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="es_ES">
+            <Text>Influencia diplomática neta generada por turno.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="es_ES">
+            <Text>Acuerdos en curso</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="es_ES">
+            <Text>Acciones diplomáticas, iniciativas, sanciones y espionaje activos que involucran a este líder.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="es_ES">
+            <Text>Rutas comerciales</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="es_ES">
+            <Text>Número de rutas comerciales activas que parten de las ciudades de este jugador.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="es_ES">
+            <Text>Superficie terrestre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="es_ES">
+            <Text>Territorio total poseído en kilómetros cuadrados, escalado a partir de las casillas hexagonales controladas.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="es_ES">
+            <Text>Datos históricos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="es_ES">
+            <Text>Anuario mundial</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="es_ES">
+            <Text>Relaciones globales</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="es_ES">
+            <Text>Opciones</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="es_ES">
+            <Text>Economía</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="es_ES">
+            <Text>Poder</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="es_ES">
+            <Text>Conocimiento e Influencia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="es_ES">
+            <Text>Triumphs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="es_ES">
+            <Text>Recursos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="es_ES">
+            <Text>Conflictos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="es_ES">
+            <Text>Guerras</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="es_ES">
+            <Text>Radar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="es_ES">
+            <Text>Carrera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="es_ES">
+            <Text>Finalización</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="es_ES">
+            <Text>Triumphs a lo largo del tiempo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="es_ES">
+            <Text>Uso del límite</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="es_ES">
+            <Text>Porcentaje del límite de asentamientos que ha utilizado este jugador. 100% significa que está en el límite.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="es_ES">
+            <Text>Progreso de la era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="es_ES">
+            <Text>Lo cerca que está la era actual de terminar. Igual para todas las civilizaciones.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="es_ES">
+            <Text>Fase de crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="es_ES">
+            <Text>Fase de crisis actual (0 = ninguna, 3 = crisis máxima). Valor para toda la partida.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="es_ES">
+            <Text>Apilado</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="es_ES">
+            <Text>Total</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="es_ES">
+            <Text>Bonificación</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="es_ES">
+            <Text>Imperio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="es_ES">
+            <Text>Ciudad</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="es_ES">
+            <Text>Fábrica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="es_ES">
+            <Text>Tesoro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="es_ES">
+            <Text>Poder militar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="es_ES">
+            <Text>Fuerza de combate sumada de todas las unidades militares de este jugador (formaciones terrestres, navales y aéreas).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="es_ES">
+            <Text>Maravillas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="es_ES">
+            <Text>Total de maravillas construidas por este jugador en todas las eras.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="es_ES">
+            <Text>(aún no implementado)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="es_ES">
+            <Text>frente al mundo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="es_ES">
+            <Text>Métrica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="es_ES">
+            <Text>Valor</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="es_ES">
+            <Text>Posición</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="es_ES">
+            <Text>Mostrar civilizaciones no encontradas en la leyenda</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="es_ES">
+            <Text>Suavizar las líneas del gráfico (media móvil de 3 turnos)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="es_ES">
+            <Text>Mostrar civilizaciones eliminadas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="es_ES">
+            <Text>Borrar historial</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="es_ES">
+            <Text>Actualizar muestra ahora</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="es_ES">
+            <Text>Civilización no encontrada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="es_ES">
+            <Text>Todavía no has encontrado esta civilización. Activa "Mostrar nombres de civilizaciones y ciudades estado no encontradas" en Opciones para revelar los nombres reales.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="es_ES">
+            <Text>Ciudad estado no encontrada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="es_ES">
+            <Text>Todavía no has encontrado esta ciudad estado. Activa "Mostrar nombres de civilizaciones y ciudades estado no encontradas" en Opciones para revelar los nombres reales.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="es_ES">
+            <Text>Mostrar nombres de civilizaciones y ciudades estado no encontradas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="es_ES">
+            <Text>Cuando está desactivado (predeterminado), las civilizaciones y ciudades estado que aún no has encontrado se muestran como marcadores genéricos "No encontrada" en las gráficas, el anuario y los anillos de relaciones globales.</Text>
+        </Replace>
     </LocalizedText>
 </Database>
