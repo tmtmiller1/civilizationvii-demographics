@@ -21,7 +21,19 @@ const ENGINE_GLOBALS = {
   Input: "readonly",
   WorldUI: "readonly",
   InterfaceMode: "readonly",
-  Audio: "readonly"
+  Audio: "readonly",
+  GameTutorial: "readonly",
+  Chart: "readonly",
+  HallofFame: "readonly",
+  Loading: "readonly",
+  Coherent: "readonly",
+  Component: "readonly",
+  DiplomacyActionTypes: "readonly",
+  YieldTypes: "readonly",
+  ProgressionTreeNodeState: "readonly",
+  UIViewExperience: "readonly",
+  VictoryManager: "readonly",
+  SerialBase: "readonly"
 };
 
 const BROWSER_GLOBALS = {
@@ -36,7 +48,10 @@ const BROWSER_GLOBALS = {
   Event: "readonly",
   HTMLElement: "readonly",
   URL: "readonly",
-  navigator: "readonly"
+  navigator: "readonly",
+  Proxy: "readonly",
+  globalThis: "readonly",
+  structuredClone: "readonly"
 };
 
 export default [
