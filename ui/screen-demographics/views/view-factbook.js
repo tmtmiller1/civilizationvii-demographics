@@ -68,7 +68,7 @@ import { safePlaySound } from "/demographics/ui/demographics-audio.js";
  * @property {number} total Count of civs with a numeric value.
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

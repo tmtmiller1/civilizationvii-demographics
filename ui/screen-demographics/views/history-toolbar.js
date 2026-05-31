@@ -42,7 +42,7 @@ import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/
  * @typedef {import("/demographics/ui/screen-demographics/views/view-history.js").HistoryCtx} HistoryCtx
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

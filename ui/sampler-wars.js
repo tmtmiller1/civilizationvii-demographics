@@ -73,13 +73,15 @@ import DemographicsStorage from "/demographics/ui/demographics-storage.js";
  * @property {number | null} headerStartTurn Age-local declaration turn.
  */
 
+// Flip to true for local debugging (committed off, matching the rest of the mod).
+const DEMOGRAPHICS_DEBUG = false;
 /**
- * Informational logger; always emits.
+ * Informational logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
  * @returns {void}
  */
 function ilog(...a) {
-  console.warn("[Demographics.sampler]", ...a);
+  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
 }
 
 // ---- war tracker ---------------------------------------------------------

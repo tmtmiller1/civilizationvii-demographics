@@ -8,7 +8,7 @@
 // Engine APIs are not safe to touch before whenReady resolves, doing
 // so silently kills the module with no stack trace.
 
-const DEMOGRAPHICS_DEBUG = true;
+const DEMOGRAPHICS_DEBUG = false;
 
 /**
  * Debug logger, no-op unless {@link DEMOGRAPHICS_DEBUG} is set.

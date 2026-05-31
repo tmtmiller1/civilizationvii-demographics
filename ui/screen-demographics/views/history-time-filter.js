@@ -23,7 +23,7 @@ import { playActivate } from "/demographics/ui/demographics-audio.js";
  * @property {number} max Last turn shown.
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

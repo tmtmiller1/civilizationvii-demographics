@@ -6,7 +6,7 @@
 // Split out of view-relations.js so relations-ring-svg.js / relations-edges.js
 // / relations-filters.js can import these without duplicating them.
 
-const DEMOGRAPHICS_DEBUG = true;
+const DEMOGRAPHICS_DEBUG = false;
 
 /**
  * One relationship edge between two ring nodes. `a`/`b` are player ids; the

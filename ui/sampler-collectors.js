@@ -101,7 +101,7 @@ import {
  * @property {number} [crisisStageMax] Game-wide crisis stage max (stamped).
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

@@ -12,7 +12,7 @@
 // Either path now ends with a VISIBLE toast on the screen so the user sees
 // confirmation — the previous version succeeded silently and looked broken.
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.

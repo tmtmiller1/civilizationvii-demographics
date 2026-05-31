@@ -60,7 +60,7 @@ import * as ViewAbout from "/demographics/ui/screen-demographics/views/view-abou
  * @property {() => void} requestReload Reload history and re-render.
  */
 
-const DBG = true;
+const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
