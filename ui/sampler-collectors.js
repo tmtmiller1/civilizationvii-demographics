@@ -127,7 +127,8 @@ function yieldEnum(key) {
       if (typeof v === "number" || typeof v === "string") return v;
     }
   } catch (_e) {
-    /* swallow */
+    // YieldTypes[key] access can throw if the enum global is absent; treat the
+    // yield as unavailable.
   }
   return undefined;
 }
@@ -167,7 +168,8 @@ function _resolveFullyUnlockedState() {
       return ProgressionTreeNodeState.NODE_STATE_FULLY_UNLOCKED;
     }
   } catch (_) {
-    /* swallow */
+    // ProgressionTreeNodeState global can be absent / throw in the sandbox; fall
+    // back to the depth-unlocked heuristic.
   }
   return undefined;
 }
@@ -269,7 +271,8 @@ export function getCurrentAgeType() {
       }
     }
   } catch (_) {
-    /* */
+    // Game.age / GameInfo.Ages.lookup() can be absent / throw before the game
+    // is fully loaded; report the age as unknown.
   }
   return undefined;
 }
@@ -313,7 +316,8 @@ function getTreesForSystem(systemType) {
       }
     }
   } catch (_) {
-    /* */
+    // Iterating GameInfo.ProgressionTrees can throw if the table is absent;
+    // cache whatever was collected (possibly empty).
   }
   _treesBySystemAndAge.set(cacheKey, list);
   return list;
@@ -441,7 +445,8 @@ function collectMet(ctx, id, p) {
       }
     }
   } catch (_) {
-    /* leave undefined */
+    // getLocalPlayerID() / getPlayer().Diplomacy can be null / throw mid
+    // age-transition; leave ctx.met undefined.
   }
 }
 
@@ -460,13 +465,15 @@ function collectRawTypes(ctx, p) {
     rawLeader = p.leaderType ?? p.LeaderType;
     if (rawLeader !== undefined && rawLeader !== null) ctx.leaderType = rawLeader;
   } catch (_e) {
-    /* ignore */
+    // p.leaderType property access can throw on a stale player handle; leave the
+    // raw leader type undefined.
   }
   try {
     rawCiv = p.civilizationType ?? p.CivilizationType;
     if (rawCiv !== undefined && rawCiv !== null) ctx.civType = rawCiv;
   } catch (_e) {
-    /* ignore */
+    // p.civilizationType property access can throw on a stale player handle;
+    // leave the raw civ type undefined.
   }
   return { rawLeader, rawCiv };
 }
@@ -483,7 +490,8 @@ function _composeLocale(tag) {
     const s = Locale.compose(tag);
     if (typeof s === "string" && s.length > 0) return s;
   } catch (_) {
-    /* */
+    // Locale.compose() can throw on a malformed tag; report the tag as
+    // uncomposable.
   }
   return undefined;
 }
@@ -537,7 +545,8 @@ function lookupInfoRow(table, raw, typeField) {
     if (typeof GameInfo === "undefined" || !table) return null;
     return _lookupRowDirect(table, raw) || _lookupRowByIteration(table, raw, typeField);
   } catch (_) {
-    /* swallow */
+    // table.lookup() / table iteration can throw if GameInfo isn't ready; treat
+    // the row as not found.
   }
   return null;
 }
@@ -557,7 +566,8 @@ function resolveDisplayName(row, typeField, raw, prefix, fallback) {
     const nm = row?.Name;
     if (nm) return _composeLocale(nm) || String(nm);
   } catch (_) {
-    /* */
+    // row.Name access can throw on a proxy GameInfo row; fall through to the
+    // type-string prettifier.
   }
   const typeStr = row?.[typeField] || (typeof raw === "string" ? raw : "");
   if (typeStr) return _prettifyType(typeStr, prefix);
@@ -600,7 +610,8 @@ function resolveCivName(p, civRow, rawCiv) {
       return _composeLocale(full) || full;
     }
   } catch (_) {
-    /* */
+    // p.civilizationName / p.civilizationFullName access can throw on a stale
+    // handle; fall through to the GameInfo-row lookup.
   }
   // Final fallback: the GameInfo row found by iteration (legacy path).
   return resolveDisplayName(civRow, "CivilizationType", rawCiv, "CIVILIZATION_", "");
@@ -681,7 +692,8 @@ function collectColors(ctx, id) {
       }
     }
   } catch (_) {
-    /* */
+    // UI.Player.get*ColorValueAsString() can throw for an unresolved player;
+    // leave the banner colors unset.
   }
 }
 
@@ -785,7 +797,8 @@ function _readFiniteProp(obj, prop) {
     const v = obj[prop];
     if (typeof v === "number" && isFinite(v)) return v;
   } catch (_e) {
-    /* ignore */
+    // Reading obj[prop] off an engine Stats handle can throw mid-transition;
+    // treat the property as unavailable.
   }
   return undefined;
 }
@@ -955,7 +968,8 @@ function _wonderComponentType(wc) {
     if (!con || !con.complete || con.damaged) return undefined;
     return _constructibleTypeString(con.type);
   } catch (_) {
-    /* per-wonder failure shouldn't kill the loop */
+    // Constructibles.getByComponentID() can throw for a stale ComponentID; skip
+    // this one wonder rather than failing the whole loop.
   }
   return undefined;
 }
@@ -981,7 +995,8 @@ function buildUnitStatsByType() {
       }
     }
   } catch (_) {
-    /* ignore — empty map means 0 power, not a kill */
+    // Iterating GameInfo.Unit_Stats can throw if the table is absent; an empty
+    // map just means 0 power, not a kill-switch trip.
   }
   return statsByType;
 }
@@ -1099,7 +1114,8 @@ function _sumUnitStrengths(ids, statsByType) {
         counted++;
       }
     } catch (_) {
-      /* skip one bad unit, never trip the kill switch */
+      // Units.get(uid) can throw for a unit destroyed mid-iteration; skip that
+      // one unit rather than tripping the kill switch.
     }
   }
   return { total, counted };
@@ -1170,7 +1186,8 @@ function collectTriumphs(ctx, p) {
         if (_tallyTriumphRow(ctx, pl, row)) inProgress++;
       }
     } catch (_) {
-      /* */
+      // Iterating GameInfo.Legacies / probing the player Legacies handle can
+      // throw; keep whatever triumphs were tallied before the throw.
     }
     ctx.triumphsInProgress = inProgress;
   });
@@ -1256,7 +1273,10 @@ function collectVictoryPoints(ctx, p) {
       for (const row of GameInfo.Victories) {
         _captureVictoryRow(ctx, v, row);
       }
-    } catch (_) {}
+    } catch (_) {
+      // Iterating GameInfo.Victories can throw if the table is absent; keep the
+      // victory points captured so far (all default to 0).
+    }
   });
 }
 
@@ -1277,7 +1297,10 @@ function _captureVictoryRow(ctx, v, row) {
     if (typeof pts === "number" && isFinite(pts) && pts > 0) {
       ctx[key] = pts;
     }
-  } catch (_) {}
+  } catch (_) {
+    // v.getPointsForVictoryType() can throw pre-Modern age; leave this victory
+    // point at its 0 default.
+  }
 }
 
 /**
@@ -1328,7 +1351,8 @@ function _csSuzerainScore(other, id) {
       if (suz === id) return 2;
     }
   } catch (_) {
-    /* */
+    // other.Influence.getSuzerain() can throw for a non-CS / unresolved player;
+    // treat as no suzerainty contribution.
   }
   return 0;
 }
@@ -1423,7 +1447,8 @@ function _sumApprovalScores(dip, id) {
       cs += part.cs;
     }
   } catch (_) {
-    /* */
+    // Players.getAlive() can throw mid age-transition; return whatever scores
+    // accumulated before the throw.
   }
   return { major, cs };
 }
@@ -1463,7 +1488,8 @@ function _resourceClassByType(resType) {
     const def = GameInfo.Resources.lookup(resType);
     return def?.ResourceClassType || def?.classType;
   } catch (_) {
-    /* */
+    // GameInfo.Resources.lookup() can throw on an unknown resType; treat the
+    // resource class as unknown.
   }
   return undefined;
 }
@@ -1611,7 +1637,8 @@ export function buildPlayerCtx(id) {
   try {
     ctx.stats = p.Stats;
   } catch (_e) {
-    /* ignore */
+    // p.Stats accessor can throw on a stale player handle; leave ctx.stats
+    // undefined so downstream collectors skip stats-derived metrics.
   }
   const stats = ctx.stats;
 

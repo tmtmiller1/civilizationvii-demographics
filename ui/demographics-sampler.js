@@ -71,7 +71,8 @@ function getPollEveryNTurns() {
     const n = Math.round(Number(v));
     if (Number.isFinite(n) && n >= 1) return n;
   } catch (_) {
-    /* */
+    // DemographicsSettings.getSetting() reads localStorage, which can be absent
+    // / throw in the sandbox; fall back to sampling every turn.
   }
   return 1;
 }
@@ -274,7 +275,8 @@ function probeCrisisEventType() {
         const v = cfg.getValue(k);
         if (typeof v === "string" && /^[A-Z_]+_CRISIS_[A-Z_]+$/.test(v)) return v;
       } catch (_) {
-        /* */
+        // Configuration.getGame().getValue(k) can throw on unknown keys; try the
+        // next candidate key.
       }
     }
     return undefined;
@@ -315,7 +317,8 @@ function _readCrisisStageMax(cm, out) {
         out.crisisStageMax = t;
       }
     } catch (_) {
-      /* */
+      // cm.getCrisisStageTriggerPercent(0, st) can throw for out-of-range stages;
+      // skip this stage and keep the max seen so far.
     }
   }
 }
@@ -331,10 +334,16 @@ function readAgeProgress(out) {
   let cur, max;
   try {
     cur = apm.getCurrentAgeProgressionPoints();
-  } catch (_) {}
+  } catch (_) {
+    // apm.getCurrentAgeProgressionPoints() can throw mid age-transition; leave
+    // cur undefined so the pct stays unset.
+  }
   try {
     max = apm.getMaxAgeProgressionPoints();
-  } catch (_) {}
+  } catch (_) {
+    // apm.getMaxAgeProgressionPoints() can throw mid age-transition; leave max
+    // undefined so the pct stays unset.
+  }
   if (typeof cur === "number" && typeof max === "number" && max > 0) {
     out.ageProgressPct = (cur / max) * 100;
   }
@@ -790,7 +799,8 @@ function resetSamplerState() {
       if (last && typeof last.turn === "number") lastSampledTurn = last.turn;
     }
   } catch (_) {
-    /* */
+    // DemographicsStorage.load() can throw before the player bag is ready; leave
+    // lastSampledTurn at its default so the first turn samples normally.
   }
 }
 
@@ -840,6 +850,8 @@ function _storedSampleCount() {
   try {
     return DemographicsStorage.load?.()?.samples?.length || 0;
   } catch (_) {
+    // DemographicsStorage.load() can throw before the player bag is ready; treat
+    // as zero stored samples.
     return 0;
   }
 }

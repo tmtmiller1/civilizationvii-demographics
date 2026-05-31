@@ -161,7 +161,8 @@ function getMetMajorIds(localPid) {
         try {
           if (isMetMajor(id, localPid, humanDiplo)) out.push(id);
         } catch (_) {
-          /* skip */
+          // Players.get(id)/p.isMajor/humanDiplo.hasMet(id) can throw per-id;
+          // skip that player and keep scanning the rest.
         }
       }
       return out;
@@ -183,7 +184,8 @@ function collectAliveIdsPrimary() {
       if (Array.isArray(arr)) ids = arr.slice();
     }
   } catch (_) {
-    /* */
+    // Players.getAliveIds() can throw at the engine boundary; fall back to []
+    // (caller then tries collectAliveIdsFallback).
   }
   return ids;
 }
@@ -207,7 +209,7 @@ function collectAliveIdsFallback() {
       }
     }
   } catch (_) {
-    /* */
+    // Players.getAlive() can throw at the engine boundary; fall back to [].
   }
   return ids;
 }
@@ -326,7 +328,8 @@ function localeComposeSafe(key) {
       const s = Locale.compose(key);
       if (typeof s === "string" && s.length > 0) return s;
     } catch (_) {
-      /* */
+      // Locale.compose(key) can throw on a malformed key; fall through to the
+      // raw key below.
     }
   }
   return key;
@@ -345,7 +348,8 @@ function csNameFromCivType(p) {
       if (row?.Name) return localeComposeSafe(row.Name);
     }
   } catch (_) {
-    /* */
+    // GameInfo.Civilizations.lookup(p.civilizationType) can throw at the
+    // engine boundary; fall back to null.
   }
   return null;
 }
@@ -570,7 +574,8 @@ function readTopTab(settings) {
     topTab = settings?.getSetting?.("relationsTopTab", "civ") || "civ";
     if (!["civ", "cs"].includes(topTab)) topTab = "civ";
   } catch (_) {
-    /* */
+    // settings.getSetting("relationsTopTab") can throw at the storage
+    // boundary; keep the "civ" default.
   }
   return topTab;
 }
@@ -584,6 +589,8 @@ function readShowUnmetNames(settings) {
   try {
     return !!settings?.getSetting?.("showUnmetNames", false);
   } catch (_) {
+    // settings.getSetting("showUnmetNames") can throw at the storage
+    // boundary; default to false (mask unmet names).
     return false;
   }
 }
@@ -603,6 +610,8 @@ function readCsViewerPid(settings, localId, metIds) {
     if (typeof saved === "number" && metIds.includes(saved)) csViewerPid = saved;
     else if (typeof localId === "number") csViewerPid = localId;
   } catch (_) {
+    // settings.getSetting("relationsCsViewerPid") can throw at the storage
+    // boundary; fall back to the local player.
     csViewerPid = localId;
   }
   return csViewerPid;
@@ -1008,7 +1017,10 @@ function buildViewerDropdown(rs) {
     rs.csViewerPid = newPid;
     try {
       rs.settings?.setSetting?.("relationsCsViewerPid", newPid);
-    } catch (_) {}
+    } catch (_) {
+      // settings.setSetting persistence is best-effort (Coherent storage is
+      // unreliable here); the in-memory rs.csViewerPid already holds truth.
+    }
     dlog("CS viewer changed to pid", newPid);
     rs.repaint();
   });
@@ -1151,7 +1163,10 @@ function buildTabBars(rs) {
       rs.topTab = id;
       try {
         rs.settings?.setSetting?.("relationsTopTab", id);
-      } catch (_) {}
+      } catch (_) {
+        // settings.setSetting persistence is best-effort; rs.topTab already
+        // holds the live value for this session.
+      }
       rs.repaint();
     })
   );
@@ -1194,6 +1209,8 @@ function makeFilterSetReader(settings) {
     try {
       arr = settings?.getSetting?.(key, dflt);
     } catch (_) {
+      // settings.getSetting(filter key) can throw at the storage boundary;
+      // fall back to the all-on default set.
       arr = dflt;
     }
     if (!Array.isArray(arr)) arr = dflt;
@@ -1215,7 +1232,10 @@ function makeFilterSetWriter(settings) {
     const key = filterKeyForState(top);
     try {
       settings?.setSetting?.(key, Array.from(set));
-    } catch (_) {}
+    } catch (_) {
+      // settings.setSetting persistence is best-effort; the _filterSetCache
+      // write above is the authoritative in-memory store.
+    }
   };
 }
 

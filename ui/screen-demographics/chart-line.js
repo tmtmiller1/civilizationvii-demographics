@@ -134,14 +134,14 @@ function lookupLeaderName(leaderType) {
           try {
             return Locale.compose(row.Name);
           } catch (_) {
-            /* fall through */
+            // Locale.compose may throw on a malformed tag; fall through to the raw row.Name.
           }
         }
         return row.Name;
       }
     }
   } catch (_) {
-    /* swallow — fall through to fallback */
+    // GameInfo.Leaders.lookup may be absent or throw; fall through to null.
   }
   return null;
 }
@@ -352,7 +352,7 @@ function liveCivNameFallback(pid) {
     const composed = composeLocale(live);
     if (composed && composed.length > 0) return [composed];
   } catch (_) {
-    /* */
+    // Players.get / player.civilizationName may be absent or throw; fall back to empty list.
   }
   return [];
 }
@@ -475,7 +475,9 @@ function teardownExistingChart(host) {
   if (cur && typeof cur.destroy === "function") {
     try {
       cur.destroy();
-    } catch (_) {}
+    } catch (_) {
+      // Chart#destroy may throw on an already-disposed instance; ignore.
+    }
   }
   host._demographicsChart = null;
 }
@@ -531,7 +533,7 @@ function applyEngineChartDefaults() {
     }
     _engineDefaultsApplied = true;
   } catch (_) {
-    /* */
+    // Chart.defaults may be frozen/absent before hof-chart loads; leave stock defaults.
   }
 }
 
@@ -551,7 +553,7 @@ function applyShowEliminated(allSeries) {
       return allSeries.filter((s) => !s.eliminated);
     }
   } catch (_) {
-    /* */
+    // DemographicsSettings.getSetting may throw; fall back to showing all series.
   }
   return allSeries;
 }
@@ -598,6 +600,7 @@ function resolveMetricMeta(metricId) {
   try {
     return getMetric(metricId);
   } catch (_) {
+    // getMetric may throw on an unknown metric id; fall back to null metadata.
     return null;
   }
 }
@@ -638,7 +641,7 @@ function applyUnmetNames(allSeries) {
   try {
     showUnmet = !!DemographicsSettings.getSetting("showUnmetNames", false);
   } catch (_) {
-    /* */
+    // DemographicsSettings.getSetting may throw; leave showUnmet at its default (false).
   }
   const localPid = resolveLocalPid();
   if (!showUnmet) {
@@ -850,6 +853,7 @@ function shouldShowWonders(metricId) {
   try {
     return !!DemographicsSettings.getSetting("showWonderMarkers", wonderDefault);
   } catch (_) {
+    // DemographicsSettings.getSetting may throw; fall back to the per-metric default.
     return wonderDefault;
   }
 }
@@ -961,7 +965,7 @@ function resolveWonderIcon(ev) {
       ev.iconUrl = UI.getIconURL(ev.wonderType, "WONDER");
     }
   } catch (_) {
-    /* */
+    // UI.getIconURL may be absent or throw; leave ev.iconUrl unset (event dropped upstream).
   }
 }
 
@@ -978,7 +982,7 @@ function bestWonderDescription(info) {
     try {
       if (typeof Locale?.compose === "function") composed = Locale.compose(tag);
     } catch (_) {
-      /* */
+      // Locale.compose may throw on a malformed tag; keep the raw tag (skipped below).
     }
     // Skip if compose returned the raw tag (no string in the localization
     // DB for the active language).
@@ -1009,6 +1013,7 @@ function resolveWonderMeta(ev) {
     const best = bestWonderDescription(info);
     if (best) ev.wonderDescription = best;
   } catch (_) {
+    // GameInfo.Constructibles.lookup may be absent or throw; fall back to the raw type as name.
     ev.wonderName = ev.wonderType;
   }
 }
@@ -1383,7 +1388,7 @@ function gcWonderMarkers(wonderMarkerEls, renderedKeys) {
       try {
         el.remove();
       } catch (_) {
-        /* */
+        // Element.remove may throw if already detached by Coherent; drop the ref regardless.
       }
       wonderMarkerEls.delete(key);
     }
@@ -1760,7 +1765,7 @@ function getGameSeed() {
       if (s !== undefined && s !== null) return String(s);
     }
   } catch (_) {
-    /* */
+    // Configuration.getGame may be absent or throw; fall back to an empty seed string.
   }
   return "";
 }
@@ -2312,7 +2317,7 @@ function resolveLeaderIconHTML(ds, color) {
         ';flex-shrink:0;"></div>';
     }
   } catch (_) {
-    /* */
+    // UI.getIconURL may be absent or throw; fall through to the colored-dot fallback.
   }
   if (!iconHTML) {
     // No leader icon — show a colored dot.

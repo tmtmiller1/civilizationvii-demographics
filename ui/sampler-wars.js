@@ -130,7 +130,10 @@ function _pidLiveInfo(pid, cachedCiv) {
       }
       isCS = detectCityState(p);
     }
-  } catch (_) {}
+  } catch (_) {
+    // Players.get() / Locale.compose() can be null / throw mid age-transition;
+    // keep the cached civ name and a non-CS default.
+  }
   return { civ, isCS };
 }
 
@@ -163,7 +166,8 @@ function _civTypeStringFor(pid) {
     const ct = p?.civilizationType;
     if (typeof ct === "string" && ct.length > 0) return ct;
   } catch (_) {
-    /* */
+    // Players.get() can be null / throw mid age-transition; treat the civ type
+    // string as unavailable.
   }
   return undefined;
 }
@@ -185,7 +189,10 @@ function detectCityState(p) {
     if (typeof v === "function") {
       try {
         return !!v.call(p);
-      } catch (_) {}
+      } catch (_) {
+        // Calling the player flag accessor (e.g. p.isMinor) can throw on a stale
+        // handle; treat the flag as unknown.
+      }
     }
     return undefined;
   }
@@ -275,7 +282,10 @@ function ingestWarEvent(ev, activeWarsByID) {
   let header;
   try {
     header = Game.Diplomacy.getDiplomaticEventData(uid);
-  } catch (_) {}
+  } catch (_) {
+    // Game.Diplomacy.getDiplomaticEventData() can throw for a stale uniqueID;
+    // skip this war event.
+  }
   if (!header) return;
   activeWarsByID.set(uid, _normalizeWarRecord(uid, header));
 }
@@ -317,10 +327,16 @@ function _warEnvoyLists(uid) {
   let opposers = [];
   try {
     supporters = Game.Diplomacy.getSupportingPlayersWithBonusEnvoys(uid) || [];
-  } catch (_) {}
+  } catch (_) {
+    // Game.Diplomacy.getSupportingPlayersWithBonusEnvoys() can throw for a stale
+    // uniqueID; treat the supporting side as empty.
+  }
   try {
     opposers = Game.Diplomacy.getOpposingPlayersWithBonusEnvoys(uid) || [];
-  } catch (_) {}
+  } catch (_) {
+    // Game.Diplomacy.getOpposingPlayersWithBonusEnvoys() can throw for a stale
+    // uniqueID; treat the opposing side as empty.
+  }
   return { supporters, opposers };
 }
 
@@ -569,7 +585,10 @@ function _readTurnDate() {
       const s = Game.getTurnDate();
       if (typeof s === "string" && s.length > 0) return s;
     }
-  } catch (_) {}
+  } catch (_) {
+    // Game.getTurnDate() can throw before the game clock is ready; report the
+    // date label as unavailable.
+  }
   return undefined;
 }
 

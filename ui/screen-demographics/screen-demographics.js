@@ -174,7 +174,7 @@ class ScreenDemographics extends Panel {
         this.Root.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
       }
     } catch (_) {
-      /* */
+      // this.Root.setAttribute can be absent before the panel template mounts; the audio cue is optional.
     }
   }
 
@@ -399,7 +399,7 @@ class ScreenDemographics extends Panel {
         tabBar.setAttribute("nav-help-left-class", "relative left-0");
       }
     } catch (_) {
-      /* */
+      // UI.getViewExperience / UIViewExperience are absent in headless contexts; nav hints are cosmetic.
     }
   }
 

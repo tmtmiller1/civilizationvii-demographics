@@ -193,7 +193,8 @@ function findBonusRow(bonusHash) {
       }
     }
   } catch (_) {
-    /* */
+    // GameInfo.CityStateBonuses.find/iteration can throw at the engine
+    // boundary; fall back to null (CS type stays unresolved).
   }
   return row;
 }
@@ -243,7 +244,8 @@ function findIndependentRow(adj) {
       }
     }
   } catch (_) {
-    /* */
+    // GameInfo.Independents.forEach/iteration can throw at the engine
+    // boundary; fall back to null (CS type stays unresolved).
   }
   return match;
 }
@@ -589,6 +591,8 @@ function tradeRouteCount(trade, toPid) {
   try {
     return trade.countPlayerTradeRoutesTo(toPid) | 0;
   } catch (_) {
+    // trade.countPlayerTradeRoutesTo(toPid) can throw at the engine boundary;
+    // treat as no routes.
     return 0;
   }
 }
@@ -685,6 +689,8 @@ function readSuzerain(cs) {
   try {
     suz = inf.getSuzerain();
   } catch (_) {
+    // inf.getSuzerain() can throw at the engine boundary; treat as no
+    // suzerain (-1).
     suz = -1;
   }
   return typeof suz === "number" ? suz : -1;
@@ -834,6 +840,8 @@ function readSuzerainLoose(cs) {
   try {
     return cs.Influence?.getSuzerain?.() ?? -1;
   } catch (_) {
+    // cs.Influence.getSuzerain() can throw at the engine boundary; treat as
+    // no suzerain (-1).
     return -1;
   }
 }

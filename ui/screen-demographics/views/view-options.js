@@ -287,6 +287,8 @@ function buildHistoryCapHint() {
     try {
       return resolveEffectiveCap();
     } catch (_) {
+      // resolveEffectiveCap() (storage module) can throw reading game config;
+      // fall back to an unlimited/unknown descriptor for the hint.
       return { cap: Infinity, source: "?" };
     }
   })();
@@ -294,6 +296,8 @@ function buildHistoryCapHint() {
     try {
       return detectGameSpeedType();
     } catch (_) {
+      // detectGameSpeedType() (storage module) can throw reading game config;
+      // fall back to null → "unknown" speed label.
       return null;
     }
   })();
@@ -383,7 +387,8 @@ function refreshSampleNow(ctx) {
       ctx.requestReload?.();
     }
   } catch (_) {
-    /* */
+    // sampler.sampleNow() (sampler module) can throw mid-sample; ignore so a
+    // failed manual sample doesn't tear down the Options view.
   }
 }
 
@@ -413,7 +418,8 @@ function clearHistory(ctx) {
     ctx.storage?.clear?.();
     ctx.requestReload?.();
   } catch (_) {
-    /* */
+    // storage.clear() (storage module) can throw at the persistence boundary;
+    // ignore so the Options view stays mounted.
   }
 }
 
@@ -436,7 +442,8 @@ function resetWarHistory(ctx) {
       ctx.requestReload?.();
     }
   } catch (_) {
-    /* */
+    // storage.load()/save() (storage module) can throw at the persistence
+    // boundary; ignore so the Options view stays mounted.
   }
 }
 

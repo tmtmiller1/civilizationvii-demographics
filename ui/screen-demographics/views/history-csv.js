@@ -44,7 +44,8 @@ function showCsvToast(host, message, success) {
     const old = host.querySelector(".demographics-csv-toast");
     if (old) old.remove();
   } catch (_) {
-    /* */
+    // host.querySelector/old.remove() can throw if host is detached; skip the
+    // prior-toast cleanup and append the new toast anyway.
   }
   const toast = document.createElement("div");
   toast.className = "demographics-csv-toast";
@@ -72,7 +73,10 @@ function showCsvToast(host, message, success) {
   setTimeout(() => {
     try {
       toast.remove();
-    } catch (_) {}
+    } catch (_) {
+      // toast.remove() can throw if the node was already detached; nothing
+      // left to clean up.
+    }
   }, 4000);
 }
 
@@ -255,6 +259,8 @@ function readGameSpeedLabel() {
     const speedHash = Configuration.getGame()?.getValue?.("GameSpeed");
     return gameSpeedLabelFor(speedHash);
   } catch (_) {
+    // Configuration.getGame()/getValue("GameSpeed") can throw at the engine
+    // boundary; report "unknown" in the CSV provenance header.
     return "unknown";
   }
 }
@@ -283,7 +289,8 @@ function readMapTypeLabel() {
       if (typeof ms === "string") return ms;
     }
   } catch (_) {
-    /* */
+    // Configuration.getMap().mapScript can throw at the engine boundary;
+    // report "unknown" in the CSV provenance header.
   }
   return "unknown";
 }
@@ -299,7 +306,8 @@ function readCurrentAgeLabel() {
       if (ageRow?.AgeType) return ageRow.AgeType.replace(/^AGE_/, "").toLowerCase();
     }
   } catch (_) {
-    /* */
+    // Game.age / GameInfo.Ages.lookup(Game.age) can throw at the engine
+    // boundary; report "unknown" in the CSV provenance header.
   }
   return "unknown";
 }
