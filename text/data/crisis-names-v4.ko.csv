@@ -1,8 +1,60 @@
-event_id,event_name
-war,전쟁
-revolution,혁명
-rebellion,반란
-civil_war,내전
-plague,역병
-famine,기근
-natural_disaster,자연재해
+pool,kind,arc_id,stage,template,name,keep
+ANTIQUITY_CRISIS_INVASION,name,,,청동기 시대의 붕괴,청동기 시대의 붕괴,1
+ANTIQUITY_CRISIS_INVASION,name,,,대이동,대이동,1
+ANTIQUITY_CRISIS_INVASION,name,,,민족 대이동의 시대,민족 대이동의 시대,1
+ANTIQUITY_CRISIS_INVASION,name,,,바다 민족의 도래,바다 민족의 도래,1
+ANTIQUITY_CRISIS_INVASION,name,,,이민족의 침략,이민족의 침략,1
+ANTIQUITY_CRISIS_INVASION,name,,,이민족 전쟁,이민족 전쟁,1
+ANTIQUITY_CRISIS_INVASION,name,,,대부족,대부족,1
+ANTIQUITY_CRISIS_INVASION,name,,,기마 군주의 도래,기마 군주의 도래,1
+ANTIQUITY_CRISIS_INVASION,name,,,이방인의 행군,이방인의 행군,1
+ANTIQUITY_CRISIS_INVASION,name,,,파멸의 세월,파멸의 세월,1
+ANTIQUITY_CRISIS_INVASION,name,,,혼란의 세월,혼란의 세월,1
+ANTIQUITY_CRISIS_INVASION,name,,,변경의 붕괴,변경의 붕괴,1
+ANTIQUITY_CRISIS_INVASION,name,,,변경의 위기,변경의 위기,1
+ANTIQUITY_CRISIS_INVASION,name,,,변경 전쟁,변경 전쟁,1
+ANTIQUITY_CRISIS_INVASION,name,,,북방의 침략,북방의 침략,1
+ANTIQUITY_CRISIS_INVASION,name,,,동방의 침략,동방의 침략,1
+ANTIQUITY_CRISIS_INVASION,name,,,변경에서 온 폭풍,변경에서 온 폭풍,1
+ANTIQUITY_CRISIS_INVASION,name,,,속주에서 온 폭풍,속주에서 온 폭풍,1
+ANTIQUITY_CRISIS_INVASION,name,,,초원에서 온 폭풍,초원에서 온 폭풍,1
+ANTIQUITY_CRISIS_INVASION,name,,,해안에서 온 폭풍,해안에서 온 폭풍,1
+ANTIQUITY_CRISIS_INVASION,name,,,심장부에서 온 폭풍,심장부에서 온 폭풍,1
+ANTIQUITY_CRISIS_INVASION,name,,,변경의 약탈,변경의 약탈,1
+ANTIQUITY_CRISIS_INVASION,name,,,속주의 약탈,속주의 약탈,1
+ANTIQUITY_CRISIS_INVASION,name,,,초원의 약탈,초원의 약탈,1
+ANTIQUITY_CRISIS_INVASION,name,,,해안의 약탈,해안의 약탈,1
+ANTIQUITY_CRISIS_INVASION,name,,,심장부의 약탈,심장부의 약탈,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,변경의 습격,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,이민족의 침략,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,변경의 약탈,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,4,,대이동,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,1,,기마 군주의 도래,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,2,,초원에서 온 폭풍,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,3,,변경의 함락,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,파멸의 세월,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,변경 전쟁,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,이민족 전쟁,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,속주의 약탈,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,청동기 시대의 붕괴,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,안토니누스 역병,안토니누스 역병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,갈레노스의 역병,갈레노스의 역병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,대역병,대역병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,대사망,대사망,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,대열병,대열병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,대죽음,대죽음,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,역병의 세월,역병의 세월,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,죽음의 시대,죽음의 시대,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,역병의 시기,역병의 시기,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,죽음의 세월,죽음의 세월,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,잿빛 세월,잿빛 세월,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,발한병,발한병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,소모성 역병,소모성 역병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,여름 역병,여름 역병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,겨울 병마,겨울 병마,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,조용한 죽음,조용한 죽음,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,흑사병,흑사병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,적사병,적사병,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,회색 죽음,회색 죽음,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,잿빛 죽음,잿빛 죽음,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,변경의 역병,변경의 역병,1

@@ -1,8 +1,60 @@
-event_id,event_name
-war,Conflitto
-revolution,Rivoluzione
-rebellion,Ribellione
-civil_war,Guerra civile
-plague,Peste
-famine,Carestia
-natural_disaster,Disastro naturale
+pool,kind,arc_id,stage,template,name,keep
+ANTIQUITY_CRISIS_INVASION,name,,,Il collasso dell'età del bronzo,Il collasso dell'età del bronzo,1
+ANTIQUITY_CRISIS_INVASION,name,,,La grande migrazione,La grande migrazione,1
+ANTIQUITY_CRISIS_INVASION,name,,,L'età delle migrazioni,L'età delle migrazioni,1
+ANTIQUITY_CRISIS_INVASION,name,,,L'arrivo dei Popoli del Mare,L'arrivo dei Popoli del Mare,1
+ANTIQUITY_CRISIS_INVASION,name,,,Le invasioni barbariche,Le invasioni barbariche,1
+ANTIQUITY_CRISIS_INVASION,name,,,Le guerre barbariche,Le guerre barbariche,1
+ANTIQUITY_CRISIS_INVASION,name,,,La grande orda,La grande orda,1
+ANTIQUITY_CRISIS_INVASION,name,,,L'arrivo dei signori della steppa,L'arrivo dei signori della steppa,1
+ANTIQUITY_CRISIS_INVASION,name,,,La marcia degli stranieri,La marcia degli stranieri,1
+ANTIQUITY_CRISIS_INVASION,name,,,Gli anni della devastazione,Gli anni della devastazione,1
+ANTIQUITY_CRISIS_INVASION,name,,,Gli anni del tumulto,Gli anni del tumulto,1
+ANTIQUITY_CRISIS_INVASION,name,,,Il crollo della frontiera,Il crollo della frontiera,1
+ANTIQUITY_CRISIS_INVASION,name,,,La crisi della frontiera,La crisi della frontiera,1
+ANTIQUITY_CRISIS_INVASION,name,,,Le guerre di frontiera,Le guerre di frontiera,1
+ANTIQUITY_CRISIS_INVASION,name,,,Le invasioni del nord,Le invasioni del nord,1
+ANTIQUITY_CRISIS_INVASION,name,,,Le invasioni dell'est,Le invasioni dell'est,1
+ANTIQUITY_CRISIS_INVASION,name,,,La tempesta dalla frontiera,La tempesta dalla frontiera,1
+ANTIQUITY_CRISIS_INVASION,name,,,La tempesta dalle province,La tempesta dalle province,1
+ANTIQUITY_CRISIS_INVASION,name,,,La tempesta dalla steppa,La tempesta dalla steppa,1
+ANTIQUITY_CRISIS_INVASION,name,,,La tempesta dalla costa,La tempesta dalla costa,1
+ANTIQUITY_CRISIS_INVASION,name,,,La tempesta dal cuore dell'impero,La tempesta dal cuore dell'impero,1
+ANTIQUITY_CRISIS_INVASION,name,,,Il sacco della frontiera,Il sacco della frontiera,1
+ANTIQUITY_CRISIS_INVASION,name,,,Il sacco delle province,Il sacco delle province,1
+ANTIQUITY_CRISIS_INVASION,name,,,Il sacco della steppa,Il sacco della steppa,1
+ANTIQUITY_CRISIS_INVASION,name,,,Il sacco della costa,Il sacco della costa,1
+ANTIQUITY_CRISIS_INVASION,name,,,Il sacco del cuore dell'impero,Il sacco del cuore dell'impero,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,Le incursioni di confine,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,Le invasioni barbariche,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,Il sacco della frontiera,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,4,,La grande migrazione,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,1,,L'arrivo dei signori della steppa,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,2,,La tempesta dalla steppa,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,3,,La caduta della frontiera,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,Gli anni della devastazione,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,Le guerre di frontiera,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,Le guerre barbariche,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,Il sacco delle province,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,Il collasso dell'età del bronzo,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La peste antonina,La peste antonina,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La peste di Galeno,La peste di Galeno,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La grande pestilenza,La grande pestilenza,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La grande moria,La grande moria,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La grande febbre,La grande febbre,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La grande morte,La grande morte,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Gli anni della peste,Gli anni della peste,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Il tempo della morte,Il tempo della morte,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Il tempo della pestilenza,Il tempo della pestilenza,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Gli anni della mortalità,Gli anni della mortalità,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Gli anni delle ceneri,Gli anni delle ceneri,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La febbre sudorifera,La febbre sudorifera,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La peste devastatrice,La peste devastatrice,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La peste estiva,La peste estiva,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Il morbo invernale,Il morbo invernale,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La morte silenziosa,La morte silenziosa,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La morte nera,La morte nera,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La morte rossa,La morte rossa,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La morte grigia,La morte grigia,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La morte cinerea,La morte cinerea,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,La peste della frontiera,La peste della frontiera,1

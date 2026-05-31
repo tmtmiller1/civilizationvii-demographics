@@ -1,8 +1,60 @@
-event_id,event_name
-guerra,Conflito
-revolucao,Revolução
-rebelião,Rebelião
-guerra_civil,Guerra Civil
-peste,Peste
-fome,Fome
-desastre_natural,Desastre Natural
+pool,kind,arc_id,stage,template,name,keep
+ANTIQUITY_CRISIS_INVASION,name,,,O Colapso da Idade do Bronze,O Colapso da Idade do Bronze,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Grande Migração,A Grande Migração,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Era das Migrações,A Era das Migrações,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Chegada dos Povos do Mar,A Chegada dos Povos do Mar,1
+ANTIQUITY_CRISIS_INVASION,name,,,As Invasões Bárbaras,As Invasões Bárbaras,1
+ANTIQUITY_CRISIS_INVASION,name,,,As Guerras Bárbaras,As Guerras Bárbaras,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Grande Horda,A Grande Horda,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Chegada dos Senhores das Estepes,A Chegada dos Senhores das Estepes,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Marcha dos Estranhos,A Marcha dos Estranhos,1
+ANTIQUITY_CRISIS_INVASION,name,,,Os Anos de Devastação,Os Anos de Devastação,1
+ANTIQUITY_CRISIS_INVASION,name,,,Os Anos de Tormento,Os Anos de Tormento,1
+ANTIQUITY_CRISIS_INVASION,name,,,O Colapso da Fronteira,O Colapso da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Crise da Fronteira,A Crise da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,name,,,As Guerras da Fronteira,As Guerras da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,name,,,As Invasões do Norte,As Invasões do Norte,1
+ANTIQUITY_CRISIS_INVASION,name,,,As Invasões do Leste,As Invasões do Leste,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Tempestade vinda da Fronteira,A Tempestade vinda da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Tempestade vinda das Províncias,A Tempestade vinda das Províncias,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Tempestade vinda das Estepes,A Tempestade vinda das Estepes,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Tempestade vinda da Costa,A Tempestade vinda da Costa,1
+ANTIQUITY_CRISIS_INVASION,name,,,A Tempestade vinda do Coração do Império,A Tempestade vinda do Coração do Império,1
+ANTIQUITY_CRISIS_INVASION,name,,,O Saque da Fronteira,O Saque da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,name,,,O Saque das Províncias,O Saque das Províncias,1
+ANTIQUITY_CRISIS_INVASION,name,,,O Saque das Estepes,O Saque das Estepes,1
+ANTIQUITY_CRISIS_INVASION,name,,,O Saque da Costa,O Saque da Costa,1
+ANTIQUITY_CRISIS_INVASION,name,,,O Saque do Coração do Império,O Saque do Coração do Império,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,As Incursões na Fronteira,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,As Invasões Bárbaras,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,O Saque da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,4,,A Grande Migração,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,1,,A Chegada dos Senhores das Estepes,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,2,,A Tempestade vinda das Estepes,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,3,,A Queda da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,Os Anos de Devastação,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,As Guerras da Fronteira,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,As Guerras Bárbaras,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,O Saque das Províncias,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,O Colapso da Idade do Bronze,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Peste Antonina,A Peste Antonina,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Peste de Galeno,A Peste de Galeno,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Grande Peste,A Grande Peste,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Grande Mortandade,A Grande Mortandade,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Grande Febre,A Grande Febre,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Grande Morte,A Grande Morte,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Os Anos de Peste,Os Anos de Peste,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,O Tempo da Morte,O Tempo da Morte,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,O Tempo da Pestilência,O Tempo da Pestilência,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Os Anos de Mortandade,Os Anos de Mortandade,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Os Anos de Cinzas,Os Anos de Cinzas,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,O Mal do Suor,O Mal do Suor,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Peste Devastadora,A Peste Devastadora,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Peste do Verão,A Peste do Verão,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Doença do Inverno,A Doença do Inverno,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Morte Silenciosa,A Morte Silenciosa,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Morte Negra,A Morte Negra,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Morte Vermelha,A Morte Vermelha,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Morte Cinzenta,A Morte Cinzenta,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Morte Acinzentada,A Morte Acinzentada,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,A Peste da Fronteira,A Peste da Fronteira,1
