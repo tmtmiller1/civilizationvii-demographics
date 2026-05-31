@@ -37,17 +37,10 @@ function wireAllToggleHover(el) {
  */
 function buildAllToggleRow(onToggleAll) {
   const ctrlRow = document.createElement("div");
-  ctrlRow.style.cssText =
-    "display:flex;gap:0.7rem;align-items:center;" +
-    "margin-bottom:0.35rem;padding-bottom:0.3rem;" +
-    "border-bottom:1px solid rgba(168,132,90,0.25);" +
-    "font-size:0.72rem;color:var(--ia-text-accent-2,#c2c4cc);" +
-    "text-transform:uppercase;letter-spacing:0.08em;" +
-    "font-family:TitleFont, BodyFont, sans-serif;";
+  ctrlRow.className = "demographics-relations-filter-ctrl-row";
   const allOn = document.createElement("span");
   allOn.textContent = "All On";
-  allOn.style.cssText =
-    "cursor:pointer;color:var(--ia-text-secondary,#e5d2ac);" + "transition:color 0.1s;";
+  allOn.className = "demographics-relations-all-toggle";
   wireAllToggleHover(allOn);
   allOn.addEventListener("click", (ev) => {
     ev?.stopPropagation?.();
@@ -56,11 +49,10 @@ function buildAllToggleRow(onToggleAll) {
   });
   const sep = document.createElement("span");
   sep.textContent = "·";
-  sep.style.cssText = "color:rgba(168,132,90,0.5);";
+  sep.className = "demographics-relations-filter-sep";
   const allOff = document.createElement("span");
   allOff.textContent = "All Off";
-  allOff.style.cssText =
-    "cursor:pointer;color:var(--ia-text-secondary,#e5d2ac);" + "transition:color 0.1s;";
+  allOff.className = "demographics-relations-all-toggle";
   wireAllToggleHover(allOff);
   allOff.addEventListener("click", (ev) => {
     ev?.stopPropagation?.();
@@ -86,17 +78,12 @@ const SAMPLE_W = 84; // px — 75% bigger so dash patterns are very visible
  */
 function pushSwatchSeg(swatch, color, leftPx, widthPx) {
   const d = document.createElement("span");
-  d.style.cssText =
-    "position:absolute;top:0;height:7px;" +
-    "left:" +
-    leftPx +
-    "px;width:" +
-    widthPx +
-    "px;" +
-    "background:" +
-    color +
-    ";" +
-    "border-radius:3.5px;";
+  d.className = "demographics-relations-swatch-seg";
+  // Offset, width, and color are per-segment dynamics; the rest of the
+  // segment chrome lives in the .demographics-relations-swatch-seg rule.
+  d.style.left = leftPx + "px";
+  d.style.width = widthPx + "px";
+  d.style.background = color;
   swatch.appendChild(d);
 }
 
@@ -109,12 +96,10 @@ function pushSwatchSeg(swatch, color, leftPx, widthPx) {
  */
 function buildFilterSwatch(f) {
   const swatch = document.createElement("span");
-  swatch.style.cssText =
-    "display:inline-block;vertical-align:middle;" +
-    "width:" +
-    SAMPLE_W +
-    "px;height:7px;" +
-    "margin-right:0.75rem;flex-shrink:0;position:relative;";
+  swatch.className = "demographics-relations-swatch";
+  // Width is derived from the SAMPLE_W constant (dynamic); the rest of the
+  // swatch chrome lives in the .demographics-relations-swatch rule.
+  swatch.style.width = SAMPLE_W + "px";
   const color = f.color || "#bfbfbf";
   // Honor per-tab dash override on the swatch so the legend visual
   // matches the actual ring edge (CS tab: trade=dotted, suzerain=dashed).

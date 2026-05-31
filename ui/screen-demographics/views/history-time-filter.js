@@ -275,46 +275,16 @@ function buildDisabledFilterTooltipEl() {
   const t = CROSS_AGE_DISABLED_TOOLTIP;
 
   const tip = document.createElement("div");
-  tip.className = "img-tooltip-border img-tooltip-bg";
-  tip.style.cssText = [
-    "position:absolute",
-    "left:0",
-    "top:1.9rem",
-    "width:38rem",
-    "max-width:92vw",
-    "padding:1.1rem 1.3rem 1.1rem",
-    "font-family:BodyFont, sans-serif",
-    "font-size:0.95rem",
-    "line-height:1.5",
-    "color:#d6d8dc",
-    "text-align:left",
-    "white-space:normal",
-    "word-wrap:break-word",
-    "overflow-wrap:break-word",
-    "pointer-events:none",
-    "opacity:0",
-    "transition:opacity 0.1s",
-    "z-index:50",
-    "box-sizing:border-box"
-  ].join(";");
+  tip.className =
+    "img-tooltip-border img-tooltip-bg demographics-history-tip demographics-history-tip-disabled-filter";
 
   const title = document.createElement("div");
-  title.style.cssText = [
-    "color:#f3c34c",
-    "font-family:TitleFont, BodyFont, sans-serif",
-    "font-weight:700",
-    "font-size:1.05rem",
-    "letter-spacing:0.08em",
-    "text-transform:uppercase",
-    "margin-bottom:0.65rem",
-    "padding-bottom:0.4rem",
-    "border-bottom:1px solid rgba(201,162,76,0.55)"
-  ].join(";");
+  title.className = "demographics-history-tip-title";
   title.textContent = t.title;
   tip.appendChild(title);
 
   const body = document.createElement("div");
-  body.style.cssText = "color:#d6d8dc;";
+  body.className = "demographics-history-tip-body";
   body.innerHTML = t.body;
   tip.appendChild(body);
 
@@ -330,18 +300,13 @@ function buildDisabledFilterTooltipEl() {
 function buildDisabledFilterPill(f) {
   const pill = document.createElement("div");
   pill.className = "demographics-chart-time-filter-pill";
-  pill.classList.add("is-disabled");
   // Visual greying via color / border alpha rather than CSS
   // `opacity`. Opacity compounds onto children, which would
   // dim the disabled-filter tooltip below to the point of
   // illegibility; muting the foreground colors instead leaves
-  // the tooltip free to render at full strength.
-  pill.style.color = "rgba(194, 196, 204, 0.45)";
-  pill.style.borderColor = "rgba(168, 132, 90, 0.25)";
-  pill.style.background = "rgba(20, 16, 10, 0.35)";
-  pill.style.cursor = "not-allowed";
-  pill.style.pointerEvents = "auto"; // keep tooltip on hover
-  pill.style.position = "relative";
+  // the tooltip free to render at full strength. See the
+  // `.demographics-chart-time-filter-pill.is-disabled` rule.
+  pill.classList.add("is-disabled");
   pill.textContent = f.label;
   attachDisabledFilterTooltip(pill);
   // Swallow clicks so audio + selection don't fire.
@@ -387,11 +352,11 @@ function buildEnabledFilterPill(f, activeFilter, onSelect) {
  */
 export function buildTimeFilterRow(activeFilter, onSelect) {
   const row = document.createElement("div");
-  row.className = "demographics-chart-time-filter-row font-body text-xs";
   // Row needs to be the positioning context for absolutely-placed
   // tooltips on disabled pills (the pill itself is a flex child and
-  // its own bounds are too narrow for a multi-line tooltip).
-  row.style.position = "relative";
+  // its own bounds are too narrow for a multi-line tooltip) — see the
+  // position:relative in the .demographics-chart-time-filter-row rule.
+  row.className = "demographics-chart-time-filter-row font-body text-xs";
   for (const f of TIME_FILTERS) {
     const pill = f.disabled
       ? buildDisabledFilterPill(f)

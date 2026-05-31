@@ -273,9 +273,10 @@ function computeRanks(profiles, metricId) {
 function buildLeaderAvatar(profile, sizeRem) {
   const wrap = document.createElement("div");
   wrap.className = "demographics-factbook-avatar";
+  // Edge length is the caller-supplied dynamic size; flex-shrink:0 lives in
+  // the .demographics-factbook-avatar rule.
   wrap.style.width = sizeRem + "rem";
   wrap.style.height = sizeRem + "rem";
-  wrap.style.flexShrink = "0";
 
   const leaderType = profile.leaderTypeString;
   try {
@@ -284,8 +285,6 @@ function buildLeaderAvatar(profile, sizeRem) {
       portrait.setAttribute("data-icon-id", leaderType);
       portrait.setAttribute("data-icon-context", "LEADER");
       portrait.classList.add("demographics-factbook-portrait");
-      portrait.style.width = "100%";
-      portrait.style.height = "100%";
       wrap.appendChild(portrait);
       return wrap;
     }
@@ -571,26 +570,8 @@ function sortOtherPids(profiles, allPids, localPid) {
 function buildHint() {
   const hint = document.createElement("div");
   hint.className = "demographics-factbook-hint font-body text-xs";
-  hint.style.cssText = [
-    "display:flex",
-    "align-items:center",
-    "gap:0.4rem",
-    "padding:0.3rem 0.6rem 0.45rem",
-    "color:#e5d2ac",
-    "opacity:0.85",
-    "font-style:italic"
-  ].join(";");
   const hintIcon = document.createElement("div");
-  hintIcon.style.cssText = [
-    "width:1rem",
-    "height:1rem",
-    "background-image:url('blp:icon_info')",
-    "background-size:contain",
-    "background-repeat:no-repeat",
-    "background-position:center",
-    "flex:0 0 auto",
-    "opacity:0.85"
-  ].join(";");
+  hintIcon.className = "demographics-factbook-hint-icon";
   const hintText = document.createElement("span");
   hintText.textContent =
     "Tip: click any civilization's header to hide it and focus the comparison. Click again (in the slim column on the right) to bring it back.";
@@ -741,7 +722,7 @@ function buildOtherColumn(st, pid) {
     col.querySelector(".demographics-factbook-civ-header")
   );
   if (header) {
-    header.style.cursor = "pointer";
+    header.classList.add("demographics-factbook-civ-header-clickable");
     header.title = isHidden ? "Click to show" : "Click to hide";
     header.addEventListener("click", () => {
       safePlaySound("data-audio-checkbox-press", "audio-screen-unlocks");

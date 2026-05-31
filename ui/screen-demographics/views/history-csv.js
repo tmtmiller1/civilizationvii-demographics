@@ -49,25 +49,10 @@ function showCsvToast(host, message, success) {
   }
   const toast = document.createElement("div");
   toast.className = "demographics-csv-toast";
-  toast.style.cssText = [
-    "position:fixed",
-    "top:6rem",
-    "left:50%",
-    "transform:translateX(-50%)",
-    "z-index:200",
-    "padding:0.6rem 1.1rem",
-    "border-radius:0.25rem",
-    "border:1px solid " + (success ? "rgba(73,209,130,0.7)" : "rgba(213,94,0,0.7)"),
-    "background:rgba(20, 16, 10, 0.92)",
-    "color:" + (success ? "#49d182" : "#D55E00"),
-    "font-family:TitleFont, BodyFont, sans-serif",
-    "font-size:0.9rem",
-    "font-weight:700",
-    "text-transform:uppercase",
-    "letter-spacing:0.08em",
-    "box-shadow:0 0 1rem rgba(0,0,0,0.6)",
-    "pointer-events:none"
-  ].join(";");
+  // Success/failure tint is dynamic — the rest of the chrome lives in the
+  // .demographics-csv-toast rule.
+  toast.style.borderColor = success ? "rgba(73,209,130,0.7)" : "rgba(213,94,0,0.7)";
+  toast.style.color = success ? "#49d182" : "#D55E00";
   toast.textContent = message;
   host.appendChild(toast);
   setTimeout(() => {
