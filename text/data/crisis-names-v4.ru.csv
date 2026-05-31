@@ -1,8 +1,60 @@
-event_id,event_name
-war,Война
-revolution,Революция
-rebellion,Восстание
-civil_war,Гражданская война
-plague,Чума
-famine,Голод
-natural_disaster,Стихийное бедствие
+pool,kind,arc_id,stage,template,name,keep
+ANTIQUITY_CRISIS_INVASION,name,,,Крах бронзового века,Крах бронзового века,1
+ANTIQUITY_CRISIS_INVASION,name,,,Великое переселение народов,Великое переселение народов,1
+ANTIQUITY_CRISIS_INVASION,name,,,Эпоха переселений,Эпоха переселений,1
+ANTIQUITY_CRISIS_INVASION,name,,,Нашествие народов моря,Нашествие народов моря,1
+ANTIQUITY_CRISIS_INVASION,name,,,Варварские вторжения,Варварские вторжения,1
+ANTIQUITY_CRISIS_INVASION,name,,,Варварские войны,Варварские войны,1
+ANTIQUITY_CRISIS_INVASION,name,,,Великая орда,Великая орда,1
+ANTIQUITY_CRISIS_INVASION,name,,,Приход степных владык,Приход степных владык,1
+ANTIQUITY_CRISIS_INVASION,name,,,Поступь чужеземцев,Поступь чужеземцев,1
+ANTIQUITY_CRISIS_INVASION,name,,,Годы опустошения,Годы опустошения,1
+ANTIQUITY_CRISIS_INVASION,name,,,Годы смуты,Годы смуты,1
+ANTIQUITY_CRISIS_INVASION,name,,,Крушение рубежей,Крушение рубежей,1
+ANTIQUITY_CRISIS_INVASION,name,,,Кризис на рубежах,Кризис на рубежах,1
+ANTIQUITY_CRISIS_INVASION,name,,,Пограничные войны,Пограничные войны,1
+ANTIQUITY_CRISIS_INVASION,name,,,Северные вторжения,Северные вторжения,1
+ANTIQUITY_CRISIS_INVASION,name,,,Восточные вторжения,Восточные вторжения,1
+ANTIQUITY_CRISIS_INVASION,name,,,Буря с рубежей,Буря с рубежей,1
+ANTIQUITY_CRISIS_INVASION,name,,,Буря из провинций,Буря из провинций,1
+ANTIQUITY_CRISIS_INVASION,name,,,Буря из степи,Буря из степи,1
+ANTIQUITY_CRISIS_INVASION,name,,,Буря с побережья,Буря с побережья,1
+ANTIQUITY_CRISIS_INVASION,name,,,Буря из сердца державы,Буря из сердца державы,1
+ANTIQUITY_CRISIS_INVASION,name,,,Разорение рубежей,Разорение рубежей,1
+ANTIQUITY_CRISIS_INVASION,name,,,Разорение провинций,Разорение провинций,1
+ANTIQUITY_CRISIS_INVASION,name,,,Разорение степи,Разорение степи,1
+ANTIQUITY_CRISIS_INVASION,name,,,Разорение побережья,Разорение побережья,1
+ANTIQUITY_CRISIS_INVASION,name,,,Разорение сердца державы,Разорение сердца державы,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,Пограничные набеги,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,Варварские вторжения,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,Разорение рубежей,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,4,,Великое переселение народов,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,1,,Приход степных владык,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,2,,Буря из степи,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,3,,Падение рубежей,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,Годы опустошения,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,Пограничные войны,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,Варварские войны,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,Разорение провинций,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,Крах бронзового века,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Чума Антонинов,Чума Антонинов,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Чума Галена,Чума Галена,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Великий мор,Великий мор,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Великая смертность,Великая смертность,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Великая лихорадка,Великая лихорадка,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Великое вымирание,Великое вымирание,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Годы чумы,Годы чумы,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Время умирания,Время умирания,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Время моровое,Время моровое,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Годы смертности,Годы смертности,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Годы пепла,Годы пепла,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Потовая горячка,Потовая горячка,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Изнуряющая чума,Изнуряющая чума,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Летняя чума,Летняя чума,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Зимняя хворь,Зимняя хворь,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Безмолвная смерть,Безмолвная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Чёрная смерть,Чёрная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Красная смерть,Красная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Серая смерть,Серая смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Пепельная смерть,Пепельная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,Чума на рубежах,Чума на рубежах,1
