@@ -96,7 +96,7 @@ function composeLegacyName(row) {
       if (typeof c === "string" && c.length > 0) name = c;
     }
   } catch (_) {
-    /* */
+    // Locale.compose is absent/throws in non-localized contexts; the raw row.Name fallback stands.
   }
   return name;
 }
@@ -162,7 +162,9 @@ function composePlayerField(p, field) {
   try {
     const v = p?.[field];
     if (typeof v === "string") return Locale.compose(v);
-  } catch (_) {}
+  } catch (_) {
+    // p?.[field] read or Locale.compose can throw at the engine boundary; empty-string fallback below.
+  }
   return "";
 }
 
@@ -198,7 +200,7 @@ function civColor(pid) {
       }
     }
   } catch (_) {
-    /* */
+    // UI.Player.getPrimaryColorValueAsString is absent in headless contexts; neutral color fallback below.
   }
   return "#85878c";
 }
@@ -217,7 +219,7 @@ function probeMajorPids() {
       if (isMajor) pids.push(i);
     }
   } catch (_) {
-    /* */
+    // Players.get throws when the Players library isn't ready; return whatever pids we gathered.
   }
   return pids;
 }
@@ -266,7 +268,7 @@ function allMajorPids() {
       pids = Array.from(Players.getAliveMajorIds());
     }
   } catch (_) {
-    /* */
+    // Players.getAliveMajorIds is absent/throws before the Players library is ready; the 0..63 probe fallback runs below.
   }
   if (pids.length === 0) {
     // Fallback: probe pid 0..63 for major civs.

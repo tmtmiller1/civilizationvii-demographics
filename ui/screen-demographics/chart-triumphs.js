@@ -88,7 +88,7 @@ function tryComposeKey(key) {
       if (typeof composed === "string" && composed.length > 0) return composed;
     }
   } catch (_) {
-    /* */
+    // Locale.compose may throw on a malformed key; fall back to the raw key.
   }
   return key;
 }
@@ -135,7 +135,9 @@ function currentAgeType() {
       if (row?.AgeType) return row.AgeType;
       return String(Game.age);
     }
-  } catch (_) {}
+  } catch (_) {
+    // Game.age / GameInfo.Ages.lookup may be absent or throw; fall back to null.
+  }
   return null;
 }
 
@@ -153,7 +155,7 @@ function alliveMajorsFromHistory(history) {
       return Array.from(Players.getAliveMajorIds());
     }
   } catch (_) {
-    /* */
+    // Players.getAliveMajorIds may throw; fall back to scanning the history samples.
   }
   return majorsFromSamples(history?.samples || []);
 }
@@ -243,7 +245,7 @@ function collectTriumphRows(age) {
       races.push(row);
     }
   } catch (_) {
-    /* */
+    // GameInfo.Legacies may be absent or non-iterable; return whatever was collected.
   }
   return races;
 }
@@ -271,6 +273,7 @@ function triumphProgressFor(pid, legacyType) {
     const p = pl.getProgress ? pl.getProgress(legacyType) : null;
     return readTriumphProgress(pl, p, legacyType);
   } catch (_) {
+    // Players.get / player.Legacies.getProgress may be absent or throw; report no progress.
     return null;
   }
 }
@@ -845,7 +848,7 @@ function computeTriumphTotals(age) {
       if (totals[row.LegacySubtype] !== undefined) totals[row.LegacySubtype]++;
     }
   } catch (_) {
-    /* */
+    // GameInfo.Legacies may be absent or non-iterable; return the partial totals.
   }
   return totals;
 }
@@ -860,6 +863,7 @@ function isLegacyTriggered(pl, legacyType) {
   try {
     return !!pl.isTriggered?.(legacyType);
   } catch (_) {
+    // player.Legacies.isTriggered may throw for this legacy; treat as not triggered.
     return false;
   }
 }
@@ -881,7 +885,7 @@ function tallyCivCounts(pl, age) {
       if (isLegacyTriggered(pl, row.LegacyType)) counts[row.LegacySubtype]++;
     }
   } catch (_) {
-    /* */
+    // GameInfo.Legacies may be absent or non-iterable; return the partial counts.
   }
   return counts;
 }

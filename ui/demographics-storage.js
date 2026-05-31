@@ -354,6 +354,8 @@ function getGlobalStore() {
       write: (key, val) => GameTutorial.setProperty(dbHash("_" + CATALOG_SCOPE + "__" + key), val)
     };
   } catch (_) {
+    // GameTutorial global can be absent / throw in the sandbox; report no global
+    // store so the caller falls back accordingly.
     return null;
   }
 }
@@ -418,10 +420,16 @@ class StorageImpl {
     };
     try {
       engine.on("BeforeAgeTransition", flush);
-    } catch (_) {}
+    } catch (_) {
+      // engine.on() can throw if the event name is unknown in this build; the
+      // BeforeUnload hook below still covers most flush cases.
+    }
     try {
       engine.on("BeforeUnload", flush);
-    } catch (_) {}
+    } catch (_) {
+      // engine.on() can throw if the event name is unknown in this build; rely
+      // on per-turn saves if neither flush hook installs.
+    }
   }
 
   /**

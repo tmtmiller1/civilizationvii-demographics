@@ -119,7 +119,7 @@ function adjectiveFromCivType(civType) {
       if (typeof v === "string" && v.length > 0 && !v.startsWith("LOC_")) return v;
     }
   } catch (_) {
-    /* */
+    // Locale.compose may throw on a malformed adjective tag; fall back to null.
   }
   return null;
 }

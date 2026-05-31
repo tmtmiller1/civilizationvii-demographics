@@ -123,7 +123,8 @@ function applyNavHelpClasses(metricBar) {
       metricBar.setAttribute("nav-help-left-class", "relative left-0");
     }
   } catch (_) {
-    /* */
+    // UI.getViewExperience()/UIViewExperience can throw at the engine
+    // boundary; skip the desktop-only nav-help class hints.
   }
 }
 
@@ -519,11 +520,17 @@ function appendTimeUnitsToggle(toolbar, ctx) {
   let mode = "both";
   try {
     mode = ctx.settings?.getSetting?.("xAxisMode", "both") || "both";
-  } catch (_) {}
+  } catch (_) {
+    // settings.getSetting("xAxisMode") can throw at the storage boundary;
+    // keep the "both" default.
+  }
   if (!modes.includes(mode)) mode = "both";
   try {
     ctx.chartMod?.setXAxisMode?.(mode);
-  } catch (_) {}
+  } catch (_) {
+    // chartMod.setXAxisMode(mode) is an optional module hook that can throw;
+    // the toggle still renders with its current label.
+  }
   const timeBtn = document.createElement("div");
   timeBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
   timeBtn.textContent = labels[mode];
@@ -534,10 +541,16 @@ function appendTimeUnitsToggle(toolbar, ctx) {
     const next = modes[(modes.indexOf(mode) + 1) % modes.length];
     try {
       ctx.settings?.setSetting?.("xAxisMode", next);
-    } catch (_) {}
+    } catch (_) {
+      // settings.setSetting("xAxisMode") persistence is best-effort; the
+      // reload below still applies `next` for this session.
+    }
     try {
       ctx.chartMod?.setXAxisMode?.(next);
-    } catch (_) {}
+    } catch (_) {
+      // chartMod.setXAxisMode(next) is an optional module hook that can throw;
+      // the requestReload below re-applies the mode on next render.
+    }
     ctx.requestReload?.();
   });
   toolbar.appendChild(timeBtn);
@@ -556,6 +569,8 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
     try {
       return !!ctx.settings?.getSetting?.("showWonderMarkers", true);
     } catch (_) {
+      // settings.getSetting("showWonderMarkers") can throw at the storage
+      // boundary; default to ON.
       return true;
     }
   })();
@@ -580,7 +595,8 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
       ctx.settings?.setSetting?.("showWonderMarkers", next);
       dlog("wonders toggle clicked; new value=" + next);
     } catch (_) {
-      /* */
+      // settings.getSetting/setSetting("showWonderMarkers") can throw at the
+      // storage boundary; the requestReload below still re-reads the setting.
     }
     ctx.requestReload?.();
   });

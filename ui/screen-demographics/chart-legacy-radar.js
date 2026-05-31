@@ -195,12 +195,12 @@ function tallyLiveTriumphs(pl) {
       try {
         triggered = !!pl.isTriggered?.(row.LegacyType);
       } catch (_) {
-        /* */
+        // player.Legacies.isTriggered may throw for this row; treat as not triggered.
       }
       if (triggered) counts[axis]++;
     }
   } catch (_) {
-    /* */
+    // GameInfo.Legacies may be absent or non-iterable; return the zeroed counts.
   }
   return counts;
 }
@@ -221,7 +221,7 @@ function liveRadarPull(civs, pidOrder) {
       mergeLiveMajorTriumphs(civs, pidOrder, pid, tallyLiveTriumphs(pl));
     }
   } catch (_) {
-    /* */
+    // Players.getAliveMajorIds / Players.get may throw; skip the live override.
   }
 }
 

@@ -163,7 +163,7 @@ function resolveLocalPid() {
       if (typeof GameContext.localObserverID === "number") return GameContext.localObserverID;
     }
   } catch (_) {
-    /* */
+    // GameContext may be absent or throw outside an active game; fall back to undefined.
   }
   return undefined;
 }
@@ -197,7 +197,7 @@ function addLiveTurnYear(turnYearMap) {
       if (typeof y === "string" && y.length > 0) turnYearMap.set(Game.turn, y);
     }
   } catch (_) {
-    /* */
+    // Game.turn / Game.getTurnDate may be absent or throw; skip the live entry.
   }
 }
 

@@ -77,6 +77,14 @@ const DBG = false;
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-factbook]", ...a);
 }
+/**
+ * Error logger (always emits).
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
+function derr(...a) {
+  console.error("[Demographics.view-factbook]", ...a);
+}
 
 /**
  * Invoke `fn` and return its result, or `fb` if it throws.
@@ -89,6 +97,8 @@ function safeCall(fn, fb) {
   try {
     return fn();
   } catch (_) {
+    // Defensive engine-boundary wrapper — `fn` reads GameContext.localPlayerID
+    // / localObserverID, which can throw; return the fallback.
     return fb;
   }
 }
@@ -279,8 +289,10 @@ function buildLeaderAvatar(profile, sizeRem) {
       wrap.appendChild(portrait);
       return wrap;
     }
-  } catch (_) {
-    /* fall through */
+  } catch (e) {
+    // Own-logic DOM build (fxs-icon portrait) — surface failures, then fall
+    // through to the initial-letter placeholder below.
+    derr("buildLeaderAvatar:", e);
   }
 
   const placeholder = document.createElement("div");
@@ -380,7 +392,10 @@ function buildValueCell(metric, profile) {
   if (typeof v === "number" && isFinite(v)) {
     try {
       value.textContent = /** @type {(n: number) => string} */ (metric.format)(v);
-    } catch (_) {
+    } catch (e) {
+      // Own-logic: a metric's format() callback threw — surface it, then fall
+      // back to a rounded integer so the cell still shows a value.
+      derr("buildValueCell format(" + metric.id + "):", e);
       value.textContent = String(Math.round(v));
     }
   } else {
@@ -662,7 +677,8 @@ function readHiddenCivs(ctx) {
     const raw = ctx.settings?.getSetting?.("factbookHiddenCivs", []);
     if (Array.isArray(raw)) return new Set(raw.map((v) => String(v)));
   } catch (_) {
-    /* */
+    // settings.getSetting("factbookHiddenCivs") can throw at the storage
+    // boundary; start with an empty hidden set.
   }
   return new Set();
 }
@@ -676,7 +692,8 @@ function saveHiddenCivs(st) {
   try {
     st.ctx.settings?.setSetting?.("factbookHiddenCivs", Array.from(st.hiddenCivs));
   } catch (_) {
-    /* */
+    // settings.setSetting("factbookHiddenCivs") persistence is best-effort;
+    // st.hiddenCivs already holds the live set for this session.
   }
 }
 

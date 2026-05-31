@@ -39,7 +39,7 @@ export function safePlaySound(id, group) {
       dlog("playSound", id, "group=", group);
     }
   } catch (_) {
-    /* swallow */
+    // Audio (the Civ7 audio manager) is absent in observer/headless/save-preview contexts; sound is optional.
   }
 }
 

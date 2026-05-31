@@ -464,7 +464,8 @@ function queueLeaderPortrait(info, pos, r, portraitsToPlace) {
       (UI.getIconURL(leaderType, "LEADER") + ".png").toLowerCase();
     }
   } catch (_) {
-    /* */
+    // UI.getIconURL(leaderType, "LEADER") can throw at the engine boundary;
+    // ignore — the fxs-icon overlay below resolves the BLP itself.
   }
   if (leaderType) {
     // Defer placement — we position fxs-icon divs over the wrap in pixel
@@ -637,6 +638,8 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
     try {
       rect = svg.getBoundingClientRect();
     } catch (_) {
+      // svg.getBoundingClientRect() can throw if the node is detached; treat
+      // as not-yet-laid-out and re-defer a frame below.
       rect = null;
     }
     if (!rect || rect.width === 0 || rect.height === 0) {
