@@ -126,7 +126,6 @@ function elog(...a) {
 let errorCount = 0;
 const KILL_THRESHOLD = 3;
 let disabled = false;
-let started = false;
 let firstSampleSucceeded = false;
 /** @type {*} */
 let handlerRef = null;
@@ -782,7 +781,6 @@ function teardownStaleSubscriptions() {
 function resetSamplerState() {
   handlerRef = null;
   _ageHandlerRef = null;
-  started = false;
   // Clear any prior-session kill state — the new game deserves a fresh budget
   // of retries before we decide the sampler is broken.
   disabled = false;
@@ -861,7 +859,6 @@ function registerSamplerHandlers() {
     engine.on("PlayerTurnActivated", handlerRef);
     _ageHandlerRef = (/** @type {*} */ data) => onPlayerAgeTransitionComplete(data);
     engine.on("PlayerAgeTransitionComplete", _ageHandlerRef);
-    started = true;
     ilog(
       "subscribed to PlayerTurnActivated + PlayerAgeTransitionComplete",
       "(re-registered fresh on load, kill at",

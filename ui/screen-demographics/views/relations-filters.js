@@ -6,7 +6,7 @@
 // Off" header. Split out of view-relations.js.
 
 import { dlog, LINE_DASH } from "/demographics/ui/screen-demographics/views/relations-shared.js";
-import { safePlaySound, playActivate } from "/demographics/ui/demographics-audio.js";
+import { safePlaySound } from "/demographics/ui/demographics-audio.js";
 
 /**
  * One filter-pill descriptor. `kind` groups attitude / political / economic

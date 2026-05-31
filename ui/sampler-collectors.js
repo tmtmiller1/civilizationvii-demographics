@@ -126,7 +126,7 @@ function yieldEnum(key) {
       const v = YieldTypes[key];
       if (typeof v === "number" || typeof v === "string") return v;
     }
-  } catch (e) {
+  } catch (_e) {
     /* swallow */
   }
   return undefined;
@@ -459,13 +459,13 @@ function collectRawTypes(ctx, p) {
   try {
     rawLeader = p.leaderType ?? p.LeaderType;
     if (rawLeader !== undefined && rawLeader !== null) ctx.leaderType = rawLeader;
-  } catch (e) {
+  } catch (_e) {
     /* ignore */
   }
   try {
     rawCiv = p.civilizationType ?? p.CivilizationType;
     if (rawCiv !== undefined && rawCiv !== null) ctx.civType = rawCiv;
-  } catch (e) {
+  } catch (_e) {
     /* ignore */
   }
   return { rawLeader, rawCiv };
@@ -788,7 +788,7 @@ function _readFiniteProp(obj, prop) {
   try {
     const v = obj[prop];
     if (typeof v === "number" && isFinite(v)) return v;
-  } catch (e) {
+  } catch (_e) {
     /* ignore */
   }
   return undefined;
@@ -1614,7 +1614,7 @@ export function buildPlayerCtx(id) {
   // Stats handle (used for score + yields + size counts)
   try {
     ctx.stats = p.Stats;
-  } catch (e) {
+  } catch (_e) {
     /* ignore */
   }
   const stats = ctx.stats;

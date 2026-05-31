@@ -153,21 +153,6 @@ function buildNameToRow() {
 }
 
 /**
- * Alive major-civ player ids via the canonical accessor, or `[]` if unavailable.
- * @returns {Pid[]} Player ids.
- */
-function alliveMajorIds() {
-  try {
-    if (typeof Players?.getAliveMajorIds === "function") {
-      return Array.from(Players.getAliveMajorIds());
-    }
-  } catch (_) {
-    /* */
-  }
-  return [];
-}
-
-/**
  * Compose a player-object string field through `Locale`, swallowing errors.
  * @param {PlayerLibrary | null | undefined} p Player handle.
  * @param {string} field Name of the string field to compose (e.g. `"leaderName"`).

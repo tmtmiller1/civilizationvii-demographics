@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <GermanText>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+            <Text>Demografie</Text>
+        </Row>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+            <Text>Historische Diagramme pro Runde, Weltfaktbuch, globale Beziehungsringe, Konflikt-Gantt und native Triumph-Fortschrittsbalken für jede getroffene Zivilisation.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+            <Text>Demografie</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+            <Text>Demografie</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+            <Text>Punkte im Zeitverlauf</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+            <Text>Live-Geschichte vom Sammler.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+            <Text>Schließen</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+            <Text>Hallo. Wenn Sie dies lesen können, funktioniert das System.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+            <Text>Punkte</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+            <Text>Schatz</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+            <Text>GPT</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+            <Text>Gold-Einkommen pro Runde (netto).</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+            <Text>Siedlungen</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+            <Text>Technologien</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+            <Text>Bürger</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+            <Text>Zusammengesetzte Punktzahl, dieselbe Zahl wie im Sieg-Bildschirm.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+            <Text>Aktueller Schatzbestand.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+            <Text>Gesamtzahl der besessenen Städte und Dörfer.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+            <Text>Gesamtzahl der besessenen Technologien.</Text>
+        </Row>
+    </GermanText>
+</Database>
