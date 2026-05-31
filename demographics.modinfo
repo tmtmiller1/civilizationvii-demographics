@@ -31,6 +31,8 @@
                 <ImportFiles>
                     <Item>ui/demographics-dock-decorator.js</Item>
                     <Item>ui/demographics-sampler.js</Item>
+                    <Item>ui/sampler-collectors.js</Item>
+                    <Item>ui/sampler-wars.js</Item>
                     <Item>ui/demographics-storage.js</Item>
                     <Item>ui/demographics-metrics.js</Item>
                     <Item>ui/demographics-settings.js</Item>
@@ -40,9 +42,22 @@
                     <Item>ui/screen-demographics/screen-demographics.html</Item>
                     <Item>ui/screen-demographics/screen-demographics.css</Item>
                     <Item>ui/screen-demographics/demographics-chart.js</Item>
+                    <Item>ui/screen-demographics/chart-shared.js</Item>
+                    <Item>ui/screen-demographics/chart-line.js</Item>
+                    <Item>ui/screen-demographics/chart-legacy-radar.js</Item>
+                    <Item>ui/screen-demographics/chart-resources.js</Item>
+                    <Item>ui/screen-demographics/chart-wars-gantt.js</Item>
+                    <Item>ui/screen-demographics/chart-triumphs.js</Item>
                     <Item>ui/screen-demographics/views/view-history.js</Item>
+                    <Item>ui/screen-demographics/views/history-toolbar.js</Item>
+                    <Item>ui/screen-demographics/views/history-time-filter.js</Item>
+                    <Item>ui/screen-demographics/views/history-csv.js</Item>
                     <Item>ui/screen-demographics/views/view-factbook.js</Item>
                     <Item>ui/screen-demographics/views/view-relations.js</Item>
+                    <Item>ui/screen-demographics/views/relations-shared.js</Item>
+                    <Item>ui/screen-demographics/views/relations-edges.js</Item>
+                    <Item>ui/screen-demographics/views/relations-filters.js</Item>
+                    <Item>ui/screen-demographics/views/relations-ring-svg.js</Item>
                     <Item>ui/screen-demographics/views/view-options.js</Item>
                     <Item>ui/screen-demographics/views/view-about.js</Item>
                     <Item>images/demographics-icon.svg</Item>
