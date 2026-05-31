@@ -16,7 +16,8 @@ import {
   resolveTurnRange,
   getXAxisMode,
   nearestByTurn,
-  buildStackTurnYears
+  buildStackTurnYears,
+  escapeHtml
 } from "/demographics/ui/screen-demographics/chart-shared.js";
 
 // Wars Gantt — one horizontal bar per war, stacked vertically by start turn.
@@ -943,6 +944,18 @@ function warRosterLines(roster) {
 }
 
 /**
+ * Concise civ-name label for a war side, so the war-cost readout names who
+ * suffered the loss (e.g. "Rome" or "Rome & Egypt") instead of "Attackers".
+ * @param {*[]} roster A war side's roster.
+ * @returns {string} The side's major-civ names joined, or a fallback.
+ */
+function sideCivLabel(roster) {
+  const majors = majorsOnSide(roster);
+  if (majors.length === 0) return "(no major civs)";
+  return majors.map((r) => r.civ).join(" & ");
+}
+
+/**
  * Build the structured tooltip body for a war.
  * @param {*} w The war record.
  * @param {Object} ctx Shared Gantt context.
@@ -974,7 +987,8 @@ function buildWarTooltipBody(w, ctx) {
     endYr,
     yrs,
     turns,
-    cost
+    cost,
+    costLabels: { a: sideCivLabel(w.sideACivs), b: sideCivLabel(w.sideBCivs) }
   };
 }
 
@@ -1023,7 +1037,7 @@ function renderWarTooltip(tooltip, w, ctx) {
     t.turns +
     " turns)";
   tooltip.appendChild(meta);
-  appendWarCost(tooltip, t.cost);
+  appendWarCost(tooltip, t.cost, t.costLabels);
 }
 
 /**
@@ -1057,21 +1071,27 @@ function formatSideCost(c) {
 }
 
 /**
- * Append the per-side observed war-cost section to the tooltip. All figures are
+ * Append the per-side observed war-cost section to the tooltip, labeling each
+ * side by its civ name(s) so it's clear who suffered the loss. All figures are
  * derived from the sampled time-series over the war window (no invented data).
  * @param {HTMLElement} tooltip The tooltip element.
  * @param {{ a: SideWarCost, b: SideWarCost }} cost Per-side costs.
+ * @param {{ a: string, b: string }} labels Per-side civ-name labels.
  * @returns {void}
  */
-function appendWarCost(tooltip, cost) {
+function appendWarCost(tooltip, cost, labels) {
   const block = document.createElement("div");
   block.style.marginTop = "0.4rem";
   block.style.opacity = "0.9";
   block.innerHTML =
     'Cost during war <span style="opacity:0.65;">(observed change)</span>:' +
-    "<br>Attackers — " +
+    "<br>" +
+    escapeHtml(labels.a) +
+    " — " +
     formatSideCost(cost.a) +
-    "<br>Defenders — " +
+    "<br>" +
+    escapeHtml(labels.b) +
+    " — " +
     formatSideCost(cost.b);
   tooltip.appendChild(block);
 }
