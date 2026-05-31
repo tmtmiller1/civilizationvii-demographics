@@ -592,19 +592,19 @@ function appendPortraitDiv(wrap, p, contentLeft, contentTop, scale) {
   const diameter = p.vbR * 2 * scale;
   const div = document.createElement("div");
   div.className = "demographics-relations-portrait";
-  div.style.position = "absolute";
+  // Pixel-coord placement + size are dynamic (computed from the letterboxed
+  // viewBox); position:absolute and pointer-events live in the class.
   div.style.left = px - diameter / 2 + "px";
   div.style.top = py - diameter / 2 + "px";
   div.style.width = diameter + "px";
   div.style.height = diameter + "px";
-  div.style.pointerEvents = "none";
   if (p.kind === "cs-icon") {
     // CS type-icon: a background-image div resolves `blp:` paths the same
     // way every other Civ7 UI surface does (the SVG `<image>` path didn't).
+    // The background image URL is dynamic; the static contain/center/no-repeat
+    // chrome lives in the .demographics-relations-portrait-cs rule.
+    div.classList.add("demographics-relations-portrait-cs");
     div.style.backgroundImage = "url('" + p.iconUrl + "')";
-    div.style.backgroundSize = "contain";
-    div.style.backgroundPosition = "center";
-    div.style.backgroundRepeat = "no-repeat";
   } else {
     const icon = document.createElement("fxs-icon");
     icon.setAttribute("data-icon-id", /** @type {string} */ (p.leaderType));
@@ -684,8 +684,9 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
 export function buildRingSvg(ringIds, names, edges, localPid, viewerPid) {
   if (typeof viewerPid !== "number") viewerPid = localPid;
   const wrap = document.createElement("div");
+  // position:relative is the positioning context for the pixel-placed portrait
+  // overlays; it lives in the .demographics-relations-ring-wrap rule.
   wrap.className = "demographics-relations-ring-wrap";
-  wrap.style.position = "relative";
 
   // Collected as we walk the ring; positioned after the SVG mounts so we can
   // measure where the (proportionally-letterboxed) viewBox area actually

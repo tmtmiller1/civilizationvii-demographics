@@ -226,12 +226,8 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
   // synthetic metrics that carry a `subtitle` (e.g. Triumphs Over Time).
   if (synthMeta && synthMeta.subtitle) {
     const sub = document.createElement("div");
-    sub.className = "demographics-chart-subtitle font-body text-sm";
+    sub.className = "demographics-chart-subtitle demographics-history-subtitle font-body text-sm";
     sub.textContent = synthMeta.subtitle;
-    sub.style.cssText =
-      "text-align:center;color:#c2c4cc;" +
-      "font-style:italic;margin-top:-0.15rem;margin-bottom:0.35rem;" +
-      "letter-spacing:0.04em;";
     host.appendChild(sub);
   }
 }
@@ -317,12 +313,9 @@ export function appendMetricCaptions(host, activeMetric) {
  */
 function buildMetricInfoCaption(opts) {
   const wrap = document.createElement("div");
-  wrap.className = "demographics-metric-info";
-  wrap.style.position = "relative";
-  wrap.style.textAlign = "center";
   // Caption now lives between title and filter row — center on the full
   // host width (no asymmetric padding needed; nothing to align with).
-  wrap.style.margin = "0.1rem 0 0.25rem 0";
+  wrap.className = "demographics-metric-info demographics-history-metric-info";
 
   const trigger = document.createElement("div");
   trigger.className = "demographics-chart-caption-compact font-body text-xs";
@@ -401,8 +394,7 @@ function appendRadarControls(toolbar, ctx) {
     pill.className = "demographics-chart-time-filter-pill";
     if (opt.id === active) pill.classList.add("is-active");
     if (!haveSnap) {
-      pill.style.opacity = "0.4";
-      pill.style.cursor = "not-allowed";
+      pill.classList.add("demographics-history-pill-disabled");
       pill.title = "No snapshot yet — the age hasn't ended.";
     } else {
       makeClickable(pill, (ev) => {
@@ -614,7 +606,7 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
   if (!wondersOn) {
     // OFF state — desaturated text color is the "off" signal; the
     // "Wonders: OFF" label itself already says it explicitly.
-    wondersBtn.style.color = "#c0a875";
+    wondersBtn.classList.add("demographics-history-wonders-off");
   }
   makeClickable(wondersBtn, (ev) => {
     ev?.stopPropagation?.();
@@ -641,28 +633,8 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
  */
 function buildCsvInfoTooltip() {
   const tip = document.createElement("div");
-  tip.className = "img-tooltip-border img-tooltip-bg";
-  tip.style.cssText = [
-    "position:absolute",
-    "right:0",
-    "top:1.9rem",
-    "width:36rem",
-    "max-width:92vw",
-    "padding:1.1rem 1.3rem 1.1rem",
-    "font-family:BodyFont, sans-serif",
-    "font-size:0.95rem",
-    "line-height:1.5",
-    "color:#d6d8dc",
-    "text-align:left",
-    "white-space:normal",
-    "word-wrap:break-word",
-    "overflow-wrap:break-word",
-    "pointer-events:none",
-    "opacity:0",
-    "transition:opacity 0.1s",
-    "z-index:50",
-    "box-sizing:border-box"
-  ].join(";");
+  tip.className =
+    "img-tooltip-border img-tooltip-bg demographics-history-tip demographics-history-tip-csv";
   const HDR =
     "color:#f3c34c;font-family:TitleFont, BodyFont, sans-serif;" +
     "font-weight:700;text-transform:uppercase;letter-spacing:0.08em;" +
@@ -681,23 +653,7 @@ function buildCsvInfoTooltip() {
  */
 function buildCsvInfoIcon() {
   const el = document.createElement("div");
-  el.className = "demographics-chart-toolbar-info";
-  el.style.cssText = [
-    "display:block",
-    "flex:0 0 1.3rem",
-    "width:1.3rem",
-    "height:1.3rem",
-    // Native info BLP — same icon Civ7 uses for tooltips / civilopedia.
-    "background-image:url('blp:icon_info')",
-    "background-size:contain",
-    "background-position:center",
-    "background-repeat:no-repeat",
-    "cursor:help",
-    "user-select:none",
-    "position:relative",
-    "opacity:0.75",
-    "transition:opacity 0.12s"
-  ].join(";");
+  el.className = "demographics-chart-toolbar-info demographics-history-csv-info-icon";
   // Custom HTML tooltip — Coherent doesn't reliably render multi-line
   // native `title` attrs, and `\n` shows as a single space. Inject our
   // own absolute-positioned tooltip with the engine's tooltip chrome.
@@ -742,14 +698,7 @@ function appendCsvControls(toolbar, host, ctx) {
   // toolbar's justification or gap behavior (Coherent's flex layout has
   // surprised us before — explicit grouping removes the ambiguity).
   const csvGroup = document.createElement("div");
-  csvGroup.style.cssText = [
-    "display:flex",
-    "flex-direction:row",
-    "flex-wrap:nowrap",
-    "align-items:center",
-    "gap:0.35rem",
-    "flex:0 0 auto"
-  ].join(";");
+  csvGroup.className = "demographics-history-csv-group";
   csvGroup.appendChild(csvBtn);
   csvGroup.appendChild(csvInfo);
   toolbar.appendChild(csvGroup);

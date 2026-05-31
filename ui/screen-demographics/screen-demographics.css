@@ -325,6 +325,7 @@
 
 /* Time-range filter pill row (sits between chart title and chart). */
 .demographics-chart-time-filter-row {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -359,6 +360,18 @@
     background: rgba(60, 45, 20, 0.85);
     color: var(--ia-accent-gold);
     font-weight: 600;
+}
+/* Disabled (cross-age) filter pill. Greyed via color / border alpha rather
+   than opacity — opacity would compound onto the absolutely-positioned
+   tooltip child and dim it to illegibility. pointer-events stays auto so the
+   tooltip still shows on hover. */
+.demographics-chart-time-filter-pill.is-disabled {
+    position: relative;
+    color: rgba(194, 196, 204, 0.45);
+    border-color: rgba(168, 132, 90, 0.25);
+    background: rgba(20, 16, 10, 0.35);
+    cursor: not-allowed;
+    pointer-events: auto;
 }
 
 /* Custom hover tooltip that follows the cursor over the chart. */
@@ -783,6 +796,7 @@
 
 .demographics-factbook-avatar {
     position: relative;
+    flex-shrink: 0;
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid rgba(201, 162, 76, 0.6);
@@ -1048,6 +1062,7 @@
 
 /* Ring container — takes most of the available space, centered. */
 .demographics-relations-ring-wrap {
+    position: relative;
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
@@ -1069,12 +1084,20 @@
    wrap (computed from svg.getBoundingClientRect after layout). Uses the
    same fxs-icon path the factbook header uses. */
 .demographics-relations-portrait {
+    position: absolute;
     border-radius: 50%;
     overflow: hidden;
     border: 1px solid rgba(28, 20, 8, 0.7);
     box-sizing: border-box;
     box-shadow: 0 0 0.15rem rgba(0, 0, 0, 0.5);
     pointer-events: none;
+}
+/* CS type-icon variant — static background-image chrome (the URL is set
+   inline per-placement). */
+.demographics-relations-portrait-cs {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 .demographics-relations-portrait-icon {
     display: block;
@@ -1712,4 +1735,206 @@
    inline. */
 .demographics-radar-legend-label {
     position: absolute;
+}
+
+/* ── History toolbar / time-filter (history-* views) ─────────────────────── */
+
+/* Parenthetical metric subtitle below the chart title. */
+.demographics-history-subtitle {
+    text-align: center;
+    color: #c2c4cc;
+    font-style: italic;
+    margin-top: -0.15rem;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.04em;
+}
+
+/* Metric "ⓘ" caption wrapper — sits between the title and the filter row. */
+.demographics-history-metric-info {
+    position: relative;
+    text-align: center;
+    margin: 0.1rem 0 0.25rem 0;
+}
+
+/* Radar snapshot pill with no captured snapshot yet — greyed + not-allowed. */
+.demographics-history-pill-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Wonders-marker toggle button in its OFF state — desaturated label color. */
+.demographics-history-wonders-off {
+    color: #c0a875;
+}
+
+/* Shared chrome for the history info tooltips (CSV + disabled-filter). The
+   left/right anchor and width differ per tooltip (modifier classes below). */
+.demographics-history-tip {
+    position: absolute;
+    top: 1.9rem;
+    max-width: 92vw;
+    padding: 1.1rem 1.3rem 1.1rem;
+    font-family: BodyFont, sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #d6d8dc;
+    text-align: left;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s;
+    z-index: 50;
+    box-sizing: border-box;
+}
+.demographics-history-tip-csv {
+    right: 0;
+    width: 36rem;
+}
+.demographics-history-tip-disabled-filter {
+    left: 0;
+    width: 38rem;
+}
+
+/* Tooltip title bar (disabled-filter tooltip — built as real DOM). */
+.demographics-history-tip-title {
+    color: #f3c34c;
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(201, 162, 76, 0.55);
+}
+.demographics-history-tip-body {
+    color: #d6d8dc;
+}
+
+/* Native info BLP icon next to the "Copy as CSV" button. Base opacity is
+   raised to 1 on hover via an inline style toggle. */
+.demographics-history-csv-info-icon {
+    display: block;
+    flex: 0 0 1.3rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    background-image: url("blp:icon_info");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: help;
+    user-select: none;
+    position: relative;
+    opacity: 0.75;
+    transition: opacity 0.12s;
+}
+
+/* Inline-flex group wrapping the CSV button + its info icon so the icon
+   reliably renders to the right regardless of toolbar justification. */
+.demographics-history-csv-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+}
+
+/* CSV export toast. Success/failure border-color + color are dynamic and set
+   inline; border-color overrides the transparent placeholder below to keep
+   the original `1px solid <tint>` border. */
+.demographics-csv-toast {
+    position: fixed;
+    top: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    background: rgba(20, 16, 10, 0.92);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+}
+
+/* ── Factbook (view-factbook) ────────────────────────────────────────────── */
+
+/* Click-to-hide affordance hint above the matrix. */
+.demographics-factbook-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem 0.45rem;
+    color: #e5d2ac;
+    opacity: 0.85;
+    font-style: italic;
+}
+.demographics-factbook-hint-icon {
+    width: 1rem;
+    height: 1rem;
+    background-image: url("blp:icon_info");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex: 0 0 auto;
+    opacity: 0.85;
+}
+
+/* Toggleable (other-civ) column header — only these headers carry a click
+   handler, so the pointer cursor is opt-in rather than on every header. */
+.demographics-factbook-civ-header-clickable {
+    cursor: pointer;
+}
+
+/* ── Relations filters (relations-filters) ───────────────────────────────── */
+
+/* "All On · All Off" bulk-toggle header row. */
+.demographics-relations-filter-ctrl-row {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    margin-bottom: 0.35rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid rgba(168, 132, 90, 0.25);
+    font-size: 0.72rem;
+    color: var(--ia-text-accent-2, #c2c4cc);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: TitleFont, BodyFont, sans-serif;
+}
+/* "All On" / "All Off" link span (hover color toggled inline). */
+.demographics-relations-all-toggle {
+    cursor: pointer;
+    color: var(--ia-text-secondary, #e5d2ac);
+    transition: color 0.1s;
+}
+/* "·" separator between the two toggle links. */
+.demographics-relations-filter-sep {
+    color: rgba(168, 132, 90, 0.5);
+}
+
+/* Filter-pill mini sample-line swatch. Width derives from the SAMPLE_W
+   constant and stays inline. */
+.demographics-relations-swatch {
+    display: inline-block;
+    vertical-align: middle;
+    height: 7px;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    position: relative;
+}
+/* One solid sub-segment of a swatch (synthesizes dash patterns). left, width,
+   and background are per-segment dynamics set inline. */
+.demographics-relations-swatch-seg {
+    position: absolute;
+    top: 0;
+    height: 7px;
+    border-radius: 3.5px;
 }
