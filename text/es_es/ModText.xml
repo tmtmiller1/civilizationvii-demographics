@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
-    <SpanishText>
-        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+    <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="es_ES">
             <Text>Demografía</Text>
-        </Row>
-        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+        </Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="es_ES">
             <Text>Gráficas históricas por turno, anuario mundial, anillos de relaciones globales, diagrama de Gantt de conflictos y barras de progreso Triumphs nativas para cada civilización encontrada.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="es_ES">
             <Text>Demografía</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="es_ES">
             <Text>Demografía</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="es_ES">
             <Text>Puntuación a lo largo del tiempo</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="es_ES">
             <Text>Historia en vivo del recolector.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="es_ES">
             <Text>Cerrar</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="es_ES">
             <Text>Hola. Si puedes leer esto, el sistema funciona.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="es_ES">
             <Text>Puntuación</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="es_ES">
             <Text>Tesoro</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="es_ES">
             <Text>GPT</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="es_ES">
             <Text>Ingreso de oro por turno (neto).</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="es_ES">
             <Text>Asentamientos</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="es_ES">
             <Text>Tecnologías</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="es_ES">
             <Text>Cívicos</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="es_ES">
             <Text>Puntuación de poder compuesta, el mismo número que usa la pantalla de Victoria.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="es_ES">
             <Text>Saldo actual del tesoro.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="es_ES">
             <Text>Número total de ciudades y pueblos poseídos.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="es_ES">
             <Text>Número total de tecnologías poseídas.</Text>
-        </Row>
-    </SpanishText>
+        </Replace>
+    </LocalizedText>
 </Database>

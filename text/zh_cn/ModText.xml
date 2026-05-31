@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
-    <ChineseText>
-        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+    <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="zh_Hans_CN">
             <Text>人口统计</Text>
-        </Row>
-        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+        </Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="zh_Hans_CN">
             <Text>每回合历史图表、世界年鉴、全球关系环、冲突甘特图，以及每个已遇文明的原生成就进度条。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="zh_Hans_CN">
             <Text>人口统计</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="zh_Hans_CN">
             <Text>人口统计</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="zh_Hans_CN">
             <Text>分数随时间变化</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="zh_Hans_CN">
             <Text>采样器实时历史。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="zh_Hans_CN">
             <Text>关闭</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="zh_Hans_CN">
             <Text>你好。如果你能看到这句话，系统正常。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="zh_Hans_CN">
             <Text>分数</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="zh_Hans_CN">
             <Text>金库</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="zh_Hans_CN">
             <Text>每回合金币</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合净金币收入。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="zh_Hans_CN">
             <Text>定居点</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="zh_Hans_CN">
             <Text>科技</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="zh_Hans_CN">
             <Text>公民</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="zh_Hans_CN">
             <Text>综合实力分数，与胜利界面一致。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="zh_Hans_CN">
             <Text>当前金库余额。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="zh_Hans_CN">
             <Text>拥有的城市和城镇总数。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="zh_Hans_CN">
             <Text>拥有的科技总数。</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="zh_Hans_CN">
             <Text>拥有的公民总数。</Text>
-        </Row>
-    </ChineseText>
+        </Replace>
+    </LocalizedText>
 </Database>
