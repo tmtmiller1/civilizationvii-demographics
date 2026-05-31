@@ -1079,24 +1079,8 @@ function resolveWonderEvents(wonderEventsByPid) {
 function ensureWonderTip(state, wrap) {
   if (state.wonderTip && state.wonderTip.isConnected) return state.wonderTip;
   const wonderTip = document.createElement("div");
-  wonderTip.className = "demographics-wonder-tooltip img-tooltip-border img-tooltip-bg";
-  wonderTip.style.cssText = [
-    "position:absolute",
-    "display:none",
-    "z-index:30",
-    "pointer-events:none",
-    "padding:0.55rem 0.75rem 0.6rem",
-    "min-width:14rem",
-    "max-width:24rem",
-    "color:#c2c4cc",
-    "font-family:BodyFont, sans-serif",
-    "font-size:0.78rem",
-    "line-height:1.4",
-    "background:rgba(12, 9, 6, 0.96)",
-    "border:1px solid rgba(243, 195, 76, 0.6)",
-    "border-radius:0.2rem",
-    "white-space:normal"
-  ].join(";");
+  wonderTip.className =
+    "demographics-wonder-tooltip demographics-line-wonder-tip img-tooltip-border img-tooltip-bg";
   wrap.appendChild(wonderTip);
   state.wonderTip = wonderTip;
   return wonderTip;
@@ -1191,14 +1175,7 @@ function computeWonderTipPlacement(wonderTip, wrap, iconLeft, iconTop, iconSize)
 function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
   if (!wonderTip.arrow) {
     const arrow = document.createElement("div");
-    arrow.style.cssText = [
-      "position:absolute",
-      "width:0;height:0;",
-      "border:8px solid transparent;",
-      "z-index:31;",
-      "pointer-events:none;"
-    ].join("");
-    arrow.className = "wonder-tip-arrow";
+    arrow.className = "wonder-tip-arrow demographics-line-wonder-tip-arrow";
     wonderTip.appendChild(arrow);
     wonderTip.arrow = arrow;
   }
@@ -1290,23 +1267,11 @@ function findEventDataPoint(ds, turn) {
  */
 function createWonderMarker(tipState, wrap, ev, civLabel) {
   const mk = document.createElement("div");
-  mk.className = "demographics-wonder-marker";
+  mk.className = "demographics-wonder-marker demographics-line-wonder-marker";
   // Only real per-wonder icons reach this code path — events without a
   // specific icon are pre-filtered upstream, so no generic fallback is
-  // stacked.
-  mk.style.cssText = [
-    "position:absolute",
-    "width:" + WONDER_ICON_SIZE + "px",
-    "height:" + WONDER_ICON_SIZE + "px",
-    "background-image:url('" + ev.iconUrl + "')",
-    "background-size:contain",
-    "background-repeat:no-repeat",
-    "background-position:center",
-    "pointer-events:auto",
-    "z-index:6",
-    "filter:drop-shadow(0 0 3px rgba(0,0,0,0.9))",
-    "cursor:pointer"
-  ].join(";");
+  // stacked. Per-event icon URL stays inline (dynamic).
+  mk.style.backgroundImage = "url('" + ev.iconUrl + "')";
   // Custom hover tooltip — native `title` doesn't render in Coherent.
   // Anchor the tip to the icon's current position (not the cursor) so it
   // sits in a predictable spot and doesn't jitter. Read the icon's offset
@@ -2248,21 +2213,8 @@ function ensureChartTooltipEl(wrap) {
   let tip = /** @type {HTMLElement|null} */ (wrap.querySelector(".demographics-chart-tooltip"));
   if (!tip) {
     tip = document.createElement("div");
-    tip.className = "demographics-chart-tooltip img-tooltip-border img-tooltip-bg";
-    tip.style.cssText = [
-      "position:absolute",
-      "pointer-events:none",
-      "min-width:14rem",
-      "max-width:22rem",
-      "padding:0.55rem 0.7rem",
-      "color:#c2c4cc",
-      "font-family:BodyFont, sans-serif",
-      "font-size:0.85rem",
-      "line-height:1.3",
-      "z-index:50",
-      "opacity:0",
-      "transition:opacity 0.08s"
-    ].join(";");
+    tip.className =
+      "demographics-chart-tooltip demographics-line-chart-tooltip img-tooltip-border img-tooltip-bg";
     wrap.appendChild(tip);
   }
   return tip;
@@ -2820,13 +2772,17 @@ export function renderChart(host, options) {
  */
 function buildChartCanvas(renderW, renderH) {
   const wrap = document.createElement("div");
-  wrap.className = "demographics-chartjs-wrap";
-  wrap.style.cssText =
-    "position:relative;width:" + renderW + "px;height:" + renderH + "px;flex:0 0 auto;";
+  wrap.className = "demographics-chartjs-wrap demographics-line-chartjs-wrap";
+  // Render dimensions are dynamic (computed per viewport) — keep inline.
+  wrap.style.width = renderW + "px";
+  wrap.style.height = renderH + "px";
   const canvas = document.createElement("canvas");
+  canvas.className = "demographics-line-chartjs-canvas";
   canvas.width = renderW;
   canvas.height = renderH;
-  canvas.style.cssText = "display:block;width:" + renderW + "px;height:" + renderH + "px;";
+  // Canvas CSS size mirrors the dynamic render dimensions — keep inline.
+  canvas.style.width = renderW + "px";
+  canvas.style.height = renderH + "px";
   wrap.appendChild(canvas);
   return { wrap, canvas };
 }
