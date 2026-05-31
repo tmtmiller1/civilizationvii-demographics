@@ -501,7 +501,8 @@ export function render(host, ctx) {
   const metricObj = (() => {
     try {
       return getMetric(activeMetric);
-    } catch (_) {
+    } catch (e) {
+      derr("resolve metricObj:", e);
       return null;
     }
   })();

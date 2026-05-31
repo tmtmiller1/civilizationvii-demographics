@@ -165,11 +165,7 @@ function migrateLegacySlice(root) {
     (!root[MOD_ID] || typeof root[MOD_ID] !== "object" || Object.keys(root[MOD_ID]).length === 0)
   ) {
     root[MOD_ID] = root[LEGACY_KEY];
-    try {
-      writeRoot(root);
-    } catch (_) {
-      /* */
-    }
+    writeRoot(root);
     dlog("migrated legacy settings from modSettings.infoAddict → modSettings.demographics");
   }
 }
@@ -187,8 +183,8 @@ function migrateLegacySlice(root) {
     if (root[MOD_ID] && typeof root[MOD_ID] === "object") {
       Object.assign(memoryBucket, root[MOD_ID]);
     }
-  } catch (_) {
-    /* */
+  } catch (e) {
+    derr("_seedMemoryFromStorage:", e);
   }
 })();
 

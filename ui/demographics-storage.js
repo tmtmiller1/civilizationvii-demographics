@@ -149,7 +149,8 @@ function detectGameSpeedType() {
 function readSampleCapOverride() {
   try {
     return DemographicsSettings.getSetting("sampleCapOverride", "auto");
-  } catch (_) {
+  } catch (e) {
+    derr("readSampleCapOverride:", e);
     return "auto";
   }
 }
@@ -211,7 +212,8 @@ function resolveEffectiveCap() {
 function decimationDisabled() {
   try {
     return !!DemographicsSettings.getSetting("disableDecimation", false);
-  } catch (_) {
+  } catch (e) {
+    derr("decimationDisabled:", e);
     return false;
   }
 }
@@ -464,7 +466,9 @@ class StorageImpl {
       );
       try {
         store.write(PAYLOAD_KEY, JSON.stringify(this._mem));
-      } catch (_) {}
+      } catch (e) {
+        derr("_loadEmpty: recovery store.write threw:", e);
+      }
       return this._mem;
     }
     dlog("load: no existing history (pid=" + store.pid + ")");
@@ -504,7 +508,9 @@ class StorageImpl {
       );
       try {
         store.write(PAYLOAD_KEY, JSON.stringify(this._mem));
-      } catch (_) {}
+      } catch (e) {
+        derr("_loadParsed: recovery store.write threw:", e);
+      }
       return this._mem;
     }
 
@@ -662,7 +668,9 @@ class StorageImpl {
       ) {
         return !!DemographicsSettings.getSetting("perfMode", false);
       }
-    } catch (_) {}
+    } catch (e) {
+      derr("_perfModeEnabled:", e);
+    }
     return false;
   }
 

@@ -27,6 +27,7 @@
 
 import {
   dlog,
+  derr,
   safeCall,
   normalizeCivColor
 } from "/demographics/ui/screen-demographics/views/relations-shared.js";
@@ -670,14 +671,10 @@ function buildScaffold(host) {
  * @returns {boolean|undefined} The recorded met state, or `undefined`.
  */
 function latestSampleMet(history, pid) {
-  try {
-    const samples = history?.samples || [];
-    for (let i = samples.length - 1; i >= 0; i--) {
-      const ps = samples[i]?.players?.[pid];
-      if (ps && typeof ps.met === "boolean") return ps.met;
-    }
-  } catch (_) {
-    /* */
+  const samples = history?.samples || [];
+  for (let i = samples.length - 1; i >= 0; i--) {
+    const ps = samples[i]?.players?.[pid];
+    if (ps && typeof ps.met === "boolean") return ps.met;
   }
   return undefined;
 }
@@ -1267,7 +1264,14 @@ export function render(host, ctx) {
     repaint: () => repaintView(rs)
   };
 
-  buildTabBars(rs);
-  rs.repaint();
-  dlog("rendered relations; topTab=", rs.topTab, "met=", rs.metIds.length);
+  try {
+    buildTabBars(rs);
+    rs.repaint();
+    dlog("rendered relations; topTab=", rs.topTab, "met=", rs.metIds.length);
+  } catch (e) {
+    // Top-level guard: own-logic bugs SURFACE here (logged) without crashing
+    // the game UI. Inner per-helper swallows around own logic were removed so
+    // failures propagate to this single logged boundary.
+    derr("render:", e);
+  }
 }

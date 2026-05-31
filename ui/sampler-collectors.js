@@ -656,12 +656,8 @@ function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
  * @returns {string | undefined} The canonical type string, or undefined.
  */
 function _canonicalTypeString(rowType, raw) {
-  try {
-    if (typeof rowType === "string" && rowType.length > 0) return rowType;
-    if (typeof raw === "string" && raw.length > 0) return raw;
-  } catch (_) {
-    /* */
-  }
+  if (typeof rowType === "string" && rowType.length > 0) return rowType;
+  if (typeof raw === "string" && raw.length > 0) return raw;
   return undefined;
 }
 

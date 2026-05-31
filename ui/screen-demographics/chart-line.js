@@ -22,6 +22,16 @@ import {
 } from "/demographics/ui/screen-demographics/chart-shared.js";
 
 /**
+ * Error logger for this module. Always logs (unlike the gated {@link dlog}) so
+ * own-logic bugs surface in UI.log rather than being silently swallowed.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
+function derr(...a) {
+  console.error("[Demographics.chart-line]", ...a);
+}
+
+/**
  * One per-civ data series built from history for a single metric.
  * @typedef {Object} ChartSeries
  * @property {string} name End-of-line / legend display name.
@@ -553,26 +563,29 @@ function applyShowEliminated(allSeries) {
  * @returns {void}
  */
 function applySmoothChart(allSeries) {
+  let smooth = false;
   try {
-    const smooth = !!DemographicsSettings.getSetting("smoothChart", false);
-    if (smooth) {
-      for (const s of allSeries) {
-        if (!Array.isArray(s.points) || s.points.length < 3) continue;
-        const src = s.points;
-        const out = new Array(src.length);
-        out[0] = src[0];
-        out[src.length - 1] = src[src.length - 1];
-        for (let i = 1; i < src.length - 1; i++) {
-          const a = src[i - 1].v,
-            b = src[i].v,
-            c = src[i + 1].v;
-          out[i] = { t: src[i].t, v: (a + b + c) / 3 };
-        }
-        s.points = out;
-      }
-    }
+    smooth = !!DemographicsSettings.getSetting("smoothChart", false);
   } catch (_) {
-    /* */
+    /* setting unreadable — leave smoothing off */
+  }
+  if (!smooth) return;
+  // Own-logic smoothing math runs OUTSIDE the engine guard so a real bug here
+  // surfaces (propagating to the logged top-level render guard) rather than
+  // being swallowed.
+  for (const s of allSeries) {
+    if (!Array.isArray(s.points) || s.points.length < 3) continue;
+    const src = s.points;
+    const out = new Array(src.length);
+    out[0] = src[0];
+    out[src.length - 1] = src[src.length - 1];
+    for (let i = 1; i < src.length - 1; i++) {
+      const a = src[i - 1].v,
+        b = src[i].v,
+        c = src[i + 1].v;
+      out[i] = { t: src[i].t, v: (a + b + c) / 3 };
+    }
+    s.points = out;
   }
 }
 
@@ -737,8 +750,8 @@ function makeAxisFormatters(maps, metricMeta) {
       try {
         const s = metricMeta.format(v);
         if (typeof s === "string") return s;
-      } catch (_) {
-        /* */
+      } catch (e) {
+        derr("fmtY: metric.format threw:", e);
       }
     }
     return String(v);
