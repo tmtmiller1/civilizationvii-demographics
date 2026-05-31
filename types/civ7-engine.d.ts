@@ -145,6 +145,7 @@ declare global {
   const UIViewExperience: { [key: string]: any };
   const VictoryManager: { [key: string]: any };
   const SerialBase: { [key: string]: any };
+  const DiplomacyPlayerRelationships: { [key: string]: any };
 
   /** Global tutorial property bag (wiped at age transition; fallback tier). */
   const GameTutorial: {

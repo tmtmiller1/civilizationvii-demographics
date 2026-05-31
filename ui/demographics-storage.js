@@ -31,13 +31,43 @@
 
 import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
 
+// The shared global {History} typedef merges with the DOM lib's `History`
+// interface (both are declared in global scope), which makes it unusable as a
+// structural annotation here. Alias the same shape under a local name. Field
+// shapes mirror the {History} interface in types/demographics.d.ts exactly.
+/**
+ * @typedef {object} StoredHistory
+ * @property {number} version Persisted schema version.
+ * @property {string | number} seed Game seed.
+ * @property {Snapshot[]} samples Per-turn samples.
+ * @property {AgeBoundary[]} ageBoundaries Age hand-off markers.
+ * @property {Record<string, any>} eliminated Elimination bookkeeping.
+ */
+
 const DBG = true;
+/**
+ * Debug logger, no-op unless {@link DBG} is set.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.storage]", ...a);
 }
+/**
+ * Error logger; always emits.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function derr(...a) {
   console.error("[Demographics.storage]", ...a);
 }
+/**
+ * Run `fn`, returning its result, or `fallback` if it throws. Never throws.
+ * @template T
+ * @param {() => T} fn Thunk to invoke.
+ * @param {T} fallback Value returned if `fn` throws.
+ * @returns {T} The result of `fn`, or `fallback` on error.
+ */
 function safeCall(fn, fallback) {
   try {
     return fn();
@@ -48,67 +78,136 @@ function safeCall(fn, fallback) {
 }
 
 // ── Schema ──────────────────────────────────────────────────────────
+/** Persisted history schema version. */
 const VERSION = 1;
+/** Absolute ceiling on retained samples, regardless of user override. */
 const HARD_MAX_SAMPLES = 50000;
 // Catalog scope + object/key names. Stable across all ages.
+/** Hashing scope prefix; stable across all ages. */
 const CATALOG_SCOPE = "demographics-history-v1";
-const HISTORY_OBJECT = "history";
+/** Property-bag key under which the JSON payload is stored. */
 const PAYLOAD_KEY = "json";
 
 // ── Sample cap config (preserved from prior implementation) ─────────
+/** @type {Record<string, number>} */
 const ADAPTIVE_DEFAULTS_BY_SPEED = {
   GAMESPEED_QUICK: 500,
   GAMESPEED_STANDARD: 2000,
   GAMESPEED_EPIC: 3000,
   GAMESPEED_MARATHON: 5000
 };
+/** Sample cap used when the game speed can't be detected. */
 const FALLBACK_DEFAULT = 2000;
 
-function detectGameSpeedType() {
-  return safeCall(() => {
-    if (typeof Game === "undefined") return null;
-    const candidate =
-      Game.gameSpeedType ||
-      (typeof Game.getGameSpeedType === "function" ? Game.getGameSpeedType() : null);
-    if (typeof candidate === "string" && candidate.length > 0) return candidate;
-    const hash = Game.gameSpeed;
-    if (
-      hash !== undefined &&
-      hash !== null &&
-      typeof GameInfo !== "undefined" &&
-      GameInfo.GameSpeeds &&
-      typeof GameInfo.GameSpeeds.lookup === "function"
-    ) {
-      const row = GameInfo.GameSpeeds.lookup(hash);
-      if (row && typeof row.GameSpeedType === "string") return row.GameSpeedType;
-    }
-    return null;
-  }, null);
+/**
+ * Resolve a game-speed type string from a `Game.gameSpeed` hash via the
+ * `GameInfo.GameSpeeds` lookup table.
+ * @param {*} hash The `Game.gameSpeed` hash value.
+ * @returns {string | null} The speed type string, or null.
+ */
+function gameSpeedTypeFromHash(hash) {
+  if (
+    hash !== undefined &&
+    hash !== null &&
+    typeof GameInfo !== "undefined" &&
+    GameInfo.GameSpeeds &&
+    typeof GameInfo.GameSpeeds.lookup === "function"
+  ) {
+    const row = GameInfo.GameSpeeds.lookup(hash);
+    if (row && typeof row.GameSpeedType === "string") return row.GameSpeedType;
+  }
+  return null;
 }
 
-function resolveEffectiveCap() {
-  let override;
+/**
+ * Read the active game-speed type string off the (loosely typed) engine
+ * globals, trying the direct field/getter first and falling back to a
+ * `GameInfo.GameSpeeds` hash lookup.
+ * @returns {string | null} The speed type (e.g. `"GAMESPEED_EPIC"`), or null.
+ */
+function lookupGameSpeedType() {
+  if (typeof Game === "undefined") return null;
+  const candidate =
+    Game.gameSpeedType ||
+    (typeof Game.getGameSpeedType === "function" ? Game.getGameSpeedType() : null);
+  if (typeof candidate === "string" && candidate.length > 0) return candidate;
+  return gameSpeedTypeFromHash(Game.gameSpeed);
+}
+
+/**
+ * Detect the active game-speed type, never throwing.
+ * @returns {string | null} The speed type string, or null if unavailable.
+ */
+function detectGameSpeedType() {
+  return safeCall(() => lookupGameSpeedType(), null);
+}
+
+/**
+ * Read the raw `sampleCapOverride` setting, defaulting to `"auto"` on error.
+ * @returns {number | string} The override value, or `"auto"`.
+ */
+function readSampleCapOverride() {
   try {
-    override = DemographicsSettings.getSetting("sampleCapOverride", "auto");
+    return DemographicsSettings.getSetting("sampleCapOverride", "auto");
   } catch (_) {
-    override = "auto";
+    return "auto";
   }
-  if (typeof override === "number" && isFinite(override) && override !== 0) {
-    if (override < 0) return { cap: Infinity, source: "user:unlimited" };
-    return { cap: Math.min(override, HARD_MAX_SAMPLES), source: "user:" + override };
+}
+
+/**
+ * Interpret a numeric sample-cap override into an {@link EffectiveCap}.
+ * @param {number} override A finite, non-zero override count.
+ * @returns {EffectiveCap} The resolved cap and its source label.
+ */
+function capFromNumber(override) {
+  if (override < 0) return { cap: Infinity, source: "user:unlimited" };
+  return { cap: Math.min(override, HARD_MAX_SAMPLES), source: "user:" + override };
+}
+
+/**
+ * Interpret a non-"auto" string sample-cap override into an {@link EffectiveCap}.
+ * @param {string} override The raw string override.
+ * @returns {EffectiveCap | null} The resolved cap, or null if not a valid number.
+ */
+function capFromString(override) {
+  const parsed = parseInt(override, 10);
+  if (isFinite(parsed) && parsed !== 0) {
+    return capFromNumber(parsed);
   }
-  if (typeof override === "string" && override !== "auto") {
-    const parsed = parseInt(override, 10);
-    if (isFinite(parsed) && parsed !== 0) {
-      if (parsed < 0) return { cap: Infinity, source: "user:unlimited" };
-      return { cap: Math.min(parsed, HARD_MAX_SAMPLES), source: "user:" + parsed };
-    }
-  }
+  return null;
+}
+
+/**
+ * Resolve the adaptive (game-speed-derived) sample cap.
+ * @returns {EffectiveCap} The resolved cap and its source label.
+ */
+function adaptiveCap() {
   const speed = detectGameSpeedType();
   const adaptive = (speed && ADAPTIVE_DEFAULTS_BY_SPEED[speed]) || FALLBACK_DEFAULT;
   return { cap: adaptive, source: "auto:" + (speed || "fallback") };
 }
 
+/**
+ * Resolve the effective sample cap from the user override, falling back to the
+ * adaptive per-game-speed default.
+ * @returns {EffectiveCap} The resolved cap and its source label.
+ */
+function resolveEffectiveCap() {
+  const override = readSampleCapOverride();
+  if (typeof override === "number" && isFinite(override) && override !== 0) {
+    return capFromNumber(override);
+  }
+  if (typeof override === "string" && override !== "auto") {
+    const fromString = capFromString(override);
+    if (fromString) return fromString;
+  }
+  return adaptiveCap();
+}
+
+/**
+ * Whether the user has disabled sample decimation.
+ * @returns {boolean}
+ */
 function decimationDisabled() {
   try {
     return !!DemographicsSettings.getSetting("disableDecimation", false);
@@ -118,6 +217,11 @@ function decimationDisabled() {
 }
 
 // ── Hashing (matches engine SerialBase.makeHash) ────────────────────
+/**
+ * FNV-1a 32-bit hash, used as a fallback when `Database.makeHash` is absent.
+ * @param {string} str Input string.
+ * @returns {number} 32-bit unsigned hash.
+ */
 function fnv1a(str) {
   let h = 0x811c9dc5 >>> 0;
   for (let i = 0; i < str.length; i++) {
@@ -126,6 +230,11 @@ function fnv1a(str) {
   }
   return h >>> 0;
 }
+/**
+ * Hash a key with the engine's `Database.makeHash`, falling back to {@link fnv1a}.
+ * @param {string} s Input string.
+ * @returns {number} 32-bit hash.
+ */
 function dbHash(s) {
   try {
     if (typeof Database !== "undefined" && typeof Database.makeHash === "function") {
@@ -138,6 +247,11 @@ function dbHash(s) {
 }
 
 // ── History helpers ─────────────────────────────────────────────────
+/**
+ * Build an empty {@link History} stamped with the given seed.
+ * @param {string | number} seed Game seed.
+ * @returns {StoredHistory} A fresh, empty history.
+ */
 function emptyHistory(seed) {
   return {
     version: VERSION,
@@ -147,9 +261,19 @@ function emptyHistory(seed) {
     eliminated: {}
   };
 }
+/**
+ * Whether a parsed value is a structurally valid {@link History}.
+ * @param {*} h Candidate value.
+ * @returns {boolean}
+ */
 function isValid(h) {
   return !!(h && typeof h === "object" && h.version === VERSION && Array.isArray(h.samples));
 }
+/**
+ * Backfill optional {@link History} fields in place.
+ * @param {StoredHistory | null | undefined} h History to normalize.
+ * @returns {StoredHistory | null | undefined} The same value, normalized.
+ */
 function normalize(h) {
   if (!h) return h;
   if (!Array.isArray(h.ageBoundaries)) h.ageBoundaries = [];
@@ -163,6 +287,24 @@ function normalize(h) {
 // available yet. Re-resolves the player on every call: localObserverID
 // can change at age transition while the post-transition shell is
 // settling, and we don't want to cache a stale Player reference.
+/**
+ * Resolve the local player id, preferring the observer id, then the player id.
+ * @returns {Pid} The local player id, or -1 if none is available.
+ */
+function resolveLocalPid() {
+  return typeof GameContext.localObserverID !== "undefined" && GameContext.localObserverID >= 0
+    ? GameContext.localObserverID
+    : typeof GameContext.localPlayerID !== "undefined" && GameContext.localPlayerID >= 0
+      ? GameContext.localPlayerID
+      : -1;
+}
+
+/**
+ * Resolve the per-player Tutorial property bag — the cross-age-surviving
+ * persistence tier. Re-resolves the player on every call, since
+ * `localObserverID` can change as a post-transition shell settles. Never throws.
+ * @returns {PersistStore | null} A read/write handle, or null if unavailable.
+ */
 function getPlayerStore() {
   try {
     if (
@@ -171,12 +313,7 @@ function getPlayerStore() {
       typeof Players.get !== "function"
     )
       return null;
-    const pid =
-      typeof GameContext.localObserverID !== "undefined" && GameContext.localObserverID >= 0
-        ? GameContext.localObserverID
-        : typeof GameContext.localPlayerID !== "undefined" && GameContext.localPlayerID >= 0
-          ? GameContext.localPlayerID
-          : -1;
+    const pid = resolveLocalPid();
     if (pid < 0) return null;
     const p = Players.get(pid);
     if (
@@ -200,6 +337,11 @@ function getPlayerStore() {
 // Fallback global tier — only used if per-player store isn't yet
 // available. Same hashing scheme so we can also try to migrate any
 // legacy data written under the old GameTutorial-based code.
+/**
+ * Resolve the global `GameTutorial` property bag — the fallback tier used
+ * before the per-player store is available. Same hashing scheme. Never throws.
+ * @returns {PersistStore | null} A read/write handle, or null if unavailable.
+ */
 function getGlobalStore() {
   try {
     if (typeof GameTutorial === "undefined" || typeof GameTutorial.setProperty !== "function")
@@ -215,15 +357,28 @@ function getGlobalStore() {
 }
 
 // ── Storage singleton ───────────────────────────────────────────────
+/**
+ * Cross-age persistent storage for the history time series, backed by the
+ * per-player Tutorial property bag (with the global bag as a fallback tier).
+ */
 class StorageImpl {
   constructor() {
+    /** @type {StoredHistory | null} In-memory mirror of the latest history. */
     this._mem = null;
+    /** @type {string | number} Game seed used to stamp fresh histories. */
     this._seed = "unknown";
+    /** @type {boolean} Whether {@link StorageImpl#_init} has run. */
     this._initialized = false;
+    /** @type {boolean} Whether engine flush hooks are installed. */
     this._hooksInstalled = false;
+    /** @type {number} Buffered writes awaiting a perfMode flush. */
     this._pendingWrites = 0;
   }
 
+  /**
+   * Lazily resolve the game seed and install engine flush hooks. Idempotent.
+   * @returns {void}
+   */
   _init() {
     if (this._initialized) return;
     try {
@@ -240,10 +395,15 @@ class StorageImpl {
     dlog("init: seed=", this._seed, "scope=", CATALOG_SCOPE);
   }
 
+  /**
+   * Install one-time `BeforeAgeTransition` / `BeforeUnload` flush hooks. Idempotent.
+   * @returns {void}
+   */
   _installEngineHooks() {
     if (this._hooksInstalled) return;
     if (typeof engine === "undefined" || typeof engine.on !== "function") return;
     this._hooksInstalled = true;
+    /** @returns {void} */
     const flush = () => {
       try {
         if (this._mem) {
@@ -262,50 +422,62 @@ class StorageImpl {
     } catch (_) {}
   }
 
+  /**
+   * Pick the best available persistence tier (per-player, else global).
+   * @returns {PersistStore | null}
+   */
   _pickStore() {
     return getPlayerStore() || getGlobalStore();
   }
 
-  load() {
-    this._init();
-    const store = this._pickStore();
-    if (!store) {
-      // Player not yet available. Return _mem if we have it,
-      // otherwise an empty shell. Subsequent loads will retry.
-      dlog(
-        "load: no store available yet (pre-player-init); _mem=" +
-          (this._mem ? this._mem.samples.length : "null")
-      );
-      return this._mem || emptyHistory(this._seed);
-    }
-    let raw = null;
+  /**
+   * Read the raw payload string from a store, swallowing read errors.
+   * @param {PersistStore} store Store to read from.
+   * @returns {string | null} The raw payload, or null on error/empty.
+   */
+  _readRaw(store) {
     try {
-      raw = store.read(PAYLOAD_KEY);
+      return store.read(PAYLOAD_KEY);
     } catch (e) {
       derr("store.read threw:", e);
+      return null;
     }
+  }
 
-    if (raw == null || raw === "") {
-      // Cross-age recovery: if persistent tier is empty but our
-      // in-memory mirror has data, treat _mem as truth and
-      // re-stamp it under the (now writable) player bag.
-      if (this._mem && this._mem.samples && this._mem.samples.length > 0) {
-        dlog(
-          "load: persistent empty, recovering from _mem (samples=" +
-            this._mem.samples.length +
-            " pid=" +
-            store.pid +
-            ")"
-        );
-        try {
-          store.write(PAYLOAD_KEY, JSON.stringify(this._mem));
-        } catch (_) {}
-        return this._mem;
-      }
-      dlog("load: no existing history (pid=" + store.pid + ")");
-      return emptyHistory(this._seed);
+  /**
+   * Handle the empty-persistent-tier case: recover from `_mem` if it holds
+   * data (re-stamping it under the now-writable bag), else return an empty shell.
+   * @param {PersistStore} store The (empty) store to recover into.
+   * @returns {StoredHistory} The recovered or freshly empty history.
+   */
+  _loadEmpty(store) {
+    // Cross-age recovery: if persistent tier is empty but our
+    // in-memory mirror has data, treat _mem as truth and
+    // re-stamp it under the (now writable) player bag.
+    if (this._mem && this._mem.samples && this._mem.samples.length > 0) {
+      dlog(
+        "load: persistent empty, recovering from _mem (samples=" +
+          this._mem.samples.length +
+          " pid=" +
+          store.pid +
+          ")"
+      );
+      try {
+        store.write(PAYLOAD_KEY, JSON.stringify(this._mem));
+      } catch (_) {}
+      return this._mem;
     }
+    dlog("load: no existing history (pid=" + store.pid + ")");
+    return emptyHistory(this._seed);
+  }
 
+  /**
+   * Parse and validate a raw payload, reconciling it against `_mem`.
+   * @param {string} raw Raw payload string.
+   * @param {PersistStore} store Store the payload came from.
+   * @returns {StoredHistory} The reconciled history.
+   */
+  _loadParsed(raw, store) {
     let parsed = null;
     try {
       parsed = JSON.parse(raw);
@@ -349,6 +521,34 @@ class StorageImpl {
     return parsed;
   }
 
+  /**
+   * Load the history from persistence, reconciling against the in-memory mirror.
+   * @returns {StoredHistory} The loaded (or recovered, or empty) history.
+   */
+  load() {
+    this._init();
+    const store = this._pickStore();
+    if (!store) {
+      // Player not yet available. Return _mem if we have it,
+      // otherwise an empty shell. Subsequent loads will retry.
+      dlog(
+        "load: no store available yet (pre-player-init); _mem=" +
+          (this._mem ? this._mem.samples.length : "null")
+      );
+      return this._mem || emptyHistory(this._seed);
+    }
+    const raw = this._readRaw(store);
+    if (raw == null || raw === "") {
+      return this._loadEmpty(store);
+    }
+    return this._loadParsed(raw, store);
+  }
+
+  /**
+   * Validate, cap, mirror, and persist a history blob.
+   * @param {StoredHistory} history History to persist.
+   * @returns {boolean} True if written to a store, false otherwise.
+   */
   save(history) {
     this._init();
     if (!isValid(history)) {
@@ -383,12 +583,16 @@ class StorageImpl {
     }
   }
 
-  appendSample(snapshot) {
-    const h = this.load();
-
-    // De-dupe by (age, localTurn) so repeat events on the same
-    // age-local turn (notably per-pid PlayerAgeTransitionComplete
-    // bursts) don't pile up at one chart X coord.
+  /**
+   * Insert (or dedupe-replace) a snapshot into a history's sample list, in place.
+   * De-dupes by (age, localTurn) so repeat events on the same age-local turn
+   * (notably per-pid PlayerAgeTransitionComplete bursts) don't pile up at one
+   * chart X coord.
+   * @param {StoredHistory} h Target history.
+   * @param {Snapshot} snapshot Snapshot to insert.
+   * @returns {void}
+   */
+  _insertSnapshot(h, snapshot) {
     if (snapshot && typeof snapshot.localTurn === "number" && typeof snapshot.age === "string") {
       const i = h.samples.findIndex(
         (s) => s && s.age === snapshot.age && s.localTurn === snapshot.localTurn
@@ -402,20 +606,30 @@ class StorageImpl {
     } else {
       h.samples.push(snapshot);
     }
+  }
 
-    // Decimation (preserved from prior implementation).
-    const eff = resolveEffectiveCap();
+  /**
+   * Decimate older samples in place once the count exceeds a cap-derived
+   * threshold, preserving the latest age and any age-boundary turns.
+   * @param {StoredHistory} h Target history (mutated).
+   * @param {EffectiveCap} eff The active effective cap.
+   * @returns {void}
+   */
+  _maybeDecimate(h, eff) {
     const KEEP_EVERY_NTH = 3;
     if (!decimationDisabled() && isFinite(eff.cap)) {
       const decimateThreshold = Math.max(250, Math.floor(eff.cap * 0.25));
       if (h.samples.length > decimateThreshold) {
         const bounds = Array.isArray(h.ageBoundaries) ? h.ageBoundaries : [];
         const latestBoundary = bounds.length > 0 ? bounds[bounds.length - 1].turn : Infinity;
+        /** @type {Set<number | undefined>} */
         const boundaryTurns = new Set(bounds.map((b) => b.turn));
+        /** @type {Snapshot[]} */
         const before = [];
+        /** @type {Snapshot[]} */
         const after = [];
         for (const s of h.samples) {
-          if (s.turn >= latestBoundary) after.push(s);
+          if (/** @type {number} */ (s.turn) >= latestBoundary) after.push(s);
           else before.push(s);
         }
         const decimated = before.filter(
@@ -434,21 +648,32 @@ class StorageImpl {
         );
       }
     }
+  }
 
-    // perfMode: buffer writes across N turns to reduce stringify load.
+  /**
+   * Whether perfMode (write buffering) is enabled, defensively.
+   * @returns {boolean}
+   */
+  _perfModeEnabled() {
+    try {
+      if (
+        typeof DemographicsSettings !== "undefined" &&
+        typeof DemographicsSettings.getSetting === "function"
+      ) {
+        return !!DemographicsSettings.getSetting("perfMode", false);
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  /**
+   * Persist `h` immediately, or buffer it across N turns when perfMode is on.
+   * @param {StoredHistory} h History to persist.
+   * @returns {void}
+   */
+  _persistAppend(h) {
     const BUFFER_TURNS = 3;
-    const perfMode = (() => {
-      try {
-        if (
-          typeof DemographicsSettings !== "undefined" &&
-          typeof DemographicsSettings.getSetting === "function"
-        ) {
-          return !!DemographicsSettings.getSetting("perfMode", false);
-        }
-      } catch (_) {}
-      return false;
-    })();
-    if (perfMode) {
+    if (this._perfModeEnabled()) {
       this._mem = h;
       this._pendingWrites += 1;
       if (this._pendingWrites >= BUFFER_TURNS) {
@@ -458,9 +683,31 @@ class StorageImpl {
     } else {
       this.save(h);
     }
+  }
+
+  /**
+   * Append a snapshot to the history (dedupe, decimate, persist) and return it.
+   * @param {Snapshot} snapshot Snapshot to append.
+   * @returns {StoredHistory} The updated history.
+   */
+  appendSample(snapshot) {
+    const h = this.load();
+
+    this._insertSnapshot(h, snapshot);
+
+    // Decimation (preserved from prior implementation).
+    const eff = resolveEffectiveCap();
+    this._maybeDecimate(h, eff);
+
+    // perfMode: buffer writes across N turns to reduce stringify load.
+    this._persistAppend(h);
     return h;
   }
 
+  /**
+   * Force-persist the in-memory mirror, clearing any buffered writes.
+   * @returns {void}
+   */
   flush() {
     if (this._mem) {
       this.save(this._mem);
@@ -468,6 +715,10 @@ class StorageImpl {
     }
   }
 
+  /**
+   * Reset the history to empty, both in memory and in the active store.
+   * @returns {void}
+   */
   clear() {
     this._init();
     const empty = emptyHistory(this._seed);
@@ -483,6 +734,7 @@ class StorageImpl {
   }
 }
 
+/** The cross-age history storage singleton. */
 const DemographicsStorage = new StorageImpl();
 export default DemographicsStorage;
 export {

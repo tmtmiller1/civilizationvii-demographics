@@ -33,7 +33,8 @@ const ENGINE_GLOBALS = {
   ProgressionTreeNodeState: "readonly",
   UIViewExperience: "readonly",
   VictoryManager: "readonly",
-  SerialBase: "readonly"
+  SerialBase: "readonly",
+  DiplomacyPlayerRelationships: "readonly"
 };
 
 const BROWSER_GLOBALS = {
@@ -51,7 +52,21 @@ const BROWSER_GLOBALS = {
   navigator: "readonly",
   Proxy: "readonly",
   globalThis: "readonly",
-  structuredClone: "readonly"
+  structuredClone: "readonly",
+  localStorage: "readonly",
+  sessionStorage: "readonly",
+  MutationObserver: "readonly",
+  ResizeObserver: "readonly",
+  getComputedStyle: "readonly",
+  performance: "readonly",
+  requestIdleCallback: "readonly",
+  Blob: "readonly",
+  FileReader: "readonly",
+  DOMParser: "readonly",
+  Node: "readonly",
+  SVGElement: "readonly",
+  btoa: "readonly",
+  atob: "readonly"
 };
 
 export default [
