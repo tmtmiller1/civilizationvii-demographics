@@ -42,8 +42,12 @@ declare global {
     [key: string]: any;
   }
 
-  /** The full persisted history blob round-tripped through storage. */
-  interface History {
+  /**
+   * The full persisted history blob round-tripped through storage.
+   * Named `DemoHistory` (not `History`) to avoid merging with the DOM's
+   * built-in global `History` interface.
+   */
+  interface DemoHistory {
     version: number;
     seed: string | number;
     samples: Snapshot[];
