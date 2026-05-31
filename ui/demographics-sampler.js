@@ -354,12 +354,8 @@ function getGlobalAgeContext() {
     crisisEventType: undefined
   };
   safeCall("crisisAgeGlobal", () => {
-    try {
-      readCrisisManager(out);
-      readAgeProgress(out);
-    } catch (_) {
-      /* */
-    }
+    readCrisisManager(out);
+    readAgeProgress(out);
   });
   out.crisisEventType = probeCrisisEventType();
   return out;
@@ -416,7 +412,7 @@ function computeMetrics(ctx, turn) {
             const sv = m.scale(v, scaleCtx, ctx);
             if (typeof sv === "number" && isFinite(sv)) v = sv;
           } catch (e) {
-            if (DEMOGRAPHICS_DEBUG) vlog("scale fn threw for", m.id, e);
+            elog("scale fn threw for", m.id, e);
           }
         }
         metrics[m.id] = v;

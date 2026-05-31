@@ -342,7 +342,12 @@ function extractCurrentTotal(prog) {
  *   a Legacies handle.
  */
 function readCivProgress(pid, row) {
-  const p = Players.get(pid);
+  let p;
+  try {
+    p = Players.get(pid);
+  } catch (_) {
+    return null;
+  }
   const pl = p?.Legacies;
   if (!pl) return null;
   const prog = queryProgress(pl, row);
@@ -399,32 +404,28 @@ function getProgressForRow(row) {
   const out = [];
   let total = 0;
   let winner = -1;
-  try {
-    const pids = allMajorPids();
-    /** @type {ProbeSample[]} */
-    const logSamples = [];
-    for (const pid of pids) {
-      const entry = readCivProgress(pid, row);
-      if (!entry) continue;
-      const raceWinner = entry.raceWinner;
-      if (entry.total > total) total = entry.total;
-      if (typeof raceWinner === "number" && raceWinner !== -1) winner = raceWinner;
-      collectProbeSample(logSamples, entry);
-      out.push({
-        pid: entry.pid,
-        current: entry.current,
-        total: entry.total,
-        triggered: entry.triggered
-      });
-    }
-    if (!_firstRowLogged) {
-      _firstRowLogged = true;
-      dlog("first-row probe for " + row.LegacyType + ":", JSON.stringify(logSamples));
-    }
-    out.sort(makeProgressSorter(winner));
-  } catch (_) {
-    /* */
+  const pids = allMajorPids();
+  /** @type {ProbeSample[]} */
+  const logSamples = [];
+  for (const pid of pids) {
+    const entry = readCivProgress(pid, row);
+    if (!entry) continue;
+    const raceWinner = entry.raceWinner;
+    if (entry.total > total) total = entry.total;
+    if (typeof raceWinner === "number" && raceWinner !== -1) winner = raceWinner;
+    collectProbeSample(logSamples, entry);
+    out.push({
+      pid: entry.pid,
+      current: entry.current,
+      total: entry.total,
+      triggered: entry.triggered
+    });
   }
+  if (!_firstRowLogged) {
+    _firstRowLogged = true;
+    dlog("first-row probe for " + row.LegacyType + ":", JSON.stringify(logSamples));
+  }
+  out.sort(makeProgressSorter(winner));
   return { civs: out, total, winner };
 }
 
@@ -736,10 +737,19 @@ function handleHydratedTarget(m) {
  */
 function onMutations(mutations) {
   for (const m of mutations) {
-    for (const node of m.addedNodes) {
-      handleAddedNode(node);
+    // DOM-edge boundary: the engine fires this callback synchronously, so a
+    // throw here would tear down the MutationObserver and stop all further
+    // decoration. Guard per-record (one bad card can't block the rest) and
+    // LOG — own-logic bugs in decorateCard / progress computation surface
+    // instead of being silently swallowed.
+    try {
+      for (const node of m.addedNodes) {
+        handleAddedNode(node);
+      }
+      handleHydratedTarget(m);
+    } catch (e) {
+      derr("onMutations:", e);
     }
-    handleHydratedTarget(m);
   }
 }
 
@@ -750,7 +760,13 @@ function onMutations(mutations) {
  */
 function bootstrap() {
   dlog("bootstrap");
-  sweepRoot(document.body);
+  // DOM-edge boundary for the initial sweep: log own-logic failures instead
+  // of letting them abort bootstrap (which would also skip observer setup).
+  try {
+    sweepRoot(document.body);
+  } catch (e) {
+    derr("initial sweep:", e);
+  }
   const observer = new MutationObserver(onMutations);
   observer.observe(document.body, {
     childList: true,
