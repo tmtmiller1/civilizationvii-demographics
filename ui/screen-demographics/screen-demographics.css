@@ -1676,3 +1676,33 @@
 .demographics-line-chartjs-canvas {
     display: block;
 }
+
+/* ── Resources stacked-area chart — static chrome migrated from
+   chart-resources.js inline styles. These classes sit alongside the shared
+   demographics-chart-* classes (which carry typography) and add only the
+   absolute-positioning + static transforms. Dynamic values stay inline:
+   per-axis / per-tick / per-band left+top, and the per-category legend dot
+   background color. ──────────────────────────────────────────────────────── */
+
+/* Axis titles. left/top are per-axis geometry, set inline. */
+.demographics-resources-axis-title {
+    position: absolute;
+}
+.demographics-resources-axis-x {
+    transform: translate(-50%, -100%);
+}
+.demographics-resources-axis-y {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* X-axis tick overlay. left/top are per-tick geometry, set inline. */
+.demographics-resources-x-tick {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+/* Right-margin band legend entry. left/top are per-band geometry, set inline;
+   the dot's background color is per-category and also stays inline. */
+.demographics-resources-legend-label {
+    position: absolute;
+}
