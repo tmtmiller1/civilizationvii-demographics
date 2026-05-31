@@ -128,6 +128,31 @@ declare global {
   const WorldUI: { [key: string]: any };
   const InterfaceMode: { addHandler(...args: any[]): any; [key: string]: any };
 
+  /** Chart.js, loaded as a global by the engine (not imported). */
+  const Chart: any;
+  /** Hall of Fame DB surface. */
+  const HallofFame: { [key: string]: any };
+  /** Loading/age-transition lifecycle surface. */
+  const Loading: { [key: string]: any };
+  /** GameFace host bridge. */
+  const Coherent: { [key: string]: any };
+  /** Base class for engine UI components. */
+  const Component: any;
+  // Engine enum / type-hash tables used by name.
+  const DiplomacyActionTypes: { [key: string]: any };
+  const YieldTypes: { [key: string]: any };
+  const ProgressionTreeNodeState: { [key: string]: any };
+  const UIViewExperience: { [key: string]: any };
+  const VictoryManager: { [key: string]: any };
+  const SerialBase: { [key: string]: any };
+
+  /** Global tutorial property bag (wiped at age transition; fallback tier). */
+  const GameTutorial: {
+    getProperty(hash: number): any;
+    setProperty(hash: number, value: any): void;
+    [key: string]: any;
+  };
+
   /** Coherent GameFace engine bridge. */
   const engine: {
     whenReady: Promise<void>;
