@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Database>
-    <GermanText>
-        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+    <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="de_DE">
             <Text>Demografie</Text>
-        </Row>
-        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+        </Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="de_DE">
             <Text>Historische Diagramme pro Runde, Weltfaktbuch, globale Beziehungsringe, Konflikt-Gantt und native Triumph-Fortschrittsbalken für jede getroffene Zivilisation.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="de_DE">
             <Text>Demografie</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="de_DE">
             <Text>Demografie</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="de_DE">
             <Text>Punkte im Zeitverlauf</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="de_DE">
             <Text>Live-Geschichte vom Sammler.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="de_DE">
             <Text>Schließen</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="de_DE">
             <Text>Hallo. Wenn Sie dies lesen können, funktioniert das System.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="de_DE">
             <Text>Punkte</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="de_DE">
             <Text>Schatz</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="de_DE">
             <Text>GPT</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="de_DE">
             <Text>Gold-Einkommen pro Runde (netto).</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="de_DE">
             <Text>Siedlungen</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="de_DE">
             <Text>Technologien</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="de_DE">
             <Text>Bürger</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="de_DE">
             <Text>Zusammengesetzte Punktzahl, dieselbe Zahl wie im Sieg-Bildschirm.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="de_DE">
             <Text>Aktueller Schatzbestand.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="de_DE">
             <Text>Gesamtzahl der besessenen Städte und Dörfer.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="de_DE">
             <Text>Gesamtzahl der besessenen Technologien.</Text>
-        </Row>
-    </GermanText>
+        </Replace>
+    </LocalizedText>
 </Database>
