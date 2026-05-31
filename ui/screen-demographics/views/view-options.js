@@ -9,6 +9,7 @@
 // (ComponentValueChangeEventName
 // defined in core/ui/component-support.js:713) with detail.value: boolean.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import {
   resolveEffectiveCap,
   detectGameSpeedType,
@@ -135,7 +136,7 @@ function clearHost(host) {
 function buildHeading() {
   const heading = document.createElement("div");
   heading.className = "demographics-options-heading font-title text-lg uppercase text-secondary";
-  heading.textContent = "Options";
+  heading.textContent = t("LOC_DEMOGRAPHICS_OPTIONS_HEADING");
   return heading;
 }
 
@@ -165,27 +166,23 @@ function buildHeading() {
 function appendToggles(wrap, ctx) {
   wrap.appendChild(
     makeToggle(
-      "Show real names for civilizations I haven't met (spoiler)",
+      t("LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER"),
       "showUnmetNames",
       false,
       ctx.settings
     )
   );
   wrap.appendChild(
-    makeToggle(
-      "Colorblind mode (high-contrast Wong palette for chart + relations colors)",
-      "colorblindMode",
-      false,
-      ctx.settings,
-      () => ctx.requestReload?.()
+    makeToggle(t("LOC_DEMOGRAPHICS_OPT_COLORBLIND"), "colorblindMode", false, ctx.settings, () =>
+      ctx.requestReload?.()
     )
   );
   wrap.appendChild(
-    makeToggle("Smooth chart lines (3-turn moving average)", "smoothChart", false, ctx.settings)
+    makeToggle(t("LOC_DEMOGRAPHICS_OPT_SMOOTH"), "smoothChart", false, ctx.settings)
   );
   wrap.appendChild(
     makeToggle(
-      "Show eliminated civs in chart and factbook",
+      t("LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL"),
       "showEliminatedCivs",
       true,
       ctx.settings
@@ -193,21 +190,14 @@ function appendToggles(wrap, ctx) {
   );
   wrap.appendChild(
     makeToggle(
-      "Show wonder-built markers on chart lines (small icon at the turn each civ completed a wonder)",
+      t("LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS"),
       "showWonderMarkers",
       true,
       ctx.settings
     )
   );
   wrap.appendChild(
-    makeToggle(
-      "Performance mode (buffer storage writes, throttle hover) " +
-        "— recommended for long games or slower machines. " +
-        "May lose up to 2 turns of history on crash.",
-      "perfMode",
-      false,
-      ctx.settings
-    )
+    makeToggle(t("LOC_DEMOGRAPHICS_OPT_PERF_MODE"), "perfMode", false, ctx.settings)
   );
 }
 
@@ -253,18 +243,18 @@ function buildDropdownRow(labelText, opts, selectedIdx, onSelect) {
  */
 function buildHistoryCapControl(ctx) {
   const capOpts = [
-    { id: "auto", label: "Auto (game-speed default)" },
-    { id: "1000", label: "1,000 samples" },
-    { id: "2500", label: "2,500 samples" },
-    { id: "5000", label: "5,000 samples" },
-    { id: "10000", label: "10,000 samples ⚠ may slow performance" },
-    { id: "-1", label: "Unlimited ⚠ very large saves, may slow performance" }
+    { id: "auto", label: t("LOC_DEMOGRAPHICS_OPT_CAP_AUTO") },
+    { id: "1000", label: t("LOC_DEMOGRAPHICS_OPT_CAP_1000") },
+    { id: "2500", label: t("LOC_DEMOGRAPHICS_OPT_CAP_2500") },
+    { id: "5000", label: t("LOC_DEMOGRAPHICS_OPT_CAP_5000") },
+    { id: "10000", label: t("LOC_DEMOGRAPHICS_OPT_CAP_10000") },
+    { id: "-1", label: t("LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED") }
   ];
   const curCapRaw = ctx.settings.getSetting("sampleCapOverride", "auto");
   const curCapKey = typeof curCapRaw === "number" ? String(curCapRaw) : String(curCapRaw);
   let capIdx = capOpts.findIndex((o) => o.id === curCapKey);
   if (capIdx < 0) capIdx = 0;
-  return buildDropdownRow("History sample cap:", capOpts, capIdx, (i) => {
+  return buildDropdownRow(t("LOC_DEMOGRAPHICS_OPT_CAP_LABEL"), capOpts, capIdx, (i) => {
     const chosen = capOpts[i].id;
     // Store as a number when numeric, "auto" otherwise. (-1 = unlimited.)
     if (chosen === "auto") ctx.settings.setSetting("sampleCapOverride", "auto");
@@ -301,15 +291,18 @@ function buildHistoryCapHint() {
       return null;
     }
   })();
-  const speedLbl = speed ? speed.replace(/^GAMESPEED_/, "").toLowerCase() : "unknown";
-  const capStr = isFinite(eff.cap) ? eff.cap.toLocaleString() : "unlimited";
-  hint.textContent =
-    "Current effective cap: " +
-    capStr +
-    "  ·  Game speed detected: " +
-    speedLbl +
-    "  ·  Hard ceiling: " +
-    HARD_MAX_SAMPLES.toLocaleString();
+  const speedLbl = speed
+    ? speed.replace(/^GAMESPEED_/, "").toLowerCase()
+    : t("LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN");
+  const capStr = isFinite(eff.cap)
+    ? eff.cap.toLocaleString()
+    : t("LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE");
+  hint.textContent = t(
+    "LOC_DEMOGRAPHICS_OPT_CAP_HINT",
+    capStr,
+    speedLbl,
+    HARD_MAX_SAMPLES.toLocaleString()
+  );
   return hint;
 }
 
@@ -324,16 +317,16 @@ function buildHistoryCapHint() {
  */
 function buildPollingControl(ctx) {
   const pollOpts = [
-    { id: "1", label: "Every turn (default)" },
-    { id: "2", label: "Every 2 turns" },
-    { id: "5", label: "Every 5 turns" },
-    { id: "10", label: "Every 10 turns" },
-    { id: "25", label: "Every 25 turns ⚠ coarse graphs" }
+    { id: "1", label: t("LOC_DEMOGRAPHICS_OPT_POLL_1") },
+    { id: "2", label: t("LOC_DEMOGRAPHICS_OPT_POLL_2") },
+    { id: "5", label: t("LOC_DEMOGRAPHICS_OPT_POLL_5") },
+    { id: "10", label: t("LOC_DEMOGRAPHICS_OPT_POLL_10") },
+    { id: "25", label: t("LOC_DEMOGRAPHICS_OPT_POLL_25") }
   ];
   const curPoll = String(ctx.settings.getSetting("sampleEveryNTurns", 1));
   let pollIdx = pollOpts.findIndex((o) => o.id === curPoll);
   if (pollIdx < 0) pollIdx = 0;
-  return buildDropdownRow("Sample frequency:", pollOpts, pollIdx, (i) => {
+  return buildDropdownRow(t("LOC_DEMOGRAPHICS_OPT_POLL_LABEL"), pollOpts, pollIdx, (i) => {
     ctx.settings.setSetting("sampleEveryNTurns", parseInt(pollOpts[i].id, 10));
   });
 }
@@ -345,9 +338,7 @@ function buildPollingControl(ctx) {
 function buildPollingHint() {
   const pollHint = document.createElement("div");
   pollHint.className = "demographics-option-hint font-body text-xs";
-  pollHint.textContent =
-    "Higher values record fewer points — useful for long marathon games. " +
-    "Change applies on the next turn; existing samples are kept.";
+  pollHint.textContent = t("LOC_DEMOGRAPHICS_OPT_POLL_HINT");
   return pollHint;
 }
 
@@ -363,8 +354,7 @@ function appendStorageControls(wrap, ctx) {
   wrap.appendChild(buildHistoryCapHint());
   wrap.appendChild(
     makeToggle(
-      "Disable downsampling (keep every turn's sample even after the cap is hit) " +
-        "— power-user mode; pair with a high cap or Unlimited.",
+      t("LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION"),
       "disableDecimation",
       false,
       ctx.settings
@@ -413,7 +403,7 @@ function confirmAction(message) {
  * @returns {void}
  */
 function clearHistory(ctx) {
-  if (!confirmAction("Clear all recorded Demographics samples?")) return;
+  if (!confirmAction(t("LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY"))) return;
   try {
     ctx.storage?.clear?.();
     ctx.requestReload?.();
@@ -432,8 +422,7 @@ function clearHistory(ctx) {
  * @returns {void}
  */
 function resetWarHistory(ctx) {
-  if (!confirmAction("Clear all recorded wars? Sample history and other data will be kept."))
-    return;
+  if (!confirmAction(t("LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS"))) return;
   try {
     const h = ctx.storage?.load?.();
     if (h) {
@@ -455,9 +444,9 @@ function resetWarHistory(ctx) {
 function buildButtonRow(ctx) {
   const btnRow = document.createElement("div");
   btnRow.className = "demographics-options-buttons";
-  btnRow.appendChild(makeButton("Refresh sample now", () => refreshSampleNow(ctx)));
-  btnRow.appendChild(makeButton("Clear history", () => clearHistory(ctx)));
-  btnRow.appendChild(makeButton("Reset war history", () => resetWarHistory(ctx)));
+  btnRow.appendChild(makeButton(t("LOC_DEMOGRAPHICS_OPT_REFRESH"), () => refreshSampleNow(ctx)));
+  btnRow.appendChild(makeButton(t("LOC_DEMOGRAPHICS_OPT_CLEAR"), () => clearHistory(ctx)));
+  btnRow.appendChild(makeButton(t("LOC_DEMOGRAPHICS_OPT_RESET_WARS"), () => resetWarHistory(ctx)));
   return btnRow;
 }
 
@@ -475,7 +464,7 @@ function buildSessionInfo(ctx) {
     typeof GameTutorial !== "undefined" && typeof GameTutorial.setProperty === "function"
       ? "GameTutorial"
       : "in-memory";
-  info.textContent = "Samples: " + samples + "    Schema: v" + schema + "    Backend: " + backend;
+  info.textContent = t("LOC_DEMOGRAPHICS_OPT_SESSION_INFO", samples, schema, backend);
   return info;
 }
 

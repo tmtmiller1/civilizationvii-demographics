@@ -12,6 +12,8 @@
 // Either path now ends with a VISIBLE toast on the screen so the user sees
 // confirmation — the previous version succeeded silently and looked broken.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
+
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
@@ -389,7 +391,7 @@ function writeCsvToClipboard(csv) {
 export function exportHistoryAsCsv(history, host) {
   if (!history || !Array.isArray(history.samples) || history.samples.length === 0) {
     dlog("CSV export: no samples to write");
-    if (host) showCsvToast(host, "No samples yet — play a turn first.", false);
+    if (host) showCsvToast(host, t("LOC_DEMOGRAPHICS_CSV_NO_SAMPLES"), false);
     return;
   }
   const { csv, lines, headers } = buildCsvDocument(history);
@@ -486,14 +488,7 @@ function refuseOversizedCsv(host, sizeMB) {
       "Lower the sample cap in Options (e.g. 5000) and retry."
   );
   if (host) {
-    showCsvToast(
-      host,
-      "CSV too large (" +
-        sizeMB +
-        " MB) · would crash clipboard. " +
-        "Lower sample cap in Options and retry.",
-      false
-    );
+    showCsvToast(host, t("LOC_DEMOGRAPHICS_CSV_TOO_LARGE", sizeMB), false);
   }
 }
 
@@ -549,18 +544,8 @@ function showCsvResultToast(host, csv, lineCount, colCount, sizeMB, clipboardOk)
   const sizeTag = csv.length >= CSV_SOFT_LIMIT ? " · " + sizeMB + " MB" : "";
   if (!host) return;
   if (clipboardOk) {
-    showCsvToast(
-      host,
-      "Copied · " +
-        dataRows +
-        " rows × " +
-        colCount +
-        " cols" +
-        sizeTag +
-        " · paste into Excel / Sheets / a .csv file",
-      true
-    );
+    showCsvToast(host, t("LOC_DEMOGRAPHICS_CSV_COPIED", dataRows, colCount, sizeTag), true);
   } else {
-    showCsvToast(host, "Clipboard unavailable · wrote CSV to UI.log (see logs folder)", false);
+    showCsvToast(host, t("LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE"), false);
   }
 }

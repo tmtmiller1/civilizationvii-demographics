@@ -5,6 +5,7 @@
 // Coherent's SVG renderer rejects `stroke-dasharray`), and the "All On / All
 // Off" header. Split out of view-relations.js.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { dlog, LINE_DASH } from "/demographics/ui/screen-demographics/views/relations-shared.js";
 import { safePlaySound } from "/demographics/ui/demographics-audio.js";
 
@@ -39,7 +40,7 @@ function buildAllToggleRow(onToggleAll) {
   const ctrlRow = document.createElement("div");
   ctrlRow.className = "demographics-relations-filter-ctrl-row";
   const allOn = document.createElement("span");
-  allOn.textContent = "All On";
+  allOn.textContent = t("LOC_DEMOGRAPHICS_RELATIONS_ALL_ON");
   allOn.className = "demographics-relations-all-toggle";
   wireAllToggleHover(allOn);
   allOn.addEventListener("click", (ev) => {
@@ -51,7 +52,7 @@ function buildAllToggleRow(onToggleAll) {
   sep.textContent = "·";
   sep.className = "demographics-relations-filter-sep";
   const allOff = document.createElement("span");
-  allOff.textContent = "All Off";
+  allOff.textContent = t("LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF");
   allOff.className = "demographics-relations-all-toggle";
   wireAllToggleHover(allOff);
   allOff.addEventListener("click", (ev) => {
@@ -194,7 +195,9 @@ function buildFilterPill(f, activeSet, onToggle) {
   pill.className = "demographics-relations-filter-pill font-body text-sm";
   if (!active) pill.classList.add("is-hidden");
   else pill.classList.add("is-active");
-  pill.title = label + (active ? " (click to hide)" : " (click to show)");
+  pill.title = active
+    ? t("LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP", label)
+    : t("LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP", label);
 
   // ── Mini sample line: an inline element showing exactly what this
   // filter's edges look like on the ring. The "swatch" is a tiny

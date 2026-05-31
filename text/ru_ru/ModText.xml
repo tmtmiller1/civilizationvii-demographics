@@ -93,5 +93,193 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ru_RU"><Text>Вы еще не встретили этот город-государство. Включите «Показывать названия невстреченных цивилизаций и городов-государств» в настройках, чтобы раскрыть настоящие названия.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ru_RU"><Text>Показывать названия невстреченных цивилизаций и городов-государств</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ru_RU"><Text>Когда отключено (по умолчанию), цивилизации и города-государства, которые вы еще не встретили, отображаются как обобщенные заполнители «Невстреченные» на графиках, в справочнике и в кольцах глобальных отношений.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="ru_RU"><Text>Игрок {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="ru_RU"><Text>Прогресс цивилизаций</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="ru_RU"><Text>Ни одна цивилизация еще не добилась прогресса.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="ru_RU"><Text>Милитаризм</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="ru_RU"><Text>Экономика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="ru_RU"><Text>Дипломатия</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="ru_RU"><Text>Культура</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="ru_RU"><Text>Наука</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="ru_RU"><Text>Экспансия</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="ru_RU"><Text>Прочее</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок — сыграйте ход и откройте снова.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="ru_RU"><Text>Невстреченная цивилизация</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ru_RU"><Text>Чудо</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ru_RU"><Text>Построено</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="ru_RU"><Text>Ход {1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ru_RU"><Text>Начало кризиса</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ru_RU"><Text>Кризис усиливается</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ru_RU"><Text>Кульминация кризиса</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="ru_RU"><Text>Конец кризиса</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="ru_RU"><Text>Начало Античности</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="ru_RU"><Text>Начало Эпохи освоения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="ru_RU"><Text>Начало Современности</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="ru_RU"><Text>Лимит 100%</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ru_RU"><Text>Графики недоступны — Chart.js не загружен.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ru_RU"><Text>Не удалось отрисовать график — см. UI.log.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="ru_RU"><Text>Бонус</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="ru_RU"><Text>Империя</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="ru_RU"><Text>Город</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="ru_RU"><Text>Фабрика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="ru_RU"><Text>Сокровище</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="ru_RU"><Text>Время (ход / год)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ru_RU"><Text>Пока нет выборок ресурсов — как только вы назначите первый ресурс, график заполнится.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="ru_RU"><Text>Назначено ресурсов (количество)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="ru_RU"><Text>Триумф</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="ru_RU"><Text>Памятный · {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="ru_RU"><Text>Мгновенный · {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="ru_RU"><Text>Награда: </Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="ru_RU"><Text>Пока нет прогресса.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ru_RU"><Text>API наследия «Испытание временем» недоступен.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="ru_RU"><Text>Пока нет выборок по цивилизациям.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="ru_RU"><Text>В эпоху {1_Age} нет доступных триумфов.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="ru_RU"><Text>Нет доступных триумфов.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="ru_RU"><Text>Текущая эпоха: {1_Age}. В ячейках показано получено / всего доступно; полоса заполнена в процентах.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="ru_RU"><Text>неизвестно</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="ru_RU"><Text>{1_Count} доступный триумф</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="ru_RU"><Text>{1_Count} доступных триумфов</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="ru_RU"><Text>Триумфы (количество)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="ru_RU"><Text>{1_Years} г.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="ru_RU"><Text>{1_Years} л.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="ru_RU"><Text>Конфликты (одна полоса на войну)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="ru_RU"><Text>(нет крупных цивилизаций)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="ru_RU"><Text>продолжается</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="ru_RU"><Text>завершена</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="ru_RU"><Text>продолжается</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="ru_RU"><Text>неизвестно</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="ru_RU"><Text>Нападающие:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="ru_RU"><Text>Защитники:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="ru_RU"><Text>Объявлена: {1_Name}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="ru_RU"><Text>Длительность: {1_Years} лет</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="ru_RU"><Text>{1_Turns} ходов</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="ru_RU"><Text>сила {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="ru_RU"><Text>поселения {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ru_RU"><Text>население {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="ru_RU"><Text>производство {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="ru_RU"><Text>Издержки во время войны</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ru_RU"><Text>(наблюдаемое изменение)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ru_RU"><Text>Пока нет войн. Как только любая цивилизация объявит войну, временная шкала заполнится.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ru_RU"><Text>Нет войн, соответствующих текущим фильтрам.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок — сначала сыграйте ход.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ru_RU"><Text>CSV слишком большой ({1_SizeMB} МБ) · приведет к сбою буфера обмена. Снизьте лимит выборок в настройках и повторите.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ru_RU"><Text>Скопировано · {1_Rows} строк × {2_Cols} столбцов{3_SizeTag} · вставьте в Excel / Sheets / файл .csv</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ru_RU"><Text>Буфер обмена недоступен · CSV записан в UI.log (см. папку logs)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="ru_RU"><Text>Текущая эпоха</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="ru_RU"><Text>1-я эпоха</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="ru_RU"><Text>2-я эпоха</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ru_RU"><Text>3-я эпоха</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ru_RU"><Text>За все время</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ru_RU"><Text>Межэпохальные графики недоступны</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Единый график, охватывающий &lt;b style="color:#f3e7c4;"&gt;Античность, Эпоху освоения и Современность&lt;/b&gt;, невозможен. Civ&amp;nbsp;7 стирает каждый канал хранения, который мод мог бы использовать для переноса собранной истории через переход между эпохами, поэтому каждая эпоха может отображать только собственные данные. Используйте вместо этого &lt;b style="color:#f3e7c4;"&gt;Текущую&amp;nbsp;эпоху&lt;/b&gt; или любой фильтр по диапазону лет.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ru_RU"><Text>Фильтр {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ru_RU"><Text>ⓘ ВВП = Σ взвешенных доходов × ход × 1 млн  ·  наведите для пояснения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ru_RU"><Text>Валовой внутренний продукт</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ru_RU"><Text>&lt;p&gt;Псевдореалистичная величина, объединяющая доходы цивилизации за ход, взвешенные по тому, насколько каждый доход вносит вклад в реальную экономику.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Формула:&lt;/b&gt; Σ (доход × вес) × ход × 1 000 000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Веса&lt;/b&gt; (на единицу дохода):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Золото&lt;/b&gt; — 1.0 (валюта = прямая торговля)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Производство&lt;/b&gt; — 1.0 (промышленный выпуск)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Наука&lt;/b&gt; — 1.2 (инновации накапливаются со временем)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Культура&lt;/b&gt; — 1.2 (мягкая сила &amp; туризм)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Еда&lt;/b&gt; — 0.5 (пропитание; в ВВП идет только излишек)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Влияние&lt;/b&gt; — 1.5 (дипломатический / договорной рычаг)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Зачем умножать на ход?&lt;/b&gt; Реальные экономики накапливаются: цивилизация на 200-м ходу с теми же доходами за ход, что и цивилизация на 50-м ходу, представляет 4-кратную накопленную экономическую массу.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Только для отображения — никогда не влияет на состояние игры.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ru_RU"><Text>ⓘ Дипломатическое одобрение = Σ взвешенных по отношениям показателей  ·  наведите для пояснения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ru_RU"><Text>Дипломатическое одобрение — международная репутация</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ru_RU"><Text>&lt;p&gt;Знаковый агрегат того, как к вам сейчас относятся все остальные цивилизации. Растет &lt;b&gt;вверх&lt;/b&gt;, когда у вас есть союзники и друзья; идет &lt;b&gt;вниз&lt;/b&gt;, когда вас окружают враги или вы в состоянии войны.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Вклад на каждую крупную цивилизацию&lt;/b&gt; (на основе перечня отношений, показываемого на экране дипломатии):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Союз&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Содействие&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Дружелюбие&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Нейтралитет&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Недружелюбие&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Враждебность&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Война&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Вклад городов-государств:&lt;/b&gt; +2 за каждый ГГ, где вы сюзерен, ослабленный множителем 0.3× (чтобы стратегии с упором на ГГ не затмевали отношения с крупными цивилизациями).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Показатель = Σ(веса крупных цив.) + 0.3 × Σ(бонусы сюзеренитета)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Выбирается каждый ход с точки зрения каждой цивилизации на местного игрока. Только для отображения.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ru_RU"><Text>Текущий</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ru_RU"><Text>Конец 1-й эпохи</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ru_RU"><Text>Конец 2-й эпохи</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ru_RU"><Text>Снимок:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ru_RU"><Text>Пока нет снимка — эпоха не завершилась.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ru_RU"><Text>↻ Обновить</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ru_RU"><Text>Повторно загрузить прогресс наследия из VictoryManager.getVictoryProgress()</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ru_RU"><Text>Все крупные цивилизации</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ru_RU"><Text>Цивилизация:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="ru_RU"><Text>Только текущие</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="ru_RU"><Text>Все войны</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="ru_RU"><Text>Просмотр:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="ru_RU"><Text>Сбросить фокус ({1_Count})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="ru_RU"><Text>Показать все цивилизации с полной непрозрачностью</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="ru_RU"><Text>Время: оба</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="ru_RU"><Text>Время: ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="ru_RU"><Text>Время: год</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="ru_RU"><Text>Переключить единицы времени по оси X между номером хода, игровым годом или обоими</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="ru_RU"><Text>Чудеса: ВКЛ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="ru_RU"><Text>Чудеса: ВЫКЛ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="ru_RU"><Text>Скрыть метки построенных чудес на линиях графика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="ru_RU"><Text>Показать метки построенных чудес на линиях графика (значок на ходу, когда каждая цивилизация завершила чудо)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="ru_RU"><Text>Копировать как CSV</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Копирует каждый выбранный ход для каждой цивилизации в буфер обмена. Вставьте в Excel, Sheets или сохраните как &lt;code&gt;.csv&lt;/code&gt;. Песочница интерфейса Civ&amp;nbsp;7 не имеет API для записи файлов, поэтому буфер обмена — единственный способ передачи.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ru_RU"><Text>Скопировать всю собранную историю в буфер обмена как CSV — вставьте в Excel, Google Sheets или файл .csv</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="ru_RU"><Text>Милитаризм</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="ru_RU"><Text>Культура</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="ru_RU"><Text>Экономика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="ru_RU"><Text>Наука</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="ru_RU"><Text>Экспансия</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="ru_RU"><Text>Дипломатия</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="ru_RU"><Text>Все вкл</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="ru_RU"><Text>Все выкл</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="ru_RU"><Text>{1_Label} (нажмите, чтобы скрыть)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="ru_RU"><Text>{1_Label} (нажмите, чтобы показать)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="ru_RU"><Text>Нет цивилизаций для отображения.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="ru_RU"><Text>Невстреченный лидер</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="ru_RU"><Text>Игрок {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="ru_RU"><Text>(ранее {1_Names})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ru_RU"><Text>Ранг {1_Rank}/{2_Total}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ru_RU"><Text>Сбросить ({1_Count} скрыто)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ru_RU"><Text>Показать все скрытые цивилизации</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ru_RU"><Text>Совет: нажмите на заголовок любой цивилизации, чтобы скрыть ее и сфокусировать сравнение. Нажмите снова (в узком столбце справа), чтобы вернуть ее.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ru_RU"><Text>Не встречена</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто — нажмите, чтобы показать)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ru_RU"><Text>Нажмите, чтобы показать</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="ru_RU"><Text>Нажмите, чтобы скрыть</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ru_RU"><Text>Радар триумфов — все цивилизации, все 6 путей атрибутов</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ru_RU"><Text>Триумфы с течением времени</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ru_RU"><Text>(Накопительный счет, с разбивкой по атрибутам)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ru_RU"><Text>Распределение ресурсов с течением времени (область с накоплением)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ru_RU"><Text>Хронология конфликтов — каждая война, которую видела эта игра</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ru_RU"><Text>Еще не реализовано — появится в будущей версии.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ru_RU"><Text>Настройки</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ru_RU"><Text>Показывать настоящие названия цивилизаций, которые я не встретил (спойлер)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников (высококонтрастная палитра Вонга для цветов графиков и отношений)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ru_RU"><Text>Показывать уничтоженные цивилизации на графике и в справочнике</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Показывать метки построенных чудес на линиях графика (маленький значок на ходу, когда каждая цивилизация завершила чудо)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ru_RU"><Text>Режим производительности (буферизация записей в хранилище, ограничение наведения) — рекомендуется для долгих игр или медленных машин. При сбое может потеряться до 2 ходов истории.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ru_RU"><Text>Авто (по умолчанию для скорости игры)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ru_RU"><Text>1 000 выборок</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ru_RU"><Text>2 500 выборок</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="ru_RU"><Text>5 000 выборок</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="ru_RU"><Text>10 000 выборок ⚠ может снизить производительность</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="ru_RU"><Text>Без ограничений ⚠ очень большие сохранения, может снизить производительность</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="ru_RU"><Text>Лимит выборок истории:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="ru_RU"><Text>неизвестно</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="ru_RU"><Text>без ограничений</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="ru_RU"><Text>Текущий действующий лимит: {1_Cap}  ·  Обнаружена скорость игры: {2_Speed}  ·  Жесткий потолок: {3_Ceiling}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="ru_RU"><Text>Каждый ход (по умолчанию)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="ru_RU"><Text>Каждые 2 хода</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ru_RU"><Text>Каждые 5 ходов</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ru_RU"><Text>Каждые 10 ходов</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ru_RU"><Text>Каждые 25 ходов ⚠ грубые графики</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ru_RU"><Text>Частота выборки:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Более высокие значения записывают меньше точек — полезно для долгих марафонских игр. Изменение применяется на следующем ходу; существующие выборки сохраняются.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ru_RU"><Text>Отключить прореживание (сохранять выборку каждого хода даже после достижения лимита) — режим для опытных пользователей; используйте с высоким лимитом или без ограничений.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ru_RU"><Text>Очистить все записанные выборки Демографии?</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ru_RU"><Text>Очистить все записанные войны? История выборок и другие данные будут сохранены.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="ru_RU"><Text>Сбросить историю войн</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="ru_RU"><Text>Выборок: {1_Samples}    Схема: v{2_Schema}    Бэкенд: {3_Backend}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="ru_RU"><Text>Война</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="ru_RU"><Text>Союз</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="ru_RU"><Text>Содействие</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="ru_RU"><Text>Дружелюбие</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="ru_RU"><Text>Недружелюбие</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="ru_RU"><Text>Враждебность</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="ru_RU"><Text>Открытые границы</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="ru_RU"><Text>Осуждение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="ru_RU"><Text>Соглашения об исследованиях</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="ru_RU"><Text>Прочие начинания</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="ru_RU"><Text>Торговые пути</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="ru_RU"><Text>Сюзеренитет</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="ru_RU"><Text>Невстреченный ГГ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="ru_RU"><Text>Наблюдатель:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="ru_RU"><Text>Вы</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="ru_RU"><Text>{1_Name} (Вы)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="ru_RU"><Text>Узел кольца = встреченная крупная цивилизация. Несколько линий между двумя цивилизациями = несколько отношений.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="ru_RU"><Text>Отношения цивилизация-наблюдатель ↔ город-государство. Несколько линий = несколько отношений.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="ru_RU"><Text>Местный игрок недоступен (режим наблюдателя).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ru_RU"><Text>Крупные цивилизации</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ru_RU"><Text>Города-государства</Text></Replace>
     </LocalizedText>
 </Database>

@@ -17,6 +17,7 @@
 //   DiplomacyActionTypes.DIPLOMACY_ACTION_OPEN_BORDERS
 //   Game.Diplomacy.getPlayerEvents(playerId)
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { dlog, safeCall } from "/demographics/ui/screen-demographics/views/relations-shared.js";
 import { getAttitudeColors } from "/demographics/ui/demographics-palette.js";
 
@@ -305,22 +306,50 @@ export function resolveCsType(pid) {
 // surfaces a proper type glyph instead of a colored disc fallback.
 /** @type {Record<string, { label: string, color: string, icon: string }>} */
 const CS_TYPE_META = {
-  MILITARISTIC: { label: "Militaristic", color: "#d97c7c", icon: "blp:bonus_militaristic" },
-  CULTURAL: { label: "Cultural", color: "#c9a2dc", icon: "blp:bonus_cultural" },
-  ECONOMIC: { label: "Economic", color: "#e6c14c", icon: "blp:bonus_economic" },
-  SCIENTIFIC: { label: "Scientific", color: "#7fb3e6", icon: "blp:bonus_scientific" },
-  EXPANSIONIST: { label: "Expansionist", color: "#9ad17a", icon: "blp:bonustype_expansionist" },
-  DIPLOMATIC: { label: "Diplomatic", color: "#5fb3b3", icon: "blp:bonustype_diplomatic" }
+  MILITARISTIC: {
+    label: "LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC",
+    color: "#d97c7c",
+    icon: "blp:bonus_militaristic"
+  },
+  CULTURAL: {
+    label: "LOC_DEMOGRAPHICS_CSTYPE_CULTURAL",
+    color: "#c9a2dc",
+    icon: "blp:bonus_cultural"
+  },
+  ECONOMIC: {
+    label: "LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC",
+    color: "#e6c14c",
+    icon: "blp:bonus_economic"
+  },
+  SCIENTIFIC: {
+    label: "LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC",
+    color: "#7fb3e6",
+    icon: "blp:bonus_scientific"
+  },
+  EXPANSIONIST: {
+    label: "LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST",
+    color: "#9ad17a",
+    icon: "blp:bonustype_expansionist"
+  },
+  DIPLOMATIC: {
+    label: "LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC",
+    color: "#5fb3b3",
+    icon: "blp:bonustype_diplomatic"
+  }
 };
 
 /**
- * Look up the display meta (label/color/icon) for a CS type string.
+ * Look up the display meta (label/color/icon) for a CS type string. The `label`
+ * is resolved from its `LOC_*` key at call time so a language change between
+ * renders is reflected.
  * @param {*} typeStr The `CityStateType` string.
  * @returns {{ label: string, color: string, icon: string }|null} Meta, or null.
  */
 export function csTypeMeta(typeStr) {
   if (typeof typeStr !== "string") return null;
-  return CS_TYPE_META[typeStr.toUpperCase()] || null;
+  const meta = CS_TYPE_META[typeStr.toUpperCase()];
+  if (!meta) return null;
+  return { label: t(meta.label), color: meta.color, icon: meta.icon };
 }
 
 // ---- per-subtab edge builders ---------------------------------------------
@@ -449,8 +478,10 @@ function resolveEndeavorLookups(actionList) {
   const Types = typeof DiplomacyActionTypes !== "undefined" ? DiplomacyActionTypes : null;
   if (!Types) return lookups;
   for (const entry of actionList) {
-    const t = Types[entry.name];
-    if (typeof t === "number") lookups.push({ t, color: entry.color, name: entry.name });
+    const actionInt = Types[entry.name];
+    if (typeof actionInt === "number") {
+      lookups.push({ t: actionInt, color: entry.color, name: entry.name });
+    }
   }
   return lookups;
 }

@@ -7,6 +7,7 @@
 // demographics-chart.js.
 
 import { getSemantic } from "/demographics/ui/demographics-palette.js";
+import { t } from "/demographics/ui/demographics-i18n.js";
 import {
   dlog,
   SVG_NS,
@@ -743,7 +744,11 @@ function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W
   barRects.forEach(({ war, x, y, w, h }) => {
     const yrs = warDurationYears(war, turnYearMap, latestTurn);
     const displayName = nameOverride.get(war) || war.name;
-    const label = displayName + "  ·  " + yrs + " yr" + (yrs === 1 ? "" : "s");
+    const yrLabel =
+      yrs === 1
+        ? t("LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE", yrs)
+        : t("LOC_DEMOGRAPHICS_WARS_DURATION_YR", yrs);
+    const label = displayName + "  ·  " + yrLabel;
     const div = document.createElement("div");
     div.className = "demographics-chart-war-label demographics-wars-label";
     // Per-bar geometry stays dynamic (pixel-derived percentages).
@@ -803,14 +808,14 @@ function mountGanttAxisTitles(wrap, L, W, H) {
   // Per-axis position stays dynamic (pixel-derived percentages).
   xTitle.style.left = ((L.padL + L.innerW / 2) / W) * 100 + "%";
   xTitle.style.top = ((H - 4) / H) * 100 + "%";
-  xTitle.textContent = "Time (turn / year)";
+  xTitle.textContent = t("LOC_DEMOGRAPHICS_AXIS_TIME");
   wrap.appendChild(xTitle);
   const yTitle = document.createElement("div");
   yTitle.className =
     "demographics-chart-axis-title demographics-chart-axis-y demographics-wars-axis-title demographics-wars-axis-y";
   yTitle.style.left = (12 / W) * 100 + "%";
   yTitle.style.top = ((L.padT + L.innerH / 2) / H) * 100 + "%";
-  yTitle.textContent = "Conflicts (one bar per war)";
+  yTitle.textContent = t("LOC_DEMOGRAPHICS_AXIS_CONFLICTS");
   wrap.appendChild(yTitle);
 }
 
@@ -925,7 +930,7 @@ function computeWarCost(war, samples, latestTurn) {
  */
 function warRosterLines(roster) {
   const majors = majorsOnSide(roster);
-  if (majors.length === 0) return ["(no major civs)"];
+  if (majors.length === 0) return [t("LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS")];
   return majors.map((r) => (r.leader ? r.leader + ", " + r.civ : r.civ));
 }
 
@@ -937,7 +942,7 @@ function warRosterLines(roster) {
  */
 function sideCivLabel(roster) {
   const majors = majorsOnSide(roster);
-  if (majors.length === 0) return "(no major civs)";
+  if (majors.length === 0) return t("LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS");
   return majors.map((r) => r.civ).join(" & ");
 }
 
@@ -956,7 +961,8 @@ function buildWarTooltipBody(w, ctx) {
   const sTurn = w.startTurn;
   const eTurn = typeof w.endTurn === "number" ? w.endTurn : latestTurn;
   const startYr = w.startYear || "T-" + sTurn;
-  const endYr = typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : "ongoing";
+  const endYr =
+    typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
   const yrs = warDurationYears(w, turnYearMap, latestTurn);
   const turns = eTurn - sTurn;
   const cost = computeWarCost(w, samples, latestTurn);
@@ -965,7 +971,10 @@ function buildWarTooltipBody(w, ctx) {
     // Use the World War override when 4+ civs are involved; fall back to the
     // bilateral name otherwise.
     title: nameOverride.get(w) || w.name,
-    status: typeof w.endTurn === "number" ? "concluded" : "ongoing",
+    status:
+      typeof w.endTurn === "number"
+        ? t("LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED")
+        : t("LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING"),
     sideA: warRosterLines(w.sideACivs),
     sideB: warRosterLines(w.sideBCivs),
     declared,
@@ -984,7 +993,7 @@ function buildWarTooltipBody(w, ctx) {
  * @returns {string} The declarer label.
  */
 function warDeclaredBy(w) {
-  if (!w.declaredBy || w.declaredBy.isCS) return "unknown";
+  if (!w.declaredBy || w.declaredBy.isCS) return t("LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN");
   return w.declaredBy.leader ? w.declaredBy.leader + ", " + w.declaredBy.civ : w.declaredBy.civ;
 }
 
@@ -996,31 +1005,29 @@ function warDeclaredBy(w) {
  * @returns {void}
  */
 function renderWarTooltip(tooltip, w, ctx) {
-  const t = buildWarTooltipBody(w, ctx);
+  const tip = buildWarTooltipBody(w, ctx);
   while (tooltip.firstChild) tooltip.removeChild(tooltip.firstChild);
   const head = document.createElement("div");
   head.className = "demographics-wars-tooltip-head";
-  head.textContent = t.title + "  [" + t.status + "]";
+  head.textContent = tip.title + "  [" + tip.status + "]";
   tooltip.appendChild(head);
-  appendTooltipSection(tooltip, "Attackers:", t.sideA);
-  appendTooltipSection(tooltip, "Defenders:", t.sideB);
+  appendTooltipSection(tooltip, t("LOC_DEMOGRAPHICS_WARS_ATTACKERS"), tip.sideA);
+  appendTooltipSection(tooltip, t("LOC_DEMOGRAPHICS_WARS_DEFENDERS"), tip.sideB);
   const meta = document.createElement("div");
   meta.className = "demographics-wars-tooltip-meta";
   meta.innerHTML =
-    "Declared by: " +
-    t.declared +
-    "<br>Duration: " +
-    t.yrs +
-    " years" +
+    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_DECLARED_BY", tip.declared)) +
+    "<br>" +
+    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_DURATION", tip.yrs)) +
     " (" +
-    t.startYr +
+    escapeHtml(tip.startYr) +
     " → " +
-    t.endYr +
+    escapeHtml(tip.endYr) +
     ", " +
-    t.turns +
-    " turns)";
+    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_DURATION_TURNS", tip.turns)) +
+    ")";
   tooltip.appendChild(meta);
-  appendWarCost(tooltip, t.cost, t.costLabels);
+  appendWarCost(tooltip, tip.cost, tip.costLabels);
 }
 
 /**
@@ -1042,14 +1049,13 @@ function formatSideCost(c) {
     return (r > 0 ? "+" : "−") + formatMagnitude(Math.abs(r));
   };
   return (
-    "strength " +
-    lost(c.milLost) +
-    " · settlements " +
-    lost(c.settlementsLost) +
-    " · pop " +
-    lost(c.popLost) +
-    " · production " +
-    signed(c.prodChange)
+    t("LOC_DEMOGRAPHICS_WARS_COST_STRENGTH", lost(c.milLost)) +
+    " · " +
+    t("LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS", lost(c.settlementsLost)) +
+    " · " +
+    t("LOC_DEMOGRAPHICS_WARS_COST_POP", lost(c.popLost)) +
+    " · " +
+    t("LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION", signed(c.prodChange))
   );
 }
 
@@ -1066,7 +1072,10 @@ function appendWarCost(tooltip, cost, labels) {
   const block = document.createElement("div");
   block.className = "demographics-wars-tooltip-cost";
   block.innerHTML =
-    'Cost during war <span style="opacity:0.65;">(observed change)</span>:' +
+    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_COST_HEADER")) +
+    ' <span style="opacity:0.65;">' +
+    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_COST_OBSERVED")) +
+    "</span>:" +
     "<br>" +
     escapeHtml(labels.a) +
     " — " +
@@ -1234,7 +1243,7 @@ function prepareGanttData(host, opts) {
   const wars = opts.history && Array.isArray(opts.history.wars) ? opts.history.wars.slice() : [];
   const samples = historySamples(opts.history);
   if (wars.length === 0) {
-    appendEmptyNotice(host, "No wars yet. Once any civ declares war, the timeline will populate.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS"));
     return null;
   }
   wars.sort((a, b) => (a.startTurn || 0) - (b.startTurn || 0));
@@ -1246,7 +1255,7 @@ function prepareGanttData(host, opts) {
   const showActiveOnly = !!opts.activeOnly;
   const filtered = filterGanttWars(wars, showActiveOnly, filterPid);
   if (filtered.length === 0) {
-    appendEmptyNotice(host, "No wars match the current filters.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH"));
     return null;
   }
   return { wars, filtered, latestTurn, samples, filterPid, showActiveOnly };

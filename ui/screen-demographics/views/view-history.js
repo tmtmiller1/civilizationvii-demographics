@@ -13,6 +13,7 @@
 // public API (PAGES, render, computeTurnRange, buildTimeFilterRow,
 // exportHistoryAsCsv) is preserved by re-exporting the relocated symbols here.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { METRICS, getMetric } from "/demographics/ui/demographics-metrics.js";
 import {
   buildPageTabRow,
@@ -211,23 +212,39 @@ export const PAGES = [
 const SYNTHETIC_METRICS = {
   legacy_radar: {
     label: "Radar",
-    title: "Triumph Radar — all civs, all 6 attribute paths"
+    title: "LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE"
   },
   triumphs_stack: {
     label: "Triumphs Over Time",
     // Two-line: bold heading + parenthetical subtitle below.
-    title: "Triumphs Over Time",
-    subtitle: "(Cumulative Count, Stacked by Attribute)"
+    title: "LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE",
+    subtitle: "LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE"
   },
   resources_stack: {
     label: "Stacked",
-    title: "Resource Allocation Over Time (stacked area)"
+    title: "LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE"
   },
   wars_gantt: {
     label: "Wars",
-    title: "Conflicts Timeline — every war this game has seen"
+    title: "LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE"
   }
 };
+
+/**
+ * Resolve a synthetic metric's display meta, localizing its title/subtitle
+ * (stored as `LOC_*` keys) at render time. The non-displayed `label` field is
+ * passed through unchanged.
+ * @param {string} id Synthetic metric id.
+ * @returns {SyntheticMeta|null} The localized meta, or null when not synthetic.
+ */
+function resolveSyntheticMeta(id) {
+  const raw = SYNTHETIC_METRICS[id];
+  if (!raw) return null;
+  /** @type {SyntheticMeta} */
+  const meta = { label: raw.label, title: t(raw.title) };
+  if (raw.subtitle) meta.subtitle = t(raw.subtitle);
+  return meta;
+}
 /**
  * Whether `id` names a synthetic metric routed to a custom renderer.
  * @param {string} id Metric id.
@@ -455,7 +472,7 @@ function buildChartHost(host, ctx, activeMetric, turnRange) {
     // Placeholder for unimplemented metric.
     const ph = document.createElement("div");
     ph.className = "demographics-nyi font-body text-base";
-    ph.textContent = "Not yet implemented — coming in a future iteration.";
+    ph.textContent = t("LOC_DEMOGRAPHICS_EMPTY_NYI");
     chartHost.appendChild(ph);
     return;
   }
@@ -506,7 +523,7 @@ export function render(host, ctx) {
       return null;
     }
   })();
-  const synthMeta = isSynthetic(activeMetric) ? SYNTHETIC_METRICS[activeMetric] : null;
+  const synthMeta = isSynthetic(activeMetric) ? resolveSyntheticMeta(activeMetric) : null;
   buildChartTitle(host, activeMetric, metricObj, synthMeta);
 
   // ── Per-metric explanation caption (moved ABOVE the filter row so the

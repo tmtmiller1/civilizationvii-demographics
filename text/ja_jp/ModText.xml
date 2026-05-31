@@ -93,5 +93,193 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ja_JP"><Text>この都市国家とはまだ遭遇していません。実際の名前を表示するには、オプションで「未遭遇の文明と都市国家の名前を表示」を有効にしてください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ja_JP"><Text>未遭遇の文明と都市国家の名前を表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ja_JP"><Text>オフ（既定）の場合、まだ遭遇していない文明と都市国家は、グラフ、ファクトブック、グローバル関係リングにおいて汎用の「未遭遇」プレースホルダーとして表示されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="ja_JP"><Text>プレイヤー {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="ja_JP"><Text>文明の進捗</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="ja_JP"><Text>まだ進捗を上げた文明はありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="ja_JP"><Text>軍事主義</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="ja_JP"><Text>経済</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="ja_JP"><Text>外交</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="ja_JP"><Text>文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="ja_JP"><Text>科学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="ja_JP"><Text>拡張主義</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="ja_JP"><Text>その他</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません — 1ターンプレイしてから再度開いてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="ja_JP"><Text>未遭遇の文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ja_JP"><Text>遺産</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ja_JP"><Text>建設者</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="ja_JP"><Text>ターン {1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ja_JP"><Text>危機の始まり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ja_JP"><Text>危機の激化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ja_JP"><Text>危機の頂点</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="ja_JP"><Text>危機の終わり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="ja_JP"><Text>古代の始まり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="ja_JP"><Text>探検の時代の始まり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="ja_JP"><Text>近代の始まり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="ja_JP"><Text>上限 100%</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ja_JP"><Text>グラフを利用できません — Chart.js が読み込まれていません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ja_JP"><Text>グラフの描画に失敗しました — UI.log を確認してください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="ja_JP"><Text>ボーナス</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="ja_JP"><Text>帝国</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="ja_JP"><Text>都市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="ja_JP"><Text>工場</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="ja_JP"><Text>財宝</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="ja_JP"><Text>時間（ターン / 年）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ja_JP"><Text>まだ資源のサンプルがありません — 最初の資源を割り当てるとグラフに反映されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="ja_JP"><Text>割り当て済み資源（数）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="ja_JP"><Text>トライアンフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="ja_JP"><Text>記念 · {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="ja_JP"><Text>即時 · {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="ja_JP"><Text>報酬: </Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="ja_JP"><Text>まだ進捗はありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ja_JP"><Text>Test-of-Time レガシー API を利用できません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="ja_JP"><Text>まだサンプリングされた文明がありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="ja_JP"><Text>{1_Age}に利用可能なトライアンフはありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="ja_JP"><Text>利用可能なトライアンフはありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="ja_JP"><Text>現在の時代: {1_Age}。セルは発動済み / 利用可能な総数を示し、バーは達成率です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="ja_JP"><Text>不明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="ja_JP"><Text>利用可能なトライアンフ {1_Count} 件</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="ja_JP"><Text>利用可能なトライアンフ {1_Count} 件</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="ja_JP"><Text>トライアンフ（数）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="ja_JP"><Text>{1_Years} 年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="ja_JP"><Text>{1_Years} 年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="ja_JP"><Text>紛争（戦争ごとに1本のバー）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="ja_JP"><Text>（主要文明なし）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="ja_JP"><Text>進行中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="ja_JP"><Text>終結</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="ja_JP"><Text>進行中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="ja_JP"><Text>不明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="ja_JP"><Text>攻撃側:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="ja_JP"><Text>防衛側:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="ja_JP"><Text>宣戦布告: {1_Name}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="ja_JP"><Text>期間: {1_Years} 年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="ja_JP"><Text>{1_Turns} ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="ja_JP"><Text>戦力 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="ja_JP"><Text>入植地 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ja_JP"><Text>人口 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="ja_JP"><Text>生産力 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="ja_JP"><Text>戦争中のコスト</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ja_JP"><Text>（観測された変化）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ja_JP"><Text>まだ戦争はありません。いずれかの文明が宣戦布告すると、タイムラインに反映されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ja_JP"><Text>現在のフィルターに一致する戦争はありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません — まず1ターンプレイしてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ja_JP"><Text>CSV が大きすぎます（{1_SizeMB} MB） · クリップボードがクラッシュする可能性があります。オプションでサンプル上限を下げて再試行してください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ja_JP"><Text>コピー済み · {1_Rows} 行 × {2_Cols} 列{3_SizeTag} · Excel / Sheets / .csv ファイルに貼り付けてください</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ja_JP"><Text>クリップボードを利用できません · CSV を UI.log に書き込みました（logs フォルダーを参照）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="ja_JP"><Text>現在の時代</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="ja_JP"><Text>第1の時代</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="ja_JP"><Text>第2の時代</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ja_JP"><Text>第3の時代</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ja_JP"><Text>全期間</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ja_JP"><Text>時代をまたぐグラフは利用できません</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;&lt;b style="color:#f3e7c4;"&gt;古代、探検の時代、近代&lt;/b&gt;にまたがる単一のグラフは作成できません。Civ&amp;nbsp;7 は時代の移行時に、Mod がサンプリングした履歴を保持するために使えるすべてのストレージチャネルを消去するため、各時代は自身のデータしかグラフ化できません。代わりに&lt;b style="color:#f3e7c4;"&gt;現在の&amp;nbsp;時代&lt;/b&gt;または任意の年代範囲フィルターを使用してください。&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ja_JP"><Text>{1_Label} フィルター</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ja_JP"><Text>ⓘ GDP = Σ 加重産出 × ターン × 1M  ·  説明はホバーで表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ja_JP"><Text>国内総生産</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ja_JP"><Text>&lt;p&gt;文明の1ターンあたりの産出を、各産出が実体経済にどれだけ寄与するかで加重して組み合わせた、疑似リアルな値です。&lt;/p&gt;&lt;p&gt;&lt;b&gt;計算式:&lt;/b&gt; Σ (産出 × 重み) × ターン × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;重み&lt;/b&gt;（産出1ポイントあたり）:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;ゴールド&lt;/b&gt; — 1.0（通貨 = 直接的な交易）&lt;/li&gt;&lt;li&gt;&lt;b&gt;生産力&lt;/b&gt; — 1.0（工業生産）&lt;/li&gt;&lt;li&gt;&lt;b&gt;科学&lt;/b&gt; — 1.2（イノベーションは時間とともに複利的に増加）&lt;/li&gt;&lt;li&gt;&lt;b&gt;文化&lt;/b&gt; — 1.2（ソフトパワー &amp; 観光）&lt;/li&gt;&lt;li&gt;&lt;b&gt;食料&lt;/b&gt; — 0.5（生存維持; 余剰分のみが GDP に相当）&lt;/li&gt;&lt;li&gt;&lt;b&gt;影響力&lt;/b&gt; — 1.5（外交 / 条約上の影響力）&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;なぜターン数を掛けるのか?&lt;/b&gt; 実体経済は複利的に成長します。同じ1ターンあたりの産出を持つターン50の文明に比べ、ターン200の文明は4倍の蓄積された経済規模を表します。&lt;/p&gt;&lt;p&gt;&lt;i&gt;表示専用 — ゲームの状態には一切影響しません。&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ja_JP"><Text>ⓘ 外交的支持 = Σ 関係加重スコア  ·  説明はホバーで表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ja_JP"><Text>外交的支持 — 国際的評判</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ja_JP"><Text>&lt;p&gt;他のすべての文明が現在あなたをどう感じているかを符号付きで集計したものです。同盟国や友好国がいると&lt;b&gt;上昇&lt;/b&gt;し、敵対勢力に囲まれたり戦争中だったりすると&lt;b&gt;下降&lt;/b&gt;します。&lt;/p&gt;&lt;p&gt;&lt;b&gt;主要文明ごとの寄与&lt;/b&gt;（外交画面に表示される関係の列挙値に基づく）:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;同盟&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;協力的&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;友好的&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;中立&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;非友好的&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;敵対的&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;戦争中&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;都市国家の寄与:&lt;/b&gt; 宗主国となっている都市国家1つにつき +2、0.3倍に減衰（都市国家中心の戦略が主要文明との関係を圧倒しないようにするため）。&lt;/p&gt;&lt;p&gt;&lt;b&gt;スコア = Σ（主要文明の重み） + 0.3 × Σ（宗主国ボーナス）&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;各ターン、各文明のローカルプレイヤーに対する視点からサンプリングされます。表示専用です。&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ja_JP"><Text>現在</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ja_JP"><Text>第1の時代の終わり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ja_JP"><Text>第2の時代の終わり</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ja_JP"><Text>スナップショット:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ja_JP"><Text>まだスナップショットがありません — 時代がまだ終わっていません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ja_JP"><Text>↻ 更新</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ja_JP"><Text>VictoryManager.getVictoryProgress() からレガシー進捗を再取得します</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ja_JP"><Text>すべての主要文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ja_JP"><Text>文明:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="ja_JP"><Text>進行中のみ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="ja_JP"><Text>すべての戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="ja_JP"><Text>表示中:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="ja_JP"><Text>フォーカスを解除 ({1_Count})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="ja_JP"><Text>すべての文明を完全な不透明度で表示します</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="ja_JP"><Text>時間: 両方</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="ja_JP"><Text>時間: ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="ja_JP"><Text>時間: 年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="ja_JP"><Text>X軸の時間単位をターン番号、ゲーム内の年、または両方で切り替えます</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="ja_JP"><Text>遺産: オン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="ja_JP"><Text>遺産: オフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="ja_JP"><Text>グラフの線上の遺産建設マーカーを非表示にします</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="ja_JP"><Text>グラフの線上に遺産建設マーカーを表示します（各文明が遺産を完成させたターンにアイコンを表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="ja_JP"><Text>CSV としてコピー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;すべての文明のサンプリングされた全ターンをクリップボードにコピーします。Excel、Sheets に貼り付けるか、&lt;code&gt;.csv&lt;/code&gt; として保存してください。Civ&amp;nbsp;7 の UI サンドボックスにはファイル書き込み API がないため、クリップボードが唯一の受け渡し手段です。&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ja_JP"><Text>サンプリングされた全履歴を CSV としてクリップボードにコピー — Excel、Google Sheets、または .csv ファイルに貼り付けてください</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="ja_JP"><Text>軍事主義</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="ja_JP"><Text>文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="ja_JP"><Text>経済</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="ja_JP"><Text>科学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="ja_JP"><Text>拡張主義</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="ja_JP"><Text>外交</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="ja_JP"><Text>すべてオン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="ja_JP"><Text>すべてオフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="ja_JP"><Text>{1_Label}（クリックで非表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="ja_JP"><Text>{1_Label}（クリックで表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="ja_JP"><Text>表示する文明がありません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="ja_JP"><Text>未遭遇のリーダー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="ja_JP"><Text>プレイヤー {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="ja_JP"><Text>（旧 {1_Names}）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ja_JP"><Text>順位 {1_Rank}/{2_Total}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ja_JP"><Text>リセット（{1_Count} 件非表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ja_JP"><Text>非表示のすべての文明を表示します</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ja_JP"><Text>ヒント: いずれかの文明のヘッダーをクリックすると、その文明を非表示にして比較に集中できます。（右側の細い列で）再度クリックすると元に戻ります。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ja_JP"><Text>未遭遇</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示 — クリックで表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="ja_JP"><Text>クリックで非表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ja_JP"><Text>トライアンフレーダー — 全文明、6つの属性パスすべて</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ja_JP"><Text>時系列トライアンフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ja_JP"><Text>（累計数、属性別に積み上げ）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ja_JP"><Text>時系列資源配分（積み上げ面）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ja_JP"><Text>紛争タイムライン — このゲームで発生したすべての戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ja_JP"><Text>未実装 — 今後のアップデートで対応予定です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ja_JP"><Text>オプション</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ja_JP"><Text>まだ遭遇していない文明の実際の名前を表示（ネタバレ）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード（グラフと関係の色に高コントラストの Wong パレットを使用）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ja_JP"><Text>排除された文明をグラフとファクトブックに表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>グラフの線上に遺産建設マーカーを表示（各文明が遺産を完成させたターンに小さなアイコンを表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ja_JP"><Text>パフォーマンスモード（ストレージ書き込みをバッファリングし、ホバーを抑制） — 長時間のゲームや低速なマシンに推奨。クラッシュ時に最大2ターン分の履歴が失われる可能性があります。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ja_JP"><Text>自動（ゲーム速度の既定値）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ja_JP"><Text>1,000 サンプル</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ja_JP"><Text>2,500 サンプル</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="ja_JP"><Text>5,000 サンプル</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="ja_JP"><Text>10,000 サンプル ⚠ パフォーマンスが低下する可能性があります</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="ja_JP"><Text>無制限 ⚠ セーブが非常に大きくなり、パフォーマンスが低下する可能性があります</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="ja_JP"><Text>履歴サンプル上限:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="ja_JP"><Text>不明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="ja_JP"><Text>無制限</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="ja_JP"><Text>現在の実効上限: {1_Cap}  ·  検出されたゲーム速度: {2_Speed}  ·  上限の限界値: {3_Ceiling}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="ja_JP"><Text>毎ターン（既定）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="ja_JP"><Text>2ターンごと</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ja_JP"><Text>5ターンごと</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ja_JP"><Text>10ターンごと</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ja_JP"><Text>25ターンごと ⚠ 粗いグラフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ja_JP"><Text>サンプル頻度:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ja_JP"><Text>値を大きくすると記録するポイントが少なくなります — 長時間のマラソンゲームに便利です。変更は次のターンに適用され、既存のサンプルは保持されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ja_JP"><Text>ダウンサンプリングを無効化（上限に達した後も毎ターンのサンプルを保持） — パワーユーザー向けモード; 高い上限または無制限と組み合わせてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ja_JP"><Text>記録されたすべての人口統計サンプルを消去しますか?</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ja_JP"><Text>記録されたすべての戦争を消去しますか? サンプル履歴とその他のデータは保持されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="ja_JP"><Text>戦争履歴をリセット</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="ja_JP"><Text>サンプル: {1_Samples}    スキーマ: v{2_Schema}    バックエンド: {3_Backend}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="ja_JP"><Text>戦争中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="ja_JP"><Text>同盟</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="ja_JP"><Text>協力的</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="ja_JP"><Text>友好的</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="ja_JP"><Text>非友好的</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="ja_JP"><Text>敵対的</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="ja_JP"><Text>国境開放</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="ja_JP"><Text>非難</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="ja_JP"><Text>研究協定</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="ja_JP"><Text>その他の外交活動</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="ja_JP"><Text>交易路</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="ja_JP"><Text>宗主権</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="ja_JP"><Text>未遭遇の都市国家</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="ja_JP"><Text>視点:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="ja_JP"><Text>あなた</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="ja_JP"><Text>{1_Name}（あなた）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="ja_JP"><Text>リングのノード = 遭遇した主要文明。2つの文明間の複数の線 = 複数の関係。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="ja_JP"><Text>視点文明 ↔ 都市国家の関係。複数の線 = 複数の関係。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="ja_JP"><Text>ローカルプレイヤーを利用できません（オブザーバーモード）。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ja_JP"><Text>主要文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ja_JP"><Text>都市国家</Text></Replace>
     </LocalizedText>
 </Database>

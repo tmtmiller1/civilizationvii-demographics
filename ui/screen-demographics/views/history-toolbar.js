@@ -6,6 +6,7 @@
 // toggle, wonders toggle, and the Copy-as-CSV button group). The render
 // orchestrator in view-history.js composes these in their fixed display order.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/demographics-a11y.js";
 import { safePlaySound, playActivate } from "/demographics/ui/demographics-audio.js";
 import { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/history-csv.js";
@@ -233,59 +234,30 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
 }
 
 /**
- * Caption content for the GDP metric.
- * @type {MetricInfoOpts}
+ * Build the localized caption content for the GDP metric. Resolved per-render
+ * so a language change between renders is reflected.
+ * @returns {MetricInfoOpts} The GDP caption content.
  */
-const GDP_CAPTION = {
-  triggerText: "ⓘ GDP = Σ weighted yields × turn × 1M  ·  hover for explanation",
-  title: "Gross Domestic Product",
-  bodyHtml:
-    "<p>A pseudo-realistic value combining a civilization's per-turn yields, " +
-    "weighted by how much each yield contributes to a real economy.</p>" +
-    "<p><b>Formula:</b> Σ (yield × weight) × turn × 1,000,000</p>" +
-    "<p><b>Weights</b> (per yield point):</p>" +
-    "<ul>" +
-    "<li><b>Gold</b> — 1.0 (currency = direct trade)</li>" +
-    "<li><b>Production</b> — 1.0 (industrial output)</li>" +
-    "<li><b>Science</b> — 1.2 (innovation compounds over time)</li>" +
-    "<li><b>Culture</b> — 1.2 (soft power & tourism)</li>" +
-    "<li><b>Food</b> — 0.5 (subsistence; only the surplus is GDP-like)</li>" +
-    "<li><b>Influence</b> — 1.5 (diplomatic / treaty leverage)</li>" +
-    "</ul>" +
-    "<p><b>Why multiply by turn?</b> Real economies compound: a civ at turn 200 " +
-    "with the same per-turn yields as a civ at turn 50 represents 4× the " +
-    "accumulated economic mass.</p>" +
-    "<p><i>Presentational only — never affects game state.</i></p>"
-};
+function gdpCaption() {
+  return {
+    triggerText: t("LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER"),
+    title: t("LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE"),
+    bodyHtml: t("LOC_DEMOGRAPHICS_CAPTION_GDP_BODY")
+  };
+}
 
 /**
- * Caption content for the Diplomatic Approval metric.
- * @type {MetricInfoOpts}
+ * Build the localized caption content for the Diplomatic Approval metric.
+ * Resolved per-render so a language change between renders is reflected.
+ * @returns {MetricInfoOpts} The Approval caption content.
  */
-const APPROVAL_CAPTION = {
-  triggerText: "ⓘ Diplomatic Approval = Σ relationship-weighted scores  ·  hover for explanation",
-  title: "Diplomatic Approval — international reputation",
-  bodyHtml:
-    "<p>A signed aggregate of how every other civilization currently feels " +
-    "about you. Goes <b>up</b> when you have allies and friends; goes " +
-    "<b>down</b> when you're surrounded by hostiles or at war.</p>" +
-    "<p><b>Per-major-civ contribution</b> (based on the relationship enum the " +
-    "diplomacy screen shows):</p>" +
-    "<ul>" +
-    "<li><b>Alliance</b> — +5</li>" +
-    "<li><b>Helpful</b> — +3</li>" +
-    "<li><b>Friendly</b> — +2</li>" +
-    "<li><b>Neutral</b> — 0</li>" +
-    "<li><b>Unfriendly</b> — −2</li>" +
-    "<li><b>Hostile</b> — −3</li>" +
-    "<li><b>At War</b> — −5</li>" +
-    "</ul>" +
-    "<p><b>City-state contribution:</b> +2 per CS where you are suzerain, " +
-    "dampened by 0.3× (so CS-heavy strategies don't dwarf major-civ relations).</p>" +
-    "<p><b>Score = Σ(major weights) + 0.3 × Σ(suzerain bonuses)</b></p>" +
-    "<p><i>Sampled each turn from each civ's perspective on the local player. " +
-    "Presentational only.</i></p>"
-};
+function approvalCaption() {
+  return {
+    triggerText: t("LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER"),
+    title: t("LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE"),
+    bodyHtml: t("LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY")
+  };
+}
 
 /**
  * Append the per-metric explanation caption(s) for the active metric (GDP and
@@ -296,10 +268,10 @@ const APPROVAL_CAPTION = {
  */
 export function appendMetricCaptions(host, activeMetric) {
   if (activeMetric === "gdp") {
-    host.appendChild(buildMetricInfoCaption(GDP_CAPTION));
+    host.appendChild(buildMetricInfoCaption(gdpCaption()));
   }
   if (activeMetric === "approval") {
-    host.appendChild(buildMetricInfoCaption(APPROVAL_CAPTION));
+    host.appendChild(buildMetricInfoCaption(approvalCaption()));
   }
 }
 
@@ -374,14 +346,14 @@ function buildMetricInfoCaption(opts) {
  */
 function appendRadarControls(toolbar, ctx) {
   const ageOpts = [
-    { id: "current", label: "Current" },
-    { id: "AGE_ANTIQUITY", label: "End of 1st Age" },
-    { id: "AGE_EXPLORATION", label: "End of 2nd Age" }
+    { id: "current", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT") },
+    { id: "AGE_ANTIQUITY", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1") },
+    { id: "AGE_EXPLORATION", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2") }
   ];
   const active = ctx.activeRadarAge || "current";
   const radarLabel = document.createElement("div");
   radarLabel.className = "demographics-chart-toolbar-label font-body text-xs";
-  radarLabel.textContent = "Snapshot:";
+  radarLabel.textContent = t("LOC_DEMOGRAPHICS_LABEL_SNAPSHOT");
   toolbar.appendChild(radarLabel);
   for (const opt of ageOpts) {
     // Only enable past-age buttons when we actually have that snapshot.
@@ -395,7 +367,7 @@ function appendRadarControls(toolbar, ctx) {
     if (opt.id === active) pill.classList.add("is-active");
     if (!haveSnap) {
       pill.classList.add("demographics-history-pill-disabled");
-      pill.title = "No snapshot yet — the age hasn't ended.";
+      pill.title = t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP");
     } else {
       makeClickable(pill, (ev) => {
         ev?.stopPropagation?.();
@@ -411,8 +383,8 @@ function appendRadarControls(toolbar, ctx) {
   // panel was already open (a civ finishing a triumph, etc.).
   const refresh = document.createElement("div");
   refresh.className = "demographics-chart-toolbar-btn font-body text-xs";
-  refresh.textContent = "↻ Refresh";
-  refresh.title = "Re-pull legacy progress from VictoryManager.getVictoryProgress()";
+  refresh.textContent = t("LOC_DEMOGRAPHICS_BTN_REFRESH");
+  refresh.title = t("LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP");
   makeClickable(refresh, (ev) => {
     ev?.stopPropagation?.();
     playActivate();
@@ -433,11 +405,11 @@ function appendWarsControls(toolbar, ctx) {
   const wopts = /** @type {*} */ (ctx.chartMod)
     .collectWarCivOptions(ctx.history)
     .filter((/** @type {*} */ o) => !o.isCS);
-  const allOpt = { pid: null, label: "All major civilizations", isCS: false };
+  const allOpt = { pid: null, label: t("LOC_DEMOGRAPHICS_WARS_ALL_MAJORS"), isCS: false };
   const dropdownOpts = [allOpt].concat(wopts);
   const lbl = document.createElement("div");
   lbl.className = "demographics-chart-toolbar-label font-body text-xs";
-  lbl.textContent = "Civ:";
+  lbl.textContent = t("LOC_DEMOGRAPHICS_LABEL_CIV");
   toolbar.appendChild(lbl);
   const dd = document.createElement("fxs-dropdown");
   dd.classList.add("demographics-chart-viewer-dropdown");
@@ -464,7 +436,9 @@ function appendWarsControls(toolbar, ctx) {
   const activePill = document.createElement("div");
   activePill.className = "demographics-chart-time-filter-pill";
   if (ctx.warsActiveOnly) activePill.classList.add("is-active");
-  activePill.textContent = ctx.warsActiveOnly ? "Ongoing only" : "All wars";
+  activePill.textContent = ctx.warsActiveOnly
+    ? t("LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY")
+    : t("LOC_DEMOGRAPHICS_WARS_ALL_WARS");
   makeClickable(activePill, (ev) => {
     ev?.stopPropagation?.();
     playActivate();
@@ -487,7 +461,7 @@ function appendViewerDropdown(toolbar, opts, currentPid, setViewerPid) {
   if (opts.length <= 1) return;
   const label = document.createElement("div");
   label.className = "demographics-chart-toolbar-label font-body text-xs";
-  label.textContent = "Viewing:";
+  label.textContent = t("LOC_DEMOGRAPHICS_LABEL_VIEWING");
   toolbar.appendChild(label);
   const dd = document.createElement("fxs-dropdown");
   dd.classList.add("demographics-chart-viewer-dropdown");
@@ -516,8 +490,8 @@ function appendClearFocus(toolbar, ctx) {
   if (!(ctx.focusedCivs && ctx.focusedCivs.size > 0)) return;
   const clear = document.createElement("div");
   clear.className = "demographics-chart-toolbar-btn font-body text-xs";
-  clear.textContent = "Clear Focus (" + ctx.focusedCivs.size + ")";
-  clear.title = "Show all civs at full opacity";
+  clear.textContent = t("LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS", ctx.focusedCivs.size);
+  clear.title = t("LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP");
   makeClickable(clear, (ev) => {
     ev?.stopPropagation?.();
     safePlaySound("data-audio-activate", "options");
@@ -537,7 +511,11 @@ function appendClearFocus(toolbar, ctx) {
 function appendTimeUnitsToggle(toolbar, ctx) {
   const modes = ["both", "turn", "year"];
   /** @type {Record<string, string>} */
-  const labels = { both: "Time: Both", turn: "Time: Turn", year: "Time: Year" };
+  const labels = {
+    both: t("LOC_DEMOGRAPHICS_BTN_TIME_BOTH"),
+    turn: t("LOC_DEMOGRAPHICS_BTN_TIME_TURN"),
+    year: t("LOC_DEMOGRAPHICS_BTN_TIME_YEAR")
+  };
   let mode = "both";
   try {
     mode = ctx.settings?.getSetting?.("xAxisMode", "both") || "both";
@@ -555,7 +533,7 @@ function appendTimeUnitsToggle(toolbar, ctx) {
   const timeBtn = document.createElement("div");
   timeBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
   timeBtn.textContent = labels[mode];
-  timeBtn.title = "Toggle X-axis time units between turn number, in-game year, or both";
+  timeBtn.title = t("LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP");
   makeClickable(timeBtn, (ev) => {
     ev?.stopPropagation?.();
     safePlaySound("data-audio-activate", "options");
@@ -599,10 +577,12 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
   wondersBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
   // No ✓ glyph — Civ7's font set doesn't include U+2713 and renders
   // it as a missing-glyph "[]" box. Plain "ON"/"OFF" is unambiguous.
-  wondersBtn.textContent = wondersOn ? "Wonders: ON" : "Wonders: OFF";
+  wondersBtn.textContent = wondersOn
+    ? t("LOC_DEMOGRAPHICS_BTN_WONDERS_ON")
+    : t("LOC_DEMOGRAPHICS_BTN_WONDERS_OFF");
   wondersBtn.title = wondersOn
-    ? "Hide wonder-built markers on chart lines"
-    : "Show wonder-built markers on chart lines (icon at the turn each civ completed a wonder)";
+    ? t("LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP")
+    : t("LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP");
   if (!wondersOn) {
     // OFF state — desaturated text color is the "off" signal; the
     // "Wonders: OFF" label itself already says it explicitly.
@@ -641,8 +621,10 @@ function buildCsvInfoTooltip() {
     "font-size:1.05rem;margin-bottom:0.65rem;padding-bottom:0.4rem;" +
     "border-bottom:1px solid rgba(201,162,76,0.55);";
   tip.innerHTML =
-    `<div style="${HDR}">Copy as CSV</div>` +
-    `<p style="margin:0;">Copies every sampled turn for every civ to your clipboard. Paste into Excel, Sheets, or save as <code>.csv</code>. Civ&nbsp;7's UI sandbox has no file-write API, so the clipboard is the only hand-off.</p>`;
+    `<div style="${HDR}">` +
+    t("LOC_DEMOGRAPHICS_BTN_COPY_CSV") +
+    `</div>` +
+    t("LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY");
   return tip;
 }
 
@@ -685,9 +667,8 @@ function appendCsvControls(toolbar, host, ctx) {
 
   const csvBtn = document.createElement("div");
   csvBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
-  csvBtn.textContent = "Copy as CSV";
-  csvBtn.title =
-    "Copy all sampled history to the clipboard as CSV — paste into Excel, Google Sheets, or a .csv file";
+  csvBtn.textContent = t("LOC_DEMOGRAPHICS_BTN_COPY_CSV");
+  csvBtn.title = t("LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP");
   makeClickable(csvBtn, (ev) => {
     ev?.stopPropagation?.();
     safePlaySound("data-audio-activate", "options");

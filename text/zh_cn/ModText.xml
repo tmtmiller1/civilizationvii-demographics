@@ -277,5 +277,569 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="zh_Hans_CN">
             <Text>关闭时（默认），你尚未遇见的文明和城邦在图表、年鉴和全球关系环中显示为通用的“未遇”占位符。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="zh_Hans_CN">
+            <Text>玩家 {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="zh_Hans_CN">
+            <Text>文明进度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="zh_Hans_CN">
+            <Text>尚无文明取得进度。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="zh_Hans_CN">
+            <Text>军事</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="zh_Hans_CN">
+            <Text>经济</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="zh_Hans_CN">
+            <Text>外交</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="zh_Hans_CN">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="zh_Hans_CN">
+            <Text>科学</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="zh_Hans_CN">
+            <Text>扩张</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="zh_Hans_CN">
+            <Text>其他</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="zh_Hans_CN">
+            <Text>尚无采样——进行一回合后重新打开。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="zh_Hans_CN">
+            <Text>未遇文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="zh_Hans_CN">
+            <Text>建造者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="zh_Hans_CN">
+            <Text>第 {1_Turn} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hans_CN">
+            <Text>危机开始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="zh_Hans_CN">
+            <Text>危机加剧</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="zh_Hans_CN">
+            <Text>危机达到顶点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="zh_Hans_CN">
+            <Text>危机结束</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="zh_Hans_CN">
+            <Text>古典时代开始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="zh_Hans_CN">
+            <Text>探索时代开始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="zh_Hans_CN">
+            <Text>现代时代开始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="zh_Hans_CN">
+            <Text>上限 100%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="zh_Hans_CN">
+            <Text>图表不可用——Chart.js 未加载。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="zh_Hans_CN">
+            <Text>图表渲染失败——参见 UI.log。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="zh_Hans_CN">
+            <Text>加成</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="zh_Hans_CN">
+            <Text>帝国</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="zh_Hans_CN">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="zh_Hans_CN">
+            <Text>工厂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="zh_Hans_CN">
+            <Text>珍宝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="zh_Hans_CN">
+            <Text>时间（回合 / 年份）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="zh_Hans_CN">
+            <Text>尚无资源采样——一旦你分配了第一项资源，图表便会填充数据。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="zh_Hans_CN">
+            <Text>已分配资源（数量）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="zh_Hans_CN">
+            <Text>成就</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="zh_Hans_CN">
+            <Text>纪念性 · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="zh_Hans_CN">
+            <Text>即时 · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="zh_Hans_CN">
+            <Text>奖励： </Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="zh_Hans_CN">
+            <Text>尚无进度。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="zh_Hans_CN">
+            <Text>时光长河遗产 API 不可用。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="zh_Hans_CN">
+            <Text>尚无文明被采样。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="zh_Hans_CN">
+            <Text>{1_Age}中没有可用的成就。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>没有可用的成就。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="zh_Hans_CN">
+            <Text>当前时代：{1_Age}。单元格显示已触发 / 可用总数；进度条为已填充百分比。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="zh_Hans_CN">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="zh_Hans_CN">
+            <Text>{1_Count} 项可用成就</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="zh_Hans_CN">
+            <Text>{1_Count} 项可用成就</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="zh_Hans_CN">
+            <Text>成就（数量）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="zh_Hans_CN">
+            <Text>{1_Years} 年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="zh_Hans_CN">
+            <Text>{1_Years} 年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="zh_Hans_CN">
+            <Text>冲突（每场战争一条）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="zh_Hans_CN">
+            <Text>（无主要文明）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="zh_Hans_CN">
+            <Text>进行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="zh_Hans_CN">
+            <Text>已结束</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="zh_Hans_CN">
+            <Text>进行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="zh_Hans_CN">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="zh_Hans_CN">
+            <Text>进攻方：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="zh_Hans_CN">
+            <Text>防御方：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="zh_Hans_CN">
+            <Text>宣战方：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="zh_Hans_CN">
+            <Text>持续时间：{1_Years} 年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="zh_Hans_CN">
+            <Text>{1_Turns} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="zh_Hans_CN">
+            <Text>实力 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>定居点 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="zh_Hans_CN">
+            <Text>人口 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="zh_Hans_CN">
+            <Text>生产力 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="zh_Hans_CN">
+            <Text>战争期间的损耗</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="zh_Hans_CN">
+            <Text>（观测到的变化）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="zh_Hans_CN">
+            <Text>尚无战争。一旦任何文明宣战，时间线便会填充数据。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="zh_Hans_CN">
+            <Text>没有符合当前筛选条件的战争。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="zh_Hans_CN">
+            <Text>尚无采样——请先进行一回合。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="zh_Hans_CN">
+            <Text>CSV 过大（{1_SizeMB} MB）· 会导致剪贴板崩溃。请在选项中降低采样上限后重试。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="zh_Hans_CN">
+            <Text>已复制 · {1_Rows} 行 × {2_Cols} 列{3_SizeTag} · 粘贴至 Excel / Sheets / .csv 文件</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="zh_Hans_CN">
+            <Text>剪贴板不可用 · 已将 CSV 写入 UI.log（见 logs 文件夹）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="zh_Hans_CN">
+            <Text>当前时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="zh_Hans_CN">
+            <Text>第一时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="zh_Hans_CN">
+            <Text>第二时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="zh_Hans_CN">
+            <Text>第三时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="zh_Hans_CN">
+            <Text>全部时段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="zh_Hans_CN">
+            <Text>跨时代图表不可用</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="zh_Hans_CN">
+            <Text>&lt;p style="margin:0;"&gt;无法绘制一张横跨&lt;b style="color:#f3e7c4;"&gt;古典、探索和现代&lt;/b&gt;时代的图表。文明&amp;nbsp;7 会清除模组用来跨越时代转换携带采样历史的每一个存储通道，因此每个时代只能绘制其自身的数据。请改用&lt;b style="color:#f3e7c4;"&gt;当前&amp;nbsp;时代&lt;/b&gt;或任意年份范围筛选。&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="zh_Hans_CN">
+            <Text>{1_Label} 筛选</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="zh_Hans_CN">
+            <Text>ⓘ GDP = Σ 加权产出 × 回合 × 1M  ·  悬停查看说明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="zh_Hans_CN">
+            <Text>国内生产总值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="zh_Hans_CN">
+            <Text>&lt;p&gt;一个伪真实数值，综合一个文明的每回合产出，按各产出对真实经济的贡献程度加权。&lt;/p&gt;&lt;p&gt;&lt;b&gt;公式：&lt;/b&gt; Σ（产出 × 权重）× 回合 × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;权重&lt;/b&gt;（每点产出）：&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;金币&lt;/b&gt; — 1.0（货币 = 直接贸易）&lt;/li&gt;&lt;li&gt;&lt;b&gt;生产力&lt;/b&gt; — 1.0（工业产出）&lt;/li&gt;&lt;li&gt;&lt;b&gt;科学&lt;/b&gt; — 1.2（创新随时间复利累积）&lt;/li&gt;&lt;li&gt;&lt;b&gt;文化&lt;/b&gt; — 1.2（软实力与旅游业）&lt;/li&gt;&lt;li&gt;&lt;b&gt;食物&lt;/b&gt; — 0.5（维持生计；只有盈余才类似 GDP）&lt;/li&gt;&lt;li&gt;&lt;b&gt;影响力&lt;/b&gt; — 1.5（外交 / 条约筹码）&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;为何要乘以回合？&lt;/b&gt; 真实经济会复利累积：一个处于第 200 回合、与处于第 50 回合且每回合产出相同的文明相比，代表着 4 倍的累积经济总量。&lt;/p&gt;&lt;p&gt;&lt;i&gt;仅用于展示——绝不影响游戏状态。&lt;/i&gt;&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="zh_Hans_CN">
+            <Text>ⓘ 外交支持度 = Σ 关系加权分数  ·  悬停查看说明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="zh_Hans_CN">
+            <Text>外交支持度——国际声誉</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="zh_Hans_CN">
+            <Text>&lt;p&gt;一个带符号的总和，反映当前其他所有文明对你的看法。当你拥有盟友和朋友时会&lt;b&gt;上升&lt;/b&gt;；当你被敌对者包围或处于交战状态时会&lt;b&gt;下降&lt;/b&gt;。&lt;/p&gt;&lt;p&gt;&lt;b&gt;每个主要文明的贡献&lt;/b&gt;（基于外交界面显示的关系枚举）：&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;结盟&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;有益&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;友好&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;中立&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;不友好&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;敌对&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;交战&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;城邦贡献：&lt;/b&gt;每个由你担任宗主的城邦 +2，按 0.3× 衰减（以免偏重城邦的策略压过主要文明关系）。&lt;/p&gt;&lt;p&gt;&lt;b&gt;分数 = Σ（主要文明权重）+ 0.3 × Σ（宗主加成）&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;每回合从各文明对本地玩家的视角采样。仅用于展示。&lt;/i&gt;&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="zh_Hans_CN">
+            <Text>当前</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="zh_Hans_CN">
+            <Text>第一时代结束时</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="zh_Hans_CN">
+            <Text>第二时代结束时</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="zh_Hans_CN">
+            <Text>快照：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="zh_Hans_CN">
+            <Text>尚无快照——该时代尚未结束。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="zh_Hans_CN">
+            <Text>↻ 刷新</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="zh_Hans_CN">
+            <Text>从 VictoryManager.getVictoryProgress() 重新拉取遗产进度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="zh_Hans_CN">
+            <Text>所有主要文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="zh_Hans_CN">
+            <Text>文明：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="zh_Hans_CN">
+            <Text>仅进行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="zh_Hans_CN">
+            <Text>所有战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="zh_Hans_CN">
+            <Text>正在查看：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="zh_Hans_CN">
+            <Text>清除聚焦（{1_Count}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="zh_Hans_CN">
+            <Text>以完全不透明度显示所有文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="zh_Hans_CN">
+            <Text>时间：两者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="zh_Hans_CN">
+            <Text>时间：回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="zh_Hans_CN">
+            <Text>时间：年份</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="zh_Hans_CN">
+            <Text>在回合数、游戏内年份或两者之间切换 X 轴时间单位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="zh_Hans_CN">
+            <Text>奇观：开</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="zh_Hans_CN">
+            <Text>奇观：关</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="zh_Hans_CN">
+            <Text>隐藏图表曲线上的奇观建成标记</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="zh_Hans_CN">
+            <Text>显示图表曲线上的奇观建成标记（在各文明完成奇观的回合处显示图标）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="zh_Hans_CN">
+            <Text>复制为 CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="zh_Hans_CN">
+            <Text>&lt;p style="margin:0;"&gt;将每个文明的每个采样回合复制到剪贴板。粘贴至 Excel、Sheets，或保存为 &lt;code&gt;.csv&lt;/code&gt;。文明&amp;nbsp;7 的 UI 沙盒没有文件写入 API，因此剪贴板是唯一的交接方式。&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="zh_Hans_CN">
+            <Text>将所有采样历史以 CSV 形式复制到剪贴板——粘贴至 Excel、Google Sheets 或 .csv 文件</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="zh_Hans_CN">
+            <Text>军事</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="zh_Hans_CN">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="zh_Hans_CN">
+            <Text>经济</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="zh_Hans_CN">
+            <Text>科学</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="zh_Hans_CN">
+            <Text>扩张</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="zh_Hans_CN">
+            <Text>外交</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="zh_Hans_CN">
+            <Text>全部开启</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="zh_Hans_CN">
+            <Text>全部关闭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="zh_Hans_CN">
+            <Text>{1_Label}（点击隐藏）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="zh_Hans_CN">
+            <Text>{1_Label}（点击显示）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="zh_Hans_CN">
+            <Text>没有可显示的文明。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="zh_Hans_CN">
+            <Text>未遇领袖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="zh_Hans_CN">
+            <Text>玩家 {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="zh_Hans_CN">
+            <Text>（曾用名 {1_Names}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="zh_Hans_CN">
+            <Text>排名 {1_Rank}/{2_Total}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="zh_Hans_CN">
+            <Text>重置（{1_Count} 个已隐藏）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="zh_Hans_CN">
+            <Text>显示所有已隐藏的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="zh_Hans_CN">
+            <Text>提示：点击任意文明的标题以将其隐藏并聚焦比较。再次点击（在右侧细窄列中）即可将其恢复。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="zh_Hans_CN">
+            <Text>未遇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="zh_Hans_CN">
+            <Text>（已隐藏——点击显示）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="zh_Hans_CN">
+            <Text>点击显示</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="zh_Hans_CN">
+            <Text>点击隐藏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="zh_Hans_CN">
+            <Text>成就雷达图——所有文明，全部 6 条属性路径</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="zh_Hans_CN">
+            <Text>成就随时间变化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="zh_Hans_CN">
+            <Text>（累计数量，按属性堆叠）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="zh_Hans_CN">
+            <Text>资源分配随时间变化（堆叠面积图）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="zh_Hans_CN">
+            <Text>冲突时间线——本局游戏出现过的每一场战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="zh_Hans_CN">
+            <Text>尚未实现——将在未来的迭代中推出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="zh_Hans_CN">
+            <Text>选项</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="zh_Hans_CN">
+            <Text>显示我尚未遇见的文明的真实名称（剧透）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="zh_Hans_CN">
+            <Text>色盲模式（图表与关系配色采用高对比度 Wong 调色板）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="zh_Hans_CN">
+            <Text>在图表和年鉴中显示已淘汰文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="zh_Hans_CN">
+            <Text>在图表曲线上显示奇观建成标记（在各文明完成奇观的回合处显示小图标）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="zh_Hans_CN">
+            <Text>性能模式（缓冲存储写入、限制悬停频率）——推荐用于长局游戏或较慢的机器。崩溃时可能丢失最多 2 回合的历史。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="zh_Hans_CN">
+            <Text>自动（游戏速度默认值）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="zh_Hans_CN">
+            <Text>1,000 个采样</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="zh_Hans_CN">
+            <Text>2,500 个采样</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="zh_Hans_CN">
+            <Text>5,000 个采样</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="zh_Hans_CN">
+            <Text>10,000 个采样 ⚠ 可能降低性能</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="zh_Hans_CN">
+            <Text>无限制 ⚠ 存档非常大，可能降低性能</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="zh_Hans_CN">
+            <Text>历史采样上限：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="zh_Hans_CN">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="zh_Hans_CN">
+            <Text>无限制</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="zh_Hans_CN">
+            <Text>当前有效上限：{1_Cap}  ·  检测到的游戏速度：{2_Speed}  ·  硬性上限：{3_Ceiling}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="zh_Hans_CN">
+            <Text>每回合（默认）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="zh_Hans_CN">
+            <Text>每 2 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="zh_Hans_CN">
+            <Text>每 5 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="zh_Hans_CN">
+            <Text>每 10 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="zh_Hans_CN">
+            <Text>每 25 回合 ⚠ 图表较粗略</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="zh_Hans_CN">
+            <Text>采样频率：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="zh_Hans_CN">
+            <Text>较高的数值记录更少的点——适用于长时间的马拉松游戏。更改在下一回合生效；现有采样将被保留。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="zh_Hans_CN">
+            <Text>禁用降采样（即使达到上限后仍保留每回合的采样）——高级用户模式；请搭配较高的上限或无限制使用。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="zh_Hans_CN">
+            <Text>清除所有已记录的人口统计采样？</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="zh_Hans_CN">
+            <Text>清除所有已记录的战争？采样历史和其他数据将被保留。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="zh_Hans_CN">
+            <Text>重置战争历史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="zh_Hans_CN">
+            <Text>采样：{1_Samples}    架构：v{2_Schema}    后端：{3_Backend}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="zh_Hans_CN">
+            <Text>交战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="zh_Hans_CN">
+            <Text>结盟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="zh_Hans_CN">
+            <Text>有益</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="zh_Hans_CN">
+            <Text>友好</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="zh_Hans_CN">
+            <Text>不友好</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="zh_Hans_CN">
+            <Text>敌对</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="zh_Hans_CN">
+            <Text>开放边境</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="zh_Hans_CN">
+            <Text>谴责</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="zh_Hans_CN">
+            <Text>研究协议</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="zh_Hans_CN">
+            <Text>其他事业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="zh_Hans_CN">
+            <Text>贸易路线</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="zh_Hans_CN">
+            <Text>宗主权</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="zh_Hans_CN">
+            <Text>未遇城邦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="zh_Hans_CN">
+            <Text>查看者：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="zh_Hans_CN">
+            <Text>你</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="zh_Hans_CN">
+            <Text>{1_Name}（你）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="zh_Hans_CN">
+            <Text>环上节点 = 已遇主要文明。两个文明之间的多条连线 = 多重关系。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="zh_Hans_CN">
+            <Text>查看者文明 ↔ 城邦关系。多条连线 = 多重关系。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="zh_Hans_CN">
+            <Text>本地玩家不可用（观察者模式）。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="zh_Hans_CN">
+            <Text>主要文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="zh_Hans_CN">
+            <Text>城邦</Text>
+        </Replace>
     </LocalizedText>
 </Database>

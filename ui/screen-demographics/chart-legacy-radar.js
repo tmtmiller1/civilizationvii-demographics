@@ -5,6 +5,7 @@
 // polygon-drawing helpers. Migrated verbatim from demographics-chart.js.
 
 import { safePlaySound } from "/demographics/ui/demographics-audio.js";
+import { t } from "/demographics/ui/demographics-i18n.js";
 import {
   dlog,
   SVG_NS,
@@ -24,12 +25,24 @@ import {
 // age, values are also live-pulled from `player.Legacies.isTriggered` so
 // progress reflects the engine state right now, not just the latest sample.
 const LEGACY_AXES = [
-  { id: "triumphs_militaristic", label: "Militaristic", angle: -Math.PI / 2 }, // top
-  { id: "triumphs_economic", label: "Economic", angle: -Math.PI / 6 }, // upper-right
-  { id: "triumphs_diplomatic", label: "Diplomatic", angle: Math.PI / 6 }, // lower-right
-  { id: "triumphs_cultural", label: "Cultural", angle: Math.PI / 2 }, // bottom
-  { id: "triumphs_scientific", label: "Scientific", angle: (5 * Math.PI) / 6 }, // lower-left
-  { id: "triumphs_expansionist", label: "Expansionist", angle: (-5 * Math.PI) / 6 } // upper-left
+  {
+    id: "triumphs_militaristic",
+    label: t("LOC_DEMOGRAPHICS_ATTR_MILITARISTIC"),
+    angle: -Math.PI / 2
+  }, // top
+  { id: "triumphs_economic", label: t("LOC_DEMOGRAPHICS_ATTR_ECONOMIC"), angle: -Math.PI / 6 }, // upper-right
+  { id: "triumphs_diplomatic", label: t("LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC"), angle: Math.PI / 6 }, // lower-right
+  { id: "triumphs_cultural", label: t("LOC_DEMOGRAPHICS_ATTR_CULTURAL"), angle: Math.PI / 2 }, // bottom
+  {
+    id: "triumphs_scientific",
+    label: t("LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC"),
+    angle: (5 * Math.PI) / 6
+  }, // lower-left
+  {
+    id: "triumphs_expansionist",
+    label: t("LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST"),
+    angle: (-5 * Math.PI) / 6
+  } // upper-left
 ];
 
 const RADAR_AXIS_KEYS = [
@@ -647,7 +660,7 @@ export function renderLegacyRadar(host, options) {
 
   const samples = opts.history && Array.isArray(opts.history.samples) ? opts.history.samples : [];
   if (samples.length === 0) {
-    appendEmptyNotice(host, "No samples yet — play a turn and reopen.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES"));
     return null;
   }
 

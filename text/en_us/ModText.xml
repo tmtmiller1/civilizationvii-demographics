@@ -301,6 +301,570 @@
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP">
             <Text>When off (default), civs and city-states you have not yet met are shown as generic "Unmet" placeholders in charts, the factbook, and global relations rings.</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK">
+            <Text>Player {1_Pid}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER">
+            <Text>Civilization Progress</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS">
+            <Text>No civilization has made progress yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC">
+            <Text>Militaristic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC">
+            <Text>Economic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC">
+            <Text>Diplomatic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL">
+            <Text>Cultural</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC">
+            <Text>Scientific</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST">
+            <Text>Expansionist</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ATTR_OTHER">
+            <Text>Other</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES">
+            <Text>No samples yet — play a turn and reopen.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV">
+            <Text>Unmet Civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME">
+            <Text>Wonder</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY">
+            <Text>Built by</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WONDER_TURN">
+            <Text>Turn {1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS">
+            <Text>Crisis Begins</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES">
+            <Text>Crisis Intensifies</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES">
+            <Text>Crisis Culminates</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS">
+            <Text>Crisis Ends</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS">
+            <Text>Antiquity Begins</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS">
+            <Text>Exploration Begins</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS">
+            <Text>Modern Begins</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT">
+            <Text>Cap 100%</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING">
+            <Text>Charts unavailable — Chart.js not loaded.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED">
+            <Text>Chart failed to render — see UI.log.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS">
+            <Text>Bonus</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE">
+            <Text>Empire</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY">
+            <Text>City</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY">
+            <Text>Factory</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE">
+            <Text>Treasure</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AXIS_TIME">
+            <Text>Time (turn / year)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES">
+            <Text>No resource samples yet — once you assign your first resource the chart will populate.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED">
+            <Text>Resources Assigned (count)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME">
+            <Text>Triumph</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE">
+            <Text>Commemorative · {1_Label}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT">
+            <Text>Instant · {1_Label}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL">
+            <Text>Reward: </Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS">
+            <Text>No progress yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API">
+            <Text>Test-of-Time Legacies API unavailable.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED">
+            <Text>No civs sampled yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE">
+            <Text>No triumphs available in {1_Age}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS">
+            <Text>No triumphs available.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER">
+            <Text>Current age: {1_Age}. Cells show triggered / total available; bar is filled percent.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN">
+            <Text>unknown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE">
+            <Text>{1_Count} triumph available</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT">
+            <Text>{1_Count} triumphs available</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT">
+            <Text>Triumphs (count)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE">
+            <Text>{1_Years} yr</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR">
+            <Text>{1_Years} yrs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS">
+            <Text>Conflicts (one bar per war)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS">
+            <Text>(no major civs)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_ONGOING">
+            <Text>ongoing</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED">
+            <Text>concluded</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING">
+            <Text>ongoing</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN">
+            <Text>unknown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS">
+            <Text>Attackers:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS">
+            <Text>Defenders:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY">
+            <Text>Declared by: {1_Name}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DURATION">
+            <Text>Duration: {1_Years} years</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS">
+            <Text>{1_Turns} turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH">
+            <Text>strength {1_Value}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS">
+            <Text>settlements {1_Value}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_POP">
+            <Text>pop {1_Value}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION">
+            <Text>production {1_Value}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER">
+            <Text>Cost during war</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED">
+            <Text>(observed change)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS">
+            <Text>No wars yet. Once any civ declares war, the timeline will populate.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH">
+            <Text>No wars match the current filters.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES">
+            <Text>No samples yet — play a turn first.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE">
+            <Text>CSV too large ({1_SizeMB} MB) · would crash clipboard. Lower sample cap in Options and retry.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_COPIED">
+            <Text>Copied · {1_Rows} rows × {2_Cols} cols{3_SizeTag} · paste into Excel / Sheets / a .csv file</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE">
+            <Text>Clipboard unavailable · wrote CSV to UI.log (see logs folder)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE">
+            <Text>Current Age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_AGE1">
+            <Text>1st Age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_AGE2">
+            <Text>2nd Age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_AGE3">
+            <Text>3rd Age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME">
+            <Text>All Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE">
+            <Text>Cross-Age Graphs Unavailable</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY">
+            <Text>&lt;p style="margin:0;"&gt;A single graph spanning &lt;b style="color:#f3e7c4;"&gt;Antiquity, Exploration, and Modern&lt;/b&gt; isn't possible. Civ&amp;nbsp;7 wipes every storage channel a mod could use to carry sampled history across an age transition, so each age can only graph its own data. Use &lt;b style="color:#f3e7c4;"&gt;Current&amp;nbsp;Age&lt;/b&gt; or any year-range filter instead.&lt;/p&gt;</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP">
+            <Text>{1_Label} filter</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER">
+            <Text>ⓘ GDP = Σ weighted yields × turn × 1M  ·  hover for explanation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE">
+            <Text>Gross Domestic Product</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY">
+            <Text>&lt;p&gt;A pseudo-realistic value combining a civilization's per-turn yields, weighted by how much each yield contributes to a real economy.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formula:&lt;/b&gt; Σ (yield × weight) × turn × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Weights&lt;/b&gt; (per yield point):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Gold&lt;/b&gt; — 1.0 (currency = direct trade)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Production&lt;/b&gt; — 1.0 (industrial output)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Science&lt;/b&gt; — 1.2 (innovation compounds over time)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Culture&lt;/b&gt; — 1.2 (soft power &amp; tourism)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Food&lt;/b&gt; — 0.5 (subsistence; only the surplus is GDP-like)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influence&lt;/b&gt; — 1.5 (diplomatic / treaty leverage)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Why multiply by turn?&lt;/b&gt; Real economies compound: a civ at turn 200 with the same per-turn yields as a civ at turn 50 represents 4× the accumulated economic mass.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Presentational only — never affects game state.&lt;/i&gt;&lt;/p&gt;</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER">
+            <Text>ⓘ Diplomatic Approval = Σ relationship-weighted scores  ·  hover for explanation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE">
+            <Text>Diplomatic Approval — international reputation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY">
+            <Text>&lt;p&gt;A signed aggregate of how every other civilization currently feels about you. Goes &lt;b&gt;up&lt;/b&gt; when you have allies and friends; goes &lt;b&gt;down&lt;/b&gt; when you're surrounded by hostiles or at war.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Per-major-civ contribution&lt;/b&gt; (based on the relationship enum the diplomacy screen shows):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alliance&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Helpful&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Friendly&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutral&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Unfriendly&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostile&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;At War&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;City-state contribution:&lt;/b&gt; +2 per CS where you are suzerain, dampened by 0.3× (so CS-heavy strategies don't dwarf major-civ relations).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Score = Σ(major weights) + 0.3 × Σ(suzerain bonuses)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Sampled each turn from each civ's perspective on the local player. Presentational only.&lt;/i&gt;&lt;/p&gt;</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT">
+            <Text>Current</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1">
+            <Text>End of 1st Age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2">
+            <Text>End of 2nd Age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT">
+            <Text>Snapshot:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP">
+            <Text>No snapshot yet — the age hasn't ended.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_REFRESH">
+            <Text>↻ Refresh</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP">
+            <Text>Re-pull legacy progress from VictoryManager.getVictoryProgress()</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS">
+            <Text>All major civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LABEL_CIV">
+            <Text>Civ:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY">
+            <Text>Ongoing only</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS">
+            <Text>All wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING">
+            <Text>Viewing:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS">
+            <Text>Clear Focus ({1_Count})</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP">
+            <Text>Show all civs at full opacity</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH">
+            <Text>Time: Both</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN">
+            <Text>Time: Turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR">
+            <Text>Time: Year</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP">
+            <Text>Toggle X-axis time units between turn number, in-game year, or both</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON">
+            <Text>Wonders: ON</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF">
+            <Text>Wonders: OFF</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP">
+            <Text>Hide wonder-built markers on chart lines</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP">
+            <Text>Show wonder-built markers on chart lines (icon at the turn each civ completed a wonder)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV">
+            <Text>Copy as CSV</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY">
+            <Text>&lt;p style="margin:0;"&gt;Copies every sampled turn for every civ to your clipboard. Paste into Excel, Sheets, or save as &lt;code&gt;.csv&lt;/code&gt;. Civ&amp;nbsp;7's UI sandbox has no file-write API, so the clipboard is the only hand-off.&lt;/p&gt;</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP">
+            <Text>Copy all sampled history to the clipboard as CSV — paste into Excel, Google Sheets, or a .csv file</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC">
+            <Text>Militaristic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL">
+            <Text>Cultural</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC">
+            <Text>Economic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC">
+            <Text>Scientific</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST">
+            <Text>Expansionist</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC">
+            <Text>Diplomatic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON">
+            <Text>All On</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF">
+            <Text>All Off</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP">
+            <Text>{1_Label} (click to hide)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP">
+            <Text>{1_Label} (click to show)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS">
+            <Text>No civilizations to show.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER">
+            <Text>Unmet Leader</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK">
+            <Text>Player {1_Pid}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY">
+            <Text>(formerly {1_Names})</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF">
+            <Text>Rank {1_Rank}/{2_Total}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET">
+            <Text>Reset ({1_Count} hidden)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP">
+            <Text>Show all hidden civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT">
+            <Text>Tip: click any civilization's header to hide it and focus the comparison. Click again (in the slim column on the right) to bring it back.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT">
+            <Text>Unmet</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK">
+            <Text>(hidden — click to show)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW">
+            <Text>Click to show</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE">
+            <Text>Click to hide</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE">
+            <Text>Triumph Radar — all civs, all 6 attribute paths</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE">
+            <Text>Triumphs Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE">
+            <Text>(Cumulative Count, Stacked by Attribute)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE">
+            <Text>Resource Allocation Over Time (stacked area)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE">
+            <Text>Conflicts Timeline — every war this game has seen</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NYI">
+            <Text>Not yet implemented — coming in a future iteration.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING">
+            <Text>Options</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER">
+            <Text>Show real names for civilizations I haven't met (spoiler)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND">
+            <Text>Colorblind mode (high-contrast Wong palette for chart + relations colors)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL">
+            <Text>Show eliminated civs in chart and factbook</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS">
+            <Text>Show wonder-built markers on chart lines (small icon at the turn each civ completed a wonder)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE">
+            <Text>Performance mode (buffer storage writes, throttle hover) — recommended for long games or slower machines. May lose up to 2 turns of history on crash.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO">
+            <Text>Auto (game-speed default)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000">
+            <Text>1,000 samples</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500">
+            <Text>2,500 samples</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000">
+            <Text>5,000 samples</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000">
+            <Text>10,000 samples ⚠ may slow performance</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED">
+            <Text>Unlimited ⚠ very large saves, may slow performance</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL">
+            <Text>History sample cap:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN">
+            <Text>unknown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE">
+            <Text>unlimited</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT">
+            <Text>Current effective cap: {1_Cap}  ·  Game speed detected: {2_Speed}  ·  Hard ceiling: {3_Ceiling}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_1">
+            <Text>Every turn (default)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_2">
+            <Text>Every 2 turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_5">
+            <Text>Every 5 turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_10">
+            <Text>Every 10 turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_25">
+            <Text>Every 25 turns ⚠ coarse graphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL">
+            <Text>Sample frequency:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT">
+            <Text>Higher values record fewer points — useful for long marathon games. Change applies on the next turn; existing samples are kept.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION">
+            <Text>Disable downsampling (keep every turn's sample even after the cap is hit) — power-user mode; pair with a high cap or Unlimited.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY">
+            <Text>Clear all recorded Demographics samples?</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS">
+            <Text>Clear all recorded wars? Sample history and other data will be kept.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS">
+            <Text>Reset war history</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO">
+            <Text>Samples: {1_Samples}    Schema: v{2_Schema}    Backend: {3_Backend}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR">
+            <Text>At War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE">
+            <Text>Alliance</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL">
+            <Text>Helpful</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY">
+            <Text>Friendly</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY">
+            <Text>Unfriendly</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE">
+            <Text>Hostile</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS">
+            <Text>Open Borders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED">
+            <Text>Denounced</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH">
+            <Text>Research Agreements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS">
+            <Text>Other Endeavors</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES">
+            <Text>Trade Routes</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY">
+            <Text>Suzerainty</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS">
+            <Text>Unmet CS</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER">
+            <Text>Viewer:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PLAYER_YOU">
+            <Text>You</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU">
+            <Text>{1_Name} (You)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV">
+            <Text>Ring node = met major civ. Multiple lines between two civs = multiple relationships.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS">
+            <Text>Viewer-civ ↔ city-state relationships. Multiple lines = multiple relationships.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER">
+            <Text>Local player not available (observer mode).</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS">
+            <Text>Major Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES">
+            <Text>City States</Text>
+        </Row>
 
     </EnglishText>
 </Database>

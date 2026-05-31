@@ -277,5 +277,569 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="es_ES">
             <Text>Cuando está desactivado (predeterminado), las civilizaciones y ciudades estado que aún no has encontrado se muestran como marcadores genéricos "No encontrada" en las gráficas, el anuario y los anillos de relaciones globales.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="es_ES">
+            <Text>Jugador {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="es_ES">
+            <Text>Progreso de la civilización</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="es_ES">
+            <Text>Ninguna civilización ha avanzado todavía.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="es_ES">
+            <Text>Militarista</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="es_ES">
+            <Text>Económico</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="es_ES">
+            <Text>Diplomático</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="es_ES">
+            <Text>Cultural</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="es_ES">
+            <Text>Científico</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="es_ES">
+            <Text>Expansionista</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="es_ES">
+            <Text>Otro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="es_ES">
+            <Text>Aún no hay muestras: juega un turno y vuelve a abrir.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="es_ES">
+            <Text>Civilización no encontrada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="es_ES">
+            <Text>Maravilla</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="es_ES">
+            <Text>Construida por</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="es_ES">
+            <Text>Turno {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="es_ES">
+            <Text>Comienza la crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="es_ES">
+            <Text>La crisis se intensifica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="es_ES">
+            <Text>La crisis culmina</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="es_ES">
+            <Text>Termina la crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="es_ES">
+            <Text>Comienza la Antigüedad</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="es_ES">
+            <Text>Comienza la Exploración</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="es_ES">
+            <Text>Comienza la Era Moderna</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="es_ES">
+            <Text>Límite 100%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="es_ES">
+            <Text>Gráficas no disponibles: Chart.js no se ha cargado.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="es_ES">
+            <Text>La gráfica no se ha podido representar: consulta UI.log.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="es_ES">
+            <Text>Bonificación</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="es_ES">
+            <Text>Imperio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="es_ES">
+            <Text>Ciudad</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="es_ES">
+            <Text>Fábrica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="es_ES">
+            <Text>Tesoro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="es_ES">
+            <Text>Tiempo (turno / año)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="es_ES">
+            <Text>Aún no hay muestras de recursos: cuando asignes tu primer recurso, la gráfica se rellenará.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="es_ES">
+            <Text>Recursos asignados (recuento)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="es_ES">
+            <Text>Triumph</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="es_ES">
+            <Text>Conmemorativo · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="es_ES">
+            <Text>Instantáneo · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="es_ES">
+            <Text>Recompensa: </Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="es_ES">
+            <Text>Aún no hay progreso.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="es_ES">
+            <Text>La API de Legados Test-of-Time no está disponible.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="es_ES">
+            <Text>Aún no se ha muestreado ninguna civilización.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="es_ES">
+            <Text>No hay triumphs disponibles en {1_Age}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="es_ES">
+            <Text>No hay triumphs disponibles.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="es_ES">
+            <Text>Era actual: {1_Age}. Las celdas muestran activados / total disponible; la barra es el porcentaje completado.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="es_ES">
+            <Text>desconocida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="es_ES">
+            <Text>{1_Count} triumph disponible</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="es_ES">
+            <Text>{1_Count} triumphs disponibles</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="es_ES">
+            <Text>Triumphs (recuento)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="es_ES">
+            <Text>{1_Years} año</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="es_ES">
+            <Text>{1_Years} años</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="es_ES">
+            <Text>Conflictos (una barra por guerra)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="es_ES">
+            <Text>(sin civilizaciones principales)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="es_ES">
+            <Text>en curso</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="es_ES">
+            <Text>concluida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="es_ES">
+            <Text>en curso</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="es_ES">
+            <Text>desconocido</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="es_ES">
+            <Text>Atacantes:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="es_ES">
+            <Text>Defensores:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="es_ES">
+            <Text>Declarada por: {1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="es_ES">
+            <Text>Duración: {1_Years} años</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="es_ES">
+            <Text>{1_Turns} turnos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="es_ES">
+            <Text>fuerza {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="es_ES">
+            <Text>asentamientos {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="es_ES">
+            <Text>pob {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="es_ES">
+            <Text>producción {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="es_ES">
+            <Text>Coste durante la guerra</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="es_ES">
+            <Text>(cambio observado)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="es_ES">
+            <Text>Aún no hay guerras. En cuanto cualquier civilización declare la guerra, la línea temporal se rellenará.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="es_ES">
+            <Text>Ninguna guerra coincide con los filtros actuales.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="es_ES">
+            <Text>Aún no hay muestras: juega un turno primero.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="es_ES">
+            <Text>CSV demasiado grande ({1_SizeMB} MB) · bloquearía el portapapeles. Reduce el límite de muestras en Opciones y vuelve a intentarlo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="es_ES">
+            <Text>Copiado · {1_Rows} filas × {2_Cols} columnas{3_SizeTag} · pega en Excel / Sheets / un archivo .csv</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="es_ES">
+            <Text>Portapapeles no disponible · CSV escrito en UI.log (consulta la carpeta de registros)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="es_ES">
+            <Text>Era actual</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="es_ES">
+            <Text>1.ª era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="es_ES">
+            <Text>2.ª era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="es_ES">
+            <Text>3.ª era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="es_ES">
+            <Text>Todo el tiempo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="es_ES">
+            <Text>Gráficas entre eras no disponibles</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="es_ES">
+            <Text>&lt;p style="margin:0;"&gt;No es posible una única gráfica que abarque &lt;b style="color:#f3e7c4;"&gt;Antigüedad, Exploración y Era Moderna&lt;/b&gt;. Civ&amp;nbsp;7 borra todos los canales de almacenamiento que un mod podría usar para llevar el historial muestreado a través de una transición de era, por lo que cada era solo puede graficar sus propios datos. Usa &lt;b style="color:#f3e7c4;"&gt;Era&amp;nbsp;actual&lt;/b&gt; o cualquier filtro de rango de años en su lugar.&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="es_ES">
+            <Text>Filtro {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="es_ES">
+            <Text>ⓘ PIB = Σ rendimientos ponderados × turno × 1M  ·  pasa el cursor para ver la explicación</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="es_ES">
+            <Text>Producto interior bruto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="es_ES">
+            <Text>&lt;p&gt;Un valor pseudorrealista que combina los rendimientos por turno de una civilización, ponderados según cuánto contribuye cada rendimiento a una economía real.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Fórmula:&lt;/b&gt; Σ (rendimiento × peso) × turno × 1.000.000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Pesos&lt;/b&gt; (por punto de rendimiento):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Oro&lt;/b&gt; — 1.0 (moneda = comercio directo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Producción&lt;/b&gt; — 1.0 (producción industrial)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Ciencia&lt;/b&gt; — 1.2 (la innovación se acumula con el tiempo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Cultura&lt;/b&gt; — 1.2 (poder blando &amp; turismo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Alimentos&lt;/b&gt; — 0.5 (subsistencia; solo el excedente es similar al PIB)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influencia&lt;/b&gt; — 1.5 (apalancamiento diplomático / de tratados)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;¿Por qué multiplicar por el turno?&lt;/b&gt; Las economías reales se acumulan: una civilización en el turno 200 con los mismos rendimientos por turno que una en el turno 50 representa 4× la masa económica acumulada.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Solo presentacional: nunca afecta al estado del juego.&lt;/i&gt;&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="es_ES">
+            <Text>ⓘ Aprobación diplomática = Σ puntuaciones ponderadas por relación  ·  pasa el cursor para ver la explicación</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="es_ES">
+            <Text>Aprobación diplomática — reputación internacional</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="es_ES">
+            <Text>&lt;p&gt;Un agregado con signo de lo que todas las demás civilizaciones sienten actualmente por ti. &lt;b&gt;Sube&lt;/b&gt; cuando tienes aliados y amigos; &lt;b&gt;baja&lt;/b&gt; cuando estás rodeado de hostiles o en guerra.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contribución por civilización principal&lt;/b&gt; (según el estado de relación que muestra la pantalla de diplomacia):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alianza&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Servicial&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Amistosa&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutral&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Antipática&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostil&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;En guerra&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Contribución de ciudades estado:&lt;/b&gt; +2 por cada ciudad estado de la que eres protector, amortiguada por 0.3× (para que las estrategias centradas en ciudades estado no eclipsen las relaciones con civilizaciones principales).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Puntuación = Σ(pesos principales) + 0.3 × Σ(bonificaciones de protector)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Muestreada cada turno desde la perspectiva de cada civilización sobre el jugador local. Solo presentacional.&lt;/i&gt;&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="es_ES">
+            <Text>Actual</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="es_ES">
+            <Text>Fin de la 1.ª era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="es_ES">
+            <Text>Fin de la 2.ª era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="es_ES">
+            <Text>Instantánea:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="es_ES">
+            <Text>Aún no hay instantánea: la era no ha terminado.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="es_ES">
+            <Text>↻ Actualizar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="es_ES">
+            <Text>Volver a obtener el progreso de legados desde VictoryManager.getVictoryProgress()</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="es_ES">
+            <Text>Todas las civilizaciones principales</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="es_ES">
+            <Text>Civilización:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="es_ES">
+            <Text>Solo en curso</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="es_ES">
+            <Text>Todas las guerras</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="es_ES">
+            <Text>Viendo:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="es_ES">
+            <Text>Quitar enfoque ({1_Count})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="es_ES">
+            <Text>Mostrar todas las civilizaciones con opacidad completa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="es_ES">
+            <Text>Tiempo: ambos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="es_ES">
+            <Text>Tiempo: turno</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="es_ES">
+            <Text>Tiempo: año</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="es_ES">
+            <Text>Alternar las unidades de tiempo del eje X entre número de turno, año del juego o ambos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="es_ES">
+            <Text>Maravillas: SÍ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="es_ES">
+            <Text>Maravillas: NO</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="es_ES">
+            <Text>Ocultar los marcadores de maravillas construidas en las líneas de la gráfica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="es_ES">
+            <Text>Mostrar los marcadores de maravillas construidas en las líneas de la gráfica (icono en el turno en que cada civilización completó una maravilla)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="es_ES">
+            <Text>Copiar como CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="es_ES">
+            <Text>&lt;p style="margin:0;"&gt;Copia cada turno muestreado de cada civilización a tu portapapeles. Pega en Excel, Sheets o guarda como &lt;code&gt;.csv&lt;/code&gt;. El entorno aislado de la interfaz de Civ&amp;nbsp;7 no tiene API de escritura de archivos, así que el portapapeles es la única vía de transferencia.&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="es_ES">
+            <Text>Copiar todo el historial muestreado al portapapeles como CSV: pega en Excel, Google Sheets o un archivo .csv</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="es_ES">
+            <Text>Militarista</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="es_ES">
+            <Text>Cultural</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="es_ES">
+            <Text>Económico</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="es_ES">
+            <Text>Científico</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="es_ES">
+            <Text>Expansionista</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="es_ES">
+            <Text>Diplomático</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="es_ES">
+            <Text>Activar todo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="es_ES">
+            <Text>Desactivar todo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="es_ES">
+            <Text>{1_Label} (haz clic para ocultar)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="es_ES">
+            <Text>{1_Label} (haz clic para mostrar)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="es_ES">
+            <Text>No hay civilizaciones que mostrar.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="es_ES">
+            <Text>Líder no encontrado</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="es_ES">
+            <Text>Jugador {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="es_ES">
+            <Text>(antes {1_Names})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="es_ES">
+            <Text>Posición {1_Rank}/{2_Total}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="es_ES">
+            <Text>Restablecer ({1_Count} ocultas)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="es_ES">
+            <Text>Mostrar todas las civilizaciones ocultas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="es_ES">
+            <Text>Consejo: haz clic en la cabecera de cualquier civilización para ocultarla y centrar la comparación. Haz clic de nuevo (en la columna estrecha de la derecha) para traerla de vuelta.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="es_ES">
+            <Text>No encontrada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="es_ES">
+            <Text>(oculta: haz clic para mostrar)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="es_ES">
+            <Text>Haz clic para mostrar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="es_ES">
+            <Text>Haz clic para ocultar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="es_ES">
+            <Text>Radar de Triumphs — todas las civilizaciones, las 6 rutas de atributos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="es_ES">
+            <Text>Triumphs a lo largo del tiempo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="es_ES">
+            <Text>(Recuento acumulado, apilado por atributo)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="es_ES">
+            <Text>Asignación de recursos a lo largo del tiempo (área apilada)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="es_ES">
+            <Text>Línea temporal de conflictos — todas las guerras vistas en esta partida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="es_ES">
+            <Text>Aún no implementado: llegará en una futura iteración.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="es_ES">
+            <Text>Opciones</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="es_ES">
+            <Text>Mostrar nombres reales de las civilizaciones que no he encontrado (spoiler)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="es_ES">
+            <Text>Modo daltónico (paleta Wong de alto contraste para los colores de gráficas y relaciones)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="es_ES">
+            <Text>Mostrar civilizaciones eliminadas en la gráfica y el anuario</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="es_ES">
+            <Text>Mostrar los marcadores de maravillas construidas en las líneas de la gráfica (icono pequeño en el turno en que cada civilización completó una maravilla)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="es_ES">
+            <Text>Modo de rendimiento (almacenar en búfer las escrituras, limitar el hover): recomendado para partidas largas o máquinas más lentas. Puede perder hasta 2 turnos de historial en caso de fallo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="es_ES">
+            <Text>Automático (predeterminado según la velocidad del juego)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="es_ES">
+            <Text>1.000 muestras</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="es_ES">
+            <Text>2.500 muestras</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="es_ES">
+            <Text>5.000 muestras</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="es_ES">
+            <Text>10.000 muestras ⚠ puede ralentizar el rendimiento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="es_ES">
+            <Text>Ilimitado ⚠ partidas guardadas muy grandes, puede ralentizar el rendimiento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="es_ES">
+            <Text>Límite de muestras del historial:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="es_ES">
+            <Text>desconocida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="es_ES">
+            <Text>ilimitado</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="es_ES">
+            <Text>Límite efectivo actual: {1_Cap}  ·  Velocidad del juego detectada: {2_Speed}  ·  Tope máximo: {3_Ceiling}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="es_ES">
+            <Text>Cada turno (predeterminado)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="es_ES">
+            <Text>Cada 2 turnos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="es_ES">
+            <Text>Cada 5 turnos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="es_ES">
+            <Text>Cada 10 turnos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="es_ES">
+            <Text>Cada 25 turnos ⚠ gráficas poco detalladas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="es_ES">
+            <Text>Frecuencia de muestreo:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="es_ES">
+            <Text>Los valores más altos registran menos puntos: útil para partidas maratón largas. El cambio se aplica en el siguiente turno; las muestras existentes se conservan.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="es_ES">
+            <Text>Desactivar el submuestreo (conservar la muestra de cada turno incluso después de alcanzar el límite): modo para usuarios avanzados; combínalo con un límite alto o Ilimitado.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="es_ES">
+            <Text>¿Borrar todas las muestras de Demografía registradas?</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="es_ES">
+            <Text>¿Borrar todas las guerras registradas? Se conservarán el historial de muestras y los demás datos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="es_ES">
+            <Text>Restablecer historial de guerras</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="es_ES">
+            <Text>Muestras: {1_Samples}    Esquema: v{2_Schema}    Backend: {3_Backend}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="es_ES">
+            <Text>En guerra</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="es_ES">
+            <Text>Alianza</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="es_ES">
+            <Text>Servicial</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="es_ES">
+            <Text>Amistosa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="es_ES">
+            <Text>Antipática</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="es_ES">
+            <Text>Hostil</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="es_ES">
+            <Text>Fronteras abiertas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="es_ES">
+            <Text>Denunciada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="es_ES">
+            <Text>Acuerdos de investigación</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="es_ES">
+            <Text>Otras iniciativas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="es_ES">
+            <Text>Rutas comerciales</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="es_ES">
+            <Text>Protectorado</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="es_ES">
+            <Text>CE no encontrada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="es_ES">
+            <Text>Observador:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="es_ES">
+            <Text>Tú</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="es_ES">
+            <Text>{1_Name} (Tú)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="es_ES">
+            <Text>Nodo del anillo = civilización principal encontrada. Varias líneas entre dos civilizaciones = varias relaciones.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="es_ES">
+            <Text>Relaciones entre la civilización observadora ↔ ciudad estado. Varias líneas = varias relaciones.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="es_ES">
+            <Text>Jugador local no disponible (modo observador).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="es_ES">
+            <Text>Civilizaciones principales</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="es_ES">
+            <Text>Ciudades estado</Text>
+        </Replace>
     </LocalizedText>
 </Database>

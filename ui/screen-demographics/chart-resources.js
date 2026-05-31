@@ -18,6 +18,7 @@ import {
   buildStackTurnYears,
   civOptionLabel
 } from "/demographics/ui/screen-demographics/chart-shared.js";
+import { t } from "/demographics/ui/demographics-i18n.js";
 
 /**
  * @typedef {import("/demographics/ui/screen-demographics/chart-line.js").ChartOptions} ChartOptions
@@ -28,11 +29,11 @@ import {
 // the user can see how their resource allocation strategy evolved over the
 // course of the game. Compares CATEGORIES, not civs.
 const RESOURCE_BANDS = [
-  { id: "resources_bonus", label: "Bonus", color: "#7fb3e6" },
-  { id: "resources_empire", label: "Empire", color: "#e6a23c" },
-  { id: "resources_city", label: "City", color: "#9ad17a" },
-  { id: "resources_factory", label: "Factory", color: "#c9a2dc" },
-  { id: "resources_treasure", label: "Treasure", color: "#f3c34c" }
+  { id: "resources_bonus", label: t("LOC_DEMOGRAPHICS_RESOURCE_BONUS"), color: "#7fb3e6" },
+  { id: "resources_empire", label: t("LOC_DEMOGRAPHICS_RESOURCE_EMPIRE"), color: "#e6a23c" },
+  { id: "resources_city", label: t("LOC_DEMOGRAPHICS_RESOURCE_CITY"), color: "#9ad17a" },
+  { id: "resources_factory", label: t("LOC_DEMOGRAPHICS_RESOURCE_FACTORY"), color: "#c9a2dc" },
+  { id: "resources_treasure", label: t("LOC_DEMOGRAPHICS_RESOURCE_TREASURE"), color: "#f3c34c" }
 ];
 
 /**
@@ -391,7 +392,7 @@ function mountStackAxisTitles(wrap, L, W, H, yAxisLabel) {
   // Per-axis geometry stays inline.
   xTitle.style.left = ((L.padL + L.innerW / 2) / W) * 100 + "%";
   xTitle.style.top = ((H - 4) / H) * 100 + "%";
-  xTitle.textContent = "Time (turn / year)";
+  xTitle.textContent = t("LOC_DEMOGRAPHICS_AXIS_TIME");
   wrap.appendChild(xTitle);
   const yTitle = document.createElement("div");
   yTitle.className =
@@ -516,7 +517,7 @@ export function renderResourcesStack(host, options) {
   const H = opts.height || 600;
   const samples = historySamples(opts.history);
   if (samples.length === 0) {
-    appendEmptyNotice(host, "No samples yet — play a turn and reopen.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES"));
     return null;
   }
   // viewerPid (option) lets the caller pick which civ's stacked resources to
@@ -524,10 +525,7 @@ export function renderResourcesStack(host, options) {
   const points = buildStackPoints(samples, resolveStackTargetPid(opts), BANDS);
   clampStackPoints(points, opts);
   if (points.length === 0) {
-    appendEmptyNotice(
-      host,
-      "No resource samples yet — once you assign your first resource the chart will populate."
-    );
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES"));
     return null;
   }
 
@@ -565,7 +563,7 @@ function mountStackWrap(svg, opts, bands, points, tickPositions, L, W, H) {
   const yAxisLabel =
     typeof opts.yAxisLabel === "string" && opts.yAxisLabel
       ? opts.yAxisLabel
-      : "Resources Assigned (count)";
+      : t("LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED");
   mountStackAxisTitles(wrap, L, W, H, yAxisLabel);
   mountStackXTickLabels(wrap, tickPositions, W, H);
   mountStackLegend(wrap, bands, points, L, W, H);

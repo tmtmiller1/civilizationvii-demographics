@@ -13,6 +13,7 @@
 // `<table` literals). Coherent's GameFace renders tables unreliably,
 // hence flex.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { METRICS } from "/demographics/ui/demographics-metrics.js";
 import { safePlaySound } from "/demographics/ui/demographics-audio.js";
 
@@ -312,13 +313,15 @@ function buildLeaderAvatar(profile, sizeRem) {
 function buildCivHeaderText(text, profile, maskAsUnmet) {
   const leader = document.createElement("div");
   leader.className = "demographics-factbook-civ-header-leader font-title text-sm";
-  leader.textContent = maskAsUnmet ? "Unmet Leader" : profile.leaderName || "Player " + profile.pid;
+  leader.textContent = maskAsUnmet
+    ? t("LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER")
+    : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
   text.appendChild(leader);
 
   if (maskAsUnmet) {
     const civ = document.createElement("div");
     civ.className = "demographics-factbook-civ-header-civ font-body text-xs";
-    civ.textContent = "Unmet Civilization";
+    civ.textContent = t("LOC_DEMOGRAPHICS_UNMET_CIV");
     text.appendChild(civ);
   } else if (profile.civName) {
     const civ = document.createElement("div");
@@ -331,7 +334,7 @@ function buildCivHeaderText(text, profile, maskAsUnmet) {
     if (prior.length > 0) {
       const fmr = document.createElement("div");
       fmr.className = "demographics-factbook-civ-header-formerly font-body text-xs";
-      fmr.textContent = "(formerly " + prior.join(", ") + ")";
+      fmr.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY", prior.join(", "));
       text.appendChild(fmr);
     }
   }
@@ -414,7 +417,8 @@ function buildValueCell(metric, profile) {
 function buildRankCell(rank, total) {
   const cell = document.createElement("div");
   cell.className = "demographics-factbook-cell-rank font-body text-xs";
-  cell.textContent = typeof rank === "number" ? "Rank " + rank + "/" + total : "";
+  cell.textContent =
+    typeof rank === "number" ? t("LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF", rank, total) : "";
   return cell;
 }
 
@@ -433,8 +437,8 @@ function buildLabelColumn(opts) {
   if (opts && (opts.hiddenCount ?? 0) > 0 && typeof opts.onReset === "function") {
     const btn = document.createElement("div");
     btn.className = "demographics-factbook-reset-btn font-body text-xs";
-    btn.textContent = "Reset (" + opts.hiddenCount + " hidden)";
-    btn.title = "Show all hidden civilizations";
+    btn.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_RESET", opts.hiddenCount);
+    btn.title = t("LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP");
     btn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       safePlaySound("data-audio-activate", "options");
@@ -527,7 +531,7 @@ function stripEliminatedCivs(profiles, history) {
 function appendEmptyState(host) {
   const empty = document.createElement("div");
   empty.className = "demographics-empty font-body text-base";
-  empty.textContent = "No samples yet — play a turn and reopen.";
+  empty.textContent = t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES");
   host.appendChild(empty);
 }
 
@@ -573,8 +577,7 @@ function buildHint() {
   const hintIcon = document.createElement("div");
   hintIcon.className = "demographics-factbook-hint-icon";
   const hintText = document.createElement("span");
-  hintText.textContent =
-    "Tip: click any civilization's header to hide it and focus the comparison. Click again (in the slim column on the right) to bring it back.";
+  hintText.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_HINT");
   hint.appendChild(hintIcon);
   hint.appendChild(hintText);
   return hint;
@@ -604,12 +607,14 @@ function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
 
   const leader = document.createElement("div");
   leader.className = "demographics-factbook-civ-header-leader font-title text-xs";
-  leader.textContent = maskAsUnmet ? "Unmet" : profile.leaderName || "Player " + profile.pid;
+  leader.textContent = maskAsUnmet
+    ? t("LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT")
+    : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
   text.appendChild(leader);
 
   const hint = document.createElement("div");
   hint.className = "demographics-factbook-civ-header-civ font-body text-xs";
-  hint.textContent = "(hidden — click to show)";
+  hint.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK");
   text.appendChild(hint);
 
   return col;
@@ -723,7 +728,9 @@ function buildOtherColumn(st, pid) {
   );
   if (header) {
     header.classList.add("demographics-factbook-civ-header-clickable");
-    header.title = isHidden ? "Click to show" : "Click to hide";
+    header.title = isHidden
+      ? t("LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW")
+      : t("LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE");
     header.addEventListener("click", () => {
       safePlaySound("data-audio-checkbox-press", "audio-screen-unlocks");
       dlog("factbook header click pid=" + pid, "wasHidden=" + isHidden);

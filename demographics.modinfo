@@ -29,6 +29,7 @@
                     <Item>ui/demographics-triumphs-decorator.js</Item>
                 </UIScripts>
                 <ImportFiles>
+                    <Item>ui/demographics-i18n.js</Item>
                     <Item>ui/demographics-dock-decorator.js</Item>
                     <Item>ui/demographics-sampler.js</Item>
                     <Item>ui/sampler-collectors.js</Item>
