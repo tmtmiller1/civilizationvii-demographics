@@ -61,8 +61,11 @@ rm -rf "$DIST_DIR"
 mkdir -p "$TARGET_DIR"
 
 echo "==> Mirroring $SRC_DIR/ → $TARGET_DIR/ (excluding dev cruft)"
-rsync -a --exclude='.git' --exclude='.DS_Store' --exclude='dist' \
+rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude='dist' \
     --exclude='release.sh' --exclude='*.bak' --exclude='node_modules' \
+    --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' \
+    --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
+    --exclude='*.d.ts' \
     "$SRC_DIR"/ "$TARGET_DIR"/
 
 echo "==> Disabling debug logging in dist JS files"
