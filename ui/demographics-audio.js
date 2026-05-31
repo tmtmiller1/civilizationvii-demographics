@@ -13,14 +13,29 @@
 // and silent.
 
 const DBG = false;
+/**
+ * Debug logger, no-op unless {@link DBG} is set.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.audio]", ...a);
 }
 
+/**
+ * Play an engine sound by id, defensively. Never throws — the audio subsystem
+ * is absent in observer mode, headless contexts, and save previews, where a
+ * missing `Audio` object is normal and silent.
+ * @param {string} id Sound id (e.g. `"data-audio-activate"`); `"none"` silences.
+ * @param {string} [group] Sound group; the engine falls back to `"audio-base"`.
+ * @returns {void}
+ */
 export function safePlaySound(id, group) {
   try {
-    if (typeof Audio !== "undefined" && Audio && typeof Audio.playSound === "function") {
-      Audio.playSound(id, group);
+    // `Audio` here is the Civ7 audio manager, not the DOM constructor.
+    const mgr = /** @type {any} */ (typeof Audio !== "undefined" ? Audio : null);
+    if (mgr && typeof mgr.playSound === "function") {
+      mgr.playSound(id, group);
       dlog("playSound", id, "group=", group);
     }
   } catch (_) {
@@ -28,8 +43,11 @@ export function safePlaySound(id, group) {
   }
 }
 
-// Shorthand for the activate cue from audio-screen-unlocks; used at
-// most pill / chart-label click sites.
+/**
+ * Play the standard activate cue (from `audio-screen-unlocks`) used at most
+ * pill / chart-label / ring-node click sites.
+ * @returns {void}
+ */
 export function playActivate() {
   safePlaySound("data-audio-activate", "audio-screen-unlocks");
 }

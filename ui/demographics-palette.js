@@ -94,6 +94,10 @@ const SEMANTIC_COLORBLIND = {
   accent_gold: "#F0E442"
 };
 
+/**
+ * Whether the user has enabled the CVD-safe (colorblind) palette.
+ * @returns {boolean}
+ */
 function isColorblindMode() {
   try {
     return !!DemographicsSettings.getSetting("colorblindMode", false);
@@ -102,14 +106,26 @@ function isColorblindMode() {
   }
 }
 
+/**
+ * The rotating per-civ line palette (Wong CVD-safe set in colorblind mode).
+ * @returns {string[]} Hex color strings.
+ */
 export function getPalette() {
   return isColorblindMode() ? PALETTE_COLORBLIND : PALETTE_STANDARD;
 }
 
+/**
+ * Relationship-attitude swatches keyed by attitude name (war, alliance, …).
+ * @returns {Record<string, string>} Attitude → hex color.
+ */
 export function getAttitudeColors() {
   return isColorblindMode() ? ATTITUDE_COLORBLIND : ATTITUDE_STANDARD;
 }
 
+/**
+ * Generic semantic colors (gantt fallback bars, ongoing/closed markers, accent).
+ * @returns {Record<string, string>} Semantic role → hex color.
+ */
 export function getSemantic() {
   return isColorblindMode() ? SEMANTIC_COLORBLIND : SEMANTIC_STANDARD;
 }
