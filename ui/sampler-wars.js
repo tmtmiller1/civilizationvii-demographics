@@ -426,19 +426,15 @@ function buildNewWar(wars, info, aRoster, bRoster, snapshot, gameYear, turn) {
   const declarer = pidInfo(snapshot, /** @type {Pid} */ (info.initialPid));
   return {
     warUniqueID: info.uniqueID,
-    // `info.headerStartTurn` comes from the engine's diplomacy event header —
-    // it's age-local (Game.turn at declaration). Add the current
-    // cumulativeOffset so it lives in the same global coordinate space as the
-    // chart's X axis (which is also global). Wars cross-age are
-    // rare/non-existent in Civ7, so applying the current offset is sufficient.
-    // `cumulativeOffset` is intentionally undeclared here — preserved verbatim
-    // from the original (it ReferenceErrors at runtime, which the warTracker
-    // safeCall swallows). Both directives keep the linters quiet without
-    // altering that behavior. See the function-level note above.
-    startTurn:
-      // @ts-ignore intentional undeclared reference (see note)
-      // eslint-disable-next-line no-undef
-      typeof info.headerStartTurn === "number" ? info.headerStartTurn + cumulativeOffset : turn,
+    // `info.headerStartTurn` is the engine diplomacy header's declaration turn
+    // (age-local Game.turn). Samples, `endTurn`, and the Gantt domain are all
+    // age-local — the chart applies the per-age offset at render time — so we
+    // store it as-is, falling back to the current turn when the header lacks a
+    // usable value. (The earlier `+ cumulativeOffset` referenced a variable
+    // that never existed and threw a swallowed ReferenceError on every new war,
+    // silently dropping that turn's war tracking; the offset bookkeeping it came
+    // from was removed mod-wide as obsolete.)
+    startTurn: typeof info.headerStartTurn === "number" ? info.headerStartTurn : turn,
     endTurn: null,
     startYear: gameYear,
     endYear: null,

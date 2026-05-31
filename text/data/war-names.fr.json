@@ -1,0 +1,45 @@
+{
+  "ordinal": {
+    "1": "Première",
+    "2": "Deuxième",
+    "3": "Troisième",
+    "4": "Quatrième",
+    "5": "Cinquième",
+    "n": "{n}e"
+  },
+  "templates": {
+    "worldWar": "{ordinal} Guerre mondiale",
+    "greatWar": "Grande Guerre entre {A} et {B} (+{n} civilisations)",
+    "tripartite": "Guerre tripartite {A}–{B}–{C}",
+    "bilateral": "{ordinal} Guerre {A}–{B}"
+  },
+  "ui": {
+    "attackers": "Attaquants :",
+    "defenders": "Défenseurs :",
+    "declaredBy": "Déclarée par :",
+    "years": "ans",
+    "turns": "tours",
+    "concluded": "terminée",
+    "ongoing": "en cours"
+  },
+  "civAdjectives": {
+    "America": "Américain",
+    "Arabia": "Arabe",
+    "Aztec": "Aztèque",
+    "China": "Chinois",
+    "Egypt": "Égyptien",
+    "England": "Anglais",
+    "France": "Français",
+    "Germany": "Allemand",
+    "Greece": "Grec",
+    "India": "Indien",
+    "Iroquois": "Iroquois",
+    "Japan": "Japonais",
+    "Ottoman": "Ottoman",
+    "Persia": "Persan",
+    "Rome": "Romain",
+    "Russia": "Russe",
+    "Siam": "Siamois",
+    "Songhai": "Songhaï"
+  }
+}
