@@ -15,6 +15,14 @@
 //
 // Doesn't fight Civ7's nav system; just upgrades plain divs to button-equivalents.
 
+/**
+ * Upgrade a plain `<div>` into a keyboard/gamepad-reachable button-equivalent:
+ * adds it to the tab order, gives it `role="button"`, and fires `onClick` on
+ * click and on Enter / Space. Does not fight Civ7's nav system.
+ * @param {HTMLElement | null | undefined} el Element to make clickable.
+ * @param {(ev?: Event) => void} onClick Activation handler.
+ * @returns {HTMLElement | null | undefined} The same element, for chaining.
+ */
 export function makeClickable(el, onClick) {
   if (!el || typeof onClick !== "function") return el;
   el.setAttribute("tabindex", "0");

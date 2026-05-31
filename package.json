@@ -1,0 +1,16 @@
+{
+  "name": "demographics-mod-dev",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dev-only tooling for the Demographics Civ VII mod (type-check + lint). Not shipped — release.sh excludes it.",
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "lint": "eslint ui",
+    "verify": "tsc --noEmit && eslint ui"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "typescript": "^5.4.0"
+  }
+}
