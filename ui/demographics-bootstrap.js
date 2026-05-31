@@ -9,18 +9,36 @@
 // so silently kills the module with no stack trace.
 
 const DEMOGRAPHICS_DEBUG = true;
+
+/**
+ * Debug logger, no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function dlog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.bootstrap]", ...a);
 }
+
+/**
+ * Error logger; always emits (unlike {@link dlog}).
+ * @param {...*} a Values to log.
+ * @returns {void}
+ */
 function derr(...a) {
   console.error("[Demographics.bootstrap]", ...a);
 }
 
 dlog("loaded; debug=", DEMOGRAPHICS_DEBUG);
 
+/**
+ * Dynamic-import the dock-button decorator for its registration side effect.
+ * Never rejects — an import failure is logged and swallowed so the sampler
+ * still loads.
+ * @returns {Promise<*>} Resolves to the imported module, or `undefined` on failure.
+ */
 function loadDecorator() {
   dlog("about to dynamic-import demographics-dock-decorator.js");
-  return import("/demographics/ui/demographics-dock-decorator.js")
+  return /** @type {Promise<*>} */ (import("/demographics/ui/demographics-dock-decorator.js"))
     .then((mod) => {
       dlog("dock-decorator import resolved; module keys:", Object.keys(mod || {}));
       return mod;
@@ -30,9 +48,14 @@ function loadDecorator() {
     });
 }
 
+/**
+ * Dynamic-import the sampler module and invoke its `startSampler` export.
+ * Never rejects — a missing export or thrown start is logged and swallowed.
+ * @returns {Promise<void>} Resolves once the import settles.
+ */
 function startSampler() {
   dlog("about to dynamic-import demographics-sampler.js");
-  return import("/demographics/ui/demographics-sampler.js")
+  return /** @type {Promise<*>} */ (import("/demographics/ui/demographics-sampler.js"))
     .then((mod) => {
       dlog("sampler import resolved; keys:", Object.keys(mod || {}));
       try {
