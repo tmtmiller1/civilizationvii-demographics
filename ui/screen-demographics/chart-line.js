@@ -7,6 +7,7 @@
 
 import { getMetric } from "/demographics/ui/demographics-metrics.js";
 import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
+import { t } from "/demographics/ui/demographics-i18n.js";
 import {
   dlog,
   PALETTE,
@@ -647,7 +648,7 @@ function applyUnmetNames(allSeries) {
   if (!showUnmet) {
     for (const s of allSeries) {
       const isLocal = localPid !== undefined && s.pid === localPid;
-      if (!isLocal && s.met === false) s.name = "Unmet Civilization";
+      if (!isLocal && s.met === false) s.name = t("LOC_DEMOGRAPHICS_LINE_UNMET_CIV");
     }
   }
 }
@@ -1112,13 +1113,15 @@ function showWonderTip(state, wrap, ev, civLabel, iconLeft, iconTop, iconSize) {
     "letter-spacing:0.02em;margin-bottom:0.25rem;" +
     "border-bottom:1px solid rgba(168,132,90,0.45);" +
     'padding-bottom:0.2rem;">' +
-    escapeHtml(ev.wonderName || "Wonder") +
+    escapeHtml(ev.wonderName || t("LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME")) +
     "</div>" +
-    '<div><span style="color:#e5d2ac;">Built by</span> ' +
+    '<div><span style="color:#e5d2ac;">' +
+    escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_BUILT_BY")) +
+    "</span> " +
     escapeHtml(civLabel) +
     "</div>" +
-    '<div style="color:#9aa0aa;font-size:0.74rem;">Turn ' +
-    ev.turn +
+    '<div style="color:#9aa0aa;font-size:0.74rem;">' +
+    escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_TURN", ev.turn)) +
     escapeHtml(yearStr) +
     "</div>" +
     descHtml;
@@ -1849,10 +1852,10 @@ function detectCrisisOnset(s, prevHolder, ageOffsets, boundaries, gameSeedStr) {
 }
 
 const CRISIS_STAGE_LABELS = [
-  "Crisis Begins",
-  "Crisis Intensifies",
-  "Crisis Culminates",
-  "Crisis Ends"
+  t("LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS"),
+  t("LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES"),
+  t("LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES"),
+  t("LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS")
 ];
 const CRISIS_STAGE_COLORS = ["#e69a3c", "#e57c1a", "#d54a2b", "#9a2a2a"];
 
@@ -1915,9 +1918,9 @@ function collectAgeMarkers(history, ageOffsets) {
   if (!history || !Array.isArray(history.ageBoundaries)) return ageMarkers;
   /** @type {Record<string, string>} */
   const AGE_NAMES = {
-    AGE_ANTIQUITY: "Antiquity Begins",
-    AGE_EXPLORATION: "Exploration Begins",
-    AGE_MODERN: "Modern Begins"
+    AGE_ANTIQUITY: t("LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS"),
+    AGE_EXPLORATION: t("LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS"),
+    AGE_MODERN: t("LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS")
   };
   for (const b of history.ageBoundaries) {
     if (!b || typeof b.age !== "string") continue;
@@ -2145,7 +2148,7 @@ function makeCapLimitLinePlugin(metricId) {
       ctx2.stroke();
       // Tiny label on the right edge so the line is self-documenting.
       ctx2.font = "11px " + (Chart.defaults.font.family || "BodyFont, sans-serif");
-      const text = "Cap 100%";
+      const text = t("LOC_DEMOGRAPHICS_LINE_CAP_LIMIT");
       const textW = ctx2.measureText(text).width;
       ctx2.fillStyle = "rgba(20, 16, 10, 0.85)";
       ctx2.fillRect(right - textW - 8, y - 14, textW + 8, 14);
@@ -2539,7 +2542,7 @@ function mountLineChart(parts) {
     console.error("[Demographics.chart] Chart.js global unavailable; cannot render chart.");
     const msg = document.createElement("div");
     msg.className = "demographics-empty font-body text-base";
-    msg.textContent = "Charts unavailable — Chart.js not loaded.";
+    msg.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING");
     host.appendChild(msg);
     return null;
   }
@@ -2574,7 +2577,7 @@ function mountLineChart(parts) {
     );
     const msg = document.createElement("div");
     msg.className = "demographics-empty font-body text-base";
-    msg.textContent = "Chart failed to render — see UI.log.";
+    msg.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED");
     host.appendChild(msg);
     return null;
   }

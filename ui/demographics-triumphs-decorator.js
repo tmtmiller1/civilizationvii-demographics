@@ -20,6 +20,8 @@
 // in sibling decorators. Exports no bindings — a runtime no-op.
 export {};
 
+import { t } from "/demographics/ui/demographics-i18n.js";
+
 /**
  * A `GameInfo.Legacies` row, narrowed to the fields this module reads. The
  * engine row carries many more columns; they are intentionally left loose.
@@ -179,9 +181,9 @@ function civDisplayName(pid) {
     const leader = composePlayerField(p, "leaderName");
     const civ = composePlayerField(p, "civilizationName");
     if (leader && civ) return leader + " (" + civ + ")";
-    return leader || civ || "Player " + pid;
+    return leader || civ || t("LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK", pid);
   } catch (_) {
-    return "Player " + pid;
+    return t("LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK", pid);
   }
 }
 
@@ -530,7 +532,7 @@ function buildHeading() {
     "text-align:center",
     "opacity:0.85"
   ].join(";");
-  heading.textContent = "Civilization Progress";
+  heading.textContent = t("LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER");
   return heading;
 }
 
@@ -635,7 +637,7 @@ function fillProgressBox(box, progress) {
   if (civs.length === 0) {
     const empty = document.createElement("div");
     empty.style.cssText = "font-size:0.7rem;color:#85878c;font-style:italic;text-align:center;";
-    empty.textContent = "No civilization has made progress yet.";
+    empty.textContent = t("LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS");
     box.appendChild(empty);
   } else {
     for (const c of civs) {

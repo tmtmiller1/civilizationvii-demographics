@@ -12,6 +12,7 @@
 // global-relations-panel.js, around line 496 for the angle math and
 // around line 123 for the per-pair line rendering.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import {
   dlog,
   dasharrayFor,
@@ -708,7 +709,7 @@ export function buildRingSvg(ringIds, names, edges, localPid, viewerPid) {
   if (ringIds.length === 0) {
     const empty = document.createElement("div");
     empty.className = "demographics-empty font-body text-base";
-    empty.textContent = "No civilizations to show.";
+    empty.textContent = t("LOC_DEMOGRAPHICS_EMPTY_NO_CIVS");
     wrap.appendChild(empty);
     return wrap;
   }

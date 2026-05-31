@@ -93,5 +93,193 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ko_KR"><Text>아직 이 도시 국가를 만나지 않았습니다. 실제 이름을 표시하려면 옵션에서 "만나지 않은 문명 및 도시 국가의 이름 표시"를 활성화하세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ko_KR"><Text>만나지 않은 문명 및 도시 국가의 이름 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ko_KR"><Text>꺼져 있을 때(기본값) 아직 만나지 않은 문명과 도시 국가는 차트, 정보 자료집, 글로벌 관계 링에서 일반적인 "만나지 않음" 자리 표시자로 표시됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="ko_KR"><Text>플레이어 {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="ko_KR"><Text>문명 진행도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="ko_KR"><Text>아직 진행한 문명이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="ko_KR"><Text>군사주의</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="ko_KR"><Text>경제</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="ko_KR"><Text>외교</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="ko_KR"><Text>문화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="ko_KR"><Text>과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="ko_KR"><Text>팽창주의</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="ko_KR"><Text>기타</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다 — 한 턴을 진행한 후 다시 여세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="ko_KR"><Text>만나지 않은 문명</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ko_KR"><Text>불가사의</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ko_KR"><Text>건설자</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="ko_KR"><Text>{1_Turn}턴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ko_KR"><Text>위기 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ko_KR"><Text>위기 심화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ko_KR"><Text>위기 절정</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="ko_KR"><Text>위기 종료</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="ko_KR"><Text>고대 시대 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="ko_KR"><Text>탐험 시대 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="ko_KR"><Text>현대 시대 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="ko_KR"><Text>상한 100%</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ko_KR"><Text>차트를 사용할 수 없음 — Chart.js가 로드되지 않았습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ko_KR"><Text>차트 렌더링 실패 — UI.log를 확인하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="ko_KR"><Text>보너스</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="ko_KR"><Text>제국</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="ko_KR"><Text>도시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="ko_KR"><Text>공장</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="ko_KR"><Text>보물</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="ko_KR"><Text>시간(턴 / 연도)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ko_KR"><Text>아직 자원 샘플이 없습니다 — 첫 자원을 배정하면 차트가 채워집니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="ko_KR"><Text>배정된 자원(개수)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="ko_KR"><Text>위업</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="ko_KR"><Text>기념 · {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="ko_KR"><Text>즉시 · {1_Label}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="ko_KR"><Text>보상: </Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="ko_KR"><Text>아직 진행 사항이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ko_KR"><Text>Test-of-Time 레거시 API를 사용할 수 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="ko_KR"><Text>아직 샘플링된 문명이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="ko_KR"><Text>{1_Age}에 사용 가능한 위업이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="ko_KR"><Text>사용 가능한 위업이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="ko_KR"><Text>현재 시대: {1_Age}. 각 칸은 발동 / 사용 가능 총합을 표시하며, 막대는 채워진 백분율입니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="ko_KR"><Text>알 수 없음</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="ko_KR"><Text>위업 {1_Count}개 사용 가능</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="ko_KR"><Text>위업 {1_Count}개 사용 가능</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="ko_KR"><Text>위업(개수)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="ko_KR"><Text>{1_Years}년</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="ko_KR"><Text>{1_Years}년</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="ko_KR"><Text>분쟁(전쟁당 막대 하나)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="ko_KR"><Text>(주요 문명 없음)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="ko_KR"><Text>진행 중</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="ko_KR"><Text>종료됨</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="ko_KR"><Text>진행 중</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="ko_KR"><Text>알 수 없음</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="ko_KR"><Text>공격자:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="ko_KR"><Text>방어자:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="ko_KR"><Text>선포자: {1_Name}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="ko_KR"><Text>지속 기간: {1_Years}년</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="ko_KR"><Text>{1_Turns}턴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="ko_KR"><Text>전투력 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="ko_KR"><Text>정착지 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ko_KR"><Text>인구 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="ko_KR"><Text>생산력 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="ko_KR"><Text>전쟁 중 비용</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ko_KR"><Text>(관측된 변화)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ko_KR"><Text>아직 전쟁이 없습니다. 어떤 문명이든 전쟁을 선포하면 타임라인이 채워집니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ko_KR"><Text>현재 필터에 해당하는 전쟁이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다 — 먼저 한 턴을 진행하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ko_KR"><Text>CSV가 너무 큼({1_SizeMB} MB) · 클립보드가 충돌할 수 있습니다. 옵션에서 샘플 상한을 낮추고 다시 시도하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ko_KR"><Text>복사됨 · {1_Rows}행 × {2_Cols}열{3_SizeTag} · Excel / Sheets / .csv 파일에 붙여 넣으세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ko_KR"><Text>클립보드를 사용할 수 없음 · CSV를 UI.log에 기록했습니다(로그 폴더 참조)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="ko_KR"><Text>현재 시대</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="ko_KR"><Text>1번째 시대</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="ko_KR"><Text>2번째 시대</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ko_KR"><Text>3번째 시대</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ko_KR"><Text>전체 기간</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ko_KR"><Text>시대 간 그래프 사용 불가</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ko_KR"><Text>&lt;p style="margin:0;"&gt;&lt;b style="color:#f3e7c4;"&gt;고대, 탐험, 현대&lt;/b&gt;를 아우르는 단일 그래프는 불가능합니다. Civ&amp;nbsp;7은 모드가 시대 전환을 넘어 샘플링된 기록을 운반하는 데 사용할 수 있는 모든 저장 채널을 초기화하므로, 각 시대는 자체 데이터만 그래프로 표시할 수 있습니다. 대신 &lt;b style="color:#f3e7c4;"&gt;현재&amp;nbsp;시대&lt;/b&gt; 또는 연도 범위 필터를 사용하세요.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ko_KR"><Text>{1_Label} 필터</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ko_KR"><Text>ⓘ GDP = Σ 가중 산출량 × 턴 × 1M  ·  설명을 보려면 마우스를 올리세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ko_KR"><Text>국내 총생산</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ko_KR"><Text>&lt;p&gt;문명의 턴당 산출량을, 각 산출량이 실제 경제에 기여하는 정도에 따라 가중하여 결합한 유사 현실적 값입니다.&lt;/p&gt;&lt;p&gt;&lt;b&gt;공식:&lt;/b&gt; Σ (산출량 × 가중치) × 턴 × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;가중치&lt;/b&gt;(산출량 1점당):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;금&lt;/b&gt; — 1.0(통화 = 직접 교역)&lt;/li&gt;&lt;li&gt;&lt;b&gt;생산력&lt;/b&gt; — 1.0(산업 생산)&lt;/li&gt;&lt;li&gt;&lt;b&gt;과학&lt;/b&gt; — 1.2(혁신은 시간이 지날수록 복리로 누적됨)&lt;/li&gt;&lt;li&gt;&lt;b&gt;문화&lt;/b&gt; — 1.2(소프트 파워 &amp; 관광)&lt;/li&gt;&lt;li&gt;&lt;b&gt;식량&lt;/b&gt; — 0.5(생계 유지; 잉여분만 GDP에 해당)&lt;/li&gt;&lt;li&gt;&lt;b&gt;영향력&lt;/b&gt; — 1.5(외교 / 조약 영향력)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;왜 턴을 곱하는가?&lt;/b&gt; 실제 경제는 복리로 누적됩니다. 200턴의 문명은 동일한 턴당 산출량을 가진 50턴의 문명에 비해 4배의 누적된 경제 규모를 나타냅니다.&lt;/p&gt;&lt;p&gt;&lt;i&gt;표시용일 뿐 — 게임 상태에 절대 영향을 주지 않습니다.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ko_KR"><Text>ⓘ 외교 지지도 = Σ 관계 가중 점수  ·  설명을 보려면 마우스를 올리세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ko_KR"><Text>외교 지지도 — 국제 평판</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ko_KR"><Text>&lt;p&gt;다른 모든 문명이 현재 당신을 어떻게 느끼는지에 대한 부호 있는 총합입니다. 동맹과 친구가 있으면 &lt;b&gt;올라가고&lt;/b&gt;, 적대 세력에 둘러싸이거나 전쟁 중이면 &lt;b&gt;내려갑니다&lt;/b&gt;.&lt;/p&gt;&lt;p&gt;&lt;b&gt;주요 문명당 기여분&lt;/b&gt;(외교 화면에 표시되는 관계 열거값 기준):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;동맹&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;협조적&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;친근&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;중립&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;비우호적&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;적대적&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;전쟁 중&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;도시 국가 기여분:&lt;/b&gt; 종주국으로 있는 도시 국가당 +2, 0.3배로 감쇠(도시 국가 중심 전략이 주요 문명 관계를 압도하지 않도록).&lt;/p&gt;&lt;p&gt;&lt;b&gt;점수 = Σ(주요 가중치) + 0.3 × Σ(종주 보너스)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;각 문명의 로컬 플레이어에 대한 관점에서 매 턴 샘플링됩니다. 표시용일 뿐입니다.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ko_KR"><Text>현재</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ko_KR"><Text>1번째 시대 종료</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ko_KR"><Text>2번째 시대 종료</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ko_KR"><Text>스냅샷:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ko_KR"><Text>아직 스냅샷이 없습니다 — 시대가 종료되지 않았습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ko_KR"><Text>↻ 새로 고침</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ko_KR"><Text>VictoryManager.getVictoryProgress()에서 레거시 진행도를 다시 가져옵니다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ko_KR"><Text>모든 주요 문명</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ko_KR"><Text>문명:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="ko_KR"><Text>진행 중인 것만</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="ko_KR"><Text>모든 전쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="ko_KR"><Text>보는 중:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="ko_KR"><Text>초점 해제 ({1_Count})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="ko_KR"><Text>모든 문명을 완전한 불투명도로 표시합니다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="ko_KR"><Text>시간: 둘 다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="ko_KR"><Text>시간: 턴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="ko_KR"><Text>시간: 연도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="ko_KR"><Text>X축 시간 단위를 턴 번호, 게임 내 연도, 또는 둘 다로 전환합니다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="ko_KR"><Text>불가사의: 켜짐</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="ko_KR"><Text>불가사의: 꺼짐</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="ko_KR"><Text>차트 선의 불가사의 건설 표식을 숨깁니다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="ko_KR"><Text>차트 선에 불가사의 건설 표식을 표시합니다(각 문명이 불가사의를 완성한 턴에 아이콘 표시)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="ko_KR"><Text>CSV로 복사</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ko_KR"><Text>&lt;p style="margin:0;"&gt;모든 문명의 샘플링된 모든 턴을 클립보드로 복사합니다. Excel, Sheets에 붙여 넣거나 &lt;code&gt;.csv&lt;/code&gt;로 저장하세요. Civ&amp;nbsp;7의 UI 샌드박스에는 파일 쓰기 API가 없으므로, 클립보드가 유일한 전달 수단입니다.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ko_KR"><Text>샘플링된 모든 기록을 CSV로 클립보드에 복사 — Excel, Google Sheets, 또는 .csv 파일에 붙여 넣으세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="ko_KR"><Text>군사주의</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="ko_KR"><Text>문화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="ko_KR"><Text>경제</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="ko_KR"><Text>과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="ko_KR"><Text>팽창주의</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="ko_KR"><Text>외교</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="ko_KR"><Text>모두 켜기</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="ko_KR"><Text>모두 끄기</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="ko_KR"><Text>{1_Label} (클릭하여 숨기기)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="ko_KR"><Text>{1_Label} (클릭하여 표시)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="ko_KR"><Text>표시할 문명이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="ko_KR"><Text>만나지 않은 지도자</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="ko_KR"><Text>플레이어 {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="ko_KR"><Text>(이전 {1_Names})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ko_KR"><Text>순위 {1_Rank}/{2_Total}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ko_KR"><Text>초기화 ({1_Count}개 숨김)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ko_KR"><Text>숨겨진 모든 문명을 표시합니다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ko_KR"><Text>팁: 문명의 머리글을 클릭하면 해당 문명을 숨기고 비교에 집중할 수 있습니다. (오른쪽의 좁은 열에서) 다시 클릭하면 되돌립니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ko_KR"><Text>만나지 않음</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ko_KR"><Text>(숨김 — 클릭하여 표시)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ko_KR"><Text>클릭하여 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="ko_KR"><Text>클릭하여 숨기기</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ko_KR"><Text>위업 레이더 — 모든 문명, 6가지 속성 경로 전부</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ko_KR"><Text>시간에 따른 위업</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ko_KR"><Text>(누적 개수, 속성별 누적)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ko_KR"><Text>시간에 따른 자원 배분(누적 영역)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ko_KR"><Text>분쟁 타임라인 — 이 게임에서 발생한 모든 전쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ko_KR"><Text>아직 구현되지 않음 — 향후 업데이트에서 제공 예정.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ko_KR"><Text>옵션</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ko_KR"><Text>아직 만나지 않은 문명의 실제 이름 표시(스포일러)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ko_KR"><Text>색맹 모드(차트 + 관계 색상용 고대비 Wong 팔레트)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ko_KR"><Text>차트와 정보 자료집에 제거된 문명 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ko_KR"><Text>차트 선에 불가사의 건설 표식 표시(각 문명이 불가사의를 완성한 턴에 작은 아이콘)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ko_KR"><Text>성능 모드(저장 쓰기를 버퍼링하고 마우스 오버를 제한) — 긴 게임이나 느린 컴퓨터에 권장됩니다. 충돌 시 최대 2턴의 기록이 손실될 수 있습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ko_KR"><Text>자동(게임 속도 기본값)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ko_KR"><Text>1,000개 샘플</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ko_KR"><Text>2,500개 샘플</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="ko_KR"><Text>5,000개 샘플</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="ko_KR"><Text>10,000개 샘플 ⚠ 성능이 저하될 수 있음</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="ko_KR"><Text>무제한 ⚠ 저장 용량이 매우 커지고 성능이 저하될 수 있음</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="ko_KR"><Text>기록 샘플 상한:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="ko_KR"><Text>알 수 없음</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="ko_KR"><Text>무제한</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="ko_KR"><Text>현재 유효 상한: {1_Cap}  ·  감지된 게임 속도: {2_Speed}  ·  최대 한도: {3_Ceiling}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="ko_KR"><Text>매 턴(기본값)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="ko_KR"><Text>2턴마다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ko_KR"><Text>5턴마다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ko_KR"><Text>10턴마다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ko_KR"><Text>25턴마다 ⚠ 그래프가 거칠어짐</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ko_KR"><Text>샘플 빈도:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 기록되는 지점이 적어집니다 — 긴 마라톤 게임에 유용합니다. 변경 사항은 다음 턴에 적용되며, 기존 샘플은 유지됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ko_KR"><Text>다운샘플링 비활성화(상한에 도달한 후에도 모든 턴의 샘플 유지) — 고급 사용자 모드; 높은 상한이나 무제한과 함께 사용하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ko_KR"><Text>기록된 모든 인구 통계 샘플을 지우시겠습니까?</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ko_KR"><Text>기록된 모든 전쟁을 지우시겠습니까? 샘플 기록과 기타 데이터는 유지됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="ko_KR"><Text>전쟁 기록 초기화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="ko_KR"><Text>샘플: {1_Samples}    스키마: v{2_Schema}    백엔드: {3_Backend}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="ko_KR"><Text>전쟁 중</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="ko_KR"><Text>동맹</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="ko_KR"><Text>협조적</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="ko_KR"><Text>친근</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="ko_KR"><Text>비우호적</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="ko_KR"><Text>적대적</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="ko_KR"><Text>국경 개방</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="ko_KR"><Text>비난함</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="ko_KR"><Text>연구 협정</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="ko_KR"><Text>기타 활동 계획</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="ko_KR"><Text>교역로</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="ko_KR"><Text>종주권</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="ko_KR"><Text>만나지 않은 도시 국가</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="ko_KR"><Text>관찰자:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="ko_KR"><Text>당신</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="ko_KR"><Text>{1_Name} (당신)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="ko_KR"><Text>링 노드 = 만난 주요 문명. 두 문명 사이의 여러 선 = 여러 관계.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="ko_KR"><Text>관찰자 문명 ↔ 도시 국가 관계. 여러 선 = 여러 관계.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="ko_KR"><Text>로컬 플레이어를 사용할 수 없음(관찰자 모드).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ko_KR"><Text>주요 문명</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ko_KR"><Text>도시 국가</Text></Replace>
     </LocalizedText>
 </Database>

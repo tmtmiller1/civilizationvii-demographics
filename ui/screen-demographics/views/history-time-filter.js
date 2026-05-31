@@ -5,6 +5,7 @@
 // pick a window. Cross-age filters are greyed out with a custom HTML tooltip
 // (Coherent ignores native `title`).
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/demographics-a11y.js";
 import { playActivate } from "/demographics/ui/demographics-audio.js";
 
@@ -45,11 +46,11 @@ export const TIME_FILTERS = [
   { id: "300", label: "300y" },
   { id: "500", label: "500y" },
   { id: "1000", label: "1000y" },
-  { id: "age", label: "Current Age" },
-  { id: "age1", label: "1st Age", disabled: true },
-  { id: "age2", label: "2nd Age", disabled: true },
-  { id: "age3", label: "3rd Age", disabled: true },
-  { id: "all", label: "All Time", disabled: true }
+  { id: "age", label: "LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" },
+  { id: "age1", label: "LOC_DEMOGRAPHICS_FILTER_AGE1", disabled: true },
+  { id: "age2", label: "LOC_DEMOGRAPHICS_FILTER_AGE2", disabled: true },
+  { id: "age3", label: "LOC_DEMOGRAPHICS_FILTER_AGE3", disabled: true },
+  { id: "all", label: "LOC_DEMOGRAPHICS_FILTER_ALL_TIME", disabled: true }
 ];
 
 /**
@@ -59,8 +60,8 @@ export const TIME_FILTERS = [
  * @type {{ title: string, body: string }}
  */
 const CROSS_AGE_DISABLED_TOOLTIP = {
-  title: "Cross-Age Graphs Unavailable",
-  body: '<p style="margin:0;">A single graph spanning <b style="color:#f3e7c4;">Antiquity, Exploration, and Modern</b> isn\'t possible. Civ&nbsp;7 wipes every storage channel a mod could use to carry sampled history across an age transition, so each age can only graph its own data. Use <b style="color:#f3e7c4;">Current&nbsp;Age</b> or any year-range filter instead.</p>'
+  title: "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE",
+  body: "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY"
 };
 
 /**
@@ -272,7 +273,7 @@ function attachDisabledFilterTooltip(pill) {
  * @returns {HTMLElement} The tooltip element.
  */
 function buildDisabledFilterTooltipEl() {
-  const t = CROSS_AGE_DISABLED_TOOLTIP;
+  const content = CROSS_AGE_DISABLED_TOOLTIP;
 
   const tip = document.createElement("div");
   tip.className =
@@ -280,12 +281,12 @@ function buildDisabledFilterTooltipEl() {
 
   const title = document.createElement("div");
   title.className = "demographics-history-tip-title";
-  title.textContent = t.title;
+  title.textContent = t(content.title);
   tip.appendChild(title);
 
   const body = document.createElement("div");
   body.className = "demographics-history-tip-body";
-  body.innerHTML = t.body;
+  body.innerHTML = t(content.body);
   tip.appendChild(body);
 
   return tip;
@@ -307,7 +308,7 @@ function buildDisabledFilterPill(f) {
   // the tooltip free to render at full strength. See the
   // `.demographics-chart-time-filter-pill.is-disabled` rule.
   pill.classList.add("is-disabled");
-  pill.textContent = f.label;
+  pill.textContent = t(f.label);
   attachDisabledFilterTooltip(pill);
   // Swallow clicks so audio + selection don't fire.
   pill.addEventListener("click", (ev) => {
@@ -329,8 +330,9 @@ function buildEnabledFilterPill(f, activeFilter, onSelect) {
   const pill = document.createElement("div");
   pill.className = "demographics-chart-time-filter-pill";
   if (f.id === activeFilter) pill.classList.add("is-active");
-  pill.textContent = f.label;
-  pill.title = f.label + " filter";
+  const label = t(f.label);
+  pill.textContent = label;
+  pill.title = t("LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP", label);
   makeClickable(pill, (ev) => {
     ev?.stopPropagation?.();
     playActivate();

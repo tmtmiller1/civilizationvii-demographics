@@ -12,6 +12,7 @@ import {
   appendEmptyNotice,
   civOptionLabel
 } from "/demographics/ui/screen-demographics/chart-shared.js";
+import { t } from "/demographics/ui/demographics-i18n.js";
 import { renderResourcesStack } from "/demographics/ui/screen-demographics/chart-resources.js";
 
 /**
@@ -24,12 +25,12 @@ import { renderResourcesStack } from "/demographics/ui/screen-demographics/chart
 // from base-standard/ui-next/screens/legacies/legacies-support.js so our
 // surfaces look at home next to the in-game Triumphs panel.
 const TRIUMPH_ATTR_META = [
-  { key: "LEGACY_CULTURAL", label: "Cultural", color: "#AC088E" },
-  { key: "LEGACY_DIPLOMATIC", label: "Diplomatic", color: "#255BE4" },
-  { key: "LEGACY_ECONOMIC", label: "Economic", color: "#C05D16" },
-  { key: "LEGACY_SCIENTIFIC", label: "Scientific", color: "#356F8F" },
-  { key: "LEGACY_MILITARISTIC", label: "Militaristic", color: "#B31515" },
-  { key: "LEGACY_EXPANSIONIST", label: "Expansionist", color: "#00A717" }
+  { key: "LEGACY_CULTURAL", label: t("LOC_DEMOGRAPHICS_ATTR_CULTURAL"), color: "#AC088E" },
+  { key: "LEGACY_DIPLOMATIC", label: t("LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC"), color: "#255BE4" },
+  { key: "LEGACY_ECONOMIC", label: t("LOC_DEMOGRAPHICS_ATTR_ECONOMIC"), color: "#C05D16" },
+  { key: "LEGACY_SCIENTIFIC", label: t("LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC"), color: "#356F8F" },
+  { key: "LEGACY_MILITARISTIC", label: t("LOC_DEMOGRAPHICS_ATTR_MILITARISTIC"), color: "#B31515" },
+  { key: "LEGACY_EXPANSIONIST", label: t("LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST"), color: "#00A717" }
 ];
 
 /**
@@ -42,7 +43,7 @@ function attrMetaFor(subtype) {
   return (
     TRIUMPH_ATTR_META.find((a) => a.key === subtype) || {
       key: "LEGACY_WILDCARD",
-      label: "Other",
+      label: t("LOC_DEMOGRAPHICS_ATTR_OTHER"),
       color: "#888888"
     }
   );
@@ -450,7 +451,8 @@ function addCardRing(card, a, isTriggered) {
 function addCardName(card, row) {
   const name = document.createElement("div");
   name.className = "demographics-triumph-name";
-  name.textContent = localizeText(row.Name) || row.LegacyType || "Triumph";
+  name.textContent =
+    localizeText(row.Name) || row.LegacyType || t("LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME");
   card.appendChild(name);
 }
 
@@ -469,7 +471,9 @@ function addCardPill(card, a, isMajor) {
   const pill = document.createElement("div");
   pill.className = "dedication-pill demographics-triumph-pill";
   pill.style.color = isMajor ? a.color : "#85878c";
-  pill.textContent = isMajor ? "Commemorative · " + a.label : "Instant · " + a.label;
+  pill.textContent = isMajor
+    ? t("LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE", a.label)
+    : t("LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT", a.label);
   const divR = document.createElement("div");
   divR.className = "demographics-triumph-pill-divider demographics-triumph-pill-divider-right";
   pillRow.appendChild(divL);
@@ -497,7 +501,7 @@ function addCardRequirementsAndReward(card, row) {
     rwd.className = "demographics-triumph-reward";
     const rwdLabel = document.createElement("span");
     rwdLabel.className = "demographics-triumph-reward-label";
-    rwdLabel.textContent = "Reward: ";
+    rwdLabel.textContent = t("LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL");
     rwd.appendChild(rwdLabel);
     const rwdBody = document.createElement("span");
     rwdBody.textContent = localizeText(rewardText);
@@ -544,7 +548,7 @@ function addCardProgressBars(card, rd, a, history) {
   if (active.length === 0) {
     const noneMsg = document.createElement("div");
     noneMsg.className = "demographics-triumph-bars-none";
-    noneMsg.textContent = "No progress yet.";
+    noneMsg.textContent = t("LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS");
     barsBox.appendChild(noneMsg);
   } else {
     for (const c of active) {
@@ -667,14 +671,14 @@ export function renderTriumphRace(host, options) {
   host.style.padding = "0.6rem 0.8rem";
 
   if (!triumphApiAvailable()) {
-    appendEmptyNotice(host, "Test-of-Time Legacies API unavailable.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API"));
     return null;
   }
 
   const age = currentAgeType();
   const majors = alliveMajorsFromHistory(opts.history);
   if (majors.length === 0) {
-    appendEmptyNotice(host, "No civs sampled yet.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED"));
     return null;
   }
 
@@ -685,7 +689,9 @@ export function renderTriumphRace(host, options) {
   if (races.length === 0) {
     appendEmptyNotice(
       host,
-      age ? "No triumphs available in " + age + "." : "No triumphs available."
+      age
+        ? t("LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE", age)
+        : t("LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS")
     );
     return null;
   }
@@ -812,10 +818,10 @@ function computeCivCompletions(majors, age) {
 function buildCompletionHeader(age) {
   const header = document.createElement("div");
   header.className = "demographics-triumph-completion-header";
-  header.textContent =
-    "Current age: " +
-    (age || "unknown") +
-    ". Cells show triggered / total available; bar is filled percent.";
+  header.textContent = t(
+    "LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER",
+    age || t("LOC_DEMOGRAPHICS_AGE_UNKNOWN")
+  );
   return header;
 }
 
@@ -836,7 +842,10 @@ function buildAttrSectionHead(a, tot) {
   sectionHead.appendChild(sectionTitle);
   const sectionCount = document.createElement("div");
   sectionCount.className = "demographics-triumph-section-count";
-  sectionCount.textContent = tot + " triumph" + (tot === 1 ? "" : "s") + " available";
+  sectionCount.textContent =
+    tot === 1
+      ? t("LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE", tot)
+      : t("LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT", tot);
   sectionHead.appendChild(sectionCount);
   return sectionHead;
 }
@@ -980,7 +989,7 @@ export function renderTriumphCompletion(host, options) {
   host.style.padding = "0.6rem 0.8rem";
 
   if (!triumphApiAvailable()) {
-    appendEmptyNotice(host, "Test-of-Time Legacies API unavailable.");
+    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API"));
     return null;
   }
 
@@ -1028,12 +1037,12 @@ export function collectTriumphCivOptions(history) {
 }
 
 const TRIUMPH_BANDS = [
-  { id: "triumphs_cultural", label: "Cultural", color: "#AC088E" },
-  { id: "triumphs_diplomatic", label: "Diplomatic", color: "#255BE4" },
-  { id: "triumphs_economic", label: "Economic", color: "#C05D16" },
-  { id: "triumphs_scientific", label: "Scientific", color: "#356F8F" },
-  { id: "triumphs_militaristic", label: "Militaristic", color: "#B31515" },
-  { id: "triumphs_expansionist", label: "Expansionist", color: "#00A717" }
+  { id: "triumphs_cultural", label: t("LOC_DEMOGRAPHICS_ATTR_CULTURAL"), color: "#AC088E" },
+  { id: "triumphs_diplomatic", label: t("LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC"), color: "#255BE4" },
+  { id: "triumphs_economic", label: t("LOC_DEMOGRAPHICS_ATTR_ECONOMIC"), color: "#C05D16" },
+  { id: "triumphs_scientific", label: t("LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC"), color: "#356F8F" },
+  { id: "triumphs_militaristic", label: t("LOC_DEMOGRAPHICS_ATTR_MILITARISTIC"), color: "#B31515" },
+  { id: "triumphs_expansionist", label: t("LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST"), color: "#00A717" }
 ];
 
 /**
@@ -1051,7 +1060,7 @@ export function renderTriumphStack(host, options) {
     host,
     Object.assign({}, options || {}, {
       bands: TRIUMPH_BANDS,
-      yAxisLabel: "Triumphs (count)"
+      yAxisLabel: t("LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT")
     })
   );
 }

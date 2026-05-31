@@ -25,6 +25,7 @@
 // vanilla diplomacy code under core/ui/utilities/ and
 // base-standard/ui/diplomacy*.
 
+import { t } from "/demographics/ui/demographics-i18n.js";
 import {
   dlog,
   derr,
@@ -420,30 +421,34 @@ function filtersForView(topTab) {
     // Order matters — pills render in this order; attitude grouped first
     // so the relationship-state pills sit together visually.
     return [
-      { key: "war", label: "At War", kind: "attitude" },
-      { key: "alliance", label: "Alliance", kind: "attitude" },
-      { key: "helpful", label: "Helpful", kind: "attitude" },
-      { key: "friendly", label: "Friendly", kind: "attitude" },
-      { key: "unfriendly", label: "Unfriendly", kind: "attitude" },
-      { key: "hostile", label: "Hostile", kind: "attitude" },
+      { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude" },
+      { key: "alliance", label: t("LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE"), kind: "attitude" },
+      { key: "helpful", label: t("LOC_DEMOGRAPHICS_RELATIONS_HELPFUL"), kind: "attitude" },
+      { key: "friendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY"), kind: "attitude" },
+      { key: "unfriendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY"), kind: "attitude" },
+      { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude" },
       // Neutral intentionally omitted — N² neutral lines just clutter.
-      { key: "openborders", label: "Open Borders", kind: "political" },
-      { key: "denounced", label: "Denounced", kind: "political" },
-      { key: "research", label: "Research Agreements", kind: "political" },
-      { key: "endeavors", label: "Other Endeavors", kind: "political" },
-      { key: "trade", label: "Trade Routes", kind: "economic" }
+      {
+        key: "openborders",
+        label: t("LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS"),
+        kind: "political"
+      },
+      { key: "denounced", label: t("LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED"), kind: "political" },
+      { key: "research", label: t("LOC_DEMOGRAPHICS_RELATIONS_RESEARCH"), kind: "political" },
+      { key: "endeavors", label: t("LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS"), kind: "political" },
+      { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic" }
     ];
   }
   // City-state tab — viewer-anchored relationships.
   return [
-    { key: "suzerain", label: "Suzerainty", kind: "political" },
-    { key: "trade", label: "Trade Routes", kind: "economic" },
-    { key: "war", label: "At War", kind: "attitude" },
-    { key: "alliance", label: "Alliance", kind: "attitude" },
-    { key: "helpful", label: "Helpful", kind: "attitude" },
-    { key: "friendly", label: "Friendly", kind: "attitude" },
-    { key: "unfriendly", label: "Unfriendly", kind: "attitude" },
-    { key: "hostile", label: "Hostile", kind: "attitude" }
+    { key: "suzerain", label: t("LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY"), kind: "political" },
+    { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic" },
+    { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude" },
+    { key: "alliance", label: t("LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE"), kind: "attitude" },
+    { key: "helpful", label: t("LOC_DEMOGRAPHICS_RELATIONS_HELPFUL"), kind: "attitude" },
+    { key: "friendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY"), kind: "attitude" },
+    { key: "unfriendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY"), kind: "attitude" },
+    { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude" }
   ];
 }
 
@@ -543,7 +548,7 @@ function makeTabBar(tabs, activeKey, className, onSelect) {
   bar.setAttribute("tab-items", JSON.stringify(tabs));
   const idx = Math.max(
     0,
-    tabs.findIndex((t) => t.id === activeKey)
+    tabs.findIndex((tab) => tab.id === activeKey)
   );
   bar.setAttribute("selected-tab-index", String(idx));
   bar.addEventListener("tab-selected", (event) => {
@@ -725,7 +730,7 @@ function applyMetMaskForMajors(viewerPid, metIds, names, showUnmetNames, localId
     const met = resolveMet(viewerPid, pid, localId, history);
     if (met === false) {
       names[pid] = Object.assign({}, names[pid] || {}, {
-        leaderName: "Unmet Civilization",
+        leaderName: t("LOC_DEMOGRAPHICS_UNMET_CIV"),
         civName: undefined
       });
     }
@@ -853,7 +858,10 @@ function resolveCsVisuals(id, csIsMet) {
 function buildCsNodeInfo(id, viewerPid, showUnmetNames, localId, history) {
   const metCs = resolveMet(viewerPid, id, localId, history);
   // If hasMet says "no" → generic label; if undefined → assume met.
-  const label = metCs === false && !showUnmetNames ? "Unmet CS" : resolveCsName(id);
+  const label =
+    metCs === false && !showUnmetNames
+      ? t("LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS")
+      : resolveCsName(id);
   // PREFER the type color (matches V7's in-game CS-type color-coding) over
   // the CS's primary color, which often returns a default dark color.
   // UNMET CSes get no type icon/color — render as a neutral gray disc.
@@ -990,7 +998,7 @@ function buildViewerDropdown(rs) {
 
   const lbl = document.createElement("div");
   lbl.className = "demographics-relations-viewer-label font-body text-xs";
-  lbl.textContent = "Viewer:";
+  lbl.textContent = t("LOC_DEMOGRAPHICS_LABEL_VIEWER");
   lbl.style.color = "#f3e7c4";
   lbl.style.marginRight = "0.5rem";
   viewerHost.appendChild(lbl);
@@ -998,7 +1006,10 @@ function buildViewerDropdown(rs) {
   const items = rs.metIds.map((pid) => {
     const info = rs.namesBase[pid] || {};
     const isYou = pid === rs.localId;
-    const nm = isYou ? (info.leaderName || "You") + " (You)" : info.leaderName || "Player " + pid;
+    const baseName = info.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_YOU");
+    const nm = isYou
+      ? t("LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU", baseName)
+      : info.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", pid);
     return { label: nm, id: "viewer_" + pid, pid };
   });
   let selIdx = rs.metIds.indexOf(/** @type {number} */ (rs.csViewerPid));
@@ -1081,8 +1092,7 @@ function computeRingData(rs, activeSet) {
     // ring renderer offsets into parallel lines.
     applyMetMaskForMajors(localId, rs.metIds, names, rs.showUnmetNames, localId, rs.ctx.history);
     edges = buildCivEdges(rs.metIds, activeSet, localId);
-    capText =
-      "Ring node = met major civ. Multiple lines between two civs = multiple relationships.";
+    capText = t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV");
     return { ringIds, edges, names, capText, ringViewerPid: localId };
   }
 
@@ -1104,7 +1114,7 @@ function computeRingData(rs, activeSet) {
 
   const csMetSet = buildCsMetSet(csIds, names);
   edges = buildCsEdges(viewerPid, csIds, activeSet, csMetSet);
-  capText = "Viewer-civ ↔ city-state relationships. Multiple lines = multiple relationships.";
+  capText = t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS");
   const ringViewerPid = typeof rs.csViewerPid === "number" ? rs.csViewerPid : localId;
   return { ringIds, edges, names, capText, ringViewerPid };
 }
@@ -1124,7 +1134,7 @@ function renderRingBody(rs) {
   if (typeof rs.localId !== "number") {
     const empty = document.createElement("div");
     empty.className = "demographics-empty font-body text-base";
-    empty.textContent = "Local player not available (observer mode).";
+    empty.textContent = t("LOC_DEMOGRAPHICS_EMPTY_OBSERVER");
     body.appendChild(empty);
     return;
   }
@@ -1154,8 +1164,8 @@ function buildTabBars(rs) {
   const { topTabHost, subTabHost } = rs.sc;
   while (topTabHost.firstChild) topTabHost.removeChild(topTabHost.firstChild);
   const topTabs = [
-    { id: "civ", label: "Major Civilizations" },
-    { id: "cs", label: "City States" }
+    { id: "civ", label: t("LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS") },
+    { id: "cs", label: t("LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES") }
   ];
   topTabHost.appendChild(
     makeTabBar(topTabs, rs.topTab, "demographics-relations-toptabs", (id) => {
