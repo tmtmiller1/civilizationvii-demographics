@@ -596,9 +596,9 @@ function radarTriumphTotal(c) {
  */
 function buildRadarLegendEntry(c, isHidden, pos, onToggle) {
   const div = document.createElement("div");
-  div.className = "demographics-chart-line-label";
+  div.className = "demographics-chart-line-label demographics-radar-legend-label";
   if (isHidden) div.classList.add("is-hidden");
-  div.style.position = "absolute";
+  // Per-civ geometry stays inline; cursor depends on whether toggle is wired.
   div.style.left = (pos.legendX / pos.W) * 100 + "%";
   div.style.top = (pos.gy / pos.H) * 100 + "%";
   div.style.cursor = onToggle ? "pointer" : "default";

@@ -1706,3 +1706,10 @@
 .demographics-resources-legend-label {
     position: absolute;
 }
+
+/* Legacy radar side-legend entry. left/top are per-civ geometry, set inline;
+   cursor (toggle vs none) and the dot's per-civ fill/border color also stay
+   inline. */
+.demographics-radar-legend-label {
+    position: absolute;
+}
