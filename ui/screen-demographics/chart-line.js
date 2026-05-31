@@ -2563,6 +2563,16 @@ function buildChartScalesOpts(metricMeta, formatters) {
  */
 function mountLineChart(parts) {
   const { host, canvas, config, datasets, metricId, sampleCount, W, H } = parts;
+  // Chart.js is a base-game-provided global (core/ui/external/chart-js); guard
+  // for its absence the way Firaxis's own fxs-hof-chart.js does.
+  if (typeof Chart === "undefined") {
+    console.error("[Demographics.chart] Chart.js global unavailable; cannot render chart.");
+    const msg = document.createElement("div");
+    msg.className = "demographics-empty font-body text-base";
+    msg.textContent = "Charts unavailable — Chart.js not loaded.";
+    host.appendChild(msg);
+    return null;
+  }
   try {
     const ctx2d = canvas.getContext("2d");
     const chart = new Chart(ctx2d, config);

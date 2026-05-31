@@ -625,8 +625,7 @@ function buildCsvInfoTooltip() {
     "border-bottom:1px solid rgba(201,162,76,0.55);";
   tip.innerHTML =
     `<div style="${HDR}">Copy as CSV</div>` +
-    `<p style="margin:0 0 0.6rem;">Copies every sampled turn for every civ to your clipboard. Paste into Excel, Sheets, or save as <code>.csv</code>. Civ&nbsp;7's UI sandbox has no file-write API, so the clipboard is the only hand-off.</p>` +
-    `<p style="margin:0;color:#f3c34c;font-weight:700;">See "About" Tab for more information</p>`;
+    `<p style="margin:0;">Copies every sampled turn for every civ to your clipboard. Paste into Excel, Sheets, or save as <code>.csv</code>. Civ&nbsp;7's UI sandbox has no file-write API, so the clipboard is the only hand-off.</p>`;
   return tip;
 }
 

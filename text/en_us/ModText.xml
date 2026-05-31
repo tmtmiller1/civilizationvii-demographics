@@ -153,9 +153,6 @@
         <Row Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS">
             <Text>Options</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TAB_ABOUT">
-            <Text>About</Text>
-        </Row>
 
         <!-- Historical Data sub-page tabs -->
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY">

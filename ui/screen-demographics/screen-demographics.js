@@ -15,7 +15,6 @@ import * as ViewHistory from "/demographics/ui/screen-demographics/views/view-hi
 import * as ViewFactbook from "/demographics/ui/screen-demographics/views/view-factbook.js";
 import * as ViewRelations from "/demographics/ui/screen-demographics/views/view-relations.js";
 import * as ViewOptions from "/demographics/ui/screen-demographics/views/view-options.js";
-import * as ViewAbout from "/demographics/ui/screen-demographics/views/view-about.js";
 
 // ── Local typedefs ──────────────────────────────────────────────────
 // The settings/storage/sampler/chart modules are imported dynamically and
@@ -86,8 +85,7 @@ const VIEW_TABS = [
   { id: "history", label: "LOC_DEMOGRAPHICS_TAB_HISTORY" },
   { id: "factbook", label: "LOC_DEMOGRAPHICS_TAB_FACTBOOK" },
   { id: "relations", label: "LOC_DEMOGRAPHICS_TAB_RELATIONS" },
-  { id: "options", label: "LOC_DEMOGRAPHICS_TAB_OPTIONS" },
-  { id: "about", label: "LOC_DEMOGRAPHICS_TAB_ABOUT" }
+  { id: "options", label: "LOC_DEMOGRAPHICS_TAB_OPTIONS" }
 ];
 
 /** Filters disabled in the runtime (see CROSS_AGE_DISABLED_TOOLTIP). */
@@ -473,9 +471,6 @@ class ScreenDemographics extends Panel {
           history: this.history,
           requestReload: () => this._reload()
         });
-        break;
-      case "about":
-        ViewAbout.render(host, {});
         break;
       case "history":
       default:

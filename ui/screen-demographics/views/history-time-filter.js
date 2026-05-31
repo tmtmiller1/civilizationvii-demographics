@@ -60,9 +60,7 @@ export const TIME_FILTERS = [
  */
 const CROSS_AGE_DISABLED_TOOLTIP = {
   title: "Cross-Age Graphs Unavailable",
-  body:
-    '<p style="margin:0 0 0.6rem;">A single graph spanning <b style="color:#f3e7c4;">Antiquity, Exploration, and Modern</b> isn\'t possible. Civ&nbsp;7 wipes every storage channel a mod could use to carry sampled history across an age transition, so each age can only graph its own data. Use <b style="color:#f3e7c4;">Current&nbsp;Age</b> or any year-range filter instead.</p>' +
-    '<p style="margin:0;color:#f3c34c;font-weight:700;">See "About" Tab for more information</p>'
+  body: '<p style="margin:0;">A single graph spanning <b style="color:#f3e7c4;">Antiquity, Exploration, and Modern</b> isn\'t possible. Civ&nbsp;7 wipes every storage channel a mod could use to carry sampled history across an age transition, so each age can only graph its own data. Use <b style="color:#f3e7c4;">Current&nbsp;Age</b> or any year-range filter instead.</p>'
 };
 
 /**
