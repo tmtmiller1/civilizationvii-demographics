@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="demographics" version="12" xmlns="ModInfo">
+    <Properties>
+        <Name>LOC_MOD_DEMOGRAPHICS_NAME</Name>
+        <Description>LOC_MOD_DEMOGRAPHICS_DESCRIPTION</Description>
+        <Authors>Tower</Authors>
+        <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis & Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
+        <Package>DemographicsMod</Package>
+        <PackageSortIndex>1000</PackageSortIndex>
+        <Version>1.1.6</Version>
+    </Properties>
+    <Dependencies>
+        <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
+    </Dependencies>
+    <ActionCriteria>
+        <Criteria id="always">
+            <AlwaysMet></AlwaysMet>
+        </Criteria>
+    </ActionCriteria>
+    <ActionGroups>
+        <ActionGroup id="demographics-game" scope="game" criteria="always">
+            <Properties>
+                <LoadOrder>50</LoadOrder>
+            </Properties>
+            <Actions>
+                <UIScripts>
+                    <Item>ui/demographics-bootstrap.js</Item>
+                    <Item>ui/screen-demographics/screen-demographics.js</Item>
+                    <Item>ui/demographics-triumphs-decorator.js</Item>
+                </UIScripts>
+                <ImportFiles>
+                    <Item>ui/demographics-dock-decorator.js</Item>
+                    <Item>ui/demographics-sampler.js</Item>
+                    <Item>ui/demographics-storage.js</Item>
+                    <Item>ui/demographics-metrics.js</Item>
+                    <Item>ui/demographics-settings.js</Item>
+                    <Item>ui/demographics-audio.js</Item>
+                    <Item>ui/demographics-palette.js</Item>
+                    <Item>ui/demographics-a11y.js</Item>
+                    <Item>ui/screen-demographics/screen-demographics.html</Item>
+                    <Item>ui/screen-demographics/screen-demographics.css</Item>
+                    <Item>ui/screen-demographics/demographics-chart.js</Item>
+                    <Item>ui/screen-demographics/views/view-history.js</Item>
+                    <Item>ui/screen-demographics/views/view-factbook.js</Item>
+                    <Item>ui/screen-demographics/views/view-relations.js</Item>
+                    <Item>ui/screen-demographics/views/view-options.js</Item>
+                    <Item>ui/screen-demographics/views/view-about.js</Item>
+                    <Item>images/demographics-icon.svg</Item>
+                </ImportFiles>
+                <UpdateText>
+                    <Item>text/en_us/ModText.xml</Item>
+                </UpdateText>
+            </Actions>
+        </ActionGroup>
+    </ActionGroups>
+    <LocalizedText>
+        <File>text/en_us/ModText.xml</File>
+    </LocalizedText>
+</Mod>

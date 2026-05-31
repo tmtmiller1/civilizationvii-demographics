@@ -1,0 +1,16 @@
+<div class="demographics-root w-full h-full flex items-center justify-center">
+    <fxs-frame frame-style="f2" class="demographics-frame relative flex flex-col">
+        <fxs-header class="demographics-title relative font-title text-xl uppercase text-secondary"
+                    filigree-style="h4" title="LOC_DEMOGRAPHICS_TITLE"></fxs-header>
+        <div class="demographics-body relative flex flex-col flex-auto px-6 pb-6">
+            <!-- TOP-LEVEL view tab bar (Historical Data / Factbook / Relations / Options) -->
+            <div class="demographics-view-tab-host w-full"></div>
+            <!-- The currently-active view renders into this host -->
+            <div class="demographics-view-host w-full flex flex-col flex-auto"></div>
+        </div>
+        <fxs-close-button data-ia-close
+            data-audio-group-ref="audio-screen-unlocks"
+            data-audio-activate-ref="data-audio-close-selected"
+            data-audio-press-ref="data-audio-close-press"></fxs-close-button>
+    </fxs-frame>
+</div>

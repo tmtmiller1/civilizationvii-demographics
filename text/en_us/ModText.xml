@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <EnglishText>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+            <Text>Demographics</Text>
+        </Row>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+            <Text>Per-turn historical graphs, world factbook, global relations rings, conflicts gantt, and native-Triumphs progress bars for every met civilization.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+            <Text>Demographics</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+            <Text>Demographics</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+            <Text>Score over time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+            <Text>Live history from the sampler.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+            <Text>Close</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+            <Text>Hello. If you can read this, the harness works.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+            <Text>Score</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+            <Text>Treasury</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+            <Text>GPT</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+            <Text>Gold income per turn (net).</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+            <Text>Techs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+            <Text>Civics</Text>
+        </Row>
+
+        <!-- Tooltips for the original 5 metrics -->
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+            <Text>Composite power score, the same number the Victory screen uses.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+            <Text>Current treasury balance.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+            <Text>Total number of cities and towns owned.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+            <Text>Number of fully-researched technology nodes in the current age tree.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP">
+            <Text>Number of fully-unlocked civic nodes in the current age tree.</Text>
+        </Row>
+
+        <!-- V5 pseudo-realistic -->
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GDP">
+            <Text>GDP</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP">
+            <Text>Pseudo-realistic gross domestic product. Weighted sum of per-turn yields (Production 1.0, Gold 1.0, Science 1.2, Culture 1.2, Food 0.5, Influence 1.5), multiplied by turns elapsed and scaled to dollars.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION">
+            <Text>PPT</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP">
+            <Text>Production per turn — what your cities build.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD">
+            <Text>Science</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP">
+            <Text>Science per turn — drives technology research.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD">
+            <Text>Culture</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP">
+            <Text>Culture per turn — drives civics progress.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CROPS">
+            <Text>Crop Yield</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP">
+            <Text>Net food output per turn across all settlements.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL">
+            <Text>Diplomatic Approval</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP">
+            <Text>International reputation aggregate. Sum of weighted relationship scores across all met major civs (Allied +5, Helpful +3, Friendly +2, Neutral 0, Unfriendly -2, Hostile -3, At War -5) plus a damped (0.3x) contribution from city-states where you are suzerain.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP">
+            <Text>Scaled real-world population, exponentially derived from total citizen count.</Text>
+        </Row>
+
+        <!-- V7-specific creative -->
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE">
+            <Text>IPT</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT">
+            <Text>HPT</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP">
+            <Text>Net happiness yield per turn.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP">
+            <Text>Net diplomatic Influence generated per turn.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_DEALS">
+            <Text>Ongoing Deals</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP">
+            <Text>Active diplomatic actions, endeavors, sanctions, and espionage involving this leader.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRADE">
+            <Text>Trade Routes</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP">
+            <Text>Number of active trade routes leaving this player's cities.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_LAND">
+            <Text>Land Area</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP">
+            <Text>Total territory owned in square kilometers, scaled from controlled hex tiles.</Text>
+        </Row>
+
+        <!-- Top-level view tabs -->
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_HISTORY">
+            <Text>Historical Data</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK">
+            <Text>World Factbook</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS">
+            <Text>Global Relations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS">
+            <Text>Options</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_ABOUT">
+            <Text>About</Text>
+        </Row>
+
+        <!-- Historical Data sub-page tabs -->
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY">
+            <Text>Economy</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_POWER">
+            <Text>Power</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE">
+            <Text>Knowledge &amp; Influence</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_AGE">
+            <Text>Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES">
+            <Text>Resources</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS">
+            <Text>Conflicts</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT">
+            <Text>Wars</Text>
+        </Row>
+
+        <!-- Civ7-specific Age mechanics -->
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR">
+            <Text>Radar</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE">
+            <Text>Race</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION">
+            <Text>Completion</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK">
+            <Text>Triumphs Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT">
+            <Text>Cap Utilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP">
+            <Text>Percentage of the settlement cap this player has used. 100% means at the limit.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS">
+            <Text>Age Progress</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP">
+            <Text>How close the current age is to ending. Same for all civilizations.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE">
+            <Text>Crisis Stage</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP">
+            <Text>Current crisis stage (0 = none, 3 = peak crisis). Game-wide value.</Text>
+        </Row>
+
+        <!-- Resources page metrics -->
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK">
+            <Text>Stacked</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL">
+            <Text>Total</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS">
+            <Text>Bonus</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE">
+            <Text>Empire</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY">
+            <Text>City</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY">
+            <Text>Factory</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE">
+            <Text>Treasure</Text>
+        </Row>
+
+        <!-- Power-page metrics: military strength and wonders -->
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER">
+            <Text>Military Power</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP">
+            <Text>Summed combat strength across all of this player's military units (land, naval, and air formations).</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS">
+            <Text>Wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP">
+            <Text>Total wonders constructed by this player across all ages.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_NYI">
+            <Text>(not yet implemented)</Text>
+        </Row>
+
+        <!-- Factbook header sub-label -->
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD">
+            <Text>vs. world</Text>
+        </Row>
+
+        <!-- Factbook column headers -->
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC">
+            <Text>Metric</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE">
+            <Text>Value</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK">
+            <Text>Rank</Text>
+        </Row>
+
+        <!-- Options labels -->
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET">
+            <Text>Show unmet civs in legend</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH">
+            <Text>Smooth chart lines (3-turn moving average)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED">
+            <Text>Show eliminated civs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CLEAR">
+            <Text>Clear history</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_REFRESH">
+            <Text>Refresh sample now</Text>
+        </Row>
+
+        <!-- Unmet placeholder strings (Fix 4) -->
+        <Row Tag="LOC_DEMOGRAPHICS_UNMET_CIV">
+            <Text>Unmet Civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP">
+            <Text>You have not yet met this civilization. Enable "Show names of unmet civilizations and city-states" in Options to reveal real names.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNMET_CS">
+            <Text>Unmet City State</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP">
+            <Text>You have not yet met this city-state. Enable "Show names of unmet civilizations and city-states" in Options to reveal real names.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES">
+            <Text>Show names of unmet civilizations and city-states</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP">
+            <Text>When off (default), civs and city-states you have not yet met are shown as generic "Unmet" placeholders in charts, the factbook, and global relations rings.</Text>
+        </Row>
+
+    </EnglishText>
+</Database>

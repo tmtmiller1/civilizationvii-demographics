@@ -1,0 +1,150 @@
+pool,template,name,keep
+ANTIQUITY_CRISIS_INVASION,The Bronze Age Collapse,The Bronze Age Collapse,1
+ANTIQUITY_CRISIS_INVASION,The Great Migration,The Great Migration,1
+ANTIQUITY_CRISIS_INVASION,The Age of Migrations,The Age of Migrations,1
+ANTIQUITY_CRISIS_INVASION,The Sea Peoples,The Sea Peoples,1
+ANTIQUITY_CRISIS_INVASION,The Coming of the Sea Peoples,The Coming of the Sea Peoples,1
+ANTIQUITY_CRISIS_INVASION,The Barbarian Invasions,The Barbarian Invasions,1
+ANTIQUITY_CRISIS_INVASION,The Barbarian Wars,The Barbarian Wars,1
+ANTIQUITY_CRISIS_INVASION,The Great Horde,The Great Horde,1
+ANTIQUITY_CRISIS_INVASION,The Coming of the Horse Lords,The Coming of the Horse Lords,1
+ANTIQUITY_CRISIS_INVASION,The March of Strangers,The March of Strangers,1
+ANTIQUITY_CRISIS_INVASION,The Border Raids,The Border Raids,1
+ANTIQUITY_CRISIS_INVASION,The Years of Devastation,The Years of Devastation,1
+ANTIQUITY_CRISIS_INVASION,The Sack Years,The Sack Years,1
+ANTIQUITY_CRISIS_INVASION,The Crisis of the Frontier,The Crisis of the Frontier,1
+ANTIQUITY_CRISIS_INVASION,The Frontier Wars,The Frontier Wars,1
+ANTIQUITY_CRISIS_INVASION,The {regional} Invasions,The Northern Invasions,1
+ANTIQUITY_CRISIS_INVASION,The {regional} Invasions,The Eastern Invasions,1
+ANTIQUITY_CRISIS_INVASION,The {regional} Invasions,The Provincial Invasions,1
+ANTIQUITY_CRISIS_INVASION,The Storm from the {place},The Storm from the Frontier,1
+ANTIQUITY_CRISIS_INVASION,The Storm from the {place},The Storm from the Provinces,1
+ANTIQUITY_CRISIS_INVASION,The Storm from the {place},The Storm from the Steppe,1
+ANTIQUITY_CRISIS_INVASION,The Storm from the {place},The Storm from the Coast,1
+ANTIQUITY_CRISIS_INVASION,The Storm from the {place},The Storm from the Heartland,1
+ANTIQUITY_CRISIS_INVASION,The Sack of the {place},The Sack of the Frontier,1
+ANTIQUITY_CRISIS_INVASION,The Sack of the {place},The Sack of the Provinces,1
+ANTIQUITY_CRISIS_INVASION,The Sack of the {place},The Sack of the Steppe,1
+ANTIQUITY_CRISIS_INVASION,The Sack of the {place},The Sack of the Coast,1
+ANTIQUITY_CRISIS_INVASION,The Sack of the {place},The Sack of the Heartland,1
+ANTIQUITY_CRISIS_PLAGUE,The Antonine Plague,The Antonine Plague,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague of Galen,The Plague of Galen,1
+ANTIQUITY_CRISIS_PLAGUE,The Great Pestilence,The Great Pestilence,1
+ANTIQUITY_CRISIS_PLAGUE,The Great Mortality,The Great Mortality,1
+ANTIQUITY_CRISIS_PLAGUE,The Great Fever,The Great Fever,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague Years,The Plague Years,1
+ANTIQUITY_CRISIS_PLAGUE,The Dying Time,The Dying Time,1
+ANTIQUITY_CRISIS_PLAGUE,The Years of Ashes,The Years of Ashes,1
+ANTIQUITY_CRISIS_PLAGUE,The Sweating Sickness,The Sweating Sickness,1
+ANTIQUITY_CRISIS_PLAGUE,The Wasting Plague,The Wasting Plague,1
+ANTIQUITY_CRISIS_PLAGUE,The Summer Plague,The Summer Plague,1
+ANTIQUITY_CRISIS_PLAGUE,The Winter Sickness,The Winter Sickness,1
+ANTIQUITY_CRISIS_PLAGUE,The Silent Death,The Silent Death,1
+ANTIQUITY_CRISIS_PLAGUE,The {color} Death,The Black Death,1
+ANTIQUITY_CRISIS_PLAGUE,The {color} Death,The Red Death,1
+ANTIQUITY_CRISIS_PLAGUE,The {color} Death,The Grey Death,1
+ANTIQUITY_CRISIS_PLAGUE,The {color} Death,The Ashen Death,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Frontier,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Provinces,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Steppe,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Coast,1
+ANTIQUITY_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Heartland,1
+ANTIQUITY_CRISIS_LOYALTY,The Servile Wars,The Servile Wars,1
+ANTIQUITY_CRISIS_LOYALTY,The Civil Wars,The Civil Wars,1
+ANTIQUITY_CRISIS_LOYALTY,The Years of Revolt,The Years of Revolt,1
+ANTIQUITY_CRISIS_LOYALTY,The Years of Anarchy,The Years of Anarchy,1
+ANTIQUITY_CRISIS_LOYALTY,The Time of Tyrants,The Time of Tyrants,1
+ANTIQUITY_CRISIS_LOYALTY,The Age of Usurpers,The Age of Usurpers,1
+ANTIQUITY_CRISIS_LOYALTY,The Crisis of the Third Century,The Crisis of the Third Century,1
+ANTIQUITY_CRISIS_LOYALTY,The Crisis of Succession,The Crisis of Succession,1
+ANTIQUITY_CRISIS_LOYALTY,The Crisis of Legitimacy,The Crisis of Legitimacy,1
+ANTIQUITY_CRISIS_LOYALTY,The Crisis of Authority,The Crisis of Authority,1
+ANTIQUITY_CRISIS_LOYALTY,The Collapse of Authority,The Collapse of Authority,1
+ANTIQUITY_CRISIS_LOYALTY,The Great Fracturing,The Great Fracturing,1
+ANTIQUITY_CRISIS_LOYALTY,The Sundering,The Sundering,1
+ANTIQUITY_CRISIS_LOYALTY,The Troubles,The Troubles,1
+ANTIQUITY_CRISIS_LOYALTY,The Soldier's Revolt,The Soldier's Revolt,1
+ANTIQUITY_CRISIS_LOYALTY,The Pretenders' War,The Pretenders' War,1
+ANTIQUITY_CRISIS_LOYALTY,The War of Succession,The War of Succession,1
+ANTIQUITY_CRISIS_LOYALTY,The Provincial Revolts,The Provincial Revolts,1
+ANTIQUITY_CRISIS_LOYALTY,The Crisis of the Provinces,The Crisis of the Provinces,1
+ANTIQUITY_CRISIS_LOYALTY,The Revolt of the {place},The Revolt of the Frontier,1
+ANTIQUITY_CRISIS_LOYALTY,The Revolt of the {place},The Revolt of the Provinces,1
+ANTIQUITY_CRISIS_LOYALTY,The Revolt of the {place},The Revolt of the Steppe,1
+ANTIQUITY_CRISIS_LOYALTY,The Revolt of the {place},The Revolt of the Coast,1
+ANTIQUITY_CRISIS_LOYALTY,The Revolt of the {place},The Revolt of the Heartland,1
+EXPLORATION_CRISIS_REVOLUTION,The Age of Revolutions,The Age of Revolutions,1
+EXPLORATION_CRISIS_REVOLUTION,The Revolutionary Years,The Revolutionary Years,1
+EXPLORATION_CRISIS_REVOLUTION,The Spring of Nations,The Spring of Nations,1
+EXPLORATION_CRISIS_REVOLUTION,The Year of Liberty,The Year of Liberty,1
+EXPLORATION_CRISIS_REVOLUTION,The Year of the Republic,The Year of the Republic,1
+EXPLORATION_CRISIS_REVOLUTION,The Glorious Revolution,The Glorious Revolution,1
+EXPLORATION_CRISIS_REVOLUTION,The Great Awakening,The Great Awakening,1
+EXPLORATION_CRISIS_REVOLUTION,The Reform Movement,The Reform Movement,1
+EXPLORATION_CRISIS_REVOLUTION,The People's Rising,The People's Rising,1
+EXPLORATION_CRISIS_REVOLUTION,The People's Revolution,The People's Revolution,1
+EXPLORATION_CRISIS_REVOLUTION,The National Rising,The National Rising,1
+EXPLORATION_CRISIS_REVOLUTION,The Republican Rising,The Republican Rising,1
+EXPLORATION_CRISIS_REVOLUTION,The Crisis of the Crown,The Crisis of the Crown,1
+EXPLORATION_CRISIS_REVOLUTION,The Fall of the Crown,The Fall of the Crown,1
+EXPLORATION_CRISIS_REVOLUTION,The Constitutional Crisis,The Constitutional Crisis,1
+EXPLORATION_CRISIS_REVOLUTION,The Risings in the {place},The Risings in the Frontier,1
+EXPLORATION_CRISIS_REVOLUTION,The Risings in the {place},The Risings in the Provinces,1
+EXPLORATION_CRISIS_REVOLUTION,The Risings in the {place},The Risings in the Steppe,1
+EXPLORATION_CRISIS_REVOLUTION,The Risings in the {place},The Risings in the Coast,1
+EXPLORATION_CRISIS_REVOLUTION,The Risings in the {place},The Risings in the Heartland,1
+EXPLORATION_CRISIS_RELIGION,The Great Schism,The Great Schism,1
+EXPLORATION_CRISIS_RELIGION,The Sacred Schism,The Sacred Schism,1
+EXPLORATION_CRISIS_RELIGION,The Reformation,The Reformation,1
+EXPLORATION_CRISIS_RELIGION,The Counter-Reformation,The Counter-Reformation,1
+EXPLORATION_CRISIS_RELIGION,The Wars of Religion,The Wars of Religion,1
+EXPLORATION_CRISIS_RELIGION,The Age of Heresies,The Age of Heresies,1
+EXPLORATION_CRISIS_RELIGION,The Age of Prophets,The Age of Prophets,1
+EXPLORATION_CRISIS_RELIGION,The Religious Upheaval,The Religious Upheaval,1
+EXPLORATION_CRISIS_RELIGION,The Crisis of Faith,The Crisis of Faith,1
+EXPLORATION_CRISIS_RELIGION,The Sacred Wars,The Sacred Wars,1
+EXPLORATION_CRISIS_RELIGION,The War of the Faithful,The War of the Faithful,1
+EXPLORATION_CRISIS_RELIGION,The Iconoclast Crisis,The Iconoclast Crisis,1
+EXPLORATION_CRISIS_RELIGION,The Temple Crisis,The Temple Crisis,1
+EXPLORATION_CRISIS_RELIGION,The Pilgrim Wars,The Pilgrim Wars,1
+EXPLORATION_CRISIS_RELIGION,The {regional} Reformation,The Northern Reformation,1
+EXPLORATION_CRISIS_RELIGION,The {regional} Reformation,The Eastern Reformation,1
+EXPLORATION_CRISIS_RELIGION,The {regional} Reformation,The Provincial Reformation,1
+EXPLORATION_CRISIS_RELIGION,The Heresy of the {place},The Heresy of the Frontier,1
+EXPLORATION_CRISIS_RELIGION,The Heresy of the {place},The Heresy of the Provinces,1
+EXPLORATION_CRISIS_RELIGION,The Heresy of the {place},The Heresy of the Steppe,1
+EXPLORATION_CRISIS_RELIGION,The Heresy of the {place},The Heresy of the Coast,1
+EXPLORATION_CRISIS_RELIGION,The Heresy of the {place},The Heresy of the Heartland,1
+EXPLORATION_CRISIS_PLAGUE,The Black Death,The Black Death,1
+EXPLORATION_CRISIS_PLAGUE,The Great Pestilence,The Great Pestilence,1
+EXPLORATION_CRISIS_PLAGUE,The Great Mortality,The Great Mortality,1
+EXPLORATION_CRISIS_PLAGUE,The Great Fever,The Great Fever,1
+EXPLORATION_CRISIS_PLAGUE,The Sweating Sickness,The Sweating Sickness,1
+EXPLORATION_CRISIS_PLAGUE,The Wasting Plague,The Wasting Plague,1
+EXPLORATION_CRISIS_PLAGUE,The Plague Years,The Plague Years,1
+EXPLORATION_CRISIS_PLAGUE,The Dying Time,The Dying Time,1
+EXPLORATION_CRISIS_PLAGUE,The Years of Ashes,The Years of Ashes,1
+EXPLORATION_CRISIS_PLAGUE,The Summer Plague,The Summer Plague,1
+EXPLORATION_CRISIS_PLAGUE,The Winter Sickness,The Winter Sickness,1
+EXPLORATION_CRISIS_PLAGUE,The Silent Death,The Silent Death,1
+EXPLORATION_CRISIS_PLAGUE,The {color} Death,The Black Death,1
+EXPLORATION_CRISIS_PLAGUE,The {color} Death,The Red Death,1
+EXPLORATION_CRISIS_PLAGUE,The {color} Death,The Grey Death,1
+EXPLORATION_CRISIS_PLAGUE,The {color} Death,The Ashen Death,1
+EXPLORATION_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Frontier,1
+EXPLORATION_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Provinces,1
+EXPLORATION_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Steppe,1
+EXPLORATION_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Coast,1
+EXPLORATION_CRISIS_PLAGUE,The Plague of the {place},The Plague of the Heartland,1
+FALLBACK_AGE_ANTIQUITY,The Age of Upheaval,The Age of Upheaval,1
+FALLBACK_AGE_ANTIQUITY,The Troubles,The Troubles,1
+FALLBACK_AGE_ANTIQUITY,The Time of Troubles,The Time of Troubles,1
+FALLBACK_AGE_ANTIQUITY,The Crisis of Empire,The Crisis of Empire,1
+FALLBACK_AGE_ANTIQUITY,The Years of Anarchy,The Years of Anarchy,1
+FALLBACK_AGE_ANTIQUITY,The Great Fracturing,The Great Fracturing,1
+FALLBACK_AGE_ANTIQUITY,The Sundering,The Sundering,1
+FALLBACK_AGE_EXPLORATION,The Crisis of Empire,The Crisis of Empire,1
+FALLBACK_AGE_EXPLORATION,The Age of Upheaval,The Age of Upheaval,1
+FALLBACK_AGE_EXPLORATION,The Revolutionary Years,The Revolutionary Years,1
+FALLBACK_AGE_EXPLORATION,The Reform Crisis,The Reform Crisis,1
+FALLBACK_AGE_EXPLORATION,The Long Years,The Long Years,1
