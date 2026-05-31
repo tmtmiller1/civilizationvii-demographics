@@ -10,6 +10,7 @@ import { makeClickable } from "/demographics/ui/demographics-a11y.js";
 import { safePlaySound, playActivate } from "/demographics/ui/demographics-audio.js";
 import { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/history-csv.js";
 import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/view-history.js";
+import { getCurrentAgeType } from "/demographics/ui/sampler-collectors.js";
 
 /**
  * One metric page in the tab bar: an id, a localization key, and the ordered
@@ -129,6 +130,33 @@ function applyNavHelpClasses(metricBar) {
 }
 
 /**
+ * Metric ids that only exist in a specific Civ7 age, mapped to the age they
+ * require. Treasure resources are an Exploration-age mechanic; Factory
+ * resources are a Modern-age mechanic — their tabs are hidden in other ages.
+ * @type {Record<string, string>}
+ */
+const AGE_GATED_METRICS = {
+  resources_treasure: "AGE_EXPLORATION",
+  resources_factory: "AGE_MODERN"
+};
+
+/**
+ * Filter a page's metric ids to those visible in the current age, dropping
+ * age-gated metrics (treasure/factory) when the current age doesn't match. When
+ * the age can't be resolved, age-gated metrics are hidden (they're meaningless
+ * outside their age and have no data in any other).
+ * @param {string[]} metrics The page's metric ids.
+ * @returns {string[]} The metric ids to show as tabs this age.
+ */
+function visibleMetricsForAge(metrics) {
+  const age = getCurrentAgeType();
+  return metrics.filter((mid) => {
+    const requiredAge = AGE_GATED_METRICS[mid];
+    return !requiredAge || requiredAge === age;
+  });
+}
+
+/**
  * Build and append the metric tab bar for `page`.
  * @param {HTMLElement} host The view host element.
  * @param {HistoryCtx} ctx Render context.
@@ -145,7 +173,8 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
   metricBar.classList.add("demographics-tabs", "w-full", "font-title", "text-sm");
   metricBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   metricBar.setAttribute("tab-item-class", "font-title text-base");
-  const metricTabs = page.metrics.map((mid) => {
+  const metrics = visibleMetricsForAge(page.metrics);
+  const metricTabs = metrics.map((mid) => {
     const exists = metricExists(mid);
     return {
       id: mid,
@@ -156,7 +185,7 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
 
   const mIdx = Math.max(
     0,
-    page.metrics.findIndex((m) => m === activeMetric)
+    metrics.findIndex((m) => m === activeMetric)
   );
   metricBar.setAttribute("selected-tab-index", String(mIdx));
   applyNavHelpClasses(metricBar);
