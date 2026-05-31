@@ -5,7 +5,7 @@
 // starts the per-turn sampler. The two imports are independent so a
 // failure in one doesn't prevent the other.
 //
-// Engine APIs are not safe to touch before whenReady resolves — doing
+// Engine APIs are not safe to touch before whenReady resolves, doing
 // so silently kills the module with no stack trace.
 
 const DEMOGRAPHICS_DEBUG = true;
@@ -32,7 +32,7 @@ dlog("loaded; debug=", DEMOGRAPHICS_DEBUG);
 
 /**
  * Dynamic-import the dock-button decorator for its registration side effect.
- * Never rejects — an import failure is logged and swallowed so the sampler
+ * Never rejects. An import failure is logged and swallowed so the sampler
  * still loads.
  * @returns {Promise<*>} Resolves to the imported module, or `undefined` on failure.
  */
