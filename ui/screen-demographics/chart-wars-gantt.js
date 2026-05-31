@@ -222,11 +222,11 @@ function parseYear(s) {
 }
 
 /**
- * Format an estimated casualty count with a magnitude suffix.
- * @param {number} n The count.
- * @returns {string} The formatted count ("—" for non-positive).
+ * Format a positive magnitude with a K/M/B suffix.
+ * @param {number} n The value.
+ * @returns {string} The formatted value ("—" for non-finite/non-positive).
  */
-function formatCasualties(n) {
+function formatMagnitude(n) {
   if (!isFinite(n) || n <= 0) return "—";
   if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
   if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
@@ -828,44 +828,107 @@ function mountGanttAxisTitles(wrap, L, W, H) {
 }
 
 /**
- * Estimate a war's casualty count from duration, participant military power,
- * and an era multiplier.
- * @param {*} war The war record.
- * @param {Snapshot[]} samples The sample stream.
- * @param {number} latestTurn The latest sampled turn.
- * @returns {number} The estimated casualties.
+ * Sum a metric across a set of pids within a single sample.
+ * @param {Snapshot} sample The sample.
+ * @param {Pid[]} pids Participant pids.
+ * @param {string} metricId Metric key (e.g. "milpower").
+ * @returns {number | null} The summed value, or null if no pid had finite data.
  */
-function estimateCasualties(war, samples, latestTurn) {
-  const duration = Math.max(
-    1,
-    (typeof war.endTurn === "number" ? war.endTurn : latestTurn) - war.startTurn
-  );
-  const allPids = /** @type {any[]} */ ([]).concat(war.sideA || [], war.sideB || []);
-  let totalPower = sumLatestWarPower(samples, allPids);
-  if (totalPower <= 0) totalPower = 100; // fallback minimum
-  const avgPower = totalPower / Math.max(1, allPids.length);
-  const eraMult = 0.5 * Math.pow(1.04, war.startTurn || 0);
-  return Math.round(duration * avgPower * 0.5 * eraMult);
+function sumMetricAt(sample, pids, metricId) {
+  if (!sample || !sample.players) return null;
+  let sum = 0;
+  let any = false;
+  for (const pid of pids) {
+    const v = sample.players[pid]?.metrics?.[metricId];
+    if (typeof v === "number" && isFinite(v)) {
+      sum += v;
+      any = true;
+    }
+  }
+  return any ? sum : null;
 }
 
 /**
- * Sum the participants' military power from the latest sample that has any
- * (walking backwards until a non-zero total is found).
- * @param {Snapshot[]} samples The sample stream.
- * @param {*[]} allPids The participant pids.
- * @returns {number} The summed military power (0 when none found).
+ * Build the per-sample series of a side's combined metric over a window.
+ * @param {Snapshot[]} windowSamples Samples inside the war window.
+ * @param {Pid[]} pids The side's participant pids.
+ * @param {string} metricId Metric key.
+ * @returns {number[]} Combined values (samples lacking data are skipped).
  */
-function sumLatestWarPower(samples, allPids) {
-  let totalPower = 0;
-  for (let i = samples.length - 1; i >= 0 && totalPower === 0; i--) {
-    const s = samples[i];
-    if (!s?.players) continue;
-    for (const pid of allPids) {
-      const mp = s.players[pid]?.metrics?.milpower;
-      if (typeof mp === "number" && isFinite(mp)) totalPower += mp;
-    }
+function sideMetricSeries(windowSamples, pids, metricId) {
+  const series = [];
+  for (const s of windowSamples) {
+    const v = sumMetricAt(s, pids, metricId);
+    if (v !== null) series.push(v);
   }
-  return totalPower;
+  return series;
+}
+
+/**
+ * Maximum drawdown of a series: the largest drop from a running peak. Returns 0
+ * when the series only ever rises, so "losses" are never fabricated from growth.
+ * @param {number[]} values The series.
+ * @returns {number} The largest peak→trough decline.
+ */
+function maxDrawdown(values) {
+  let peak = -Infinity;
+  let maxDD = 0;
+  for (const v of values) {
+    if (v > peak) peak = v;
+    if (peak - v > maxDD) maxDD = peak - v;
+  }
+  return maxDD;
+}
+
+/**
+ * One side's observed cost over a war window. Fields are null when the samples
+ * don't cover the window (fewer than two data points).
+ * @typedef {Object} SideWarCost
+ * @property {number | null} milLost Military-strength drawdown.
+ * @property {number | null} settlementsLost Settlement-count drawdown.
+ * @property {number | null} popLost Population drawdown.
+ * @property {number | null} prodChange Net production change (signed: +gain / -loss).
+ */
+
+/**
+ * Compute one side's observed cost over the war window from real samples.
+ * @param {Snapshot[]} windowSamples Samples inside the war window.
+ * @param {Pid[]} pids The side's participant pids.
+ * @returns {SideWarCost} Per-metric figures (null where fewer than two points).
+ */
+function sideCost(windowSamples, pids) {
+  const mil = sideMetricSeries(windowSamples, pids, "milpower");
+  const set = sideMetricSeries(windowSamples, pids, "settlements");
+  const pop = sideMetricSeries(windowSamples, pids, "population");
+  const prod = sideMetricSeries(windowSamples, pids, "production");
+  return {
+    milLost: mil.length >= 2 ? maxDrawdown(mil) : null,
+    settlementsLost: set.length >= 2 ? maxDrawdown(set) : null,
+    popLost: pop.length >= 2 ? maxDrawdown(pop) : null,
+    prodChange: prod.length >= 2 ? prod[prod.length - 1] - prod[0] : null
+  };
+}
+
+/**
+ * Compute both sides' war cost from the sampled time-series over the war's turn
+ * window. This is an honest "observed change during the war" (correlation, not
+ * proven causation) derived entirely from real samples — never an invented
+ * formula. Fields are null when samples don't cover the window.
+ * @param {*} war The war record (startTurn / endTurn / sideA / sideB pids).
+ * @param {Snapshot[]} samples The full sample stream.
+ * @param {number} latestTurn The latest sampled turn (window end for ongoing wars).
+ * @returns {{ a: SideWarCost, b: SideWarCost }} Per-side costs.
+ */
+function computeWarCost(war, samples, latestTurn) {
+  const sTurn = war.startTurn;
+  const eTurn = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
+  const win = samples.filter(
+    (s) => typeof s?.turn === "number" && s.turn >= sTurn && s.turn <= eTurn
+  );
+  return {
+    a: sideCost(win, war.sideA || []),
+    b: sideCost(win, war.sideB || [])
+  };
 }
 
 /**
@@ -897,11 +960,7 @@ function buildWarTooltipBody(w, ctx) {
   const endYr = typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : "ongoing";
   const yrs = warDurationYears(w, turnYearMap, latestTurn);
   const turns = eTurn - sTurn;
-  const casualties = formatCasualties(estimateCasualties(w, samples, latestTurn));
-  const partyMul = Math.sqrt(
-    Math.max(1, (w.sideA || []).length) * Math.max(1, (w.sideB || []).length)
-  );
-  const battles = Math.max(1, Math.round(turns * 0.4 * partyMul * Math.pow(1.02, sTurn || 0)));
+  const cost = computeWarCost(w, samples, latestTurn);
   const declared = warDeclaredBy(w);
   return {
     // Use the World War override when 4+ civs are involved; fall back to the
@@ -915,8 +974,7 @@ function buildWarTooltipBody(w, ctx) {
     endYr,
     yrs,
     turns,
-    battles,
-    casualties
+    cost
   };
 }
 
@@ -963,12 +1021,59 @@ function renderWarTooltip(tooltip, w, ctx) {
     t.endYr +
     ", " +
     t.turns +
-    " turns)" +
-    "<br>Estimated battles: ~" +
-    t.battles +
-    "<br>Estimated casualties: ~" +
-    t.casualties;
+    " turns)";
   tooltip.appendChild(meta);
+  appendWarCost(tooltip, t.cost);
+}
+
+/**
+ * Format one side's war cost as a compact line. Losses render as "−N", net
+ * production change is signed, and missing data renders as "—".
+ * @param {SideWarCost} c The side cost.
+ * @returns {string} The formatted line.
+ */
+function formatSideCost(c) {
+  const lost = (/** @type {number | null} */ n) => {
+    if (n === null) return "—";
+    const r = Math.round(n);
+    return r <= 0 ? "0" : "−" + formatMagnitude(r);
+  };
+  const signed = (/** @type {number | null} */ n) => {
+    if (n === null) return "—";
+    const r = Math.round(n);
+    if (r === 0) return "0";
+    return (r > 0 ? "+" : "−") + formatMagnitude(Math.abs(r));
+  };
+  return (
+    "strength " +
+    lost(c.milLost) +
+    " · settlements " +
+    lost(c.settlementsLost) +
+    " · pop " +
+    lost(c.popLost) +
+    " · production " +
+    signed(c.prodChange)
+  );
+}
+
+/**
+ * Append the per-side observed war-cost section to the tooltip. All figures are
+ * derived from the sampled time-series over the war window (no invented data).
+ * @param {HTMLElement} tooltip The tooltip element.
+ * @param {{ a: SideWarCost, b: SideWarCost }} cost Per-side costs.
+ * @returns {void}
+ */
+function appendWarCost(tooltip, cost) {
+  const block = document.createElement("div");
+  block.style.marginTop = "0.4rem";
+  block.style.opacity = "0.9";
+  block.innerHTML =
+    'Cost during war <span style="opacity:0.65;">(observed change)</span>:' +
+    "<br>Attackers — " +
+    formatSideCost(cost.a) +
+    "<br>Defenders — " +
+    formatSideCost(cost.b);
+  tooltip.appendChild(block);
 }
 
 /**

@@ -59,7 +59,6 @@
                     <Item>ui/screen-demographics/views/relations-filters.js</Item>
                     <Item>ui/screen-demographics/views/relations-ring-svg.js</Item>
                     <Item>ui/screen-demographics/views/view-options.js</Item>
-                    <Item>ui/screen-demographics/views/view-about.js</Item>
                     <Item>images/demographics-icon.svg</Item>
                 </ImportFiles>
                 <UpdateText>
