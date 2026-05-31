@@ -1130,3 +1130,386 @@
 .demographics-option-dropdown {
     min-width: 18rem;
 }
+
+/* ── Triumph (Legacy) views: Race cards, Completion sections ───────────────
+   Static chrome/layout for the triumph charts. Dynamic values (per-civ
+   colors, attribute tints, bar fill widths, conditional highlights) stay
+   inline in chart-triumphs.js — many via CSS custom properties consumed by
+   the rules below. */
+
+/* Wrapping flex grid of race cards (Race view). */
+.demographics-triumph-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem 1rem;
+    justify-content: center;
+    padding: 0.5rem 0.3rem;
+}
+
+/* Vertical stack of attribute sections (Completion view). */
+.demographics-triumph-completion-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+/* Race card — ornate flex column. Sits alongside .ornate-card-bg /
+   .triumph-card chrome from triumph-card.css. */
+.demographics-triumph-card {
+    position: relative;
+    width: 22rem;
+    min-height: 24rem;
+    padding: 1.5rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto;
+}
+
+/* Rotated corner adornment. Position + rotation are per-corner dynamics set
+   inline (--corner-rotate plus the edge offsets). */
+.demographics-triumph-corner {
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-image: url("blp:mp_player_detail");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(var(--corner-rotate, 0deg));
+}
+
+/* Top filigree band. Tint (background) is the attribute color, set inline. */
+.demographics-triumph-filigree-row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5rem;
+    pointer-events: none;
+}
+.demographics-triumph-filigree {
+    position: absolute;
+    width: 7rem;
+    height: 2.5rem;
+    top: -0.2rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.4;
+}
+.demographics-triumph-filigree-left {
+    left: 1rem;
+    background-image: url("blp:base_top-filigree_left");
+}
+.demographics-triumph-filigree-right {
+    right: 1rem;
+    background-image: url("blp:base_top-filigree_right");
+}
+
+/* Attribute ring at the top of the card. */
+.demographics-triumph-ring {
+    position: absolute;
+    top: -1.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4.4rem;
+    height: 4.4rem;
+    background-image: url("blp:base_triumph_ring");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+/* Ring inner disc. background + color are dynamic (attribute color, or the
+   triggered gold/dark pair), set inline. */
+.demographics-triumph-ring-inner {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    border: 2px solid #e5d2ac;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.6);
+}
+
+/* Triumph name. */
+.demographics-triumph-name {
+    margin-top: 2.6rem;
+    color: #e5d2ac;
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
+    padding: 0 0.4rem;
+}
+
+/* Dedication pill row + flanking dividers. */
+.demographics-triumph-pill-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.4rem;
+    gap: 0.4rem;
+    width: 100%;
+}
+.demographics-triumph-pill-divider {
+    flex: 0 0 3.5rem;
+    height: 1px;
+}
+.demographics-triumph-pill-divider-left {
+    background: linear-gradient(to right, rgba(81, 78, 84, 0), rgba(81, 78, 84, 0.9));
+}
+.demographics-triumph-pill-divider-right {
+    background: linear-gradient(to left, rgba(81, 78, 84, 0), rgba(81, 78, 84, 0.9));
+}
+/* Pill text. color is dynamic (attribute color when major, muted when not). */
+.demographics-triumph-pill {
+    padding: 0.05rem 0.6rem;
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Requirement (trigger description) line. */
+.demographics-triumph-req {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    color: #c2c4cc;
+    text-align: center;
+    line-height: 1.3;
+    padding: 0 0.3rem;
+    font-style: italic;
+}
+/* Reward line + its "Reward:" label span. */
+.demographics-triumph-reward {
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    color: #c2c4cc;
+    text-align: center;
+    line-height: 1.3;
+    padding: 0 0.3rem;
+}
+.demographics-triumph-reward-label {
+    color: #e5d2ac;
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Winner trophy line. */
+.demographics-triumph-trophy {
+    margin-top: 0.55rem;
+    color: #f3c34c;
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+
+/* Spacer that pushes the progress bars to the bottom of the card. */
+.demographics-triumph-spacer {
+    flex: 1 1 auto;
+    min-height: 0.6rem;
+}
+
+/* Per-civ progress bars container + its "No progress yet." note. */
+.demographics-triumph-bars-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+}
+.demographics-triumph-bars-none {
+    font-size: 0.72rem;
+    color: #85878c;
+    font-style: italic;
+    text-align: center;
+}
+
+/* One civ progress row: name cell | bar | count. */
+.demographics-triumph-civ-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(2.4rem, auto);
+    gap: 0.4rem;
+    align-items: center;
+}
+.demographics-triumph-civ-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 0;
+}
+/* Civ color dot. background is the civ color, set inline. */
+.demographics-triumph-civ-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+/* Civ name. color + font-weight are dynamic (winner highlight), set inline. */
+.demographics-triumph-civ-name {
+    font-size: 0.72rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+/* Count cell. color + font-weight are dynamic (winner / triggered). */
+.demographics-triumph-civ-count {
+    font-family: monospace, ui-monospace;
+    font-size: 0.7rem;
+    text-align: right;
+}
+/* Progress bar track. */
+.demographics-triumph-bar {
+    position: relative;
+    height: 0.3rem;
+    background: rgba(20, 16, 10, 0.7);
+    border: 1px solid rgba(168, 132, 90, 0.4);
+    border-radius: 0.1rem;
+    overflow: hidden;
+}
+/* Bar fill. width (--fill), background + opacity are dynamic, set inline. */
+.demographics-triumph-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--fill, 0%);
+}
+
+/* Completion view — section header line. */
+.demographics-triumph-completion-header {
+    font-size: 0.85rem;
+    color: #c9b88c;
+    margin-bottom: 0.5rem;
+}
+
+/* Completion attribute section. border-top color is the attribute color,
+   set inline. */
+.demographics-triumph-section {
+    background: rgba(20, 16, 10, 0.55);
+    border: 1px solid rgba(201, 162, 76, 0.25);
+    border-top: 0.18rem solid var(--ia-fxs-header);
+    border-radius: 0.2rem;
+    padding: 0.55rem 0.8rem 0.7rem;
+}
+.demographics-triumph-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+/* Section title. color is the attribute color, set inline. */
+.demographics-triumph-section-title {
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 0.3rem rgba(0, 0, 0, 0.6);
+}
+.demographics-triumph-section-count {
+    font-size: 0.78rem;
+    color: #c9b88c;
+    font-family: monospace, ui-monospace;
+}
+.demographics-triumph-section-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+/* Completion per-civ row: name cell | pipped bar | count. */
+.demographics-triumph-completion-row {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) 1fr minmax(3rem, auto);
+    gap: 0.6rem;
+    align-items: center;
+}
+.demographics-triumph-completion-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+/* Civ color dot. background is the civ color, set inline. */
+.demographics-triumph-completion-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.demographics-triumph-completion-name {
+    color: #f3e7c4;
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* Count cell. color + font-weight are dynamic (progress / complete). */
+.demographics-triumph-completion-count {
+    font-family: monospace, ui-monospace;
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+/* Completion pipped bar: wrap, background track, fill, pip row. */
+.demographics-triumph-completion-bar-wrap {
+    position: relative;
+    height: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+.demographics-triumph-completion-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0.32rem;
+    background: rgba(20, 16, 10, 0.7);
+    border: 1px solid rgba(201, 162, 76, 0.25);
+    border-radius: 0.15rem;
+}
+/* Filled portion. width (--fill) + background are dynamic, set inline. */
+.demographics-triumph-completion-fill {
+    position: absolute;
+    left: 0;
+    height: 0.32rem;
+    width: var(--fill, 0%);
+    opacity: 0.85;
+    border-radius: 0.15rem;
+}
+.demographics-triumph-completion-pip-row {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.18rem;
+    box-sizing: border-box;
+}
+/* Pip base. Filled pips add background/border/box-shadow inline (attribute
+   color); hollow pips add the muted background/border inline. */
+.demographics-triumph-pip {
+    width: 0.72rem;
+    height: 0.72rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}

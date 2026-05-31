@@ -365,31 +365,24 @@ function sortRaceData(raceData) {
   });
 }
 
-const TRIUMPH_CARD_CORNER_BLP = "blp:mp_player_detail";
-const TRIUMPH_CARD_FILIGREE_L = "blp:base_top-filigree_left";
-const TRIUMPH_CARD_FILIGREE_R = "blp:base_top-filigree_right";
-const TRIUMPH_CARD_RING_BLP = "blp:base_triumph_ring";
+// The triumph-card chrome BLPs (corner adornment, top filigrees, attribute
+// ring) now live in screen-demographics.css as background-image url(...)
+// declarations on the demographics-triumph-* classes.
 
 /**
  * Append one rotated corner adornment to a triumph card.
  * @param {HTMLElement} card The card element.
  * @param {string} rotate The CSS rotation (e.g. "180deg").
- * @param {string} position The CSS position fragment.
+ * @param {[string, string]} vEdge The vertical edge offset (e.g. ["top", "0.5rem"]).
+ * @param {[string, string]} hEdge The horizontal edge offset (e.g. ["left", "0.4rem"]).
  * @returns {void}
  */
-function addCardCorner(card, rotate, position) {
+function addCardCorner(card, rotate, vEdge, hEdge) {
   const c = document.createElement("div");
-  c.style.cssText = [
-    "position:absolute",
-    "width:1.5rem",
-    "height:1.5rem",
-    "background-image:url('" + TRIUMPH_CARD_CORNER_BLP + "')",
-    "background-size:contain",
-    "background-repeat:no-repeat",
-    "background-position:center",
-    "transform:rotate(" + rotate + ")",
-    position
-  ].join(";");
+  c.className = "demographics-triumph-corner";
+  c.style.setProperty("--corner-rotate", rotate);
+  c.style.setProperty(vEdge[0], vEdge[1]);
+  c.style.setProperty(hEdge[0], hEdge[1]);
   card.appendChild(c);
 }
 
@@ -399,10 +392,10 @@ function addCardCorner(card, rotate, position) {
  * @returns {void}
  */
 function addCardCorners(card) {
-  addCardCorner(card, "180deg", "top:0.5rem;left:0.4rem");
-  addCardCorner(card, "-90deg", "top:0.5rem;right:0.4rem");
-  addCardCorner(card, "90deg", "bottom:0.4rem;left:0.4rem");
-  addCardCorner(card, "0deg", "bottom:0.4rem;right:0.4rem");
+  addCardCorner(card, "180deg", ["top", "0.5rem"], ["left", "0.4rem"]);
+  addCardCorner(card, "-90deg", ["top", "0.5rem"], ["right", "0.4rem"]);
+  addCardCorner(card, "90deg", ["bottom", "0.4rem"], ["left", "0.4rem"]);
+  addCardCorner(card, "0deg", ["bottom", "0.4rem"], ["right", "0.4rem"]);
 }
 
 /**
@@ -413,23 +406,12 @@ function addCardCorners(card) {
  */
 function addCardFiligree(card, a) {
   const filigreeRow = document.createElement("div");
-  filigreeRow.style.cssText =
-    "position:absolute;top:0;left:0;right:0;height:2.5rem;pointer-events:none;";
+  filigreeRow.className = "demographics-triumph-filigree-row";
   if (a.color) filigreeRow.style.background = a.color + "22"; // very subtle tint
   const filL = document.createElement("div");
-  filL.style.cssText =
-    "position:absolute;width:7rem;height:2.5rem;left:1rem;top:-0.2rem;" +
-    "background-image:url('" +
-    TRIUMPH_CARD_FILIGREE_L +
-    "');background-size:contain;" +
-    "background-repeat:no-repeat;background-position:center;opacity:0.4;";
+  filL.className = "demographics-triumph-filigree demographics-triumph-filigree-left";
   const filR = document.createElement("div");
-  filR.style.cssText =
-    "position:absolute;width:7rem;height:2.5rem;right:1rem;top:-0.2rem;" +
-    "background-image:url('" +
-    TRIUMPH_CARD_FILIGREE_R +
-    "');background-size:contain;" +
-    "background-repeat:no-repeat;background-position:center;opacity:0.4;";
+  filR.className = "demographics-triumph-filigree demographics-triumph-filigree-right";
   filigreeRow.appendChild(filL);
   filigreeRow.appendChild(filR);
   card.appendChild(filigreeRow);
@@ -444,38 +426,11 @@ function addCardFiligree(card, a) {
  */
 function addCardRing(card, a, isTriggered) {
   const ringWrap = document.createElement("div");
-  ringWrap.style.cssText = [
-    "position:absolute",
-    "top:-1.6rem",
-    "left:50%",
-    "transform:translateX(-50%)",
-    "width:4.4rem",
-    "height:4.4rem",
-    "background-image:url('" + TRIUMPH_CARD_RING_BLP + "')",
-    "background-size:contain",
-    "background-repeat:no-repeat",
-    "background-position:center",
-    "display:flex",
-    "align-items:center",
-    "justify-content:center",
-    "pointer-events:none"
-  ].join(";");
+  ringWrap.className = "demographics-triumph-ring";
   const ringInner = document.createElement("div");
-  ringInner.style.cssText = [
-    "width:2.8rem",
-    "height:2.8rem",
-    "border-radius:50%",
-    "background:" + a.color,
-    "border:2px solid #e5d2ac",
-    "display:flex",
-    "align-items:center",
-    "justify-content:center",
-    "color:#ffffff",
-    "font-family:TitleFont, BodyFont, sans-serif",
-    "font-size:1.2rem",
-    "font-weight:800",
-    "box-shadow:0 0 0.5rem rgba(0,0,0,0.6)"
-  ].join(";");
+  ringInner.className = "demographics-triumph-ring-inner";
+  ringInner.style.background = a.color;
+  ringInner.style.color = "#ffffff";
   ringInner.textContent = a.label.charAt(0);
   if (isTriggered) {
     ringInner.textContent = "✓";
@@ -494,19 +449,7 @@ function addCardRing(card, a, isTriggered) {
  */
 function addCardName(card, row) {
   const name = document.createElement("div");
-  name.style.cssText = [
-    "margin-top:2.6rem",
-    "color:#e5d2ac",
-    "font-family:TitleFont, BodyFont, sans-serif",
-    "font-size:1rem",
-    "font-weight:800",
-    "text-transform:uppercase",
-    "letter-spacing:0.08em",
-    "text-align:center",
-    "text-shadow:0 0 0.3rem rgba(0,0,0,0.7)",
-    "line-height:1.2",
-    "padding:0 0.4rem"
-  ].join(";");
+  name.className = "demographics-triumph-name";
   name.textContent = localizeText(row.Name) || row.LegacyType || "Triumph";
   card.appendChild(name);
 }
@@ -520,27 +463,15 @@ function addCardName(card, row) {
  */
 function addCardPill(card, a, isMajor) {
   const pillRow = document.createElement("div");
-  pillRow.style.cssText =
-    "display:flex;align-items:center;justify-content:center;margin-top:0.4rem;gap:0.4rem;width:100%;";
+  pillRow.className = "demographics-triumph-pill-row";
   const divL = document.createElement("div");
-  divL.style.cssText =
-    "flex:0 0 3.5rem;height:1px;background:linear-gradient(to right, rgba(81,78,84,0), rgba(81,78,84,0.9));";
+  divL.className = "demographics-triumph-pill-divider demographics-triumph-pill-divider-left";
   const pill = document.createElement("div");
-  pill.className = "dedication-pill";
-  pill.style.cssText = [
-    "padding:0.05rem 0.6rem",
-    "font-family:TitleFont, BodyFont, sans-serif",
-    "font-size:0.72rem",
-    "color:" + (isMajor ? a.color : "#85878c"),
-    "text-transform:uppercase",
-    "letter-spacing:0.12em",
-    "font-weight:700",
-    "white-space:nowrap"
-  ].join(";");
+  pill.className = "dedication-pill demographics-triumph-pill";
+  pill.style.color = isMajor ? a.color : "#85878c";
   pill.textContent = isMajor ? "Commemorative · " + a.label : "Instant · " + a.label;
   const divR = document.createElement("div");
-  divR.style.cssText =
-    "flex:0 0 3.5rem;height:1px;background:linear-gradient(to left, rgba(81,78,84,0), rgba(81,78,84,0.9));";
+  divR.className = "demographics-triumph-pill-divider demographics-triumph-pill-divider-right";
   pillRow.appendChild(divL);
   pillRow.appendChild(pill);
   pillRow.appendChild(divR);
@@ -556,32 +487,16 @@ function addCardPill(card, a, isMajor) {
 function addCardRequirementsAndReward(card, row) {
   if (row.TriggerDescription) {
     const req = document.createElement("div");
-    req.style.cssText = [
-      "margin-top:0.6rem",
-      "font-size:0.78rem",
-      "color:#c2c4cc",
-      "text-align:center",
-      "line-height:1.3",
-      "padding:0 0.3rem",
-      "font-style:italic"
-    ].join(";");
+    req.className = "demographics-triumph-req";
     req.textContent = localizeText(row.TriggerDescription);
     card.appendChild(req);
   }
   const rewardText = row.Description || row.RewardDescription || null;
   if (rewardText) {
     const rwd = document.createElement("div");
-    rwd.style.cssText = [
-      "margin-top:0.45rem",
-      "font-size:0.78rem",
-      "color:#c2c4cc",
-      "text-align:center",
-      "line-height:1.3",
-      "padding:0 0.3rem"
-    ].join(";");
+    rwd.className = "demographics-triumph-reward";
     const rwdLabel = document.createElement("span");
-    rwdLabel.style.cssText =
-      "color:#e5d2ac;font-family:TitleFont, BodyFont, sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;";
+    rwdLabel.className = "demographics-triumph-reward-label";
     rwdLabel.textContent = "Reward: ";
     rwd.appendChild(rwdLabel);
     const rwdBody = document.createElement("span");
@@ -601,16 +516,7 @@ function addCardRequirementsAndReward(card, row) {
 function addCardTrophy(card, rd, history) {
   if (rd.winner === -1) return;
   const trophy = document.createElement("div");
-  trophy.style.cssText = [
-    "margin-top:0.55rem",
-    "color:#f3c34c",
-    "font-family:TitleFont, BodyFont, sans-serif",
-    "font-size:0.82rem",
-    "font-weight:700",
-    "text-transform:uppercase",
-    "letter-spacing:0.08em",
-    "text-align:center"
-  ].join(";");
+  trophy.className = "demographics-triumph-trophy";
   trophy.textContent = "🏆 " + civDisplayName(history, rd.winner);
   card.appendChild(trophy);
 }
@@ -627,18 +533,17 @@ function addCardTrophy(card, rd, history) {
 function addCardProgressBars(card, rd, a, history) {
   // Spacer that pushes the bars to the bottom of the card.
   const spacer = document.createElement("div");
-  spacer.style.flex = "1 1 auto";
-  spacer.style.minHeight = "0.6rem";
+  spacer.className = "demographics-triumph-spacer";
   card.appendChild(spacer);
 
   // Small per-civ progress bars — ONLY for civs with current > 0 (winner
   // included). This is the user-requested addition.
   const active = rd.civs.filter((c) => c.current > 0 || c.pid === rd.winner);
   const barsBox = document.createElement("div");
-  barsBox.style.cssText = "width:100%;display:flex;flex-direction:column;gap:0.18rem;";
+  barsBox.className = "demographics-triumph-bars-box";
   if (active.length === 0) {
     const noneMsg = document.createElement("div");
-    noneMsg.style.cssText = "font-size:0.72rem;color:#85878c;font-style:italic;text-align:center;";
+    noneMsg.className = "demographics-triumph-bars-none";
     noneMsg.textContent = "No progress yet.";
     barsBox.appendChild(noneMsg);
   } else {
@@ -660,17 +565,13 @@ function addCardProgressBars(card, rd, a, history) {
 function buildCivProgressRow(c, rd, a, history) {
   const isWinner = c.pid === rd.winner;
   const row = document.createElement("div");
-  row.style.cssText =
-    "display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(2.4rem,auto);gap:0.4rem;align-items:center;";
+  row.className = "demographics-triumph-civ-row";
   row.appendChild(buildCivProgressNameCell(c, isWinner, history));
   row.appendChild(buildCivProgressBar(c, rd, a));
   const num = document.createElement("div");
-  num.style.cssText =
-    "font-family:monospace, ui-monospace;font-size:0.7rem;color:" +
-    (isWinner ? "#f3c34c" : "#c2c4cc") +
-    ";text-align:right;font-weight:" +
-    (c.triggered ? "700" : "500") +
-    ";";
+  num.className = "demographics-triumph-civ-count";
+  num.style.color = isWinner ? "#f3c34c" : "#c2c4cc";
+  num.style.fontWeight = c.triggered ? "700" : "500";
   num.textContent = c.current + "/" + rd.total + (c.triggered ? " ✓" : "");
   row.appendChild(num);
   return row;
@@ -685,20 +586,15 @@ function buildCivProgressRow(c, rd, a, history) {
  */
 function buildCivProgressNameCell(c, isWinner, history) {
   const nameCell = document.createElement("div");
-  nameCell.style.cssText = "display:flex;align-items:center;gap:0.3rem;min-width:0;";
+  nameCell.className = "demographics-triumph-civ-name-cell";
   const dot = document.createElement("span");
-  dot.style.cssText =
-    "width:0.45rem;height:0.45rem;border-radius:50%;flex-shrink:0;background:" +
-    civColor(history, c.pid) +
-    ";";
+  dot.className = "demographics-triumph-civ-dot";
+  dot.style.background = civColor(history, c.pid);
   nameCell.appendChild(dot);
   const nm = document.createElement("span");
-  nm.style.cssText =
-    "font-size:0.72rem;color:" +
-    (isWinner ? "#f3c34c" : "#e5d2ac") +
-    ";font-weight:" +
-    (isWinner ? "700" : "500") +
-    ";overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;";
+  nm.className = "demographics-triumph-civ-name";
+  nm.style.color = isWinner ? "#f3c34c" : "#e5d2ac";
+  nm.style.fontWeight = isWinner ? "700" : "500";
   nm.textContent = civDisplayName(history, c.pid);
   nameCell.appendChild(nm);
   return nameCell;
@@ -713,19 +609,14 @@ function buildCivProgressNameCell(c, isWinner, history) {
  */
 function buildCivProgressBar(c, rd, a) {
   const bar = document.createElement("div");
-  bar.style.cssText =
-    "position:relative;height:0.3rem;background:rgba(20,16,10,0.7);border:1px solid rgba(168,132,90,0.4);border-radius:0.1rem;overflow:hidden;";
+  bar.className = "demographics-triumph-bar";
   if (rd.total > 0 && c.current > 0) {
     const fill = document.createElement("div");
     const pct = Math.min(100, (c.current / rd.total) * 100);
-    fill.style.cssText =
-      "position:absolute;left:0;top:0;bottom:0;width:" +
-      pct +
-      "%;background:" +
-      (c.triggered ? "#f3c34c" : a.color) +
-      ";opacity:" +
-      (c.triggered ? "0.95" : "0.85") +
-      ";";
+    fill.className = "demographics-triumph-bar-fill";
+    fill.style.setProperty("--fill", pct + "%");
+    fill.style.background = c.triggered ? "#f3c34c" : a.color;
+    fill.style.opacity = c.triggered ? "0.95" : "0.85";
     bar.appendChild(fill);
   }
   return bar;
@@ -744,17 +635,7 @@ function buildTriumphCard(rd, history) {
   const isTriggered = rd.civs.some((c) => c.triggered);
 
   const card = document.createElement("div");
-  card.className = "ornate-card-bg triumph-card";
-  card.style.cssText = [
-    "position:relative",
-    "width:22rem",
-    "min-height:24rem",
-    "padding:1.5rem 1rem 1rem",
-    "display:flex",
-    "flex-direction:column",
-    "align-items:center",
-    "pointer-events:auto"
-  ].join(";");
+  card.className = "ornate-card-bg triumph-card demographics-triumph-card";
 
   addCardCorners(card);
   addCardFiligree(card, a);
@@ -818,11 +699,7 @@ export function renderTriumphRace(host, options) {
   // requirements) PLUS small per-civ progress bars. Laid out as a wrapping
   // flex grid like the native triumphs tab.
   const grid = document.createElement("div");
-  grid.style.display = "flex";
-  grid.style.flexWrap = "wrap";
-  grid.style.gap = "1.2rem 1rem";
-  grid.style.justifyContent = "center";
-  grid.style.padding = "0.5rem 0.3rem";
+  grid.className = "demographics-triumph-grid";
   for (const rd of raceData) {
     grid.appendChild(buildTriumphCard(rd, opts.history));
   }
@@ -934,9 +811,7 @@ function computeCivCompletions(majors, age) {
  */
 function buildCompletionHeader(age) {
   const header = document.createElement("div");
-  header.style.fontSize = "0.85rem";
-  header.style.color = "#c9b88c";
-  header.style.marginBottom = "0.5rem";
+  header.className = "demographics-triumph-completion-header";
   header.textContent =
     "Current age: " +
     (age || "unknown") +
@@ -952,25 +827,15 @@ function buildCompletionHeader(age) {
  */
 function buildAttrSectionHead(a, tot) {
   const sectionHead = document.createElement("div");
-  sectionHead.style.display = "flex";
-  sectionHead.style.alignItems = "baseline";
-  sectionHead.style.justifyContent = "space-between";
-  sectionHead.style.marginBottom = "0.5rem";
+  sectionHead.className = "demographics-triumph-section-head";
   const sectionTitle = document.createElement("div");
   // Engine fxs-header style: TitleFont uppercase tracking-150 in path color.
+  sectionTitle.className = "demographics-triumph-section-title";
   sectionTitle.style.color = a.color;
-  sectionTitle.style.fontFamily = "TitleFont, BodyFont, sans-serif";
-  sectionTitle.style.fontSize = "1.1rem";
-  sectionTitle.style.fontWeight = "800";
-  sectionTitle.style.textTransform = "uppercase";
-  sectionTitle.style.letterSpacing = "0.15em";
-  sectionTitle.style.textShadow = "0 0 0.3rem rgba(0,0,0,0.6)";
   sectionTitle.textContent = a.label;
   sectionHead.appendChild(sectionTitle);
   const sectionCount = document.createElement("div");
-  sectionCount.style.fontSize = "0.78rem";
-  sectionCount.style.color = "#c9b88c";
-  sectionCount.style.fontFamily = "monospace, ui-monospace";
+  sectionCount.className = "demographics-triumph-section-count";
   sectionCount.textContent = tot + " triumph" + (tot === 1 ? "" : "s") + " available";
   sectionHead.appendChild(sectionCount);
   return sectionHead;
@@ -984,22 +849,13 @@ function buildAttrSectionHead(a, tot) {
  */
 function buildCompletionNameCell(pid, history) {
   const nameCell = document.createElement("div");
-  nameCell.style.display = "flex";
-  nameCell.style.alignItems = "center";
-  nameCell.style.gap = "0.4rem";
+  nameCell.className = "demographics-triumph-completion-name-cell";
   const dot = document.createElement("span");
-  dot.style.width = "0.6rem";
-  dot.style.height = "0.6rem";
-  dot.style.borderRadius = "50%";
+  dot.className = "demographics-triumph-completion-dot";
   dot.style.background = civColor(history, pid);
-  dot.style.flexShrink = "0";
   nameCell.appendChild(dot);
   const nm = document.createElement("span");
-  nm.style.color = "#f3e7c4";
-  nm.style.fontSize = "0.85rem";
-  nm.style.overflow = "hidden";
-  nm.style.textOverflow = "ellipsis";
-  nm.style.whiteSpace = "nowrap";
+  nm.className = "demographics-triumph-completion-name";
   nm.textContent = civDisplayName(history, pid);
   nameCell.appendChild(nm);
   return nameCell;
@@ -1014,30 +870,17 @@ function buildCompletionNameCell(pid, history) {
  */
 function buildCompletionBar(a, tot, got) {
   const barWrap = document.createElement("div");
-  barWrap.style.position = "relative";
-  barWrap.style.height = "1.1rem";
-  barWrap.style.display = "flex";
-  barWrap.style.alignItems = "center";
+  barWrap.className = "demographics-triumph-completion-bar-wrap";
   // Track behind the pips.
   const track = document.createElement("div");
-  track.style.position = "absolute";
-  track.style.left = "0";
-  track.style.right = "0";
-  track.style.height = "0.32rem";
-  track.style.background = "rgba(20, 16, 10, 0.7)";
-  track.style.border = "1px solid rgba(201, 162, 76, 0.25)";
-  track.style.borderRadius = "0.15rem";
+  track.className = "demographics-triumph-completion-track";
   barWrap.appendChild(track);
   // Filled portion of the track up to the triggered count.
   if (tot > 0 && got > 0) {
     const fill = document.createElement("div");
-    fill.style.position = "absolute";
-    fill.style.left = "0";
-    fill.style.height = "0.32rem";
-    fill.style.width = (got / tot) * 100 + "%";
+    fill.className = "demographics-triumph-completion-fill";
+    fill.style.setProperty("--fill", (got / tot) * 100 + "%");
     fill.style.background = a.color;
-    fill.style.opacity = "0.85";
-    fill.style.borderRadius = "0.15rem";
     barWrap.appendChild(fill);
   }
   barWrap.appendChild(buildCompletionPips(a, tot, got));
@@ -1053,21 +896,11 @@ function buildCompletionBar(a, tot, got) {
  */
 function buildCompletionPips(a, tot, got) {
   const pipRow = document.createElement("div");
-  pipRow.style.position = "relative";
-  pipRow.style.width = "100%";
-  pipRow.style.display = "flex";
-  pipRow.style.justifyContent = "space-between";
-  pipRow.style.alignItems = "center";
-  // Pad ends slightly so first/last pips don't get clipped.
-  pipRow.style.padding = "0 0.18rem";
-  pipRow.style.boxSizing = "border-box";
+  pipRow.className = "demographics-triumph-completion-pip-row";
   const pipCount = Math.max(1, tot);
   for (let i = 0; i < pipCount; i++) {
     const pip = document.createElement("div");
-    pip.style.width = "0.72rem";
-    pip.style.height = "0.72rem";
-    pip.style.borderRadius = "50%";
-    pip.style.flexShrink = "0";
+    pip.className = "demographics-triumph-pip";
     if (i < got) {
       pip.style.background = a.color;
       pip.style.border = "2px solid #f3c34c";
@@ -1091,17 +924,12 @@ function buildCompletionPips(a, tot, got) {
  */
 function buildCompletionRow(cr, a, tot, history) {
   const row = document.createElement("div");
-  row.style.display = "grid";
-  row.style.gridTemplateColumns = "minmax(10rem, 14rem) 1fr minmax(3rem, auto)";
-  row.style.gap = "0.6rem";
-  row.style.alignItems = "center";
+  row.className = "demographics-triumph-completion-row";
   row.appendChild(buildCompletionNameCell(cr.pid, history));
   row.appendChild(buildCompletionBar(a, tot, cr.got));
   const num = document.createElement("div");
-  num.style.fontFamily = "monospace, ui-monospace";
-  num.style.fontSize = "0.8rem";
+  num.className = "demographics-triumph-completion-count";
   num.style.color = cr.got > 0 ? "#f3c34c" : "#9a8c5c";
-  num.style.textAlign = "right";
   num.style.fontWeight = cr.got === tot && tot > 0 ? "700" : "500";
   num.textContent = cr.got + "/" + tot;
   row.appendChild(num);
@@ -1119,20 +947,15 @@ function buildCompletionRow(cr, a, tot, history) {
 function buildAttrSection(a, totals, civRows, history) {
   const tot = totals[a.key] || 0;
   const section = document.createElement("div");
-  section.style.background = "rgba(20, 16, 10, 0.55)";
-  section.style.border = "1px solid rgba(201, 162, 76, 0.25)";
-  section.style.borderTop = "0.18rem solid " + a.color;
-  section.style.borderRadius = "0.2rem";
-  section.style.padding = "0.55rem 0.8rem 0.7rem";
+  section.className = "demographics-triumph-section";
+  section.style.borderTopColor = a.color;
   section.appendChild(buildAttrSectionHead(a, tot));
   // Per-civ rows, sorted by progress in THIS attribute (desc).
   const rowsForAttr = civRows
     .map((cr) => ({ pid: cr.pid, got: cr.counts[a.key] || 0 }))
     .sort((x, y) => y.got - x.got);
   const rowsContainer = document.createElement("div");
-  rowsContainer.style.display = "flex";
-  rowsContainer.style.flexDirection = "column";
-  rowsContainer.style.gap = "0.3rem";
+  rowsContainer.className = "demographics-triumph-section-rows";
   for (const cr of rowsForAttr) {
     rowsContainer.appendChild(buildCompletionRow(cr, a, tot, history));
   }
@@ -1172,9 +995,7 @@ export function renderTriumphCompletion(host, options) {
   // Each civ gets a pipped progress bar — one pip per legacy in that path,
   // filled-gold for triggered and hollow for not.
   const stack = document.createElement("div");
-  stack.style.display = "flex";
-  stack.style.flexDirection = "column";
-  stack.style.gap = "0.9rem";
+  stack.className = "demographics-triumph-completion-stack";
   for (const a of TRIUMPH_ATTR_META) {
     stack.appendChild(buildAttrSection(a, totals, civRows, opts.history));
   }
