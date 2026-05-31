@@ -745,23 +745,11 @@ function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W
     const displayName = nameOverride.get(war) || war.name;
     const label = displayName + "  ·  " + yrs + " yr" + (yrs === 1 ? "" : "s");
     const div = document.createElement("div");
-    div.className = "demographics-chart-war-label";
-    div.style.position = "absolute";
+    div.className = "demographics-chart-war-label demographics-wars-label";
+    // Per-bar geometry stays dynamic (pixel-derived percentages).
     div.style.left = (x / W) * 100 + "%";
     div.style.top = ((y + h / 2) / H) * 100 + "%";
     div.style.width = (w / W) * 100 + "%";
-    // The label sits inside the bar; translate so it's vertically centered.
-    div.style.transform = "translateY(-50%)";
-    div.style.padding = "0 0.5rem";
-    div.style.color = "#f7ecc8";
-    div.style.textShadow = "0 0 0.2rem rgba(0,0,0,0.95), 0 0 0.4rem rgba(0,0,0,0.7)";
-    div.style.whiteSpace = "nowrap";
-    div.style.overflow = "hidden";
-    div.style.textOverflow = "ellipsis";
-    div.style.pointerEvents = "none";
-    div.style.fontWeight = "600";
-    div.style.fontSize = "0.85rem";
-    div.style.lineHeight = "1";
     div.textContent = label;
     wrap.appendChild(div);
   });
@@ -779,11 +767,10 @@ function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W
 function mountGanttXTicks(wrap, tickPositions, L, W, H) {
   tickPositions.forEach((tick) => {
     const div = document.createElement("div");
-    div.className = "demographics-chart-x-tick";
-    div.style.position = "absolute";
+    div.className = "demographics-chart-x-tick demographics-wars-x-tick";
+    // Per-tick position stays dynamic (pixel-derived percentages).
     div.style.left = (tick.x / W) * 100 + "%";
     div.style.top = ((L.padT + L.innerH + 8) / H) * 100 + "%";
-    div.style.transform = "translateX(-50%)";
     if (getXAxisMode() !== "turn" && tick.year) {
       const yr = document.createElement("div");
       yr.className = "demographics-chart-x-tick-year";
@@ -811,19 +798,18 @@ function mountGanttXTicks(wrap, tickPositions, L, W, H) {
  */
 function mountGanttAxisTitles(wrap, L, W, H) {
   const xTitle = document.createElement("div");
-  xTitle.className = "demographics-chart-axis-title demographics-chart-axis-x";
-  xTitle.style.position = "absolute";
+  xTitle.className =
+    "demographics-chart-axis-title demographics-chart-axis-x demographics-wars-axis-title demographics-wars-axis-x";
+  // Per-axis position stays dynamic (pixel-derived percentages).
   xTitle.style.left = ((L.padL + L.innerW / 2) / W) * 100 + "%";
   xTitle.style.top = ((H - 4) / H) * 100 + "%";
-  xTitle.style.transform = "translate(-50%, -100%)";
   xTitle.textContent = "Time (turn / year)";
   wrap.appendChild(xTitle);
   const yTitle = document.createElement("div");
-  yTitle.className = "demographics-chart-axis-title demographics-chart-axis-y";
-  yTitle.style.position = "absolute";
+  yTitle.className =
+    "demographics-chart-axis-title demographics-chart-axis-y demographics-wars-axis-title demographics-wars-axis-y";
   yTitle.style.left = (12 / W) * 100 + "%";
   yTitle.style.top = ((L.padT + L.innerH / 2) / H) * 100 + "%";
-  yTitle.style.transform = "translate(-50%, -50%) rotate(-90deg)";
   yTitle.textContent = "Conflicts (one bar per war)";
   wrap.appendChild(yTitle);
 }
@@ -1013,16 +999,13 @@ function renderWarTooltip(tooltip, w, ctx) {
   const t = buildWarTooltipBody(w, ctx);
   while (tooltip.firstChild) tooltip.removeChild(tooltip.firstChild);
   const head = document.createElement("div");
-  head.style.fontWeight = "700";
-  head.style.color = "#f3c34c";
-  head.style.marginBottom = "0.25rem";
+  head.className = "demographics-wars-tooltip-head";
   head.textContent = t.title + "  [" + t.status + "]";
   tooltip.appendChild(head);
   appendTooltipSection(tooltip, "Attackers:", t.sideA);
   appendTooltipSection(tooltip, "Defenders:", t.sideB);
   const meta = document.createElement("div");
-  meta.style.marginTop = "0.4rem";
-  meta.style.opacity = "0.9";
+  meta.className = "demographics-wars-tooltip-meta";
   meta.innerHTML =
     "Declared by: " +
     t.declared +
@@ -1081,8 +1064,7 @@ function formatSideCost(c) {
  */
 function appendWarCost(tooltip, cost, labels) {
   const block = document.createElement("div");
-  block.style.marginTop = "0.4rem";
-  block.style.opacity = "0.9";
+  block.className = "demographics-wars-tooltip-cost";
   block.innerHTML =
     'Cost during war <span style="opacity:0.65;">(observed change)</span>:' +
     "<br>" +
@@ -1105,14 +1087,12 @@ function appendWarCost(tooltip, cost, labels) {
  */
 function appendTooltipSection(tooltip, label, lines) {
   const h = document.createElement("div");
-  h.style.fontWeight = "600";
-  h.style.opacity = "0.85";
-  h.style.marginTop = "0.25rem";
+  h.className = "demographics-wars-tooltip-section-label";
   h.textContent = label;
   tooltip.appendChild(h);
   lines.forEach((l) => {
     const r = document.createElement("div");
-    r.style.paddingLeft = "0.7rem";
+    r.className = "demographics-wars-tooltip-section-line";
     r.textContent = "• " + l;
     tooltip.appendChild(r);
   });
@@ -1124,22 +1104,10 @@ function appendTooltipSection(tooltip, label, lines) {
  */
 function createGanttTooltip() {
   const tooltip = document.createElement("div");
-  tooltip.className = "demographics-chart-hover-tooltip";
+  tooltip.className = "demographics-chart-hover-tooltip demographics-wars-tooltip";
+  // Hidden until a bar is hovered — visibility is toggled live by the hover
+  // wiring, so it stays inline.
   tooltip.style.display = "none";
-  tooltip.style.position = "absolute";
-  tooltip.style.zIndex = "20";
-  tooltip.style.minWidth = "16rem";
-  tooltip.style.maxWidth = "26rem";
-  tooltip.style.padding = "0.55rem 0.75rem";
-  tooltip.style.background = "rgba(12, 9, 6, 0.96)";
-  tooltip.style.border = "1px solid rgba(243, 195, 76, 0.6)";
-  tooltip.style.borderRadius = "0.2rem";
-  tooltip.style.color = "#f3e7c4";
-  tooltip.style.fontFamily = "TitilliumWeb, sans-serif";
-  tooltip.style.fontSize = "0.85rem";
-  tooltip.style.lineHeight = "1.35";
-  tooltip.style.pointerEvents = "none";
-  tooltip.style.boxShadow = "0 0.2rem 0.6rem rgba(0,0,0,0.7)";
   return tooltip;
 }
 
@@ -1329,8 +1297,7 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
 function mountGanttWrap(svg, env) {
   const { filtered, barRects, tickPositions, L, turnYearMap, latestTurn, samples, W, H } = env;
   const wrap = document.createElement("div");
-  wrap.className = "demographics-chart-wrap";
-  wrap.style.position = "relative";
+  wrap.className = "demographics-chart-wrap demographics-wars-wrap";
   wrap.appendChild(svg);
 
   mountGanttXTicks(wrap, tickPositions, L, W, H);

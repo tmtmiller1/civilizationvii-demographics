@@ -1513,3 +1513,86 @@
     border-radius: 50%;
     flex-shrink: 0;
 }
+
+/* ── Wars Gantt (conflicts timeline) — static chrome migrated from
+   chart-wars-gantt.js inline styles. Per-bar geometry, x-tick / axis-title
+   positions, and the tooltip's hover visibility stay inline (dynamic);
+   everything below is the static layout/typography. ───────────────────────── */
+
+/* Gantt wrap — the absolutely-positioned overlay anchor. */
+.demographics-wars-wrap {
+    position: relative;
+}
+
+/* In-bar war label. left/top/width are per-bar geometry, set inline. */
+.demographics-wars-label {
+    position: absolute;
+    /* The label sits inside the bar; translate so it's vertically centered. */
+    transform: translateY(-50%);
+    padding: 0 0.5rem;
+    color: #f7ecc8;
+    text-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.95), 0 0 0.4rem rgba(0, 0, 0, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+/* X-axis tick overlay. left/top are per-tick geometry, set inline. */
+.demographics-wars-x-tick {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+/* Axis titles. left/top are per-axis geometry, set inline. */
+.demographics-wars-axis-title {
+    position: absolute;
+}
+.demographics-wars-axis-x {
+    transform: translate(-50%, -100%);
+}
+.demographics-wars-axis-y {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* Hover tooltip chrome. display (hidden/shown) + left/top stay inline. */
+.demographics-wars-tooltip {
+    position: absolute;
+    z-index: 20;
+    min-width: 16rem;
+    max-width: 26rem;
+    padding: 0.55rem 0.75rem;
+    background: rgba(12, 9, 6, 0.96);
+    border: 1px solid rgba(243, 195, 76, 0.6);
+    border-radius: 0.2rem;
+    color: #f3e7c4;
+    font-family: TitilliumWeb, sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    pointer-events: none;
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.7);
+}
+.demographics-wars-tooltip-head {
+    font-weight: 700;
+    color: #f3c34c;
+    margin-bottom: 0.25rem;
+}
+.demographics-wars-tooltip-meta {
+    margin-top: 0.4rem;
+    opacity: 0.9;
+}
+.demographics-wars-tooltip-cost {
+    margin-top: 0.4rem;
+    opacity: 0.9;
+}
+.demographics-wars-tooltip-section-label {
+    font-weight: 600;
+    opacity: 0.85;
+    margin-top: 0.25rem;
+}
+.demographics-wars-tooltip-section-line {
+    padding-left: 0.7rem;
+}
