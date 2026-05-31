@@ -1,1 +1,60 @@
-(file moved from root demographics/)
+pool,kind,arc_id,stage,template,name,keep
+ANTIQUITY_CRISIS_INVASION,name,,,The Bronze Age Collapse,The Bronze Age Collapse,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Great Migration,The Great Migration,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Age of Migrations,The Age of Migrations,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Sea Peoples,The Coming of the Sea Peoples,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Invasions,The Barbarian Invasions,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Wars,The Barbarian Wars,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Great Horde,The Great Horde,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Horse Lords,The Coming of the Horse Lords,1
+ANTIQUITY_CRISIS_INVASION,name,,,The March of Strangers,The March of Strangers,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Devastation,The Years of Devastation,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Turmoil,The Years of Turmoil,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Collapse,The Frontier Collapse,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Crisis of the Frontier,The Crisis of the Frontier,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Wars,The Frontier Wars,1
+ANTIQUITY_CRISIS_INVASION,name,,,The {regional} Invasions,The Northern Invasions,1
+ANTIQUITY_CRISIS_INVASION,name,,,The {regional} Invasions,The Eastern Invasions,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},The Storm from the Frontier,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},The Storm from the Provinces,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},The Storm from the Steppe,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},The Storm from the Coast,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},The Storm from the Heartland,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},The Sack of the Frontier,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},The Sack of the Provinces,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},The Sack of the Steppe,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},The Sack of the Coast,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},The Sack of the Heartland,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,The Border Raids,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,The Barbarian Invasions,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,The Sack of the Frontier,1
+ANTIQUITY_CRISIS_INVASION,arc,arc1,4,,The Great Migration,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,1,,The Coming of the Horse Lords,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,2,,The Storm from the Steppe,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,3,,The Fall of the Frontier,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,The Years of Devastation,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,The Frontier Wars,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,The Barbarian Wars,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,The Sack of the Provinces,1
+ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,The Bronze Age Collapse,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Antonine Plague,The Antonine Plague,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,The Plague of Galen,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,The Great Pestilence,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,The Great Mortality,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,The Great Fever,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,The Great Dying,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,The Plague Years,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,The Dying Time,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,The Time of Pestilence,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Years of Mortality,The Years of Mortality,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Years of Ashes,The Years of Ashes,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Sweating Sickness,The Sweating Sickness,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Wasting Plague,The Wasting Plague,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Summer Plague,The Summer Plague,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Winter Sickness,The Winter Sickness,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Silent Death,The Silent Death,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,The Black Death,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,The Red Death,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,The Grey Death,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,The Ashen Death,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},The Plague of the Frontier,1

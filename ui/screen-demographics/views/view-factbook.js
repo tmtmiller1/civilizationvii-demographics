@@ -14,7 +14,7 @@
 // hence flex.
 
 import { METRICS } from "/demographics/ui/demographics-metrics.js";
-import { safePlaySound, playActivate } from "/demographics/ui/demographics-audio.js";
+import { safePlaySound } from "/demographics/ui/demographics-audio.js";
 
 /**
  * A civ "profile": the latest non-empty value of each identity field folded
@@ -335,10 +335,10 @@ function buildCivHeaderText(text, profile, maskAsUnmet) {
  * @param {CivProfile} profile Source civ profile.
  * @param {boolean} isLocal Whether this is the local player's column.
  * @param {boolean} maskAsUnmet When true, mask names as generic placeholders.
- * @param {HeaderOpts} [opts] Click affordance options (unused here).
+ * @param {HeaderOpts} [_opts] Click affordance options (unused here).
  * @returns {HTMLElement} The civ-header element.
  */
-function buildCivHeader(profile, isLocal, maskAsUnmet, opts) {
+function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   const wrap = document.createElement("div");
   wrap.className = "demographics-factbook-cell demographics-factbook-civ-header";
   if (isLocal) wrap.classList.add("is-local");
@@ -591,10 +591,10 @@ function buildHint() {
  * remaining space (per the CSS `.demographics-factbook-col { flex: 1 0 9rem }`).
  * @param {CivProfile} profile This civ's profile.
  * @param {boolean} maskAsUnmet When true, show the generic unmet placeholder.
- * @param {HeaderOpts} [opts] Click affordance options (unused here).
+ * @param {HeaderOpts} [_opts] Click affordance options (unused here).
  * @returns {HTMLElement} The ghost-column element.
  */
-function buildGhostCivColumn(profile, maskAsUnmet, opts) {
+function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
   const col = document.createElement("div");
   col.className = "demographics-factbook-col demographics-factbook-col-civ is-hidden";
 

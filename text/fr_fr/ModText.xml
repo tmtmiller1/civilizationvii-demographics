@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <FrenchText>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_NAME">
+            <Text>Démographie</Text>
+        </Row>
+        <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
+            <Text>Graphiques historiques par tour, annuaire mondial, anneaux de relations mondiales, diagramme de Gantt des conflits et barres de progression Triumphs natives pour chaque civilisation rencontrée.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPEN">
+            <Text>Démographie</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TITLE">
+            <Text>Démographie</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SUBTITLE">
+            <Text>Score au fil du temps</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
+            <Text>Historique en direct du collecteur.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
+            <Text>Fermer</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BODY">
+            <Text>Bonjour. Si vous pouvez lire ceci, le système fonctionne.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
+            <Text>Score</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD">
+            <Text>Trésorerie</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
+            <Text>GPT</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
+            <Text>Revenu d'or par tour (net).</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
+            <Text>Colonies</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
+            <Text>Technologies</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
+            <Text>Civiques</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP">
+            <Text>Score de puissance composite, le même nombre que l'écran Victoire utilise.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP">
+            <Text>Solde actuel de la trésorerie.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP">
+            <Text>Nombre total de villes et villages possédés.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP">
+            <Text>Nombre total de technologies possédées.</Text>
+        </Row>
+    </FrenchText>
+</Database>
