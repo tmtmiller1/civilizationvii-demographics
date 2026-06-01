@@ -252,8 +252,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="it_IT"><Text>Ogni 5 turni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="it_IT"><Text>Ogni 10 turni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="it_IT"><Text>Ogni 25 turni ⚠ grafici grossolani</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="it_IT"><Text>Frequenza di campionamento:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="it_IT"><Text>Valori più alti registrano meno punti. La modifica si applica dal turno successivo.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="it_IT"><Text>Frequenza di campionamento (prestazioni):</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="it_IT"><Text>Valori più alti acquisiscono un'istantanea meno spesso, quindi il mod fa meno lavoro a ogni turno — più leggero su macchine lente e partite lunghe. Si applica dal turno successivo; i campioni esistenti vengono conservati.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="it_IT"><Text>Disabilita il sottocampionamento e conserva tutti i campioni anche oltre il limite.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="it_IT"><Text>Cancellare tutti i campioni di Demografia registrati?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="it_IT"><Text>Cancellare tutte le guerre registrate? La cronologia dei campioni e gli altri dati verranno mantenuti.</Text></Replace>

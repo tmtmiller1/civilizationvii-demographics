@@ -755,10 +755,10 @@
             <Text>每 25 回合 ⚠ 图表较粗略</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="zh_Hans_CN">
-            <Text>采样频率：</Text>
+            <Text>采样频率（性能）：</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="zh_Hans_CN">
-            <Text>较高的数值记录更少的点——适用于长时间的马拉松游戏。更改在下一回合生效；现有采样将被保留。</Text>
+            <Text>数值越高，拍摄快照的频率越低，因此每回合的工作量更少——在低速设备和长时间游戏中更轻量。更改在下一回合生效；现有采样将保留。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="zh_Hans_CN">
             <Text>禁用降采样（即使达到上限后仍保留每回合的采样）——高级用户模式；请搭配较高的上限或无限制使用。</Text>

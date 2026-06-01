@@ -779,10 +779,10 @@
             <Text>Every 25 turns ⚠ coarse graphs</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL">
-            <Text>Sample frequency:</Text>
+            <Text>Sample frequency (performance):</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT">
-            <Text>Higher values record fewer points. The change applies on the next turn, and existing samples are kept.</Text>
+            <Text>Higher values take a snapshot less often, so the mod does less work each turn — lighter on slow machines and long games. Applies next turn; existing samples are kept.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION">
             <Text>Disable downsampling and keep every recorded turn after the cap is reached. Best used with a high cap or Unlimited.</Text>
