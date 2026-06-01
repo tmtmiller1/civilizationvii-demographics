@@ -17,13 +17,13 @@
             <Text>Score au fil du temps</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="fr_FR">
-            <Text>Historique en direct du collecteur.</Text>
+            <Text>Historique enregistré tour par tour.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="fr_FR">
             <Text>Fermer</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="fr_FR">
-            <Text>Bonjour. Si vous pouvez lire ceci, le système fonctionne.</Text>
+            <Text>Aperçu historique de la partie en cours.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="fr_FR">
             <Text>Score</Text>
@@ -518,7 +518,7 @@
             <Text>Filtre {1_Label}</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="fr_FR">
-            <Text>ⓘ PIB = Σ rendements pondérés × tour × 1M  ·  survolez pour l'explication</Text>
+            <Text>ⓘ PIB : estimation économique comparative  ·  survolez pour les détails</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="fr_FR">
             <Text>Produit intérieur brut</Text>
@@ -527,7 +527,7 @@
             <Text>&lt;p&gt;Une valeur pseudo-réaliste combinant les rendements par tour d'une civilisation, pondérés selon la contribution de chaque rendement à une économie réelle.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formule :&lt;/b&gt; Σ (rendement × poids) × tour × 1 000 000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Poids&lt;/b&gt; (par point de rendement) :&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Or&lt;/b&gt; — 1.0 (monnaie = commerce direct)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Production&lt;/b&gt; — 1.0 (production industrielle)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Science&lt;/b&gt; — 1.2 (l'innovation se cumule avec le temps)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Culture&lt;/b&gt; — 1.2 (puissance douce &amp; tourisme)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Vivres&lt;/b&gt; — 0.5 (subsistance ; seul le surplus est assimilable au PIB)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influence&lt;/b&gt; — 1.5 (levier diplomatique / de traités)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Pourquoi multiplier par le tour ?&lt;/b&gt; Les économies réelles se cumulent : une civilisation au tour 200 ayant les mêmes rendements par tour qu'une civilisation au tour 50 représente 4× la masse économique accumulée.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Présentation seulement — n'affecte jamais l'état de la partie.&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="fr_FR">
-            <Text>ⓘ Approbation diplomatique = Σ scores pondérés par relation  ·  survolez pour l'explication</Text>
+            <Text>ⓘ Approbation diplomatique : synthèse des relations extérieures  ·  survolez pour les détails</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="fr_FR">
             <Text>Approbation diplomatique — réputation internationale</Text>
