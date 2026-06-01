@@ -52,17 +52,6 @@ import { t } from "/demographics/ui/demographics-i18n.js";
  * @typedef {HTMLElement & { _demographicsDecorated?: boolean }} DecoratableCard
  */
 
-/**
- * One diagnostic sample captured during the first-row progress probe.
- * @typedef {Object} ProbeSample
- * @property {Pid} pid Player id.
- * @property {boolean} hasProg Whether a progress object was returned.
- * @property {string} progStr Truncated JSON of the progress object.
- * @property {boolean} triggered Whether the legacy is triggered.
- * @property {number} cur Current progress value.
- * @property {number} tot Target progress value.
- */
-
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
@@ -331,9 +320,6 @@ function allMajorPids() {
   return pids;
 }
 
-/** @type {boolean} Whether the one-time first-row progress probe has logged. */
-let _firstRowLogged = false;
-
 /**
  * One player's raw progress read, before aggregation/sorting.
  * @typedef {Object} CivProgressRead
@@ -425,25 +411,6 @@ function makeProgressSorter(winner) {
 }
 
 /**
- * Append up to three diagnostic samples to `logSamples` while the one-time
- * first-row probe is still pending.
- * @param {ProbeSample[]} logSamples Accumulator (mutated).
- * @param {CivProgressRead} entry The civ's raw progress read.
- */
-function collectProbeSample(logSamples, entry) {
-  if (_firstRowLogged || logSamples.length >= 3) return;
-  const prog = entry.prog;
-  logSamples.push({
-    pid: entry.pid,
-    hasProg: !!prog,
-    progStr: prog ? JSON.stringify(prog).slice(0, 200) : "null",
-    triggered: entry.triggered,
-    cur: entry.current,
-    tot: entry.total
-  });
-}
-
-/**
  * Compute aggregated per-civ progress for one legacy row across all major civs.
  * Every major civ is included — even zero-progress — so every card renders at
  * the same height regardless of how many civs are making progress.
@@ -456,25 +423,18 @@ function getProgressForRow(row) {
   let total = 0;
   let winner = -1;
   const pids = allMajorPids();
-  /** @type {ProbeSample[]} */
-  const logSamples = [];
   for (const pid of pids) {
     const entry = readCivProgress(pid, row);
     if (!entry) continue;
     const raceWinner = entry.raceWinner;
     if (entry.total > total) total = entry.total;
     if (typeof raceWinner === "number" && raceWinner !== -1) winner = raceWinner;
-    collectProbeSample(logSamples, entry);
     out.push({
       pid: entry.pid,
       current: entry.current,
       total: entry.total,
       triggered: entry.triggered
     });
-  }
-  if (!_firstRowLogged) {
-    _firstRowLogged = true;
-    dlog("first-row probe for " + row.LegacyType + ":", JSON.stringify(logSamples));
   }
   out.sort(makeProgressSorter(winner));
   return { civs: out, total, winner };
