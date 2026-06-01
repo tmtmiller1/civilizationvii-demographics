@@ -42,7 +42,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,盖伦瘟疫,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,大瘟疫,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,大死亡,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,大热病,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,大疫劫,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Perishing,大消亡,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,瘟疫之年,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,死亡时代,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,瘟疫时期,1
@@ -72,7 +72,7 @@ ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,大瘟疫,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,灰烬之年,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,冬季瘟疫,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,消耗性瘟疫,1
-ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,大疫劫,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,大消亡,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,无声的死亡,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,奴隶战争,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,内战,1
@@ -90,7 +90,7 @@ ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,权威危机,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,权威崩溃,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,大分裂,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,裂解,1
-ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,动乱,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Unrest,大动荡,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,士兵叛乱,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,伪王之战,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,继承战争,1
@@ -194,7 +194,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,黑死病,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,大瘟疫,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,大死亡,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,大热病,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,大疫劫,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Perishing,大消亡,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,瘟疫时期,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,死亡之年,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,出汗病,1
@@ -220,7 +220,7 @@ EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,黑死病,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,大死亡,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,海岸瘟疫,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,大瘟疫,1
-EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,大疫劫,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,大消亡,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,灰烬之年,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,出汗病,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,消耗性瘟疫,1

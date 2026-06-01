@@ -419,8 +419,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="ja_JP">
             <Text>熱病の時代</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="ja_JP">
-            <Text>大いなる死</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING" Language="ja_JP">
+            <Text>大いなる滅び</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="ja_JP">
             <Text>疫病の年月</Text>
@@ -524,8 +524,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="ja_JP">
             <Text>分断</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="ja_JP">
-            <Text>動乱</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST" Language="ja_JP">
+            <Text>大動乱</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="ja_JP">
             <Text>兵士の反乱</Text>
