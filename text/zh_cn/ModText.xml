@@ -1285,5 +1285,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="zh_Hans_CN">
             <Text>已禁用抽稀 — 保留每个样本。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="zh_Hans_CN">
+            <Text>隐藏未遇见文明的外交/关系数据</Text>
+        </Replace>
     </LocalizedText>
 </Database>

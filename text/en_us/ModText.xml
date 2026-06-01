@@ -1310,5 +1310,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED">
             <Text>Downsampling disabled — keeping every sample.</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS">
+            <Text>Hide diplomacy/relations stats for civilizations you haven't met</Text>
+        </Row>
     </EnglishText>
 </Database>

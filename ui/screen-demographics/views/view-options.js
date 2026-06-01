@@ -175,6 +175,9 @@ function appendToggles(wrap, ctx) {
     )
   );
   wrap.appendChild(
+    makeToggle(t("LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS"), "hideUnmetStats", true, ctx.settings)
+  );
+  wrap.appendChild(
     makeToggle(t("LOC_DEMOGRAPHICS_OPT_COLORBLIND"), "colorblindMode", false, ctx.settings, () =>
       ctx.requestReload?.()
     )
