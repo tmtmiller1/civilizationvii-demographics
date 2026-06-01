@@ -194,7 +194,6 @@ function groupEdgesByPair(edges, positions) {
  * @param {{x: number, y: number}} pb Target position.
  * @param {number} ox Perpendicular x-offset for this slot.
  * @param {number} oy Perpendicular y-offset for this slot.
- * @returns {void}
  */
 function appendSolidEdge(svg, e, pa, pb, ox, oy) {
   const line = document.createElementNS(SVG_NS, "line");
@@ -221,7 +220,6 @@ function appendSolidEdge(svg, e, pa, pb, ox, oy) {
  * @param {number} y1 Segment start y.
  * @param {number} x2 Segment end x.
  * @param {number} y2 Segment end y.
- * @returns {void}
  */
 function appendDashSeg(svg, color, x1, y1, x2, y2) {
   const seg = document.createElementNS(SVG_NS, "line");
@@ -246,7 +244,6 @@ function appendDashSeg(svg, color, x1, y1, x2, y2) {
  * @param {{x: number, y: number}} pa Source position (slot-offset applied).
  * @param {{x: number, y: number}} pb Target position (slot-offset applied).
  * @param {string} dash The dash pattern string.
- * @returns {void}
  */
 function appendDashedEdge(svg, e, pa, pb, dash) {
   if (!_dashLogged) {
@@ -305,7 +302,6 @@ const PARALLEL_SPACING = 1.6;
  * synthesized as solid sub-segments at the slot's offset endpoints.
  * @param {Element} svg The SVG root.
  * @param {EdgeGeo[]} entries The grouped edges for this pair.
- * @returns {void}
  */
 function appendEdgeGroup(svg, entries) {
   const n = entries.length;
@@ -382,7 +378,6 @@ function resolveNodeColors(info, isCs) {
  * @param {boolean} isCs Whether the node is a city-state.
  * @param {number} r Node radius.
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
- * @returns {void}
  */
 function appendCsIndicator(svg, pos, info, isCs, r, portraitsToPlace) {
   if (isCs && info.csTypeIcon) {
@@ -486,7 +481,6 @@ function queueLeaderPortrait(info, pos, r, portraitsToPlace) {
  * @param {boolean} isCs Whether the node is a city-state.
  * @param {number} density The ring density factor.
  * @param {string} nm The node display name.
- * @returns {void}
  */
 function appendInitialLetter(svg, pos, isViewer, isCs, density, nm) {
   const initFont = (isViewer ? 5 : isCs ? 3.2 : 4) * density;
@@ -512,7 +506,6 @@ function appendInitialLetter(svg, pos, isViewer, isCs, density, nm) {
  * @param {number} density The ring density factor.
  * @param {number} viewBoxH ViewBox height (label clamp).
  * @param {string} nm The node display name.
- * @returns {void}
  */
 function appendNodeLabel(svg, pos, r, cx, cy, density, viewBoxH, nm) {
   // Single label line: just the CS / leader name. The CS type is already
@@ -550,7 +543,6 @@ function appendNodeLabel(svg, pos, r, cx, cy, density, viewBoxH, nm) {
  * @param {number} localPid Local player id.
  * @param {number} viewerPid Focus viewer id.
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
- * @returns {void}
  */
 function appendRingNode(svg, id, geo, names, localPid, viewerPid, portraitsToPlace) {
   const pos = geo.positions.get(id);
@@ -585,7 +577,6 @@ function appendRingNode(svg, id, geo, names, localPid, viewerPid, portraitsToPla
  * @param {number} contentLeft Letterboxed content left edge, px.
  * @param {number} contentTop Letterboxed content top edge, px.
  * @param {number} scale ViewBox→pixel scale.
- * @returns {void}
  */
 function appendPortraitDiv(wrap, p, contentLeft, contentTop, scale) {
   const px = contentLeft + p.vbX * scale;
@@ -631,7 +622,6 @@ function appendPortraitDiv(wrap, p, contentLeft, contentTop, scale) {
 function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
   /**
    * Position every queued overlay, deferring a frame if layout isn't ready.
-   * @returns {void}
    */
   function placePortraits() {
     if (portraitsToPlace.length === 0) return;

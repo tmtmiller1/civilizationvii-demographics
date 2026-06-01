@@ -105,7 +105,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.sampler]", ...a);
@@ -287,7 +286,6 @@ const _treesBySystemAndAge = new Map();
 /**
  * Clear the age + trees caches so {@link getCurrentAgeType} re-reads Game.age.
  * Called by the sampler core on a PlayerAgeTransitionComplete event.
- * @returns {void}
  */
 export function resetAgeCaches() {
   _cachedAgeType = undefined;
@@ -424,7 +422,6 @@ function _cityPlotCount(c) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id being sampled.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectMet(ctx, id, p) {
   try {
@@ -627,7 +624,6 @@ function resolveCivName(p, civRow, rawCiv) {
  * @param {*} p The sampled player handle.
  * @param {*} rawLeader The raw leader type value.
  * @param {*} rawCiv The raw civ type value.
- * @returns {void}
  */
 function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
   const leaderRow = lookupInfoRow(
@@ -677,7 +673,6 @@ function _canonicalTypeString(rowType, raw) {
  * base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
- * @returns {void}
  */
 function collectColors(ctx, id) {
   try {
@@ -702,7 +697,6 @@ function collectColors(ctx, id) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectGold(ctx, id, p) {
   const treasury = safeCall("p.Treasury (pid=" + id + ")", () => p.Treasury);
@@ -749,7 +743,6 @@ function collectCities(ctx, id, p) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectTechAndCivicCounts(ctx, id, p) {
   const techsN = countCompletedNodes(p, id, "Techs");
@@ -764,7 +757,6 @@ function collectTechAndCivicCounts(ctx, id, p) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} stats The player Stats handle.
- * @returns {void}
  */
 function collectYieldsAndSizes(ctx, id, stats) {
   if (!stats) return;
@@ -808,7 +800,6 @@ function _readFiniteProp(obj, prop) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectTradeRoutes(ctx, id, p) {
   const trade = safeCall("p.Trade (pid=" + id + ")", () => p.Trade);
@@ -826,7 +817,6 @@ function collectTradeRoutes(ctx, id, p) {
  * Game.Diplomacy.getPlayerEvents(pid).
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
- * @returns {void}
  */
 function collectOngoingDeals(ctx, id) {
   const events = safeCall("Game.Diplomacy.getPlayerEvents(" + id + ")", () => {
@@ -883,7 +873,6 @@ function _cityWonderCount(c) {
  * @param {Pid} id The player id.
  * @param {*} stats The player Stats handle.
  * @param {*} cityList The city list for the fallback path.
- * @returns {void}
  */
 function collectWonderCount(ctx, id, stats, cityList) {
   if (stats && typeof stats.getNumWonders === "function") {
@@ -906,7 +895,6 @@ function collectWonderCount(ctx, id, stats, cityList) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectWonderTypes(ctx, id, p) {
   try {
@@ -1007,7 +995,6 @@ function buildUnitStatsByType() {
  * @param {Map<string, { Combat: number, RangedCombat: number, score: number }>} statsByType
  *   The map to mutate.
  * @param {*} row A GameInfo.Unit_Stats row.
- * @returns {void}
  */
 function _mergeUnitStatRow(statsByType, row) {
   if (!row || typeof row.UnitType !== "string") return;
@@ -1074,7 +1061,6 @@ function _defStrength(def, statsByType) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectMilitaryPower(ctx, id, p) {
   safeCall("computeMilitaryPower(pid=" + id + ")", () => {
@@ -1126,7 +1112,6 @@ function _sumUnitStrengths(ids, statsByType) {
  * Citation: base-standard/ui/diplo-ribbon/panel-yield-banner.js.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} stats The player Stats handle.
- * @returns {void}
  */
 function collectSettlementCap(ctx, stats) {
   safeCall("settlementCap", () => {
@@ -1165,7 +1150,6 @@ const SUBTYPE_TO_KEY = {
  *   age-antiquity/data/legacies.xml         LegacySubtype values
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectTriumphs(ctx, p) {
   ctx.triumphsCultural = 0;
@@ -1258,7 +1242,6 @@ const VICTORY_TYPE_TO_KEY = {
  * ui-next/screens/victories/victories-screen-model.js,1137.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectVictoryPoints(ctx, p) {
   ctx.victoryPointsCulture = 0;
@@ -1286,7 +1269,6 @@ function collectVictoryPoints(ctx, p) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} v The player's Victories handle.
  * @param {*} row A GameInfo.Victories row.
- * @returns {void}
  */
 function _captureVictoryRow(ctx, v, row) {
   if (!row) return;
@@ -1382,7 +1364,6 @@ function _majorRelationshipScore(dip, oid, weightMajor) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The sampled player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectDiplomaticApproval(ctx, id, p) {
   safeCall("diplomaticApproval", () => {
@@ -1500,7 +1481,6 @@ function _resourceClassByType(resType) {
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} p The sampled player handle.
- * @returns {void}
  */
 function collectResourceCategories(ctx, id, p) {
   safeCall("resourceCategories", () => {
@@ -1547,7 +1527,6 @@ function _resourceCount(r) {
  * @param {ResourceCounts} c The counts to mutate.
  * @param {*} cls The resource class string.
  * @param {number} cnt The amount to add.
- * @returns {void}
  */
 function _bucketResource(c, cls, cnt) {
   if (cls === "RESOURCECLASS_BONUS") c.bonus += cnt;

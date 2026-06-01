@@ -28,7 +28,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.history-time-filter]", ...a);
@@ -211,7 +210,6 @@ export function computeTurnRange(history, filterId) {
  * Nudge `tip` back into the viewport via a translate transform when any edge
  * overflows; clear the transform when it fits.
  * @param {HTMLElement} tip The tooltip element.
- * @returns {void}
  */
 function repositionTooltip(tip) {
   if (!tip.parentElement) return;
@@ -249,7 +247,6 @@ function overflowShift(near, far, extent) {
  * Coherent GameFace ignores the native `title` attribute, so we render the
  * structured CROSS_AGE_DISABLED_TOOLTIP content as proper HTML.
  * @param {HTMLElement} pill The disabled filter pill.
- * @returns {void}
  */
 function attachDisabledFilterTooltip(pill) {
   const tip = buildDisabledFilterTooltipEl();

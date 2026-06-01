@@ -13,7 +13,6 @@ const DEMOGRAPHICS_DEBUG = false;
 /**
  * Debug logger, no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.bootstrap]", ...a);
@@ -22,7 +21,6 @@ function dlog(...a) {
 /**
  * Error logger; always emits (unlike {@link dlog}).
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.bootstrap]", ...a);

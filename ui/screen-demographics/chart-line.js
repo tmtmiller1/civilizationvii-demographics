@@ -26,7 +26,6 @@ import {
  * Error logger for this module. Always logs (unlike the gated {@link dlog}) so
  * own-logic bugs surface in UI.log rather than being silently swallowed.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.chart-line]", ...a);
@@ -325,7 +324,6 @@ function foldPidSamples(samples, pid, metricId, ageOffsets, ageBoundariesLocal, 
  * leader type / leader name, latest non-empty primary color, latest met flag.
  * @param {PidFold} fold Accumulator (mutated).
  * @param {CivSample|*} ps One civ's sample.
- * @returns {void}
  */
 function mergePidIdentity(fold, ps) {
   if (!fold.leaderType && ps.leaderType !== undefined && ps.leaderType !== null) {
@@ -498,7 +496,6 @@ function buildSeriesFromHistory(history, metricId) {
 /**
  * Destroy any prior Chart instance cached on the host before re-mounting.
  * @param {HTMLElement|*} host The chart host element.
- * @returns {void}
  */
 function teardownExistingChart(host) {
   if (!host) return;
@@ -541,7 +538,6 @@ let _engineDefaultsApplied = false;
 /**
  * Apply the engine's `fxs-hof-chart` Chart.defaults (font, color) once, so our
  * charts match the in-game graphs even if hof-chart hasn't loaded yet.
- * @returns {void}
  */
 function applyEngineChartDefaults() {
   if (_engineDefaultsApplied) return;
@@ -593,7 +589,6 @@ function applyShowEliminated(allSeries) {
  * Apply the `smoothChart` setting: 3-turn centered moving average, in place.
  * First/last points keep raw values; series with <3 points are untouched.
  * @param {ChartSeries[]} allSeries The series list (mutated).
- * @returns {void}
  */
 function applySmoothChart(allSeries) {
   let smooth = false;
@@ -665,7 +660,6 @@ function collapseGlobalMetric(allSeries, metricMeta, metricId) {
  * Apply the `showUnmetNames` setting (default false): mask each non-local,
  * unmet civ's series name with a generic placeholder.
  * @param {ChartSeries[]} allSeries The series list (mutated).
- * @returns {void}
  */
 function applyUnmetNames(allSeries) {
   let showUnmet = false;
@@ -945,7 +939,6 @@ function collectWonderEvents(samples, ageOffsets, boundaries) {
  * @param {boolean} isFirstSample Whether this is the civ's first sample.
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} boundaries Age boundary table.
- * @returns {void}
  */
 function foldWonderTypes(
   wonderEventsByPid,
@@ -988,7 +981,6 @@ function foldWonderTypes(
 /**
  * Resolve the engine icon URL for a wonder event, mutating `ev.iconUrl`.
  * @param {WonderEvent} ev The event (mutated).
- * @returns {void}
  */
 function resolveWonderIcon(ev) {
   try {
@@ -1027,7 +1019,6 @@ function bestWonderDescription(info) {
 /**
  * Resolve display name + flavor description for a wonder event, mutating it.
  * @param {WonderEvent} ev The event (mutated).
- * @returns {void}
  */
 function resolveWonderMeta(ev) {
   try {
@@ -1068,7 +1059,6 @@ function resolveWonderName(wonderType, info) {
  * Resolve icon + name for every wonder event, dropping events with no icon
  * and pruning pids that end up empty.
  * @param {Map<string, WonderEvent[]>} wonderEventsByPid pid → events (mutated).
- * @returns {void}
  */
 function resolveWonderEvents(wonderEventsByPid) {
   // Resolve display name + icon URL for each event using the engine's
@@ -1126,7 +1116,6 @@ function ensureWonderTip(state, wrap) {
  * @param {number} iconLeft Icon left offset (px).
  * @param {number} iconTop Icon top offset (px).
  * @param {number} iconSize Icon edge length (px).
- * @returns {void}
  */
 function showWonderTip(state, wrap, ev, civLabel, iconLeft, iconTop, iconSize) {
   const tip = ensureWonderTip(state, wrap);
@@ -1203,7 +1192,6 @@ function computeWonderTipPlacement(wonderTip, wrap, iconLeft, iconTop, iconSize)
  * @param {number} iconLeft Icon left offset (px).
  * @param {number} tipW Measured tip width (px).
  * @param {number} tipH Measured tip height (px).
- * @returns {void}
  */
 function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
   if (!wonderTip.arrow) {
@@ -1237,7 +1225,6 @@ function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
  * @param {number} iconLeft Icon left offset (px).
  * @param {number} iconTop Icon top offset (px).
  * @param {number} iconSize Icon edge length (px).
- * @returns {void}
  */
 function positionWonderTip(state, iconLeft, iconTop, iconSize) {
   const wonderTip = state.wonderTip;
@@ -1259,7 +1246,6 @@ function positionWonderTip(state, iconLeft, iconTop, iconSize) {
 /**
  * Hide the wonder hover-tooltip.
  * @param {WonderTipState} state The tip state wrapper.
- * @returns {void}
  */
 function hideWonderTip(state) {
   if (state.wonderTip) state.wonderTip.style.display = "none";
@@ -1324,7 +1310,6 @@ function createWonderMarker(tipState, wrap, ev, civLabel) {
  * @param {Record<string, *>} ds The Chart.js dataset.
  * @param {WonderEvent[]} events The dataset civ's events.
  * @param {number} pid The civ pid.
- * @returns {void}
  */
 function renderDatasetWonderMarkers(ctx, ds, events, pid) {
   const { wrap, xScale, yScale, offX, offY, wonderMarkerEls, renderedKeys, tipState } = ctx;
@@ -1378,7 +1363,6 @@ function getOrCreateWonderMarker(wonderMarkerEls, key, tipState, wrap, ev, dsLab
  * Garbage-collect markers no longer rendered this pass.
  * @param {Map<string, HTMLElement>} wonderMarkerEls key → marker element.
  * @param {Set<string>} renderedKeys Keys rendered this pass.
- * @returns {void}
  */
 function gcWonderMarkers(wonderMarkerEls, renderedKeys) {
   for (const [key, el] of wonderMarkerEls) {
@@ -1409,7 +1393,6 @@ function makeWonderMarkersPlugin(allSeries, wonderEventsByPid, wonderMarkerEls, 
     id: "demographicsWonderMarkers",
     /**
      * @param {*} c The Chart instance.
-     * @returns {void}
      */
     afterDatasetsDraw(c) {
       const wrap = c.canvas.parentNode;
@@ -1448,7 +1431,6 @@ function makeWonderMarkersPlugin(allSeries, wonderEventsByPid, wonderMarkerEls, 
  * @param {Record<string, *>} ds The Chart.js dataset.
  * @param {ChartSeries[]} allSeries The series list (for pid lookup).
  * @param {Map<string, WonderEvent[]>} wonderEventsByPid pid → events.
- * @returns {void}
  */
 function renderOneDatasetWonders(passCtx, ds, allSeries, wonderEventsByPid) {
   if (!ds || ds.hidden) return;
@@ -2056,7 +2038,6 @@ function makeFocusGlowPlugin() {
     id: "demographicsFocusGlow",
     /**
      * @param {*} c The Chart instance.
-     * @returns {void}
      */
     beforeDatasetsDraw(c) {
       const ctx2 = c.ctx;
@@ -2092,7 +2073,6 @@ function focusedGlowElems(c, ds, i) {
  * @param {*} ctx2 The 2D canvas context.
  * @param {Record<string, *>} ds The Chart.js dataset.
  * @param {{ x: number, y: number }[]} elems The dataset's point elements.
- * @returns {void}
  */
 function strokeGlowPath(ctx2, ds, elems) {
   ctx2.save();
@@ -2126,7 +2106,6 @@ function makeHoverCrosshairPlugin() {
     id: "demographicsHoverCrosshair",
     /**
      * @param {*} c The Chart instance.
-     * @returns {void}
      */
     afterDatasetsDraw(c) {
       const tt = c.tooltip;
@@ -2158,7 +2137,6 @@ function makeHoverCrosshairPlugin() {
  * @param {number} x Pixel x position.
  * @param {number} top Plot-area top.
  * @param {number} bottom Plot-area bottom.
- * @returns {void}
  */
 function drawCrisisMarker(ctx2, mk, x, top, bottom) {
   ctx2.save();
@@ -2208,7 +2186,6 @@ function makeCrisisMarkerPlugin(crisisMarkers) {
     id: "demographicsCrisisMarkers",
     /**
      * @param {*} c The Chart instance.
-     * @returns {void}
      */
     afterDatasetsDraw(c) {
       if (!crisisMarkers || crisisMarkers.length === 0) return;
@@ -2236,7 +2213,6 @@ function makeCapLimitLinePlugin(metricId) {
     id: "demographicsCapLimitLine",
     /**
      * @param {*} c The Chart instance.
-     * @returns {void}
      */
     afterDatasetsDraw(c) {
       if (metricId !== "settlement_cap_pct") return;
@@ -2278,7 +2254,6 @@ function makeAgeMarkerPlugin(ageMarkers) {
     id: "demographicsAgeMarkers",
     /**
      * @param {*} c The Chart instance.
-     * @returns {void}
      */
     afterDatasetsDraw(c) {
       if (!ageMarkers || ageMarkers.length === 0) return;
@@ -2432,7 +2407,6 @@ function buildTooltipRow(dp, fmtY) {
  * @param {*} chart The Chart instance.
  * @param {*} tooltip The Chart.js tooltip model.
  * @param {HTMLElement} wrap The chart wrap.
- * @returns {void}
  */
 function positionChartTooltip(tip, chart, tooltip, wrap) {
   // Position next to the cursor. Chart.js gives caretX/Y in canvas pixels —

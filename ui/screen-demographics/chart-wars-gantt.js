@@ -541,7 +541,6 @@ function drawWarBar(svg, w, L, dom, baseY, latestTurn, samples) {
  * @param {number} args.barW Bar width.
  * @param {number} args.barH Bar height.
  * @param {boolean} args.isClosed Whether the war concluded.
- * @returns {void}
  */
 function drawWarBarStripes(svg, args) {
   const { stripes, samples, sem, x1, baseY, barW, barH, isClosed } = args;
@@ -586,7 +585,6 @@ function drawWarBarStripes(svg, args) {
  * @param {number} baseY Bar top.
  * @param {number} barH Bar height.
  * @param {*} sem The semantic palette.
- * @returns {void}
  */
 function drawWarBarEndMarker(svg, isClosed, x2, baseY, barH, sem) {
   if (isClosed) {
@@ -746,7 +744,6 @@ function composeWarLabel(w, pairCounts, worldWars) {
  * @param {number} latestTurn The latest sampled turn.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @returns {void}
  */
 function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W, H) {
   barRects.forEach(({ war, x, y, w, h }) => {
@@ -775,7 +772,6 @@ function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W
  * @param {GanttLayout} L The layout.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @returns {void}
  */
 function mountGanttXTicks(wrap, tickPositions, L, W, H) {
   tickPositions.forEach((tick) => {
@@ -807,7 +803,6 @@ function mountGanttXTicks(wrap, tickPositions, L, W, H) {
  * @param {GanttLayout} L The layout.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @returns {void}
  */
 function mountGanttAxisTitles(wrap, L, W, H) {
   const xTitle = document.createElement("div");
@@ -1035,7 +1030,6 @@ function warDeclaredBy(w) {
  * @param {HTMLElement} tooltip The tooltip element (cleared and repopulated).
  * @param {*} w The war record.
  * @param {*} ctx Shared Gantt context (see {@link buildWarTooltipBody}).
- * @returns {void}
  */
 function renderWarTooltip(tooltip, w, ctx) {
   const tip = buildWarTooltipBody(w, ctx);
@@ -1099,7 +1093,6 @@ function formatSideCost(c) {
  * @param {HTMLElement} tooltip The tooltip element.
  * @param {{ a: SideWarCost, b: SideWarCost }} cost Per-side costs.
  * @param {{ a: string, b: string }} labels Per-side civ-name labels.
- * @returns {void}
  */
 function appendWarCost(tooltip, cost, labels) {
   const block = document.createElement("div");
@@ -1125,7 +1118,6 @@ function appendWarCost(tooltip, cost, labels) {
  * @param {HTMLElement} tooltip The tooltip element.
  * @param {string} label The section label.
  * @param {string[]} lines The bullet lines.
- * @returns {void}
  */
 function appendTooltipSection(tooltip, label, lines) {
   const h = document.createElement("div");
@@ -1177,7 +1169,6 @@ function hitTestBars(barRects, svgX, svgY) {
  * @param {Object} args.ctx Shared Gantt context (for tooltip rendering).
  * @param {number} args.W Canvas width.
  * @param {number} args.H Canvas height.
- * @returns {void}
  */
 function wireGanttHover(args) {
   const { wrap, svg, tooltip, barRects, ctx, W, H } = args;

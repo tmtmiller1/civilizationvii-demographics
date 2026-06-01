@@ -47,7 +47,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.storage]", ...a);
@@ -55,7 +54,6 @@ function dlog(...a) {
 /**
  * Error logger; always emits.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.storage]", ...a);
@@ -401,7 +399,6 @@ class StorageImpl {
 
   /**
    * Lazily resolve the game seed and install engine flush hooks. Idempotent.
-   * @returns {void}
    */
   _init() {
     if (this._initialized) return;
@@ -424,7 +421,6 @@ class StorageImpl {
    * in-session age boundaries and quit-to-menu). `BeforeAgeTransition` — the
    * cross-age carry-forward attempt, which does not work in current builds — is
    * installed only in `legacy_tutorial_bag` mode. Idempotent.
-   * @returns {void}
    */
   _installEngineHooks() {
     if (this._hooksInstalled) return;
@@ -629,7 +625,6 @@ class StorageImpl {
    * chart X coord.
    * @param {StoredHistory} h Target history.
    * @param {Snapshot} snapshot Snapshot to insert.
-   * @returns {void}
    */
   _insertSnapshot(h, snapshot) {
     if (snapshot && typeof snapshot.localTurn === "number" && typeof snapshot.age === "string") {
@@ -652,7 +647,6 @@ class StorageImpl {
    * threshold, preserving the latest age and any age-boundary turns.
    * @param {StoredHistory} h Target history (mutated).
    * @param {EffectiveCap} eff The active effective cap.
-   * @returns {void}
    */
   _maybeDecimate(h, eff) {
     const KEEP_EVERY_NTH = 3;
@@ -698,7 +692,6 @@ class StorageImpl {
    * @param {StoredHistory} h The (already decimated) history.
    * @param {EffectiveCap} eff The active effective cap.
    * @param {number} keepEveryNth The keep-1-in-N decimation ratio.
-   * @returns {void}
    */
   _noteDecimation(h, eff, keepEveryNth) {
     if (this._decimationNotified) return;
@@ -755,7 +748,6 @@ class StorageImpl {
 
   /**
    * Force-persist the in-memory mirror.
-   * @returns {void}
    */
   flush() {
     if (this._mem) this.save(this._mem);
@@ -763,7 +755,6 @@ class StorageImpl {
 
   /**
    * Reset the history to empty, both in memory and in the active store.
-   * @returns {void}
    */
   clear() {
     this._init();

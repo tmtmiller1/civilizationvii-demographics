@@ -39,7 +39,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.dock]", ...a);
@@ -47,7 +46,6 @@ function dlog(...a) {
 /**
  * Error logger; always emits.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.dock]", ...a);
@@ -60,7 +58,6 @@ const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 /**
  * Inject the one-time `<style>` that paints our dock-button icon from the
  * file-shipped SVG. Idempotent: re-runs are a no-op once the style exists.
- * @returns {void}
  */
 function injectIconStyle() {
   if (document.getElementById("demographics-dock-icon-style")) return;
@@ -96,7 +93,6 @@ export class DemographicsDockDecorator {
 
   /**
    * Lifecycle hook fired before the panel attaches.
-   * @returns {void}
    */
   beforeAttach() {
     dlog("beforeAttach");
@@ -105,7 +101,6 @@ export class DemographicsDockDecorator {
   /**
    * Lifecycle hook fired after the panel attaches: paints the icon style and
    * registers our dock button.
-   * @returns {void}
    */
   afterAttach() {
     dlog("afterAttach: about to call this._panel.addButton");
@@ -119,7 +114,6 @@ export class DemographicsDockDecorator {
 
   /**
    * Add the Demographics button to the dock, defensively. Never throws.
-   * @returns {void}
    */
   _addDockButton() {
     try {
@@ -143,14 +137,12 @@ export class DemographicsDockDecorator {
 
   /**
    * Lifecycle hook fired before the panel detaches.
-   * @returns {void}
    */
   beforeDetach() {
     dlog("beforeDetach");
   }
   /**
    * Lifecycle hook fired after the panel detaches.
-   * @returns {void}
    */
   afterDetach() {
     dlog("afterDetach");
@@ -159,7 +151,6 @@ export class DemographicsDockDecorator {
   /**
    * Button activation handler: dynamic-imports the engine context manager and
    * pushes the Demographics screen. Never throws.
-   * @returns {void}
    */
   openScreen() {
     dlog("button activated; about to push screen-demographics");
