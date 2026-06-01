@@ -354,9 +354,8 @@ function getPlayerStore() {
   }
 }
 
-// Fallback global tier — only used if per-player store isn't yet
-// available. Same hashing scheme so we can also try to migrate any
-// legacy data written under the old GameTutorial-based code.
+// Fallback global tier — only used if the per-player store isn't yet
+// available. Same hashing scheme as the per-player tier.
 /**
  * Resolve the global `GameTutorial` property bag — the fallback tier used
  * before the per-player store is available. Same hashing scheme. Never throws.

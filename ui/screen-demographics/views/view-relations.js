@@ -293,7 +293,7 @@ function buildNameMap(history) {
 
 // Resolve a CS display name from the player handle directly. The vanilla
 // canonical accessor is `Locale.compose(player.name)` — see
-// base-standard/ui/diplo-ribbon/model-diplo-ribbon.js:351. This yields the
+// base-standard/ui/diplo-ribbon/model-diplo-ribbon.js. This yields the
 // actual minor-civ name (e.g. "Carthage", "Bactra") rather than the generic
 // "village" / civilizationType placeholder.
 
@@ -1193,9 +1193,9 @@ function buildTabBars(rs) {
  */
 function repaintView(rs) {
   // Viewer dropdown (CS tab only). Element confirmed at
-  //   core/ui/options/options-helpers.js:35-50  (fxs-dropdown attributes)
-  //   core/ui/components/fxs-dropdown.js:8       ("dropdown-selection-change")
-  //   core/ui/options/screen-options.js:239-245  (handler pattern)
+  //   core/ui/options/options-helpers.js  (fxs-dropdown attributes)
+  //   core/ui/components/fxs-dropdown.js       ("dropdown-selection-change")
+  //   core/ui/options/screen-options.js  (handler pattern)
   buildViewerDropdown(rs);
   // Filter pill row — one pill per relationship type. All toggles apply to
   // the same ring; no subtab indirection.

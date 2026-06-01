@@ -532,7 +532,7 @@ function colorWithAlpha(hex, a) {
 }
 
 // Apply the same Chart.defaults that the engine's fxs-hof-chart sets at
-// module load (see core/ui/components/fxs-hof-chart.js:5-9). The defaults
+// module load (see core/ui/components/fxs-hof-chart.js). The defaults
 // stick after first application, so duplicates are harmless; but if our
 // chart instantiates before hof-chart has ever loaded, the stock Chart.js
 // defaults (Arial, #666 text, etc.) leak through and our graphs look NOTHING
@@ -1072,7 +1072,7 @@ function resolveWonderName(wonderType, info) {
  */
 function resolveWonderEvents(wonderEventsByPid) {
   // Resolve display name + icon URL for each event using the engine's
-  // canonical accessors. Cite: utilities-image.js:71-74
+  // canonical accessors. Cite: utilities-image.js
   //   Icon.getWonderIconFromDefinition() === UI.getIconURL(type, "WONDER")
   for (const [pid, events] of wonderEventsByPid) {
     /** @type {WonderEvent[]} */

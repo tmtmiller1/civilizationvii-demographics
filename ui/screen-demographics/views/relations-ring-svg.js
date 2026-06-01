@@ -88,7 +88,7 @@ import {
 let _dashLogged = false;
 
 // ---- ring layout ----------------------------------------------------------
-// ADAPTED from sloth/global-relations-panel.js:496-510.
+// ADAPTED from sloth/global-relations-panel.js.
 
 /**
  * Lay out `ids` evenly on an ellipse centered at `(cx, cy)`. Backwards-
@@ -461,7 +461,7 @@ function queueLeaderPortrait(info, pos, r, portraitsToPlace) {
       typeof UI.getIconURL === "function"
     ) {
       // Same pattern as Icon.getLeaderPortraitIcon (vanilla
-      // utilities-image.js:182): default size is the most reliable variant.
+      // utilities-image.js): default size is the most reliable variant.
       (UI.getIconURL(leaderType, "LEADER") + ".png").toLowerCase();
     }
   } catch (_) {
