@@ -252,8 +252,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ja_JP"><Text>5ターンごと</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ja_JP"><Text>10ターンごと</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ja_JP"><Text>25ターンごと ⚠ 粗いグラフ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ja_JP"><Text>サンプル頻度:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ja_JP"><Text>値を大きくすると記録点は少なくなります。変更は次のターンから反映されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ja_JP"><Text>サンプル頻度（パフォーマンス）:</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ja_JP"><Text>値を大きくするとスナップショットの取得頻度が下がり、各ターンの処理が軽くなります（低速な環境や長いゲームに有効）。変更は次のターンから反映され、既存のサンプルは保持されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ja_JP"><Text>間引きを無効にし、上限到達後もすべてのサンプルを保持します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ja_JP"><Text>記録されたすべての人口統計サンプルを消去しますか?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ja_JP"><Text>記録されたすべての戦争を消去しますか? サンプル履歴とその他のデータは保持されます。</Text></Replace>

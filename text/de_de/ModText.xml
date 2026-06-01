@@ -755,10 +755,10 @@
             <Text>Alle 25 Runden ⚠ grobe Diagramme</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="de_DE">
-            <Text>Stichprobenhäufigkeit:</Text>
+            <Text>Stichprobenhäufigkeit (Leistung):</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="de_DE">
-            <Text>Höhere Werte zeichnen weniger Punkte auf — nützlich für lange Marathonspiele. Die Änderung gilt ab der nächsten Runde; vorhandene Stichproben bleiben erhalten.</Text>
+            <Text>Höhere Werte erstellen seltener eine Momentaufnahme, sodass der Mod pro Runde weniger Arbeit leistet — schonender auf langsamen Rechnern und in langen Spielen. Gilt ab der nächsten Runde; vorhandene Stichproben bleiben erhalten.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="de_DE">
             <Text>Herunterrechnen deaktivieren (jede Runden-Stichprobe behalten, auch nachdem das Limit erreicht ist) — Power-User-Modus; mit einem hohen Limit oder Unbegrenzt kombinieren.</Text>
