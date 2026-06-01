@@ -419,8 +419,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="ko_KR">
             <Text>열병의 시대</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="ko_KR">
-            <Text>대죽음</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING" Language="ko_KR">
+            <Text>대멸망</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="ko_KR">
             <Text>역병의 세월</Text>
@@ -524,8 +524,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="ko_KR">
             <Text>분단</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="ko_KR">
-            <Text>분란의 시대</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST" Language="ko_KR">
+            <Text>대혼란</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="ko_KR">
             <Text>병사들의 반란</Text>

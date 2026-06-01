@@ -979,8 +979,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="de_DE">
             <Text>Das große Fieber</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="de_DE">
-            <Text>Das große Sterben</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING" Language="de_DE">
+            <Text>Das große Verderben</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="de_DE">
             <Text>Die Pestjahre</Text>
@@ -1084,8 +1084,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="de_DE">
             <Text>Die Spaltung</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="de_DE">
-            <Text>Die Wirren</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST" Language="de_DE">
+            <Text>Die große Unruhe</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="de_DE">
             <Text>Der Soldatenaufstand</Text>

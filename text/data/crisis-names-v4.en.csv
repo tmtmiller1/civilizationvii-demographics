@@ -42,7 +42,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,The Plague of Galen,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,The Great Pestilence,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,The Great Mortality,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,The Great Fever,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,The Great Dying,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Perishing,The Great Perishing,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,The Plague Years,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,The Dying Time,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,The Time of Pestilence,1
@@ -72,7 +72,7 @@ ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,The Great Pestilence,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,The Years of Ashes,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,The Winter Sickness,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,The Wasting Plague,1
-ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,The Great Dying,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,The Great Perishing,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,The Silent Death,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,The Servile Wars,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,The Civil Wars,1
@@ -90,7 +90,7 @@ ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,The Crisis of Authority,
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,The Collapse of Authority,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,The Great Fracturing,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,The Sundering,1
-ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,The Troubles,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Unrest,The Great Unrest,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,The Soldier's Revolt,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,The Pretenders' War,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,The War of Succession,1
@@ -194,7 +194,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,The Black Death,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,The Great Pestilence,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,The Great Mortality,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,The Great Fever,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,The Great Dying,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Perishing,The Great Perishing,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,The Time of Pestilence,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,The Years of Mortality,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,The Sweating Sickness,1
@@ -220,7 +220,7 @@ EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,The Black Death,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,The Great Mortality,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,The Plague of the Coast,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,The Great Pestilence,1
-EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,The Great Dying,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,The Great Perishing,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,The Years of Ashes,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,The Sweating Sickness,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,The Wasting Plague,1

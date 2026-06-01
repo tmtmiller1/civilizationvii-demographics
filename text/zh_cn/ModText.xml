@@ -979,8 +979,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="zh_Hans_CN">
             <Text>大热病</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="zh_Hans_CN">
-            <Text>大疫劫</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING" Language="zh_Hans_CN">
+            <Text>大消亡</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="zh_Hans_CN">
             <Text>瘟疫之年</Text>
@@ -1084,8 +1084,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="zh_Hans_CN">
             <Text>裂解</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="zh_Hans_CN">
-            <Text>动乱</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST" Language="zh_Hans_CN">
+            <Text>大动荡</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="zh_Hans_CN">
             <Text>士兵叛乱</Text>

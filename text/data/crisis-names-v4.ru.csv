@@ -42,7 +42,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,Чума Галена,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,Великий мор,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,Великая смертность,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,Великая лихорадка,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,Великая смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Perishing,Великая погибель,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,Годы чумы,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,Время смерти,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,Время моровое,1
@@ -72,7 +72,7 @@ ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,Великий мор,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,Годы пепла,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,Зимняя хворь,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,Изнуряющая чума,1
-ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Великая смерть,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Великая погибель,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,Безмолвная смерть,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,Войны рабов,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,Гражданские войны,1
@@ -90,7 +90,7 @@ ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,Кризис власт�
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,Крушение власти,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,Великий раскол державы,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,Распад,1
-ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,Смута,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Unrest,Великие волнения,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,Солдатский мятеж,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,Война самозванцев,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,Война за наследство,1
@@ -194,7 +194,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,Чёрная смерть,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,Великий мор,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,Великая смертность,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,Великая лихорадка,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,Великая смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Perishing,Великая погибель,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,Время моровое,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,Годы мора,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,Потовая горячка,1
@@ -220,7 +220,7 @@ EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,Чёрная смерть,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,Великая смертность,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,Чума побережья,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,Великий мор,1
-EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Великая смерть,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Великая погибель,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,Годы пепла,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,Потовая горячка,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,Изнуряющая чума,1

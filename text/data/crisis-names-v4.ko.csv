@@ -42,7 +42,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,갈레노스의 역병,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,대역병,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,대재앙,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,열병의 시대,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,대죽음,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Perishing,대멸망,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,역병의 세월,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,죽음의 시대,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,역병의 시대,1
@@ -72,7 +72,7 @@ ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,대역병,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,잿빛 세월,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,겨울 병마,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,쇠약의 역병,1
-ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,대죽음,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,대멸망,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,조용한 죽음,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,노예 전쟁,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,내전,1
@@ -90,7 +90,7 @@ ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,권위의 위기,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,권위의 붕괴,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,대분열,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,분단,1
-ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,분란의 시대,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Unrest,대혼란,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,병사들의 반란,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,참칭자들의 전쟁,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,계승 전쟁,1
@@ -194,7 +194,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,흑사병,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,대역병,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,대재앙,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,열병의 시대,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,대죽음,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Perishing,대멸망,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,역병의 시대,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,죽음의 세월,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,발한병,1
@@ -220,7 +220,7 @@ EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,흑사병,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,대재앙,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,해안의 역병,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,대역병,1
-EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,대죽음,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,대멸망,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,잿빛 세월,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,발한병,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,쇠약의 역병,1

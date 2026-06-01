@@ -1004,8 +1004,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER">
             <Text>The Great Fever</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING">
-            <Text>The Great Dying</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING">
+            <Text>The Great Perishing</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS">
             <Text>The Plague Years</Text>
@@ -1109,8 +1109,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING">
             <Text>The Sundering</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES">
-            <Text>The Troubles</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST">
+            <Text>The Great Unrest</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT">
             <Text>The Soldier's Revolt</Text>
