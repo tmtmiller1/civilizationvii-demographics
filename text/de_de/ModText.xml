@@ -841,5 +841,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="de_DE">
             <Text>Stadtstaaten</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="de_DE">
+            <Text>ausgetreten T-{1_Turn}</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -820,38 +820,17 @@ function mountGanttAxisTitles(wrap, L, W, H) {
 }
 
 /**
- * Sum a metric across a set of pids within a single sample.
- * @param {Snapshot} sample The sample.
- * @param {Pid[]} pids Participant pids.
+ * Build one participant's metric series across the samples in a window.
+ * @param {Snapshot[]} windowSamples Samples inside the participant's active window.
+ * @param {Pid | string} pid The participant pid.
  * @param {string} metricId Metric key (e.g. "milpower").
- * @returns {number | null} The summed value, or null if no pid had finite data.
+ * @returns {number[]} The participant's values (samples lacking the value skipped).
  */
-function sumMetricAt(sample, pids, metricId) {
-  if (!sample || !sample.players) return null;
-  let sum = 0;
-  let any = false;
-  for (const pid of pids) {
-    const v = sample.players[pid]?.metrics?.[metricId];
-    if (typeof v === "number" && isFinite(v)) {
-      sum += v;
-      any = true;
-    }
-  }
-  return any ? sum : null;
-}
-
-/**
- * Build the per-sample series of a side's combined metric over a window.
- * @param {Snapshot[]} windowSamples Samples inside the war window.
- * @param {Pid[]} pids The side's participant pids.
- * @param {string} metricId Metric key.
- * @returns {number[]} Combined values (samples lacking data are skipped).
- */
-function sideMetricSeries(windowSamples, pids, metricId) {
+function participantMetricSeries(windowSamples, pid, metricId) {
   const series = [];
   for (const s of windowSamples) {
-    const v = sumMetricAt(s, pids, metricId);
-    if (v !== null) series.push(v);
+    const v = s?.players?.[pid]?.metrics?.[metricId];
+    if (typeof v === "number" && isFinite(v)) series.push(v);
   }
   return series;
 }
@@ -883,43 +862,81 @@ function maxDrawdown(values) {
  */
 
 /**
- * Compute one side's observed cost over the war window from real samples.
- * @param {Snapshot[]} windowSamples Samples inside the war window.
- * @param {Pid[]} pids The side's participant pids.
- * @returns {SideWarCost} Per-metric figures (null where fewer than two points).
+ * The metrics that make up a side's war cost, each mapped to the result field
+ * it feeds and how its series reduces to a figure: `"drawdown"` (peak→trough
+ * loss) or `"net"` (signed end−start change).
+ * @type {{ id: string, key: string, mode: "drawdown" | "net" }[]}
  */
-function sideCost(windowSamples, pids) {
-  const mil = sideMetricSeries(windowSamples, pids, "milpower");
-  const set = sideMetricSeries(windowSamples, pids, "settlements");
-  const pop = sideMetricSeries(windowSamples, pids, "population");
-  const prod = sideMetricSeries(windowSamples, pids, "production");
+const COST_METRICS = [
+  { id: "milpower", key: "milLost", mode: "drawdown" },
+  { id: "settlements", key: "settlementsLost", mode: "drawdown" },
+  { id: "population", key: "popLost", mode: "drawdown" },
+  { id: "production", key: "prodChange", mode: "net" }
+];
+
+/**
+ * Reduce a participant's metric series to its cost contribution.
+ * @param {number[]} series The metric series over the participation window.
+ * @param {"drawdown" | "net"} mode Drawdown (loss) or signed net change.
+ * @returns {number | null} The contribution, or null when fewer than two points.
+ */
+function reduceCostSeries(series, mode) {
+  if (series.length < 2) return null;
+  return mode === "net" ? series[series.length - 1] - series[0] : maxDrawdown(series);
+}
+
+/**
+ * A side's observed cost as a FULL accounting across every civ that ever fought
+ * on it — each measured only over the turns it was actually in the war
+ * ([joinTurn, leaveTurn || war end]), so a civ that withdrew still counts for
+ * the stretch it participated. Per-metric figures are null when no participant
+ * has enough data.
+ * @param {Snapshot[]} samples The full sample stream.
+ * @param {import("/demographics/ui/sampler-wars.js").WarParticipant[]} participants
+ *   The side's cumulative roster.
+ * @param {number} warStart The war's start turn.
+ * @param {number} warEnd The war's end turn (or latest sampled turn if ongoing).
+ * @returns {SideWarCost} Summed per-metric figures.
+ */
+function sideCostFull(samples, participants, warStart, warEnd) {
+  /** @type {Record<string, number | null>} */
+  const acc = { milLost: null, settlementsLost: null, popLost: null, prodChange: null };
+  for (const p of participants || []) {
+    const jt = typeof p?.joinTurn === "number" ? p.joinTurn : warStart;
+    const lt = typeof p?.leaveTurn === "number" ? p.leaveTurn : warEnd;
+    const win = samples.filter((s) => typeof s?.turn === "number" && s.turn >= jt && s.turn <= lt);
+    for (const m of COST_METRICS) {
+      const v = reduceCostSeries(participantMetricSeries(win, p.pid, m.id), m.mode);
+      if (v !== null) {
+        const cur = acc[m.key];
+        acc[m.key] = (cur === null ? 0 : cur) + v;
+      }
+    }
+  }
   return {
-    milLost: mil.length >= 2 ? maxDrawdown(mil) : null,
-    settlementsLost: set.length >= 2 ? maxDrawdown(set) : null,
-    popLost: pop.length >= 2 ? maxDrawdown(pop) : null,
-    prodChange: prod.length >= 2 ? prod[prod.length - 1] - prod[0] : null
+    milLost: acc.milLost,
+    settlementsLost: acc.settlementsLost,
+    popLost: acc.popLost,
+    prodChange: acc.prodChange
   };
 }
 
 /**
- * Compute both sides' war cost from the sampled time-series over the war's turn
- * window. This is an honest "observed change during the war" (correlation, not
- * proven causation) derived entirely from real samples — never an invented
- * formula. Fields are null when samples don't cover the window.
- * @param {*} war The war record (startTurn / endTurn / sideA / sideB pids).
+ * Compute both sides' war cost as a full accounting over the war's whole life:
+ * every civ that ever fought, each measured over its own participation window,
+ * summed per side. Derived entirely from real samples (no invented formula);
+ * an honest "observed change during the war" (correlation, not proven cause).
+ * @param {*} war The war record (startTurn / endTurn / sideACivs / sideBCivs).
  * @param {Snapshot[]} samples The full sample stream.
  * @param {number} latestTurn The latest sampled turn (window end for ongoing wars).
  * @returns {{ a: SideWarCost, b: SideWarCost }} Per-side costs.
  */
 function computeWarCost(war, samples, latestTurn) {
-  const sTurn = war.startTurn;
-  const eTurn = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
-  const win = samples.filter(
-    (s) => typeof s?.turn === "number" && s.turn >= sTurn && s.turn <= eTurn
-  );
+  const warStart = typeof war.startTurn === "number" ? war.startTurn : 0;
+  const warEnd = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
   return {
-    a: sideCost(win, war.sideA || []),
-    b: sideCost(win, war.sideB || [])
+    a: sideCostFull(samples, war.sideACivs || [], warStart, warEnd),
+    b: sideCostFull(samples, war.sideBCivs || [], warStart, warEnd)
   };
 }
 
@@ -931,7 +948,15 @@ function computeWarCost(war, samples, latestTurn) {
 function warRosterLines(roster) {
   const majors = majorsOnSide(roster);
   if (majors.length === 0) return [t("LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS")];
-  return majors.map((r) => (r.leader ? r.leader + ", " + r.civ : r.civ));
+  return majors.map((r) => {
+    const base = r.leader ? r.leader + ", " + r.civ : r.civ;
+    // Departed civs stay in the roster (full participation history) but are
+    // marked with the turn they withdrew.
+    if (r.active === false && typeof r.leaveTurn === "number") {
+      return base + " (" + t("LOC_DEMOGRAPHICS_WARS_WITHDREW", r.leaveTurn) + ")";
+    }
+    return base;
+  });
 }
 
 /**

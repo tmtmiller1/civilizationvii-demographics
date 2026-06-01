@@ -281,5 +281,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="pt_BR"><Text>Jogador local indisponível (modo observador).</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="pt_BR"><Text>Civilizações Principais</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="pt_BR"><Text>Cidades-Estado</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="pt_BR">
+            <Text>retirou-se T-{1_Turn}</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -281,5 +281,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="ru_RU"><Text>Местный игрок недоступен (режим наблюдателя).</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ru_RU"><Text>Крупные цивилизации</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ru_RU"><Text>Города-государства</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ru_RU">
+            <Text>вышла T-{1_Turn}</Text>
+        </Replace>
     </LocalizedText>
 </Database>
