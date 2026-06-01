@@ -45,7 +45,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.settings]", ...a);
@@ -53,7 +52,6 @@ function dlog(...a) {
 /**
  * Error logger; always emits.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.settings]", ...a);
@@ -138,7 +136,6 @@ function readRoot() {
 /**
  * Persist the top-level `modSettings` blob. No-op when storage is unavailable.
  * @param {SettingsRoot} root The full root blob to serialize.
- * @returns {void}
  */
 function writeRoot(root) {
   if (!hasLocalStorage()) return;
@@ -203,7 +200,6 @@ export const DemographicsSettings = {
    * Set one setting, updating the in-memory bucket and best-effort persisting.
    * @param {string} key Setting key.
    * @param {*} value New value.
-   * @returns {void}
    */
   setSetting(key, value) {
     memoryBucket[key] = value;

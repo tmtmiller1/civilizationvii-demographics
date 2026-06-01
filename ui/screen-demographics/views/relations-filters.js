@@ -23,7 +23,6 @@ import { safePlaySound } from "/demographics/ui/demographics-audio.js";
 /**
  * Wire hover-color in/out behavior on an "All On"/"All Off" link span.
  * @param {HTMLElement} el The link span.
- * @returns {void}
  */
 function wireAllToggleHover(el) {
   el.addEventListener("mouseenter", () => (el.style.color = "var(--ia-accent-gold,#f3c34c)"));
@@ -75,7 +74,6 @@ const SAMPLE_W = 84; // px — 75% bigger so dash patterns are very visible
  * @param {string} color The segment color.
  * @param {number} leftPx Left offset, px.
  * @param {number} widthPx Segment width, px.
- * @returns {void}
  */
 function pushSwatchSeg(swatch, color, leftPx, widthPx) {
   const d = document.createElement("span");
@@ -139,7 +137,6 @@ function buildFilterSwatch(f) {
  * @param {FilterDef} f The filter descriptor.
  * @param {boolean} active The pill's active state at build time.
  * @param {(key: string) => void} onToggle Toggle callback.
- * @returns {void}
  */
 function wireFilterPill(pill, f, active, onToggle) {
   let lastFired = 0;

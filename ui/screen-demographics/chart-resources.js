@@ -76,7 +76,6 @@ export function collectResourceCivOptions(history) {
  * @param {Map<string, { pid: string, label: string }>} seen Options map (mutated).
  * @param {CivSample|*} ps One civ's sample.
  * @param {string} pid Player id key.
- * @returns {void}
  */
 function foldResourceCivOption(seen, ps, pid) {
   const m = ps?.metrics;
@@ -179,7 +178,6 @@ function buildStackRow(turn, m, bands) {
  * Clamp the stack rows to a time range in place, when one is set.
  * @param {StackPoint[]} points The stack rows (mutated).
  * @param {ChartOptions|*} opts The render options.
- * @returns {void}
  */
 function clampStackPoints(points, opts) {
   const stackTr = resolveTurnRange(opts);
@@ -257,7 +255,6 @@ function buildStackLayout(W, H, dom) {
  * @param {SVGElement} svg The chart SVG.
  * @param {StackLayout} L The layout.
  * @param {number} yMax The y-domain maximum.
- * @returns {void}
  */
 function drawStackGrid(svg, L, yMax) {
   svg.appendChild(
@@ -338,7 +335,6 @@ function drawStackXTicks(svg, L, dom, stackTurnYears) {
  * @param {StackPoint[]} points The stack rows.
  * @param {StackBand[]} bands The band set.
  * @param {StackLayout} L The layout.
- * @returns {void}
  */
 function drawStackBands(svg, points, bands, L) {
   // For each band, build a polygon bounded above by (cum + band) and below by
@@ -383,7 +379,6 @@ function drawStackBands(svg, points, bands, L) {
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
  * @param {string} yAxisLabel The y-axis title text.
- * @returns {void}
  */
 function mountStackAxisTitles(wrap, L, W, H, yAxisLabel) {
   const xTitle = document.createElement("div");
@@ -411,7 +406,6 @@ function mountStackAxisTitles(wrap, L, W, H, yAxisLabel) {
  *   The tick positions.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @returns {void}
  */
 function mountStackXTickLabels(wrap, ticks, W, H) {
   ticks.forEach((tick) => {
@@ -439,7 +433,6 @@ function mountStackXTickLabels(wrap, ticks, W, H) {
  * Append a "T-N" turn sub-label to a tick container.
  * @param {HTMLElement} div The tick container.
  * @param {number} t The turn.
- * @returns {void}
  */
 function appendTickTurn(div, t) {
   const tn = document.createElement("div");
@@ -456,7 +449,6 @@ function appendTickTurn(div, t) {
  * @param {StackLayout} L The layout.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @returns {void}
  */
 function mountStackLegend(wrap, bands, points, L, W, H) {
   let gy = L.padT + 8;
