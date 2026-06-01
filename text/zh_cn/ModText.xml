@@ -464,7 +464,7 @@
             <Text>定居点 {1_Value}</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="zh_Hans_CN">
-            <Text>人口 {1_Value}</Text>
+            <Text>人口 {1_Value}（换算）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="zh_Hans_CN">
             <Text>生产力 {1_Value}</Text>
@@ -843,6 +843,441 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="zh_Hans_CN">
             <Text>T-{1_Turn} 退出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="zh_Hans_CN">
+            <Text>第{1_Roman}次世界大战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="zh_Hans_CN">
+            <Text>{1_A}对{2_B}大战（另有{3_Extra}个文明参战）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="zh_Hans_CN">
+            <Text>{1_A}–{2_B}–{3_C}三方战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="zh_Hans_CN">
+            <Text>{1_Ordinal}{2_A}–{3_B}战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="zh_Hans_CN">
+            <Text>{1_Base}（百年战争）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="zh_Hans_CN">
+            <Text>{1_Base}（长期战争）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="zh_Hans_CN">
+            <Text>第一次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="zh_Hans_CN">
+            <Text>第二次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="zh_Hans_CN">
+            <Text>第三次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="zh_Hans_CN">
+            <Text>第四次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="zh_Hans_CN">
+            <Text>第五次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="zh_Hans_CN">
+            <Text>第{1_Num}次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="zh_Hans_CN">
+            <Text>青铜时代崩溃</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="zh_Hans_CN">
+            <Text>大迁徙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="zh_Hans_CN">
+            <Text>民族迁徙时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="zh_Hans_CN">
+            <Text>海上民族</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="zh_Hans_CN">
+            <Text>蛮族入侵</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="zh_Hans_CN">
+            <Text>蛮族战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="zh_Hans_CN">
+            <Text>大部族</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="zh_Hans_CN">
+            <Text>草原领主来袭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="zh_Hans_CN">
+            <Text>异族迁徙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="zh_Hans_CN">
+            <Text>毁灭之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="zh_Hans_CN">
+            <Text>动荡之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="zh_Hans_CN">
+            <Text>边疆崩溃</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="zh_Hans_CN">
+            <Text>边疆战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="zh_Hans_CN">
+            <Text>北方入侵</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="zh_Hans_CN">
+            <Text>东方入侵</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆风暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省风暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="zh_Hans_CN">
+            <Text>来自草原的风暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="zh_Hans_CN">
+            <Text>海岸风暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="zh_Hans_CN">
+            <Text>腹地风暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="zh_Hans_CN">
+            <Text>草原之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="zh_Hans_CN">
+            <Text>海岸之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="zh_Hans_CN">
+            <Text>腹地之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="zh_Hans_CN">
+            <Text>边疆突袭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆的沦陷</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="zh_Hans_CN">
+            <Text>安东尼瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="zh_Hans_CN">
+            <Text>盖伦瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="zh_Hans_CN">
+            <Text>大瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="zh_Hans_CN">
+            <Text>大死亡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="zh_Hans_CN">
+            <Text>大热病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="zh_Hans_CN">
+            <Text>大疫劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="zh_Hans_CN">
+            <Text>瘟疫之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="zh_Hans_CN">
+            <Text>死亡时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="zh_Hans_CN">
+            <Text>瘟疫时期</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="zh_Hans_CN">
+            <Text>死亡之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="zh_Hans_CN">
+            <Text>灰烬之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="zh_Hans_CN">
+            <Text>出汗病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="zh_Hans_CN">
+            <Text>消耗性瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="zh_Hans_CN">
+            <Text>夏季瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="zh_Hans_CN">
+            <Text>冬季瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="zh_Hans_CN">
+            <Text>无声的死亡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="zh_Hans_CN">
+            <Text>黑死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="zh_Hans_CN">
+            <Text>红死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="zh_Hans_CN">
+            <Text>灰死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="zh_Hans_CN">
+            <Text>灰烬瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="zh_Hans_CN">
+            <Text>草原瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="zh_Hans_CN">
+            <Text>海岸瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="zh_Hans_CN">
+            <Text>腹地瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="zh_Hans_CN">
+            <Text>奴隶战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="zh_Hans_CN">
+            <Text>内战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="zh_Hans_CN">
+            <Text>反叛之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="zh_Hans_CN">
+            <Text>无政府之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="zh_Hans_CN">
+            <Text>僭主时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="zh_Hans_CN">
+            <Text>篡位者时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="zh_Hans_CN">
+            <Text>伪王时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="zh_Hans_CN">
+            <Text>军阀时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="zh_Hans_CN">
+            <Text>三世纪危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="zh_Hans_CN">
+            <Text>继承危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="zh_Hans_CN">
+            <Text>正统性危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="zh_Hans_CN">
+            <Text>权威危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="zh_Hans_CN">
+            <Text>权威崩溃</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="zh_Hans_CN">
+            <Text>大分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="zh_Hans_CN">
+            <Text>裂解</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="zh_Hans_CN">
+            <Text>动乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="zh_Hans_CN">
+            <Text>士兵叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="zh_Hans_CN">
+            <Text>伪王之战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="zh_Hans_CN">
+            <Text>继承战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="zh_Hans_CN">
+            <Text>行省叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="zh_Hans_CN">
+            <Text>草原叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="zh_Hans_CN">
+            <Text>海岸叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="zh_Hans_CN">
+            <Text>腹地叛乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="zh_Hans_CN">
+            <Text>革命时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="zh_Hans_CN">
+            <Text>改革时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="zh_Hans_CN">
+            <Text>革命之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="zh_Hans_CN">
+            <Text>民族革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="zh_Hans_CN">
+            <Text>民族之春</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="zh_Hans_CN">
+            <Text>自由之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="zh_Hans_CN">
+            <Text>共和之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="zh_Hans_CN">
+            <Text>光荣革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="zh_Hans_CN">
+            <Text>大觉醒</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="zh_Hans_CN">
+            <Text>改革运动</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="zh_Hans_CN">
+            <Text>人民起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="zh_Hans_CN">
+            <Text>人民革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="zh_Hans_CN">
+            <Text>民族起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="zh_Hans_CN">
+            <Text>共和起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="zh_Hans_CN">
+            <Text>王权危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="zh_Hans_CN">
+            <Text>共和危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="zh_Hans_CN">
+            <Text>王权陨落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="zh_Hans_CN">
+            <Text>宪政危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="zh_Hans_CN">
+            <Text>草原起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="zh_Hans_CN">
+            <Text>海岸起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="zh_Hans_CN">
+            <Text>腹地起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="zh_Hans_CN">
+            <Text>东西教会大分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="zh_Hans_CN">
+            <Text>圣教分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="zh_Hans_CN">
+            <Text>神殿分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="zh_Hans_CN">
+            <Text>行省教会分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="zh_Hans_CN">
+            <Text>宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="zh_Hans_CN">
+            <Text>反宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="zh_Hans_CN">
+            <Text>宗教战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="zh_Hans_CN">
+            <Text>异端时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="zh_Hans_CN">
+            <Text>先知时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="zh_Hans_CN">
+            <Text>宗教动荡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="zh_Hans_CN">
+            <Text>信仰危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="zh_Hans_CN">
+            <Text>正统危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="zh_Hans_CN">
+            <Text>圣战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="zh_Hans_CN">
+            <Text>信徒之战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="zh_Hans_CN">
+            <Text>先知之战</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="zh_Hans_CN">
+            <Text>圣像破坏危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="zh_Hans_CN">
+            <Text>神殿危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="zh_Hans_CN">
+            <Text>朝圣者战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="zh_Hans_CN">
+            <Text>北方宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="zh_Hans_CN">
+            <Text>东方宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="zh_Hans_CN">
+            <Text>边疆异端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="zh_Hans_CN">
+            <Text>行省异端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="zh_Hans_CN">
+            <Text>草原异端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="zh_Hans_CN">
+            <Text>海岸异端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="zh_Hans_CN">
+            <Text>腹地异端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="zh_Hans_CN">
+            <Text>动荡时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="zh_Hans_CN">
+            <Text>混乱时期</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="zh_Hans_CN">
+            <Text>帝国危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="zh_Hans_CN">
+            <Text>改革危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="zh_Hans_CN">
+            <Text>危机</Text>
         </Replace>
     </LocalizedText>
 </Database>

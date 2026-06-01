@@ -1,30 +1,30 @@
 pool,kind,arc_id,stage,template,name,keep
-ANTIQUITY_CRISIS_INVASION,name,,,El colapso de la Edad de Bronce,El colapso de la Edad de Bronce,1
-ANTIQUITY_CRISIS_INVASION,name,,,La gran migración,La gran migración,1
-ANTIQUITY_CRISIS_INVASION,name,,,La era de las migraciones,La era de las migraciones,1
-ANTIQUITY_CRISIS_INVASION,name,,,La llegada de los Pueblos del Mar,La llegada de los Pueblos del Mar,1
-ANTIQUITY_CRISIS_INVASION,name,,,Las invasiones bárbaras,Las invasiones bárbaras,1
-ANTIQUITY_CRISIS_INVASION,name,,,Las guerras bárbaras,Las guerras bárbaras,1
-ANTIQUITY_CRISIS_INVASION,name,,,La gran horda,La gran horda,1
-ANTIQUITY_CRISIS_INVASION,name,,,La llegada de los señores de la estepa,La llegada de los señores de la estepa,1
-ANTIQUITY_CRISIS_INVASION,name,,,La marcha de los extraños,La marcha de los extraños,1
-ANTIQUITY_CRISIS_INVASION,name,,,Los años de devastación,Los años de devastación,1
-ANTIQUITY_CRISIS_INVASION,name,,,Los años de agitación,Los años de agitación,1
-ANTIQUITY_CRISIS_INVASION,name,,,La caída de la frontera,La caída de la frontera,1
-ANTIQUITY_CRISIS_INVASION,name,,,La crisis de la frontera,La crisis de la frontera,1
-ANTIQUITY_CRISIS_INVASION,name,,,Las guerras de la frontera,Las guerras de la frontera,1
-ANTIQUITY_CRISIS_INVASION,name,,,Las invasiones del norte,Las invasiones del norte,1
-ANTIQUITY_CRISIS_INVASION,name,,,Las invasiones del este,Las invasiones del este,1
-ANTIQUITY_CRISIS_INVASION,name,,,La tormenta de la frontera,La tormenta de la frontera,1
-ANTIQUITY_CRISIS_INVASION,name,,,La tormenta de las provincias,La tormenta de las provincias,1
-ANTIQUITY_CRISIS_INVASION,name,,,La tormenta de la estepa,La tormenta de la estepa,1
-ANTIQUITY_CRISIS_INVASION,name,,,La tormenta de la costa,La tormenta de la costa,1
-ANTIQUITY_CRISIS_INVASION,name,,,La tormenta del corazón del imperio,La tormenta del corazón del imperio,1
-ANTIQUITY_CRISIS_INVASION,name,,,El saqueo de la frontera,El saqueo de la frontera,1
-ANTIQUITY_CRISIS_INVASION,name,,,El saqueo de las provincias,El saqueo de las provincias,1
-ANTIQUITY_CRISIS_INVASION,name,,,El saqueo de la estepa,El saqueo de la estepa,1
-ANTIQUITY_CRISIS_INVASION,name,,,El saqueo de la costa,El saqueo de la costa,1
-ANTIQUITY_CRISIS_INVASION,name,,,El saqueo del corazón del imperio,El saqueo del corazón del imperio,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Bronze Age Collapse,El colapso de la Edad de Bronce,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Great Migration,La gran migración,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Age of Migrations,La era de las migraciones,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Sea Peoples,La llegada de los Pueblos del Mar,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Invasions,Las invasiones bárbaras,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Wars,Las guerras bárbaras,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Great Horde,La gran horda,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Horse Lords,La llegada de los señores de la estepa,1
+ANTIQUITY_CRISIS_INVASION,name,,,The March of Strangers,La marcha de los extraños,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Devastation,Los años de devastación,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Turmoil,Los años de agitación,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Collapse,La caída de la frontera,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Crisis of the Frontier,La crisis de la frontera,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Wars,Las guerras de la frontera,1
+ANTIQUITY_CRISIS_INVASION,name,,,The {regional} Invasions,Las invasiones del norte,1
+ANTIQUITY_CRISIS_INVASION,name,,,The {regional} Invasions,Las invasiones del este,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},La tormenta de la frontera,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},La tormenta de las provincias,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},La tormenta desde la estepa,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},La tormenta de la costa,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},La tormenta del corazón del imperio,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},El saqueo de la frontera,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},El saqueo de las provincias,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},El saqueo de la estepa,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},El saqueo de la costa,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},El saqueo del corazón del imperio,1
 ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,Las incursiones fronterizas,1
 ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,Las invasiones bárbaras,1
 ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,El saqueo de la frontera,1
@@ -37,24 +37,192 @@ ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,Las guerras de la frontera,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,Las guerras bárbaras,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,El saqueo de las provincias,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,El colapso de la Edad de Bronce,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La peste antonina,La peste antonina,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La peste de Galeno,La peste de Galeno,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La gran peste,La gran peste,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La gran mortalidad,La gran mortalidad,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La gran fiebre,La gran fiebre,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La gran muerte,La gran muerte,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Los años de peste,Los años de peste,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Los tiempos de la muerte,Los tiempos de la muerte,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,El tiempo de la peste,El tiempo de la peste,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Los años de mortalidad,Los años de mortalidad,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Los años de cenizas,Los años de cenizas,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,El mal del sudor,El mal del sudor,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La peste devastadora,La peste devastadora,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La peste de verano,La peste de verano,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La peste invernal,La peste invernal,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La muerte silenciosa,La muerte silenciosa,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La muerte negra,La muerte negra,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La muerte roja,La muerte roja,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La muerte gris,La muerte gris,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La muerte gris ceniza,La muerte gris ceniza,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,La peste de la frontera,La peste de la frontera,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Antonine Plague,La peste antonina,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,La peste de Galeno,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,La gran peste,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,La gran mortalidad,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,La gran fiebre,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,La gran muerte,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,Los años de peste,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,Los tiempos de la muerte,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,El tiempo de la peste,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Years of Mortality,Los años de mortalidad,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Years of Ashes,Los años de cenizas,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Sweating Sickness,El mal del sudor,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Wasting Plague,La peste devastadora,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Summer Plague,La peste de verano,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Winter Sickness,La peste invernal,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Silent Death,La muerte silenciosa,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,La muerte negra,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,La muerte roja,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,La muerte gris,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,La muerte gris ceniza,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de la frontera,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de las provincias,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de la estepa,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de la costa,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste del corazón del imperio,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,1,,La peste de verano,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,2,,Los años de peste,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,3,,La gran mortalidad,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,4,,Los tiempos de la muerte,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,1,,El mal del sudor,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,2,,La peste de la costa,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,La gran peste,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,Los años de cenizas,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,La peste invernal,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,La peste devastadora,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,La gran muerte,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,La muerte silenciosa,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,Las guerras serviles,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,Las guerras civiles,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Years of Revolt,Los años de revuelta,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Years of Anarchy,Los años de anarquía,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Years of Turmoil,Los años de agitación,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Time of Tyrants,El tiempo de los tiranos,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Age of Usurpers,La era de los usurpadores,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Age of Pretenders,La era de los pretendientes,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Age of Warlords,La era de los señores de la guerra,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of the Third Century,La crisis del siglo III,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Succession,La crisis de sucesión,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Legitimacy,La crisis de legitimidad,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,La crisis de autoridad,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,El colapso de la autoridad,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,La gran fractura,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,La escisión,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,Los disturbios,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,La revuelta de los soldados,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,La guerra de los pretendientes,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,La guerra de sucesión,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Provincial Revolts,Las revueltas provinciales,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of the Provinces,La crisis de las provincias,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},La revuelta de la frontera,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},La revuelta de las provincias,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},La revuelta de la estepa,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},La revuelta de la costa,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},La revuelta del corazón del imperio,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,1,,La guerra de los pretendientes,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,2,,Las guerras civiles,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,3,,La era de los usurpadores,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,4,,El colapso de la autoridad,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,1,,La revuelta de los soldados,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,2,,Las revueltas provinciales,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,3,,Los años de anarquía,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,4,,La escisión,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,1,,La crisis de sucesión,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,2,,La guerra de sucesión,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,3,,Las guerras civiles,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,4,,El tiempo de los tiranos,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,1,,Los años de revuelta,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,2,,La crisis de las provincias,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,3,,La gran fractura,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,4,,La era de los señores de la guerra,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Age of Revolutions,La era de las revoluciones,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Age of Reform,La era de las reformas,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Revolutionary Years,Los años revolucionarios,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The National Revolutions,Las revoluciones nacionales,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Spring of Nations,La Primavera de los Pueblos,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Year of Liberty,El año de la libertad,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Year of the Republic,El año de la república,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Glorious Revolution,La Revolución Gloriosa,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Great Awakening,El Gran Despertar,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Reform Movement,El movimiento de reforma,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The People's Rising,El levantamiento del pueblo,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The People's Revolution,La revolución del pueblo,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The National Rising,El levantamiento nacional,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Republican Rising,El levantamiento republicano,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Crisis of the Crown,La crisis de la corona,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Crisis of the Republic,La crisis de la república,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Fall of the Crown,La caída de la corona,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Constitutional Crisis,La crisis constitucional,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Los levantamientos de la frontera,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Los levantamientos de las provincias,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Los levantamientos de la estepa,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Los levantamientos de la costa,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Los levantamientos del corazón del imperio,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,1,,El año de la libertad,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,2,,El levantamiento republicano,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,3,,La caída de la corona,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,4,,Los años revolucionarios,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,1,,La crisis constitucional,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,2,,El levantamiento del pueblo,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,3,,La revolución del pueblo,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,4,,La Primavera de los Pueblos,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,1,,El movimiento de reforma,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,2,,La crisis de la corona,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,3,,El levantamiento nacional,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,4,,La era de las revoluciones,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Great Schism,El Gran Cisma,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Sacred Schism,El cisma sagrado,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Temple Schism,El cisma del templo,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Provincial Schism,El cisma provincial,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Reformation,La Reforma,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Counter-Reformation,La Contrarreforma,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Reformation of the Provinces,La Reforma de las provincias,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Wars of Religion,Las guerras de religión,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Age of Heresies,La era de las herejías,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Age of Prophets,La era de los profetas,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Religious Upheaval,La conmoción religiosa,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Crisis of Faith,La crisis de fe,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Crisis of Orthodoxy,La crisis de la ortodoxia,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Sacred Wars,Las guerras sagradas,1
+EXPLORATION_CRISIS_RELIGION,name,,,The War of the Faithful,La guerra de los fieles,1
+EXPLORATION_CRISIS_RELIGION,name,,,The War of the Prophets,La guerra de los profetas,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Iconoclast Crisis,La crisis iconoclasta,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Temple Crisis,La crisis del templo,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Pilgrim Wars,Las guerras de los peregrinos,1
+EXPLORATION_CRISIS_RELIGION,name,,,The {regional} Reformation,La Reforma del norte,1
+EXPLORATION_CRISIS_RELIGION,name,,,The {regional} Reformation,La Reforma del este,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},La herejía de la frontera,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},La herejía de las provincias,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},La herejía de la estepa,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},La herejía de la costa,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},La herejía del corazón del imperio,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,1,,La crisis de fe,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,2,,El cisma sagrado,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,3,,Las guerras de religión,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,4,,La Reforma,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,1,,La crisis iconoclasta,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,2,,La era de las herejías,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,3,,Las guerras de los peregrinos,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,4,,La Contrarreforma,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,1,,La crisis del templo,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,2,,La guerra de los profetas,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,3,,El Gran Cisma,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,4,,La era de los profetas,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,La muerte negra,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,La gran peste,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,La gran mortalidad,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,La gran fiebre,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,La gran muerte,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,El tiempo de la peste,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,Los años de mortalidad,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,El mal del sudor,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Wasting Plague,La peste devastadora,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague Years,Los años de peste,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Dying Time,Los tiempos de la muerte,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Ashes,Los años de cenizas,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Summer Plague,La peste de verano,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Winter Sickness,La peste invernal,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Silent Death,La muerte silenciosa,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,La muerte negra,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,La muerte roja,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,La muerte gris,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,La muerte gris ceniza,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de la frontera,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de las provincias,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de la estepa,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste de la costa,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},La peste del corazón del imperio,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,1,,La peste de verano,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,2,,Los años de peste,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,La muerte negra,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,La gran mortalidad,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,La peste de la costa,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,La gran peste,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,La gran muerte,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,Los años de cenizas,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,El mal del sudor,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,La peste devastadora,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,3,,El tiempo de la peste,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,4,,Los tiempos de la muerte,1

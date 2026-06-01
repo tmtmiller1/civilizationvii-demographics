@@ -464,8 +464,13 @@ function readCardTitle(card) {
 }
 
 /**
- * Resolve the legacy row for a card title: exact name-map hit, else a substring
- * match (the native L10n composer sometimes wraps names with style tags).
+ * Resolve the legacy row for a card title: an exact name-map hit, else a single
+ * UNAMBIGUOUS containment match. The native L10n composer sometimes wraps the
+ * name in style tags, so the card title can contain the legacy name with extra
+ * decoration — we accept that one direction only (title ⊇ name), and only when
+ * exactly one key matches. The reverse direction (name ⊇ title) and ties are
+ * rejected: both could bind a card to the wrong legacy, which is worse than
+ * leaving it undecorated.
  * @param {Map<string, LegacyRow>} map Name map.
  * @param {string} rawText Raw (display-cased) title text, for diagnostics.
  * @param {string} titleText Uppercased title text.
@@ -474,12 +479,12 @@ function readCardTitle(card) {
 function resolveRowForTitle(map, rawText, titleText) {
   let row = map.get(titleText);
   if (!row) {
+    /** @type {LegacyRow[]} */
+    const hits = [];
     for (const [k, v] of map.entries()) {
-      if (k.includes(titleText) || titleText.includes(k)) {
-        row = v;
-        break;
-      }
+      if (k.length > 0 && titleText.includes(k)) hits.push(v);
     }
+    if (hits.length === 1) row = hits[0];
   }
   if (!row) {
     if (_logCount < 10)
@@ -757,27 +762,90 @@ function onMutations(mutations) {
   }
 }
 
+/** @type {MutationObserver | null} Scoped card observer; active only while the legacies screen is open. */
+let _cardObserver = null;
+/** @type {MutationObserver | null} Lightweight watcher for the legacies screen mounting/unmounting. */
+let _presenceObserver = null;
+
+/** The legacies screen's custom-element tag (base-standard `defineLegacyComponent`). */
+const LEGACIES_SCREEN_TAG = "screen-legacies";
+
 /**
- * Initial sweep plus a MutationObserver that keeps decorating cards as the
- * native UI mounts and hydrates them.
+ * Attach the card-decoration observer, scoped to the open legacies screen, and
+ * run an initial sweep over it. Idempotent: a call while already attached is a
+ * no-op.
+ * @param {HTMLElement} screenRoot The `<screen-legacies>` element.
+ * @returns {void}
+ */
+function attachCardObserver(screenRoot) {
+  if (_cardObserver) return;
+  // DOM-edge boundary for the initial sweep: log own-logic failures instead of
+  // letting them abort attachment (which would also skip the observer).
+  try {
+    sweepRoot(screenRoot);
+  } catch (e) {
+    derr("initial sweep:", e);
+  }
+  _cardObserver = new MutationObserver(onMutations);
+  _cardObserver.observe(screenRoot, { childList: true, subtree: true, characterData: true });
+  dlog("card observer attached to", LEGACIES_SCREEN_TAG);
+}
+
+/**
+ * Disconnect the scoped card observer if attached.
+ * @returns {void}
+ */
+function detachCardObserver() {
+  if (!_cardObserver) return;
+  _cardObserver.disconnect();
+  _cardObserver = null;
+  dlog("card observer detached");
+}
+
+/**
+ * Disconnect every observer. Wired to engine `BeforeUnload` so the watchers
+ * don't outlive this UI-module context — the closest analog to a screen detach
+ * for a standalone decorator script.
+ * @returns {void}
+ */
+function teardownObservers() {
+  detachCardObserver();
+  if (_presenceObserver) {
+    _presenceObserver.disconnect();
+    _presenceObserver = null;
+  }
+}
+
+/**
+ * Watch for the legacies screen mounting/unmounting and attach or detach the
+ * scoped card observer accordingly. The presence watcher is deliberately
+ * childList/subtree only (no `characterData`) so it stays cheap across the whole
+ * HUD; the expensive `characterData` watch is confined to the screen's subtree
+ * and lives only while the screen is open — so the decorator no longer runs a
+ * document-wide text-mutation observer for the entire process lifetime.
  * @returns {void}
  */
 function bootstrap() {
   dlog("bootstrap");
-  // DOM-edge boundary for the initial sweep: log own-logic failures instead
-  // of letting them abort bootstrap (which would also skip observer setup).
-  try {
-    sweepRoot(document.body);
-  } catch (e) {
-    derr("initial sweep:", e);
-  }
-  const observer = new MutationObserver(onMutations);
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    characterData: true
+  const existing = /** @type {HTMLElement | null} */ (document.querySelector(LEGACIES_SCREEN_TAG));
+  if (existing) attachCardObserver(existing);
+
+  _presenceObserver = new MutationObserver(() => {
+    const screen = /** @type {HTMLElement | null} */ (document.querySelector(LEGACIES_SCREEN_TAG));
+    if (screen) attachCardObserver(screen);
+    else detachCardObserver();
   });
-  dlog("MutationObserver attached");
+  _presenceObserver.observe(document.body, { childList: true, subtree: true });
+  dlog("presence observer attached");
+
+  try {
+    if (typeof engine !== "undefined" && typeof engine.on === "function") {
+      engine.on("BeforeUnload", teardownObservers);
+    }
+  } catch (_) {
+    // engine.on can throw if the event name is unknown in this build; the
+    // observers are harmless if they're never torn down explicitly.
+  }
 }
 
 if (document.readyState === "complete" || document.readyState === "interactive") {

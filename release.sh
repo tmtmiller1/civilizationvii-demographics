@@ -65,7 +65,7 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='release.sh' --exclude='*.bak' --exclude='node_modules' \
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
-    --exclude='*.d.ts' \
+    --exclude='*.d.ts' --exclude='text/data' \
     "$SRC_DIR"/ "$TARGET_DIR"/
 
 echo "==> Disabling debug logging in dist JS files"

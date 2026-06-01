@@ -488,7 +488,7 @@
             <Text>settlements {1_Value}</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_POP">
-            <Text>pop {1_Value}</Text>
+            <Text>pop {1_Value} (scaled)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION">
             <Text>production {1_Value}</Text>
@@ -868,6 +868,441 @@
 
         <Row Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW">
             <Text>withdrew T-{1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD">
+            <Text>World War {1_Roman}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT">
+            <Text>Great War: {1_A} vs {2_B} (+{3_Extra} civs)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE">
+            <Text>Tripartite {1_A}–{2_B}–{3_C} War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL">
+            <Text>{1_Ordinal} {2_A}–{3_B} War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED">
+            <Text>{1_Base} (Hundred Years' War)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_LONG">
+            <Text>{1_Base} (Long War)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_1">
+            <Text>First</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_2">
+            <Text>Second</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_3">
+            <Text>Third</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_4">
+            <Text>Fourth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_5">
+            <Text>Fifth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_N">
+            <Text>{1_Num}th</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE">
+            <Text>The Bronze Age Collapse</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION">
+            <Text>The Great Migration</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS">
+            <Text>The Age of Migrations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES">
+            <Text>The Coming of the Sea Peoples</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS">
+            <Text>The Barbarian Invasions</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS">
+            <Text>The Barbarian Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE">
+            <Text>The Great Horde</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS">
+            <Text>The Coming of the Horse Lords</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS">
+            <Text>The March of Strangers</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION">
+            <Text>The Years of Devastation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL">
+            <Text>The Years of Turmoil</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE">
+            <Text>The Frontier Collapse</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER">
+            <Text>The Crisis of the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS">
+            <Text>The Frontier Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS">
+            <Text>The Northern Invasions</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS">
+            <Text>The Eastern Invasions</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER">
+            <Text>The Storm from the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES">
+            <Text>The Storm from the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE">
+            <Text>The Storm from the Steppe</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST">
+            <Text>The Storm from the Coast</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND">
+            <Text>The Storm from the Heartland</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER">
+            <Text>The Sack of the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES">
+            <Text>The Sack of the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE">
+            <Text>The Sack of the Steppe</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST">
+            <Text>The Sack of the Coast</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND">
+            <Text>The Sack of the Heartland</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS">
+            <Text>The Border Raids</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER">
+            <Text>The Fall of the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE">
+            <Text>The Antonine Plague</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN">
+            <Text>The Plague of Galen</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE">
+            <Text>The Great Pestilence</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY">
+            <Text>The Great Mortality</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER">
+            <Text>The Great Fever</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING">
+            <Text>The Great Dying</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS">
+            <Text>The Plague Years</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME">
+            <Text>The Dying Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE">
+            <Text>The Time of Pestilence</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY">
+            <Text>The Years of Mortality</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES">
+            <Text>The Years of Ashes</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS">
+            <Text>The Sweating Sickness</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE">
+            <Text>The Wasting Plague</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE">
+            <Text>The Summer Plague</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS">
+            <Text>The Winter Sickness</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH">
+            <Text>The Silent Death</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH">
+            <Text>The Black Death</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH">
+            <Text>The Red Death</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH">
+            <Text>The Grey Death</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH">
+            <Text>The Ashen Death</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER">
+            <Text>The Plague of the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES">
+            <Text>The Plague of the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE">
+            <Text>The Plague of the Steppe</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST">
+            <Text>The Plague of the Coast</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND">
+            <Text>The Plague of the Heartland</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS">
+            <Text>The Servile Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS">
+            <Text>The Civil Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT">
+            <Text>The Years of Revolt</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY">
+            <Text>The Years of Anarchy</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS">
+            <Text>The Time of Tyrants</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS">
+            <Text>The Age of Usurpers</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS">
+            <Text>The Age of Pretenders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS">
+            <Text>The Age of Warlords</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY">
+            <Text>The Crisis of the Third Century</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION">
+            <Text>The Crisis of Succession</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY">
+            <Text>The Crisis of Legitimacy</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY">
+            <Text>The Crisis of Authority</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY">
+            <Text>The Collapse of Authority</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING">
+            <Text>The Great Fracturing</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING">
+            <Text>The Sundering</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES">
+            <Text>The Troubles</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT">
+            <Text>The Soldier's Revolt</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR">
+            <Text>The Pretenders' War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION">
+            <Text>The War of Succession</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS">
+            <Text>The Provincial Revolts</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES">
+            <Text>The Crisis of the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER">
+            <Text>The Revolt of the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES">
+            <Text>The Revolt of the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE">
+            <Text>The Revolt of the Steppe</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST">
+            <Text>The Revolt of the Coast</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND">
+            <Text>The Revolt of the Heartland</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS">
+            <Text>The Age of Revolutions</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM">
+            <Text>The Age of Reform</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS">
+            <Text>The Revolutionary Years</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS">
+            <Text>The National Revolutions</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS">
+            <Text>The Spring of Nations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY">
+            <Text>The Year of Liberty</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC">
+            <Text>The Year of the Republic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION">
+            <Text>The Glorious Revolution</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING">
+            <Text>The Great Awakening</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT">
+            <Text>The Reform Movement</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING">
+            <Text>The People's Rising</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION">
+            <Text>The People's Revolution</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING">
+            <Text>The National Rising</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING">
+            <Text>The Republican Rising</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN">
+            <Text>The Crisis of the Crown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC">
+            <Text>The Crisis of the Republic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN">
+            <Text>The Fall of the Crown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS">
+            <Text>The Constitutional Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER">
+            <Text>The Risings in the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES">
+            <Text>The Risings in the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE">
+            <Text>The Risings in the Steppe</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST">
+            <Text>The Risings in the Coast</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND">
+            <Text>The Risings in the Heartland</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM">
+            <Text>The Great Schism</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM">
+            <Text>The Sacred Schism</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM">
+            <Text>The Temple Schism</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM">
+            <Text>The Provincial Schism</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION">
+            <Text>The Reformation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION">
+            <Text>The Counter-Reformation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES">
+            <Text>The Reformation of the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION">
+            <Text>The Wars of Religion</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES">
+            <Text>The Age of Heresies</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS">
+            <Text>The Age of Prophets</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL">
+            <Text>The Religious Upheaval</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH">
+            <Text>The Crisis of Faith</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY">
+            <Text>The Crisis of Orthodoxy</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS">
+            <Text>The Sacred Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL">
+            <Text>The War of the Faithful</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS">
+            <Text>The War of the Prophets</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS">
+            <Text>The Iconoclast Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS">
+            <Text>The Temple Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS">
+            <Text>The Pilgrim Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION">
+            <Text>The Northern Reformation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION">
+            <Text>The Eastern Reformation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER">
+            <Text>The Heresy of the Frontier</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES">
+            <Text>The Heresy of the Provinces</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE">
+            <Text>The Heresy of the Steppe</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST">
+            <Text>The Heresy of the Coast</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND">
+            <Text>The Heresy of the Heartland</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL">
+            <Text>The Age of Upheaval</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES">
+            <Text>The Time of Troubles</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE">
+            <Text>The Crisis of Empire</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS">
+            <Text>The Reform Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS">
+            <Text>The Crisis</Text>
         </Row>
     </EnglishText>
 </Database>

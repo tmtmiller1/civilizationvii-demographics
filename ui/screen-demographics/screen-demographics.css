@@ -1582,42 +1582,59 @@
 }
 
 /* Hover tooltip chrome. display (hidden/shown) + left/top stay inline. */
+/* War tooltip — dressed to match the game's native tooltips: the same
+   `base_tooltip-bg` ornate border-image frame, the same dark gradient fill, and
+   the native parchment/tan text palette (title rgb(204,188,163), body
+   rgb(179,158,128)). Mirrors core/ui/themes/default `.img-tooltip-border` +
+   `.img-tooltip-bg` and tooltip-manager.css `.tooltip-title` / `.tooltip-value`,
+   so the mod's tooltip reads as part of the base UI rather than a bolt-on. */
 .demographics-wars-tooltip {
     position: absolute;
     z-index: 20;
     min-width: 16rem;
     max-width: 26rem;
-    padding: 0.55rem 0.75rem;
-    background: rgba(12, 9, 6, 0.96);
-    border: 1px solid rgba(243, 195, 76, 0.6);
-    border-radius: 0.2rem;
-    color: #f3e7c4;
+    padding: 0.85rem 1rem 1.05rem 1rem;
+    border: 0;
+    border-radius: 0;
+    border-image-outset: 0.3333333333rem 0.8888888889rem 1.3333333333rem 0.8888888889rem;
+    border-image-slice: 16 24 36 24 fill;
+    border-image-source: url("blp:base_tooltip-bg");
+    border-image-width: 0.8888888889rem 1.3333333333rem 2rem 1.3333333333rem;
+    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.97) 0%, rgba(18, 21, 31, 0.97) 100%);
+    color: rgb(179, 158, 128);
     font-family: TitilliumWeb, sans-serif;
     font-size: 0.85rem;
     line-height: 1.35;
     pointer-events: none;
-    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.6);
 }
 .demographics-wars-tooltip-head {
     font-weight: 700;
-    color: #f3c34c;
-    margin-bottom: 0.25rem;
+    color: rgb(213, 197, 170);
+    font-size: 0.92rem;
+    margin-bottom: 0.35rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid rgba(204, 188, 163, 0.25);
 }
 .demographics-wars-tooltip-meta {
-    margin-top: 0.4rem;
-    opacity: 0.9;
+    margin-top: 0.45rem;
+    color: rgb(179, 158, 128);
 }
 .demographics-wars-tooltip-cost {
-    margin-top: 0.4rem;
-    opacity: 0.9;
+    margin-top: 0.5rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid rgba(204, 188, 163, 0.18);
+    color: rgb(179, 158, 128);
 }
 .demographics-wars-tooltip-section-label {
     font-weight: 600;
-    opacity: 0.85;
-    margin-top: 0.25rem;
+    color: rgb(204, 188, 163);
+    letter-spacing: 0.02rem;
+    margin-top: 0.4rem;
 }
 .demographics-wars-tooltip-section-line {
     padding-left: 0.7rem;
+    color: rgb(179, 158, 128);
 }
 
 /* ── Line chart (main per-civ time-series) — static chrome migrated from
