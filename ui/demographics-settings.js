@@ -65,6 +65,13 @@ const ROOT_KEY = "modSettings";
 const SCHEMA_KEY = "__schema";
 const SCHEMA_VERSION = 1;
 
+// NOTE: DEFAULTS is NOT an exhaustive schema. It seeds the in-memory bucket and
+// backs `getSettings()`, but the authoritative default for any setting is the
+// fallback passed at the call site — `getSetting(key, dflt)`. Many settings
+// (per-view state: active tab/page/metric, viewer pids, time filters, etc.) are
+// intentionally absent here and resolved by their call sites. Add a key here
+// only when you want it in the baseline bucket; otherwise the call-site default
+// is sufficient and authoritative.
 /** @type {SettingsBucket} */
 const DEFAULTS = {
   activeMetric: "score",
