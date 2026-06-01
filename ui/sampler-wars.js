@@ -90,7 +90,6 @@ const DEMOGRAPHICS_DEBUG = false;
 /**
  * Informational logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function ilog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
@@ -227,7 +226,6 @@ function detectCityState(p) {
  * the latest player state.
  * @param {Snapshot} snapshot The current snapshot (for pidInfo).
  * @param {WarRecord[]} wars The history.wars array (mutated in place).
- * @returns {void}
  */
 function migrateWarRecords(snapshot, wars) {
   for (const w of wars) {
@@ -281,7 +279,6 @@ function prepareWarSideRoster(snapshot, civs, pids, startTurn, warOpen) {
  * Migrate one legacy war record's roster fields from the old aPid/bPid scalar
  * schema to the sideA/sideB array schema (in place).
  * @param {WarRecord} w A history war record.
- * @returns {void}
  */
 function _migrateWarRecord(w) {
   if (Array.isArray(w.sideA) && Array.isArray(w.sideB)) return;
@@ -323,7 +320,6 @@ function asPidList(arr) {
  * SideB = target + opposers, with cross-membership stripped.
  * @param {*} ev A diplomacy event from getPlayerEvents.
  * @param {Map<*, ActiveWar>} activeWarsByID Accumulator keyed by uniqueID.
- * @returns {void}
  */
 function ingestWarEvent(ev, activeWarsByID) {
   if (!ev || ev.actionTypeName !== "DIPLOMACY_ACTION_DECLARE_WAR") return;
@@ -492,7 +488,6 @@ function mergeWarParticipants(list, live, turn) {
  * @param {WarRosterEntry[]} bRoster Side B live roster entries.
  * @param {*} uid The war uniqueID (for logging).
  * @param {number} turn The current (age-local) turn.
- * @returns {void}
  */
 function updateExistingWar(existing, info, aRoster, bRoster, uid, turn) {
   if (!Array.isArray(existing.sideACivs)) existing.sideACivs = [];
@@ -592,7 +587,6 @@ function buildNewWar(wars, info, aRoster, bRoster, snapshot, gameYear, turn) {
  * @param {Snapshot} snapshot The current snapshot.
  * @param {string | undefined} gameYear The current game-year label.
  * @param {number} turn The current turn.
- * @returns {void}
  */
 function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
   const knownByID = new Map();
@@ -634,7 +628,6 @@ function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
  * @param {Map<*, ActiveWar>} activeWarsByID Active wars keyed by uniqueID.
  * @param {string | undefined} gameYear The current game-year label.
  * @param {number} turn The current turn.
- * @returns {void}
  */
 function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
   for (const w of wars) {
@@ -663,7 +656,6 @@ function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
  * switch.
  * @param {Snapshot} snapshot The just-recorded snapshot.
  * @param {number} turn The current turn.
- * @returns {void}
  */
 export function runWarTracker(snapshot, turn) {
   safeCall("warTracker", () => {

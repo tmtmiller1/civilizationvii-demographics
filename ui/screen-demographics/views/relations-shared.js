@@ -27,7 +27,6 @@ export const DBG = DEMOGRAPHICS_DEBUG;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 export function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-relations]", ...a);
@@ -35,7 +34,6 @@ export function dlog(...a) {
 /**
  * Error logger (always emits).
  * @param {...*} a Values to log.
- * @returns {void}
  */
 export function derr(...a) {
   console.error("[Demographics.view-relations]", ...a);

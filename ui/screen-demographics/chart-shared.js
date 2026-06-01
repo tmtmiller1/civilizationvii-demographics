@@ -15,7 +15,6 @@ const DBG = false;
 /**
  * Debug logger; no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.chart]", ...a);
@@ -68,7 +67,6 @@ function historySamples(history) {
  * Append a standard empty-state / notice element to a host.
  * @param {HTMLElement} host The host element.
  * @param {string} text The notice text.
- * @returns {void}
  */
 function appendEmptyNotice(host, text) {
   const msg = document.createElement("div");
@@ -129,7 +127,6 @@ let _xAxisMode = "both";
 /**
  * Set the shared X-axis time-unit mode. Ignores unrecognized values.
  * @param {string} mode One of `"turn"`, `"year"`, `"both"`.
- * @returns {void}
  */
 export function setXAxisMode(mode) {
   if (mode === "turn" || mode === "year" || mode === "both") _xAxisMode = mode;
@@ -184,7 +181,6 @@ function resolveTurnRange(opts) {
 /**
  * Add the live current-turn → year entry from the engine `Game`, defensively.
  * @param {Map<number, string>} turnYearMap chart-X → year map (mutated).
- * @returns {void}
  */
 function addLiveTurnYear(turnYearMap) {
   try {

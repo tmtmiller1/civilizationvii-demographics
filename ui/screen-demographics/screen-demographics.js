@@ -63,7 +63,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.screen]", ...a);
@@ -71,7 +70,6 @@ function dlog(...a) {
 /**
  * Error logger; always emits.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.screen]", ...a);
@@ -157,7 +155,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Panel lifecycle: configure audio cues before attach.
-   * @returns {void}
    */
   onInitialize() {
     dlog("onInitialize");
@@ -181,7 +178,6 @@ class ScreenDemographics extends Panel {
   /**
    * Panel lifecycle: wire the close button then lazily import the data
    * modules, restore state, build the tab bar, and render the active view.
-   * @returns {void}
    */
   onAttach() {
     dlog("onAttach");
@@ -192,7 +188,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Wire the template's close button to {@link ScreenDemographics#close}.
-   * @returns {void}
    */
   _wireCloseButton() {
     safeCall(() => {
@@ -211,7 +206,6 @@ class ScreenDemographics extends Panel {
   /**
    * Lazily import the storage/chart/sampler/settings modules, then restore
    * state, ensure a sample exists, and render. Errors are logged, not thrown.
-   * @returns {void}
    */
   _loadModulesThenRender() {
     Promise.all([
@@ -240,7 +234,6 @@ class ScreenDemographics extends Panel {
    * Restore the active view / metric / page / time-filter state from
    * persisted settings. Coerces away now-disabled filters and migrates the
    * legacy scalar time filter into the per-metric map.
-   * @returns {void}
    */
   _restoreState() {
     this.activeView = this.settings.getSetting("activeView", "history");
@@ -273,7 +266,6 @@ class ScreenDemographics extends Panel {
    * runtime. The legacy scalar `activeTimeFilter` is kept as the fallback so
    * existing user settings migrate cleanly; a now-disabled value coerces to
    * "age".
-   * @returns {void}
    */
   _restoreTimeFilters() {
     const legacyFilter = this.settings.getSetting("activeTimeFilter", "age");
@@ -294,7 +286,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Restore the resources / triumphs / radar-age viewer selections.
-   * @returns {void}
    */
   _restoreViewerPids() {
     const rvp = this.settings.getSetting("resourcesViewerPid", null);
@@ -306,7 +297,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Restore the wars-Gantt filter / city-state / active-only flags.
-   * @returns {void}
    */
   _restoreWarsState() {
     const wfp = this.settings.getSetting("warsFilterPid", null);
@@ -317,7 +307,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Restore the hidden-civ set, coercing legacy numeric entries to strings.
-   * @returns {void}
    */
   _restoreHiddenCivs() {
     const hidden = this.settings.getSetting("hiddenCivs", []);
@@ -328,7 +317,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Load the history blob from storage into {@link ScreenDemographics#history}.
-   * @returns {void}
    */
   _loadHistory() {
     if (this.storage && typeof this.storage.load === "function") {
@@ -340,7 +328,6 @@ class ScreenDemographics extends Panel {
   /**
    * If the history is empty, force an on-demand sample and reload it so the
    * first render shows data rather than an empty chart.
-   * @returns {void}
    */
   _ensureInitialSample() {
     if (!(this.history.samples?.length > 0) && this.sampler?.sampleNow) {
@@ -356,7 +343,6 @@ class ScreenDemographics extends Panel {
   /**
    * Build the `fxs-tab-bar` view selector, wire its `tab-selected` listener,
    * and append it to the template host.
-   * @returns {void}
    */
   buildViewTabBar() {
     const host = this.Root.querySelector(".demographics-view-tab-host");
@@ -385,7 +371,6 @@ class ScreenDemographics extends Panel {
   /**
    * Apply nav-help class hints to the tab bar on non-mobile experiences.
    * @param {HTMLElement} tabBar The tab-bar element to annotate.
-   * @returns {void}
    */
   _applyTabBarNavHints(tabBar) {
     try {
@@ -407,7 +392,6 @@ class ScreenDemographics extends Panel {
    * Handle a `tab-selected` event: switch the active view, persist it, and
    * re-render. Ignores re-selection of the current view.
    * @param {*} event The `tab-selected` CustomEvent.
-   * @returns {void}
    */
   _onViewTabSelected(event) {
     const id = event?.detail?.selectedItem?.id;
@@ -421,7 +405,6 @@ class ScreenDemographics extends Panel {
   /**
    * Reload the history from storage (if available) and re-render the view.
    * Wired into views as their `requestReload` callback.
-   * @returns {void}
    */
   _reload() {
     safeCall(() => {
@@ -433,7 +416,6 @@ class ScreenDemographics extends Panel {
   /**
    * Clear the view host and render the view selected by `activeView`. View
    * render errors are logged, not thrown.
-   * @returns {void}
    */
   renderActiveView() {
     const host = this.Root.querySelector(".demographics-view-host");
@@ -453,7 +435,6 @@ class ScreenDemographics extends Panel {
   /**
    * Render the active view into `host`, dispatching on `activeView`.
    * @param {HTMLElement} host The cleared view-host element.
-   * @returns {void}
    */
   _dispatchView(host) {
     switch (this.activeView) {
@@ -535,7 +516,6 @@ class ScreenDemographics extends Panel {
    * @param {string} field The instance field name to assign.
    * @param {string} settingKey The settings key to persist under.
    * @param {*} value The new value.
-   * @returns {void}
    */
   _setAndPersist(field, settingKey, value) {
     /** @type {*} */ (this)[field] = value;
@@ -546,7 +526,6 @@ class ScreenDemographics extends Panel {
   /**
    * Toggle a leader key in the focused-civs set and re-render.
    * @param {string} leaderKey The leader key to toggle.
-   * @returns {void}
    */
   _toggleFocusCiv(leaderKey) {
     if (!leaderKey) return;
@@ -558,7 +537,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Clear all focused civs and re-render.
-   * @returns {void}
    */
   _clearFocus() {
     this.focusedCivs.clear();
@@ -576,7 +554,6 @@ class ScreenDemographics extends Panel {
    * metric — including wars_gantt, where narrower windows hide wars that
    * happened earlier in the age.
    * @param {string} id The metric id to activate.
-   * @returns {void}
    */
   _setActiveMetric(id) {
     this.activeMetric = id;
@@ -589,7 +566,6 @@ class ScreenDemographics extends Panel {
    * Set the active time filter, persisting BOTH the per-metric map and the
    * legacy scalar so older settings consumers keep working, then re-render.
    * @param {string} id The time-filter id to activate.
-   * @returns {void}
    */
   _setActiveTimeFilter(id) {
     this.activeTimeFilter = id;
@@ -603,7 +579,6 @@ class ScreenDemographics extends Panel {
   /**
    * Toggle a leader key in the hidden-civs set, persist the set, and re-render.
    * @param {string} leaderKey The leader key to toggle.
-   * @returns {void}
    */
   toggleCiv(leaderKey) {
     if (!leaderKey) return;
@@ -618,7 +593,6 @@ class ScreenDemographics extends Panel {
   /**
    * Panel lifecycle: detach the tab-bar listener and flush buffered storage
    * writes so closing the panel saves all in-flight samples.
-   * @returns {void}
    */
   onDetach() {
     dlog("onDetach");
@@ -635,7 +609,6 @@ class ScreenDemographics extends Panel {
 
   /**
    * Close the panel.
-   * @returns {void}
    */
   close() {
     dlog("close()");

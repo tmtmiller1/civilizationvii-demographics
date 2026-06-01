@@ -73,7 +73,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-factbook]", ...a);
@@ -81,7 +80,6 @@ function dlog(...a) {
 /**
  * Error logger (always emits).
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.view-factbook]", ...a);
@@ -146,7 +144,6 @@ function makeBlankProfile(pid, ps) {
  * keeping every finite value.
  * @param {CivProfile} profile Profile to mutate.
  * @param {Record<string, *>} metrics Per-metric values from the sample.
- * @returns {void}
  */
 function mergeProfileMetrics(profile, metrics) {
   for (const k of Object.keys(metrics)) {
@@ -170,7 +167,6 @@ function nonEmptyString(v) {
  * tracking distinct civ names in first-seen order.
  * @param {CivProfile} profile Profile to mutate.
  * @param {CivSample} ps One civ's sample.
- * @returns {void}
  */
 function mergeCivNames(profile, ps) {
   const leaderName = nonEmptyString(ps?.leaderName);
@@ -187,7 +183,6 @@ function mergeCivNames(profile, ps) {
  * Fold one sample's engine type strings and civ colors into a profile.
  * @param {CivProfile} profile Profile to mutate.
  * @param {CivSample} ps One civ's sample.
- * @returns {void}
  */
 function mergeCivTypesAndColors(profile, ps) {
   const leaderTypeString = nonEmptyString(ps?.leaderTypeString);
@@ -205,7 +200,6 @@ function mergeCivTypesAndColors(profile, ps) {
  * field only when the newer sample carries a non-empty value.
  * @param {CivProfile} profile Profile to mutate.
  * @param {CivSample} ps One civ's sample.
- * @returns {void}
  */
 function mergeCivSample(profile, ps) {
   mergeCivNames(profile, ps);
@@ -308,7 +302,6 @@ function buildLeaderAvatar(profile, sizeRem) {
  * @param {HTMLElement} text The header text container to append into.
  * @param {CivProfile} profile Source civ profile.
  * @param {boolean} maskAsUnmet When true, emit generic unmet placeholders.
- * @returns {void}
  */
 function buildCivHeaderText(text, profile, maskAsUnmet) {
   const leader = document.createElement("div");
@@ -509,7 +502,6 @@ function readBoolSetting(ctx, key, fallback) {
  * comes from `history.eliminated`, populated by the sampler at civ death.
  * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
  * @param {DemoHistory|undefined} history Source history blob.
- * @returns {void}
  */
 function stripEliminatedCivs(profiles, history) {
   const elim =
@@ -536,7 +528,6 @@ const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
  * computation read `latest`, so removing the value here covers both. Reversible
  * — only called when `hideUnmetStats` is on.
  * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
- * @returns {void}
  */
 function stripUnmetDiplomacy(profiles) {
   for (const pid of Object.keys(profiles)) {
@@ -549,7 +540,6 @@ function stripUnmetDiplomacy(profiles) {
 /**
  * Append the "no samples yet" empty-state notice to the host.
  * @param {HTMLElement} host The view host element.
- * @returns {void}
  */
 function appendEmptyState(host) {
   const empty = document.createElement("div");
@@ -695,7 +685,6 @@ function readHiddenCivs(ctx) {
 /**
  * Persist the current hidden-civ set, defensively.
  * @param {StripState} st The strip state.
- * @returns {void}
  */
 function saveHiddenCivs(st) {
   try {
@@ -710,7 +699,6 @@ function saveHiddenCivs(st) {
  * Toggle one civ's hidden state, persist, and re-render the strip.
  * @param {StripState} st The strip state.
  * @param {string} pid Player id to toggle.
- * @returns {void}
  */
 function toggleCiv(st, pid) {
   const k = String(pid);
@@ -723,7 +711,6 @@ function toggleCiv(st, pid) {
 /**
  * Clear all hidden civs, persist, and re-render the strip.
  * @param {StripState} st The strip state.
- * @returns {void}
  */
 function resetHidden(st) {
   st.hiddenCivs.clear();
@@ -766,7 +753,6 @@ function buildOtherColumn(st, pid) {
 /**
  * Append the label column (1) and sticky local-player column (2) to the strip.
  * @param {StripState} st The strip state.
- * @returns {void}
  */
 function appendStickyColumns(st) {
   // Column 1: metric labels (sticky-left).
@@ -788,7 +774,6 @@ function appendStickyColumns(st) {
  * hidden (ghost) civ columns. Visible columns stay adjacent to the local
  * column to make comparisons easier; hidden ones are pushed to the far right.
  * @param {StripState} st The strip state.
- * @returns {void}
  */
 function renderStrip(st) {
   while (st.strip.firstChild) st.strip.removeChild(st.strip.firstChild);
@@ -843,7 +828,6 @@ function mountFactbookStrip(strip, profiles, localPid, otherPids, ctx, showUnmet
  * `showUnmetNames` settings, then mounts the interactive strip.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {FactbookCtx} ctx Render context (history + settings accessors).
- * @returns {void}
  */
 export function render(host, ctx) {
   while (host.firstChild) host.removeChild(host.firstChild);

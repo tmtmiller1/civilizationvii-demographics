@@ -16,7 +16,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.audio]", ...a);
@@ -28,7 +27,6 @@ function dlog(...a) {
  * missing `Audio` object is normal and silent.
  * @param {string} id Sound id (e.g. `"data-audio-activate"`); `"none"` silences.
  * @param {string} [group] Sound group; the engine falls back to `"audio-base"`.
- * @returns {void}
  */
 export function safePlaySound(id, group) {
   try {
@@ -46,7 +44,6 @@ export function safePlaySound(id, group) {
 /**
  * Play the standard activate cue (from `audio-screen-unlocks`) used at most
  * pill / chart-label / ring-node click sites.
- * @returns {void}
  */
 export function playActivate() {
   safePlaySound("data-audio-activate", "audio-screen-unlocks");

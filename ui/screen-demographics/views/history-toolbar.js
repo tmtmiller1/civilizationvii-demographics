@@ -48,7 +48,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.history-toolbar]", ...a);
@@ -59,7 +58,6 @@ function dlog(...a) {
  * @param {HTMLElement} host The view host element.
  * @param {HistoryCtx} ctx Render context.
  * @param {string} activePage Resolved active page id.
- * @returns {void}
  */
 export function buildPageTabRow(host, ctx, activePage) {
   const pageHost = document.createElement("div");
@@ -91,7 +89,6 @@ export function buildPageTabRow(host, ctx, activePage) {
  * @param {HistoryCtx} ctx Render context.
  * @param {string} activePage The previously-active page id.
  * @param {string|undefined} id The newly-selected page id.
- * @returns {void}
  */
 function onPageTabSelected(ctx, activePage, id) {
   if (!id || id === activePage) return;
@@ -111,7 +108,6 @@ function onPageTabSelected(ctx, activePage, id) {
  * Apply the desktop-only nav-help class hints to a tab bar. No-ops on mobile
  * or when the view-experience globals are unavailable.
  * @param {HTMLElement} metricBar The metric tab bar element.
- * @returns {void}
  */
 function applyNavHelpClasses(metricBar) {
   try {
@@ -163,7 +159,6 @@ function visibleMetricsForAge(metrics) {
  * @param {HistoryCtx} ctx Render context.
  * @param {PageDef} page The active page.
  * @param {string} activeMetric Resolved active metric id.
- * @returns {void}
  */
 export function buildMetricTabRow(host, ctx, page, activeMetric) {
   const metricHost = document.createElement("div");
@@ -210,7 +205,6 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
  * @param {string} activeMetric Active metric id.
  * @param {MetricDef|null} metricObj Resolved real metric definition, if any.
  * @param {SyntheticMeta|null} synthMeta Synthetic metric meta, if any.
- * @returns {void}
  */
 export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
   const title = document.createElement("div");
@@ -264,7 +258,6 @@ function approvalCaption() {
  * Diplomatic Approval carry rich formula popovers). No-op for other metrics.
  * @param {HTMLElement} host The view host element.
  * @param {string} activeMetric Active metric id.
- * @returns {void}
  */
 export function appendMetricCaptions(host, activeMetric) {
   if (activeMetric === "gdp") {
@@ -311,7 +304,6 @@ function buildMetricInfoCaption(opts) {
   let hideTimer = null;
   /**
    * Show the popover and cancel any pending hide.
-   * @returns {void}
    */
   function show() {
     if (hideTimer) {
@@ -322,7 +314,6 @@ function buildMetricInfoCaption(opts) {
   }
   /**
    * Schedule the popover to hide after a short grace period.
-   * @returns {void}
    */
   function scheduleHide() {
     if (hideTimer) clearTimeout(hideTimer);
@@ -342,7 +333,6 @@ function buildMetricInfoCaption(opts) {
  * Refresh affordance that re-pulls live legacy progress.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendRadarControls(toolbar, ctx) {
   const ageOpts = [
@@ -398,7 +388,6 @@ function appendRadarControls(toolbar, ctx) {
  * ongoing-only toggle. Requires `chartMod.collectWarCivOptions`.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendWarsControls(toolbar, ctx) {
   // Filter to majors only — CSes never appear on this view.
@@ -455,7 +444,6 @@ function appendWarsControls(toolbar, ctx) {
  * @param {Array<*>} opts Civ options ({ pid, label }).
  * @param {Pid|undefined} currentPid Currently selected viewer pid.
  * @param {(pid: Pid) => void} [setViewerPid] Setter for the viewer pid.
- * @returns {void}
  */
 function appendViewerDropdown(toolbar, opts, currentPid, setViewerPid) {
   if (opts.length <= 1) return;
@@ -484,7 +472,6 @@ function appendViewerDropdown(toolbar, opts, currentPid, setViewerPid) {
  * Append the "Clear Focus (N)" toolbar button when any civs are focused.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendClearFocus(toolbar, ctx) {
   if (!(ctx.focusedCivs && ctx.focusedCivs.size > 0)) return;
@@ -506,7 +493,6 @@ function appendClearFocus(toolbar, ctx) {
  * match on the next reload.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendTimeUnitsToggle(toolbar, ctx) {
   const modes = ["both", "turn", "year"];
@@ -561,7 +547,6 @@ function appendTimeUnitsToggle(toolbar, ctx) {
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
  * @param {string} activeMetric Active metric id (for the debug log only).
- * @returns {void}
  */
 function appendWondersToggle(toolbar, ctx, activeMetric) {
   const wondersOn = (() => {
@@ -658,7 +643,6 @@ function buildCsvInfoIcon() {
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HTMLElement} host The view host element (for the export toast).
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendCsvControls(toolbar, host, ctx) {
   // Build the CSV info icon — appended AFTER the CSV button below so it
@@ -692,7 +676,6 @@ function appendCsvControls(toolbar, host, ctx) {
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
  * @param {string} activeMetric Active metric id.
- * @returns {void}
  */
 function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
   if (activeMetric === "legacy_radar") appendRadarControls(toolbar, ctx);
@@ -705,7 +688,6 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
  * Append the wars controls when `chartMod.collectWarCivOptions` is available.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendWarsControlsIfReady(toolbar, ctx) {
   if (ctx.chartMod && typeof ctx.chartMod.collectWarCivOptions === "function") {
@@ -718,7 +700,6 @@ function appendWarsControlsIfReady(toolbar, ctx) {
  * is available.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendTriumphsViewerIfReady(toolbar, ctx) {
   if (ctx.chartMod && typeof ctx.chartMod.collectTriumphCivOptions === "function") {
@@ -732,7 +713,6 @@ function appendTriumphsViewerIfReady(toolbar, ctx) {
  * is available.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {HistoryCtx} ctx Render context.
- * @returns {void}
  */
 function appendResourcesViewerIfReady(toolbar, ctx) {
   if (ctx.chartMod && typeof ctx.chartMod.collectResourceCivOptions === "function") {
@@ -747,7 +727,6 @@ function appendResourcesViewerIfReady(toolbar, ctx) {
  * @param {HTMLElement} host The view host element.
  * @param {HistoryCtx} ctx Render context.
  * @param {string} activeMetric Active metric id.
- * @returns {void}
  */
 export function buildToolbar(host, ctx, activeMetric) {
   const toolbar = document.createElement("div");
