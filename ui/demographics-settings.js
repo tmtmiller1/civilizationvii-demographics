@@ -59,6 +59,11 @@ function derr(...a) {
 
 const MOD_ID = "demographics";
 const ROOT_KEY = "modSettings";
+// Schema version stamped into the persisted slice (under SCHEMA_KEY), so a
+// missing / malformed / wrong-version slice can be detected on load. SCHEMA_KEY
+// is kept out of the in-memory settings keyspace (stripped on seed).
+const SCHEMA_KEY = "__schema";
+const SCHEMA_VERSION = 1;
 
 /** @type {SettingsBucket} */
 const DEFAULTS = {
@@ -149,6 +154,41 @@ function writeRoot(root) {
   });
 }
 
+let _integrityWarned = false;
+/**
+ * One-time heads-up if our persisted slice came back missing while OTHER mods'
+ * keys are present in the shared `modSettings` blob (a sibling may have
+ * overwritten the whole key), or malformed, or stamped with a different schema
+ * version. localStorage is only authoritative at load here — the in-memory
+ * bucket serves reads regardless — so this is informational, not a failure.
+ * @param {SettingsRoot} root The parsed modSettings root.
+ */
+function checkSliceIntegrity(root) {
+  if (_integrityWarned) return;
+  const slice = root[MOD_ID];
+  const otherKeys = Object.keys(root).filter((k) => k !== MOD_ID).length;
+  let problem = null;
+  if (slice === undefined || slice === null) {
+    if (otherKeys > 0) {
+      problem =
+        "missing while other mods' settings are present (a sibling mod may have " +
+        "overwritten the shared modSettings key)";
+    }
+  } else if (typeof slice !== "object") {
+    problem = "malformed (not an object)";
+  } else if (slice[SCHEMA_KEY] !== undefined && slice[SCHEMA_KEY] !== SCHEMA_VERSION) {
+    problem = "from schema v" + slice[SCHEMA_KEY] + " (expected v" + SCHEMA_VERSION + ")";
+  }
+  if (problem) {
+    _integrityWarned = true;
+    console.warn(
+      "[Demographics.settings] Persisted settings slice " +
+        problem +
+        "; falling back to defaults / in-memory values for this session."
+    );
+  }
+}
+
 // Seed the memory bucket from localStorage ONCE at module load (when the
 // storage is actually populated). After that, memoryBucket is the
 // authoritative store — Coherent's localStorage gets wiped between reads
@@ -158,8 +198,10 @@ function writeRoot(root) {
   try {
     const root = readRoot();
     if (!root) return;
+    checkSliceIntegrity(root);
     if (root[MOD_ID] && typeof root[MOD_ID] === "object") {
       Object.assign(memoryBucket, root[MOD_ID]);
+      delete memoryBucket[SCHEMA_KEY]; // keep the schema marker out of the settings keyspace
     }
   } catch (e) {
     derr("_seedMemoryFromStorage:", e);
@@ -210,6 +252,7 @@ export const DemographicsSettings = {
       const root = readRoot() || {};
       const slice = { ...DEFAULTS, ...(root[MOD_ID] || {}) };
       slice[key] = value;
+      slice[SCHEMA_KEY] = SCHEMA_VERSION;
       root[MOD_ID] = slice;
       writeRoot(root);
     }
