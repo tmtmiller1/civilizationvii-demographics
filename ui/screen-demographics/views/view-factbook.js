@@ -523,6 +523,29 @@ function stripEliminatedCivs(profiles, history) {
   }
 }
 
+/** Diplomacy-category metric ids — the spoiler-gated set (computed once). */
+const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
+  .filter((m) => m.category === "diplomacy")
+  .map((m) => m.id);
+
+/**
+ * Spoiler guard (display-time): strip diplomacy-category metric values from the
+ * profiles of civs the local player has not met (`met === false`), so the
+ * factbook renders the missing-value placeholder instead of leaking their
+ * reputation / influence / deals. Both the displayed cells and the rank
+ * computation read `latest`, so removing the value here covers both. Reversible
+ * — only called when `hideUnmetStats` is on.
+ * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
+ * @returns {void}
+ */
+function stripUnmetDiplomacy(profiles) {
+  for (const pid of Object.keys(profiles)) {
+    const p = profiles[pid];
+    if (p.met !== false) continue;
+    for (const id of DIPLOMACY_METRIC_IDS) delete p.latest[id];
+  }
+}
+
 /**
  * Append the "no samples yet" empty-state notice to the host.
  * @param {HTMLElement} host The view host element.
@@ -832,6 +855,12 @@ export function render(host, ctx) {
   const showEliminatedCivs = readBoolSetting(ctx, "showEliminatedCivs", true);
   if (!showEliminatedCivs) {
     stripEliminatedCivs(profiles, ctx.history);
+  }
+  // Spoiler guard (display-time): when `hideUnmetStats` is on (default), drop
+  // diplomacy-category values for civs the local player hasn't met so the
+  // factbook shows "—" rather than their reputation/influence/deals. Reversible.
+  if (readBoolSetting(ctx, "hideUnmetStats", true)) {
+    stripUnmetDiplomacy(profiles);
   }
   const allPids = Object.keys(profiles);
   if (allPids.length === 0) {
