@@ -6,9 +6,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ja_JP"><Text>時系列スコア</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ja_JP"><Text>サンプラーによるリアルタイム履歴。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ja_JP"><Text>ターンごとに記録された履歴。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="ja_JP"><Text>閉じる</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ja_JP"><Text>こんにちは。これが読めれば、ハーネスは正常に動作しています。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ja_JP"><Text>現在のゲームの履歴概要です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ja_JP"><Text>スコア</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ja_JP"><Text>国庫</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ja_JP"><Text>GPT</Text></Replace>
@@ -22,7 +22,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ja_JP"><Text>現在の時代のツリーで完全に研究されたテクノロジーノードの数。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ja_JP"><Text>現在の時代のツリーで完全にアンロックされた社会制度ノードの数。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ja_JP"><Text>GDP</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ja_JP"><Text>疑似リアルな国内総生産。1ターンあたりの産出の加重合計（生産力1.0、ゴールド1.0、科学1.2、文化1.2、食料0.5、影響力1.5）に経過ターン数を掛け、ドルに換算したものです。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの産出と経過ターン数に基づく、経済規模の比較用指標です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ja_JP"><Text>PPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの生産力 — 都市が建設するもの。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ja_JP"><Text>科学</Text></Replace>
@@ -32,7 +32,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ja_JP"><Text>作物産出</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ja_JP"><Text>全入植地における1ターンあたりの純食料産出。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ja_JP"><Text>外交的支持</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ja_JP"><Text>国際的評判の総計。遭遇したすべての主要文明との関係スコアの加重合計（同盟 +5、協力的 +3、友好的 +2、中立 0、非友好的 -2、敵対的 -3、戦争中 -5）に、宗主国となっている都市国家からの減衰させた寄与（0.3倍）を加えたものです。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ja_JP"><Text>遭遇した文明との外交関係を要約した指標で、都市国家からの影響は小さめに反映されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ja_JP"><Text>人口</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ja_JP"><Text>市民の総数から指数的に導出された、換算後の実世界人口。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ja_JP"><Text>IPT</Text></Replace>
@@ -131,7 +131,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="ja_JP"><Text>即時 · {1_Label}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="ja_JP"><Text>報酬: </Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="ja_JP"><Text>まだ進捗はありません。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ja_JP"><Text>Test-of-Time レガシー API を利用できません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ja_JP"><Text>この画面ではレガシーデータを利用できません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="ja_JP"><Text>まだサンプリングされた文明がありません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="ja_JP"><Text>{1_Age}に利用可能なトライアンフはありません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="ja_JP"><Text>利用可能なトライアンフはありません。</Text></Replace>
@@ -155,37 +155,37 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="ja_JP"><Text>{1_Turns} ターン</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="ja_JP"><Text>戦力 {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="ja_JP"><Text>入植地 {1_Value}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ja_JP"><Text>人口 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ja_JP"><Text>人口 {1_Value}（換算）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="ja_JP"><Text>生産力 {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="ja_JP"><Text>戦争中のコスト</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ja_JP"><Text>（観測された変化）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ja_JP"><Text>まだ戦争はありません。いずれかの文明が宣戦布告すると、タイムラインに反映されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ja_JP"><Text>現在のフィルターに一致する戦争はありません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません — まず1ターンプレイしてください。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ja_JP"><Text>CSV が大きすぎます（{1_SizeMB} MB） · クリップボードがクラッシュする可能性があります。オプションでサンプル上限を下げて再試行してください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ja_JP"><Text>CSV が大きすぎます（{1_SizeMB} MB）。オプションでサンプル上限を下げて再試行してください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ja_JP"><Text>コピー済み · {1_Rows} 行 × {2_Cols} 列{3_SizeTag} · Excel / Sheets / .csv ファイルに貼り付けてください</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ja_JP"><Text>クリップボードを利用できません · CSV を UI.log に書き込みました（logs フォルダーを参照）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ja_JP"><Text>クリップボードを利用できません。CSV を UI.log に書き込みました。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="ja_JP"><Text>現在の時代</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="ja_JP"><Text>第1の時代</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="ja_JP"><Text>第2の時代</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ja_JP"><Text>第3の時代</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ja_JP"><Text>全期間</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ja_JP"><Text>時代をまたぐグラフは利用できません</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;&lt;b style="color:#f3e7c4;"&gt;古代、探検の時代、近代&lt;/b&gt;にまたがる単一のグラフは作成できません。Civ&amp;nbsp;7 は時代の移行時に、Mod がサンプリングした履歴を保持するために使えるすべてのストレージチャネルを消去するため、各時代は自身のデータしかグラフ化できません。代わりに&lt;b style="color:#f3e7c4;"&gt;現在の&amp;nbsp;時代&lt;/b&gt;または任意の年代範囲フィルターを使用してください。&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;グラフは時代をまたいで連続しません。各時代では、その時代の中で記録されたデータだけを表示します。&lt;b style="color:#f3e7c4;"&gt;現在の時代&lt;/b&gt;または年代範囲のフィルターを使用してください。&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ja_JP"><Text>{1_Label} フィルター</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ja_JP"><Text>ⓘ GDP = Σ 加重産出 × ターン × 1M  ·  説明はホバーで表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ja_JP"><Text>ⓘ GDP: 経済規模の比較指標  ·  詳細はホバーで表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ja_JP"><Text>国内総生産</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ja_JP"><Text>&lt;p&gt;文明の1ターンあたりの産出を、各産出が実体経済にどれだけ寄与するかで加重して組み合わせた、疑似リアルな値です。&lt;/p&gt;&lt;p&gt;&lt;b&gt;計算式:&lt;/b&gt; Σ (産出 × 重み) × ターン × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;重み&lt;/b&gt;（産出1ポイントあたり）:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;ゴールド&lt;/b&gt; — 1.0（通貨 = 直接的な交易）&lt;/li&gt;&lt;li&gt;&lt;b&gt;生産力&lt;/b&gt; — 1.0（工業生産）&lt;/li&gt;&lt;li&gt;&lt;b&gt;科学&lt;/b&gt; — 1.2（イノベーションは時間とともに複利的に増加）&lt;/li&gt;&lt;li&gt;&lt;b&gt;文化&lt;/b&gt; — 1.2（ソフトパワー &amp; 観光）&lt;/li&gt;&lt;li&gt;&lt;b&gt;食料&lt;/b&gt; — 0.5（生存維持; 余剰分のみが GDP に相当）&lt;/li&gt;&lt;li&gt;&lt;b&gt;影響力&lt;/b&gt; — 1.5（外交 / 条約上の影響力）&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;なぜターン数を掛けるのか?&lt;/b&gt; 実体経済は複利的に成長します。同じ1ターンあたりの産出を持つターン50の文明に比べ、ターン200の文明は4倍の蓄積された経済規模を表します。&lt;/p&gt;&lt;p&gt;&lt;i&gt;表示専用 — ゲームの状態には一切影響しません。&lt;/i&gt;&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ja_JP"><Text>ⓘ 外交的支持 = Σ 関係加重スコア  ·  説明はホバーで表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ja_JP"><Text>外交的支持 — 国際的評判</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ja_JP"><Text>&lt;p&gt;他のすべての文明が現在あなたをどう感じているかを符号付きで集計したものです。同盟国や友好国がいると&lt;b&gt;上昇&lt;/b&gt;し、敵対勢力に囲まれたり戦争中だったりすると&lt;b&gt;下降&lt;/b&gt;します。&lt;/p&gt;&lt;p&gt;&lt;b&gt;主要文明ごとの寄与&lt;/b&gt;（外交画面に表示される関係の列挙値に基づく）:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;同盟&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;協力的&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;友好的&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;中立&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;非友好的&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;敵対的&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;戦争中&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;都市国家の寄与:&lt;/b&gt; 宗主国となっている都市国家1つにつき +2、0.3倍に減衰（都市国家中心の戦略が主要文明との関係を圧倒しないようにするため）。&lt;/p&gt;&lt;p&gt;&lt;b&gt;スコア = Σ（主要文明の重み） + 0.3 × Σ（宗主国ボーナス）&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;各ターン、各文明のローカルプレイヤーに対する視点からサンプリングされます。表示専用です。&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ja_JP"><Text>&lt;p&gt;この項目は、ゲーム全体を通した文明の相対的な経済規模を要約します。&lt;/p&gt;&lt;p&gt;主要な産出をまとめ、経過ターン数を加味することで、同じゲーム内の異なる時点にある帝国同士を比較しやすくしています。&lt;/p&gt;&lt;p&gt;&lt;i&gt;表示用の指標であり、ゲームの仕組みには影響しません。&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ja_JP"><Text>ⓘ 外交的支持: 対外関係の要約  ·  詳細はホバーで表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ja_JP"><Text>外交的支持</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ja_JP"><Text>&lt;p&gt;この項目は、遭遇した文明との外交関係の全体傾向を要約します。&lt;/p&gt;&lt;p&gt;値が高いほど関係は良好で、値が低いほど周囲の情勢は敵対的または不安定です。&lt;/p&gt;&lt;p&gt;&lt;i&gt;表示用の指標であり、ゲームの仕組みには影響しません。&lt;/i&gt;&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ja_JP"><Text>現在</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ja_JP"><Text>第1の時代の終わり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ja_JP"><Text>第2の時代の終わり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ja_JP"><Text>スナップショット:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ja_JP"><Text>まだスナップショットがありません — 時代がまだ終わっていません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ja_JP"><Text>↻ 更新</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ja_JP"><Text>VictoryManager.getVictoryProgress() からレガシー進捗を再取得します</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ja_JP"><Text>レガシー進捗を再読み込みします。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ja_JP"><Text>すべての主要文明</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ja_JP"><Text>文明:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="ja_JP"><Text>進行中のみ</Text></Replace>
@@ -202,8 +202,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="ja_JP"><Text>グラフの線上の遺産建設マーカーを非表示にします</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="ja_JP"><Text>グラフの線上に遺産建設マーカーを表示します（各文明が遺産を完成させたターンにアイコンを表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="ja_JP"><Text>CSV としてコピー</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;すべての文明のサンプリングされた全ターンをクリップボードにコピーします。Excel、Sheets に貼り付けるか、&lt;code&gt;.csv&lt;/code&gt; として保存してください。Civ&amp;nbsp;7 の UI サンドボックスにはファイル書き込み API がないため、クリップボードが唯一の受け渡し手段です。&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ja_JP"><Text>サンプリングされた全履歴を CSV としてクリップボードにコピー — Excel、Google Sheets、または .csv ファイルに貼り付けてください</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;サンプリング済みの履歴を CSV 形式でクリップボードにコピーします。表計算ソフトや &lt;code&gt;.csv&lt;/code&gt; ファイルに貼り付けて使用できます。&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ja_JP"><Text>サンプリング済みの履歴を CSV としてクリップボードにコピーします。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="ja_JP"><Text>軍事主義</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="ja_JP"><Text>文化</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="ja_JP"><Text>経済</Text></Replace>
@@ -221,7 +221,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ja_JP"><Text>順位 {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ja_JP"><Text>リセット（{1_Count} 件非表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ja_JP"><Text>非表示のすべての文明を表示します</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ja_JP"><Text>ヒント: いずれかの文明のヘッダーをクリックすると、その文明を非表示にして比較に集中できます。（右側の細い列で）再度クリックすると元に戻ります。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ja_JP"><Text>文明の見出しをクリックすると非表示になり、比較対象を絞り込めます。もう一度クリックすると再表示されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ja_JP"><Text>未遭遇</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示 — クリックで表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
@@ -231,13 +231,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ja_JP"><Text>（累計数、属性別に積み上げ）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ja_JP"><Text>時系列資源配分（積み上げ面）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ja_JP"><Text>紛争タイムライン — このゲームで発生したすべての戦争</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ja_JP"><Text>未実装 — 今後のアップデートで対応予定です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ja_JP"><Text>まだ利用できません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ja_JP"><Text>オプション</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ja_JP"><Text>まだ遭遇していない文明の実際の名前を表示（ネタバレ）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード（グラフと関係の色に高コントラストの Wong パレットを使用）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード（グラフと関係表示に高コントラスト配色を使用）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ja_JP"><Text>排除された文明をグラフとファクトブックに表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>グラフの線上に遺産建設マーカーを表示（各文明が遺産を完成させたターンに小さなアイコンを表示）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ja_JP"><Text>パフォーマンスモード（ストレージ書き込みをバッファリングし、ホバーを抑制） — 長時間のゲームや低速なマシンに推奨。クラッシュ時に最大2ターン分の履歴が失われる可能性があります。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>グラフの線上に遺産マーカーを表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ja_JP"><Text>パフォーマンスモード（グラフの更新と操作を軽くします）。長いゲームや低速な環境で有効です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ja_JP"><Text>自動（ゲーム速度の既定値）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ja_JP"><Text>1,000 サンプル</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ja_JP"><Text>2,500 サンプル</Text></Replace>
@@ -254,8 +254,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ja_JP"><Text>10ターンごと</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ja_JP"><Text>25ターンごと ⚠ 粗いグラフ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ja_JP"><Text>サンプル頻度:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ja_JP"><Text>値を大きくすると記録するポイントが少なくなります — 長時間のマラソンゲームに便利です。変更は次のターンに適用され、既存のサンプルは保持されます。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ja_JP"><Text>ダウンサンプリングを無効化（上限に達した後も毎ターンのサンプルを保持） — パワーユーザー向けモード; 高い上限または無制限と組み合わせてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ja_JP"><Text>値を大きくすると記録点は少なくなります。変更は次のターンから反映されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ja_JP"><Text>間引きを無効にし、上限到達後もすべてのサンプルを保持します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ja_JP"><Text>記録されたすべての人口統計サンプルを消去しますか?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ja_JP"><Text>記録されたすべての戦争を消去しますか? サンプル履歴とその他のデータは保持されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="ja_JP"><Text>戦争履歴をリセット</Text></Replace>
@@ -283,6 +283,441 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ja_JP"><Text>都市国家</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ja_JP">
             <Text>T-{1_Turn} に離脱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="ja_JP">
+            <Text>第{1_Roman}次世界大戦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="ja_JP">
+            <Text>{1_A}対{2_B}大戦（他{3_Extra}文明参戦）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="ja_JP">
+            <Text>三国間戦争 {1_A}–{2_B}–{3_C}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="ja_JP">
+            <Text>{1_Ordinal}{2_A}–{3_B}戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="ja_JP">
+            <Text>{1_Base}（百年戦争）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="ja_JP">
+            <Text>{1_Base}（長期戦争）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="ja_JP">
+            <Text>第一次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="ja_JP">
+            <Text>第二次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="ja_JP">
+            <Text>第三次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="ja_JP">
+            <Text>第四次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="ja_JP">
+            <Text>第五次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="ja_JP">
+            <Text>第{1_Num}次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="ja_JP">
+            <Text>青銅器時代の崩壊</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="ja_JP">
+            <Text>民族大移動</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="ja_JP">
+            <Text>民族移動の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="ja_JP">
+            <Text>海の民の到来</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="ja_JP">
+            <Text>蛮族の侵攻</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="ja_JP">
+            <Text>蛮族戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="ja_JP">
+            <Text>遊牧民大連合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="ja_JP">
+            <Text>騎馬王たちの到来</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="ja_JP">
+            <Text>異邦人の行軍</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="ja_JP">
+            <Text>荒廃の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="ja_JP">
+            <Text>動乱の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="ja_JP">
+            <Text>辺境の崩壊</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="ja_JP">
+            <Text>辺境戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="ja_JP">
+            <Text>北方の侵攻</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="ja_JP">
+            <Text>東方の侵攻</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境からの嵐</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="ja_JP">
+            <Text>属州からの嵐</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="ja_JP">
+            <Text>草原からの嵐</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="ja_JP">
+            <Text>海岸からの嵐</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="ja_JP">
+            <Text>中心地からの嵐</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の劫掠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の劫掠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="ja_JP">
+            <Text>草原の劫掠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="ja_JP">
+            <Text>海岸の劫掠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="ja_JP">
+            <Text>中心地の劫掠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="ja_JP">
+            <Text>辺境の襲撃</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の陥落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="ja_JP">
+            <Text>アントニヌスの疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="ja_JP">
+            <Text>ガレノスの疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="ja_JP">
+            <Text>大悪疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="ja_JP">
+            <Text>大疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="ja_JP">
+            <Text>熱病の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="ja_JP">
+            <Text>大いなる死</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="ja_JP">
+            <Text>疫病の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="ja_JP">
+            <Text>死の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="ja_JP">
+            <Text>悪疫の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="ja_JP">
+            <Text>死の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="ja_JP">
+            <Text>灰燼の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="ja_JP">
+            <Text>発汗病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="ja_JP">
+            <Text>消耗の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="ja_JP">
+            <Text>夏の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="ja_JP">
+            <Text>冬の病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="ja_JP">
+            <Text>静かなる死</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="ja_JP">
+            <Text>黒死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="ja_JP">
+            <Text>赤死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="ja_JP">
+            <Text>灰死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="ja_JP">
+            <Text>灰燼の死</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="ja_JP">
+            <Text>草原の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="ja_JP">
+            <Text>海岸の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="ja_JP">
+            <Text>中心地の疫病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="ja_JP">
+            <Text>奴隷戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="ja_JP">
+            <Text>内乱の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="ja_JP">
+            <Text>反乱の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="ja_JP">
+            <Text>無政府の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="ja_JP">
+            <Text>僭主の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="ja_JP">
+            <Text>簒奪者の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="ja_JP">
+            <Text>僭称者の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="ja_JP">
+            <Text>群雄割拠の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="ja_JP">
+            <Text>3世紀の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="ja_JP">
+            <Text>継承の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="ja_JP">
+            <Text>正統性の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="ja_JP">
+            <Text>権威の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="ja_JP">
+            <Text>権威の崩壊</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="ja_JP">
+            <Text>大分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="ja_JP">
+            <Text>分断</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="ja_JP">
+            <Text>動乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="ja_JP">
+            <Text>兵士の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="ja_JP">
+            <Text>僭称者の戦い</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="ja_JP">
+            <Text>継承戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="ja_JP">
+            <Text>属州の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="ja_JP">
+            <Text>草原の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="ja_JP">
+            <Text>海岸の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="ja_JP">
+            <Text>中心地の反乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="ja_JP">
+            <Text>革命の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="ja_JP">
+            <Text>改革の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="ja_JP">
+            <Text>革命の年月</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="ja_JP">
+            <Text>民族革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="ja_JP">
+            <Text>諸国民の春</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="ja_JP">
+            <Text>自由の年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="ja_JP">
+            <Text>共和国の年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="ja_JP">
+            <Text>名誉革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="ja_JP">
+            <Text>大覚醒</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="ja_JP">
+            <Text>改革運動</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="ja_JP">
+            <Text>民衆蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="ja_JP">
+            <Text>民衆革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="ja_JP">
+            <Text>民族蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="ja_JP">
+            <Text>共和派の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="ja_JP">
+            <Text>王権の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="ja_JP">
+            <Text>共和国の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="ja_JP">
+            <Text>王権の失墜</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="ja_JP">
+            <Text>立憲の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="ja_JP">
+            <Text>草原の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="ja_JP">
+            <Text>海岸の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="ja_JP">
+            <Text>中心地の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="ja_JP">
+            <Text>大シスマ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="ja_JP">
+            <Text>聖なる分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="ja_JP">
+            <Text>神殿の分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="ja_JP">
+            <Text>諸州の分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="ja_JP">
+            <Text>宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="ja_JP">
+            <Text>対抗宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="ja_JP">
+            <Text>宗教戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="ja_JP">
+            <Text>異端の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="ja_JP">
+            <Text>預言者の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="ja_JP">
+            <Text>宗教的動乱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="ja_JP">
+            <Text>信仰の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="ja_JP">
+            <Text>正統信仰の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="ja_JP">
+            <Text>聖戦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="ja_JP">
+            <Text>信徒の戦い</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="ja_JP">
+            <Text>預言者の戦い</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="ja_JP">
+            <Text>聖像破壊の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="ja_JP">
+            <Text>神殿の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="ja_JP">
+            <Text>巡礼者戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="ja_JP">
+            <Text>北方の宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="ja_JP">
+            <Text>東方の宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="ja_JP">
+            <Text>辺境の異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="ja_JP">
+            <Text>諸州の異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="ja_JP">
+            <Text>草原の異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="ja_JP">
+            <Text>海岸の異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="ja_JP">
+            <Text>中心地の異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="ja_JP">
+            <Text>動乱の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="ja_JP">
+            <Text>動乱の時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="ja_JP">
+            <Text>帝国の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="ja_JP">
+            <Text>改革の危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="ja_JP">
+            <Text>危機</Text>
         </Replace>
     </LocalizedText>
 </Database>

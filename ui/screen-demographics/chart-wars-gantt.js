@@ -161,14 +161,15 @@ function civAdjective(rosterEntry) {
 }
 
 /**
- * Format an integer with its English ordinal suffix ("1st", "2nd", ...).
- * @param {number} n The integer.
- * @returns {string} The ordinal string.
+ * Localized ordinal word for a 1-based count: 1–5 spelled out, otherwise a
+ * generic suffix form. Each language's forms are war-gendered so they agree
+ * with "war" / "Weltkrieg" / "Guerra" / etc.
+ * @param {number} n The 1-based count.
+ * @returns {string} The localized ordinal.
  */
-function ordinalInt(n) {
-  const v = n % 100,
-    s = ["th", "st", "nd", "rd"];
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+function ordinalWord(n) {
+  if (n >= 1 && n <= 5) return t("LOC_DEMOGRAPHICS_ORDINAL_" + n);
+  return t("LOC_DEMOGRAPHICS_ORDINAL_N", n);
 }
 
 /**
@@ -681,11 +682,13 @@ function buildWarNameOverrides(filtered, turnYearMap, latestTurn) {
     const yrs = warDurationYears(w, turnYearMap, latestTurn);
     const n = majorsOnSide(w.sideACivs).length + majorsOnSide(w.sideBCivs).length;
     let label = composeWarLabel(w, pairCounts, worldWars);
-    // Duration flair — long protracted conflicts get a flavor prefix.
+    // Duration flair — long protracted conflicts get an evocative suffix. The
+    // flair templates wrap the localized base label (no English-specific suffix
+    // stripping, which wouldn't survive translation).
     if (yrs >= 100 && n < 6) {
-      label = label.replace(/ War$/, "") + " (Hundred Years' War)";
+      label = t("LOC_DEMOGRAPHICS_WARNAME_HUNDRED", label);
     } else if (yrs >= 50 && n < 6) {
-      label = label.replace(/ War$/, "") + " (Long War)";
+      label = t("LOC_DEMOGRAPHICS_WARNAME_LONG", label);
     }
     nameOverride.set(w, label);
   }
@@ -709,22 +712,27 @@ function composeWarLabel(w, pairCounts, worldWars) {
   const adjB = b.map((r) => civAdjective(r));
   if (n >= 6) {
     worldWars.push(w);
-    return "World War " + romanize(worldWars.length);
+    const idx = worldWars.length;
+    // Pass both numeral forms; each language's template picks one (en uses the
+    // roman numeral, de/es/fr/it/pt/ru use the ordinal word).
+    return t("LOC_DEMOGRAPHICS_WARNAME_WORLD", romanize(idx), ordinalWord(idx));
   }
   if (n >= 4) {
-    return "Great War: " + adjA[0] + " vs " + adjB[0] + " (+" + (n - 2) + " civs)";
+    return t("LOC_DEMOGRAPHICS_WARNAME_GREAT", adjA[0], adjB[0], n - 2);
   }
   if (n === 3) {
-    return "Tripartite " + /** @type {any[]} */ ([]).concat(adjA, adjB).sort().join("–") + " War";
+    // Exactly three majors total — sort for a stable, order-independent label.
+    const tri = /** @type {string[]} */ ([]).concat(adjA, adjB).sort();
+    return t("LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE", tri[0], tri[1], tri[2]);
   }
   if (n === 2) {
     // Standard bilateral. Build a stable adjective key (alpha order) so reruns
-    // of the same matchup get ordinal suffixes ("Second Roman-Egyptian War").
+    // of the same matchup get ordinal prefixes ("Second Roman–Egyptian War").
     const pair = [adjA[0] || "Unknown", adjB[0] || "Unknown"].sort();
     const key = pair.join("|");
     const count = (pairCounts.get(key) || 0) + 1;
     pairCounts.set(key, count);
-    return ordinalInt(count) + " " + pair[0] + "–" + pair[1] + " War";
+    return t("LOC_DEMOGRAPHICS_WARNAME_BILATERAL", ordinalWord(count), pair[0], pair[1]);
   }
   return w.name; // single-party / odd fallback
 }

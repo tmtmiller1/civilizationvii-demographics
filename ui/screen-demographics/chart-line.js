@@ -1432,232 +1432,314 @@ function renderOneDatasetWonders(passCtx, ds, allSeries, wonderEventsByPid) {
 }
 
 /**
- * Crisis-name template pools keyed by AgeCrisisEventType. Each entry is
- * `{ names, arcs }`: `names` is the single-pick pool (stable across all four
- * stages); `arcs` are multi-stage progressions (one beat per stage). See the
- * crisis-stages.xml for the source event types. Modern age has no AgeCrisis
- * pipeline, so only Antiquity/Exploration are represented.
+ * Crisis-name LOC-key pools keyed by AgeCrisisEventType. Each entry is
+ * `{ names, arcs }` of `LOC_DEMOGRAPHICS_CRISIS_*` tags (composed via {@link t}):
+ * `names` is the single-pick pool; `arcs` are multi-stage progressions (one
+ * beat per stage). Templates that once expanded via {color}/{place}/{regional}
+ * are now pre-expanded into concrete, individually localized keys. Modern age
+ * has no AgeCrisis pipeline, so only Antiquity/Exploration are represented.
  * @type {Record<string, { names: string[], arcs: string[][] }>}
  */
 const CRISIS_NAME_TEMPLATES = {
   ANTIQUITY_CRISIS_INVASION: {
     names: [
-      "The Bronze Age Collapse",
-      "The Great Migration",
-      "The Age of Migrations",
-      "The Coming of the Sea Peoples",
-      "The Barbarian Invasions",
-      "The Barbarian Wars",
-      "The Great Horde",
-      "The Coming of the Horse Lords",
-      "The March of Strangers",
-      "The Years of Devastation",
-      "The Years of Turmoil",
-      "The Frontier Collapse",
-      "The Crisis of the Frontier",
-      "The Frontier Wars",
-      "The {regional} Invasions",
-      "The Storm from the {place}",
-      "The Sack of the {place}"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND"
     ],
     arcs: [
       [
-        "The Border Raids",
-        "The Barbarian Invasions",
-        "The Sack of the Frontier",
-        "The Great Migration"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION"
       ],
       [
-        "The Coming of the Horse Lords",
-        "The Storm from the Steppe",
-        "The Fall of the Frontier",
-        "The Years of Devastation"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION"
       ],
       [
-        "The Frontier Wars",
-        "The Barbarian Wars",
-        "The Sack of the Provinces",
-        "The Bronze Age Collapse"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE"
       ]
     ]
   },
   ANTIQUITY_CRISIS_PLAGUE: {
     names: [
-      "The Antonine Plague",
-      "The Plague of Galen",
-      "The Great Pestilence",
-      "The Great Mortality",
-      "The Great Fever",
-      "The Great Dying",
-      "The Plague Years",
-      "The Dying Time",
-      "The Time of Pestilence",
-      "The Years of Mortality",
-      "The Years of Ashes",
-      "The Sweating Sickness",
-      "The Wasting Plague",
-      "The Summer Plague",
-      "The Winter Sickness",
-      "The Silent Death",
-      "The {color} Death",
-      "The Plague of the {place}"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND"
     ],
     arcs: [
-      ["The Summer Plague", "The Plague Years", "The Great Mortality", "The Dying Time"],
       [
-        "The Sweating Sickness",
-        "The Plague of the Coast",
-        "The Great Pestilence",
-        "The Years of Ashes"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME"
       ],
-      ["The Winter Sickness", "The Wasting Plague", "The Great Dying", "The Silent Death"]
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES"
+      ],
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH"
+      ]
     ]
   },
   ANTIQUITY_CRISIS_LOYALTY: {
     names: [
-      "The Servile Wars",
-      "The Civil Wars",
-      "The Years of Revolt",
-      "The Years of Anarchy",
-      "The Years of Turmoil",
-      "The Time of Tyrants",
-      "The Age of Usurpers",
-      "The Age of Pretenders",
-      "The Age of Warlords",
-      "The Crisis of the Third Century",
-      "The Crisis of Succession",
-      "The Crisis of Legitimacy",
-      "The Crisis of Authority",
-      "The Collapse of Authority",
-      "The Great Fracturing",
-      "The Sundering",
-      "The Troubles",
-      "The Soldier's Revolt",
-      "The Pretenders' War",
-      "The War of Succession",
-      "The Provincial Revolts",
-      "The Crisis of the Provinces",
-      "The Revolt of the {place}"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND"
     ],
     arcs: [
-      ["The Pretenders' War", "The Civil Wars", "The Age of Usurpers", "The Collapse of Authority"],
-      ["The Soldier's Revolt", "The Provincial Revolts", "The Years of Anarchy", "The Sundering"],
       [
-        "The Crisis of Succession",
-        "The War of Succession",
-        "The Civil Wars",
-        "The Time of Tyrants"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY"
       ],
       [
-        "The Years of Revolt",
-        "The Crisis of the Provinces",
-        "The Great Fracturing",
-        "The Age of Warlords"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING"
+      ],
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS"
+      ],
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS"
       ]
     ]
   },
   EXPLORATION_CRISIS_REVOLUTION: {
     names: [
-      "The Age of Revolutions",
-      "The Age of Reform",
-      "The Revolutionary Years",
-      "The National Revolutions",
-      "The Spring of Nations",
-      "The Year of Liberty",
-      "The Year of the Republic",
-      "The Glorious Revolution",
-      "The Great Awakening",
-      "The Reform Movement",
-      "The People's Rising",
-      "The People's Revolution",
-      "The National Rising",
-      "The Republican Rising",
-      "The Crisis of the Crown",
-      "The Crisis of the Republic",
-      "The Fall of the Crown",
-      "The Constitutional Crisis",
-      "The Risings in the {place}"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND"
     ],
     arcs: [
       [
-        "The Year of Liberty",
-        "The Republican Rising",
-        "The Fall of the Crown",
-        "The Revolutionary Years"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS"
       ],
       [
-        "The Constitutional Crisis",
-        "The People's Rising",
-        "The People's Revolution",
-        "The Spring of Nations"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS"
       ],
       [
-        "The Reform Movement",
-        "The Crisis of the Crown",
-        "The National Rising",
-        "The Age of Revolutions"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS"
       ]
     ]
   },
   EXPLORATION_CRISIS_RELIGION: {
     names: [
-      "The Great Schism",
-      "The Sacred Schism",
-      "The Temple Schism",
-      "The Provincial Schism",
-      "The Reformation",
-      "The Counter-Reformation",
-      "The Reformation of the Provinces",
-      "The Wars of Religion",
-      "The Age of Heresies",
-      "The Age of Prophets",
-      "The Religious Upheaval",
-      "The Crisis of Faith",
-      "The Crisis of Orthodoxy",
-      "The Sacred Wars",
-      "The War of the Faithful",
-      "The War of the Prophets",
-      "The Iconoclast Crisis",
-      "The Temple Crisis",
-      "The Pilgrim Wars",
-      "The {regional} Reformation",
-      "The Heresy of the {place}"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND"
     ],
     arcs: [
-      ["The Crisis of Faith", "The Sacred Schism", "The Wars of Religion", "The Reformation"],
       [
-        "The Iconoclast Crisis",
-        "The Age of Heresies",
-        "The Pilgrim Wars",
-        "The Counter-Reformation"
+        "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION"
       ],
-      ["The Temple Crisis", "The War of the Prophets", "The Great Schism", "The Age of Prophets"]
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION"
+      ],
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS"
+      ]
     ]
   },
   EXPLORATION_CRISIS_PLAGUE: {
     names: [
-      "The Black Death",
-      "The Great Pestilence",
-      "The Great Mortality",
-      "The Great Fever",
-      "The Great Dying",
-      "The Time of Pestilence",
-      "The Years of Mortality",
-      "The Sweating Sickness",
-      "The Wasting Plague",
-      "The Plague Years",
-      "The Dying Time",
-      "The Years of Ashes",
-      "The Summer Plague",
-      "The Winter Sickness",
-      "The Silent Death",
-      "The {color} Death",
-      "The Plague of the {place}"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND"
     ],
     arcs: [
-      ["The Summer Plague", "The Plague Years", "The Black Death", "The Great Mortality"],
-      ["The Plague of the Coast", "The Great Pestilence", "The Great Dying", "The Years of Ashes"],
-      ["The Sweating Sickness", "The Wasting Plague", "The Time of Pestilence", "The Dying Time"]
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY"
+      ],
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES"
+      ],
+      [
+        "LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE",
+        "LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME"
+      ]
     ]
   }
 };
@@ -1666,35 +1748,27 @@ const CRISIS_NAME_TEMPLATES = {
 const CRISIS_FALLBACK_BY_AGE = {
   AGE_ANTIQUITY: {
     names: [
-      "The Age of Upheaval",
-      "The Troubles",
-      "The Time of Troubles",
-      "The Crisis of Empire",
-      "The Years of Anarchy",
-      "The Years of Turmoil",
-      "The Great Fracturing",
-      "The Sundering"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING"
     ],
     arcs: []
   },
   AGE_EXPLORATION: {
     names: [
-      "The Crisis of Empire",
-      "The Age of Upheaval",
-      "The Revolutionary Years",
-      "The Reform Crisis"
+      "LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS",
+      "LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS"
     ],
     arcs: []
   }
 };
-// Tiny placeholder pools — only the most evocative entries kept.
-// {regional} dropped "Provincial" (read awkwardly with "Invasions" /
-// "Reformation"); the specific provincial names that DO work live as
-// literals in the relevant pools (Provincial Revolts, Provincial Schism,
-// Reformation of the Provinces).
-const CRISIS_COLORS = ["Black", "Red", "Grey", "Ashen"];
-const CRISIS_PLACES = ["Frontier", "Provinces", "Steppe", "Coast", "Heartland"];
-const CRISIS_REGIONAL = ["Northern", "Eastern"];
 
 /**
  * FNV-1a-ish 32-bit string hash, used to seed deterministic crisis-name picks.
@@ -1739,33 +1813,41 @@ function getGameSeed() {
 }
 
 /**
- * Resolve the `{ names, arcs }` template entry for a crisis sample, tolerating
- * the legacy flat-array shape.
+ * Resolve the `{ names, arcs }` LOC-key entry for a crisis sample, tolerating
+ * the legacy flat-array shape. Entries hold `LOC_DEMOGRAPHICS_CRISIS_*` tags.
  * @param {Snapshot|*} sample The crisis sample.
- * @returns {{ names: string[], arcs: string[][] }} The resolved pools.
+ * @returns {{ names: string[], arcs: string[][] }} The resolved key pools.
  */
 function resolveCrisisEntry(sample) {
-  const t = sample && sample.crisisEventType;
-  const entry = (t && CRISIS_NAME_TEMPLATES[t]) ||
-    CRISIS_FALLBACK_BY_AGE[sample && sample.age] || { names: ["The Crisis"], arcs: [] };
+  const type = sample && sample.crisisEventType;
+  const entry = (type && CRISIS_NAME_TEMPLATES[type]) ||
+    CRISIS_FALLBACK_BY_AGE[sample && sample.age] || {
+      names: ["LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS"],
+      arcs: []
+    };
   // Backward-compat: tolerate the legacy flat-array shape.
-  const names = Array.isArray(entry) ? entry : entry.names || ["The Crisis"];
+  const names = Array.isArray(entry)
+    ? entry
+    : entry.names || ["LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS"];
   const arcs = Array.isArray(entry) ? [] : entry.arcs || [];
   return { names, arcs };
 }
 
 /**
- * Compose a seeded, historian-style crisis name for a sample + stage. The same
- * game (seed) always reads consistently.
+ * Compose a seeded, historian-style crisis name for a sample + stage, resolving
+ * the chosen `LOC_DEMOGRAPHICS_CRISIS_*` tag to the active language. The same
+ * game (seed) always reads consistently. ({color}/{place}/{regional} variants
+ * are now pre-expanded into concrete, individually localized keys, so no
+ * post-compose substitution is needed.)
  * @param {Snapshot|*} sample The crisis sample (carries crisisEventType/age).
  * @param {number} stage The 1-based display stage.
  * @param {string} gameSeedStr The game's seed string.
- * @returns {string} The composed crisis name.
+ * @returns {string} The composed, localized crisis name.
  */
 function flavorCrisisName(sample, stage, gameSeedStr) {
-  const t = sample && sample.crisisEventType;
+  const type = sample && sample.crisisEventType;
   const { names, arcs } = resolveCrisisEntry(sample);
-  const seedKey = (t || (sample && sample.age) || "crisis") + "|" + gameSeedStr;
+  const seedKey = (type || (sample && sample.age) || "crisis") + "|" + gameSeedStr;
   const seed = hashString(seedKey);
   // Arc vs single-name decision — seeded so each game commits to one mode for
   // the run. ~35% chance of an arc when arcs exist; otherwise pick from the
@@ -1775,13 +1857,9 @@ function flavorCrisisName(sample, stage, gameSeedStr) {
   if (useArc) {
     const arc = arcs[seed % arcs.length];
     const idx = Math.max(0, Math.min(arc.length - 1, (stage | 0 || 1) - 1));
-    return arc[idx];
+    return t(arc[idx]);
   }
-  const template = pickSeeded(names, seed);
-  return template
-    .replace(/\{color\}/g, pickSeeded(CRISIS_COLORS, hashString(seedKey + "|color")))
-    .replace(/\{place\}/g, pickSeeded(CRISIS_PLACES, hashString(seedKey + "|place")))
-    .replace(/\{regional\}/g, pickSeeded(CRISIS_REGIONAL, hashString(seedKey + "|regional")));
+  return t(pickSeeded(names, seed));
 }
 
 /**
