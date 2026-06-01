@@ -67,7 +67,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.triumphsDecorator]", ...a);
@@ -75,7 +74,6 @@ function dlog(...a) {
 /**
  * Error logger; always emits.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.triumphsDecorator]", ...a);
@@ -118,7 +116,6 @@ function composeLegacyName(row) {
  * @param {Map<string, LegacyRow>} map Map being built.
  * @param {string} key Uppercased, trimmed display-name key.
  * @param {LegacyRow} row Candidate legacy row.
- * @returns {void}
  */
 function insertNameRow(map, key, row) {
   const isRace = typeof row.LegacyType === "string" && /_RACE$/.test(row.LegacyType);
@@ -161,7 +158,6 @@ function buildNameToRow() {
 /**
  * Index every legacy row by its uppercased `LegacyType` into `map`.
  * @param {Map<string, LegacyRow>} map Map to populate.
- * @returns {void}
  */
 function _indexLegaciesByType(map) {
   for (const row of GameInfo.Legacies) {
@@ -174,7 +170,6 @@ function _indexLegaciesByType(map) {
  * Alias `_RACE` keys to their paired non-race base row when present (the base
  * row carries per-civ progress; the `_RACE` row returns null progress).
  * @param {Map<string, LegacyRow>} map Type map to alias in place.
- * @returns {void}
  */
 function _aliasRaceKeys(map) {
   for (const [k, row] of Array.from(map.entries())) {
@@ -283,7 +278,6 @@ function probeMajorPids() {
 /**
  * One-time diagnostic dump of the resolved pids and pid 0's Legacies API shape.
  * @param {Pid[]} pids Resolved major-civ ids.
- * @returns {void}
  */
 function logPidsOnce(pids) {
   dlog("allMajorPids returned:", JSON.stringify(pids));
@@ -435,7 +429,6 @@ function makeProgressSorter(winner) {
  * first-row probe is still pending.
  * @param {ProbeSample[]} logSamples Accumulator (mutated).
  * @param {CivProgressRead} entry The civ's raw progress read.
- * @returns {void}
  */
 function collectProbeSample(logSamples, entry) {
   if (_firstRowLogged || logSamples.length >= 3) return;
@@ -556,7 +549,6 @@ function resolveRowForTitle(map, rawText, titleText) {
  * Add possible `LegacyType` tokens from a string to `out`.
  * @param {Set<string>} out Token sink.
  * @param {unknown} value Candidate string value.
- * @returns {void}
  */
 function collectLegacyTokens(out, value) {
   if (typeof value !== "string") return;
@@ -772,7 +764,6 @@ function buildProgressRow(c, total, winner) {
  * otherwise one row per civ.
  * @param {HTMLElement} box Progress box to append into.
  * @param {RowProgress} progress Aggregated progress.
- * @returns {void}
  */
 function fillProgressBox(box, progress) {
   const { civs, total, winner } = progress;
@@ -794,7 +785,6 @@ function fillProgressBox(box, progress) {
  * @param {DecoratableCard} card The card.
  * @param {LegacyRow} row The resolved legacy row.
  * @param {{ token?: string } | null | undefined} identityHit Stable-id hit, if any.
- * @returns {void}
  */
 function markCardProbe(card, row, identityHit) {
   card.setAttribute("data-demographics-legacy-probe", identityHit ? "stable-id" : "title-fallback");
@@ -808,7 +798,6 @@ function markCardProbe(card, row, identityHit) {
  * Resolves the legacy from the card title, marks the card decorated to guard
  * against Solid re-renders, then builds and appends the bars block.
  * @param {DecoratableCard} card Triumph card.
- * @returns {void}
  */
 function decorateCard(card) {
   if (!card || card._demographicsDecorated) return;
@@ -858,7 +847,6 @@ function decorateCard(card) {
 /**
  * Decorate every `.triumph-card` descendant of `root`.
  * @param {HTMLElement | Document | null | undefined} root Subtree root to sweep.
- * @returns {void}
  */
 function sweepRoot(root) {
   if (!root || typeof root.querySelectorAll !== "function") return;
@@ -870,7 +858,6 @@ function sweepRoot(root) {
 /**
  * Handle one added DOM node: decorate it if it is a triumph card, else sweep it.
  * @param {Node} node An added node from a mutation record.
- * @returns {void}
  */
 function handleAddedNode(node) {
   if (node.nodeType !== 1) return;
@@ -886,7 +873,6 @@ function handleAddedNode(node) {
  * Re-check the card enclosing a mutated text/child node (Solid hydration patches
  * title text into nodes that already mounted).
  * @param {MutationRecord} m Mutation record whose target to inspect.
- * @returns {void}
  */
 function handleHydratedTarget(m) {
   if (m.type !== "characterData" && m.type !== "childList") return;
@@ -900,7 +886,6 @@ function handleHydratedTarget(m) {
  * Handle one batch of mutation records: decorate newly added cards, sweep added
  * subtrees, and re-check cards whose text/children changed (Solid hydration).
  * @param {MutationRecord[]} mutations Observed mutation records.
- * @returns {void}
  */
 function onMutations(mutations) {
   for (const m of mutations) {
@@ -933,7 +918,6 @@ const LEGACIES_SCREEN_TAG = "screen-legacies";
  * run an initial sweep over it. Idempotent: a call while already attached is a
  * no-op.
  * @param {HTMLElement} screenRoot The `<screen-legacies>` element.
- * @returns {void}
  */
 function attachCardObserver(screenRoot) {
   if (_cardObserver) return;
@@ -951,7 +935,6 @@ function attachCardObserver(screenRoot) {
 
 /**
  * Disconnect the scoped card observer if attached.
- * @returns {void}
  */
 function detachCardObserver() {
   if (!_cardObserver) return;
@@ -964,7 +947,6 @@ function detachCardObserver() {
  * Disconnect every observer. Wired to engine `BeforeUnload` so the watchers
  * don't outlive this UI-module context — the closest analog to a screen detach
  * for a standalone decorator script.
- * @returns {void}
  */
 function teardownObservers() {
   detachCardObserver();
@@ -981,7 +963,6 @@ function teardownObservers() {
  * HUD; the expensive `characterData` watch is confined to the screen's subtree
  * and lives only while the screen is open — so the decorator no longer runs a
  * document-wide text-mutation observer for the entire process lifetime.
- * @returns {void}
  */
 function bootstrap() {
   dlog("bootstrap");

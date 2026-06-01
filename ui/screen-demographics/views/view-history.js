@@ -117,7 +117,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-history]", ...a);
@@ -125,7 +124,6 @@ function dlog(...a) {
 /**
  * Error logger for this view.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.view-history]", ...a);
@@ -281,7 +279,6 @@ function safeCall(fn, fb) {
 /**
  * Remove every child of `host`.
  * @param {HTMLElement} host Element to empty.
- * @returns {void}
  */
 function clearHost(host) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -354,7 +351,6 @@ function measureChartSize(chartHost) {
  * @param {TurnRange|null} turnRange Active turn window.
  * @param {number} width Chart width in pixels.
  * @param {number} height Chart height in pixels.
- * @returns {void}
  */
 function routeChartRender(chartHost, ctx, activeMetric, turnRange, width, height) {
   if (tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, width, height)) return;
@@ -432,7 +428,6 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, width, heig
  * @param {TurnRange|null} turnRange Active turn window.
  * @param {number} width Chart width in pixels.
  * @param {number} height Chart height in pixels.
- * @returns {void}
  */
 function renderStandardChart(chartHost, ctx, activeMetric, turnRange, width, height) {
   const chartMod = /** @type {HistoryChartMod} */ (ctx.chartMod);
@@ -461,7 +456,6 @@ function renderStandardChart(chartHost, ctx, activeMetric, turnRange, width, hei
  * @param {HistoryCtx} ctx Render context.
  * @param {string} activeMetric Active metric id.
  * @param {TurnRange|null} turnRange Active turn window.
- * @returns {void}
  */
 function buildChartHost(host, ctx, activeMetric, turnRange) {
   const chartHost = document.createElement("div");
@@ -499,7 +493,6 @@ function buildChartHost(host, ctx, activeMetric, turnRange) {
  * toolbar, and chart host in their fixed display order.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {HistoryCtx} ctx Render context (history, selection state, callbacks).
- * @returns {void}
  */
 export function render(host, ctx) {
   clearHost(host);

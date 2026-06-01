@@ -153,7 +153,6 @@ function loadRadarCivsCurrent(samples) {
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  * @param {string} pid Player id key.
  * @param {CivSample|*} ps One civ's sample.
- * @returns {void}
  */
 function foldRadarSample(civs, pidOrder, pid, ps) {
   const m = ps?.metrics || {};
@@ -181,7 +180,6 @@ function foldRadarSample(civs, pidOrder, pid, ps) {
  * Merge per-axis values into a target, keeping the max of each finite value.
  * @param {Record<string, number>} target The values to update (mutated).
  * @param {Record<string, *>} src The source values (numeric or not).
- * @returns {void}
  */
 function mergeMaxAxes(target, src) {
   for (const k of RADAR_AXIS_KEYS) {
@@ -223,7 +221,6 @@ function tallyLiveTriumphs(pl) {
  * every alive major (creating civ entries that lack samples).
  * @param {Map<string, RadarCiv>} civs The civ map (mutated).
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
- * @returns {void}
  */
 function liveRadarPull(civs, pidOrder) {
   try {
@@ -257,7 +254,6 @@ function legaciesApiAvailable() {
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  * @param {number} pid The major's pid.
  * @param {Record<string, number>} counts The per-axis triggered counts.
- * @returns {void}
  */
 function mergeLiveMajorTriumphs(civs, pidOrder, pid, counts) {
   // Ensure civ exists (alive majors may not have samples yet if the storage
@@ -327,7 +323,6 @@ function radarScaleMax(civs) {
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarGeometry} geo The radar geometry.
  * @param {number} scaleMax The scale maximum.
- * @returns {void}
  */
 function drawRadarGrid(svg, geo, scaleMax) {
   const { cx, cy, innerR } = geo;
@@ -359,7 +354,6 @@ function drawRadarGrid(svg, geo, scaleMax) {
  * @param {number} i The ring index (1-based count).
  * @param {number} maxRings The total ring count.
  * @param {number} ringStrokeW The ring stroke width.
- * @returns {void}
  */
 function drawRadarRing(svg, geo, i, maxRings, ringStrokeW) {
   const { cx, cy, R } = geo;
@@ -397,7 +391,6 @@ function drawRadarRing(svg, geo, i, maxRings, ringStrokeW) {
  * Draw the axis spokes (center → rim) and the axis labels.
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarGeometry} geo The radar geometry.
- * @returns {void}
  */
 function drawRadarSpokes(svg, geo) {
   const { cx, cy, R } = geo;
@@ -490,7 +483,6 @@ function buildRadarPoly(c, geo, scaleMax) {
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarPoly[]} polys The polygons (already sorted back-to-front).
  * @param {RadarGeometry} geo The radar geometry.
- * @returns {void}
  */
 function drawRadarPolys(svg, polys, geo) {
   // Pass 1 — translucent fills; Pass 2 — spokes; Pass 3 — outlines; Pass 4 —
@@ -505,7 +497,6 @@ function drawRadarPolys(svg, polys, geo) {
  * Draw one polygon's translucent fill (skipped for < 3 vertices).
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarPoly} p The polygon.
- * @returns {void}
  */
 function drawRadarPolyFill(svg, p) {
   if (!p.polyPts || p.polyPts.length < 3) return;
@@ -520,7 +511,6 @@ function drawRadarPolyFill(svg, p) {
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarPoly} p The polygon.
  * @param {RadarGeometry} geo The radar geometry.
- * @returns {void}
  */
 function drawRadarPolySpokes(svg, p, geo) {
   LEGACY_AXES.forEach((a, idx) => {
@@ -543,7 +533,6 @@ function drawRadarPolySpokes(svg, p, geo) {
  * Draw one polygon's outline (skipped for < 2 vertices).
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarPoly} p The polygon.
- * @returns {void}
  */
 function drawRadarPolyOutline(svg, p) {
   if (!p.polyPts || p.polyPts.length < 2) return;
@@ -564,7 +553,6 @@ function drawRadarPolyOutline(svg, p) {
  * Draw one polygon's vertex dots on populated axes.
  * @param {SVGElement} svg The radar SVG.
  * @param {RadarPoly} p The polygon.
- * @returns {void}
  */
 function drawRadarPolyDots(svg, p) {
   LEGACY_AXES.forEach((a, idx) => {
@@ -733,7 +721,6 @@ function buildRadarSvg(civs, hidden, geo, scaleMax, W, H) {
  * @param {ChartOptions|*} opts The render options (onToggleCiv).
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @returns {void}
  */
 function mountRadarLegend(wrap, civs, hidden, opts, W, H) {
   const onToggle = typeof opts.onToggleCiv === "function" ? opts.onToggleCiv : null;

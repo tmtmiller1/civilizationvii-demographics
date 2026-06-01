@@ -18,7 +18,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.history-csv]", ...a);
@@ -26,7 +25,6 @@ function dlog(...a) {
 /**
  * Error logger for this module.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function derr(...a) {
   console.error("[Demographics.history-csv]", ...a);
@@ -38,7 +36,6 @@ function derr(...a) {
  * @param {HTMLElement} host The view host element.
  * @param {string} message Toast text.
  * @param {boolean} success Green (success) vs orange (failure) styling.
- * @returns {void}
  */
 function showCsvToast(host, message, success) {
   // Remove any prior toast first.
@@ -386,7 +383,6 @@ function writeCsvToClipboard(csv) {
  * samples; refuses oversized exports that would crash the clipboard bridge.
  * @param {DemoHistory|undefined} history The persisted history blob.
  * @param {HTMLElement} [host] Host for the confirmation toast.
- * @returns {void}
  */
 export function exportHistoryAsCsv(history, host) {
   if (!history || !Array.isArray(history.samples) || history.samples.length === 0) {
@@ -478,7 +474,6 @@ function buildCsvDocument(history) {
  * Log and toast a refusal for a CSV that exceeds the hard size limit.
  * @param {HTMLElement|undefined} host Host for the toast.
  * @param {string} sizeMB Formatted CSV size in MB.
- * @returns {void}
  */
 function refuseOversizedCsv(host, sizeMB) {
   console.error(
@@ -499,7 +494,6 @@ function refuseOversizedCsv(host, sizeMB) {
  * @param {number} lineCount Total CSV line count.
  * @param {string} sizeMB Formatted CSV size in MB.
  * @param {boolean} clipboardOk Whether the clipboard write succeeded.
- * @returns {void}
  */
 function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
   if (csv.length <= CSV_SOFT_LIMIT) {
@@ -536,7 +530,6 @@ function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
  * @param {number} colCount Column count.
  * @param {string} sizeMB Formatted CSV size in MB.
  * @param {boolean} clipboardOk Whether the clipboard write succeeded.
- * @returns {void}
  */
 function showCsvResultToast(host, csv, lineCount, colCount, sizeMB, clipboardOk) {
   const META_LINES = 9; // keep in sync with metadata-header push count above

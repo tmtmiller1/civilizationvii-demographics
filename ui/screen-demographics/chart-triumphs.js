@@ -349,7 +349,6 @@ function buildRaceData(races, majors) {
 /**
  * Sort race data by attribute order, then activity, then localized name.
  * @param {RaceDatum[]} raceData The race data (sorted in place).
- * @returns {void}
  */
 function sortRaceData(raceData) {
   const ATTR_ORDER = TRIUMPH_ATTR_META.map((a) => a.key);
@@ -376,7 +375,6 @@ function sortRaceData(raceData) {
  * @param {string} rotate The CSS rotation (e.g. "180deg").
  * @param {[string, string]} vEdge The vertical edge offset (e.g. ["top", "0.5rem"]).
  * @param {[string, string]} hEdge The horizontal edge offset (e.g. ["left", "0.4rem"]).
- * @returns {void}
  */
 function addCardCorner(card, rotate, vEdge, hEdge) {
   const c = document.createElement("div");
@@ -390,7 +388,6 @@ function addCardCorner(card, rotate, vEdge, hEdge) {
 /**
  * Append the four corner adornments to a triumph card.
  * @param {HTMLElement} card The card element.
- * @returns {void}
  */
 function addCardCorners(card) {
   addCardCorner(card, "180deg", ["top", "0.5rem"], ["left", "0.4rem"]);
@@ -403,7 +400,6 @@ function addCardCorners(card) {
  * Append the top filigree pair (tinted by attribute color) to a card.
  * @param {HTMLElement} card The card element.
  * @param {{ color: string }} a The attribute metadata.
- * @returns {void}
  */
 function addCardFiligree(card, a) {
   const filigreeRow = document.createElement("div");
@@ -423,7 +419,6 @@ function addCardFiligree(card, a) {
  * @param {HTMLElement} card The card element.
  * @param {{ color: string, label: string }} a The attribute metadata.
  * @param {boolean} isTriggered Whether any civ triggered this triumph.
- * @returns {void}
  */
 function addCardRing(card, a, isTriggered) {
   const ringWrap = document.createElement("div");
@@ -446,7 +441,6 @@ function addCardRing(card, a, isTriggered) {
  * Append the triumph name to a card.
  * @param {HTMLElement} card The card element.
  * @param {*} row The legacy row.
- * @returns {void}
  */
 function addCardName(card, row) {
   const name = document.createElement("div");
@@ -461,7 +455,6 @@ function addCardName(card, row) {
  * @param {HTMLElement} card The card element.
  * @param {{ color: string, label: string }} a The attribute metadata.
  * @param {boolean} isMajor Whether the legacy is a major (commemorative) one.
- * @returns {void}
  */
 function addCardPill(card, a, isMajor) {
   const pillRow = document.createElement("div");
@@ -486,7 +479,6 @@ function addCardPill(card, a, isMajor) {
  * Append the requirements + reward text rows to a card (when present).
  * @param {HTMLElement} card The card element.
  * @param {*} row The legacy row.
- * @returns {void}
  */
 function addCardRequirementsAndReward(card, row) {
   if (row.TriggerDescription) {
@@ -515,7 +507,6 @@ function addCardRequirementsAndReward(card, row) {
  * @param {HTMLElement} card The card element.
  * @param {RaceDatum} rd The race datum.
  * @param {DemoHistory|*} history The history blob (for the name).
- * @returns {void}
  */
 function addCardTrophy(card, rd, history) {
   if (rd.winner === -1) return;
@@ -532,7 +523,6 @@ function addCardTrophy(card, rd, history) {
  * @param {RaceDatum} rd The race datum.
  * @param {{ color: string }} a The attribute metadata.
  * @param {DemoHistory|*} history The history blob (for names/colors).
- * @returns {void}
  */
 function addCardProgressBars(card, rd, a, history) {
   // Spacer that pushes the bars to the bottom of the card.
