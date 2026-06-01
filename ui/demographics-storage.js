@@ -1,33 +1,32 @@
 // demographics-storage.js
 //
-// This would be Cross-age persistent storage for the history time series if
-// that functionality were possible in the UI sandbox. Unfortunately, the
-// necessary tools aren't available (yet? we can always hope)
-
-// Backend is the per-local-player Tutorial property bag — the same
-// surface used internally by the engine for legacy/triumph tracking and
-// civ-unlock tracking (see triumph-tracking-manager.js and
-// civ-unlock-tracking-manager.js under base-standard/ui-next/ and
-// core/ui-next/ respectively).
+// Per-turn history time-series storage for the Demographics screen.
 //
-// Why per-player and not GameTutorial:
-//   GameTutorial.setProperty (the global bag) is wiped at age transition.
-//   The engine's own tutorial-manager.js can afford this because each age
-//   ships its own tutorial item bank and never needs cross-age state.
+// IMPORTANT — cross-age persistence does NOT work in current builds.
+// Empirical testing shows the per-player Tutorial property bag does not carry
+// our payload across an age transition (the JS module heap is also reloaded at
+// the boundary). Treat history as scoped to a single age/session. The backend
+// is retained because it DOES survive within an age and across in-session UI
+// reloads, and as a forward-compat hook if a future build carries per-player
+// UI state across the age save.
 //
-//   Players[localObserverID].Tutorial.setProperty survives because it
-//   rides on the per-player serialized state that the age-transition
-//   save carries forward. This is the engine's blessed cross-age path,
-//   established in core/ui/utilities/utility-serialize.js
-//   (SerialBase.internalWrite, around lines 37–44):
-//       if (!this.player) GameTutorial.setProperty(hash, value);
-//       else              this.player.Tutorial.setProperty(hash, value);
+// Backend: the per-local-player Tutorial property bag — the same surface the
+// engine uses internally for legacy/triumph and civ-unlock tracking. We write
+// only our own hashed sub-keys. The GLOBAL GameTutorial bag is wiped at age
+// transition, so we prefer Players[localObserverID].Tutorial.setProperty,
+// which at least persists within the current age/session.
 //
-// Proactive flushes fire on:
-//   BeforeAgeTransition  — engine emits this immediately before the
-//                          transition save is captured
-//   BeforeUnload         — UI module reload; covers age boundaries and
-//                          quit-to-menu
+// Persistence mode (see PERSISTENCE_MODE / the "persistenceMode" setting):
+//   "within_age"          (default) — persist within the age/session only.
+//   "legacy_tutorial_bag" (opt-in)  — additionally register the
+//                          BeforeAgeTransition flush that attempts the cross-age
+//                          carry-forward. Kept for power users / future builds;
+//                          it does NOT preserve history across ages today.
+//
+// Flush hooks:
+//   BeforeUnload         — UI module reload; covers in-session age boundaries
+//                          and quit-to-menu (always installed).
+//   BeforeAgeTransition  — only in "legacy_tutorial_bag" mode.
 
 import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
 
@@ -87,6 +86,24 @@ const HARD_MAX_SAMPLES = 50000;
 const CATALOG_SCOPE = "demographics-history-v1";
 /** Property-bag key under which the JSON payload is stored. */
 const PAYLOAD_KEY = "json";
+/**
+ * Default persistence mode. `within_age` persists within a single age/session
+ * (the honest default — cross-age carry-forward does not work in current
+ * builds). `legacy_tutorial_bag` additionally registers the BeforeAgeTransition
+ * flush; opt in via the `persistenceMode` setting.
+ */
+const PERSISTENCE_MODE = "within_age";
+/**
+ * Resolve the active persistence mode from settings, defaulting to
+ * {@link PERSISTENCE_MODE}.
+ * @returns {string} `"within_age"` or `"legacy_tutorial_bag"`.
+ */
+function activePersistenceMode() {
+  return safeCall(
+    () => DemographicsSettings.getSetting("persistenceMode", PERSISTENCE_MODE),
+    PERSISTENCE_MODE
+  );
+}
 
 // ── Sample cap config (preserved from prior implementation) ─────────
 /** @type {Record<string, number>} */
@@ -283,7 +300,7 @@ function normalize(h) {
   return h;
 }
 
-// ── Per-player Tutorial accessor (the cross-age-surviving surface) ──
+// ── Per-player Tutorial accessor (the within-age persistence surface) ──
 //
 // Returns { read(key), write(key, val) } or null if the player isn't
 // available yet. Re-resolves the player on every call: localObserverID
@@ -302,8 +319,9 @@ function resolveLocalPid() {
 }
 
 /**
- * Resolve the per-player Tutorial property bag — the cross-age-surviving
- * persistence tier. Re-resolves the player on every call, since
+ * Resolve the per-player Tutorial property bag — the within-age persistence
+ * tier (survives in-session reloads, not the age save). Re-resolves the player
+ * on every call, since
  * `localObserverID` can change as a post-transition shell settles. Never throws.
  * @returns {PersistStore | null} A read/write handle, or null if unavailable.
  */
@@ -400,7 +418,10 @@ class StorageImpl {
   }
 
   /**
-   * Install one-time `BeforeAgeTransition` / `BeforeUnload` flush hooks. Idempotent.
+   * Install one-time flush hooks. `BeforeUnload` is always installed (covers
+   * in-session age boundaries and quit-to-menu). `BeforeAgeTransition` — the
+   * cross-age carry-forward attempt, which does not work in current builds — is
+   * installed only in `legacy_tutorial_bag` mode. Idempotent.
    * @returns {void}
    */
   _installEngineHooks() {
@@ -411,18 +432,20 @@ class StorageImpl {
     const flush = () => {
       try {
         if (this._mem) {
-          dlog("flush: BeforeAgeTransition/BeforeUnload — samples=" + this._mem.samples.length);
+          dlog("flush: samples=" + this._mem.samples.length);
           this.save(this._mem);
         }
       } catch (e) {
         derr("flush hook threw:", e);
       }
     };
-    try {
-      engine.on("BeforeAgeTransition", flush);
-    } catch (_) {
-      // engine.on() can throw if the event name is unknown in this build; the
-      // BeforeUnload hook below still covers most flush cases.
+    if (activePersistenceMode() === "legacy_tutorial_bag") {
+      try {
+        engine.on("BeforeAgeTransition", flush);
+      } catch (_) {
+        // engine.on() can throw if the event name is unknown in this build; the
+        // BeforeUnload hook below still covers most flush cases.
+      }
     }
     try {
       engine.on("BeforeUnload", flush);
@@ -750,7 +773,7 @@ class StorageImpl {
   }
 }
 
-/** The cross-age history storage singleton. */
+/** The history storage singleton. */
 const DemographicsStorage = new StorageImpl();
 export default DemographicsStorage;
 export {
