@@ -252,8 +252,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="pt_BR"><Text>A cada 5 turnos</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="pt_BR"><Text>A cada 10 turnos</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="pt_BR"><Text>A cada 25 turnos ⚠ gráficos grosseiros</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="pt_BR"><Text>Frequência de amostragem:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="pt_BR"><Text>Valores mais altos registram menos pontos. A mudança passa a valer no próximo turno.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="pt_BR"><Text>Frequência de amostragem (desempenho):</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="pt_BR"><Text>Valores mais altos capturam um instantâneo com menos frequência, então o mod faz menos trabalho a cada turno — mais leve em máquinas lentas e partidas longas. Aplica-se no próximo turno; as amostras existentes são mantidas.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="pt_BR"><Text>Desativar a redução de amostras e manter todos os registros mesmo após atingir o limite.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="pt_BR"><Text>Limpar todas as amostras de Demografia registradas?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="pt_BR"><Text>Limpar todas as guerras registradas? O histórico de amostras e outros dados serão mantidos.</Text></Replace>

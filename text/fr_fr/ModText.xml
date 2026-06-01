@@ -755,10 +755,10 @@
             <Text>Tous les 25 tours ⚠ graphiques grossiers</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="fr_FR">
-            <Text>Fréquence d'échantillonnage :</Text>
+            <Text>Fréquence d'échantillonnage (performances) :</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="fr_FR">
-            <Text>Des valeurs plus élevées enregistrent moins de points — utile pour les longues parties marathon. Le changement s'applique au tour suivant ; les échantillons existants sont conservés.</Text>
+            <Text>Des valeurs plus élevées prennent un instantané moins souvent, donc le mod fait moins de travail à chaque tour — plus léger sur les machines lentes et les longues parties. S'applique au tour suivant ; les échantillons existants sont conservés.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="fr_FR">
             <Text>Désactiver le sous-échantillonnage (conserver l'échantillon de chaque tour même après l'atteinte du plafond) — mode expert ; à associer à un plafond élevé ou Illimité.</Text>

@@ -252,8 +252,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ko_KR"><Text>5턴마다</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ko_KR"><Text>10턴마다</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ko_KR"><Text>25턴마다 ⚠ 그래프가 거칠어짐</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ko_KR"><Text>샘플 빈도:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 기록 지점이 줄어듭니다. 변경 사항은 다음 턴부터 적용됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ko_KR"><Text>샘플 빈도(성능):</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 스냅샷을 덜 자주 찍어 매 턴 작업량이 줄어듭니다(느린 기기와 긴 게임에 유리). 다음 턴부터 적용되며 기존 샘플은 유지됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ko_KR"><Text>샘플 축소를 끄고 상한 이후에도 모든 기록을 유지합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ko_KR"><Text>기록된 모든 인구 통계 샘플을 지우시겠습니까?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ko_KR"><Text>기록된 모든 전쟁을 지우시겠습니까? 샘플 기록과 기타 데이터는 유지됩니다.</Text></Replace>

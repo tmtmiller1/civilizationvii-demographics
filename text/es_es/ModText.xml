@@ -755,10 +755,10 @@
             <Text>Cada 25 turnos ⚠ gráficas poco detalladas</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="es_ES">
-            <Text>Frecuencia de muestreo:</Text>
+            <Text>Frecuencia de muestreo (rendimiento):</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="es_ES">
-            <Text>Los valores más altos registran menos puntos: útil para partidas maratón largas. El cambio se aplica en el siguiente turno; las muestras existentes se conservan.</Text>
+            <Text>Los valores más altos toman una instantánea con menos frecuencia, por lo que el mod hace menos trabajo cada turno: más ligero en equipos lentos y partidas largas. Se aplica en el siguiente turno; las muestras existentes se conservan.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="es_ES">
             <Text>Desactivar el submuestreo (conservar la muestra de cada turno incluso después de alcanzar el límite): modo para usuarios avanzados; combínalo con un límite alto o Ilimitado.</Text>

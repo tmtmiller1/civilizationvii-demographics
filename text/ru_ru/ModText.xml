@@ -252,8 +252,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ru_RU"><Text>Каждые 5 ходов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ru_RU"><Text>Каждые 10 ходов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ru_RU"><Text>Каждые 25 ходов ⚠ грубые графики</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ru_RU"><Text>Частота выборки:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Чем выше значение, тем реже записываются точки. Изменение применяется со следующего хода.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ru_RU"><Text>Частота выборки (производительность):</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Чем выше значение, тем реже создаётся снимок, поэтому мод выполняет меньше работы за ход — легче на медленных компьютерах и в долгих партиях. Применяется со следующего хода; существующие выборки сохраняются.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ru_RU"><Text>Отключить прореживание и сохранять все выборки даже после достижения лимита.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ru_RU"><Text>Очистить все записанные выборки Демографии?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ru_RU"><Text>Очистить все записанные войны? История выборок и другие данные будут сохранены.</Text></Replace>
