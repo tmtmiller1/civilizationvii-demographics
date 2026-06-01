@@ -111,7 +111,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   name before incrementing the counter. Surface "Demographics paused due
   to engine errors" in the Options panel with a manual re-enable button.
 
-### 15. Relations graph — cache edges, re-filter on toggle (perf)
+### 10. Relations graph — cache edges, re-filter on toggle (perf)
 - **Problem.** Every filter-pill toggle calls `rs.repaint()` →
   `computeRingData` → `buildCivEdges`, which re-queries the engine from
   scratch: a full O(n²) `getRelationshipEnum` attitude pass plus a per-active
@@ -152,7 +152,7 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## P3 — Content and framing
 
-### 10. De-Europeanize the Exploration crisis name pools
+### 11. De-Europeanize the Exploration crisis name pools
 - **Problem.** `EXPLORATION_CRISIS_REVOLUTION` and
   `EXPLORATION_CRISIS_RELIGION` lean heavily on Reformation,
   Counter-Reformation, Iconoclast, Glorious Revolution, Spring of Nations
@@ -164,7 +164,7 @@ critique pass. Items are grouped by audience and ordered by impact.
     expand the shared pool with diverse entries so the RNG can pick
     region-appropriate names.
 
-### 11. Crisis/war-name sensitivity audit — partially done
+### 12. Crisis/war-name sensitivity audit — partially done
 - **Problem.** Procedurally combined names risk (a) per-locale phrasing
   that maps to a slur, and (b) English or translated names that read as a
   specific real-world atrocity/tragedy.
@@ -186,7 +186,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   Exploration crises); record the audit in a CSV header comment so future
   contributors know it was checked.
 
-### 12. Credits — keep attribution clean
+### 13. Credits — keep attribution clean
 - **Context.** Lineage from robk (Civ V Demographics), Gedemon (CivGraphs),
   Slothoth (Global Relations). These are older mods on prior Civ titles
   and no permission is required to draw inspiration from them.
@@ -196,14 +196,89 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## P4 — Optional / nice-to-have
 
-### 13. Export-as-CSV / JSON button
+### 14. Export-as-CSV / JSON button
 - Sidesteps the persistence problem entirely by letting players save a
   run's history to disk before the age transition wipes it.
 
-### 14. Replace FNV-1a fallback hash with a hard fail
+### 15. Replace FNV-1a fallback hash with a hard fail
 - If `Database.makeHash` is missing, the mod should disable persistence
   and warn, not silently use a different hash that will desync from any
   future engine change.
+
+### 16. `localStorage.modSettings` shared-namespace defense
+- **Problem.** Settings live under a top-level `modSettings` key shared
+  with any other mod. The current code already only writes our own
+  sub-key (after an earlier regression that wiped siblings), but there is
+  no defensive read — if a sibling mod ships the same bug, our slice
+  disappears silently.
+- **Action.** Add a schema-version field to the persisted slice and a
+  one-time in-game toast if the slice comes back missing or malformed.
+- **Files.** `ui/demographics-settings.js`
+
+### 17. `infoAddict` legacy slice migration — ✅ RESOLVED
+- **Context.** Storage layer migrated from a `modSettings.infoAddict`
+  slice. Confirmed via code inspection that `infoAddict` was an earlier
+  internal name for THIS mod (Civ 7 Demographics), not robk's Civ V mod,
+  and no released build of this mod ever shipped under that key.
+- **Resolution.** Removed `migrateLegacySlice` and its call site in
+  `ui/demographics-settings.js`. Also flagged for the comment-sweep
+  (#5): `ui/demographics-storage.js` near line 341 still references
+  "legacy data written under the old GameTutorial-based code" — that
+  fallback existed for the same dead migration and should be trimmed.
+
+### 18. Engine-event subscription lifecycle
+- **Problem.** Subscriptions to `PlayerTurnActivated`,
+  `PlayerAgeTransitionComplete`, `BeforeAgeTransition`, and `BeforeUnload`
+  are not all paired with explicit unsubscribes on the kill-switch path
+  (#9) or on module teardown. A leaked subscription firing after the
+  module is in a partial state is itself a likely source of the throws
+  that trip the kill switch.
+- **Action.** Audit every `engine.on(...)` / `addEventListener(...)` in
+  `ui/demographics-sampler.js` and `ui/demographics-storage.js`. Store
+  the returned handles and call `off` / `removeEventListener` on the
+  kill-switch path. Add a single `_teardown()` that drains them all.
+- **Files.** `ui/demographics-sampler.js`, `ui/demographics-storage.js`
+
+### 19. Save-bloat measurement
+- **Problem.** Cap + decimation are tuned by intuition. There is no
+  measurement of actual serialized byte size per write.
+- **Action.** Add a one-shot console helper (e.g. `window.__demoSizeOf()`)
+  that reports the byte size of the property-bag payload at current turn
+  count. Use it to set a sane default cap and to answer future user
+  complaints quantitatively.
+- **Files.** `ui/demographics-storage.js` (helper); no shipped UI.
+
+### 20. README claims audit before release
+- **Action.** After #1 (Tutorial-bag downgrade) and any other
+  user-visible behavior changes land, re-read `docs/README.md` and the
+  Workshop short description top-to-bottom and strip anything stale
+  (cross-age history claims, template-based crisis names, etc.).
+- **Files.** `docs/README.md`, `docs/steam-workshop-description-short.md`
+
+### 21. Promote `tooltipSafeTextColor` to a shared utility
+- **Problem.** Civ-color text-on-color contrast logic lives only in the
+  chart tooltip. Relations ring labels, Wars Gantt labels, and any
+  future surface have the same problem and risk diverging implementations.
+- **Action.** Extract `safeTextColor(civColor)` into a shared module
+  (e.g. `ui/civ-color-utils.js`); refactor the tooltip and all other
+  civ-color text surfaces to use it.
+
+### 22. `release.sh` exclusion audit
+- **Problem.** After #3 excluded `text/data`, no one verified the rest
+  of the exclusion list. One regex too loose and the Workshop zip ships
+  `docs/`, `*.md`, `.DS_Store`, `node_modules/`, stray CSVs, etc.
+- **Action.** Add an assertion step to `release.sh` that diffs the zip
+  contents against an allow-list and fails the build on unexpected
+  entries.
+- **Files.** `release.sh`
+
+### 23. Minimal test harness
+- **Scope.** Two pure-function tests, ~30 lines total:
+  - `flavorCrisisName(seed, type) → key` is deterministic across calls.
+  - `_maybeDecimate(samples, cap)` preserves age-boundary turns and the
+    latest age window.
+- **Action.** Add `tests/` with a Node-runnable script (no framework
+  needed). Excluded from the shipped zip via #22.
 
 ## Execution order
 
@@ -212,11 +287,15 @@ critique pass. Items are grouped by audience and ordered by impact.
 3. P1/#3 (template tokens) — ✅ done (migrated crisis names to LOC keys).
 4. P2/#7 + P2/#8 (perfMode + decimation transparency) — paired cleanup.
 5. P1/#4 (locale tone pass) — mechanical.
-6. P2/#5, #6, #9, #15 — code-quality + perf sweep, can run in parallel.
-7. P3/#10, #11, #12 — content review, requires external input. (#11
+6. P2/#5, #6, #9, #10 — code-quality + perf sweep, can run in parallel.
+   (#5 should also trim the stale "legacy GameTutorial migration"
+   comment in `ui/demographics-storage.js` near line 341, flagged by #17.)
+7. P3/#11, #12, #13 — content review, requires external input. (#12
    sensitivity scan + charged-name renames done; native pass on es/fr/pt/zh
    still pending.)
-8. P4 — defer.
+8. P4/#16, #18, #22 — pre-release hardening (settings defense, event
+   lifecycle audit, release.sh allow-list).
+9. P4/#14, #15, #19, #20, #21, #23 — defer / nice-to-have.
 
 ## Out of scope
 
