@@ -3,9 +3,11 @@
 Plan for addressing issues identified in the engineering / modding-community
 critique pass. Items are grouped by audience and ordered by impact.
 
+**Status:** `[x]` done · `[~]` partially done · `[ ]` not started.
+
 ## P0 — Correctness and stale assumptions
 
-### 1. Drop or honestly downgrade the `Tutorial.setProperty` cross-age backend
+### 1. [x] Drop or honestly downgrade the `Tutorial.setProperty` cross-age backend
 - **Problem.** `demographics-storage.js` writes to
   `Players[localObserverID].Tutorial.setProperty` on the documented theory
   that it survives age transitions. Empirical testing shows it does not.
@@ -27,7 +29,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   - `ui/demographics-settings.js` (new setting)
   - `docs/README.md`, `docs/steam-workshop-description-short.md`
 
-### 2. Spoiler / multiplayer leakage audit on diplomacy metrics
+### 2. [x] Spoiler / multiplayer leakage audit on diplomacy metrics
 - **Problem.** `Game.Diplomacy.getPlayerEvents` and other diplomacy
   accessors are sampled for every alive major civ. The `showUnmetNames`
   setting gates *labels*, but metric *values* may still surface
@@ -47,7 +49,7 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## P1 — Localization
 
-### 3. Resolve template-token inconsistency in crisis-name CSVs — ✅ RESOLVED
+### 3. [x] Resolve template-token inconsistency in crisis-name CSVs — ✅ RESOLVED
 - **Problem (orig).** English source used `{regional}` / `{place}` /
   `{color}` tokens while translations baked in concrete variants per row —
   redundant rows *and* lost template flexibility. Worse: the CSVs were read
@@ -66,27 +68,28 @@ critique pass. Items are grouped by audience and ordered by impact.
   `text/<lang>/ModText.xml` (×10), `text/data/crisis-names-v4.*.csv`,
   `release.sh` (now excludes `text/data`).
 
-### 4. Finish locale tone-clean pass
-- **Status.** Done for it, pt, ja, ko, ru. Pending for de, es, fr, zh, en.
-- **Action.** Apply the same tone/strip-dev-jargon pass to remaining
-  `text/<lang>/ModText.xml` files.
+### 4. [x] Finish locale tone-clean pass
+- **Status.** Done for all 10 locales. it/pt/ja/ko/ru were already cleaned; en
+  is the (clean) source of truth; de/es/fr/zh re-synced — harness-placeholder
+  BODY, collector/sampler FOOTNOTE, and Σ-formula GDP/approval trigger captions
+  replaced with the cleaned wording (detailed hover popovers keep their formula).
 
 ## P2 — Code-smell, maintainability, and "looks AI-generated"
 
-### 5. Strip reverse-engineered file:line citations from comments
+### 5. [ ] Strip reverse-engineered file:line citations from comments
 - **Problem.** Comments reference engine paths and line numbers
   ("see model-diplo-ribbon.js:748-752", "gamecore-events.xml:148"). These
   rot on every patch and become disinformation in our own codebase.
 - **Action.** Replace with the *symbolic* hook ("accessor X on Y") or
   delete entirely. Sweep all `ui/*.js` files.
 
-### 6. Trim verbose JSDoc on internal helpers
+### 6. [ ] Trim verbose JSDoc on internal helpers
 - **Problem.** Two-line helpers carry paragraph-length typed JSDoc. Reads
   as LLM-generated boilerplate.
 - **Action.** Reserve full JSDoc for module-exported surfaces. Keep one-line
   `//` comments on internal helpers. Do not over-type with `@type {*}`.
 
-### 7. Decide the fate of `perfMode`
+### 7. [x] Decide the fate of `perfMode`
 - **Problem.** Flushes every 3 turns instead of every 1. Saves trivial
   work, loses up to 3 turns on crash, adds a second persistence path.
 - **Action.** Remove `perfMode` and the `_persistAppend` buffer. The
@@ -97,21 +100,21 @@ critique pass. Items are grouped by audience and ordered by impact.
   - `ui/demographics-settings.js`
   - `ui/screen-demographics/views/view-options.js`
 
-### 8. Decimation should warn, not silently lossy-compress
+### 8. [x] Decimation should warn, not silently lossy-compress
 - **Problem.** `_maybeDecimate` drops every-other-than-Nth sample past
   25% of cap. Users discovering late-game data gaps will be confused.
 - **Action.** When decimation triggers, emit a one-time toast / log line:
   "Sample cap approached; history downsampled past turn N to fit." Expose
   the current cap and decimation state in the Options panel.
 
-### 9. Kill-switch error reporting
+### 9. [ ] Kill-switch error reporting
 - **Problem.** Three accessor throws → permanent silent unsubscribe.
   Masks real engine bugs.
 - **Action.** Log the *first* exception with full stack and the accessor
   name before incrementing the counter. Surface "Demographics paused due
   to engine errors" in the Options panel with a manual re-enable button.
 
-### 10. Relations graph — cache edges, re-filter on toggle (perf)
+### 10. [ ] Relations graph — cache edges, re-filter on toggle (perf)
 - **Problem.** Every filter-pill toggle calls `rs.repaint()` →
   `computeRingData` → `buildCivEdges`, which re-queries the engine from
   scratch: a full O(n²) `getRelationshipEnum` attitude pass plus a per-active
@@ -150,9 +153,23 @@ critique pass. Items are grouped by audience and ordered by impact.
     (consolidate `buildAttitudeEdges` / `buildPoliticalEdges` /
     `buildEconomicEdges` into one tagged build)
 
+### Triumphs stable-id probe (2026-06-01) — ✅ INVESTIGATED
+- **Question.** Can localized title matching in the Triumphs decorator be
+  replaced with a stable native identifier?
+- **What was done.** Added runtime probe logic to
+  `ui/demographics-triumphs-decorator.js`, deployed the updated script to the
+  active Civ VII Mods directory, opened Legacies → Triumphs, and inspected
+  game logs.
+- **Evidence.** `UI.log` reported:
+  `[Demographics.triumphsDecorator] stable-id probe: no native LegacyType token found; using title fallback`
+  (2026-06-01 08:10:51).
+- **Conclusion.** Current Civ VII native Triumph card DOM does not expose a
+  stable `LegacyType` token discoverable by passive probing. Keep title
+  fallback matching in place. Re-test only after Firaxis UI updates.
+
 ## P3 — Content and framing
 
-### 11. De-Europeanize the Exploration crisis name pools
+### 11. [ ] De-Europeanize the Exploration crisis name pools
 - **Problem.** `EXPLORATION_CRISIS_REVOLUTION` and
   `EXPLORATION_CRISIS_RELIGION` lean heavily on Reformation,
   Counter-Reformation, Iconoclast, Glorious Revolution, Spring of Nations
@@ -164,7 +181,7 @@ critique pass. Items are grouped by audience and ordered by impact.
     expand the shared pool with diverse entries so the RNG can pick
     region-appropriate names.
 
-### 12. Crisis/war-name sensitivity audit — partially done
+### 12. [~] Crisis/war-name sensitivity audit — partially done
 - **Problem.** Procedurally combined names risk (a) per-locale phrasing
   that maps to a slur, and (b) English or translated names that read as a
   specific real-world atrocity/tragedy.
@@ -186,7 +203,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   Exploration crises); record the audit in a CSV header comment so future
   contributors know it was checked.
 
-### 13. Credits — keep attribution clean
+### 13. [x] Credits — keep attribution clean
 - **Context.** Lineage from robk (Civ V Demographics), Gedemon (CivGraphs),
   Slothoth (Global Relations). These are older mods on prior Civ titles
   and no permission is required to draw inspiration from them.
@@ -196,16 +213,16 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## P4 — Optional / nice-to-have
 
-### 14. Export-as-CSV / JSON button
+### 14. [ ] Export-as-CSV / JSON button
 - Sidesteps the persistence problem entirely by letting players save a
   run's history to disk before the age transition wipes it.
 
-### 15. Replace FNV-1a fallback hash with a hard fail
+### 15. [ ] Replace FNV-1a fallback hash with a hard fail
 - If `Database.makeHash` is missing, the mod should disable persistence
   and warn, not silently use a different hash that will desync from any
   future engine change.
 
-### 16. `localStorage.modSettings` shared-namespace defense
+### 16. [ ] `localStorage.modSettings` shared-namespace defense
 - **Problem.** Settings live under a top-level `modSettings` key shared
   with any other mod. The current code already only writes our own
   sub-key (after an earlier regression that wiped siblings), but there is
@@ -215,7 +232,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   one-time in-game toast if the slice comes back missing or malformed.
 - **Files.** `ui/demographics-settings.js`
 
-### 17. `infoAddict` legacy slice migration — ✅ RESOLVED
+### 17. [x] `infoAddict` legacy slice migration — ✅ RESOLVED
 - **Context.** Storage layer migrated from a `modSettings.infoAddict`
   slice. Confirmed via code inspection that `infoAddict` was an earlier
   internal name for THIS mod (Civ 7 Demographics), not robk's Civ V mod,
@@ -226,7 +243,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   "legacy data written under the old GameTutorial-based code" — that
   fallback existed for the same dead migration and should be trimmed.
 
-### 18. Engine-event subscription lifecycle
+### 18. [ ] Engine-event subscription lifecycle
 - **Problem.** Subscriptions to `PlayerTurnActivated`,
   `PlayerAgeTransitionComplete`, `BeforeAgeTransition`, and `BeforeUnload`
   are not all paired with explicit unsubscribes on the kill-switch path
@@ -239,7 +256,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   kill-switch path. Add a single `_teardown()` that drains them all.
 - **Files.** `ui/demographics-sampler.js`, `ui/demographics-storage.js`
 
-### 19. Save-bloat measurement
+### 19. [ ] Save-bloat measurement
 - **Problem.** Cap + decimation are tuned by intuition. There is no
   measurement of actual serialized byte size per write.
 - **Action.** Add a one-shot console helper (e.g. `window.__demoSizeOf()`)
@@ -248,14 +265,14 @@ critique pass. Items are grouped by audience and ordered by impact.
   complaints quantitatively.
 - **Files.** `ui/demographics-storage.js` (helper); no shipped UI.
 
-### 20. README claims audit before release
+### 20. [ ] README claims audit before release
 - **Action.** After #1 (Tutorial-bag downgrade) and any other
   user-visible behavior changes land, re-read `docs/README.md` and the
   Workshop short description top-to-bottom and strip anything stale
   (cross-age history claims, template-based crisis names, etc.).
 - **Files.** `docs/README.md`, `docs/steam-workshop-description-short.md`
 
-### 21. Promote `tooltipSafeTextColor` to a shared utility
+### 21. [ ] Promote `tooltipSafeTextColor` to a shared utility
 - **Problem.** Civ-color text-on-color contrast logic lives only in the
   chart tooltip. Relations ring labels, Wars Gantt labels, and any
   future surface have the same problem and risk diverging implementations.
@@ -263,7 +280,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   (e.g. `ui/civ-color-utils.js`); refactor the tooltip and all other
   civ-color text surfaces to use it.
 
-### 22. `release.sh` exclusion audit
+### 22. [ ] `release.sh` exclusion audit
 - **Problem.** After #3 excluded `text/data`, no one verified the rest
   of the exclusion list. One regex too loose and the Workshop zip ships
   `docs/`, `*.md`, `.DS_Store`, `node_modules/`, stray CSVs, etc.
@@ -272,7 +289,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   entries.
 - **Files.** `release.sh`
 
-### 23. Minimal test harness
+### 23. [ ] Minimal test harness
 - **Scope.** Two pure-function tests, ~30 lines total:
   - `flavorCrisisName(seed, type) → key` is deterministic across calls.
   - `_maybeDecimate(samples, cap)` preserves age-boundary turns and the
@@ -299,8 +316,9 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## Out of scope
 
-- Rewriting the Triumphs decorator. DOM injection into the native popup is
-  ugly but stable and well-isolated; revisit only if Firaxis changes the
-  Legacies screen.
+- Rewriting the Triumphs decorator. Runtime probe confirmed no stable native
+  `LegacyType` token is currently exposed in Triumph card DOM (`UI.log`,
+  2026-06-01 08:10:51); keep the scoped decorator + title fallback and
+  revisit only if Firaxis changes the Legacies screen.
 - Replacing Chart.js. The `fxs-hof-chart` dependency is the engine's
   shipping chart and the right thing to ride.
