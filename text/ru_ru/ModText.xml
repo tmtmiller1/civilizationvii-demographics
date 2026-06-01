@@ -727,5 +727,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="ru_RU">
             <Text>Прореживание отключено — сохраняются все выборки.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ru_RU">
+            <Text>Скрывать данные дипломатии/отношений для невстреченных цивилизаций</Text>
+        </Replace>
     </LocalizedText>
 </Database>

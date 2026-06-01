@@ -727,5 +727,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="it_IT">
             <Text>Riduzione disattivata — vengono conservati tutti i campioni.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="it_IT">
+            <Text>Nascondi i dati di diplomazia/relazioni delle civiltà non incontrate</Text>
+        </Replace>
     </LocalizedText>
 </Database>

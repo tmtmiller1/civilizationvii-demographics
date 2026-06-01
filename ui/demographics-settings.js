@@ -87,7 +87,12 @@ const DEFAULTS = {
   // ─── Wonder markers ─────────────────────────────────────────────────
   // Overlay a tiny wonder icon on each civ's line at every turn that
   // civ's wonders count incremented. Toggle from the Options tab.
-  showWonderMarkers: true
+  showWonderMarkers: true,
+  // ─── Spoiler guard ─────────────────────────────────────────────────
+  // When true (default), diplomacy / influence / relations figures are
+  // withheld for civilizations the local player has not met (the charts
+  // show a gap, not a value). Turn off to record and show those too.
+  hideUnmetStats: true
 };
 
 /**
@@ -147,29 +152,6 @@ function writeRoot(root) {
   });
 }
 
-/**
- * Migrate settings from the legacy `infoAddict` slice to `demographics` when
- * the user has old data but no new data yet. Mutates and re-persists `root`.
- * @param {SettingsRoot} root The parsed root blob to migrate in place.
- * @returns {void}
- */
-function migrateLegacySlice(root) {
-  // Backward-compat: this mod's persistence key was renamed from
-  // "infoAddict" to "demographics". If the user has data under the
-  // old key but nothing under the new one yet, copy it across so
-  // history, settings, and war records carry over silently.
-  const LEGACY_KEY = "infoAddict";
-  if (
-    root[LEGACY_KEY] &&
-    typeof root[LEGACY_KEY] === "object" &&
-    (!root[MOD_ID] || typeof root[MOD_ID] !== "object" || Object.keys(root[MOD_ID]).length === 0)
-  ) {
-    root[MOD_ID] = root[LEGACY_KEY];
-    writeRoot(root);
-    dlog("migrated legacy settings from modSettings.infoAddict → modSettings.demographics");
-  }
-}
-
 // Seed the memory bucket from localStorage ONCE at module load (when the
 // storage is actually populated). After that, memoryBucket is the
 // authoritative store — Coherent's localStorage gets wiped between reads
@@ -179,7 +161,6 @@ function migrateLegacySlice(root) {
   try {
     const root = readRoot();
     if (!root) return;
-    migrateLegacySlice(root);
     if (root[MOD_ID] && typeof root[MOD_ID] === "object") {
       Object.assign(memoryBucket, root[MOD_ID]);
     }
