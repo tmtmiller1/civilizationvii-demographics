@@ -709,9 +709,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="es_ES">
             <Text>Mostrar los marcadores de maravillas construidas en las líneas de la gráfica (icono pequeño en el turno en que cada civilización completó una maravilla)</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="es_ES">
-            <Text>Modo de rendimiento (almacenar en búfer las escrituras, limitar el hover): recomendado para partidas largas o máquinas más lentas. Puede perder hasta 2 turnos de historial en caso de fallo.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="es_ES">
             <Text>Automático (predeterminado según la velocidad del juego)</Text>
         </Replace>
@@ -1278,6 +1275,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="es_ES">
             <Text>La crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="es_ES">
+            <Text>Límite de historial {1_Cap}: las muestras antiguas se reducen para ajustarse.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="es_ES">
+            <Text>Límite de historial {1_Cap}: aún sin reducción.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="es_ES">
+            <Text>Reducción desactivada: se conservan todas las muestras.</Text>
         </Replace>
     </LocalizedText>
 </Database>

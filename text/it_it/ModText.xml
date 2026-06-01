@@ -237,7 +237,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="it_IT"><Text>Modalità daltonici (palette ad alto contrasto per grafici e relazioni)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="it_IT"><Text>Mostra le civiltà eliminate nel grafico e nel factbook</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="it_IT"><Text>Mostra indicatori delle meraviglie sulle linee del grafico</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="it_IT"><Text>Modalità prestazioni (riduce aggiornamenti e interazioni del grafico). Utile per partite lunghe o sistemi più lenti.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="it_IT"><Text>Automatico (predefinito in base alla velocità di gioco)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="it_IT"><Text>1.000 campioni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="it_IT"><Text>2.500 campioni</Text></Replace>
@@ -718,6 +717,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="it_IT">
             <Text>La crisi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="it_IT">
+            <Text>Limite cronologia {1_Cap} — i campioni più vecchi vengono ridotti per rientrare.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="it_IT">
+            <Text>Limite cronologia {1_Cap} — nessuna riduzione finora.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="it_IT">
+            <Text>Riduzione disattivata — vengono conservati tutti i campioni.</Text>
         </Replace>
     </LocalizedText>
 </Database>
