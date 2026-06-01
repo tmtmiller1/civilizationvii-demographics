@@ -386,7 +386,7 @@ function getCurrentTurn() {
 /**
  * Read the in-game date label for the CURRENT turn (Game.getTurnDate reads the
  * current turn only). Citation: base-standard/ui/system-bar/
- * panel-system-bar.js:192.
+ * panel-system-bar.js.
  * @returns {string | undefined} The date label, or undefined.
  */
 function readGameYear() {
@@ -578,8 +578,8 @@ function _noteSampleSucceeded(curTurn) {
 //
 // PlayerAgeTransitionComplete fires per-player as each civ finishes its
 // transition into the new age. Payload shape `data.player` (a numeric pid)
-// is cited from base-standard/ui/diplo-ribbon/model-diplo-ribbon.js:748-752.
-// Event row exists at core/data/gamecore-events.xml:148.
+// is cited from base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
+// Event row exists at core/data/gamecore-events.xml.
 //
 // After transition:
 //   - Cached current age (and the trees-by-age map) are stale; reset both.

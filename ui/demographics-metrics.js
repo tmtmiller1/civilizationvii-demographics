@@ -402,7 +402,7 @@ export const METRICS = [
     accessor: (ctx) => safeNum(ctx.gold),
     format: formatRoundedCount,
     unit: "gold",
-    // yield-icons.xml:65-72 — blp:Yield_Gold (64px).
+    // yield-icons.xml — blp:Yield_Gold (64px).
     unitIcon: "blp:Yield_Gold"
   },
   {
@@ -458,7 +458,7 @@ export const METRICS = [
     // Turn-1 fix: when the Culture progression tree handle isn't yet
     // populated, sampler stores ctx.civicsCount as undefined. Returning
     // undefined here would cause the chart to skip the entire civ's
-    // series (chart.js:80 requires isFinite). Default to 0 so the
+    // series (chart.js requires isFinite). Default to 0 so the
     // turn-1 sample plots at y=0 with a legend entry, rather than
     // showing no line/label at all.
     accessor: civicsAccessor,
@@ -498,12 +498,12 @@ export const METRICS = [
     format: formatSignedRate,
     unit: "food / turn",
     // Civ7 yield-icon BLP path, registered in
-    //   Resources/Base/modules/base-standard/data/icons/yield-icons.xml:5-12
+    //   Resources/Base/modules/base-standard/data/icons/yield-icons.xml
     unitIcon: "blp:Yield_Food"
   },
   {
     // Net PRODUCTION per turn (display as +/-).
-    // yield-icons.xml:36-43 — blp:Yield_Production.
+    // yield-icons.xml — blp:Yield_Production.
     id: "production",
     label: "PPT",
     title: "Production Per Turn",
@@ -520,7 +520,7 @@ export const METRICS = [
   },
   {
     // Net SCIENCE per turn (display as +/-).
-    // yield-icons.xml:96-103 — blp:Yield_Science.
+    // yield-icons.xml — blp:Yield_Science.
     id: "science_yield",
     label: "Science",
     title: "Science Per Turn",
@@ -537,7 +537,7 @@ export const METRICS = [
   },
   {
     // Net CULTURE per turn (display as +/-).
-    // yield-icons.xml:126-133 — blp:Yield_Culture.
+    // yield-icons.xml — blp:Yield_Culture.
     id: "culture_yield",
     label: "Culture",
     title: "Culture Per Turn",
@@ -602,7 +602,7 @@ export const METRICS = [
      */
     accessor: (ctx) => safeNum(ctx.yieldDiplomacy),
     format: formatSignedRate,
-    // yield-icons.xml:185-193 maps YIELD_DIPLOMACY to blp:yield_influence.
+    // yield-icons.xml maps YIELD_DIPLOMACY to blp:yield_influence.
     unit: "influence / turn",
     unitIcon: "blp:yield_influence"
   },
@@ -670,7 +670,7 @@ export const METRICS = [
   {
     // Wonders — total wonders constructed by the player, all ages.
     // Accessor: player.Stats.getNumWonders(false, false)
-    //   — base-standard/ui/advice/advice-support.js:33
+    //   — base-standard/ui/advice/advice-support.js
     id: "wonders",
     label: "Wonders",
     title: "Wonders Constructed",
@@ -760,7 +760,7 @@ export const METRICS = [
     accessor: (ctx) => safeNum(ctx.triumphsExpansionist)
   },
   // Settlement cap utilization: settlements / cap × 100.
-  // citation: base-standard/ui/diplo-ribbon/panel-yield-banner.js:208-209
+  // citation: base-standard/ui/diplo-ribbon/panel-yield-banner.js
   {
     id: "settlement_cap_pct",
     label: "Cap Utilization",
@@ -772,7 +772,7 @@ export const METRICS = [
     unit: "%"
   },
   // Crisis stage 0-3 (game-wide). Plotted as a step function.
-  // citation: base-standard/ui/policies/model-government.js:119-125
+  // citation: base-standard/ui/policies/model-government.js
   {
     id: "crisis_stage",
     label: "Crisis Stage",
@@ -792,7 +792,7 @@ export const METRICS = [
     //    1 = second active stage ("Crisis Intensifies")
     //    2 = third active stage ("Crisis Culminates")
     //    3 = post-final stage ("Crisis Ends")
-    // Cite: model-government.js:120 — `nextCrisisStage = max(0, crisisStage+1)`
+    // Cite: model-government.js — `nextCrisisStage = max(0, crisisStage+1)`
     // looks at the NEXT marker index, confirming engine values are 0-based.
     // Display-side we want the user-facing label "Stage 1" when the engine
     // says 0 (the first active stage). Shift every value up by 1 so the
@@ -802,7 +802,7 @@ export const METRICS = [
     unit: "stage"
   },
   // ── Resources page metrics ─────────────────────────────────────────
-  // citation: base-standard/ui/resource-allocation/model-resource-allocation.js:126
+  // citation: base-standard/ui/resource-allocation/model-resource-allocation.js
   {
     id: "resources_total",
     label: "Resources",

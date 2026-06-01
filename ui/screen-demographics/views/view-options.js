@@ -3,11 +3,10 @@
 // "Options" view: settings panel, history controls, session info.
 //
 // Checkbox pattern: lifted from vanilla panel-mini-map.js — see
-// createShowMinimapCheckbox (around line 707) and createLayerCheckbox
-// (around 725) for the canonical form. fxs-checkbox takes a `selected`
-// attribute (stringified bool) and emits "component-value-changed"
-// (ComponentValueChangeEventName
-// defined in core/ui/component-support.js:713) with detail.value: boolean.
+// createShowMinimapCheckbox / createLayerCheckbox for the canonical form.
+// fxs-checkbox takes a `selected` attribute (stringified bool) and emits
+// "component-value-changed" (ComponentValueChangeEventName, defined in
+// core/ui/component-support.js) with detail.value: boolean.
 
 import { t } from "/demographics/ui/demographics-i18n.js";
 import {
