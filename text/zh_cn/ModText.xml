@@ -709,9 +709,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="zh_Hans_CN">
             <Text>在图表曲线上显示奇观建成标记（在各文明完成奇观的回合处显示小图标）</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="zh_Hans_CN">
-            <Text>性能模式（缓冲存储写入、限制悬停频率）——推荐用于长局游戏或较慢的机器。崩溃时可能丢失最多 2 回合的历史。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="zh_Hans_CN">
             <Text>自动（游戏速度默认值）</Text>
         </Replace>
@@ -1278,6 +1275,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="zh_Hans_CN">
             <Text>危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="zh_Hans_CN">
+            <Text>历史上限 {1_Cap} — 较早的样本会被抽稀以适应容量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="zh_Hans_CN">
+            <Text>历史上限 {1_Cap} — 尚未抽稀。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="zh_Hans_CN">
+            <Text>已禁用抽稀 — 保留每个样本。</Text>
         </Replace>
     </LocalizedText>
 </Database>

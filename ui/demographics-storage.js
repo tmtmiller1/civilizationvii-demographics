@@ -380,8 +380,9 @@ function getGlobalStore() {
 
 // ── Storage singleton ───────────────────────────────────────────────
 /**
- * Cross-age persistent storage for the history time series, backed by the
- * per-player Tutorial property bag (with the global bag as a fallback tier).
+ * History time-series storage, backed by the per-player Tutorial property bag
+ * (with the global bag as a fallback tier). Persistence is within-age only;
+ * see the file header.
  */
 class StorageImpl {
   constructor() {
@@ -393,8 +394,10 @@ class StorageImpl {
     this._initialized = false;
     /** @type {boolean} Whether engine flush hooks are installed. */
     this._hooksInstalled = false;
-    /** @type {number} Buffered writes awaiting a perfMode flush. */
-    this._pendingWrites = 0;
+    /** @type {boolean} Whether the one-time decimation notice has fired. */
+    this._decimationNotified = false;
+    /** @type {number} Turn at which decimation first kicked in (-1 if never). */
+    this._decimationTurn = -1;
   }
 
   /**
@@ -673,6 +676,7 @@ class StorageImpl {
           (s, i) => i % KEEP_EVERY_NTH === 0 || boundaryTurns.has(s.turn)
         );
         h.samples = decimated.concat(after);
+        this._noteDecimation(h, eff, KEEP_EVERY_NTH);
         dlog(
           "decimated; before=" +
             before.length +
@@ -688,40 +692,48 @@ class StorageImpl {
   }
 
   /**
-   * Whether perfMode (write buffering) is enabled, defensively.
-   * @returns {boolean}
+   * Fire the one-time, always-on downsampling notice (not gated by DBG) and
+   * record the turn it first triggered. No-op after the first call. Users with
+   * very long games should know late history is downsampled, not lost silently;
+   * the Options panel mirrors this via {@link StorageImpl#decimationStatus}.
+   * @param {StoredHistory} h The (already decimated) history.
+   * @param {EffectiveCap} eff The active effective cap.
+   * @param {number} keepEveryNth The keep-1-in-N decimation ratio.
+   * @returns {void}
    */
-  _perfModeEnabled() {
-    try {
-      if (
-        typeof DemographicsSettings !== "undefined" &&
-        typeof DemographicsSettings.getSetting === "function"
-      ) {
-        return !!DemographicsSettings.getSetting("perfMode", false);
-      }
-    } catch (e) {
-      derr("_perfModeEnabled:", e);
-    }
-    return false;
+  _noteDecimation(h, eff, keepEveryNth) {
+    if (this._decimationNotified) return;
+    this._decimationNotified = true;
+    const last = h.samples[h.samples.length - 1];
+    this._decimationTurn = last && typeof last.turn === "number" ? last.turn : -1;
+    console.warn(
+      "[Demographics.storage] History sample cap approached; older samples " +
+        "downsampled (keeping 1 in " +
+        keepEveryNth +
+        ", age boundaries preserved) to fit cap " +
+        eff.cap +
+        " (" +
+        eff.source +
+        "). Raise it via the History sample-cap setting."
+    );
   }
 
   /**
-   * Persist `h` immediately, or buffer it across N turns when perfMode is on.
-   * @param {StoredHistory} h History to persist.
-   * @returns {void}
+   * Current decimation + cap state, for read-only display in the Options panel.
+   * @returns {{ active: boolean, firstTurn: number, cap: number, capSource: string, disabled: boolean }}
+   *   `active` once downsampling has triggered; `firstTurn` is when; `cap` /
+   *   `capSource` are the effective sample cap and where it came from;
+   *   `disabled` reflects the user's "keep every sample" override.
    */
-  _persistAppend(h) {
-    const BUFFER_TURNS = 3;
-    if (this._perfModeEnabled()) {
-      this._mem = h;
-      this._pendingWrites += 1;
-      if (this._pendingWrites >= BUFFER_TURNS) {
-        this.save(h);
-        this._pendingWrites = 0;
-      }
-    } else {
-      this.save(h);
-    }
+  decimationStatus() {
+    const eff = resolveEffectiveCap();
+    return {
+      active: this._decimationNotified,
+      firstTurn: this._decimationTurn,
+      cap: eff.cap,
+      capSource: eff.source,
+      disabled: decimationDisabled()
+    };
   }
 
   /**
@@ -738,20 +750,16 @@ class StorageImpl {
     const eff = resolveEffectiveCap();
     this._maybeDecimate(h, eff);
 
-    // perfMode: buffer writes across N turns to reduce stringify load.
-    this._persistAppend(h);
+    this.save(h);
     return h;
   }
 
   /**
-   * Force-persist the in-memory mirror, clearing any buffered writes.
+   * Force-persist the in-memory mirror.
    * @returns {void}
    */
   flush() {
-    if (this._mem) {
-      this.save(this._mem);
-      this._pendingWrites = 0;
-    }
+    if (this._mem) this.save(this._mem);
   }
 
   /**

@@ -237,7 +237,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ko_KR"><Text>색각 보조 모드(차트와 관계 표시에 고대비 색상 사용)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ko_KR"><Text>차트와 정보 자료집에 제거된 문명 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ko_KR"><Text>차트 선에 불가사의 표식을 표시</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ko_KR"><Text>성능 모드(그래프 업데이트와 상호작용을 줄입니다). 긴 게임이나 느린 환경에 유용합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ko_KR"><Text>자동(게임 속도 기본값)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ko_KR"><Text>1,000개 샘플</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ko_KR"><Text>2,500개 샘플</Text></Replace>
@@ -718,6 +717,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="ko_KR">
             <Text>위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="ko_KR">
+            <Text>기록 상한 {1_Cap} — 오래된 샘플은 용량에 맞게 솎아냅니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="ko_KR">
+            <Text>기록 상한 {1_Cap} — 아직 솎아내기 없음.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="ko_KR">
+            <Text>솎아내기 비활성화 — 모든 샘플 유지.</Text>
         </Replace>
     </LocalizedText>
 </Database>

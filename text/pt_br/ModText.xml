@@ -237,7 +237,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="pt_BR"><Text>Modo daltônico (paleta de alto contraste para gráficos e relações)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="pt_BR"><Text>Mostrar civilizações eliminadas no gráfico e no almanaque</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="pt_BR"><Text>Mostrar marcadores de maravilhas nas linhas do gráfico</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="pt_BR"><Text>Modo de desempenho (reduz atualizações e interações do gráfico). Útil para partidas longas ou sistemas mais lentos.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="pt_BR"><Text>Automático (padrão da velocidade do jogo)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="pt_BR"><Text>1.000 amostras</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="pt_BR"><Text>2.500 amostras</Text></Replace>
@@ -718,6 +717,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="pt_BR">
             <Text>A Crise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="pt_BR">
+            <Text>Limite de histórico {1_Cap} — amostras antigas são reduzidas para caber.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="pt_BR">
+            <Text>Limite de histórico {1_Cap} — ainda sem redução.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="pt_BR">
+            <Text>Redução desativada — mantendo todas as amostras.</Text>
         </Replace>
     </LocalizedText>
 </Database>

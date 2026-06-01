@@ -42,6 +42,8 @@ import {
  * @property {() => void} [clear] Wipe all recorded samples.
  * @property {() => (DemoHistory|undefined)} [load] Load the persisted history.
  * @property {(history: DemoHistory) => void} [save] Persist the history.
+ * @property {() => { active: boolean, firstTurn: number, cap: number, capSource: string, disabled: boolean }} [decimationStatus]
+ *   Current downsampling + cap state (read-only display).
  */
 
 /**
@@ -196,9 +198,6 @@ function appendToggles(wrap, ctx) {
       ctx.settings
     )
   );
-  wrap.appendChild(
-    makeToggle(t("LOC_DEMOGRAPHICS_OPT_PERF_MODE"), "perfMode", false, ctx.settings)
-  );
 }
 
 /**
@@ -343,6 +342,30 @@ function buildPollingHint() {
 }
 
 /**
+ * Read-only line reporting whether history downsampling has kicked in, plus the
+ * effective cap. Surfaces what the one-time storage notice reports (remediation
+ * #8) so late-game data gaps read as intentional, not a bug.
+ * @param {OptionsCtx} ctx Render context.
+ * @returns {HTMLElement} The hint element (empty when status is unavailable).
+ */
+function buildDecimationStatus(ctx) {
+  const hint = document.createElement("div");
+  hint.className = "demographics-option-hint font-body text-xs";
+  let s = null;
+  try {
+    s = ctx.storage?.decimationStatus?.() || null;
+  } catch (_) {
+    // storage.decimationStatus() can throw at the persistence boundary; show nothing.
+  }
+  if (!s) return hint;
+  const capStr = isFinite(s.cap) ? String(s.cap) : "∞";
+  if (s.disabled) hint.textContent = t("LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED");
+  else if (s.active) hint.textContent = t("LOC_DEMOGRAPHICS_OPT_DECIMATION_ON", capStr);
+  else hint.textContent = t("LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF", capStr);
+  return hint;
+}
+
+/**
  * Append the adaptive-cap dropdown + hint, the disable-decimation toggle, and
  * the polling-rate dropdown + hint to `wrap`, in their fixed display order.
  * @param {HTMLElement} wrap The options container to append into.
@@ -360,6 +383,7 @@ function appendStorageControls(wrap, ctx) {
       ctx.settings
     )
   );
+  wrap.appendChild(buildDecimationStatus(ctx));
   wrap.appendChild(buildPollingControl(ctx));
   wrap.appendChild(buildPollingHint());
 }
