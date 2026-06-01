@@ -34,6 +34,7 @@ import {
   getLocalPlayerID,
   getPlayer
 } from "/demographics/ui/demographics-sampler.js";
+import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
 
 /**
  * The per-civ context object assembled by {@link buildPlayerCtx}. Engine-
@@ -451,19 +452,35 @@ function collectMet(ctx, id, p) {
 }
 
 /**
- * Spoiler guard. When the LOCAL player has definitively NOT met this civ
+ * Whether the spoiler guard is enabled — the `hideUnmetStats` setting, default
+ * on. Players can disable it in Options to record and show unmet civs' figures.
+ * @returns {boolean} True when unmet diplomacy/relations values should be withheld.
+ */
+function hideUnmetStatsEnabled() {
+  // safeCall returns undefined if the read throws; treat anything but an
+  // explicit `false` as "guard on" so the default stays spoiler-safe.
+  return (
+    safeCall("hideUnmetStats", () => DemographicsSettings.getSetting("hideUnmetStats", true)) !==
+    false
+  );
+}
+
+/**
+ * Spoiler guard (toggleable via the `hideUnmetStats` setting, default on). When
+ * enabled and the LOCAL player has definitively NOT met this civ
  * (`ctx.met === false`), clear the diplomacy / influence / relations fields so
  * the line charts elide (render a gap) rather than leak an unmet civ's
  * reputation, influence yield, and deal activity. Yields / score / military /
- * etc. are intentionally left intact — this gate is scoped to the diplomacy
- * family per the remediation plan. The local player is always `met === true`
- * and is never gated; `met === undefined` (couldn't determine) is left intact
- * to avoid spurious gaps on confirmed-met civs during transient API gaps.
+ * etc. are left intact — this gate is scoped to the diplomacy family. The local
+ * player is always `met === true` and is never gated; `met === undefined`
+ * (couldn't determine) is left intact to avoid spurious gaps during transient
+ * API gaps. When the setting is off, nothing is withheld.
  * @param {PlayerCtx} ctx The assembled context.
  * @returns {void}
  */
 function gateUnmetDiplomacy(ctx) {
   if (ctx.met !== false) return;
+  if (!hideUnmetStatsEnabled()) return;
   ctx.yieldDiplomacy = undefined;
   ctx.ongoingDealsCount = undefined;
   ctx.diplomaticApproval = undefined;

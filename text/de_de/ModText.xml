@@ -1285,5 +1285,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="de_DE">
             <Text>Ausdünnung deaktiviert — jede Stichprobe wird behalten.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="de_DE">
+            <Text>Diplomatie-/Beziehungswerte für nicht getroffene Zivilisationen ausblenden</Text>
+        </Replace>
     </LocalizedText>
 </Database>
