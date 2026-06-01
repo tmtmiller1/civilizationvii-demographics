@@ -65,7 +65,7 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='release.sh' --exclude='*.bak' --exclude='node_modules' \
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
-    --exclude='*.d.ts' --exclude='text/data' \
+    --exclude='*.d.ts' --exclude='text/data' --exclude='tests' \
     "$SRC_DIR"/ "$TARGET_DIR"/
 
 echo "==> Disabling debug logging in dist JS files"
@@ -90,9 +90,24 @@ echo "==> Verifying modinfo at zip root"
 echo "==> Zipping $ZIP_PATH"
 ( cd "$DIST_DIR" && zip -qr "$ZIP_NAME" demographics )
 
-# Sanity-check zip contents. `|| true` guards against SIGPIPE (exit 141) when
-# `head` closes the pipe early under `set -o pipefail` — harmless here.
-echo "==> Zip contents (first 20 entries):"
+# Allow-list audit: fail the build on any shipped file that isn't expected, so a
+# loose rsync exclude can't silently ship docs/, tests/, *.d.ts, dev configs,
+# stray CSVs, .DS_Store, etc. Update ALLOW when a new shipped file type is added.
+echo "==> Verifying zip contents against allow-list"
+ALLOW='^demographics/(demographics\.modinfo|README\.md|LICENSE)$'
+ALLOW="$ALLOW"'|^demographics/ui/.+\.(js|html|css)$'
+ALLOW="$ALLOW"'|^demographics/images/.+\.(svg|png)$'
+ALLOW="$ALLOW"'|^demographics/text/[a-z_]+/ModText\.xml$'
+UNEXPECTED="$(unzip -Z1 "$ZIP_PATH" | grep -vE '/$' | grep -vE "$ALLOW" || true)"
+if [ -n "$UNEXPECTED" ]; then
+    echo "error: zip contains entries not on the allow-list:"
+    echo "$UNEXPECTED" | sed 's/^/    /'
+    echo "  → tighten the rsync --exclude list, or update ALLOW in release.sh if intended."
+    exit 1
+fi
+echo "    OK — every shipped entry matches the allow-list."
+
+echo "==> Zip contents:"
 unzip -l "$ZIP_PATH" | head -25 || true
 
 SIZE="$(du -h "$ZIP_PATH" | cut -f1)"
@@ -130,7 +145,7 @@ EOF
 cat >> "$VDF_PATH" <<EOF
     "visibility"     "0"
     "title"          "Demographics"
-    "description"    "Civilization V's Demographics, ported to VII. Real-time per-civ history graphs (score, GDP, military power, legacy paths…), a per-civ Factbook, global relations rings, and a conflicts gantt of every war. Pure presentation — never affects game state."
+    "description"    "Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for Civilization VII. Read-only — never affects game state."
     "changenote"     "v${VERSION} release."
     // After first upload, steamcmd will print a publishedfileid.
     // Add it here as:    "publishedfileid"  "1234567890"
