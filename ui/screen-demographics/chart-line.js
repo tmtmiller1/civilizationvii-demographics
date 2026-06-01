@@ -291,9 +291,11 @@ function collectPidSet(samples) {
  * @param {string} metricId Metric id to extract.
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} ageBoundariesLocal Age boundary table.
+ * @param {boolean} gateUnmet When true, skip points for samples taken before
+ *   the local player met this civ (diplomacy spoiler guard).
  * @returns {PidFold} The accumulated fold for this pid.
  */
-function foldPidSamples(samples, pid, metricId, ageOffsets, ageBoundariesLocal) {
+function foldPidSamples(samples, pid, metricId, ageOffsets, ageBoundariesLocal, gateUnmet) {
   /** @type {PidFold} */
   const fold = {
     points: [],
@@ -306,6 +308,9 @@ function foldPidSamples(samples, pid, metricId, ageOffsets, ageBoundariesLocal) 
     const ps = s.players && s.players[pid];
     if (!ps) continue;
     mergePidIdentity(fold, ps);
+    // Spoiler guard: when gating, withhold this point for samples taken before
+    // the local player met this civ (met === false). Met / unknown → shown.
+    if (gateUnmet && ps.met === false) continue;
     const v = ps.metrics ? ps.metrics[metricId] : undefined;
     if (typeof v === "number" && isFinite(v)) {
       const x = sampleX(s, ageOffsets, ageBoundariesLocal);
@@ -412,6 +417,30 @@ function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
 }
 
 /**
+ * Whether to withhold this metric's points for civs the local player had not
+ * yet met at a given sample. True only for diplomacy-category metrics when the
+ * `hideUnmetStats` spoiler guard (default on) is enabled — so the toggle is
+ * fully reversible at render time (the values are always sampled).
+ * @param {string} metricId Metric id.
+ * @returns {boolean} True to gate unmet samples for this metric.
+ */
+function shouldGateUnmet(metricId) {
+  let meta = null;
+  try {
+    meta = getMetric(metricId);
+  } catch (_) {
+    // getMetric may throw on an unknown id; treat as non-gated.
+  }
+  if (!meta || meta.category !== "diplomacy") return false;
+  try {
+    return DemographicsSettings.getSetting("hideUnmetStats", true) !== false;
+  } catch (_) {
+    // getSetting may throw; default spoiler-safe (gate on).
+    return true;
+  }
+}
+
+/**
  * Build per-civ series from a history blob for one metric id. Each civ's
  * X positions are derived from a freshly computed age-offset table.
  * @param {DemoHistory|*} history The persisted history blob.
@@ -432,11 +461,12 @@ function buildSeriesFromHistory(history, metricId) {
     history && Array.isArray(history.ageBoundaries) ? history.ageBoundaries : [];
   const { offsets: ageOffsets } = computeAgeOffsets(samples, ageBoundariesLocal);
 
+  const gateUnmet = shouldGateUnmet(metricId);
   const pids = collectPidSet(samples);
   /** @type {ChartSeries[]} */
   const series = [];
   pids.forEach((pid, idx) => {
-    const fold = foldPidSamples(samples, pid, metricId, ageOffsets, ageBoundariesLocal);
+    const fold = foldPidSamples(samples, pid, metricId, ageOffsets, ageBoundariesLocal, gateUnmet);
     if (fold.points.length >= 1) {
       series.push(buildSeriesEntry(samples, pid, idx, fold, eliminatedMap));
     }
