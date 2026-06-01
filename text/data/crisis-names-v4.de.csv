@@ -8,7 +8,7 @@ ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Wars,Die Barbarenkriege,1
 ANTIQUITY_CRISIS_INVASION,name,,,The Great Horde,Die große Horde,1
 ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Horse Lords,Die Reiterhorden,1
 ANTIQUITY_CRISIS_INVASION,name,,,The March of Strangers,Der Marsch der Fremden,1
-ANTIQUITY_CRISIS_INVASION,name,,,The Years of Devastation,Das Zeitalter der Wanderungen,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Devastation,Die Jahre der Verwüstung,1
 ANTIQUITY_CRISIS_INVASION,name,,,The Years of Turmoil,Die Jahre der Unruhe,1
 ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Collapse,Der Fall der Grenze,1
 ANTIQUITY_CRISIS_INVASION,name,,,The Crisis of the Frontier,Die Krise der Grenze,1
@@ -32,7 +32,7 @@ ANTIQUITY_CRISIS_INVASION,arc,arc1,4,,Die große Völkerwanderung,1
 ANTIQUITY_CRISIS_INVASION,arc,arc2,1,,Die Reiterhorden,1
 ANTIQUITY_CRISIS_INVASION,arc,arc2,2,,Der Sturm von der Steppe,1
 ANTIQUITY_CRISIS_INVASION,arc,arc2,3,,Die Jahre der Verwüstung,1
-ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,Das Zeitalter der Wanderungen,1
+ANTIQUITY_CRISIS_INVASION,arc,arc2,4,,Die Jahre der Verwüstung,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,Die Grenzkriege,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,Die Barbarenkriege,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,Die Plünderung der Provinzen,1
@@ -41,7 +41,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Antonine Plague,Die Antoninische Pest,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,Die Pest des Galen,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,Die große Pest,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,Die große Sterblichkeit,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,Die große Seuche,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,Das große Fieber,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,Das große Sterben,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,Die Pestjahre,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,Die Zeit des Sterbens,1
@@ -56,7 +56,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Silent Death,Der stille Tod,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Der Schwarze Tod,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Der Rote Tod,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Der Graue Tod,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Der Graue Tod,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Der Aschfahle Tod,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Die Pest der Grenze,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Die Pest der Provinzen,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Die Pest der Steppe,1
@@ -193,7 +193,7 @@ EXPLORATION_CRISIS_RELIGION,arc,arc3,4,,Das Zeitalter der Propheten,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,Der Schwarze Tod,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,Die große Pest,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,Die große Sterblichkeit,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,Die große Seuche,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,Das große Fieber,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,Das große Sterben,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,Die Zeit der Pest,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,Die Jahre der Sterblichkeit,1
@@ -208,7 +208,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Silent Death,Der stille Tod,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Der Schwarze Tod,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Der Rote Tod,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Der Graue Tod,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Der Graue Tod,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Der Aschfahle Tod,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Die Pest der Grenze,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Die Pest der Provinzen,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Die Pest der Steppe,1
