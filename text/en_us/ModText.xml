@@ -733,9 +733,6 @@
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS">
             <Text>Show wonder markers on chart lines</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE">
-            <Text>Performance mode reduces write frequency and hover work. It is recommended for long games or slower machines. Up to 2 turns of history may be lost after a crash.</Text>
-        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO">
             <Text>Auto (game-speed default)</Text>
         </Row>
@@ -1303,6 +1300,15 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS">
             <Text>The Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON">
+            <Text>History sample cap {1_Cap} — older samples are downsampled to fit.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF">
+            <Text>History sample cap {1_Cap} — no downsampling yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED">
+            <Text>Downsampling disabled — keeping every sample.</Text>
         </Row>
     </EnglishText>
 </Database>

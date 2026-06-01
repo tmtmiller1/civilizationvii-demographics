@@ -237,7 +237,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников (высококонтрастные цвета для графиков и отношений)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ru_RU"><Text>Показывать уничтоженные цивилизации на графике и в справочнике</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Показывать отметки чудес на линиях графика</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ru_RU"><Text>Режим производительности (уменьшает частоту обновлений и взаимодействий с графиком). Полезен для долгих партий и более слабых систем.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ru_RU"><Text>Авто (по умолчанию для скорости игры)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ru_RU"><Text>1 000 выборок</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ru_RU"><Text>2 500 выборок</Text></Replace>
@@ -718,6 +717,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="ru_RU">
             <Text>Кризис</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="ru_RU">
+            <Text>Лимит истории {1_Cap} — старые выборки прореживаются для умещения.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="ru_RU">
+            <Text>Лимит истории {1_Cap} — прореживания пока нет.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="ru_RU">
+            <Text>Прореживание отключено — сохраняются все выборки.</Text>
         </Replace>
     </LocalizedText>
 </Database>

@@ -709,9 +709,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="de_DE">
             <Text>Wunder-Baumarkierungen auf den Diagrammlinien anzeigen (kleines Symbol an der Runde, in der jede Zivilisation ein Wunder fertiggestellt hat)</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="de_DE">
-            <Text>Leistungsmodus (Speichervorgänge puffern, Hover drosseln) — empfohlen für lange Spiele oder langsamere Maschinen. Kann bei einem Absturz bis zu 2 Runden Verlauf verlieren.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="de_DE">
             <Text>Auto (Spielgeschwindigkeits-Standard)</Text>
         </Replace>
@@ -1278,6 +1275,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="de_DE">
             <Text>Die Krise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="de_DE">
+            <Text>Verlaufslimit {1_Cap} — ältere Stichproben werden zum Einpassen ausgedünnt.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="de_DE">
+            <Text>Verlaufslimit {1_Cap} — noch keine Ausdünnung.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="de_DE">
+            <Text>Ausdünnung deaktiviert — jede Stichprobe wird behalten.</Text>
         </Replace>
     </LocalizedText>
 </Database>

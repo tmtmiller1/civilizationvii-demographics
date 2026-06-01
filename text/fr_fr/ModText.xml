@@ -709,9 +709,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="fr_FR">
             <Text>Afficher les marqueurs de merveilles construites sur les courbes du graphique (petite icône au tour où chaque civilisation a achevé une merveille)</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="fr_FR">
-            <Text>Mode performance (mise en mémoire tampon des écritures de stockage, limitation du survol) — recommandé pour les longues parties ou les machines plus lentes. Peut perdre jusqu'à 2 tours d'historique en cas de plantage.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="fr_FR">
             <Text>Auto (par défaut selon la vitesse de jeu)</Text>
         </Replace>
@@ -1278,6 +1275,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="fr_FR">
             <Text>La crise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="fr_FR">
+            <Text>Limite d'historique {1_Cap} — les anciens échantillons sont sous-échantillonnés.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="fr_FR">
+            <Text>Limite d'historique {1_Cap} — pas encore de sous-échantillonnage.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="fr_FR">
+            <Text>Sous-échantillonnage désactivé — chaque échantillon est conservé.</Text>
         </Replace>
     </LocalizedText>
 </Database>
