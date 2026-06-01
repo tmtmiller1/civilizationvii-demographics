@@ -281,5 +281,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="ko_KR"><Text>로컬 플레이어를 사용할 수 없음(관찰자 모드).</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ko_KR"><Text>주요 문명</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ko_KR"><Text>도시 국가</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ko_KR">
+            <Text>T-{1_Turn} 이탈</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -5,7 +5,7 @@
             <Text>Demographics</Text>
         </Row>
         <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
-            <Text>Per-turn historical graphs, world factbook, global relations rings, conflicts gantt, and native-Triumphs progress bars for every met civilization.</Text>
+            <Text>Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for every met civilization.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPEN">
             <Text>Demographics</Text>
@@ -17,13 +17,13 @@
             <Text>Score over time</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_FOOTNOTE">
-            <Text>Live history from the sampler.</Text>
+            <Text>Turn-by-turn world history.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CLOSE">
             <Text>Close</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_BODY">
-            <Text>Hello. If you can read this, the harness works.</Text>
+            <Text>Track each civilization across the course of the game.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
             <Text>Score</Text>
@@ -64,18 +64,18 @@
             <Text>Number of fully-unlocked civic nodes in the current age tree.</Text>
         </Row>
 
-        <!-- V5 pseudo-realistic -->
+        <!-- Economy metrics -->
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_GDP">
             <Text>GDP</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP">
-            <Text>Pseudo-realistic gross domestic product. Weighted sum of per-turn yields (Production 1.0, Gold 1.0, Science 1.2, Culture 1.2, Food 0.5, Influence 1.5), multiplied by turns elapsed and scaled to dollars.</Text>
+            <Text>Estimated economic output based on per-turn yields and turns elapsed.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION">
             <Text>PPT</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP">
-            <Text>Production per turn — what your cities build.</Text>
+            <Text>Production generated per turn.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD">
             <Text>Science</Text>
@@ -99,7 +99,7 @@
             <Text>Diplomatic Approval</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP">
-            <Text>International reputation aggregate. Sum of weighted relationship scores across all met major civs (Allied +5, Helpful +3, Friendly +2, Neutral 0, Unfriendly -2, Hostile -3, At War -5) plus a damped (0.3x) contribution from city-states where you are suzerain.</Text>
+            <Text>Summary of current diplomatic standing across met civilizations and suzerain city-states.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION">
             <Text>Population</Text>
@@ -287,19 +287,19 @@
             <Text>Unmet Civilization</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP">
-            <Text>You have not yet met this civilization. Enable "Show names of unmet civilizations and city-states" in Options to reveal real names.</Text>
+            <Text>This civilization is still unmet. Enable "Show names of unmet civilizations and city-states" in Options to show real names.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_UNMET_CS">
             <Text>Unmet City State</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP">
-            <Text>You have not yet met this city-state. Enable "Show names of unmet civilizations and city-states" in Options to reveal real names.</Text>
+            <Text>This city-state is still unmet. Enable "Show names of unmet civilizations and city-states" in Options to show real names.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES">
             <Text>Show names of unmet civilizations and city-states</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP">
-            <Text>When off (default), civs and city-states you have not yet met are shown as generic "Unmet" placeholders in charts, the factbook, and global relations rings.</Text>
+            <Text>When off, unmet civilizations and city-states appear as generic placeholders in charts, the factbook, and global relations.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK">
             <Text>Player {1_Pid}</Text>
@@ -416,7 +416,7 @@
             <Text>No progress yet.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API">
-            <Text>Test-of-Time Legacies API unavailable.</Text>
+            <Text>Triumph data is unavailable.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED">
             <Text>No civs sampled yet.</Text>
@@ -509,13 +509,13 @@
             <Text>No samples yet — play a turn first.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE">
-            <Text>CSV too large ({1_SizeMB} MB) · would crash clipboard. Lower sample cap in Options and retry.</Text>
+            <Text>CSV is too large ({1_SizeMB} MB). Lower the history cap in Options and try again.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CSV_COPIED">
             <Text>Copied · {1_Rows} rows × {2_Cols} cols{3_SizeTag} · paste into Excel / Sheets / a .csv file</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE">
-            <Text>Clipboard unavailable · wrote CSV to UI.log (see logs folder)</Text>
+            <Text>Clipboard export unavailable. CSV written to UI.log.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE">
             <Text>Current Age</Text>
@@ -533,31 +533,31 @@
             <Text>All Time</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE">
-            <Text>Cross-Age Graphs Unavailable</Text>
+            <Text>Cross-Age Charts Unavailable</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY">
-            <Text>&lt;p style="margin:0;"&gt;A single graph spanning &lt;b style="color:#f3e7c4;"&gt;Antiquity, Exploration, and Modern&lt;/b&gt; isn't possible. Civ&amp;nbsp;7 wipes every storage channel a mod could use to carry sampled history across an age transition, so each age can only graph its own data. Use &lt;b style="color:#f3e7c4;"&gt;Current&amp;nbsp;Age&lt;/b&gt; or any year-range filter instead.&lt;/p&gt;</Text>
+            <Text>&lt;p style="margin:0;"&gt;A single chart cannot span &lt;b style="color:#f3e7c4;"&gt;Antiquity, Exploration, and Modern&lt;/b&gt;. History resets at each age transition, so charts only show data from the current age. Use &lt;b style="color:#f3e7c4;"&gt;Current&amp;nbsp;Age&lt;/b&gt; or a year-range filter instead.&lt;/p&gt;</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP">
             <Text>{1_Label} filter</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER">
-            <Text>ⓘ GDP = Σ weighted yields × turn × 1M  ·  hover for explanation</Text>
+            <Text>ⓘ GDP estimate</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE">
             <Text>Gross Domestic Product</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY">
-            <Text>&lt;p&gt;A pseudo-realistic value combining a civilization's per-turn yields, weighted by how much each yield contributes to a real economy.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formula:&lt;/b&gt; Σ (yield × weight) × turn × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Weights&lt;/b&gt; (per yield point):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Gold&lt;/b&gt; — 1.0 (currency = direct trade)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Production&lt;/b&gt; — 1.0 (industrial output)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Science&lt;/b&gt; — 1.2 (innovation compounds over time)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Culture&lt;/b&gt; — 1.2 (soft power &amp; tourism)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Food&lt;/b&gt; — 0.5 (subsistence; only the surplus is GDP-like)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influence&lt;/b&gt; — 1.5 (diplomatic / treaty leverage)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Why multiply by turn?&lt;/b&gt; Real economies compound: a civ at turn 200 with the same per-turn yields as a civ at turn 50 represents 4× the accumulated economic mass.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Presentational only — never affects game state.&lt;/i&gt;&lt;/p&gt;</Text>
+            <Text>&lt;p&gt;An estimated economic output score based on per-turn yields and turns elapsed.&lt;/p&gt;&lt;p&gt;It is a display metric for comparing civilizations over time. It does not affect game state.&lt;/p&gt;</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER">
-            <Text>ⓘ Diplomatic Approval = Σ relationship-weighted scores  ·  hover for explanation</Text>
+            <Text>ⓘ Diplomatic standing</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE">
-            <Text>Diplomatic Approval — international reputation</Text>
+            <Text>Diplomatic Standing</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY">
-            <Text>&lt;p&gt;A signed aggregate of how every other civilization currently feels about you. Goes &lt;b&gt;up&lt;/b&gt; when you have allies and friends; goes &lt;b&gt;down&lt;/b&gt; when you're surrounded by hostiles or at war.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Per-major-civ contribution&lt;/b&gt; (based on the relationship enum the diplomacy screen shows):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alliance&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Helpful&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Friendly&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutral&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Unfriendly&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostile&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;At War&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;City-state contribution:&lt;/b&gt; +2 per CS where you are suzerain, dampened by 0.3× (so CS-heavy strategies don't dwarf major-civ relations).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Score = Σ(major weights) + 0.3 × Σ(suzerain bonuses)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Sampled each turn from each civ's perspective on the local player. Presentational only.&lt;/i&gt;&lt;/p&gt;</Text>
+            <Text>&lt;p&gt;A summary of current diplomatic relationships with met civilizations and suzerain city-states.&lt;/p&gt;&lt;p&gt;Higher values reflect stronger relations. Lower values reflect hostility or war. This is a display metric only.&lt;/p&gt;</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT">
             <Text>Current</Text>
@@ -578,7 +578,7 @@
             <Text>↻ Refresh</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP">
-            <Text>Re-pull legacy progress from VictoryManager.getVictoryProgress()</Text>
+            <Text>Refresh Triumph progress</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS">
             <Text>All major civilizations</Text>
@@ -629,10 +629,10 @@
             <Text>Copy as CSV</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY">
-            <Text>&lt;p style="margin:0;"&gt;Copies every sampled turn for every civ to your clipboard. Paste into Excel, Sheets, or save as &lt;code&gt;.csv&lt;/code&gt;. Civ&amp;nbsp;7's UI sandbox has no file-write API, so the clipboard is the only hand-off.&lt;/p&gt;</Text>
+            <Text>&lt;p style="margin:0;"&gt;Copies all sampled turns for all civilizations to the clipboard as CSV. Paste into Excel, Sheets, or another spreadsheet tool to save or analyze the data.&lt;/p&gt;</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP">
-            <Text>Copy all sampled history to the clipboard as CSV — paste into Excel, Google Sheets, or a .csv file</Text>
+            <Text>Copy all sampled history as CSV</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC">
             <Text>Militaristic</Text>
@@ -686,7 +686,7 @@
             <Text>Show all hidden civilizations</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT">
-            <Text>Tip: click any civilization's header to hide it and focus the comparison. Click again (in the slim column on the right) to bring it back.</Text>
+            <Text>Tip: click a civilization header to hide it and focus the comparison. Click it again in the right column to restore it.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT">
             <Text>Unmet</Text>
@@ -716,7 +716,7 @@
             <Text>Conflicts Timeline — every war this game has seen</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NYI">
-            <Text>Not yet implemented — coming in a future iteration.</Text>
+            <Text>Not yet implemented.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING">
             <Text>Options</Text>
@@ -725,16 +725,16 @@
             <Text>Show real names for civilizations I haven't met (spoiler)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND">
-            <Text>Colorblind mode (high-contrast Wong palette for chart + relations colors)</Text>
+            <Text>Colorblind mode (high-contrast palette for charts and relations)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL">
             <Text>Show eliminated civs in chart and factbook</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS">
-            <Text>Show wonder-built markers on chart lines (small icon at the turn each civ completed a wonder)</Text>
+            <Text>Show wonder markers on chart lines</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE">
-            <Text>Performance mode (buffer storage writes, throttle hover) — recommended for long games or slower machines. May lose up to 2 turns of history on crash.</Text>
+            <Text>Performance mode reduces write frequency and hover work. It is recommended for long games or slower machines. Up to 2 turns of history may be lost after a crash.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO">
             <Text>Auto (game-speed default)</Text>
@@ -785,10 +785,10 @@
             <Text>Sample frequency:</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT">
-            <Text>Higher values record fewer points — useful for long marathon games. Change applies on the next turn; existing samples are kept.</Text>
+            <Text>Higher values record fewer points. The change applies on the next turn, and existing samples are kept.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION">
-            <Text>Disable downsampling (keep every turn's sample even after the cap is hit) — power-user mode; pair with a high cap or Unlimited.</Text>
+            <Text>Disable downsampling and keep every recorded turn after the cap is reached. Best used with a high cap or Unlimited.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY">
             <Text>Clear all recorded Demographics samples?</Text>
@@ -866,5 +866,8 @@
             <Text>City States</Text>
         </Row>
 
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW">
+            <Text>withdrew T-{1_Turn}</Text>
+        </Row>
     </EnglishText>
 </Database>

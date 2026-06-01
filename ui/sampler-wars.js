@@ -63,6 +63,18 @@ import DemographicsStorage from "/demographics/ui/demographics-storage.js";
  */
 
 /**
+ * A war-roster entry tracked across the WHOLE life of a war (so a war record is
+ * a full participation history, not just a snapshot of who is in it right now).
+ * Extends {@link WarRosterEntry} with the turn the civ joined, the turn it left
+ * (absent while still in), and whether it is in the war as of the latest sample.
+ * @typedef {WarRosterEntry & {
+ *   joinTurn: number,
+ *   leaveTurn?: number,
+ *   active: boolean
+ * }} WarParticipant
+ */
+
+/**
  * The normalized active-war info derived from a DECLARE_WAR event header.
  * @typedef {object} ActiveWar
  * @property {*} uniqueID The engine uniqueID.
@@ -220,11 +232,49 @@ function detectCityState(p) {
 function migrateWarRecords(snapshot, wars) {
   for (const w of wars) {
     _migrateWarRecord(w);
-    // Always refresh rosters from the current pidInfo() so the isCS flag
-    // reflects the latest player state — old records may have it stale.
-    w.sideACivs = (w.sideA || []).map((p) => pidInfo(snapshot, p));
-    w.sideBCivs = (w.sideB || []).map((p) => pidInfo(snapshot, p));
+    const open = w.endTurn == null;
+    w.sideACivs = prepareWarSideRoster(snapshot, w.sideACivs, w.sideA, w.startTurn, open);
+    w.sideBCivs = prepareWarSideRoster(snapshot, w.sideBCivs, w.sideB, w.startTurn, open);
   }
+}
+
+/**
+ * Prepare a war side's cumulative participation roster for the current sample.
+ * For records that already carry participation history (entries with a
+ * `joinTurn`), refresh only the ACTIVE participants' display fields and leave
+ * departed civs frozen with their last-known info. For legacy records (no
+ * history yet), backfill the roster from the side's pid list, treating everyone
+ * as a founding participant — best-effort, since pre-history saves never
+ * recorded joins/departures.
+ * @param {Snapshot} snapshot The current snapshot.
+ * @param {WarParticipant[]|object[]|undefined} civs The stored side roster.
+ * @param {Pid[]|undefined} pids The side's pid list (for legacy backfill).
+ * @param {number|null|undefined} startTurn The war's start turn.
+ * @param {boolean} warOpen Whether the war is currently open.
+ * @returns {WarParticipant[]} The prepared cumulative roster.
+ */
+function prepareWarSideRoster(snapshot, civs, pids, startTurn, warOpen) {
+  const list = /** @type {WarParticipant[]} */ (Array.isArray(civs) ? civs : []);
+  const hasHistory = list.some((e) => e && typeof e.joinTurn === "number");
+  if (!hasHistory) {
+    const st = typeof startTurn === "number" ? startTurn : 0;
+    return (pids || []).map((p) => ({
+      ...pidInfo(snapshot, p),
+      joinTurn: st,
+      active: warOpen
+    }));
+  }
+  for (const e of list) {
+    if (e.active) {
+      const info = pidInfo(snapshot, e.pid);
+      e.civ = info.civ;
+      e.leader = info.leader;
+      e.color = info.color;
+      e.civTypeString = info.civTypeString;
+      e.isCS = info.isCS;
+    }
+  }
+  return list;
 }
 
 /**
@@ -388,22 +438,75 @@ function collectActiveWars(allPlayers) {
 }
 
 /**
- * Update an existing history war record from freshly-enumerated war info
- * (expanding rosters and reopening if it was wrongly closed).
+ * Merge the current live roster for one war side into the cumulative
+ * participation list, so a war record remembers every civ that ever fought on
+ * it. New civs are appended (joinTurn = current turn); a civ that returns is
+ * reactivated; a civ no longer present is marked inactive with its leave turn.
+ * Active entries' display fields are refreshed from the latest roster info.
+ * @param {WarParticipant[]} list The cumulative side roster (mutated in place).
+ * @param {WarRosterEntry[]} live The current live roster entries for this side.
+ * @param {number} turn The current (age-local) turn.
+ * @returns {WarParticipant[]} The same list, updated.
+ */
+function mergeWarParticipants(list, live, turn) {
+  const livePids = new Set(live.map((r) => r.pid));
+  for (const r of live) {
+    const e = list.find((x) => x.pid === r.pid);
+    if (e) {
+      e.civ = r.civ;
+      e.leader = r.leader;
+      e.color = r.color;
+      e.civTypeString = r.civTypeString;
+      e.isCS = r.isCS;
+      e.active = true;
+      delete e.leaveTurn;
+    } else {
+      list.push({
+        pid: r.pid,
+        civ: r.civ,
+        leader: r.leader,
+        color: r.color,
+        civTypeString: r.civTypeString,
+        isCS: r.isCS,
+        joinTurn: turn,
+        active: true
+      });
+    }
+  }
+  for (const e of list) {
+    if (!livePids.has(e.pid) && e.active) {
+      e.active = false;
+      e.leaveTurn = turn;
+    }
+  }
+  return list;
+}
+
+/**
+ * Update an existing history war record from freshly-enumerated war info:
+ * merge the live roster into the war's cumulative participation history
+ * (tracking joins/departures) and reopen if it was wrongly closed.
  * @param {WarRecord} existing The history war record (mutated in place).
  * @param {ActiveWar} info The normalized active-war info.
- * @param {WarRosterEntry[]} aRoster Side A roster entries.
- * @param {WarRosterEntry[]} bRoster Side B roster entries.
+ * @param {WarRosterEntry[]} aRoster Side A live roster entries.
+ * @param {WarRosterEntry[]} bRoster Side B live roster entries.
  * @param {*} uid The war uniqueID (for logging).
+ * @param {number} turn The current (age-local) turn.
  * @returns {void}
  */
-function updateExistingWar(existing, info, aRoster, bRoster, uid) {
-  // Update participants in case the war expanded (joined allies).
-  existing.sideA = info.sideA.slice();
-  existing.sideB = info.sideB.slice();
-  existing.participants = info.sideA.concat(info.sideB);
-  existing.sideACivs = aRoster;
-  existing.sideBCivs = bRoster;
+function updateExistingWar(existing, info, aRoster, bRoster, uid, turn) {
+  if (!Array.isArray(existing.sideACivs)) existing.sideACivs = [];
+  if (!Array.isArray(existing.sideBCivs)) existing.sideBCivs = [];
+  const aCivs = /** @type {WarParticipant[]} */ (existing.sideACivs);
+  const bCivs = /** @type {WarParticipant[]} */ (existing.sideBCivs);
+  mergeWarParticipants(aCivs, aRoster, turn);
+  mergeWarParticipants(bCivs, bRoster, turn);
+  // sideA/sideB (and participants) are the CUMULATIVE pid sets — every civ that
+  // has ever fought on each side — so downstream filtering and the cost
+  // accounting see the war's full history, not just its current belligerents.
+  existing.sideA = /** @type {Pid[]} */ (aCivs.map((e) => e.pid));
+  existing.sideB = /** @type {Pid[]} */ (bCivs.map((e) => e.pid));
+  existing.participants = existing.sideA.concat(existing.sideB);
   // If a previous close was wrong (UI lag, etc.), reopen.
   if (typeof existing.endTurn === "number") {
     existing.endTurn = null;
@@ -442,25 +545,32 @@ function buildNewWar(wars, info, aRoster, bRoster, snapshot, gameYear, turn) {
   const ordinal = ordinalSuffix(priorCount + 1);
   const name = ordinal + " " + sortedNames[0] + " vs " + sortedNames[1] + " War";
   const declarer = pidInfo(snapshot, /** @type {Pid} */ (info.initialPid));
+  // `info.headerStartTurn` is the engine diplomacy header's declaration turn
+  // (age-local Game.turn). Samples, `endTurn`, and the Gantt domain are all
+  // age-local — the chart applies the per-age offset at render time — so we
+  // store it as-is, falling back to the current turn when the header lacks a
+  // usable value. (The earlier `+ cumulativeOffset` referenced a variable
+  // that never existed and threw a swallowed ReferenceError on every new war,
+  // silently dropping that turn's war tracking; the offset bookkeeping it came
+  // from was removed mod-wide as obsolete.)
+  const startTurn = typeof info.headerStartTurn === "number" ? info.headerStartTurn : turn;
+  // Seed the cumulative participation history: the founding belligerents join
+  // at the war's start. Later joiners/departures are tracked by updateExistingWar.
+  /** @type {WarParticipant[]} */
+  const sideACivs = aRoster.map((r) => ({ ...r, joinTurn: startTurn, active: true }));
+  /** @type {WarParticipant[]} */
+  const sideBCivs = bRoster.map((r) => ({ ...r, joinTurn: startTurn, active: true }));
   return {
     warUniqueID: info.uniqueID,
-    // `info.headerStartTurn` is the engine diplomacy header's declaration turn
-    // (age-local Game.turn). Samples, `endTurn`, and the Gantt domain are all
-    // age-local — the chart applies the per-age offset at render time — so we
-    // store it as-is, falling back to the current turn when the header lacks a
-    // usable value. (The earlier `+ cumulativeOffset` referenced a variable
-    // that never existed and threw a swallowed ReferenceError on every new war,
-    // silently dropping that turn's war tracking; the offset bookkeeping it came
-    // from was removed mod-wide as obsolete.)
-    startTurn: typeof info.headerStartTurn === "number" ? info.headerStartTurn : turn,
+    startTurn,
     endTurn: null,
     startYear: gameYear,
     endYear: null,
     sideA: info.sideA.slice(),
     sideB: info.sideB.slice(),
     participants: info.sideA.concat(info.sideB),
-    sideACivs: aRoster,
-    sideBCivs: bRoster,
+    sideACivs,
+    sideBCivs,
     declaredBy: declarer
       ? {
           pid: declarer.pid,
@@ -494,7 +604,7 @@ function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
     const aRoster = info.sideA.map((p) => pidInfo(snapshot, p));
     const bRoster = info.sideB.map((p) => pidInfo(snapshot, p));
     if (existing) {
-      updateExistingWar(existing, info, aRoster, bRoster, uid);
+      updateExistingWar(existing, info, aRoster, bRoster, uid, turn);
       continue;
     }
     const newWar = buildNewWar(wars, info, aRoster, bRoster, snapshot, gameYear, turn);
