@@ -2,45 +2,44 @@
 
 ## Short Description
 
-Demographics adds turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII.
+Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for Civilization VII. Read-only.
 
 ## Full Description
 
-Demographics is a read-only information mod for Civilization VII. It records turn-by-turn data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays.
+Demographics is a read-only information mod. It records per-turn data for every civilization and presents it as charts, rankings, a relations ring, a war timeline, and progress overlays on the native Triumphs cards. It does not touch gameplay.
 
-The mod includes:
+Includes:
 
-- Historical charts for economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
-- A World Factbook view with current values and world rankings for each civilization.
-- A Global Relations view with met civilizations and city-states arranged in a ring layout.
-- A war timeline built from diplomacy events.
-- Progress overlays on the native Legacies → Triumphs cards.
-- CSV export for recorded history.
-- Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
+- Historical charts: economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
+- World Factbook: current values and world ranks per civilization.
+- Global Relations: met civilizations and city-states in a ring layout.
+- War timeline built from diplomacy events.
+- Progress overlays on the Legacies → Triumphs cards.
+- CSV export.
+- Options: smoothing, unmet-name handling, eliminated civilizations, sample frequency, colorblind mode, and sample caps.
 
-## What The Mod Does Not Do
+## What It Doesn't Do
 
-- It does not change gameplay balance.
-- It does not alter AI behavior.
-- It does not overwrite base-game files.
-- It does not add cross-age charts, because each age only exposes its own history.
+- No gameplay or balance changes.
+- No AI changes.
+- No base-game file replacement.
+- No cross-age charts — each age only exposes its own history.
 
 ## Compatibility
 
 - Read-only presentation layer.
 - No base-game file replacement.
-- Per-save data storage.
+- Per-save history (within an age).
 - Additive Triumphs overlay.
 
 ## Installation
 
-1. Download or subscribe to the mod.
-2. Place the `demographics` folder in the Civilization VII Mods directory.
-3. Enable Demographics from Additional Content in-game.
+1. Subscribe, or place the `demographics` folder in the Mods directory.
+2. Enable Demographics in Additional Content.
 
 ## Credits
 
-- robk for Demographics for Civilization V.
-- Gedemon for CivGraphs for Civilization VI.
-- Slothoth for Global Relations for Civilization VII.
-- Tower for the Civilization VII implementation and expansion work.
+- robk — Demographics (Civ V).
+- Gedemon — CivGraphs (Civ VI).
+- Slothoth — Global Relations (Civ VII).
+- Tower — Civilization VII implementation.
