@@ -343,8 +343,8 @@ function _treeRowMatches(row, systemType, age) {
 //   treeKind === "Culture" → all SYSTEM_CULTURE trees of the current age
 // (Civ7 gives each civ access to mainline + civ-unique tree; we sum both.)
 // ProgressionTree.SystemType cited from
-//   age-antiquity/data/progression-trees-culture-tot-common.xml:21
-//   age-antiquity/data/progression-trees-culture-unique.xml:95+
+//   age-antiquity/data/progression-trees-culture-tot-common.xml
+//   age-antiquity/data/progression-trees-culture-unique.xml+
 /**
  * Count fully-unlocked nodes for a player across all trees of a branch.
  * @param {*} player The player handle (currently unused; kept for parity).
@@ -420,7 +420,7 @@ function _cityPlotCount(c) {
 /**
  * Capture whether the LOCAL player has met `id` at sample time. The local
  * player is always met. Read from the local player's `Diplomacy.hasMet`
- * (sloth global-relations-panel.js:127).
+ * (sloth global-relations-panel.js).
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id being sampled.
  * @param {*} p The sampled player handle.
@@ -525,7 +525,7 @@ function _lookupRowByIteration(table, raw, typeField) {
   if (!table || typeof table[Symbol.iterator] !== "function") return null;
   for (const row of table) {
     if (!row) continue;
-    // Vanilla uses `$hash` on GameInfo rows; see city-banners.js:266.
+    // Vanilla uses `$hash` on GameInfo rows; see city-banners.js.
     if (row.$hash === raw || row.Hash === raw) return row;
     if (typeof raw === "string" && row[typeField] === raw) return row;
   }
@@ -590,7 +590,7 @@ function _prettifyType(typeStr, prefix) {
 
 /**
  * Resolve the civilization display name, preferring the DIRECT
- * `player.civilizationName` accessor (tutorial-items-antiquity.js:3528) which
+ * `player.civilizationName` accessor (tutorial-items-antiquity.js) which
  * works for numeric-hash civTypes, then `civilizationFullName`, then the
  * iterated GameInfo row.
  * @param {*} p The sampled player handle.
@@ -604,7 +604,7 @@ function resolveCivName(p, civRow, rawCiv) {
     if (typeof direct === "string" && direct.length > 0) {
       return _composeLocale(direct) || direct;
     }
-    // Fallback: civilizationFullName (utilities-image.js:189).
+    // Fallback: civilizationFullName (utilities-image.js).
     const full = p?.civilizationFullName;
     if (typeof full === "string" && full.length > 0) {
       return _composeLocale(full) || full;
@@ -620,8 +620,8 @@ function resolveCivName(p, civRow, rawCiv) {
 /**
  * Resolve leader/civ display names + canonical type strings and store them on
  * `ctx`. GameInfo.Leaders.lookup accepts either hash or "LEADER_*" string
- * (civ-unlocks-model.js:18, map-utilities.js:24-25); LeaderType STRING for
- * <fxs-icon>/<leader-icon> is extracted as in model-diplo-ribbon.js:402.
+ * (civ-unlocks-model.js, map-utilities.js); LeaderType STRING for
+ * <fxs-icon>/<leader-icon> is extracted as in model-diplo-ribbon.js.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id (used in the "Player N" fallback).
  * @param {*} p The sampled player handle.
@@ -653,7 +653,7 @@ function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
 
   // LeaderType STRING (canonical "LEADER_AUGUSTUS") for <fxs-icon> /
   // <leader-icon>. Vanilla extracts this exact way at
-  // base-standard/ui/diplo-ribbon/model-diplo-ribbon.js:402.
+  // base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
   ctx.leaderTypeString = _canonicalTypeString(leaderRow?.LeaderType, rawLeader);
   ctx.civTypeString = _canonicalTypeString(civRow?.CivilizationType, rawCiv);
 }
@@ -674,7 +674,7 @@ function _canonicalTypeString(rowType, raw) {
 
 /**
  * Capture the player's banner colors. Pattern at
- * base-standard/ui/diplo-ribbon/model-diplo-ribbon.js:407-408.
+ * base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @returns {void}
@@ -760,7 +760,7 @@ function collectTechAndCivicCounts(ctx, id, p) {
 
 /**
  * Read net yields + population/city/town counts off the Stats handle.
- * Numeric properties per model-diplo-ribbon.js:557,566,575.
+ * Numeric properties per model-diplo-ribbon.js,566,575.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} stats The player Stats handle.
@@ -777,7 +777,7 @@ function collectYieldsAndSizes(ctx, id, stats) {
   ctx.yieldDiplomacy = netYield(stats, "YIELD_DIPLOMACY", id);
 
   // Population / city / town counts (numeric properties per
-  // model-diplo-ribbon.js:557,566,575).
+  // model-diplo-ribbon.js,566,575).
   const tp = _readFiniteProp(stats, "totalPopulation");
   if (tp !== undefined) ctx.totalPopulation = tp;
   const nc = _readFiniteProp(stats, "numCities");
@@ -840,8 +840,8 @@ function collectOngoingDeals(ctx, id) {
 
 /**
  * Sum completed wonders across a player's cities (fallback when the
- * player-wide accessor is unavailable). Cite model-city-capture-chooser.js:30,
- * peace-deal-tooltip.js:218.
+ * player-wide accessor is unavailable). Cite model-city-capture-chooser.js,
+ * peace-deal-tooltip.js.
  * @param {*} cityList The city list (array/array-like) or undefined.
  * @param {Pid} id The player id (for log attribution).
  * @returns {number | undefined} Total wonders, or undefined if none readable.
@@ -878,7 +878,7 @@ function _cityWonderCount(c) {
 
 /**
  * Capture the wonder COUNT, preferring player.Stats.getNumWonders(false,false)
- * (advice-support.js:33), falling back to summing across cities.
+ * (advice-support.js), falling back to summing across cities.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
  * @param {*} stats The player Stats handle.
@@ -901,7 +901,7 @@ function collectWonderCount(ctx, id, stats, cityList) {
 
 /**
  * Capture per-wonder identity (ConstructibleType strings) for completed,
- * undamaged wonders. Cite endgame-cinematics.js:319-323. Used by the chart's
+ * undamaged wonders. Cite endgame-cinematics.js. Used by the chart's
  * wonder-marker plugin to diff against the prior sample.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id.
@@ -1068,7 +1068,7 @@ function _defStrength(def, statsByType) {
 /**
  * Compute military power by iterating the player's units and summing combat
  * strength for military formations. Pattern at
- * age-antiquity/ui/tutorial/tutorial-items-antiquity.js:218-221. The ENTIRE
+ * age-antiquity/ui/tutorial/tutorial-items-antiquity.js. The ENTIRE
  * iteration is wrapped in ONE safeCall so a single bad lookup doesn't trip the
  * kill switch repeatedly per turn.
  * @param {PlayerCtx} ctx The context to mutate.
@@ -1123,7 +1123,7 @@ function _sumUnitStrengths(ids, statsByType) {
 
 /**
  * Capture the settlement cap + settlements-used.
- * Citation: base-standard/ui/diplo-ribbon/panel-yield-banner.js:208-209.
+ * Citation: base-standard/ui/diplo-ribbon/panel-yield-banner.js.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} stats The player Stats handle.
  * @returns {void}
@@ -1159,10 +1159,10 @@ const SUBTYPE_TO_KEY = {
  * Civ7 ToT replaced the 4 legacy paths with a 6-attribute triumph system. The
  * OLD GameInfo.LegacyPaths / Game.VictoryManager APIs still exist but return
  * frozen zeros post-ToT; don't read from them. Citations:
- *   ui-next/screens/legacies/legacies-model.js:73   getProgress shape
- *   ui-next/screens/legacies/legacies-model.js:67   per-other-player access
- *   ui-next/screens/legacies/triumph-tracking-manager.js:73-83
- *   age-antiquity/data/legacies.xml:170-178         LegacySubtype values
+ *   ui-next/screens/legacies/legacies-model.js   getProgress shape
+ *   ui-next/screens/legacies/legacies-model.js   per-other-player access
+ *   ui-next/screens/legacies/triumph-tracking-manager.js
+ *   age-antiquity/data/legacies.xml         LegacySubtype values
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} p The sampled player handle.
  * @returns {void}
@@ -1255,7 +1255,7 @@ const VICTORY_TYPE_TO_KEY = {
  * Capture real Modern-age victory points per civ via player.Victories. The
  * vanilla Victories screen reads this exact value for the Economic (GDP)
  * victory. Pre-Modern these return 0. Citation:
- * ui-next/screens/victories/victories-screen-model.js:1096,1137.
+ * ui-next/screens/victories/victories-screen-model.js,1137.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} p The sampled player handle.
  * @returns {void}
@@ -1306,7 +1306,7 @@ function _captureVictoryRow(ctx, v, row) {
 /**
  * Score one OTHER player's contribution to `id`'s diplomatic approval. City-
  * states contribute via suzerainty (+2, damped later); majors via a weighted
- * relationship enum. Cite view-relations.js:164 (getRelationshipEnum), :501
+ * relationship enum. Cite view-relations.js (getRelationshipEnum), :501
  * (getSuzerain).
  * @param {*} dip The sampled player's Diplomacy handle.
  * @param {Pid} id The sampled player id.
@@ -1457,7 +1457,7 @@ function _sumApprovalScores(dip, id) {
  * Resolve a single ResourceEntry's class string, accepting either the flat
  * `classType` shape or the nested `uniqueResource.resource` hash (which we
  * look up in GameInfo.Resources). Cite
- * base-standard/ui/resource-allocation/model-resource-allocation.js:126-131.
+ * base-standard/ui/resource-allocation/model-resource-allocation.js.
  * @param {*} r A ResourceEntry item.
  * @returns {*} The resource class string, or undefined.
  */

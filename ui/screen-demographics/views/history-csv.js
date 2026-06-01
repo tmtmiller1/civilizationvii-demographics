@@ -4,7 +4,7 @@
 // CSV with one row per (turn, pid) and one column per metric. Coherent
 // GameFace doesn't expose `URL.createObjectURL` or `<a download>`, so we route
 // through the engine's `UI.setClipboardText`
-// (cite: base-standard/ui-next/screens/pause-menu/pause-menu-model.js:258,
+// (cite: base-standard/ui-next/screens/pause-menu/pause-menu-model.js,
 //  269 — the pause menu uses this for the map seed). When clipboard isn't
 // available, we fall back to writing the CSV to UI.log so it's still
 // recoverable.
@@ -353,7 +353,7 @@ function buildCsvMetaHeader(history, rowByKey, metricCols) {
 
 /**
  * Write `csv` to the clipboard via the engine's `UI.setClipboardText`, gated by
- * `UI.isClipboardAvailable()` where present (cite: pause-menu-model.js:268).
+ * `UI.isClipboardAvailable()` where present (cite: pause-menu-model.js).
  * @param {string} csv The full CSV text.
  * @returns {boolean} True when the clipboard write succeeded.
  */
@@ -410,7 +410,7 @@ export function exportHistoryAsCsv(history, host) {
   }
 
   // Step 1: try clipboard. UI.isClipboardAvailable() is the canonical gate
-  // (cite: pause-menu-model.js:268).
+  // (cite: pause-menu-model.js).
   const clipboardOk = writeCsvToClipboard(csv);
 
   // Step 2: dump to UI.log as a recoverable fallback.

@@ -101,7 +101,7 @@ function ilog(...a) {
 /**
  * Resolve display info (civ/leader/color/type-string + isCS) for a pid, using
  * the snapshot first and falling back to live engine reads. Mirrors the trio
- * of CS checks view-relations.js uses (lines 133-135).
+ * of CS checks view-relations.js uses.
  * @param {Snapshot} snapshot The current snapshot (for cached player info).
  * @param {Pid | string} pid The player id.
  * @returns {WarRosterEntry} The resolved war-roster entry.
@@ -186,7 +186,7 @@ function _civTypeStringFor(pid) {
 
 /**
  * Determine whether a live player handle is a city-state / independent /
- * non-major civ, mirroring view-relations.js (lines 133-135).
+ * non-major civ, mirroring view-relations.js.
  * @param {*} p A live player handle.
  * @returns {boolean} True if the player should be treated as a city-state.
  */
@@ -406,8 +406,8 @@ function _buildWarSide(seedPid, participants) {
 /**
  * Enumerate every active DECLARE_WAR event via getPlayerEvents(pid) for each
  * player and de-dupe on uniqueID. Returns null if the API is unavailable.
- * Citation: core/ui/utilities/diplomacy-utilities.js:70,
- * base-standard/ui/diplo-ribbon/model-diplo-ribbon.js:1088.
+ * Citation: core/ui/utilities/diplomacy-utilities.js,
+ * base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
  * @param {*[]} allPlayers The alive players list.
  * @returns {Map<*, ActiveWar> | null} Active wars keyed by uniqueID, or null.
  */

@@ -167,9 +167,9 @@ const ENDEAVOR_ACTIONS = {
 // the hash is looked up in `Game.CityStates.getBonusType(csPid)` and the
 // row is found in `GameInfo.CityStateBonuses` (each row carries
 // `.CityStateType`). Cited from
-//   base-standard/ui/city-banners/city-banners.js:265-266
-//   base-standard/ui-next/tooltips/plot-tooltip/helpers.js:223
-// CS type strings observed in age-antiquity/data/independents.xml:199+ :
+//   base-standard/ui/city-banners/city-banners.js
+//   base-standard/ui-next/tooltips/plot-tooltip/helpers.js
+// CS type strings observed in age-antiquity/data/independents.xml+ :
 //   MILITARISTIC, CULTURAL, ECONOMIC, SCIENTIFIC
 // (modifier names also reference EXPANSIONIST and DIPLOMATIC — handled).
 
@@ -202,7 +202,7 @@ function findBonusRow(bonusHash) {
 
 /**
  * Pass 1: classify a CS by its assigned tier-1/2/3 bonus. Works once a bonus
- * has been assigned. Cite: base-standard/ui/city-banners/city-banners.js:265-266.
+ * has been assigned. Cite: base-standard/ui/city-banners/city-banners.js.
  * @param {number} pid City-state player id.
  * @returns {string|null} The `CityStateType` string, or `null`.
  */
@@ -254,7 +254,7 @@ function findIndependentRow(adj) {
 /**
  * Pass 2: classify a CS from its intrinsic `GameInfo.Independents` row, matched
  * by `civilizationAdjective`. Works even before a bonus is assigned. Cite:
- * base-standard/ui/city-banners/city-banners.js:274-278.
+ * base-standard/ui/city-banners/city-banners.js.
  * @param {number} pid City-state player id.
  * @returns {string|null} The `CityStateType` string, or `null`.
  */
@@ -291,7 +291,7 @@ export function resolveCsType(pid) {
 // CS-type → display label + color. Colors chosen for readability against
 // the parchment ring background.
 // Icon paths cited from
-//   age-antiquity/data/icons/city-state-bonus-icons.xml:10,30,50,70
+//   age-antiquity/data/icons/city-state-bonus-icons.xml,30,50,70
 // (e.g. blp:bonus_militaristic, blp:bonus_cultural, etc.). These are the
 // same banner-style glyphs the game shows on city banners (sword for
 // militaristic, mask for cultural, coin for economic, beaker for
@@ -589,7 +589,7 @@ export function buildPoliticalEdges(metIds, filterKey) {
   }
   if (filterKey === "openborders") {
     // Open Borders is a diplomatic action/deal. Cited pattern:
-    // base-standard/ui/diplomacy-actions/panel-diplomacy-actions.js:269-273, 2413-2417.
+    // base-standard/ui/diplomacy-actions/panel-diplomacy-actions.js, 2413-2417.
     return buildActionTypeEdges(
       metIds,
       actionTypeByName("DIPLOMACY_ACTION_OPEN_BORDERS"),
