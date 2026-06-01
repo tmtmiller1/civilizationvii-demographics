@@ -908,7 +908,7 @@
             <Text>Der Marsch der Fremden</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="de_DE">
-            <Text>Das Zeitalter der Wanderungen</Text>
+            <Text>Die Jahre der Verwüstung</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="de_DE">
             <Text>Die Jahre der Unruhe</Text>
@@ -977,7 +977,7 @@
             <Text>Die große Sterblichkeit</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="de_DE">
-            <Text>Die große Seuche</Text>
+            <Text>Das große Fieber</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="de_DE">
             <Text>Das große Sterben</Text>
@@ -1022,7 +1022,7 @@
             <Text>Der Graue Tod</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="de_DE">
-            <Text>Der Graue Tod</Text>
+            <Text>Der Aschfahle Tod</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="de_DE">
             <Text>Die Pest der Grenze</Text>
