@@ -6,9 +6,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ru_RU"><Text>Очки с течением времени</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ru_RU"><Text>Живая история из сэмплера.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ru_RU"><Text>История, записанная по ходам.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="ru_RU"><Text>Закрыть</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ru_RU"><Text>Здравствуйте. Если вы это читаете, значит, оснастка работает.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ru_RU"><Text>Краткий исторический обзор текущей партии.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ru_RU"><Text>Очки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ru_RU"><Text>Казна</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ru_RU"><Text>Зол./ход</Text></Replace>
@@ -22,7 +22,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ru_RU"><Text>Число полностью изученных узлов технологий в дереве текущей эпохи.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ru_RU"><Text>Число полностью открытых узлов соц. институтов в дереве текущей эпохи.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ru_RU"><Text>ВВП</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ru_RU"><Text>Псевдореалистичный валовой внутренний продукт. Взвешенная сумма доходов за ход (Производство 1.0, Золото 1.0, Наука 1.2, Культура 1.2, Еда 0.5, Влияние 1.5), умноженная на число прошедших ходов и приведенная к долларам.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ru_RU"><Text>Сравнительная оценка масштаба экономики на основе доходов за ход и длительности партии.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ru_RU"><Text>Пр-во/ход</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ru_RU"><Text>Производство за ход — то, что строят ваши города.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ru_RU"><Text>Наука</Text></Replace>
@@ -32,7 +32,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ru_RU"><Text>Урожайность</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ru_RU"><Text>Чистое производство еды за ход по всем поселениям.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ru_RU"><Text>Дипломатическое одобрение</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ru_RU"><Text>Совокупная международная репутация. Сумма взвешенных показателей отношений со всеми встреченными крупными цивилизациями (Союзники +5, Содействие +3, Дружелюбие +2, Нейтралитет 0, Недружелюбие -2, Враждебность -3, Война -5) плюс ослабленный (0.3x) вклад от городов-государств, где вы являетесь сюзереном.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ru_RU"><Text>Сводный показатель дипломатических отношений со встреченными цивилизациями и, в меньшей степени, с подвластными городами-государствами.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ru_RU"><Text>Население</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ru_RU"><Text>Масштабированное реальное население, экспоненциально выведенное из общего числа граждан.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ru_RU"><Text>Влн./ход</Text></Replace>
@@ -131,7 +131,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="ru_RU"><Text>Мгновенный · {1_Label}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="ru_RU"><Text>Награда: </Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="ru_RU"><Text>Пока нет прогресса.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ru_RU"><Text>API наследия «Испытание временем» недоступен.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ru_RU"><Text>Данные наследия недоступны на этом экране.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="ru_RU"><Text>Пока нет выборок по цивилизациям.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="ru_RU"><Text>В эпоху {1_Age} нет доступных триумфов.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="ru_RU"><Text>Нет доступных триумфов.</Text></Replace>
@@ -155,37 +155,37 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="ru_RU"><Text>{1_Turns} ходов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="ru_RU"><Text>сила {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="ru_RU"><Text>поселения {1_Value}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ru_RU"><Text>население {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ru_RU"><Text>население {1_Value} (масштаб.)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="ru_RU"><Text>производство {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="ru_RU"><Text>Издержки во время войны</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ru_RU"><Text>(наблюдаемое изменение)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ru_RU"><Text>Пока нет войн. Как только любая цивилизация объявит войну, временная шкала заполнится.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ru_RU"><Text>Нет войн, соответствующих текущим фильтрам.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок — сначала сыграйте ход.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ru_RU"><Text>CSV слишком большой ({1_SizeMB} МБ) · приведет к сбою буфера обмена. Снизьте лимит выборок в настройках и повторите.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ru_RU"><Text>CSV слишком большой ({1_SizeMB} МБ). Снизьте лимит выборок в настройках и повторите.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ru_RU"><Text>Скопировано · {1_Rows} строк × {2_Cols} столбцов{3_SizeTag} · вставьте в Excel / Sheets / файл .csv</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ru_RU"><Text>Буфер обмена недоступен · CSV записан в UI.log (см. папку logs)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ru_RU"><Text>Буфер обмена недоступен. CSV записан в UI.log.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="ru_RU"><Text>Текущая эпоха</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="ru_RU"><Text>1-я эпоха</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="ru_RU"><Text>2-я эпоха</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ru_RU"><Text>3-я эпоха</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ru_RU"><Text>За все время</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ru_RU"><Text>Межэпохальные графики недоступны</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Единый график, охватывающий &lt;b style="color:#f3e7c4;"&gt;Античность, Эпоху освоения и Современность&lt;/b&gt;, невозможен. Civ&amp;nbsp;7 стирает каждый канал хранения, который мод мог бы использовать для переноса собранной истории через переход между эпохами, поэтому каждая эпоха может отображать только собственные данные. Используйте вместо этого &lt;b style="color:#f3e7c4;"&gt;Текущую&amp;nbsp;эпоху&lt;/b&gt; или любой фильтр по диапазону лет.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Графики не продолжаются между эпохами. Каждая эпоха показывает только данные, собранные внутри нее. Используйте &lt;b style="color:#f3e7c4;"&gt;Текущую эпоху&lt;/b&gt; или фильтр по диапазону лет.&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ru_RU"><Text>Фильтр {1_Label}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ru_RU"><Text>ⓘ ВВП = Σ взвешенных доходов × ход × 1 млн  ·  наведите для пояснения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ru_RU"><Text>ⓘ ВВП: сравнительная оценка экономики  ·  наведите для деталей</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ru_RU"><Text>Валовой внутренний продукт</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ru_RU"><Text>&lt;p&gt;Псевдореалистичная величина, объединяющая доходы цивилизации за ход, взвешенные по тому, насколько каждый доход вносит вклад в реальную экономику.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Формула:&lt;/b&gt; Σ (доход × вес) × ход × 1 000 000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Веса&lt;/b&gt; (на единицу дохода):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Золото&lt;/b&gt; — 1.0 (валюта = прямая торговля)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Производство&lt;/b&gt; — 1.0 (промышленный выпуск)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Наука&lt;/b&gt; — 1.2 (инновации накапливаются со временем)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Культура&lt;/b&gt; — 1.2 (мягкая сила &amp; туризм)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Еда&lt;/b&gt; — 0.5 (пропитание; в ВВП идет только излишек)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Влияние&lt;/b&gt; — 1.5 (дипломатический / договорной рычаг)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Зачем умножать на ход?&lt;/b&gt; Реальные экономики накапливаются: цивилизация на 200-м ходу с теми же доходами за ход, что и цивилизация на 50-м ходу, представляет 4-кратную накопленную экономическую массу.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Только для отображения — никогда не влияет на состояние игры.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ru_RU"><Text>ⓘ Дипломатическое одобрение = Σ взвешенных по отношениям показателей  ·  наведите для пояснения</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ru_RU"><Text>Дипломатическое одобрение — международная репутация</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ru_RU"><Text>&lt;p&gt;Знаковый агрегат того, как к вам сейчас относятся все остальные цивилизации. Растет &lt;b&gt;вверх&lt;/b&gt;, когда у вас есть союзники и друзья; идет &lt;b&gt;вниз&lt;/b&gt;, когда вас окружают враги или вы в состоянии войны.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Вклад на каждую крупную цивилизацию&lt;/b&gt; (на основе перечня отношений, показываемого на экране дипломатии):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Союз&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Содействие&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Дружелюбие&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Нейтралитет&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Недружелюбие&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Враждебность&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Война&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Вклад городов-государств:&lt;/b&gt; +2 за каждый ГГ, где вы сюзерен, ослабленный множителем 0.3× (чтобы стратегии с упором на ГГ не затмевали отношения с крупными цивилизациями).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Показатель = Σ(веса крупных цив.) + 0.3 × Σ(бонусы сюзеренитета)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Выбирается каждый ход с точки зрения каждой цивилизации на местного игрока. Только для отображения.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ru_RU"><Text>&lt;p&gt;Этот показатель суммирует относительный экономический вес цивилизации по ходу партии.&lt;/p&gt;&lt;p&gt;Он объединяет основные доходы и учитывает число прошедших ходов, чтобы было проще сравнивать империи на разных этапах одной и той же партии.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Описательный индикатор: не меняет игровые механики.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ru_RU"><Text>ⓘ Дипломатическое одобрение: сводка внешних отношений  ·  наведите для деталей</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ru_RU"><Text>Дипломатическое одобрение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ru_RU"><Text>&lt;p&gt;Этот показатель кратко отражает общее состояние дипломатических отношений со встреченными цивилизациями.&lt;/p&gt;&lt;p&gt;Более высокие значения означают более благоприятную обстановку, более низкие — более враждебную или нестабильную.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Описательный индикатор: не меняет игровые механики.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ru_RU"><Text>Текущий</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ru_RU"><Text>Конец 1-й эпохи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ru_RU"><Text>Конец 2-й эпохи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ru_RU"><Text>Снимок:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ru_RU"><Text>Пока нет снимка — эпоха не завершилась.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ru_RU"><Text>↻ Обновить</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ru_RU"><Text>Повторно загрузить прогресс наследия из VictoryManager.getVictoryProgress()</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ru_RU"><Text>Перезагрузить прогресс наследия.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ru_RU"><Text>Все крупные цивилизации</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ru_RU"><Text>Цивилизация:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="ru_RU"><Text>Только текущие</Text></Replace>
@@ -202,8 +202,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="ru_RU"><Text>Скрыть метки построенных чудес на линиях графика</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="ru_RU"><Text>Показать метки построенных чудес на линиях графика (значок на ходу, когда каждая цивилизация завершила чудо)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="ru_RU"><Text>Копировать как CSV</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Копирует каждый выбранный ход для каждой цивилизации в буфер обмена. Вставьте в Excel, Sheets или сохраните как &lt;code&gt;.csv&lt;/code&gt;. Песочница интерфейса Civ&amp;nbsp;7 не имеет API для записи файлов, поэтому буфер обмена — единственный способ передачи.&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ru_RU"><Text>Скопировать всю собранную историю в буфер обмена как CSV — вставьте в Excel, Google Sheets или файл .csv</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Копирует собранную историю в буфер обмена в формате CSV. Ее можно вставить в таблицу или сохранить в файл &lt;code&gt;.csv&lt;/code&gt;.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ru_RU"><Text>Скопировать собранную историю в буфер обмена как CSV.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="ru_RU"><Text>Милитаризм</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="ru_RU"><Text>Культура</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="ru_RU"><Text>Экономика</Text></Replace>
@@ -221,7 +221,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ru_RU"><Text>Ранг {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ru_RU"><Text>Сбросить ({1_Count} скрыто)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ru_RU"><Text>Показать все скрытые цивилизации</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ru_RU"><Text>Совет: нажмите на заголовок любой цивилизации, чтобы скрыть ее и сфокусировать сравнение. Нажмите снова (в узком столбце справа), чтобы вернуть ее.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ru_RU"><Text>Нажмите на заголовок цивилизации, чтобы скрыть ее и сузить сравнение. Нажмите снова, чтобы вернуть ее.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ru_RU"><Text>Не встречена</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто — нажмите, чтобы показать)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ru_RU"><Text>Нажмите, чтобы показать</Text></Replace>
@@ -231,13 +231,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ru_RU"><Text>(Накопительный счет, с разбивкой по атрибутам)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ru_RU"><Text>Распределение ресурсов с течением времени (область с накоплением)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ru_RU"><Text>Хронология конфликтов — каждая война, которую видела эта игра</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ru_RU"><Text>Еще не реализовано — появится в будущей версии.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ru_RU"><Text>Пока недоступно.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ru_RU"><Text>Настройки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ru_RU"><Text>Показывать настоящие названия цивилизаций, которые я не встретил (спойлер)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников (высококонтрастная палитра Вонга для цветов графиков и отношений)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников (высококонтрастные цвета для графиков и отношений)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ru_RU"><Text>Показывать уничтоженные цивилизации на графике и в справочнике</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Показывать метки построенных чудес на линиях графика (маленький значок на ходу, когда каждая цивилизация завершила чудо)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ru_RU"><Text>Режим производительности (буферизация записей в хранилище, ограничение наведения) — рекомендуется для долгих игр или медленных машин. При сбое может потеряться до 2 ходов истории.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Показывать отметки чудес на линиях графика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ru_RU"><Text>Режим производительности (уменьшает частоту обновлений и взаимодействий с графиком). Полезен для долгих партий и более слабых систем.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ru_RU"><Text>Авто (по умолчанию для скорости игры)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ru_RU"><Text>1 000 выборок</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ru_RU"><Text>2 500 выборок</Text></Replace>
@@ -254,8 +254,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ru_RU"><Text>Каждые 10 ходов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ru_RU"><Text>Каждые 25 ходов ⚠ грубые графики</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ru_RU"><Text>Частота выборки:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Более высокие значения записывают меньше точек — полезно для долгих марафонских игр. Изменение применяется на следующем ходу; существующие выборки сохраняются.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ru_RU"><Text>Отключить прореживание (сохранять выборку каждого хода даже после достижения лимита) — режим для опытных пользователей; используйте с высоким лимитом или без ограничений.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Чем выше значение, тем реже записываются точки. Изменение применяется со следующего хода.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ru_RU"><Text>Отключить прореживание и сохранять все выборки даже после достижения лимита.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ru_RU"><Text>Очистить все записанные выборки Демографии?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ru_RU"><Text>Очистить все записанные войны? История выборок и другие данные будут сохранены.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="ru_RU"><Text>Сбросить историю войн</Text></Replace>
@@ -283,6 +283,441 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ru_RU"><Text>Города-государства</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ru_RU">
             <Text>вышла T-{1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="ru_RU">
+            <Text>{2_Ordinal} мировая война</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="ru_RU">
+            <Text>Великая война между {1_A} и {2_B} (+{3_Extra} цивилизаций)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="ru_RU">
+            <Text>Трехсторонняя война {1_A}–{2_B}–{3_C}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="ru_RU">
+            <Text>{1_Ordinal} война между {2_A} и {3_B}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="ru_RU">
+            <Text>{1_Base} (Столетняя война)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="ru_RU">
+            <Text>{1_Base} (Долгая война)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="ru_RU">
+            <Text>Первая</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="ru_RU">
+            <Text>Вторая</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="ru_RU">
+            <Text>Третья</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="ru_RU">
+            <Text>Четвертая</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="ru_RU">
+            <Text>Пятая</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="ru_RU">
+            <Text>{1_Num}-я</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="ru_RU">
+            <Text>Крах бронзового века</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="ru_RU">
+            <Text>Великое переселение народов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="ru_RU">
+            <Text>Эпоха переселений</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="ru_RU">
+            <Text>Нашествие народов моря</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="ru_RU">
+            <Text>Варварские вторжения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="ru_RU">
+            <Text>Варварские войны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="ru_RU">
+            <Text>Великая орда</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="ru_RU">
+            <Text>Приход степных народов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="ru_RU">
+            <Text>Поступь чужеземцев</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="ru_RU">
+            <Text>Годы опустошения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="ru_RU">
+            <Text>Годы смуты</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="ru_RU">
+            <Text>Крушение рубежей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="ru_RU">
+            <Text>Кризис на рубежах</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="ru_RU">
+            <Text>Пограничные войны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="ru_RU">
+            <Text>Северные вторжения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="ru_RU">
+            <Text>Восточные вторжения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="ru_RU">
+            <Text>Буря с рубежей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="ru_RU">
+            <Text>Бунт провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="ru_RU">
+            <Text>Буря из степи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="ru_RU">
+            <Text>Буря с побережья</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="ru_RU">
+            <Text>Буря из сердца державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="ru_RU">
+            <Text>Разорение рубежей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="ru_RU">
+            <Text>Разорение провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="ru_RU">
+            <Text>Разорение степи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="ru_RU">
+            <Text>Разорение побережья</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="ru_RU">
+            <Text>Разорение сердца державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="ru_RU">
+            <Text>Пограничные набеги</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="ru_RU">
+            <Text>Падение рубежей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="ru_RU">
+            <Text>Чума Антонинов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="ru_RU">
+            <Text>Чума Галена</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="ru_RU">
+            <Text>Великий мор</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="ru_RU">
+            <Text>Великая смертность</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="ru_RU">
+            <Text>Великая лихорадка</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="ru_RU">
+            <Text>Великая смерть</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="ru_RU">
+            <Text>Годы чумы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="ru_RU">
+            <Text>Время смерти</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="ru_RU">
+            <Text>Время моровое</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="ru_RU">
+            <Text>Годы мора</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="ru_RU">
+            <Text>Годы пепла</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="ru_RU">
+            <Text>Потовая горячка</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="ru_RU">
+            <Text>Изнуряющая чума</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="ru_RU">
+            <Text>Летняя чума</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="ru_RU">
+            <Text>Зимняя хворь</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="ru_RU">
+            <Text>Безмолвная смерть</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="ru_RU">
+            <Text>Чёрная смерть</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="ru_RU">
+            <Text>Красная смерть</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="ru_RU">
+            <Text>Серая смерть</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="ru_RU">
+            <Text>Пепельная смерть</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="ru_RU">
+            <Text>Чума на рубежах</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="ru_RU">
+            <Text>Чума провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="ru_RU">
+            <Text>Чума степи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="ru_RU">
+            <Text>Чума побережья</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="ru_RU">
+            <Text>Чума сердца державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="ru_RU">
+            <Text>Войны рабов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="ru_RU">
+            <Text>Гражданские войны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="ru_RU">
+            <Text>Годы мятежа</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="ru_RU">
+            <Text>Годы анархии</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="ru_RU">
+            <Text>Время тиранов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="ru_RU">
+            <Text>Эпоха узурпаторов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="ru_RU">
+            <Text>Эпоха самозванцев</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="ru_RU">
+            <Text>Эпоха военных вождей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="ru_RU">
+            <Text>Кризис третьего века</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="ru_RU">
+            <Text>Кризис престолонаследия</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="ru_RU">
+            <Text>Кризис легитимности</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="ru_RU">
+            <Text>Кризис власти</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="ru_RU">
+            <Text>Крушение власти</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="ru_RU">
+            <Text>Великий раскол державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="ru_RU">
+            <Text>Распад</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="ru_RU">
+            <Text>Смута</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="ru_RU">
+            <Text>Солдатский мятеж</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="ru_RU">
+            <Text>Война самозванцев</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="ru_RU">
+            <Text>Война за наследство</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="ru_RU">
+            <Text>Восстания провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="ru_RU">
+            <Text>Кризис провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="ru_RU">
+            <Text>Восстание на рубежах</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="ru_RU">
+            <Text>Восстание провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="ru_RU">
+            <Text>Восстание степи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="ru_RU">
+            <Text>Восстание побережья</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="ru_RU">
+            <Text>Восстание сердца державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="ru_RU">
+            <Text>Эпоха революций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="ru_RU">
+            <Text>Эпоха реформ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="ru_RU">
+            <Text>Годы революции</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="ru_RU">
+            <Text>Национальные революции</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="ru_RU">
+            <Text>Весна народов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="ru_RU">
+            <Text>Год свободы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="ru_RU">
+            <Text>Год республики</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="ru_RU">
+            <Text>Славная революция</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="ru_RU">
+            <Text>Великое пробуждение</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="ru_RU">
+            <Text>Движение реформ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="ru_RU">
+            <Text>Народное восстание</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="ru_RU">
+            <Text>Народная революция</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="ru_RU">
+            <Text>Национальное восстание</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="ru_RU">
+            <Text>Республиканское восстание</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="ru_RU">
+            <Text>Кризис короны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="ru_RU">
+            <Text>Кризис республики</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="ru_RU">
+            <Text>Падение короны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="ru_RU">
+            <Text>Конституционный кризис</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="ru_RU">
+            <Text>Восстания на рубежах</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="ru_RU">
+            <Text>Восстания в провинциях</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="ru_RU">
+            <Text>Восстания в степи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="ru_RU">
+            <Text>Восстания на побережье</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="ru_RU">
+            <Text>Восстания в сердце державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="ru_RU">
+            <Text>Великий раскол</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="ru_RU">
+            <Text>Священный раскол</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="ru_RU">
+            <Text>Храмовый раскол</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="ru_RU">
+            <Text>Раскол в провинциях</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="ru_RU">
+            <Text>Реформация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="ru_RU">
+            <Text>Контрреформация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="ru_RU">
+            <Text>Реформация в провинциях</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="ru_RU">
+            <Text>Религиозные войны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="ru_RU">
+            <Text>Эпоха ересей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="ru_RU">
+            <Text>Эпоха пророков</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="ru_RU">
+            <Text>Религиозные потрясения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="ru_RU">
+            <Text>Кризис веры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="ru_RU">
+            <Text>Кризис правоверия</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="ru_RU">
+            <Text>Священные войны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="ru_RU">
+            <Text>Война правоверных</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="ru_RU">
+            <Text>Война пророков</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="ru_RU">
+            <Text>Иконоборческий кризис</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="ru_RU">
+            <Text>Храмовый кризис</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="ru_RU">
+            <Text>Войны паломников</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="ru_RU">
+            <Text>Северная Реформация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="ru_RU">
+            <Text>Восточная Реформация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="ru_RU">
+            <Text>Ересь на рубежах</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="ru_RU">
+            <Text>Ересь провинций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="ru_RU">
+            <Text>Ересь степи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="ru_RU">
+            <Text>Ересь побережья</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="ru_RU">
+            <Text>Ересь сердца державы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="ru_RU">
+            <Text>Эпоха потрясений</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="ru_RU">
+            <Text>Смутное время</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="ru_RU">
+            <Text>Кризис империи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="ru_RU">
+            <Text>Кризис реформ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="ru_RU">
+            <Text>Кризис</Text>
         </Replace>
     </LocalizedText>
 </Database>

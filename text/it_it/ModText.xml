@@ -6,9 +6,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="it_IT"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="it_IT"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="it_IT"><Text>Punteggio nel tempo</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="it_IT"><Text>Cronologia in tempo reale dal campionatore.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="it_IT"><Text>Cronologia registrata turno per turno.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="it_IT"><Text>Chiudi</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="it_IT"><Text>Salve. Se riesci a leggere questo, l'impalcatura funziona.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="it_IT"><Text>Panoramica storica della partita corrente.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="it_IT"><Text>Punteggio</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="it_IT"><Text>Tesoro</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="it_IT"><Text>GPT</Text></Replace>
@@ -22,7 +22,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="it_IT"><Text>Numero di nodi tecnologici completamente ricercati nell'albero dell'era attuale.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="it_IT"><Text>Numero di nodi civici completamente sbloccati nell'albero dell'era attuale.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="it_IT"><Text>PIL</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="it_IT"><Text>Prodotto interno lordo pseudo-realistico. Somma ponderata dei rendimenti per turno (Produzione 1.0, Oro 1.0, Scienza 1.2, Cultura 1.2, Cibo 0.5, Influenza 1.5), moltiplicata per i turni trascorsi e scalata in dollari.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="it_IT"><Text>Stima comparativa della dimensione economica, basata sui rendimenti per turno e sulla durata della partita.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="it_IT"><Text>PPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="it_IT"><Text>Produzione per turno — ciò che costruiscono le tue città.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="it_IT"><Text>Scienza</Text></Replace>
@@ -32,7 +32,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="it_IT"><Text>Resa agricola</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="it_IT"><Text>Produzione netta di cibo per turno in tutti gli insediamenti.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="it_IT"><Text>Approvazione diplomatica</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="it_IT"><Text>Aggregato della reputazione internazionale. Somma dei punteggi di relazione ponderati di tutte le civiltà maggiori incontrate (Alleata +5, Disponibile +3, Amichevole +2, Neutrale 0, Ostile -2, Bellicosa -3, In guerra -5) più un contributo smorzato (0,3x) dalle città-stato di cui sei signore supremo.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="it_IT"><Text>Indicatore sintetico dei rapporti diplomatici con le civiltà incontrate e, in misura minore, con le città-stato soggette.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="it_IT"><Text>Popolazione</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="it_IT"><Text>Popolazione reale scalata, derivata esponenzialmente dal numero totale di cittadini.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="it_IT"><Text>IPT</Text></Replace>
@@ -131,7 +131,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="it_IT"><Text>Istantaneo · {1_Label}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="it_IT"><Text>Ricompensa: </Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="it_IT"><Text>Nessun progresso ancora.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="it_IT"><Text>API dei Lasciti della Prova del Tempo non disponibile.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="it_IT"><Text>Dati dei Lasciti non disponibili in questa schermata.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="it_IT"><Text>Nessuna civiltà ancora campionata.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="it_IT"><Text>Nessun trionfo disponibile in {1_Age}.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="it_IT"><Text>Nessun trionfo disponibile.</Text></Replace>
@@ -155,37 +155,37 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="it_IT"><Text>{1_Turns} turni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="it_IT"><Text>forza {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="it_IT"><Text>insediamenti {1_Value}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="it_IT"><Text>pop {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="it_IT"><Text>pop {1_Value} (in scala)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="it_IT"><Text>produzione {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="it_IT"><Text>Costo durante la guerra</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="it_IT"><Text>(variazione osservata)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="it_IT"><Text>Nessuna guerra ancora. Quando una civiltà dichiarerà guerra, la cronologia si popolerà.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="it_IT"><Text>Nessuna guerra corrisponde ai filtri attuali.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="it_IT"><Text>Nessun campione ancora — gioca prima un turno.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="it_IT"><Text>CSV troppo grande ({1_SizeMB} MB) · manderebbe in crash gli appunti. Riduci il limite dei campioni nelle Opzioni e riprova.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="it_IT"><Text>CSV troppo grande ({1_SizeMB} MB). Riduci il limite dei campioni nelle Opzioni e riprova.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="it_IT"><Text>Copiato · {1_Rows} righe × {2_Cols} colonne{3_SizeTag} · incolla in Excel / Sheets / un file .csv</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="it_IT"><Text>Appunti non disponibili · CSV scritto in UI.log (consulta la cartella dei log)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="it_IT"><Text>Appunti non disponibili. CSV scritto in UI.log.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="it_IT"><Text>Era attuale</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="it_IT"><Text>1ª era</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="it_IT"><Text>2ª era</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="it_IT"><Text>3ª era</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="it_IT"><Text>Tutto il tempo</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="it_IT"><Text>Grafici tra le ere non disponibili</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="it_IT"><Text>&lt;p style="margin:0;"&gt;Un singolo grafico che copre &lt;b style="color:#f3e7c4;"&gt;Antichità, Esplorazione ed Età moderna&lt;/b&gt; non è possibile. Civ&amp;nbsp;7 cancella ogni canale di archiviazione che una mod potrebbe usare per portare la cronologia campionata attraverso una transizione di era, quindi ogni era può rappresentare graficamente solo i propri dati. Usa invece &lt;b style="color:#f3e7c4;"&gt;Era&amp;nbsp;attuale&lt;/b&gt; o qualsiasi filtro per intervallo di anni.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="it_IT"><Text>&lt;p style="margin:0;"&gt;I grafici non proseguono tra un'era e l'altra. Ogni era mostra solo i dati raccolti al suo interno. Usa &lt;b style="color:#f3e7c4;"&gt;Era attuale&lt;/b&gt; o un intervallo di anni.&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="it_IT"><Text>Filtro {1_Label}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="it_IT"><Text>ⓘ PIL = Σ rendimenti ponderati × turno × 1M  ·  passa il mouse per la spiegazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="it_IT"><Text>ⓘ PIL: stima economica comparativa  ·  passa il mouse per i dettagli</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="it_IT"><Text>Prodotto interno lordo</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="it_IT"><Text>&lt;p&gt;Un valore pseudo-realistico che combina i rendimenti per turno di una civiltà, ponderati in base a quanto ciascun rendimento contribuisce a un'economia reale.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formula:&lt;/b&gt; Σ (rendimento × peso) × turno × 1.000.000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Pesi&lt;/b&gt; (per punto di rendimento):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Oro&lt;/b&gt; — 1.0 (valuta = commercio diretto)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Produzione&lt;/b&gt; — 1.0 (produzione industriale)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Scienza&lt;/b&gt; — 1.2 (l'innovazione si accumula nel tempo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Cultura&lt;/b&gt; — 1.2 (soft power &amp; turismo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Cibo&lt;/b&gt; — 0.5 (sussistenza; solo l'eccedenza è simile al PIL)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influenza&lt;/b&gt; — 1.5 (leva diplomatica / dei trattati)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Perché moltiplicare per il turno?&lt;/b&gt; Le economie reali si accumulano: una civiltà al turno 200 con gli stessi rendimenti per turno di una civiltà al turno 50 rappresenta 4× la massa economica accumulata.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Solo presentazionale — non influisce mai sullo stato del gioco.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="it_IT"><Text>ⓘ Approvazione diplomatica = Σ punteggi ponderati per relazione  ·  passa il mouse per la spiegazione</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="it_IT"><Text>Approvazione diplomatica — reputazione internazionale</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="it_IT"><Text>&lt;p&gt;Un aggregato con segno di come ogni altra civiltà attualmente percepisce te. Sale &lt;b&gt;verso l'alto&lt;/b&gt; quando hai alleati e amici; scende &lt;b&gt;verso il basso&lt;/b&gt; quando sei circondato da ostili o in guerra.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contributo per civiltà maggiore&lt;/b&gt; (basato sull'enum di relazione mostrato nella schermata diplomatica):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alleanza&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Disponibile&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Amichevole&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutrale&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Ostile&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Bellicosa&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;In guerra&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Contributo delle città-stato:&lt;/b&gt; +2 per ogni città-stato di cui sei signore supremo, smorzato di 0,3× (così le strategie incentrate sulle città-stato non sovrastano le relazioni con le civiltà maggiori).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Punteggio = Σ(pesi maggiori) + 0,3 × Σ(bonus di signoria suprema)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Campionato a ogni turno dalla prospettiva di ciascuna civiltà sul giocatore locale. Solo presentazionale.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="it_IT"><Text>&lt;p&gt;Questa voce riassume il peso economico relativo di una civiltà nel corso della partita.&lt;/p&gt;&lt;p&gt;Combina i rendimenti principali e li scala in base ai turni trascorsi, così da favorire il confronto tra imperi in momenti diversi della stessa partita.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Indicatore descrittivo: non modifica alcuna meccanica di gioco.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="it_IT"><Text>ⓘ Approvazione diplomatica: sintesi dei rapporti esteri  ·  passa il mouse per i dettagli</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="it_IT"><Text>Approvazione diplomatica</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="it_IT"><Text>&lt;p&gt;Questa voce riassume l'andamento delle relazioni diplomatiche con le civiltà incontrate.&lt;/p&gt;&lt;p&gt;Valori più alti indicano rapporti complessivamente migliori; valori più bassi indicano un contesto più ostile o più instabile.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Indicatore descrittivo: non modifica alcuna meccanica di gioco.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="it_IT"><Text>Attuale</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="it_IT"><Text>Fine della 1ª era</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="it_IT"><Text>Fine della 2ª era</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="it_IT"><Text>Istantanea:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="it_IT"><Text>Nessuna istantanea ancora — l'era non è finita.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="it_IT"><Text>↻ Aggiorna</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="it_IT"><Text>Ri-estrai il progresso dei lasciti da VictoryManager.getVictoryProgress()</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="it_IT"><Text>Ricarica il progresso dei Lasciti.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="it_IT"><Text>Tutte le civiltà maggiori</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="it_IT"><Text>Civiltà:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="it_IT"><Text>Solo in corso</Text></Replace>
@@ -202,8 +202,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="it_IT"><Text>Nascondi i segnaposto delle meraviglie costruite sulle linee del grafico</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="it_IT"><Text>Mostra i segnaposto delle meraviglie costruite sulle linee del grafico (icona al turno in cui ogni civiltà ha completato una meraviglia)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="it_IT"><Text>Copia come CSV</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="it_IT"><Text>&lt;p style="margin:0;"&gt;Copia ogni turno campionato per ogni civiltà negli appunti. Incolla in Excel, Sheets o salva come &lt;code&gt;.csv&lt;/code&gt;. La sandbox dell'interfaccia di Civ&amp;nbsp;7 non ha API di scrittura su file, quindi gli appunti sono l'unico modo di trasferimento.&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="it_IT"><Text>Copia tutta la cronologia campionata negli appunti come CSV — incolla in Excel, Google Sheets o un file .csv</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="it_IT"><Text>&lt;p style="margin:0;"&gt;Copia la cronologia campionata negli appunti in formato CSV. Incolla in un foglio di calcolo o in un file &lt;code&gt;.csv&lt;/code&gt;.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="it_IT"><Text>Copia la cronologia campionata negli appunti come CSV.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="it_IT"><Text>Militarista</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="it_IT"><Text>Culturale</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="it_IT"><Text>Economica</Text></Replace>
@@ -221,7 +221,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="it_IT"><Text>Posizione {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="it_IT"><Text>Ripristina ({1_Count} nascoste)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="it_IT"><Text>Mostra tutte le civiltà nascoste</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="it_IT"><Text>Suggerimento: clicca l'intestazione di una civiltà per nasconderla e focalizzare il confronto. Clicca di nuovo (nella colonna stretta a destra) per riportarla.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="it_IT"><Text>Clicca l'intestazione di una civiltà per nasconderla e concentrare il confronto. Clicca di nuovo per mostrarla.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="it_IT"><Text>Non incontrata</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="it_IT"><Text>(nascosta — clicca per mostrare)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="it_IT"><Text>Clicca per mostrare</Text></Replace>
@@ -231,13 +231,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="it_IT"><Text>(Conteggio cumulativo, impilato per attributo)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="it_IT"><Text>Allocazione delle risorse nel tempo (area impilata)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="it_IT"><Text>Cronologia dei conflitti — ogni guerra vista in questa partita</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="it_IT"><Text>Non ancora implementato — in arrivo in una futura iterazione.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="it_IT"><Text>Non ancora disponibile.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="it_IT"><Text>Opzioni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="it_IT"><Text>Mostra i nomi reali delle civiltà che non ho incontrato (spoiler)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="it_IT"><Text>Modalità daltonici (palette Wong ad alto contrasto per i colori del grafico e delle relazioni)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="it_IT"><Text>Modalità daltonici (palette ad alto contrasto per grafici e relazioni)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="it_IT"><Text>Mostra le civiltà eliminate nel grafico e nel factbook</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="it_IT"><Text>Mostra i segnaposto delle meraviglie costruite sulle linee del grafico (piccola icona al turno in cui ogni civiltà ha completato una meraviglia)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="it_IT"><Text>Modalità prestazioni (bufferizza le scritture su archiviazione, limita il passaggio del mouse) — consigliata per partite lunghe o macchine più lente. In caso di crash potrebbe perdere fino a 2 turni di cronologia.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="it_IT"><Text>Mostra indicatori delle meraviglie sulle linee del grafico</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="it_IT"><Text>Modalità prestazioni (riduce aggiornamenti e interazioni del grafico). Utile per partite lunghe o sistemi più lenti.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="it_IT"><Text>Automatico (predefinito in base alla velocità di gioco)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="it_IT"><Text>1.000 campioni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="it_IT"><Text>2.500 campioni</Text></Replace>
@@ -254,8 +254,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="it_IT"><Text>Ogni 10 turni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="it_IT"><Text>Ogni 25 turni ⚠ grafici grossolani</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="it_IT"><Text>Frequenza di campionamento:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="it_IT"><Text>Valori più alti registrano meno punti — utile per lunghe partite maratona. La modifica si applica al turno successivo; i campioni esistenti vengono mantenuti.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="it_IT"><Text>Disabilita il sottocampionamento (mantieni il campione di ogni turno anche dopo aver raggiunto il limite) — modalità per utenti esperti; abbinala a un limite alto o Illimitato.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="it_IT"><Text>Valori più alti registrano meno punti. La modifica si applica dal turno successivo.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="it_IT"><Text>Disabilita il sottocampionamento e conserva tutti i campioni anche oltre il limite.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="it_IT"><Text>Cancellare tutti i campioni di Demografia registrati?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="it_IT"><Text>Cancellare tutte le guerre registrate? La cronologia dei campioni e gli altri dati verranno mantenuti.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="it_IT"><Text>Azzera cronologia delle guerre</Text></Replace>
@@ -283,6 +283,441 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="it_IT"><Text>Città-stato</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="it_IT">
             <Text>ritirato T-{1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="it_IT">
+            <Text>{2_Ordinal} Guerra Mondiale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="it_IT">
+            <Text>Grande Guerra tra {1_A} e {2_B} (+{3_Extra} civiltà)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="it_IT">
+            <Text>Guerra tripartita {1_A}–{2_B}–{3_C}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="it_IT">
+            <Text>{1_Ordinal} Guerra tra {2_A} e {3_B}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="it_IT">
+            <Text>{1_Base} (Guerra dei Cent'anni)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="it_IT">
+            <Text>{1_Base} (Guerra Lunga)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="it_IT">
+            <Text>Prima</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="it_IT">
+            <Text>Seconda</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="it_IT">
+            <Text>Terza</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="it_IT">
+            <Text>Quarta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="it_IT">
+            <Text>Quinta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="it_IT">
+            <Text>{1_Num}ª</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="it_IT">
+            <Text>Il collasso dell'età del bronzo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="it_IT">
+            <Text>La grande migrazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="it_IT">
+            <Text>L'età delle migrazioni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="it_IT">
+            <Text>L'arrivo dei Popoli del Mare</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="it_IT">
+            <Text>Le invasioni barbariche</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="it_IT">
+            <Text>Le guerre barbariche</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="it_IT">
+            <Text>La grande orda</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="it_IT">
+            <Text>L'arrivo dei popoli della steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="it_IT">
+            <Text>La marcia degli stranieri</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="it_IT">
+            <Text>Gli anni della devastazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="it_IT">
+            <Text>Gli anni del tumulto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="it_IT">
+            <Text>Il crollo della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="it_IT">
+            <Text>La crisi della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="it_IT">
+            <Text>Le guerre di frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="it_IT">
+            <Text>Le invasioni del nord</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="it_IT">
+            <Text>Le invasioni dell'est</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="it_IT">
+            <Text>La minaccia dalla frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="it_IT">
+            <Text>La rivolta delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="it_IT">
+            <Text>La tempesta dalla steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="it_IT">
+            <Text>La tempesta dalla costa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="it_IT">
+            <Text>La tempesta dal cuore dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="it_IT">
+            <Text>Il sacco della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="it_IT">
+            <Text>Il sacco delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="it_IT">
+            <Text>Le razzie della steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="it_IT">
+            <Text>Il sacco della costa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="it_IT">
+            <Text>Il sacco del cuore dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="it_IT">
+            <Text>Le incursioni di confine</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="it_IT">
+            <Text>Il crollo della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="it_IT">
+            <Text>La peste antonina</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="it_IT">
+            <Text>La peste di Galeno</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="it_IT">
+            <Text>La grande pestilenza</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="it_IT">
+            <Text>La grande moria</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="it_IT">
+            <Text>La grande febbre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="it_IT">
+            <Text>Il grande flagello</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="it_IT">
+            <Text>Gli anni della peste</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="it_IT">
+            <Text>Il tempo della morte</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="it_IT">
+            <Text>Il tempo della pestilenza</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="it_IT">
+            <Text>Gli anni della mortalità</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="it_IT">
+            <Text>Gli anni delle ceneri</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="it_IT">
+            <Text>La febbre sudorifera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="it_IT">
+            <Text>La peste devastatrice</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="it_IT">
+            <Text>La peste estiva</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="it_IT">
+            <Text>Il morbo invernale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="it_IT">
+            <Text>La morte silenziosa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="it_IT">
+            <Text>La morte nera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="it_IT">
+            <Text>La morte rossa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="it_IT">
+            <Text>La morte grigia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="it_IT">
+            <Text>La morte pallida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="it_IT">
+            <Text>La peste della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="it_IT">
+            <Text>La peste delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="it_IT">
+            <Text>La peste della steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="it_IT">
+            <Text>La peste della costa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="it_IT">
+            <Text>La peste del cuore dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="it_IT">
+            <Text>Le guerre servili</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="it_IT">
+            <Text>Le guerre civili</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="it_IT">
+            <Text>Gli anni della rivolta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="it_IT">
+            <Text>Gli anni dell'anarchia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="it_IT">
+            <Text>Il tempo dei tiranni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="it_IT">
+            <Text>L'età degli usurpatori</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="it_IT">
+            <Text>L'età dei pretendenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="it_IT">
+            <Text>L'età dei signori della guerra</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="it_IT">
+            <Text>La crisi del III secolo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="it_IT">
+            <Text>La crisi di successione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="it_IT">
+            <Text>La crisi di legittimità</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="it_IT">
+            <Text>La crisi dell'autorità</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="it_IT">
+            <Text>Il crollo dell'autorità</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="it_IT">
+            <Text>La grande frattura</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="it_IT">
+            <Text>La grande scissione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="it_IT">
+            <Text>I disordini</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="it_IT">
+            <Text>La rivolta dei soldati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="it_IT">
+            <Text>La guerra dei pretendenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="it_IT">
+            <Text>La guerra di successione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="it_IT">
+            <Text>Le rivolte provinciali</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="it_IT">
+            <Text>La crisi delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="it_IT">
+            <Text>La rivolta della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="it_IT">
+            <Text>La rivolta delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="it_IT">
+            <Text>La rivolta della steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="it_IT">
+            <Text>La rivolta della costa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="it_IT">
+            <Text>La rivolta del cuore dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="it_IT">
+            <Text>L'età delle rivoluzioni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="it_IT">
+            <Text>L'età delle riforme</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="it_IT">
+            <Text>Gli anni rivoluzionari</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="it_IT">
+            <Text>Le rivoluzioni nazionali</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="it_IT">
+            <Text>La primavera dei popoli</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="it_IT">
+            <Text>L'anno della libertà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="it_IT">
+            <Text>L'anno della repubblica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="it_IT">
+            <Text>La Gloriosa Rivoluzione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="it_IT">
+            <Text>Il grande risveglio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="it_IT">
+            <Text>Il movimento riformatore</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="it_IT">
+            <Text>La sollevazione popolare</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="it_IT">
+            <Text>La rivoluzione popolare</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="it_IT">
+            <Text>La sollevazione nazionale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="it_IT">
+            <Text>La sollevazione repubblicana</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="it_IT">
+            <Text>La crisi della corona</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="it_IT">
+            <Text>La crisi della repubblica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="it_IT">
+            <Text>La caduta della corona</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="it_IT">
+            <Text>La crisi costituzionale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="it_IT">
+            <Text>Le sollevazioni della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="it_IT">
+            <Text>Le sollevazioni delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="it_IT">
+            <Text>Le sollevazioni della steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="it_IT">
+            <Text>Le sollevazioni della costa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="it_IT">
+            <Text>Le sollevazioni del cuore dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="it_IT">
+            <Text>Il Grande Scisma</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="it_IT">
+            <Text>Lo scisma sacro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="it_IT">
+            <Text>Lo scisma del tempio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="it_IT">
+            <Text>Lo scisma provinciale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="it_IT">
+            <Text>La Riforma</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="it_IT">
+            <Text>La Controriforma</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="it_IT">
+            <Text>La Riforma delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="it_IT">
+            <Text>Le guerre di religione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="it_IT">
+            <Text>L'età delle eresie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="it_IT">
+            <Text>L'età dei profeti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="it_IT">
+            <Text>Il tumulto religioso</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="it_IT">
+            <Text>La crisi della fede</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="it_IT">
+            <Text>La crisi dell'ortodossia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="it_IT">
+            <Text>Le guerre sacre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="it_IT">
+            <Text>La guerra dei fedeli</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="it_IT">
+            <Text>La guerra dei profeti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="it_IT">
+            <Text>La crisi iconoclasta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="it_IT">
+            <Text>La crisi del tempio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="it_IT">
+            <Text>Le guerre dei pellegrini</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="it_IT">
+            <Text>La Riforma del nord</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="it_IT">
+            <Text>La Riforma dell'est</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="it_IT">
+            <Text>L'eresia della frontiera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="it_IT">
+            <Text>L'eresia delle province</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="it_IT">
+            <Text>L'eresia della steppa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="it_IT">
+            <Text>L'eresia della costa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="it_IT">
+            <Text>L'eresia del cuore dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="it_IT">
+            <Text>L'età del tumulto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="it_IT">
+            <Text>Il tempo dei torbidi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="it_IT">
+            <Text>La crisi dell'impero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="it_IT">
+            <Text>La crisi delle riforme</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="it_IT">
+            <Text>La crisi</Text>
         </Replace>
     </LocalizedText>
 </Database>

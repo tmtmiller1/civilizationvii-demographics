@@ -1,30 +1,30 @@
 pool,kind,arc_id,stage,template,name,keep
-ANTIQUITY_CRISIS_INVASION,name,,,Крах бронзового века,Крах бронзового века,1
-ANTIQUITY_CRISIS_INVASION,name,,,Великое переселение народов,Великое переселение народов,1
-ANTIQUITY_CRISIS_INVASION,name,,,Эпоха переселений,Эпоха переселений,1
-ANTIQUITY_CRISIS_INVASION,name,,,Нашествие народов моря,Нашествие народов моря,1
-ANTIQUITY_CRISIS_INVASION,name,,,Варварские вторжения,Варварские вторжения,1
-ANTIQUITY_CRISIS_INVASION,name,,,Варварские войны,Варварские войны,1
-ANTIQUITY_CRISIS_INVASION,name,,,Великая орда,Великая орда,1
-ANTIQUITY_CRISIS_INVASION,name,,,Приход степных народов,Приход степных народов,1
-ANTIQUITY_CRISIS_INVASION,name,,,Поступь чужеземцев,Поступь чужеземцев,1
-ANTIQUITY_CRISIS_INVASION,name,,,Годы опустошения,Годы опустошения,1
-ANTIQUITY_CRISIS_INVASION,name,,,Годы смуты,Годы смуты,1
-ANTIQUITY_CRISIS_INVASION,name,,,Крушение рубежей,Крушение рубежей,1
-ANTIQUITY_CRISIS_INVASION,name,,,Кризис на рубежах,Кризис на рубежах,1
-ANTIQUITY_CRISIS_INVASION,name,,,Пограничные войны,Пограничные войны,1
-ANTIQUITY_CRISIS_INVASION,name,,,Северные вторжения,Северные вторжения,1
-ANTIQUITY_CRISIS_INVASION,name,,,Восточные вторжения,Восточные вторжения,1
-ANTIQUITY_CRISIS_INVASION,name,,,Буря с рубежей,Буря с рубежей,1
-ANTIQUITY_CRISIS_INVASION,name,,,Бунт провинций,Бунт провинций,1
-ANTIQUITY_CRISIS_INVASION,name,,,Буря из степи,Буря из степи,1
-ANTIQUITY_CRISIS_INVASION,name,,,Буря с побережья,Буря с побережья,1
-ANTIQUITY_CRISIS_INVASION,name,,,Буря из сердца державы,Буря из сердца державы,1
-ANTIQUITY_CRISIS_INVASION,name,,,Разорение рубежей,Разорение рубежей,1
-ANTIQUITY_CRISIS_INVASION,name,,,Разорение провинций,Разорение провинций,1
-ANTIQUITY_CRISIS_INVASION,name,,,Разорение степи,Разорение степи,1
-ANTIQUITY_CRISIS_INVASION,name,,,Разорение побережья,Разорение побережья,1
-ANTIQUITY_CRISIS_INVASION,name,,,Разорение сердца державы,Разорение сердца державы,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Bronze Age Collapse,Крах бронзового века,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Great Migration,Великое переселение народов,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Age of Migrations,Эпоха переселений,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Sea Peoples,Нашествие народов моря,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Invasions,Варварские вторжения,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Barbarian Wars,Варварские войны,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Great Horde,Великая орда,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Coming of the Horse Lords,Приход степных народов,1
+ANTIQUITY_CRISIS_INVASION,name,,,The March of Strangers,Поступь чужеземцев,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Devastation,Годы опустошения,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Years of Turmoil,Годы смуты,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Collapse,Крушение рубежей,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Crisis of the Frontier,Кризис на рубежах,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Frontier Wars,Пограничные войны,1
+ANTIQUITY_CRISIS_INVASION,name,,,The {regional} Invasions,Северные вторжения,1
+ANTIQUITY_CRISIS_INVASION,name,,,The {regional} Invasions,Восточные вторжения,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},Буря с рубежей,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},Бунт провинций,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},Буря из степи,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},Буря с побережья,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Storm from the {place},Буря из сердца державы,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},Разорение рубежей,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},Разорение провинций,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},Разорение степи,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},Разорение побережья,1
+ANTIQUITY_CRISIS_INVASION,name,,,The Sack of the {place},Разорение сердца державы,1
 ANTIQUITY_CRISIS_INVASION,arc,arc1,1,,Пограничные набеги,1
 ANTIQUITY_CRISIS_INVASION,arc,arc1,2,,Варварские вторжения,1
 ANTIQUITY_CRISIS_INVASION,arc,arc1,3,,Разорение рубежей,1
@@ -37,24 +37,192 @@ ANTIQUITY_CRISIS_INVASION,arc,arc3,1,,Пограничные войны,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,2,,Варварские войны,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,3,,Разорение провинций,1
 ANTIQUITY_CRISIS_INVASION,arc,arc3,4,,Крах бронзового века,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Чума Антонинов,Чума Антонинов,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Чума Галена,Чума Галена,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Великий мор,Великий мор,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Великая смертность,Великая смертность,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Великая лихорадка,Великая лихорадка,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Великая смерть,Великая смерть,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Годы чумы,Годы чумы,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Время смерти,Время смерти,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Время моровое,Время моровое,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Годы мора,Годы мора,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Годы пепла,Годы пепла,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Потовая горячка,Потовая горячка,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Изнуряющая чума,Изнуряющая чума,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Летняя чума,Летняя чума,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Зимняя хворь,Зимняя хворь,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Безмолвная смерть,Безмолвная смерть,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Чёрная смерть,Чёрная смерть,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Красная смерть,Красная смерть,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Серая смерть,Серая смерть,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Пепельная смерть,Пепельная смерть,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,Чума на рубежах,Чума на рубежах,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Antonine Plague,Чума Антонинов,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,Чума Галена,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,Великий мор,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,Великая смертность,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,Великая лихорадка,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,Великая смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,Годы чумы,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,Время смерти,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,Время моровое,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Years of Mortality,Годы мора,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Years of Ashes,Годы пепла,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Sweating Sickness,Потовая горячка,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Wasting Plague,Изнуряющая чума,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Summer Plague,Летняя чума,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Winter Sickness,Зимняя хворь,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Silent Death,Безмолвная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Чёрная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Красная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Серая смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The {color} Death,Пепельная смерть,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума на рубежах,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума провинций,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума степи,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума побережья,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума сердца державы,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,1,,Летняя чума,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,2,,Годы чумы,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,3,,Великая смертность,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc1,4,,Время смерти,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,1,,Потовая горячка,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,2,,Чума побережья,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,Великий мор,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,Годы пепла,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,Зимняя хворь,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,Изнуряющая чума,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Великая смерть,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,Безмолвная смерть,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,Войны рабов,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,Гражданские войны,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Years of Revolt,Годы мятежа,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Years of Anarchy,Годы анархии,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Years of Turmoil,Годы смуты,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Time of Tyrants,Время тиранов,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Age of Usurpers,Эпоха узурпаторов,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Age of Pretenders,Эпоха самозванцев,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Age of Warlords,Эпоха военных вождей,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of the Third Century,Кризис третьего века,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Succession,Кризис престолонаследия,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Legitimacy,Кризис легитимности,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,Кризис власти,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,Крушение власти,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,Великий раскол державы,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,Распад,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,Смута,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,Солдатский мятеж,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,Война самозванцев,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,Война за наследство,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Provincial Revolts,Восстания провинций,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of the Provinces,Кризис провинций,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},Восстание на рубежах,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},Восстание провинций,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},Восстание степи,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},Восстание побережья,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Revolt of the {place},Восстание сердца державы,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,1,,Война самозванцев,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,2,,Гражданские войны,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,3,,Эпоха узурпаторов,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc1,4,,Крушение власти,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,1,,Солдатский мятеж,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,2,,Восстания провинций,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,3,,Годы анархии,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc2,4,,Распад,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,1,,Кризис престолонаследия,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,2,,Война за наследство,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,3,,Гражданские войны,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc3,4,,Время тиранов,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,1,,Годы мятежа,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,2,,Кризис провинций,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,3,,Великий раскол державы,1
+ANTIQUITY_CRISIS_LOYALTY,arc,arc4,4,,Эпоха военных вождей,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Age of Revolutions,Эпоха революций,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Age of Reform,Эпоха реформ,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Revolutionary Years,Годы революции,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The National Revolutions,Национальные революции,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Spring of Nations,Весна народов,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Year of Liberty,Год свободы,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Year of the Republic,Год республики,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Glorious Revolution,Славная революция,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Great Awakening,Великое пробуждение,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Reform Movement,Движение реформ,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The People's Rising,Народное восстание,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The People's Revolution,Народная революция,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The National Rising,Национальное восстание,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Republican Rising,Республиканское восстание,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Crisis of the Crown,Кризис короны,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Crisis of the Republic,Кризис республики,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Fall of the Crown,Падение короны,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Constitutional Crisis,Конституционный кризис,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Восстания на рубежах,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Восстания в провинциях,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Восстания в степи,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Восстания на побережье,1
+EXPLORATION_CRISIS_REVOLUTION,name,,,The Risings in the {place},Восстания в сердце державы,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,1,,Год свободы,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,2,,Республиканское восстание,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,3,,Падение короны,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc1,4,,Годы революции,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,1,,Конституционный кризис,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,2,,Народное восстание,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,3,,Народная революция,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc2,4,,Весна народов,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,1,,Движение реформ,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,2,,Кризис короны,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,3,,Национальное восстание,1
+EXPLORATION_CRISIS_REVOLUTION,arc,arc3,4,,Эпоха революций,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Great Schism,Великий раскол,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Sacred Schism,Священный раскол,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Temple Schism,Храмовый раскол,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Provincial Schism,Раскол в провинциях,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Reformation,Реформация,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Counter-Reformation,Контрреформация,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Reformation of the Provinces,Реформация в провинциях,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Wars of Religion,Религиозные войны,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Age of Heresies,Эпоха ересей,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Age of Prophets,Эпоха пророков,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Religious Upheaval,Религиозные потрясения,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Crisis of Faith,Кризис веры,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Crisis of Orthodoxy,Кризис правоверия,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Sacred Wars,Священные войны,1
+EXPLORATION_CRISIS_RELIGION,name,,,The War of the Faithful,Война правоверных,1
+EXPLORATION_CRISIS_RELIGION,name,,,The War of the Prophets,Война пророков,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Iconoclast Crisis,Иконоборческий кризис,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Temple Crisis,Храмовый кризис,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Pilgrim Wars,Войны паломников,1
+EXPLORATION_CRISIS_RELIGION,name,,,The {regional} Reformation,Северная Реформация,1
+EXPLORATION_CRISIS_RELIGION,name,,,The {regional} Reformation,Восточная Реформация,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},Ересь на рубежах,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},Ересь провинций,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},Ересь степи,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},Ересь побережья,1
+EXPLORATION_CRISIS_RELIGION,name,,,The Heresy of the {place},Ересь сердца державы,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,1,,Кризис веры,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,2,,Священный раскол,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,3,,Религиозные войны,1
+EXPLORATION_CRISIS_RELIGION,arc,arc1,4,,Реформация,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,1,,Иконоборческий кризис,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,2,,Эпоха ересей,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,3,,Войны паломников,1
+EXPLORATION_CRISIS_RELIGION,arc,arc2,4,,Контрреформация,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,1,,Храмовый кризис,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,2,,Война пророков,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,3,,Великий раскол,1
+EXPLORATION_CRISIS_RELIGION,arc,arc3,4,,Эпоха пророков,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,Чёрная смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,Великий мор,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,Великая смертность,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,Великая лихорадка,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,Великая смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,Время моровое,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,Годы мора,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,Потовая горячка,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Wasting Plague,Изнуряющая чума,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague Years,Годы чумы,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Dying Time,Время смерти,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Ashes,Годы пепла,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Summer Plague,Летняя чума,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Winter Sickness,Зимняя хворь,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Silent Death,Безмолвная смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Чёрная смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Красная смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Серая смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The {color} Death,Пепельная смерть,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума на рубежах,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума провинций,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума степи,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума побережья,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Plague of the {place},Чума сердца державы,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,1,,Летняя чума,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,2,,Годы чумы,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,Чёрная смерть,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,Великая смертность,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,Чума побережья,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,Великий мор,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Великая смерть,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,Годы пепла,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,Потовая горячка,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,Изнуряющая чума,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,3,,Время моровое,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc3,4,,Время смерти,1

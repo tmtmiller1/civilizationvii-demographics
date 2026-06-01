@@ -6,9 +6,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ko_KR"><Text>인구 통계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ko_KR"><Text>인구 통계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ko_KR"><Text>시간에 따른 점수</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ko_KR"><Text>샘플러로부터 실시간 기록.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="ko_KR"><Text>턴마다 기록된 이력.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="ko_KR"><Text>닫기</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ko_KR"><Text>안녕하세요. 이 글이 보인다면 하니스가 정상 작동 중입니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ko_KR"><Text>현재 게임의 기록 개요입니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ko_KR"><Text>점수</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ko_KR"><Text>국고</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ko_KR"><Text>GPT</Text></Replace>
@@ -22,7 +22,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ko_KR"><Text>현재 시대 트리에서 완전히 연구된 기술 노드의 수.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ko_KR"><Text>현재 시대 트리에서 완전히 잠금 해제된 사회 제도 노드의 수.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ko_KR"><Text>GDP</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ko_KR"><Text>유사 현실적 국내 총생산. 턴당 산출량의 가중 합계(생산력 1.0, 금 1.0, 과학 1.2, 문화 1.2, 식량 0.5, 영향력 1.5)에 경과한 턴 수를 곱하고 달러 단위로 환산한 값.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ko_KR"><Text>턴당 산출량과 경과 턴 수를 바탕으로 한 경제 규모 비교 지표입니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ko_KR"><Text>PPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ko_KR"><Text>턴당 생산력 — 도시가 건설하는 것.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>과학</Text></Replace>
@@ -32,7 +32,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ko_KR"><Text>작물 산출량</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ko_KR"><Text>모든 정착지에 걸친 턴당 순 식량 산출량.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ko_KR"><Text>외교 지지도</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ko_KR"><Text>국제 평판 총합. 만난 모든 주요 문명과의 가중 관계 점수의 합계(동맹 +5, 우호적 +3, 친근 +2, 중립 0, 비우호적 -2, 적대적 -3, 전쟁 중 -5)에 종주국으로 있는 도시 국가로부터의 감쇠된(0.3배) 기여분을 더한 값.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ko_KR"><Text>만난 문명들과의 외교 관계를 요약한 지표이며, 도시 국가의 영향은 더 작게 반영됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ko_KR"><Text>인구</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ko_KR"><Text>총 시민 수에서 지수적으로 도출된, 환산된 실제 세계 인구.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ko_KR"><Text>IPT</Text></Replace>
@@ -131,7 +131,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="ko_KR"><Text>즉시 · {1_Label}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="ko_KR"><Text>보상: </Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="ko_KR"><Text>아직 진행 사항이 없습니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ko_KR"><Text>Test-of-Time 레거시 API를 사용할 수 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="ko_KR"><Text>이 화면에서는 레거시 데이터를 사용할 수 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="ko_KR"><Text>아직 샘플링된 문명이 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="ko_KR"><Text>{1_Age}에 사용 가능한 위업이 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="ko_KR"><Text>사용 가능한 위업이 없습니다.</Text></Replace>
@@ -155,37 +155,37 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="ko_KR"><Text>{1_Turns}턴</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="ko_KR"><Text>전투력 {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="ko_KR"><Text>정착지 {1_Value}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ko_KR"><Text>인구 {1_Value}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="ko_KR"><Text>인구 {1_Value} (환산)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="ko_KR"><Text>생산력 {1_Value}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="ko_KR"><Text>전쟁 중 비용</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ko_KR"><Text>(관측된 변화)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ko_KR"><Text>아직 전쟁이 없습니다. 어떤 문명이든 전쟁을 선포하면 타임라인이 채워집니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ko_KR"><Text>현재 필터에 해당하는 전쟁이 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다 — 먼저 한 턴을 진행하세요.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ko_KR"><Text>CSV가 너무 큼({1_SizeMB} MB) · 클립보드가 충돌할 수 있습니다. 옵션에서 샘플 상한을 낮추고 다시 시도하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ko_KR"><Text>CSV가 너무 큽니다({1_SizeMB} MB). 옵션에서 샘플 상한을 낮추고 다시 시도하세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ko_KR"><Text>복사됨 · {1_Rows}행 × {2_Cols}열{3_SizeTag} · Excel / Sheets / .csv 파일에 붙여 넣으세요</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ko_KR"><Text>클립보드를 사용할 수 없음 · CSV를 UI.log에 기록했습니다(로그 폴더 참조)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ko_KR"><Text>클립보드를 사용할 수 없습니다. CSV를 UI.log에 기록했습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="ko_KR"><Text>현재 시대</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="ko_KR"><Text>1번째 시대</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="ko_KR"><Text>2번째 시대</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ko_KR"><Text>3번째 시대</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ko_KR"><Text>전체 기간</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ko_KR"><Text>시대 간 그래프 사용 불가</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ko_KR"><Text>&lt;p style="margin:0;"&gt;&lt;b style="color:#f3e7c4;"&gt;고대, 탐험, 현대&lt;/b&gt;를 아우르는 단일 그래프는 불가능합니다. Civ&amp;nbsp;7은 모드가 시대 전환을 넘어 샘플링된 기록을 운반하는 데 사용할 수 있는 모든 저장 채널을 초기화하므로, 각 시대는 자체 데이터만 그래프로 표시할 수 있습니다. 대신 &lt;b style="color:#f3e7c4;"&gt;현재&amp;nbsp;시대&lt;/b&gt; 또는 연도 범위 필터를 사용하세요.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ko_KR"><Text>&lt;p style="margin:0;"&gt;그래프는 시대를 넘어 연속되지 않습니다. 각 시대에서는 그 시대 안에서 기록된 데이터만 표시합니다. &lt;b style="color:#f3e7c4;"&gt;현재 시대&lt;/b&gt; 또는 연도 범위 필터를 사용하세요.&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ko_KR"><Text>{1_Label} 필터</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ko_KR"><Text>ⓘ GDP = Σ 가중 산출량 × 턴 × 1M  ·  설명을 보려면 마우스를 올리세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ko_KR"><Text>ⓘ GDP: 경제 규모 비교 지표  ·  자세한 내용은 마우스를 올리세요</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ko_KR"><Text>국내 총생산</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ko_KR"><Text>&lt;p&gt;문명의 턴당 산출량을, 각 산출량이 실제 경제에 기여하는 정도에 따라 가중하여 결합한 유사 현실적 값입니다.&lt;/p&gt;&lt;p&gt;&lt;b&gt;공식:&lt;/b&gt; Σ (산출량 × 가중치) × 턴 × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;가중치&lt;/b&gt;(산출량 1점당):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;금&lt;/b&gt; — 1.0(통화 = 직접 교역)&lt;/li&gt;&lt;li&gt;&lt;b&gt;생산력&lt;/b&gt; — 1.0(산업 생산)&lt;/li&gt;&lt;li&gt;&lt;b&gt;과학&lt;/b&gt; — 1.2(혁신은 시간이 지날수록 복리로 누적됨)&lt;/li&gt;&lt;li&gt;&lt;b&gt;문화&lt;/b&gt; — 1.2(소프트 파워 &amp; 관광)&lt;/li&gt;&lt;li&gt;&lt;b&gt;식량&lt;/b&gt; — 0.5(생계 유지; 잉여분만 GDP에 해당)&lt;/li&gt;&lt;li&gt;&lt;b&gt;영향력&lt;/b&gt; — 1.5(외교 / 조약 영향력)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;왜 턴을 곱하는가?&lt;/b&gt; 실제 경제는 복리로 누적됩니다. 200턴의 문명은 동일한 턴당 산출량을 가진 50턴의 문명에 비해 4배의 누적된 경제 규모를 나타냅니다.&lt;/p&gt;&lt;p&gt;&lt;i&gt;표시용일 뿐 — 게임 상태에 절대 영향을 주지 않습니다.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ko_KR"><Text>ⓘ 외교 지지도 = Σ 관계 가중 점수  ·  설명을 보려면 마우스를 올리세요</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ko_KR"><Text>외교 지지도 — 국제 평판</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ko_KR"><Text>&lt;p&gt;다른 모든 문명이 현재 당신을 어떻게 느끼는지에 대한 부호 있는 총합입니다. 동맹과 친구가 있으면 &lt;b&gt;올라가고&lt;/b&gt;, 적대 세력에 둘러싸이거나 전쟁 중이면 &lt;b&gt;내려갑니다&lt;/b&gt;.&lt;/p&gt;&lt;p&gt;&lt;b&gt;주요 문명당 기여분&lt;/b&gt;(외교 화면에 표시되는 관계 열거값 기준):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;동맹&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;협조적&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;친근&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;중립&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;비우호적&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;적대적&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;전쟁 중&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;도시 국가 기여분:&lt;/b&gt; 종주국으로 있는 도시 국가당 +2, 0.3배로 감쇠(도시 국가 중심 전략이 주요 문명 관계를 압도하지 않도록).&lt;/p&gt;&lt;p&gt;&lt;b&gt;점수 = Σ(주요 가중치) + 0.3 × Σ(종주 보너스)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;각 문명의 로컬 플레이어에 대한 관점에서 매 턴 샘플링됩니다. 표시용일 뿐입니다.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ko_KR"><Text>&lt;p&gt;이 항목은 게임 전반에 걸친 문명의 상대적인 경제 규모를 요약합니다.&lt;/p&gt;&lt;p&gt;주요 산출량을 묶고 경과 턴 수를 반영해, 같은 게임 안의 서로 다른 시점에 있는 제국을 비교하기 쉽게 합니다.&lt;/p&gt;&lt;p&gt;&lt;i&gt;표시용 지표이며 게임 규칙에는 영향을 주지 않습니다.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ko_KR"><Text>ⓘ 외교 지지도: 대외 관계 요약  ·  자세한 내용은 마우스를 올리세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ko_KR"><Text>외교 지지도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ko_KR"><Text>&lt;p&gt;이 항목은 만난 문명들과의 외교 관계가 전반적으로 어떤 상태인지 요약합니다.&lt;/p&gt;&lt;p&gt;값이 높을수록 관계가 우호적이고, 값이 낮을수록 주변 정세가 적대적이거나 불안정합니다.&lt;/p&gt;&lt;p&gt;&lt;i&gt;표시용 지표이며 게임 규칙에는 영향을 주지 않습니다.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ko_KR"><Text>현재</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ko_KR"><Text>1번째 시대 종료</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ko_KR"><Text>2번째 시대 종료</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ko_KR"><Text>스냅샷:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ko_KR"><Text>아직 스냅샷이 없습니다 — 시대가 종료되지 않았습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ko_KR"><Text>↻ 새로 고침</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ko_KR"><Text>VictoryManager.getVictoryProgress()에서 레거시 진행도를 다시 가져옵니다</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ko_KR"><Text>레거시 진행도를 다시 불러옵니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ko_KR"><Text>모든 주요 문명</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ko_KR"><Text>문명:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="ko_KR"><Text>진행 중인 것만</Text></Replace>
@@ -202,8 +202,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="ko_KR"><Text>차트 선의 불가사의 건설 표식을 숨깁니다</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="ko_KR"><Text>차트 선에 불가사의 건설 표식을 표시합니다(각 문명이 불가사의를 완성한 턴에 아이콘 표시)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="ko_KR"><Text>CSV로 복사</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ko_KR"><Text>&lt;p style="margin:0;"&gt;모든 문명의 샘플링된 모든 턴을 클립보드로 복사합니다. Excel, Sheets에 붙여 넣거나 &lt;code&gt;.csv&lt;/code&gt;로 저장하세요. Civ&amp;nbsp;7의 UI 샌드박스에는 파일 쓰기 API가 없으므로, 클립보드가 유일한 전달 수단입니다.&lt;/p&gt;</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ko_KR"><Text>샘플링된 모든 기록을 CSV로 클립보드에 복사 — Excel, Google Sheets, 또는 .csv 파일에 붙여 넣으세요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="ko_KR"><Text>&lt;p style="margin:0;"&gt;샘플링된 기록을 CSV 형식으로 클립보드에 복사합니다. 스프레드시트나 &lt;code&gt;.csv&lt;/code&gt; 파일에 붙여 넣어 사용할 수 있습니다.&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="ko_KR"><Text>샘플링된 기록을 CSV로 클립보드에 복사합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="ko_KR"><Text>군사주의</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="ko_KR"><Text>문화</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="ko_KR"><Text>경제</Text></Replace>
@@ -221,7 +221,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ko_KR"><Text>순위 {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ko_KR"><Text>초기화 ({1_Count}개 숨김)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ko_KR"><Text>숨겨진 모든 문명을 표시합니다</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ko_KR"><Text>팁: 문명의 머리글을 클릭하면 해당 문명을 숨기고 비교에 집중할 수 있습니다. (오른쪽의 좁은 열에서) 다시 클릭하면 되돌립니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ko_KR"><Text>문명 머리글을 클릭하면 숨겨지고 비교 대상을 좁힐 수 있습니다. 다시 클릭하면 다시 표시됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ko_KR"><Text>만나지 않음</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ko_KR"><Text>(숨김 — 클릭하여 표시)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ko_KR"><Text>클릭하여 표시</Text></Replace>
@@ -231,13 +231,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ko_KR"><Text>(누적 개수, 속성별 누적)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ko_KR"><Text>시간에 따른 자원 배분(누적 영역)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ko_KR"><Text>분쟁 타임라인 — 이 게임에서 발생한 모든 전쟁</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ko_KR"><Text>아직 구현되지 않음 — 향후 업데이트에서 제공 예정.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ko_KR"><Text>아직 사용할 수 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ko_KR"><Text>옵션</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ko_KR"><Text>아직 만나지 않은 문명의 실제 이름 표시(스포일러)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ko_KR"><Text>색맹 모드(차트 + 관계 색상용 고대비 Wong 팔레트)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ko_KR"><Text>색각 보조 모드(차트와 관계 표시에 고대비 색상 사용)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ko_KR"><Text>차트와 정보 자료집에 제거된 문명 표시</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ko_KR"><Text>차트 선에 불가사의 건설 표식 표시(각 문명이 불가사의를 완성한 턴에 작은 아이콘)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ko_KR"><Text>성능 모드(저장 쓰기를 버퍼링하고 마우스 오버를 제한) — 긴 게임이나 느린 컴퓨터에 권장됩니다. 충돌 시 최대 2턴의 기록이 손실될 수 있습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ko_KR"><Text>차트 선에 불가사의 표식을 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_PERF_MODE" Language="ko_KR"><Text>성능 모드(그래프 업데이트와 상호작용을 줄입니다). 긴 게임이나 느린 환경에 유용합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ko_KR"><Text>자동(게임 속도 기본값)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ko_KR"><Text>1,000개 샘플</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ko_KR"><Text>2,500개 샘플</Text></Replace>
@@ -254,8 +254,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ko_KR"><Text>10턴마다</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ko_KR"><Text>25턴마다 ⚠ 그래프가 거칠어짐</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ko_KR"><Text>샘플 빈도:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 기록되는 지점이 적어집니다 — 긴 마라톤 게임에 유용합니다. 변경 사항은 다음 턴에 적용되며, 기존 샘플은 유지됩니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ko_KR"><Text>다운샘플링 비활성화(상한에 도달한 후에도 모든 턴의 샘플 유지) — 고급 사용자 모드; 높은 상한이나 무제한과 함께 사용하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 기록 지점이 줄어듭니다. 변경 사항은 다음 턴부터 적용됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ko_KR"><Text>샘플 축소를 끄고 상한 이후에도 모든 기록을 유지합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ko_KR"><Text>기록된 모든 인구 통계 샘플을 지우시겠습니까?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ko_KR"><Text>기록된 모든 전쟁을 지우시겠습니까? 샘플 기록과 기타 데이터는 유지됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="ko_KR"><Text>전쟁 기록 초기화</Text></Replace>
@@ -283,6 +283,441 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ko_KR"><Text>도시 국가</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ko_KR">
             <Text>T-{1_Turn} 이탈</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="ko_KR">
+            <Text>제{1_Roman}차 세계 대전</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="ko_KR">
+            <Text>{1_A} 대 {2_B} 대전 (+{3_Extra} 문명)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="ko_KR">
+            <Text>3국 전쟁 {1_A}–{2_B}–{3_C}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="ko_KR">
+            <Text>{1_Ordinal} {2_A}–{3_B} 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="ko_KR">
+            <Text>{1_Base} (백년 전쟁)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="ko_KR">
+            <Text>{1_Base} (장기전)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="ko_KR">
+            <Text>제1차</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="ko_KR">
+            <Text>제2차</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="ko_KR">
+            <Text>제3차</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="ko_KR">
+            <Text>제4차</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="ko_KR">
+            <Text>제5차</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="ko_KR">
+            <Text>제{1_Num}차</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="ko_KR">
+            <Text>청동기 시대의 붕괴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="ko_KR">
+            <Text>민족 대이동</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="ko_KR">
+            <Text>민족 대이동의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="ko_KR">
+            <Text>바다 민족의 도래</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="ko_KR">
+            <Text>이민족의 침략</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="ko_KR">
+            <Text>이민족 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="ko_KR">
+            <Text>대유목 연맹</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="ko_KR">
+            <Text>기마 민족의 도래</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="ko_KR">
+            <Text>이방인의 행군</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="ko_KR">
+            <Text>파멸의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="ko_KR">
+            <Text>혼란의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="ko_KR">
+            <Text>변경의 붕괴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="ko_KR">
+            <Text>변경 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="ko_KR">
+            <Text>북방의 침략</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="ko_KR">
+            <Text>동방의 침략</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="ko_KR">
+            <Text>변경에서 온 폭풍</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="ko_KR">
+            <Text>속주에서 온 폭풍</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="ko_KR">
+            <Text>초원에서 온 폭풍</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="ko_KR">
+            <Text>해안에서 온 폭풍</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="ko_KR">
+            <Text>제국 중심부에서 온 폭풍</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 약탈</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 약탈</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="ko_KR">
+            <Text>초원의 약탈</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="ko_KR">
+            <Text>해안의 약탈</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="ko_KR">
+            <Text>심장부의 약탈</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="ko_KR">
+            <Text>변경의 습격</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 함락</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="ko_KR">
+            <Text>안토니누스 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="ko_KR">
+            <Text>갈레노스의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="ko_KR">
+            <Text>대역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="ko_KR">
+            <Text>대재앙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="ko_KR">
+            <Text>열병의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_DYING" Language="ko_KR">
+            <Text>대죽음</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="ko_KR">
+            <Text>역병의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="ko_KR">
+            <Text>죽음의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="ko_KR">
+            <Text>역병의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="ko_KR">
+            <Text>죽음의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="ko_KR">
+            <Text>잿빛 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="ko_KR">
+            <Text>발한병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="ko_KR">
+            <Text>쇠약의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="ko_KR">
+            <Text>여름 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="ko_KR">
+            <Text>겨울 병마</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="ko_KR">
+            <Text>조용한 죽음</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="ko_KR">
+            <Text>흑사병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="ko_KR">
+            <Text>적사병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="ko_KR">
+            <Text>회색 죽음</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="ko_KR">
+            <Text>잿빛 죽음</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="ko_KR">
+            <Text>초원의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="ko_KR">
+            <Text>해안의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="ko_KR">
+            <Text>심장부의 역병</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="ko_KR">
+            <Text>노예 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="ko_KR">
+            <Text>내전</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="ko_KR">
+            <Text>반란의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="ko_KR">
+            <Text>무정부의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="ko_KR">
+            <Text>폭군의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="ko_KR">
+            <Text>찬탈자의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="ko_KR">
+            <Text>참칭자의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="ko_KR">
+            <Text>군벌의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="ko_KR">
+            <Text>3세기의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="ko_KR">
+            <Text>계승의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="ko_KR">
+            <Text>정통성의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="ko_KR">
+            <Text>권위의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="ko_KR">
+            <Text>권위의 붕괴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="ko_KR">
+            <Text>대분열</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="ko_KR">
+            <Text>분단</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TROUBLES" Language="ko_KR">
+            <Text>분란의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="ko_KR">
+            <Text>병사들의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="ko_KR">
+            <Text>참칭자들의 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="ko_KR">
+            <Text>계승 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="ko_KR">
+            <Text>속주의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="ko_KR">
+            <Text>초원의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="ko_KR">
+            <Text>해안의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="ko_KR">
+            <Text>심장부의 반란</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="ko_KR">
+            <Text>혁명의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="ko_KR">
+            <Text>개혁의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="ko_KR">
+            <Text>혁명의 세월</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="ko_KR">
+            <Text>민족 혁명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="ko_KR">
+            <Text>국민들의 봄</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="ko_KR">
+            <Text>자유의 해</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="ko_KR">
+            <Text>공화국의 해</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="ko_KR">
+            <Text>명예혁명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="ko_KR">
+            <Text>대각성</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="ko_KR">
+            <Text>개혁 운동</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="ko_KR">
+            <Text>민중 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="ko_KR">
+            <Text>민중 혁명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="ko_KR">
+            <Text>민족 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="ko_KR">
+            <Text>공화파 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="ko_KR">
+            <Text>왕권의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="ko_KR">
+            <Text>공화국의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="ko_KR">
+            <Text>왕권의 몰락</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="ko_KR">
+            <Text>헌정 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="ko_KR">
+            <Text>초원의 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="ko_KR">
+            <Text>해안의 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="ko_KR">
+            <Text>심장부의 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="ko_KR">
+            <Text>동서 교회의 분열</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="ko_KR">
+            <Text>성스러운 분열</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="ko_KR">
+            <Text>성전의 분열</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="ko_KR">
+            <Text>속주의 분열</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="ko_KR">
+            <Text>종교개혁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="ko_KR">
+            <Text>반종교개혁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 종교개혁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="ko_KR">
+            <Text>종교 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="ko_KR">
+            <Text>이단의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="ko_KR">
+            <Text>예언자의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="ko_KR">
+            <Text>종교적 격변</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="ko_KR">
+            <Text>신앙의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="ko_KR">
+            <Text>정통 교리의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="ko_KR">
+            <Text>신성 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="ko_KR">
+            <Text>신도들의 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="ko_KR">
+            <Text>예언자들의 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="ko_KR">
+            <Text>성상 파괴 논쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="ko_KR">
+            <Text>성전의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="ko_KR">
+            <Text>순례자 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="ko_KR">
+            <Text>북방의 종교개혁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="ko_KR">
+            <Text>동방의 종교개혁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="ko_KR">
+            <Text>변경의 이단</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="ko_KR">
+            <Text>속주의 이단</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="ko_KR">
+            <Text>초원의 이단</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="ko_KR">
+            <Text>해안의 이단</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="ko_KR">
+            <Text>심장부의 이단</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="ko_KR">
+            <Text>격변의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="ko_KR">
+            <Text>동란의 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="ko_KR">
+            <Text>제국의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="ko_KR">
+            <Text>개혁의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="ko_KR">
+            <Text>위기</Text>
         </Replace>
     </LocalizedText>
 </Database>
