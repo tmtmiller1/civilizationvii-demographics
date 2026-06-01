@@ -451,6 +451,27 @@ function collectMet(ctx, id, p) {
 }
 
 /**
+ * Spoiler guard. When the LOCAL player has definitively NOT met this civ
+ * (`ctx.met === false`), clear the diplomacy / influence / relations fields so
+ * the line charts elide (render a gap) rather than leak an unmet civ's
+ * reputation, influence yield, and deal activity. Yields / score / military /
+ * etc. are intentionally left intact — this gate is scoped to the diplomacy
+ * family per the remediation plan. The local player is always `met === true`
+ * and is never gated; `met === undefined` (couldn't determine) is left intact
+ * to avoid spurious gaps on confirmed-met civs during transient API gaps.
+ * @param {PlayerCtx} ctx The assembled context.
+ * @returns {void}
+ */
+function gateUnmetDiplomacy(ctx) {
+  if (ctx.met !== false) return;
+  ctx.yieldDiplomacy = undefined;
+  ctx.ongoingDealsCount = undefined;
+  ctx.diplomaticApproval = undefined;
+  ctx.diplomaticApprovalMajor = undefined;
+  ctx.diplomaticApprovalCS = undefined;
+}
+
+/**
  * Read the RAW leaderType / civilizationType off the player handle (numeric
  * hash on most builds; sometimes a "LEADER_*"/"CIVILIZATION_*" string) and
  * store them on `ctx`.
@@ -1681,6 +1702,10 @@ export function buildPlayerCtx(id) {
 
   // ── Resources assigned by class ────────────────────────────────────
   collectResourceCategories(ctx, id, p);
+
+  // ── Spoiler guard: drop diplomacy-family fields for civs the local
+  //    player hasn't met (must run after every diplomacy collector). ──
+  gateUnmetDiplomacy(ctx);
 
   return ctx;
 }
