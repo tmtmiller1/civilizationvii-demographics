@@ -65,9 +65,10 @@ A runtime decorator watches the native Legacies → Triumphs popup and adds a pr
 ## Compatibility
 
 - No vanilla game files are overwritten.
-- Per-save history data is stored in the local player's `Tutorial` property bag.
+- Per-save history data is stored in the local player's `Tutorial` property bag (within an age/session; it does not carry across age transitions).
 - The Triumphs decorator only appends UI elements to existing cards.
 - Defensive accessors are used throughout so schema drift produces missing data instead of crashes.
+- Designed and tested for single-player. Diplomacy, influence, and relations figures for civilizations the local player has not yet met are withheld (the charts show a gap, not a value), so the dashboard does not reveal hidden information. In multiplayer the screen is not access-controlled by the mod — a host who wants to prevent any incidental information advantage should gate or disable it.
 
 ## Credits
 
