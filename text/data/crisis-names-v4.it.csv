@@ -42,7 +42,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,La peste di Galeno,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,La grande pestilenza,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,La grande moria,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,La grande febbre,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,Il grande flagello,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Perishing,Il Grande Trapasso,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,Gli anni della peste,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,Il tempo della morte,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,Il tempo della pestilenza,1
@@ -72,7 +72,7 @@ ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,La grande pestilenza,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,Gli anni delle ceneri,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,Il morbo invernale,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,La peste devastatrice,1
-ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Il grande flagello,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Il Grande Trapasso,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,La morte silenziosa,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,Le guerre servili,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,Le guerre civili,1
@@ -90,7 +90,7 @@ ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,La crisi dell'autorità,
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,Il crollo dell'autorità,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,La grande frattura,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,La grande scissione,1
-ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,I disordini,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Unrest,La Grande Agitazione,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,La rivolta dei soldati,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,La guerra dei pretendenti,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,La guerra di successione,1
@@ -194,7 +194,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,La morte nera,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,La grande pestilenza,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,La grande moria,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,La grande febbre,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,Il grande flagello,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Perishing,Il Grande Trapasso,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,Il tempo della pestilenza,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,Gli anni della mortalità,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,La febbre sudorifera,1
@@ -220,7 +220,7 @@ EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,La morte nera,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,La grande moria,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,La peste della costa,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,La grande pestilenza,1
-EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Il grande flagello,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Il Grande Trapasso,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,Gli anni delle ceneri,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,La febbre sudorifera,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,La peste devastatrice,1

@@ -42,7 +42,7 @@ ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague of Galen,Die Pest des Galen,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Pestilence,Die große Pest,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Mortality,Die große Sterblichkeit,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Fever,Das große Fieber,1
-ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Dying,Das große Sterben,1
+ANTIQUITY_CRISIS_PLAGUE,name,,,The Great Perishing,Das große Verderben,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Plague Years,Die Pestjahre,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Dying Time,Die Zeit des Sterbens,1
 ANTIQUITY_CRISIS_PLAGUE,name,,,The Time of Pestilence,Die Zeit der Pest,1
@@ -72,7 +72,7 @@ ANTIQUITY_CRISIS_PLAGUE,arc,arc2,3,,Die große Pest,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc2,4,,Die Jahre des Verfalls,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,1,,Die Winterseuche,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,2,,Die verheerende Pest,1
-ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Das große Sterben,1
+ANTIQUITY_CRISIS_PLAGUE,arc,arc3,3,,Das große Verderben,1
 ANTIQUITY_CRISIS_PLAGUE,arc,arc3,4,,Der stille Tod,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Servile Wars,Die Sklavenkriege,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Civil Wars,Die Bürgerkriege,1
@@ -90,7 +90,7 @@ ANTIQUITY_CRISIS_LOYALTY,name,,,The Crisis of Authority,Die Krise der Staatsgewa
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Collapse of Authority,Der Zusammenbruch der Staatsgewalt,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Fracturing,Die große Zersplitterung,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Sundering,Die Spaltung,1
-ANTIQUITY_CRISIS_LOYALTY,name,,,The Troubles,Die Wirren,1
+ANTIQUITY_CRISIS_LOYALTY,name,,,The Great Unrest,Die große Unruhe,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Soldier's Revolt,Der Soldatenaufstand,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The Pretenders' War,Der Krieg der Thronräuber,1
 ANTIQUITY_CRISIS_LOYALTY,name,,,The War of Succession,Der Erbfolgekrieg,1
@@ -194,7 +194,7 @@ EXPLORATION_CRISIS_PLAGUE,name,,,The Black Death,Der Schwarze Tod,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Pestilence,Die große Pest,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Mortality,Die große Sterblichkeit,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Great Fever,Das große Fieber,1
-EXPLORATION_CRISIS_PLAGUE,name,,,The Great Dying,Das große Sterben,1
+EXPLORATION_CRISIS_PLAGUE,name,,,The Great Perishing,Das große Verderben,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Time of Pestilence,Die Zeit der Pest,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Years of Mortality,Die Jahre der Sterblichkeit,1
 EXPLORATION_CRISIS_PLAGUE,name,,,The Sweating Sickness,Die Schweißkrankheit,1
@@ -220,7 +220,7 @@ EXPLORATION_CRISIS_PLAGUE,arc,arc1,3,,Der Schwarze Tod,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc1,4,,Die große Sterblichkeit,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,1,,Die Pest der Küste,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,2,,Die große Pest,1
-EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Das große Sterben,1
+EXPLORATION_CRISIS_PLAGUE,arc,arc2,3,,Das große Verderben,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc2,4,,Die Jahre des Verfalls,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,1,,Die Schweißkrankheit,1
 EXPLORATION_CRISIS_PLAGUE,arc,arc3,2,,Die verheerende Pest,1
