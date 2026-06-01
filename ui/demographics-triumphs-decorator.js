@@ -83,6 +83,10 @@ function derr(...a) {
 
 /** @type {Map<string, LegacyRow> | null} Cached localized-name → legacy-row map. */
 let _nameToRow = null;
+/** @type {Map<string, LegacyRow> | null} Cached LegacyType → row map. */
+let _legacyTypeToRow = null;
+/** @type {boolean} One-time probe status log guard. */
+let _stableIdProbeLogged = false;
 
 /**
  * Compose a legacy row's display name through `Locale`, falling back to the raw
@@ -152,6 +156,56 @@ function buildNameToRow() {
     derr("buildNameToRow:", /** @type {any} */ (e)?.message);
   }
   return _nameToRow;
+}
+
+/**
+ * Index every legacy row by its uppercased `LegacyType` into `map`.
+ * @param {Map<string, LegacyRow>} map Map to populate.
+ * @returns {void}
+ */
+function _indexLegaciesByType(map) {
+  for (const row of GameInfo.Legacies) {
+    const lt = row?.LegacyType;
+    if (typeof lt === "string" && lt.length > 0) map.set(lt.toUpperCase(), row);
+  }
+}
+
+/**
+ * Alias `_RACE` keys to their paired non-race base row when present (the base
+ * row carries per-civ progress; the `_RACE` row returns null progress).
+ * @param {Map<string, LegacyRow>} map Type map to alias in place.
+ * @returns {void}
+ */
+function _aliasRaceKeys(map) {
+  for (const [k, row] of Array.from(map.entries())) {
+    if (!/_RACE$/.test(k)) continue;
+    const base = k.replace(/_RACE$/, "");
+    const paired = map.get(base);
+    if (paired) map.set(k, paired);
+    else map.set(base, row);
+  }
+}
+
+/**
+ * Build (and cache) the `LegacyType` → `GameInfo.Legacies` row map.
+ *
+ * `_RACE` rows often share a name with a paired non-race row, but only the
+ * non-race row typically yields meaningful per-civ progress. For robustness,
+ * map a race key to its paired non-race row when the pair exists.
+ * @returns {Map<string, LegacyRow>} LegacyType map (possibly empty).
+ */
+function buildLegacyTypeToRow() {
+  if (_legacyTypeToRow) return _legacyTypeToRow;
+  _legacyTypeToRow = new Map();
+  try {
+    if (typeof GameInfo === "undefined" || !GameInfo.Legacies) return _legacyTypeToRow;
+    _indexLegaciesByType(_legacyTypeToRow);
+    _aliasRaceKeys(_legacyTypeToRow);
+    dlog("legacyTypeToRow built; entries=" + _legacyTypeToRow.size);
+  } catch (e) {
+    derr("buildLegacyTypeToRow:", /** @type {any} */ (e)?.message);
+  }
+  return _legacyTypeToRow;
 }
 
 /**
@@ -499,6 +553,89 @@ function resolveRowForTitle(map, rawText, titleText) {
 }
 
 /**
+ * Add possible `LegacyType` tokens from a string to `out`.
+ * @param {Set<string>} out Token sink.
+ * @param {unknown} value Candidate string value.
+ * @returns {void}
+ */
+function collectLegacyTokens(out, value) {
+  if (typeof value !== "string") return;
+  const text = value.trim();
+  if (!text) return;
+  const parts = text.split(/[^A-Za-z0-9_]+/);
+  for (const raw of parts) {
+    const token = raw.toUpperCase();
+    if (token.length < 6) continue;
+    if (!token.includes("_")) continue;
+    if (!/^[A-Z0-9_]+$/.test(token)) continue;
+    out.add(token);
+  }
+}
+
+/**
+ * Gather possible stable `LegacyType` tokens from a native triumph-card DOM node.
+ * Scans card attrs/dataset/classes and descendants for machine-like identifiers.
+ * @param {HTMLElement} card Triumph card element.
+ * @returns {string[]} Unique uppercase candidate tokens.
+ */
+function gatherCardLegacyTypeCandidates(card) {
+  const out = new Set();
+  /** @param {Element | null | undefined} el */
+  const scanElement = (el) => {
+    if (!el) return;
+    for (const attr of Array.from(el.attributes || [])) {
+      collectLegacyTokens(out, attr.name);
+      collectLegacyTokens(out, attr.value);
+    }
+    for (const cls of Array.from(el.classList || [])) {
+      collectLegacyTokens(out, cls);
+    }
+    const ds = /** @type {Record<string, unknown>} */ (
+      /** @type {HTMLElement} */ (el).dataset || {}
+    );
+    for (const [k, v] of Object.entries(ds)) {
+      collectLegacyTokens(out, k);
+      collectLegacyTokens(out, v);
+    }
+  };
+
+  scanElement(card);
+  const nodes = card.querySelectorAll("*");
+  const limit = Math.min(nodes.length, 120);
+  for (let i = 0; i < limit; i++) {
+    scanElement(nodes[i]);
+  }
+  return Array.from(out);
+}
+
+/**
+ * Attempt to resolve a legacy row from stable identifier hints embedded in the
+ * card DOM (attributes/classes/dataset). Falls back to `undefined` when no
+ * stable hint maps to a known `LegacyType`.
+ * @param {HTMLElement} card Triumph card element.
+ * @param {Map<string, LegacyRow>} typeMap LegacyType → row map.
+ * @returns {{ row: LegacyRow, token: string } | undefined} Resolved row + token.
+ */
+function resolveRowForCardIdentity(card, typeMap) {
+  const tokens = gatherCardLegacyTypeCandidates(card);
+  for (const tok of tokens) {
+    const hit = typeMap.get(tok);
+    if (hit) {
+      if (!_stableIdProbeLogged) {
+        _stableIdProbeLogged = true;
+        derr("stable-id probe: found native token", tok);
+      }
+      return { row: hit, token: tok };
+    }
+  }
+  if (!_stableIdProbeLogged) {
+    _stableIdProbeLogged = true;
+    derr("stable-id probe: no native LegacyType token found; using title fallback");
+  }
+  return undefined;
+}
+
+/**
  * Create the outer progress box container with its inline styling.
  * @returns {HTMLElement} The styled container `<div>`.
  */
@@ -652,6 +789,21 @@ function fillProgressBox(box, progress) {
 }
 
 /**
+ * Stamp diagnostic `data-demographics-*` attributes recording how the card's
+ * legacy was resolved (stable-id vs title-fallback).
+ * @param {DecoratableCard} card The card.
+ * @param {LegacyRow} row The resolved legacy row.
+ * @param {{ token?: string } | null | undefined} identityHit Stable-id hit, if any.
+ * @returns {void}
+ */
+function markCardProbe(card, row, identityHit) {
+  card.setAttribute("data-demographics-legacy-probe", identityHit ? "stable-id" : "title-fallback");
+  card.setAttribute("data-demographics-legacy-type", String(row.LegacyType || ""));
+  if (identityHit?.token) card.setAttribute("data-demographics-legacy-token", identityHit.token);
+  else card.removeAttribute("data-demographics-legacy-token");
+}
+
+/**
  * Decorate a single native triumph card with the per-civ progress block.
  * Resolves the legacy from the card title, marks the card decorated to guard
  * against Solid re-renders, then builds and appends the bars block.
@@ -661,14 +813,19 @@ function fillProgressBox(box, progress) {
 function decorateCard(card) {
   if (!card || card._demographicsDecorated) return;
 
+  const typeMap = buildLegacyTypeToRow();
+  const identityHit = resolveRowForCardIdentity(card, typeMap);
+
   // Read the triumph title.
   const title = readCardTitle(card);
   if (!title) return;
   const { rawText, titleText } = title;
 
   const map = buildNameToRow();
-  const row = resolveRowForTitle(map, rawText, titleText);
+  const row = identityHit?.row || resolveRowForTitle(map, rawText, titleText);
   if (!row) return;
+
+  markCardProbe(card, row, identityHit);
 
   // Mark decorated FIRST so a Solid reactivity re-render doesn't double up.
   card._demographicsDecorated = true;
@@ -680,6 +837,7 @@ function decorateCard(card) {
       rawText +
       "' legacyType=" +
       row.LegacyType +
+      (identityHit ? " token=" + identityHit.token : " token=title-fallback") +
       " civsWithProgress=" +
       civs.length +
       " total=" +
