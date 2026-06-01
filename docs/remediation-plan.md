@@ -76,14 +76,14 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## P2 — Code-smell, maintainability, and "looks AI-generated"
 
-### 5. [ ] Strip reverse-engineered file:line citations from comments
+### 5. [x] Strip reverse-engineered file:line citations from comments
 - **Problem.** Comments reference engine paths and line numbers
   ("see model-diplo-ribbon.js:748-752", "gamecore-events.xml:148"). These
   rot on every patch and become disinformation in our own codebase.
 - **Action.** Replace with the *symbolic* hook ("accessor X on Y") or
   delete entirely. Sweep all `ui/*.js` files.
 
-### 6. [ ] Trim verbose JSDoc on internal helpers
+### 6. [x] Trim verbose JSDoc on internal helpers
 - **Problem.** Two-line helpers carry paragraph-length typed JSDoc. Reads
   as LLM-generated boilerplate.
 - **Action.** Reserve full JSDoc for module-exported surfaces. Keep one-line
@@ -107,14 +107,14 @@ critique pass. Items are grouped by audience and ordered by impact.
   "Sample cap approached; history downsampled past turn N to fit." Expose
   the current cap and decimation state in the Options panel.
 
-### 9. [ ] Kill-switch error reporting
+### 9. [x] Kill-switch error reporting
 - **Problem.** Three accessor throws → permanent silent unsubscribe.
   Masks real engine bugs.
 - **Action.** Log the *first* exception with full stack and the accessor
   name before incrementing the counter. Surface "Demographics paused due
   to engine errors" in the Options panel with a manual re-enable button.
 
-### 10. [ ] Relations graph — cache edges, re-filter on toggle (perf)
+### 10. [x] Relations graph — cache edges, re-filter on toggle (perf)
 - **Problem.** Every filter-pill toggle calls `rs.repaint()` →
   `computeRingData` → `buildCivEdges`, which re-queries the engine from
   scratch: a full O(n²) `getRelationshipEnum` attitude pass plus a per-active
@@ -175,11 +175,18 @@ critique pass. Items are grouped by audience and ordered by impact.
   Counter-Reformation, Iconoclast, Glorious Revolution, Spring of Nations
   vocabulary. Applied to any civ in any region, this flattens.
 - **Actions.**
-  - Add equivalent name pools rooted in East/South Asian, African,
-    Mesoamerican, and Islamic-world historical vocabulary.
+  - Add at least 3 non-European alternatives per crisis family, with one
+    pool each for East/South Asian, African, Mesoamerican, and
+    Islamic-world historical vocabulary.
+  - Keep the existing English keys and add new `LOC_DEMOGRAPHICS_CRISIS_*`
+    entries rather than hardcoding region-specific strings in JS.
   - Tag pools by civ/region affinity if the engine permits; otherwise
     expand the shared pool with diverse entries so the RNG can pick
     region-appropriate names.
+  - Verify the resulting set still produces deterministic keys for a fixed
+    seed and does not reduce the number of crisis variants available in
+    the current English build.
+- **Files.** `ui/screen-demographics/chart-line.js`, `text/<lang>/ModText.xml`
 
 ### 12. [~] Crisis/war-name sensitivity audit — partially done
 - **Problem.** Procedurally combined names risk (a) per-locale phrasing
@@ -202,6 +209,10 @@ critique pass. Items are grouped by audience and ordered by impact.
   (es, fr, pt, zh) for the 4 newly-added crisis types (loyalty + the three
   Exploration crises); record the audit in a CSV header comment so future
   contributors know it was checked.
+- **Acceptance criteria.** The audit is complete when each touched locale
+  has a reviewed translation, the source CSVs note the review date or
+  reviewer, and no newly added phrase reintroduces a direct real-world
+  atrocity reference or a locale-specific offensive term.
 
 ### 13. [x] Credits — keep attribution clean
 - **Context.** Lineage from robk (Civ V Demographics), Gedemon (CivGraphs),
@@ -213,16 +224,22 @@ critique pass. Items are grouped by audience and ordered by impact.
 
 ## P4 — Optional / nice-to-have
 
-### 14. [ ] Export-as-CSV / JSON button
-- Sidesteps the persistence problem entirely by letting players save a
-  run's history to disk before the age transition wipes it.
+### 14. [x] Export-as-CSV / JSON button (runtime-constrained)
+- **Constraint.** Civ VII GameFace in this UI context does not expose a
+  reliable true file-download path (`URL.createObjectURL` / `<a download>`),
+  so a disk-save export is not feasible from the mod panel.
+- **Implemented scope.** Keep the current clipboard-first CSV export
+  (`UI.setClipboardText`) with UI.log fallback for environments where
+  clipboard access is unavailable or blocked.
+- **Decision.** Treat this as complete for current engine capabilities; do
+  not chase a fake "Save As" UX that cannot actually write files.
 
-### 15. [ ] Replace FNV-1a fallback hash with a hard fail
+### 15. [x] Replace FNV-1a fallback hash with a hard fail
 - If `Database.makeHash` is missing, the mod should disable persistence
   and warn, not silently use a different hash that will desync from any
   future engine change.
 
-### 16. [ ] `localStorage.modSettings` shared-namespace defense
+### 16. [x] `localStorage.modSettings` shared-namespace defense
 - **Problem.** Settings live under a top-level `modSettings` key shared
   with any other mod. The current code already only writes our own
   sub-key (after an earlier regression that wiped siblings), but there is
@@ -243,7 +260,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   "legacy data written under the old GameTutorial-based code" — that
   fallback existed for the same dead migration and should be trimmed.
 
-### 18. [ ] Engine-event subscription lifecycle
+### 18. [x] Engine-event subscription lifecycle
 - **Problem.** Subscriptions to `PlayerTurnActivated`,
   `PlayerAgeTransitionComplete`, `BeforeAgeTransition`, and `BeforeUnload`
   are not all paired with explicit unsubscribes on the kill-switch path
@@ -256,7 +273,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   kill-switch path. Add a single `_teardown()` that drains them all.
 - **Files.** `ui/demographics-sampler.js`, `ui/demographics-storage.js`
 
-### 19. [ ] Save-bloat measurement
+### 19. [x] Save-bloat measurement
 - **Problem.** Cap + decimation are tuned by intuition. There is no
   measurement of actual serialized byte size per write.
 - **Action.** Add a one-shot console helper (e.g. `window.__demoSizeOf()`)
@@ -265,14 +282,14 @@ critique pass. Items are grouped by audience and ordered by impact.
   complaints quantitatively.
 - **Files.** `ui/demographics-storage.js` (helper); no shipped UI.
 
-### 20. [ ] README claims audit before release
+### 20. [x] README claims audit before release
 - **Action.** After #1 (Tutorial-bag downgrade) and any other
   user-visible behavior changes land, re-read `docs/README.md` and the
   Workshop short description top-to-bottom and strip anything stale
   (cross-age history claims, template-based crisis names, etc.).
 - **Files.** `docs/README.md`, `docs/steam-workshop-description-short.md`
 
-### 21. [ ] Promote `tooltipSafeTextColor` to a shared utility
+### 21. [x] Promote `tooltipSafeTextColor` to a shared utility
 - **Problem.** Civ-color text-on-color contrast logic lives only in the
   chart tooltip. Relations ring labels, Wars Gantt labels, and any
   future surface have the same problem and risk diverging implementations.
@@ -280,7 +297,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   (e.g. `ui/civ-color-utils.js`); refactor the tooltip and all other
   civ-color text surfaces to use it.
 
-### 22. [ ] `release.sh` exclusion audit
+### 22. [x] `release.sh` exclusion audit
 - **Problem.** After #3 excluded `text/data`, no one verified the rest
   of the exclusion list. One regex too loose and the Workshop zip ships
   `docs/`, `*.md`, `.DS_Store`, `node_modules/`, stray CSVs, etc.
@@ -289,7 +306,7 @@ critique pass. Items are grouped by audience and ordered by impact.
   entries.
 - **Files.** `release.sh`
 
-### 23. [ ] Minimal test harness
+### 23. [x] Minimal test harness
 - **Scope.** Two pure-function tests, ~30 lines total:
   - `flavorCrisisName(seed, type) → key` is deterministic across calls.
   - `_maybeDecimate(samples, cap)` preserves age-boundary turns and the
@@ -297,22 +314,86 @@ critique pass. Items are grouped by audience and ordered by impact.
 - **Action.** Add `tests/` with a Node-runnable script (no framework
   needed). Excluded from the shipped zip via #22.
 
+## P5 — Post-remediation audit findings
+
+### 24. [x] Rip out the debug-only first-row probe in the Triumphs decorator
+- **Problem.** `ui/demographics-triumphs-decorator.js` builds a `ProbeSample[]`
+  (`collectProbeSample` + the `logSamples` accumulator) on every first-row card
+  decoration, but the result only ever feeds a `DBG`-gated `dlog`. In shipped
+  builds (`DBG = false`) it allocates and does work for zero benefit.
+- **Action.** Remove the `ProbeSample` typedef, `collectProbeSample`, and the
+  `logSamples` accumulation — or gate the whole probe behind `DBG` so nothing is
+  built when off.
+- **Files.** `ui/demographics-triumphs-decorator.js`
+
+### 25. [x] Add a LICENSE file (README claims MIT)
+- **Problem.** `README.md` says "MIT. See LICENSE." but no `LICENSE` file exists
+  — a real hygiene/legal gap for a public Workshop release.
+- **Action.** Add an MIT `LICENSE` at the mod root, or drop the claim from the
+  README. The #22 allow-list already permits a `LICENSE` entry.
+- **Files.** `LICENSE` (new), `README.md`
+
+### 26. [ ] Split the `chart-line.js` monolith
+- **Problem.** `ui/screen-demographics/chart-line.js` is ~2,800 lines — the one
+  module that escaped the original modularization. It mixes series-building, the
+  seeded crisis-name generator, the wonder-markers chart plugin, axis/formatting,
+  and the render loop.
+- **Action.** Extract cohesive units into siblings (cleanest first cut: the
+  crisis-name generator → its own module; then the wonder-markers plugin).
+  Behavior-identical; verify tsc/eslint green after each split.
+- **Files.** `ui/screen-demographics/chart-line.js` (+ new siblings)
+
+### 27. [x] Make settings `DEFAULTS` the real schema (or document that it isn't)
+- **Problem.** `DEFAULTS` in `ui/demographics-settings.js` lists 8 keys, but ~25
+  settings are read via `getSetting(key, dflt)`. It works (call sites supply
+  defaults) but `DEFAULTS` looks like a single source of truth and isn't.
+- **Action.** Either complete `DEFAULTS` with every persisted key, or add a
+  comment stating call-site defaults are authoritative. Low priority.
+- **Files.** `ui/demographics-settings.js`
+
+### 28. [ ] macOS Workshop preview.png generation gap
+- **Problem.** `release.sh` renders `preview.png` from the SVG icon only when
+  `rsvg-convert` is present; on stock macOS it's skipped, so a Workshop upload
+  from a Mac ships without a preview image.
+- **Action.** Commit a prebuilt 512×512 `preview.png`, or surface the
+  `brew install librsvg` prerequisite more loudly in the release output. Low
+  priority.
+- **Files.** `release.sh` (+ a committed preview asset)
+
+### 29. [x] Move the item-23 test hook out of `chart-line.js`
+- **Problem.** `ui/screen-demographics/chart-line.js` now exports a
+  test-only `__testFlavorCrisisName` helper so the Node harness can hit the
+  production code path. That keeps the harness simple, but it also leaves a
+  test shim in a shipped module.
+- **Action.** Move the helper into a test-only module or a tiny harness shim,
+  then switch the Node test to import that path. Keep the production chart
+  module exporting only runtime surfaces.
+- **Files.** `ui/screen-demographics/chart-line.js`, `tests/remediation-23.mjs`
+
 ## Execution order
 
-1. P0/#1 (Tutorial bag honesty) — blocking for any further persistence work.
-2. P0/#2 (spoiler audit) — small surface, high reputational risk.
-3. P1/#3 (template tokens) — ✅ done (migrated crisis names to LOC keys).
-4. P2/#7 + P2/#8 (perfMode + decimation transparency) — paired cleanup.
-5. P1/#4 (locale tone pass) — mechanical.
-6. P2/#5, #6, #9, #10 — code-quality + perf sweep, can run in parallel.
-   (#5 should also trim the stale "legacy GameTutorial migration"
-   comment in `ui/demographics-storage.js` near line 341, flagged by #17.)
-7. P3/#11, #12, #13 — content review, requires external input. (#12
-   sensitivity scan + charged-name renames done; native pass on es/fr/pt/zh
-   still pending.)
-8. P4/#16, #18, #22 — pre-release hardening (settings defense, event
-   lifecycle audit, release.sh allow-list).
-9. P4/#14, #15, #19, #20, #21, #23 — defer / nice-to-have.
+1. ✅ P0/#1 — Tutorial-bag honesty.
+2. ✅ P0/#2 — spoiler guard (toggleable, display-time).
+3. ✅ P1/#3 — crisis names migrated to LOC keys.
+4. ✅ P2/#7 + #8 — perfMode removed; decimation transparency.
+5. ✅ P1/#4 — locale tone pass (all 10 locales).
+6. ✅ P2/#5, #6, #9, #10 — citation strip, JSDoc de-boilerplate, kill-switch
+   reporting, relations edge cache.
+7. P3 content — ✅ #13 (credits, no action); 🟡 #12 (sensitivity scans +
+   charged-name renames done; native-speaker pass on es/fr/pt/zh pending);
+   ☐ #11 (De-Europeanize crisis pools — content authoring).
+8. ✅ P4/#16, #18, #22 — settings defense, event-lifecycle audit, release.sh
+   allow-list.
+9. ✅ P4/#14, #15, #19, #20, #21, #23 — export, hash hard-fail, size helper,
+   README audit, color util, test harness.
+10. P5 — ✅ #24 (debug probe ripped), #25 (LICENSE), #27 (DEFAULTS documented),
+    #29 (crisis-names extracted; test-only export removed). ☐ #26 (finish the
+    chart-line split — #29 already moved the crisis-name generator out),
+    #28 (macOS preview.png).
+
+**Remaining open:** #11 (content authoring), #12 (native-speaker pass on
+es/fr/pt/zh), #26 (further chart-line split), #28 (preview.png). Everything else
+is complete.
 
 ## Out of scope
 
