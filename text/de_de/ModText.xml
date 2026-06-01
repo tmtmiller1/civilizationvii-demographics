@@ -17,13 +17,13 @@
             <Text>Punkte im Zeitverlauf</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="de_DE">
-            <Text>Live-Geschichte vom Sammler.</Text>
+            <Text>Verlauf Runde für Runde aufgezeichnet.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="de_DE">
             <Text>Schließen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="de_DE">
-            <Text>Hallo. Wenn Sie dies lesen können, funktioniert das System.</Text>
+            <Text>Historischer Überblick über die aktuelle Partie.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="de_DE">
             <Text>Punkte</Text>
@@ -518,7 +518,7 @@
             <Text>Filter {1_Label}</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="de_DE">
-            <Text>ⓘ BIP = Σ gewichtete Erträge × Runde × 1 Mio.  ·  für Erklärung den Mauszeiger darüber bewegen</Text>
+            <Text>ⓘ BIP: vergleichende Wirtschaftsschätzung  ·  für Details mit der Maus darüberfahren</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="de_DE">
             <Text>Bruttoinlandsprodukt</Text>
@@ -527,7 +527,7 @@
             <Text>&lt;p&gt;Ein pseudorealistischer Wert, der die Erträge einer Zivilisation pro Runde kombiniert, gewichtet danach, wie stark jeder Ertrag zu einer realen Wirtschaft beiträgt.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formel:&lt;/b&gt; Σ (Ertrag × Gewichtung) × Runde × 1.000.000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Gewichtungen&lt;/b&gt; (pro Ertragspunkt):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Gold&lt;/b&gt; — 1.0 (Währung = direkter Handel)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Produktion&lt;/b&gt; — 1.0 (industrielle Leistung)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Wissenschaft&lt;/b&gt; — 1.2 (Innovation summiert sich im Laufe der Zeit)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Kultur&lt;/b&gt; — 1.2 (Soft Power &amp; Tourismus)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Nahrung&lt;/b&gt; — 0.5 (Existenzsicherung; nur der Überschuss ist BIP-ähnlich)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Einfluss&lt;/b&gt; — 1.5 (diplomatischer / vertraglicher Hebel)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Warum mit der Runde multiplizieren?&lt;/b&gt; Reale Wirtschaften summieren sich: Eine Zivilisation in Runde 200 mit denselben Erträgen pro Runde wie eine Zivilisation in Runde 50 repräsentiert die 4-fache akkumulierte Wirtschaftsmasse.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Nur zur Darstellung — beeinflusst niemals den Spielzustand.&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="de_DE">
-            <Text>ⓘ Diplomatische Zustimmung = Σ beziehungsgewichtete Werte  ·  für Erklärung den Mauszeiger darüber bewegen</Text>
+            <Text>ⓘ Diplomatische Zustimmung: Zusammenfassung der Außenbeziehungen  ·  für Details mit der Maus darüberfahren</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="de_DE">
             <Text>Diplomatische Zustimmung — internationales Ansehen</Text>

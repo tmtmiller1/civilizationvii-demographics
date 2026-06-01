@@ -17,13 +17,13 @@
             <Text>分数随时间变化</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="zh_Hans_CN">
-            <Text>采样器实时历史。</Text>
+            <Text>逐回合记录的历史。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="zh_Hans_CN">
             <Text>关闭</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="zh_Hans_CN">
-            <Text>你好。如果你能看到这句话，系统正常。</Text>
+            <Text>当前对局的历史概览。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="zh_Hans_CN">
             <Text>分数</Text>
@@ -518,7 +518,7 @@
             <Text>{1_Label} 筛选</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="zh_Hans_CN">
-            <Text>ⓘ GDP = Σ 加权产出 × 回合 × 1M  ·  悬停查看说明</Text>
+            <Text>ⓘ GDP：比较经济估算  ·  悬停查看详情</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="zh_Hans_CN">
             <Text>国内生产总值</Text>
@@ -527,7 +527,7 @@
             <Text>&lt;p&gt;一个伪真实数值，综合一个文明的每回合产出，按各产出对真实经济的贡献程度加权。&lt;/p&gt;&lt;p&gt;&lt;b&gt;公式：&lt;/b&gt; Σ（产出 × 权重）× 回合 × 1,000,000&lt;/p&gt;&lt;p&gt;&lt;b&gt;权重&lt;/b&gt;（每点产出）：&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;金币&lt;/b&gt; — 1.0（货币 = 直接贸易）&lt;/li&gt;&lt;li&gt;&lt;b&gt;生产力&lt;/b&gt; — 1.0（工业产出）&lt;/li&gt;&lt;li&gt;&lt;b&gt;科学&lt;/b&gt; — 1.2（创新随时间复利累积）&lt;/li&gt;&lt;li&gt;&lt;b&gt;文化&lt;/b&gt; — 1.2（软实力与旅游业）&lt;/li&gt;&lt;li&gt;&lt;b&gt;食物&lt;/b&gt; — 0.5（维持生计；只有盈余才类似 GDP）&lt;/li&gt;&lt;li&gt;&lt;b&gt;影响力&lt;/b&gt; — 1.5（外交 / 条约筹码）&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;为何要乘以回合？&lt;/b&gt; 真实经济会复利累积：一个处于第 200 回合、与处于第 50 回合且每回合产出相同的文明相比，代表着 4 倍的累积经济总量。&lt;/p&gt;&lt;p&gt;&lt;i&gt;仅用于展示——绝不影响游戏状态。&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="zh_Hans_CN">
-            <Text>ⓘ 外交支持度 = Σ 关系加权分数  ·  悬停查看说明</Text>
+            <Text>ⓘ 外交支持：对外关系综览  ·  悬停查看详情</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="zh_Hans_CN">
             <Text>外交支持度——国际声誉</Text>
