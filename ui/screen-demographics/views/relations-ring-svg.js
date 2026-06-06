@@ -39,6 +39,7 @@ import {
  * Per-node display info resolved from history + engine lookups. Loose at the
  * engine boundary; the renderer reads these fields off `names[pid]`.
  * @typedef {Object} NodeInfo
+ * @property {number} [pid] Player id (stamped in by appendRingNode).
  * @property {string} [leaderName] Leader display name.
  * @property {string} [civName] Civilization display name.
  * @property {string} [leaderTypeString] Engine LeaderType string.
@@ -67,6 +68,8 @@ import {
  * @property {string} kind Either "leader" or "cs-icon".
  * @property {string} [leaderType] Engine LeaderType (leader portraits).
  * @property {string} [iconUrl] BLP icon url (cs-icon overlays).
+ * @property {number} [pid] Player id for click-to-focus.
+ * @property {boolean} [selected] Whether this node is in the active focus set.
  * @property {number} vbX X position in viewBox coords.
  * @property {number} vbY Y position in viewBox coords.
  * @property {number} vbR Node radius in viewBox coords.
@@ -140,12 +143,19 @@ function computeRingGeometry(ringIds) {
   // have headroom both above the top node AND below the bottom node.
   const viewBoxH = 100 + ovalT * 24; // 100..124
   const cx = viewBoxW / 2;
-  const cy = viewBoxH / 2;
+  // Lift the ring slightly ABOVE the viewBox midpoint for the major-civ tab
+  // (N <= 12) so the diagram reads as centered on the window rather than sitting
+  // low in the body region below the tab/header chrome. Oval/CS rings (N > 12)
+  // already fill the canvas, so they stay centered. Negative = up.
+  const cyBias = N <= 12 ? -4 : 0;
+  const cy = viewBoxH / 2 + cyBias;
 
   // Ring radius scales with node count so a few civs sit close to center
   // (more space for labels) while many civs spread out to use the canvas.
-  const ry = N <= 2 ? 18 : N <= 6 ? 36 : N <= 12 ? 40 : 38;
-  // rx grows past ry when ovalT > 0 — the wider viewBox is what gives
+  // Keep sparse major-civ rings a bit flatter vertically so the top node
+  // clears the relations header/tab chrome.
+  const ry = N <= 2 ? 18 : N <= 6 ? 32 : N <= 12 ? 40 : 38;
+  // rx grows past ry when ovalT > 0 - the wider viewBox is what gives
   // us room for a longer X axis.
   const rx = ry + ovalT * 38; // 42..80 at max oval
   const positions = ringPositions(ringIds, rx, ry, cx, cy);
@@ -203,7 +213,7 @@ function appendSolidEdge(svg, e, pa, pb, ox, oy) {
   line.setAttribute("y2", String(pb.y + oy));
   line.setAttribute("stroke", e.color || "#bfbfbf");
   // Uniform thickness + opacity across every edge on both rings. Per-edge
-  // overrides (e.width / e.opacity) are intentionally ignored — they made
+  // overrides (e.width / e.opacity) are intentionally ignored - they made
   // edge color the only signal a reader has to discriminate filter types.
   line.setAttribute("stroke-width", "0.6");
   line.setAttribute("stroke-opacity", "0.9");
@@ -236,7 +246,7 @@ function appendDashSeg(svg, color, x1, y1, x2, y2) {
 }
 
 /**
- * Render a dashed edge by synthesizing solid sub-line segments by hand —
+ * Render a dashed edge by synthesizing solid sub-line segments by hand -
  * Coherent's renderer ignores `stroke-dasharray` on `<line>`. Falls back to
  * a single solid line for bad / zero-length patterns.
  * @param {Element} svg The SVG root.
@@ -264,7 +274,7 @@ function appendDashedEdge(svg, e, pa, pb, dash) {
     .filter((n) => !isNaN(n) && n > 0);
   const color = e.color || "#bfbfbf";
   if (parts.length < 2) {
-    // Bad pattern — fall back to solid.
+    // Bad pattern - fall back to solid.
     appendSolidEdge(svg, e, pa, pb, 0, 0);
     return;
   }
@@ -400,6 +410,21 @@ function appendCsIndicator(svg, pos, info, isCs, r, portraitsToPlace) {
 }
 
 /**
+ * The node circle's stroke width: a base by node kind, bumped when selected,
+ * scaled by ring density. Extracted to keep `appendNodeCircle` under the
+ * complexity cap.
+ * @param {boolean} isViewer Whether the node is the focus viewer.
+ * @param {boolean} isCs Whether the node is a city-state.
+ * @param {boolean} isSelected Whether the node is in the active focus set.
+ * @param {number} density The ring density factor.
+ * @returns {number} The stroke width in viewBox units.
+ */
+function nodeStrokeWidth(isViewer, isCs, isSelected, density) {
+  const base = isViewer ? 0.9 : isCs ? 0.7 : 0.5;
+  return (base + (isSelected ? 0.25 : 0)) * Math.max(density, 0.6);
+}
+
+/**
  * Append the node circle (and, for city-states, the inner color disc) for one
  * ring node, returning the chosen radius.
  * @param {Element} svg The SVG root.
@@ -408,11 +433,25 @@ function appendCsIndicator(svg, pos, info, isCs, r, portraitsToPlace) {
  * @param {boolean} isCs Whether the node is a city-state.
  * @param {boolean} isViewer Whether the node is the focus viewer.
  * @param {number} density The ring density factor.
+ * @param {number} id The node player id.
+ * @param {boolean} isSelected Whether this node is selected in focus mode.
+ * @param {((pid: number) => void) | undefined} onNodeToggle Click handler (may be undefined).
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue to push CS icons.
  * @returns {number} The node radius `r`.
  */
-function appendNodeCircle(svg, pos, info, isCs, isViewer, density, portraitsToPlace) {
-  // Viewer gets the larger node size — keeps the focus civ prominent.
+function appendNodeCircle(
+  svg,
+  pos,
+  info,
+  isCs,
+  isViewer,
+  density,
+  id,
+  isSelected,
+  onNodeToggle,
+  portraitsToPlace
+) {
+  // Viewer gets the larger node size - keeps the focus civ prominent.
   const baseR = isViewer ? 6.0 : isCs ? 4.0 : 5.0;
   const r = baseR * (isViewer ? Math.max(density, 0.65) : density);
 
@@ -424,12 +463,15 @@ function appendNodeCircle(svg, pos, info, isCs, isViewer, density, portraitsToPl
   // Fill = type color tinted at ~30%. Final scrub here is defense-in-depth.
   const { stroke, fill } = resolveNodeColors(info, isCs);
   circle.setAttribute("fill", fill);
-  circle.setAttribute("stroke", isViewer ? "#f3c34c" : stroke);
-  circle.setAttribute(
-    "stroke-width",
-    String((isViewer ? 0.9 : isCs ? 0.7 : 0.5) * Math.max(density, 0.6))
-  );
+  circle.setAttribute("stroke", isViewer || isSelected ? "#f3c34c" : stroke);
+  circle.setAttribute("stroke-width", String(nodeStrokeWidth(isViewer, isCs, isSelected, density)));
   if (isCs) circle.setAttribute("stroke-dasharray", "0.8 0.5");
+  if (typeof onNodeToggle === "function") {
+    circle.style.cursor = "pointer";
+    circle.addEventListener("click", () => {
+      onNodeToggle(id);
+    });
+  }
   svg.appendChild(circle);
 
   appendCsIndicator(svg, pos, info, isCs, r, portraitsToPlace);
@@ -444,9 +486,10 @@ function appendNodeCircle(svg, pos, info, isCs, isViewer, density, portraitsToPl
  * @param {{x: number, y: number}} pos Node position.
  * @param {number} r Node radius.
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
+ * @param {boolean} [isSelected] Whether this node is in the active focus set.
  * @returns {boolean} True when a portrait overlay was queued.
  */
-function queueLeaderPortrait(info, pos, r, portraitsToPlace) {
+function queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected) {
   const leaderType = info.leaderTypeString;
   try {
     if (
@@ -461,12 +504,20 @@ function queueLeaderPortrait(info, pos, r, portraitsToPlace) {
     }
   } catch (_) {
     // UI.getIconURL(leaderType, "LEADER") can throw at the engine boundary;
-    // ignore — the fxs-icon overlay below resolves the BLP itself.
+    // ignore - the fxs-icon overlay below resolves the BLP itself.
   }
   if (leaderType) {
-    // Defer placement — we position fxs-icon divs over the wrap in pixel
+    // Defer placement - we position fxs-icon divs over the wrap in pixel
     // coords once the SVG has laid out, so icons scale uniformly.
-    portraitsToPlace.push({ kind: "leader", leaderType, vbX: pos.x, vbY: pos.y, vbR: r });
+    portraitsToPlace.push({
+      kind: "leader",
+      leaderType,
+      pid: Number(info.pid),
+      selected: !!isSelected,
+      vbX: pos.x,
+      vbY: pos.y,
+      vbR: r
+    });
     return true;
   }
   return false;
@@ -542,23 +593,47 @@ function appendNodeLabel(svg, pos, r, cx, cy, density, viewBoxH, nm) {
  * @param {Record<string, NodeInfo>} names Node display-info map.
  * @param {number} localPid Local player id.
  * @param {number} viewerPid Focus viewer id.
+ * @param {Set<number> | undefined} selectedNodeIds Selected-node set (may be undefined).
+ * @param {((pid: number) => void) | undefined} onNodeToggle Click handler (may be undefined).
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
  */
-function appendRingNode(svg, id, geo, names, localPid, viewerPid, portraitsToPlace) {
+function appendRingNode(
+  svg,
+  id,
+  geo,
+  names,
+  localPid,
+  viewerPid,
+  selectedNodeIds,
+  onNodeToggle,
+  portraitsToPlace
+) {
   const pos = geo.positions.get(id);
   if (!pos) return;
   const isViewer = id === viewerPid;
-  const info = names[id] || {};
+  const info = Object.assign({}, names[id] || {}, { pid: id });
   const isCs = !!info.isCityState;
+  const isSelected = !!selectedNodeIds && selectedNodeIds.has(id);
 
-  const r = appendNodeCircle(svg, pos, info, isCs, isViewer, geo.density, portraitsToPlace);
+  const r = appendNodeCircle(
+    svg,
+    pos,
+    info,
+    isCs,
+    isViewer,
+    geo.density,
+    id,
+    isSelected,
+    onNodeToggle,
+    portraitsToPlace
+  );
   const nm = nodeDisplayName(info, id);
 
   // For MAJOR civs: render the leader portrait inside the node (same BLP the
   // factbook uses). CS nodes keep the type-icon / colored-disc path above.
   let renderedPortrait = false;
   if (!isCs) {
-    renderedPortrait = queueLeaderPortrait(info, pos, r, portraitsToPlace);
+    renderedPortrait = queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected);
   }
 
   // Initial-letter fallback. Skipped when we drew a portrait, or it's a CS
@@ -577,19 +652,31 @@ function appendRingNode(svg, id, geo, names, localPid, viewerPid, portraitsToPla
  * @param {number} contentLeft Letterboxed content left edge, px.
  * @param {number} contentTop Letterboxed content top edge, px.
  * @param {number} scale ViewBox→pixel scale.
+ * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
  */
-function appendPortraitDiv(wrap, p, contentLeft, contentTop, scale) {
+function appendPortraitDiv(wrap, p, contentLeft, contentTop, scale, onNodeToggle) {
   const px = contentLeft + p.vbX * scale;
   const py = contentTop + p.vbY * scale;
   const diameter = p.vbR * 2 * scale;
   const div = document.createElement("div");
   div.className = "demographics-relations-portrait";
+  // The leader portrait covers the node's SVG circle (whose stroke turns gold
+  // when selected), so the focus state must live on the portrait frame itself.
+  if (p.selected) div.classList.add("is-selected");
   // Pixel-coord placement + size are dynamic (computed from the letterboxed
   // viewBox); position:absolute and pointer-events live in the class.
   div.style.left = px - diameter / 2 + "px";
   div.style.top = py - diameter / 2 + "px";
   div.style.width = diameter + "px";
   div.style.height = diameter + "px";
+  if (typeof onNodeToggle === "function" && typeof p.pid === "number") {
+    const pid = p.pid;
+    div.style.pointerEvents = "auto";
+    div.style.cursor = "pointer";
+    div.addEventListener("click", () => {
+      onNodeToggle(pid);
+    });
+  }
   if (p.kind === "cs-icon") {
     // CS type-icon: a background-image div resolves `blp:` paths the same
     // way every other Civ7 UI surface does (the SVG `<image>` path didn't).
@@ -617,9 +704,10 @@ function appendPortraitDiv(wrap, p, contentLeft, contentTop, scale) {
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
  * @param {number} viewBoxW ViewBox width.
  * @param {number} viewBoxH ViewBox height.
+ * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
  * @returns {() => void} The placement routine.
  */
-function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
+function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH, onNodeToggle) {
   /**
    * Position every queued overlay, deferring a frame if layout isn't ready.
    */
@@ -634,7 +722,7 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
       rect = null;
     }
     if (!rect || rect.width === 0 || rect.height === 0) {
-      // Layout not ready yet — try again next frame.
+      // Layout not ready yet - try again next frame.
       if (typeof requestAnimationFrame === "function") {
         requestAnimationFrame(placePortraits);
       } else {
@@ -653,11 +741,28 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
     const contentTop = (rect.height - contentH) / 2;
 
     for (const p of portraitsToPlace) {
-      appendPortraitDiv(wrap, p, contentLeft, contentTop, scale);
+      appendPortraitDiv(wrap, p, contentLeft, contentTop, scale, onNodeToggle);
     }
     dlog("placed " + portraitsToPlace.length + " portraits " + "@scale=" + scale.toFixed(2));
   }
   return placePortraits;
+}
+
+/**
+ * Create the ring's root <svg>: a viewBox sized to the geometry with
+ * 'xMidYMid meet' (uniform scale + letterbox, so shapes stay proportional
+ * regardless of the element's pixel size). Extracted to keep `buildRingSvg`
+ * under the line cap.
+ * @param {number} viewBoxW ViewBox width.
+ * @param {number} viewBoxH ViewBox height.
+ * @returns {SVGElement} The configured SVG root (not yet mounted).
+ */
+function createRingSvgRoot(viewBoxW, viewBoxH) {
+  const svg = /** @type {SVGElement} */ (document.createElementNS(SVG_NS, "svg"));
+  svg.setAttribute("viewBox", "0 0 " + viewBoxW + " " + viewBoxH);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  svg.classList.add("demographics-relations-ring-svg");
+  return svg;
 }
 
 /**
@@ -670,10 +775,14 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH) {
  * @param {Edge[]} edges Edges to draw.
  * @param {number} localPid Local player id.
  * @param {number} [viewerPid] Focus viewer id (defaults to `localPid`).
+ * @param {{ selectedNodeIds?: Set<number>, onNodeToggle?: (pid: number) => void }} [options]
+ *   Optional selection config for node-focus interactions.
  * @returns {HTMLElement} The ring wrap element.
  */
-export function buildRingSvg(ringIds, names, edges, localPid, viewerPid) {
+export function buildRingSvg(ringIds, names, edges, localPid, viewerPid, options) {
   if (typeof viewerPid !== "number") viewerPid = localPid;
+  const selectedNodeIds = options?.selectedNodeIds;
+  const onNodeToggle = options?.onNodeToggle;
   const wrap = document.createElement("div");
   // position:relative is the positioning context for the pixel-placed portrait
   // overlays; it lives in the .demographics-relations-ring-wrap rule.
@@ -688,12 +797,7 @@ export function buildRingSvg(ringIds, names, edges, localPid, viewerPid) {
   const geo = computeRingGeometry(ringIds);
   const { viewBoxW, viewBoxH } = geo;
 
-  const svg = document.createElementNS(SVG_NS, "svg");
-  svg.setAttribute("viewBox", "0 0 " + viewBoxW + " " + viewBoxH);
-  // 'xMidYMid meet' = uniform scale + letterbox. Shapes inside the viewBox
-  // stay proportional regardless of the SVG element's pixel dimensions.
-  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-  svg.classList.add("demographics-relations-ring-svg");
+  const svg = createRingSvgRoot(viewBoxW, viewBoxH);
   wrap.appendChild(svg);
 
   if (ringIds.length === 0) {
@@ -713,11 +817,28 @@ export function buildRingSvg(ringIds, names, edges, localPid, viewerPid) {
 
   // Nodes.
   for (const id of ringIds) {
-    appendRingNode(svg, id, geo, names, localPid, viewerPid, portraitsToPlace);
+    appendRingNode(
+      svg,
+      id,
+      geo,
+      names,
+      localPid,
+      viewerPid,
+      selectedNodeIds,
+      onNodeToggle,
+      portraitsToPlace
+    );
   }
 
   // Place leader portraits as HTML overlays in PIXEL coords over the wrap.
-  const placePortraits = makePlacePortraits(wrap, svg, portraitsToPlace, viewBoxW, viewBoxH);
+  const placePortraits = makePlacePortraits(
+    wrap,
+    svg,
+    portraitsToPlace,
+    viewBoxW,
+    viewBoxH,
+    onNodeToggle
+  );
   // Defer until the wrap is in the DOM and laid out. The caller mounts the
   // wrap synchronously, so a single rAF is enough on first paint.
   if (typeof requestAnimationFrame === "function") {

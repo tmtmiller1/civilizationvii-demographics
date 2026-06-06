@@ -12,35 +12,40 @@ import {
   PALETTE,
   svgEl,
   appendEmptyNotice,
-  coerceKeySet
+  coerceKeySet,
+  hideUnmetEnabled,
+  isCivUnmet
 } from "/demographics/ui/screen-demographics/chart-shared.js";
 
 /**
  * @typedef {import("/demographics/ui/screen-demographics/chart-line.js").ChartOptions} ChartOptions
  */
 
-// Triumph radar — 6-axis polar chart, one polygon per civ. Reads
+// Triumph radar - 6-axis polar chart, one polygon per civ. Reads
 // triumphs_cultural / _diplomatic / _economic / _scientific / _militaristic
 // / _expansionist counts (Test-of-Time Legacies system). For the CURRENT
 // age, values are also live-pulled from `player.Legacies.isTriggered` so
 // progress reflects the engine state right now, not just the latest sample.
+// Labels are stored as LOC keys and translated at render time (see
+// drawRadarSpokes), not baked at module load - so they reflect the active
+// language even if the module loaded before Locale was ready.
 const LEGACY_AXES = [
   {
     id: "triumphs_militaristic",
-    label: t("LOC_DEMOGRAPHICS_ATTR_MILITARISTIC"),
+    labelKey: "LOC_DEMOGRAPHICS_ATTR_MILITARISTIC",
     angle: -Math.PI / 2
   }, // top
-  { id: "triumphs_economic", label: t("LOC_DEMOGRAPHICS_ATTR_ECONOMIC"), angle: -Math.PI / 6 }, // upper-right
-  { id: "triumphs_diplomatic", label: t("LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC"), angle: Math.PI / 6 }, // lower-right
-  { id: "triumphs_cultural", label: t("LOC_DEMOGRAPHICS_ATTR_CULTURAL"), angle: Math.PI / 2 }, // bottom
+  { id: "triumphs_economic", labelKey: "LOC_DEMOGRAPHICS_ATTR_ECONOMIC", angle: -Math.PI / 6 }, // upper-right
+  { id: "triumphs_diplomatic", labelKey: "LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC", angle: Math.PI / 6 }, // lower-right
+  { id: "triumphs_cultural", labelKey: "LOC_DEMOGRAPHICS_ATTR_CULTURAL", angle: Math.PI / 2 }, // bottom
   {
     id: "triumphs_scientific",
-    label: t("LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC"),
+    labelKey: "LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC",
     angle: (5 * Math.PI) / 6
   }, // lower-left
   {
     id: "triumphs_expansionist",
-    label: t("LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST"),
+    labelKey: "LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST",
     angle: (-5 * Math.PI) / 6
   } // upper-left
 ];
@@ -97,6 +102,19 @@ function radarCivName(src, pid) {
 }
 
 /**
+ * Read a snapshot row's per-axis triumph counts into a fresh zeroed values map.
+ * @param {Record<string, *>} row The snapshot row.
+ * @returns {Record<string, number>} The per-axis values.
+ */
+function radarValuesFromRow(row) {
+  const values = radarEmptyValues();
+  for (const k of RADAR_AXIS_KEYS) {
+    if (typeof row[k] === "number" && isFinite(row[k])) values[k] = row[k];
+  }
+  return values;
+}
+
+/**
  * Build the civ map from a frozen per-age legacy snapshot.
  * @param {Record<string, *>} snap The snapshot (pid → row).
  * @returns {Map<string, RadarCiv>} The civ map.
@@ -105,18 +123,22 @@ function loadRadarCivsFromSnapshot(snap) {
   /** @type {Map<string, RadarCiv>} */
   const out = new Map();
   let idx = 0;
-  for (const pid of Object.keys(snap)) {
+  for (const pid of Object.keys(snap || {})) {
     const row = snap[pid];
-    const values = radarEmptyValues();
-    for (const k of RADAR_AXIS_KEYS) {
-      if (typeof row[k] === "number" && isFinite(row[k])) values[k] = row[k];
-    }
+    if (!row || typeof row !== "object") continue;
+    // Prefer the civ's stored banner color so a civ keeps the SAME color in the
+    // frozen per-age view as in the live current-age view; palette is a fallback
+    // (older snapshots saved before primaryColor was stored).
+    const color =
+      typeof row.primaryColor === "string" && row.primaryColor.length > 0
+        ? row.primaryColor
+        : PALETTE[idx++ % PALETTE.length];
     out.set(pid, {
       pid,
       leaderType: String(row.leaderType ?? "pid:" + pid),
       name: radarCivName(row, pid),
-      color: PALETTE[idx++ % PALETTE.length],
-      values
+      color,
+      values: radarValuesFromRow(row)
     });
   }
   return out;
@@ -148,7 +170,7 @@ function loadRadarCivsCurrent(samples) {
 
 /**
  * Fold one civ's sample into the radar civ map (create-on-first-seen, then
- * take the per-axis max — triumph counts are non-decreasing per age).
+ * take the per-axis max - triumph counts are non-decreasing per age).
  * @param {Map<string, RadarCiv>} civs The civ map (mutated).
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  * @param {string} pid Player id key.
@@ -172,7 +194,7 @@ function foldRadarSample(civs, pidOrder, pid, ps) {
     civs.set(pid, civ);
     pidOrder.push(pid);
   }
-  // Take the MAX — triumph counts are non-decreasing per age.
+  // Take the MAX - triumph counts are non-decreasing per age.
   mergeMaxAxes(civ.values, m);
 }
 
@@ -226,7 +248,7 @@ function liveRadarPull(civs, pidOrder) {
   try {
     if (!legaciesApiAvailable()) return;
     for (const pid of Players.getAliveMajorIds()) {
-      const pl = typeof Players?.get === "function" ? Players.get(pid)?.Legacies : null;
+      const pl = typeof Players.get === "function" ? Players.get(pid)?.Legacies : null;
       if (!pl) continue;
       mergeLiveMajorTriumphs(civs, pidOrder, pid, tallyLiveTriumphs(pl));
     }
@@ -243,7 +265,8 @@ function legaciesApiAvailable() {
   return (
     typeof GameInfo !== "undefined" &&
     !!GameInfo.Legacies &&
-    typeof Players?.getAliveMajorIds === "function"
+    typeof Players !== "undefined" &&
+    typeof Players.getAliveMajorIds === "function"
   );
 }
 
@@ -287,10 +310,18 @@ function loadRadarCivs(opts, samples) {
       ? opts.history.legacySnapshots
       : {};
   const ageSource = typeof opts.ageSource === "string" ? opts.ageSource : "current";
-  if (ageSource !== "current" && snapshots[ageSource]) {
-    return loadRadarCivsFromSnapshot(snapshots[ageSource]);
+  const civs =
+    ageSource !== "current" && snapshots[ageSource]
+      ? loadRadarCivsFromSnapshot(snapshots[ageSource])
+      : loadRadarCivsCurrent(samples);
+  // Spoiler guard: drop polygons for civs the local player has not met (default
+  // on). The radar is a current-state snapshot, so an unmet civ is hidden whole.
+  if (hideUnmetEnabled()) {
+    for (const pid of Array.from(civs.keys())) {
+      if (isCivUnmet(samples, pid)) civs.delete(pid);
+    }
   }
-  return loadRadarCivsCurrent(samples);
+  return civs;
 }
 
 /**
@@ -337,7 +368,7 @@ function drawRadarGrid(svg, geo, scaleMax) {
       "stroke-width": "1.6"
     })
   );
-  // Concentric guide rings — one per integer count up to scaleMax; thinner
+  // Concentric guide rings - one per integer count up to scaleMax; thinner
   // stroke once past ~12 rings so the chart stays legible.
   const maxRings = Math.max(1, Math.ceil(scaleMax));
   const ringStrokeW = maxRings <= 12 ? 1 : maxRings <= 20 ? 0.8 : 0.6;
@@ -417,7 +448,7 @@ function drawRadarSpokes(svg, geo) {
       "stroke-width": "3",
       "paint-order": "stroke"
     });
-    lbl.textContent = a.label;
+    lbl.textContent = t(a.labelKey);
     svg.appendChild(lbl);
   });
 }
@@ -466,7 +497,7 @@ function buildRadarPoly(c, geo, scaleMax) {
   } else {
     polyPts = populated;
   }
-  // Shoelace area on the drawn polygon — larger shapes sort behind smaller.
+  // Shoelace area on the drawn polygon - larger shapes sort behind smaller.
   let area = 0;
   if (polyPts.length >= 3) {
     for (let i = 0; i < polyPts.length; i++) {
@@ -485,7 +516,7 @@ function buildRadarPoly(c, geo, scaleMax) {
  * @param {RadarGeometry} geo The radar geometry.
  */
 function drawRadarPolys(svg, polys, geo) {
-  // Pass 1 — translucent fills; Pass 2 — spokes; Pass 3 — outlines; Pass 4 —
+  // Pass 1 - translucent fills; Pass 2 - spokes; Pass 3 - outlines; Pass 4 -
   // vertex dots. Each pass runs over every poly so later passes sit on top.
   for (const p of polys) drawRadarPolyFill(svg, p);
   for (const p of polys) drawRadarPolySpokes(svg, p, geo);

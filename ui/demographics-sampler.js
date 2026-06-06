@@ -13,35 +13,46 @@
 // Players.getAliveMajorIds() is from base-standard/maps/assign-starting-plots.js.
 //
 // Accessor crib sheet (all under Resources/Base/modules):
-//   Stats.getNetYield(YieldTypes.YIELD_*)         — diplo-ribbon/model-diplo-ribbon.js
-//   Stats.numSettlements / settlementCap          — same file
-//   Stats.numCities / numTowns / totalPopulation  — same file
-//   Treasury.getGoldBalance() / goldBalance       — advice/advice-support.js
-//   Cities.getCities()                            — pre-existing
-//   city.getPurchasedPlots()                      — city-zoomer/city-zoomer.js
-//   Trade.countPlayerTradeRoutes()                — age-antiquity tutorial
-//   Game.Diplomacy.getPlayerEvents(playerId)      — diplomacy-actions panel
-//   player.Stats.getNumWonders(orig, currentAge)  — advice/advice-support.js
-//   player.Units.getUnitIds() + Units.get(id)     — age-antiquity tutorial
+//   Stats.getNetYield(YieldTypes.YIELD_*)         - diplo-ribbon/model-diplo-ribbon.js
+//   Stats.numSettlements / settlementCap          - same file
+//   Stats.numCities / numTowns / totalPopulation  - same file
+//   Treasury.getGoldBalance() / goldBalance       - advice/advice-support.js
+//   Cities.getCities()                            - pre-existing
+//   city.getPurchasedPlots()                      - city-zoomer/city-zoomer.js
+//   Trade.countPlayerTradeRoutes()                - age-antiquity tutorial
+//   Game.Diplomacy.getPlayerEvents(playerId)      - diplomacy-actions panel
+//   player.Stats.getNumWonders(orig, currentAge)  - advice/advice-support.js
+//   player.Units.getUnitIds() + Units.get(id)     - age-antiquity tutorial
 //   GameInfo.Unit_Stats[].Combat joined on UnitType
-//                                                  — civilopedia-sidebar-panels.js
+//                                                  - civilopedia-sidebar-panels.js
 //   FormationClass classifier (LAND_COMBAT / NAVAL / AIR → military)
-//                                                  — interface-mode-unit-selected.js
+//                                                  - interface-mode-unit-selected.js
 //   Techs.getTreeType() + Game.ProgressionTrees.getTree(pid, treeType).nodes
-//                                                  — tutorial/tutorial-support.js
+//                                                  - tutorial/tutorial-support.js
 //   Culture: analogous via player.Culture.getTreeType()
 //   ProgressionTreeNodeState.NODE_STATE_FULLY_UNLOCKED = "researched"
-//                                                  — tree-grid/tree-grid.js
+//                                                  - tree-grid/tree-grid.js
 
 import { METRICS } from "/demographics/ui/demographics-metrics.js";
 import DemographicsStorage from "/demographics/ui/demographics-storage.js";
 import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
 import {
   buildPlayerCtx,
+  buildMinorMilitaryCtx,
   getCurrentAgeType,
   resetAgeCaches
 } from "/demographics/ui/sampler-collectors.js";
 import { runWarTracker } from "/demographics/ui/sampler-wars.js";
+import {
+  getCumulativeCasualty,
+  getCumulativeRazed,
+  getCumulativeWarProd,
+  getCumulativeCityWarNet,
+  getCumulativeWarLand,
+  startWarEventTracker,
+  stopWarEventTracker,
+  seedWarEventsFromHistory
+} from "/demographics/ui/sampler-war-events.js";
 
 /**
  * The per-civ context object assembled by {@link buildPlayerCtx} (defined in
@@ -79,7 +90,7 @@ function getPollEveryNTurns() {
 
 // Track the last turn we actually recorded a snapshot on so the throttle
 // stays correct across (a) save/load round-trips and (b) settings changes
-// — we don't want the user to switch from "every 5 turns" to "every 2"
+// - we don't want the user to switch from "every 5 turns" to "every 2"
 // and immediately get a duplicate sample on the same turn.
 let lastSampledTurn = -1;
 /**
@@ -101,7 +112,6 @@ let DEMOGRAPHICS_DEBUG = false;
 /**
  * Verbose debug logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function vlog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
@@ -109,7 +119,6 @@ function vlog(...a) {
 /**
  * Informational logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function ilog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
@@ -117,7 +126,6 @@ function ilog(...a) {
 /**
  * Error logger; always emits.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function elog(...a) {
   console.error("[Demographics.sampler]", ...a);
@@ -128,29 +136,81 @@ let errorCount = 0;
 const KILL_THRESHOLD = 3;
 let disabled = false;
 let firstSampleSucceeded = false;
+let firstExceptionLogged = false;
 /** @type {*} */
 let handlerRef = null;
+/** @type {*} */
+let _ageHandlerRef = null;
+
+/** @type {{ label: string, stack: string } | null} */
+let firstException = null;
+
+/**
+ * Drain every sampler-owned engine subscription.
+ */
+function _teardown() {
+  if (typeof engine !== "undefined" && typeof engine.off === "function") {
+    try {
+      if (handlerRef) engine.off("PlayerTurnActivated", handlerRef);
+    } catch (e) {
+      vlog("engine.off PlayerTurnActivated threw:", /** @type {*} */ (e)?.message);
+    }
+    try {
+      if (_ageHandlerRef) engine.off("PlayerAgeTransitionComplete", _ageHandlerRef);
+    } catch (e) {
+      vlog("engine.off PlayerAgeTransitionComplete threw:", /** @type {*} */ (e)?.message);
+    }
+  }
+  handlerRef = null;
+  _ageHandlerRef = null;
+  stopWarEventTracker();
+}
+
+/**
+ * Build a full stack string from any thrown value.
+ * @param {*} err The thrown value.
+ * @returns {string} Best-effort stack/message text.
+ */
+function fullErrorStack(err) {
+  if (err && typeof err.stack === "string" && err.stack.length > 0) {
+    return err.stack;
+  }
+  if (err && typeof err.message === "string" && err.message.length > 0) {
+    return err.message;
+  }
+  try {
+    return String(err);
+  } catch (_) {
+    return "<unprintable error>";
+  }
+}
 
 /**
  * Increment the error counter and, once it reaches {@link KILL_THRESHOLD},
  * permanently disable sampling and unsubscribe for this session.
  * @param {string} label A label identifying where the error occurred.
  * @param {*} e The thrown error.
- * @returns {void}
  */
 function tripIfTooMany(label, e) {
+  if (!firstExceptionLogged) {
+    firstExceptionLogged = true;
+    firstException = { label, stack: fullErrorStack(e) };
+    elog("first sampler exception in accessor:", label, "\n" + firstException.stack);
+  }
   errorCount++;
   elog("error in", label, "errorCount=", errorCount, "/", KILL_THRESHOLD, "err:", e);
   if (errorCount >= KILL_THRESHOLD) {
     ilog("kill switch tripped, disabling sampling permanently for this session");
     disabled = true;
     try {
-      if (typeof engine !== "undefined" && typeof engine.off === "function" && handlerRef) {
-        engine.off("PlayerTurnActivated", handlerRef);
-        vlog("engine.off PlayerTurnActivated done");
-      }
+      _teardown();
     } catch (e2) {
       elog("engine.off threw during kill:", e2);
+    }
+    try {
+      DemographicsStorage.teardown?.();
+    } catch (e3) {
+      elog("DemographicsStorage.teardown threw during kill:", e3);
     }
   }
 }
@@ -210,6 +270,30 @@ function getAliveMajorIds() {
 }
 
 /**
+ * Get the list of alive MINOR (city-state / independent) player ids,
+ * defensively. Used to sample city-state war allies' military power.
+ * @returns {number[]} The minor ids, or an empty array on any failure.
+ */
+function getAliveMinorIds() {
+  return (
+    safeCall("Players.getAlive() minors", () => {
+      if (typeof Players === "undefined" || typeof Players.getAlive !== "function") return [];
+      const all = Players.getAlive() || [];
+      /** @type {number[]} */
+      const out = [];
+      for (const p of all) {
+        try {
+          if (p && p.isMinor === true && typeof p.id === "number") out.push(p.id);
+        } catch (_) {
+          // A stale handle's isMinor accessor can throw; skip that player.
+        }
+      }
+      return out;
+    }) || []
+  );
+}
+
+/**
  * Get a player library handle defensively.
  * @param {Pid} id The player id.
  * @returns {*} The player handle, or undefined.
@@ -245,7 +329,7 @@ export function safeNum(v) {
 
 // Crisis + age progress are GAME-WIDE, not per-player. We sample them once
 // per snapshot and stamp the value on every player's ctx so the existing
-// per-civ chart pipeline can plot them (every civ gets the same line — by
+// per-civ chart pipeline can plot them (every civ gets the same line - by
 // design, since crisis affects everyone in the age).
 // Try to identify the SPECIFIC age-crisis event the game rolled this run
 // (e.g. ANTIQUITY_CRISIS_PLAGUE vs ANTIQUITY_CRISIS_INVASION). The engine
@@ -286,7 +370,6 @@ function probeCrisisEventType() {
 /**
  * Read the crisis stage / trigger percents off Game.CrisisManager into `out`.
  * @param {GlobalAgeContext} out The context to mutate.
- * @returns {void}
  */
 function readCrisisManager(out) {
   const cm = typeof Game !== "undefined" ? Game.CrisisManager : null;
@@ -306,7 +389,6 @@ function readCrisisManager(out) {
  * `out.crisisStageMax`, so consumers can normalise.
  * @param {*} cm The Game.CrisisManager handle.
  * @param {GlobalAgeContext} out The context to mutate.
- * @returns {void}
  */
 function _readCrisisStageMax(cm, out) {
   if (typeof cm.getCrisisStageTriggerPercent !== "function") return;
@@ -326,7 +408,6 @@ function _readCrisisStageMax(cm, out) {
 /**
  * Read the age-progress percentage off Game.AgeProgressManager into `out`.
  * @param {GlobalAgeContext} out The context to mutate.
- * @returns {void}
  */
 function readAgeProgress(out) {
   const apm = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
@@ -450,6 +531,8 @@ function buildSnapshotPlayer(ctx, metrics) {
     primaryColor: ctx.primaryColor,
     secondaryColor: ctx.secondaryColor,
     met: ctx.met,
+    // Home continent (capital's landmass) for war-naming geography.
+    continent: ctx.continent,
     metrics,
     // List of ConstructibleType strings for completed wonders this civ owns
     // at this turn. Used by the chart's wonder-marker plugin to diff against
@@ -457,6 +540,96 @@ function buildSnapshotPlayer(ctx, metrics) {
     // we can show its icon, name and a tooltip).
     wonderTypes: Array.isArray(ctx.wonderTypes) ? ctx.wonderTypes : undefined
   };
+}
+
+/**
+ * Stamp the event-based war metrics onto a player's computed metrics for this
+ * sample: cumulative strength lost, settlements razed, production directed to
+ * war, net capture balance, and raw population.
+ * @param {Record<string, number>} metrics The computed metrics to augment.
+ * @param {number} pid The player id.
+ * @param {*} ctx The player sample context.
+ * @returns {void}
+ */
+function stampWarMetrics(metrics, pid, ctx) {
+  // Cumulative combat strength this civ has lost to unit kills (from the
+  // event-based casualty tracker). Monotonic; the war tooltip reads its
+  // increase over a war window as that side's true power lost.
+  metrics.milLostCum = getCumulativeCasualty(pid);
+  // Cumulative settlements permanently razed out from under this civ.
+  metrics.razedCum = getCumulativeRazed(pid);
+  // Cumulative production this civ directed to war (military units + buildings).
+  metrics.warProdCum = getCumulativeWarProd(pid);
+  // Net cities won-minus-lost via capture (founding excluded).
+  metrics.cityWarNetCum = getCumulativeCityWarNet(pid);
+  // Net territory (km²) won-minus-lost via capture - the land actually taken in
+  // war, unlike the Land Area line which also moves with peaceful expansion.
+  metrics.warLandCum = getCumulativeWarLand(pid);
+  // RAW total population (actual citizens). The line chart's `population`
+  // metric is a non-linear, turn-inflated "scaled millions" figure whose turn
+  // factor (1.009^turn) masks real drops - so war "population lost" is computed
+  // from this raw count instead.
+  if (typeof ctx.totalPopulation === "number" && isFinite(ctx.totalPopulation)) {
+    metrics.populationRaw = ctx.totalPopulation;
+  }
+}
+
+/**
+ * Sample every alive minor (city-state / independent) player's military power +
+ * cumulative power lost into a lightweight map, so the Conflicts views can show
+ * city-state war allies' strength over time. Returns null when there are none.
+ * @returns {Record<string, *> | null} pid -> { civName, leaderTypeString, primaryColor, metrics }, or null.
+ */
+function sampleMinors() {
+  const ids = getAliveMinorIds();
+  if (!ids.length) return null;
+  /** @type {Record<string, *>} */
+  const out = {};
+  for (const pid of ids) {
+    const ctx = buildMinorMilitaryCtx(pid);
+    out[pid] = {
+      civName: ctx.civName,
+      leaderTypeString: ctx.leaderTypeString,
+      primaryColor: ctx.primaryColor,
+      metrics: {
+        milpower: typeof ctx.militaryPower === "number" ? ctx.militaryPower : 0,
+        milLostCum: getCumulativeCasualty(pid)
+      }
+    };
+  }
+  return out;
+}
+
+/**
+ * High-resolution timestamp in ms (0 when unavailable). Used only for the
+ * per-sample performance log.
+ * @returns {number} The current time in ms.
+ */
+function perfNow() {
+  try {
+    return typeof performance !== "undefined" && performance.now ? performance.now() : 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+/**
+ * Log one sample's wall-clock cost, broken into work (majors + minors), the
+ * storage write, and the war tracker, plus the counts that drive each. Read
+ * these lines off the in-game log (UI.log) to gauge real performance on a save.
+ * @param {{ start: number, work: number, write: number, end: number }} t Phase timestamps.
+ * @param {{ players: number, minors: number, samples: number }} counts Size counts.
+ */
+function logSampleTiming(t, counts) {
+  ilog(
+    "perf doSample total=" + (t.end - t.start).toFixed(1) + "ms",
+    "(majors+minors=" + (t.work - t.start).toFixed(1) +
+      " write=" + (t.write - t.work).toFixed(1) +
+      " warTracker=" + (t.end - t.write).toFixed(1) + ")",
+    "players=" + counts.players,
+    "minors=" + counts.minors,
+    "storedSamples=" + counts.samples
+  );
 }
 
 /**
@@ -471,17 +644,21 @@ function doSample() {
     ilog("skip sample: too few alive players (", ids.length, ") at localTurn=", localTurn);
     return null;
   }
+  const tStart = perfNow();
   const globalAge = getGlobalAgeContext();
+  const ageType = getCurrentAgeType();
+  const chartTurn = computeChartTurn(ageType, localTurn);
   // Each sample is stamped with:
-  //   localTurn — Game.turn at sample time (age-local; resets per age)
-  //   age       — current age type
-  //   turn      — same as localTurn (no precomputed offset). The chart
+  //   localTurn - Game.turn at sample time (age-local; resets per age)
+  //   age       - current age type
+  //   chartTurn - monotonic chart-X turn persisted for stability when older
+  //               samples are capped/decimated
+  //   turn      - same as localTurn (no precomputed offset). The chart
   //               computes the GLOBAL X position at render time by
   //               walking all samples to build per-age offsets:
   //                 X(sample) = offsets[sample.age] + sample.localTurn
-  //               This is robust to any historical offset corruption —
+  //               This is robust to any historical offset corruption -
   //               we don't store stateful offsets that can drift.
-  const ageType = getCurrentAgeType();
   const turn = localTurn;
   // Capture the in-game date label for this turn so chart x-axis labels can
   // show e.g. "T-52 / 2725 BCE".
@@ -490,6 +667,7 @@ function doSample() {
   const snapshot = {
     turn,
     localTurn,
+    chartTurn,
     age: ageType,
     gameYear,
     crisisEventType: globalAge.crisisEventType,
@@ -504,30 +682,109 @@ function doSample() {
     ctx.crisisStage = globalAge.crisisStage;
     ctx.crisisStageMax = globalAge.crisisStageMax;
     const metrics = computeMetrics(ctx, turn);
+    stampWarMetrics(metrics, pid, ctx);
     players[pid] = buildSnapshotPlayer(ctx, metrics);
   }
+  // City-state / independent military power (+ power lost) for the Conflicts
+  // views; stored apart from `players` so the per-civ line charts never see it.
+  const minors = sampleMinors();
+  if (minors) snapshot.minors = minors;
+  const tWork = perfNow();
+  let storedSamples = 0;
   try {
-    DemographicsStorage.appendSample(snapshot);
-    ilog(
-      "appendSample OK localTurn=",
-      localTurn,
-      "age=",
-      ageType,
-      "players=",
-      Object.keys(players).length
-    );
+    const h = DemographicsStorage.appendSample(snapshot);
+    storedSamples = h && Array.isArray(h.samples) ? h.samples.length : 0;
   } catch (e) {
     tripIfTooMany("DemographicsStorage.appendSample", e);
   }
+  const tWrite = perfNow();
   runWarTracker(snapshot, turn);
+  const minorCount = minors ? Object.keys(minors).length : 0;
+  const counts = { players: Object.keys(players).length, minors: minorCount, samples: storedSamples };
+  logSampleTiming({ start: tStart, work: tWork, write: tWrite, end: perfNow() }, counts);
   return snapshot;
+}
+
+/**
+ * Compute a monotonic chart turn for the next sample.
+ *
+ * This value is persisted per sample and preferred by chart-axis mapping to
+ * avoid horizontal drift when older samples are decimated. Within the same
+ * age, spacing follows local-turn deltas; across age boundaries it advances by
+ * at least one turn and usually by the new age-local turn.
+ * @param {string | undefined} ageType The current age type.
+ * @param {number} localTurn The current age-local turn.
+ * @returns {number} Monotonic chart turn.
+ */
+function computeChartTurn(ageType, localTurn) {
+  const lt = positiveLocalTurn(localTurn);
+  /** @type {WarHistory | null} */
+  let h = null;
+  try {
+    h = /** @type {WarHistory} */ (DemographicsStorage.load());
+  } catch (_) {
+    return lt;
+  }
+  const samps = h && Array.isArray(h.samples) ? h.samples : [];
+  if (samps.length === 0) return lt;
+  const { chartTurn, age, localTurn: lastLocal } = lastSampleChartState(samps);
+  if (isSameAgeContinuation(age, ageType, lastLocal)) {
+    const delta = lt - (lastLocal ?? 0);
+    return chartTurn + (delta >= 0 ? delta : 1);
+  }
+  return chartTurn + Math.max(1, lt);
+}
+
+/**
+ * Coerce a value to a finite number, or null.
+ * @param {*} v The candidate value.
+ * @returns {number|null} The finite number, or null.
+ */
+function finiteOrNull(v) {
+  return typeof v === "number" && isFinite(v) ? v : null;
+}
+
+/**
+ * Resolve a positive, finite age-local turn, defaulting to 1.
+ * @param {*} localTurn The candidate local turn.
+ * @returns {number} A positive finite turn (>= 1).
+ */
+function positiveLocalTurn(localTurn) {
+  const n = finiteOrNull(localTurn);
+  return n !== null && n > 0 ? n : 1;
+}
+
+/**
+ * Extract the latest sample's chart-turn / age / local-turn. `turn` is the
+ * fallback for chartTurn and localTurn (legacy samples lacked those fields).
+ * @param {*[]} samps The (non-empty) sample stream.
+ * @returns {{ chartTurn: number, age: (string|null), localTurn: (number|null) }} The state.
+ */
+function lastSampleChartState(samps) {
+  const last = samps[samps.length - 1] || {};
+  const turn = finiteOrNull(last.turn);
+  const chartTurn = finiteOrNull(last.chartTurn) ?? turn ?? 0;
+  const localTurn = finiteOrNull(last.localTurn) ?? turn;
+  const age = typeof last.age === "string" ? last.age : null;
+  return { chartTurn, age, localTurn };
+}
+
+/**
+ * Whether the new turn continues the SAME age as the last sample (so the chart
+ * turn advances by the local-turn delta rather than starting a fresh age).
+ * @param {string|null} lastAge The last sample's age.
+ * @param {string|undefined} ageType The current age type.
+ * @param {number|null} lastLocal The last sample's local turn.
+ * @returns {boolean} True for a same-age continuation.
+ */
+function isSameAgeContinuation(lastAge, ageType, lastLocal) {
+  return !!(lastAge && ageType && lastAge === ageType && typeof lastLocal === "number");
 }
 
 /**
  * PlayerTurnActivated handler: samples the local player's turn, honoring the
  * kill switch and the configured polling cadence.
  * @param {*} data The event payload (carries `player`/`playerID`).
- * @returns {void}
  */
 function onPlayerTurnActivated(data) {
   if (disabled) return;
@@ -541,7 +798,7 @@ function onPlayerTurnActivated(data) {
     if (evtPid !== localId) return; // local-player only
 
     // Throttle by user-configured polling rate. Off-cadence turns are
-    // silently skipped — the in-game turn still advances, we just don't write
+    // silently skipped - the in-game turn still advances, we just don't write
     // a new snapshot. lastSampledTurn is updated below only on successful
     // capture so a missed sample (e.g. due to error) doesn't shift the
     // cadence.
@@ -563,7 +820,6 @@ function onPlayerTurnActivated(data) {
  * Bookkeeping after a successful sample: advance the cadence tracker and, on
  * the first success, downgrade log verbosity.
  * @param {number | undefined} curTurn The turn that was just sampled.
- * @returns {void}
  */
 function _noteSampleSucceeded(curTurn) {
   if (typeof curTurn === "number") lastSampledTurn = curTurn;
@@ -585,9 +841,6 @@ function _noteSampleSucceeded(curTurn) {
 //   - Cached current age (and the trees-by-age map) are stale; reset both.
 //   - Append { turn, age } to history.ageBoundaries (once per age, not per pid).
 //   - Force a sample now so the FIRST sample of the new age records the new civ.
-/** @type {*} */
-let _ageHandlerRef = null;
-
 /**
  * Clear the age + trees caches and re-read the current age type.
  * @returns {string | undefined} The new (re-read) age type.
@@ -611,7 +864,7 @@ function _ageBoundaryAlreadyRecorded(history, age, turn) {
   if (!Array.isArray(arr)) return false;
   // Same age + same age-local turn = same transition event (multiple pids
   // report it). We check `b.localTurn` (the age-local Game.turn) because
-  // `b.turn` was switched to a GLOBAL value for chart alignment — checking
+  // `b.turn` was switched to a GLOBAL value for chart alignment - checking
   // against that would always miss and we'd append a fresh boundary for every
   // per-pid transition event.
   return arr.some((b) => {
@@ -637,7 +890,7 @@ function _resolveFinishedAge(h, newAge, turn) {
     .sort((/** @type {*} */ a, /** @type {*} */ b) => (a.turn || 0) - (b.turn || 0));
   const idx = sorted.findIndex((/** @type {*} */ b) => b.age === newAge && b.turn === turn);
   if (idx > 0) return sorted[idx - 1].age;
-  return "AGE_ANTIQUITY"; // first transition — finishing antiquity
+  return "AGE_ANTIQUITY"; // first transition - finishing antiquity
 }
 
 /**
@@ -679,7 +932,11 @@ function _legacyRecordForPlayer(ps) {
     triumphs_expansionist: m.triumphs_expansionist || 0,
     leaderName: ps.leaderName,
     civName: ps.civName,
-    leaderType: ps.leaderType
+    leaderType: ps.leaderType,
+    // Stored so the legacy radar colors a civ the SAME in the frozen per-age
+    // view as in the live current-age view (radar falls back to a palette when
+    // an older snapshot lacks this).
+    primaryColor: ps.primaryColor
   };
 }
 
@@ -688,12 +945,11 @@ function _legacyRecordForPlayer(ps) {
  * age-end triumph snapshot, bumping the cumulative turn-offset bookkeeping.
  * @param {string | undefined} newAge The new age type.
  * @param {number} turn The age-local Game.turn at transition.
- * @returns {void}
  */
 function recordAgeBoundary(newAge, turn) {
   const h = /** @type {WarHistory} */ (DemographicsStorage.load());
   if (!newAge || _ageBoundaryAlreadyRecorded(h, newAge, turn)) return;
-  // Clear obsolete stored offset (no longer used — chart computes X at render
+  // Clear obsolete stored offset (no longer used - chart computes X at render
   // time from age + localTurn). This also gets rid of garbage values like
   // offset=235 baked into earlier corrupt saves.
   delete h.cumulativeTurnOffset;
@@ -703,7 +959,7 @@ function recordAgeBoundary(newAge, turn) {
     age: newAge
   });
   ilog("ageBoundary: recorded", newAge, "at localTurn=", turn);
-  // Snapshot per-civ TRIUMPH counts at this moment — values from the latest
+  // Snapshot per-civ TRIUMPH counts at this moment - values from the latest
   // sample for each civ are the age-end totals. Stored under
   // history.legacySnapshots[age] (the storage key is kept as `legacySnapshots`
   // for back-compat; the contained data is the new triumph-count shape).
@@ -730,7 +986,6 @@ function recordAgeBoundary(newAge, turn) {
  * PlayerAgeTransitionComplete handler: resets caches, records the age boundary
  * once, and re-samples immediately so the new civ name lands in history.
  * @param {*} data The event payload (carries `player`).
- * @returns {void}
  */
 function onPlayerAgeTransitionComplete(data) {
   if (disabled) return;
@@ -760,36 +1015,25 @@ function onPlayerAgeTransitionComplete(data) {
 /**
  * Tear down any stale subscriptions left over from a prior game session. Both
  * engine.off calls are safe no-ops if nothing was registered.
- * @returns {void}
  */
 function teardownStaleSubscriptions() {
-  if (typeof engine !== "undefined" && typeof engine.off === "function") {
-    try {
-      if (handlerRef) engine.off("PlayerTurnActivated", handlerRef);
-    } catch (e) {
-      vlog("engine.off PlayerTurnActivated (stale) threw:", /** @type {*} */ (e)?.message);
-    }
-    try {
-      if (_ageHandlerRef) engine.off("PlayerAgeTransitionComplete", _ageHandlerRef);
-    } catch (e) {
-      vlog("engine.off PlayerAgeTransitionComplete (stale) threw:", /** @type {*} */ (e)?.message);
-    }
-  }
+  _teardown();
 }
 
 /**
  * Reset every cross-load piece of sampler state to its fresh-game defaults and
  * seed the poll-cadence tracker from the most recent stored sample so a resume
  * kickoff doesn't re-record an already-stored turn.
- * @returns {void}
  */
 function resetSamplerState() {
   handlerRef = null;
   _ageHandlerRef = null;
-  // Clear any prior-session kill state — the new game deserves a fresh budget
+  // Clear any prior-session kill state - the new game deserves a fresh budget
   // of retries before we decide the sampler is broken.
   disabled = false;
   errorCount = 0;
+  firstExceptionLogged = false;
+  firstException = null;
   firstSampleSucceeded = false;
   // Seed the poll-cadence tracker from the most recent stored sample.
   try {
@@ -798,6 +1042,10 @@ function resetSamplerState() {
       const last = h.samples[h.samples.length - 1];
       if (last && typeof last.turn === "number") lastSampledTurn = last.turn;
     }
+    // Seed cumulative casualty totals from history so they survive a fresh JS
+    // process (full game restart) and the sampled milLostCum series stays
+    // monotonic across the load.
+    seedWarEventsFromHistory(h?.samples);
   } catch (_) {
     // DemographicsStorage.load() can throw before the player bag is ready; leave
     // lastSampledTurn at its default so the first turn samples normally.
@@ -809,7 +1057,6 @@ function resetSamplerState() {
  * GameTutorial properties have been deserialized (see startSampler comment),
  * so DemographicsStorage.load() reads the real persisted history rather than
  * clobbering it with a fresh first sample.
- * @returns {void}
  */
 function runKickoff() {
   try {
@@ -859,14 +1106,16 @@ function _storedSampleCount() {
 /**
  * Register the PlayerTurnActivated + PlayerAgeTransitionComplete handlers and
  * schedule the deferred resume kickoff. Assumes state has already been reset.
- * @returns {void}
  */
 function registerSamplerHandlers() {
   try {
+    _teardown();
     handlerRef = (/** @type {*} */ data) => onPlayerTurnActivated(data);
     engine.on("PlayerTurnActivated", handlerRef);
     _ageHandlerRef = (/** @type {*} */ data) => onPlayerAgeTransitionComplete(data);
     engine.on("PlayerAgeTransitionComplete", _ageHandlerRef);
+    // Begin event-based military casualty tracking for this (re)load.
+    startWarEventTracker();
     ilog(
       "subscribed to PlayerTurnActivated + PlayerAgeTransitionComplete",
       "(re-registered fresh on load, kill at",
@@ -880,14 +1129,14 @@ function registerSamplerHandlers() {
     // save's GameTutorial properties have been populated. If we sample before
     // that, DemographicsStorage.load() reads empty, we write a "fresh" first
     // sample, the save layer treats it as truth, and the real antiquity
-    // history persisted in the save file gets clobbered — the root cause of
+    // history persisted in the save file gets clobbered - the root cause of
     // "no antiquity persistence across the age transition" (age transition is
     // a save→load cycle and we've been racing the deserializer).
     if (typeof Loading !== "undefined" && typeof Loading.runWhenLoaded === "function") {
       ilog("startSampler: deferring kickoff until Loading.runWhenLoaded");
       Loading.runWhenLoaded(runKickoff);
     } else {
-      // Loading API unavailable — fall back to the timeout-based kickoff so we
+      // Loading API unavailable - fall back to the timeout-based kickoff so we
       // don't break in test contexts.
       ilog("startSampler: Loading.runWhenLoaded unavailable; using 250ms timeout fallback");
       setTimeout(runKickoff, 250);
@@ -902,10 +1151,9 @@ function registerSamplerHandlers() {
  * calls startSampler() again. The sampler MODULE is cached for the lifetime of
  * the Coherent JS process, so module-scope state persists into the new game.
  * That used to make us refuse to re-register, carry a stale handler ref, and
- * honor a kill switch from the previous game — silently stopping recording on
+ * honor a kill switch from the previous game - silently stopping recording on
  * the new save. We tear down stale subscriptions, reset every cross-load piece
  * of state, and always re-register fresh.
- * @returns {void}
  */
 export function startSampler() {
   teardownStaleSubscriptions();
@@ -924,6 +1172,36 @@ export function startSampler() {
  */
 export function isSamplerDisabled() {
   return disabled;
+}
+
+/**
+ * First exception captured by the kill-switch path this session.
+ * @returns {{ label: string, stack: string } | null} Accessor + stack, or null.
+ */
+export function getSamplerFirstException() {
+  return firstException;
+}
+
+/**
+ * Manually re-enable the sampler after a kill-switch trip.
+ * @returns {boolean} True when re-enabled or already active, false on failure.
+ */
+export function reenableSampler() {
+  if (!disabled) return true;
+  disabled = false;
+  errorCount = 0;
+  firstExceptionLogged = false;
+  firstException = null;
+  firstSampleSucceeded = false;
+  try {
+    DemographicsStorage.load?.();
+    registerSamplerHandlers();
+    return true;
+  } catch (e) {
+    disabled = true;
+    elog("reenableSampler failed:", e);
+    return false;
+  }
 }
 
 // On-demand sample so the modal can force a snapshot when it opens with

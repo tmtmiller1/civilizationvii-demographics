@@ -16,6 +16,7 @@ const ENGINE_GLOBALS = {
   Units: "readonly",
   Cities: "readonly",
   Constructibles: "readonly",
+  ProductionKind: "readonly",
   Modding: "readonly",
   UI: "readonly",
   Input: "readonly",

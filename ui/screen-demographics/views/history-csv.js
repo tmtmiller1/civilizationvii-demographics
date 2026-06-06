@@ -5,12 +5,12 @@
 // GameFace doesn't expose `URL.createObjectURL` or `<a download>`, so we route
 // through the engine's `UI.setClipboardText`
 // (cite: base-standard/ui-next/screens/pause-menu/pause-menu-model.js,
-//  269 — the pause menu uses this for the map seed). When clipboard isn't
+//  269 - the pause menu uses this for the map seed). When clipboard isn't
 // available, we fall back to writing the CSV to UI.log so it's still
 // recoverable.
 //
 // Either path now ends with a VISIBLE toast on the screen so the user sees
-// confirmation — the previous version succeeded silently and looked broken.
+// confirmation - the previous version succeeded silently and looked broken.
 
 import { t } from "/demographics/ui/demographics-i18n.js";
 
@@ -48,7 +48,7 @@ function showCsvToast(host, message, success) {
   }
   const toast = document.createElement("div");
   toast.className = "demographics-csv-toast";
-  // Success/failure tint is dynamic — the rest of the chrome lives in the
+  // Success/failure tint is dynamic - the rest of the chrome lives in the
   // .demographics-csv-toast rule.
   toast.style.borderColor = success ? "rgba(73,209,130,0.7)" : "rgba(213,94,0,0.7)";
   toast.style.color = success ? "#49d182" : "#D55E00";
@@ -66,7 +66,7 @@ function showCsvToast(host, message, success) {
 
 /**
  * Columns ordered SEMANTICALLY by category so related metrics sit next to each
- * other in a spreadsheet (was alphabetical — score next to settlements made no
+ * other in a spreadsheet (was alphabetical - score next to settlements made no
  * sense). Identity first, then highest-level signal (score), economy, yields,
  * military, science/culture, infrastructure, triumphs, resources, age systems.
  * Anything uncategorised falls into a tail bucket so new metrics are never
@@ -317,7 +317,7 @@ function buildCsvMetaHeader(history, rowByKey, metricCols) {
   /** @type {string[]} */
   const lines = [];
   // Lead the file with a UTF-8 BOM so Excel on Windows/macOS auto-detects
-  // the encoding — without it, "Hawai'i" / "José" / "Sayyida" import as
+  // the encoding - without it, "Hawai'i" / "José" / "Sayyida" import as
   // mojibake. Standard byte sequence: U+FEFF (3 UTF-8 bytes).
   lines.push("﻿# === Demographics CSV export ===");
   lines.push("# Mod: Demographics v1.0.0");
@@ -366,7 +366,7 @@ function writeCsvToClipboard(csv) {
       UI.setClipboardText(csv);
       clipboardOk = true;
     } else if (typeof UI !== "undefined" && typeof UI.setClipboardText === "function") {
-      // Older Civ7 builds didn't ship isClipboardAvailable() — try anyway.
+      // Older Civ7 builds didn't ship isClipboardAvailable() - try anyway.
       UI.setClipboardText(csv);
       clipboardOk = true;
     }
@@ -459,7 +459,7 @@ function buildCsvDocument(history) {
     return ta - tb || pa - pb;
   });
   // ── Metadata header ─────────────────────────────────────────────────
-  // `#`-prefixed lines — most importers honor them as comments (Excel
+  // `#`-prefixed lines - most importers honor them as comments (Excel
   // skips-on-import; Sheets reads as text; Pandas via comment='#').
   // Provenance + game context so an exported file remains analyzable
   // months later without remembering the game state.
@@ -488,7 +488,7 @@ function refuseOversizedCsv(host, sizeMB) {
 }
 
 /**
- * Dump the CSV to UI.log as a recoverable fallback — full dump under the soft
+ * Dump the CSV to UI.log as a recoverable fallback - full dump under the soft
  * limit, summary line above it (so the log writer isn't stalled).
  * @param {string} csv The full CSV text.
  * @param {number} lineCount Total CSV line count.

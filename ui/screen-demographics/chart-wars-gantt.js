@@ -17,225 +17,28 @@ import {
   resolveTurnRange,
   getXAxisMode,
   nearestByTurn,
-  buildStackTurnYears,
-  escapeHtml
+  buildStackTurnYears
 } from "/demographics/ui/screen-demographics/chart-shared.js";
+import { mergeWars } from "/demographics/ui/screen-demographics/chart-wars-merge.js";
+import {
+  majorsOnSide,
+  buildContinentMap,
+  buildWarNameOverrides,
+  warLabelText
+} from "/demographics/ui/screen-demographics/chart-wars-naming.js";
+import { renderWarTooltip } from "/demographics/ui/screen-demographics/chart-wars-tooltip.js";
+import {
+  CRISIS_STAGE_COLORS,
+  CRISIS_STAGE_LABELS,
+  crisisStageOnsets
+} from "/demographics/ui/screen-demographics/crisis-stage-data.js";
+import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/crisis-names.js";
 
-// Wars Gantt — one horizontal bar per war, stacked vertically by start turn.
+// Wars Gantt - one horizontal bar per war, stacked vertically by start turn.
 // X-axis = turn (with year ticks). Bars colored by the attacker's primary
 // color; named with the ordinal-style label the sampler generates.
 
-/**
- * Filter a roster to its major (non-city-state) civs.
- * @param {*[]} roster A war side's roster.
- * @returns {*[]} The major civs.
- */
-function majorsOnSide(roster) {
-  return (roster || []).filter((r) => r && !r.isCS);
-}
 
-// CIV_ADJECTIVE — civ display-name → grammatical adjective form. Covers every
-// base + DLC civ across all three ages; unknown civs fall back to a heuristic.
-/** @type {Record<string, string>} */
-const CIV_ADJECTIVE = {
-  // Antiquity
-  Aksum: "Aksumite",
-  Carthage: "Carthaginian",
-  Egypt: "Egyptian",
-  Greece: "Greek",
-  Han: "Han",
-  Khmer: "Khmer",
-  Maurya: "Mauryan",
-  Maya: "Mayan",
-  Mississippian: "Mississippian",
-  Persia: "Persian",
-  Rome: "Roman",
-  // Exploration
-  Abbasid: "Abbasid",
-  Chola: "Chola",
-  Hawaii: "Hawaiian",
-  Inca: "Incan",
-  Majapahit: "Majapahit",
-  Ming: "Ming",
-  Mongolia: "Mongol",
-  Mongol: "Mongol",
-  Norman: "Norman",
-  Normans: "Norman",
-  Shawnee: "Shawnee",
-  Songhai: "Songhai",
-  Spain: "Spanish",
-  // Modern
-  America: "American",
-  "United States": "American",
-  Buganda: "Bugandan",
-  France: "French",
-  Japan: "Japanese",
-  Korea: "Korean",
-  Meiji: "Meiji",
-  Mexico: "Mexican",
-  Mughal: "Mughal",
-  Prussia: "Prussian",
-  Qing: "Qing",
-  Russia: "Russian",
-  Siam: "Siamese",
-  Thailand: "Thai",
-  // Common DLC / wishlist
-  Aztec: "Aztec",
-  Babylonia: "Babylonian",
-  Britain: "British",
-  Byzantium: "Byzantine",
-  England: "English",
-  Ethiopia: "Ethiopian",
-  Germany: "German",
-  India: "Indian",
-  Israel: "Israeli",
-  Italy: "Italian",
-  Khazar: "Khazar",
-  Macedon: "Macedonian",
-  Maori: "Maori",
-  Netherlands: "Dutch",
-  Phoenicia: "Phoenician",
-  Poland: "Polish",
-  Portugal: "Portuguese",
-  Sumeria: "Sumerian",
-  Sweden: "Swedish",
-  Turkey: "Turkish",
-  Vietnam: "Vietnamese",
-  Zulu: "Zulu"
-};
-
-/**
- * Resolve a civ's adjective from the engine's `LOC_CIVILIZATION_*_ADJECTIVE`
- * string, or `null` when unavailable. Cite: CivilizationText.xml.
- * @param {*} civType The engine CivilizationType string.
- * @returns {string|null} The composed adjective, or `null`.
- */
-function adjectiveFromCivType(civType) {
-  if (typeof civType !== "string" || !civType) return null;
-  const stem = civType.replace(/^CIVILIZATION_/, "");
-  if (!stem) return null;
-  const tag = "LOC_CIVILIZATION_" + stem + "_ADJECTIVE";
-  try {
-    if (typeof Locale?.compose === "function") {
-      const v = Locale.compose(tag);
-      if (typeof v === "string" && v.length > 0 && !v.startsWith("LOC_")) return v;
-    }
-  } catch (_) {
-    // Locale.compose may throw on a malformed adjective tag; fall back to null.
-  }
-  return null;
-}
-
-/**
- * Resolve a civ's adjective from the bundled map, then a heuristic English
- * suffix derivation. Used when the engine adjective isn't available.
- * @param {*} name The civ display name.
- * @returns {string} The adjective.
- */
-function civAdjectiveFromName(name) {
-  if (typeof name !== "string" || !name.length) return "Unknown";
-  if (CIV_ADJECTIVE[name]) return CIV_ADJECTIVE[name];
-  const cleaned = name.replace(/^the\s+/i, "").trim();
-  if (CIV_ADJECTIVE[cleaned]) return CIV_ADJECTIVE[cleaned];
-  if (/ia$/i.test(cleaned)) return cleaned.replace(/ia$/i, "ian");
-  if (/y$/i.test(cleaned)) return cleaned.replace(/y$/i, "ian");
-  if (/a$/i.test(cleaned)) return cleaned + "n";
-  if (/e$/i.test(cleaned)) return cleaned.replace(/e$/i, "ean");
-  if (/o$/i.test(cleaned)) return cleaned + "an";
-  return cleaned + "an";
-}
-
-/**
- * Resolve a roster entry's (or raw string's) civ adjective, preferring the
- * engine LOC lookup.
- * @param {*} rosterEntry A roster object ({civ, civTypeString}) or a string.
- * @returns {string} The adjective.
- */
-function civAdjective(rosterEntry) {
-  if (rosterEntry && typeof rosterEntry === "object") {
-    const fromEngine = adjectiveFromCivType(rosterEntry.civTypeString);
-    if (fromEngine) return fromEngine;
-    return civAdjectiveFromName(rosterEntry.civ);
-  }
-  return civAdjectiveFromName(rosterEntry);
-}
-
-/**
- * Localized ordinal word for a 1-based count: 1–5 spelled out, otherwise a
- * generic suffix form. Each language's forms are war-gendered so they agree
- * with "war" / "Weltkrieg" / "Guerra" / etc.
- * @param {number} n The 1-based count.
- * @returns {string} The localized ordinal.
- */
-function ordinalWord(n) {
-  if (n >= 1 && n <= 5) return t("LOC_DEMOGRAPHICS_ORDINAL_" + n);
-  return t("LOC_DEMOGRAPHICS_ORDINAL_N", n);
-}
-
-/**
- * Convert an integer to a Roman numeral (>=1; "I" minimum).
- * @param {number} n The integer.
- * @returns {string} The Roman numeral.
- */
-function romanize(n) {
-  /** @type {[string, number][]} */
-  const numerals = [
-    ["M", 1000],
-    ["CM", 900],
-    ["D", 500],
-    ["CD", 400],
-    ["C", 100],
-    ["XC", 90],
-    ["L", 50],
-    ["XL", 40],
-    ["X", 10],
-    ["IX", 9],
-    ["V", 5],
-    ["IV", 4],
-    ["I", 1]
-  ];
-  let r = "",
-    v = n;
-  for (const [s, d] of numerals) {
-    while (v >= d) {
-      r += s;
-      v -= d;
-    }
-  }
-  return r || "I";
-}
-
-/**
- * Parse a Civ7 gameYear ("2725 BCE", "100 CE", "1842") into a signed integer
- * (BCE → negative). Numbers pass through.
- * @param {*} s The year string or number.
- * @returns {number|null} The signed year, or `null`.
- */
-function parseYear(s) {
-  if (typeof s !== "number") {
-    if (typeof s !== "string") return null;
-    const m = s.match(/(-?\d+)\s*(BCE|BC|CE|AD)?/i);
-    if (!m) return null;
-    const n = parseInt(m[1], 10);
-    if (!isFinite(n)) return null;
-    const era = (m[2] || "").toUpperCase();
-    return era === "BCE" || era === "BC" ? -n : n;
-  }
-  return s;
-}
-
-/**
- * Format a positive magnitude with a K/M/B suffix.
- * @param {number} n The value.
- * @returns {string} The formatted value ("—" for non-finite/non-positive).
- */
-function formatMagnitude(n) {
-  if (!isFinite(n) || n <= 0) return "—";
-  if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
-  if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
-  return String(Math.round(n));
-}
 
 // Collect every civ pid that's appeared in any war (with display labels) so
 // the conflicts page filter dropdown can list them.
@@ -322,9 +125,53 @@ function computeGanttDomain(filtered, tr, latestTurn, samples) {
   if (tr) {
     xMin = tr.min;
     xMax = tr.max;
+  } else {
+    xMax = extendDomainFuture(filtered, xMin, xMax, latestTurn);
   }
   if (xMin === xMax) xMax = xMin + 1;
   return { xMin, xMax };
+}
+
+/**
+ * Extend the domain's right edge: always keep the current turn in view, and when
+ * a war is still ongoing reserve a stretch of unplayed future turns to the right
+ * so its fading "tail" has somewhere to go.
+ * @param {*[]} filtered The filtered wars.
+ * @param {number} xMin The domain left.
+ * @param {number} xMax The raw domain right.
+ * @param {number} latestTurn The latest sampled turn.
+ * @returns {number} The extended right edge.
+ */
+function extendDomainFuture(filtered, xMin, xMax, latestTurn) {
+  let max = xMax;
+  if (isFinite(latestTurn) && latestTurn > max) max = latestTurn;
+  if (filtered.some((w) => typeof w.endTurn !== "number")) {
+    const futurePad = Math.max(4, Math.round((max - xMin) * 0.08));
+    max = (isFinite(latestTurn) ? latestTurn : max) + futurePad;
+  }
+  return max;
+}
+
+// Min horizontal pixels per turn so short wars and dense timelines stay legible;
+// the chart grows past the viewport (and scrolls) when the span is long.
+const GANTT_MIN_PX_PER_TURN = 14;
+// padL (60) + padR (60) from buildGanttLayout - kept in sync here so the natural
+// width and the layout's plot rect agree.
+const GANTT_PAD_LR = 120;
+
+/**
+ * Compute the Gantt's natural pixel width: the larger of the viewport width and
+ * the turn span at GANTT_MIN_PX_PER_TURN, so a long timeline scrolls instead of
+ * cramming every turn into the viewport.
+ * @param {number} viewportW The measured host width.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @returns {number} The canvas width in pixels.
+ */
+function computeGanttWidth(viewportW, dom) {
+  const span = Math.max(1, dom.xMax - dom.xMin);
+  const naturalInner = span * GANTT_MIN_PX_PER_TURN;
+  const innerW = Math.max(viewportW - GANTT_PAD_LR, naturalInner);
+  return Math.round(innerW + GANTT_PAD_LR);
 }
 
 /**
@@ -356,32 +203,58 @@ function ganttWarSpan(filtered, tr, latestTurn) {
  * @property {number} innerH Plot height.
  * @property {number} H Final canvas height.
  * @property {number[]} rowTops Per-war row top offsets.
- * @property {number} barH Bar height.
+ * @property {number[]} rowHeights Per-war bar heights (scale with belligerents).
+ * @property {number} barH Base bar height.
  * @property {(t: number) => number} xOf Turn → pixel x.
  */
 
-const GANTT_BAR_H = 24; // bar height (label fits comfortably inside)
+const GANTT_BAR_H = 24; // base bar height (2-civ war; label fits inside)
+const GANTT_BAR_H_MAX = 64; // cap so a world war doesn't dominate the page
+const GANTT_PER_STRIPE = 7; // extra height per belligerent beyond the first two
 const GANTT_ROW_GAP = 10; // gap between wars
 
 /**
- * Build the Gantt layout: row offsets, final height, plot rect, x-mapper.
+ * The belligerent (major) count of a war, used for stripe count + bar height.
+ * @param {*} w A war record.
+ * @returns {number} The belligerent count (>= 2).
+ */
+function warStripeCount(w) {
+  return Math.max(2, majorsOnSide(w.sideACivs).length + majorsOnSide(w.sideBCivs).length);
+}
+
+/**
+ * A war's bar height: taller for more belligerents so each civ's color stripe
+ * stays legible (a merged multi-front war reads as one fatter, multi-color bar).
+ * @param {*} w A war record.
+ * @returns {number} The bar height in px.
+ */
+function barHeightFor(w) {
+  return Math.min(GANTT_BAR_H_MAX, GANTT_BAR_H + Math.max(0, warStripeCount(w) - 2) * GANTT_PER_STRIPE);
+}
+
+/**
+ * Build the Gantt layout: per-war row offsets + heights, final height, plot
+ * rect, x-mapper.
  * @param {number} W Canvas width.
  * @param {number} H0 Caller height floor.
- * @param {number} warCount The filtered war count.
+ * @param {*[]} wars The filtered wars (one row each).
  * @param {{ xMin: number, xMax: number }} dom The x-domain.
  * @returns {GanttLayout} The layout.
  */
-function buildGanttLayout(W, H0, warCount, dom) {
+function buildGanttLayout(W, H0, wars, dom) {
   const padL = 60,
     padR = 60,
     padT = 30,
     padB = 64;
-  // Pre-compute Y offsets so we can size H upfront — uniform row height.
+  // Pre-compute Y offsets so we can size H upfront - per-war (variable) heights.
   const rowTops = [];
+  const rowHeights = [];
   let accumY = padT + 6;
-  for (let i = 0; i < warCount; i++) {
+  for (const w of wars) {
+    const h = barHeightFor(w);
     rowTops.push(accumY);
-    accumY += GANTT_BAR_H + GANTT_ROW_GAP;
+    rowHeights.push(h);
+    accumY += h + GANTT_ROW_GAP;
   }
   const minInnerH = Math.max(120, accumY - padT - 6 + 16);
   const H = Math.max(H0, padT + minInnerH + padB);
@@ -394,6 +267,7 @@ function buildGanttLayout(W, H0, warCount, dom) {
     innerH,
     H,
     rowTops,
+    rowHeights,
     barH: GANTT_BAR_H,
     xOf: (t) => padL + ((t - dom.xMin) / (dom.xMax - dom.xMin || 1)) * innerW
   };
@@ -413,6 +287,23 @@ function currentPrimaryColor(samples, pid) {
     }
   }
   return "#9aa8c8";
+}
+
+/**
+ * Resolve one war-bar stripe's fill: the participant's latest sampled primary
+ * color, else its roster color, else a side-based fallback.
+ * @param {*} c The stripe (participant or fallback) record.
+ * @param {number} idx The stripe index.
+ * @param {Snapshot[]} samples The sample stream.
+ * @param {*} sem The semantic palette.
+ * @returns {string} The fill color.
+ */
+function resolveStripeFill(c, idx, samples, sem) {
+  return (
+    (typeof c.pid === "number" && currentPrimaryColor(samples, c.pid)) ||
+    c.color ||
+    (idx % 2 === 0 ? sem.sideA_fallback : sem.sideB_fallback)
+  );
 }
 
 /**
@@ -436,7 +327,9 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
       "stroke-width": "1"
     })
   );
-  const xTicks = 6;
+  // Scale tick count to the (possibly very wide, scrollable) plot so a long
+  // timeline keeps a readable year cadence instead of just 6 sparse ticks.
+  const xTicks = Math.max(6, Math.min(40, Math.round(L.innerW / 160)));
   const tickPositions = [];
   for (let i = 0; i <= xTicks; i++) {
     const t = Math.round(dom.xMin + ((dom.xMax - dom.xMin) * i) / xTicks);
@@ -451,7 +344,7 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
         "stroke-width": "1"
       })
     );
-    // Vertical grid line — Chart.js neutral grid color.
+    // Vertical grid line - Chart.js neutral grid color.
     svg.appendChild(
       svgEl("line", {
         x1: x,
@@ -477,6 +370,7 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
  * @property {number} h Bar height.
  * @property {number} x2 Bar right.
  * @property {boolean} isClosed Whether the war concluded.
+ * @property {number} [hitW] Hit-test width (includes an ongoing war's future tail).
  */
 
 /**
@@ -487,16 +381,17 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
  * @param {GanttLayout} L The layout.
  * @param {{ xMin: number, xMax: number }} dom The x-domain.
  * @param {number} baseY The bar's top offset.
+ * @param {number} barH The bar's height (scales with belligerent count).
  * @param {number} latestTurn The latest sampled turn.
  * @param {Snapshot[]} samples The sample stream (for colors).
  * @returns {BarRect} The bar hit-test rect.
  */
-function drawWarBar(svg, w, L, dom, baseY, latestTurn, samples) {
+function drawWarBar(svg, w, L, dom, baseY, barH, latestTurn, samples) {
   const sTurn = w.startTurn;
-  const eTurn = typeof w.endTurn === "number" ? w.endTurn : latestTurn;
+  const isClosed = typeof w.endTurn === "number";
+  const eTurn = isClosed ? w.endTurn : latestTurn;
   const x1 = L.xOf(Math.max(sTurn, dom.xMin));
   const x2 = L.xOf(Math.min(eTurn, dom.xMax));
-  const isClosed = typeof w.endTurn === "number";
   const sem = getSemantic();
   // Build the full participant list (sideA first, then sideB) so the bar is
   // striped one band per civ. Side ordering preserved so allies sit together.
@@ -512,21 +407,183 @@ function drawWarBar(svg, w, L, dom, baseY, latestTurn, samples) {
           { pid: null, color: sem.sideB_fallback }
         ];
   const barW = Math.max(2, x2 - x1);
-  drawWarBarStripes(svg, { stripes, samples, sem, x1, baseY, barW, barH: L.barH, isClosed });
-  // Single outline around the combined bar.
+  drawWarBarStripes(svg, { stripes, samples, sem, x1, baseY, barW, barH, isClosed });
+  // Single outline around the (solid, played) part of the bar.
   svg.appendChild(
     svgEl("rect", {
       x: x1,
       y: baseY,
       width: barW,
-      height: L.barH,
+      height: barH,
       fill: "none",
       stroke: "#1c1408",
       "stroke-width": "1"
     })
   );
-  drawWarBarEndMarker(svg, isClosed, x2, baseY, L.barH, sem);
-  return { war: w, x: x1, y: baseY, w: barW, h: L.barH, x2, isClosed };
+  // Ongoing wars get a "future tail" fading the colors into grey across the
+  // not-yet-played turns; the hit-test rect extends over it so the tail is
+  // hoverable. Concluded wars get the usual end-cap.
+  let hitW = barW;
+  if (!isClosed) {
+    const xTail = L.xOf(dom.xMax);
+    drawWarBarTail(svg, { stripes, samples, sem, xStart: x2, xEnd: xTail, baseY, barH });
+    hitW = Math.max(barW, xTail - x1);
+  } else {
+    drawWarBarEndMarker(svg, isClosed, x2, baseY, barH, sem);
+  }
+  // `w` is the SOLID (played) width - what labels measure against; `hitW`
+  // includes the future tail so hovering the faded region still hits the war.
+  return { war: w, x: x1, y: baseY, w: barW, h: barH, x2, isClosed, hitW };
+}
+
+/**
+ * Append a horizontal SVG gradient (opaque `color` -> transparent) for a tail
+ * stripe, so the color fades smoothly with no banding at any scale.
+ * @param {SVGElement} svg The chart SVG.
+ * @param {string} id The gradient element id (referenced via url(#id)).
+ * @param {string} color The stripe color.
+ */
+function appendTailGradient(svg, id, color) {
+  const grad = svgEl("linearGradient", { id, x1: "0", y1: "0", x2: "1", y2: "0" });
+  grad.appendChild(svgEl("stop", { offset: "0", "stop-color": color, "stop-opacity": "0.92" }));
+  grad.appendChild(svgEl("stop", { offset: "1", "stop-color": color, "stop-opacity": "0" }));
+  svg.appendChild(grad);
+}
+
+/**
+ * Draw an ongoing war's "future tail": a grey underlay across the unplayed turns
+ * overlaid with each civ's stripe color fading smoothly (via a per-stripe
+ * gradient) into the grey - signaling those turns aren't played yet and the war
+ * isn't over.
+ * @param {SVGElement} svg The chart SVG.
+ * @param {Object} args Tail-drawing inputs.
+ * @param {*[]} args.stripes The participant stripes.
+ * @param {Snapshot[]} args.samples The sample stream (for colors).
+ * @param {*} args.sem The semantic palette.
+ * @param {number} args.xStart The tail's left x (the current turn).
+ * @param {number} args.xEnd The tail's right x (the future horizon).
+ * @param {number} args.baseY The bar top.
+ * @param {number} args.barH The bar height.
+ */
+function drawWarBarTail(svg, args) {
+  const { stripes, samples, sem, xStart, xEnd, baseY, barH } = args;
+  const tailW = xEnd - xStart;
+  if (tailW <= 1) return;
+  // Grey underlay the colors fade into - also the graceful fallback: if SVG
+  // gradients aren't honored, a solid grey tail still reads as "unplayed".
+  svg.appendChild(
+    svgEl("rect", {
+      x: xStart,
+      y: baseY,
+      width: tailW,
+      height: barH,
+      fill: "#3a3d44",
+      "fill-opacity": "0.5"
+    })
+  );
+  const stripeH = barH / stripes.length;
+  stripes.forEach((c, idx) => {
+    const fill = resolveStripeFill(c, idx, samples, sem);
+    const gradId = "demo-wartail-" + Math.round(baseY) + "-" + idx;
+    appendTailGradient(svg, gradId, fill);
+    svg.appendChild(
+      svgEl("rect", {
+        x: xStart,
+        y: baseY + idx * stripeH,
+        width: tailW,
+        height: stripeH,
+        fill: "url(#" + gradId + ")"
+      })
+    );
+  });
+}
+
+/**
+ * Draw the vertical "current turn" marker: a dashed red line across the plot at
+ * the latest sampled turn (where the solid bars end and the future tails begin).
+ * @param {SVGElement} svg The chart SVG.
+ * @param {GanttLayout} L The layout.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {number} latestTurn The latest sampled turn.
+ */
+function drawCurrentTurnLine(svg, L, dom, latestTurn) {
+  if (!isFinite(latestTurn) || latestTurn < dom.xMin || latestTurn > dom.xMax) return;
+  const x = L.xOf(latestTurn);
+  svg.appendChild(
+    svgEl("line", {
+      x1: x,
+      x2: x,
+      y1: L.padT,
+      y2: L.padT + L.innerH,
+      stroke: "#e8453c",
+      "stroke-width": "2",
+      "stroke-dasharray": "5 3"
+    })
+  );
+}
+
+/**
+ * Draw the crisis stage-onset overlay lines: a dashed vertical line at each
+ * onset turn, colored by stage - the same markers the historical line charts
+ * draw. (Labels are mounted as HTML overlays; see mountCrisisLabels.)
+ * @param {SVGElement} svg The chart SVG.
+ * @param {GanttLayout} L The layout.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The crisis onsets.
+ */
+function drawCrisisMarkers(svg, L, dom, onsets) {
+  for (const o of onsets || []) {
+    if (o.turn < dom.xMin || o.turn > dom.xMax) continue;
+    const x = L.xOf(o.turn);
+    const color = CRISIS_STAGE_COLORS[Math.max(0, Math.min(3, o.stage - 1))];
+    svg.appendChild(
+      svgEl("line", {
+        x1: x,
+        x2: x,
+        y1: L.padT,
+        y2: L.padT + L.innerH,
+        stroke: color,
+        "stroke-width": "1.4",
+        "stroke-dasharray": "4 3",
+        "stroke-opacity": "0.85"
+      })
+    );
+  }
+}
+
+/**
+ * Mount the crisis stage-onset HTML labels atop each overlay line: a two-line
+ * pill (stage label in the stage color, crisis name below), staggered down so
+ * adjacent onsets don't collide. Mirrors the historical charts' marker labels.
+ * @param {HTMLElement} wrap The chart canvas.
+ * @param {GanttLayout} L The layout.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The crisis onsets.
+ * @param {string} seed The game seed (for the flavor crisis name).
+ * @param {number} W Canvas width.
+ * @param {number} H Canvas height.
+ */
+function mountCrisisLabels(wrap, L, dom, onsets, seed, W, H) {
+  (onsets || []).forEach((o, i) => {
+    if (o.turn < dom.xMin || o.turn > dom.xMax) return;
+    const idx = Math.max(0, Math.min(3, o.stage - 1));
+    const x = L.xOf(o.turn);
+    const div = document.createElement("div");
+    div.className = "demographics-wars-crisis-label";
+    // Per-marker geometry stays dynamic; stagger each label down to reduce overlap.
+    div.style.left = (x / W) * 100 + "%";
+    div.style.top = ((L.padT + 2 + (i % 3) * 30) / H) * 100 + "%";
+    const stage = document.createElement("div");
+    stage.className = "demographics-wars-crisis-label-stage";
+    stage.style.color = CRISIS_STAGE_COLORS[idx];
+    stage.textContent = t(CRISIS_STAGE_LABELS[idx]);
+    div.appendChild(stage);
+    const name = document.createElement("div");
+    name.className = "demographics-wars-crisis-label-name";
+    name.textContent = flavorCrisisName(o.sample, o.stage, seed);
+    div.appendChild(name);
+    wrap.appendChild(div);
+  });
 }
 
 /**
@@ -545,12 +602,9 @@ function drawWarBar(svg, w, L, dom, baseY, latestTurn, samples) {
 function drawWarBarStripes(svg, args) {
   const { stripes, samples, sem, x1, baseY, barW, barH, isClosed } = args;
   const stripeH = barH / stripes.length;
-  // One colored stripe per participating civ — height = BAR_H / N.
+  // One colored stripe per participating civ - height = BAR_H / N.
   stripes.forEach((c, idx) => {
-    const fill =
-      (typeof c.pid === "number" && currentPrimaryColor(samples, c.pid)) ||
-      c.color ||
-      (idx % 2 === 0 ? sem.sideA_fallback : sem.sideB_fallback);
+    const fill = resolveStripeFill(c, idx, samples, sem);
     svg.appendChild(
       svgEl("rect", {
         x: x1,
@@ -630,114 +684,47 @@ function drawWarBars(svg, filtered, L, dom, tr, latestTurn, samples) {
     const w = filtered[i];
     const eTurn = typeof w.endTurn === "number" ? w.endTurn : latestTurn;
     if (tr && (eTurn < tr.min || w.startTurn > tr.max)) continue;
-    barRects.push(drawWarBar(svg, w, L, dom, L.rowTops[i], latestTurn, samples));
+    barRects.push(drawWarBar(svg, w, L, dom, L.rowTops[i], L.rowHeights[i], latestTurn, samples));
   }
   return barRects;
 }
 
+
 /**
- * Compute a war's duration in years from its year strings, falling back to the
- * turn count.
- * @param {*} war The war record.
- * @param {Map<number, string>} turnYearMap chart-turn → year map.
- * @param {number} latestTurn The latest sampled turn.
- * @returns {number} The duration in years (>=1).
+ * Mount one war-name label: the FULL name in a neutral box (never truncated),
+ * anchored at the bar's left edge - or, for a bar in the right third of the
+ * chart, with its right edge at the bar end so a long name grows left and isn't
+ * clipped by the canvas edge.
+ * @param {HTMLElement} wrap The chart canvas.
+ * @param {BarRect} rect The bar hit-test rect.
+ * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>, latestTurn: number, W: number, H: number }} env Shared inputs.
  */
-function warDurationYears(war, turnYearMap, latestTurn) {
-  const sY = parseYear(war.startYear);
-  const eY =
-    typeof war.endTurn === "number"
-      ? parseYear(war.endYear)
-      : parseYear(turnYearMap.get(latestTurn));
-  if (sY !== null && eY !== null) {
-    const d = Math.abs(eY - sY);
-    return d > 0 ? d : 1;
+function mountOneWarLabel(wrap, rect, env) {
+  const { nameOverride, turnYearMap, latestTurn, W, H } = env;
+  const { war, x, y, h } = rect;
+  const xRight = x + (rect.hitW ?? rect.w);
+  const label = warLabelText(war, nameOverride, turnYearMap, latestTurn);
+  const div = document.createElement("div");
+  div.className = "demographics-chart-war-label demographics-wars-label";
+  // Per-bar geometry stays dynamic (pixel-derived percentages).
+  div.style.top = ((y + h / 2) / H) * 100 + "%";
+  if (x <= W * 0.66) {
+    div.style.left = (x / W) * 100 + "%";
+  } else {
+    div.classList.add("demographics-wars-label-anchor-right");
+    div.style.left = (xRight / W) * 100 + "%";
   }
-  // Fallback: turn-count when years aren't available.
-  const t = (typeof war.endTurn === "number" ? war.endTurn : latestTurn) - war.startTurn;
-  return Math.max(1, t);
+  // The name sits in a neutral box so it stays readable over any banner color.
+  const box = document.createElement("span");
+  box.className = "demographics-wars-label-box";
+  box.textContent = label;
+  div.appendChild(box);
+  wrap.appendChild(div);
 }
 
 /**
- * Build the per-war display-name override map: ordinal-numbered recurring
- * matchups, tripartite/great-war/world-war labels, and duration flair.
- * @param {*[]} filtered The filtered wars.
- * @param {Map<number, string>} turnYearMap chart-turn → year map.
- * @param {number} latestTurn The latest sampled turn.
- * @returns {Map<*, string>} war → display label.
- */
-function buildWarNameOverrides(filtered, turnYearMap, latestTurn) {
-  /** @type {Map<*, string>} */
-  const nameOverride = new Map();
-  // Count prior wars with the EXACT same participant set so we can
-  // ordinal-number recurring matchups ("Second Roman-Carthaginian War").
-  /** @type {Map<string, number>} */
-  const pairCounts = new Map();
-  /** @type {*[]} */
-  const worldWars = []; // chronological order (for "World War N")
-  const sorted = filtered.slice().sort((a, b) => (a.startTurn || 0) - (b.startTurn || 0));
-  for (const w of sorted) {
-    const yrs = warDurationYears(w, turnYearMap, latestTurn);
-    const n = majorsOnSide(w.sideACivs).length + majorsOnSide(w.sideBCivs).length;
-    let label = composeWarLabel(w, pairCounts, worldWars);
-    // Duration flair — long protracted conflicts get an evocative suffix. The
-    // flair templates wrap the localized base label (no English-specific suffix
-    // stripping, which wouldn't survive translation).
-    if (yrs >= 100 && n < 6) {
-      label = t("LOC_DEMOGRAPHICS_WARNAME_HUNDRED", label);
-    } else if (yrs >= 50 && n < 6) {
-      label = t("LOC_DEMOGRAPHICS_WARNAME_LONG", label);
-    }
-    nameOverride.set(w, label);
-  }
-  return nameOverride;
-}
-
-/**
- * Compose a war's base name by participant count (world / great / tripartite /
- * bilateral / fallback), advancing the pair-count and world-war state.
- * @param {*} w The war record.
- * @param {Map<string, number>} pairCounts Recurring-matchup counts (mutated).
- * @param {*[]} worldWars World-war list (mutated, for numbering).
- * @returns {string} The base label.
- */
-function composeWarLabel(w, pairCounts, worldWars) {
-  const a = majorsOnSide(w.sideACivs);
-  const b = majorsOnSide(w.sideBCivs);
-  const n = a.length + b.length;
-  // Pass the FULL roster object so civAdjective can use civTypeString.
-  const adjA = a.map((r) => civAdjective(r));
-  const adjB = b.map((r) => civAdjective(r));
-  if (n >= 6) {
-    worldWars.push(w);
-    const idx = worldWars.length;
-    // Pass both numeral forms; each language's template picks one (en uses the
-    // roman numeral, de/es/fr/it/pt/ru use the ordinal word).
-    return t("LOC_DEMOGRAPHICS_WARNAME_WORLD", romanize(idx), ordinalWord(idx));
-  }
-  if (n >= 4) {
-    return t("LOC_DEMOGRAPHICS_WARNAME_GREAT", adjA[0], adjB[0], n - 2);
-  }
-  if (n === 3) {
-    // Exactly three majors total — sort for a stable, order-independent label.
-    const tri = /** @type {string[]} */ ([]).concat(adjA, adjB).sort();
-    return t("LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE", tri[0], tri[1], tri[2]);
-  }
-  if (n === 2) {
-    // Standard bilateral. Build a stable adjective key (alpha order) so reruns
-    // of the same matchup get ordinal prefixes ("Second Roman–Egyptian War").
-    const pair = [adjA[0] || "Unknown", adjB[0] || "Unknown"].sort();
-    const key = pair.join("|");
-    const count = (pairCounts.get(key) || 0) + 1;
-    pairCounts.set(key, count);
-    return t("LOC_DEMOGRAPHICS_WARNAME_BILATERAL", ordinalWord(count), pair[0], pair[1]);
-  }
-  return w.name; // single-party / odd fallback
-}
-
-/**
- * Mount the per-bar war-name labels (inside each bar) into the wrap.
- * @param {HTMLElement} wrap The chart wrap.
+ * Mount the per-bar war-name labels into the canvas.
+ * @param {HTMLElement} wrap The chart canvas.
  * @param {BarRect[]} barRects The bar rects.
  * @param {Map<*, string>} nameOverride war → display label.
  * @param {Map<number, string>} turnYearMap chart-turn → year map.
@@ -746,23 +733,8 @@ function composeWarLabel(w, pairCounts, worldWars) {
  * @param {number} H Canvas height.
  */
 function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W, H) {
-  barRects.forEach(({ war, x, y, w, h }) => {
-    const yrs = warDurationYears(war, turnYearMap, latestTurn);
-    const displayName = nameOverride.get(war) || war.name;
-    const yrLabel =
-      yrs === 1
-        ? t("LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE", yrs)
-        : t("LOC_DEMOGRAPHICS_WARS_DURATION_YR", yrs);
-    const label = displayName + "  ·  " + yrLabel;
-    const div = document.createElement("div");
-    div.className = "demographics-chart-war-label demographics-wars-label";
-    // Per-bar geometry stays dynamic (pixel-derived percentages).
-    div.style.left = (x / W) * 100 + "%";
-    div.style.top = ((y + h / 2) / H) * 100 + "%";
-    div.style.width = (w / W) * 100 + "%";
-    div.textContent = label;
-    wrap.appendChild(div);
-  });
+  const env = { nameOverride, turnYearMap, latestTurn, W, H };
+  for (const rect of barRects) mountOneWarLabel(wrap, rect, env);
 }
 
 /**
@@ -823,314 +795,32 @@ function mountGanttAxisTitles(wrap, L, W, H) {
 }
 
 /**
- * Build one participant's metric series across the samples in a window.
- * @param {Snapshot[]} windowSamples Samples inside the participant's active window.
- * @param {Pid | string} pid The participant pid.
- * @param {string} metricId Metric key (e.g. "milpower").
- * @returns {number[]} The participant's values (samples lacking the value skipped).
+ * Mount the "Now" label atop the current-turn (red) line, when that turn is in
+ * range.
+ * @param {HTMLElement} wrap The chart canvas.
+ * @param {GanttLayout} L The layout.
+ * @param {number} latestTurn The latest sampled turn.
+ * @param {number} W Canvas width.
+ * @param {number} H Canvas height.
  */
-function participantMetricSeries(windowSamples, pid, metricId) {
-  const series = [];
-  for (const s of windowSamples) {
-    const v = s?.players?.[pid]?.metrics?.[metricId];
-    if (typeof v === "number" && isFinite(v)) series.push(v);
-  }
-  return series;
+function mountCurrentTurnLabel(wrap, L, latestTurn, W, H) {
+  if (!isFinite(latestTurn)) return;
+  const x = L.xOf(latestTurn);
+  if (x < L.padL || x > L.padL + L.innerW) return;
+  const div = document.createElement("div");
+  div.className = "demographics-wars-now-label";
+  // Per-marker position stays dynamic (pixel-derived percentages).
+  div.style.left = (x / W) * 100 + "%";
+  div.style.top = (L.padT / H) * 100 + "%";
+  div.textContent = t("LOC_DEMOGRAPHICS_WARS_NOW", latestTurn);
+  wrap.appendChild(div);
 }
 
-/**
- * Maximum drawdown of a series: the largest drop from a running peak. Returns 0
- * when the series only ever rises, so "losses" are never fabricated from growth.
- * @param {number[]} values The series.
- * @returns {number} The largest peak→trough decline.
- */
-function maxDrawdown(values) {
-  let peak = -Infinity;
-  let maxDD = 0;
-  for (const v of values) {
-    if (v > peak) peak = v;
-    if (peak - v > maxDD) maxDD = peak - v;
-  }
-  return maxDD;
-}
 
-/**
- * One side's observed cost over a war window. Fields are null when the samples
- * don't cover the window (fewer than two data points).
- * @typedef {Object} SideWarCost
- * @property {number | null} milLost Military-strength drawdown.
- * @property {number | null} settlementsLost Settlement-count drawdown.
- * @property {number | null} popLost Population drawdown.
- * @property {number | null} prodChange Net production change (signed: +gain / -loss).
- */
 
-/**
- * The metrics that make up a side's war cost, each mapped to the result field
- * it feeds and how its series reduces to a figure: `"drawdown"` (peak→trough
- * loss) or `"net"` (signed end−start change).
- * @type {{ id: string, key: string, mode: "drawdown" | "net" }[]}
- */
-const COST_METRICS = [
-  { id: "milpower", key: "milLost", mode: "drawdown" },
-  { id: "settlements", key: "settlementsLost", mode: "drawdown" },
-  { id: "population", key: "popLost", mode: "drawdown" },
-  { id: "production", key: "prodChange", mode: "net" }
-];
 
-/**
- * Reduce a participant's metric series to its cost contribution.
- * @param {number[]} series The metric series over the participation window.
- * @param {"drawdown" | "net"} mode Drawdown (loss) or signed net change.
- * @returns {number | null} The contribution, or null when fewer than two points.
- */
-function reduceCostSeries(series, mode) {
-  if (series.length < 2) return null;
-  return mode === "net" ? series[series.length - 1] - series[0] : maxDrawdown(series);
-}
 
-/**
- * A side's observed cost as a FULL accounting across every civ that ever fought
- * on it — each measured only over the turns it was actually in the war
- * ([joinTurn, leaveTurn || war end]), so a civ that withdrew still counts for
- * the stretch it participated. Per-metric figures are null when no participant
- * has enough data.
- * @param {Snapshot[]} samples The full sample stream.
- * @param {import("/demographics/ui/sampler-wars.js").WarParticipant[]} participants
- *   The side's cumulative roster.
- * @param {number} warStart The war's start turn.
- * @param {number} warEnd The war's end turn (or latest sampled turn if ongoing).
- * @returns {SideWarCost} Summed per-metric figures.
- */
-function sideCostFull(samples, participants, warStart, warEnd) {
-  /** @type {Record<string, number | null>} */
-  const acc = { milLost: null, settlementsLost: null, popLost: null, prodChange: null };
-  for (const p of participants || []) {
-    const jt = typeof p?.joinTurn === "number" ? p.joinTurn : warStart;
-    const lt = typeof p?.leaveTurn === "number" ? p.leaveTurn : warEnd;
-    const win = samples.filter((s) => typeof s?.turn === "number" && s.turn >= jt && s.turn <= lt);
-    for (const m of COST_METRICS) {
-      const v = reduceCostSeries(participantMetricSeries(win, p.pid, m.id), m.mode);
-      if (v !== null) {
-        const cur = acc[m.key];
-        acc[m.key] = (cur === null ? 0 : cur) + v;
-      }
-    }
-  }
-  return {
-    milLost: acc.milLost,
-    settlementsLost: acc.settlementsLost,
-    popLost: acc.popLost,
-    prodChange: acc.prodChange
-  };
-}
 
-/**
- * Compute both sides' war cost as a full accounting over the war's whole life:
- * every civ that ever fought, each measured over its own participation window,
- * summed per side. Derived entirely from real samples (no invented formula);
- * an honest "observed change during the war" (correlation, not proven cause).
- * @param {*} war The war record (startTurn / endTurn / sideACivs / sideBCivs).
- * @param {Snapshot[]} samples The full sample stream.
- * @param {number} latestTurn The latest sampled turn (window end for ongoing wars).
- * @returns {{ a: SideWarCost, b: SideWarCost }} Per-side costs.
- */
-function computeWarCost(war, samples, latestTurn) {
-  const warStart = typeof war.startTurn === "number" ? war.startTurn : 0;
-  const warEnd = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
-  return {
-    a: sideCostFull(samples, war.sideACivs || [], warStart, warEnd),
-    b: sideCostFull(samples, war.sideBCivs || [], warStart, warEnd)
-  };
-}
-
-/**
- * The roster lines (per major civ) for a war side.
- * @param {*[]} roster A war side's roster.
- * @returns {string[]} The "Leader, Civ" lines (or a placeholder).
- */
-function warRosterLines(roster) {
-  const majors = majorsOnSide(roster);
-  if (majors.length === 0) return [t("LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS")];
-  return majors.map((r) => {
-    const base = r.leader ? r.leader + ", " + r.civ : r.civ;
-    // Departed civs stay in the roster (full participation history) but are
-    // marked with the turn they withdrew.
-    if (r.active === false && typeof r.leaveTurn === "number") {
-      return base + " (" + t("LOC_DEMOGRAPHICS_WARS_WITHDREW", r.leaveTurn) + ")";
-    }
-    return base;
-  });
-}
-
-/**
- * Concise civ-name label for a war side, so the war-cost readout names who
- * suffered the loss (e.g. "Rome" or "Rome & Egypt") instead of "Attackers".
- * @param {*[]} roster A war side's roster.
- * @returns {string} The side's major-civ names joined, or a fallback.
- */
-function sideCivLabel(roster) {
-  const majors = majorsOnSide(roster);
-  if (majors.length === 0) return t("LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS");
-  return majors.map((r) => r.civ).join(" & ");
-}
-
-/**
- * Build the structured tooltip body for a war.
- * @param {*} w The war record.
- * @param {Object} ctx Shared Gantt context.
- * @param {Map<*, string>} ctx.nameOverride war → display label.
- * @param {Map<number, string>} ctx.turnYearMap chart-turn → year map.
- * @param {number} ctx.latestTurn The latest sampled turn.
- * @param {Snapshot[]} ctx.samples The sample stream.
- * @returns {Record<string, *>} The tooltip body fields.
- */
-function buildWarTooltipBody(w, ctx) {
-  const { nameOverride, turnYearMap, latestTurn, samples } = ctx;
-  const sTurn = w.startTurn;
-  const eTurn = typeof w.endTurn === "number" ? w.endTurn : latestTurn;
-  const startYr = w.startYear || "T-" + sTurn;
-  const endYr =
-    typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
-  const yrs = warDurationYears(w, turnYearMap, latestTurn);
-  const turns = eTurn - sTurn;
-  const cost = computeWarCost(w, samples, latestTurn);
-  const declared = warDeclaredBy(w);
-  return {
-    // Use the World War override when 4+ civs are involved; fall back to the
-    // bilateral name otherwise.
-    title: nameOverride.get(w) || w.name,
-    status:
-      typeof w.endTurn === "number"
-        ? t("LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED")
-        : t("LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING"),
-    sideA: warRosterLines(w.sideACivs),
-    sideB: warRosterLines(w.sideBCivs),
-    declared,
-    startYr,
-    endYr,
-    yrs,
-    turns,
-    cost,
-    costLabels: { a: sideCivLabel(w.sideACivs), b: sideCivLabel(w.sideBCivs) }
-  };
-}
-
-/**
- * The "declared by" line for a war (its major declarer, else "unknown").
- * @param {*} w The war record.
- * @returns {string} The declarer label.
- */
-function warDeclaredBy(w) {
-  if (!w.declaredBy || w.declaredBy.isCS) return t("LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN");
-  return w.declaredBy.leader ? w.declaredBy.leader + ", " + w.declaredBy.civ : w.declaredBy.civ;
-}
-
-/**
- * Render the tooltip DOM for a war into the shared tooltip element.
- * @param {HTMLElement} tooltip The tooltip element (cleared and repopulated).
- * @param {*} w The war record.
- * @param {*} ctx Shared Gantt context (see {@link buildWarTooltipBody}).
- */
-function renderWarTooltip(tooltip, w, ctx) {
-  const tip = buildWarTooltipBody(w, ctx);
-  while (tooltip.firstChild) tooltip.removeChild(tooltip.firstChild);
-  const head = document.createElement("div");
-  head.className = "demographics-wars-tooltip-head";
-  head.textContent = tip.title + "  [" + tip.status + "]";
-  tooltip.appendChild(head);
-  appendTooltipSection(tooltip, t("LOC_DEMOGRAPHICS_WARS_ATTACKERS"), tip.sideA);
-  appendTooltipSection(tooltip, t("LOC_DEMOGRAPHICS_WARS_DEFENDERS"), tip.sideB);
-  const meta = document.createElement("div");
-  meta.className = "demographics-wars-tooltip-meta";
-  meta.innerHTML =
-    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_DECLARED_BY", tip.declared)) +
-    "<br>" +
-    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_DURATION", tip.yrs)) +
-    " (" +
-    escapeHtml(tip.startYr) +
-    " → " +
-    escapeHtml(tip.endYr) +
-    ", " +
-    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_DURATION_TURNS", tip.turns)) +
-    ")";
-  tooltip.appendChild(meta);
-  appendWarCost(tooltip, tip.cost, tip.costLabels);
-}
-
-/**
- * Format one side's war cost as a compact line. Losses render as "−N", net
- * production change is signed, and missing data renders as "—".
- * @param {SideWarCost} c The side cost.
- * @returns {string} The formatted line.
- */
-function formatSideCost(c) {
-  const lost = (/** @type {number | null} */ n) => {
-    if (n === null) return "—";
-    const r = Math.round(n);
-    return r <= 0 ? "0" : "−" + formatMagnitude(r);
-  };
-  const signed = (/** @type {number | null} */ n) => {
-    if (n === null) return "—";
-    const r = Math.round(n);
-    if (r === 0) return "0";
-    return (r > 0 ? "+" : "−") + formatMagnitude(Math.abs(r));
-  };
-  return (
-    t("LOC_DEMOGRAPHICS_WARS_COST_STRENGTH", lost(c.milLost)) +
-    " · " +
-    t("LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS", lost(c.settlementsLost)) +
-    " · " +
-    t("LOC_DEMOGRAPHICS_WARS_COST_POP", lost(c.popLost)) +
-    " · " +
-    t("LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION", signed(c.prodChange))
-  );
-}
-
-/**
- * Append the per-side observed war-cost section to the tooltip, labeling each
- * side by its civ name(s) so it's clear who suffered the loss. All figures are
- * derived from the sampled time-series over the war window (no invented data).
- * @param {HTMLElement} tooltip The tooltip element.
- * @param {{ a: SideWarCost, b: SideWarCost }} cost Per-side costs.
- * @param {{ a: string, b: string }} labels Per-side civ-name labels.
- */
-function appendWarCost(tooltip, cost, labels) {
-  const block = document.createElement("div");
-  block.className = "demographics-wars-tooltip-cost";
-  block.innerHTML =
-    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_COST_HEADER")) +
-    ' <span style="opacity:0.65;">' +
-    escapeHtml(t("LOC_DEMOGRAPHICS_WARS_COST_OBSERVED")) +
-    "</span>:" +
-    "<br>" +
-    escapeHtml(labels.a) +
-    " — " +
-    formatSideCost(cost.a) +
-    "<br>" +
-    escapeHtml(labels.b) +
-    " — " +
-    formatSideCost(cost.b);
-  tooltip.appendChild(block);
-}
-
-/**
- * Append a labeled bullet section to the war tooltip.
- * @param {HTMLElement} tooltip The tooltip element.
- * @param {string} label The section label.
- * @param {string[]} lines The bullet lines.
- */
-function appendTooltipSection(tooltip, label, lines) {
-  const h = document.createElement("div");
-  h.className = "demographics-wars-tooltip-section-label";
-  h.textContent = label;
-  tooltip.appendChild(h);
-  lines.forEach((l) => {
-    const r = document.createElement("div");
-    r.className = "demographics-wars-tooltip-section-line";
-    r.textContent = "• " + l;
-    tooltip.appendChild(r);
-  });
-}
 
 /**
  * Create the shared Gantt hover-tooltip element (hidden, absolute).
@@ -1139,7 +829,7 @@ function appendTooltipSection(tooltip, label, lines) {
 function createGanttTooltip() {
   const tooltip = document.createElement("div");
   tooltip.className = "demographics-chart-hover-tooltip demographics-wars-tooltip";
-  // Hidden until a bar is hovered — visibility is toggled live by the hover
+  // Hidden until a bar is hovered - visibility is toggled live by the hover
   // wiring, so it stays inline.
   tooltip.style.display = "none";
   return tooltip;
@@ -1154,10 +844,15 @@ function createGanttTooltip() {
  */
 function hitTestBars(barRects, svgX, svgY) {
   for (const r of barRects) {
-    if (svgX >= r.x && svgX <= r.x + r.w && svgY >= r.y && svgY <= r.y + r.h) return r.war;
+    const w = r.hitW ?? r.w;
+    if (svgX >= r.x && svgX <= r.x + w && svgY >= r.y && svgY <= r.y + r.h) return r.war;
   }
   return null;
 }
+
+// Visual scale applied to the tooltip in CSS (.demographics-wars-tooltip); used
+// here so the right-edge flip accounts for the enlarged width. Keep in sync.
+const TOOLTIP_SCALE = 1.12;
 
 /**
  * Wire the Gantt's mousemove/leave hover tooltip behavior.
@@ -1172,10 +867,15 @@ function hitTestBars(barRects, svgX, svgY) {
  */
 function wireGanttHover(args) {
   const { wrap, svg, tooltip, barRects, ctx, W, H } = args;
+  // The war currently rendered in the tooltip. We only REBUILD its DOM when the
+  // hovered war changes - rebuilding every mousemove re-created the <fxs-icon>
+  // leader portraits each frame, which made the faces flicker while scrolling.
+  let shownWar = /** @type {*} */ (null);
   wrap.addEventListener("mousemove", (ev) => {
     const rect = svg.getBoundingClientRect();
     if (!rect || rect.width === 0) {
       tooltip.style.display = "none";
+      shownWar = null;
       return;
     }
     const sx = ((ev.clientX - rect.left) / rect.width) * W;
@@ -1183,16 +883,35 @@ function wireGanttHover(args) {
     const w = hitTestBars(barRects, sx, sy);
     if (!w) {
       tooltip.style.display = "none";
+      shownWar = null;
       return;
     }
-    renderWarTooltip(tooltip, w, ctx);
-    const wrapRect = wrap.getBoundingClientRect();
-    tooltip.style.left = ev.clientX - wrapRect.left + 14 + "px";
-    tooltip.style.top = ev.clientY - wrapRect.top + 14 + "px";
-    tooltip.style.display = "block";
+    if (w !== shownWar) {
+      // Show FIRST so the freshly-built <fxs-icon> leader portraits initialize in
+      // a laid-out element - custom-element icons don't render while an ancestor
+      // is display:none (the Factbook builds its portraits while already visible).
+      tooltip.style.display = "block";
+      renderWarTooltip(tooltip, w, ctx);
+      shownWar = w;
+    }
+    // Reposition every move (cheap). The tooltip lives in the (scrollable)
+    // canvas, whose box equals the SVG's, so position relative to that rect.
+    const localX = ev.clientX - rect.left;
+    let left = localX + 14;
+    // A wide popup (many civs) would clip off the right of the visible window -
+    // flip it to the LEFT of the cursor when it won't fit to the right. offsetWidth
+    // is the UNSCALED layout width, so multiply by the CSS scale for the real span.
+    const tw = tooltip.offsetWidth * TOOLTIP_SCALE;
+    const visRight = wrap.scrollLeft + wrap.clientWidth - 8;
+    if (left + tw > visRight) {
+      left = Math.max(wrap.scrollLeft + 8, localX - 14 - tw);
+    }
+    tooltip.style.left = left + "px";
+    tooltip.style.top = ev.clientY - rect.top + 14 + "px";
   });
   wrap.addEventListener("mouseleave", () => {
     tooltip.style.display = "none";
+    shownWar = null;
   });
 }
 
@@ -1218,20 +937,26 @@ export function renderWarsGantt(host, options) {
   if (!host) return null;
   while (host.firstChild) host.removeChild(host.firstChild);
   const opts = options || {};
-  const W = opts.width || 1400;
+  const viewportW = opts.width || 1400;
   const prep = prepareGanttData(host, opts);
   if (!prep) return null;
-  const { wars, filtered, latestTurn, samples, filterPid, showActiveOnly } = prep;
+  const { wars, merged, filtered, latestTurn, samples, filterPid, showActiveOnly } = prep;
 
   const tr = resolveTurnRange(opts);
   const dom = computeGanttDomain(filtered, tr, latestTurn, samples);
-  const L = buildGanttLayout(W, opts.height || 600, filtered.length, dom);
+  // Natural pixel width from the turn span (>= viewport); the chart scrolls
+  // horizontally when the timeline is longer than the viewport.
+  const W = computeGanttWidth(viewportW, dom);
+  const L = buildGanttLayout(W, opts.height || 600, filtered, dom);
   const H = L.H;
   const turnYearMap = buildStackTurnYears(samples);
-  const env = { turnYearMap, latestTurn, samples, W, H };
+  // Crisis stage-onset overlay (same markers the historical line charts draw).
+  const crisisOnsets = crisisStageOnsets(samples);
+  const crisisSeed = getGameSeed();
+  const env = { turnYearMap, latestTurn, samples, W, H, dom, crisisOnsets, crisisSeed };
 
   const { svg, barRects, tickPositions } = buildGanttSvg(filtered, L, dom, tr, env);
-  const wrap = mountGanttWrap(svg, { filtered, barRects, tickPositions, L, ...env });
+  const wrap = mountGanttWrap(svg, { merged, barRects, tickPositions, L, ...env });
 
   host.appendChild(wrap);
   dlog(
@@ -1244,10 +969,12 @@ export function renderWarsGantt(host, options) {
   return { svg };
 }
 
+
 /**
  * Prepared Gantt data: the sorted wars, the filtered subset, and filter flags.
  * @typedef {Object} GanttPrep
  * @property {*[]} wars The sorted war list.
+ * @property {*[]} merged The full merged war set (for naming).
  * @property {*[]} filtered The filtered subset.
  * @property {number} latestTurn The latest sampled turn.
  * @property {Snapshot[]} samples The sample stream.
@@ -1270,19 +997,23 @@ function prepareGanttData(host, opts) {
     appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS"));
     return null;
   }
-  wars.sort((a, b) => (a.startTurn || 0) - (b.startTurn || 0));
   const latestTurn = samples.length > 0 ? (samples[samples.length - 1].turn ?? 0) : 0;
-  // Filter pipeline: city states are dropped — this is a major-civ engagement
+  // Collapse concurrent, overlapping wars that share a belligerent into single
+  // multi-front wars before anything else, so the whole view (bars, tooltip,
+  // naming) sees one war per front-group.
+  const merged = mergeWars(wars, latestTurn);
+  merged.sort((a, b) => (a.startTurn || 0) - (b.startTurn || 0));
+  // Filter pipeline: city states are dropped - this is a major-civ engagement
   // timeline. Coalition wars between two majors still show, but only major
   // civs are rendered as bars.
   const filterPid = typeof opts.filterPid === "number" ? opts.filterPid : null;
   const showActiveOnly = !!opts.activeOnly;
-  const filtered = filterGanttWars(wars, showActiveOnly, filterPid);
+  const filtered = filterGanttWars(merged, showActiveOnly, filterPid);
   if (filtered.length === 0) {
     appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH"));
     return null;
   }
-  return { wars, filtered, latestTurn, samples, filterPid, showActiveOnly };
+  return { wars, merged, filtered, latestTurn, samples, filterPid, showActiveOnly };
 }
 
 /**
@@ -1308,6 +1039,8 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
   });
   const tickPositions = drawGanttGrid(svg, L, dom, turnYearMap);
   const barRects = drawWarBars(svg, filtered, L, dom, tr, latestTurn, samples);
+  drawCrisisMarkers(svg, L, dom, env.crisisOnsets);
+  drawCurrentTurnLine(svg, L, dom, latestTurn);
   return { svg, barRects, tickPositions };
 }
 
@@ -1316,7 +1049,7 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
  * war labels) plus the hover tooltip.
  * @param {SVGElement} svg The chart SVG.
  * @param {Object} env Shared environment.
- * @param {*[]} env.filtered The filtered wars.
+ * @param {*[]} env.merged The full merged war set (for naming).
  * @param {BarRect[]} env.barRects The bar rects.
  * @param {{ t: number, x: number, year: string|null }[]} env.tickPositions Ticks.
  * @param {GanttLayout} env.L The layout.
@@ -1325,23 +1058,43 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
  * @param {Snapshot[]} env.samples The sample stream.
  * @param {number} env.W Canvas width.
  * @param {number} env.H Canvas height.
+ * @param {{ xMin: number, xMax: number }} env.dom The x-domain.
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} env.crisisOnsets Crisis onsets.
+ * @param {string} env.crisisSeed The game seed (for crisis names).
  * @returns {HTMLElement} The chart wrap.
  */
 function mountGanttWrap(svg, env) {
-  const { filtered, barRects, tickPositions, L, turnYearMap, latestTurn, samples, W, H } = env;
+  const { merged, barRects, tickPositions, L, turnYearMap, latestTurn, samples, W, H } = env;
+  const { dom, crisisOnsets, crisisSeed } = env;
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap demographics-wars-wrap";
-  wrap.appendChild(svg);
+  // Inner canvas: fills the viewport (width/height 100% in CSS) but is forced to
+  // at least the chart's NATURAL pixel extent via min-width/min-height, so it
+  // stretches to fill when the timeline is small and scrolls when it's large.
+  // The SVG (viewBox W x H, preserveAspectRatio none) and the %-positioned
+  // overlays both scale with the canvas, so they stay aligned either way.
+  const canvas = document.createElement("div");
+  canvas.className = "demographics-wars-canvas";
+  canvas.style.minWidth = W + "px";
+  canvas.style.minHeight = H + "px";
+  canvas.appendChild(svg);
+  wrap.appendChild(canvas);
 
-  mountGanttXTicks(wrap, tickPositions, L, W, H);
-  mountGanttAxisTitles(wrap, L, W, H);
+  mountGanttXTicks(canvas, tickPositions, L, W, H);
+  mountGanttAxisTitles(canvas, L, W, H);
+  mountCurrentTurnLabel(canvas, L, latestTurn, W, H);
+  mountCrisisLabels(canvas, L, dom, crisisOnsets, crisisSeed, W, H);
 
-  const nameOverride = buildWarNameOverrides(filtered, turnYearMap, latestTurn);
-  mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W, H);
+  // Name over the FULL merged set (not just the filtered subset) so the names -
+  // including recurrence ordinals + world-war numbering - match the War Graphs
+  // picker and header, which name the same full set.
+  const continentMap = buildContinentMap(samples);
+  const nameOverride = buildWarNameOverrides(merged, turnYearMap, latestTurn, continentMap);
+  mountWarLabels(canvas, barRects, nameOverride, turnYearMap, latestTurn, W, H);
 
-  // Hover tooltip — custom callout replacing the unreliable `title` attribute.
+  // Hover tooltip - custom callout replacing the unreliable `title` attribute.
   const tooltip = createGanttTooltip();
-  wrap.appendChild(tooltip);
+  canvas.appendChild(tooltip);
   const ctx = { nameOverride, turnYearMap, latestTurn, samples };
   wireGanttHover({ wrap, svg, tooltip, barRects, ctx, W, H });
   return wrap;

@@ -163,7 +163,7 @@ const ENDEAVOR_ACTIONS = {
 
 // ---- City-State type resolution -------------------------------------------
 // City-state bonus / type resolution. Civ7 stores a CS's "type" (Cultural /
-// Economic / Militaristic / Scientific) via its assigned CityStateBonus —
+// Economic / Militaristic / Scientific) via its assigned CityStateBonus -
 // the hash is looked up in `Game.CityStates.getBonusType(csPid)` and the
 // row is found in `GameInfo.CityStateBonuses` (each row carries
 // `.CityStateType`). Cited from
@@ -171,7 +171,7 @@ const ENDEAVOR_ACTIONS = {
 //   base-standard/ui-next/tooltips/plot-tooltip/helpers.js
 // CS type strings observed in age-antiquity/data/independents.xml+ :
 //   MILITARISTIC, CULTURAL, ECONOMIC, SCIENTIFIC
-// (modifier names also reference EXPANSIONIST and DIPLOMATIC — handled).
+// (modifier names also reference EXPANSIONIST and DIPLOMATIC - handled).
 
 /**
  * Find the `GameInfo.CityStateBonuses` row whose `$hash` matches `bonusHash`,
@@ -534,7 +534,6 @@ function pushEndeavorEdges(actionList, metIds, filterKey) {
  * @param {number[]} metIds Met major ids.
  * @param {ActionLookup[]} lookups Pre-resolved endeavor lookups.
  * @param {string} filterKey Filter key to tag the edge with.
- * @returns {void}
  */
 function pushOneEndeavorEdge(edges, seen, ev, a, metIds, lookups, filterKey) {
   if (!ev || typeof ev.actionType !== "number") return;
@@ -578,7 +577,7 @@ export function buildPoliticalEdges(metIds, filterKey) {
   if (filterKey === "denounced") {
     // Denunciations are diplomatic actions, queried via getPlayerEvents the
     // same way Open Borders is. Direction matters (A denounced B is not
-    // symmetric), but the ring treats edges as undirected pairs — we collapse
+    // symmetric), but the ring treats edges as undirected pairs - we collapse
     // with a sorted key to dedupe reciprocal denounces.
     return buildActionTypeEdges(
       metIds,
@@ -702,6 +701,126 @@ export function buildAttitudeEdges(metIds, _localPid) {
       const catKey = attitudeCatFor(pa, b);
       edges.push({ a, b, color: categoryColor(catKey), filterKey: catKey });
     }
+  }
+  return edges;
+}
+
+/** Political filter keys that are sourced from diplomacy-event scans. */
+const POLITICAL_EVENT_FILTER_KEYS = ["openborders", "denounced", "research", "endeavors"];
+
+/**
+ * Context for fused pairwise civ-edge construction.
+ * @typedef {Object} CivPairContext
+ * @property {number[]} pids Major ids in scope (met + local).
+ * @property {Map<number, *>} playersById Cached Players.get handles.
+ * @property {Map<number, *>} tradesById Cached Trade handles.
+ */
+
+/**
+ * Resolve major-player and trade handles once for the civ-ring passes.
+ * @param {number[]} metIds Met major ids.
+ * @param {number|undefined} localPid Local player id to force-include.
+ * @returns {CivPairContext} Resolved pairwise context.
+ */
+function resolveCivPairContext(metIds, localPid) {
+  const pids = metIds.slice();
+  if (typeof localPid === "number" && !pids.includes(localPid)) pids.push(localPid);
+  /** @type {Map<number, *>} */
+  const playersById = new Map();
+  /** @type {Map<number, *>} */
+  const tradesById = new Map();
+  for (const pid of pids) {
+    const p = safeCall("Players.get(" + pid + ")", () => Players.get(pid), null);
+    playersById.set(pid, p);
+    tradesById.set(pid, resolveTradeHandle(pid));
+  }
+  return { pids, playersById, tradesById };
+}
+
+/**
+ * Append directional trade edges for one unordered major-major pair.
+ * @param {Edge[]} edges Accumulator to push into.
+ * @param {number} a First player id.
+ * @param {number} b Second player id.
+ * @param {*} tradeA Trade handle for `a` (or null).
+ * @param {*} tradeB Trade handle for `b` (or null).
+ */
+function appendPairTradeEdges(edges, a, b, tradeA, tradeB) {
+  if (tradeA) {
+    const nAB = tradeRouteCount(tradeA, b);
+    if (nAB > 0) {
+      const wAB = Math.min(1, nAB / 3);
+      edges.push({
+        a,
+        b,
+        color: "#4dc6c6",
+        opacity: 0.5 + wAB * 0.5,
+        filterKey: "trade"
+      });
+    }
+  }
+  if (tradeB) {
+    const nBA = tradeRouteCount(tradeB, a);
+    if (nBA > 0) {
+      const wBA = Math.min(1, nBA / 3);
+      edges.push({
+        a: b,
+        b: a,
+        color: "#4dc6c6",
+        opacity: 0.5 + wBA * 0.5,
+        filterKey: "trade"
+      });
+    }
+  }
+}
+
+/**
+ * Fused civ pair pass: one i<j loop computes attitude (optional) and trade.
+ * @param {CivPairContext} ctx Pre-resolved pair context.
+ * @param {boolean} includeAttitude Whether to emit attitude-family edges.
+ * @returns {Edge[]} Pairwise edges.
+ */
+function buildPairwiseCivEdges(ctx, includeAttitude) {
+  /** @type {Edge[]} */
+  const edges = [];
+  const { pids, playersById, tradesById } = ctx;
+  for (let i = 0; i < pids.length; i++) {
+    const a = pids[i];
+    const pa = playersById.get(a);
+    for (let j = i + 1; j < pids.length; j++) {
+      const b = pids[j];
+      const tradeA = tradesById.get(a) || null;
+      const tradeB = tradesById.get(b) || null;
+      try {
+        if (includeAttitude && pa) {
+          const catKey = attitudeCatFor(pa, b);
+          edges.push({ a, b, color: categoryColor(catKey), filterKey: catKey });
+        }
+        appendPairTradeEdges(edges, a, b, tradeA, tradeB);
+      } catch (_) {
+        // One pair can fail on transient engine reads; skip that pair only.
+      }
+    }
+  }
+  return edges;
+}
+
+/**
+ * Build the full civ-ring edge set tagged by filter key so callers can cache
+ * once and apply filter toggles without re-querying engine state.
+ * @param {number[]} metIds Met major ids.
+ * @param {number|undefined} localPid Local player id.
+ * @param {boolean} includeAttitude Whether to include attitude-family edges.
+ * @returns {Edge[]} Full tagged edge set.
+ */
+export function buildCivTaggedEdges(metIds, localPid, includeAttitude) {
+  /** @type {Edge[]} */
+  let edges = [];
+  if (typeof Players === "undefined" || typeof Players.get !== "function") return edges;
+  const pairCtx = resolveCivPairContext(metIds, localPid);
+  edges = edges.concat(buildPairwiseCivEdges(pairCtx, includeAttitude));
+  for (const k of POLITICAL_EVENT_FILTER_KEYS) {
+    edges = edges.concat(buildPoliticalEdges(metIds, k));
   }
   return edges;
 }

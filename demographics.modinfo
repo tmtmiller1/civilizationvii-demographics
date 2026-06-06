@@ -7,7 +7,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>1.1.6</Version>
+        <Version>1.2.0</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -34,6 +34,7 @@
                     <Item>ui/demographics-sampler.js</Item>
                     <Item>ui/sampler-collectors.js</Item>
                     <Item>ui/sampler-wars.js</Item>
+                    <Item>ui/sampler-war-events.js</Item>
                     <Item>ui/demographics-storage.js</Item>
                     <Item>ui/demographics-metrics.js</Item>
                     <Item>ui/demographics-settings.js</Item>
@@ -45,10 +46,15 @@
                     <Item>ui/screen-demographics/demographics-chart.js</Item>
                     <Item>ui/screen-demographics/chart-shared.js</Item>
                     <Item>ui/screen-demographics/chart-line.js</Item>
+                    <Item>ui/screen-demographics/crisis-names.js</Item>
                     <Item>ui/screen-demographics/chart-legacy-radar.js</Item>
                     <Item>ui/screen-demographics/chart-resources.js</Item>
+                    <Item>ui/screen-demographics/chart-wars-cost.js</Item>
+                    <Item>ui/screen-demographics/chart-wars-merge.js</Item>
                     <Item>ui/screen-demographics/chart-wars-gantt.js</Item>
-                    <Item>ui/screen-demographics/chart-triumphs.js</Item>
+                    <Item>ui/screen-demographics/chart-wars-glossary.js</Item>
+                    <Item>ui/screen-demographics/chart-war-graphs.js</Item>
+                    <Item>ui/screen-demographics/chart-crisis-stages.js</Item>
                     <Item>ui/screen-demographics/views/view-history.js</Item>
                     <Item>ui/screen-demographics/views/history-toolbar.js</Item>
                     <Item>ui/screen-demographics/views/history-time-filter.js</Item>

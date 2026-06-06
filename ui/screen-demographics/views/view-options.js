@@ -2,7 +2,7 @@
 //
 // "Options" view: settings panel, history controls, session info.
 //
-// Checkbox pattern: lifted from vanilla panel-mini-map.js — see
+// Checkbox pattern: lifted from vanilla panel-mini-map.js - see
 // createShowMinimapCheckbox / createLayerCheckbox for the canonical form.
 // fxs-checkbox takes a `selected` attribute (stringified bool) and emits
 // "component-value-changed" (ComponentValueChangeEventName, defined in
@@ -33,6 +33,8 @@ import {
  * Live sampler surface used by the "Refresh sample now" button.
  * @typedef {Object} OptionsSampler
  * @property {() => void} [sampleNow] Force an immediate sample.
+ * @property {() => boolean} [isSamplerDisabled] Whether kill-switch is active.
+ * @property {() => boolean} [reenableSampler] Manually re-enable sampling.
  */
 
 /**
@@ -59,7 +61,6 @@ const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
- * @returns {void}
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-options]", ...a);
@@ -112,7 +113,7 @@ function makeToggle(label, key, dflt, settings, onChange) {
 function makeButton(label, handler) {
   const btn = document.createElement("fxs-button");
   btn.setAttribute("caption", label);
-  // Audio cue group — Enhancements.md #1. fxs-button auto-emits primary
+  // Audio cue group - Enhancements.md #1. fxs-button auto-emits primary
   // button-press / activate sounds when given a group ref.
   btn.setAttribute("data-audio-group-ref", "options");
   btn.className = "demographics-option-button";
@@ -124,7 +125,6 @@ function makeButton(label, handler) {
 /**
  * Remove every child of `host` so the view can be rebuilt from scratch.
  * @param {HTMLElement} host The view host element.
- * @returns {void}
  */
 function clearHost(host) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -147,7 +147,7 @@ function buildHeading() {
  * NOTE: Toggles intentionally DO NOT call ctx.requestReload(). Reload calls
  * renderActiveView() which clears the host and re-renders, which destroys the
  * in-flight checkbox element mid-event and makes the entire options view vanish
- * on click. Settings take effect on next open of History/Factbook — which is
+ * on click. Settings take effect on next open of History/Factbook - which is
  * fine, since nothing in the Options view itself depends on these toggles.
  *
  * The earlier "Show unmet civs in legend" toggle and this "Show real names for
@@ -157,12 +157,11 @@ function buildHeading() {
  *                                     Civilization" placeholder.
  *   showUnmetNames = true:            real leader + civ names shown for civs the
  *                                     local player hasn't met (spoiler mode).
- * The old `showUnmetCivs` toggle is removed — there's no useful behavior between
+ * The old `showUnmetCivs` toggle is removed - there's no useful behavior between
  * "hide entirely" and "show as placeholder", and hiding civs from the chart
  * entirely makes ranks misleading.
  * @param {HTMLElement} wrap The options container to append into.
  * @param {OptionsCtx} ctx Render context.
- * @returns {void}
  */
 function appendToggles(wrap, ctx) {
   wrap.appendChild(
@@ -176,6 +175,20 @@ function appendToggles(wrap, ctx) {
   wrap.appendChild(
     makeToggle(t("LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS"), "hideUnmetStats", true, ctx.settings)
   );
+  // Sub-option of "Hide unmet civ stats": once you meet a civ, reveal its whole
+  // history (back-fill, on) or only data from first contact forward (off).
+  const backfillRow = makeToggle(
+    t("LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY"),
+    "backfillMetHistory",
+    true,
+    ctx.settings
+  );
+  backfillRow.classList.add("demographics-option-row-sub");
+  wrap.appendChild(backfillRow);
+  const backfillHint = document.createElement("div");
+  backfillHint.className = "demographics-option-hint font-body text-xs";
+  backfillHint.textContent = t("LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT");
+  wrap.appendChild(backfillHint);
   wrap.appendChild(
     makeToggle(t("LOC_DEMOGRAPHICS_OPT_COLORBLIND"), "colorblindMode", false, ctx.settings, () =>
       ctx.requestReload?.()
@@ -310,7 +323,7 @@ function buildHistoryCapHint() {
 /**
  * Build the polling-rate (turns between samples) dropdown row.
  *
- * Takes effect on the very next PlayerTurnActivated — no restart needed. The
+ * Takes effect on the very next PlayerTurnActivated - no restart needed. The
  * sampler reads the setting fresh each turn and skips turns that aren't on
  * cadence.
  * @param {OptionsCtx} ctx Render context.
@@ -372,7 +385,6 @@ function buildDecimationStatus(ctx) {
  * the polling-rate dropdown + hint to `wrap`, in their fixed display order.
  * @param {HTMLElement} wrap The options container to append into.
  * @param {OptionsCtx} ctx Render context.
- * @returns {void}
  */
 function appendStorageControls(wrap, ctx) {
   wrap.appendChild(buildHistoryCapControl(ctx));
@@ -391,10 +403,43 @@ function appendStorageControls(wrap, ctx) {
 }
 
 /**
+ * Build kill-switch recovery controls when sampling is paused.
+ * @param {OptionsCtx} ctx Render context.
+ * @returns {HTMLElement} The paused-state row (empty when sampler is active).
+ */
+function buildSamplerRecoveryRow(ctx) {
+  const row = document.createElement("div");
+  row.className = "demographics-option-row";
+  let paused = false;
+  try {
+    paused = !!ctx.sampler?.isSamplerDisabled?.();
+  } catch (_) {
+    // sampler.isSamplerDisabled() can throw during hot-reload; render nothing.
+  }
+  if (!paused) return row;
+
+  const label = document.createElement("div");
+  label.className = "demographics-option-label font-body text-sm";
+  label.style.marginRight = "0.6rem";
+  label.textContent = t("LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED");
+  row.appendChild(label);
+
+  const reenableBtn = makeButton(t("LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE"), () => {
+    try {
+      ctx.sampler?.reenableSampler?.();
+      ctx.requestReload?.();
+    } catch (_) {
+      // sampler.reenableSampler() can throw if engine handlers are unavailable.
+    }
+  });
+  row.appendChild(reenableBtn);
+  return row;
+}
+
+/**
  * Force an immediate sample, then re-render the view. Defensive: swallows any
  * error from the sampler.
  * @param {OptionsCtx} ctx Render context.
- * @returns {void}
  */
 function refreshSampleNow(ctx) {
   try {
@@ -426,7 +471,6 @@ function confirmAction(message) {
  * Confirm, then wipe all recorded samples and re-render. Defensive: swallows
  * any error from storage.
  * @param {OptionsCtx} ctx Render context.
- * @returns {void}
  */
 function clearHistory(ctx) {
   if (!confirmAction(t("LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY"))) return;
@@ -445,7 +489,6 @@ function clearHistory(ctx) {
  * change and are duplicating in the conflicts gantt. Defensive: swallows any
  * error from storage.
  * @param {OptionsCtx} ctx Render context.
- * @returns {void}
  */
 function resetWarHistory(ctx) {
   if (!confirmAction(t("LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS"))) return;
@@ -501,7 +544,6 @@ function buildSessionInfo(ctx) {
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {OptionsCtx} ctx Render context (settings, storage, sampler, history,
  *   requestReload).
- * @returns {void}
  */
 export function render(host, ctx) {
   clearHost(host);
@@ -513,6 +555,7 @@ export function render(host, ctx) {
   wrap.appendChild(buildHeading());
   appendToggles(wrap, ctx);
   appendStorageControls(wrap, ctx);
+  wrap.appendChild(buildSamplerRecoveryRow(ctx));
   wrap.appendChild(buildButtonRow(ctx));
   wrap.appendChild(buildSessionInfo(ctx));
 }

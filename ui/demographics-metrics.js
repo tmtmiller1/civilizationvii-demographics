@@ -13,7 +13,7 @@
 // (see screen-demographics.js).
 //
 // A few metrics apply a deterministic transform to make the raw game
-// number feel more real-world — GDP in dollars, population in millions,
+// number feel more real-world - GDP in dollars, population in millions,
 // land in km². These are purely cosmetic; they never affect game state.
 // Per-metric formulas are documented inline below.
 //
@@ -48,7 +48,7 @@ function safeNum(v) {
 
 /**
  * Format a number with a magnitude suffix, e.g. `1234567` → `"1.23M"`. Handles
- * negatives and sub-1000 values (no suffix). Non-finite input renders as `"—"`.
+ * negatives and sub-1000 values (no suffix). Non-finite input renders as `"-"`.
  * @param {number} n Value to format.
  * @returns {string} The formatted string.
  */
@@ -152,7 +152,7 @@ function scalePopulation(raw, scaleCtx, ctx) {
 }
 
 // GDP scale: (raw weighted per-turn yield sum) × turnsElapsed × 1,000,000
-// — produces billion-scale numbers that grow believably over a game.
+// - produces billion-scale numbers that grow believably over a game.
 // Falls back to current turn=1 if scaleCtx.turn missing.
 // `scaleCtx` is the per-player ctx (sampler passes the player ctx as both
 // arguments at call sites); we also accept a third `ctx` arg as the spec
@@ -173,7 +173,7 @@ function scaleGDP(raw, scaleCtx, ctx) {
   return raw * turn * 1000000;
 }
 
-// GDP weighting — research-informed values describing the relative
+// GDP weighting - research-informed values describing the relative
 // "value per point" of each yield (production = base unit of 1.0).
 // See README/spec for rationale.
 /** @type {Record<string, number>} */
@@ -220,14 +220,14 @@ function allUndefined(values) {
  * once it became available in the Modern age, but those "real" victory points
  * start at single-digit values (1, 2, 3...) while the synthesized GDP is on a
  * $billions scale. The instant a civ earned their first economic victory point,
- * the accessor swapped paths and the line collapsed from ~$8B to ~$3 — looking
+ * the accessor swapped paths and the line collapsed from ~$8B to ~$3 - looking
  * like a hard drop to zero on the chart. Each civ hit that first VP at a
  * different turn, hence the "every civilization drops to zero at varying times"
  * symptom. Keeping the synthesis path exclusive ensures a continuous magnitude
  * from antiquity through modern.
  *
  * If every yield came back undefined we have NO real data for this player this
- * turn (Stats API not ready yet — common on the first sample after a saved-game
+ * turn (Stats API not ready yet - common on the first sample after a saved-game
  * resume). Return undefined so the sampler omits gdp from the snapshot entirely.
  * The chart's `spanGaps:true` will connect across the gap with a straight
  * segment, which is far less jarring than a sudden plunge to $0 that an explicit
@@ -401,11 +401,11 @@ export const METRICS = [
     accessor: (ctx) => safeNum(ctx.gold),
     format: formatRoundedCount,
     unit: "gold",
-    // yield-icons.xml — blp:Yield_Gold (64px).
+    // yield-icons.xml - blp:Yield_Gold (64px).
     unitIcon: "blp:Yield_Gold"
   },
   {
-    // Gold income per turn (net) — yield-based companion to Treasury.
+    // Gold income per turn (net) - yield-based companion to Treasury.
     id: "gpt",
     label: "GPT",
     title: "Gold Per Turn",
@@ -502,7 +502,7 @@ export const METRICS = [
   },
   {
     // Net PRODUCTION per turn (display as +/-).
-    // yield-icons.xml — blp:Yield_Production.
+    // yield-icons.xml - blp:Yield_Production.
     id: "production",
     label: "PPT",
     title: "Production Per Turn",
@@ -519,7 +519,7 @@ export const METRICS = [
   },
   {
     // Net SCIENCE per turn (display as +/-).
-    // yield-icons.xml — blp:Yield_Science.
+    // yield-icons.xml - blp:Yield_Science.
     id: "science_yield",
     label: "Science",
     title: "Science Per Turn",
@@ -536,7 +536,7 @@ export const METRICS = [
   },
   {
     // Net CULTURE per turn (display as +/-).
-    // yield-icons.xml — blp:Yield_Culture.
+    // yield-icons.xml - blp:Yield_Culture.
     id: "culture_yield",
     label: "Culture",
     title: "Culture Per Turn",
@@ -552,7 +552,7 @@ export const METRICS = [
     unitIcon: "blp:Yield_Culture"
   },
   {
-    // Diplomatic Approval — international reputation aggregate.
+    // Diplomatic Approval - international reputation aggregate.
     // Sum of weighted relationship scores across all met major civs
     // (Allied +5, Helpful +3, Friendly +2, Neutral 0, Unfriendly -2,
     // Hostile -3, At War -5) PLUS 0.3 × (suzerain bonus from city-states).
@@ -650,9 +650,9 @@ export const METRICS = [
     unit: "routes"
   },
   {
-    // Military Power — summed combat strength across military units.
+    // Military Power - summed combat strength across military units.
     // Computed in sampler (no clean vanilla player-level accessor); see
-    // demographics-sampler.js computeMilitaryPower() — citations there.
+    // demographics-sampler.js computeMilitaryPower() - citations there.
     id: "milpower",
     label: "Military Power",
     title: "Military Power (combined unit strength)",
@@ -667,9 +667,9 @@ export const METRICS = [
     unit: "strength"
   },
   {
-    // Wonders — total wonders constructed by the player, all ages.
+    // Wonders - total wonders constructed by the player, all ages.
     // Accessor: player.Stats.getNumWonders(false, false)
-    //   — base-standard/ui/advice/advice-support.js
+    //   - base-standard/ui/advice/advice-support.js
     id: "wonders",
     label: "Wonders",
     title: "Wonders Constructed",
@@ -689,7 +689,7 @@ export const METRICS = [
   // every row in GameInfo.Legacies. These six fields are persisted in
   // every sample's metrics so the stacked-area "Triumphs Over Time" view
   // and the radar can reconstruct history. They DON'T have their own
-  // line-chart tabs — a single-integer step counter over hundreds of
+  // line-chart tabs - a single-integer step counter over hundreds of
   // turns is poor info density. The dedicated triumph views (Race,
   // Completion, Stack) live as synthetic metrics in view-history.js.
   {
@@ -779,7 +779,7 @@ export const METRICS = [
     category: "age",
     global: true,
     factbookHidden: true,
-    // Discrete integer metric — Chart.js auto-generates fractional ticks
+    // Discrete integer metric - Chart.js auto-generates fractional ticks
     // (0, 0.5, 1, …) over our 0–4 range and the formatter rounds them,
     // so labels appear 9 times instead of 5. This flag tells the chart
     // to suppress non-integer tick labels.
@@ -791,7 +791,7 @@ export const METRICS = [
     //    1 = second active stage ("Crisis Intensifies")
     //    2 = third active stage ("Crisis Culminates")
     //    3 = post-final stage ("Crisis Ends")
-    // Cite: model-government.js — `nextCrisisStage = max(0, crisisStage+1)`
+    // Cite: model-government.js - `nextCrisisStage = max(0, crisisStage+1)`
     // looks at the NEXT marker index, confirming engine values are 0-based.
     // Display-side we want the user-facing label "Stage 1" when the engine
     // says 0 (the first active stage). Shift every value up by 1 so the

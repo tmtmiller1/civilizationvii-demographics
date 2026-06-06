@@ -65,7 +65,7 @@ function buildAllToggleRow(onToggleAll) {
   return ctrlRow;
 }
 
-const SAMPLE_W = 84; // px — 75% bigger so dash patterns are very visible
+const SAMPLE_W = 84; // px - 75% bigger so dash patterns are very visible
 
 /**
  * Append one solid sub-segment span to a swatch, used to synthesize dash
@@ -185,7 +185,7 @@ function buildFilterPill(f, activeSet, onToggle) {
   // Single-element pill: <div> with textContent. Nested children
   // (pip <span/div> + label <span/div>) were rendering empty in
   // Coherent for reasons we couldn't pin down. Putting the whole
-  // label — disc glyph + text — into the pill's textContent matches
+  // label - disc glyph + text - into the pill's textContent matches
   // the pattern that works for factbook headers and the new chart
   // line labels.
   const pill = document.createElement("div");
@@ -199,7 +199,7 @@ function buildFilterPill(f, activeSet, onToggle) {
   // ── Mini sample line: an inline element showing exactly what this
   // filter's edges look like on the ring. The "swatch" is a tiny
   // horizontal line drawn in the filter's color, with the SAME dash
-  // pattern (rendered as multiple solid sub-segments — Coherent's
+  // pattern (rendered as multiple solid sub-segments - Coherent's
   // SVG renderer rejects stroke-dasharray). This is the actual
   // legend mapping color+texture → filter type.
   pill.appendChild(buildFilterSwatch(f));
@@ -212,7 +212,7 @@ function buildFilterPill(f, activeSet, onToggle) {
 }
 
 /**
- * Build the toggleable filter-pill row — visual vocabulary mirrors the History
+ * Build the toggleable filter-pill row - visual vocabulary mirrors the History
  * view legend (pip + label, filled when active, hollow/dim when off). Uses a
  * plain `<div>` (not `<fxs-activatable>`) so click handling is direct.
  * @param {FilterDef[]} filters Filter descriptors to render.
@@ -231,7 +231,7 @@ export function makeFilterPillRow(filters, activeSet, onToggle, onToggleAll) {
   row.className = "demographics-relations-filter-row font-body text-xs";
   if (!filters || filters.length === 0) return row;
 
-  // "All on" / "All off" header — flips every filter at once. Sits above
+  // "All on" / "All off" header - flips every filter at once. Sits above
   // the per-filter pills as a small two-link row.
   if (typeof onToggleAll === "function") {
     row.appendChild(buildAllToggleRow(onToggleAll));

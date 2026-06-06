@@ -104,10 +104,10 @@
             <Text>Population réelle mise à l'échelle, dérivée exponentiellement du nombre total de citoyens.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="fr_FR">
-            <Text>IPT</Text>
+            <Text>Influence</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="fr_FR">
-            <Text>HPT</Text>
+            <Text>Bonheur</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="fr_FR">
             <Text>Rendement net de bonheur par tour.</Text>
@@ -321,6 +321,9 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="fr_FR">
             <Text>Tour {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="fr_FR">
+            <Text>Détruite</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="fr_FR">
             <Text>Début de la crise</Text>
@@ -551,7 +554,7 @@
             <Text>Aucun instantané pour l'instant — l'ère ne s'est pas terminée.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="fr_FR">
-            <Text>↻ Actualiser</Text>
+            <Text>Actualiser</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="fr_FR">
             <Text>Récupérer à nouveau la progression des héritages depuis VictoryManager.getVictoryProgress()</Text>
@@ -722,10 +725,10 @@
             <Text>5 000 échantillons</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="fr_FR">
-            <Text>10 000 échantillons ⚠ peut ralentir les performances</Text>
+            <Text>10 000 échantillons (peut ralentir les performances)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="fr_FR">
-            <Text>Illimité ⚠ sauvegardes très volumineuses, peut ralentir les performances</Text>
+            <Text>Illimité (sauvegardes très volumineuses, peut ralentir les performances)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="fr_FR">
             <Text>Plafond d'échantillons d'historique :</Text>
@@ -752,7 +755,7 @@
             <Text>Tous les 10 tours</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="fr_FR">
-            <Text>Tous les 25 tours ⚠ graphiques grossiers</Text>
+            <Text>Tous les 25 tours (graphiques grossiers)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="fr_FR">
             <Text>Fréquence d'échantillonnage (performances) :</Text>
@@ -846,6 +849,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="fr_FR">
             <Text>Grande Guerre entre {1_A} et {2_B} (+{3_Extra} civilisations)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_REGIONAL" Language="fr_FR">
+            <Text>Guerre régionale entre {1_A} et {2_B} (+{3_Extra} civilisations)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_CENTURIES" Language="fr_FR">
+            <Text>{1_Base} (Guerre des Siècles)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_YEARS" Language="fr_FR">
+            <Text>{1_Base} (Guerre de {2_Years} Ans)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="fr_FR">
             <Text>Guerre tripartite {1_A}–{2_B}–{3_C}</Text>
@@ -1287,6 +1299,240 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="fr_FR">
             <Text>Masquer les données de diplomatie/relations des civilisations non rencontrées</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="fr_FR">
+            <Text>Crises</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="fr_FR">
+            <Text>Stades de crise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="fr_FR">
+            <Text>Stades de crise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="fr_FR">
+            <Text>Impact de la crise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="fr_FR">
+            <Text>Impact de la crise</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="fr_FR">
+            <Text>Civilisations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY" Language="fr_FR">
+            <Text>Aucune donnée enregistrée pour l'instant.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE" Language="fr_FR">
+            <Text>Aucune crise n'a encore commencé dans cette ère.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GLOSSARY" Language="fr_FR">
+            <Text>Guide</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WAR_GRAPHS" Language="fr_FR">
+            <Text>Impact de la guerre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK" Language="fr_FR">
+            <Text>Guerre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE" Language="fr_FR">
+            <Text>Aucune guerre pour l'instant. Dès qu'une civilisation déclare la guerre, vous pourrez la représenter ici.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA" Language="fr_FR">
+            <Text>Aucune donnée enregistrée pour cette guerre.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_STRENGTH" Language="fr_FR">
+            <Text>Puissance militaire (perdue)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_SETTLEMENTS" Language="fr_FR">
+            <Text>Colonies perdues/gagnées</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_RAZED" Language="fr_FR">
+            <Text>Colonies rasées</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_LAND" Language="fr_FR">
+            <Text>Superficie perdue</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_POP" Language="fr_FR">
+            <Text>Population perdue</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN" Language="fr_FR">
+            <Text>Tour</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="fr_FR">
+            <Text>Force</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="fr_FR">
+            <Text>Colonies (net)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_RAZED" Language="fr_FR">
+            <Text>Colonies</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_LAND" Language="fr_FR">
+            <Text>km²</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_POP" Language="fr_FR">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS" Language="fr_FR">
+            <Text>Vivres / tour</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD" Language="fr_FR">
+            <Text>Production / tour</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD" Language="fr_FR">
+            <Text>Production</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER" Language="fr_FR">
+            <Text>Puissance militaire (au fil du temps)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" Language="fr_FR">
+            <Text>Prod. consacrée à la guerre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS" Language="fr_FR">
+            <Text>Civilisations belligérantes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS" Language="fr_FR">
+            <Text>Cités-États alliées</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CUMULATIVE" Language="fr_FR">
+            <Text>Cumul allié</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE" Language="fr_FR">
+            <Text>Camp de {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE_UNKNOWN" Language="fr_FR">
+            <Text>Camp allié</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_VS" Language="fr_FR">
+            <Text>contre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="fr_FR">
+            <Text>Maintenant (T-{1_Turn})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="fr_FR">
+            <Text>Cités-États alliées</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_COMBINED" Language="fr_FR">
+            <Text>Cités-États (cumulées)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE" Language="fr_FR">
+            <Text>Camp de {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE_UNKNOWN" Language="fr_FR">
+            <Text>Camp allié</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_NONE" Language="fr_FR">
+            <Text>Aucune</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_MILPOWER" Language="fr_FR">
+            <Text>Puissance militaire (actuelle)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="fr_FR">
+            <Text>Puissance militaire (perdue)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="fr_FR">
+            <Text>Colonies</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_LAND" Language="fr_FR">
+            <Text>Superficie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_RAZED" Language="fr_FR">
+            <Text>Rasées</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_POP" Language="fr_FR">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_CROPLOST" Language="fr_FR">
+            <Text>Rendement agricole perdu</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_PRODLOST" Language="fr_FR">
+            <Text>Production perdue</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="fr_FR">
+            <Text>Consacrée à la guerre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="fr_FR">
+            <Text>Voici les chiffres affichés dans la fenêtre contextuelle de chaque guerre sur l'onglet Guerres. Chaque chiffre est mesuré sur la durée de participation d'un belligérant à cette guerre — du tour où il y est entré au tour où il l'a quittée, ou jusqu'à maintenant si la guerre est toujours en cours — et la partie est échantillonnée une fois par tour. Un nombre vert est un gain, un nombre rouge est une perte, et un tiret (—) signifie qu'aucune donnée n'a été enregistrée pour cette guerre.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="fr_FR">
+            <Text>Votre puissance militaire actuelle — la force de combat totale de votre armée — à la fin de la guerre (ou au dernier tour tant qu'elle est en cours). Il s'agit de la taille de vos forces, et non d'une perte ; la « puissance militaire perdue » ci-dessous suit les pertes subies.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="fr_FR">
+            <Text>Force de combat de vos unités réellement tuées au combat, additionnée à mesure que chaque unité meurt (sa force de combat de base). Il s'agit des pertes réelles — remplacer les unités ne masque jamais une perte, et le chiffre n'est pas dérivé de la taille de votre armée active. Les guerres menées avant l'existence de ce suivi se rabattent sur la baisse nette de la force totale de votre armée.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="fr_FR">
+            <Text>Colonies nettes gagnées ou perdues par capture : une colonie que vous capturez compte +1, une qui vous est prise compte −1. Fonder une nouvelle colonie avec un colon ne compte pas — seules les colonies qui changent réellement de mains. Comme il s'agit d'un chiffre net, une colonie que vous perdez puis reprenez revient à zéro. Il est enregistré à partir des événements de capture, donc une guerre menée avant l'ajout de ce suivi n'affiche aucun chiffre.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="fr_FR">
+            <Text>Combien de vos colonies ont été définitivement détruites (rasées). Cela vous est imputé en tant que propriétaire avant la capture de la ville, et non au conquérant qui l'a rasée. Contrairement à une capture — qui peut être annulée en reprenant la ville — une ville rasée est perdue à jamais. Enregistré uniquement pour les guerres menées après l'ajout de ce suivi.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="fr_FR">
+            <Text>Territoire ayant réellement changé de mains pendant la guerre, en kilomètres carrés (chaque case de la carte fait environ 7 000 km²). Ne compte que les terres des colonies capturées à l'ennemi — ou perdues à son profit ; l'expansion pacifique et la croissance des frontières sont exclues. Un nombre positif signifie que vous avez gagné du terrain ; un nombre négatif que vous en avez perdu.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="fr_FR">
+            <Text>Population totale que vous avez perdue, additionnée à partir de chaque tour où votre population a chuté — les tours où elle a augmenté sont ignorés, de sorte que la croissance normale ne peut jamais masquer les pertes de guerre. Deux limites : il ne peut distinguer une mort de guerre d'une famine sur la même période, et la population d'une ville que vous reprenez ensuite compte tout de même comme perdue au tour où elle a chuté pour la première fois.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="fr_FR">
+            <Text>Perturbation alimentaire : chaque tour où votre rendement agricole (vivres nets par tour) a chuté, cette baisse est additionnée (les tours où il a augmenté sont ignorés, de sorte que la croissance ordinaire ne peut la masquer). Les fortes baisses proviennent des fermes et des cases pillées et des villes occupées ou perdues. Il s'agit d'une somme de baisses de taux, un indicateur de perturbation, et non d'une quantité totale de vivres.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST" Language="fr_FR">
+            <Text>Perturbation de la production : chaque tour où votre production par tour a chuté, cette baisse est additionnée (les tours où elle a augmenté sont ignorés, de sorte que la croissance économique ordinaire ne peut la masquer). Les fortes baisses proviennent des cases pillées et des villes occupées ou perdues. Il s'agit d'une somme de baisses de taux, un indicateur de perturbation, et non d'une quantité totale de production. La production que vous avez délibérément consacrée à la guerre est suivie séparément sous « Consacrée à la guerre ».</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="fr_FR">
+            <Text>Production que vous avez consacrée à l'effort de guerre : le coût en production de chaque unité militaire et de chaque bâtiment militaire ou de fortification (murs, etc.) que vous avez achevé pendant la guerre, additionné. Les unités civiles, les bâtiments économiques et les merveilles ne comptent pas. Il s'agit d'un investissement délibéré dans la guerre, et non d'une perte, c'est pourquoi il est affiché comme un chiffre neutre. Le coût est le coût effectif dans la ville qui l'a construit — les réductions liées à votre dirigeant, votre civilisation et vos doctrines sont déjà prises en compte. Les éléments achetés directement avec de l'or ou de la foi ne sont pas comptés, car cela relève de la trésorerie et non de la production ; le report de production entre éléments n'est pas réparti avec exactitude.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="fr_FR">
+            <Text>Pourquoi certaines colonnes sont nettes et d'autres des totaux : le territoire, les colonies et la production fluctuent dans les deux sens et peuvent être annulés, ils sont donc affichés comme une variation nette. La force et la population sont des destructions qui ne devraient jamais être masquées par des gains ailleurs, elles sont donc affichées comme des pertes cumulées. Les colonies rasées sont permanentes par définition.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="fr_FR">
+            <Text>L'historique est réinitialisé à chaque transition d'ère.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2" Language="fr_FR">
+            <Text>Comme il n'existe aucune méthode de persistance des données,</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3" Language="fr_FR">
+            <Text>un seul graphique ne peut pas couvrir plusieurs ères</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="fr_FR">
+            <Text>Utilisez l'ère actuelle ou un filtre par plage d'ères.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="fr_FR">
+            <Text>Guide du coût des guerres — ce que signifie chaque chiffre et comment il est mesuré</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="fr_FR">
+            <Text>Impact de la guerre — la trajectoire de chaque belligérant au cours d'une guerre choisie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="fr_FR">
+            <Text>Révéler tout l'historique lorsque vous rencontrez une civilisation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="fr_FR">
+            <Text>Activé : rencontrer une civilisation révèle tout son passé sur les graphiques. Désactivé : les courbes commencent au moment du premier contact.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED" Language="fr_FR">
+            <Text>Démographie en pause en raison d'erreurs du moteur.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE" Language="fr_FR">
+            <Text>Réactiver l'échantillonnage</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL" Language="fr_FR">
+            <Text>Toutes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="fr_FR">
+            <Text>Aucune</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="fr_FR">
+            <Text>Toutes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE" Language="fr_FR">
+            <Text>Aucune</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_TITLE" Language="fr_FR">
+            <Text>Légende</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_ALL" Language="fr_FR">
+            <Text>Toutes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="fr_FR">
+            <Text>Aucune</Text>
         </Replace>
     </LocalizedText>
 </Database>

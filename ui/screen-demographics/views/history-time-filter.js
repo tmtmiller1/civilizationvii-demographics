@@ -8,6 +8,10 @@
 import { t } from "/demographics/ui/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/demographics-a11y.js";
 import { playActivate } from "/demographics/ui/demographics-audio.js";
+import {
+  computeAgeOffsets,
+  sampleX
+} from "/demographics/ui/screen-demographics/chart-line-axis.js";
 
 /**
  * A single time-range filter pill definition.
@@ -53,14 +57,20 @@ export const TIME_FILTERS = [
 ];
 
 /**
- * Cross-age filter tooltip content. Structured so the renderer can lay it out
- * as proper HTML (clean sections, mixed-case headings) rather than a wall of
- * monospace text. One place to edit if/when the engine constraint changes.
- * @type {{ title: string, body: string }}
+ * Cross-age filter tooltip content: a title and an ordered list of body lines.
+ * Each line is rendered as its own block element (Coherent strips `<br>` and
+ * force-breaks inline `<b>`, so real line breaks need real elements). The last
+ * line is the call-to-action and gets a distinct accent style.
+ * @type {{ title: string, lines: string[] }}
  */
 const CROSS_AGE_DISABLED_TOOLTIP = {
   title: "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE",
-  body: "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY"
+  lines: [
+    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1",
+    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2",
+    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3",
+    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4"
+  ]
 };
 
 /**
@@ -86,14 +96,41 @@ function parseGameYear(s) {
 function buildTurnYearMap(history) {
   /** @type {Map<number, number>} */
   const m = new Map();
-  const samps = history && Array.isArray(history.samples) ? history.samples : [];
-  for (const s of samps) {
-    if (s && typeof s.turn === "number" && typeof s.gameYear === "string") {
+  const mapped = mapSamplesToChartX(history);
+  for (const s of mapped) {
+    if (typeof s.x === "number" && typeof s.gameYear === "string") {
       const y = parseGameYear(s.gameYear);
-      if (typeof y === "number") m.set(s.turn, y);
+      if (typeof y === "number") m.set(s.x, y);
     }
   }
   return m;
+}
+
+/**
+ * One sample mapped to chart-X.
+ * @typedef {{ x: number, age: string, gameYear?: string }} ChartSample
+ */
+
+/**
+ * Build chart-X mapped samples sorted by X position.
+ * @param {DemoHistory|undefined} history The persisted history blob.
+ * @returns {ChartSample[]} Chart-X mapped samples.
+ */
+function mapSamplesToChartX(history) {
+  const samps = history && Array.isArray(history.samples) ? history.samples : [];
+  const boundaries = history && Array.isArray(history.ageBoundaries) ? history.ageBoundaries : [];
+  const { offsets } = computeAgeOffsets(samps, boundaries);
+  /** @type {ChartSample[]} */
+  const out = [];
+  for (const s of samps) {
+    if (!s) continue;
+    const x = sampleX(s, offsets, boundaries);
+    if (typeof x !== "number" || !isFinite(x)) continue;
+    const age = typeof s.age === "string" ? s.age : "AGE_ANTIQUITY";
+    out.push({ x, age, gameYear: s.gameYear });
+  }
+  out.sort((a, b) => a.x - b.x);
+  return out;
 }
 
 /**
@@ -104,12 +141,11 @@ function buildTurnYearMap(history) {
  * @returns {number} Start turn of the current age.
  */
 function currentAgeStartTurn(history, firstTurn) {
-  const bounds =
-    history && Array.isArray(history.ageBoundaries)
-      ? history.ageBoundaries.slice().sort((a, b) => (a.turn || 0) - (b.turn || 0))
-      : [];
-  if (bounds.length === 0) return firstTurn;
-  return bounds[bounds.length - 1].turn;
+  const mapped = mapSamplesToChartX(history);
+  if (mapped.length === 0) return firstTurn;
+  const curAge = mapped[mapped.length - 1].age;
+  const firstInAge = mapped.find((s) => s.age === curAge);
+  return firstInAge ? firstInAge.x : firstTurn;
 }
 
 /**
@@ -130,9 +166,9 @@ function computeYearRelativeRange(history, samps, span, firstTurn, lastTurn) {
   // Find the earliest turn whose year >= cutoff.
   let minTurn = lastTurn;
   for (const s of samps) {
-    const y = turnYear.get(/** @type {number} */ (s.turn));
+    const y = turnYear.get(/** @type {number} */ (s.x));
     if (typeof y === "number" && y >= cutoff) {
-      minTurn = /** @type {number} */ (s.turn);
+      minTurn = /** @type {number} */ (s.x);
       break;
     }
   }
@@ -155,11 +191,17 @@ function computeYearRelativeRange(history, samps, span, firstTurn, lastTurn) {
  * @returns {TurnRange|null} The window, or null for an unknown filter.
  */
 function computeAgeRange(history, filterId, firstTurn, lastTurn) {
-  // Age filters use history.ageBoundaries: [{turn, age}, ...]
-  const bounds =
-    history && Array.isArray(history.ageBoundaries)
-      ? history.ageBoundaries.slice().sort((a, b) => (a.turn || 0) - (b.turn || 0))
-      : [];
+  const mapped = mapSamplesToChartX(history);
+  /** @type {{ age: string, start: number }[]} */
+  const starts = [];
+  /** @type {Set<string>} */
+  const seen = new Set();
+  for (const s of mapped) {
+    if (!seen.has(s.age)) {
+      seen.add(s.age);
+      starts.push({ age: s.age, start: s.x });
+    }
+  }
   /**
    * Resolve the [start, end] window for the age at boundary index `idx`.
    * @param {number} idx Zero-based age index.
@@ -167,10 +209,11 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
    */
   function ageRange(idx) {
     if (idx < 0) return null;
-    const start = idx === 0 ? firstTurn : bounds[idx - 1]?.turn || firstTurn;
+    if (idx >= starts.length) return null;
+    const start = idx === 0 ? firstTurn : starts[idx].start;
     // If this is the last known age, max = lastTurn; else next boundary - 1.
-    const next = bounds[idx];
-    const end = next ? next.turn - 1 : lastTurn;
+    const next = starts[idx + 1];
+    const end = next ? next.start - 1 : lastTurn;
     return { min: start, max: end };
   }
   if (filterId === "age1") return ageRange(0);
@@ -178,9 +221,9 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
   if (filterId === "age3") return ageRange(2);
   if (filterId === "age") {
     // Current age: from the LAST recorded boundary turn → lastTurn.
-    if (bounds.length === 0) return { min: firstTurn, max: lastTurn };
-    const last = bounds[bounds.length - 1];
-    return { min: last.turn, max: lastTurn };
+    if (starts.length === 0) return { min: firstTurn, max: lastTurn };
+    const last = starts[starts.length - 1];
+    return { min: last.start, max: lastTurn };
   }
   return null;
 }
@@ -194,10 +237,10 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
  */
 export function computeTurnRange(history, filterId) {
   if (!filterId || filterId === "all") return null;
-  const samps = history && Array.isArray(history.samples) ? history.samples : [];
+  const samps = mapSamplesToChartX(history);
   if (samps.length === 0) return null;
-  const lastTurn = /** @type {number} */ (samps[samps.length - 1].turn);
-  const firstTurn = /** @type {number} */ (samps[0].turn);
+  const lastTurn = /** @type {number} */ (samps[samps.length - 1].x);
+  const firstTurn = /** @type {number} */ (samps[0].x);
   // Year-relative filters (25/50/100/300/500/1000 years).
   if (/^\d+$/.test(filterId)) {
     const span = parseInt(filterId, 10);
@@ -250,17 +293,32 @@ function overflowShift(near, far, extent) {
  */
 function attachDisabledFilterTooltip(pill) {
   const tip = buildDisabledFilterTooltipEl();
+  let hoverTimer = 0;
+  const HOVER_DELAY_MS = 360;
 
-  // Ensure tooltip never overflows the viewport
+  // Gameface does not reliably honor `pointer-events: none` for hit-testing, so
+  // a permanently-present (opacity-0) tip still registers its 38rem box as part
+  // of the pill for `mouseenter` - firing the tooltip far to the right/below the
+  // pill. Fix: keep the tip OUT of the DOM unless actually shown, so there is no
+  // phantom hover region. Reposition once it has been appended.
   tip.addEventListener("transitionend", () => repositionTooltip(tip));
-  tip.addEventListener("mouseenter", () => repositionTooltip(tip));
 
-  pill.appendChild(tip);
   pill.addEventListener("mouseenter", () => {
-    tip.style.opacity = "1";
+    if (hoverTimer) clearTimeout(hoverTimer);
+    hoverTimer = setTimeout(() => {
+      hoverTimer = 0;
+      pill.appendChild(tip);
+      tip.style.opacity = "1";
+      repositionTooltip(tip);
+    }, HOVER_DELAY_MS);
   });
   pill.addEventListener("mouseleave", () => {
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+      hoverTimer = 0;
+    }
     tip.style.opacity = "0";
+    if (tip.parentElement) tip.remove();
   });
 }
 
@@ -274,7 +332,11 @@ function buildDisabledFilterTooltipEl() {
 
   const tip = document.createElement("div");
   tip.className =
-    "img-tooltip-border img-tooltip-bg demographics-history-tip demographics-history-tip-disabled-filter";
+    "demographics-tip-chrome demographics-history-tip demographics-history-tip-disabled-filter";
+  // Belt-and-suspenders with the transient-DOM approach in attachDisabledFilter-
+  // Tooltip: keep pointer-events off so this 38rem-wide tip never acts as a hover
+  // target for the pill's mouseenter even while it is briefly in the DOM.
+  tip.style.pointerEvents = "none";
 
   const title = document.createElement("div");
   title.className = "demographics-history-tip-title";
@@ -283,7 +345,14 @@ function buildDisabledFilterTooltipEl() {
 
   const body = document.createElement("div");
   body.className = "demographics-history-tip-body";
-  body.innerHTML = t(content.body);
+  content.lines.forEach((loc, i) => {
+    const line = document.createElement("div");
+    line.className = "demographics-history-tip-line";
+    // Last line is the call-to-action - accent it.
+    if (i === content.lines.length - 1) line.classList.add("demographics-history-tip-line-action");
+    line.textContent = t(loc);
+    body.appendChild(line);
+  });
   tip.appendChild(body);
 
   return tip;
@@ -341,7 +410,7 @@ function buildEnabledFilterPill(f, activeFilter, onSelect) {
 
 /**
  * Build the pill row of time-range filter buttons. Same single-div pattern that
- * works in view-relations.js — class + textContent + click handler. Persists
+ * works in view-relations.js - class + textContent + click handler. Persists
  * the active filter via `onSelect` (round-trips through settings). Filters
  * flagged `disabled` render greyed and non-clickable with a custom HTML tooltip
  * (Coherent ignores native `title`).
@@ -353,7 +422,7 @@ export function buildTimeFilterRow(activeFilter, onSelect) {
   const row = document.createElement("div");
   // Row needs to be the positioning context for absolutely-placed
   // tooltips on disabled pills (the pill itself is a flex child and
-  // its own bounds are too narrow for a multi-line tooltip) — see the
+  // its own bounds are too narrow for a multi-line tooltip) - see the
   // position:relative in the .demographics-chart-time-filter-row rule.
   row.className = "demographics-chart-time-filter-row font-body text-xs";
   for (const f of TIME_FILTERS) {

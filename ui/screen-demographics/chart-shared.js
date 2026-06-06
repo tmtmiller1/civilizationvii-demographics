@@ -6,6 +6,7 @@
 // nearest-by-turn lookup, and the stack turn/year map builder.
 
 import { getPalette } from "/demographics/ui/demographics-palette.js";
+import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
 
 /**
  * @typedef {import("/demographics/ui/screen-demographics/chart-line.js").ChartOptions} ChartOptions
@@ -26,7 +27,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // in Options takes effect on the very next paint without a mod reload.
 // Define PALETTE as a getter so existing `PALETTE[i]` indexing keeps working.
 // Typed `any` because the Proxy returns either a number (`.length`) or a color
-// string (numeric index) depending on the key — a dynamic shape callers index
+// string (numeric index) depending on the key - a dynamic shape callers index
 // freely.
 /** @type {*} */
 const PALETTE = new Proxy(/** @type {Record<string, string>} */ ({}), {
@@ -92,7 +93,7 @@ function collectCivHistory(samples, pid) {
     if (!nm) continue;
     if (list.length === 0 || list[list.length - 1] !== nm) {
       // Only append when the LATEST civ differs from the previous entry
-      // — otherwise we'd push "Rome" twice if it shows up in turns 1..80.
+      // - otherwise we'd push "Rome" twice if it shows up in turns 1..80.
       // We still want to detect non-adjacent recurrence (Rome → Han → Rome),
       // so de-dup by sequence position, not set membership.
       if (!list.includes(nm)) list.push(nm);
@@ -119,6 +120,63 @@ function displayName(leaderOnly, civHistory) {
 }
 
 export { collectCivHistory, displayName };
+
+/**
+ * Whether the "hide unmet stats" spoiler guard is enabled (default on). When
+ * on, every chart withholds data for civs the local player has not met -
+ * seeing any of an unmet civ's history (score, economy, military, diplomacy)
+ * is treated as a spoiler. Reads fresh each render so the Options toggle is
+ * fully reversible without a reload. Fails spoiler-safe (on) if the setting
+ * read throws.
+ * @returns {boolean} True to gate unmet civs.
+ */
+function hideUnmetEnabled() {
+  try {
+    return DemographicsSettings.getSetting("hideUnmetStats", true) !== false;
+  } catch (_) {
+    return true;
+  }
+}
+
+/**
+ * Sub-option of the spoiler guard (only meaningful when {@link hideUnmetEnabled}
+ * is on): how a civ's line chart behaves once the local player meets it.
+ * When true (default), the civ's ENTIRE history is back-filled on meeting
+ * (matching the radar / factbook current-state views). When false, only data
+ * from first contact forward is shown. Reads fresh each render so the toggle is
+ * reversible without a reload. Defaults to back-fill on read error.
+ * @returns {boolean} True to reveal full history once met.
+ */
+function backfillMetHistoryEnabled() {
+  try {
+    return DemographicsSettings.getSetting("backfillMetHistory", true) !== false;
+  } catch (_) {
+    return true;
+  }
+}
+
+/**
+ * Whether the local player has NOT met this civ as of the most recent sample
+ * that carries a met flag. Used by current-state charts (legacy radar, triumph
+ * progress, resource / triumph-stack pickers) to exclude whole civs, mirroring
+ * the per-point gate the line chart applies to time series. The local player is
+ * always met. An unknown met flag (never resolved) is treated as met (shown) -
+ * matching the line chart, which only drops points where `met === false`.
+ * @param {Snapshot[]|*} samples The sample stream.
+ * @param {string|number} pid The civ player id.
+ * @returns {boolean} True when the civ is currently unmet.
+ */
+function isCivUnmet(samples, pid) {
+  if (!Array.isArray(samples)) return false;
+  const key = String(pid);
+  for (let i = samples.length - 1; i >= 0; i--) {
+    const ps = samples[i] && samples[i].players ? samples[i].players[key] : null;
+    if (ps && typeof ps.met === "boolean") return ps.met === false;
+  }
+  return false;
+}
+
+export { hideUnmetEnabled, backfillMetHistoryEnabled, isCivUnmet };
 
 // X-axis time-unit mode shared across every history chart (line, stacks,
 // gantt). "both" = "T-N / Year", "turn" = "T-N", "year" = "Year". Toolbar
@@ -180,9 +238,13 @@ function resolveTurnRange(opts) {
 
 /**
  * Add the live current-turn → year entry from the engine `Game`, defensively.
+ * `Game.turn` is the AGE-LOCAL turn (resets per age), so callers whose map is
+ * keyed by chart-X (age offset + local turn) must pass the current age's
+ * `xOffset`; callers keyed by raw age-local turn pass 0 (the default).
  * @param {Map<number, string>} turnYearMap chart-X → year map (mutated).
+ * @param {number} [xOffset] The current age's chart-X offset (0 for raw-turn maps).
  */
-function addLiveTurnYear(turnYearMap) {
+function addLiveTurnYear(turnYearMap, xOffset = 0) {
   try {
     if (
       typeof Game !== "undefined" &&
@@ -190,7 +252,7 @@ function addLiveTurnYear(turnYearMap) {
       typeof Game.getTurnDate === "function"
     ) {
       const y = Game.getTurnDate();
-      if (typeof y === "string" && y.length > 0) turnYearMap.set(Game.turn, y);
+      if (typeof y === "string" && y.length > 0) turnYearMap.set(Game.turn + xOffset, y);
     }
   } catch (_) {
     // Game.turn / Game.getTurnDate may be absent or throw; skip the live entry.
