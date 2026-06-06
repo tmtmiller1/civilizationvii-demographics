@@ -3,7 +3,7 @@
 // Color palette for mod-owned chrome. Civ primary colors (returned by
 // UI.Player.getPrimaryColorValueAsString) are treated as identity
 // markers and never overridden; this module only owns colors we invent
-// ourselves — the rotating fallback when a civ has no primary, the
+// ourselves - the rotating fallback when a civ has no primary, the
 // attitude swatches in the relations ring, and the fallback bars in
 // the conflicts gantt.
 //
@@ -29,7 +29,7 @@ const PALETTE_STANDARD = [
   "#c8d97c"
 ];
 
-// Wong palette — designed for CVD readability.
+// Wong palette - designed for CVD readability.
 const PALETTE_COLORBLIND = [
   "#E69F00", // orange
   "#56B4E9", // sky blue
@@ -47,7 +47,7 @@ const PALETTE_COLORBLIND = [
   "#A88FB2"
 ];
 
-// Attitude swatches — each must remain visually distinct from the
+// Attitude swatches - each must remain visually distinct from the
 // per-filter colors shown in the same view (POLITICAL_FILTERS,
 // ECONOMIC_FILTERS, CS_POLITICAL_FILTERS in view-relations.js). Two
 // known collisions:
@@ -60,7 +60,7 @@ const ATTITUDE_STANDARD = {
   friendly: "#3fbf3f", // green
   neutral: "#bfbfbf", // gray
   unfriendly: "#ffd34c", // amber
-  hostile: "#b03868" // maroon-pink — distinct from denounced orange + war red
+  hostile: "#b03868" // maroon-pink - distinct from denounced orange + war red
 };
 
 // CVD-safe attitude swatches: red→vermillion (the most universal "danger"
@@ -68,13 +68,13 @@ const ATTITUDE_STANDARD = {
 // Preserves the warm vs. cool semantic split so a quick glance still reads
 // "at war = dangerous" and "alliance = positive".
 const ATTITUDE_COLORBLIND = {
-  war: "#D55E00", // vermillion — still reads "warning"
-  alliance: "#56B4E9", // sky blue — positive
-  helpful: "#F0E442", // yellow — warm positive
-  friendly: "#009E73", // bluish green — positive
+  war: "#D55E00", // vermillion - still reads "warning"
+  alliance: "#56B4E9", // sky blue - positive
+  helpful: "#F0E442", // yellow - warm positive
+  friendly: "#009E73", // bluish green - positive
   neutral: "#999999", // gray
-  unfriendly: "#E69F00", // orange — caution
-  hostile: "#CC79A7" // reddish purple — strong negative
+  unfriendly: "#E69F00", // orange - caution
+  hostile: "#CC79A7" // reddish purple - strong negative
 };
 
 // Generic semantic helpers used elsewhere (conflicts gantt fallback bar

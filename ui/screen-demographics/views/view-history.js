@@ -2,7 +2,7 @@
 //
 // "Historical Data" view: a paginated metric tab bar, the chart, and the
 // per-civ legend. Mirrors the layout of the V5 main historical-graphs
-// panel — three metric pages plus the chart.js renderer.
+// panel - three metric pages plus the chart.js renderer.
 //
 // The page list keeps placeholders for metrics that aren't wired up yet
 // (milpower, wonders); those render as disabled tabs labelled "Not yet
@@ -66,11 +66,13 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @typedef {Object} HistoryChartMod
  * @property {(host: HTMLElement, opts: *) => void} [renderChart]
  * @property {(host: HTMLElement, opts: *) => void} [renderLegacyRadar]
- * @property {(host: HTMLElement, opts: *) => void} [renderTriumphStack]
  * @property {(host: HTMLElement, opts: *) => void} [renderResourcesStack]
  * @property {(host: HTMLElement, opts: *) => void} [renderWarsGantt]
+ * @property {(host: HTMLElement) => void} [renderWarsGlossary]
+ * @property {(host: HTMLElement, opts: *) => void} [renderWarGraphs]
+ * @property {(host: HTMLElement, opts: *) => void} [renderCrisisStages]
+ * @property {(host: HTMLElement, opts: *) => void} [renderCrisisGraphs]
  * @property {(history: *) => Array<*>} [collectWarCivOptions]
- * @property {(history: *) => Array<*>} [collectTriumphCivOptions]
  * @property {(history: *) => Array<*>} [collectResourceCivOptions]
  * @property {(mode: string) => void} [setXAxisMode]
  */
@@ -97,17 +99,18 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @property {Pid|null} [warsFilterPid] Active wars-view civ filter.
  * @property {boolean} [warsActiveOnly] Show only ongoing wars.
  * @property {boolean} [warsShowCs] Show city-state wars.
- * @property {Pid} [triumphsViewerPid] Selected triumphs viewer civ.
+ * @property {number|null} [warGraphsWarId] Selected war (warUniqueID) for the War Graphs sub-tab.
  * @property {Pid} [resourcesViewerPid] Selected resources viewer civ.
  * @property {(id: string) => void} [setActiveMetric] Select a metric.
  * @property {(id: string) => void} [setActivePage] Select a page.
  * @property {(id: string) => void} [setActiveTimeFilter] Select a time filter.
  * @property {(id: string) => void} [setActiveRadarAge] Select a radar age.
  * @property {(pid: Pid|null) => void} [setWarsFilterPid] Set wars civ filter.
+ * @property {(id: number|null) => void} [setWarGraphsWarId] Select a war for War Graphs.
  * @property {(v: boolean) => void} [setWarsActiveOnly] Toggle ongoing-only.
- * @property {(pid: Pid) => void} [setTriumphsViewerPid] Set triumphs viewer.
  * @property {(pid: Pid) => void} [setResourcesViewerPid] Set resources viewer.
  * @property {(leaderKey: string) => void} [toggleCiv] Hide/show a civ.
+ * @property {(hide: boolean, keys: string[]) => void} [setAllCivsHidden] Hide/show all civs at once.
  * @property {(leaderKey: string) => void} [toggleFocusCiv] Focus/unfocus a civ.
  * @property {() => void} [clearFocus] Clear all focused civs.
  * @property {() => void} [requestReload] Re-render the active view.
@@ -161,18 +164,18 @@ export const PAGES = [
   },
   {
     // Civ7 Test of Time triumph dashboard + crisis stage. All four
-    // triumph views are SYNTHETIC metrics — they route to dedicated
+    // triumph views are SYNTHETIC metrics - they route to dedicated
     // renderers in demographics-chart.js rather than the line-chart
     // pipeline. The per-attribute line graphs were removed; a step-
     // counter over hundreds of turns is poor info density next to the
     // radar / race / completion / stack views below.
     id: "age",
     label: "LOC_DEMOGRAPHICS_PAGE_AGE",
-    // `triumphs_race` and `triumphs_completion` removed — per-civ progress
+    // `triumphs_race` and `triumphs_completion` removed - per-civ progress
     // bars now ride on the NATIVE Legacies → Triumphs cards via
     // ui/demographics-triumphs-decorator.js. Cloning them inside Info
     // Addict was redundant once the in-game cards carry the same data.
-    metrics: ["legacy_radar", "triumphs_stack", "crisis_stage"]
+    metrics: ["legacy_radar"]
   },
   {
     // Resource-allocation page. First metric is a stacked-area page-
@@ -196,7 +199,14 @@ export const PAGES = [
     // Tracked by the sampler against `history.wars`.
     id: "conflicts",
     label: "LOC_DEMOGRAPHICS_PAGE_CONFLICTS",
-    metrics: ["wars_gantt"]
+    metrics: ["wars_gantt", "war_graphs", "wars_glossary"]
+  },
+  {
+    // Crises page: the current age's crisis broken into its stages, each with a
+    // permanent per-civ cost section (the war-tooltip table sans war-only rows).
+    id: "crises",
+    label: "LOC_DEMOGRAPHICS_PAGE_CRISES",
+    metrics: ["crisis_stages", "crisis_graphs"]
   }
 ];
 
@@ -212,12 +222,6 @@ const SYNTHETIC_METRICS = {
     label: "Radar",
     title: "LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE"
   },
-  triumphs_stack: {
-    label: "Triumphs Over Time",
-    // Two-line: bold heading + parenthetical subtitle below.
-    title: "LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE",
-    subtitle: "LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE"
-  },
   resources_stack: {
     label: "Stacked",
     title: "LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE"
@@ -225,6 +229,22 @@ const SYNTHETIC_METRICS = {
   wars_gantt: {
     label: "Wars",
     title: "LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE"
+  },
+  wars_glossary: {
+    label: "Guide",
+    title: "LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE"
+  },
+  war_graphs: {
+    label: "War Graphs",
+    title: "LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE"
+  },
+  crisis_stages: {
+    label: "Crises",
+    title: "LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE"
+  },
+  crisis_graphs: {
+    label: "Graphs",
+    title: "LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE"
   }
 };
 
@@ -252,7 +272,7 @@ function isSynthetic(id) {
   return Object.prototype.hasOwnProperty.call(SYNTHETIC_METRICS, id);
 }
 /**
- * Whether `id` is renderable — a synthetic metric or a real METRICS entry.
+ * Whether `id` is renderable - a synthetic metric or a real METRICS entry.
  * @param {string} id Metric id.
  * @returns {boolean} True if renderable.
  */
@@ -381,16 +401,6 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, width, heig
     });
     return true;
   }
-  if (activeMetric === "triumphs_stack" && typeof chartMod.renderTriumphStack === "function") {
-    chartMod.renderTriumphStack(chartHost, {
-      history: ctx.history,
-      width,
-      height,
-      turnRange,
-      viewerPid: ctx.triumphsViewerPid
-    });
-    return true;
-  }
   if (activeMetric === "resources_stack" && typeof chartMod.renderResourcesStack === "function") {
     chartMod.renderResourcesStack(chartHost, {
       history: ctx.history,
@@ -401,11 +411,47 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, width, heig
     });
     return true;
   }
+  if (tryRenderCrisis(chartHost, ctx, activeMetric)) return true;
+  return tryRenderWars(chartHost, ctx, activeMetric, width, height);
+}
+
+/**
+ * Render the Crises page's synthetic views: the per-stage cost tables or the
+ * all-ages crisis graphs.
+ * @param {HTMLElement} chartHost The chart host element.
+ * @param {HistoryCtx} ctx Render context.
+ * @param {string} activeMetric Active metric id.
+ * @returns {boolean} True when a crisis renderer handled the render.
+ */
+function tryRenderCrisis(chartHost, ctx, activeMetric) {
+  const chartMod = /** @type {HistoryChartMod} */ (ctx.chartMod);
+  if (activeMetric === "crisis_stages" && typeof chartMod.renderCrisisStages === "function") {
+    chartMod.renderCrisisStages(chartHost, { history: ctx.history });
+    return true;
+  }
+  if (activeMetric === "crisis_graphs" && typeof chartMod.renderCrisisGraphs === "function") {
+    chartMod.renderCrisisGraphs(chartHost, { history: ctx.history });
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Render the Conflicts page's synthetic views: the wars timeline or the war-cost
+ * "Guide" glossary.
+ * @param {HTMLElement} chartHost The chart host element.
+ * @param {HistoryCtx} ctx Render context.
+ * @param {string} activeMetric Active metric id.
+ * @param {number} width Chart width in pixels.
+ * @param {number} height Chart height in pixels.
+ * @returns {boolean} True when a wars renderer handled the render.
+ */
+function tryRenderWars(chartHost, ctx, activeMetric, width, height) {
+  const chartMod = /** @type {HistoryChartMod} */ (ctx.chartMod);
   if (activeMetric === "wars_gantt" && typeof chartMod.renderWarsGantt === "function") {
-    // Wars timeline shows EVERY war regardless of the line-chart
-    // time filter. Clamping to "current age" silently hid wars
-    // from earlier ages and produced an empty chart for mid- and
-    // late-game saves.
+    // Wars timeline shows EVERY war regardless of the line-chart time filter.
+    // Clamping to "current age" silently hid wars from earlier ages and produced
+    // an empty chart for mid- and late-game saves.
     chartMod.renderWarsGantt(chartHost, {
       history: ctx.history,
       width,
@@ -414,6 +460,17 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, width, heig
       filterPid: ctx.warsFilterPid,
       showCs: ctx.warsShowCs !== false,
       activeOnly: ctx.warsActiveOnly
+    });
+    return true;
+  }
+  if (activeMetric === "wars_glossary" && typeof chartMod.renderWarsGlossary === "function") {
+    chartMod.renderWarsGlossary(chartHost);
+    return true;
+  }
+  if (activeMetric === "war_graphs" && typeof chartMod.renderWarGraphs === "function") {
+    chartMod.renderWarGraphs(chartHost, {
+      history: ctx.history,
+      selectedWarId: ctx.warGraphsWarId
     });
     return true;
   }
@@ -440,11 +497,14 @@ function renderStandardChart(chartHost, ctx, activeMetric, turnRange, width, hei
     height,
     turnRange,
     onToggleCiv: (/** @type {string} */ leaderKey) => {
-      // Repurposed: clicking a line label toggles FOCUS on
-      // that civ (head-to-head view) rather than hiding.
+      // Line labels on the chart toggle FOCUS (head-to-head view).
       if (typeof ctx.toggleFocusCiv === "function") ctx.toggleFocusCiv(leaderKey);
       else ctx.toggleCiv?.(leaderKey);
-    }
+    },
+    // Legend rows toggle VISIBILITY so they pair with the All/None controls.
+    onToggleVisibility: (/** @type {string} */ leaderKey) => ctx.toggleCiv?.(leaderKey),
+    onSetAllHidden: (/** @type {boolean} */ hide, /** @type {string[]} */ keys) =>
+      ctx.setAllCivsHidden?.(hide, keys)
   });
 }
 
@@ -530,12 +590,15 @@ export function render(host, ctx) {
   // suggesting they're filterable.
   //
   // If the persisted active filter is now disabled (cross-age filters
-  // are greyed out — see CROSS_AGE_DISABLED_TOOLTIP), silently fall
+  // are greyed out - see CROSS_AGE_DISABLED_TOOLTIP), silently fall
   // back to "age" (Current Age) so the chart still renders a sane
   // default instead of an empty window.
   const activeFilter = resolveActiveFilter(ctx);
   const turnRange = computeTurnRange(ctx.history, activeFilter);
-  const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar"]);
+  // Crisis Graphs span every age (they ignore the turn window) and the Crisis
+  // Stages tables show fixed per-stage windows, so the current-age/year time
+  // filter would be misleading - hide it there.
+  const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
   if (!TIME_FILTER_HIDDEN_FOR.has(activeMetric)) {
     const filterRow = buildTimeFilterRow(activeFilter, (id) => {
       if (typeof ctx.setActiveTimeFilter === "function") ctx.setActiveTimeFilter(id);
@@ -554,6 +617,6 @@ export function render(host, ctx) {
   // plot area, clickable to restore). The bottom legend list was
   // removed to simplify the UI.
   // Per-metric explanation captions are appended ABOVE the chart (after
-  // the title) — see the earlier block in this function. Kept the
+  // the title) - see the earlier block in this function. Kept the
   // bottom-of-chart block free of duplicates.
 }

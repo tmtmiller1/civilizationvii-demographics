@@ -23,10 +23,12 @@ declare global {
 
   /** A single per-turn sample (one row of {@link History.samples}). */
   interface Snapshot {
-    /** Absolute game turn. */
+    /** Legacy turn field (age-local in current builds). */
     turn?: number;
     /** Age-local turn (resets each age). */
     localTurn?: number;
+    /** Monotonic chart X turn used for stable plotting across retained samples. */
+    chartTurn?: number;
     /** Age type string (e.g. "AGE_ANTIQUITY"). */
     age?: string;
     /** Per-civ metrics keyed by player id. */

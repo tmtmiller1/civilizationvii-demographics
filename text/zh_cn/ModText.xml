@@ -104,10 +104,10 @@
             <Text>按比例换算的现实世界人口，由公民总数以指数方式推算得出。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="zh_Hans_CN">
-            <Text>每回合影响力</Text>
+            <Text>影响力</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="zh_Hans_CN">
-            <Text>每回合幸福度</Text>
+            <Text>幸福度</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合净幸福度产出。</Text>
@@ -321,6 +321,9 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="zh_Hans_CN">
             <Text>第 {1_Turn} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="zh_Hans_CN">
+            <Text>已摧毁</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hans_CN">
             <Text>危机开始</Text>
@@ -551,7 +554,7 @@
             <Text>尚无快照——该时代尚未结束。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="zh_Hans_CN">
-            <Text>↻ 刷新</Text>
+            <Text>刷新</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="zh_Hans_CN">
             <Text>从 VictoryManager.getVictoryProgress() 重新拉取遗产进度</Text>
@@ -722,10 +725,10 @@
             <Text>5,000 个采样</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="zh_Hans_CN">
-            <Text>10,000 个采样 ⚠ 可能降低性能</Text>
+            <Text>10,000 个采样 (可能降低性能)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="zh_Hans_CN">
-            <Text>无限制 ⚠ 存档非常大，可能降低性能</Text>
+            <Text>无限制 (存档非常大，可能降低性能)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="zh_Hans_CN">
             <Text>历史采样上限：</Text>
@@ -752,7 +755,7 @@
             <Text>每 10 回合</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="zh_Hans_CN">
-            <Text>每 25 回合 ⚠ 图表较粗略</Text>
+            <Text>每 25 回合 (图表较粗略)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="zh_Hans_CN">
             <Text>采样频率（性能）：</Text>
@@ -846,6 +849,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="zh_Hans_CN">
             <Text>{1_A}对{2_B}大战（另有{3_Extra}个文明参战）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_REGIONAL" Language="zh_Hans_CN">
+            <Text>{1_A}对{2_B}地区战争（另有{3_Extra}个文明参战）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_CENTURIES" Language="zh_Hans_CN">
+            <Text>{1_Base}（数世纪战争）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_YEARS" Language="zh_Hans_CN">
+            <Text>{1_Base}（{2_Years}年战争）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="zh_Hans_CN">
             <Text>{1_A}–{2_B}–{3_C}三方战争</Text>
@@ -1287,6 +1299,240 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="zh_Hans_CN">
             <Text>隐藏未遇见文明的外交/关系数据</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="zh_Hans_CN">
+            <Text>危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="zh_Hans_CN">
+            <Text>危机阶段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="zh_Hans_CN">
+            <Text>危机阶段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="zh_Hans_CN">
+            <Text>危机影响</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="zh_Hans_CN">
+            <Text>危机影响</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="zh_Hans_CN">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY" Language="zh_Hans_CN">
+            <Text>尚无记录的数据。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE" Language="zh_Hans_CN">
+            <Text>本时代尚未爆发任何危机。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GLOSSARY" Language="zh_Hans_CN">
+            <Text>指南</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WAR_GRAPHS" Language="zh_Hans_CN">
+            <Text>战争影响</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK" Language="zh_Hans_CN">
+            <Text>战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE" Language="zh_Hans_CN">
+            <Text>尚无战争。一旦任何文明宣战，便可在此绘制图表。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA" Language="zh_Hans_CN">
+            <Text>该场战争没有记录的数据。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_STRENGTH" Language="zh_Hans_CN">
+            <Text>军事实力（损失）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>定居点 失/得</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_RAZED" Language="zh_Hans_CN">
+            <Text>被夷平的定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_LAND" Language="zh_Hans_CN">
+            <Text>陆地面积损失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_POP" Language="zh_Hans_CN">
+            <Text>人口损失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN" Language="zh_Hans_CN">
+            <Text>回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="zh_Hans_CN">
+            <Text>实力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="zh_Hans_CN">
+            <Text>定居点（净）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_RAZED" Language="zh_Hans_CN">
+            <Text>定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_LAND" Language="zh_Hans_CN">
+            <Text>km²</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_POP" Language="zh_Hans_CN">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS" Language="zh_Hans_CN">
+            <Text>食物 / 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD" Language="zh_Hans_CN">
+            <Text>生产力 / 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD" Language="zh_Hans_CN">
+            <Text>生产力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER" Language="zh_Hans_CN">
+            <Text>军事实力（随时间变化）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" Language="zh_Hans_CN">
+            <Text>投入战争的生产力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS" Language="zh_Hans_CN">
+            <Text>参战文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS" Language="zh_Hans_CN">
+            <Text>城邦盟友</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CUMULATIVE" Language="zh_Hans_CN">
+            <Text>累计盟方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE" Language="zh_Hans_CN">
+            <Text>{1_Civ} 一方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE_UNKNOWN" Language="zh_Hans_CN">
+            <Text>盟方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_VS" Language="zh_Hans_CN">
+            <Text>对</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="zh_Hans_CN">
+            <Text>现在（T-{1_Turn}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="zh_Hans_CN">
+            <Text>城邦盟友</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_COMBINED" Language="zh_Hans_CN">
+            <Text>城邦（合计）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE" Language="zh_Hans_CN">
+            <Text>{1_Civ} 一方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE_UNKNOWN" Language="zh_Hans_CN">
+            <Text>盟方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_NONE" Language="zh_Hans_CN">
+            <Text>无</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_MILPOWER" Language="zh_Hans_CN">
+            <Text>军事实力（当前）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="zh_Hans_CN">
+            <Text>军事实力（损失）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_LAND" Language="zh_Hans_CN">
+            <Text>陆地面积</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_RAZED" Language="zh_Hans_CN">
+            <Text>被夷平</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_POP" Language="zh_Hans_CN">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_CROPLOST" Language="zh_Hans_CN">
+            <Text>作物产量损失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_PRODLOST" Language="zh_Hans_CN">
+            <Text>生产力损失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="zh_Hans_CN">
+            <Text>投入战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="zh_Hans_CN">
+            <Text>这些是战争标签页中每场战争弹窗里显示的数据。每项数据都是按某一参战方在该场战争中的时间段来衡量的——从其参战的回合到退出的回合，若战争仍在进行则计至当前——并且游戏每回合采样一次。绿色数字表示收益，红色数字表示损失，破折号（—）表示该场战争没有记录数据。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="zh_Hans_CN">
+            <Text>战争结束时（若仍在进行则为最近一回合）你的常备军事实力——即你军队的总战斗力。这是你军力的规模，而非损失；下方的“军事实力损失”才追踪伤亡。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="zh_Hans_CN">
+            <Text>你在战斗中实际阵亡单位的战斗力，于每个单位死亡时按其基础战斗力累加。这是真实的伤亡——补充建造替代单位绝不会掩盖损失，且该数据并非由你常备军队的规模推算而来。在此追踪机制出现之前进行的战争，则改用你军队总实力的净下降值作为后备计算。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>通过占领得失的净定居点数：你占领的一个定居点计 +1，被人从你手中夺走的计 −1。用移民建立新定居点不计入——只计实际易手的定居点。由于这是净值，你失去后又夺回的定居点会抵消归零。它由占领事件记录，因此在此机制加入之前进行的战争不显示数据。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="zh_Hans_CN">
+            <Text>你有多少定居点被永久摧毁（夷平）。它计入城市被占领之前的所有者（即你）名下，而非夷平它的征服者名下。与占领不同——占领可通过夺回城市来逆转——被夷平的城市则永久消失。仅记录此追踪机制加入之后进行的战争。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="zh_Hans_CN">
+            <Text>战争中实际易手的领土，以平方公里计（每个地图地块约 7,000 km²）。仅计入从敌方占领或被敌方夺走的定居点的陆地；和平扩张与边境增长不计入。正数表示你夺取了土地，负数表示你失去了土地。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="zh_Hans_CN">
+            <Text>你损失的总人口，由你人口下降的每一回合累加而得——人口增长的回合被忽略，因此正常增长绝不会掩盖战时损失。两项局限：它无法区分同一时段内是战争死亡还是饥荒，且你日后夺回的城市的人口，在其首次下降的回合仍计为损失。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="zh_Hans_CN">
+            <Text>食物中断：你的作物产量（每回合净食物）每下降一回合，该降幅便被累加（上升的回合被忽略，因此普通增长无法掩盖它）。大幅下降源于被劫掠的农场和地块，以及城市被占领或失守。它是各次降幅的总和，是中断程度的代理指标，而非食物总量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST" Language="zh_Hans_CN">
+            <Text>生产力中断：你的每回合生产力每下降一回合，该降幅便被累加（上升的回合被忽略，因此普通经济增长无法掩盖它）。大幅下降源于被劫掠的地块以及城市被占领或失守。它是各次降幅的总和，是中断程度的代理指标，而非生产力总量。你主动投入战争的生产力会单独在“投入战争”项下追踪。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="zh_Hans_CN">
+            <Text>你为战争投入的生产力：战争期间你完成的每个军事单位以及军事或防御工事建筑（城墙等）的生产力成本之和。平民单位、经济建筑和奇观不计入。这是对战争的主动投入，而非损失，因此显示为中性数字。其成本为建造该项目的城市中的有效成本——你的领袖、文明和政策折扣均已计入其中。用金币或信仰直接购买的项目不计入，因为那属于国库而非生产力；项目之间溢出的生产力也不会被精确拆分。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="zh_Hans_CN">
+            <Text>为何某些列是净值而另一些是总计：领土、定居点和生产力可双向变动且可被逆转，因此显示为净变化。实力和人口属于不应被他处收益所掩盖的破坏，因此显示为累计损失。被夷平的定居点按定义是永久性的。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="zh_Hans_CN">
+            <Text>历史会在每次时代转换时重置。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2" Language="zh_Hans_CN">
+            <Text>由于没有数据持久化的方法，</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3" Language="zh_Hans_CN">
+            <Text>单张图表无法横跨多个时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="zh_Hans_CN">
+            <Text>请使用当前时代或时代范围筛选。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="zh_Hans_CN">
+            <Text>战争损耗指南——各项数据的含义及衡量方式</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="zh_Hans_CN">
+            <Text>战争影响——各参战方在所选战争中的轨迹</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="zh_Hans_CN">
+            <Text>遇见文明时揭示其全部历史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="zh_Hans_CN">
+            <Text>开启：遇见某文明时会在图表上揭示其全部过往。关闭：曲线从首次接触的那一刻开始。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED" Language="zh_Hans_CN">
+            <Text>人口统计因引擎错误已暂停。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE" Language="zh_Hans_CN">
+            <Text>重新启用采样</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="zh_Hans_CN">
+            <Text>无</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE" Language="zh_Hans_CN">
+            <Text>无</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_TITLE" Language="zh_Hans_CN">
+            <Text>图例</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_ALL" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="zh_Hans_CN">
+            <Text>无</Text>
         </Replace>
     </LocalizedText>
 </Database>

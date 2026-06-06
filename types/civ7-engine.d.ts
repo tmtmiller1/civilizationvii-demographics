@@ -117,6 +117,7 @@ declare global {
 
   const Units: { get(id: any): EngineHandle; getUnitIds(player: PlayerId): any[]; [key: string]: any };
   const Cities: { [key: string]: any };
+  const ProductionKind: { UNIT: any; CONSTRUCTIBLE: any; PROJECT: any; [key: string]: any };
   const Constructibles: { getByComponentID(id: any): EngineHandle; [key: string]: any };
   const GameplayMap: { [key: string]: any };
   const Modding: {

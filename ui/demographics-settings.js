@@ -4,8 +4,18 @@
 //
 // Follows the ModSettingsSingleton convention from corpus mod 3666485798
 // (wonders-screen-continued/code/mod-options-decorator.js, around lines
-// 28–55). Hard invariant: only ever write the "modSettings" top-level
-// key. Sibling keys break localStorage reads for every mod.
+// 28–55). Hard invariant: only ever write the SINGLE "modSettings" top-level
+// key, and never add a dedicated/sibling key.
+//
+// Why a dedicated key is NOT an option: many popular mods (3640416186,
+// 3507072814, 3506956202, 3666485798, 3548476215, 3684206095, …) ship active
+// load-time code of the form:
+//     if (localStorage.length > 1) { localStorage.clear(); }
+// i.e. if more than ONE top-level key exists they wipe ALL of localStorage.
+// So writing a second key here would make localStorage.length === 2 and cause
+// the next such mod to load to erase every mod's settings, ours included. The
+// shared "modSettings" blob (keyed by mod id) is the only safe surface; treat
+// the in-memory bucket as authoritative and persist best-effort.
 //
 // API:
 //   DemographicsSettings.getSettings()           → the mod's slice
@@ -67,7 +77,7 @@ const SCHEMA_VERSION = 1;
 
 // NOTE: DEFAULTS is NOT an exhaustive schema. It seeds the in-memory bucket and
 // backs `getSettings()`, but the authoritative default for any setting is the
-// fallback passed at the call site — `getSetting(key, dflt)`. Many settings
+// fallback passed at the call site - `getSetting(key, dflt)`. Many settings
 // (per-view state: active tab/page/metric, viewer pids, time filters, etc.) are
 // intentionally absent here and resolved by their call sites. Add a key here
 // only when you want it in the baseline bucket; otherwise the call-site default
@@ -81,9 +91,9 @@ const DEFAULTS = {
   // ─── Adaptive history storage cap (see Enhancements.md) ───
   // Overrides the max samples we keep before decimating older history.
   // "auto" = derive from Game.gameSpeed; numeric value overrides;
-  // -1 = unlimited (never drops samples — power-user only).
+  // -1 = unlimited (never drops samples - power-user only).
   sampleCapOverride: "auto",
-  // When true, the per-Nth decimation pass is skipped entirely — useful
+  // When true, the per-Nth decimation pass is skipped entirely - useful
   // for power users who want every single turn preserved. Pairs with a
   // generous (or unlimited) `sampleCapOverride` for the full-history
   // experience.
@@ -92,7 +102,7 @@ const DEFAULTS = {
   // How often the sampler records a snapshot, measured in TURNS between
   // captures. 1 = every turn (default, finest detail). Higher values
   // trade chart resolution for smaller storage footprint and less work
-  // each turn-end — useful on slow machines or marathon-speed games.
+  // each turn-end - useful on slow machines or marathon-speed games.
   sampleEveryNTurns: 1,
   // ─── Wonder markers ─────────────────────────────────────────────────
   // Overlay a tiny wonder icon on each civ's line at every turn that
@@ -102,7 +112,16 @@ const DEFAULTS = {
   // When true (default), diplomacy / influence / relations figures are
   // withheld for civilizations the local player has not met (the charts
   // show a gap, not a value). Turn off to record and show those too.
-  hideUnmetStats: true
+  hideUnmetStats: true,
+  // ─── Met-history reveal mode (sub-option of hideUnmetStats) ─────────
+  // Controls what the line chart shows for a civ AFTER you meet it, when
+  // hideUnmetStats is on:
+  //   true  (default): back-fill - reveal the civ's ENTIRE history once met
+  //                    (matches the radar / factbook current-state views).
+  //   false:           reveal only data from the moment of first contact
+  //                    forward; pre-contact history stays hidden.
+  // Ignored when hideUnmetStats is off (everything shows regardless).
+  backfillMetHistory: true
 };
 
 /**
@@ -132,17 +151,44 @@ function hasLocalStorage() {
 /** In-memory fallback bucket. @type {SettingsBucket} */
 let memoryBucket = { ...DEFAULTS };
 
+let _rootParseWarned = false;
 /**
  * Read and parse the top-level `modSettings` blob from storage.
- * @returns {SettingsRoot|null} The parsed root, `{}` on parse failure, or
- *   `null` when storage is unavailable.
+ *
+ * `modSettings` is a SHARED localStorage key — other mods and the engine write
+ * to it too, and can leave a value that isn't valid JSON (or Coherent can hand
+ * back a wiped/garbage read). Our settings are served from the authoritative
+ * in-memory bucket, so a failed parse here is harmless. We warn at most ONCE per
+ * session instead of letting the generic `safeCall` log on every `setSetting`,
+ * which previously spammed the log on every checkbox toggle.
+ * @returns {SettingsRoot|null} The parsed root, `{}` on parse failure or empty,
+ *   or `null` when storage is unavailable.
  */
 function readRoot() {
   if (!hasLocalStorage()) return null;
-  return safeCall(() => {
-    const raw = localStorage.getItem(ROOT_KEY);
-    return raw ? JSON.parse(raw) : {};
-  }, {});
+  let raw = null;
+  try {
+    raw = localStorage.getItem(ROOT_KEY);
+  } catch (_e) {
+    // localStorage.getItem itself can throw in some Coherent UI contexts.
+    return {};
+  }
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch (_e) {
+    if (!_rootParseWarned) {
+      _rootParseWarned = true;
+      derr(
+        "shared '" +
+          ROOT_KEY +
+          "' localStorage value is not valid JSON (likely written by another " +
+          "mod or the engine); using in-memory settings for this session. " +
+          "Further parse failures are silenced."
+      );
+    }
+    return {};
+  }
 }
 
 /**
@@ -153,7 +199,7 @@ function writeRoot(root) {
   if (!hasLocalStorage()) return;
   safeCall(() => {
     // We only write our own key ("modSettings"). DO NOT wipe other
-    // top-level keys — earlier versions did, which destroyed our own
+    // top-level keys - earlier versions did, which destroyed our own
     // data when Civ7 / other UI code wrote its own keys between our
     // setSetting calls (every other checkbox toggle would silently
     // reset back to default).
@@ -166,8 +212,8 @@ let _integrityWarned = false;
  * One-time heads-up if our persisted slice came back missing while OTHER mods'
  * keys are present in the shared `modSettings` blob (a sibling may have
  * overwritten the whole key), or malformed, or stamped with a different schema
- * version. localStorage is only authoritative at load here — the in-memory
- * bucket serves reads regardless — so this is informational, not a failure.
+ * version. localStorage is only authoritative at load here - the in-memory
+ * bucket serves reads regardless - so this is informational, not a failure.
  * @param {SettingsRoot} root The parsed modSettings root.
  */
 function checkSliceIntegrity(root) {
@@ -198,7 +244,7 @@ function checkSliceIntegrity(root) {
 
 // Seed the memory bucket from localStorage ONCE at module load (when the
 // storage is actually populated). After that, memoryBucket is the
-// authoritative store — Coherent's localStorage gets wiped between reads
+// authoritative store - Coherent's localStorage gets wiped between reads
 // in this UI context, so trusting round-trips through it loses settings
 // every time a checkbox is toggled.
 /** @returns {void} */ (function _seedMemoryFromStorage() {
@@ -232,7 +278,7 @@ export const DemographicsSettings = {
    */
   getSettings() {
     // Authoritative source = memoryBucket. localStorage merely tries to
-    // survive a session reload — it does NOT round-trip reliably.
+    // survive a session reload - it does NOT round-trip reliably.
     return { ...DEFAULTS, ...memoryBucket };
   },
   /**

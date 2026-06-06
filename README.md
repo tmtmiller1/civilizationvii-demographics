@@ -1,24 +1,24 @@
 # Demographics for Civilization VII
 
-A read-only analytics dashboard. It samples every civilization each turn and shows the data as charts, factbook cards, a relations ring, a conflicts timeline, and progress overlays on the native Triumphs cards. It does not change gameplay.
+A read-only analytics dashboard. It samples data for every civilization and displays as graphs and charts with filters as well as progress overlays on the native Triumphs cards. It does not change gameplay.
 
-Builds on robk's Demographics (Civ V), Gedemon's CivGraphs (Civ VI), and Slothoth's Global Relations (Civ VII).
+Intended as the natural successor to robk's InfoAddict (Civ V), Gedemon's CivGraphs (Civ VI), and as an extension of Slothoth's Global Relations panel with added filters (Civ VII).
 
 ## Tabs
 
-- **Historical Data** — per-turn time-series charts.
-- **World Factbook** — current values and world ranks per civilization.
-- **Global Relations** — concentric relationship ring of met civilizations and city-states.
-- **Options** — sampling, visibility, and display settings.
+- **Historical Data**  -  per-turn time-series charts.
+- **World Factbook**  -  current values and world ranks per civilization.
+- **Global Relations**  -  concentric relationship ring of met civilizations and city-states.
+- **Options**  -  sampling, visibility, and display settings.
 
 ## Historical Data
 
 Chart.js time-series, grouped into four metric pages:
 
-- **Economy** — Score, GDP, Treasury, GPT, Production, Crops, Trade Routes.
-- **Power** — Military Power, Population, Settlements, Cap Utilization, Land Area, Wonders.
-- **Knowledge & Influence** — Techs, Civics, Science, Culture, Diplomatic Approval, Influence, Happiness, Active Deals.
-- **Triumphs** — Legacy Radar, Triumphs Over Time, Crisis Stage.
+- **Economy**  -  Score, GDP, Treasury, GPT, Production, Crops, Trade Routes.
+- **Power**  -  Military Power, Population, Settlements, Cap Utilization, Land Area, Wonders.
+- **Knowledge & Influence**  -  Techs, Civics, Science, Culture, Diplomatic Approval, Influence, Happiness, Active Deals.
+- **Triumphs**  -  Legacy Radar, Triumphs Over Time, Crisis Stage.
 
 Supports per-civ colors, time-range filters, year axis labels, per-metric formatting, hide/focus civs, smoothing, elimination filtering, and CSV export.
 
@@ -32,7 +32,7 @@ Concentric ring: viewer civ at center, met civilizations on the inner ring, met 
 
 ## Conflicts
 
-Gantt chart of wars from diplomacy events — declarer, supporters, opposers, and a stable war ID. War cost is the observed change in each side's military, settlements, population, and production across the war, derived from the recorded samples (not invented). Opens on a 50-year window.
+Gantt chart of wars from diplomacy events  -  declarer, supporters, opposers, and a stable war ID. War cost is the observed change in each side's military, settlements, population, and production across the war, derived from the recorded samples (not invented). Opens on a 50-year window.
 
 ## Triumphs Overlay
 
@@ -40,10 +40,10 @@ A runtime decorator adds a per-civilization progress block to each card in the n
 
 ## Behavior
 
-- Settings persist in `localStorage`. Recorded history persists per save game, within an age — it does not carry across age transitions.
+- Settings persist in `localStorage`. Recorded history persists per save game, within an age  -  it does not carry across age transitions.
 - History sample caps scale with game speed and can be overridden in Options. Lower the sample frequency there to cut per-turn work on slow machines or long games.
 - Colorblind mode swaps chart and relationship colors to a colorblind-safe set.
-- Single-player by default: diplomacy, influence, and relations figures for civilizations you haven't met are withheld (the charts show a gap; toggle in Options). The mod does not access-control the screen in multiplayer — a host should gate or disable it.
+- Single-player by default: diplomacy, influence, and relations figures for civilizations you haven't met are withheld (the charts show a gap; toggle in Options). The mod does not access-control the screen in multiplayer  -  a host should gate or disable it.
 
 ## Installation
 
@@ -66,11 +66,11 @@ A runtime decorator adds a per-civilization progress block to each card in the n
 
 ## Credits
 
-- robk — Demographics (Civ V).
-- Gedemon — CivGraphs (Civ VI).
-- Slothoth — Global Relations (Civ VII).
-- The Civilization modding community — documentation, samples, testing.
-- Tower — Civilization VII rebuild.
+- robk  -  Demographics (Civ V).
+- Gedemon  -  CivGraphs (Civ VI).
+- Slothoth  -  Global Relations (Civ VII).
+- The Civilization modding community  -  documentation, samples, testing.
+- Tower  -  Civilization VII rebuild.
 
 ## License
 

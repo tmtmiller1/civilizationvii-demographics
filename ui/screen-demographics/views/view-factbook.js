@@ -96,7 +96,7 @@ function safeCall(fn, fb) {
   try {
     return fn();
   } catch (_) {
-    // Defensive engine-boundary wrapper — `fn` reads GameContext.localPlayerID
+    // Defensive engine-boundary wrapper - `fn` reads GameContext.localPlayerID
     // / localObserverID, which can throw; return the fallback.
     return fb;
   }
@@ -284,7 +284,7 @@ function buildLeaderAvatar(profile, sizeRem) {
       return wrap;
     }
   } catch (e) {
-    // Own-logic DOM build (fxs-icon portrait) — surface failures, then fall
+    // Own-logic DOM build (fxs-icon portrait) - surface failures, then fall
     // through to the initial-letter placeholder below.
     derr("buildLeaderAvatar:", e);
   }
@@ -352,7 +352,7 @@ function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   if (maskAsUnmet) wrap.classList.add("is-unmet");
 
   // For unmet civs, force the avatar's placeholder rather than the actual
-  // leader portrait — build a shallow profile clone with leaderTypeString
+  // leader portrait - build a shallow profile clone with leaderTypeString
   // stripped so buildLeaderAvatar takes the fallback path.
   const avatarProfile = maskAsUnmet
     ? Object.assign({}, profile, { leaderTypeString: undefined, leaderName: "?" })
@@ -388,7 +388,7 @@ function buildValueCell(metric, profile) {
     try {
       value.textContent = /** @type {(n: number) => string} */ (metric.format)(v);
     } catch (e) {
-      // Own-logic: a metric's format() callback threw — surface it, then fall
+      // Own-logic: a metric's format() callback threw - surface it, then fall
       // back to a rounded integer so the cell still shows a value.
       derr("buildValueCell format(" + metric.id + "):", e);
       value.textContent = String(Math.round(v));
@@ -515,7 +515,7 @@ function stripEliminatedCivs(profiles, history) {
   }
 }
 
-/** Diplomacy-category metric ids — the spoiler-gated set (computed once). */
+/** Diplomacy-category metric ids - the spoiler-gated set (computed once). */
 const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
   .filter((m) => m.category === "diplomacy")
   .map((m) => m.id);
@@ -526,7 +526,7 @@ const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
  * factbook renders the missing-value placeholder instead of leaking their
  * reputation / influence / deals. Both the displayed cells and the rank
  * computation read `latest`, so removing the value here covers both. Reversible
- * — only called when `hideUnmetStats` is on.
+ * - only called when `hideUnmetStats` is on.
  * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
  */
 function stripUnmetDiplomacy(profiles) {
@@ -597,7 +597,7 @@ function buildHint() {
 }
 
 /**
- * Slim "ghost" column shown for hidden civs — just a narrow header with the
+ * Slim "ghost" column shown for hidden civs - just a narrow header with the
  * leader name (or unmet placeholder), no metric cells. Lets the user see who's
  * hidden and click to bring them back. The visible civs flex to fill the
  * remaining space (per the CSS `.demographics-factbook-col { flex: 1 0 9rem }`).
@@ -842,7 +842,7 @@ export function render(host, ctx) {
   }
   // Spoiler guard (display-time): when `hideUnmetStats` is on (default), drop
   // diplomacy-category values for civs the local player hasn't met so the
-  // factbook shows "—" rather than their reputation/influence/deals. Reversible.
+  // factbook shows "-" rather than their reputation/influence/deals. Reversible.
   if (readBoolSetting(ctx, "hideUnmetStats", true)) {
     stripUnmetDiplomacy(profiles);
   }
