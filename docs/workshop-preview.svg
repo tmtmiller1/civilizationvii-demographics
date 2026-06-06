@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#243042"/>
+      <stop offset="100%" stop-color="#121821"/>
+    </linearGradient>
+    <linearGradient id="parchment" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7eed1"/>
+      <stop offset="100%" stop-color="#e7d4a3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- Gold frame to echo the in-game parchment/gold palette -->
+  <rect x="26" y="26" width="972" height="972" rx="30" fill="none" stroke="#c9a24c" stroke-width="4" opacity="0.5"/>
+
+  <!-- Mod logo: the 64-unit bar-chart icon scaled up and centered -->
+  <g transform="translate(192,140) scale(10)">
+    <g stroke="#c9a24c" stroke-width="2" stroke-linejoin="round" fill="url(#parchment)">
+      <rect x="9"  y="36" width="12" height="18" rx="1.5"/>
+      <rect x="26" y="24" width="12" height="30" rx="1.5"/>
+      <rect x="43" y="12" width="12" height="42" rx="1.5"/>
+    </g>
+    <line x1="6" y1="55" x2="58" y2="55" stroke="#c9a24c" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="512" y="822" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-size="94"
+        font-weight="bold" fill="#e7d4a3" letter-spacing="2">DEMOGRAPHICS</text>
+  <!-- Tagline -->
+  <text x="512" y="890" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-size="38"
+        fill="#c9a24c" opacity="0.92">Graphs &#183; Rankings &#183; Relations &#183; Wars</text>
+</svg>

@@ -35,8 +35,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ja_JP"><Text>遭遇した文明との外交関係を要約した指標で、都市国家からの影響は小さめに反映されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ja_JP"><Text>人口</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ja_JP"><Text>市民の総数から指数的に導出された、換算後の実世界人口。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ja_JP"><Text>IPT</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ja_JP"><Text>HPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ja_JP"><Text>影響力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ja_JP"><Text>幸福度</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの純幸福度産出。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="ja_JP"><Text>1ターンあたりに生成される純外交影響力。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="ja_JP"><Text>進行中の取引</Text></Replace>
@@ -108,6 +108,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ja_JP"><Text>遺産</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ja_JP"><Text>建設者</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="ja_JP"><Text>ターン {1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="ja_JP"><Text>破壊</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ja_JP"><Text>危機の始まり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ja_JP"><Text>危機の激化</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ja_JP"><Text>危機の頂点</Text></Replace>
@@ -184,7 +185,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ja_JP"><Text>第2の時代の終わり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ja_JP"><Text>スナップショット:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ja_JP"><Text>まだスナップショットがありません — 時代がまだ終わっていません。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ja_JP"><Text>↻ 更新</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ja_JP"><Text>更新</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ja_JP"><Text>レガシー進捗を再読み込みします。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ja_JP"><Text>すべての主要文明</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="ja_JP"><Text>文明:</Text></Replace>
@@ -241,8 +242,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ja_JP"><Text>1,000 サンプル</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ja_JP"><Text>2,500 サンプル</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="ja_JP"><Text>5,000 サンプル</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="ja_JP"><Text>10,000 サンプル ⚠ パフォーマンスが低下する可能性があります</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="ja_JP"><Text>無制限 ⚠ セーブが非常に大きくなり、パフォーマンスが低下する可能性があります</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="ja_JP"><Text>10,000 サンプル (パフォーマンスが低下する可能性があります)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="ja_JP"><Text>無制限 (セーブが非常に大きくなり、パフォーマンスが低下する可能性があります)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="ja_JP"><Text>履歴サンプル上限:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="ja_JP"><Text>不明</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="ja_JP"><Text>無制限</Text></Replace>
@@ -251,7 +252,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="ja_JP"><Text>2ターンごと</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="ja_JP"><Text>5ターンごと</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ja_JP"><Text>10ターンごと</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ja_JP"><Text>25ターンごと ⚠ 粗いグラフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ja_JP"><Text>25ターンごと (粗いグラフ)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ja_JP"><Text>サンプル頻度（パフォーマンス）:</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ja_JP"><Text>値を大きくするとスナップショットの取得頻度が下がり、各ターンの処理が軽くなります（低速な環境や長いゲームに有効）。変更は次のターンから反映され、既存のサンプルは保持されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ja_JP"><Text>間引きを無効にし、上限到達後もすべてのサンプルを保持します。</Text></Replace>
@@ -288,6 +289,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="ja_JP">
             <Text>{1_A}対{2_B}大戦（他{3_Extra}文明参戦）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_REGIONAL" Language="ja_JP">
+            <Text>{1_A}対{2_B}地域戦争（他{3_Extra}文明参戦）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_CENTURIES" Language="ja_JP">
+            <Text>{1_Base}（数世紀戦争）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_YEARS" Language="ja_JP">
+            <Text>{1_Base}（{2_Years}年戦争）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="ja_JP">
             <Text>三国間戦争 {1_A}–{2_B}–{3_C}</Text>
@@ -729,6 +739,240 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ja_JP">
             <Text>未遭遇の文明の外交・関係の統計を非表示にする</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="ja_JP">
+            <Text>危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="ja_JP">
+            <Text>危機段階</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="ja_JP">
+            <Text>危機段階</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="ja_JP">
+            <Text>危機の影響</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="ja_JP">
+            <Text>危機の影響</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="ja_JP">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY" Language="ja_JP">
+            <Text>まだ記録されたデータがありません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE" Language="ja_JP">
+            <Text>この時代ではまだ危機が始まっていません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GLOSSARY" Language="ja_JP">
+            <Text>ガイド</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WAR_GRAPHS" Language="ja_JP">
+            <Text>戦争の影響</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK" Language="ja_JP">
+            <Text>戦争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE" Language="ja_JP">
+            <Text>まだ戦争はありません。いずれかの文明が宣戦布告すると、ここでグラフ化できます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA" Language="ja_JP">
+            <Text>この戦争について記録されたデータはありません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_STRENGTH" Language="ja_JP">
+            <Text>軍事力（損失）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_SETTLEMENTS" Language="ja_JP">
+            <Text>入植地の喪失/獲得</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_RAZED" Language="ja_JP">
+            <Text>破壊された入植地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_LAND" Language="ja_JP">
+            <Text>失った領土面積</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_POP" Language="ja_JP">
+            <Text>失った人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN" Language="ja_JP">
+            <Text>ターン</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="ja_JP">
+            <Text>戦力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="ja_JP">
+            <Text>入植地（純増減）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_RAZED" Language="ja_JP">
+            <Text>入植地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_LAND" Language="ja_JP">
+            <Text>km²</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_POP" Language="ja_JP">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS" Language="ja_JP">
+            <Text>食料 / ターン</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD" Language="ja_JP">
+            <Text>生産力 / ターン</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD" Language="ja_JP">
+            <Text>生産力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER" Language="ja_JP">
+            <Text>軍事力（推移）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" Language="ja_JP">
+            <Text>戦争に投じた生産力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS" Language="ja_JP">
+            <Text>交戦中の文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS" Language="ja_JP">
+            <Text>都市国家の同盟国</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CUMULATIVE" Language="ja_JP">
+            <Text>同盟側の累計</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE" Language="ja_JP">
+            <Text>{1_Civ}側</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE_UNKNOWN" Language="ja_JP">
+            <Text>同盟側</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_VS" Language="ja_JP">
+            <Text>対</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="ja_JP">
+            <Text>現在（T-{1_Turn}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="ja_JP">
+            <Text>都市国家の同盟国</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_COMBINED" Language="ja_JP">
+            <Text>都市国家（合計）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE" Language="ja_JP">
+            <Text>{1_Civ}側</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE_UNKNOWN" Language="ja_JP">
+            <Text>同盟側</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_NONE" Language="ja_JP">
+            <Text>なし</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_MILPOWER" Language="ja_JP">
+            <Text>軍事力（現在）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="ja_JP">
+            <Text>軍事力（損失）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="ja_JP">
+            <Text>入植地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_LAND" Language="ja_JP">
+            <Text>領土面積</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_RAZED" Language="ja_JP">
+            <Text>破壊</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_POP" Language="ja_JP">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_CROPLOST" Language="ja_JP">
+            <Text>失った作物産出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_PRODLOST" Language="ja_JP">
+            <Text>失った生産力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="ja_JP">
+            <Text>戦争への投入</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="ja_JP">
+            <Text>これらは「戦争」タブの各戦争のポップアップに表示される数値です。すべての数値は、その戦争における交戦国の参戦期間にわたって測定されます——参戦したターンから離脱したターンまで、戦争が継続中であれば現在までで、ゲームは1ターンごとに1回サンプリングされます。緑の数字は増加、赤の数字は損失を表し、ダッシュ（—）はその戦争についてデータが記録されなかったことを意味します。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="ja_JP">
+            <Text>戦争終了時点（継続中の場合は最新ターン）における、あなたの常備軍事力——軍隊の総戦闘力です。これは損失ではなく自軍の規模であり、下の「軍事力（損失）」が損害を追跡します。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="ja_JP">
+            <Text>実際に戦闘で失われたユニットの戦闘力で、各ユニットが倒れるたびにその基礎戦闘力を合算したものです。これは真の損害であり——代替ユニットを建設しても損失が隠れることはなく、この数値は常備軍の規模から導出されたものではありません。この追跡が導入される前の戦争では、代わりに自軍の総戦力の純減少分が用いられます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="ja_JP">
+            <Text>占領によって獲得または喪失した入植地の純数です。占領した入植地は+1、奪われた入植地は−1として数えます。開拓者で新たな入植地を建設しても数えません——実際に支配が移った入植地のみが対象です。純数であるため、一度失って再び奪い返した入植地は差し引きゼロになります。占領イベントから記録されるため、この機能が追加される前の戦争では数値が表示されません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="ja_JP">
+            <Text>あなたの入植地のうち、何件が恒久的に破壊（破壊）されたかを示します。これは破壊した征服者ではなく、都市が占領される前の所有者であるあなたに計上されます。都市を奪い返せば取り消せる占領とは異なり、破壊された都市は永久に失われます。この追跡が追加された後の戦争についてのみ記録されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="ja_JP">
+            <Text>戦争で実際に支配が移った領土を平方キロメートルで示します（各マップタイルは約7,000 km²）。敵から占領した、または敵に奪われた入植地の領土のみを数え、平和的な拡張や国境の成長は除外されます。正の数はあなたが領土を獲得したこと、負の数は失ったことを意味します。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="ja_JP">
+            <Text>あなたが失った総人口で、人口が減少したすべてのターンから合算したものです——増加したターンは無視されるため、通常の成長が戦時の損失を覆い隠すことは決してありません。2つの制約があります。同じ期間における戦死と飢饉を区別できないこと、そして後に奪い返した都市の人口も、最初に失われたターンの損失として依然計上されることです。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="ja_JP">
+            <Text>食料の混乱です。作物産出（1ターンあたりの純食料）が減少したターンごとに、その減少分が合算されます（増加したターンは無視されるため、通常の成長が覆い隠すことはできません）。大きな減少は、略奪された農場やタイル、占領または喪失した都市から生じます。これは比率の減少の合計であり、混乱の代理指標であって、食料の総量ではありません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST" Language="ja_JP">
+            <Text>生産力の混乱です。1ターンあたりの生産力が減少したターンごとに、その減少分が合算されます（増加したターンは無視されるため、通常の経済成長が覆い隠すことはできません）。大きな減少は、略奪されたタイルや占領または喪失した都市から生じます。これは比率の減少の合計であり、混乱の代理指標であって、生産力の総量ではありません。あなたが意図的に戦争に注ぎ込んだ生産力は、「戦争への投入」として別途追跡されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="ja_JP">
+            <Text>あなたが戦争遂行に費やした生産力です。戦争中に完成させたすべての軍事ユニット、および軍事建造物や防御施設（城壁など）の生産コストを合算したものです。民間ユニット、経済建造物、遺産は数えません。これは損失ではなく戦争への意図的な投資であるため、中立的な数値として表示されます。コストはそれを建設した都市における実効コストであり、リーダー、文明、政策による割引はすでに反映されています。ゴールドや信仰で直接購入したものは、生産力ではなく国庫からの支出であるため数えません。アイテム間の生産力の繰り越しも厳密には分離されません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="ja_JP">
+            <Text>一部の列が純増減で、他が総計である理由について。領土、入植地、生産力は双方向に変動し、取り消すこともできるため、純変化として表示されます。戦力と人口は、他での増加によって決して隠されるべきでない破壊であるため、累積損失として表示されます。破壊された入植地は、その定義上、恒久的なものです。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="ja_JP">
+            <Text>履歴は各時代の移行時にリセットされます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2" Language="ja_JP">
+            <Text>データを永続化する手段がないため、</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3" Language="ja_JP">
+            <Text>1つのグラフが複数の時代にまたがることはできません</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="ja_JP">
+            <Text>現在の時代、または年代範囲のフィルターを使用してください。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="ja_JP">
+            <Text>戦争コストガイド — 各数値の意味と測定方法</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="ja_JP">
+            <Text>戦争の影響 — 選択した戦争における各交戦国の推移</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ja_JP">
+            <Text>文明と遭遇したときに全履歴を表示する</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="ja_JP">
+            <Text>オン: 文明と遭遇すると、その過去すべてがグラフに表示されます。オフ: 線は最初に接触した時点から始まります。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED" Language="ja_JP">
+            <Text>エンジンエラーのため人口統計が一時停止しました。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE" Language="ja_JP">
+            <Text>サンプリングを再有効化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL" Language="ja_JP">
+            <Text>すべて</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="ja_JP">
+            <Text>なし</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="ja_JP">
+            <Text>すべて</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE" Language="ja_JP">
+            <Text>なし</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_TITLE" Language="ja_JP">
+            <Text>凡例</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_ALL" Language="ja_JP">
+            <Text>すべて</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="ja_JP">
+            <Text>なし</Text>
         </Replace>
     </LocalizedText>
 </Database>

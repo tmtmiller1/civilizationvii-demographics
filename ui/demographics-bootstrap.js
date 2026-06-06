@@ -48,7 +48,7 @@ function loadDecorator() {
 
 /**
  * Dynamic-import the sampler module and invoke its `startSampler` export.
- * Never rejects — a missing export or thrown start is logged and swallowed.
+ * Never rejects - a missing export or thrown start is logged and swallowed.
  * @returns {Promise<void>} Resolves once the import settles.
  */
 function startSampler() {

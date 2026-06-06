@@ -16,7 +16,9 @@ import {
   getXAxisMode,
   nearestByTurn,
   buildStackTurnYears,
-  civOptionLabel
+  civOptionLabel,
+  hideUnmetEnabled,
+  isCivUnmet
 } from "/demographics/ui/screen-demographics/chart-shared.js";
 import { t } from "/demographics/ui/demographics-i18n.js";
 
@@ -24,7 +26,7 @@ import { t } from "/demographics/ui/demographics-i18n.js";
  * @typedef {import("/demographics/ui/screen-demographics/chart-line.js").ChartOptions} ChartOptions
  */
 
-// Resources stacked-area chart — LOCAL player only. For each turn, stack
+// Resources stacked-area chart - LOCAL player only. For each turn, stack
 // the 5 resource-class counts (bonus, empire, city, factory, treasure) so
 // the user can see how their resource allocation strategy evolved over the
 // course of the game. Compares CATEGORIES, not civs.
@@ -60,11 +62,14 @@ function hasResourceMetric(m) {
  */
 export function collectResourceCivOptions(history) {
   const samps = history && Array.isArray(history.samples) ? history.samples : [];
+  const gate = hideUnmetEnabled();
   /** @type {Map<string, { pid: string, label: string }>} */
   const seen = new Map();
   for (const s of samps) {
     if (!s?.players) continue;
     for (const pid of Object.keys(s.players)) {
+      // Spoiler guard: don't offer unmet civs as a pickable stack target.
+      if (gate && isCivUnmet(samps, pid)) continue;
       foldResourceCivOption(seen, s.players[pid], pid);
     }
   }
@@ -491,8 +496,8 @@ function mountStackLegend(wrap, bands, points, L, W, H) {
 
 /**
  * Render the resources stacked-area chart (one civ, bands stacked over time)
- * into `host`. Reused by {@link renderTriumphStack} via the `bands` /
- * `yAxisLabel` options.
+ * into `host`. The `bands` / `yAxisLabel` options generalize it for arbitrary
+ * stacked band sets (used by the now-removed triumph stack; kept generic).
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {StackOptions} [options] Render options.
  * @returns {{ svg: SVGElement }|null} The mounted SVG handle, or `null`.
@@ -501,9 +506,9 @@ export function renderResourcesStack(host, options) {
   if (!host) return null;
   while (host.firstChild) host.removeChild(host.firstChild);
   const opts = options || {};
-  // `opts.bands` lets `renderTriumphStack` reuse this entire SVG path by
-  // passing a different band set (cultural/diplomatic/etc) while keeping all
-  // the layout, axes, tooltips, and per-civ dropdown logic.
+  // `opts.bands` lets a caller reuse this entire SVG path by passing a
+  // different band set while keeping all the layout, axes, tooltips, and
+  // per-civ dropdown logic.
   const BANDS = resolveStackBands(opts);
   const W = opts.width || 1400;
   const H = opts.height || 600;
@@ -550,8 +555,8 @@ function mountStackWrap(svg, opts, bands, points, tickPositions, L, W, H) {
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap";
   wrap.appendChild(svg);
-  // Callers can override the y-axis title via opts.yAxisLabel —
-  // renderTriumphStack passes "Triumphs (count)" to replace the default.
+  // Callers can override the y-axis title via opts.yAxisLabel (e.g. a band-set
+  // reuse that stacks something other than resources).
   const yAxisLabel =
     typeof opts.yAxisLabel === "string" && opts.yAxisLabel
       ? opts.yAxisLabel

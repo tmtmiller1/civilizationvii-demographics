@@ -8,25 +8,25 @@
 // the kill-switch state stays single-owner.
 //
 // Accessor crib sheet (all under Resources/Base/modules):
-//   Stats.getNetYield(YieldTypes.YIELD_*)         — diplo-ribbon/model-diplo-ribbon.js
-//   Stats.numSettlements / settlementCap          — same file
-//   Stats.numCities / numTowns / totalPopulation  — same file
-//   Treasury.getGoldBalance() / goldBalance       — advice/advice-support.js
-//   Cities.getCities()                            — pre-existing
-//   city.getPurchasedPlots()                      — city-zoomer/city-zoomer.js
-//   Trade.countPlayerTradeRoutes()                — age-antiquity tutorial
-//   Game.Diplomacy.getPlayerEvents(playerId)      — diplomacy-actions panel
-//   player.Stats.getNumWonders(orig, currentAge)  — advice/advice-support.js
-//   player.Units.getUnitIds() + Units.get(id)     — age-antiquity tutorial
+//   Stats.getNetYield(YieldTypes.YIELD_*)         - diplo-ribbon/model-diplo-ribbon.js
+//   Stats.numSettlements / settlementCap          - same file
+//   Stats.numCities / numTowns / totalPopulation  - same file
+//   Treasury.getGoldBalance() / goldBalance       - advice/advice-support.js
+//   Cities.getCities()                            - pre-existing
+//   city.getPurchasedPlots()                      - city-zoomer/city-zoomer.js
+//   Trade.countPlayerTradeRoutes()                - age-antiquity tutorial
+//   Game.Diplomacy.getPlayerEvents(playerId)      - diplomacy-actions panel
+//   player.Stats.getNumWonders(orig, currentAge)  - advice/advice-support.js
+//   player.Units.getUnitIds() + Units.get(id)     - age-antiquity tutorial
 //   GameInfo.Unit_Stats[].Combat joined on UnitType
-//                                                  — civilopedia-sidebar-panels.js
+//                                                  - civilopedia-sidebar-panels.js
 //   FormationClass classifier (LAND_COMBAT / NAVAL / AIR → military)
-//                                                  — interface-mode-unit-selected.js
+//                                                  - interface-mode-unit-selected.js
 //   Techs.getTreeType() + Game.ProgressionTrees.getTree(pid, treeType).nodes
-//                                                  — tutorial/tutorial-support.js
+//                                                  - tutorial/tutorial-support.js
 //   Culture: analogous via player.Culture.getTreeType()
 //   ProgressionTreeNodeState.NODE_STATE_FULLY_UNLOCKED = "researched"
-//                                                  — tree-grid/tree-grid.js
+//                                                  - tree-grid/tree-grid.js
 
 import {
   safeCall,
@@ -34,6 +34,7 @@ import {
   getLocalPlayerID,
   getPlayer
 } from "/demographics/ui/demographics-sampler.js";
+import { recordUnitStrength, recordCity } from "/demographics/ui/sampler-war-events.js";
 
 /**
  * The per-civ context object assembled by {@link buildPlayerCtx}. Engine-
@@ -68,6 +69,7 @@ import {
  * @property {number} [citiesCount] Number of cities.
  * @property {number} [townsCount] Number of towns.
  * @property {number} [tilesOwned] Total owned tiles across cities.
+ * @property {number} [continent] Home-continent type (capital's landmass).
  * @property {number} [tradeRoutesCount] Player-wide trade-route count.
  * @property {number} [ongoingDealsCount] Ongoing diplomatic action count.
  * @property {number} [wondersCount] Completed wonder count.
@@ -397,6 +399,62 @@ function sumOwnedTiles(cityList, pid) {
     }
   }
   return anyOK ? total : undefined;
+}
+
+/**
+ * Whether a city handle is the player's capital (defensively).
+ * @param {*} c A city handle.
+ * @returns {boolean} True for the capital.
+ */
+function _isCapital(c) {
+  try {
+    return !!c && c.isCapital === true;
+  } catch (_) {
+    return false;
+  }
+}
+
+/**
+ * Capture the civ's home continent: the continent type under its capital (or
+ * first city). Used by the war-naming logic to decide world vs regional flavor.
+ * Defensive - leaves ctx.continent undefined when the map API is unavailable.
+ * @param {PlayerCtx} ctx The context to mutate.
+ * @param {*} cityList The player's city list (from collectCities).
+ */
+function collectContinent(ctx, cityList) {
+  safeCall("collectContinent", () => {
+    const cont = _capitalContinent(cityList);
+    if (typeof cont === "number") ctx.continent = cont;
+  });
+}
+
+/**
+ * The continent type under a player's capital (or first city), or undefined when
+ * unavailable.
+ * @param {*} cityList The player's city list.
+ * @returns {number | undefined} The continent type, or undefined.
+ */
+function _capitalContinent(cityList) {
+  const loc = _capitalLoc(cityList);
+  if (!loc) return undefined;
+  if (typeof GameplayMap === "undefined" || typeof GameplayMap.getContinentType !== "function") {
+    return undefined;
+  }
+  const cont = GameplayMap.getContinentType(loc.x, loc.y);
+  return typeof cont === "number" ? cont : undefined;
+}
+
+/**
+ * The capital's (or first city's) plot location, or null when unreadable.
+ * @param {*} cityList The player's city list.
+ * @returns {{ x: number, y: number } | null} The location, or null.
+ */
+function _capitalLoc(cityList) {
+  if (!Array.isArray(cityList) || !cityList.length) return null;
+  const cap = cityList.find((c) => _isCapital(c)) || cityList[0];
+  const loc = cap?.location;
+  if (!loc || typeof loc.x !== "number" || typeof loc.y !== "number") return null;
+  return loc;
 }
 
 /**
@@ -733,6 +791,10 @@ function collectCities(ctx, id, p) {
     // Total tiles owned (land area)
     const tiles = sumOwnedTiles(cityList, id);
     if (typeof tiles === "number") ctx.tilesOwned = tiles;
+
+    // Stamp each settlement's owner by plot location so the war-loss tracker can
+    // attribute a later razing to the civ that owned it before capture.
+    if (Array.isArray(cityList)) for (const c of cityList) recordCity(c, id);
   }
   return cityList;
 }
@@ -1070,7 +1132,7 @@ function collectMilitaryPower(ctx, id, p) {
     if (!ids || typeof ids[Symbol.iterator] !== "function") return;
     // Build a quick UnitType -> stats row map once, lazily, per sample.
     const statsByType = buildUnitStatsByType();
-    const { total, counted } = _sumUnitStrengths(ids, statsByType);
+    const { total, counted } = _sumUnitStrengths(ids, statsByType, id);
     if (counted > 0 || total > 0) ctx.militaryPower = total;
     else ctx.militaryPower = 0; // alive player with zero military still
     // gets a real "0" rather than dropped.
@@ -1079,12 +1141,15 @@ function collectMilitaryPower(ctx, id, p) {
 
 /**
  * Iterate unit ids and sum military strength, skipping any unit that throws.
+ * Each counted unit's strength is also recorded against its owner so the
+ * casualty tracker can resolve it after the unit is destroyed.
  * @param {Iterable<*>} ids The player's unit ids.
  * @param {Map<string, { Combat: number, RangedCombat: number, score: number }>} statsByType
  *   Map from {@link buildUnitStatsByType}.
+ * @param {number} [owner] The owner pid (for casualty-cache recording).
  * @returns {{ total: number, counted: number }} The summed strength + count.
  */
-function _sumUnitStrengths(ids, statsByType) {
+function _sumUnitStrengths(ids, statsByType, owner) {
   let total = 0;
   let counted = 0;
   for (const uid of ids) {
@@ -1098,6 +1163,7 @@ function _sumUnitStrengths(ids, statsByType) {
       if (strength > 0) {
         total += strength;
         counted++;
+        if (typeof owner === "number") recordUnitStrength(uid, owner, strength);
       }
     } catch (_) {
       // Units.get(uid) can throw for a unit destroyed mid-iteration; skip that
@@ -1374,7 +1440,7 @@ function collectDiplomaticApproval(ctx, id, p) {
     ctx.diplomaticApprovalMajor = majorScore;
     ctx.diplomaticApprovalCS = csScore;
     // Debug: emit a per-pid trace so we can verify the score is actually
-    // varying across turns/civs (FIXES.md #3 — flatness diagnosis).
+    // varying across turns/civs (FIXES.md #3 - flatness diagnosis).
     dlog(
       "diplomaticApproval pid=" + id,
       "major=" + majorScore,
@@ -1569,12 +1635,13 @@ function _newPlayerCtx(id) {
     citiesCount: undefined,
     townsCount: undefined,
     tilesOwned: undefined,
+    continent: undefined,
     tradeRoutesCount: undefined,
     ongoingDealsCount: undefined,
     wondersCount: undefined,
     militaryPower: undefined,
     // Resolved names + LeaderType STRING (for <fxs-icon data-icon-id> /
-    // <leader-icon leader=...>) — these elements need the canonical
+    // <leader-icon leader=...>) - these elements need the canonical
     // "LEADER_*" string, not the numeric hash that p.leaderType returns.
     leaderTypeString: undefined,
     civTypeString: undefined,
@@ -1604,7 +1671,7 @@ export function buildPlayerCtx(id) {
   // legend / factbook / relations rings).
   collectMet(ctx, id, p);
 
-  // leaderType / civType — keep the RAW value; resolve display names + the
+  // leaderType / civType - keep the RAW value; resolve display names + the
   // canonical type strings HERE so the screen doesn't re-resolve at render.
   const { rawLeader, rawCiv } = collectRawTypes(ctx, p);
   collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv);
@@ -1627,23 +1694,26 @@ export function buildPlayerCtx(id) {
   // Cities -> settlement count + tiles owned + (cached for downstream)
   const cityList = collectCities(ctx, id, p);
 
-  // Techs / Civics — count NODE_STATE_FULLY_UNLOCKED nodes.
+  // Home continent (capital's landmass) for war-naming geography.
+  collectContinent(ctx, cityList);
+
+  // Techs / Civics - count NODE_STATE_FULLY_UNLOCKED nodes.
   collectTechAndCivicCounts(ctx, id, p);
 
   // Yields via Stats.getNetYield + population / city / town counts.
   collectYieldsAndSizes(ctx, id, stats);
 
-  // Trade routes — player-level total count.
+  // Trade routes - player-level total count.
   collectTradeRoutes(ctx, id, p);
 
   // Ongoing diplomatic actions involving this player.
   collectOngoingDeals(ctx, id);
 
-  // Wonders — count then per-wonder identity capture.
+  // Wonders - count then per-wonder identity capture.
   collectWonderCount(ctx, id, stats, cityList);
   collectWonderTypes(ctx, id, p);
 
-  // Military Power — computed defensively from unit iteration.
+  // Military Power - computed defensively from unit iteration.
   collectMilitaryPower(ctx, id, p);
 
   // ── Settlement cap (Civ7-specific) ─────────────────────────────────
@@ -1661,5 +1731,28 @@ export function buildPlayerCtx(id) {
   // ── Resources assigned by class ────────────────────────────────────
   collectResourceCategories(ctx, id, p);
 
+  return ctx;
+}
+
+/**
+ * Build a LIGHTWEIGHT context for a minor (city-state / independent) player:
+ * identity, banner colors, and military power only - skipping the heavy per-civ
+ * collectors. Used to sample city-state war allies cheaply so the Conflicts
+ * views can show their power and (via recordUnitStrength) power lost.
+ * @param {Pid} id The minor player id.
+ * @returns {PlayerCtx} The trimmed per-civ context.
+ */
+export function buildMinorMilitaryCtx(id) {
+  const ctx = _newPlayerCtx(id);
+  const p = getPlayer(id);
+  if (!p) return ctx;
+  ctx.player = p;
+  collectMet(ctx, id, p);
+  const { rawLeader, rawCiv } = collectRawTypes(ctx, p);
+  collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv);
+  collectColors(ctx, id);
+  // Iterating the minor's units here ALSO records each unit's strength against
+  // its owner, so the casualty tracker can resolve city-state power lost later.
+  collectMilitaryPower(ctx, id, p);
   return ctx;
 }

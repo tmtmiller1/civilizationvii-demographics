@@ -59,6 +59,8 @@ import DemographicsStorage from "/demographics/ui/demographics-storage.js";
  * @property {string} leader Display leader name.
  * @property {string} color Banner color string.
  * @property {string | undefined} civTypeString Canonical CIVILIZATION_* type.
+ * @property {string | undefined} [leaderType] Canonical LEADER_* type (for the
+ *   tooltip leader portrait); absent on rosters built before this was captured.
  * @property {boolean} isCS Whether the participant is a city-state / IP.
  */
 
@@ -117,6 +119,7 @@ function pidInfo(snapshot, pid) {
     leader: ps.leaderName || "",
     color: ps.primaryColor || "#9aa8c8",
     civTypeString: civTypeString || undefined,
+    leaderType: ps.leaderTypeString || undefined,
     isCS
   };
 }
@@ -242,7 +245,7 @@ function migrateWarRecords(snapshot, wars) {
  * `joinTurn`), refresh only the ACTIVE participants' display fields and leave
  * departed civs frozen with their last-known info. For legacy records (no
  * history yet), backfill the roster from the side's pid list, treating everyone
- * as a founding participant — best-effort, since pre-history saves never
+ * as a founding participant - best-effort, since pre-history saves never
  * recorded joins/departures.
  * @param {Snapshot} snapshot The current snapshot.
  * @param {WarParticipant[]|object[]|undefined} civs The stored side roster.
@@ -315,6 +318,144 @@ function asPidList(arr) {
 }
 
 /**
+ * Whether player handle `p` is a formal ally (alliance or defensive pact) of the
+ * major civ `otherId`. Both are co-belligerents in the player's wars.
+ * @param {*} p A player handle.
+ * @param {number} otherId The other major's pid.
+ * @returns {boolean} True when allied or defensive-pacted.
+ */
+function isAllyOrPact(p, otherId) {
+  try {
+    const d = p?.Diplomacy;
+    if (!d) return false;
+    if (typeof d.hasAllied === "function" && d.hasAllied(otherId)) return true;
+    if (typeof d.hasDefensivePact === "function" && d.hasDefensivePact(otherId)) return true;
+    return false;
+  } catch (_) {
+    // Diplomacy.hasAllied()/hasDefensivePact() can throw for an unresolved player.
+    return false;
+  }
+}
+
+/**
+ * Append a side's belligerents' formal allies (major civs) to that side, in place
+ * and de-duped, skipping any civ already on either side.
+ * @param {Pid[]} side The side's pid list (mutated).
+ * @param {Pid[]} otherSide The opposing side's pid list.
+ * @param {Map<number, *>} byId Player handle by pid.
+ * @param {number[]} majors The alive major pids.
+ */
+function addSideAllies(side, otherSide, byId, majors) {
+  const inSide = new Set(side.map(Number));
+  const inOther = new Set(otherSide.map(Number));
+  for (const memberPid of side.slice()) {
+    const mp = byId.get(Number(memberPid));
+    if (!mp) continue;
+    for (const otherId of majors) {
+      if (inSide.has(otherId) || inOther.has(otherId)) continue;
+      if (isAllyOrPact(mp, otherId)) {
+        side.push(otherId);
+        inSide.add(otherId);
+      }
+    }
+  }
+}
+
+/**
+ * Augment every active war's sides with each belligerent's formal allies (major
+ * civs in an alliance / defensive pact), so allies become war participants.
+ * @param {Map<*, ActiveWar>} activeWarsByID The active wars.
+ * @param {*[]} allPlayers The alive players list.
+ */
+function augmentWarsWithAllies(activeWarsByID, allPlayers) {
+  /** @type {Map<number, *>} */
+  const byId = new Map();
+  /** @type {number[]} */
+  const majors = [];
+  for (const p of allPlayers) {
+    if (!p || typeof p.id !== "number") continue;
+    byId.set(p.id, p);
+    if (p.isMinor !== true) majors.push(p.id);
+  }
+  if (!majors.length) return;
+  for (const war of activeWarsByID.values()) {
+    addSideAllies(war.sideA, war.sideB, byId, majors);
+    addSideAllies(war.sideB, war.sideA, byId, majors);
+  }
+}
+
+/**
+ * Map each major civ to the set of alive city-states it currently suzerains
+ * (city-state pid via player.Influence.getSuzerain()).
+ * @param {*[]} allPlayers The alive players list.
+ * @returns {Map<number, Set<number>>} suzerain pid -> set of city-state pids.
+ */
+function buildSuzerainMap(allPlayers) {
+  /** @type {Map<number, Set<number>>} */
+  const map = new Map();
+  for (const p of allPlayers) {
+    const suz = readSuzerain(p);
+    if (suz < 0) continue;
+    if (!map.has(suz)) map.set(suz, new Set());
+    /** @type {Set<number>} */ (map.get(suz)).add(p.id);
+  }
+  return map;
+}
+
+/**
+ * Read a city-state player's current suzerain pid, or -1 when it isn't an alive
+ * city-state with a suzerain.
+ * @param {*} p A player handle.
+ * @returns {number} The suzerain pid, or -1.
+ */
+function readSuzerain(p) {
+  try {
+    if (!p || p.isMinor !== true || typeof p.id !== "number") return -1;
+    const inf = p.Influence;
+    const suz = inf && typeof inf.getSuzerain === "function" ? inf.getSuzerain() : -1;
+    return typeof suz === "number" ? suz : -1;
+  } catch (_) {
+    // Influence.getSuzerain() can throw for a non-CS / unresolved player.
+    return -1;
+  }
+}
+
+/**
+ * Append a side's belligerents' suzerained city-states to that side's pid list
+ * (in place, de-duped).
+ * @param {Pid[]} sidePids The side's pid list (mutated).
+ * @param {Map<number, Set<number>>} csBySuzerain The suzerain -> city-states map.
+ */
+function addSideCityStates(sidePids, csBySuzerain) {
+  const existing = new Set(sidePids);
+  for (const major of sidePids.slice()) {
+    const css = csBySuzerain.get(Number(major));
+    if (!css) continue;
+    for (const cs of css) {
+      if (!existing.has(cs)) {
+        sidePids.push(cs);
+        existing.add(cs);
+      }
+    }
+  }
+}
+
+/**
+ * Augment every active war's sides with the city-states suzerained by that
+ * side's belligerents, so allied city-states become first-class war participants.
+ * @param {Map<*, ActiveWar>} activeWarsByID The active wars.
+ * @param {*[]} allPlayers The alive players list.
+ */
+function augmentWarsWithCityStates(activeWarsByID, allPlayers) {
+  const csBySuzerain = buildSuzerainMap(allPlayers);
+  if (!csBySuzerain.size) return;
+  for (const war of activeWarsByID.values()) {
+    addSideCityStates(war.sideA, csBySuzerain);
+    addSideCityStates(war.sideB, csBySuzerain);
+  }
+}
+
+/**
  * Read one DECLARE_WAR event header into a normalized war record and store it
  * (de-duped on uniqueID) in `activeWarsByID`. SideA = initiator + supporters;
  * SideB = target + opposers, with cross-membership stripped.
@@ -351,7 +492,7 @@ function _normalizeWarRecord(uid, header) {
   const sideASet = _buildWarSide(initialPid, supporters);
   const sideBSet = _buildWarSide(targetPid, opposers);
   // Engine sometimes returns the initiator listed in supporters and vice
-  // versa — strip cross-membership.
+  // versa - strip cross-membership.
   for (const id of sideASet) sideBSet.delete(id);
   return {
     uniqueID: uid,
@@ -496,8 +637,8 @@ function updateExistingWar(existing, info, aRoster, bRoster, uid, turn) {
   const bCivs = /** @type {WarParticipant[]} */ (existing.sideBCivs);
   mergeWarParticipants(aCivs, aRoster, turn);
   mergeWarParticipants(bCivs, bRoster, turn);
-  // sideA/sideB (and participants) are the CUMULATIVE pid sets — every civ that
-  // has ever fought on each side — so downstream filtering and the cost
+  // sideA/sideB (and participants) are the CUMULATIVE pid sets - every civ that
+  // has ever fought on each side - so downstream filtering and the cost
   // accounting see the war's full history, not just its current belligerents.
   existing.sideA = /** @type {Pid[]} */ (aCivs.map((e) => e.pid));
   existing.sideB = /** @type {Pid[]} */ (bCivs.map((e) => e.pid));
@@ -542,7 +683,7 @@ function buildNewWar(wars, info, aRoster, bRoster, snapshot, gameYear, turn) {
   const declarer = pidInfo(snapshot, /** @type {Pid} */ (info.initialPid));
   // `info.headerStartTurn` is the engine diplomacy header's declaration turn
   // (age-local Game.turn). Samples, `endTurn`, and the Gantt domain are all
-  // age-local — the chart applies the per-age offset at render time — so we
+  // age-local - the chart applies the per-age offset at render time - so we
   // store it as-is, falling back to the current turn when the header lacks a
   // usable value. (The earlier `+ cumulativeOffset` referenced a variable
   // that never existed and threw a swallowed ReferenceError on every new war,
@@ -633,7 +774,7 @@ function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
   for (const w of wars) {
     if (typeof w.endTurn === "number") continue;
     if (typeof w.warUniqueID !== "number") {
-      // Pre-API legacy record with no uniqueID — close it on first pass after
+      // Pre-API legacy record with no uniqueID - close it on first pass after
       // migration so it doesn't linger forever.
       w.endTurn = turn;
       w.endYear = gameYear;
@@ -668,6 +809,12 @@ export function runWarTracker(snapshot, turn) {
 
     const activeWarsByID = collectActiveWars(allPlayers);
     if (activeWarsByID === null) return;
+    // Pull each belligerent's formal allies (alliance / defensive pact) onto its
+    // side, then its suzerained city-states - both fight alongside it, so they
+    // belong in the war roster (and the tooltip). Allies first so an ally's own
+    // city-states are picked up by the city-state pass.
+    augmentWarsWithAllies(activeWarsByID, allPlayers);
+    augmentWarsWithCityStates(activeWarsByID, allPlayers);
 
     const wars = h.wars || [];
     reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn);

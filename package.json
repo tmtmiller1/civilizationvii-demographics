@@ -7,9 +7,12 @@
   "scripts": {
     "check": "tsc --noEmit",
     "lint": "eslint ui",
+    "test:remediation-23": "node --loader ./tests/loader.mjs ./tests/remediation-23.mjs",
+    "test:civ-color-utils": "node --loader ./tests/loader.mjs ./tests/civ-color-utils.mjs",
     "verify": "tsc --noEmit && eslint ui"
   },
   "devDependencies": {
+    "esbuild": "^0.28.0",
     "eslint": "^9.0.0",
     "typescript": "^5.4.0"
   }

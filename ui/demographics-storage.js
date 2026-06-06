@@ -2,7 +2,7 @@
 //
 // Per-turn history time-series storage for the Demographics screen.
 //
-// IMPORTANT — cross-age persistence does NOT work in current builds.
+// IMPORTANT - cross-age persistence does NOT work in current builds.
 // Empirical testing shows the per-player Tutorial property bag does not carry
 // our payload across an age transition (the JS module heap is also reloaded at
 // the boundary). Treat history as scoped to a single age/session. The backend
@@ -10,23 +10,23 @@
 // reloads, and as a forward-compat hook if a future build carries per-player
 // UI state across the age save.
 //
-// Backend: the per-local-player Tutorial property bag — the same surface the
+// Backend: the per-local-player Tutorial property bag - the same surface the
 // engine uses internally for legacy/triumph and civ-unlock tracking. We write
 // only our own hashed sub-keys. The GLOBAL GameTutorial bag is wiped at age
 // transition, so we prefer Players[localObserverID].Tutorial.setProperty,
 // which at least persists within the current age/session.
 //
 // Persistence mode (see PERSISTENCE_MODE / the "persistenceMode" setting):
-//   "within_age"          (default) — persist within the age/session only.
-//   "legacy_tutorial_bag" (opt-in)  — additionally register the
+//   "within_age"          (default) - persist within the age/session only.
+//   "legacy_tutorial_bag" (opt-in)  - additionally register the
 //                          BeforeAgeTransition flush that attempts the cross-age
 //                          carry-forward. Kept for power users / future builds;
 //                          it does NOT preserve history across ages today.
 //
 // Flush hooks:
-//   BeforeUnload         — UI module reload; covers in-session age boundaries
+//   BeforeUnload         - UI module reload; covers in-session age boundaries
 //                          and quit-to-menu (always installed).
-//   BeforeAgeTransition  — only in "legacy_tutorial_bag" mode.
+//   BeforeAgeTransition  - only in "legacy_tutorial_bag" mode.
 
 import { DemographicsSettings } from "/demographics/ui/demographics-settings.js";
 
@@ -74,6 +74,24 @@ function safeCall(fn, fallback) {
   }
 }
 
+/**
+ * Measure UTF-8 byte length of a string.
+ * @param {string} s Input string.
+ * @returns {number} Byte size.
+ */
+function utf8ByteLength(s) {
+  const Encoder =
+    typeof globalThis !== "undefined" && globalThis.TextEncoder ? globalThis.TextEncoder : null;
+  if (Encoder) {
+    try {
+      return new Encoder().encode(s).length;
+    } catch (_) {
+      // Fall through to char-length estimate.
+    }
+  }
+  return s.length;
+}
+
 // ── Schema ──────────────────────────────────────────────────────────
 /** Persisted history schema version. */
 const VERSION = 1;
@@ -86,7 +104,7 @@ const CATALOG_SCOPE = "demographics-history-v1";
 const PAYLOAD_KEY = "json";
 /**
  * Default persistence mode. `within_age` persists within a single age/session
- * (the honest default — cross-age carry-forward does not work in current
+ * (the honest default - cross-age carry-forward does not work in current
  * builds). `legacy_tutorial_bag` additionally registers the BeforeAgeTransition
  * flush; opt in via the `persistenceMode` setting.
  */
@@ -233,34 +251,42 @@ function decimationDisabled() {
   }
 }
 
-// ── Hashing (matches engine SerialBase.makeHash) ────────────────────
+// ── Hashing (engine SerialBase.makeHash) ────────────────────────────
+let _noHashWarned = false;
 /**
- * FNV-1a 32-bit hash, used as a fallback when `Database.makeHash` is absent.
- * @param {string} str Input string.
- * @returns {number} 32-bit unsigned hash.
+ * Whether the engine's key-hashing API is available. Persistence REQUIRES it
+ * (see {@link dbHash}): there is intentionally no fallback hash, because a
+ * divergent one would write under keys that silently desync from the engine's
+ * property-bag scheme - so persistence is disabled, not guessed, when absent.
+ * @returns {boolean} True when `Database.makeHash` can be used.
  */
-function fnv1a(str) {
-  let h = 0x811c9dc5 >>> 0;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
-  }
-  return h >>> 0;
+function engineHashAvailable() {
+  return typeof Database !== "undefined" && typeof Database.makeHash === "function";
 }
+
 /**
- * Hash a key with the engine's `Database.makeHash`, falling back to {@link fnv1a}.
+ * Warn (once) that history persistence is disabled because the engine hash API
+ * is missing. In-memory history still works until the UI reloads.
+ */
+function warnNoEngineHash() {
+  if (_noHashWarned) return;
+  _noHashWarned = true;
+  derr(
+    "Database.makeHash unavailable — history persistence DISABLED this session " +
+      "(no fallback hash is used, to avoid silently desyncing from engine keys). " +
+      "In-memory history still works until the UI reloads."
+  );
+}
+
+/**
+ * Hash a key with the engine's `Database.makeHash`. Callers must gate on
+ * {@link engineHashAvailable} first (the store accessors do), so this is only
+ * reached when makeHash exists - there is deliberately no fallback.
  * @param {string} s Input string.
  * @returns {number} 32-bit hash.
  */
 function dbHash(s) {
-  try {
-    if (typeof Database !== "undefined" && typeof Database.makeHash === "function") {
-      return Database.makeHash(s);
-    }
-  } catch (e) {
-    derr("Database.makeHash threw:", e);
-  }
-  return fnv1a(s);
+  return Database.makeHash(s);
 }
 
 // ── History helpers ─────────────────────────────────────────────────
@@ -277,6 +303,42 @@ function emptyHistory(seed) {
     ageBoundaries: [],
     eliminated: {}
   };
+}
+
+/**
+ * Whether a sample should be kept in the non-decimated tail bucket.
+ * @param {Snapshot} s One sample.
+ * @param {string | null} latestAge Latest age label, when available.
+ * @param {number} latestBoundary Legacy turn cutoff fallback.
+ * @returns {boolean} True when sample belongs in the preserved tail.
+ */
+function isAfterDecimationCut(s, latestAge, latestBoundary) {
+  if (latestAge && s && s.age === latestAge) return true;
+  return /** @type {number} */ (s.turn) >= latestBoundary;
+}
+
+/**
+ * Split samples into the preserved tail (`after`) and decimation candidate
+ * head (`before`), keeping the latest age untouched when age tags exist.
+ * @param {Snapshot[]} samples The full sample list.
+ * @param {AgeBoundary[]} bounds Age boundary list.
+ * @returns {{ before: Snapshot[], after: Snapshot[], boundaryTurns: Set<number | undefined> }} Buckets + boundary turns.
+ */
+function splitDecimationBuckets(samples, bounds) {
+  const latestBoundary = bounds.length > 0 ? bounds[bounds.length - 1].turn : Infinity;
+  const last = samples[samples.length - 1];
+  const latestAge = last && typeof last.age === "string" ? last.age : null;
+  /** @type {Set<number | undefined>} */
+  const boundaryTurns = new Set(bounds.map((b) => b.turn));
+  /** @type {Snapshot[]} */
+  const before = [];
+  /** @type {Snapshot[]} */
+  const after = [];
+  for (const s of samples) {
+    if (isAfterDecimationCut(s, latestAge, latestBoundary)) after.push(s);
+    else before.push(s);
+  }
+  return { before, after, boundaryTurns };
 }
 /**
  * Whether a parsed value is a structurally valid {@link History}.
@@ -317,14 +379,32 @@ function resolveLocalPid() {
 }
 
 /**
- * Resolve the per-player Tutorial property bag — the within-age persistence
+ * Whether a player handle exposes a usable Tutorial property bag.
+ * @param {*} p Player handle.
+ * @returns {boolean} True when read/write via Tutorial.{get,set}Property is possible.
+ */
+function hasTutorialBag(p) {
+  return !!(
+    p &&
+    p.Tutorial &&
+    typeof p.Tutorial.setProperty === "function" &&
+    typeof p.Tutorial.getProperty === "function"
+  );
+}
+
+/**
+ * Resolve the per-player Tutorial property bag - the within-age persistence
  * tier (survives in-session reloads, not the age save). Re-resolves the player
- * on every call, since
- * `localObserverID` can change as a post-transition shell settles. Never throws.
+ * on every call, since `localObserverID` can change as a post-transition shell
+ * settles. Never throws.
  * @returns {PersistStore | null} A read/write handle, or null if unavailable.
  */
 function getPlayerStore() {
   try {
+    if (!engineHashAvailable()) {
+      warnNoEngineHash();
+      return null;
+    }
     if (
       typeof GameContext === "undefined" ||
       typeof Players === "undefined" ||
@@ -334,17 +414,12 @@ function getPlayerStore() {
     const pid = resolveLocalPid();
     if (pid < 0) return null;
     const p = Players.get(pid);
-    if (
-      !p ||
-      !p.Tutorial ||
-      typeof p.Tutorial.setProperty !== "function" ||
-      typeof p.Tutorial.getProperty !== "function"
-    )
-      return null;
+    if (!p || !hasTutorialBag(p)) return null;
+    const tutorial = p.Tutorial;
     return {
       pid: pid,
-      read: (key) => p.Tutorial.getProperty(dbHash("_" + CATALOG_SCOPE + "__" + key)),
-      write: (key, val) => p.Tutorial.setProperty(dbHash("_" + CATALOG_SCOPE + "__" + key), val)
+      read: (key) => tutorial.getProperty(dbHash("_" + CATALOG_SCOPE + "__" + key)),
+      write: (key, val) => tutorial.setProperty(dbHash("_" + CATALOG_SCOPE + "__" + key), val)
     };
   } catch (e) {
     derr("getPlayerStore threw:", e);
@@ -352,15 +427,19 @@ function getPlayerStore() {
   }
 }
 
-// Fallback global tier — only used if the per-player store isn't yet
+// Fallback global tier - only used if the per-player store isn't yet
 // available. Same hashing scheme as the per-player tier.
 /**
- * Resolve the global `GameTutorial` property bag — the fallback tier used
+ * Resolve the global `GameTutorial` property bag - the fallback tier used
  * before the per-player store is available. Same hashing scheme. Never throws.
  * @returns {PersistStore | null} A read/write handle, or null if unavailable.
  */
 function getGlobalStore() {
   try {
+    if (!engineHashAvailable()) {
+      warnNoEngineHash();
+      return null;
+    }
     if (typeof GameTutorial === "undefined" || typeof GameTutorial.setProperty !== "function")
       return null;
     return {
@@ -395,13 +474,20 @@ class StorageImpl {
     this._decimationNotified = false;
     /** @type {number} Turn at which decimation first kicked in (-1 if never). */
     this._decimationTurn = -1;
+    /** @type {(() => void) | null} BeforeUnload hook callback. */
+    this._beforeUnloadHook = null;
+    /** @type {(() => void) | null} BeforeAgeTransition hook callback. */
+    this._beforeAgeTransitionHook = null;
   }
 
   /**
    * Lazily resolve the game seed and install engine flush hooks. Idempotent.
    */
   _init() {
-    if (this._initialized) return;
+    if (this._initialized) {
+      this._installEngineHooks();
+      return;
+    }
     try {
       if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
         const g = Configuration.getGame();
@@ -418,8 +504,8 @@ class StorageImpl {
 
   /**
    * Install one-time flush hooks. `BeforeUnload` is always installed (covers
-   * in-session age boundaries and quit-to-menu). `BeforeAgeTransition` — the
-   * cross-age carry-forward attempt, which does not work in current builds — is
+   * in-session age boundaries and quit-to-menu). `BeforeAgeTransition` - the
+   * cross-age carry-forward attempt, which does not work in current builds - is
    * installed only in `legacy_tutorial_bag` mode. Idempotent.
    */
   _installEngineHooks() {
@@ -439,18 +525,47 @@ class StorageImpl {
     };
     if (activePersistenceMode() === "legacy_tutorial_bag") {
       try {
+        this._beforeAgeTransitionHook = flush;
         engine.on("BeforeAgeTransition", flush);
       } catch (_) {
+        this._beforeAgeTransitionHook = null;
         // engine.on() can throw if the event name is unknown in this build; the
         // BeforeUnload hook below still covers most flush cases.
       }
     }
     try {
+      this._beforeUnloadHook = flush;
       engine.on("BeforeUnload", flush);
     } catch (_) {
+      this._beforeUnloadHook = null;
       // engine.on() can throw if the event name is unknown in this build; rely
       // on per-turn saves if neither flush hook installs.
     }
+  }
+
+  /**
+   * Drain every storage-owned engine hook.
+   */
+  _teardown() {
+    if (typeof engine !== "undefined" && typeof engine.off === "function") {
+      try {
+        if (this._beforeAgeTransitionHook) {
+          engine.off("BeforeAgeTransition", this._beforeAgeTransitionHook);
+        }
+      } catch (e) {
+        derr("teardown BeforeAgeTransition off threw:", e);
+      }
+      try {
+        if (this._beforeUnloadHook) {
+          engine.off("BeforeUnload", this._beforeUnloadHook);
+        }
+      } catch (e) {
+        derr("teardown BeforeUnload off threw:", e);
+      }
+    }
+    this._beforeAgeTransitionHook = null;
+    this._beforeUnloadHook = null;
+    this._hooksInstalled = false;
   }
 
   /**
@@ -650,38 +765,26 @@ class StorageImpl {
    */
   _maybeDecimate(h, eff) {
     const KEEP_EVERY_NTH = 3;
-    if (!decimationDisabled() && isFinite(eff.cap)) {
-      const decimateThreshold = Math.max(250, Math.floor(eff.cap * 0.25));
-      if (h.samples.length > decimateThreshold) {
-        const bounds = Array.isArray(h.ageBoundaries) ? h.ageBoundaries : [];
-        const latestBoundary = bounds.length > 0 ? bounds[bounds.length - 1].turn : Infinity;
-        /** @type {Set<number | undefined>} */
-        const boundaryTurns = new Set(bounds.map((b) => b.turn));
-        /** @type {Snapshot[]} */
-        const before = [];
-        /** @type {Snapshot[]} */
-        const after = [];
-        for (const s of h.samples) {
-          if (/** @type {number} */ (s.turn) >= latestBoundary) after.push(s);
-          else before.push(s);
-        }
-        const decimated = before.filter(
-          (s, i) => i % KEEP_EVERY_NTH === 0 || boundaryTurns.has(s.turn)
-        );
-        h.samples = decimated.concat(after);
-        this._noteDecimation(h, eff, KEEP_EVERY_NTH);
-        dlog(
-          "decimated; before=" +
-            before.length +
-            " after=" +
-            after.length +
-            " kept=" +
-            decimated.length +
-            " cap=" +
-            eff.source
-        );
-      }
-    }
+    if (decimationDisabled() || !isFinite(eff.cap)) return;
+    const decimateThreshold = Math.max(250, Math.floor(eff.cap * 0.25));
+    if (h.samples.length <= decimateThreshold) return;
+    const bounds = Array.isArray(h.ageBoundaries) ? h.ageBoundaries : [];
+    const { before, after, boundaryTurns } = splitDecimationBuckets(h.samples, bounds);
+    const decimated = before.filter(
+      (s, i) => i % KEEP_EVERY_NTH === 0 || boundaryTurns.has(s.turn)
+    );
+    h.samples = decimated.concat(after);
+    this._noteDecimation(h, eff, KEEP_EVERY_NTH);
+    dlog(
+      "decimated; before=" +
+        before.length +
+        " after=" +
+        after.length +
+        " kept=" +
+        decimated.length +
+        " cap=" +
+        eff.source
+    );
   }
 
   /**
@@ -769,10 +872,97 @@ class StorageImpl {
       }
     }
   }
+
+  /**
+   * Public teardown entry point for external lifecycle drains.
+   */
+  teardown() {
+    this._teardown();
+  }
+}
+
+/**
+ * Install a one-shot console helper for payload-size diagnostics.
+ *
+ * Usage in the in-game console:
+ *   window.__demoSizeOf()
+ *
+ * Returns an object with payload byte size, sample count, and turn context.
+ * @param {StorageImpl} storage The storage singleton.
+ */
+function installSizeProbe(storage) {
+  /** @type {*} */
+  const root = typeof window !== "undefined" ? window : globalThis;
+  if (!root || root.__demoSizeOf) return;
+  root.__demoSizeOf = () => buildSizeReport(storage);
+}
+
+/**
+ * Build a runtime payload-size report for the current history snapshot.
+ * @param {StorageImpl} storage The storage singleton.
+ * @returns {object} Size and context report.
+ */
+function buildSizeReport(storage) {
+  const h = safeCall(() => storage.load(), emptyHistory("unknown"));
+  const serialized = safeCall(() => JSON.stringify(h), "");
+  const bytes = utf8ByteLength(serialized);
+  const samples = Array.isArray(h?.samples) ? h.samples.length : 0;
+  const lastSummary = summarizeLastSample(h, samples);
+  const store = getPlayerStore() || getGlobalStore();
+  const persistedRaw = readPersistedPayload(store);
+  const persistedBytes = typeof persistedRaw === "string" ? utf8ByteLength(persistedRaw) : null;
+  const report = {
+    bytes,
+    kib: Number((bytes / 1024).toFixed(2)),
+    samples,
+    currentTurn: currentTurnOrNull(),
+    latestSampleTurn: lastSummary.turn,
+    latestSampleAge: lastSummary.age,
+    persistedBytes,
+    storePid: store ? store.pid : null,
+    cap: resolveEffectiveCap()
+  };
+  console.warn("[Demographics.storage] __demoSizeOf", report);
+  return report;
+}
+
+/**
+ * Read persisted payload text from the active store.
+ * @param {PersistStore | null} store Active store.
+ * @returns {string | null} Raw payload text.
+ */
+function readPersistedPayload(store) {
+  if (!store || typeof store.read !== "function") return null;
+  return safeCall(() => store.read(PAYLOAD_KEY), null);
+}
+
+/**
+ * Read current game turn defensively.
+ * @returns {number | null} Current turn, or null.
+ */
+function currentTurnOrNull() {
+  return safeCall(
+    () => (typeof Game !== "undefined" && typeof Game.turn === "number" ? Game.turn : null),
+    null
+  );
+}
+
+/**
+ * Summarize the last sample's turn and age fields.
+ * @param {StoredHistory} h History snapshot.
+ * @param {number} samples Sample count.
+ * @returns {{ turn: number | null, age: string | null }} Last sample summary.
+ */
+function summarizeLastSample(h, samples) {
+  const last = samples > 0 ? h.samples[samples - 1] : null;
+  const turn = last && typeof last.turn === "number" ? last.turn : null;
+  const age = last && typeof last.age === "string" ? last.age : null;
+  return { turn, age };
 }
 
 /** The history storage singleton. */
 const DemographicsStorage = new StorageImpl();
+installSizeProbe(DemographicsStorage);
 export default DemographicsStorage;
 export {
   DemographicsStorage,

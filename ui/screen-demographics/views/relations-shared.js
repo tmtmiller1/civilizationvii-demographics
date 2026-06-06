@@ -52,7 +52,7 @@ export function hexToRgba(hex, alpha) {
   // Civ7's `UI.Player.getPrimaryColorValueAsString` can return 8-char hex
   // ("#AARRGGBB" or "#RRGGBBAA"). The previous regex only matched 6 chars
   // and FELL THROUGH returning the raw string, so SVG `fill="#FFFFFFFF"`
-  // rendered as opaque white — that's the "white circle" bug. Accept 6 or
+  // rendered as opaque white - that's the "white circle" bug. Accept 6 or
   // 8 char hex and always take the LAST 6 digits as RGB.
   const m = hex.match(/^#?([0-9a-fA-F]{6,8})$/);
   if (!m) return "rgba(20, 16, 10, " + alpha + ")";
@@ -102,16 +102,16 @@ export function safeCall(label, fn, fb) {
 
 // Per-filter line texture. Returns the SVG `stroke-dasharray` value to use
 // for an edge of that filter key, or "" for a solid line. Pairing rationale:
-//   research / endeavors share warm-cool space with trade and denounced —
+//   research / endeavors share warm-cool space with trade and denounced -
 //   give them distinct dash patterns so the eye can pick them apart even
 //   when the same pair has multiple parallel edges.
 // Stroke is 0.6 viewBox units. Dash patterns are sized large enough to
 // remain obvious across the typical 20–50 viewBox-unit edge lengths in
 // this ring. Earlier "1.6 1.2" / "0.6 1.4" patterns were imperceptible
-// at typical rendered scales — bumped well above stroke width.
+// at typical rendered scales - bumped well above stroke width.
 /** @type {Record<string, string>} */
 export const LINE_DASH = {
-  // Primary signals — solid:
+  // Primary signals - solid:
   war: "",
   alliance: "",
   helpful: "",
@@ -119,7 +119,7 @@ export const LINE_DASH = {
   unfriendly: "",
   hostile: "",
   trade: "",
-  // Overlay categories — patterned (units = SVG viewBox 0..100):
+  // Overlay categories - patterned (units = SVG viewBox 0..100):
   openborders: "5 2", // long-dash
   denounced: "2.5 2", // medium-dash
   research: "0.6 2", // dots
@@ -140,7 +140,7 @@ export function dasharrayFor(edge) {
   // recolor trade=yellow-dotted etc. without touching the base maps.
   if (typeof edge._dashOverride === "string") return edge._dashOverride;
   if (edge._dashOverride === null || edge._dashOverride === "") return "";
-  // Legacy `e.dashed` flag (suzerain edges set it directly) — preserve.
+  // Legacy `e.dashed` flag (suzerain edges set it directly) - preserve.
   if (edge.dashed && !edge.filterKey) return "1.4 1.0";
   const k = edge.filterKey || "";
   if (Object.prototype.hasOwnProperty.call(LINE_DASH, k)) return LINE_DASH[k];
