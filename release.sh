@@ -9,8 +9,14 @@
 #   2. Sed-replaces `const DBG = true` -> `const DBG = false` in every JS file
 #      so the verbose `console.warn` traces don't fire in shipped builds.
 #      Source code stays development-friendly; only the dist copy is muted.
-#   3. Verifies the modinfo has Version + Authors set to non-default values.
-#   4. Zips the result with `demographics/` as the zip root (mod.io / Steam
+#   3. Minifies every dist JS file in place (esbuild, per-file transform) so the
+#      shipped build parses ~60% fewer bytes. The engine loads scripts by path
+#      and resolves ES imports by literal specifier, so files are NOT bundled -
+#      only local identifiers are mangled and comments/whitespace stripped; the
+#      module layout, import paths, and export names are preserved. Source stays
+#      readable; only the dist copy is minified.
+#   4. Verifies the modinfo has Version + Authors set to non-default values.
+#   5. Zips the result with `demographics/` as the zip root (mod.io / Steam
 #      Workshop need the modinfo at zip root, not inside a wrapper folder).
 #
 # Run from the mod source directory.
@@ -52,6 +58,35 @@ case "$VERSION" in
         ;;
 esac
 
+# ── Steam Workshop published file id ──────────────────────────────────────
+# The publishedfileid is what makes steamcmd UPDATE the existing Workshop item
+# instead of creating a duplicate. It must survive the `rm -rf dist` below, so we
+# persist it OUTSIDE dist/ in steam_workshop_id.txt (committed to the repo).
+# Resolution priority: saved steam_workshop_id.txt is authoritative by default;
+# WORKSHOP_PUBLISHED_FILE_ID may be used only when it matches the saved id (or
+# no saved id exists); final fallback recovers from leftover dist/workshop_item.vdf.
+WORKSHOP_ID_FILE="$SRC_DIR/steam_workshop_id.txt"
+PUBLISHED_FILE_ID="${WORKSHOP_PUBLISHED_FILE_ID:-}"
+SAVED_PUBLISHED_FILE_ID=""
+if [ -f "$WORKSHOP_ID_FILE" ]; then
+    SAVED_PUBLISHED_FILE_ID="$(tr -dc '0-9' < "$WORKSHOP_ID_FILE")"
+fi
+if [ -n "$PUBLISHED_FILE_ID" ] && [ -n "$SAVED_PUBLISHED_FILE_ID" ] \
+    && [ "$PUBLISHED_FILE_ID" != "$SAVED_PUBLISHED_FILE_ID" ]; then
+    echo "error: WORKSHOP_PUBLISHED_FILE_ID ($PUBLISHED_FILE_ID) conflicts with"
+    echo "       steam_workshop_id.txt ($SAVED_PUBLISHED_FILE_ID)."
+    echo "       Refusing to override the saved mod number."
+    echo "       Unset WORKSHOP_PUBLISHED_FILE_ID or update steam_workshop_id.txt intentionally."
+    exit 1
+fi
+if [ -z "$PUBLISHED_FILE_ID" ] && [ -n "$SAVED_PUBLISHED_FILE_ID" ]; then
+    PUBLISHED_FILE_ID="$SAVED_PUBLISHED_FILE_ID"
+fi
+if [ -z "$PUBLISHED_FILE_ID" ] && [ -f "$DIST_DIR/workshop_item.vdf" ]; then
+    PUBLISHED_FILE_ID="$(grep -oE '"publishedfileid"[[:space:]]*"[0-9]+"' \
+        "$DIST_DIR/workshop_item.vdf" | grep -oE '[0-9]+' | head -1 || true)"
+fi
+
 ZIP_NAME="demographics-v${VERSION}.zip"
 TARGET_DIR="$DIST_DIR/demographics"
 ZIP_PATH="$DIST_DIR/$ZIP_NAME"
@@ -66,6 +101,7 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
     --exclude='*.d.ts' --exclude='text/data' --exclude='tests' \
+    --exclude='steam_workshop_id.txt' \
     "$SRC_DIR"/ "$TARGET_DIR"/
 
 echo "==> Disabling debug logging in dist JS files"
@@ -78,6 +114,25 @@ find "$TARGET_DIR" -name '*.js' -type f -print0 | xargs -0 sed -i '' -E \
     -e 's/^const DBG = true;/const DBG = false;/' \
     -e 's/^let DEMOGRAPHICS_DEBUG = true;/let DEMOGRAPHICS_DEBUG = false;/' \
     -e 's/^const DEMOGRAPHICS_DEBUG = true;/const DEMOGRAPHICS_DEBUG = false;/'
+
+echo "==> Minifying dist JS (per-file; preserves module paths + export names)"
+# Minify each shipped file IN PLACE rather than bundling: the modinfo loads
+# scripts by path and the engine resolves ES imports by literal specifier, so
+# the file layout and import/export strings must survive. esbuild's transform
+# mode (no --bundle) mangles only local identifiers and strips comments and
+# whitespace; with `const DBG = false` already set above it also constant-folds
+# the debug branches away. esbuild is a BUILD-TIME tool only - the output is
+# plain ES modules with no runtime/dependency, so players downloading the mod
+# never need esbuild or node_modules. Source stays readable; only dist is minified.
+ESBUILD="$SRC_DIR/node_modules/.bin/esbuild"
+if [ ! -x "$ESBUILD" ]; then
+    echo "error: esbuild not found at $ESBUILD — run 'npm install' in the mod dir first."
+    exit 1
+fi
+find "$TARGET_DIR" -name '*.js' -type f -print0 | while IFS= read -r -d '' f; do
+    "$ESBUILD" "$f" --minify --format=esm --legal-comments=none --outfile="$f.min" || exit 1
+    mv -f "$f.min" "$f"
+done || { echo "error: JS minification failed"; exit 1; }
 
 echo "==> Syntax-checking dist JS"
 find "$TARGET_DIR" -name '*.js' -type f -print0 \
@@ -94,7 +149,7 @@ echo "==> Zipping $ZIP_PATH"
 # loose rsync exclude can't silently ship docs/, tests/, *.d.ts, dev configs,
 # stray CSVs, .DS_Store, etc. Update ALLOW when a new shipped file type is added.
 echo "==> Verifying zip contents against allow-list"
-ALLOW='^demographics/(demographics\.modinfo|README\.md|LICENSE)$'
+ALLOW='^demographics/(demographics\.modinfo|README\.md|LICENSE|CHANGELOG\.md)$'
 ALLOW="$ALLOW"'|^demographics/ui/.+\.(js|html|css)$'
 ALLOW="$ALLOW"'|^demographics/images/.+\.(svg|png)$'
 ALLOW="$ALLOW"'|^demographics/text/[a-z_]+/ModText\.xml$'
@@ -113,16 +168,20 @@ unzip -l "$ZIP_PATH" | head -25 || true
 SIZE="$(du -h "$ZIP_PATH" | cut -f1)"
 
 # ── Steam Workshop upload assets ──────────────────────────────────────────
-# Generate a 512×512 PNG preview from the SVG icon and a workshop_item.vdf
-# template ready to use with steamcmd. The .vdf needs absolute paths so we
-# build them off $(pwd).
-
-PREVIEW_SRC="$SRC_DIR/images/demographics-icon.svg"
+# Generate a 1024×1024 PNG preview for the Workshop thumbnail and a
+# workshop_item.vdf template ready to use with steamcmd. The .vdf needs absolute
+# paths so we build them off $(pwd).
+#
+# Prefer the branded preview card (docs/workshop-preview.svg: dark frame + logo
+# + wordmark) over the bare 64px icon, since the card reads far better in the
+# Steam Workshop grid. Falls back to the raw icon if the card is absent.
+PREVIEW_SRC="$SRC_DIR/docs/workshop-preview.svg"
+[ -f "$PREVIEW_SRC" ] || PREVIEW_SRC="$SRC_DIR/images/demographics-icon.svg"
 PREVIEW_OUT="$DIST_DIR/preview.png"
 if [ -f "$PREVIEW_SRC" ]; then
     if command -v rsvg-convert >/dev/null 2>&1; then
-        rsvg-convert -w 512 -h 512 "$PREVIEW_SRC" -o "$PREVIEW_OUT"
-        echo "==> Workshop preview rendered:  $PREVIEW_OUT"
+        rsvg-convert -w 1024 -h 1024 "$PREVIEW_SRC" -o "$PREVIEW_OUT"
+        echo "==> Workshop preview rendered:  $PREVIEW_OUT  (from $(basename "$PREVIEW_SRC"))"
     elif command -v sips >/dev/null 2>&1; then
         # macOS fallback: sips can't read SVG, so we skip and warn.
         echo "==> rsvg-convert not found; preview.png NOT generated."
@@ -131,29 +190,83 @@ if [ -f "$PREVIEW_SRC" ]; then
 fi
 
 VDF_PATH="$DIST_DIR/workshop_item.vdf"
+VDF_NOPREVIEW_PATH="$DIST_DIR/workshop_item_no_preview.vdf"
 ABS_CONTENT="$(cd "$TARGET_DIR" && pwd)"
 ABS_PREVIEW=""
 [ -f "$PREVIEW_OUT" ] && ABS_PREVIEW="$(cd "$DIST_DIR" && pwd)/preview.png"
 
-cat > "$VDF_PATH" <<EOF
+# Change note: pull the current version's section out of CHANGELOG.md (Keep a
+# Changelog format) and render its bullet lines as a Steam BBCode list. Falls
+# back to a generic note if CHANGELOG.md or the matching section is absent.
+CHANGELOG_FILE="$SRC_DIR/CHANGELOG.md"
+CHANGENOTE="v${VERSION} release."
+if [ -f "$CHANGELOG_FILE" ]; then
+    # awk: print lines between "## [VERSION]" and the next "## " header.
+    BULLETS="$(awk -v ver="$VERSION" '
+        $0 ~ ("^## \\[" ver "\\]") { grab = 1; next }
+        grab && /^## / { exit }
+        grab { print }
+    ' "$CHANGELOG_FILE" \
+        | sed -nE 's/^[[:space:]]*[-*][[:space:]]+(.*)$/[*]\1/p' \
+        | sed -E 's/\*\*//g; s/`//g' \
+        | tr '\n' ' ')"
+    if [ -n "$BULLETS" ]; then
+        # Wrap as a BBCode list and escape backslashes/quotes for the VDF string.
+        CHANGENOTE="$(printf '[list]%s[/list]' "$BULLETS" \
+            | sed -E 's/\\/\\\\/g; s/"/\\"/g')"
+    fi
+fi
+
+write_workshop_vdf() {
+    local out_path="$1"
+    local include_preview="$2"
+    cat > "$out_path" <<EOF
 "workshopitem"
 {
     "appid"          "1295660"
+EOF
+[ -n "$PUBLISHED_FILE_ID" ] && echo "    \"publishedfileid\" \"$PUBLISHED_FILE_ID\"" >> "$out_path"
+cat >> "$out_path" <<EOF
     "contentfolder"  "$ABS_CONTENT"
 EOF
-[ -n "$ABS_PREVIEW" ] && echo "    \"previewfile\"    \"$ABS_PREVIEW\"" >> "$VDF_PATH"
-cat >> "$VDF_PATH" <<EOF
+    if [ "$include_preview" = "yes" ] && [ -n "$ABS_PREVIEW" ]; then
+        echo "    \"previewfile\"    \"$ABS_PREVIEW\"" >> "$out_path"
+    fi
+cat >> "$out_path" <<EOF
     "visibility"     "0"
     "title"          "Demographics"
-    "description"    "Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for Civilization VII. Read-only — never affects game state."
-    "changenote"     "v${VERSION} release."
-    // After first upload, steamcmd will print a publishedfileid.
-    // Add it here as:    "publishedfileid"  "1234567890"
-    // so subsequent runs update the existing item instead of creating a new one.
-}
 EOF
+# NOTE: "description" is intentionally omitted. steamcmd's workshop_build_item
+# only updates the fields present in this VDF, so leaving it out preserves the
+# description currently set on the Steam Workshop page instead of overwriting it.
+cat >> "$out_path" <<EOF
+    "changenote"     "${CHANGENOTE}"
+EOF
+if [ -z "$PUBLISHED_FILE_ID" ]; then
+    cat >> "$out_path" <<EOF
+    // First upload: steamcmd will print a publishedfileid when this completes.
+    // Save it so re-runs UPDATE the existing item instead of creating a duplicate:
+    //     echo <publishedfileid> > steam_workshop_id.txt
+EOF
+fi
+    echo "}" >> "$out_path"
+}
+
+write_workshop_vdf "$VDF_PATH" yes
+write_workshop_vdf "$VDF_NOPREVIEW_PATH" no
+
+# Persist the id so it's durable across `rm -rf dist` on future runs.
+if [ -n "$PUBLISHED_FILE_ID" ]; then
+    printf '%s\n' "$PUBLISHED_FILE_ID" > "$WORKSHOP_ID_FILE"
+fi
 
 echo "==> Workshop manifest written: $VDF_PATH"
+echo "==> Workshop no-preview manifest written: $VDF_NOPREVIEW_PATH"
+if [ -n "$PUBLISHED_FILE_ID" ]; then
+    echo "    UPDATE mode — publishedfileid $PUBLISHED_FILE_ID (existing item)"
+else
+    echo "    NEW-ITEM mode — no publishedfileid yet (first upload will create one)"
+fi
 echo ""
 echo "✓ Release built:  $ZIP_PATH  ($SIZE)"
 echo "  Version:        $VERSION"
@@ -168,6 +281,16 @@ echo "  2. Upload (Steam Guard prompt will appear on first login):"
 echo "       ~/steamcmd/steamcmd.sh +login <yourSteamLogin> \\"
 echo "           +workshop_build_item $(cd "$DIST_DIR" && pwd)/workshop_item.vdf +quit"
 echo ""
-echo "  3. The first run prints a publishedfileid. Paste it into $VDF_PATH"
-echo "     (uncomment the publishedfileid line) so re-runs UPDATE the item"
-echo "     instead of creating a new one."
+echo ""
+echo "     If Steam rejects the preview upload with Access Denied, upload with:"
+echo "       ~/steamcmd/steamcmd.sh +login <yourSteamLogin> \\
+"
+echo "           +workshop_build_item $(cd "$DIST_DIR" && pwd)/workshop_item_no_preview.vdf +quit"
+if [ -z "$PUBLISHED_FILE_ID" ]; then
+echo "  3. The first run prints a publishedfileid. Save it so future runs UPDATE"
+echo "     the existing item instead of creating a duplicate:"
+echo "       echo <publishedfileid> > steam_workshop_id.txt"
+else
+echo "  3. This builds in UPDATE mode (publishedfileid $PUBLISHED_FILE_ID from"
+echo "     steam_workshop_id.txt), so the upload updates the existing item."
+fi

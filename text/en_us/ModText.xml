@@ -25,6 +25,15 @@
         <Row Tag="LOC_DEMOGRAPHICS_BODY">
             <Text>Track each civilization across the course of the game.</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LEGEND_TITLE">
+            <Text>Legend</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LEGEND_ALL">
+            <Text>All</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_LEGEND_NONE">
+            <Text>None</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE">
             <Text>Score</Text>
         </Row>
@@ -110,10 +119,10 @@
 
         <!-- V7-specific creative -->
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE">
-            <Text>IPT</Text>
+            <Text>Influence</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT">
-            <Text>HPT</Text>
+            <Text>Happiness</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP">
             <Text>Net happiness yield per turn.</Text>
@@ -173,8 +182,122 @@
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS">
             <Text>Conflicts</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_CRISES">
+            <Text>Crises</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE">
+            <Text>Crisis Stages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES">
+            <Text>Crisis Stages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS">
+            <Text>Crisis Impact</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE">
+            <Text>Crisis Impact</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND">
+            <Text>Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL">
+            <Text>All</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE">
+            <Text>None</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY">
+            <Text>No data recorded yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE">
+            <Text>No crisis has begun in this age yet.</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT">
-            <Text>Wars</Text>
+            <Text>War Timeline</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GLOSSARY">
+            <Text>Guide</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_WAR_GRAPHS">
+            <Text>War Impact</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL">
+            <Text>All</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE">
+            <Text>None</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK">
+            <Text>War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE">
+            <Text>No wars yet. Once any civ declares war, you can graph it here.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA">
+            <Text>No data recorded for this war.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_STRENGTH">
+            <Text>Military Power (Lost)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_SETTLEMENTS">
+            <Text>Settlements Lost/Gained</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_RAZED">
+            <Text>Settlements Razed</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_LAND">
+            <Text>Land Area Lost</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_POP">
+            <Text>Population Lost</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN">
+            <Text>Turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH">
+            <Text>Strength</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES">
+            <Text>Settlements (net)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_RAZED">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_LAND">
+            <Text>km²</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_POP">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS">
+            <Text>Food / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD">
+            <Text>Production / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD">
+            <Text>Production</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER">
+            <Text>Military Power (Over Time)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD">
+            <Text>Prod. Directed to War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS">
+            <Text>Belligerent Civs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS">
+            <Text>City State Allies</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CUMULATIVE">
+            <Text>Cumulative Allied</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE">
+            <Text>{1_Civ} side</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE_UNKNOWN">
+            <Text>Allied side</Text>
         </Row>
 
         <!-- Civ7-specific Age mechanics -->
@@ -346,6 +469,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_WONDER_TURN">
             <Text>Turn {1_Turn}</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED">
+            <Text>Destroyed</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS">
             <Text>Crisis Begins</Text>
         </Row>
@@ -472,6 +598,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS">
             <Text>Defenders:</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_VS">
+            <Text>vs</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY">
             <Text>Declared by: {1_Name}</Text>
         </Row>
@@ -480,6 +609,9 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS">
             <Text>{1_Turns} turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_NOW">
+            <Text>Now (T-{1_Turn})</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH">
             <Text>strength {1_Value}</Text>
@@ -498,6 +630,81 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED">
             <Text>(observed change)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES">
+            <Text>City State Allies</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_CS_COMBINED">
+            <Text>City States (Combined)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE">
+            <Text>{1_Civ} side</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE_UNKNOWN">
+            <Text>Allied side</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_CS_NONE">
+            <Text>None</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_MILPOWER">
+            <Text>Military Power (Current)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH">
+            <Text>Military Power (Lost)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_LAND">
+            <Text>Land Area</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_RAZED">
+            <Text>Razed</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_POP">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_CROPLOST">
+            <Text>Crop Yield Lost</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_PRODLOST">
+            <Text>Production Lost</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD">
+            <Text>Directed to War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO">
+            <Text>These are the figures shown in each war's pop-up on the Wars tab. Every figure is measured over a combatant's time in that war — from the turn it joined to the turn it left, or to now if the war is still going — and the game is sampled once per turn. A green number is a gain, a red number is a loss, and a dash (—) means no data was recorded for that war.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER">
+            <Text>Your standing Military Power — the total combat strength of your army — at the end of the war (or the latest turn while it is ongoing). This is the size of your forces, not a loss; "Military Power Lost" below tracks the casualties.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH">
+            <Text>Combat strength of your units actually killed in combat, summed as each unit dies (its base combat strength). This is true casualties — building replacements never hides a loss, and the figure is not derived from the size of your standing army. Wars fought before this tracking existed instead fall back to the net drop in your army's total strength.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS">
+            <Text>Net settlements won or lost by capture: a settlement you capture counts +1, one captured from you counts −1. Founding a new settlement with a settler does not count — only settlements that actually change hands. Because it is a net figure, a settlement you lose and then retake cancels back to zero. It is recorded from capture events, so a war fought before this was added shows no figure.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED">
+            <Text>How many of your settlements were permanently destroyed (razed). It is charged to you as the owner from before the city was captured, not to the conqueror who razed it. Unlike a capture — which can be reversed by retaking the city — a razed city is gone for good. Only recorded for wars fought after this tracking was added.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND">
+            <Text>Territory that actually changed hands in the war, in square kilometres (each map tile is about 7,000 km²). Counts only the land of settlements captured from — or lost to — the enemy; peaceful expansion and border growth are excluded. A positive number means you took ground; a negative number means you lost it.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP">
+            <Text>Total population you lost, added up from every turn your population fell — turns where it grew are ignored, so normal growth can never mask wartime losses. Two limits: it cannot tell a war death from a famine in the same span, and population from a city you later recapture still counts as lost on the turn it first fell.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST">
+            <Text>Food disruption: every turn your crop yield (net food per turn) fell, that drop is added up (turns it rose are ignored, so ordinary growth can't hide it). Big drops come from pillaged farms and tiles and from cities being occupied or lost. It is a sum of rate drops, a proxy for disruption, not a total amount of food.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST">
+            <Text>Production disruption: every turn your production-per-turn fell, that drop is added up (turns it rose are ignored, so ordinary economic growth can't hide it). Big drops come from pillaged tiles and cities being occupied or lost. It is a sum of rate drops, a proxy for disruption, not a total amount of production. Production you deliberately poured into the war is tracked separately under "Directed to War".</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD">
+            <Text>Production you spent on the war effort: the production cost of every military unit and military or fortification building (walls, etc.) you completed while the war was on, added up. Civilian units, economic buildings, and wonders don't count. This is deliberate investment in the war, not a loss, so it is shown as a neutral figure. The cost is the effective cost in the city that built it — your leader, civilization, and policy discounts are already baked in. Items bought outright with gold or faith aren't counted, since that's treasury, not production; production overflow between items isn't split out exactly.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE">
+            <Text>Why some columns are net and others are totals: territory, settlements, and production swing both ways and can be undone, so they are shown as a net change. Strength and population are destruction that should never be hidden by gains elsewhere, so they are shown as cumulative losses. Razed settlements are permanent by definition.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS">
             <Text>No wars yet. Once any civ declares war, the timeline will populate.</Text>
@@ -535,8 +742,17 @@
         <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE">
             <Text>Cross-Age Charts Unavailable</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY">
-            <Text>&lt;p style="margin:0;"&gt;A single chart cannot span &lt;b style="color:#f3e7c4;"&gt;Antiquity, Exploration, and Modern&lt;/b&gt;. History resets at each age transition, so charts only show data from the current age. Use &lt;b style="color:#f3e7c4;"&gt;Current&amp;nbsp;Age&lt;/b&gt; or a year-range filter instead.&lt;/p&gt;</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1">
+            <Text>History resets at each age transition.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2">
+            <Text>As there is no method of Data persistence,</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3">
+            <Text>a single chart cannot span multiple ages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4">
+            <Text>Use current age or an age range filter.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP">
             <Text>{1_Label} filter</Text>
@@ -575,7 +791,7 @@
             <Text>No snapshot yet — the age hasn't ended.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_BTN_REFRESH">
-            <Text>↻ Refresh</Text>
+            <Text>Refresh</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP">
             <Text>Refresh Triumph progress</Text>
@@ -715,6 +931,12 @@
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE">
             <Text>Conflicts Timeline — every war this game has seen</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE">
+            <Text>War Cost Guide — what each figure means and how it's measured</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE">
+            <Text>War Impact — each combatant's trajectory through a chosen war</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NYI">
             <Text>Not yet implemented.</Text>
         </Row>
@@ -746,10 +968,10 @@
             <Text>5,000 samples</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000">
-            <Text>10,000 samples ⚠ may slow performance</Text>
+            <Text>10,000 samples (may slow performance)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED">
-            <Text>Unlimited ⚠ very large saves, may slow performance</Text>
+            <Text>Unlimited (very large saves, may slow performance)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL">
             <Text>History sample cap:</Text>
@@ -776,7 +998,7 @@
             <Text>Every 10 turns</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_25">
-            <Text>Every 25 turns ⚠ coarse graphs</Text>
+            <Text>Every 25 turns (coarse graphs)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL">
             <Text>Sample frequency (performance):</Text>
@@ -872,6 +1094,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT">
             <Text>Great War: {1_A} vs {2_B} (+{3_Extra} civs)</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_REGIONAL">
+            <Text>Regional War: {1_A} vs {2_B} (+{3_Extra} civs)</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE">
             <Text>Tripartite {1_A}–{2_B}–{3_C} War</Text>
         </Row>
@@ -883,6 +1108,12 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARNAME_LONG">
             <Text>{1_Base} (Long War)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_YEARS">
+            <Text>{1_Base} ({2_Years}-Year War)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_CENTURIES">
+            <Text>{1_Base} (Centuries' War)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_ORDINAL_1">
             <Text>First</Text>
@@ -1312,6 +1543,18 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS">
             <Text>Hide diplomacy/relations stats for civilizations you haven't met</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY">
+            <Text>Reveal full history when you meet a civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT">
+            <Text>On: meeting a civ reveals its entire past on the charts. Off: lines begin at the moment of first contact.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED">
+            <Text>Demographics paused due to engine errors.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE">
+            <Text>Re-enable sampling</Text>
         </Row>
     </EnglishText>
 </Database>

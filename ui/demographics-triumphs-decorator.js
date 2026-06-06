@@ -17,7 +17,7 @@
 
 // Module marker: makes this file an ES module for the type-checker so
 // module-scoped `const DBG` does not collide with the identical debug flag
-// in sibling decorators. Exports no bindings — a runtime no-op.
+// in sibling decorators. Exports no bindings - a runtime no-op.
 export {};
 
 import { t } from "/demographics/ui/demographics-i18n.js";
@@ -100,7 +100,7 @@ function composeLegacyName(row) {
  * Race triumphs (LegacyType ending in "_RACE") are FirstPlayerOnly and share
  * their display name with a paired non-race row whose LegacyType is the same
  * string without "_RACE". The paired row is the one with actual per-civ
- * getProgress data — the _RACE row returns null progress. Prefer the non-_RACE
+ * getProgress data - the _RACE row returns null progress. Prefer the non-_RACE
  * row whenever a name collision occurs.
  * @param {Map<string, LegacyRow>} map Map being built.
  * @param {string} key Uppercased, trimmed display-name key.
@@ -116,7 +116,7 @@ function insertNameRow(map, key, row) {
       map.set(key, row); // upgrade to non-race
     }
     // Otherwise keep existing (we already have non-race, or
-    // both are race — either way, no win in overwriting).
+    // both are race - either way, no win in overwriting).
   } else {
     map.set(key, row);
   }
@@ -412,7 +412,7 @@ function makeProgressSorter(winner) {
 
 /**
  * Compute aggregated per-civ progress for one legacy row across all major civs.
- * Every major civ is included — even zero-progress — so every card renders at
+ * Every major civ is included - even zero-progress - so every card renders at
  * the same height regardless of how many civs are making progress.
  * @param {LegacyRow} row Legacy row to query.
  * @returns {RowProgress} Aggregated, sorted progress.
@@ -444,7 +444,7 @@ function getProgressForRow(row) {
 let _logCount = 0;
 
 /**
- * Read a triumph card's title text. The native template structure varies — try
+ * Read a triumph card's title text. The native template structure varies - try
  * several selectors and fall back to the first font-title bearing element.
  * @param {HTMLElement} card Triumph card element.
  * @returns {{ rawText: string, titleText: string } | null} Raw and uppercased
@@ -474,7 +474,7 @@ function readCardTitle(card) {
  * Resolve the legacy row for a card title: an exact name-map hit, else a single
  * UNAMBIGUOUS containment match. The native L10n composer sometimes wraps the
  * name in style tags, so the card title can contain the legacy name with extra
- * decoration — we accept that one direction only (title ⊇ name), and only when
+ * decoration - we accept that one direction only (title ⊇ name), and only when
  * exactly one key matches. The reverse direction (name ⊇ title) and ties are
  * rejected: both could bind a card to the wrong legacy, which is worse than
  * leaving it undecorated.
@@ -793,7 +793,7 @@ function decorateCard(card) {
       total
   );
   if (civs.length === 0) {
-    // Couldn't enumerate any major civs — skip rather than render an
+    // Couldn't enumerate any major civs - skip rather than render an
     // empty box. (Goal is unknown OR Players API isn't ready.)
     return;
   }
@@ -852,7 +852,7 @@ function onMutations(mutations) {
     // DOM-edge boundary: the engine fires this callback synchronously, so a
     // throw here would tear down the MutationObserver and stop all further
     // decoration. Guard per-record (one bad card can't block the rest) and
-    // LOG — own-logic bugs in decorateCard / progress computation surface
+    // LOG - own-logic bugs in decorateCard / progress computation surface
     // instead of being silently swallowed.
     try {
       for (const node of m.addedNodes) {
@@ -905,7 +905,7 @@ function detachCardObserver() {
 
 /**
  * Disconnect every observer. Wired to engine `BeforeUnload` so the watchers
- * don't outlive this UI-module context — the closest analog to a screen detach
+ * don't outlive this UI-module context - the closest analog to a screen detach
  * for a standalone decorator script.
  */
 function teardownObservers() {
@@ -921,7 +921,7 @@ function teardownObservers() {
  * scoped card observer accordingly. The presence watcher is deliberately
  * childList/subtree only (no `characterData`) so it stays cheap across the whole
  * HUD; the expensive `characterData` watch is confined to the screen's subtree
- * and lives only while the screen is open — so the decorator no longer runs a
+ * and lives only while the screen is open - so the decorator no longer runs a
  * document-wide text-mutation observer for the entire process lifetime.
  */
 function bootstrap() {

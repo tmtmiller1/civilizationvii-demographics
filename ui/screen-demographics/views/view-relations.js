@@ -11,10 +11,10 @@
 //
 // The ring renderer, edge builders, and filter-pill DOM live in sibling
 // modules:
-//   relations-ring-svg.js — buildRingSvg + SVG node/edge/portrait helpers
-//   relations-edges.js    — edge builders + diplomacy/CS-type resolution
-//   relations-filters.js  — makeFilterPillRow + pill/swatch helpers
-//   relations-shared.js   — logging, safeCall, color + dash helpers
+//   relations-ring-svg.js - buildRingSvg + SVG node/edge/portrait helpers
+//   relations-edges.js    - edge builders + diplomacy/CS-type resolution
+//   relations-filters.js  - makeFilterPillRow + pill/swatch helpers
+//   relations-shared.js   - logging, safeCall, color + dash helpers
 //
 // V7 diplomacy accessors in use:
 //   player.Diplomacy.hasMet(other)
@@ -33,9 +33,7 @@ import {
   normalizeCivColor
 } from "/demographics/ui/screen-demographics/views/relations-shared.js";
 import {
-  buildPoliticalEdges,
-  buildEconomicEdges,
-  buildAttitudeEdges,
+  buildCivTaggedEdges,
   buildCsSuzerainEdges,
   buildCsTradeEdges,
   buildCsAttitudeEdges,
@@ -247,7 +245,6 @@ function getCityStateIds() {
  * @param {NodeInfo} target Object to mutate.
  * @param {string} field Field name.
  * @param {*} value Candidate value.
- * @returns {void}
  */
 function assignIfNonEmpty(target, field, value) {
   if (typeof value === "string" && value.length > 0) {
@@ -261,7 +258,6 @@ function assignIfNonEmpty(target, field, value) {
  * @param {Record<string, NodeInfo>} map Name map to mutate.
  * @param {string} pid Player id (string key).
  * @param {*} ps One civ's sample (loose engine/history shape).
- * @returns {void}
  */
 function foldNameSample(map, pid, ps) {
   if (!map[pid]) map[pid] = {};
@@ -292,7 +288,7 @@ function buildNameMap(history) {
 }
 
 // Resolve a CS display name from the player handle directly. The vanilla
-// canonical accessor is `Locale.compose(player.name)` — see
+// canonical accessor is `Locale.compose(player.name)` - see
 // base-standard/ui/diplo-ribbon/model-diplo-ribbon.js. This yields the
 // actual minor-civ name (e.g. "Carthage", "Bactra") rather than the generic
 // "village" / civilizationType placeholder.
@@ -402,7 +398,7 @@ function viewerHasMet(viewerPid, otherPid) {
 
 // ---- filter persistence ---------------------------------------------------
 
-// Unified filter sets — the political/economic/attitude subtabs were folded
+// Unified filter sets - the political/economic/attitude subtabs were folded
 // into a single ring per top tab so users can see "Augustus is allied AND has
 // open borders AND a trade route with me" in one glance instead of switching
 // between three panels.
@@ -418,7 +414,7 @@ function viewerHasMet(viewerPid, otherPid) {
  */
 function filtersForView(topTab) {
   if (topTab === "civ") {
-    // Order matters — pills render in this order; attitude grouped first
+    // Order matters - pills render in this order; attitude grouped first
     // so the relationship-state pills sit together visually.
     return [
       { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude" },
@@ -427,7 +423,7 @@ function filtersForView(topTab) {
       { key: "friendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY"), kind: "attitude" },
       { key: "unfriendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY"), kind: "attitude" },
       { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude" },
-      // Neutral intentionally omitted — N² neutral lines just clutter.
+      // Neutral intentionally omitted - N² neutral lines just clutter.
       {
         key: "openborders",
         label: t("LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS"),
@@ -439,7 +435,7 @@ function filtersForView(topTab) {
       { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic" }
     ];
   }
-  // City-state tab — viewer-anchored relationships.
+  // City-state tab - viewer-anchored relationships.
   return [
     { key: "suzerain", label: t("LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY"), kind: "political" },
     { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic" },
@@ -474,7 +470,7 @@ function defaultFiltersFor(topTab) {
 // the live palette so colorblind mode applies; political/economic keys have
 // their own fixed colors (these aren't "civ attitudes" semantically).
 // Per-topTab visual overrides. The City-State tab has a different visual
-// vocabulary than the major-civs tab — friendly green stays green, but the
+// vocabulary than the major-civs tab - friendly green stays green, but the
 // other relationship colors are recolored to be more legible against the
 // CS ring background and to distinguish them from major-civ filters at
 // a glance. Suzerainty is the headline CS relationship → blue. Trade
@@ -561,10 +557,14 @@ function makeTabBar(tabs, activeKey, className, onSelect) {
 
 // Module-scope cache of filter sets keyed by `${topTab}:${subTab}`.
 // Coherent's localStorage gets wiped between reads in this UI context, so
-// we cannot trust round-tripping through settings.json — we keep the
+// we cannot trust round-tripping through settings.json - we keep the
 // authoritative Set here in memory and treat settings.setSetting as a
 // best-effort write for cross-session persistence.
 const _filterSetCache = new Map();
+
+// Module-scope cache of node-focus selections keyed by top tab ("civ"/"cs").
+// In-memory only; stale ids are pruned against the current ringIds each paint.
+const _nodeSelectionCache = new Map();
 
 // ---- main render ----------------------------------------------------------
 
@@ -658,7 +658,7 @@ function buildScaffold(host) {
   wrap.appendChild(viewerHost);
 
   // Body is the ring's container. Repaints wipe ALL its children, so the
-  // filter legend must NOT live inside it — filterHost stays a sibling and
+  // filter legend must NOT live inside it - filterHost stays a sibling and
   // the CSS positions it absolutely over the body's top-right corner.
   const body = document.createElement("div");
   body.className = "demographics-relations-body";
@@ -721,7 +721,6 @@ function resolveMet(viewerPid, pid, localId, history) {
  * @param {boolean} showUnmetNames When true, leave real names visible.
  * @param {number|undefined} localId Local player id.
  * @param {DemoHistory|undefined} history The persisted history blob.
- * @returns {void}
  */
 function applyMetMaskForMajors(viewerPid, metIds, names, showUnmetNames, localId, history) {
   if (showUnmetNames) return;
@@ -735,42 +734,6 @@ function applyMetMaskForMajors(viewerPid, metIds, names, showUnmetNames, localId
       });
     }
   }
-}
-
-/**
- * Build the overlaid Civ-Relations edge set (local-player viewer): attitude
- * edges filtered by active pills, plus political and trade edges per pill.
- * @param {number[]} metIds Met major ids.
- * @param {Set<string>} activeSet Active filter keys.
- * @param {number} localId Local player id.
- * @returns {Edge[]} The combined edge set.
- */
-function buildCivEdges(metIds, activeSet, localId) {
-  /** @type {Edge[]} */
-  let edges = [];
-  // Attitude edges (one per pair). war/alliance are part of this set.
-  const attitudeEdges = buildAttitudeEdges(metIds, localId);
-  for (const e of attitudeEdges) {
-    if (e.filterKey && activeSet.has(e.filterKey)) edges.push(e);
-  }
-  // Political-action edges (open borders, denounced, research, endeavors).
-  if (activeSet.has("openborders")) {
-    edges = edges.concat(buildPoliticalEdges(metIds, "openborders"));
-  }
-  if (activeSet.has("denounced")) {
-    edges = edges.concat(buildPoliticalEdges(metIds, "denounced"));
-  }
-  if (activeSet.has("research")) {
-    edges = edges.concat(buildPoliticalEdges(metIds, "research"));
-  }
-  if (activeSet.has("endeavors")) {
-    edges = edges.concat(buildPoliticalEdges(metIds, "endeavors"));
-  }
-  // Economic edges (trade routes; width scales with route count).
-  if (activeSet.has("trade")) {
-    edges = edges.concat(buildEconomicEdges(metIds, "trade", localId));
-  }
-  return edges;
 }
 
 const UNMET_GRAY = "#7d7d7d";
@@ -864,7 +827,7 @@ function buildCsNodeInfo(id, viewerPid, showUnmetNames, localId, history) {
       : resolveCsName(id);
   // PREFER the type color (matches V7's in-game CS-type color-coding) over
   // the CS's primary color, which often returns a default dark color.
-  // UNMET CSes get no type icon/color — render as a neutral gray disc.
+  // UNMET CSes get no type icon/color - render as a neutral gray disc.
   const csIsMet = metCs !== false;
   const v = resolveCsVisuals(id, csIsMet);
   return {
@@ -900,44 +863,69 @@ function buildCsMetSet(csIds, names) {
  * then filtered down to edges involving only met CSes.
  * @param {number} viewerPid The viewer player id.
  * @param {number[]} csIds City-state ids.
- * @param {Set<string>} activeSet Active filter keys.
+ * @param {boolean} includeAttitude Whether to include attitude-family edges.
  * @param {Set<number>} csMetSet The met-CS id set.
  * @returns {Edge[]} The combined, filtered edge set.
  */
-function buildCsEdges(viewerPid, csIds, activeSet, csMetSet) {
+function buildCsEdges(viewerPid, csIds, includeAttitude, csMetSet) {
   // Pass only the viewer civ as the "majors" list so each edge anchors at
   // the viewer; all relationship types overlay on the same ring.
   const viewerMajors = [viewerPid];
   /** @type {Edge[]} */
   let edges = [];
-  if (activeSet.has("suzerain")) {
-    edges = edges.concat(buildCsSuzerainEdges(viewerMajors, csIds, viewerPid));
-  }
-  if (activeSet.has("trade")) {
-    edges = edges.concat(buildCsTradeEdges(viewerMajors, csIds, viewerPid));
-  }
-  // Attitude edges, filtered by which attitude pills are active.
-  const attEdges = buildCsAttitudeEdges(viewerMajors, csIds, viewerPid);
-  for (const e of attEdges) {
-    if (e.filterKey && activeSet.has(e.filterKey) && (e.a === viewerPid || e.b === viewerPid)) {
-      edges.push(e);
-    }
+  edges = edges.concat(buildCsSuzerainEdges(viewerMajors, csIds, viewerPid));
+  edges = edges.concat(buildCsTradeEdges(viewerMajors, csIds, viewerPid));
+  if (includeAttitude) {
+    edges = edges.concat(buildCsAttitudeEdges(viewerMajors, csIds, viewerPid));
   }
   // Require any CS endpoint to be in the viewer's met set (unmet CSes still
   // appear as nodes, but draw no edges from the viewer's perspective).
   return edges.filter((e) => {
+    if (e.a !== viewerPid && e.b !== viewerPid) return false;
     if (csIds.includes(e.a) && !csMetSet.has(e.a)) return false;
     if (csIds.includes(e.b) && !csMetSet.has(e.b)) return false;
     return true;
   });
 }
 
+/** Attitude-family filter keys. */
+const ATTITUDE_FILTER_KEYS = new Set([
+  "war",
+  "alliance",
+  "helpful",
+  "friendly",
+  "unfriendly",
+  "hostile"
+]);
+
+/**
+ * Whether any attitude-family filter is active.
+ * @param {Set<string>} activeSet Active filters.
+ * @returns {boolean} True when at least one attitude key is enabled.
+ */
+function hasActiveAttitudeFilter(activeSet) {
+  for (const k of ATTITUDE_FILTER_KEYS) {
+    if (activeSet.has(k)) return true;
+  }
+  return false;
+}
+
+/**
+ * Read current game turn defensively.
+ * @returns {number|undefined} Current turn, or undefined.
+ */
+function readGameTurn() {
+  return safeCall("relations.Game.turn", () => {
+    if (typeof Game !== "undefined" && typeof Game.turn === "number") return Game.turn;
+    return undefined;
+  });
+}
+
 /**
  * Apply per-topTab visual overrides to CS-tab edges (suzerain=blue dashed,
- * trade=yellow dotted, etc.). Non-destructive — `e._dashOverride` is read by
+ * trade=yellow dotted, etc.). Non-destructive - `e._dashOverride` is read by
  * `dasharrayFor` first, and `e.color` overwrites the builder default. Mutates.
  * @param {Edge[]} edges The edges to recolor.
- * @returns {void}
  */
 function applyCsEdgeOverrides(edges) {
   for (const e of edges) {
@@ -983,13 +971,42 @@ function buildFilterDefs(topTab) {
  * @property {number|undefined} csViewerPid Active CS-tab viewer pid.
  * @property {(top: string) => Set<string>} readFilterSet Filter-set reader.
  * @property {(top: string, set: Set<string>) => void} writeFilterSet Writer.
+ * @property {(top: string) => Set<number>} readNodeSelection Node-focus reader.
+ * @property {(top: string, set: Set<number>) => void} writeNodeSelection Writer.
+ * @property {Record<string, { key: string, edges: Edge[] }>} edgeCacheByTop
+ *   Cached full edge set keyed by turn/viewer snapshot.
  * @property {() => void} repaint Repaint entry point.
  */
 
 /**
+ * Keep only selected ids that still exist in the current ring.
+ * @param {Set<number>} selected Selected ids (any source).
+ * @param {number[]} ringIds Current ring ids.
+ * @returns {Set<number>} Pruned selection.
+ */
+function pruneSelectionToRing(selected, ringIds) {
+  const ringSet = new Set(ringIds);
+  const out = new Set();
+  for (const id of selected) {
+    if (ringSet.has(id)) out.add(id);
+  }
+  return out;
+}
+
+/**
+ * Filter edges to those touching any selected node. Empty selection means all.
+ * @param {Edge[]} edges Candidate edges.
+ * @param {Set<number>} selected Selected node ids.
+ * @returns {Edge[]} The filtered edge list.
+ */
+function filterEdgesBySelectedNodes(edges, selected) {
+  if (!(selected instanceof Set) || selected.size === 0) return edges;
+  return edges.filter((e) => selected.has(e.a) || selected.has(e.b));
+}
+
+/**
  * Build the CS-tab viewer dropdown into the viewer host (no-op off the CS tab).
  * @param {RenderState} rs The render-loop state.
- * @returns {void}
  */
 function buildViewerDropdown(rs) {
   const { viewerHost } = rs.sc;
@@ -1043,11 +1060,19 @@ function buildViewerDropdown(rs) {
  * toggles to update the filter set and repaint.
  * @param {RenderState} rs The render-loop state.
  * @param {FilterDef[]} filterDefs The visual-resolved filter descriptors.
- * @returns {void}
  */
 function buildFilterRow(rs, filterDefs) {
   const { filterHost } = rs.sc;
   while (filterHost.firstChild) filterHost.removeChild(filterHost.firstChild);
+
+  const title = document.createElement("div");
+  title.className = "demographics-relations-filter-title font-title text-xs";
+  title.textContent =
+    rs.topTab === "civ"
+      ? t("LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS")
+      : t("LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES");
+  filterHost.appendChild(title);
+
   const activeSet = rs.readFilterSet(rs.topTab);
   filterHost.appendChild(
     makeFilterPillRow(
@@ -1071,39 +1096,59 @@ function buildFilterRow(rs, filterDefs) {
 }
 
 /**
- * Compute the ring node set, edges, names, and caption for the active view.
+ * Compute civ-tab ring data, including cached full-edge build and re-filter.
  * @param {RenderState} rs The render-loop state.
  * @param {Set<string>} activeSet Active filter keys.
+ * @param {Record<string, NodeInfo>} names Node display-info map.
  * @returns {{ ringIds: number[], edges: Edge[], names: Record<string, NodeInfo>, capText: string, ringViewerPid: number|undefined }}
  *   The computed ring inputs.
  */
-function computeRingData(rs, activeSet) {
+function computeCivRingData(rs, activeSet, names) {
   const localId = /** @type {number} */ (rs.localId);
-  /** @type {Edge[]} */
-  let edges = [];
-  let ringIds = rs.metIds.slice();
-  /** @type {Record<string, NodeInfo>} */
-  const names = Object.assign({}, rs.namesBase);
-  let capText = "";
-
-  if (rs.topTab === "civ") {
-    // Civ Relations uses the LOCAL player as the viewer. All filters are
-    // overlaid in one ring — a pair can carry multiple edges, which the
-    // ring renderer offsets into parallel lines.
-    applyMetMaskForMajors(localId, rs.metIds, names, rs.showUnmetNames, localId, rs.ctx.history);
-    edges = buildCivEdges(rs.metIds, activeSet, localId);
-    capText = t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV");
-    return { ringIds, edges, names, capText, ringViewerPid: localId };
+  applyMetMaskForMajors(localId, rs.metIds, names, rs.showUnmetNames, localId, rs.ctx.history);
+  const turn = readGameTurn();
+  const includeAttitude = hasActiveAttitudeFilter(activeSet);
+  const cacheKey =
+    String(localId) +
+    "|" +
+    String(turn) +
+    "|" +
+    String(localId) +
+    "|" +
+    String(rs.metIds.length) +
+    "|att:" +
+    String(includeAttitude ? 1 : 0);
+  const slot = rs.edgeCacheByTop.civ;
+  if (slot.key !== cacheKey) {
+    slot.key = cacheKey;
+    slot.edges = buildCivTaggedEdges(rs.metIds, localId, includeAttitude);
   }
+  const edges = slot.edges.filter((e) => !!e.filterKey && activeSet.has(e.filterKey));
+  return {
+    ringIds: rs.metIds.slice(),
+    edges,
+    names,
+    capText: t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV"),
+    ringViewerPid: localId
+  };
+}
 
-  // CS Relations uses the SELECTED viewer (csViewerPid). Only the selected
-  // viewer civ appears among majors — keeps the diagram focused.
+/**
+ * Compute city-state-tab ring data, including cached full-edge build and
+ * re-filter.
+ * @param {RenderState} rs The render-loop state.
+ * @param {Set<string>} activeSet Active filter keys.
+ * @param {Record<string, NodeInfo>} names Node display-info map.
+ * @returns {{ ringIds: number[], edges: Edge[], names: Record<string, NodeInfo>, capText: string, ringViewerPid: number|undefined }}
+ *   The computed ring inputs.
+ */
+function computeCsRingData(rs, activeSet, names) {
+  const localId = /** @type {number} */ (rs.localId);
   const viewerPid = typeof rs.csViewerPid === "number" ? rs.csViewerPid : localId;
   applyMetMaskForMajors(viewerPid, rs.metIds, names, rs.showUnmetNames, localId, rs.ctx.history);
 
   const csIds = getCityStateIds();
-  // Only the viewer civ on the major side of the ring.
-  ringIds = [viewerPid].concat(csIds);
+  const ringIds = [viewerPid].concat(csIds);
   for (const id of csIds) {
     names[id] = Object.assign(
       {},
@@ -1111,18 +1156,107 @@ function computeRingData(rs, activeSet) {
       buildCsNodeInfo(id, viewerPid, rs.showUnmetNames, localId, rs.ctx.history)
     );
   }
-
   const csMetSet = buildCsMetSet(csIds, names);
-  edges = buildCsEdges(viewerPid, csIds, activeSet, csMetSet);
-  capText = t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS");
-  const ringViewerPid = typeof rs.csViewerPid === "number" ? rs.csViewerPid : localId;
-  return { ringIds, edges, names, capText, ringViewerPid };
+  const turn = readGameTurn();
+  const includeAttitude = hasActiveAttitudeFilter(activeSet);
+  const cacheKey =
+    String(localId) +
+    "|" +
+    String(turn) +
+    "|" +
+    String(viewerPid) +
+    "|" +
+    String(rs.metIds.length) +
+    "|" +
+    String(csIds.length) +
+    "|att:" +
+    String(includeAttitude ? 1 : 0);
+  const slot = rs.edgeCacheByTop.cs;
+  if (slot.key !== cacheKey) {
+    slot.key = cacheKey;
+    slot.edges = buildCsEdges(viewerPid, csIds, includeAttitude, csMetSet);
+  }
+  const edges = slot.edges.filter((e) => !!e.filterKey && activeSet.has(e.filterKey));
+  return {
+    ringIds,
+    edges,
+    names,
+    capText: t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS"),
+    ringViewerPid: viewerPid
+  };
+}
+
+/**
+ * Compute the ring node set, edges, names, and caption for the active view.
+ * @param {RenderState} rs The render-loop state.
+ * @param {Set<string>} activeSet Active filter keys.
+ * @returns {{ ringIds: number[], edges: Edge[], names: Record<string, NodeInfo>, capText: string, ringViewerPid: number|undefined }}
+ *   The computed ring inputs.
+ */
+function computeRingData(rs, activeSet) {
+  /** @type {Record<string, NodeInfo>} */
+  const names = Object.assign({}, rs.namesBase);
+  if (rs.topTab === "civ") return computeCivRingData(rs, activeSet, names);
+  return computeCsRingData(rs, activeSet, names);
+}
+
+/**
+ * Build the ring SVG for the current selection, wiring node clicks to toggle
+ * the per-tab focus set and repaint. Extracted to keep `renderRingBody` under
+ * the line cap.
+ * @param {RenderState} rs The render-loop state.
+ * @param {number[]} ringIds Node ids on the ring.
+ * @param {Record<string, *>} names Node display-info map.
+ * @param {*[]} focusedEdges Edges after focus filtering.
+ * @param {number | undefined} ringViewerPid Viewer pid for the ring (defaults to local).
+ * @param {Set<number>} selected The active focus set.
+ * @returns {HTMLElement} The ring wrap element.
+ */
+function buildFocusedRingSvg(rs, ringIds, names, focusedEdges, ringViewerPid, selected) {
+  return buildRingSvg(
+    ringIds,
+    names,
+    focusedEdges,
+    /** @type {number} */ (rs.localId),
+    ringViewerPid,
+    {
+      selectedNodeIds: selected,
+      onNodeToggle: (pid) => {
+        const cur = rs.readNodeSelection(rs.topTab);
+        if (cur.has(pid)) cur.delete(pid);
+        else cur.add(pid);
+        rs.writeNodeSelection(rs.topTab, cur);
+        rs.repaint();
+      }
+    }
+  );
+}
+
+/**
+ * Append the "Clear focus" caption button (with a leading spacer) used when one
+ * or more nodes are focused.
+ * @param {HTMLElement} caption The caption element.
+ * @param {RenderState} rs The render-loop state.
+ */
+function appendFocusClearButton(caption, rs) {
+  const sep = document.createElement("span");
+  sep.textContent = "   ";
+  caption.appendChild(sep);
+
+  const clearBtn = document.createElement("button");
+  clearBtn.type = "button";
+  clearBtn.className = "demographics-relations-clear-focus-btn font-body text-xs";
+  clearBtn.textContent = "Clear focus";
+  clearBtn.addEventListener("click", () => {
+    rs.writeNodeSelection(rs.topTab, new Set());
+    rs.repaint();
+  });
+  caption.appendChild(clearBtn);
 }
 
 /**
  * Render the ring body + caption from computed ring data.
  * @param {RenderState} rs The render-loop state.
- * @returns {void}
  */
 function renderRingBody(rs) {
   const { body, caption } = rs.sc;
@@ -1139,26 +1273,44 @@ function renderRingBody(rs) {
     return;
   }
 
-  const { ringIds, edges, names, capText, ringViewerPid } = computeRingData(rs, activeSet);
+  const { ringIds, edges, names, capText: baseCapText, ringViewerPid } = computeRingData(
+    rs,
+    activeSet
+  );
+  let capText = baseCapText;
 
   // Apply per-topTab visual overrides to edges (CS tab uses a different
   // color/dash vocabulary). Edits are non-destructive.
   if (rs.topTab === "cs") {
     applyCsEdgeOverrides(edges);
   }
+
+  // Node-focus filter: click one or more ring nodes to show only the edges
+  // to/from those nodes. Empty selection = show all edges.
+  const selectedRaw = rs.readNodeSelection(rs.topTab);
+  const selected = pruneSelectionToRing(selectedRaw, ringIds);
+  if (selected.size !== selectedRaw.size) {
+    rs.writeNodeSelection(rs.topTab, selected);
+  }
+  const focusedEdges = filterEdgesBySelectedNodes(edges, selected);
+
+  if (selected.size > 0) {
+    capText += "  " +
+      "(" + selected.size + " focus" + (selected.size === 1 ? "" : "es") +
+      "; click icons to toggle)";
+  }
+
   // Civ-tab always uses the local player as the viewer; CS-tab uses the
   // selected viewer so its node keeps the larger "focus" size.
-  body.appendChild(
-    buildRingSvg(ringIds, names, edges, /** @type {number} */ (rs.localId), ringViewerPid)
-  );
+  body.appendChild(buildFocusedRingSvg(rs, ringIds, names, focusedEdges, ringViewerPid, selected));
   caption.textContent = capText;
+  if (selected.size > 0) appendFocusClearButton(caption, rs);
 }
 
 /**
  * Build the top + sub tab bars ONCE per render. The bars are never torn down
  * on filter clicks (rebuilding `fxs-tab-bar` mid-event swallowed pip clicks).
  * @param {RenderState} rs The render-loop state.
- * @returns {void}
  */
 function buildTabBars(rs) {
   const { topTabHost, subTabHost } = rs.sc;
@@ -1180,7 +1332,7 @@ function buildTabBars(rs) {
       rs.repaint();
     })
   );
-  // Sub-tab row removed — political/economic/attitude views are now overlaid
+  // Sub-tab row removed - political/economic/attitude views are now overlaid
   // in a single ring; the filter pill row handles per-type toggling.
   while (subTabHost.firstChild) subTabHost.removeChild(subTabHost.firstChild);
 }
@@ -1189,7 +1341,6 @@ function buildTabBars(rs) {
  * Repaint the viewer row, filter pills, body SVG, and caption. Tab bars stay
  * live across repaints.
  * @param {RenderState} rs The render-loop state.
- * @returns {void}
  */
 function repaintView(rs) {
   // Viewer dropdown (CS tab only). Element confirmed at
@@ -1197,7 +1348,7 @@ function repaintView(rs) {
   //   core/ui/components/fxs-dropdown.js       ("dropdown-selection-change")
   //   core/ui/options/screen-options.js  (handler pattern)
   buildViewerDropdown(rs);
-  // Filter pill row — one pill per relationship type. All toggles apply to
+  // Filter pill row - one pill per relationship type. All toggles apply to
   // the same ring; no subtab indirection.
   buildFilterRow(rs, buildFilterDefs(rs.topTab));
   // Body: ring SVG + caption.
@@ -1250,13 +1401,33 @@ function makeFilterSetWriter(settings) {
 }
 
 /**
+ * Build the node-focus reader for this render.
+ * @returns {(top: string) => Set<number>} The reader.
+ */
+function makeNodeSelectionReader() {
+  return (top) => {
+    const s = _nodeSelectionCache.get(top);
+    return s instanceof Set ? s : new Set();
+  };
+}
+
+/**
+ * Build the node-focus writer for this render.
+ * @returns {(top: string, set: Set<number>) => void} The writer.
+ */
+function makeNodeSelectionWriter() {
+  return (top, set) => {
+    _nodeSelectionCache.set(top, new Set(set));
+  };
+}
+
+/**
  * Render the Global Relations view into `host`. Clears the host, reads the
  * persisted tab/filter/viewer state, builds the scaffold + live tab bars, then
  * paints the ring. Sub-tabs (political/economic/attitude) are collapsed into a
  * single overlaid ring per top tab.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {RelationsCtx} ctx Render context (history + settings accessors).
- * @returns {void}
  */
 export function render(host, ctx) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -1264,7 +1435,7 @@ export function render(host, ctx) {
   const settings = ctx.settings;
 
   // ---- read persisted state ----------------------------------------
-  // Sub-tabs were collapsed into a single ring per top tab — users now see
+  // Sub-tabs were collapsed into a single ring per top tab - users now see
   // every relationship type overlaid. The old `relationsTab` setting is
   // ignored; we key only by top tab now.
   const topTab = readTopTab(settings);
@@ -1291,6 +1462,12 @@ export function render(host, ctx) {
     csViewerPid,
     readFilterSet: makeFilterSetReader(settings),
     writeFilterSet: makeFilterSetWriter(settings),
+    readNodeSelection: makeNodeSelectionReader(),
+    writeNodeSelection: makeNodeSelectionWriter(),
+    edgeCacheByTop: {
+      civ: { key: "", edges: [] },
+      cs: { key: "", edges: [] }
+    },
     repaint: () => repaintView(rs)
   };
 

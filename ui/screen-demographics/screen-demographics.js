@@ -1,10 +1,10 @@
 // screen-demographics.js
 //
 // The modal panel. A top-level fxs-tab-bar selects between four views:
-//   history    — Historical Data (default)  → view-history.js
-//   factbook   — World Factbook              → view-factbook.js
-//   relations  — Global Relations            → view-relations.js
-//   options    — Options                     → view-options.js
+//   history    - Historical Data (default)  → view-history.js
+//   factbook   - World Factbook              → view-factbook.js
+//   relations  - Global Relations            → view-relations.js
+//   options    - Options                     → view-options.js
 //
 // The Controls.define + fxs-tab-bar wiring follows vanilla
 // screen-great-works.js (for the tabs) and wonders-screen-continued's
@@ -12,9 +12,22 @@
 
 import Panel from "/core/ui/panel-support.js";
 import * as ViewHistory from "/demographics/ui/screen-demographics/views/view-history.js";
-import * as ViewFactbook from "/demographics/ui/screen-demographics/views/view-factbook.js";
-import * as ViewRelations from "/demographics/ui/screen-demographics/views/view-relations.js";
 import * as ViewOptions from "/demographics/ui/screen-demographics/views/view-options.js";
+
+// The two heavy tabs (Factbook ~0.9k lines, Relations ~2.5k lines incl. the
+// network graph) are imported on first open instead of statically, so they are
+// never parsed for sessions that only use the default Historical Data view.
+// Specifier per lazy view id, resolved + cached by _renderLazyView.
+/** @type {Record<string, string>} */
+const LAZY_VIEW_SPECIFIERS = {
+  factbook: "/demographics/ui/screen-demographics/views/view-factbook.js",
+  relations: "/demographics/ui/screen-demographics/views/view-relations.js"
+};
+
+// Metrics whose chart renderer is loaded on demand (the heavy Conflicts charts,
+// behind demographics-chart.js's ensureChartForMetric). Everything else renders
+// synchronously from the statically-loaded barrel.
+const LAZY_CHART_METRICS = new Set(["wars_gantt", "war_graphs", "wars_glossary"]);
 
 // ── Local typedefs ──────────────────────────────────────────────────
 // The settings/storage/sampler/chart modules are imported dynamically and
@@ -46,16 +59,17 @@ import * as ViewOptions from "/demographics/ui/screen-demographics/views/view-op
  * @typedef {object} HistoryCallbacks
  * @property {(id: string) => void} setActiveRadarAge Set the radar-chart age.
  * @property {(pid: Pid | null) => void} setWarsFilterPid Filter wars by player.
+ * @property {(id: number | null) => void} setWarGraphsWarId Select a war for War Graphs.
  * @property {(v: boolean) => void} setWarsShowCs Toggle city-states in wars.
  * @property {(v: boolean) => void} setWarsActiveOnly Toggle active-only wars.
  * @property {(pid: Pid | null) => void} setResourcesViewerPid Open resources.
- * @property {(pid: Pid | null) => void} setTriumphsViewerPid Open triumphs.
  * @property {(leaderKey: string) => void} toggleFocusCiv Toggle a focused civ.
  * @property {() => void} clearFocus Clear all focused civs.
  * @property {(id: string) => void} setActiveMetric Switch the active metric.
  * @property {(id: string) => void} setActivePage Switch the active page.
  * @property {(id: string) => void} setActiveTimeFilter Switch the time filter.
  * @property {(leaderKey: string) => void} toggleCiv Toggle a hidden civ.
+ * @property {(hide: boolean, keys: string[]) => void} setAllCivsHidden Hide/show all civs.
  * @property {() => void} requestReload Reload history and re-render.
  */
 
@@ -128,14 +142,14 @@ class ScreenDemographics extends Panel {
   focusedCivs = new Set();
   /** @type {Pid | null} Player whose resources detail is open, if any. */
   resourcesViewerPid = null;
-  /** @type {Pid | null} Player whose triumphs detail is open, if any. */
-  triumphsViewerPid = null;
   /** @type {Pid | null} Player the wars Gantt is filtered to, if any. */
   warsFilterPid = null;
   /** @type {boolean} Whether the wars Gantt includes city-states. */
   warsShowCs = true;
   /** @type {boolean} Whether the wars Gantt shows only active wars. */
   warsActiveOnly = false;
+  /** @type {number | null} Selected war (warUniqueID) for the War Graphs sub-tab. */
+  warGraphsWarId = null;
   /** @type {DemoHistory} The loaded history time series. */
   history = { version: 1, seed: "unknown", samples: [], ageBoundaries: [], eliminated: {} };
   /** @type {StorageModule} The history storage singleton (loaded on attach). */
@@ -159,7 +173,7 @@ class ScreenDemographics extends Panel {
   onInitialize() {
     dlog("onInitialize");
     super.onInitialize?.();
-    // Audio cues — Enhancements.md #1.
+    // Audio cues - Enhancements.md #1.
     // Panel base class plays data-audio-showing on attach and
     // data-audio-hiding on close when these flags are true. The
     // group-ref scopes lookups to the audio-screen-unlocks bank,
@@ -260,7 +274,7 @@ class ScreenDemographics extends Panel {
    * Restore the per-metric time-filter map and resolve the active filter.
    *
    * Each metric remembers its own last-chosen filter, defaulting to "age"
-   * (Current Age) — except the wars Gantt, which defaults to "50" (a 50-year
+   * (Current Age) - except the wars Gantt, which defaults to "50" (a 50-year
    * window) so users land on a useful slice instead of a centuries-wide pile.
    * The cross-age filters ("all", "age1"/"age2"/"age3") are disabled in the
    * runtime. The legacy scalar `activeTimeFilter` is kept as the fallback so
@@ -290,8 +304,6 @@ class ScreenDemographics extends Panel {
   _restoreViewerPids() {
     const rvp = this.settings.getSetting("resourcesViewerPid", null);
     this.resourcesViewerPid = typeof rvp === "number" ? rvp : null;
-    const tvp = this.settings.getSetting("triumphsViewerPid", null);
-    this.triumphsViewerPid = typeof tvp === "number" ? tvp : null;
     this.activeRadarAge = this.settings.getSetting("activeRadarAge", "current");
   }
 
@@ -303,6 +315,8 @@ class ScreenDemographics extends Panel {
     this.warsFilterPid = typeof wfp === "number" ? wfp : null;
     this.warsShowCs = this.settings.getSetting("warsShowCs", true) !== false;
     this.warsActiveOnly = !!this.settings.getSetting("warsActiveOnly", false);
+    const wgw = this.settings.getSetting("warGraphsWarId", null);
+    this.warGraphsWarId = typeof wgw === "number" ? wgw : null;
   }
 
   /**
@@ -311,7 +325,7 @@ class ScreenDemographics extends Panel {
   _restoreHiddenCivs() {
     const hidden = this.settings.getSetting("hiddenCivs", []);
     // Stored values are strings (we normalize to String for the Set
-    // key); older payloads may have numeric entries — coerce.
+    // key); older payloads may have numeric entries - coerce.
     this.hiddenCivs = new Set((Array.isArray(hidden) ? hidden : []).map((v) => String(v)));
   }
 
@@ -439,10 +453,8 @@ class ScreenDemographics extends Panel {
   _dispatchView(host) {
     switch (this.activeView) {
       case "factbook":
-        ViewFactbook.render(host, { history: this.history, settings: this.settings });
-        break;
       case "relations":
-        ViewRelations.render(host, { history: this.history, settings: this.settings });
+        this._renderLazyView(host, this.activeView);
         break;
       case "options":
         ViewOptions.render(host, {
@@ -455,9 +467,64 @@ class ScreenDemographics extends Panel {
         break;
       case "history":
       default:
-        ViewHistory.render(host, this._buildHistoryContext());
+        this._renderHistoryView(host);
         break;
     }
+  }
+
+  /**
+   * Render a lazily-imported tab (Factbook / Relations), importing its module on
+   * first open and caching it. The host was already cleared by renderActiveView,
+   * so it stays empty for the (local, fast) import; the render is skipped if the
+   * user switched tabs before it resolved, and re-clears defensively first.
+   * @param {HTMLElement} host The cleared view-host element.
+   * @param {string} id The active view id ("factbook" | "relations").
+   */
+  _renderLazyView(host, id) {
+    const args = { history: this.history, settings: this.settings };
+    const cache =
+      this._lazyViews || (this._lazyViews = /** @type {Record<string, *>} */ ({}));
+    const cached = cache[id];
+    if (cached) {
+      cached.render(host, args);
+      return;
+    }
+    import(LAZY_VIEW_SPECIFIERS[id])
+      .then((mod) => {
+        cache[id] = mod;
+        if (this.activeView !== id) return; // user navigated away while loading
+        while (host.firstChild) host.removeChild(host.firstChild);
+        mod.render(host, { history: this.history, settings: this.settings });
+      })
+      .catch((/** @type {*} */ e) => derr("lazy view load failed:", id, e));
+  }
+
+  /**
+   * Render the Historical Data view. Common metrics render synchronously from
+   * the statically-loaded chart barrel; the heavy Conflicts metrics first
+   * ensure their on-demand chart module is imported, then render once. The
+   * re-render is skipped if the user navigated away while the import was in
+   * flight.
+   * @param {HTMLElement} host The cleared view-host element.
+   */
+  _renderHistoryView(host) {
+    const metric = this.activeMetric;
+    if (
+      this.chartMod &&
+      typeof this.chartMod.ensureChartForMetric === "function" &&
+      LAZY_CHART_METRICS.has(metric)
+    ) {
+      this.chartMod
+        .ensureChartForMetric(metric)
+        .then(() => {
+          if (this.activeView !== "history" || this.activeMetric !== metric) return;
+          while (host.firstChild) host.removeChild(host.firstChild);
+          ViewHistory.render(host, this._buildHistoryContext());
+        })
+        .catch((/** @type {*} */ e) => derr("lazy chart load failed:", metric, e));
+      return;
+    }
+    ViewHistory.render(host, this._buildHistoryContext());
   }
 
   /**
@@ -474,12 +541,12 @@ class ScreenDemographics extends Panel {
       hiddenCivs: this.hiddenCivs,
       focusedCivs: this.focusedCivs,
       resourcesViewerPid: this.resourcesViewerPid,
-      triumphsViewerPid: this.triumphsViewerPid,
       chartMod: this.chartMod,
       settings: this.settings,
       storage: this.storage,
       activeRadarAge: this.activeRadarAge,
       warsFilterPid: this.warsFilterPid,
+      warGraphsWarId: this.warGraphsWarId,
       warsShowCs: this.warsShowCs,
       warsActiveOnly: this.warsActiveOnly,
       ...this._buildHistoryCallbacks()
@@ -495,18 +562,18 @@ class ScreenDemographics extends Panel {
     return {
       setActiveRadarAge: (id) => this._setAndPersist("activeRadarAge", "activeRadarAge", id),
       setWarsFilterPid: (pid) => this._setAndPersist("warsFilterPid", "warsFilterPid", pid),
+      setWarGraphsWarId: (id) => this._setAndPersist("warGraphsWarId", "warGraphsWarId", id),
       setWarsShowCs: (v) => this._setAndPersist("warsShowCs", "warsShowCs", !!v),
       setWarsActiveOnly: (v) => this._setAndPersist("warsActiveOnly", "warsActiveOnly", !!v),
       setResourcesViewerPid: (pid) =>
         this._setAndPersist("resourcesViewerPid", "resourcesViewerPid", pid),
-      setTriumphsViewerPid: (pid) =>
-        this._setAndPersist("triumphsViewerPid", "triumphsViewerPid", pid),
       toggleFocusCiv: (leaderKey) => this._toggleFocusCiv(leaderKey),
       clearFocus: () => this._clearFocus(),
       setActiveMetric: (id) => this._setActiveMetric(id),
       setActivePage: (id) => this._setAndPersist("activePage", "activePage", id),
       setActiveTimeFilter: (id) => this._setActiveTimeFilter(id),
       toggleCiv: (leaderKey) => this.toggleCiv(leaderKey),
+      setAllCivsHidden: (hide, keys) => this.setAllCivsHidden(hide, keys),
       requestReload: () => this._reload()
     };
   }
@@ -548,10 +615,10 @@ class ScreenDemographics extends Panel {
    * metric's default, and re-render.
    *
    * Switching metric resets to that metric's unique default, NOT whatever
-   * filter the user last selected for it. Per-metric memory was confusing —
+   * filter the user last selected for it. Per-metric memory was confusing -
    * users expect each graph to start from a known state. "age" (Current Age)
    * is the widest non-disabled filter, so it's the safest default across every
-   * metric — including wars_gantt, where narrower windows hide wars that
+   * metric - including wars_gantt, where narrower windows hide wars that
    * happened earlier in the age.
    * @param {string} id The metric id to activate.
    */
@@ -591,6 +658,22 @@ class ScreenDemographics extends Panel {
   }
 
   /**
+   * Show or hide every civ at once (the legend's All/None controls): All clears
+   * the hidden set; None hides all the given leader keys. Persists + re-renders.
+   * @param {boolean} hide True to hide all `keys`, false to show all civs.
+   * @param {string[]} keys The leader keys to hide (None mode).
+   */
+  setAllCivsHidden(hide, keys) {
+    if (hide) {
+      for (const k of keys || []) this.hiddenCivs.add(String(k));
+    } else {
+      this.hiddenCivs.clear();
+    }
+    safeCall(() => this.settings.setSetting("hiddenCivs", Array.from(this.hiddenCivs)));
+    this.renderActiveView();
+  }
+
+  /**
    * Panel lifecycle: detach the tab-bar listener and flush buffered storage
    * writes so closing the panel saves all in-flight samples.
    */
@@ -600,7 +683,7 @@ class ScreenDemographics extends Panel {
       safeCall(() => this.viewTabBar.removeEventListener("tab-selected", this.viewTabBarListener));
     }
     // Flush any buffered storage writes (perf-mode) so closing the
-    // panel — or the player tabbing away — saves all in-flight samples.
+    // panel - or the player tabbing away - saves all in-flight samples.
     safeCall(() => {
       if (this.storage && typeof this.storage.flush === "function") this.storage.flush();
     });

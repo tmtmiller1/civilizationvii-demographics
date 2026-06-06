@@ -12,6 +12,8 @@ import { safePlaySound, playActivate } from "/demographics/ui/demographics-audio
 import { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/history-csv.js";
 import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/view-history.js";
 import { getCurrentAgeType } from "/demographics/ui/sampler-collectors.js";
+import { mergeWars } from "/demographics/ui/screen-demographics/chart-wars-merge.js";
+import { nameMergedWars } from "/demographics/ui/screen-demographics/chart-wars-naming.js";
 
 /**
  * One metric page in the tab bar: an id, a localization key, and the ordered
@@ -129,7 +131,7 @@ function applyNavHelpClasses(metricBar) {
 /**
  * Metric ids that only exist in a specific Civ7 age, mapped to the age they
  * require. Treasure resources are an Exploration-age mechanic; Factory
- * resources are a Modern-age mechanic — their tabs are hidden in other ages.
+ * resources are a Modern-age mechanic - their tabs are hidden in other ages.
  * @type {Record<string, string>}
  */
 const AGE_GATED_METRICS = {
@@ -217,7 +219,7 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
     title.textContent = activeMetric;
   }
   host.appendChild(title);
-  // Optional parenthetical subtitle on the line below — used by
+  // Optional parenthetical subtitle on the line below - used by
   // synthetic metrics that carry a `subtitle` (e.g. Triumphs Over Time).
   if (synthMeta && synthMeta.subtitle) {
     const sub = document.createElement("div");
@@ -270,7 +272,7 @@ export function appendMetricCaptions(host, activeMetric) {
 
 /**
  * Build an "ⓘ …" caption trigger that opens a sticky popover with rich HTML
- * content on hover. Replaces the unreliable `title` attribute path — Coherent
+ * content on hover. Replaces the unreliable `title` attribute path - Coherent
  * GameFace doesn't surface native browser tooltips consistently, so we manage
  * a dedicated popover element ourselves.
  * @param {MetricInfoOpts} opts Trigger text, title, and body HTML.
@@ -278,7 +280,7 @@ export function appendMetricCaptions(host, activeMetric) {
  */
 function buildMetricInfoCaption(opts) {
   const wrap = document.createElement("div");
-  // Caption now lives between title and filter row — center on the full
+  // Caption now lives between title and filter row - center on the full
   // host width (no asymmetric padding needed; nothing to align with).
   wrap.className = "demographics-metric-info demographics-history-metric-info";
 
@@ -288,7 +290,7 @@ function buildMetricInfoCaption(opts) {
   wrap.appendChild(trigger);
 
   const popover = document.createElement("div");
-  popover.className = "demographics-metric-info-popover font-body text-xs";
+  popover.className = "demographics-metric-info-popover demographics-tip-chrome font-body text-xs";
   popover.style.display = "none";
   const title = document.createElement("div");
   title.className = "demographics-metric-info-title font-title text-sm";
@@ -368,7 +370,7 @@ function appendRadarControls(toolbar, ctx) {
     pill.textContent = opt.label;
     toolbar.appendChild(pill);
   }
-  // Refresh affordance — re-renders the radar so the live
+  // Refresh affordance - re-renders the radar so the live
   // VictoryManager pull picks up changes that happened while the
   // panel was already open (a civ finishing a triumph, etc.).
   const refresh = document.createElement("div");
@@ -390,7 +392,7 @@ function appendRadarControls(toolbar, ctx) {
  * @param {HistoryCtx} ctx Render context.
  */
 function appendWarsControls(toolbar, ctx) {
-  // Filter to majors only — CSes never appear on this view.
+  // Filter to majors only - CSes never appear on this view.
   const wopts = /** @type {*} */ (ctx.chartMod)
     .collectWarCivOptions(ctx.history)
     .filter((/** @type {*} */ o) => !o.isCS);
@@ -420,7 +422,7 @@ function appendWarsControls(toolbar, ctx) {
   });
   toolbar.appendChild(dd);
 
-  // Active-only toggle. (CS toggle removed — CS conflicts are never
+  // Active-only toggle. (CS toggle removed - CS conflicts are never
   // shown on the conflicts view per user direction.)
   const activePill = document.createElement("div");
   activePill.className = "demographics-chart-time-filter-pill";
@@ -560,7 +562,7 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
   })();
   const wondersBtn = document.createElement("div");
   wondersBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
-  // No ✓ glyph — Civ7's font set doesn't include U+2713 and renders
+  // No ✓ glyph - Civ7's font set doesn't include U+2713 and renders
   // it as a missing-glyph "[]" box. Plain "ON"/"OFF" is unambiguous.
   wondersBtn.textContent = wondersOn
     ? t("LOC_DEMOGRAPHICS_BTN_WONDERS_ON")
@@ -569,7 +571,7 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
     ? t("LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP")
     : t("LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP");
   if (!wondersOn) {
-    // OFF state — desaturated text color is the "off" signal; the
+    // OFF state - desaturated text color is the "off" signal; the
     // "Wonders: OFF" label itself already says it explicitly.
     wondersBtn.classList.add("demographics-history-wonders-off");
   }
@@ -599,12 +601,12 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
 function buildCsvInfoTooltip() {
   const tip = document.createElement("div");
   tip.className =
-    "img-tooltip-border img-tooltip-bg demographics-history-tip demographics-history-tip-csv";
+    "demographics-tip-chrome demographics-history-tip demographics-history-tip-csv";
   const HDR =
-    "color:#f3c34c;font-family:TitleFont, BodyFont, sans-serif;" +
-    "font-weight:700;text-transform:uppercase;letter-spacing:0.08em;" +
-    "font-size:1.05rem;margin-bottom:0.65rem;padding-bottom:0.4rem;" +
-    "border-bottom:1px solid rgba(201,162,76,0.55);";
+    "color:rgb(236,224,198);font-family:TitilliumWeb, sans-serif;" +
+    "font-weight:700;text-transform:uppercase;letter-spacing:0.04em;" +
+    "font-size:1.02rem;margin-bottom:0.65rem;padding-bottom:0.4rem;" +
+    "border-bottom:1px solid rgba(204,188,163,0.2);";
   tip.innerHTML =
     `<div style="${HDR}">` +
     t("LOC_DEMOGRAPHICS_BTN_COPY_CSV") +
@@ -614,14 +616,14 @@ function buildCsvInfoTooltip() {
 }
 
 /**
- * Build the CSV info icon — a native info BLP with a custom hover popover
+ * Build the CSV info icon - a native info BLP with a custom hover popover
  * (Coherent doesn't reliably render multi-line native `title` attrs).
  * @returns {HTMLElement} The info-icon element.
  */
 function buildCsvInfoIcon() {
   const el = document.createElement("div");
   el.className = "demographics-chart-toolbar-info demographics-history-csv-info-icon";
-  // Custom HTML tooltip — Coherent doesn't reliably render multi-line
+  // Custom HTML tooltip - Coherent doesn't reliably render multi-line
   // native `title` attrs, and `\n` shows as a single space. Inject our
   // own absolute-positioned tooltip with the engine's tooltip chrome.
   const tip = buildCsvInfoTooltip();
@@ -645,7 +647,7 @@ function buildCsvInfoIcon() {
  * @param {HistoryCtx} ctx Render context.
  */
 function appendCsvControls(toolbar, host, ctx) {
-  // Build the CSV info icon — appended AFTER the CSV button below so it
+  // Build the CSV info icon - appended AFTER the CSV button below so it
   // sits to the right. We construct it here and keep a ref to mount last.
   const csvInfo = buildCsvInfoIcon();
 
@@ -661,7 +663,7 @@ function appendCsvControls(toolbar, host, ctx) {
   // Wrap CSV + info icon as a single inline-flex group so the icon is
   // guaranteed to render to the RIGHT of "Export CSV" regardless of the
   // toolbar's justification or gap behavior (Coherent's flex layout has
-  // surprised us before — explicit grouping removes the ambiguity).
+  // surprised us before - explicit grouping removes the ambiguity).
   const csvGroup = document.createElement("div");
   csvGroup.className = "demographics-history-csv-group";
   csvGroup.appendChild(csvBtn);
@@ -680,8 +682,51 @@ function appendCsvControls(toolbar, host, ctx) {
 function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
   if (activeMetric === "legacy_radar") appendRadarControls(toolbar, ctx);
   else if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
-  else if (activeMetric === "triumphs_stack") appendTriumphsViewerIfReady(toolbar, ctx);
+  else if (activeMetric === "war_graphs") appendWarGraphsControls(toolbar, ctx);
   else if (activeMetric === "resources_stack") appendResourcesViewerIfReady(toolbar, ctx);
+}
+
+/**
+ * Append the War Graphs control: a dropdown to pick which war to graph. Lists
+ * tracked wars newest-first by display name; selection persists via ctx.
+ * @param {HTMLElement} toolbar The toolbar element.
+ * @param {HistoryCtx} ctx Render context.
+ */
+function appendWarGraphsControls(toolbar, ctx) {
+  const h = /** @type {*} */ (ctx.history) || {};
+  const rawWars = Array.isArray(h.wars) ? h.wars : [];
+  const samples = Array.isArray(h.samples) ? h.samples : [];
+  const latest = samples.length ? samples[samples.length - 1].turn : 0;
+  // Collapse multi-front wars so the picker matches the timeline + graphs, and
+  // use the SAME fancy names (regional/great/world + ordinals) as the timeline.
+  const wars = mergeWars(rawWars, latest);
+  const names = nameMergedWars(wars, samples);
+  /** @type {{ id: number, label: string }[]} */
+  const opts = wars
+    .filter((/** @type {*} */ w) => typeof w?.warUniqueID === "number")
+    .map((/** @type {*} */ w) => ({
+      id: w.warUniqueID,
+      label: names.get(w.warUniqueID) || w.name || "War #" + w.warUniqueID
+    }))
+    .reverse();
+  const lbl = document.createElement("div");
+  lbl.className = "demographics-chart-toolbar-label font-body text-xs";
+  lbl.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK");
+  toolbar.appendChild(lbl);
+  if (!opts.length) return;
+  const dd = document.createElement("fxs-dropdown");
+  dd.classList.add("demographics-chart-viewer-dropdown");
+  dd.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  dd.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
+  let didx = opts.findIndex((o) => Number(o.id) === Number(ctx.warGraphsWarId));
+  if (didx < 0) didx = 0;
+  dd.setAttribute("selected-item-index", String(didx));
+  dd.addEventListener("dropdown-selection-change", (event) => {
+    const i = /** @type {*} */ (event)?.detail?.selectedIndex;
+    if (typeof i !== "number" || i < 0 || i >= opts.length) return;
+    if (typeof ctx.setWarGraphsWarId === "function") ctx.setWarGraphsWarId(opts[i].id);
+  });
+  toolbar.appendChild(dd);
 }
 
 /**
@@ -692,19 +737,6 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
 function appendWarsControlsIfReady(toolbar, ctx) {
   if (ctx.chartMod && typeof ctx.chartMod.collectWarCivOptions === "function") {
     appendWarsControls(toolbar, ctx);
-  }
-}
-
-/**
- * Append the triumphs viewer dropdown when `chartMod.collectTriumphCivOptions`
- * is available.
- * @param {HTMLElement} toolbar The toolbar element.
- * @param {HistoryCtx} ctx Render context.
- */
-function appendTriumphsViewerIfReady(toolbar, ctx) {
-  if (ctx.chartMod && typeof ctx.chartMod.collectTriumphCivOptions === "function") {
-    const opts = ctx.chartMod.collectTriumphCivOptions(ctx.history);
-    appendViewerDropdown(toolbar, opts, ctx.triumphsViewerPid, ctx.setTriumphsViewerPid);
   }
 }
 
@@ -721,6 +753,12 @@ function appendResourcesViewerIfReady(toolbar, ctx) {
   }
 }
 
+/** Metrics whose views don't use the X-axis time-units toggle. */
+const TIME_TOGGLE_HIDDEN_FOR = new Set(["crisis_graphs"]);
+
+/** Metrics whose views don't use the wonders-layer toggle. */
+const WONDERS_TOGGLE_HIDDEN_FOR = new Set(["crisis_stages", "crisis_graphs"]);
+
 /**
  * Build and append the chart toolbar: per-metric viewer controls, focus-clear,
  * time-units toggle, wonders toggle, and the CSV button group.
@@ -731,12 +769,21 @@ function appendResourcesViewerIfReady(toolbar, ctx) {
 export function buildToolbar(host, ctx, activeMetric) {
   const toolbar = document.createElement("div");
   toolbar.className = "demographics-chart-toolbar";
+  // The wars view shows the age-filter pill row directly above this toolbar;
+  // add breathing room between the filters and the wars dropdown.
+  if (activeMetric === "wars_gantt") toolbar.classList.add("demographics-chart-toolbar-wars");
 
   appendMetricSpecificControls(toolbar, ctx, activeMetric);
   appendClearFocus(toolbar, ctx);
-  appendTimeUnitsToggle(toolbar, ctx);
-  appendWondersToggle(toolbar, ctx, activeMetric);
+  // The time-units toggle and wonders toggle apply to different views; the
+  // Crisis Stages tables use the time-units toggle (it sets the crisis span
+  // units) but not the wonders layer.
+  if (!TIME_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendTimeUnitsToggle(toolbar, ctx);
+  if (!WONDERS_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendWondersToggle(toolbar, ctx, activeMetric);
+  // Copy-as-CSV: top-right (gold pill), consistent on every tab it appears on.
   appendCsvControls(toolbar, host, ctx);
 
-  host.appendChild(toolbar);
+  // Skip an empty toolbar (e.g. Crisis Impact, which hosts its own controls) so
+  // it doesn't leave a blank row above the chart.
+  if (toolbar.children.length) host.appendChild(toolbar);
 }

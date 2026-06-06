@@ -1,7 +1,7 @@
 // demographics-audio.js
 //
 // Thin defensive wrapper around Audio.playSound for our custom <div>
-// click handlers — pills, chart labels, ring nodes — which don't get the
+// click handlers - pills, chart labels, ring nodes - which don't get the
 // auto-emit behavior that fxs-* widgets pick up from data-audio-*-ref.
 //
 // The engine resolves a sound by looking up Component.audio[group][id]
@@ -22,7 +22,7 @@ function dlog(...a) {
 }
 
 /**
- * Play an engine sound by id, defensively. Never throws — the audio subsystem
+ * Play an engine sound by id, defensively. Never throws - the audio subsystem
  * is absent in observer mode, headless contexts, and save previews, where a
  * missing `Audio` object is normal and silent.
  * @param {string} id Sound id (e.g. `"data-audio-activate"`); `"none"` silences.
