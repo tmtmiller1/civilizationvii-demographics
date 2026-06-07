@@ -514,9 +514,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="es_ES">
             <Text>Gráficas entre eras no disponibles</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="es_ES">
-            <Text>&lt;p style="margin:0;"&gt;No es posible una única gráfica que abarque &lt;b style="color:#f3e7c4;"&gt;Antigüedad, Exploración y Era Moderna&lt;/b&gt;. Civ&amp;nbsp;7 borra todos los canales de almacenamiento que un mod podría usar para llevar el historial muestreado a través de una transición de era, por lo que cada era solo puede graficar sus propios datos. Usa &lt;b style="color:#f3e7c4;"&gt;Era&amp;nbsp;actual&lt;/b&gt; o cualquier filtro de rango de años en su lugar.&lt;/p&gt;</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="es_ES">
             <Text>Filtro {1_Label}</Text>
         </Replace>
@@ -1533,6 +1530,326 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="es_ES">
             <Text>Ninguna</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="es_ES">
+            <Text>Asentamientos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="es_ES">
+            <Text>Top 25 asentamientos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="es_ES">
+            <Text>Todos los asentamientos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="es_ES">
+            <Text>Todos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="es_ES">
+            <Text>Ciudades</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="es_ES">
+            <Text>Pueblos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="es_ES">
+            <Text>Ciudad</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="es_ES">
+            <Text>Pueblo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="es_ES">
+            <Text>No hay asentamientos que mostrar.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="es_ES">
+            <Text>Pos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="es_ES">
+            <Text>Propietario</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="es_ES">
+            <Text>Asentamiento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="es_ES">
+            <Text>Civilización</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="es_ES">
+            <Text>Tipo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="es_ES">
+            <Text>Puntuación</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="es_ES">
+            <Text>Población</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="es_ES">
+            <Text>Comida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="es_ES">
+            <Text>Producción</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="es_ES">
+            <Text>Oro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="es_ES">
+            <Text>Ciencia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="es_ES">
+            <Text>Cultura</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="es_ES">
+            <Text>Maravillas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="es_ES">
+            <Text>Felicidad</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="es_ES">
+            <Text>Top 10</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="es_ES">
+            <Text>Pueblos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="es_ES">
+            <Text>Asesor de pueblos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="es_ES">
+            <Text>Mostrar pestaña Asesor de pueblos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="es_ES">
+            <Text>Pueblos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="es_ES">
+            <Text>Tus pueblos, en tiempo real: especialización, tamaño y crecimiento de un vistazo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="es_ES">
+            <Text>No tienes pueblos. Funda o convierte un asentamiento para verlo aquí.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="es_ES">
+            <Text>Pueblo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="es_ES">
+            <Text>Pob.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="es_ES">
+            <Text>Enfoque</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="es_ES">
+            <Text>Crecimiento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="es_ES">
+            <Text>Casillas (A/P/Pesca)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="es_ES">
+            <Text>Sin especializar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="es_ES">
+            <Text>{1_Turns} turnos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="es_ES">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="es_ES">
+            <Text>Copiar CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="es_ES">
+            <Text>Asesor de pueblos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="es_ES">
+            <Text>Sugerencias heurísticas según casillas, tamaño y rendimientos de cada pueblo. Solo consejos: no cambia nada en la partida.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="es_ES">
+            <Text>{1_Name} (pob. {2_Pop})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="es_ES">
+            <Text>Enfoque actual</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="es_ES">
+            <Text>Enfoque sugerido</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="es_ES">
+            <Text>¿Ascender a ciudad?</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="es_ES">
+            <Text>Recomendado</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="es_ES">
+            <Text>Mantener como pueblo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="es_ES">
+            <Text>{1_Count} casillas de granja/pasto/plantación favorecen la comida.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="es_ES">
+            <Text>{1_Count} casillas de mina/cantera/campamento favorecen la producción.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="es_ES">
+            <Text>{1_Count} casillas costeras/de pesca favorecen la pesca.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="es_ES">
+            <Text>Ubicación central que conecta {1_Count} asentamientos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="es_ES">
+            <Text>Una fuerte producción de oro favorece el enfoque comercial.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="es_ES">
+            <Text>Una población grande ({1_Count}) encaja con un centro urbano.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="es_ES">
+            <Text>Frontera expuesta ({1_Count} fronteras abiertas) encaja con un fuerte.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="es_ES">
+            <Text>La mejor opción general para este pueblo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="es_ES">
+            <Text>Aún sin casillas destacadas: sigue creciendo (comida).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="es_ES">
+            <Text>Pob. {1_Pop} es menor que {2_Min}; crece antes de convertir.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="es_ES">
+            <Text>Necesita {1_Cost} de oro; el tesoro tiene {2_Gold}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="es_ES">
+            <Text>Pob. {1_Pop} y asequible: una ciudad desbloquea producción y distritos.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="es_ES">
+            <Text>Imperio: {1_Cities} ciudades, {2_Towns} pueblos · rendimiento más débil: {3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="es_ES">
+            <Text>Aborda el déficit de {1_Yield} de tu imperio.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="es_ES">
+            <Text>Elegido para equilibrar los roles de tus pueblos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="es_ES">
+            <Text>Alternativa considerada: {1_Alt}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="es_ES">
+            <Text>Imperio con muchos pueblos: {1_Towns} pueblos frente a {2_Cities} ciudades. Una nueva ciudad aporta producción y distritos.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="es_ES">
+            <Text>La población crece; urbanizar potencia el crecimiento.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="es_ES">
+            <Text>La población está estancada; un enfoque de crecimiento puede ayudar más que especializar.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="es_ES">
+            <Text>Fundada en {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="es_ES">
+            <Text>Fundada ~{1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="es_ES">
+            <Text>Fundada</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="es_ES">
+            <Text>Desconocido</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="es_ES">
+            <Text>Volver a los mejores asentamientos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="es_ES">
+            <Text>Capital</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="es_ES">
+            <Text>Maravillas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="es_ES">
+            <Text>No hay maravillas registradas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="es_ES">
+            <Text>Asentamiento desconocido</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="es_ES">
+            <Text>Ver en el mapa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="es_ES">
+            <Text>No disponible: aún no has conocido a esta civilización.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="es_ES">
+            <Text>No disponible: aún no has descubierto este asentamiento.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="es_ES">
+            <Text>Vista cinematográfica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="es_ES">
+            <Text>Reproducir sobrevuelo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="es_ES">
+            <Text>Sobrevuelo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="es_ES">
+            <Text>Cámara de Asentamientos Top</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="es_ES">
+            <Text>Vista cinematográfica de asentamiento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="es_ES">
+            <Text>Sobrevuelo de asentamiento experimental</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="es_ES">
+            <Text>Activar rotación sutil</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="es_ES">
+            <Text>Duración del sobrevuelo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="es_ES">
+            <Text>Corto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="es_ES">
+            <Text>Medio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="es_ES">
+            <Text>Construida en {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="es_ES">
+            <Text>Fundada en {1_Year}, y próspera aún.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="es_ES">
+            <Text>Reconocido como el {1_Ord}.º asentamiento más grande del mundo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="es_ES">
+            <Text>Alberga {1_List}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="es_ES">
+            <Text>y</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="es_ES">
+            <Text>Una maravilla natural adorna sus tierras.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="es_ES">
+            <Text>Su distrito más próspero.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="es_ES">
+            <Text>#1 {1_Cat}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="es_ES">
+            <Text>Líderes por categoría</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="es_ES">
+            <Text>Todos los asentamientos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="es_ES">
+            <Text>Los asentamientos más grandes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="es_ES">
+            <Text>Clasificación completa</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="es_ES">
+            <Text>Clasificaciones mundiales</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="es_ES">
+            <Text>Todas las civilizaciones</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="es_ES">
+            <Text>Clasificación de civilizaciones</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="es_ES">
+            <Text>Las civilizaciones más destacadas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="es_ES">
+            <Text>Clasificación completa de civilizaciones</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="es_ES">
+            <Text>Aquí la "Puntuación" es la producción total de una civilización: la suma de comida, producción, oro, ciencia y cultura de todos sus asentamientos. No es la Puntuación oficial del juego (pantalla de Victorias), que se calcula de otra forma.</Text>
         </Replace>
     </LocalizedText>
 </Database>

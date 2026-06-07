@@ -172,7 +172,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ru_RU"><Text>3-я эпоха</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ru_RU"><Text>За все время</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ru_RU"><Text>Межэпохальные графики недоступны</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ru_RU"><Text>&lt;p style="margin:0;"&gt;Графики не продолжаются между эпохами. Каждая эпоха показывает только данные, собранные внутри нее. Используйте &lt;b style="color:#f3e7c4;"&gt;Текущую эпоху&lt;/b&gt; или фильтр по диапазону лет.&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ru_RU"><Text>Фильтр {1_Label}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ru_RU"><Text>ⓘ ВВП: сравнительная оценка экономики  ·  наведите для деталей</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ru_RU"><Text>Валовой внутренний продукт</Text></Replace>
@@ -973,6 +972,326 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="ru_RU">
             <Text>Нет</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="ru_RU">
+            <Text>Поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="ru_RU">
+            <Text>Топ-25 поселений</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="ru_RU">
+            <Text>Все поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="ru_RU">
+            <Text>Все</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="ru_RU">
+            <Text>Города</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="ru_RU">
+            <Text>Посёлки</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="ru_RU">
+            <Text>Город</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="ru_RU">
+            <Text>Посёлок</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="ru_RU">
+            <Text>Нет поселений для отображения.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="ru_RU">
+            <Text>Ранг</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="ru_RU">
+            <Text>Владелец</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="ru_RU">
+            <Text>Поселение</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="ru_RU">
+            <Text>Цивилизация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="ru_RU">
+            <Text>Тип</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="ru_RU">
+            <Text>Очки</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="ru_RU">
+            <Text>Население</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="ru_RU">
+            <Text>Пища</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="ru_RU">
+            <Text>Производство</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="ru_RU">
+            <Text>Золото</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="ru_RU">
+            <Text>Наука</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="ru_RU">
+            <Text>Культура</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="ru_RU">
+            <Text>Чудеса</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="ru_RU">
+            <Text>Счастье</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="ru_RU">
+            <Text>Топ-10</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="ru_RU">
+            <Text>Посёлки</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="ru_RU">
+            <Text>Советник</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="ru_RU">
+            <Text>Показать вкладку «Советник»</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="ru_RU">
+            <Text>Посёлки</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="ru_RU">
+            <Text>Ваши посёлки в реальном времени — специализация, размер и рост с одного взгляда.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="ru_RU">
+            <Text>У вас нет посёлков. Основайте или преобразуйте поселение, чтобы увидеть его здесь.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="ru_RU">
+            <Text>Посёлок</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="ru_RU">
+            <Text>Нас.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="ru_RU">
+            <Text>Фокус</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="ru_RU">
+            <Text>Рост</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="ru_RU">
+            <Text>Клетки (Е/П/Рыба)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="ru_RU">
+            <Text>Без специализации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="ru_RU">
+            <Text>{1_Turns} ходов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="ru_RU">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="ru_RU">
+            <Text>Копировать CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="ru_RU">
+            <Text>Советник</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="ru_RU">
+            <Text>Эвристические подсказки по клеткам, размеру и доходам каждого посёлка. Только советы — в игре ничего не меняется.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="ru_RU">
+            <Text>{1_Name} (нас. {2_Pop})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="ru_RU">
+            <Text>Текущий фокус</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="ru_RU">
+            <Text>Рекомендуемый фокус</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="ru_RU">
+            <Text>Сделать городом?</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="ru_RU">
+            <Text>Рекомендуется</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="ru_RU">
+            <Text>Оставить посёлком</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="ru_RU">
+            <Text>{1_Count} клеток ферм/пастбищ/плантаций — в пользу еды.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="ru_RU">
+            <Text>{1_Count} клеток шахт/карьеров/лагерей — в пользу производства.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="ru_RU">
+            <Text>{1_Count} прибрежных/рыболовных клеток — в пользу рыболовства.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="ru_RU">
+            <Text>Центральное расположение связывает {1_Count} поселений.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="ru_RU">
+            <Text>Высокий доход золота — в пользу торгового фокуса.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="ru_RU">
+            <Text>Большое население ({1_Count}) подходит для городского центра.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="ru_RU">
+            <Text>Открытая граница ({1_Count} открытых рубежей) подходит для форта.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="ru_RU">
+            <Text>Лучший общий выбор для этого посёлка.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="ru_RU">
+            <Text>Пока нет выдающихся клеток — продолжайте расти (еда).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="ru_RU">
+            <Text>Население {1_Pop} ниже {2_Min}; сначала вырастите.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="ru_RU">
+            <Text>Нужно {1_Cost} золота; в казне {2_Gold}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="ru_RU">
+            <Text>Население {1_Pop} и по карману — город откроет производство и районы.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="ru_RU">
+            <Text>Держава: городов {1_Cities}, посёлков {2_Towns} · слабее всего: {3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="ru_RU">
+            <Text>Восполняет нехватку: {1_Yield}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="ru_RU">
+            <Text>Выбрано для баланса ролей ваших посёлков.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="ru_RU">
+            <Text>Рассмотрена альтернатива: {1_Alt}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="ru_RU">
+            <Text>В державе много посёлков: {1_Towns} против {2_Cities} городов. Новый город даёт производство и районы.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="ru_RU">
+            <Text>Население растёт; урбанизация усилит рост.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="ru_RU">
+            <Text>Население не растёт; ставка на рост может помочь больше специализации.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="ru_RU">
+            <Text>Основан в {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="ru_RU">
+            <Text>Основан ~{1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="ru_RU">
+            <Text>Основан</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="ru_RU">
+            <Text>Неизвестно</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="ru_RU">
+            <Text>Назад к топ-поселениям</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="ru_RU">
+            <Text>Столица</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="ru_RU">
+            <Text>Чудеса</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="ru_RU">
+            <Text>Чудес не зафиксировано</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="ru_RU">
+            <Text>Неизвестное поселение</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="ru_RU">
+            <Text>Показать на карте</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="ru_RU">
+            <Text>Недоступно: вы ещё не встретили эту цивилизацию.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="ru_RU">
+            <Text>Недоступно: вы ещё не обнаружили это поселение.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="ru_RU">
+            <Text>Кинематографичный вид</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="ru_RU">
+            <Text>Запустить облёт</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="ru_RU">
+            <Text>Облёт</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="ru_RU">
+            <Text>Камера топ-поселений</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="ru_RU">
+            <Text>Кинематографичный вид поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="ru_RU">
+            <Text>Экспериментальный облёт поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="ru_RU">
+            <Text>Включить лёгкое вращение</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="ru_RU">
+            <Text>Длительность облёта</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="ru_RU">
+            <Text>Короткий</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="ru_RU">
+            <Text>Средний</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="ru_RU">
+            <Text>Построено в {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="ru_RU">
+            <Text>Основан в {1_Year} и процветает поныне.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="ru_RU">
+            <Text>Признано {1_Ord}-м величайшим поселением мира.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="ru_RU">
+            <Text>Здесь находятся: {1_List}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="ru_RU">
+            <Text>и</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="ru_RU">
+            <Text>Природное чудо украшает его земли.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="ru_RU">
+            <Text>Его богатейший район.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="ru_RU">
+            <Text>№1 {1_Cat}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="ru_RU">
+            <Text>Лидеры категорий</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ru_RU">
+            <Text>Все поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="ru_RU">
+            <Text>Величайшие поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="ru_RU">
+            <Text>Полный рейтинг</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="ru_RU">
+            <Text>Мировые рейтинги</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="ru_RU">
+            <Text>Все цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="ru_RU">
+            <Text>Рейтинг цивилизаций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="ru_RU">
+            <Text>Выдающиеся цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="ru_RU">
+            <Text>Полный рейтинг цивилизаций</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="ru_RU">
+            <Text>Здесь «Очки» — это суммарный выпуск цивилизации: еда, производство, золото, наука и культура всех её поселений. Это не официальные игровые очки из окна побед, которые считаются иначе.</Text>
         </Replace>
     </LocalizedText>
 </Database>

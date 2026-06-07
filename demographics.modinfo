@@ -60,6 +60,12 @@
                     <Item>ui/screen-demographics/views/history-time-filter.js</Item>
                     <Item>ui/screen-demographics/views/history-csv.js</Item>
                     <Item>ui/screen-demographics/views/view-factbook.js</Item>
+                    <Item>ui/screen-demographics/views/view-settlements.js</Item>
+                    <Item>ui/screen-demographics/settlements-data.js</Item>
+                    <Item>ui/screen-demographics/settlements-trace.js</Item>
+                    <Item>ui/screen-demographics/city-camera-controller.js</Item>
+                    <Item>ui/screen-demographics/city-map-view.js</Item>
+                    <Item>ui/screen-demographics/views/towns-history.js</Item>
                     <Item>ui/screen-demographics/views/view-relations.js</Item>
                     <Item>ui/screen-demographics/views/relations-shared.js</Item>
                     <Item>ui/screen-demographics/views/relations-edges.js</Item>

@@ -119,7 +119,10 @@ declare global {
   const Cities: { [key: string]: any };
   const ProductionKind: { UNIT: any; CONSTRUCTIBLE: any; PROJECT: any; [key: string]: any };
   const Constructibles: { getByComponentID(id: any): EngineHandle; [key: string]: any };
+  const Districts: { getFreeConstructible(location: any, playerId: number): any; [key: string]: any };
+  const GrowthTypes: { EXPAND: any; [key: string]: any };
   const GameplayMap: { [key: string]: any };
+  const RevealedStates: { [key: string]: any };
   const Modding: {
     getModProperty(key: string): string | null;
     setModProperty(key: string, value: string): void;
@@ -127,6 +130,34 @@ declare global {
   };
   const Input: { [key: string]: any };
   const WorldUI: { [key: string]: any };
+
+  /** World-camera control surface (see base-standard city-zoomer.js). */
+  const Camera: {
+    lookAtPlot(location: { x: number; y: number }, options?: { zoom?: number; tilt?: number; instantaneous?: boolean }): void;
+    lookAt(x: number, y: number, options?: any): void;
+    saveCameraZoom(): void;
+    restoreCameraZoom(): void;
+    restoreDefaults(): void;
+    clearAnimation(): void;
+    addKeyframe(frame: any): void;
+    calculateCameraFocusAndZoom(plots: any, angle: number, options?: any): any;
+    getState(): any;
+    rotate(x: number, isDragging: boolean): void;
+    zoom(amount: number): void;
+    pushDynamicCamera(plot: { x: number; y: number }, params: any): void;
+    pushFlyoverCamera(plot: { x: number; y: number }, params: any): void;
+    popCamera(): void;
+    [key: string]: any;
+  };
+
+  /** Camera-keyframe interpolation functions (e.g. EaseOutSin, Linear). */
+  const InterpolationFunc: { [key: string]: any };
+  /** Camera-keyframe write-mask flags (e.g. FLAG_ALL). */
+  const KeyframeFlag: { [key: string]: any };
+  /** World-model placement modes (DEFAULT / FIXED / TERRAIN / WATER). */
+  const PlacementMode: { [key: string]: any };
+  /** Unique-quarter type enum (NO_QUARTER + each unique quarter). */
+  const UniqueQuarterTypes: { [key: string]: any };
   const InterfaceMode: { addHandler(...args: any[]): any; [key: string]: any };
 
   /** Chart.js, loaded as a global by the engine (not imported). */

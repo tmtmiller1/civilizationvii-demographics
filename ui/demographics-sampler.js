@@ -43,6 +43,11 @@ import {
   resetAgeCaches
 } from "/demographics/ui/sampler-collectors.js";
 import { runWarTracker } from "/demographics/ui/sampler-wars.js";
+import { recordLocalTownsNow } from "/demographics/ui/screen-demographics/views/towns-history.js";
+import {
+  startFoundingTracker,
+  recordSettlementsNow
+} from "/demographics/ui/screen-demographics/settlements-trace.js";
 import {
   getCumulativeCasualty,
   getCumulativeRazed,
@@ -637,6 +642,18 @@ function logSampleTiming(t, counts) {
  * the war tracker. Returns the snapshot, or null if skipped/too-few-players.
  * @returns {Snapshot | null} The recorded snapshot, or null.
  */
+/**
+ * Record the auxiliary per-settlement history (local-town trends + Top Cities
+ * founding/population window) for this sample. Each call is defensively wrapped
+ * so it can never throw the sample.
+ * @param {number} chartTurn The monotonic sample turn.
+ * @param {string|undefined} gameYear The sample's game-year string.
+ */
+function recordAuxHistory(chartTurn, gameYear) {
+  safeCall("recordLocalTownsNow", () => recordLocalTownsNow(chartTurn));
+  safeCall("recordSettlementsNow", () => recordSettlementsNow(chartTurn, gameYear));
+}
+
 function doSample() {
   const localTurn = getCurrentTurn() ?? -1;
   const ids = getAliveMajorIds();
@@ -689,6 +706,9 @@ function doSample() {
   // views; stored apart from `players` so the per-civ line charts never see it.
   const minors = sampleMinors();
   if (minors) snapshot.minors = minors;
+  // Append the local player's town populations to the Town Advisor's rolling
+  // trend window (independent of the sample stream; never throws the sample).
+  recordAuxHistory(chartTurn, gameYear);
   const tWork = perfNow();
   let storedSamples = 0;
   try {
@@ -1116,6 +1136,8 @@ function registerSamplerHandlers() {
     engine.on("PlayerAgeTransitionComplete", _ageHandlerRef);
     // Begin event-based military casualty tracking for this (re)load.
     startWarEventTracker();
+    // Begin exact-founding tracking (CityAddedToMap) for the Top Cities cards.
+    startFoundingTracker();
     ilog(
       "subscribed to PlayerTurnActivated + PlayerAgeTransitionComplete",
       "(re-registered fresh on load, kill at",

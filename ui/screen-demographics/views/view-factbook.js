@@ -350,6 +350,10 @@ function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   wrap.className = "demographics-factbook-cell demographics-factbook-civ-header";
   if (isLocal) wrap.classList.add("is-local");
   if (maskAsUnmet) wrap.classList.add("is-unmet");
+  // Civ-color accent to match the Cities tab's color-accented cards.
+  if (profile.primaryColor && !maskAsUnmet) {
+    wrap.style.setProperty("border-top-color", profile.primaryColor);
+  }
 
   // For unmet civs, force the avatar's placeholder rather than the actual
   // leader portrait - build a shallow profile clone with leaderTypeString

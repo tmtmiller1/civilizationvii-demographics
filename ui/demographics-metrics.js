@@ -145,10 +145,38 @@ function resolveTurn(primary, fallback) {
  * @returns {number} The scaled population (0 for non-positive/invalid input).
  */
 function scalePopulation(raw, scaleCtx, ctx) {
+  return scalePopulationAt(raw, resolveTurn(ctx, scaleCtx));
+}
+
+/**
+ * The world-estimate population formula at an explicit turn. Used by the per-civ
+ * Population metric (a whole CIVILIZATION's people → millions).
+ * @param {number} raw Raw population count.
+ * @param {number} turn The (monotonic) turn for the era multiplier.
+ * @returns {number} The scaled population (0 for non-positive/invalid input).
+ */
+export function scalePopulationAt(raw, turn) {
   if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
-  const turn = resolveTurn(ctx, scaleCtx);
+  const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
   // Tuned formula: pop^1.11 × 90000 × 1.009^turn
-  return Math.pow(raw, 1.11) * 90000 * Math.pow(1.009, turn);
+  return Math.pow(raw, 1.11) * 90000 * Math.pow(1.009, t);
+}
+
+/**
+ * The world-estimate population for a SINGLE settlement (the Top Cities cards /
+ * dossier). Same era-growth shape as {@link scalePopulationAt} but a per-city
+ * constant (~30× smaller than the per-civilization one) so a city reads as a
+ * realistic city — tens of thousands in antiquity, low millions in the modern
+ * age — instead of being inflated to whole-civilization scale.
+ * @param {number} raw The settlement's raw population.
+ * @param {number} turn The (monotonic) turn for the era multiplier.
+ * @returns {number} The scaled city population (0 for non-positive/invalid input).
+ */
+export function scaleCityPopulationAt(raw, turn) {
+  if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
+  const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
+  // pop^1.11 × 3000 × 1.009^turn  (per-settlement scale)
+  return Math.pow(raw, 1.11) * 3000 * Math.pow(1.009, t);
 }
 
 // GDP scale: (raw weighted per-turn yield sum) × turnsElapsed × 1,000,000

@@ -172,7 +172,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="it_IT"><Text>3ª era</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="it_IT"><Text>Tutto il tempo</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="it_IT"><Text>Grafici tra le ere non disponibili</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="it_IT"><Text>&lt;p style="margin:0;"&gt;I grafici non proseguono tra un'era e l'altra. Ogni era mostra solo i dati raccolti al suo interno. Usa &lt;b style="color:#f3e7c4;"&gt;Era attuale&lt;/b&gt; o un intervallo di anni.&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="it_IT"><Text>Filtro {1_Label}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="it_IT"><Text>ⓘ PIL: stima economica comparativa  ·  passa il mouse per i dettagli</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="it_IT"><Text>Prodotto interno lordo</Text></Replace>
@@ -973,6 +972,326 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="it_IT">
             <Text>Nessuna</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="it_IT">
+            <Text>Insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="it_IT">
+            <Text>Top 25 insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="it_IT">
+            <Text>Tutti gli insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="it_IT">
+            <Text>Tutti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="it_IT">
+            <Text>Città</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="it_IT">
+            <Text>Borghi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="it_IT">
+            <Text>Città</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="it_IT">
+            <Text>Borgo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="it_IT">
+            <Text>Nessun insediamento da mostrare.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="it_IT">
+            <Text>Pos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="it_IT">
+            <Text>Proprietario</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="it_IT">
+            <Text>Insediamento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="it_IT">
+            <Text>Civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="it_IT">
+            <Text>Tipo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="it_IT">
+            <Text>Punteggio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="it_IT">
+            <Text>Popolazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="it_IT">
+            <Text>Cibo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="it_IT">
+            <Text>Produzione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="it_IT">
+            <Text>Oro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="it_IT">
+            <Text>Scienza</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="it_IT">
+            <Text>Cultura</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="it_IT">
+            <Text>Meraviglie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="it_IT">
+            <Text>Felicità</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="it_IT">
+            <Text>Top 10</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="it_IT">
+            <Text>Centri</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="it_IT">
+            <Text>Consigliere</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="it_IT">
+            <Text>Mostra scheda Consigliere</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="it_IT">
+            <Text>Centri</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="it_IT">
+            <Text>I tuoi centri, in tempo reale: specializzazione, dimensione e crescita a colpo d’occhio.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="it_IT">
+            <Text>Non hai centri. Fonda o converti un insediamento per vederlo qui.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="it_IT">
+            <Text>Centro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="it_IT">
+            <Text>Pop.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="it_IT">
+            <Text>Focus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="it_IT">
+            <Text>Crescita</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="it_IT">
+            <Text>Caselle (C/P/Pesca)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="it_IT">
+            <Text>Non specializzato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="it_IT">
+            <Text>{1_Turns} turni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="it_IT">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="it_IT">
+            <Text>Copia CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="it_IT">
+            <Text>Consigliere</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="it_IT">
+            <Text>Suggerimenti euristici da caselle, dimensione e rese di ogni centro. Solo consigli: nel gioco non cambia nulla.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="it_IT">
+            <Text>{1_Name} (pop. {2_Pop})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="it_IT">
+            <Text>Focus attuale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="it_IT">
+            <Text>Focus consigliato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="it_IT">
+            <Text>Promuovere a città?</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="it_IT">
+            <Text>Consigliato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="it_IT">
+            <Text>Mantieni come centro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="it_IT">
+            <Text>{1_Count} caselle fattoria/pascolo/piantagione favoriscono il cibo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="it_IT">
+            <Text>{1_Count} caselle miniera/cava/accampamento favoriscono la produzione.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="it_IT">
+            <Text>{1_Count} caselle costiere/da pesca favoriscono la pesca.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="it_IT">
+            <Text>Posizione centrale che collega {1_Count} insediamenti.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="it_IT">
+            <Text>Un forte rendimento d’oro favorisce il focus commerciale.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="it_IT">
+            <Text>Una popolazione numerosa ({1_Count}) si adatta a un centro urbano.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="it_IT">
+            <Text>Frontiera esposta ({1_Count} confini aperti) si adatta a un forte.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="it_IT">
+            <Text>La scelta complessiva migliore per questo centro.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="it_IT">
+            <Text>Ancora nessuna casella di spicco — continua a crescere (cibo).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="it_IT">
+            <Text>Pop. {1_Pop} sotto {2_Min}; cresci prima di convertire.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="it_IT">
+            <Text>Richiede {1_Cost} oro; il tesoro ne ha {2_Gold}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="it_IT">
+            <Text>Pop. {1_Pop} e accessibile — una città sblocca produzione e distretti.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="it_IT">
+            <Text>Impero: {1_Cities} città, {2_Towns} borghi · rendimento più debole: {3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="it_IT">
+            <Text>Affronta la carenza di {1_Yield} del tuo impero.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="it_IT">
+            <Text>Scelto per bilanciare i ruoli dei tuoi borghi.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="it_IT">
+            <Text>Alternativa considerata: {1_Alt}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="it_IT">
+            <Text>Impero ricco di borghi: {1_Towns} borghi contro {2_Cities} città. Una nuova città aggiunge produzione e distretti.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="it_IT">
+            <Text>La popolazione cresce; urbanizzare amplifica la crescita.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="it_IT">
+            <Text>La popolazione è ferma; puntare sulla crescita può aiutare più della specializzazione.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="it_IT">
+            <Text>Fondata nel {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="it_IT">
+            <Text>Fondata ~{1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="it_IT">
+            <Text>Fondata</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="it_IT">
+            <Text>Sconosciuto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="it_IT">
+            <Text>Torna ai migliori insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="it_IT">
+            <Text>Capitale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="it_IT">
+            <Text>Meraviglie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="it_IT">
+            <Text>Nessuna meraviglia registrata</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="it_IT">
+            <Text>Insediamento sconosciuto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="it_IT">
+            <Text>Mostra sulla mappa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="it_IT">
+            <Text>Non disponibile: non hai ancora incontrato questa civiltà.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="it_IT">
+            <Text>Non disponibile: non hai ancora scoperto questo insediamento.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="it_IT">
+            <Text>Vista cinematografica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="it_IT">
+            <Text>Avvia sorvolo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="it_IT">
+            <Text>Sorvolo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="it_IT">
+            <Text>Telecamera Insediamenti principali</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="it_IT">
+            <Text>Vista cinematografica dell'insediamento</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="it_IT">
+            <Text>Sorvolo insediamento sperimentale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="it_IT">
+            <Text>Abilita leggera rotazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="it_IT">
+            <Text>Durata del sorvolo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="it_IT">
+            <Text>Breve</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="it_IT">
+            <Text>Media</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="it_IT">
+            <Text>Costruita nel {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="it_IT">
+            <Text>Fondata nel {1_Year}, e ancora fiorente.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="it_IT">
+            <Text>Riconosciuto come il {1_Ord}º insediamento più grande del mondo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="it_IT">
+            <Text>Ospita {1_List}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="it_IT">
+            <Text>e</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="it_IT">
+            <Text>Una meraviglia naturale adorna le sue terre.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="it_IT">
+            <Text>Il suo quartiere più ricco.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="it_IT">
+            <Text>#1 {1_Cat}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="it_IT">
+            <Text>Leader di categoria</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="it_IT">
+            <Text>Tutti gli insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="it_IT">
+            <Text>Gli insediamenti più grandi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="it_IT">
+            <Text>Classifica completa</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="it_IT">
+            <Text>Classifiche mondiali</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="it_IT">
+            <Text>Tutte le civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="it_IT">
+            <Text>Classifica delle civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="it_IT">
+            <Text>Le civiltà più importanti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="it_IT">
+            <Text>Classifica completa delle civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="it_IT">
+            <Text>Qui il "Punteggio" è la produzione totale di una civiltà: la somma di cibo, produzione, oro, scienza e cultura di tutti i suoi insediamenti. Non è il Punteggio ufficiale del gioco (schermata Vittorie), che è calcolato in modo diverso.</Text>
         </Replace>
     </LocalizedText>
 </Database>

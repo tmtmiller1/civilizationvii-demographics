@@ -1556,5 +1556,325 @@
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE">
             <Text>Re-enable sampling</Text>
         </Row>
+            <!-- Settlements view -->
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE">
+            <Text>Top 25 Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE">
+            <Text>All Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL">
+            <Text>All</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES">
+            <Text>Cities</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS">
+            <Text>Towns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY">
+            <Text>City</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN">
+            <Text>Town</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY">
+            <Text>No settlements to show.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK">
+            <Text>Rank</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER">
+            <Text>Owner</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME">
+            <Text>Settlement</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV">
+            <Text>Civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE">
+            <Text>Type</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE">
+            <Text>Score</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD">
+            <Text>Food</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD">
+            <Text>Production</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD">
+            <Text>Gold</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE">
+            <Text>Science</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE">
+            <Text>Culture</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS">
+            <Text>Wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY">
+            <Text>Happiness</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10">
+            <Text>Top 10</Text>
+        </Row>
+        <!-- Towns + Town Advisor tabs -->
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_TOWNS">
+            <Text>Towns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR">
+            <Text>Town Advisor</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB">
+            <Text>Show Town Advisor tab</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING">
+            <Text>Towns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_HINT">
+            <Text>Your towns, read live — specialization, size, and growth at a glance.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY">
+            <Text>You have no towns. Found or convert a settlement to see it here.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME">
+            <Text>Town</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP">
+            <Text>Pop</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS">
+            <Text>Focus</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH">
+            <Text>Growth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES">
+            <Text>Tiles (F/P/Fish)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE">
+            <Text>Unspecialized</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS">
+            <Text>{1_Turns} turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV">
+            <Text>Copy CSV</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING">
+            <Text>Town Advisor</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT">
+            <Text>Heuristic suggestions from each town's tiles, size, and yields. Advice only — nothing changes in-game.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE">
+            <Text>{1_Name} (pop {2_Pop})</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT">
+            <Text>Current focus</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST">
+            <Text>Suggested focus</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE">
+            <Text>Upgrade to city?</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES">
+            <Text>Recommended</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO">
+            <Text>Keep as town</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD">
+            <Text>{1_Count} farm/pasture/plantation tiles favor food.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION">
+            <Text>{1_Count} mine/quarry/camp tiles favor production.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING">
+            <Text>{1_Count} coastal/fishing tiles favor fishing.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB">
+            <Text>Central location links {1_Count} settlements.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE">
+            <Text>Strong gold output favors a trade focus.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN">
+            <Text>Large population ({1_Count}) suits an urban center.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT">
+            <Text>Exposed frontier ({1_Count} open borders) suits a fort.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC">
+            <Text>Best overall match for this town.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT">
+            <Text>No standout tiles yet — keep growing (food).</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL">
+            <Text>Pop {1_Pop} is below {2_Min}; grow before converting.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD">
+            <Text>Needs {1_Cost} gold; treasury has {2_Gold}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES">
+            <Text>Pop {1_Pop} and affordable — a city unlocks production and districts.</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE">
+            <Text>Empire: {1_Cities} cities, {2_Towns} towns · weakest yield: {3_Need}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED">
+            <Text>Addresses your empire's {1_Yield} shortfall.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE">
+            <Text>Chosen to balance your towns' roles.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT">
+            <Text>Alternative considered: {1_Alt}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX">
+            <Text>Town-heavy empire: {1_Towns} towns vs {2_Cities} cities. A new city adds production and districts.</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW">
+            <Text>Population is climbing; urbanizing compounds the growth.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL">
+            <Text>Population has stalled; a growth focus may help more than specializing.</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED">
+            <Text>Founded {1_Year}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX">
+            <Text>Founded ~{1_Year}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL">
+            <Text>Founded</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN">
+            <Text>Unknown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK">
+            <Text>Back to Top Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL">
+            <Text>Capital</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE">
+            <Text>Wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS">
+            <Text>No wonders recorded</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME">
+            <Text>Unknown Settlement</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP">
+            <Text>View on map</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP">
+            <Text>Unavailable: you haven't met this civilization yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP">
+            <Text>Unavailable: you haven't discovered this settlement yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW">
+            <Text>Cinematic view</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY">
+            <Text>Play flyby</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL">
+            <Text>Flyby</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING">
+            <Text>Top Settlements camera</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC">
+            <Text>Cinematic settlement view</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY">
+            <Text>Experimental settlement flyby</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE">
+            <Text>Enable subtle rotate</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET">
+            <Text>Flyby length</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT">
+            <Text>Short</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM">
+            <Text>Medium</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT">
+            <Text>Built {1_Year}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED">
+            <Text>Founded in {1_Year}, and flourishing still.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN">
+            <Text>Recognized as the {1_Ord} greatest settlement in the world.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST">
+            <Text>It houses {1_List}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND">
+            <Text>and</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL">
+            <Text>A natural wonder graces its lands.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT">
+            <Text>Its most bountiful quarter.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN">
+            <Text>#1 {1_Cat}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE">
+            <Text>Category Leaders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE">
+            <Text>All Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE">
+            <Text>The Greatest Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE">
+            <Text>Full Rankings</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS">
+            <Text>World Rankings</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS">
+            <Text>All Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK">
+            <Text>Civilization Ranking</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE">
+            <Text>The Foremost Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE">
+            <Text>Full Civilization Rankings</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE">
+            <Text>"Score" here is a civilization's total output: its settlements' combined food, production, gold, science, and culture. It is not the official game Score in the Victories screen, which is calculated differently.</Text>
+        </Row>
     </EnglishText>
 </Database>
