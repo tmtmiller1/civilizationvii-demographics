@@ -6,8 +6,112 @@
 // Off" header. Split out of view-relations.js.
 
 import { t } from "/demographics/ui/demographics-i18n.js";
+import { getAttitudeColors } from "/demographics/ui/demographics-palette.js";
 import { dlog, LINE_DASH } from "/demographics/ui/screen-demographics/views/relations-shared.js";
 import { safePlaySound } from "/demographics/ui/demographics-audio.js";
+
+/**
+ * Per-topTab visual overrides for relation filters.
+ * @type {Record<string, { color: string, dash: string|undefined }>}
+ */
+const CS_FILTER_OVERRIDES = {
+  suzerain: { color: "#5bc8ff", dash: "" },
+  trade: { color: "#f3c34c", dash: "0.6 2" },
+  unfriendly: { color: "#ff7f1a", dash: undefined },
+  friendly: { color: "#3fbf3f", dash: undefined }
+};
+
+/**
+ * Resolve the civ-tab filter definitions.
+ * @returns {FilterDef[]} Ordered filter definitions.
+ */
+function civFilters() {
+  return [
+    { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude" },
+    { key: "alliance", label: t("LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE"), kind: "attitude" },
+    { key: "helpful", label: t("LOC_DEMOGRAPHICS_RELATIONS_HELPFUL"), kind: "attitude" },
+    { key: "friendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY"), kind: "attitude" },
+    { key: "unfriendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY"), kind: "attitude" },
+    { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude" },
+    {
+      key: "openborders",
+      label: t("LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS"),
+      kind: "political"
+    },
+    { key: "denounced", label: t("LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED"), kind: "political" },
+    { key: "research", label: t("LOC_DEMOGRAPHICS_RELATIONS_RESEARCH"), kind: "political" },
+    { key: "endeavors", label: t("LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS"), kind: "political" },
+    { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic" }
+  ];
+}
+
+/**
+ * Resolve the city-state-tab filter definitions.
+ * @returns {FilterDef[]} Ordered filter definitions.
+ */
+function cityStateFilters() {
+  return [
+    { key: "suzerain", label: t("LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY"), kind: "political" },
+    { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic" },
+    { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude" },
+    { key: "alliance", label: t("LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE"), kind: "attitude" },
+    { key: "helpful", label: t("LOC_DEMOGRAPHICS_RELATIONS_HELPFUL"), kind: "attitude" },
+    { key: "friendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY"), kind: "attitude" },
+    { key: "unfriendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY"), kind: "attitude" },
+    { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude" }
+  ];
+}
+
+/**
+ * Resolve filter definitions for one top tab.
+ * @param {string} topTab Either "civ" or "cs".
+ * @returns {FilterDef[]} Ordered filter definitions.
+ */
+export function filtersForView(topTab) {
+  return topTab === "civ" ? civFilters() : cityStateFilters();
+}
+
+/**
+ * Resolve visual overrides for one filter key in one top tab.
+ * @param {string} key Filter key.
+ * @param {string} topTab Either "civ" or "cs".
+ * @returns {{ color?: string, dash?: string }|null} Override descriptor.
+ */
+export function filterVisuals(key, topTab) {
+  if (topTab === "cs" && CS_FILTER_OVERRIDES[key]) {
+    return CS_FILTER_OVERRIDES[key];
+  }
+  return null;
+}
+
+/**
+ * Resolve the swatch color for a filter key in a top tab.
+ * @param {string} key Filter key.
+ * @param {string} topTab Either "civ" or "cs".
+ * @returns {string} Filter swatch color.
+ */
+export function pillColorFor(key, topTab) {
+  const ov = filterVisuals(key, topTab);
+  if (ov && ov.color) return ov.color;
+  const attitudeColors = getAttitudeColors();
+  if (attitudeColors[key]) return attitudeColors[key];
+  switch (key) {
+    case "openborders":
+      return "#5bc8ff";
+    case "denounced":
+      return "#ff7f1a";
+    case "research":
+      return "#c084fc";
+    case "endeavors":
+      return "#f5a060";
+    case "trade":
+      return "#4dc6c6";
+    case "suzerain":
+      return "#f3c34c";
+    default:
+      return "#bfbfbf";
+  }
+}
 
 /**
  * One filter-pill descriptor. `kind` groups attitude / political / economic

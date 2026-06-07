@@ -15,6 +15,7 @@
 
 import { t } from "/demographics/ui/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/demographics-audio.js";
+import { div, fmt, fmtPop, iconEl } from "/demographics/ui/ui-helpers.js";
 import {
   SETTLEMENT_OUTPUTS,
   buildSettlementBoard,
@@ -72,40 +73,6 @@ function setSetting(settings, key, value) {
   } catch (_) {
     // setSetting can throw; ignore (non-persisted is acceptable).
   }
-}
-
-/**
- * Create a div with a class and optional text.
- * @param {string} cls The class name(s).
- * @param {string} [text] Optional text content.
- * @returns {HTMLElement} The element.
- */
-function div(cls, text) {
-  const el = document.createElement("div");
-  el.className = cls;
-  if (text !== undefined) el.textContent = text;
-  return el;
-}
-
-/**
- * Format a numeric output value for display (rounded; "—" for non-finite).
- * @param {number} v The value.
- * @returns {string} The display string.
- */
-function fmt(v) {
-  return typeof v === "number" && isFinite(v) ? String(Math.round(v)) : "—";
-}
-
-/**
- * Build a BLP icon chip element.
- * @param {string} iconPath The blp: icon path.
- * @param {string} cls The class name.
- * @returns {HTMLElement} The icon element.
- */
-function iconEl(iconPath, cls) {
-  const ic = div(cls);
-  ic.style.backgroundImage = "url('" + iconPath + "')";
-  return ic;
 }
 
 /**
@@ -368,19 +335,6 @@ function buildTypeBadge(isTown) {
 }
 
 // ── Showcase (artistic Top-25 overall) ──────────────────────────────────────
-
-/**
- * Format a (large, scaled) population estimate compactly (B/M/K).
- * @param {number} v The value.
- * @returns {string} The display string.
- */
-function fmtPop(v) {
-  if (typeof v !== "number" || !isFinite(v) || v <= 0) return "—";
-  if (v >= 1e9) return (v / 1e9).toFixed(1) + "B";
-  if (v >= 1e6) return (v / 1e6).toFixed(1) + "M";
-  if (v >= 1e3) return (v / 1e3).toFixed(0) + "K";
-  return String(Math.round(v));
-}
 
 /**
  * A CSS-drawn population-trend glyph (up/down/flat) — no unicode (avoids tofu).

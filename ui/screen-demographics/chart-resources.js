@@ -20,6 +20,13 @@ import {
   hideUnmetEnabled,
   isCivUnmet
 } from "/demographics/ui/screen-demographics/chart-shared.js";
+import {
+  buildStackGridConfig,
+  drawStackGrid,
+  drawStackXTicks,
+  mountStackAxisTitles,
+  mountStackXTicks
+} from "/demographics/ui/screen-demographics/chart-stack-grid.js";
 import { t } from "/demographics/ui/demographics-i18n.js";
 
 /**
@@ -256,85 +263,6 @@ function buildStackLayout(W, H, dom) {
 }
 
 /**
- * Draw the stack plot background + Y gridlines and labels.
- * @param {SVGElement} svg The chart SVG.
- * @param {StackLayout} L The layout.
- * @param {number} yMax The y-domain maximum.
- */
-function drawStackGrid(svg, L, yMax) {
-  svg.appendChild(
-    svgEl("rect", {
-      x: L.padL,
-      y: L.padT,
-      width: L.innerW,
-      height: L.innerH,
-      fill: "rgba(20, 16, 10, 0.55)",
-      stroke: "#c9a24c",
-      "stroke-width": "1"
-    })
-  );
-  // Y gridlines (4 divisions) + labels.
-  for (let i = 0; i <= 4; i++) {
-    const v = (yMax * i) / 4;
-    const y = L.yOf(v);
-    svg.appendChild(
-      svgEl("line", {
-        x1: L.padL,
-        y1: y,
-        x2: L.padL + L.innerW,
-        y2: y,
-        stroke: "rgba(201, 162, 76, 0.18)",
-        "stroke-width": "1"
-      })
-    );
-    const lbl = svgEl("text", {
-      x: L.padL - 6,
-      y: y + 4,
-      fill: "rgba(243, 231, 196, 0.85)",
-      "font-size": "12",
-      "text-anchor": "end"
-    });
-    lbl.textContent = String(Math.round(v));
-    svg.appendChild(lbl);
-  }
-}
-
-/**
- * Draw the stack X-axis tick marks and return their HTML-overlay positions.
- * @param {SVGElement} svg The chart SVG.
- * @param {StackLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
- * @param {Map<number, string>} stackTurnYears chart-turn → year map.
- * @returns {{ t: number, x: number, year: string|null, labelY: number }[]}
- *   The tick positions.
- */
-function drawStackXTicks(svg, L, dom, stackTurnYears) {
-  const xTicks = 6;
-  const stackTickPositions = [];
-  for (let i = 0; i <= xTicks; i++) {
-    const t = Math.round(dom.xMin + ((dom.xMax - dom.xMin) * i) / xTicks);
-    const x = L.xOf(t);
-    svg.appendChild(
-      svgEl("line", {
-        x1: x,
-        x2: x,
-        y1: L.padT + L.innerH,
-        y2: L.padT + L.innerH + 4,
-        stroke: "#f3e7c4",
-        "stroke-width": "1"
-      })
-    );
-    stackTickPositions.push({
-      t,
-      x,
-      year: nearestByTurn(stackTurnYears, t),
-      labelY: L.padT + L.innerH + 8
-    });
-  }
-  return stackTickPositions;
-}
-
-/**
  * Draw the stacked-area band polygons bottom-up.
  * @param {SVGElement} svg The chart SVG.
  * @param {StackPoint[]} points The stack rows.
@@ -375,75 +303,6 @@ function drawStackBands(svg, points, bands, L) {
       })
     );
   }
-}
-
-/**
- * Mount the stack chart's axis-title overlays.
- * @param {HTMLElement} wrap The chart wrap.
- * @param {StackLayout} L The layout.
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- * @param {string} yAxisLabel The y-axis title text.
- */
-function mountStackAxisTitles(wrap, L, W, H, yAxisLabel) {
-  const xTitle = document.createElement("div");
-  xTitle.className =
-    "demographics-chart-axis-title demographics-chart-axis-x demographics-resources-axis-title demographics-resources-axis-x";
-  // Per-axis geometry stays inline.
-  xTitle.style.left = ((L.padL + L.innerW / 2) / W) * 100 + "%";
-  xTitle.style.top = ((H - 4) / H) * 100 + "%";
-  xTitle.textContent = t("LOC_DEMOGRAPHICS_AXIS_TIME");
-  wrap.appendChild(xTitle);
-  const yTitle = document.createElement("div");
-  yTitle.className =
-    "demographics-chart-axis-title demographics-chart-axis-y demographics-resources-axis-title demographics-resources-axis-y";
-  // Per-axis geometry stays inline.
-  yTitle.style.left = (12 / W) * 100 + "%";
-  yTitle.style.top = ((L.padT + L.innerH / 2) / H) * 100 + "%";
-  yTitle.textContent = yAxisLabel;
-  wrap.appendChild(yTitle);
-}
-
-/**
- * Mount the stack chart's X-tick HTML labels (turn and/or year per axis mode).
- * @param {HTMLElement} wrap The chart wrap.
- * @param {{ t: number, x: number, year: string|null, labelY: number }[]} ticks
- *   The tick positions.
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- */
-function mountStackXTickLabels(wrap, ticks, W, H) {
-  ticks.forEach((tick) => {
-    const div = document.createElement("div");
-    div.className = "demographics-chart-x-tick demographics-resources-x-tick";
-    // Per-tick geometry stays inline.
-    div.style.left = (tick.x / W) * 100 + "%";
-    div.style.top = (tick.labelY / H) * 100 + "%";
-    if (getXAxisMode() !== "year") {
-      appendTickTurn(div, tick.t);
-    }
-    if (getXAxisMode() !== "turn" && tick.year) {
-      const yr = document.createElement("div");
-      yr.className = "demographics-chart-x-tick-year";
-      yr.textContent = tick.year;
-      div.appendChild(yr);
-    } else if (getXAxisMode() === "year" && !tick.year) {
-      appendTickTurn(div, tick.t);
-    }
-    wrap.appendChild(div);
-  });
-}
-
-/**
- * Append a "T-N" turn sub-label to a tick container.
- * @param {HTMLElement} div The tick container.
- * @param {number} t The turn.
- */
-function appendTickTurn(div, t) {
-  const tn = document.createElement("div");
-  tn.className = "demographics-chart-x-tick-turn";
-  tn.textContent = "T-" + t;
-  div.appendChild(tn);
 }
 
 /**
@@ -561,8 +420,23 @@ function mountStackWrap(svg, opts, bands, points, tickPositions, L, W, H) {
     typeof opts.yAxisLabel === "string" && opts.yAxisLabel
       ? opts.yAxisLabel
       : t("LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED");
-  mountStackAxisTitles(wrap, L, W, H, yAxisLabel);
-  mountStackXTickLabels(wrap, tickPositions, W, H);
+  mountStackAxisTitles(wrap, {
+    L,
+    W,
+    H,
+    xClassName:
+      "demographics-chart-axis-title demographics-chart-axis-x demographics-resources-axis-title demographics-resources-axis-x",
+    yClassName:
+      "demographics-chart-axis-title demographics-chart-axis-y demographics-resources-axis-title demographics-resources-axis-y",
+    xText: t("LOC_DEMOGRAPHICS_AXIS_TIME"),
+    yText: yAxisLabel
+  });
+  mountStackXTicks(wrap, tickPositions, {
+    W,
+    H,
+    mode: /** @type {"turn"|"year"|"both"} */ (getXAxisMode()),
+    className: "demographics-chart-x-tick demographics-resources-x-tick"
+  });
   mountStackLegend(wrap, bands, points, L, W, H);
   return wrap;
 }
@@ -589,9 +463,18 @@ function buildStackSvg(samples, points, bands, L, dom, W, H) {
     class: "demographics-chart-svg",
     "aria-label": "Resources by category over time"
   });
-  drawStackGrid(svg, L, dom.yMax);
+  const gridCfg = buildStackGridConfig();
+  drawStackGrid(svg, L, dom.yMax, gridCfg, svgEl);
   const stackTurnYears = buildStackTurnYears(samples);
-  const tickPositions = drawStackXTicks(svg, L, dom, stackTurnYears);
+  const tickPositions = drawStackXTicks(
+    svg,
+    L,
+    dom,
+    stackTurnYears,
+    gridCfg,
+    nearestByTurn,
+    svgEl
+  );
   drawStackBands(svg, points, bands, L);
   return { svg, tickPositions };
 }
