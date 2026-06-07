@@ -41,7 +41,8 @@ import {
   buildMinorMilitaryCtx,
   getCurrentAgeType,
   resetAgeCaches
-} from "/demographics/ui/sampler-collectors.js";
+} from "/demographics/ui/sampler-collectors-core.js";
+import { onPlayerAgeTransitionComplete } from "/demographics/ui/sampler-age-boundary.js";
 import { runWarTracker } from "/demographics/ui/sampler-wars.js";
 import { recordLocalTownsNow } from "/demographics/ui/screen-demographics/views/towns-history.js";
 import {
@@ -63,7 +64,7 @@ import {
  * The per-civ context object assembled by {@link buildPlayerCtx} (defined in
  * sampler-collectors.js). Re-imported here so the snapshot pipeline can stay
  * typed without duplicating the shape.
- * @typedef {import("/demographics/ui/sampler-collectors.js").PlayerCtx} PlayerCtx
+ * @typedef {import("/demographics/ui/sampler-collectors-core.js").PlayerCtx} PlayerCtx
  */
 
 /**
@@ -850,188 +851,6 @@ function _noteSampleSucceeded(curTurn) {
   }
 }
 
-// ---- age transition handler --------------------------------------------
-//
-// PlayerAgeTransitionComplete fires per-player as each civ finishes its
-// transition into the new age. Payload shape `data.player` (a numeric pid)
-// is cited from base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
-// Event row exists at core/data/gamecore-events.xml.
-//
-// After transition:
-//   - Cached current age (and the trees-by-age map) are stale; reset both.
-//   - Append { turn, age } to history.ageBoundaries (once per age, not per pid).
-//   - Force a sample now so the FIRST sample of the new age records the new civ.
-/**
- * Clear the age + trees caches and re-read the current age type.
- * @returns {string | undefined} The new (re-read) age type.
- */
-function _readNewAgeType() {
-  // Clear cache first so getCurrentAgeType re-reads Game.age.
-  resetAgeCaches();
-  return getCurrentAgeType();
-}
-
-/**
- * Whether an age boundary for `age` at age-local `turn` is already recorded
- * (the transition event fires once per pid; we dedupe on age + localTurn).
- * @param {*} history The persisted history blob.
- * @param {string} age The new age type.
- * @param {number} turn The age-local Game.turn at transition.
- * @returns {boolean} True if already recorded.
- */
-function _ageBoundaryAlreadyRecorded(history, age, turn) {
-  const arr = history && history.ageBoundaries;
-  if (!Array.isArray(arr)) return false;
-  // Same age + same age-local turn = same transition event (multiple pids
-  // report it). We check `b.localTurn` (the age-local Game.turn) because
-  // `b.turn` was switched to a GLOBAL value for chart alignment - checking
-  // against that would always miss and we'd append a fresh boundary for every
-  // per-pid transition event.
-  return arr.some((b) => {
-    if (!b || b.age !== age) return false;
-    if (typeof b.localTurn === "number") return b.localTurn === turn;
-    // Back-compat with old boundary entries that only had `.turn`.
-    return b.turn === turn;
-  });
-}
-
-/**
- * Identify the age that just FINISHED, given the new age starting at `turn`.
- * The boundary fires when `newAge` BEGINS; the finished age is the one just
- * before this turn in the (sorted) boundary list.
- * @param {*} h The persisted history blob.
- * @param {string} newAge The new age type.
- * @param {number} turn The age-local turn at transition.
- * @returns {string} The finished age type.
- */
-function _resolveFinishedAge(h, newAge, turn) {
-  const sorted = h.ageBoundaries
-    .slice()
-    .sort((/** @type {*} */ a, /** @type {*} */ b) => (a.turn || 0) - (b.turn || 0));
-  const idx = sorted.findIndex((/** @type {*} */ b) => b.age === newAge && b.turn === turn);
-  if (idx > 0) return sorted[idx - 1].age;
-  return "AGE_ANTIQUITY"; // first transition - finishing antiquity
-}
-
-/**
- * Snapshot per-civ TRIUMPH counts from the most recent sample for each civ
- * (the age-end totals), keyed by pid.
- * @param {*} h The persisted history blob.
- * @returns {Record<string, object>} The pid → triumph-snapshot map.
- */
-function _buildLegacySnapshot(h) {
-  /** @type {Record<string, object>} */
-  const snap = {};
-  const samps = h.samples || [];
-  for (let i = samps.length - 1; i >= 0; i--) {
-    const s = samps[i];
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
-      if (snap[pid]) continue;
-      const rec = _legacyRecordForPlayer(s.players[pid]);
-      if (rec) snap[pid] = rec;
-    }
-  }
-  return snap;
-}
-
-/**
- * Build a single age-end triumph record from a snapshot player entry.
- * @param {*} ps A snapshot player record.
- * @returns {object | undefined} The triumph record, or undefined if no metrics.
- */
-function _legacyRecordForPlayer(ps) {
-  const m = ps.metrics;
-  if (!m) return undefined;
-  return {
-    triumphs_cultural: m.triumphs_cultural || 0,
-    triumphs_diplomatic: m.triumphs_diplomatic || 0,
-    triumphs_economic: m.triumphs_economic || 0,
-    triumphs_scientific: m.triumphs_scientific || 0,
-    triumphs_militaristic: m.triumphs_militaristic || 0,
-    triumphs_expansionist: m.triumphs_expansionist || 0,
-    leaderName: ps.leaderName,
-    civName: ps.civName,
-    leaderType: ps.leaderType,
-    // Stored so the legacy radar colors a civ the SAME in the frozen per-age
-    // view as in the live current-age view (radar falls back to a palette when
-    // an older snapshot lacks this).
-    primaryColor: ps.primaryColor
-  };
-}
-
-/**
- * Persist the age boundary (deduped across the per-pid stream) plus the
- * age-end triumph snapshot, bumping the cumulative turn-offset bookkeeping.
- * @param {string | undefined} newAge The new age type.
- * @param {number} turn The age-local Game.turn at transition.
- */
-function recordAgeBoundary(newAge, turn) {
-  const h = /** @type {WarHistory} */ (DemographicsStorage.load());
-  if (!newAge || _ageBoundaryAlreadyRecorded(h, newAge, turn)) return;
-  // Clear obsolete stored offset (no longer used - chart computes X at render
-  // time from age + localTurn). This also gets rid of garbage values like
-  // offset=235 baked into earlier corrupt saves.
-  delete h.cumulativeTurnOffset;
-  h.ageBoundaries.push({
-    turn, // age-local Game.turn at transition
-    localTurn: turn,
-    age: newAge
-  });
-  ilog("ageBoundary: recorded", newAge, "at localTurn=", turn);
-  // Snapshot per-civ TRIUMPH counts at this moment - values from the latest
-  // sample for each civ are the age-end totals. Stored under
-  // history.legacySnapshots[age] (the storage key is kept as `legacySnapshots`
-  // for back-compat; the contained data is the new triumph-count shape).
-  if (!h.legacySnapshots || typeof h.legacySnapshots !== "object") {
-    h.legacySnapshots = {};
-  }
-  const finishedAge = _resolveFinishedAge(h, newAge, turn);
-  const snap = _buildLegacySnapshot(h);
-  h.legacySnapshots[finishedAge] = snap;
-  DemographicsStorage.save(h);
-  ilog(
-    "appended ageBoundary turn=",
-    turn,
-    "age=",
-    newAge,
-    "legacySnapshot=",
-    finishedAge,
-    "civs=",
-    Object.keys(snap).length
-  );
-}
-
-/**
- * PlayerAgeTransitionComplete handler: resets caches, records the age boundary
- * once, and re-samples immediately so the new civ name lands in history.
- * @param {*} data The event payload (carries `player`).
- */
-function onPlayerAgeTransitionComplete(data) {
-  if (disabled) return;
-  try {
-    const newAge = _readNewAgeType();
-    const turn = getCurrentTurn() ?? -1;
-    ilog("PlayerAgeTransitionComplete pid=", data && data.player, "newAge=", newAge, "turn=", turn);
-
-    // Persist the boundary (dedupe across the per-pid stream).
-    try {
-      recordAgeBoundary(newAge, turn);
-    } catch (e) {
-      tripIfTooMany("appendAgeBoundary", e);
-    }
-
-    // Re-sample immediately so the new civ name lands in history right away.
-    try {
-      doSample();
-    } catch (e) {
-      tripIfTooMany("post-transition sample", e);
-    }
-  } catch (e) {
-    tripIfTooMany("onPlayerAgeTransitionComplete", e);
-  }
-}
-
 /**
  * Tear down any stale subscriptions left over from a prior game session. Both
  * engine.off calls are safe no-ops if nothing was registered.
@@ -1084,6 +903,11 @@ function runKickoff() {
     const curTurn = _curGameTurn();
     const storedCount = _storedSampleCount();
     ilog("startSampler runKickoff: storedCount=", storedCount, "curTurn=", curTurn);
+    // SPIKE: always-on kickoff decision (REMOVE after the save/reload test).
+    try {
+      console.warn("[Demographics.persist-spike] kickoff: storedCount=" + storedCount +
+        " curTurn=" + curTurn + " willSample=" + (storedCount === 0 || shouldSampleThisTurn(curTurn)));
+    } catch (_) { /* diagnostic only */ }
     if (storedCount === 0 || shouldSampleThisTurn(curTurn)) {
       ilog("startSampler: kicking off resume sample for turn", curTurn);
       const snap = doSample();
@@ -1123,6 +947,19 @@ function _storedSampleCount() {
   }
 }
 
+/** @type {import("/demographics/ui/sampler-age-boundary.js").AgeBoundaryDeps} */
+const AGE_BOUNDARY_DEPS = {
+  resetAgeCaches,
+  getCurrentAgeType,
+  loadHistory: () => /** @type {WarHistory} */ (DemographicsStorage.load()),
+  saveHistory: (history) => DemographicsStorage.save(history),
+  ilog,
+  tripIfTooMany,
+  doSample,
+  getCurrentTurn,
+  isDisabled: () => disabled
+};
+
 /**
  * Register the PlayerTurnActivated + PlayerAgeTransitionComplete handlers and
  * schedule the deferred resume kickoff. Assumes state has already been reset.
@@ -1132,7 +969,8 @@ function registerSamplerHandlers() {
     _teardown();
     handlerRef = (/** @type {*} */ data) => onPlayerTurnActivated(data);
     engine.on("PlayerTurnActivated", handlerRef);
-    _ageHandlerRef = (/** @type {*} */ data) => onPlayerAgeTransitionComplete(data);
+    _ageHandlerRef = (/** @type {*} */ data) =>
+      onPlayerAgeTransitionComplete(data, AGE_BOUNDARY_DEPS);
     engine.on("PlayerAgeTransitionComplete", _ageHandlerRef);
     // Begin event-based military casualty tracking for this (re)load.
     startWarEventTracker();

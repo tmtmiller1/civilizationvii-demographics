@@ -26,18 +26,28 @@
                 <UIScripts>
                     <Item>ui/demographics-bootstrap.js</Item>
                     <Item>ui/screen-demographics/screen-demographics.js</Item>
-                    <Item>ui/demographics-triumphs-decorator.js</Item>
                 </UIScripts>
                 <ImportFiles>
                     <Item>ui/demographics-i18n.js</Item>
                     <Item>ui/demographics-dock-decorator.js</Item>
                     <Item>ui/demographics-sampler.js</Item>
+                    <Item>ui/sampler-age-boundary.js</Item>
                     <Item>ui/sampler-collectors.js</Item>
+                    <Item>ui/sampler-collectors-core.js</Item>
+                    <Item>ui/sampler-collectors-economy.js</Item>
+                    <Item>ui/sampler-collectors-military.js</Item>
+                    <Item>ui/sampler-collectors-civics.js</Item>
+                    <Item>ui/sampler-wars-detect.js</Item>
+                    <Item>ui/sampler-wars-ingest.js</Item>
+                    <Item>ui/sampler-wars-augment.js</Item>
+                    <Item>ui/sampler-wars-core.js</Item>
                     <Item>ui/sampler-wars.js</Item>
                     <Item>ui/sampler-war-events.js</Item>
                     <Item>ui/demographics-storage.js</Item>
                     <Item>ui/demographics-metrics.js</Item>
+                    <Item>ui/metrics-format.js</Item>
                     <Item>ui/demographics-settings.js</Item>
+                    <Item>ui/ui-helpers.js</Item>
                     <Item>ui/demographics-audio.js</Item>
                     <Item>ui/demographics-palette.js</Item>
                     <Item>ui/demographics-a11y.js</Item>
@@ -49,27 +59,43 @@
                     <Item>ui/screen-demographics/crisis-names.js</Item>
                     <Item>ui/screen-demographics/chart-legacy-radar.js</Item>
                     <Item>ui/screen-demographics/chart-resources.js</Item>
+                    <Item>ui/screen-demographics/chart-stack-grid.js</Item>
                     <Item>ui/screen-demographics/chart-wars-cost.js</Item>
                     <Item>ui/screen-demographics/chart-wars-merge.js</Item>
                     <Item>ui/screen-demographics/chart-wars-gantt.js</Item>
                     <Item>ui/screen-demographics/chart-wars-glossary.js</Item>
+                    <Item>ui/screen-demographics/chart-war-series.js</Item>
+                    <Item>ui/screen-demographics/chart-war-mini-chart.js</Item>
+                    <Item>ui/screen-demographics/chart-war-military.js</Item>
                     <Item>ui/screen-demographics/chart-war-graphs.js</Item>
                     <Item>ui/screen-demographics/chart-crisis-stages.js</Item>
                     <Item>ui/screen-demographics/views/view-history.js</Item>
+                    <Item>ui/screen-demographics/views/history-tabs.js</Item>
+                    <Item>ui/screen-demographics/views/history-captions.js</Item>
+                    <Item>ui/screen-demographics/views/history-controls.js</Item>
                     <Item>ui/screen-demographics/views/history-toolbar.js</Item>
                     <Item>ui/screen-demographics/views/history-time-filter.js</Item>
                     <Item>ui/screen-demographics/views/history-csv.js</Item>
+                    <Item>ui/screen-demographics/views/factbook-profiles.js</Item>
+                    <Item>ui/screen-demographics/views/factbook-render.js</Item>
+                    <Item>ui/screen-demographics/views/factbook-controller.js</Item>
                     <Item>ui/screen-demographics/views/view-factbook.js</Item>
                     <Item>ui/screen-demographics/views/view-settlements.js</Item>
                     <Item>ui/screen-demographics/settlements-data.js</Item>
                     <Item>ui/screen-demographics/settlements-trace.js</Item>
+                    <Item>ui/screen-demographics/cinematic-overlay.js</Item>
+                    <Item>ui/screen-demographics/cinematic-tour.js</Item>
                     <Item>ui/screen-demographics/city-camera-controller.js</Item>
                     <Item>ui/screen-demographics/city-map-view.js</Item>
                     <Item>ui/screen-demographics/views/towns-history.js</Item>
                     <Item>ui/screen-demographics/views/view-relations.js</Item>
                     <Item>ui/screen-demographics/views/relations-shared.js</Item>
                     <Item>ui/screen-demographics/views/relations-edges.js</Item>
+                    <Item>ui/screen-demographics/views/relations-edges-cs.js</Item>
                     <Item>ui/screen-demographics/views/relations-filters.js</Item>
+                    <Item>ui/screen-demographics/views/relations-queries.js</Item>
+                    <Item>ui/screen-demographics/views/relations-settings.js</Item>
+                    <Item>ui/screen-demographics/views/relations-ring-compute.js</Item>
                     <Item>ui/screen-demographics/views/relations-ring-svg.js</Item>
                     <Item>ui/screen-demographics/views/view-options.js</Item>
                     <Item>images/demographics-icon.svg</Item>

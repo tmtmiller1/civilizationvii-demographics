@@ -15,7 +15,9 @@
 import { buildSeriesFromHistory } from "/demographics/ui/screen-demographics/chart-line-series.js";
 import {
   buildLineChartFromSeries,
-  buildPlot,
+  buildPlot
+} from "/demographics/ui/screen-demographics/chart-war-mini-chart.js";
+import {
   attachHover,
   buildNoData
 } from "/demographics/ui/screen-demographics/chart-war-graphs.js";
