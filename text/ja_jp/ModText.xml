@@ -172,7 +172,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="ja_JP"><Text>第3の時代</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="ja_JP"><Text>全期間</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="ja_JP"><Text>時代をまたぐグラフは利用できません</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="ja_JP"><Text>&lt;p style="margin:0;"&gt;グラフは時代をまたいで連続しません。各時代では、その時代の中で記録されたデータだけを表示します。&lt;b style="color:#f3e7c4;"&gt;現在の時代&lt;/b&gt;または年代範囲のフィルターを使用してください。&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="ja_JP"><Text>{1_Label} フィルター</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="ja_JP"><Text>ⓘ GDP: 経済規模の比較指標  ·  詳細はホバーで表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="ja_JP"><Text>国内総生産</Text></Replace>
@@ -973,6 +972,326 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="ja_JP">
             <Text>なし</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="ja_JP">
+            <Text>集落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="ja_JP">
+            <Text>トップ25入植地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="ja_JP">
+            <Text>すべての集落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="ja_JP">
+            <Text>すべて</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="ja_JP">
+            <Text>都市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="ja_JP">
+            <Text>町</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="ja_JP">
+            <Text>都市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="ja_JP">
+            <Text>町</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="ja_JP">
+            <Text>表示する集落がありません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="ja_JP">
+            <Text>順位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="ja_JP">
+            <Text>所有者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="ja_JP">
+            <Text>集落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="ja_JP">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="ja_JP">
+            <Text>種類</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="ja_JP">
+            <Text>スコア</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="ja_JP">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="ja_JP">
+            <Text>食料</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="ja_JP">
+            <Text>生産力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="ja_JP">
+            <Text>ゴールド</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="ja_JP">
+            <Text>科学</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="ja_JP">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="ja_JP">
+            <Text>遺産</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="ja_JP">
+            <Text>幸福度</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="ja_JP">
+            <Text>トップ10</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="ja_JP">
+            <Text>町</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="ja_JP">
+            <Text>町アドバイザー</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="ja_JP">
+            <Text>町アドバイザータブを表示</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="ja_JP">
+            <Text>町</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="ja_JP">
+            <Text>自分の町をライブ表示——特化・規模・成長が一目でわかります。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="ja_JP">
+            <Text>町がありません。集落を建設または変換するとここに表示されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="ja_JP">
+            <Text>町</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="ja_JP">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="ja_JP">
+            <Text>特化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="ja_JP">
+            <Text>成長</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="ja_JP">
+            <Text>タイル (食/生/漁)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="ja_JP">
+            <Text>未特化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="ja_JP">
+            <Text>残り{1_Turns}ターン</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="ja_JP">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="ja_JP">
+            <Text>CSVをコピー</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="ja_JP">
+            <Text>町アドバイザー</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="ja_JP">
+            <Text>各町のタイル・規模・産出からの推定提案です。助言のみで、ゲームには影響しません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="ja_JP">
+            <Text>{1_Name}（人口 {2_Pop}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="ja_JP">
+            <Text>現在の特化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="ja_JP">
+            <Text>推奨される特化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="ja_JP">
+            <Text>都市に昇格？</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="ja_JP">
+            <Text>推奨</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="ja_JP">
+            <Text>町のまま維持</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="ja_JP">
+            <Text>農場・牧草地・農園のタイルが{1_Count}個あり、食料向きです。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="ja_JP">
+            <Text>鉱山・採石場・キャンプのタイルが{1_Count}個あり、生産向きです。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="ja_JP">
+            <Text>沿岸・漁業タイルが{1_Count}個あり、漁業向きです。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="ja_JP">
+            <Text>中心的な立地で{1_Count}の集落をつなぎます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="ja_JP">
+            <Text>高いゴールド産出が交易特化に向いています。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="ja_JP">
+            <Text>人口が多く（{1_Count}）、都市中心部に適しています。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="ja_JP">
+            <Text>国境が無防備（開放境界{1_Count}）で、要塞に適しています。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="ja_JP">
+            <Text>この町にとって総合的に最適です。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="ja_JP">
+            <Text>目立つタイルはまだなし——成長を優先（食料）。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="ja_JP">
+            <Text>人口{1_Pop}は{2_Min}未満。変換前に成長を。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="ja_JP">
+            <Text>{1_Cost}ゴールド必要。国庫は{2_Gold}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="ja_JP">
+            <Text>人口{1_Pop}で予算内——都市化で生産と地区が解放されます。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="ja_JP">
+            <Text>帝国: 都市 {1_Cities}、町 {2_Towns} · 最も不足: {3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="ja_JP">
+            <Text>帝国の{1_Yield}不足を補います。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="ja_JP">
+            <Text>町の役割のバランスを取るために選択。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="ja_JP">
+            <Text>検討した代替案: {1_Alt}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="ja_JP">
+            <Text>町が多い帝国: 町 {1_Towns} 対 都市 {2_Cities}。新しい都市は生産力と地区を追加します。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="ja_JP">
+            <Text>人口が増加中。都市化で成長を加速できます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="ja_JP">
+            <Text>人口が停滞中。専門化より成長重視が有効かもしれません。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="ja_JP">
+            <Text>建設 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="ja_JP">
+            <Text>建設 ~{1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="ja_JP">
+            <Text>建設</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="ja_JP">
+            <Text>不明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="ja_JP">
+            <Text>トップ集落に戻る</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="ja_JP">
+            <Text>首都</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="ja_JP">
+            <Text>遺産</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="ja_JP">
+            <Text>記録された遺産なし</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="ja_JP">
+            <Text>未知の入植地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="ja_JP">
+            <Text>マップで表示</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="ja_JP">
+            <Text>利用不可：この文明とはまだ出会っていません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="ja_JP">
+            <Text>利用不可：この集落をまだ発見していません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="ja_JP">
+            <Text>シネマティック表示</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="ja_JP">
+            <Text>フライバイを再生</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="ja_JP">
+            <Text>フライバイ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="ja_JP">
+            <Text>トップ集落カメラ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="ja_JP">
+            <Text>集落のシネマティック表示</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="ja_JP">
+            <Text>実験的な集落フライバイ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="ja_JP">
+            <Text>緩やかな回転を有効化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="ja_JP">
+            <Text>フライバイの長さ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="ja_JP">
+            <Text>短い</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="ja_JP">
+            <Text>中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="ja_JP">
+            <Text>{1_Year}年建造</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="ja_JP">
+            <Text>{1_Year}年に築かれ、今なお栄える。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="ja_JP">
+            <Text>世界第{1_Ord}位の偉大な集落として知られています。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="ja_JP">
+            <Text>{1_List}があります。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="ja_JP">
+            <Text>、</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="ja_JP">
+            <Text>自然遺産がその地を彩る。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="ja_JP">
+            <Text>最も豊かな地区。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="ja_JP">
+            <Text>{1_Cat} #1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="ja_JP">
+            <Text>部門別トップ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ja_JP">
+            <Text>全入植地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="ja_JP">
+            <Text>最も偉大な集落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="ja_JP">
+            <Text>総合順位</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="ja_JP">
+            <Text>世界ランキング</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="ja_JP">
+            <Text>全文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="ja_JP">
+            <Text>文明ランキング</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="ja_JP">
+            <Text>最も卓越した文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="ja_JP">
+            <Text>文明総合順位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="ja_JP">
+            <Text>ここでの「スコア」は文明の総産出量です。すべての入植地の食料・生産・ゴールド・科学・文化の合計を指します。勝利画面に表示されるゲーム公式のスコアとは計算方法が異なります。</Text>
         </Replace>
     </LocalizedText>
 </Database>
