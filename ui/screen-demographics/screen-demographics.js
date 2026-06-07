@@ -20,7 +20,7 @@ import * as ViewOptions from "/demographics/ui/screen-demographics/views/view-op
 // Specifier per lazy view id, resolved + cached by _renderLazyView.
 /** @type {Record<string, string>} */
 const LAZY_VIEW_SPECIFIERS = {
-  factbook: "/demographics/ui/screen-demographics/views/view-factbook.js",
+  rankings: "/demographics/ui/screen-demographics/views/view-settlements.js",
   relations: "/demographics/ui/screen-demographics/views/view-relations.js"
 };
 
@@ -95,7 +95,7 @@ dlog("module evaluating");
 /** @type {ViewTab[]} */
 const VIEW_TABS = [
   { id: "history", label: "LOC_DEMOGRAPHICS_TAB_HISTORY" },
-  { id: "factbook", label: "LOC_DEMOGRAPHICS_TAB_FACTBOOK" },
+  { id: "rankings", label: "LOC_DEMOGRAPHICS_TAB_RANKINGS" },
   { id: "relations", label: "LOC_DEMOGRAPHICS_TAB_RELATIONS" },
   { id: "options", label: "LOC_DEMOGRAPHICS_TAB_OPTIONS" }
 ];
@@ -452,7 +452,7 @@ class ScreenDemographics extends Panel {
    */
   _dispatchView(host) {
     switch (this.activeView) {
-      case "factbook":
+      case "rankings":
       case "relations":
         this._renderLazyView(host, this.activeView);
         break;
