@@ -19,6 +19,13 @@ import {
   nearestByTurn,
   buildStackTurnYears
 } from "/demographics/ui/screen-demographics/chart-shared.js";
+import {
+  buildStackGridConfig,
+  drawStackGrid,
+  drawStackXTicks,
+  mountStackAxisTitles,
+  mountStackXTicks
+} from "/demographics/ui/screen-demographics/chart-stack-grid.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/chart-wars-merge.js";
 import {
   majorsOnSide,
@@ -316,48 +323,19 @@ function resolveStripeFill(c, idx, samples, sem) {
  * @returns {{ t: number, x: number, year: string|null }[]} The tick positions.
  */
 function drawGanttGrid(svg, L, dom, turnYearMap) {
-  svg.appendChild(
-    svgEl("rect", {
-      x: L.padL,
-      y: L.padT,
-      width: L.innerW,
-      height: L.innerH,
-      fill: "rgba(18, 20, 24, 0.85)",
-      stroke: "#c9a24c",
-      "stroke-width": "1"
-    })
-  );
   // Scale tick count to the (possibly very wide, scrollable) plot so a long
   // timeline keeps a readable year cadence instead of just 6 sparse ticks.
-  const xTicks = Math.max(6, Math.min(40, Math.round(L.innerW / 160)));
-  const tickPositions = [];
-  for (let i = 0; i <= xTicks; i++) {
-    const t = Math.round(dom.xMin + ((dom.xMax - dom.xMin) * i) / xTicks);
-    const x = L.xOf(t);
-    svg.appendChild(
-      svgEl("line", {
-        x1: x,
-        x2: x,
-        y1: L.padT + L.innerH,
-        y2: L.padT + L.innerH + 4,
-        stroke: "#E5E5E5",
-        "stroke-width": "1"
-      })
-    );
-    // Vertical grid line - Chart.js neutral grid color.
-    svg.appendChild(
-      svgEl("line", {
-        x1: x,
-        x2: x,
-        y1: L.padT,
-        y2: L.padT + L.innerH,
-        stroke: "rgba(133, 135, 140, 0.35)",
-        "stroke-width": "1"
-      })
-    );
-    tickPositions.push({ t, x, year: nearestByTurn(turnYearMap, t) });
-  }
-  return tickPositions;
+  const cfg = buildStackGridConfig({
+    plotFill: "rgba(18, 20, 24, 0.85)",
+    xTickStroke: "#E5E5E5",
+    xTicks: Math.max(6, Math.min(40, Math.round(L.innerW / 160))),
+    drawYGrid: false,
+    drawYLabels: false,
+    drawXVerticalGrid: true,
+    xVerticalGridStroke: "rgba(133, 135, 140, 0.35)"
+  });
+  drawStackGrid(svg, { ...L, yOf: () => 0 }, 1, cfg, svgEl);
+  return drawStackXTicks(svg, L, dom, turnYearMap, cfg, nearestByTurn, svgEl);
 }
 
 /**
@@ -746,26 +724,17 @@ function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W
  * @param {number} H Canvas height.
  */
 function mountGanttXTicks(wrap, tickPositions, L, W, H) {
-  tickPositions.forEach((tick) => {
-    const div = document.createElement("div");
-    div.className = "demographics-chart-x-tick demographics-wars-x-tick";
-    // Per-tick position stays dynamic (pixel-derived percentages).
-    div.style.left = (tick.x / W) * 100 + "%";
-    div.style.top = ((L.padT + L.innerH + 8) / H) * 100 + "%";
-    if (getXAxisMode() !== "turn" && tick.year) {
-      const yr = document.createElement("div");
-      yr.className = "demographics-chart-x-tick-year";
-      yr.textContent = tick.year;
-      div.appendChild(yr);
-    }
-    if (getXAxisMode() !== "year" || !tick.year) {
-      const tn = document.createElement("div");
-      tn.className = "demographics-chart-x-tick-turn";
-      tn.textContent =
-        getXAxisMode() === "both" && tick.year ? "(T-" + tick.t + ")" : "T-" + tick.t;
-      div.appendChild(tn);
-    }
-    wrap.appendChild(div);
+  mountStackXTicks(wrap, tickPositions.map((tick) => ({
+    t: tick.t,
+    x: tick.x,
+    year: tick.year,
+    labelY: L.padT + L.innerH + 8
+  })), {
+    W,
+    H,
+    mode: /** @type {"turn"|"year"|"both"} */ (getXAxisMode()),
+    className: "demographics-chart-x-tick demographics-wars-x-tick",
+    turnParenWhenBoth: true
   });
 }
 
@@ -777,21 +746,17 @@ function mountGanttXTicks(wrap, tickPositions, L, W, H) {
  * @param {number} H Canvas height.
  */
 function mountGanttAxisTitles(wrap, L, W, H) {
-  const xTitle = document.createElement("div");
-  xTitle.className =
-    "demographics-chart-axis-title demographics-chart-axis-x demographics-wars-axis-title demographics-wars-axis-x";
-  // Per-axis position stays dynamic (pixel-derived percentages).
-  xTitle.style.left = ((L.padL + L.innerW / 2) / W) * 100 + "%";
-  xTitle.style.top = ((H - 4) / H) * 100 + "%";
-  xTitle.textContent = t("LOC_DEMOGRAPHICS_AXIS_TIME");
-  wrap.appendChild(xTitle);
-  const yTitle = document.createElement("div");
-  yTitle.className =
-    "demographics-chart-axis-title demographics-chart-axis-y demographics-wars-axis-title demographics-wars-axis-y";
-  yTitle.style.left = (12 / W) * 100 + "%";
-  yTitle.style.top = ((L.padT + L.innerH / 2) / H) * 100 + "%";
-  yTitle.textContent = t("LOC_DEMOGRAPHICS_AXIS_CONFLICTS");
-  wrap.appendChild(yTitle);
+  mountStackAxisTitles(wrap, {
+    L,
+    W,
+    H,
+    xClassName:
+      "demographics-chart-axis-title demographics-chart-axis-x demographics-wars-axis-title demographics-wars-axis-x",
+    yClassName:
+      "demographics-chart-axis-title demographics-chart-axis-y demographics-wars-axis-title demographics-wars-axis-y",
+    xText: t("LOC_DEMOGRAPHICS_AXIS_TIME"),
+    yText: t("LOC_DEMOGRAPHICS_AXIS_CONFLICTS")
+  });
 }
 
 /**
