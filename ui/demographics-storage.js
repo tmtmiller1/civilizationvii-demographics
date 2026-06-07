@@ -58,6 +58,63 @@ function dlog(...a) {
 function derr(...a) {
   console.error("[Demographics.storage]", ...a);
 }
+
+// ── SPIKE: persistence diagnostic (REMOVE after the save/reload test) ──────────
+// Always-on, throttled so it can't spam. The JS module reloads on game-load, so
+// the counter resets and the FIRST loads after a reload are always captured —
+// exactly the window that answers "did the Tutorial bag carry our payload?".
+let _spikeN = 0;
+function spikeActive() {
+  return _spikeN < 25;
+}
+/**
+ * Spike diagnostic logger; throttled to a fixed number of emissions.
+ * @param {...*} a Values to log.
+ */
+function spikeLog(...a) {
+  if (!spikeActive()) return;
+  _spikeN++;
+  try {
+    console.warn("[Demographics.persist-spike]", ...a);
+  } catch (_) {
+    // console may be unavailable in headless hosts.
+  }
+}
+/** @param {*} mem The in-memory mirror. */
+function spikeNoStore(mem) {
+  spikeLog("load: NO STORE yet (pre-player-init) _mem=" + (mem && mem.samples ? mem.samples.length : "null"));
+}
+/**
+ * @param {*} store The resolved store. @param {string|null} raw The raw payload.
+ * @param {*} result The load result. @param {*} mem The in-memory mirror.
+ * @param {boolean} wasEmpty Whether the persistent tier was empty.
+ */
+function spikeLoad(store, raw, result, mem, wasEmpty) {
+  if (!spikeActive()) return;
+  const rawLen = raw == null ? -1 : raw.length;
+  const samples = result && result.samples ? result.samples.length : "?";
+  const state = wasEmpty
+    ? "RAW EMPTY (len=" + rawLen + ") _mem=" + (mem && mem.samples ? mem.samples.length : "null")
+    : "RAW PRESENT (len=" + rawLen + ")";
+  spikeLog("load: pid=" + store.pid + " " + state + " -> samples=" + samples);
+}
+/**
+ * Warn when a save would overwrite MORE persisted samples with FEWER (the
+ * "fresh first sample clobbers loaded history on reload" failure mode).
+ * @param {*} store The resolved store. @param {*} history The history being saved.
+ */
+function spikeClobberCheck(store, history) {
+  if (!spikeActive()) return;
+  try {
+    const exRaw = store.read(PAYLOAD_KEY);
+    const exN = exRaw ? (JSON.parse(exRaw).samples || []).length : 0;
+    if (history.samples.length < exN) {
+      spikeLog("save: CLOBBER writing " + history.samples.length + " over stored " + exN + " (pid=" + store.pid + ")");
+    }
+  } catch (_) {
+    // diagnostic only
+  }
+}
 /**
  * Run `fn`, returning its result, or `fallback` if it throws. Never throws.
  * @template T
@@ -675,6 +732,7 @@ class StorageImpl {
    * Load the history from persistence, reconciling against the in-memory mirror.
    * @returns {StoredHistory} The loaded (or recovered, or empty) history.
    */
+  // eslint-disable-next-line complexity -- persistence recovery flow has fixed branches.
   load() {
     this._init();
     const store = this._pickStore();
@@ -685,13 +743,18 @@ class StorageImpl {
         "load: no store available yet (pre-player-init); _mem=" +
           (this._mem ? this._mem.samples.length : "null")
       );
+      spikeNoStore(this._mem);
       return this._mem || emptyHistory(this._seed);
     }
     const raw = this._readRaw(store);
     if (raw == null || raw === "") {
-      return this._loadEmpty(store);
+      const result = this._loadEmpty(store);
+      spikeLoad(store, raw, result, this._mem, true);
+      return result;
     }
-    return this._loadParsed(raw, store);
+    const result = this._loadParsed(raw, store);
+    spikeLoad(store, raw, result, this._mem, false);
+    return result;
   }
 
   /**
@@ -699,6 +762,7 @@ class StorageImpl {
    * @param {StoredHistory} history History to persist.
    * @returns {boolean} True if written to a store, false otherwise.
    */
+  // eslint-disable-next-line complexity -- persistence write path handles guarded fallbacks.
   save(history) {
     this._init();
     if (!isValid(history)) {
@@ -717,6 +781,7 @@ class StorageImpl {
       dlog("save: no store available; held in _mem (samples=" + history.samples.length + ")");
       return false;
     }
+    spikeClobberCheck(store, history);
     let str;
     try {
       str = JSON.stringify(history);
