@@ -216,6 +216,57 @@ function appendToggles(wrap, ctx) {
 }
 
 /**
+ * Append the Top Cities camera section: the Stage 4 pseudo-cinematic toggle and
+ * the Stage 5 experimental-flyby controls (toggle + length preset + subtle
+ * rotate). All are opt-in and default off; the rotate/preset rows are visually
+ * sub-rows of the flyby toggle. Settings live under the `topCities.*` namespace
+ * inside the existing Demographics settings slice.
+ * @param {HTMLElement} wrap The options container to append into.
+ * @param {OptionsCtx} ctx Render context.
+ */
+function appendCameraOptions(wrap, ctx) {
+  const heading = document.createElement("div");
+  heading.className = "demographics-options-subheading font-title text-sm uppercase text-secondary";
+  heading.textContent = t("LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING");
+  wrap.appendChild(heading);
+  wrap.appendChild(
+    makeToggle(t("LOC_DEMOGRAPHICS_OPT_CINEMATIC"), "topCities.cinematicEnabled", true, ctx.settings)
+  );
+  wrap.appendChild(
+    makeToggle(t("LOC_DEMOGRAPHICS_OPT_FLYBY"), "topCities.flybyEnabled", true, ctx.settings)
+  );
+  wrap.appendChild(buildFlybyPresetControl(ctx));
+  const rotateRow = makeToggle(
+    t("LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE"),
+    "topCities.flybyAllowRotate",
+    true,
+    ctx.settings
+  );
+  rotateRow.classList.add("demographics-option-row-sub");
+  wrap.appendChild(rotateRow);
+}
+
+/**
+ * Build the flyby-length preset dropdown (Short / Medium), persisting the
+ * preset id under `topCities.flybyPreset`.
+ * @param {OptionsCtx} ctx Render context.
+ * @returns {HTMLElement} The dropdown-row element.
+ */
+function buildFlybyPresetControl(ctx) {
+  const opts = [
+    { id: "short", label: t("LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT") },
+    { id: "medium", label: t("LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM") }
+  ];
+  const cur = ctx.settings.getSetting("topCities.flybyPreset", "short");
+  const idx = Math.max(0, opts.findIndex((o) => o.id === cur));
+  const row = buildDropdownRow(t("LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET"), opts, idx, (i) => {
+    ctx.settings.setSetting("topCities.flybyPreset", opts[i].id);
+  });
+  row.classList.add("demographics-option-row-sub");
+  return row;
+}
+
+/**
  * Build a labeled `fxs-dropdown` row: a label cell plus the dropdown, with the
  * shared "options" audio group and a wired selection-change handler.
  * @param {string} labelText Row label text.
@@ -554,6 +605,7 @@ export function render(host, ctx) {
 
   wrap.appendChild(buildHeading());
   appendToggles(wrap, ctx);
+  appendCameraOptions(wrap, ctx);
   appendStorageControls(wrap, ctx);
   wrap.appendChild(buildSamplerRecoveryRow(ctx));
   wrap.appendChild(buildButtonRow(ctx));

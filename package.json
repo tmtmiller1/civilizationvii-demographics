@@ -9,6 +9,7 @@
     "lint": "eslint ui",
     "test:remediation-23": "node --loader ./tests/loader.mjs ./tests/remediation-23.mjs",
     "test:civ-color-utils": "node --loader ./tests/loader.mjs ./tests/civ-color-utils.mjs",
+    "test:towns-recommend": "node --loader ./tests/loader.mjs ./tests/towns-recommend.mjs",
     "verify": "tsc --noEmit && eslint ui"
   },
   "devDependencies": {

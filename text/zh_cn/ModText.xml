@@ -514,9 +514,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="zh_Hans_CN">
             <Text>跨时代图表不可用</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_BODY" Language="zh_Hans_CN">
-            <Text>&lt;p style="margin:0;"&gt;无法绘制一张横跨&lt;b style="color:#f3e7c4;"&gt;古典、探索和现代&lt;/b&gt;时代的图表。文明&amp;nbsp;7 会清除模组用来跨越时代转换携带采样历史的每一个存储通道，因此每个时代只能绘制其自身的数据。请改用&lt;b style="color:#f3e7c4;"&gt;当前&amp;nbsp;时代&lt;/b&gt;或任意年份范围筛选。&lt;/p&gt;</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="zh_Hans_CN">
             <Text>{1_Label} 筛选</Text>
         </Replace>
@@ -1533,6 +1530,326 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="zh_Hans_CN">
             <Text>无</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="zh_Hans_CN">
+            <Text>前25座聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="zh_Hans_CN">
+            <Text>所有聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="zh_Hans_CN">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="zh_Hans_CN">
+            <Text>城镇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="zh_Hans_CN">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="zh_Hans_CN">
+            <Text>城镇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="zh_Hans_CN">
+            <Text>没有可显示的聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="zh_Hans_CN">
+            <Text>排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="zh_Hans_CN">
+            <Text>拥有者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="zh_Hans_CN">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="zh_Hans_CN">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="zh_Hans_CN">
+            <Text>类型</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="zh_Hans_CN">
+            <Text>评分</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="zh_Hans_CN">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="zh_Hans_CN">
+            <Text>食物</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="zh_Hans_CN">
+            <Text>生产力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="zh_Hans_CN">
+            <Text>金币</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="zh_Hans_CN">
+            <Text>科技</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="zh_Hans_CN">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="zh_Hans_CN">
+            <Text>幸福度</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="zh_Hans_CN">
+            <Text>前10名</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="zh_Hans_CN">
+            <Text>城镇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="zh_Hans_CN">
+            <Text>城镇顾问</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="zh_Hans_CN">
+            <Text>显示城镇顾问标签页</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="zh_Hans_CN">
+            <Text>城镇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="zh_Hans_CN">
+            <Text>实时显示你的城镇——专精、规模与成长一目了然。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="zh_Hans_CN">
+            <Text>你还没有城镇。建立或转变一个聚落后会显示在这里。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="zh_Hans_CN">
+            <Text>城镇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="zh_Hans_CN">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="zh_Hans_CN">
+            <Text>专精</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="zh_Hans_CN">
+            <Text>成长</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="zh_Hans_CN">
+            <Text>地块 (食/产/渔)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="zh_Hans_CN">
+            <Text>未专精</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="zh_Hans_CN">
+            <Text>{1_Turns} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="zh_Hans_CN">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="zh_Hans_CN">
+            <Text>复制 CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="zh_Hans_CN">
+            <Text>城镇顾问</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="zh_Hans_CN">
+            <Text>依据各城镇的地块、规模与产出给出的启发式建议。仅供参考，不会改变游戏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="zh_Hans_CN">
+            <Text>{1_Name}（人口 {2_Pop}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="zh_Hans_CN">
+            <Text>当前专精</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="zh_Hans_CN">
+            <Text>建议专精</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="zh_Hans_CN">
+            <Text>升级为城市？</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="zh_Hans_CN">
+            <Text>推荐</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="zh_Hans_CN">
+            <Text>保持城镇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="zh_Hans_CN">
+            <Text>{1_Count} 个农场/牧场/种植园地块，适合食物。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="zh_Hans_CN">
+            <Text>{1_Count} 个矿场/采石场/营地地块，适合生产。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="zh_Hans_CN">
+            <Text>{1_Count} 个沿海/渔业地块，适合捕鱼。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="zh_Hans_CN">
+            <Text>中心位置连接 {1_Count} 个聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="zh_Hans_CN">
+            <Text>金币产出高，适合贸易专精。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="zh_Hans_CN">
+            <Text>人口众多（{1_Count}），适合城市中心。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="zh_Hans_CN">
+            <Text>边境暴露（{1_Count} 处开放边界），适合堡垒。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="zh_Hans_CN">
+            <Text>对该城镇综合最优。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="zh_Hans_CN">
+            <Text>暂无突出地块——继续成长（食物）。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="zh_Hans_CN">
+            <Text>人口 {1_Pop} 低于 {2_Min}；先成长再转变。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="zh_Hans_CN">
+            <Text>需要 {1_Cost} 金币；国库有 {2_Gold}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="zh_Hans_CN">
+            <Text>人口 {1_Pop} 且负担得起——城市可解锁生产与区域。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="zh_Hans_CN">
+            <Text>帝国：{1_Cities} 座城市，{2_Towns} 个城镇 · 最薄弱产出：{3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="zh_Hans_CN">
+            <Text>弥补帝国的{1_Yield}短缺。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="zh_Hans_CN">
+            <Text>为平衡各城镇的分工而选择。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="zh_Hans_CN">
+            <Text>备选方案：{1_Alt}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="zh_Hans_CN">
+            <Text>城镇偏多的帝国：{1_Towns} 个城镇对 {2_Cities} 座城市。新城市可增加生产力和区域。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="zh_Hans_CN">
+            <Text>人口正在增长；城市化将放大增长。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="zh_Hans_CN">
+            <Text>人口停滞；相比专业化，侧重增长可能更有帮助。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="zh_Hans_CN">
+            <Text>建立于 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="zh_Hans_CN">
+            <Text>建立于约 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="zh_Hans_CN">
+            <Text>建立</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="zh_Hans_CN">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="zh_Hans_CN">
+            <Text>返回顶级聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="zh_Hans_CN">
+            <Text>首都</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="zh_Hans_CN">
+            <Text>未记录奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="zh_Hans_CN">
+            <Text>未知聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="zh_Hans_CN">
+            <Text>在地图上查看</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="zh_Hans_CN">
+            <Text>不可用：您尚未遇见该文明。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="zh_Hans_CN">
+            <Text>不可用：您尚未发现该聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="zh_Hans_CN">
+            <Text>电影视角</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="zh_Hans_CN">
+            <Text>播放飞览</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="zh_Hans_CN">
+            <Text>飞览</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="zh_Hans_CN">
+            <Text>顶级聚落镜头</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="zh_Hans_CN">
+            <Text>聚落电影视角</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="zh_Hans_CN">
+            <Text>实验性聚落飞览</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="zh_Hans_CN">
+            <Text>启用轻微旋转</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="zh_Hans_CN">
+            <Text>飞览时长</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="zh_Hans_CN">
+            <Text>短</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="zh_Hans_CN">
+            <Text>中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="zh_Hans_CN">
+            <Text>建于 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="zh_Hans_CN">
+            <Text>建于 {1_Year}，至今繁荣昌盛。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="zh_Hans_CN">
+            <Text>被誉为世界第{1_Ord}大聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="zh_Hans_CN">
+            <Text>拥有{1_List}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="zh_Hans_CN">
+            <Text>、</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="zh_Hans_CN">
+            <Text>自然奇观点缀其疆域。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="zh_Hans_CN">
+            <Text>其最为富庶的城区。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="zh_Hans_CN">
+            <Text>{1_Cat} #1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="zh_Hans_CN">
+            <Text>各项之最</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="zh_Hans_CN">
+            <Text>所有聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="zh_Hans_CN">
+            <Text>最伟大的聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="zh_Hans_CN">
+            <Text>完整排名</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="zh_Hans_CN">
+            <Text>世界排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="zh_Hans_CN">
+            <Text>所有文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="zh_Hans_CN">
+            <Text>文明排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="zh_Hans_CN">
+            <Text>最卓越的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="zh_Hans_CN">
+            <Text>完整文明排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="zh_Hans_CN">
+            <Text>此处的“得分”为文明的总产出，即其所有定居点的食物、生产力、金币、科技与文化之和，并非胜利画面中按不同方式计算的官方游戏得分。</Text>
         </Replace>
     </LocalizedText>
 </Database>
