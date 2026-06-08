@@ -345,6 +345,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="fr_FR"><Text>merveilles</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="fr_FR"><Text>ressources</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="fr_FR"><Text>phase</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="fr_FR"><Text>Spoilers</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="fr_FR"><Text>Affichage</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="fr_FR"><Text>Masquer les informations des civilisations que vous n'avez pas rencontrées (spoiler)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="fr_FR"><Text>Au premier contact</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="fr_FR"><Text>Commencer le suivi des statistiques à la rencontre d'une nouvelle civilisation</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="fr_FR"><Text>Impact cumulé sur toutes les phases</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="fr_FR">
             <Text>Début de la crise</Text>
         </Replace>

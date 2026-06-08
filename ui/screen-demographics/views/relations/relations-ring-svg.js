@@ -142,6 +142,7 @@ function appendPortraitDiv(wrap, p, layout, onNodeToggle) {
   // The leader portrait covers the node's SVG circle (whose stroke turns gold
   // when selected), so the focus state must live on the portrait frame itself.
   if (p.selected) div.classList.add("is-selected");
+  if (p.dimmed) div.classList.add("is-dimmed");
   // Pixel-coord placement + size are dynamic (computed from the letterboxed
   // viewBox); position:absolute and pointer-events live in the class.
   div.style.left = px - diameter / 2 + "px";
@@ -339,9 +340,31 @@ function appendEmptyRing(wrap) {
  * @param {RingRenderCtx} ringCtx Per-ring render context.
  */
 function populateRing(svg, geo, names, edges, ringCtx) {
+  const focus = computeFocus(edges, ringCtx.selectedNodeIds);
+  ringCtx.focusNodes = focus.nodes;
   const edgeGroups = groupEdgesByPair(edges, geo.positions);
-  for (const entries of edgeGroups.values()) appendEdgeGroup(svg, entries);
+  for (const entries of edgeGroups.values()) appendEdgeGroup(svg, entries, focus.selected);
   for (const id of geo.positions.keys()) appendRingNode(svg, id, geo, names, ringCtx);
+}
+
+/**
+ * Compute the focus sets that drive click-to-focus dimming. When one or more
+ * nodes are selected, the selected nodes plus their direct edge neighbors stay
+ * bright and everything else fades back.
+ * @param {Edge[]} edges All ring edges.
+ * @param {Set<number>|undefined} selectedNodeIds The selected node ids.
+ * @returns {{ selected: Set<number>|null, nodes: Set<number>|null }} The active
+ *   selection (null when none) and the bright set (selection + neighbors).
+ */
+function computeFocus(edges, selectedNodeIds) {
+  const selected = selectedNodeIds && selectedNodeIds.size ? selectedNodeIds : null;
+  if (!selected) return { selected: null, nodes: null };
+  const nodes = new Set(selected);
+  for (const e of edges) {
+    if (selected.has(e.a)) nodes.add(e.b);
+    else if (selected.has(e.b)) nodes.add(e.a);
+  }
+  return { selected, nodes };
 }
 
 /**

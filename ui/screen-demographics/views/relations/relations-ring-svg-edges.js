@@ -68,8 +68,9 @@ export function groupEdgesByPair(edges, positions) {
  * Append a single solid `<line>` for an edge slot.
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{pa: {x: number, y: number}, pb: {x: number, y: number}, ox: number, oy: number}} slot
- *   Source/target positions and the slot's perpendicular offset.
+ * @param {{pa: {x: number, y: number}, pb: {x: number, y: number}, ox: number,
+ *   oy: number, opacity?: number}} slot Source/target positions, the slot's
+ *   perpendicular offset, and the (optional) stroke opacity.
  */
 function appendSolidEdge(svg, e, slot) {
   const { pa, pb, ox, oy } = slot;
@@ -79,11 +80,10 @@ function appendSolidEdge(svg, e, slot) {
   line.setAttribute("x2", String(pb.x + ox));
   line.setAttribute("y2", String(pb.y + oy));
   line.setAttribute("stroke", e.color || "#bfbfbf");
-  // Uniform thickness + opacity across every edge on both rings. Per-edge
-  // overrides (e.width / e.opacity) are intentionally ignored - they made
-  // edge color the only signal a reader has to discriminate filter types.
+  // Uniform thickness across every edge so color stays the type signal; opacity
+  // drops only when the edge is dimmed by click-to-focus.
   line.setAttribute("stroke-width", "0.6");
-  line.setAttribute("stroke-opacity", "0.9");
+  line.setAttribute("stroke-opacity", String(typeof slot.opacity === "number" ? slot.opacity : 0.9));
   line.setAttribute("class", "demographics-relations-line");
   line.setAttribute("stroke-linecap", "round");
   svg.appendChild(line);
@@ -93,7 +93,8 @@ function appendSolidEdge(svg, e, slot) {
  * Append one dash sub-segment as a real solid `<line>`.
  * @param {Element} svg The SVG root.
  * @param {string} color Stroke color.
- * @param {{x1: number, y1: number, x2: number, y2: number}} pts Segment endpoints.
+ * @param {{x1: number, y1: number, x2: number, y2: number, opacity?: number}} pts
+ *   Segment endpoints and (optional) stroke opacity.
  */
 function appendDashSeg(svg, color, pts) {
   const seg = document.createElementNS(SVG_NS, "line");
@@ -103,7 +104,7 @@ function appendDashSeg(svg, color, pts) {
   seg.setAttribute("y2", String(pts.y2));
   seg.setAttribute("stroke", color);
   seg.setAttribute("stroke-width", "0.6");
-  seg.setAttribute("stroke-opacity", "0.9");
+  seg.setAttribute("stroke-opacity", String(typeof pts.opacity === "number" ? pts.opacity : 0.9));
   seg.setAttribute("stroke-linecap", "round");
   seg.setAttribute("class", "demographics-relations-line");
   svg.appendChild(seg);
@@ -133,10 +134,11 @@ function logDashOnce(e, dash) {
  * @param {Element} svg The SVG root.
  * @param {string} color Stroke color.
  * @param {{ pa: {x: number, y: number}, totalLen: number, parts: number[],
- *   ux: number, uy: number }} run Start point, length, dash pattern, unit vector.
+ *   ux: number, uy: number, opacity?: number }} run Start point, length, dash
+ *   pattern, unit vector, and (optional) stroke opacity.
  */
 function walkDashSegments(svg, color, run) {
-  const { pa, totalLen, parts, ux, uy } = run;
+  const { pa, totalLen, parts, ux, uy, opacity } = run;
   let t = 0;
   let segIdx = 0; // even idx = dash (draw), odd = gap (skip)
   while (t < totalLen) {
@@ -147,7 +149,8 @@ function walkDashSegments(svg, color, run) {
         x1: pa.x + ux * t,
         y1: pa.y + uy * t,
         x2: pa.x + ux * end,
-        y2: pa.y + uy * end
+        y2: pa.y + uy * end,
+        opacity
       });
     }
     t = end;
@@ -161,12 +164,14 @@ function walkDashSegments(svg, color, run) {
  * a single solid line for bad / zero-length patterns.
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{x: number, y: number}} pa Source position (slot-offset applied).
- * @param {{x: number, y: number}} pb Target position (slot-offset applied).
+ * @param {{pa: {x: number, y: number}, pb: {x: number, y: number}}} ends
+ *   Source/target positions (slot-offset applied).
  * @param {string} dash The dash pattern string.
+ * @param {number} opacity Stroke opacity (dimmed when out of focus).
  */
-function appendDashedEdge(svg, e, pa, pb, dash) {
+function appendDashedEdge(svg, e, ends, dash, opacity) {
   logDashOnce(e, dash);
+  const { pa, pb } = ends;
   const parts = dash
     .trim()
     .split(/\s+/)
@@ -175,17 +180,17 @@ function appendDashedEdge(svg, e, pa, pb, dash) {
   const color = e.color || "#bfbfbf";
   if (parts.length < 2) {
     // Bad pattern - fall back to solid.
-    appendSolidEdge(svg, e, { pa, pb, ox: 0, oy: 0 });
+    appendSolidEdge(svg, e, { pa, pb, ox: 0, oy: 0, opacity });
     return;
   }
   const totalLen = Math.sqrt((pb.x - pa.x) ** 2 + (pb.y - pa.y) ** 2);
   if (totalLen <= 0) {
-    appendSolidEdge(svg, e, { pa, pb, ox: 0, oy: 0 });
+    appendSolidEdge(svg, e, { pa, pb, ox: 0, oy: 0, opacity });
     return;
   }
   const ux = (pb.x - pa.x) / totalLen;
   const uy = (pb.y - pa.y) / totalLen;
-  walkDashSegments(svg, color, { pa, totalLen, parts, ux, uy });
+  walkDashSegments(svg, color, { pa, totalLen, parts, ux, uy, opacity });
 }
 
 /**
@@ -194,8 +199,10 @@ function appendDashedEdge(svg, e, pa, pb, dash) {
  * synthesized as solid sub-segments at the slot's offset endpoints.
  * @param {Element} svg The SVG root.
  * @param {EdgeGeo[]} entries The grouped edges for this pair.
+ * @param {Set<number>|null} [selectedSet] Active selection; edges that touch no
+ *   selected node are dimmed (click-to-focus). Null/absent = all full strength.
  */
-export function appendEdgeGroup(svg, entries) {
+export function appendEdgeGroup(svg, entries, selectedSet) {
   const n = entries.length;
   const first = entries[0];
   const dx = first.pb.x - first.pa.x;
@@ -207,16 +214,18 @@ export function appendEdgeGroup(svg, entries) {
     const slot = i - (n - 1) / 2;
     const ox = px * slot * PARALLEL_SPACING;
     const oy = py * slot * PARALLEL_SPACING;
+    const dimmed = !!(selectedSet && !(selectedSet.has(e.a) || selectedSet.has(e.b)));
+    const opacity = dimmed ? 0.08 : 0.9;
     const dash = dasharrayFor(e);
     if (!dash) {
-      appendSolidEdge(svg, e, { pa, pb, ox, oy });
+      appendSolidEdge(svg, e, { pa, pb, ox, oy, opacity });
     } else {
       appendDashedEdge(
         svg,
         e,
-        { x: first.pa.x + ox, y: first.pa.y + oy },
-        { x: first.pb.x + ox, y: first.pb.y + oy },
-        dash
+        { pa: { x: pa.x + ox, y: pa.y + oy }, pb: { x: pb.x + ox, y: pb.y + oy } },
+        dash,
+        opacity
       );
     }
   });

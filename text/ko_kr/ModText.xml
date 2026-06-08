@@ -129,6 +129,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="ko_KR"><Text>불가사의</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="ko_KR"><Text>자원</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ko_KR"><Text>단계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="ko_KR"><Text>스포일러</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="ko_KR"><Text>표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ko_KR"><Text>만나지 않은 문명의 정보 숨기기 (스포일러)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ko_KR"><Text>첫 접촉 시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ko_KR"><Text>새 문명을 만난 시점부터 통계 기록 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ko_KR"><Text>모든 단계의 누적 영향</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ko_KR"><Text>위기 시작</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ko_KR"><Text>위기 심화</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ko_KR"><Text>위기 절정</Text></Replace>

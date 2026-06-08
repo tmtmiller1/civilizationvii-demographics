@@ -532,6 +532,24 @@
         <Row Tag="LOC_DEMOGRAPHICS_UNIT_STAGE">
             <Text>stage</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING">
+            <Text>Spoilers</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING">
+            <Text>Display</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO">
+            <Text>Hide information for civilizations you haven't met (spoiler)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE">
+            <Text>On first contact</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET">
+            <Text>Start stats tracking upon meeting a new civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE">
+            <Text>Cumulative impact across all stages</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS">
             <Text>Crisis Begins</Text>
         </Row>

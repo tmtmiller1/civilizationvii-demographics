@@ -1113,6 +1113,12 @@
     font-weight: 700;
     font-size: 1.95rem;
 }
+.demographics-map-overlay-type {
+    color: var(--ia-text-accent);
+    font-size: 1.05rem;
+    font-style: italic;
+    opacity: 0.9;
+}
 .demographics-map-overlay-owner {
     color: var(--ia-text-accent);
     font-size: 1.05rem;

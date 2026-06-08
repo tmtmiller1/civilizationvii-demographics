@@ -345,6 +345,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="zh_Hans_CN"><Text>奇观</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="zh_Hans_CN"><Text>资源</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="zh_Hans_CN"><Text>阶段</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="zh_Hans_CN"><Text>剧透</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="zh_Hans_CN"><Text>显示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="zh_Hans_CN"><Text>隐藏未遭遇文明的信息（剧透）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="zh_Hans_CN"><Text>首次接触时</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="zh_Hans_CN"><Text>从遭遇新文明时开始记录统计数据</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="zh_Hans_CN"><Text>所有阶段的累计影响</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hans_CN">
             <Text>危机开始</Text>
         </Replace>

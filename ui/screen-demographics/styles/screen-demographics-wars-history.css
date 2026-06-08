@@ -573,6 +573,34 @@
     flex-direction: column;
     gap: 1.3rem;
 }
+/* One crisis (all its stages) per group; a gold divider separates each age's
+   crisis so the Antiquity crisis reads distinctly from the Exploration one. */
+.demographics-crisis-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.demographics-crisis-group + .demographics-crisis-group {
+    border-top: 0.12rem solid rgba(201, 162, 76, 0.4);
+    padding-top: 1.2rem;
+}
+.demographics-crisis-group-header {
+    color: #f3c34c;
+    font-family: TitilliumWeb, sans-serif;
+    font-weight: 700;
+    font-size: 1.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+/* "Cumulative impact across all stages" caption above the Ends-stage table. */
+.demographics-crisis-cumulative-caption {
+    color: #f3c34c;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
 .demographics-crisis-stage-bar {
     display: flex;
     flex-direction: row;

@@ -94,7 +94,7 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size) {
     return true;
   }
   if (tryRenderCrisis(chartHost, ctx, activeMetric)) return true;
-  return tryRenderWars(chartHost, ctx, activeMetric, width, height);
+  return tryRenderWars(chartHost, ctx, activeMetric, turnRange, size);
 }
 
 /**
@@ -122,18 +122,19 @@ function tryRenderCrisis(chartHost, ctx, activeMetric) {
  * @param {HTMLElement} chartHost Chart host element.
  * @param {*} ctx Render context.
  * @param {string} activeMetric Active metric id.
- * @param {number} width Chart width.
- * @param {number} height Chart height.
+ * @param {TurnRange|null} turnRange Active turn window.
+ * @param {{ width: number, height: number }} size Chart size.
  * @returns {boolean} True if handled.
  */
-function tryRenderWars(chartHost, ctx, activeMetric, width, height) {
+function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
+  const { width, height } = size;
   const chartMod = /** @type {*} */ (ctx.chartMod);
   if (activeMetric === "wars_gantt" && typeof chartMod.renderWarsGantt === "function") {
     chartMod.renderWarsGantt(chartHost, {
       history: ctx.history,
       width,
       height,
-      turnRange: null,
+      turnRange,
       filterPid: ctx.warsFilterPid,
       showCs: ctx.warsShowCs !== false,
       activeOnly: ctx.warsActiveOnly
