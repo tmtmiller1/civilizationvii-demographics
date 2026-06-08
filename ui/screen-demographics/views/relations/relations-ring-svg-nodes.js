@@ -34,6 +34,7 @@ import {
  * @property {string} [iconUrl] BLP icon url (cs-icon overlays).
  * @property {number} [pid] Player id for click-to-focus.
  * @property {boolean} [selected] Whether this node is in the active focus set.
+ * @property {boolean} [dimmed] Whether this node is dimmed (focus on another node).
  * @property {number} vbX X position in viewBox coords.
  * @property {number} vbY Y position in viewBox coords.
  * @property {number} vbR Node radius in viewBox coords.
@@ -44,6 +45,8 @@ import {
  * @typedef {Object} RingRenderCtx
  * @property {number} viewerPid Focus viewer id.
  * @property {Set<number>|undefined} selectedNodeIds Selected-node set (may be undefined).
+ * @property {Set<number>|null} [focusNodes] Nodes kept bright when a focus is active
+ *   (the selected nodes + their direct neighbors); null when no focus is active.
  * @property {((pid: number) => void)|undefined} onNodeToggle Click handler (may be undefined).
  * @property {PortraitPlacement[]} portraitsToPlace Overlay queue.
  */
@@ -103,19 +106,59 @@ function resolveNodeColors(info, isCs) {
 }
 
 /**
- * Append the tiny CS-type disc below the node circle.
+ * Queue a city-state TYPE icon overlay (background-image div placed in pixel
+ * space later, like leader portraits). The SVG `<image href="blp:">` path renders
+ * blank in Coherent, so CS icons ride the same HTML-overlay pipeline.
+ * @param {NodeInfo} info The node's display info.
+ * @param {{x: number, y: number}} pos Node position.
+ * @param {number} r Node radius.
+ * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
+ * @returns {PortraitPlacement|null} The queued placement, or null.
+ */
+function queueCsIcon(info, pos, r, portraitsToPlace) {
+  if (!info.csTypeIcon) return null;
+  /** @type {PortraitPlacement} */
+  const placement = {
+    kind: "cs-icon",
+    iconUrl: info.csTypeIcon,
+    pid: info.pid,
+    vbX: pos.x,
+    vbY: pos.y,
+    vbR: r * 0.7 // icon inscribed slightly inside the node
+  };
+  portraitsToPlace.push(placement);
+  return placement;
+}
+
+/**
+ * Append the inner CS type-color disc (the fallback when a CS has no type icon,
+ * e.g. unmet city-states).
  * @param {Element} node The node group.
  * @param {number} r Node radius.
+ * @param {NodeInfo} info The node's display info.
  */
-function appendCsIndicator(node, r) {
-  const disc = document.createElementNS(SVG_NS, "circle");
-  disc.setAttribute("cx", "0");
-  disc.setAttribute("cy", String(r * 0.74));
-  disc.setAttribute("r", String(Math.max(1.8, r * 0.13)));
-  disc.setAttribute("fill", "#d8dce8");
-  disc.setAttribute("stroke", "#6d7384");
-  disc.setAttribute("stroke-width", "0.35");
-  node.appendChild(disc);
+function appendCsTypeDisc(node, r, info) {
+  if (!info.csTypeColor) return;
+  const inner = document.createElementNS(SVG_NS, "circle");
+  inner.setAttribute("cx", "0");
+  inner.setAttribute("cy", "0");
+  inner.setAttribute("r", String(r * 0.55));
+  inner.setAttribute("fill", info.csTypeColor);
+  inner.setAttribute("fill-opacity", "0.65");
+  node.appendChild(inner);
+}
+
+/**
+ * Node radius: density-scaled, with city-states the smallest and the viewer the
+ * largest (matches the base game's relative node weighting).
+ * @param {boolean} isViewer Whether the node is the viewer.
+ * @param {boolean} isCs Whether the node is a city-state.
+ * @param {number} density The ring density factor.
+ * @returns {number} The node radius in viewBox units.
+ */
+function nodeRadius(isViewer, isCs, density) {
+  const baseR = isViewer ? 6.0 : isCs ? 4.0 : 5.0;
+  return baseR * (isViewer ? Math.max(density, 0.65) : density);
 }
 
 /**
@@ -153,9 +196,10 @@ function appendNodeCircle(node) {
   circle.setAttribute("fill", colors.fill);
   circle.setAttribute("stroke", colors.stroke);
   circle.setAttribute("stroke-width", String(nodeStrokeWidth(isViewer, isCs, isSelected, density)));
+  // City-states read as a dashed ring (matches the base game's CS framing).
+  if (isCs) circle.setAttribute("stroke-dasharray", "0.8 0.5");
   node.appendChild(circle);
 
-  if (isCs) appendCsIndicator(node, r);
   return r;
 }
 
@@ -166,11 +210,12 @@ function appendNodeCircle(node) {
  * @param {number} r Node radius.
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
  * @param {boolean} isSelected Whether the node is selected.
- * @returns {boolean} True when a portrait was queued.
+ * @returns {PortraitPlacement|null} The queued placement, or null.
  */
 function queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected) {
-  if (!info.leaderTypeString) return false;
-  portraitsToPlace.push({
+  if (!info.leaderTypeString) return null;
+  /** @type {PortraitPlacement} */
+  const placement = {
     kind: "leader",
     leaderType: info.leaderTypeString,
     pid: info.pid,
@@ -178,37 +223,78 @@ function queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected) {
     vbX: pos.x,
     vbY: pos.y,
     vbR: r
-  });
-  return true;
+  };
+  portraitsToPlace.push(placement);
+  return placement;
 }
 
 /**
- * Append the fallback initial-letter label inside a major civ node.
+ * Append the fallback initial-letter label inside a major civ node. Font size,
+ * fill and weight are set as SVG attributes scaled by ring density (the ring is
+ * a ~100-unit viewBox, so CSS px would not scale with the ring).
  * @param {Element} node The node group.
  */
 function appendInitialLetter(node) {
+  const isViewer = node.getAttribute("data-viewer") === "1";
+  const isCs = node.getAttribute("data-cs") === "1";
+  const density = Number(node.getAttribute("data-density")) || 1;
+  const initFont = (isViewer ? 5 : isCs ? 3.2 : 4) * density;
   const text = document.createElementNS(SVG_NS, "text");
   text.setAttribute("x", "0");
-  text.setAttribute("y", "0.34em");
+  text.setAttribute("y", String(initFont * 0.34));
   text.setAttribute("text-anchor", "middle");
-  text.setAttribute("class", "demographics-relations-node-letter");
+  text.setAttribute("font-size", String(initFont));
+  text.setAttribute("fill", isCs ? "#1c1408" : "#f3c34c");
+  text.setAttribute("font-weight", "700");
   text.textContent = String(/** @type {*} */ (node).__initial || "").slice(0, 1).toUpperCase();
   node.appendChild(text);
 }
 
 /**
- * Append the node label beneath the ring node.
+ * Append the node name label beneath the ring node as a rounded "chip" (dark
+ * rounded background + bronze hairline + cream text), matching the line-chart /
+ * radar legend labels for a clean, modern look. Font + chip size scale with ring
+ * density. SVG can't measure text pre-render, so the chip width is estimated from
+ * the text length with generous padding so it never clips.
  * @param {Element} node The node group.
  * @param {number} r Node radius.
  */
 function appendNodeLabel(node, r) {
+  const density = Number(node.getAttribute("data-density")) || 1;
+  const nameFont = 2.4 * density;
+  const text = String(/** @type {*} */ (node).__label || "");
+  if (!text) return;
+  const chipH = nameFont * 1.7;
+  const chipW = text.length * nameFont * 0.56 + nameFont * 1.6;
+  const top = r + nameFont * 0.5;
+  appendLabelChip(node, { x: -chipW / 2, y: top, w: chipW, h: chipH, rx: nameFont * 0.5 });
   const label = document.createElementNS(SVG_NS, "text");
   label.setAttribute("x", "0");
-  label.setAttribute("y", String(r + 5.5));
+  label.setAttribute("y", String(top + chipH * 0.5 + nameFont * 0.34));
   label.setAttribute("text-anchor", "middle");
-  label.setAttribute("class", "demographics-relations-node-label");
-  label.textContent = String(/** @type {*} */ (node).__label || "");
+  label.setAttribute("font-size", String(nameFont));
+  label.setAttribute("font-weight", "600");
+  label.setAttribute("fill", "#f3e7c4");
+  label.textContent = text;
   node.appendChild(label);
+}
+
+/**
+ * Append the rounded chip background behind a node label.
+ * @param {Element} node The node group.
+ * @param {{ x: number, y: number, w: number, h: number, rx: number }} box Chip geometry.
+ */
+function appendLabelChip(node, box) {
+  const chip = document.createElementNS(SVG_NS, "rect");
+  chip.setAttribute("x", String(box.x));
+  chip.setAttribute("y", String(box.y));
+  chip.setAttribute("width", String(box.w));
+  chip.setAttribute("height", String(box.h));
+  chip.setAttribute("rx", String(box.rx));
+  chip.setAttribute("fill", "rgba(18, 14, 8, 0.82)");
+  chip.setAttribute("stroke", "rgba(201, 162, 76, 0.45)");
+  chip.setAttribute("stroke-width", "0.25");
+  node.appendChild(chip);
 }
 
 /**
@@ -221,16 +307,46 @@ function appendNodeLabel(node, r) {
  */
 function configureNodeElement(node, nodeData, geo, ctx) {
   const { id, pos, info } = nodeData;
+  const isViewer = id === ctx.viewerPid;
+  const isCs = !!info.isCityState;
   node.__info = info;
   node.__label = nodeDisplayName(info, id);
   node.__initial = String(info.leaderName || info.csName || "P");
   node.setAttribute("transform", "translate(" + pos.x + " " + pos.y + ")");
-  node.setAttribute("data-r", String(Math.max(6.5, 7.4 - Math.max(0, (12 - geo.density * 12) * 0.05))));
-  node.setAttribute("data-viewer", id === ctx.viewerPid ? "1" : "0");
-  node.setAttribute("data-cs", info.isCityState ? "1" : "0");
+  node.setAttribute("data-r", String(nodeRadius(isViewer, isCs, geo.density)));
+  node.setAttribute("data-viewer", isViewer ? "1" : "0");
+  node.setAttribute("data-cs", isCs ? "1" : "0");
   node.setAttribute("data-selected", ctx.selectedNodeIds && ctx.selectedNodeIds.has(id) ? "1" : "0");
   node.setAttribute("data-density", String(geo.density));
   if (typeof id === "number") node.setAttribute("data-pid", String(id));
+  applyFocusDim(node, id, ctx.focusNodes);
+}
+
+/**
+ * Focus mode: when a node is selected, everything outside its relationship
+ * neighborhood fades back so the selected node's web reads clearly.
+ * @param {Element} node The node group.
+ * @param {number} id The node player id.
+ * @param {Set<number>|null|undefined} focusNodes The bright set, or null.
+ */
+function applyFocusDim(node, id, focusNodes) {
+  const dimmed = !!(focusNodes && !focusNodes.has(id));
+  node.setAttribute("data-dimmed", dimmed ? "1" : "0");
+  if (dimmed) node.setAttribute("opacity", "0.18");
+}
+
+/**
+ * Make the whole node group click-to-focus, not just the (HTML) portrait overlay
+ * on top of it - so the ring filters even where the overlay is absent (initial
+ * letters, CS discs) or doesn't capture the click.
+ * @param {*} node The node group.
+ * @param {number} id The node player id.
+ * @param {((pid: number) => void)|undefined} onNodeToggle The toggle handler.
+ */
+function wireNodeClick(node, id, onNodeToggle) {
+  if (typeof onNodeToggle !== "function" || typeof id !== "number") return;
+  node.style.cursor = "pointer";
+  node.addEventListener("click", () => onNodeToggle(id));
 }
 
 /**
@@ -252,12 +368,20 @@ export function appendRingNode(svg, id, geo, names, ctx) {
 
   const r = appendNodeCircle(node);
 
-  let renderedPortrait = false;
-  if (!info.isCityState) {
-    renderedPortrait = queueLeaderPortrait(info, pos, r, ctx.portraitsToPlace, node.getAttribute("data-selected") === "1");
+  let placement = null;
+  if (info.isCityState) {
+    // Met CS → type icon overlay; otherwise (unmet / no icon) the colored disc.
+    placement = queueCsIcon(info, pos, r, ctx.portraitsToPlace);
+    if (!placement) appendCsTypeDisc(node, r, info);
+  } else {
+    const selected = node.getAttribute("data-selected") === "1";
+    placement = queueLeaderPortrait(info, pos, r, ctx.portraitsToPlace, selected);
+    if (!placement) appendInitialLetter(node);
   }
-  if (!renderedPortrait && !info.isCityState) appendInitialLetter(node);
+  // Fade the overlay too when the node is dimmed by focus mode.
+  if (placement && node.getAttribute("data-dimmed") === "1") placement.dimmed = true;
 
   appendNodeLabel(node, r);
+  wireNodeClick(node, id, ctx.onNodeToggle);
   svg.appendChild(node);
 }

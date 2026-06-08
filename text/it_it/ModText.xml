@@ -129,6 +129,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="it_IT"><Text>meraviglie</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="it_IT"><Text>risorse</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="it_IT"><Text>fase</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="it_IT"><Text>Spoiler</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="it_IT"><Text>Visualizzazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="it_IT"><Text>Nascondi le informazioni sulle civiltà che non hai incontrato (spoiler)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="it_IT"><Text>Al primo contatto</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="it_IT"><Text>Inizia a tracciare le statistiche all'incontro con una nuova civiltà</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="it_IT"><Text>Impatto cumulativo su tutte le fasi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="it_IT"><Text>Inizio della crisi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="it_IT"><Text>La crisi si intensifica</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="it_IT"><Text>La crisi culmina</Text></Replace>

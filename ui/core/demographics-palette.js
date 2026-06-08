@@ -59,7 +59,7 @@ const ATTITUDE_STANDARD = {
   helpful: "#f3c34c", // gold
   friendly: "#3fbf3f", // green
   neutral: "#bfbfbf", // gray
-  unfriendly: "#ffd34c", // amber
+  unfriendly: "#e07b39", // burnt orange - clearly separated from the helpful gold
   hostile: "#b03868" // maroon-pink - distinct from denounced orange + war red
 };
 

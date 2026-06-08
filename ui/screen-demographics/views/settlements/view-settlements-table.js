@@ -69,15 +69,38 @@ function buildLeaderCard(col, L) {
 }
 
 /**
- * Build the category leaders strip.
+ * The category leader (highest value in `colId`) within a settlement pool.
+ * @param {*[]} pool The settlements to rank.
+ * @param {string} colId The output/category id.
+ * @returns {*} The leading settlement, or null when the pool is empty.
+ */
+function leaderFor(pool, colId) {
+  let best = null;
+  let bestVal = -Infinity;
+  for (const s of pool) {
+    const v = valueOf(s, colId);
+    if (typeof v === "number" && v > bestVal) {
+      bestVal = v;
+      best = s;
+    }
+  }
+  return best;
+}
+
+/**
+ * Build the category leaders strip. Leaders are computed over the SAME
+ * All/Cities/Towns filter the table below uses, so "best Food" reflects only
+ * the rows currently shown.
  * @param {*} st The render state.
  * @param {TableDeps} deps Rendering dependencies.
  * @returns {HTMLElement} The strip element.
  */
 function buildLeadersStrip(st, deps) {
   const strip = div("demographics-settle-leaders");
+  const filter = FILTERS.find((f) => f.id === st.filter) || FILTERS[0];
+  const pool = st.board.settlements.filter(filter.test);
   for (const col of SETTLEMENT_OUTPUTS) {
-    const leader = st.board.leaders[col.id];
+    const leader = leaderFor(pool, col.id);
     if (!leader) continue;
     strip.appendChild(buildLeaderCard(col, deps.displayOf(st, leader)));
   }

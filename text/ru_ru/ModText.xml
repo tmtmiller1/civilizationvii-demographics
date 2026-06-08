@@ -129,6 +129,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="ru_RU"><Text>чудеса</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="ru_RU"><Text>ресурсы</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ru_RU"><Text>стадия</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="ru_RU"><Text>Спойлеры</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="ru_RU"><Text>Отображение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ru_RU"><Text>Скрывать информацию о неоткрытых цивилизациях (спойлер)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ru_RU"><Text>При первом контакте</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ru_RU"><Text>Начинать сбор статистики при встрече с новой цивилизацией</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ru_RU"><Text>Суммарный ущерб за все стадии</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ru_RU"><Text>Начало кризиса</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ru_RU"><Text>Кризис усиливается</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ru_RU"><Text>Кульминация кризиса</Text></Replace>

@@ -455,5 +455,8 @@ function drawAgeLabel(ctx2, mk, x, area) {
   ctx2.fillRect(0, 0, pillW, pillH);
   ctx2.fillStyle = mk.color;
   ctx2.fillRect(0, 0, 3, pillH);
+  // Cream label text (matching the crisis-name pill) so the age divider reads as
+  // a clear category chip rather than low-contrast purple-on-dark.
+  ctx2.fillStyle = "#e5d2ac";
   ctx2.fillText(mk.label, 9, 17);
 }

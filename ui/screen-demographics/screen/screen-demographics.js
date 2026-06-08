@@ -100,8 +100,9 @@ const VIEW_TABS = [
   { id: "options", label: "LOC_DEMOGRAPHICS_TAB_OPTIONS" }
 ];
 
-/** Filters disabled in the runtime (see CROSS_AGE_DISABLED_TOOLTIP). */
-const DISABLED_FILTERS = new Set(["all", "age1", "age2", "age3"]);
+/** Filters disabled in the runtime (see CROSS_AGE_DISABLED_TOOLTIP). "all" is the
+ * default time window; only the per-age presets remain disabled. */
+const DISABLED_FILTERS = new Set(["age1", "age2", "age3"]);
 
 /**
  * Run `fn`, returning its result, or `fb` if it throws. Never throws.
@@ -133,7 +134,7 @@ class ScreenDemographics extends Panel {
   /** @type {string} The active factbook/history page id. */
   activePage = "economy";
   /** @type {string} The active time-window filter id. */
-  activeTimeFilter = "age";
+  activeTimeFilter = "all";
   /** @type {string} The active radar-chart age selection. */
   activeRadarAge = "current";
   /** @type {Set<string>} Leader keys the user has hidden from charts. */
@@ -277,13 +278,13 @@ class ScreenDemographics extends Panel {
    * Each metric remembers its own last-chosen filter, defaulting to "age"
    * (Current Age) - except the wars Gantt, which defaults to "50" (a 50-year
    * window) so users land on a useful slice instead of a centuries-wide pile.
-   * The cross-age filters ("all", "age1"/"age2"/"age3") are disabled in the
-   * runtime. The legacy scalar `activeTimeFilter` is kept as the fallback so
-   * existing user settings migrate cleanly; a now-disabled value coerces to
-   * "age".
+   * "all" (All Time) is the default window; only the per-age presets
+   * ("age1"/"age2"/"age3") remain disabled in the runtime. The legacy scalar
+   * `activeTimeFilter` is kept as the fallback so existing user settings migrate
+   * cleanly; a now-disabled value coerces to "age".
    */
   _restoreTimeFilters() {
-    const legacyFilter = this.settings.getSetting("activeTimeFilter", "age");
+    const legacyFilter = this.settings.getSetting("activeTimeFilter", "all");
     const storedMap = this.settings.getSetting("timeFiltersByMetric", null);
     this.timeFiltersByMetric = storedMap && typeof storedMap === "object" ? storedMap : {};
     // Migrate any persisted disabled selections to "age".
@@ -639,18 +640,16 @@ class ScreenDemographics extends Panel {
    * Switch the active metric, persist it, reset the time filter to the
    * metric's default, and re-render.
    *
-   * Switching metric resets to that metric's unique default, NOT whatever
-   * filter the user last selected for it. Per-metric memory was confusing -
-   * users expect each graph to start from a known state. "age" (Current Age)
-   * is the widest non-disabled filter, so it's the safest default across every
-   * metric - including wars_gantt, where narrower windows hide wars that
-   * happened earlier in the age.
+   * Switching metric resets to a fixed default, NOT whatever filter the user
+   * last selected for it. Per-metric memory was confusing - users expect each
+   * graph to start from a known state. "all" (All Time) is that default, so
+   * every graph opens on its full cross-age history.
    * @param {string} id The metric id to activate.
    */
   _setActiveMetric(id) {
     this.activeMetric = id;
     safeCall(() => this.settings.setSetting("activeMetric", id));
-    this.activeTimeFilter = "age";
+    this.activeTimeFilter = "all";
     this.renderActiveView();
   }
 

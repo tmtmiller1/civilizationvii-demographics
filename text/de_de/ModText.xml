@@ -345,6 +345,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="de_DE"><Text>Wunder</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="de_DE"><Text>Ressourcen</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="de_DE"><Text>Stufe</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="de_DE"><Text>Spoiler</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="de_DE"><Text>Anzeige</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="de_DE"><Text>Informationen zu noch nicht getroffenen Zivilisationen verbergen (Spoiler)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="de_DE"><Text>Bei Erstkontakt</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="de_DE"><Text>Statistik-Erfassung ab dem Treffen einer neuen Zivilisation beginnen</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="de_DE"><Text>Kumulative Auswirkung über alle Stufen</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="de_DE">
             <Text>Krise beginnt</Text>
         </Replace>
