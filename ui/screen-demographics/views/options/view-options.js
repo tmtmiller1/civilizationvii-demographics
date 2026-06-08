@@ -150,53 +150,71 @@ function buildHeading() {
 }
 
 /**
- * Append the boolean-toggle rows to `wrap`, in their fixed display order.
+ * Build an uppercase section subheading (the same style the camera section uses).
+ * @param {string} text The heading text.
+ * @returns {HTMLElement} The subheading element.
+ */
+function buildSubheading(text) {
+  const h = document.createElement("div");
+  h.className = "demographics-options-subheading font-title text-sm uppercase text-secondary";
+  h.textContent = text;
+  return h;
+}
+
+/**
+ * Build the "on first contact" reveal-mode dropdown (a sub-row of the spoiler
+ * toggle): reveal a civ's full back-history when met, or only track it forward
+ * from first contact. Maps to the legacy `backfillMetHistory` boolean.
+ * @param {OptionsCtx} ctx Render context.
+ * @returns {HTMLElement} The dropdown-row element.
+ */
+function buildRevealModeControl(ctx) {
+  const opts = [
+    { id: "full", label: t("LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY") },
+    { id: "forward", label: t("LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET") }
+  ];
+  const backfill = ctx.settings.getSetting("backfillMetHistory", true) !== false;
+  const row = buildDropdownRow(
+    t("LOC_DEMOGRAPHICS_OPT_REVEAL_MODE"),
+    opts,
+    backfill ? 0 : 1,
+    (i) => ctx.settings.setSetting("backfillMetHistory", i === 0)
+  );
+  row.classList.add("demographics-option-row-sub");
+  return row;
+}
+
+/**
+ * Append the toggle/option rows to `wrap`, grouped under section subheadings.
  *
- * NOTE: Toggles intentionally DO NOT call ctx.requestReload(). Reload calls
- * renderActiveView() which clears the host and re-renders, which destroys the
- * in-flight checkbox element mid-event and makes the entire options view vanish
- * on click. Settings take effect on next open of History/Factbook - which is
- * fine, since nothing in the Options view itself depends on these toggles.
+ * NOTE: Toggles intentionally DO NOT call ctx.requestReload() (except colorblind,
+ * which needs an immediate repaint). Reload clears + re-renders the host, which
+ * would destroy the in-flight checkbox mid-event; other settings take effect on
+ * the next open of History/Rankings.
  *
- * The earlier "Show unmet civs in legend" toggle and this "Show real names for
- * unmet civs" toggle were confusing because both deal with unmet civs in
- * different ways. They now do clearly distinct things:
- *   showUnmetNames = false (default): unmet civs render as "Unmet
- *                                     Civilization" placeholder.
- *   showUnmetNames = true:            real leader + civ names shown for civs the
- *                                     local player hasn't met (spoiler mode).
- * The old `showUnmetCivs` toggle is removed - there's no useful behavior between
- * "hide entirely" and "show as placeholder", and hiding civs from the chart
- * entirely makes ranks misleading.
+ * "Spoilers": one control hides ALL info (names + diplomacy/relations stats) for
+ * civilizations the local player hasn't met. It writes the two legacy keys in
+ * lockstep - `hideUnmetStats = value`, `showUnmetNames = !value` - so every
+ * existing consumer of those keys keeps working without a schema migration. The
+ * nested dropdown picks what happens once a civ IS met (full back-history vs
+ * forward-only tracking).
  * @param {HTMLElement} wrap The options container to append into.
  * @param {OptionsCtx} ctx Render context.
  */
 function appendToggles(wrap, ctx) {
+  wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING")));
   wrap.appendChild(
     makeToggle(
-      t("LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER"),
-      "showUnmetNames",
-      false,
-      ctx.settings
+      t("LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO"),
+      "hideUnmetStats",
+      true,
+      ctx.settings,
+      (value) => ctx.settings.setSetting("showUnmetNames", !value)
     )
   );
-  wrap.appendChild(
-    makeToggle(t("LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS"), "hideUnmetStats", true, ctx.settings)
-  );
-  // Sub-option of "Hide unmet civ stats": once you meet a civ, reveal its whole
-  // history (back-fill, on) or only data from first contact forward (off).
-  const backfillRow = makeToggle(
-    t("LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY"),
-    "backfillMetHistory",
-    true,
-    ctx.settings
-  );
-  backfillRow.classList.add("demographics-option-row-sub");
-  wrap.appendChild(backfillRow);
-  const backfillHint = document.createElement("div");
-  backfillHint.className = "demographics-option-hint font-body text-xs";
-  backfillHint.textContent = t("LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT");
-  wrap.appendChild(backfillHint);
+  wrap.appendChild(buildRevealModeControl(ctx));
+
+  wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING")));
   wrap.appendChild(
     makeToggle(t("LOC_DEMOGRAPHICS_OPT_COLORBLIND"), "colorblindMode", false, ctx.settings, () =>
       ctx.requestReload?.()
@@ -234,10 +252,7 @@ function appendToggles(wrap, ctx) {
  * @param {OptionsCtx} ctx Render context.
  */
 function appendCameraOptions(wrap, ctx) {
-  const heading = document.createElement("div");
-  heading.className = "demographics-options-subheading font-title text-sm uppercase text-secondary";
-  heading.textContent = t("LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING");
-  wrap.appendChild(heading);
+  wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING")));
   wrap.appendChild(
     makeToggle(t("LOC_DEMOGRAPHICS_OPT_CINEMATIC"), "topCities.cinematicEnabled", true, ctx.settings)
   );

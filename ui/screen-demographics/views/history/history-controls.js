@@ -430,7 +430,18 @@ function appendResourcesViewerIfReady(toolbar, ctx) {
 }
 
 const TIME_TOGGLE_HIDDEN_FOR = new Set(["crisis_graphs"]);
-const WONDERS_TOGGLE_HIDDEN_FOR = new Set(["crisis_stages", "crisis_graphs"]);
+// Wonder markers only draw on the standard per-civ line charts; hide the toggle
+// on every synthetic view (radar, resources stack, the wars pages, crises) where
+// it would do nothing.
+const WONDERS_TOGGLE_HIDDEN_FOR = new Set([
+  "crisis_stages",
+  "crisis_graphs",
+  "legacy_radar",
+  "resources_stack",
+  "wars_gantt",
+  "war_graphs",
+  "wars_glossary"
+]);
 
 /**
  * Build and append the chart toolbar.

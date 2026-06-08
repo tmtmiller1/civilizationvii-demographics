@@ -94,6 +94,10 @@ export function buildOverlayHeader(settlement) {
   else head.appendChild(div("demographics-map-overlay-rank", "#" + (rank || "—")));
   const text = div("demographics-map-overlay-text");
   text.appendChild(div("demographics-map-overlay-name", settlement.name || "—"));
+  const typeKey = settlement.isTown
+    ? "LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN"
+    : "LOC_DEMOGRAPHICS_SETTLEMENTS_CITY";
+  text.appendChild(div("demographics-map-overlay-type", "(" + t(typeKey) + ")"));
   const owner = overlayOwnerName(settlement);
   if (owner) text.appendChild(div("demographics-map-overlay-owner", owner));
   head.appendChild(text);

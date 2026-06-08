@@ -134,6 +134,12 @@ function buildCellHead(m) {
   if (m.blp) head.appendChild(buildCostIcon(m.blp));
   const title = document.createElement("span");
   title.textContent = metricTitle(m);
+  // Surface the Guide's plain-language explanation as a hover tooltip on the
+  // graph title, so the notes are available in context (not just on the Guide tab).
+  if (m.glossary) {
+    title.setAttribute("data-tooltip-content", t(m.glossary));
+    title.style.cursor = "help";
+  }
   head.appendChild(title);
   return head;
 }
