@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# release.sh — produce a clean, debug-disabled zip ready for mod.io upload.
+# release.sh: produce a clean, debug-disabled zip ready for mod.io upload.
 #
 # Usage:  ./release.sh
 # Output: dist/demographics-vX.Y.Z.zip  (X.Y.Z read from demographics.modinfo <Version>)
@@ -9,12 +9,8 @@
 #   2. Sed-replaces `const DBG = true` -> `const DBG = false` in every JS file
 #      so the verbose `console.warn` traces don't fire in shipped builds.
 #      Source code stays development-friendly; only the dist copy is muted.
-#   3. Minifies every dist JS file in place (esbuild, per-file transform) so the
-#      shipped build parses ~60% fewer bytes. The engine loads scripts by path
-#      and resolves ES imports by literal specifier, so files are NOT bundled -
-#      only local identifiers are mangled and comments/whitespace stripped; the
-#      module layout, import paths, and export names are preserved. Source stays
-#      readable; only the dist copy is minified.
+#   3. Always ships readable JS (no minification; transparent source is a core
+#      property of the mod, so there is no minify path).
 #   4. Verifies the modinfo has Version + Authors set to non-default values.
 #   5. Zips the result with `demographics/` as the zip root (mod.io / Steam
 #      Workshop need the modinfo at zip root, not inside a wrapper folder).
@@ -46,14 +42,14 @@ AUTHORS="$(grep -oE '<Authors>[^<]+</Authors>' "$SRC_DIR/demographics.modinfo" \
     | head -1 | sed -E 's|</?Authors>||g')"
 case "$AUTHORS" in
     ""|"Your Name"|"TODO")
-        echo "error: <Authors> in modinfo is '$AUTHORS' — set a real author name first."
+    echo "error: <Authors> in modinfo is '$AUTHORS'; provide a release author name before packaging."
         exit 1
         ;;
 esac
 
 case "$VERSION" in
     *-smoke|*-dev|0.0.*)
-        echo "error: <Version> '$VERSION' looks like a dev tag — bump to a release version first."
+        echo "error: <Version> '$VERSION' looks like a dev tag; bump to a release version first."
         exit 1
         ;;
 esac
@@ -101,7 +97,7 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
     --exclude='*.d.ts' --exclude='text/data' --exclude='tests' \
-    --exclude='steam_workshop_id.txt' \
+    --exclude='steam_workshop_id.txt' --exclude='CONTRIBUTING.md' \
     "$SRC_DIR"/ "$TARGET_DIR"/
 
 echo "==> Disabling debug logging in dist JS files"
@@ -115,24 +111,9 @@ find "$TARGET_DIR" -name '*.js' -type f -print0 | xargs -0 sed -i '' -E \
     -e 's/^let DEMOGRAPHICS_DEBUG = true;/let DEMOGRAPHICS_DEBUG = false;/' \
     -e 's/^const DEMOGRAPHICS_DEBUG = true;/const DEMOGRAPHICS_DEBUG = false;/'
 
-echo "==> Minifying dist JS (per-file; preserves module paths + export names)"
-# Minify each shipped file IN PLACE rather than bundling: the modinfo loads
-# scripts by path and the engine resolves ES imports by literal specifier, so
-# the file layout and import/export strings must survive. esbuild's transform
-# mode (no --bundle) mangles only local identifiers and strips comments and
-# whitespace; with `const DBG = false` already set above it also constant-folds
-# the debug branches away. esbuild is a BUILD-TIME tool only - the output is
-# plain ES modules with no runtime/dependency, so players downloading the mod
-# never need esbuild or node_modules. Source stays readable; only dist is minified.
-ESBUILD="$SRC_DIR/node_modules/.bin/esbuild"
-if [ ! -x "$ESBUILD" ]; then
-    echo "error: esbuild not found at $ESBUILD — run 'npm install' in the mod dir first."
-    exit 1
-fi
-find "$TARGET_DIR" -name '*.js' -type f -print0 | while IFS= read -r -d '' f; do
-    "$ESBUILD" "$f" --minify --format=esm --legal-comments=none --outfile="$f.min" || exit 1
-    mv -f "$f.min" "$f"
-done || { echo "error: JS minification failed"; exit 1; }
+# Dist JS is ALWAYS shipped readable - no minification. Transparent, inspectable
+# source is a core property of this mod, so there is intentionally no minify path.
+echo "==> Shipping dist JS readable (no minification)"
 
 echo "==> Syntax-checking dist JS"
 find "$TARGET_DIR" -name '*.js' -type f -print0 \
@@ -160,7 +141,7 @@ if [ -n "$UNEXPECTED" ]; then
     echo "  → tighten the rsync --exclude list, or update ALLOW in release.sh if intended."
     exit 1
 fi
-echo "    OK — every shipped entry matches the allow-list."
+echo "    OK: every shipped entry matches the allow-list."
 
 echo "==> Zip contents:"
 unzip -l "$ZIP_PATH" | head -25 || true
@@ -263,9 +244,9 @@ fi
 echo "==> Workshop manifest written: $VDF_PATH"
 echo "==> Workshop no-preview manifest written: $VDF_NOPREVIEW_PATH"
 if [ -n "$PUBLISHED_FILE_ID" ]; then
-    echo "    UPDATE mode — publishedfileid $PUBLISHED_FILE_ID (existing item)"
+    echo "    UPDATE mode: publishedfileid $PUBLISHED_FILE_ID (existing item)"
 else
-    echo "    NEW-ITEM mode — no publishedfileid yet (first upload will create one)"
+    echo "    NEW-ITEM mode: no publishedfileid yet (first upload will create one)"
 fi
 echo ""
 echo "✓ Release built:  $ZIP_PATH  ($SIZE)"

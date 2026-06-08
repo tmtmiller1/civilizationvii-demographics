@@ -1,0 +1,656 @@
+/* screen-demographics.css
+   Sizing patterned on the diplomacy peace-deal trade screen:
+   - panel-diplomacy-peace-deal.css:1-4  panel-diplomacy-peace-deal { width: 100vw; height: 100vh }
+   Earlier references kept for posterity:
+   - panel-end-result-graphs.css:1-3   .graph-container { width: 66.66rem; height: 33.33rem }
+   - screen-victory-progress.css:9-10  .progression_nav { max-width: 74.44rem } */
+
+/* ════════════════════════════════════════════════════════════════════════
+   Engine-aligned palette. Mirrors the tokens defined in
+   core/ui/themes/default/default.css so Demographics's styling matches the
+   native Victors / Advisor panels: cream-gold headings, slate-gray bodies,
+   warm parchment accents. Cite:
+     default.css:6698  .text-secondary       { color: #e5d2ac }
+     default.css:9834  .text-accent          { color: #616266 }
+     default.css:10282 .text-accent-2        { color: #c2c4cc }
+     default.css:10730 .text-accent-4        { color: #85878c }
+     default.css:5382  .bg-primary           { background-color: #4c5366 }
+     default.css:2368  .fxs-header           { color: #a8845a; gradient #fffdfa }
+   Replace bespoke gold (var(--ia-accent-gold)) with these where it makes semantic sense.
+   ════════════════════════════════════════════════════════════════════════ */
+:root {
+    --ia-text-secondary:    #e5d2ac;   /* primary heading/title color  */
+    --ia-text-secondary-2:  #c0a875;   /* dimmer heading variant       */
+    --ia-text-accent:       #616266;   /* tertiary text                */
+    --ia-text-accent-2:     #c2c4cc;   /* body text                    */
+    --ia-text-accent-4:     #85878c;   /* muted gridlines / labels     */
+    --ia-fxs-header:        #a8845a;   /* section header copper        */
+    --ia-bg-primary:        #4c5366;   /* dark slate body bg           */
+    --ia-accent-gold:       #f3c34c;   /* civ-bright gold for emphasis */
+    --ia-accent-gold-soft:  #c9a24c;   /* gold border tone             */
+    --ia-frame-bg:          rgba(20, 16, 10, 0.55);
+    --ia-frame-border:      rgba(168, 132, 90, 0.40);
+    --ia-frame-border-hot:  rgba(229, 210, 172, 0.85);
+    --ia-divider:           rgba(168, 132, 90, 0.30);
+}
+
+/* Reusable "section card" — mirrors the look of an inner Victors panel:
+   slate-tinted bg, copper border, top-edge accent stripe colored by the
+   section's path. Apply via `class="demographics-section"` plus inline
+   border-top-color for path-specific tints. */
+.demographics-section {
+    background: var(--ia-frame-bg);
+    border: 1px solid var(--ia-frame-border);
+    border-top: 0.18rem solid var(--ia-fxs-header);
+    border-radius: 0.2rem;
+    padding: 0.55rem 0.8rem 0.7rem;
+}
+
+/* Reusable section/group heading typography — matches the Victors panel's
+   uppercase font-title tracking-150 in text-gradient-secondary. */
+.demographics-section-title {
+    color: var(--ia-text-secondary);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.demographics-section-subtitle {
+    color: var(--ia-text-accent-2);
+    font-family: BodyFont, sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.3;
+}
+
+.demographics-screen,
+.demographics-root {
+    /* Anchor to the viewport, NOT to .fxs-popups' flex layout. When another
+       engine popup attaches to .fxs-popups while Demographics is open, the
+       shared flex parent was making both siblings share column space — so
+       our frame visibly shrank. position:fixed + inset:0 takes us out of
+       the parent's layout entirely. z-index keeps us above popups so the
+       user finishes with Demographics before addressing them; they queue
+       on the dock behind us and surface after we close. */
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+    pointer-events: auto;
+}
+
+.demographics-frame {
+    width: 96vw;
+    height: 94vh;
+    max-width: 96vw;
+    max-height: 94vh;
+    min-height: 0;
+}
+
+@media (max-height: 55.5555555556rem), (max-aspect-ratio: 3/2) {
+    .demographics-frame {
+        width: 98vw;
+        height: 96vh;
+    }
+}
+
+.demographics-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.demographics-body {
+    width: 100%;
+    /* Fill all available height inside the frame so the view-host (and the
+       Factbook matrix inside it) can expand to fill the modal. */
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tab bar above the chart. fxs-tab-bar carries its own visuals — vanilla
+   great-works:198 just appendChilds it into a container that lets it span
+   full width. flex+justify-center was collapsing the bar; use block + w-full
+   on the bar itself (set in screen-demographics.js). */
+.demographics-tab-bar-host {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+    width: 100%;
+    display: block;
+}
+.demographics-tab-bar-host > fxs-tab-bar {
+    width: 100%;
+}
+
+.demographics-chart-title {
+    width: 100%;
+    text-align: center;
+    color: var(--ia-text-secondary);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.4rem;
+    margin-bottom: 0.5rem;
+    padding: 0.1rem 0.4rem;
+    line-height: 1.2;
+    flex: 0 0 auto;
+}
+
+.demographics-chart-host {
+    width: 100%;
+    margin-top: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow-y: auto;
+}
+
+.demographics-chart-svg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    display: block;
+}
+
+.demographics-chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.demographics-chart-line-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+    background: var(--ia-frame-bg);
+    border: 1px solid var(--ia-frame-border);
+    white-space: nowrap;
+    line-height: 1.1;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ia-text-secondary);
+    pointer-events: auto;
+    user-select: none;
+}
+.demographics-chart-line-label:hover {
+    border-color: var(--ia-frame-border-hot);
+    background: rgba(40, 30, 14, 0.85);
+}
+.demographics-chart-line-label.is-hidden {
+    opacity: 0.55;
+    color: var(--ia-text-secondary-2);
+    font-size: 0.72rem;
+}
+.demographics-chart-line-label.is-eliminated {
+    opacity: 0.4;
+    color: var(--ia-text-accent-4);
+}
+.demographics-chart-line-label.is-dimmed {
+    opacity: 0.3;
+}
+.demographics-chart-line-label.is-focused {
+    border-color: rgba(243, 195, 76, 0.95);
+    background: rgba(60, 45, 20, 0.9);
+    transform: translateY(-50%) scale(1.05);
+}
+
+/* Toolbar above the chart: viewer dropdown, focus-clear, CSV export. */
+.demographics-chart-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    width: 100%;
+    flex: 0 0 auto;
+}
+/* Wars view: extra gap between the age-filter pill row and this toolbar. */
+.demographics-chart-toolbar-wars {
+    margin-top: 0.7rem;
+}
+.demographics-chart-toolbar-label {
+    color: var(--ia-accent-gold-soft);
+    margin-right: 0.2rem;
+}
+/* Toolbar buttons styled with the engine's `hud_production_pill` BLP as a
+   border-image, same chrome the native dedication-pills use. Drops the
+   flat 1px border / rounded-rect look in favor of an ornate pill that
+   reads as native Civ7 UI. Cite: triumph-card.css:1-5 (.dedication-pill). */
+.demographics-chart-toolbar-btn {
+    display: inline-block;
+    padding: 0.22rem 0.85rem;
+    color: var(--ia-text-secondary);
+    font-family: TitleFont, BodyFont, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    vertical-align: middle;
+    /* Engine pill border-image (same one dedication-pill uses). */
+    border-image-source: url("blp:hud_production_pill");
+    border-image-slice: 4 8 4 8 fill;
+    border-image-width: 0.22rem 0.45rem 0.22rem 0.45rem;
+    border-image-repeat: stretch;
+    /* No flat border — the BLP carries the visual frame. */
+    border: 0;
+    background: transparent;
+    transition: filter 0.12s, color 0.12s;
+}
+.demographics-chart-toolbar-btn:hover {
+    color: var(--ia-accent-gold);
+    /* Subtle glow on hover — mimics the engine's button rollover. */
+    filter: brightness(1.15) drop-shadow(0 0 0.2rem rgba(243, 195, 76, 0.4));
+}
+.demographics-chart-viewer-dropdown {
+    min-width: 14rem;
+}
+
+/* War label sitting on top of each Gantt bar. */
+.demographics-chart-war-label {
+    color: var(--ia-text-secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1;
+    text-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.9), 0 0 0.4rem rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    user-select: none;
+}
+.demographics-chart-line-label-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(28, 20, 8, 0.7);
+}
+.demographics-chart-line-label-dot.is-hollow {
+    background: transparent;
+    border-width: 1.5px;
+}
+.demographics-chart-line-label-text {
+    color: inherit;
+}
+
+/* X-axis tick label overlay (turn # on top, in-game year underneath). */
+.demographics-chart-x-tick {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+    pointer-events: none;
+    white-space: nowrap;
+    user-select: none;
+}
+.demographics-chart-x-tick-year {
+    color: var(--ia-text-secondary);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+.demographics-chart-x-tick-turn {
+    color: var(--ia-text-accent-2);
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-top: 0.05rem;
+}
+
+/* Axis titles — descriptive name for what the X / Y axis represents,
+   shown in addition to the per-tick units already drawn at each gridline. */
+.demographics-chart-axis-title {
+    color: var(--ia-text-secondary);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+.demographics-chart-axis-title.demographics-chart-axis-y {
+    transform-origin: center center;
+}
+
+/* Time-range filter pill row (sits between chart title and chart). */
+.demographics-chart-time-filter-row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.05rem 0.4rem;
+    width: 100%;
+    flex: 0 0 auto;
+}
+.demographics-chart-time-filter-pill {
+    display: inline-block;
+    padding: 0.18rem 0.55rem;
+    border: 1px solid var(--ia-frame-border);
+    border-radius: 0.2rem;
+    background: var(--ia-frame-bg);
+    color: var(--ia-text-secondary);
+    font-family: TitleFont, BodyFont, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    white-space: nowrap;
+    line-height: 1.2;
+    font-size: 0.78rem;
+    user-select: none;
+}
+.demographics-chart-time-filter-pill:hover {
+    border-color: var(--ia-frame-border-hot);
+}
+.demographics-chart-time-filter-pill.is-active {
+    border-color: rgba(243, 195, 76, 0.95);
+    background: rgba(60, 45, 20, 0.85);
+    color: var(--ia-accent-gold);
+    font-weight: 600;
+}
+/* Disabled (cross-age) filter pill. Greyed via color / border alpha rather
+   than opacity — opacity would compound onto the absolutely-positioned
+   tooltip child and dim it to illegibility. pointer-events stays auto so the
+   tooltip still shows on hover. */
+.demographics-chart-time-filter-pill.is-disabled {
+    position: relative;
+    color: rgba(194, 196, 204, 0.45);
+    border-color: rgba(168, 132, 90, 0.25);
+    background: rgba(20, 16, 10, 0.35);
+    cursor: not-allowed;
+    pointer-events: auto;
+}
+
+/* Custom hover tooltip that follows the cursor over the chart. */
+.demographics-chart-hover-tooltip {
+    position: absolute;
+    pointer-events: none;
+    z-index: 50;
+    min-width: 12rem;
+    max-width: 24rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(20, 16, 10, 0.95);
+    border: 1px solid rgba(243, 195, 76, 0.8);
+    border-radius: 0.25rem;
+    font-size: 0.82rem;
+    line-height: 1.25;
+    color: var(--ia-text-secondary);
+    box-shadow: 0 0.15rem 0.6rem rgba(0, 0, 0, 0.7);
+}
+.demographics-chart-hover-tooltip-header {
+    color: var(--ia-accent-gold);
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid rgba(201, 162, 76, 0.3);
+}
+.demographics-chart-hover-tooltip-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+}
+.demographics-chart-hover-tooltip-swatch {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(28, 20, 8, 0.7);
+}
+.demographics-chart-hover-tooltip-name {
+    flex: 1 1 auto;
+    color: var(--ia-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.demographics-chart-hover-tooltip-value {
+    color: var(--ia-accent-gold);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+}
+
+/* Age boundary vertical marker — drawn by chart.js as a dashed gold line
+   with a small italic label at the top of the plot area. */
+.demographics-chart-age-marker {
+    pointer-events: none;
+}
+.demographics-chart-age-marker-label {
+    pointer-events: none;
+    letter-spacing: 0.02em;
+}
+
+/* Factbook column header: "(formerly X, Y)" suffix below current civ name. */
+.demographics-factbook-civ-header-formerly {
+    color: rgba(243, 231, 196, 0.65);
+    font-style: italic;
+    margin-top: 0.1rem;
+}
+
+/* Reset button shown in the corner cell when civs are hidden. */
+.demographics-factbook-reset-btn {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid rgba(201, 162, 76, 0.6);
+    border-radius: 0.2rem;
+    background: rgba(40, 30, 14, 0.7);
+    color: var(--ia-accent-gold);
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+}
+.demographics-factbook-reset-btn:hover {
+    border-color: rgba(243, 195, 76, 0.9);
+    background: rgba(60, 45, 20, 0.85);
+}
+
+/* ── Per-metric chart caption (GDP formula explanation, etc.) ───────────── */
+.demographics-chart-caption {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0.4rem auto 0.2rem;
+    padding: 0.4rem 0.8rem;
+    color: rgba(243, 231, 196, 0.85);
+    background: rgba(20, 16, 10, 0.55);
+    border: 1px solid rgba(201, 162, 76, 0.35);
+    border-radius: 0.2rem;
+    line-height: 1.35;
+    text-align: center;
+}
+.demographics-chart-caption b { color: var(--ia-accent-gold); }
+.demographics-chart-caption i { opacity: 0.75; }
+
+/* Compact single-line GDP affordance (replaces the multi-line caption block).
+   Keeps the chart canvas tall while still surfacing the formula via tooltip. */
+.demographics-chart-caption-compact {
+    width: 100%;
+    margin: 0.15rem 0 0 0;
+    padding: 0.1rem 0.4rem;
+    color: rgba(243, 231, 196, 0.7);
+    text-align: center;
+    cursor: help;
+    line-height: 1.2;
+}
+.demographics-chart-caption-compact:hover {
+    color: var(--ia-accent-gold);
+}
+
+/* Rich-content popover that appears when hovering the ⓘ caption trigger.
+   Replaces the unreliable `title`-attribute tooltip with a panel we
+   actually control — Coherent GameFace doesn't surface native tooltips. */
+.demographics-metric-info {
+    width: 100%;
+}
+.demographics-metric-info-popover {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-0.4rem);
+    z-index: 100;
+    min-width: 24rem;
+    max-width: 36rem;
+    padding: 0.85rem 1rem 0.95rem;
+    line-height: 1.35;
+    text-align: left;
+    pointer-events: auto;
+}
+.demographics-metric-info-title {
+    color: rgb(236, 224, 198);
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid rgba(204, 188, 163, 0.2);
+}
+.demographics-metric-info-body p { margin: 0.3rem 0; }
+.demographics-metric-info-body ul {
+    margin: 0.2rem 0 0.4rem 1rem;
+    padding: 0;
+    list-style: disc;
+}
+.demographics-metric-info-body li { margin: 0.1rem 0; }
+.demographics-metric-info-body b { color: var(--ia-accent-gold); }
+.demographics-metric-info-body i {
+    color: rgba(243, 231, 196, 0.7);
+    font-style: italic;
+}
+
+/* ── Per-civ legend grid ────────────────────────────────────────────────── */
+.demographics-legend-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+}
+
+.demographics-legend-host {
+    flex: 0 0 auto;
+    min-width: 18rem;
+}
+
+.demographics-legend {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    width: 100%;
+    max-width: 60rem;
+    margin: 0 auto;
+}
+
+.demographics-legend-entry {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid rgba(201, 162, 76, 0.4);
+    border-radius: 0.2rem;
+    background: rgba(20, 16, 10, 0.55);
+    cursor: pointer;
+    width: 100%;
+}
+
+.demographics-legend-leader {
+    color: var(--ia-accent-gold);
+    margin-right: 0.6rem;
+    flex: 1 1 auto;
+}
+.demographics-legend-civ {
+    color: var(--ia-accent-gold-soft);
+    opacity: 0.85;
+    margin-right: 0.4rem;
+}
+
+.demographics-legend-entry:hover {
+    border-color: rgba(243, 195, 76, 0.8);
+}
+
+.demographics-legend-entry.is-hidden {
+    opacity: 0.4;
+}
+
+/* "Pip" visual — filled disc when visible, hollow when hidden. */
+.demographics-legend-pip {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    flex-shrink: 0;
+    border: 1px solid currentColor;
+    background: currentColor;
+}
+
+.demographics-legend-entry.is-hidden .demographics-legend-pip {
+    background: transparent;
+}
+
+.demographics-legend-swatch {
+    width: 0.7rem;
+    height: 0.25rem;
+    margin-right: 0.4rem;
+    border-radius: 0.1rem;
+    flex-shrink: 0;
+}
+
+.demographics-legend-name {
+    color: var(--ia-accent-gold);
+    margin-right: 0.4rem;
+}
+
+.demographics-legend-value {
+    margin-left: 0.6rem;
+    color: var(--ia-text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Top-level view tab bar and per-view containers ────────────────────── */
+.demographics-view-tab-host {
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    width: 100%;
+    display: block;
+}
+.demographics-view-tab-host > fxs-tab-bar {
+    width: 100%;
+}
+.demographics-view-host {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Page tab row (Economy / Power / Knowledge & Influence) under History */
+.demographics-page-tab-host {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    width: 100%;
+}
+.demographics-page-tab-host > fxs-tab-bar {
+    width: 100%;
+}
+
+.demographics-nyi,
+.demographics-empty {
+    margin: 2rem auto;
+    color: var(--ia-accent-gold-soft);
+    opacity: 0.85;
+    text-align: center;
+}
+

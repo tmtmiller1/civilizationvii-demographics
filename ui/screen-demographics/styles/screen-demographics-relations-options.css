@@ -1,0 +1,322 @@
+/* ── Relations (two-level tabs: Civ/CS × Political/Economic/Attitude) ── */
+/* Layout: stacked vertical so nothing falls off-screen.
+   top-tab → inner-tab → filter pills → ring → caption. */
+.demographics-relations-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.demographics-relations-toptab-host,
+.demographics-relations-subtab-host {
+    width: 100%;
+}
+/* The CS tab's "Viewer:" dropdown row is anchored absolutely so it does
+   NOT push the body (and thus the graph border) down on the CS tab —
+   otherwise the absolutely-positioned legend at top:7.5rem visually
+   clashes with the body's top border on CS while sitting clean on civ. */
+.demographics-relations-viewer-host {
+    position: absolute;
+    top: 7.5rem;
+    left: 1.5rem;
+    display: flex;
+    align-items: center;
+    z-index: 4;
+    pointer-events: auto;
+}
+.demographics-relations-viewer-host:empty {
+    display: none;
+}
+/* OVERLAY the filter legend on the empty top-right of the relations panel
+   so we don't waste a vertical row above the diagram. Position is anchored
+   to `.demographics-relations-wrap` (set to position:relative below). The
+   ring is centered + circular, so the corners are always unused space. */
+.demographics-relations-wrap {
+    position: relative;
+}
+.demographics-relations-filter-host {
+    position: absolute;
+    /* Top offset clears BOTH the top-tab row AND the optional viewer-host
+       dropdown that the City-State tab renders ("Showing relations from:
+       <civ>"). Previously the legend hovered just below the tab bar — on
+       major civs that left a clean gap, but on CS the dropdown landed in
+       that gap and the legend visually overlapped it. 7.5rem clears both
+       on either tab so the two views are pixel-equivalent. */
+    top: 7.5rem;
+    right: 1.5rem;
+    /* FIXED width (not max-width) so the box has the same horizontal
+       footprint on the major-civs tab (11 entries) AND the city-states
+       tab (8 entries). Earlier max-width let it shrink to the widest
+       pill, making the CS legend visibly narrower than the civ legend. */
+    width: 22rem;
+    /* Min-height so the shorter CS legend doesn't look truncated next to
+       the major-civs legend — they read as the same "panel," just with
+       different lists inside. */
+    min-height: 14rem;
+    padding: 0.6rem 0.85rem;
+    box-sizing: border-box;
+    background: rgba(10, 8, 4, 0.65);
+    border: 1px solid rgba(168, 132, 90, 0.35);
+    border-radius: 0.25rem;
+    z-index: 5;
+    pointer-events: auto;
+}
+.demographics-relations-toptab-host > fxs-tab-bar,
+.demographics-relations-subtab-host > fxs-tab-bar {
+    width: 100%;
+}
+.demographics-relations-body {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    align-items: stretch;
+    justify-content: center;
+}
+.demographics-relations-caption {
+    width: 100%;
+    text-align: center;
+    color: var(--ia-accent-gold-soft);
+    opacity: 0.85;
+    flex: 0 0 auto;
+    padding: 0.2rem 0.4rem;
+}
+.demographics-relations-clear-focus-btn {
+    margin-left: 0.35rem;
+    padding: 0.08rem 0.45rem;
+    border: 1px solid rgba(201, 162, 76, 0.6);
+    border-radius: 0.2rem;
+    background: rgba(20, 16, 10, 0.75);
+    color: #f3e7c4;
+    cursor: pointer;
+}
+.demographics-relations-clear-focus-btn:hover {
+    color: #f3c34c;
+    border-color: rgba(243, 195, 76, 0.9);
+}
+
+/* Toggleable filter pill row across the top of each relations diagram.
+   Coherent GameFace mis-renders flex-wrap with `gap` (row-gap is dropped,
+   items overlap vertically) AND mis-clips negative-margin row containers.
+   Use a plain block container with inline-block pills — natural line
+   wrapping handles multi-row layout, and `box-sizing: border-box` plus
+   per-pill margin-right/bottom guarantees clean horizontal spacing without
+   the first pill getting clipped against the left edge of the parent. */
+.demographics-relations-filter-row {
+    /* Vertical stack — one entry per row inside the overlay box. */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+.demographics-relations-filter-title {
+    color: #f3c34c;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    padding: 0 0 0.35rem 0;
+    border-bottom: 1px solid rgba(168, 132, 90, 0.45);
+}
+.demographics-relations-filter-label {
+    color: var(--ia-text-secondary);
+    white-space: nowrap;
+}
+.demographics-relations-filter-pill.is-hidden .demographics-relations-filter-label {
+    color: var(--ia-accent-gold-soft);
+}
+/* Legend entries — NOT toggle buttons. Each entry shows a real sample line
+   (color + texture matching what the ring draws) followed by the label,
+   so the legend itself answers "what does this color/style mean?" The
+   gold-box framing was misleading — looked like a generic UI toggle, not
+   a legend. Now: bare entries, just sample + text. Click still toggles
+   the filter; hover/inactive states are conveyed by opacity, not borders. */
+.demographics-relations-filter-pill {
+    /* Stack vertically inside the overlay column — one entry per line. */
+    display: flex;
+    align-items: center;
+    padding: 0.18rem 0.35rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--ia-text-secondary);
+    font-size: 1rem;
+    white-space: nowrap;
+    line-height: 1.3;
+    pointer-events: auto;
+    user-select: none;
+    box-sizing: border-box;
+    width: 100%;
+}
+.demographics-relations-filter-pill:hover {
+    color: var(--ia-accent-gold, #f3c34c);
+}
+.demographics-relations-filter-pill.is-active {
+    /* No border — full opacity reads as "active". */
+    color: var(--ia-text-secondary);
+}
+.demographics-relations-filter-pill.is-hidden {
+    /* Dimmed; the sample SVG dims with it via opacity inheritance. */
+    opacity: 0.35;
+    color: var(--ia-text-secondary);
+}
+/* "Pip" — filled disc when active, hollow when toggled off. */
+.demographics-relations-filter-pip {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid currentColor;
+    background: currentColor;
+}
+.demographics-relations-filter-pill.is-hidden .demographics-relations-filter-pip {
+    background: transparent;
+}
+.demographics-relations-filter-swatch {
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.25rem;
+    border-radius: 0.1rem;
+    flex-shrink: 0;
+}
+.demographics-relations-filter-swatch.is-dashed {
+    background-image: repeating-linear-gradient(
+        90deg,
+        currentColor 0,
+        currentColor 0.18rem,
+        transparent 0.18rem,
+        transparent 0.32rem
+    );
+    background-color: transparent;
+}
+.demographics-relations-filter-label {
+    font-family: inherit;
+}
+
+/* Ring container — takes most of the available space, centered. */
+.demographics-relations-ring-wrap {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 16, 10, 0.55);
+    border: 1px solid rgba(201, 162, 76, 0.3);
+    border-radius: 0.3rem;
+}
+.demographics-relations-ring-svg {
+    width: 100%;
+    height: 100%;
+    min-height: 22rem;
+    max-height: 100%;
+}
+
+/* Leader portrait HTML overlay positioned in pixel coords over the SVG
+   wrap (computed from svg.getBoundingClientRect after layout). Uses the
+   same fxs-icon path the factbook header uses. */
+.demographics-relations-portrait {
+    position: absolute;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(28, 20, 8, 0.7);
+    box-sizing: border-box;
+    box-shadow: 0 0 0.15rem rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+/* Clicked / focused leader node: a gold ring + glow on the portrait frame, so
+   the selection reads even though the portrait covers the node's SVG circle. */
+.demographics-relations-portrait.is-selected {
+    border: 0.16rem solid #f3c34c;
+    box-shadow: 0 0 0.4rem 0.06rem rgba(243, 195, 76, 0.8);
+}
+/* CS type-icon variant — static background-image chrome (the URL is set
+   inline per-placement). */
+.demographics-relations-portrait-cs {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.demographics-relations-portrait-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.demographics-relations-line {
+    opacity: 0.85;
+}
+
+/* Ring node text. These are SVG <text> in the ~100-unit ring viewBox, so font
+   sizes are in viewBox units (NOT rem) - without these rules they fall back to
+   the SVG default (~16 units), which renders as giant grey labels. */
+.demographics-relations-node-label {
+    font-size: 3.6px;
+    font-weight: 600;
+    fill: var(--ia-text-secondary, #d8c69a);
+    paint-order: stroke;
+    stroke: rgba(8, 6, 3, 0.85);
+    stroke-width: 0.5px;
+    pointer-events: none;
+}
+/* Fallback initial drawn inside a major civ node when no leader portrait loads. */
+.demographics-relations-node-letter {
+    font-size: 7px;
+    font-weight: 700;
+    fill: #f3e7c4;
+    pointer-events: none;
+}
+
+/* ── Options ──────────────────────────────────────────────────────────── */
+.demographics-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem 0.2rem;
+    width: 100%;
+}
+.demographics-options-heading {
+    color: var(--ia-accent-gold);
+    margin-bottom: 0.3rem;
+}
+.demographics-option-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+/* A toggle nested visually beneath its parent toggle (e.g. the met-history
+   reveal mode under "Hide unmet civ stats"). */
+.demographics-option-row-sub {
+    margin-left: 1.5rem;
+}
+.demographics-option-checkbox {
+    margin: 0;
+}
+.demographics-option-label {
+    color: var(--ia-text-secondary);
+}
+.demographics-option-hint {
+    color: rgba(243, 231, 196, 0.65);
+    margin: 0.15rem 0 0.4rem 0.4rem;
+    line-height: 1.3;
+}
+.demographics-options-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+}
+.demographics-session-info {
+    margin-top: 0.6rem;
+    color: var(--ia-accent-gold-soft);
+    opacity: 0.85;
+}
+
+/* Inline dropdown next to a label in the Options view. */
+.demographics-option-dropdown {
+    min-width: 18rem;
+}
+

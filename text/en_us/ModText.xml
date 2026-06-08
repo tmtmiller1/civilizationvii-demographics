@@ -472,6 +472,66 @@
         <Row Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED">
             <Text>Destroyed</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE">
+            <Text>Pre-Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_POINTS">
+            <Text>points</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_GOLD">
+            <Text>gold</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN">
+            <Text>gold / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_CITIES">
+            <Text>cities</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_TECHS">
+            <Text>techs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN">
+            <Text>food / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN">
+            <Text>production / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN">
+            <Text>science / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN">
+            <Text>culture / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN">
+            <Text>happiness / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN">
+            <Text>influence / turn</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION">
+            <Text>reputation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE">
+            <Text>people</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_DEALS">
+            <Text>deals</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES">
+            <Text>routes</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH">
+            <Text>strength</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS">
+            <Text>wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES">
+            <Text>resources</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_STAGE">
+            <Text>stage</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS">
             <Text>Crisis Begins</Text>
         </Row>
