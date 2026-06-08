@@ -2,15 +2,14 @@
   "name": "demographics-mod-dev",
   "version": "0.0.0",
   "private": true,
-  "description": "Dev-only tooling for the Demographics Civ VII mod (type-check + lint). Not shipped — release.sh excludes it.",
+  "description": "Dev-only tooling for the Demographics Civ VII mod (type-check + lint). Not shipped; release.sh excludes it.",
   "type": "module",
   "scripts": {
     "check": "tsc --noEmit",
     "lint": "eslint ui",
     "test:remediation-23": "node --loader ./tests/loader.mjs ./tests/remediation-23.mjs",
     "test:civ-color-utils": "node --loader ./tests/loader.mjs ./tests/civ-color-utils.mjs",
-    "test:towns-recommend": "node --loader ./tests/loader.mjs ./tests/towns-recommend.mjs",
-    "verify": "tsc --noEmit && eslint ui"
+    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23"
   },
   "devDependencies": {
     "esbuild": "^0.28.0",

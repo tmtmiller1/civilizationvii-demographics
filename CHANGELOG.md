@@ -5,6 +5,19 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [Unreleased]
+
+### Improved
+- Release packaging now ships readable JavaScript by default. Dist minification is opt-in via `MINIFY_DIST_JS=1` in `release.sh`.
+- Workshop and README copy now state the readable-source release posture and companion `triumphs-progress-overlay` split.
+
+### Internal
+- Wave 2 refactor decomposition expanded across major view controllers:
+	- Settlements split into detail, civ ranking, showcase, and table modules.
+	- Relations name-map and city-state node-info extraction moved into `relations-node-info.js`.
+	- Options storage controls and action controls moved into dedicated modules.
+	- History chart host/render routing moved into `view-history-chart-render.js`.
+
 ## [1.2.0] - 2026-06-05
 
 ### Added
