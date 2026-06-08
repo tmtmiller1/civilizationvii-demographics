@@ -6,7 +6,7 @@ import {
   deconflictColors,
   preferReadableColor,
   safeTextColor
-} from "/demographics/ui/civ-color-utils.js";
+} from "/demographics/ui/core/civ-color-utils.js";
 
 /** Relative luminance of a `#RRGGBB` color. */
 function luminanceOf(hex) {

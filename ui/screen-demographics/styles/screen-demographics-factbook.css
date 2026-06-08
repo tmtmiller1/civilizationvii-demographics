@@ -1,0 +1,236 @@
+/* ── Factbook (matrix layout) ──────────────────────────────────────────── */
+/* Matrix container scrolls horizontally; the first column (metric labels)
+    and second column (LOCAL civ values) are sticky via position:sticky so
+    they remain visible while the user scrolls through other civs. */
+.demographics-factbook-matrix {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    background: rgba(20, 16, 10, 0.45);
+    border: 1px solid rgba(201, 162, 76, 0.3);
+    border-radius: 0.3rem;
+}
+
+/* Strip is a flex row that fills the matrix in BOTH directions. Columns
+   grow to share extra horizontal space when there are few civs (e.g. 3
+   civs in an 80rem-wide modal → each column expands to ~26rem). When
+   there are many civs, columns hold at min-width 9rem and the strip
+   overflows horizontally to trigger the matrix's overflow-x scroll. */
+.demographics-factbook-strip {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    min-width: 100%;
+    min-height: 100%;
+}
+.demographics-factbook-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 9rem;
+    min-width: 9rem;
+    max-width: 22rem;
+}
+.demographics-factbook-col-labels {
+    flex: 0 0 10rem;
+    min-width: 10rem;
+    max-width: 10rem;
+}
+.demographics-factbook-col-civ.is-local {
+    flex: 1 0 11rem;
+    min-width: 11rem;
+    max-width: 24rem;
+}
+/* Hidden (ghost) civ column: narrow strip, just shows the header so the
+   user can click to un-hide. Width doesn't flex-grow so the remaining
+   visible civ columns absorb the extra space. */
+.demographics-factbook-col-civ.is-hidden {
+    flex: 0 0 5.5rem;
+    min-width: 5.5rem;
+    max-width: 5.5rem;
+    opacity: 0.55;
+}
+.demographics-factbook-civ-header.is-ghost {
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(243, 195, 76, 0.4);
+}
+/* Hover affordance on every civ header to suggest clickability. */
+.demographics-factbook-civ-header:hover {
+    background: rgba(40, 30, 14, 0.85);
+}
+.demographics-factbook-civ-header.is-local:hover {
+    /* Local header isn't hidable, so no hover affordance. */
+    background: rgba(40, 30, 14, 0.7);
+}
+/* (Removed the :last-child grow rule because it made the bottom row balloon.
+   Instead every value cell flex-grows equally; see .demographics-factbook-
+   value-cell / .demographics-factbook-label-cell rules below.) */
+
+/* Sticky-left columns. The label column anchors at left:0; the local-player
+   column sits flush against the label column (offset by its width). */
+.demographics-factbook-col-sticky {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: rgba(28, 22, 14, 0.98);
+}
+.demographics-factbook-col-sticky-2 {
+    position: sticky;
+    left: 10rem;
+    z-index: 2;
+    background: rgba(28, 22, 14, 0.98);
+    border-right: 2px solid rgba(243, 195, 76, 0.6);
+}
+
+.demographics-factbook-corner {
+    height: 7.5rem;
+    border-bottom: 2px solid rgba(243, 195, 76, 0.5);
+}
+
+/* Civ column header: avatar + leader name + civ name. Fixed height so every
+   civ column's header lines up regardless of whether "(formerly X)" wraps. */
+.demographics-factbook-civ-header {
+    height: 7.5rem;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start;
+    gap: 0.2rem;
+    padding: 0.4rem 0.3rem;
+    /* Card-like surface + civ-color top accent to match the Cities tab cards. */
+    border-top: 3px solid rgba(243, 195, 76, 0.5);
+    border-bottom: 2px solid rgba(243, 195, 76, 0.5);
+    border-radius: 0.4rem 0.4rem 0 0;
+    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.85) 0%, rgba(18, 21, 31, 0.6) 100%);
+    margin: 0 0.12rem;
+    text-align: center;
+}
+.demographics-factbook-civ-header.is-local {
+    border: 2px solid rgba(243, 195, 76, 0.8);
+    border-top-width: 3px;
+    border-radius: 0.4rem 0.4rem 0 0;
+    background: rgba(40, 30, 14, 0.7);
+}
+.demographics-factbook-civ-header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05rem;
+    min-width: 0;
+    width: 100%;
+}
+.demographics-factbook-civ-header-leader {
+    color: var(--ia-accent-gold);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: 1.18rem;
+    line-height: 1.15;
+}
+.demographics-factbook-civ-header-civ {
+    color: var(--ia-accent-gold-soft);
+    opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    font-size: 1rem;
+    line-height: 1.15;
+}
+
+.demographics-factbook-avatar {
+    position: relative;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(201, 162, 76, 0.6);
+    background: rgba(20, 16, 10, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.demographics-factbook-portrait {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.demographics-factbook-avatar-placeholder {
+    color: var(--ia-accent-gold);
+    font-family: inherit;
+    font-size: 1.55rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Label column (metric name): left, sticky. min-height keeps a sensible
+   floor; flex: 1 1 0 makes every label row share remaining vertical space
+   EQUALLY so the column matches the value-column row heights exactly. */
+.demographics-factbook-label-cell {
+    color: var(--ia-text-secondary);
+    min-height: 2.6rem;
+    flex: 1 1 0;
+    padding: 0.2rem 0.6rem;
+    border-bottom: 1px solid rgba(201, 162, 76, 0.18);
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+
+/* Value cell: value on top, rank on bottom. Same flex-grow as the label
+   cells so rows line up and every row has identical height. */
+.demographics-factbook-cell {
+    color: var(--ia-text-secondary);
+    padding: 0.15rem 0.3rem;
+    border-bottom: 1px solid rgba(201, 162, 76, 0.15);
+    font-variant-numeric: tabular-nums;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center;
+}
+.demographics-factbook-value-cell {
+    min-height: 2.6rem;
+    flex: 1 1 0;
+}
+.demographics-factbook-cell-value-wrap {
+    gap: 0.05rem;
+}
+.demographics-factbook-cell-value {
+    color: var(--ia-text-secondary);
+    font-size: 1.18rem;
+    line-height: 1.15;
+    font-weight: 600;
+}
+.demographics-factbook-cell-rank {
+    color: var(--ia-accent-gold-soft);
+    opacity: 0.85;
+    font-size: 0.86rem;
+    line-height: 1.1;
+}
+
+/* Civ header inner: flex column. */
+.demographics-factbook-civ-header-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Heavy divider every 4 rows for scan-ability. Applied to each cell in
+   the row so the line shows across the entire matrix. */
+.demographics-factbook-cell.is-heavy-divider {
+    border-top: 1px solid rgba(243, 195, 76, 0.45);
+}
+

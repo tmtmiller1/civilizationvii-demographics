@@ -29,6 +29,23 @@ function derr(...a) {
 dlog("loaded; debug=", DEMOGRAPHICS_DEBUG);
 
 /**
+ * Dynamic-import the engine contract guard and log a one-line status report.
+ * Never rejects - a missing module is logged and swallowed so
+ * the rest of bootstrap proceeds; individual features still self-gate via
+ * `featureAvailable()`.
+ * @returns {Promise<void>} Resolves once the import settles.
+ */
+function checkContracts() {
+  return /** @type {Promise<*>} */ (import("/demographics/ui/core/demographics-contracts.js"))
+    .then((mod) => {
+      if (typeof mod.logContractReport === "function") mod.logContractReport();
+    })
+    .catch((e) => {
+      derr("contracts import REJECTED:", e);
+    });
+}
+
+/**
  * Dynamic-import the dock-button decorator for its registration side effect.
  * Never rejects. An import failure is logged and swallowed so the sampler
  * still loads.
@@ -36,7 +53,7 @@ dlog("loaded; debug=", DEMOGRAPHICS_DEBUG);
  */
 function loadDecorator() {
   dlog("about to dynamic-import demographics-dock-decorator.js");
-  return /** @type {Promise<*>} */ (import("/demographics/ui/demographics-dock-decorator.js"))
+  return /** @type {Promise<*>} */ (import("/demographics/ui/core/demographics-dock-decorator.js"))
     .then((mod) => {
       dlog("dock-decorator import resolved; module keys:", Object.keys(mod || {}));
       return mod;
@@ -53,7 +70,7 @@ function loadDecorator() {
  */
 function startSampler() {
   dlog("about to dynamic-import demographics-sampler.js");
-  return /** @type {Promise<*>} */ (import("/demographics/ui/demographics-sampler.js"))
+  return /** @type {Promise<*>} */ (import("/demographics/ui/sampler/demographics-sampler.js"))
     .then((mod) => {
       dlog("sampler import resolved; keys:", Object.keys(mod || {}));
       try {
@@ -87,16 +104,19 @@ try {
     engine.whenReady
       .then(() => {
         dlog("engine.whenReady fired");
+        checkContracts();
         loadDecorator();
         startSampler();
       })
       .catch((e) => {
         derr("engine.whenReady REJECTED:", e);
+        checkContracts();
         loadDecorator(); // best-effort fallback
         startSampler();
       });
   } else {
     derr("engine or engine.whenReady missing — loading decorator immediately as fallback");
+    checkContracts();
     loadDecorator();
     startSampler();
   }
