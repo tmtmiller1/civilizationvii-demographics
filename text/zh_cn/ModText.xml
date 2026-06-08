@@ -325,6 +325,26 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="zh_Hans_CN">
             <Text>已摧毁</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE" Language="zh_Hans_CN"><Text>危机前</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_POINTS" Language="zh_Hans_CN"><Text>点</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD" Language="zh_Hans_CN"><Text>金币</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN" Language="zh_Hans_CN"><Text>金币/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CITIES" Language="zh_Hans_CN"><Text>城市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TECHS" Language="zh_Hans_CN"><Text>科技</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN" Language="zh_Hans_CN"><Text>食物/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN" Language="zh_Hans_CN"><Text>生产力/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN" Language="zh_Hans_CN"><Text>科技/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN" Language="zh_Hans_CN"><Text>文化/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN" Language="zh_Hans_CN"><Text>幸福度/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN" Language="zh_Hans_CN"><Text>影响力/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION" Language="zh_Hans_CN"><Text>声望</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE" Language="zh_Hans_CN"><Text>人</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_DEALS" Language="zh_Hans_CN"><Text>协议</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES" Language="zh_Hans_CN"><Text>路线</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH" Language="zh_Hans_CN"><Text>战斗力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="zh_Hans_CN"><Text>奇观</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="zh_Hans_CN"><Text>资源</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="zh_Hans_CN"><Text>阶段</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hans_CN">
             <Text>危机开始</Text>
         </Replace>

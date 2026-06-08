@@ -1,0 +1,1404 @@
+/* ── Wars Gantt (conflicts timeline) — static chrome migrated from
+   chart-wars-gantt.js inline styles. Per-bar geometry, x-tick / axis-title
+   positions, and the tooltip's hover visibility stay inline (dynamic);
+   everything below is the static layout/typography. ───────────────────────── */
+
+/* Gantt wrap — the absolutely-positioned overlay anchor. */
+/* The wars timeline is the scroll VIEWPORT: it fills the host and scrolls in
+   both axes when the inner canvas (the chart's natural pixel extent) is larger
+   than it. */
+.demographics-wars-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+/* The scrollable content: fills the viewport, but min-width/min-height (set
+   inline to the chart's natural pixels) push it past the viewport to trigger
+   scrolling. The positioning context for every SVG-aligned HTML overlay. */
+.demographics-wars-canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* War-name label. left/top are per-bar geometry, set inline. The full name
+   always renders (never truncated) - the box hugs the text and is allowed to
+   overflow the bar; the neutral background keeps it readable over any color. */
+.demographics-wars-label {
+    position: absolute;
+    /* Vertically center the label on the bar. */
+    transform: translateY(-50%);
+    white-space: nowrap;
+    overflow: visible;
+    pointer-events: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+/* Anchor the label's RIGHT edge at the bar end (bars near the chart's right
+   edge), so a long name grows left instead of off the canvas. */
+.demographics-wars-label-anchor-right {
+    transform: translate(-100%, -50%);
+}
+/* Neutral box behind the war name so it stays readable over ANY banner color. */
+.demographics-wars-label-box {
+    display: inline-block;
+    overflow: visible;
+    white-space: nowrap;
+    padding: 0.08rem 0.45rem;
+    border-radius: 0.2rem;
+    background: rgba(18, 15, 10, 0.86);
+    border: 0.0625rem solid rgba(201, 162, 76, 0.4);
+    color: #f7ecc8;
+    text-shadow: 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.6);
+}
+/* Crisis stage-onset overlay label (atop the dashed stage-colored line): a
+   two-line pill - stage label in the stage color, crisis name below in cream. */
+.demographics-wars-crisis-label {
+    position: absolute;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.05rem 0.35rem;
+    border-radius: 0.2rem;
+    background: rgba(20, 16, 10, 0.85);
+    white-space: nowrap;
+    pointer-events: none;
+    text-align: center;
+}
+.demographics-wars-crisis-label-stage {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03rem;
+}
+.demographics-wars-crisis-label-name {
+    font-size: 0.7rem;
+    color: #ece0c6;
+}
+/* "Now" marker label sitting atop the dashed red current-turn line. */
+.demographics-wars-now-label {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    padding: 0.02rem 0.3rem;
+    border-radius: 0.2rem;
+    background: rgba(40, 8, 6, 0.85);
+    border: 0.0625rem solid rgba(232, 69, 60, 0.7);
+    color: #ff9d96;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* X-axis tick overlay. left/top are per-tick geometry, set inline. */
+.demographics-wars-x-tick {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+/* Axis titles. left/top are per-axis geometry, set inline. */
+.demographics-wars-axis-title {
+    position: absolute;
+}
+.demographics-wars-axis-x {
+    transform: translate(-50%, -100%);
+}
+.demographics-wars-axis-y {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* Hover tooltip chrome. display (hidden/shown) + left/top stay inline. */
+/* War tooltip — dressed to match the game's native tooltips: the same
+   `base_tooltip-bg` ornate border-image frame, the same dark gradient fill, and
+   the native parchment/tan text palette (title rgb(204,188,163), body
+   rgb(179,158,128)). Mirrors core/ui/themes/default `.img-tooltip-border` +
+   `.img-tooltip-bg` and tooltip-manager.css `.tooltip-title` / `.tooltip-value`,
+   so the mod's tooltip reads as part of the base UI rather than a bolt-on. */
+.demographics-wars-tooltip {
+    position: absolute;
+    z-index: 20;
+    min-width: 16rem;
+    /* Wide enough to lay every belligerent's column out in a row (merged
+       multi-front wars can involve many civs). */
+    max-width: 90vw;
+    /* Uniformly enlarge the whole tooltip a touch for readability. Anchored at
+       its top-left (the cursor anchor), so it grows down-right. Keep TOOLTIP_SCALE
+       in chart-wars-gantt.js in sync for the edge-flip math. */
+    transform: scale(1.12);
+    transform-origin: top left;
+    padding: 0.85rem 1rem 1.05rem 1rem;
+    border: 0;
+    border-radius: 0;
+    border-image-outset: 0.3333333333rem 0.8888888889rem 1.3333333333rem 0.8888888889rem;
+    border-image-slice: 16 24 36 24 fill;
+    border-image-source: url("blp:base_tooltip-bg");
+    border-image-width: 0.8888888889rem 1.3333333333rem 2rem 1.3333333333rem;
+    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.97) 0%, rgba(18, 21, 31, 0.97) 100%);
+    color: rgb(179, 158, 128);
+    font-family: TitilliumWeb, sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    pointer-events: none;
+    box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.6);
+}
+.demographics-wars-tooltip-head {
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+.demographics-wars-tooltip-title {
+    font-weight: 700;
+    color: rgb(236, 224, 198);
+    font-size: 0.98rem;
+    letter-spacing: 0.02rem;
+    line-height: 1.2;
+}
+.demographics-wars-tooltip-subtitle {
+    color: rgb(170, 152, 124);
+    font-size: 0.78rem;
+    margin-top: 0.1rem;
+}
+.demographics-wars-tooltip-status {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06rem;
+    padding: 0.1rem 0.55rem;
+    border-radius: 0.7rem;
+    white-space: nowrap;
+}
+.demographics-wars-tooltip-status.is-ongoing {
+    color: #f6dca6;
+    background: rgba(201, 162, 76, 0.22);
+    border: 1px solid rgba(201, 162, 76, 0.55);
+}
+.demographics-wars-tooltip-status.is-concluded {
+    color: rgb(176, 165, 146);
+    background: rgba(150, 140, 120, 0.16);
+    border: 1px solid rgba(150, 140, 120, 0.4);
+}
+.demographics-wars-tooltip-declared {
+    text-align: center;
+    color: rgb(150, 134, 110);
+    font-size: 0.74rem;
+}
+.demographics-wars-tooltip-divider {
+    height: 1px;
+    background: rgba(204, 188, 163, 0.2);
+    margin: 0.45rem 0;
+}
+.demographics-wars-tooltip-section-label {
+    font-weight: 600;
+    color: rgb(180, 165, 138);
+    text-transform: uppercase;
+    letter-spacing: 0.07rem;
+    font-size: 0.66rem;
+    margin: 0.1rem 0 0.25rem;
+    text-align: center;
+}
+/* Row-major cost table: a fixed prose-label column on the left + one value
+   column per leader, so labels, stat icons, numbers, and the portrait headers
+   all line up by column (every row shares the same column widths). */
+.demographics-wars-tooltip-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.16rem;
+}
+.demographics-wars-tooltip-trow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    color: rgb(200, 184, 156);
+}
+.demographics-wars-tooltip-trow.is-head {
+    align-items: flex-end;
+    margin-bottom: 0.25rem;
+}
+/* Leftmost prose-label column - fixed width so every row's labels align and the
+   value columns all start at the same x. */
+.demographics-wars-tooltip-tlabel {
+    flex: 0 0 9.5rem;
+    color: rgb(176, 162, 138);
+    white-space: nowrap;
+    text-align: left;
+}
+/* One value column per leader: stat icon then number. A DEFINITE basis (not
+   flex:1 1 0) so the absolutely-positioned popup grows to encompass every
+   column instead of shrinking them; fixed width also keeps columns aligned
+   row-to-row. */
+.demographics-wars-tooltip-tcell {
+    flex: 0 0 6.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+}
+/* Header cell: leader portrait stacked over the civ-color dot, centered. */
+.demographics-wars-tooltip-thead-cell {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.15rem;
+}
+/* Thin "vs" divider column between the two sides (in every row, for alignment). */
+.demographics-wars-tooltip-tvs {
+    flex: 0 0 1.4rem;
+    text-align: center;
+    color: rgb(150, 134, 110);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.demographics-wars-tooltip-leader-val {
+    flex: 0 0 auto;
+    text-align: right;
+}
+.demographics-wars-tooltip-leader-val.is-loss {
+    color: #e2a594;
+}
+.demographics-wars-tooltip-leader-val.is-gain {
+    color: #a3cb9d;
+}
+.demographics-wars-tooltip-leader-val.is-none {
+    color: rgb(140, 130, 112);
+}
+/* Neutral spending (production directed to war): visible but not gain/loss. */
+.demographics-wars-tooltip-leader-val.is-spent {
+    color: rgb(206, 188, 150);
+}
+/* "City States (Combined)" column header: a wrapped text label (no portrait),
+   sitting where a leader portrait would in the other columns. */
+.demographics-wars-tooltip-cs-combined-head {
+    white-space: normal;
+    text-align: center;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: rgb(196, 182, 156);
+    line-height: 1.15;
+}
+/* City-state ally cell, in the CS table below the majors: stacked vertically -
+   type icon + real name on top, then Military Power (Current) and (Lost). One
+   cell per ally, sitting in the SAME column as its suzerain, multiple allies
+   stacking as rows down that column. */
+.demographics-wars-tooltip-cs-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.05rem;
+    padding: 0.15rem 0;
+    font-variant-numeric: tabular-nums;
+}
+.demographics-wars-tooltip-cs-ally-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    max-width: 100%;
+    min-height: 1.05rem;
+    font-size: 0.74rem;
+    color: rgb(214, 201, 173);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.demographics-wars-tooltip-cs-ally-val {
+    text-align: left;
+    font-size: 0.78rem;
+}
+/* Label column for the CS table: stacked like an ally cell (a name-line spacer,
+   then the two metric labels) so each label lines up with its value line. */
+.demographics-wars-tooltip-cs-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.05rem;
+    padding: 0.15rem 0;
+}
+.demographics-wars-tooltip-section-line {
+    padding-left: 0.75rem;
+    color: rgb(192, 173, 143);
+}
+.demographics-wars-tooltip-combatant {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.16rem 0;
+}
+.demographics-wars-tooltip-portrait {
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(204, 188, 163, 0.4);
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.demographics-wars-tooltip-portrait-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.demographics-wars-tooltip-combatant-text {
+    min-width: 0;
+    line-height: 1.2;
+}
+.demographics-wars-tooltip-combatant-civ {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: rgb(228, 215, 188);
+    font-size: 0.86rem;
+}
+.demographics-wars-tooltip-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+.demographics-wars-tooltip-combatant-sub {
+    color: rgb(160, 143, 116);
+    font-size: 0.74rem;
+}
+.demographics-wars-tooltip-cost {
+    margin-top: 0.55rem;
+    padding-top: 0.45rem;
+    border-top: 1px solid rgba(204, 188, 163, 0.22);
+}
+.demographics-wars-tooltip-cost-header {
+    font-weight: 600;
+    color: rgb(214, 197, 166);
+    text-transform: uppercase;
+    letter-spacing: 0.06rem;
+    font-size: 0.72rem;
+    margin-bottom: 0.35rem;
+}
+/* City State Allies block: one section per side, each a sub-header then a row
+   per ally with its Military Power + Power Lost. */
+.demographics-wars-tooltip-cs-section {
+    margin-bottom: 0.45rem;
+}
+.demographics-wars-tooltip-cs-side {
+    font-weight: 600;
+    color: rgb(196, 182, 156);
+    font-size: 0.78rem;
+    margin-bottom: 0.18rem;
+}
+.demographics-wars-tooltip-cs-none {
+    color: rgb(150, 138, 118);
+    font-style: italic;
+    font-size: 0.76rem;
+    margin-bottom: 0.2rem;
+}
+.demographics-wars-tooltip-cs-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 0.4rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.12rem;
+}
+.demographics-wars-tooltip-cs-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: rgb(214, 201, 173);
+}
+.demographics-wars-tooltip-cs-stat {
+    flex: 0 0 auto;
+    color: rgb(186, 172, 144);
+}
+.demographics-wars-tooltip-cost-grid {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.22rem;
+    font-size: 0.8rem;
+}
+.demographics-wars-tooltip-cost-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 0.4rem;
+}
+.demographics-wars-tooltip-cost-corner {
+    flex: 0 0 4.6rem;
+}
+.demographics-wars-tooltip-cost-hdr {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.12rem;
+}
+.demographics-wars-tooltip-cost-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+    /* Base-game texture set inline via url("blp:NAME"). */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Conflicts "War Graphs" sub-tab: small-multiples of participant trajectories. */
+.demographics-war-graphs {
+    width: 100%;
+    padding: 0.5rem 1rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.demographics-war-graphs-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.0625rem solid rgba(150, 134, 110, 0.3);
+}
+.demographics-war-graphs-title {
+    color: rgb(228, 215, 188);
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+.demographics-war-graphs-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    color: rgb(196, 182, 156);
+    font-size: 0.8rem;
+}
+.demographics-war-graphs-legend-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    margin: 0 0.9rem 0.2rem 0;
+    cursor: pointer;
+}
+.demographics-war-graphs-legend-item.is-hidden {
+    opacity: 0.4;
+}
+/* All / None bulk-select controls sit between the war title and the legend. */
+.demographics-war-graphs-controls {
+    margin-bottom: 0.1rem;
+}
+.demographics-war-graphs-legend-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.demographics-war-graphs-grid {
+    /* Horizontal-wrapping row, the way Gameface actually supports it (see the
+       time-filter pill row): LONGHAND flex-direction + flex-wrap. The flex-flow
+       shorthand is ignored, inline-block lays out as a block (one per line), and
+       CSS grid is unsupported - all of which collapsed earlier attempts.
+       Spacing is via cell margins, not `gap`, because Gameface drops the
+       row-gap on a wrapped flex row (the two rows would overlap). No max-width:
+       the row fills the full panel and flex-grow stretches the cells edge to
+       edge (the ~38rem basis lands ~4 per row). */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.demographics-war-graph-cell {
+    flex: 1 1 42rem;
+    box-sizing: border-box;
+    margin: 0 0.9rem 0.9rem 0;
+    background: rgba(0, 0, 0, 0.18);
+    border: 0.0625rem solid rgba(150, 134, 110, 0.25);
+    border-radius: 0.25rem;
+    padding: 0.55rem 0.65rem;
+}
+.demographics-war-graph-cell-head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.25rem;
+    color: rgb(214, 197, 166);
+    font-weight: 600;
+    font-size: 1rem;
+}
+/* 3-way filter pill row on the military graphs (belligerents / city-state allies
+   / cumulative allied). Clickable divs, the active one highlighted. */
+.demographics-war-graph-filter {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 0.4rem;
+}
+.demographics-war-graph-filter-btn {
+    margin: 0 0.4rem 0.3rem 0;
+    padding: 0.12rem 0.6rem;
+    border-radius: 0.85rem;
+    border: 0.0625rem solid rgba(150, 134, 110, 0.4);
+    background: rgba(0, 0, 0, 0.25);
+    color: rgb(186, 172, 146);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.demographics-war-graph-filter-btn.is-active {
+    background: rgba(243, 195, 76, 0.18);
+    border-color: rgba(243, 195, 76, 0.7);
+    color: #f3e7c4;
+    font-weight: 600;
+}
+.demographics-war-graph-mil-body {
+    position: relative;
+}
+/* ── Crises page: one block per crisis stage (colored bar + cost section). ── */
+.demographics-crisis-stages {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+    padding: 0.5rem 1rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+}
+.demographics-crisis-stage-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 1.1rem;
+    margin-bottom: 0.5rem;
+    /* Severity color set inline per stage: a solid left cap (border-left) plus a
+       background gradient that holds black behind the name (so it stays readable)
+       then fades early into the stage's orange/red shade. */
+    border-left: 0.5rem solid;
+    border-radius: 0.3rem;
+}
+.demographics-crisis-stage-name {
+    font-weight: 700;
+    color: rgb(236, 224, 198);
+    font-size: 1.5rem;
+    text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.85);
+}
+.demographics-crisis-stage-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    font-size: 1.15rem;
+    color: rgb(236, 224, 198);
+    text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.85);
+}
+.demographics-crisis-stage-span {
+    margin-left: auto;
+    color: rgb(244, 234, 212);
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.85);
+}
+/* The permanent cost table stretches to fill the page width (value columns grow
+   evenly); when there are too many civs to fit, the columns hold a readable
+   minimum and the row scrolls horizontally instead. */
+.demographics-crisis-stage-costs {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-left: 0.35rem;
+}
+.demographics-crisis-stage-costs > .demographics-wars-tooltip-table {
+    flex: 1 1 auto;
+    width: 100%;
+}
+/* Crises page is a full-size PAGE table, not a hover tooltip: scale every part
+   of the shared cost table up (same exact format, just larger + easier to read,
+   filling the page better). */
+.demographics-crisis-stage-costs .demographics-wars-tooltip-table {
+    gap: 0.3rem;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-trow {
+    font-size: 1.05rem;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-tlabel {
+    flex-basis: 13.5rem;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-tcell {
+    flex: 1 1 9rem;
+    min-width: 9rem;
+    gap: 0.4rem;
+    justify-content: center;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-tvs {
+    flex-basis: 2rem;
+    font-size: 0.95rem;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-cost-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-portrait {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.demographics-crisis-stage-costs .demographics-wars-tooltip-dot {
+    width: 0.72rem;
+    height: 0.72rem;
+}
+/* ── Crises "Graphs" sub-tab: reuses the war-graphs grid/cell styling; adds a
+   full-height scroll container and an interactive (toggleable) shared legend. ── */
+.demographics-crisis-graphs {
+    height: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+}
+.demographics-crisis-graphs-legend-item {
+    cursor: pointer;
+}
+.demographics-crisis-graphs-legend-item.is-hidden {
+    opacity: 0.4;
+}
+/* All / None bulk-select controls, between the title and the legend. */
+.demographics-crisis-graphs-controls {
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-bottom: 0.1rem;
+}
+/* Invisible filler cell: occupies a grid column so the last row's real graph
+   keeps a single column's width instead of stretching across the row. */
+.demographics-crisis-graph-filler {
+    visibility: hidden;
+    background: transparent;
+    border-color: transparent;
+}
+
+/* The plot box: a positioned container holding the (stretched) geometry SVG
+   plus the HTML axis-text overlays. The height lives here; the SVG fills it. */
+.demographics-war-graph-plot {
+    position: relative;
+    width: 100%;
+    height: 22rem;
+}
+.demographics-war-graph-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+/* SVG geometry colors matched to the historical line charts
+   (chart-line-config.js): #85878C axis lines + the same faint gridline tint. */
+.demographics-war-graph-axis {
+    stroke: #85878c;
+    stroke-width: 1;
+}
+.demographics-war-graph-grid {
+    stroke: rgba(133, 135, 140, 0.25);
+    stroke-width: 1;
+}
+.demographics-war-graph-line {
+    fill: none;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+}
+.demographics-war-graph-bar {
+    stroke: none;
+}
+/* Axis text is HTML, not SVG, so the plot SVG's non-uniform stretch
+   (preserveAspectRatio="none") can't distort it. Typography matched to the
+   historical charts EXACTLY: the same BodyFont stack, #e5d2ac, 18px/600 axis
+   titles and 17px tick labels. */
+.demographics-war-graph-ovl {
+    position: absolute;
+    color: #e5d2ac;
+    font-family: BodyFont, BodyFont-SC, BodyFont-TC, BodyFont-JP, BodyFont-KR, TitilliumWeb, sans-serif;
+    white-space: nowrap;
+    pointer-events: none;
+}
+.demographics-war-graph-ovl-ytop {
+    top: 0.5rem;
+    left: 8%;
+    font-size: 17px;
+}
+.demographics-war-graph-ovl-ybottom {
+    bottom: 3.2rem;
+    left: 8%;
+    font-size: 17px;
+}
+.demographics-war-graph-ovl-xleft {
+    bottom: 1.4rem;
+    left: 8%;
+    font-size: 17px;
+}
+.demographics-war-graph-ovl-xright {
+    bottom: 1.4rem;
+    right: 2.5%;
+    font-size: 17px;
+}
+.demographics-war-graph-ovl-xtitle {
+    bottom: 0;
+    left: 8%;
+    right: 2.5%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+/* Rotated Y title: a thin full-(plot)-height flex column at the far left that
+   vertically centers a -90deg span. */
+.demographics-war-graph-ovl-ytitle {
+    top: 0;
+    bottom: 14%;
+    left: 0;
+    width: 1.6rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.demographics-war-graph-ovl-ytitle > span {
+    transform: rotate(-90deg);
+    font-size: 18px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+/* Hover crosshair + tooltip (mirrors the historical chart's hover readout). */
+.demographics-war-graph-crosshair {
+    stroke: rgba(243, 195, 76, 0.7);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+}
+.demographics-war-graph-hovertip {
+    position: absolute;
+    z-index: 60;
+    pointer-events: none;
+    display: none;
+    min-width: 9rem;
+    padding: 0.4rem 0.55rem;
+    background: rgba(12, 10, 7, 0.96);
+    border: 0.0625rem solid rgba(201, 162, 76, 0.55);
+    border-radius: 0.25rem;
+    color: rgb(214, 197, 166);
+    font-size: 0.8rem;
+}
+.demographics-war-graph-hovertip-head {
+    color: var(--ia-accent-gold-soft, #d9c08a);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+.demographics-war-graph-hovertip-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+}
+.demographics-war-graph-hovertip-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.demographics-war-graph-hovertip-val {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+}
+.demographics-war-graph-nodata {
+    color: rgb(140, 130, 112);
+    font-size: 0.8rem;
+    font-style: italic;
+    padding: 1.5rem 0;
+    text-align: center;
+}
+.demographics-war-graphs-empty {
+    color: rgb(170, 158, 136);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 2.5rem 1rem;
+}
+
+/* Conflicts "Guide" sub-tab: a scrollable reference for the war cost figures. */
+.demographics-wars-glossary {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+.demographics-wars-glossary-intro,
+.demographics-wars-glossary-note {
+    color: rgb(186, 172, 146);
+    font-size: 1.08rem;
+    line-height: 1.5;
+}
+.demographics-wars-glossary-note {
+    margin-top: 0.4rem;
+    padding-top: 0.85rem;
+    border-top: 0.0625rem solid rgba(150, 134, 110, 0.3);
+    color: rgb(160, 148, 126);
+    font-style: italic;
+}
+/* Two-column row wrap (longhand flex + margins, the way Gameface supports it;
+   `gap` drops on wrapped rows). Basis ~38rem -> two per row under the 92rem cap,
+   flex-grow stretches them to fill. */
+.demographics-wars-glossary-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.demographics-wars-glossary-row {
+    flex: 1 1 44rem;
+    box-sizing: border-box;
+    margin: 0 1.25rem 1.1rem 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.7rem;
+}
+.demographics-wars-glossary-row .demographics-wars-tooltip-cost-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-top: 0.1rem;
+}
+.demographics-wars-glossary-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.demographics-wars-glossary-term {
+    color: rgb(228, 215, 188);
+    font-weight: 600;
+    font-size: 1.18rem;
+    margin-bottom: 0.2rem;
+}
+.demographics-wars-glossary-body {
+    color: rgb(196, 182, 156);
+    font-size: 1.08rem;
+    line-height: 1.5;
+}
+.demographics-wars-tooltip-cost-lbl {
+    color: rgb(150, 138, 118);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02rem;
+    white-space: nowrap;
+}
+.demographics-wars-tooltip-cost-side {
+    flex: 0 0 4.6rem;
+    color: rgb(214, 197, 166);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.demographics-wars-tooltip-cost-val {
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.demographics-wars-tooltip-cost-val.is-loss {
+    color: #e2a594;
+}
+.demographics-wars-tooltip-cost-val.is-gain {
+    color: #a3cb9d;
+}
+.demographics-wars-tooltip-cost-val.is-none {
+    color: rgb(138, 128, 110);
+}
+
+/* ── Line chart (main per-civ time-series) — static chrome migrated from
+   chart-line.js inline styles. Dynamic values stay inline: marker positions
+   (left/top), the per-event wonder icon background-image, the tooltip
+   cursor-follow left/top + opacity toggle, the arrow's per-edge offsets and
+   border colors, and the Chart.js wrap/canvas render dimensions. Everything
+   below is the static layout/typography. ─────────────────────────────────── */
+
+/* ── Shared custom-tooltip chrome ────────────────────────────────────────────
+   The ornate parchment frame + dark gradient + tan palette first designed for
+   the wars tooltip (.demographics-wars-tooltip). Apply this class alongside a
+   tooltip's own layout class to give every custom HTML tooltip in the mod the
+   same look. Layout (position / size / padding / font-size / show-hide) stays
+   on the per-tooltip class; this only carries the visual skin. */
+.demographics-tip-chrome {
+    border: 0;
+    border-radius: 0;
+    border-image-outset: 0.3333333333rem 0.8888888889rem 1.3333333333rem 0.8888888889rem;
+    border-image-slice: 16 24 36 24 fill;
+    border-image-source: url("blp:base_tooltip-bg");
+    border-image-width: 0.8888888889rem 1.3333333333rem 2rem 1.3333333333rem;
+    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.97) 0%, rgba(18, 21, 31, 0.97) 100%);
+    color: rgb(179, 158, 128);
+    font-family: TitilliumWeb, sans-serif;
+    box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.6);
+}
+/* Shared tooltip header: cream heading over a faint tan rule (matches the wars
+   tooltip's title treatment; replaces the brighter gold headers). */
+.demographics-tip-title {
+    color: rgb(236, 224, 198);
+    font-weight: 700;
+    letter-spacing: 0.02rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba(204, 188, 163, 0.2);
+}
+
+/* Wonder hover-tooltip chrome. display (none/block) + left/top stay inline. */
+.demographics-line-wonder-tip {
+    position: absolute;
+    display: none;
+    z-index: 30;
+    pointer-events: none;
+    padding: 0.65rem 0.85rem 0.7rem;
+    min-width: 14rem;
+    max-width: 24rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    white-space: normal;
+}
+
+/* Wonder-tooltip connecting arrow. Per-edge left/top + border*Color stay
+   inline (depend on which side the tip landed on). */
+.demographics-line-wonder-tip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    z-index: 31;
+    pointer-events: none;
+}
+
+/* Wonder-built marker icon. background-image (per-event icon URL) + left/top
+   (per-event position) stay inline. */
+.demographics-line-wonder-marker {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    pointer-events: auto;
+    z-index: 6;
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.9));
+    cursor: pointer;
+}
+
+/* Destroyed-wonder marker: a transparent 28px container holding a faded wonder
+   icon plus a vivid burning raze badge. The container carries no background
+   itself (the built-marker's inline background is skipped for this kind), so
+   its drop-shadow alone would have nothing to cast - the shadow moves onto the
+   faded icon child below. */
+.demographics-line-wonder-marker--destroyed {
+    filter: none;
+}
+
+/* Faded/desaturated wonder icon for a destroyed wonder. Kept as a CHILD (not
+   the container background) so its dimming doesn't bleed onto the badge sibling
+   - CSS opacity/filter applies to the whole subtree. */
+.demographics-line-wonder-destroyed-icon {
+    position: absolute;
+    inset: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.55;
+    filter: grayscale(0.85) drop-shadow(0 0 3px rgba(0, 0, 0, 0.9));
+}
+
+/* Burning raze badge pinned to the destroyed marker's lower-right corner. Uses
+   the same fi_plot_burning icon the war-cost chart shows for razed settlements.
+   Outside the dimmed icon child, so it stays at full opacity/color - the
+   "destroyed" signal stays legible over the faded wonder icon. */
+.demographics-line-wonder-raze-badge {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 16px;
+    height: 16px;
+    background-image: url("blp:fi_plot_burning_64");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.95));
+    pointer-events: none;
+    z-index: 7;
+}
+
+/* HTML-overlay line-chart tooltip chrome. left/top (cursor-follow) + opacity
+   (show/hide toggle) stay inline. */
+.demographics-line-chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    min-width: 14rem;
+    max-width: 22rem;
+    padding: 0.6rem 0.8rem 0.7rem;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.08s;
+}
+/* Line-chart tooltip rows (built as DOM nodes so the portrait can be a live
+   <fxs-icon>). Header + one row per civ: leader portrait, civ color dot, name,
+   value. */
+.demographics-line-tip-head {
+    font-family: TitilliumWeb, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02rem;
+    color: rgb(236, 224, 198);
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(204, 188, 163, 0.2);
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.35rem;
+}
+.demographics-line-tip-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.12rem 0;
+}
+.demographics-line-tip-iconrow {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+}
+.demographics-line-tip-portrait {
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(210, 194, 165, 0.35);
+    flex-shrink: 0;
+}
+.demographics-line-tip-portrait-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.demographics-line-tip-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.demographics-line-tip-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #e5d2ac;
+}
+.demographics-line-tip-val {
+    font-family: monospace, ui-monospace;
+    font-weight: 700;
+    white-space: nowrap;
+    margin-left: 0.4rem;
+}
+
+/* Chart.js wrap. width/height (per-viewport render size) stay inline. Lays the
+   canvas + custom HTML legend out as a row; marker/tooltip overlays anchor
+   absolutely to the wrap's top-left (= the canvas, the first child). */
+.demographics-line-chartjs-wrap {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.demographics-line-chartjs-canvas {
+    flex: 0 0 auto;
+}
+
+/* Custom HTML legend beside the chart: one row per civ (leader portrait +
+   colored dot + name), clickable to toggle. width/max-height set inline. */
+.demographics-line-legend {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.4rem 0.2rem 0.4rem 0.7rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: TitilliumWeb, sans-serif;
+    font-size: 0.85rem;
+}
+/* Overlaid variant: floats in the plot's top-left so the canvas fills the full
+   width. A faint neutral box keeps it readable over gridlines without hiding the
+   lines (which rarely climb into the top-left early on). */
+.demographics-line-legend-overlay {
+    position: absolute;
+    top: 3rem;
+    left: 4.5rem;
+    z-index: 5;
+    /* wide-Y variant pushes further right - see .demographics-line-legend-overlay-wide */
+    /* Sizes to content so full leader/civ names fit (no truncation). */
+    padding: 0.3rem 0.55rem;
+    border-radius: 0.25rem;
+    background: rgba(12, 10, 7, 0.55);
+    border: 0.0625rem solid rgba(201, 162, 76, 0.3);
+}
+/* Metrics with wide numeric Y-axis labels: shift the legend right to clear them. */
+.demographics-line-legend-overlay.demographics-line-legend-overlay-wide {
+    left: 7.5rem;
+}
+/* "Legend" title above the entries. */
+.demographics-line-legend-title {
+    font-weight: 700;
+    color: rgb(228, 215, 188);
+    padding: 0.1rem 0.25rem 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    font-size: 0.78rem;
+}
+/* All / None bulk-select controls below the title. */
+.demographics-line-legend-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+    padding: 0 0.25rem 0.3rem;
+}
+.demographics-line-legend-btn {
+    padding: 0.06rem 0.5rem;
+    border-radius: 0.85rem;
+    border: 0.0625rem solid rgba(201, 162, 76, 0.45);
+    background: rgba(0, 0, 0, 0.25);
+    color: rgb(214, 197, 166);
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.demographics-line-legend-btn:hover {
+    background: rgba(243, 195, 76, 0.18);
+    color: #f3e7c4;
+}
+.demographics-line-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.16rem 0.25rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+}
+.demographics-line-legend-row:hover {
+    background: rgba(243, 195, 76, 0.1);
+}
+.demographics-line-legend-name {
+    /* No truncation: each name shows in full (one line); the legend column
+       widens to fit the longest leader/civ name. */
+    flex: 0 0 auto;
+    white-space: nowrap;
+    color: #e5e5e5;
+}
+/* Toggled-off civ: dimmed + struck through, but still clickable to restore. */
+.demographics-line-legend-row.is-hidden {
+    opacity: 0.4;
+}
+/* Focused civ: brighter, bolder name. */
+.demographics-line-legend-row.is-focused .demographics-line-legend-name {
+    color: var(--ia-accent-gold);
+    font-weight: 700;
+}
+/* Eliminated civ: dimmed name (no strike-through). */
+.demographics-line-legend-row.is-eliminated .demographics-line-legend-name {
+    color: rgb(176, 165, 146);
+}
+
+/* Chart.js canvas. width/height (render dimensions) stay inline. */
+.demographics-line-chartjs-canvas {
+    display: block;
+}
+
+/* ── Resources stacked-area chart — static chrome migrated from
+   chart-resources.js inline styles. These classes sit alongside the shared
+   demographics-chart-* classes (which carry typography) and add only the
+   absolute-positioning + static transforms. Dynamic values stay inline:
+   per-axis / per-tick / per-band left+top, and the per-category legend dot
+   background color. ──────────────────────────────────────────────────────── */
+
+/* Axis titles. left/top are per-axis geometry, set inline. */
+.demographics-resources-axis-title {
+    position: absolute;
+}
+.demographics-resources-axis-x {
+    transform: translate(-50%, -100%);
+}
+.demographics-resources-axis-y {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* X-axis tick overlay. left/top are per-tick geometry, set inline. */
+.demographics-resources-x-tick {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+/* Right-margin band legend entry. left/top are per-band geometry, set inline;
+   the dot's background color is per-category and also stays inline. */
+.demographics-resources-legend-label {
+    position: absolute;
+}
+
+/* Legacy radar side-legend entry. left/top are per-civ geometry, set inline;
+   cursor (toggle vs none) and the dot's per-civ fill/border color also stay
+   inline. */
+.demographics-radar-legend-label {
+    position: absolute;
+}
+
+/* ── History toolbar / time-filter (history-* views) ─────────────────────── */
+
+/* Parenthetical metric subtitle below the chart title. */
+.demographics-history-subtitle {
+    text-align: center;
+    color: #c2c4cc;
+    font-style: italic;
+    margin-top: -0.15rem;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.04em;
+}
+
+/* Metric "ⓘ" caption wrapper — sits between the title and the filter row. */
+.demographics-history-metric-info {
+    position: relative;
+    text-align: center;
+    margin: 0.1rem 0 0.25rem 0;
+}
+
+/* Radar snapshot pill with no captured snapshot yet — greyed + not-allowed. */
+.demographics-history-pill-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Wonders-marker toggle button in its OFF state — desaturated label color. */
+.demographics-history-wonders-off {
+    color: #c0a875;
+}
+
+/* Shared chrome for the history info tooltips (CSV + disabled-filter). The
+   left/right anchor and width differ per tooltip (modifier classes below). */
+.demographics-history-tip {
+    position: absolute;
+    top: 1.9rem;
+    max-width: 92vw;
+    padding: 1.1rem 1.3rem 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: left;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s;
+    z-index: 50;
+    box-sizing: border-box;
+}
+.demographics-history-tip-csv {
+    right: 0;
+    width: 36rem;
+}
+.demographics-history-tip-disabled-filter {
+    left: 0;
+    width: 38rem;
+}
+/* The tip is an absolutely-positioned child of the small filter pill. Engine
+   tooltip classes (img-tooltip-*) re-enable pointer-events, which made this
+   38rem-wide tip a hover-trigger for the pill's mouseenter - so the tooltip
+   fired across a huge area. Force pointer-events off (higher specificity than
+   the single-class engine rule) so only the visible pill triggers it. */
+.demographics-chart-time-filter-pill .demographics-history-tip {
+    pointer-events: none;
+}
+
+/* Tooltip title bar (disabled-filter tooltip — built as real DOM). */
+.demographics-history-tip-title {
+    color: rgb(236, 224, 198);
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(204, 188, 163, 0.2);
+}
+.demographics-history-tip-body {
+    color: rgb(190, 172, 144);
+    /* The tip is a child of the filter pill, which sets text-transform:uppercase;
+       that inherits down, so reset it here for mixed-case prose. */
+    text-transform: none;
+}
+/* Each body line is its own block element (real line breaks; Coherent drops
+   <br> and force-breaks inline <b>). */
+.demographics-history-tip-line {
+    margin-bottom: 0.15rem;
+}
+.demographics-history-tip-line:last-child {
+    margin-bottom: 0;
+}
+/* The closing call-to-action line. */
+.demographics-history-tip-line-action {
+    margin-top: 0.5rem;
+    color: rgb(243, 231, 196);
+    font-weight: 600;
+}
+
+/* Native info BLP icon next to the "Copy as CSV" button. Base opacity is
+   raised to 1 on hover via an inline style toggle. */
+.demographics-history-csv-info-icon {
+    display: block;
+    flex: 0 0 1.3rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    background-image: url("blp:icon_info");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: help;
+    user-select: none;
+    position: relative;
+    opacity: 0.75;
+    transition: opacity 0.12s;
+}
+
+/* Inline-flex group wrapping the CSV button + its info icon so the icon
+   reliably renders to the right regardless of toolbar justification. */
+.demographics-history-csv-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+}
+
+/* CSV export toast. Success/failure border-color + color are dynamic and set
+   inline; border-color overrides the transparent placeholder below to keep
+   the original `1px solid <tint>` border. */
+.demographics-csv-toast {
+    position: fixed;
+    top: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.25rem;
+    border: 1px solid transparent;
+    background: rgba(20, 16, 10, 0.92);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+}
+

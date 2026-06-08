@@ -1,5 +1,5 @@
 // Dev-only ESLint flat config. Enforces the modularization gate (function length +
-// cyclomatic complexity) and catches real bugs. Not shipped — release.sh excludes it.
+// cyclomatic complexity) and catches real bugs. Not shipped; release.sh excludes it.
 
 const ENGINE_GLOBALS = {
   // Civ7 true globals used without importing (see civ7-modding-docs/06).
@@ -93,6 +93,20 @@ export default [
         "error",
         { max: 50, skipBlankLines: true, skipComments: true, IIFEs: true }
       ],
+      // Soft quality guardrails from demographics-code-quality-catalogue.md.
+      "max-len": [
+        "warn",
+        {
+          code: 100,
+          ignoreUrls: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+          ignoreRegExpLiterals: true
+        }
+      ],
+      "max-params": ["error", 5],
+      "max-depth": ["error", 4],
+      "max-statements": ["error", 18],
       // Correctness checks.
       "no-undef": "error",
       "no-unused-vars": [
@@ -104,7 +118,7 @@ export default [
     }
   },
   {
-    // Declarative data catalogs are data, not logic — exempt from the length gate.
+    // Declarative data catalogs are data, not logic; exempt from the length gate.
     files: ["ui/demographics-metrics.js"],
     rules: { "max-lines-per-function": "off" }
   }

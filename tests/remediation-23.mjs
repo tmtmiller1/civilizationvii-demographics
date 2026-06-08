@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
-import DemographicsStorage from "/demographics/ui/demographics-storage.js";
-import { flavorCrisisName } from "/demographics/ui/screen-demographics/crisis-names.js";
+import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
+import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 
 function testFlavorCrisisNameDeterministic() {
   const sample = {

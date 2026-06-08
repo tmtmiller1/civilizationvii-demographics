@@ -109,6 +109,26 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ja_JP"><Text>建設者</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="ja_JP"><Text>ターン {1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="ja_JP"><Text>破壊</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE" Language="ja_JP"><Text>危機前</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_POINTS" Language="ja_JP"><Text>ポイント</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD" Language="ja_JP"><Text>ゴールド</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN" Language="ja_JP"><Text>ゴールド/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CITIES" Language="ja_JP"><Text>都市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TECHS" Language="ja_JP"><Text>テクノロジー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN" Language="ja_JP"><Text>食料/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN" Language="ja_JP"><Text>生産/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN" Language="ja_JP"><Text>科学/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN" Language="ja_JP"><Text>文化/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN" Language="ja_JP"><Text>幸福/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN" Language="ja_JP"><Text>影響力/ターン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION" Language="ja_JP"><Text>評判</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE" Language="ja_JP"><Text>人</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_DEALS" Language="ja_JP"><Text>取引</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES" Language="ja_JP"><Text>ルート</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH" Language="ja_JP"><Text>戦闘力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="ja_JP"><Text>遺産</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="ja_JP"><Text>資源</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ja_JP"><Text>段階</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ja_JP"><Text>危機の始まり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ja_JP"><Text>危機の激化</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ja_JP"><Text>危機の頂点</Text></Replace>

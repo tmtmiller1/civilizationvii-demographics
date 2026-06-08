@@ -109,6 +109,26 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="pt_BR"><Text>Construída por</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="pt_BR"><Text>Turno {1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="pt_BR"><Text>Destruída</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE" Language="pt_BR"><Text>Pré-crise</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_POINTS" Language="pt_BR"><Text>pontos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD" Language="pt_BR"><Text>ouro</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN" Language="pt_BR"><Text>ouro / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CITIES" Language="pt_BR"><Text>cidades</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TECHS" Language="pt_BR"><Text>tecnologias</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN" Language="pt_BR"><Text>comida / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN" Language="pt_BR"><Text>produção / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN" Language="pt_BR"><Text>ciência / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN" Language="pt_BR"><Text>cultura / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN" Language="pt_BR"><Text>felicidade / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN" Language="pt_BR"><Text>influência / turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION" Language="pt_BR"><Text>reputação</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE" Language="pt_BR"><Text>pessoas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_DEALS" Language="pt_BR"><Text>acordos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES" Language="pt_BR"><Text>rotas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH" Language="pt_BR"><Text>força</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="pt_BR"><Text>maravilhas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="pt_BR"><Text>recursos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="pt_BR"><Text>estágio</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="pt_BR"><Text>Crise Começa</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="pt_BR"><Text>Crise se Intensifica</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="pt_BR"><Text>Crise Culmina</Text></Replace>

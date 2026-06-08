@@ -12,9 +12,14 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [*]A World Factbook view with current values and world rankings for each civilization.
 [*]A Global Relations view with met civilizations and city-states arranged in a ring layout.
 [*]A war timeline built from diplomacy events.
-[*]Progress overlays on the Triumphs cards in the Legacies window.
+[*]Readable shipped source modules (release builds are not minified by default; written in readable JS with JSDoc types and tsc --noEmit).
 [*]Copy-to-CSV for recorded history (true export unavailable for modding).
 [*]Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
+[/list]
+
+[b]Triumphs Overlay:[/b]
+[list]
+[*]Triumph card progress overlays now ship as a separate companion mod: triumphs-progress-overlay.
 [/list]
 
 [b]What The Mod Does Not Do:[/b]

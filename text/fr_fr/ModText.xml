@@ -325,6 +325,26 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="fr_FR">
             <Text>Détruite</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE" Language="fr_FR"><Text>Avant la crise</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_POINTS" Language="fr_FR"><Text>points</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD" Language="fr_FR"><Text>or</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN" Language="fr_FR"><Text>or / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CITIES" Language="fr_FR"><Text>villes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TECHS" Language="fr_FR"><Text>technologies</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN" Language="fr_FR"><Text>nourriture / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN" Language="fr_FR"><Text>production / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN" Language="fr_FR"><Text>science / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN" Language="fr_FR"><Text>culture / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN" Language="fr_FR"><Text>bonheur / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN" Language="fr_FR"><Text>influence / tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION" Language="fr_FR"><Text>réputation</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE" Language="fr_FR"><Text>personnes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_DEALS" Language="fr_FR"><Text>accords</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES" Language="fr_FR"><Text>routes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH" Language="fr_FR"><Text>force</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="fr_FR"><Text>merveilles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="fr_FR"><Text>ressources</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="fr_FR"><Text>phase</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="fr_FR">
             <Text>Début de la crise</Text>
         </Replace>
