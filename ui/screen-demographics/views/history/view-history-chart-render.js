@@ -111,7 +111,10 @@ function tryRenderCrisis(chartHost, ctx, activeMetric) {
     return true;
   }
   if (activeMetric === "crisis_graphs" && typeof chartMod.renderCrisisGraphs === "function") {
-    chartMod.renderCrisisGraphs(chartHost, { history: ctx.history });
+    chartMod.renderCrisisGraphs(chartHost, {
+      history: ctx.history,
+      crisisAge: ctx.crisisGraphsAge
+    });
     return true;
   }
   return false;
@@ -129,8 +132,8 @@ function tryRenderCrisis(chartHost, ctx, activeMetric) {
 function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
   const { width, height } = size;
   const chartMod = /** @type {*} */ (ctx.chartMod);
-  if (activeMetric === "wars_gantt" && typeof chartMod.renderWarsGantt === "function") {
-    chartMod.renderWarsGantt(chartHost, {
+  if (activeMetric === "wars_gantt" && typeof chartMod.renderConflictsTimeline === "function") {
+    chartMod.renderConflictsTimeline(chartHost, {
       history: ctx.history,
       width,
       height,
@@ -141,15 +144,8 @@ function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
     });
     return true;
   }
-  if (
-    activeMetric === "wars_glossary" &&
-    typeof chartMod.renderWarsGlossary === "function"
-  ) {
-    chartMod.renderWarsGlossary(chartHost);
-    return true;
-  }
-  if (activeMetric === "war_graphs" && typeof chartMod.renderWarGraphs === "function") {
-    chartMod.renderWarGraphs(chartHost, {
+  if (activeMetric === "war_graphs" && typeof chartMod.renderConflictsGraphs === "function") {
+    chartMod.renderConflictsGraphs(chartHost, {
       history: ctx.history,
       selectedWarId: ctx.warGraphsWarId
     });

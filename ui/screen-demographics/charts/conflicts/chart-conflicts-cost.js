@@ -1,14 +1,14 @@
-// chart-wars-cost.js
+// chart-conflicts-cost.js
 //
 // The shared "war cost" unit for the Conflicts views: the COST_METRICS catalog
 // (the eight figures shown per combatant), the series-reduction + formatting
 // helpers that turn a participant's sampled metric series into a displayed
 // figure, and the cost-metric icon builder. Imported by the wars Gantt tooltip
-// (chart-wars-gantt.js), the Guide glossary (chart-wars-glossary.js), and the
-// War Graphs sub-tab (chart-war-graphs.js) so all three stay in lock-step.
+// (chart-conflicts-timeline.js) and the War Graphs sub-tab (chart-conflicts-graphs.js) so both
+// stay in lock-step.
 //
 // Each COST_METRICS entry's `id` IS the snapshot.metrics key it reads, so the
-// same catalog drives the tooltip figures, the glossary rows, and the graphs.
+// same catalog drives the tooltip figures and the graphs.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 

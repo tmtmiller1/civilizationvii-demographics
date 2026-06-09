@@ -13,7 +13,7 @@ import {
   appendEmptyNotice,
   getXAxisMode
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
-import { COST_METRICS, participantCost } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost.js";
+import { COST_METRICS, participantCost } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { buildCostTable } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost-table.js";
 import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
@@ -141,12 +141,10 @@ function buildCostSection(samples, start, end) {
 }
 
 /**
- * Build one stage block: the colored bar plus the per-civ cost table. For the
- * final "Ends" stage, `ctx.cumulativeGroup` makes the table span the WHOLE crisis
- * (every stage) and adds a clear "cumulative" caption.
+ * Build one stage block: the colored bar plus that stage's own per-civ cost table.
  * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg The segment.
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
- *   mode: string, cumulativeGroup?: ({start:number,end:number}|null) }} ctx Render context.
+ *   mode: string }} ctx Render context.
  * @returns {HTMLElement} The stage block.
  */
 function buildStageBlock(seg, ctx) {
@@ -156,16 +154,29 @@ function buildStageBlock(seg, ctx) {
   block.appendChild(
     buildStageBar(seg, idx, ctx.seed, formatStageSpan(seg.start, seg.end, ctx.yearMap, ctx.mode))
   );
-  const cum = ctx.cumulativeGroup || null;
-  if (cum) {
-    const cap = document.createElement("div");
-    cap.className = "demographics-crisis-cumulative-caption";
-    cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE");
-    block.appendChild(cap);
-  }
-  block.appendChild(
-    buildCostSection(ctx.samples, cum ? cum.start : seg.start, cum ? cum.end : seg.end)
-  );
+  block.appendChild(buildCostSection(ctx.samples, seg.start, seg.end));
+  return block;
+}
+
+/**
+ * Build the crisis-wide cumulative-impact block: a caption plus a cost table
+ * spanning the entire crisis ([group.start, group.end] — every stage summed).
+ * Rendered once per crisis beneath its stage blocks, INDEPENDENT of whether an
+ * "Ends" (stage 4) sample was ever captured — the engine often resolves a crisis
+ * straight from "Culminates" without a stage-4 reading, so gating on stage 4
+ * silently dropped the cumulative table.
+ * @param {{ start: number, end: number }} group The crisis run.
+ * @param {{ samples: Snapshot[] }} ctx Render context.
+ * @returns {HTMLElement} The cumulative block.
+ */
+function buildCumulativeBlock(group, ctx) {
+  const block = document.createElement("div");
+  block.className = "demographics-crisis-stage demographics-crisis-cumulative";
+  const cap = document.createElement("div");
+  cap.className = "demographics-crisis-cumulative-caption";
+  cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE");
+  block.appendChild(cap);
+  block.appendChild(buildCostSection(ctx.samples, group.start, group.end));
   return block;
 }
 
@@ -177,13 +188,18 @@ function buildStageBlock(seg, ctx) {
  * @returns {{ segments:any[], start:number, end:number, sample:Snapshot }[]} The crisis groups.
  */
 function groupCrises(segments) {
-  /** @type {{ segments:any[], start:number, end:number, sample:Snapshot }[]} */
+  /** @type {{ segments:any[], start:number, end:number, sample:Snapshot, age:* }[]} */
   const groups = [];
-  /** @type {{ segments:any[], start:number, end:number, sample:Snapshot }|null} */
+  /** @type {{ segments:any[], start:number, end:number, sample:Snapshot, age:* }|null} */
   let cur = null;
   for (const seg of segments) {
-    if (!cur || seg.stage === 1) {
-      cur = { segments: [], start: seg.start, end: seg.end, sample: seg.sample };
+    const age = seg.sample && seg.sample.age;
+    // Start a fresh crisis run at each stage-1 onset OR whenever the age changes —
+    // each age has its own crisis, so the Antiquity and Exploration crises always
+    // get their own group (and thus their own cumulative-impact table), even if a
+    // crisis's stage 1 wasn't captured.
+    if (!cur || seg.stage === 1 || age !== cur.age) {
+      cur = { segments: [], start: seg.start, end: seg.end, sample: seg.sample, age };
       groups.push(cur);
     }
     cur.segments.push(seg);
@@ -194,7 +210,8 @@ function groupCrises(segments) {
 
 /**
  * Build one crisis group: a title header (the crisis's flavor name, which differs
- * per age) and its stage blocks; the final stage carries the cumulative table.
+ * per age), its per-stage blocks, then a cumulative-impact block summing the whole
+ * crisis (shown whenever the crisis has more than one stage).
  * @param {{ segments:any[], start:number, end:number, sample:Snapshot }} group The crisis run.
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
  *   mode: string }} ctx Render context.
@@ -207,10 +224,8 @@ function buildCrisisGroup(group, ctx) {
   header.className = "demographics-crisis-group-header";
   header.textContent = flavorCrisisName(group.sample, group.segments[0].stage, ctx.seed);
   wrap.appendChild(header);
-  for (const seg of group.segments) {
-    const cumulativeGroup = seg.stage >= 4 ? group : null;
-    wrap.appendChild(buildStageBlock(seg, Object.assign({}, ctx, { cumulativeGroup })));
-  }
+  for (const seg of group.segments) wrap.appendChild(buildStageBlock(seg, ctx));
+  if (group.segments.length >= 2) wrap.appendChild(buildCumulativeBlock(group, ctx));
   return wrap;
 }
 

@@ -4,7 +4,7 @@
 // (matching the historical line charts' crisis markers) and onset/segment
 // detection from the sampled `crisis_stage` step. Pure data/logic with no
 // chart-module dependencies, so both the Crises page (chart-crisis-stages.js)
-// and the war-timeline overlay (chart-wars-gantt.js) can import it freely
+// and the war-timeline overlay (chart-conflicts-timeline.js) can import it freely
 // without creating an import cycle.
 
 // Severity color per stage (1..4), matching chart-line-event-markers.js so the
@@ -54,17 +54,37 @@ function maxStage(best, candidate) {
  * @returns {{ stage: number, turn: number, sample: Snapshot }[]} The onsets.
  */
 export function crisisStageOnsets(samples) {
+  /** @type {{ stage: number, turn: number, sample: Snapshot }[]} */
   const onsets = [];
-  let last = 0;
-  for (const s of samples || []) {
-    const raw = readSampleCrisisStage(s);
-    if (raw === undefined) continue;
-    if (raw > last && raw >= 1 && typeof s.turn === "number") {
-      onsets.push({ stage: raw, turn: s.turn, sample: s });
-    }
-    if (raw >= 0) last = raw;
-  }
+  // Each age has its OWN crisis. The stage doesn't reliably drop to 0 between ages
+  // in the sampled stream (it can linger or go undefined), so a single running max
+  // would let the Antiquity crisis's peak swallow the Exploration crisis's lower
+  // stages. `state.last` is reset whenever the age changes (see onsetStep) so the
+  // next age's crisis is detected from its own stage 1.
+  const state = { last: 0, age: /** @type {*} */ (undefined) };
+  for (const s of samples || []) onsetStep(s, state, onsets);
   return onsets;
+}
+
+/**
+ * Fold one sample into the onset accumulator, resetting the running max at age
+ * changes so each age's crisis is detected independently.
+ * @param {Snapshot|*} s One sample.
+ * @param {{ last: number, age: * }} state Running detection state (mutated).
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets Accumulator.
+ */
+function onsetStep(s, state, onsets) {
+  if (!s) return;
+  if (s.age !== state.age) {
+    state.age = s.age;
+    state.last = 0;
+  }
+  const raw = readSampleCrisisStage(s);
+  if (raw === undefined) return;
+  if (raw > state.last && raw >= 1 && typeof s.turn === "number") {
+    onsets.push({ stage: raw, turn: s.turn, sample: s });
+  }
+  if (raw >= 0) state.last = raw;
 }
 
 /**

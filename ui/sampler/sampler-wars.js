@@ -34,8 +34,11 @@
  * @property {object[]} [sideBCivs] Side B roster info entries.
  * @property {Pid} [aPid] Legacy scalar side-A pid (pre-array schema).
  * @property {Pid} [bPid] Legacy scalar side-B pid (pre-array schema).
- * @property {number | null} [startTurn] Global start turn.
- * @property {number | null} [endTurn] Global end turn (null while open).
+ * @property {number | null} [startTurn] Age-local start turn.
+ * @property {number | null} [endTurn] Age-local end turn (null while open).
+ * @property {number} [startChartTurn] Continuous (cross-age) chart turn at start.
+ * @property {number} [lastChartTurn] Latest global chart turn seen active.
+ * @property {number} [endChartTurn] Continuous chart turn at end.
  * @property {string} [startYear] In-game start year label.
  * @property {string | null} [endYear] In-game end year label.
  * @property {object | null} [declaredBy] Declarer info.

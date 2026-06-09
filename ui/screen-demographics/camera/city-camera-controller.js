@@ -23,6 +23,7 @@ import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import {
   captionText,
+  flavorText,
   mountOverlay,
   removeOverlay,
   updateFlybyProgress
@@ -34,10 +35,10 @@ import {
   popShotCamera,
   readFoV,
   removeFireworks,
-  resolveSpecialDistricts,
   restoreClutterLayers,
   setFoV
 } from "/demographics/ui/screen-demographics/camera/cinematic-tour.js";
+import { resolveSpecialDistricts } from "/demographics/ui/screen-demographics/camera/cinematic-tour-highlights.js";
 import {
   blockedTarget,
   cfg,
@@ -206,6 +207,60 @@ function withContextManager(fn) {
 }
 
 /**
+ * Resolve the engine display-queue manager (the popup/notification sequencer the
+ * base game's own cinematics defer through) and invoke `fn` with it.
+ * @param {(dq: *) => void} fn Callback receiving the DisplayQueueManager.
+ */
+function withDisplayQueue(fn) {
+  import("/core/ui/context-manager/display-queue-manager.js")
+    .then((m) => fn(/** @type {*} */ (m.DisplayQueueManager || m.default || m)))
+    .catch(() => {
+      // display-queue-manager import can fail in headless contexts; popups just won't defer.
+    });
+}
+
+/**
+ * Suspend the engine popup/notification queue while a cinematic owns the screen,
+ * so civic-discovery (and similar) popups don't appear over — and trap the player
+ * in — the flyby. Suspended popups queue and re-surface on teardown, exactly how
+ * the base game's own cinematics defer them. We only claim the suspension when it
+ * isn't already suspended, so teardown never resumes a suspension we didn't own.
+ * @param {*} flowState The active flow state (flagged so teardown resumes once).
+ */
+function suspendPopups(flowState) {
+  withDisplayQueue((dq) => {
+    try {
+      if (typeof dq.suspend === "function" && typeof dq.isSuspended === "function" && !dq.isSuspended()) {
+        dq.suspend();
+        if (flowState) flowState.popupsSuspended = true;
+      }
+    } catch (_) {
+      // suspend can throw mid-transition; non-fatal (popups simply aren't deferred).
+    }
+  });
+}
+
+/**
+ * Resume the popup/notification queue suspended by {@link suspendPopups}, letting
+ * any popups that arrived during the cinematic surface now. No-op unless we were
+ * the ones who suspended it.
+ * @param {*} flowState The flow state flagged by suspendPopups.
+ */
+function resumePopups(flowState) {
+  if (!flowState || !flowState.popupsSuspended) return;
+  flowState.popupsSuspended = false;
+  withDisplayQueue((dq) => {
+    try {
+      if (typeof dq.resume === "function" && typeof dq.isSuspended === "function" && dq.isSuspended()) {
+        dq.resume();
+      }
+    } catch (_) {
+      // resume can throw if the queue state changed; non-fatal.
+    }
+  });
+}
+
+/**
  * Pop the Demographics screen so the map is visible.
  */
 function popScreen() {
@@ -288,8 +343,9 @@ function resolveCityFrame(target) {
  * @param {*} caption The {nameKey, year} caption, or null to clear.
  */
 function updateNowShowing(caption) {
-  if (!state || !state.caption) return;
-  state.caption.textContent = captionText(caption);
+  if (!state) return;
+  if (state.caption) state.caption.textContent = captionText(caption);
+  if (state.flavor) state.flavor.textContent = flavorText(caption);
 }
 
 /**
@@ -517,6 +573,7 @@ function restoreFromCinematic(s) {
   enableWorldInput();
   showCityBanners();
   showUnitFlags();
+  resumePopups(s);
   if (!safeRestoreCamera(s.didSaveZoom)) {
     emergencyKeyframe();
   }
@@ -612,6 +669,7 @@ function beginFlow(target, mode) {
   disableWorldInput();
   hideCityBanners();
   hideUnitFlags();
+  suspendPopups(state);
   target.districts = resolveSpecialDistricts(target);
   popScreen();
   mountCurrentOverlay(target, mode);

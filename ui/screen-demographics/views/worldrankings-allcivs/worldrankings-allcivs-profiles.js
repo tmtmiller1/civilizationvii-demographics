@@ -19,16 +19,16 @@ import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
 
 /**
  * Persisted-setting accessor surface read off the render context.
- * @typedef {Object} FactbookSettings
+ * @typedef {Object} WorldRankingsAllCivsSettings
  * @property {(key: string, fallback?: *) => *} [getSetting] Read a setting.
  * @property {(key: string, value: *) => void} [setSetting] Write a setting.
  */
 
 /**
  * Render context handed to `render`.
- * @typedef {Object} FactbookCtx
+ * @typedef {Object} WorldRankingsAllCivsCtx
  * @property {DemoHistory} [history] The full persisted history blob.
- * @property {FactbookSettings} [settings] Persisted-setting accessor.
+ * @property {WorldRankingsAllCivsSettings} [settings] Persisted-setting accessor.
  */
 
 /**
@@ -214,7 +214,7 @@ export function computeRanks(profiles, metricId) {
 /**
  * Read a boolean persisted setting defensively, returning `fallback` on any
  * error.
- * @param {FactbookCtx} ctx Render context.
+ * @param {WorldRankingsAllCivsCtx} ctx Render context.
  * @param {string} key Setting key.
  * @param {boolean} fallback Value used when reading throws or is unavailable.
  * @returns {boolean} The coerced setting value.
@@ -253,7 +253,7 @@ const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
 /**
  * Spoiler guard (display-time): strip diplomacy-category metric values from the
  * profiles of civs the local player has not met (`met === false`), so the
- * factbook renders the missing-value placeholder instead of leaking their
+ * worldrankings-allcivs renders the missing-value placeholder instead of leaking their
  * reputation / influence / deals. Both the displayed cells and the rank
  * computation read `latest`, so removing the value here covers both. Reversible
  * - only called when `hideUnmetStats` is on.

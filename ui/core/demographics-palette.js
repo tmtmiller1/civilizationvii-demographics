@@ -53,14 +53,19 @@ const PALETTE_COLORBLIND = [
 // known collisions:
 //   denounced = #ff7f1a  → hostile cannot be orange.
 //   trade (was #3fbf3f)  → friendly stays green; trade moved to teal.
+// Vivid attitude scale: a saturated diverging ramp from war (red) through the
+// neutral stone to alliance (blue). The earlier pale pastels were too close in
+// chroma/value to tell apart on the deep ring field, so these push saturation
+// while keeping the semantics (war = red, friendly = green, alliance = blue, …)
+// and a readable warm→cool ordering across the seven steps.
 const ATTITUDE_STANDARD = {
-  war: "#e02020", // bright red
-  alliance: "#9933ff", // purple
-  helpful: "#f3c34c", // gold
-  friendly: "#3fbf3f", // green
-  neutral: "#bfbfbf", // gray
-  unfriendly: "#e07b39", // burnt orange - clearly separated from the helpful gold
-  hostile: "#b03868" // maroon-pink - distinct from denounced orange + war red
+  war: "#e8473b", // vivid red
+  hostile: "#e87434", // orange-red (strong negative)
+  unfriendly: "#eaa93b", // amber (caution)
+  neutral: "#b9b1a0", // warm stone grey
+  friendly: "#a6d24a", // lime green (positive)
+  helpful: "#4fc56e", // green (warm positive)
+  alliance: "#4ea6ec" // vivid blue (allied)
 };
 
 // CVD-safe attitude swatches: red→vermillion (the most universal "danger"

@@ -75,13 +75,14 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @property {(host: HTMLElement, opts: *) => void} [renderChart]
  * @property {(host: HTMLElement, opts: *) => void} [renderLegacyRadar]
  * @property {(host: HTMLElement, opts: *) => void} [renderResourcesStack]
- * @property {(host: HTMLElement, opts: *) => void} [renderWarsGantt]
- * @property {(host: HTMLElement) => void} [renderWarsGlossary]
- * @property {(host: HTMLElement, opts: *) => void} [renderWarGraphs]
+ * @property {(host: HTMLElement, opts: *) => void} [renderConflictsTimeline]
+ * @property {(host: HTMLElement, opts: *) => void} [renderConflictsGraphs]
  * @property {(host: HTMLElement, opts: *) => void} [renderCrisisStages]
  * @property {(host: HTMLElement, opts: *) => void} [renderCrisisGraphs]
  * @property {(history: *) => Array<*>} [collectWarCivOptions]
  * @property {(history: *) => Array<*>} [collectResourceCivOptions]
+ * @property {(history: *) => Array<{ id: string, label: string }>} [collectCrisisScopes]
+ * @property {(history: *, scopeId: *) => string} [resolveCrisisScope]
  * @property {(mode: string) => void} [setXAxisMode]
  */
 
@@ -108,6 +109,7 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @property {boolean} [warsActiveOnly] Show only ongoing wars.
  * @property {boolean} [warsShowCs] Show city-state wars.
  * @property {number|null} [warGraphsWarId] Selected war (warUniqueID) for the War Graphs sub-tab.
+ * @property {string} [crisisGraphsAge] Selected crisis scope for the Crisis Graphs sub-tab.
  * @property {Pid} [resourcesViewerPid] Selected resources viewer civ.
  * @property {(id: string) => void} [setActiveMetric] Select a metric.
  * @property {(id: string) => void} [setActivePage] Select a page.
@@ -115,6 +117,7 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @property {(id: string) => void} [setActiveRadarAge] Select a radar age.
  * @property {(pid: Pid|null) => void} [setWarsFilterPid] Set wars civ filter.
  * @property {(id: number|null) => void} [setWarGraphsWarId] Select a war for War Graphs.
+ * @property {(id: string) => void} [setCrisisGraphsAge] Select a crisis scope for Crisis Graphs.
  * @property {(v: boolean) => void} [setWarsActiveOnly] Toggle ongoing-only.
  * @property {(pid: Pid) => void} [setResourcesViewerPid] Set resources viewer.
  * @property {(leaderKey: string) => void} [toggleCiv] Hide/show a civ.
@@ -208,7 +211,7 @@ export const PAGES = [
     // Tracked by the sampler against `history.wars`.
     id: "conflicts",
     label: "LOC_DEMOGRAPHICS_PAGE_CONFLICTS",
-    metrics: ["wars_gantt", "war_graphs", "wars_glossary"]
+    metrics: ["wars_gantt", "war_graphs"]
   },
   {
     // Crises page: the current age's crisis broken into its stages, each with a
@@ -238,10 +241,6 @@ const SYNTHETIC_METRICS = {
   wars_gantt: {
     label: "Wars",
     title: "LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE"
-  },
-  wars_glossary: {
-    label: "Guide",
-    title: "LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE"
   },
   war_graphs: {
     label: "War Graphs",

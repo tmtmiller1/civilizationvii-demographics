@@ -55,25 +55,24 @@
                     <Item>ui/screen-demographics/screen-demographics.html</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics.css</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics-base.css</Item>
-                    <Item>ui/screen-demographics/styles/screen-demographics-factbook.css</Item>
+                    <Item>ui/screen-demographics/styles/screen-demographics-worldrankings-allcivs.css</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics-relations-options.css</Item>
-                    <Item>ui/screen-demographics/styles/screen-demographics-wars-history.css</Item>
+                    <Item>ui/screen-demographics/styles/screen-demographics-conflicts-history.css</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics-settlements.css</Item>
                     <Item>ui/screen-demographics/screen/demographics-chart.js</Item>
                     <Item>ui/screen-demographics/charts/shared/chart-shared.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-names.js</Item>
-                    <Item>ui/screen-demographics/charts/legacy/chart-legacy-radar.js</Item>
+                    <Item>ui/screen-demographics/charts/triumphs/chart-triumphs-radar.js</Item>
                     <Item>ui/screen-demographics/charts/resources/chart-resources.js</Item>
                     <Item>ui/screen-demographics/charts/shared/chart-stack-grid.js</Item>
-                    <Item>ui/screen-demographics/charts/wars/chart-wars-cost.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-wars-merge.js</Item>
-                    <Item>ui/screen-demographics/charts/wars/chart-wars-gantt.js</Item>
-                    <Item>ui/screen-demographics/charts/wars/chart-wars-glossary.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-timeline.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-war-series.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-war-mini-chart.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-war-military.js</Item>
-                    <Item>ui/screen-demographics/charts/wars/chart-war-graphs.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-graphs.js</Item>
                     <Item>ui/screen-demographics/charts/crises/chart-crisis-stages.js</Item>
                     <Item>ui/screen-demographics/views/history/view-history.js</Item>
                     <Item>ui/screen-demographics/views/history/history-tabs.js</Item>
@@ -82,15 +81,16 @@
                     <Item>ui/screen-demographics/views/history/history-toolbar.js</Item>
                     <Item>ui/screen-demographics/views/history/history-time-filter.js</Item>
                     <Item>ui/screen-demographics/views/history/history-csv.js</Item>
-                    <Item>ui/screen-demographics/views/factbook/factbook-profiles.js</Item>
-                    <Item>ui/screen-demographics/views/factbook/factbook-render.js</Item>
-                    <Item>ui/screen-demographics/views/factbook/factbook-controller.js</Item>
-                    <Item>ui/screen-demographics/views/factbook/view-factbook.js</Item>
+                    <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js</Item>
+                    <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js</Item>
+                    <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-controller.js</Item>
+                    <Item>ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js</Item>
                     <Item>ui/screen-demographics/views/settlements/view-settlements.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-data.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-trace.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-overlay.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-tour.js</Item>
+                    <Item>ui/screen-demographics/camera/cinematic-tour-highlights.js</Item>
                     <Item>ui/screen-demographics/camera/city-camera-controller.js</Item>
                     <Item>ui/screen-demographics/camera/city-map-view.js</Item>
                     <Item>ui/screen-demographics/views/settlements/towns-history.js</Item>

@@ -1,5 +1,5 @@
 /* ── Wars Gantt (conflicts timeline) — static chrome migrated from
-   chart-wars-gantt.js inline styles. Per-bar geometry, x-tick / axis-title
+   chart-conflicts-timeline.js inline styles. Per-bar geometry, x-tick / axis-title
    positions, and the tooltip's hover visibility stay inline (dynamic);
    everything below is the static layout/typography. ───────────────────────── */
 
@@ -78,15 +78,29 @@
     font-size: 0.7rem;
     color: #ece0c6;
 }
-/* "Now" marker label sitting atop the dashed red current-turn line. */
+/* Age-transition chip on the Gantt (purple, anchored at the bottom of the line
+   so it never clashes with the crisis labels stacked from the top). */
+.demographics-wars-age-label {
+    position: absolute;
+    transform: translateX(-50%);
+    padding: 0.05rem 0.4rem;
+    border-radius: 0.2rem;
+    background: rgba(20, 16, 10, 0.9);
+    border-left: 0.18rem solid #b78cff;
+    color: #e5d2ac;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    pointer-events: none;
+}
+/* "Present" marker label sitting atop the dashed yellow current-turn line. */
 .demographics-wars-now-label {
     position: absolute;
     transform: translate(-50%, -100%);
     padding: 0.02rem 0.3rem;
     border-radius: 0.2rem;
-    background: rgba(40, 8, 6, 0.85);
-    border: 0.0625rem solid rgba(232, 69, 60, 0.7);
-    color: #ff9d96;
+    background: rgba(38, 32, 6, 0.85);
+    border: 0.0625rem solid rgba(255, 223, 59, 0.7);
+    color: #ffe98a;
     font-size: 0.72rem;
     font-weight: 700;
     white-space: nowrap;
@@ -126,7 +140,7 @@
     max-width: 90vw;
     /* Uniformly enlarge the whole tooltip a touch for readability. Anchored at
        its top-left (the cursor anchor), so it grows down-right. Keep TOOLTIP_SCALE
-       in chart-wars-gantt.js in sync for the edge-flip math. */
+       in chart-conflicts-timeline.js in sync for the edge-flip math. */
     transform: scale(1.12);
     transform-origin: top left;
     padding: 0.85rem 1rem 1.05rem 1rem;
@@ -190,6 +204,29 @@
     height: 1px;
     background: rgba(204, 188, 163, 0.2);
     margin: 0.45rem 0;
+}
+/* Sign-key footer: a compact "+gain · −loss · — no data" legend. The signs reuse
+   the leader-val color classes so they match the figures above exactly. */
+.demographics-wars-tooltip-key {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+    font-size: 0.82rem;
+    opacity: 0.92;
+}
+.demographics-wars-tooltip-key .demographics-wars-tooltip-leader-val {
+    text-align: left;
+}
+.demographics-wars-tooltip-key-label {
+    color: var(--ia-text-secondary);
+    margin-right: 0.25rem;
+}
+.demographics-wars-tooltip-key-sep {
+    color: var(--ia-text-secondary);
+    opacity: 0.45;
+    margin: 0 0.15rem;
 }
 .demographics-wars-tooltip-section-label {
     font-weight: 600;
@@ -593,6 +630,14 @@
     letter-spacing: 0.04em;
 }
 /* "Cumulative impact across all stages" caption above the Ends-stage table. */
+/* Crisis-wide cumulative block: its own section beneath the stage blocks, set
+   off with a gold top rule + extra spacing so it reads as the crisis total
+   rather than another stage. */
+.demographics-crisis-cumulative {
+    margin-top: 0.6rem;
+    padding-top: 0.7rem;
+    border-top: 0.0625rem solid rgba(201, 162, 76, 0.4);
+}
 .demographics-crisis-cumulative-caption {
     color: #f3c34c;
     font-weight: 700;
@@ -600,6 +645,7 @@
     letter-spacing: 0.04em;
     font-size: 0.95rem;
     opacity: 0.9;
+    margin-bottom: 0.4rem;
 }
 .demographics-crisis-stage-bar {
     display: flex;
@@ -816,6 +862,11 @@
     font-size: 0.8rem;
 }
 .demographics-war-graph-hovertip-head {
+    /* Flex so the cost-icon <span> is a flex item — width/height are ignored on
+       an inline element, which silently collapsed the icon to zero before. */
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     color: var(--ia-accent-gold-soft, #d9c08a);
     font-weight: 600;
     margin-bottom: 0.2rem;
@@ -1406,6 +1457,18 @@
     align-items: center;
     gap: 0.35rem;
     flex: 0 0 auto;
+}
+
+/* Per-page "Copy as CSV" toolbar row used by the World Rankings sub-tabs and
+   Global Relations (the History page has its own toolbar). Right-aligned so it
+   sits unobtrusively above the page content. */
+.demographics-csv-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin: 0 0 0.4rem 0;
 }
 
 /* CSV export toast. Success/failure border-color + color are dynamic and set

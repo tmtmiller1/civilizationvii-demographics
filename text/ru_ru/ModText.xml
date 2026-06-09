@@ -46,7 +46,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="ru_RU"><Text>Площадь территории</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="ru_RU"><Text>Общая принадлежащая территория в квадратных километрах, рассчитанная из контролируемых клеток-шестиугольников.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="ru_RU"><Text>Исторические данные</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="ru_RU"><Text>Всемирный справочник</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS" Language="ru_RU"><Text>Рейтинг цивилизаций по доходу</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ru_RU"><Text>Глобальные отношения</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ru_RU"><Text>Настройки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ru_RU"><Text>Экономика</Text></Replace>
@@ -78,10 +78,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="ru_RU"><Text>Чудеса</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="ru_RU"><Text>Общее число чудес, построенных этим игроком за все эпохи.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="ru_RU"><Text>(еще не реализовано)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="ru_RU"><Text>в сравнении с миром</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="ru_RU"><Text>Показатель</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="ru_RU"><Text>Значение</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="ru_RU"><Text>Ранг</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD" Language="ru_RU"><Text>в сравнении с миром</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="ru_RU"><Text>Показатель</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="ru_RU"><Text>Значение</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="ru_RU"><Text>Ранг</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="ru_RU">
+            <Text>Значение</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ru_RU"><Text>Показывать невстреченные цивилизации в легенде</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ru_RU"><Text>Сглаживать линии графиков (скользящее среднее по 3 ходам)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ru_RU"><Text>Показывать уничтоженные цивилизации</Text></Replace>
@@ -172,6 +175,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="ru_RU"><Text>Конфликты (одна полоса на войну)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="ru_RU"><Text>(нет крупных цивилизаций)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="ru_RU"><Text>продолжается</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN" Language="ru_RU">
+            <Text>Прирост</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS" Language="ru_RU">
+            <Text>Потеря</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA" Language="ru_RU">
+            <Text>Нет данных</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="ru_RU"><Text>завершена</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="ru_RU"><Text>продолжается</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="ru_RU"><Text>неизвестно</Text></Replace>
@@ -237,26 +249,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="ru_RU"><Text>Экспансия</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="ru_RU"><Text>Дипломатия</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="ru_RU"><Text>Все вкл</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS" Language="ru_RU">
+            <Text>Политика и отношения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION" Language="ru_RU">
+            <Text>Репутация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" Language="ru_RU">
+            <Text>Соглашения</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="ru_RU"><Text>Все выкл</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL" Language="ru_RU">
+            <Text>Все</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE" Language="ru_RU">
+            <Text>Нет</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET" Language="ru_RU">
+            <Text>Сброс</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="ru_RU"><Text>{1_Label} (нажмите, чтобы скрыть)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="ru_RU"><Text>{1_Label} (нажмите, чтобы показать)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="ru_RU"><Text>Нет цивилизаций для отображения.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="ru_RU"><Text>Невстреченный лидер</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER" Language="ru_RU"><Text>Невстреченный лидер</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="ru_RU"><Text>Игрок {1_Pid}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="ru_RU"><Text>(ранее {1_Names})</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ru_RU"><Text>Ранг {1_Rank}/{2_Total}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ru_RU"><Text>Сбросить ({1_Count} скрыто)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ru_RU"><Text>Показать все скрытые цивилизации</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ru_RU"><Text>Нажмите на заголовок цивилизации, чтобы скрыть ее и сузить сравнение. Нажмите снова, чтобы вернуть ее.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ru_RU"><Text>Не встречена</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто — нажмите, чтобы показать)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ru_RU"><Text>Нажмите, чтобы показать</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="ru_RU"><Text>Нажмите, чтобы скрыть</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY" Language="ru_RU"><Text>(ранее {1_Names})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="ru_RU"><Text>Ранг {1_Rank}/{2_Total}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="ru_RU"><Text>Сбросить ({1_Count} скрыто)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ru_RU"><Text>Показать все скрытые цивилизации</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ru_RU"><Text>Нажмите на столбец, чтобы отсортировать цивилизации по нему. Переключатель «Ранг / Значение» меняет содержимое ячеек.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ru_RU"><Text>Не встречена</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто — нажмите, чтобы показать)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ru_RU"><Text>Нажмите, чтобы показать</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ru_RU"><Text>Нажмите, чтобы скрыть</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ru_RU"><Text>Радар триумфов — все цивилизации, все 6 путей атрибутов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ru_RU"><Text>Триумфы с течением времени</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ru_RU"><Text>(Накопительный счет, с разбивкой по атрибутам)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ru_RU"><Text>Распределение ресурсов с течением времени (область с накоплением)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ru_RU"><Text>Хронология конфликтов — каждая война, которую видела эта игра</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ru_RU"><Text>Хронология конфликтов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ru_RU"><Text>Пока недоступно.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ru_RU"><Text>Настройки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ru_RU"><Text>Показывать настоящие названия цивилизаций, которые я не встретил (спойлер)</Text></Replace>
@@ -769,16 +799,16 @@
             <Text>Кризисы</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="ru_RU">
-            <Text>Стадии кризиса</Text>
+            <Text>Последствия кризиса</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="ru_RU">
-            <Text>Стадии кризиса</Text>
+            <Text>Последствия кризиса</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="ru_RU">
-            <Text>Последствия кризиса</Text>
+            <Text>Графики последствий кризиса</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="ru_RU">
-            <Text>Последствия кризиса</Text>
+            <Text>Графики последствий кризиса</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="ru_RU">
             <Text>Цивилизации</Text>
@@ -871,7 +901,7 @@
             <Text>против</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="ru_RU">
-            <Text>Сейчас (T-{1_Turn})</Text>
+            <Text>Настоящее (T-{1_Turn})</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="ru_RU">
             <Text>Союзные города-государства</Text>
@@ -915,9 +945,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="ru_RU">
             <Text>Направлено на войну</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="ru_RU">
-            <Text>Это показатели, отображаемые во всплывающем окне каждой войны на вкладке «Войны». Каждый показатель измеряется за время участия воюющей стороны в этой войне — от хода вступления до хода выхода или до настоящего момента, если война ещё идёт, — а игра опрашивается раз в ход. Зелёное число — это прирост, красное число — потеря, а тире (—) означает, что для этой войны данные не записывались.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="ru_RU">
             <Text>Ваша текущая военная мощь — суммарная боевая сила вашей армии — на момент окончания войны (или на последний ход, пока она продолжается). Это размер ваших войск, а не потери; показатель «Военная мощь (потеряно)» ниже отражает потери.</Text>
         </Replace>
@@ -945,9 +972,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="ru_RU">
             <Text>Производство, которое вы потратили на военные нужды: производственная стоимость каждого военного юнита и каждого военного или фортификационного здания (стены и т. п.), завершённого вами во время войны, суммированная воедино. Гражданские юниты, экономические здания и чудеса не учитываются. Это намеренное вложение в войну, а не потеря, поэтому оно показано как нейтральное значение. Стоимость — это эффективная стоимость в построившем городе; скидки вашего лидера, цивилизации и политических курсов уже учтены. Предметы, купленные напрямую за золото или веру, не учитываются, поскольку это казна, а не производство; излишек производства между предметами не выделяется точно.</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="ru_RU">
-            <Text>Почему одни столбцы — чистые значения, а другие — суммарные: территория, поселения и производство меняются в обе стороны и могут быть отменены, поэтому они показаны как чистое изменение. Сила и население — это разрушения, которые никогда не должны скрываться приростом в другом месте, поэтому они показаны как совокупные потери. Разрушенные поселения по определению необратимы.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="ru_RU">
             <Text>История сбрасывается при каждом переходе между эпохами.</Text>
         </Replace>
@@ -959,9 +983,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="ru_RU">
             <Text>Используйте текущую эпоху или фильтр по диапазону эпох.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="ru_RU">
-            <Text>Справочник по издержкам войны — что означает каждый показатель и как он измеряется</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="ru_RU">
             <Text>Последствия войны — траектория каждой воюющей стороны в выбранной войне</Text>
@@ -983,6 +1004,21 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="ru_RU">
             <Text>Нет</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="ru_RU">
+            <Text>Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="ru_RU">
+            <Text>All Ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="ru_RU">
+            <Text>Antiquity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="ru_RU">
+            <Text>Exploration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="ru_RU">
+            <Text>Modern</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="ru_RU">
             <Text>Все</Text>
@@ -1007,7 +1043,7 @@
             <Text>Топ-25 поселений</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="ru_RU">
-            <Text>Все поселения</Text>
+            <Text>Рейтинг поселений по доходу</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="ru_RU">
             <Text>Все</Text>
@@ -1029,6 +1065,9 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="ru_RU">
             <Text>Ранг</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CITY_STATE" Language="ru_RU">
+            <Text>Город-государство</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="ru_RU">
             <Text>Владелец</Text>
@@ -1244,6 +1283,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="ru_RU">
             <Text>Облёт</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING" Language="ru_RU">
+            <Text>Вид с воздуха на {1_City}</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="ru_RU">
             <Text>Камера топ-поселений</Text>
         </Replace>
@@ -1293,25 +1335,25 @@
             <Text>Лидеры категорий</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ru_RU">
-            <Text>Все поселения</Text>
+            <Text>Рейтинг поселений по доходу</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="ru_RU">
             <Text>Величайшие поселения</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="ru_RU">
-            <Text>Полный рейтинг</Text>
+            <Text>Полный рейтинг поселений</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="ru_RU">
             <Text>Мировые рейтинги</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="ru_RU">
-            <Text>Все цивилизации</Text>
+            <Text>Рейтинг цивилизаций по доходу</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="ru_RU">
             <Text>Рейтинг цивилизаций</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="ru_RU">
-            <Text>Выдающиеся цивилизации</Text>
+            <Text>Величайшие цивилизации</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="ru_RU">
             <Text>Полный рейтинг цивилизаций</Text>

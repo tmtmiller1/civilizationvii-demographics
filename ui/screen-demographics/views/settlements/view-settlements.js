@@ -1,7 +1,7 @@
 // view-settlements.js
 //
 // "World Rankings" hub. Three 2nd-order major tabs (native fxs-tab-bar):
-//   civilizations - the per-civ World Factbook matrix (ViewFactbook; from sampled
+//   civilizations - the per-civ All Civilizations matrix (ViewWorldRankingsAllCivs; from sampled
 //                   history).
 //   showcase      - an artistic Top-25 settlements board (podium + ranked list) by
 //                   composite score, with clickable city dossiers.
@@ -24,8 +24,7 @@ import {
   startInstant,
   launchCinematic
 } from "/demographics/ui/screen-demographics/camera/city-camera-controller.js";
-import * as ViewFactbook from "/demographics/ui/screen-demographics/views/factbook/view-factbook.js";
-import { renderDetailPanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-detail.js";
+import * as ViewWorldRankingsAllCivs from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js";
 import { renderCivRankingPanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js";
 import { renderShowcasePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
 import { renderTablePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-table.js";
@@ -36,7 +35,7 @@ const TOP_N = 25;
  * Mutable render state for the Settlements view.
  * @typedef {Object} SettleState
  * @property {*} settings Persisted-setting surface (getSetting/setSetting).
- * @property {*} [history] Sampled history (for the Civilizations/factbook sub-tab).
+ * @property {*} [history] Sampled history (for the Civilizations/worldrankings-allcivs sub-tab).
  * @property {*} board The scored + ranked settlement board.
  * @property {HTMLElement} content The swappable content host.
  * @property {string} subTab Active sub-view ("showcase" | "table").
@@ -82,7 +81,7 @@ function setSetting(settings, key, value) {
  * Whether a settlement's identity should be obscured: the "hide unmet players"
  * option (showUnmetNames === false, the default) is active AND the owner is a
  * civ the local player has not met. Defensive: only mask when `met === false`
- * (mirrors the factbook), never on an unknown/undefined met state.
+ * (mirrors the worldrankings-allcivs), never on an unknown/undefined met state.
  * @param {SettleState} st The render state.
  * @param {*} s The settlement.
  * @returns {boolean} True when the settlement should be masked.
@@ -100,7 +99,7 @@ function isMasked(st, s) {
 function maskOwner(owner) {
   return {
     pid: owner ? owner.pid : -1,
-    leaderName: t("LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER"),
+    leaderName: t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER"),
     civName: t("LOC_DEMOGRAPHICS_UNMET_CIV"),
     leaderType: undefined,
     primary: undefined,
@@ -477,6 +476,7 @@ function renderTable(st) {
     rerenderContent,
     displayOf,
     buildOwnerCell,
+    buildOwnerAvatar,
     buildTypeBadge,
     buildSectionTitle,
     buildEmpty
@@ -532,43 +532,19 @@ function buildSubTabs(st) {
   return host;
 }
 
-// ── City detail dossier (click a card) ───────────────────────────────────────
-
-/**
- * Render the clicked city's detail dossier into the content host.
- * @param {SettleState} st The render state.
- */
-function renderDetail(st) {
-  if (!st.detail) {
-    renderShowcase(st);
-    return;
-  }
-  renderDetailPanel(st, {
-    rerenderContent,
-    buildOwnerAvatar,
-    buildTypeBadge,
-    buildTrendGlyph,
-    buildCameraButtons
-  });
-}
-
 /**
  * Clear and re-render the active sub-view into the content host.
  * @param {SettleState} st The render state.
  */
 function rerenderContent(st) {
   while (st.content.firstChild) st.content.removeChild(st.content.firstChild);
-  // A clicked city opens the detail dossier over the current content.
-  if (st.detail) {
-    renderDetail(st);
-    return;
-  }
-  // Civilizations = the per-civ World Factbook matrix (built from sampled
-  // history); the other two are the live settlement rankings.
+  // Civilizations = the per-civ All Civilizations matrix (built from sampled
+  // history); the other two are the live settlement rankings. (The old per-city
+  // detail dossier was folded into the Top-25 rows — no separate view.)
   if (st.subTab === "civranking") {
     renderCivRanking(st);
   } else if (st.subTab === "civilizations") {
-    ViewFactbook.render(st.content, { history: st.history, settings: st.settings });
+    ViewWorldRankingsAllCivs.render(st.content, { history: st.history, settings: st.settings });
   } else if (st.subTab === "table") renderTable(st);
   else renderShowcase(st);
 }
@@ -591,7 +567,9 @@ export function render(host, ctx) {
     board: buildSettlementBoard(),
     content: div("demographics-settle-content"),
     subTab,
-    filter: getSetting(settings, "settlementsFilter", "all"),
+    // The settlement ranking always opens on the All filter (not the last-used
+    // Cities/Towns); switching chips still works for the rest of the session.
+    filter: "all",
     sortKey: getSetting(settings, "settlementsSortKey", "composite"),
     showUnmetNames: getSetting(settings, "showUnmetNames", false) === true
   };

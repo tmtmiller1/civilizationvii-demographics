@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="it_IT"><Text>Demografia</Text></Replace>
-        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="it_IT"><Text>Grafici storici per turno, factbook mondiale, anelli delle relazioni globali, diagramma di Gantt dei conflitti e barre di avanzamento dei Trionfi nativi per ogni civiltà incontrata.</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="it_IT"><Text>Grafici storici per turno, classifiche mondiali, anelli delle relazioni globali, diagramma di Gantt dei conflitti e barre di avanzamento dei Trionfi nativi per ogni civiltà incontrata.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="it_IT"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="it_IT"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="it_IT"><Text>Punteggio nel tempo</Text></Replace>
@@ -46,7 +46,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="it_IT"><Text>Superficie territoriale</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="it_IT"><Text>Territorio totale posseduto in chilometri quadrati, scalato dalle caselle esagonali controllate.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="it_IT"><Text>Dati storici</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="it_IT"><Text>Factbook mondiale</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS" Language="it_IT"><Text>Classifica civiltà per rendimento</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="it_IT"><Text>Relazioni globali</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="it_IT"><Text>Opzioni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="it_IT"><Text>Economia</Text></Replace>
@@ -78,10 +78,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="it_IT"><Text>Meraviglie</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="it_IT"><Text>Numero totale di meraviglie costruite da questo giocatore in tutte le ere.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="it_IT"><Text>(non ancora implementato)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="it_IT"><Text>rispetto al mondo</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="it_IT"><Text>Parametro</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="it_IT"><Text>Valore</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="it_IT"><Text>Posizione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD" Language="it_IT"><Text>rispetto al mondo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="it_IT"><Text>Parametro</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="it_IT"><Text>Valore</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="it_IT"><Text>Posizione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="it_IT">
+            <Text>Valore</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="it_IT"><Text>Mostra le civiltà non incontrate nella legenda</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="it_IT"><Text>Smussa le linee del grafico (media mobile su 3 turni)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="it_IT"><Text>Mostra le civiltà eliminate</Text></Replace>
@@ -92,7 +95,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="it_IT"><Text>Città-stato non incontrata</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="it_IT"><Text>Non hai ancora incontrato questa città-stato. Attiva "Mostra i nomi delle civiltà e delle città-stato non incontrate" nelle Opzioni per rivelare i nomi reali.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="it_IT"><Text>Mostra i nomi delle civiltà e delle città-stato non incontrate</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="it_IT"><Text>Quando disattivata (predefinito), le civiltà e le città-stato che non hai ancora incontrato vengono mostrate come segnaposto generici "Non incontrata" nei grafici, nel factbook e negli anelli delle relazioni globali.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="it_IT"><Text>Quando disattivata (predefinito), le civiltà e le città-stato che non hai ancora incontrato vengono mostrate come segnaposto generici "Non incontrata" nei grafici, nelle classifiche e negli anelli delle relazioni globali.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="it_IT"><Text>Giocatore {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="it_IT"><Text>Avanzamento della civiltà</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="it_IT"><Text>Nessuna civiltà ha ancora compiuto progressi.</Text></Replace>
@@ -172,6 +175,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="it_IT"><Text>Conflitti (una barra per guerra)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="it_IT"><Text>(nessuna civiltà maggiore)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="it_IT"><Text>in corso</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN" Language="it_IT">
+            <Text>Guadagno</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS" Language="it_IT">
+            <Text>Perdita</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA" Language="it_IT">
+            <Text>Nessun dato</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="it_IT"><Text>conclusa</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="it_IT"><Text>in corso</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="it_IT"><Text>sconosciuto</Text></Replace>
@@ -237,31 +249,49 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="it_IT"><Text>Espansionista</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="it_IT"><Text>Diplomatica</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="it_IT"><Text>Tutto attivo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS" Language="it_IT">
+            <Text>Politica e relazioni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION" Language="it_IT">
+            <Text>Reputazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" Language="it_IT">
+            <Text>Accordi</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="it_IT"><Text>Tutto disattivo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL" Language="it_IT">
+            <Text>Tutti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE" Language="it_IT">
+            <Text>Nessuno</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET" Language="it_IT">
+            <Text>Reimposta</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="it_IT"><Text>{1_Label} (clicca per nascondere)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="it_IT"><Text>{1_Label} (clicca per mostrare)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="it_IT"><Text>Nessuna civiltà da mostrare.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="it_IT"><Text>Leader non incontrato</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER" Language="it_IT"><Text>Leader non incontrato</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="it_IT"><Text>Giocatore {1_Pid}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="it_IT"><Text>(in precedenza {1_Names})</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="it_IT"><Text>Posizione {1_Rank}/{2_Total}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="it_IT"><Text>Ripristina ({1_Count} nascoste)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="it_IT"><Text>Mostra tutte le civiltà nascoste</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="it_IT"><Text>Clicca l'intestazione di una civiltà per nasconderla e concentrare il confronto. Clicca di nuovo per mostrarla.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="it_IT"><Text>Non incontrata</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="it_IT"><Text>(nascosta — clicca per mostrare)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="it_IT"><Text>Clicca per mostrare</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="it_IT"><Text>Clicca per nascondere</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY" Language="it_IT"><Text>(in precedenza {1_Names})</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="it_IT"><Text>Posizione {1_Rank}/{2_Total}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="it_IT"><Text>Ripristina ({1_Count} nascoste)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="it_IT"><Text>Mostra tutte le civiltà nascoste</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="it_IT"><Text>Fai clic su una colonna per ordinare le civiltà. Usa il selettore Rango / Valore per cambiare ciò che mostra ogni cella.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="it_IT"><Text>Non incontrata</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="it_IT"><Text>(nascosta — clicca per mostrare)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="it_IT"><Text>Clicca per mostrare</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="it_IT"><Text>Clicca per nascondere</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="it_IT"><Text>Radar dei Trionfi — tutte le civiltà, tutti i 6 percorsi di attributo</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="it_IT"><Text>Trionfi nel tempo</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="it_IT"><Text>(Conteggio cumulativo, impilato per attributo)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="it_IT"><Text>Allocazione delle risorse nel tempo (area impilata)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="it_IT"><Text>Cronologia dei conflitti — ogni guerra vista in questa partita</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="it_IT"><Text>Cronologia dei conflitti</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="it_IT"><Text>Non ancora disponibile.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="it_IT"><Text>Opzioni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="it_IT"><Text>Mostra i nomi reali delle civiltà che non ho incontrato (spoiler)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="it_IT"><Text>Modalità daltonici (palette ad alto contrasto per grafici e relazioni)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="it_IT"><Text>Mostra le civiltà eliminate nel grafico e nel factbook</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="it_IT"><Text>Mostra le civiltà eliminate nel grafico e nelle classifiche mondiali</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="it_IT"><Text>Mostra indicatori delle meraviglie sulle linee del grafico</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="it_IT"><Text>Automatico (predefinito in base alla velocità di gioco)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="it_IT"><Text>1.000 campioni</Text></Replace>
@@ -769,16 +799,16 @@
             <Text>Crisi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="it_IT">
-            <Text>Fasi di crisi</Text>
+            <Text>Impatto della crisi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="it_IT">
-            <Text>Fasi di crisi</Text>
+            <Text>Impatto della crisi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="it_IT">
-            <Text>Impatto della crisi</Text>
+            <Text>Grafici d'impatto della crisi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="it_IT">
-            <Text>Impatto della crisi</Text>
+            <Text>Grafici d'impatto della crisi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="it_IT">
             <Text>Civiltà</Text>
@@ -871,7 +901,7 @@
             <Text>contro</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="it_IT">
-            <Text>Ora (T-{1_Turn})</Text>
+            <Text>Presente (T-{1_Turn})</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="it_IT">
             <Text>Città-stato alleate</Text>
@@ -915,9 +945,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="it_IT">
             <Text>Destinata alla guerra</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="it_IT">
-            <Text>Questi sono i valori mostrati nel pop-up di ciascuna guerra nella scheda Guerre. Ogni valore è misurato sul tempo trascorso da un combattente in quella guerra — dal turno in cui vi è entrato al turno in cui ne è uscito, o fino a ora se la guerra è ancora in corso — e il gioco viene campionato una volta per turno. Un numero verde indica un guadagno, un numero rosso indica una perdita e un trattino (—) significa che non è stato registrato alcun dato per quella guerra.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="it_IT">
             <Text>La tua Potenza militare permanente — la forza di combattimento totale del tuo esercito — alla fine della guerra (o all'ultimo turno mentre è ancora in corso). Si tratta della dimensione delle tue forze, non di una perdita; la voce "Potenza militare persa" qui sotto tiene traccia delle perdite.</Text>
         </Replace>
@@ -945,9 +972,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="it_IT">
             <Text>Produzione che hai speso per lo sforzo bellico: il costo di produzione di ogni unità militare e di ogni edificio militare o di fortificazione (mura, ecc.) che hai completato mentre la guerra era in corso, sommato. Le unità civili, gli edifici economici e le meraviglie non contano. Si tratta di un investimento deliberato nella guerra, non di una perdita, quindi è mostrato come valore neutro. Il costo è il costo effettivo nella città che lo ha prodotto — gli sconti del tuo leader, della tua civiltà e delle tue politiche sono già inclusi. Gli elementi acquistati direttamente con oro o fede non vengono conteggiati, poiché si tratta di tesoro e non di produzione; il riporto di produzione tra un elemento e l'altro non viene suddiviso con esattezza.</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="it_IT">
-            <Text>Perché alcune colonne sono nette e altre sono totali: territorio, insediamenti e produzione oscillano in entrambe le direzioni e possono essere annullati, quindi sono mostrati come variazione netta. Forza e popolazione sono distruzioni che non dovrebbero mai essere nascoste da guadagni altrove, quindi sono mostrate come perdite cumulative. Gli insediamenti rasi al suolo sono permanenti per definizione.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="it_IT">
             <Text>La cronologia si azzera a ogni transizione di era.</Text>
         </Replace>
@@ -959,9 +983,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="it_IT">
             <Text>Usa l'era attuale o un filtro per intervallo di ere.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="it_IT">
-            <Text>Guida ai costi di guerra — cosa significa ogni valore e come viene misurato</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="it_IT">
             <Text>Impatto della guerra — la traiettoria di ciascun combattente in una guerra scelta</Text>
@@ -983,6 +1004,21 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="it_IT">
             <Text>Nessuna</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="it_IT">
+            <Text>Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="it_IT">
+            <Text>All Ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="it_IT">
+            <Text>Antiquity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="it_IT">
+            <Text>Exploration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="it_IT">
+            <Text>Modern</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="it_IT">
             <Text>Tutte</Text>
@@ -1007,7 +1043,7 @@
             <Text>Top 25 insediamenti</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="it_IT">
-            <Text>Tutti gli insediamenti</Text>
+            <Text>Classifica insediamenti per rendimento</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="it_IT">
             <Text>Tutti</Text>
@@ -1029,6 +1065,9 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="it_IT">
             <Text>Pos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CITY_STATE" Language="it_IT">
+            <Text>Città-stato</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="it_IT">
             <Text>Proprietario</Text>
@@ -1244,6 +1283,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="it_IT">
             <Text>Sorvolo</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING" Language="it_IT">
+            <Text>Veduta aerea di {1_City}</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="it_IT">
             <Text>Telecamera Insediamenti principali</Text>
         </Replace>
@@ -1293,25 +1335,25 @@
             <Text>Leader di categoria</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="it_IT">
-            <Text>Tutti gli insediamenti</Text>
+            <Text>Classifica insediamenti per rendimento</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="it_IT">
             <Text>Gli insediamenti più grandi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="it_IT">
-            <Text>Classifica completa</Text>
+            <Text>Classifica completa degli insediamenti</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="it_IT">
             <Text>Classifiche mondiali</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="it_IT">
-            <Text>Tutte le civiltà</Text>
+            <Text>Classifica civiltà per rendimento</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="it_IT">
             <Text>Classifica delle civiltà</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="it_IT">
-            <Text>Le civiltà più importanti</Text>
+            <Text>Le più grandi civiltà</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="it_IT">
             <Text>Classifica completa delle civiltà</Text>

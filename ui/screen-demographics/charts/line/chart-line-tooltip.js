@@ -7,7 +7,7 @@
 // chart-line.js.
 //
 // Rows are built as real DOM nodes (not an innerHTML string) so the leader
-// portrait can use a live <fxs-icon> element - the same element the Factbook
+// portrait can use a live <fxs-icon> element - the same element the WorldRankingsAllCivs
 // and wars tooltip use. UI.getIconURL is NOT available in this custom screen,
 // so the URL-background approach renders nothing here.
 
@@ -51,7 +51,7 @@ function sortTooltipDataPoints(tooltip, chart) {
 
 /**
  * Build the round leader-portrait element for a dataset: a live <fxs-icon> when
- * a LEADER_* type is known (same element the Factbook uses), else null.
+ * a LEADER_* type is known (same element the WorldRankingsAllCivs uses), else null.
  * @param {Record<string, *>} ds The Chart.js dataset.
  * @returns {HTMLElement|null} The portrait wrapper, or null when no leader icon.
  */

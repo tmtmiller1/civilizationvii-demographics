@@ -22,7 +22,7 @@ import {
 } from "/demographics/ui/sampler/sampler-collectors-economy.js";
 import {
   collectMilitaryPower,
-  collectTriumphs,
+  collectLegacyTriumphs,
   collectWonderCount,
   collectWonderTypes
 } from "/demographics/ui/sampler/sampler-collectors-military.js";
@@ -535,7 +535,7 @@ function collectEconomy(ctx, id, p, stats) {
  */
 function collectPowerAndCivics(ctx, id, p) {
   collectMilitaryPower(ctx, id, p);
-  collectTriumphs(ctx, p);
+  collectLegacyTriumphs(ctx, p);
   collectVictoryPoints(ctx, p);
   collectDiplomaticApproval(ctx, id, p);
   collectResourceCategories(ctx, id, p);

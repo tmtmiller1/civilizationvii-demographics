@@ -292,7 +292,7 @@ const SUBTYPE_TO_KEY = {
  * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
  * @param {*} p The sampled player handle.
  */
-export function collectTriumphs(ctx, p) {
+export function collectLegacyTriumphs(ctx, p) {
   ctx.triumphsCultural = 0;
   ctx.triumphsDiplomatic = 0;
   ctx.triumphsEconomic = 0;

@@ -1,3 +1,8 @@
+import {
+  cityHighlights,
+  visitableWonders
+} from "/demographics/ui/screen-demographics/camera/cinematic-tour-highlights.js";
+
 const FIREWORK_STEP_MS = 550;
 const DEFAULT_FOV = 45;
 
@@ -234,9 +239,10 @@ export function shot(kind, plot, params, caption, fov) {
  * @param {{x: number, y: number}} city The city plot.
  * @param {boolean} rotate Whether rotation is allowed.
  * @param {string} role "open" | "finale".
+ * @param {*} [caption] Optional city-flavor caption for the wide establish view.
  * @returns {*} Shot descriptor.
  */
-export function establishShot(city, rotate, role) {
+export function establishShot(city, rotate, role, caption) {
   const base =
     role === "finale"
       ? {
@@ -254,7 +260,30 @@ export function establishShot(city, rotate, role) {
           arcHeight: 12
         };
   const arc = rotate ? (role === "finale" ? 95 : 80) : 38;
-  return shot("orbit", city, orbitParams(base, arc));
+  return shot("orbit", city, orbitParams(base, arc), caption || null);
+}
+
+/**
+ * Build the city-flavor caption descriptor for an establish shot — the line shown
+ * over the wide city overview that the opening + finale shots previously left
+ * blank. Returns RAW DATA only (no localization here, so this module needs no
+ * imports); the overlay's captionText() resolves it. The opening leads with the
+ * founding year (a sense of history); the finale (or an opening with no founding
+ * year) closes on the settlement's world standing rank.
+ * @param {*} target Settlement record.
+ * @param {string} role "open" | "finale".
+ * @returns {{foundedYear: string}|{standingRank: number}|null} The descriptor.
+ */
+export function cityEstablishCaption(target, role) {
+  const founded = target.founded;
+  if (role === "open" && founded && founded.year) {
+    return { foundedYear: founded.year };
+  }
+  const rank = target.ranks && target.ranks.composite;
+  if (typeof rank === "number" && rank >= 1) {
+    return { standingRank: rank };
+  }
+  return null;
 }
 
 /**
@@ -280,13 +309,19 @@ export function obliqueShot(plot, angle, duration, caption) {
 }
 
 /**
- * Build a two-shot POI vignette.
+ * Build a two-shot POI vignette: an approach fly-past, then an orbit that centers
+ * on the POI. The approach carries a NEUTRAL city interstitial (`approachCap`, e.g.
+ * "Aerial view of Rome") — never the POI name — so the fly-past, which sweeps past
+ * the target onto whatever's beyond it, can't mislabel a neighbor. The POI's own
+ * caption appears only on the orbit, once the camera is actually centered on it.
+ * Every leg still says something.
  * @param {{loc: {x: number, y: number}, cap: *}} poi Point of interest.
  * @param {number} index The POI index.
+ * @param {*} approachCap Neutral caption for the approach leg.
  * @returns {Array<*>} Shots for this POI.
  */
-export function poiVignette(poi, index) {
-  const approach = obliqueShot(poi.loc, 150 + index * 55, 3.0, poi.cap);
+export function poiVignette(poi, index, approachCap) {
+  const approach = obliqueShot(poi.loc, 150 + index * 55, 3.0, approachCap || null);
   const orbit = shot(
     "orbit",
     poi.loc,
@@ -303,266 +338,6 @@ export function poiVignette(poi, index) {
     poi.cap
   );
   return [approach, orbit];
-}
-
-/**
- * Return purchased-plot indices for a city.
- * @param {*} componentId City component id.
- * @returns {number[]} Plot indices.
- */
-export function cityPurchasedIndices(componentId) {
-  try {
-    const city =
-      componentId && typeof Cities !== "undefined" && Cities.get
-        ? Cities.get(componentId)
-        : null;
-    const plots = city && typeof city.getPurchasedPlots === "function"
-      ? city.getPurchasedPlots()
-      : null;
-    return Array.isArray(plots) ? plots : [];
-  } catch (_) {
-    return [];
-  }
-}
-
-/**
- * Resolve map location from plot index.
- * @param {number} index Plot index.
- * @returns {{x: number, y: number}|null} Plot location.
- */
-export function indexToLoc(index) {
-  try {
-    const loc =
-      typeof GameplayMap !== "undefined" && GameplayMap.getLocationFromIndex
-        ? GameplayMap.getLocationFromIndex(index)
-        : null;
-    return loc && typeof loc.x === "number" ? loc : null;
-  } catch (_) {
-    return null;
-  }
-}
-
-/**
- * Return purchased plots as [{idx,x,y}] for a city.
- * @param {*} componentId City component id.
- * @returns {Array<{idx: number, x: number, y: number}>} Purchased plots.
- */
-export function livePurchased(componentId) {
-  /** @type {Array<{idx: number, x: number, y: number}>} */
-  const out = [];
-  for (const idx of cityPurchasedIndices(componentId)) {
-    const loc = indexToLoc(idx);
-    if (loc) out.push({ idx, x: loc.x, y: loc.y });
-  }
-  return out;
-}
-
-/**
- * Whether a plot is a natural wonder.
- * @param {number} x Plot x.
- * @param {number} y Plot y.
- * @returns {boolean} True for natural wonder.
- */
-function isNatWonder(x, y) {
-  try {
-    return (
-      typeof GameplayMap !== "undefined" &&
-      typeof GameplayMap.isNaturalWonder === "function" &&
-      !!GameplayMap.isNaturalWonder(x, y)
-    );
-  } catch (_) {
-    return false;
-  }
-}
-
-/**
- * Sum plot yields for an owner.
- * @param {number} idx Plot index.
- * @param {number} pid Owner player id.
- * @returns {number} Total yield.
- */
-function plotYieldSum(idx, pid) {
-  try {
-    const yields =
-      typeof GameplayMap !== "undefined" && GameplayMap.getYields
-        ? GameplayMap.getYields(idx, pid)
-        : null;
-    if (!yields) return 0;
-    let total = 0;
-    for (const entry of yields) {
-      const amount = Array.isArray(entry) ? entry[1] : entry;
-      if (typeof amount === "number" && isFinite(amount)) total += amount;
-    }
-    return total;
-  } catch (_) {
-    return 0;
-  }
-}
-
-/**
- * Return highest-yield plot from a list.
- * @param {Array<{idx: number, x: number, y: number}>} plots Purchased plots.
- * @param {number} pid Owner player id.
- * @returns {{x: number, y: number}|null} Highest-yield plot.
- */
-export function topYieldPlot(plots, pid) {
-  let best = null;
-  let bestSum = 0;
-  for (const plot of plots) {
-    const sum = plotYieldSum(plot.idx, pid);
-    if (sum > bestSum) {
-      bestSum = sum;
-      best = plot;
-    }
-  }
-  return best ? { x: best.x, y: best.y } : null;
-}
-
-/**
- * Return district at location.
- * @param {{x: number, y: number}} plot Plot location.
- * @returns {*} District object or null.
- */
-export function districtAtPlot(plot) {
-  try {
-    return typeof Districts !== "undefined" && typeof Districts.getAtLocation === "function"
-      ? Districts.getAtLocation({ x: plot.x, y: plot.y })
-      : null;
-  } catch (_) {
-    return null;
-  }
-}
-
-/**
- * Return unique-quarter display info.
- * @param {*} quarterType Unique quarter type.
- * @returns {{name: string, type: string}|null} Quarter info.
- */
-export function uniqueQuarterInfo(quarterType) {
-  try {
-    const row =
-      typeof GameInfo !== "undefined" && GameInfo.UniqueQuarters
-        ? GameInfo.UniqueQuarters.lookup(quarterType)
-        : null;
-    if (row && row.Name && typeof Locale !== "undefined" && Locale.compose) {
-      return { name: Locale.compose(row.Name), type: row.UniqueQuarterType };
-    }
-  } catch (_) {
-    // lookup/compose can throw.
-  }
-  return null;
-}
-
-/**
- * Resolve unique-quarter districts for a target city.
- * @param {*} target Settlement record.
- * @returns {Array<{name: string, location: {x: number, y: number},
- *   quarterType: string}>} District entries.
- */
-export function resolveSpecialDistricts(target) {
-  const out = [];
-  /** @type {Record<string, boolean>} */
-  const seen = {};
-  for (const plot of livePurchased(target.componentId)) {
-    const district = districtAtPlot(plot);
-    const quarterType = district ? district.uniqueQuarterType : null;
-    if (quarterType == null) continue;
-    if (
-      typeof UniqueQuarterTypes !== "undefined" &&
-      quarterType === UniqueQuarterTypes.NO_QUARTER
-    ) {
-      continue;
-    }
-    if (seen[String(quarterType)]) continue;
-    seen[String(quarterType)] = true;
-    const info = uniqueQuarterInfo(quarterType);
-    if (info && info.name) {
-      out.push({
-        name: info.name,
-        location: { x: plot.x, y: plot.y },
-        quarterType: info.type
-      });
-    }
-  }
-  return out;
-}
-
-/**
- * Return wonder records that include map location.
- * @param {*} target Settlement record.
- * @returns {Array<*>} Visitable wonder records.
- */
-export function visitableWonders(target) {
-  const out = [];
-  for (const wonder of Array.isArray(target.wonders) ? target.wonders : []) {
-    if (wonder && wonder.location && typeof wonder.location.x === "number") {
-      out.push(wonder);
-    }
-  }
-  return out;
-}
-
-/**
- * Append wonder POIs into a city highlight list.
- * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
- * @param {*} target Settlement record.
- */
-function pushWonderPois(pois, target) {
-  for (const wonder of visitableWonders(target)) {
-    pois.push({
-      loc: wonder.location,
-      cap: { nameKey: wonder.nameKey, year: wonder.year }
-    });
-  }
-}
-
-/**
- * Append district POIs into a city highlight list.
- * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
- * @param {*} target Settlement record.
- */
-function pushDistrictPois(pois, target) {
-  for (const district of Array.isArray(target.districts) ? target.districts : []) {
-    if (!district || !district.location) continue;
-    pois.push({ loc: district.location, cap: { text: district.name } });
-  }
-}
-
-/**
- * Append natural-wonder and rich-plot POIs.
- * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
- * @param {*} target Settlement record.
- */
-function pushTerrainPois(pois, target) {
-  const plots = livePurchased(target.componentId);
-  for (const plot of plots) {
-    if (!isNatWonder(plot.x, plot.y)) continue;
-    pois.push({
-      loc: { x: plot.x, y: plot.y },
-      cap: { textKey: "LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" }
-    });
-    break;
-  }
-  const rich = topYieldPlot(plots, target.owner && target.owner.pid);
-  if (!rich) return;
-  pois.push({
-    loc: rich,
-    cap: { textKey: "LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" }
-  });
-}
-
-/**
- * Build POIs for city highlights.
- * @param {*} target Settlement record.
- * @returns {Array<{loc: {x: number, y: number}, cap: *}>} Points of interest.
- */
-export function cityHighlights(target) {
-  /** @type {Array<{loc: {x: number, y: number}, cap: *}>} */
-  const pois = [];
-  pushWonderPois(pois, target);
-  pushDistrictPois(pois, target);
-  pushTerrainPois(pois, target);
-  return pois;
 }
 
 /**
@@ -596,16 +371,21 @@ export function buildTour(target, cfg) {
   const city = target.location;
   const pois = cityHighlights(target);
   const maxPois = Math.min(pois.length, 10);
-  const shots = [establishShot(city, rotate, "open")];
+  // City-flavor caption for the opening; a neutral "Aerial view of <city>"
+  // interstitial for the approach legs + no-POI fallback sweeps, so every shot
+  // says something without the fly-past ever claiming a specific building.
+  const cityCap = cityEstablishCaption(target, "open");
+  const approachCap = target.name ? { touringCity: target.name } : cityCap;
+  const shots = [establishShot(city, rotate, "open", cityCap)];
   if (pois.length) {
     pois.slice(0, maxPois).forEach((poi, index) => {
-      for (const poiShot of poiVignette(poi, index)) shots.push(poiShot);
+      for (const poiShot of poiVignette(poi, index, approachCap)) shots.push(poiShot);
     });
   } else {
-    shots.push(obliqueShot(city, 210, 5.0));
+    shots.push(obliqueShot(city, 210, 5.0, approachCap));
   }
-  if (medium && !pois.length) shots.push(obliqueShot(city, 330, 4.5));
-  shots.push(establishShot(city, rotate, "finale"));
+  if (medium && !pois.length) shots.push(obliqueShot(city, 330, 4.5, approachCap));
+  shots.push(establishShot(city, rotate, "finale", cityEstablishCaption(target, "finale")));
   return shots;
 }
 

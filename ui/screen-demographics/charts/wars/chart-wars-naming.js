@@ -1,12 +1,12 @@
 // chart-wars-naming.js
 //
-// War-naming logic, extracted from chart-wars-gantt.js so the (large) gantt
+// War-naming logic, extracted from chart-conflicts-timeline.js so the (large) gantt
 // DOM/render module isn't pulled in just to name a war. Pure logic: turns a
 // (merged) war set into display names - recurrence ordinals, geography-aware
 // regional/great/world labels, and duration flair - plus the small roster/year
 // helpers that naming and the gantt both share. No DOM here.
 //
-// Imported by chart-wars-gantt.js (rendering), chart-war-graphs.js, and
+// Imported by chart-conflicts-timeline.js (rendering), chart-conflicts-graphs.js, and
 // history-toolbar.js (the War Graphs picker), so every surface shows the SAME
 // fancy name for a given war.
 
@@ -455,12 +455,10 @@ function composeWarLabel(w, pairCounts, worldWars, continentMap) {
   // Pass the FULL roster object so civAdjective can use civTypeString.
   const adjA = a.map((r) => civAdjective(r));
   const adjB = b.map((r) => civAdjective(r));
-  if (n >= 4) return largeWarLabel({ w, a, b, adjA, adjB, n, worldWars, continentMap });
-  if (n === 3) {
-    // Exactly three majors total - sort for a stable, order-independent label.
-    const tri = /** @type {string[]} */ ([]).concat(adjA, adjB).sort();
-    return t("LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE", tri[0], tri[1], tri[2]);
-  }
+  // A war has two sides, so 3+ majors is ALWAYS a coalition (e.g. 1-vs-2), never a
+  // true three-way "tripartite" war (which this two-sided model can't represent).
+  // Route it to the coalition namer ("Regional/Great <A>-<B> War (+N others)").
+  if (n >= 3) return largeWarLabel({ w, a, b, adjA, adjB, n, worldWars, continentMap });
   if (n === 2) {
     // Standard bilateral. Build a stable adjective key (alpha order) so reruns
     // of the same matchup get ordinal prefixes ("Second Roman–Egyptian War").
@@ -481,7 +479,7 @@ function composeWarLabel(w, pairCounts, worldWars, continentMap) {
  * @param {number} latestTurn The latest sampled turn.
  * @returns {string} The composed label.
  */
-export function warLabelText(war, nameOverride, turnYearMap, latestTurn) {
+export function conflictLabelText(war, nameOverride, turnYearMap, latestTurn) {
   const yrs = warDurationYears(war, turnYearMap, latestTurn);
   const displayName = nameOverride.get(war) || war.name;
   const yrLabel =

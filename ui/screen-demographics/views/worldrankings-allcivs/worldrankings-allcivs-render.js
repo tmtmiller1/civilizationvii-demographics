@@ -1,18 +1,19 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
+import { iconEl } from "/demographics/ui/core/ui-helpers.js";
 
-import { computeRanks } from "/demographics/ui/screen-demographics/views/factbook/factbook-profiles.js";
-
-/**
- * @typedef {import("/demographics/ui/screen-demographics/views/factbook/factbook-profiles.js").
- *   CivProfile} CivProfile
- */
+import { computeRanks } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 
 /**
- * @typedef {import("/demographics/ui/screen-demographics/views/factbook/factbook-profiles.js").
- *   FactbookCtx} FactbookCtx
+ * The metrics shown in the All Civilizations views (non-hidden), in order.
+ * @returns {*[]} The shown metric definitions.
  */
+function shownMetrics() {
+  return /** @type {*[]} */ (METRICS).filter((m) => !m.worldRankingsAllCivsHidden);
+}
+
+/** @typedef {import("./worldrankings-allcivs-profiles.js").CivProfile} CivProfile */
 
 /**
  * Per-civ-header click affordance options.
@@ -33,7 +34,7 @@ import { computeRanks } from "/demographics/ui/screen-demographics/views/factboo
  * @param {...*} a Values to log.
  */
 function derr(...a) {
-  console.error("[Demographics.view-factbook]", ...a);
+  console.error("[Demographics.view-worldrankings-allcivs]", ...a);
 }
 
 /**
@@ -45,9 +46,9 @@ function derr(...a) {
  */
 export function buildLeaderAvatar(profile, sizeRem) {
   const wrap = document.createElement("div");
-  wrap.className = "demographics-factbook-avatar";
+  wrap.className = "demographics-worldrankings-allcivs-avatar";
   // Edge length is the caller-supplied dynamic size; flex-shrink:0 lives in
-  // the .demographics-factbook-avatar rule.
+  // the .demographics-worldrankings-allcivs-avatar rule.
   wrap.style.width = sizeRem + "rem";
   wrap.style.height = sizeRem + "rem";
 
@@ -64,7 +65,7 @@ export function buildLeaderAvatar(profile, sizeRem) {
   }
 
   const placeholder = document.createElement("div");
-  placeholder.className = "demographics-factbook-avatar-placeholder";
+  placeholder.className = "demographics-worldrankings-allcivs-avatar-placeholder";
   const initial = (profile.leaderName || "?").trim().charAt(0).toUpperCase() || "?";
   placeholder.textContent = initial;
   wrap.appendChild(placeholder);
@@ -89,7 +90,7 @@ function buildLeaderPortrait(leaderType) {
   const portrait = document.createElement("fxs-icon");
   portrait.setAttribute("data-icon-id", leaderType);
   portrait.setAttribute("data-icon-context", "LEADER");
-  portrait.classList.add("demographics-factbook-portrait");
+  portrait.classList.add("demographics-worldrankings-allcivs-portrait");
   return portrait;
 }
 
@@ -101,15 +102,15 @@ function buildLeaderPortrait(leaderType) {
  */
 export function buildCivHeaderText(text, profile, maskAsUnmet) {
   const leader = document.createElement("div");
-  leader.className = "demographics-factbook-civ-header-leader font-title text-sm";
+  leader.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-sm";
   leader.textContent = maskAsUnmet
-    ? t("LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER")
+    ? t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER")
     : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
   text.appendChild(leader);
 
   if (maskAsUnmet) {
     const civ = document.createElement("div");
-    civ.className = "demographics-factbook-civ-header-civ font-body text-xs";
+    civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-xs";
     civ.textContent = t("LOC_DEMOGRAPHICS_UNMET_CIV");
     text.appendChild(civ);
   } else if (profile.civName) {
@@ -124,7 +125,7 @@ export function buildCivHeaderText(text, profile, maskAsUnmet) {
  */
 function appendCivNameRows(text, profile) {
   const civ = document.createElement("div");
-  civ.className = "demographics-factbook-civ-header-civ font-body text-xs";
+  civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-xs";
   civ.textContent = profile.civName || "";
   text.appendChild(civ);
 
@@ -132,8 +133,8 @@ function appendCivNameRows(text, profile) {
   const prior = all.filter((n) => n && n !== profile.civName);
   if (prior.length <= 0) return;
   const fmr = document.createElement("div");
-  fmr.className = "demographics-factbook-civ-header-formerly font-body text-xs";
-  fmr.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY", prior.join(", "));
+  fmr.className = "demographics-worldrankings-allcivs-civ-header-formerly font-body text-xs";
+  fmr.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY", prior.join(", "));
   text.appendChild(fmr);
 }
 
@@ -151,7 +152,7 @@ function appendCivNameRows(text, profile) {
  */
 export function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   const wrap = document.createElement("div");
-  wrap.className = "demographics-factbook-cell demographics-factbook-civ-header";
+  wrap.className = "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-civ-header";
   if (isLocal) wrap.classList.add("is-local");
   if (maskAsUnmet) wrap.classList.add("is-unmet");
   // Civ-color accent to match the Cities tab's color-accented cards.
@@ -170,7 +171,7 @@ export function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   wrap.appendChild(avatar);
 
   const text = document.createElement("div");
-  text.className = "demographics-factbook-civ-header-text";
+  text.className = "demographics-worldrankings-allcivs-civ-header-text";
   wrap.appendChild(text);
 
   buildCivHeaderText(text, profile, maskAsUnmet);
@@ -178,50 +179,95 @@ export function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   return wrap;
 }
 
+// Yield/category icon per metric id (when the metric maps to a recognizable
+// yield), so the value line can show "(<icon> 55)". Metrics without an entry
+// just show "(55)".
+/** @type {Record<string, string>} */
+export const METRIC_ICONS = {
+  gold: "blp:Yield_Gold",
+  gpt: "blp:Yield_Gold",
+  gdp: "blp:Yield_Gold",
+  crops: "blp:Yield_Food",
+  production: "blp:Yield_Production",
+  science_yield: "blp:Yield_Science",
+  culture_yield: "blp:Yield_Culture",
+  approval: "blp:Yield_Happiness",
+  hpt: "blp:Yield_Happiness",
+  population: "blp:Yield_Population",
+  influence: "blp:yield_influence",
+  wonders: "blp:fonticon_wonders"
+};
+
 /**
- * Build a single value cell (value on top; the rank row is appended by the
- * caller).
- * @param {MetricDef} metric The metric definition for this row.
- * @param {CivProfile} profile Source civ profile.
- * @returns {HTMLElement} The value-cell element.
+ * Format a metric's latest value to a display string (defensive).
+ * @param {MetricDef} metric The metric definition.
+ * @param {*} v The raw value.
+ * @returns {string} The formatted value, or "—".
  */
-export function buildValueCell(metric, profile) {
-  const cell = document.createElement("div");
-  cell.className = "demographics-factbook-cell demographics-factbook-value-cell";
-
-  const v = profile.latest?.[metric.id];
-  const value = document.createElement("div");
-  value.className = "demographics-factbook-cell-value font-body text-sm";
-  if (typeof v === "number" && isFinite(v)) {
-    try {
-      value.textContent = /** @type {(n: number) => string} */ (metric.format)(v);
-    } catch (e) {
-      // Own-logic: a metric's format() callback threw - surface it, then fall
-      // back to a rounded integer so the cell still shows a value.
-      derr("buildValueCell format(" + metric.id + "):", e);
-      value.textContent = String(Math.round(v));
-    }
-  } else {
-    value.textContent = "—";
+export function formatMetricValue(metric, v) {
+  if (typeof v !== "number" || !isFinite(v)) return "—";
+  try {
+    return /** @type {(n: number) => string} */ (metric.format)(v);
+  } catch (e) {
+    // A metric's format() callback threw - surface it, then fall back to a
+    // rounded integer so the cell still shows a value.
+    derr("formatMetricValue(" + metric.id + "):", e);
+    return String(Math.round(v));
   }
-  cell.appendChild(value);
-
-  return cell;
 }
 
 /**
- * Build the small rank line shown under a value cell.
- * @param {number|undefined} rank 1-based rank, or undefined for no rank.
- * @param {number} total Count of ranked civs (denominator).
- * @returns {HTMLElement} The rank-line element.
+ * Build the small value line: "(<icon> value)" in the (former rank) small style.
+ * A missing value shows a bare "—" (no parens/icon).
+ * @param {MetricDef} metric The metric definition.
+ * @param {CivProfile} profile Source civ profile.
+ * @returns {HTMLElement} The value line.
  */
-export function buildRankCell(rank, total) {
+function buildValueLine(metric, profile) {
+  const line = document.createElement("div");
+  line.className = "demographics-worldrankings-allcivs-cell-rank font-body text-xs";
+  const formatted = formatMetricValue(metric, profile.latest?.[metric.id]);
+  if (formatted === "—") {
+    line.textContent = "—";
+    return line;
+  }
+  // Flex row of explicit spans + a sized icon item. Coherent will NOT keep a
+  // background-image div inline among raw text nodes (it block-breaks, which made
+  // "(", icon and "value)" stack and blew up cell height), so each piece is a
+  // discrete flex child and the row is nowrap - see the matching CSS. The icon
+  // sits INSIDE the parens.
+  const blp = METRIC_ICONS[metric.id];
+  const open = document.createElement("span");
+  open.textContent = blp ? "(" : "(" + formatted + ")";
+  line.appendChild(open);
+  if (blp) {
+    line.appendChild(iconEl(blp, "demographics-worldrankings-allcivs-yield-icon"));
+    const val = document.createElement("span");
+    val.textContent = formatted + ")";
+    line.appendChild(val);
+  }
+  return line;
+}
+
+/**
+ * Build a single metric cell, RANK-FORWARD: the bare rank number is the big
+ * headline (the column context makes "rank" obvious - no "Rank" word, no /total
+ * fraction) and the yield value is the small "(<icon> value)" line below.
+ * @param {MetricDef} metric The metric definition for this row.
+ * @param {CivProfile} profile Source civ profile.
+ * @param {number|undefined} rank 1-based rank, or undefined.
+ * @returns {HTMLElement} The cell element.
+ */
+export function buildValueCell(metric, profile, rank) {
   const cell = document.createElement("div");
-  cell.className = "demographics-factbook-cell-rank font-body text-xs";
-  cell.textContent =
-    typeof rank === "number"
-      ? t("LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF", rank, total)
-      : "";
+  cell.className = "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-value-cell";
+
+  const rankLine = document.createElement("div");
+  rankLine.className = "demographics-worldrankings-allcivs-cell-value font-body text-sm";
+  rankLine.textContent = typeof rank === "number" ? String(rank) : "—";
+  cell.appendChild(rankLine);
+
+  cell.appendChild(buildValueLine(metric, profile));
   return cell;
 }
 
@@ -233,10 +279,16 @@ export function buildRankCell(rank, total) {
  */
 export function buildLabelColumn(opts) {
   const col = document.createElement("div");
-  col.className = "demographics-factbook-col demographics-factbook-col-labels";
+  col.className = "demographics-worldrankings-allcivs-col demographics-worldrankings-allcivs-col-labels";
 
   const header = document.createElement("div");
-  header.className = "demographics-factbook-cell demographics-factbook-corner";
+  header.className = "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-corner";
+  // Header label for the grid: every cell's prominent number is a world rank, so
+  // the column header reads "Rank" (matching the rank column on the other tabs).
+  const rankLabel = document.createElement("div");
+  rankLabel.className = "demographics-worldrankings-allcivs-corner-label font-title text-sm";
+  rankLabel.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK");
+  header.appendChild(rankLabel);
   const resetBtn = buildLabelResetButton(opts);
   if (resetBtn) header.appendChild(resetBtn);
   col.appendChild(header);
@@ -254,9 +306,9 @@ function buildLabelResetButton(opts) {
     return null;
   }
   const btn = document.createElement("div");
-  btn.className = "demographics-factbook-reset-btn font-body text-xs";
-  btn.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_RESET", opts.hiddenCount);
-  btn.title = t("LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP");
+  btn.className = "demographics-worldrankings-allcivs-reset-btn font-body text-xs";
+  btn.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET", opts.hiddenCount);
+  btn.title = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP");
   btn.addEventListener("click", (ev) => {
     ev.stopPropagation();
     safePlaySound("data-audio-activate", "options");
@@ -271,10 +323,10 @@ function buildLabelResetButton(opts) {
  */
 function appendMetricLabelRows(col) {
   let rowIdx = 0;
-  for (const m of /** @type {MetricDef[]} */ (METRICS).filter((x) => !x.factbookHidden)) {
+  for (const m of shownMetrics()) {
     const row = document.createElement("div");
     row.className =
-      "demographics-factbook-cell demographics-factbook-label-cell font-body text-sm";
+      "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-label-cell font-body text-sm";
     if (rowIdx > 0 && rowIdx % 4 === 0) row.classList.add("is-heavy-divider");
     row.textContent = m.label;
     col.appendChild(row);
@@ -293,17 +345,16 @@ function appendMetricLabelRows(col) {
  */
 export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
   const col = document.createElement("div");
-  col.className = "demographics-factbook-col demographics-factbook-col-civ";
+  col.className = "demographics-worldrankings-allcivs-col demographics-worldrankings-allcivs-col-civ";
   if (isLocal) col.classList.add("is-local");
 
   col.appendChild(buildCivHeader(profile, isLocal, maskAsUnmet, opts));
 
   let rowIdx = 0;
-  for (const m of /** @type {MetricDef[]} */ (METRICS).filter((x) => !x.factbookHidden)) {
-    const { ranks, total } = computeRanks(profiles, m.id);
-    const cell = buildValueCell(m, profile);
+  for (const m of shownMetrics()) {
+    const { ranks } = computeRanks(profiles, m.id);
+    const cell = buildValueCell(m, profile, ranks.get(profile.pid));
     if (rowIdx > 0 && rowIdx % 4 === 0) cell.classList.add("is-heavy-divider");
-    cell.appendChild(buildRankCell(ranks.get(profile.pid), total));
     col.appendChild(cell);
     rowIdx++;
   }
@@ -318,11 +369,11 @@ export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
  */
 export function buildHint() {
   const hint = document.createElement("div");
-  hint.className = "demographics-factbook-hint font-body text-xs";
+  hint.className = "demographics-worldrankings-allcivs-hint font-body text-xs";
   const hintIcon = document.createElement("div");
-  hintIcon.className = "demographics-factbook-hint-icon";
+  hintIcon.className = "demographics-worldrankings-allcivs-hint-icon";
   const hintText = document.createElement("span");
-  hintText.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_HINT");
+  hintText.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT");
   hint.appendChild(hintIcon);
   hint.appendChild(hintText);
   return hint;
@@ -332,7 +383,7 @@ export function buildHint() {
  * Slim "ghost" column shown for hidden civs - just a narrow header with the
  * leader name (or unmet placeholder), no metric cells. Lets the user see who's
  * hidden and click to bring them back. The visible civs flex to fill the
- * remaining space (per the CSS `.demographics-factbook-col { flex: 1 0 9rem }`).
+ * remaining space (per the CSS `.demographics-worldrankings-allcivs-col { flex: 1 0 9rem }`).
  * @param {CivProfile} profile This civ's profile.
  * @param {boolean} maskAsUnmet When true, show the generic unmet placeholder.
  * @param {HeaderOpts} [_opts] Click affordance options (unused here).
@@ -340,26 +391,26 @@ export function buildHint() {
  */
 export function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
   const col = document.createElement("div");
-  col.className = "demographics-factbook-col demographics-factbook-col-civ is-hidden";
+  col.className = "demographics-worldrankings-allcivs-col demographics-worldrankings-allcivs-col-civ is-hidden";
 
   const wrap = document.createElement("div");
-  wrap.className = "demographics-factbook-cell demographics-factbook-civ-header is-ghost";
+  wrap.className = "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-civ-header is-ghost";
   col.appendChild(wrap);
 
   const text = document.createElement("div");
-  text.className = "demographics-factbook-civ-header-text";
+  text.className = "demographics-worldrankings-allcivs-civ-header-text";
   wrap.appendChild(text);
 
   const leader = document.createElement("div");
-  leader.className = "demographics-factbook-civ-header-leader font-title text-xs";
+  leader.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-xs";
   leader.textContent = maskAsUnmet
-    ? t("LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT")
+    ? t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT")
     : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
   text.appendChild(leader);
 
   const hint = document.createElement("div");
-  hint.className = "demographics-factbook-civ-header-civ font-body text-xs";
-  hint.textContent = t("LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK");
+  hint.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-xs";
+  hint.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK");
   text.appendChild(hint);
 
   return col;

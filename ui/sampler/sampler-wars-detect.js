@@ -90,6 +90,8 @@ export function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
     if (!activeWarsByID.has(w.warUniqueID)) {
       w.endTurn = turn;
       w.endYear = gameYear;
+      // Map the end onto the continuous timeline (last active global turn).
+      if (typeof w.lastChartTurn === "number") w.endChartTurn = w.lastChartTurn;
       ilog("WAR ENDED:", w.name, "uid=", w.warUniqueID, "turn=", turn);
     }
   }

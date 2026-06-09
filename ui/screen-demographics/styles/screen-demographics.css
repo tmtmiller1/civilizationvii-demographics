@@ -1,7 +1,7 @@
 /* screen-demographics.css
    NOTE: this file is intentionally (almost) empty and is NOT the stylesheet loader.
    GameFace honors only the FIRST CSS @import and silently drops the rest, which
-   left the factbook / relations-options / wars-history / settlements styles
+   left the worldrankings-allcivs / relations-options / wars-history / settlements styles
    unloaded (broken UI). The split stylesheets are now loaded individually via the
    screen's `styles:` array in screen-demographics.js, in cascade order:
-   base, factbook, relations-options, wars-history, settlements. */
+   base, worldrankings-allcivs, relations-options, wars-history, settlements. */
