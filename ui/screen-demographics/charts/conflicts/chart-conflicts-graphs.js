@@ -1,4 +1,4 @@
-// chart-war-graphs.js
+// chart-conflicts-graphs.js
 //
 // The Conflicts "War Graphs" sub-tab: pick a war from the toolbar dropdown and
 // see each participant civ's trajectory for every war-cost metric over that
@@ -31,7 +31,7 @@ import {
   COST_METRICS,
   buildCostIcon,
   graphMetricTitle
-} from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost.js";
+} from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
@@ -177,7 +177,7 @@ function buildPlainMetricCell(m, participants, win) {
   }
   cell.appendChild(buildPlot(chart.svg, chart.labels));
   if (chart.hover) attachHover(cell, chart.svg, chart.hover);
-  if (chart.bars) attachBarHover(cell, chart.bars, metricTitle(m));
+  if (chart.bars) attachBarHover(cell, chart.bars, metricTitle(m), m.blp);
   return cell;
 }
 
@@ -276,7 +276,13 @@ function renderMilChart(m, view, body, mode) {
     return;
   }
   body.appendChild(buildPlot(chart.svg, chart.labels));
-  if (chart.hover) attachHover(body, chart.svg, chart.hover);
+  // buildLineChartFromSeries doesn't know the cost metric, so graft on the BLP
+  // here — otherwise the two military graphs' hover headers lack the cost icon
+  // the other seven graphs show.
+  if (chart.hover) {
+    chart.hover.blp = m.blp;
+    attachHover(body, chart.svg, chart.hover);
+  }
 }
 
 /**
@@ -397,7 +403,7 @@ function buildChart(m, participants, win) {
   const seriesList = buildMetricSeries(spec, participants, win, m.id);
   const b = seriesBounds(seriesList);
   if (!b) return null;
-  const hover = { series: seriesList, bounds: b, yLabel };
+  const hover = { series: seriesList, bounds: b, yLabel, blp: m.blp };
   return { svg: buildMiniSvg(seriesList, b), hover, labels: lineLabels(yLabel, b) };
 }
 
@@ -552,7 +558,7 @@ function buildWarView(history, selectedWarId) {
  * @param {{ history?: *, selectedWarId?: * }} [opts] Render options.
  * @returns {null} Always null (no chart handle).
  */
-export function renderWarGraphs(host, opts) {
+export function renderConflictsGraphs(host, opts) {
   if (!host) return null;
   clearHost(host);
   const o = opts || {};
@@ -564,7 +570,7 @@ export function renderWarGraphs(host, opts) {
   pruneHiddenWarCivs(view.participants);
   const panel = document.createElement("div");
   panel.className = "demographics-war-graphs";
-  panel.appendChild(buildHeader(view, () => renderWarGraphs(host, opts)));
+  panel.appendChild(buildHeader(view, () => renderConflictsGraphs(host, opts)));
   const grid = document.createElement("div");
   grid.className = "demographics-war-graphs-grid";
   for (const m of GRAPH_METRICS) grid.appendChild(buildMetricCell(m, view));

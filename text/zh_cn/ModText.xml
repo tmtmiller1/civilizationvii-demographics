@@ -136,8 +136,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="zh_Hans_CN">
             <Text>历史数据</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="zh_Hans_CN">
-            <Text>世界年鉴</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS" Language="zh_Hans_CN">
+            <Text>按产出排名的文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="zh_Hans_CN">
             <Text>全球关系</Text>
@@ -232,17 +232,20 @@
         <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="zh_Hans_CN">
             <Text>（尚未实现）</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD" Language="zh_Hans_CN">
             <Text>对比世界</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="zh_Hans_CN">
             <Text>指标</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="zh_Hans_CN">
             <Text>数值</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="zh_Hans_CN">
             <Text>排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="zh_Hans_CN">
+            <Text>数值</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="zh_Hans_CN">
             <Text>在图例中显示未遇文明</Text>
@@ -462,6 +465,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="zh_Hans_CN">
             <Text>进行中</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN" Language="zh_Hans_CN">
+            <Text>增加</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS" Language="zh_Hans_CN">
+            <Text>损失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA" Language="zh_Hans_CN">
+            <Text>无数据</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="zh_Hans_CN">
             <Text>已结束</Text>
         </Replace>
@@ -657,8 +669,26 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="zh_Hans_CN">
             <Text>全部开启</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS" Language="zh_Hans_CN">
+            <Text>政治与关系</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION" Language="zh_Hans_CN">
+            <Text>声望</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" Language="zh_Hans_CN">
+            <Text>协议</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="zh_Hans_CN">
             <Text>全部关闭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE" Language="zh_Hans_CN">
+            <Text>无</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET" Language="zh_Hans_CN">
+            <Text>重置</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="zh_Hans_CN">
             <Text>{1_Label}（点击隐藏）</Text>
@@ -669,37 +699,37 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="zh_Hans_CN">
             <Text>没有可显示的文明。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER" Language="zh_Hans_CN">
             <Text>未遇领袖</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="zh_Hans_CN">
             <Text>玩家 {1_Pid}</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY" Language="zh_Hans_CN">
             <Text>（曾用名 {1_Names}）</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="zh_Hans_CN">
             <Text>排名 {1_Rank}/{2_Total}</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="zh_Hans_CN">
             <Text>重置（{1_Count} 个已隐藏）</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="zh_Hans_CN">
             <Text>显示所有已隐藏的文明</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="zh_Hans_CN">
-            <Text>提示：点击任意文明的标题以将其隐藏并聚焦比较。再次点击（在右侧细窄列中）即可将其恢复。</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="zh_Hans_CN">
+            <Text>点击某列即可按该指标排序文明。使用“排名／数值”切换每个单元格显示的内容。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="zh_Hans_CN">
             <Text>未遇</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="zh_Hans_CN">
             <Text>（已隐藏——点击显示）</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="zh_Hans_CN">
             <Text>点击显示</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="zh_Hans_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="zh_Hans_CN">
             <Text>点击隐藏</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="zh_Hans_CN">
@@ -715,7 +745,7 @@
             <Text>资源分配随时间变化（堆叠面积图）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="zh_Hans_CN">
-            <Text>冲突时间线——本局游戏出现过的每一场战争</Text>
+            <Text>冲突时间线</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="zh_Hans_CN">
             <Text>尚未实现——将在未来的迭代中推出。</Text>
@@ -1327,16 +1357,16 @@
             <Text>危机</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="zh_Hans_CN">
-            <Text>危机阶段</Text>
+            <Text>危机影响</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="zh_Hans_CN">
-            <Text>危机阶段</Text>
+            <Text>危机影响</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="zh_Hans_CN">
-            <Text>危机影响</Text>
+            <Text>危机影响图表</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="zh_Hans_CN">
-            <Text>危机影响</Text>
+            <Text>危机影响图表</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="zh_Hans_CN">
             <Text>文明</Text>
@@ -1473,9 +1503,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="zh_Hans_CN">
             <Text>投入战争</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="zh_Hans_CN">
-            <Text>这些是战争标签页中每场战争弹窗里显示的数据。每项数据都是按某一参战方在该场战争中的时间段来衡量的——从其参战的回合到退出的回合，若战争仍在进行则计至当前——并且游戏每回合采样一次。绿色数字表示收益，红色数字表示损失，破折号（—）表示该场战争没有记录数据。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="zh_Hans_CN">
             <Text>战争结束时（若仍在进行则为最近一回合）你的常备军事实力——即你军队的总战斗力。这是你军力的规模，而非损失；下方的“军事实力损失”才追踪伤亡。</Text>
         </Replace>
@@ -1503,9 +1530,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="zh_Hans_CN">
             <Text>你为战争投入的生产力：战争期间你完成的每个军事单位以及军事或防御工事建筑（城墙等）的生产力成本之和。平民单位、经济建筑和奇观不计入。这是对战争的主动投入，而非损失，因此显示为中性数字。其成本为建造该项目的城市中的有效成本——你的领袖、文明和政策折扣均已计入其中。用金币或信仰直接购买的项目不计入，因为那属于国库而非生产力；项目之间溢出的生产力也不会被精确拆分。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="zh_Hans_CN">
-            <Text>为何某些列是净值而另一些是总计：领土、定居点和生产力可双向变动且可被逆转，因此显示为净变化。实力和人口属于不应被他处收益所掩盖的破坏，因此显示为累计损失。被夷平的定居点按定义是永久性的。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="zh_Hans_CN">
             <Text>历史会在每次时代转换时重置。</Text>
         </Replace>
@@ -1517,9 +1541,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="zh_Hans_CN">
             <Text>请使用当前时代或时代范围筛选。</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="zh_Hans_CN">
-            <Text>战争损耗指南——各项数据的含义及衡量方式</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="zh_Hans_CN">
             <Text>战争影响——各参战方在所选战争中的轨迹</Text>
@@ -1541,6 +1562,21 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="zh_Hans_CN">
             <Text>无</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="zh_Hans_CN">
+            <Text>Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="zh_Hans_CN">
+            <Text>All Ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="zh_Hans_CN">
+            <Text>Antiquity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="zh_Hans_CN">
+            <Text>Exploration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="zh_Hans_CN">
+            <Text>Modern</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="zh_Hans_CN">
             <Text>全部</Text>
@@ -1565,7 +1601,7 @@
             <Text>前25座聚落</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="zh_Hans_CN">
-            <Text>所有聚落</Text>
+            <Text>按产出排名的聚落</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="zh_Hans_CN">
             <Text>全部</Text>
@@ -1587,6 +1623,9 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="zh_Hans_CN">
             <Text>排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CITY_STATE" Language="zh_Hans_CN">
+            <Text>城邦</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="zh_Hans_CN">
             <Text>拥有者</Text>
@@ -1802,6 +1841,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="zh_Hans_CN">
             <Text>飞览</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING" Language="zh_Hans_CN">
+            <Text>{1_City}的鸟瞰图</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="zh_Hans_CN">
             <Text>顶级聚落镜头</Text>
         </Replace>
@@ -1851,25 +1893,25 @@
             <Text>各项之最</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="zh_Hans_CN">
-            <Text>所有聚落</Text>
+            <Text>按产出排名的聚落</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="zh_Hans_CN">
             <Text>最伟大的聚落</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="zh_Hans_CN">
-            <Text>完整排名</Text>
+            <Text>完整聚落排名</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="zh_Hans_CN">
             <Text>世界排名</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="zh_Hans_CN">
-            <Text>所有文明</Text>
+            <Text>按产出排名的文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="zh_Hans_CN">
             <Text>文明排名</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="zh_Hans_CN">
-            <Text>最卓越的文明</Text>
+            <Text>最伟大的文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="zh_Hans_CN">
             <Text>完整文明排名</Text>

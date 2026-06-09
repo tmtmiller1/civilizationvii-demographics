@@ -5,6 +5,7 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
   buildCivTaggedEdges,
+  buildCsAgreementEdges,
   buildCsAttitudeEdges,
   buildCsSuzerainEdges,
   buildCsTradeEdges
@@ -94,6 +95,7 @@ export function buildCsEdges(viewerPid, csIds, includeAttitude, csMetSet) {
   let edges = [];
   edges = edges.concat(buildCsSuzerainEdges(viewerMajors, csIds, viewerPid));
   edges = edges.concat(buildCsTradeEdges(viewerMajors, csIds, viewerPid));
+  edges = edges.concat(buildCsAgreementEdges(viewerMajors, csIds, viewerPid));
   if (includeAttitude) {
     edges = edges.concat(buildCsAttitudeEdges(viewerMajors, csIds, viewerPid));
   }
@@ -131,6 +133,28 @@ export function applyCsEdgeOverrides(edges) {
     if (!override) continue;
     if (override.color) edge.color = override.color;
     if (override.dash !== undefined) edge._dashOverride = override.dash;
+  }
+}
+
+/**
+ * Force every civ edge's color to its filter's legend (pill) color, so the
+ * filter-pill swatch is a faithful key for the lines on the ring.
+ *
+ * The diplomacy-event builders ("Research Agreements", "Other Endeavors") tagged
+ * each edge with its own per-action color — so endeavor lines came out in nine
+ * different hues and research's sabotage edge came out red, none matching the
+ * single-color pill. That made it impossible to tell which line a filter owned
+ * (a purple endeavor line looked like "Research"). Aligning color to the pill
+ * makes toggling a filter visibly clear exactly the lines of that color. Dash
+ * already derives from the shared LINE_DASH map by filterKey, so only color
+ * needs aligning. A no-op for filters whose edge color already equals the pill
+ * (attitudes, open borders, denounced, trade). Mutates edge objects.
+ * @param {*[]} edges Edges to mutate.
+ */
+export function applyCivEdgeOverrides(edges) {
+  for (const edge of edges) {
+    if (!edge || typeof edge.filterKey !== "string") continue;
+    edge.color = pillColorFor(edge.filterKey, "civ");
   }
 }
 
@@ -183,7 +207,9 @@ export function computeCivRingData(rs, activeSet, names) {
     ringIds: rs.metIds.slice(),
     edges: filterEdgesByActiveSet(slot.edges, activeSet),
     names,
-    capText: t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV"),
+    // No descriptive caption — the diagram + legend are self-explanatory. (The
+    // focus hint still appends here when nodes are selected.)
+    capText: "",
     ringViewerPid: localId
   };
 }
@@ -241,7 +267,8 @@ export function computeCsRingData(rs, activeSet, names) {
     ringIds,
     edges: filterEdgesByActiveSet(slot.edges, activeSet),
     names,
-    capText: t("LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS"),
+    // No descriptive caption (see civ tab); focus hint still appends downstream.
+    capText: "",
     ringViewerPid: viewerPid
   };
 }

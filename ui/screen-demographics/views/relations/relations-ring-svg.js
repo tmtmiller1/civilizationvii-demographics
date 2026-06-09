@@ -14,14 +14,21 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
-  dlog
+  dlog,
+  setRingPxPerUnit
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
   appendEdgeGroup,
   groupEdgesByPair
 } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-edges.js";
 import {
-  appendRingNode
+  appendRingBackdrop
+} from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-backdrop.js";
+// (radar/bezel/emblem removed — see relations-ring-svg-backdrop.js, now a quiet
+//  single orbit ring matching the game's restrained art.)
+import {
+  appendRingNode,
+  nodeRadius
 } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-nodes.js";
 
 /**
@@ -134,6 +141,10 @@ function computeRingGeometry(ringIds) {
  * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
  */
 function appendPortraitDiv(wrap, p, layout, onNodeToggle) {
+  if (p.kind === "label") {
+    appendNodeLabelDiv(wrap, p, layout);
+    return;
+  }
   const px = layout.contentLeft + p.vbX * layout.scale;
   const py = layout.contentTop + p.vbY * layout.scale;
   const diameter = p.vbR * 2 * layout.scale;
@@ -151,6 +162,26 @@ function appendPortraitDiv(wrap, p, layout, onNodeToggle) {
   div.style.height = diameter + "px";
   wirePortraitClick(div, p, onNodeToggle);
   fillPortraitContent(div, p);
+  wrap.appendChild(div);
+}
+
+/**
+ * Append a node name label as plain HTML text (no box), centered under the node.
+ * Uses the same UI font/weight/color as the historical-data chart labels via CSS.
+ * @param {HTMLElement} wrap The ring wrap (overlay parent).
+ * @param {PortraitPlacement} p The label placement (carries text + position).
+ * @param {{contentLeft: number, contentTop: number, scale: number}} layout
+ *   Letterboxed content offset + viewBox→pixel scale.
+ */
+function appendNodeLabelDiv(wrap, p, layout) {
+  const px = layout.contentLeft + p.vbX * layout.scale;
+  const py = layout.contentTop + p.vbY * layout.scale;
+  const div = document.createElement("div");
+  div.className = "demographics-relations-node-label";
+  if (p.dimmed) div.classList.add("is-dimmed");
+  div.style.left = px + "px";
+  div.style.top = py + "px";
+  div.textContent = p.text || "";
   wrap.appendChild(div);
 }
 
@@ -183,11 +214,43 @@ function fillPortraitContent(div, p) {
     div.style.backgroundImage = "url('" + p.iconUrl + "')";
     return;
   }
+  // Leader = a gold-rimmed hexagon token tinted by the civ's color, echoing the
+  // diplomacy-ribbon hex leaders. Pure-CSS hexes (clip-path) so there's no
+  // texture/tint dependency; layered back→front: select glow, gold rim, color
+  // fill, then the leader portrait.
+  div.classList.add("demographics-relations-portrait-hex");
+  div.appendChild(hexLayer("demographics-relations-hex-glow"));
+  div.appendChild(hexLayer("demographics-relations-hex-rim"));
+  const fill = hexLayer("demographics-relations-hex-fill");
+  if (p.color) fill.style.backgroundColor = p.color;
+  div.appendChild(fill);
   const icon = document.createElement("fxs-icon");
   icon.setAttribute("data-icon-id", /** @type {string} */ (p.leaderType));
   icon.setAttribute("data-icon-context", "LEADER");
   icon.classList.add("demographics-relations-portrait-icon");
   div.appendChild(icon);
+}
+
+/**
+ * Build one absolutely-positioned hex-token layer div.
+ * @param {string} className The layer class.
+ * @returns {HTMLElement} The layer element.
+ */
+function hexLayer(className) {
+  const el = document.createElement("div");
+  el.className = className;
+  return el;
+}
+
+/**
+ * Remove previously-placed portrait/label overlays so repaints don't pile up.
+ * @param {HTMLElement} wrap The ring wrap.
+ */
+function stripOldOverlays(wrap) {
+  const old = wrap.querySelectorAll(
+    ".demographics-relations-portrait, .demographics-relations-node-label"
+  );
+  old.forEach((el) => el.remove());
 }
 
 /**
@@ -225,11 +288,11 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) 
       }
       return;
     }
-    // Strip any previously-placed portraits so repaints don't pile up.
-    const old = wrap.querySelectorAll(".demographics-relations-portrait");
-    old.forEach((el) => el.remove());
-
+    stripOldOverlays(wrap);
     const scale = Math.min(rect.width / viewBox.w, rect.height / viewBox.h);
+    // Publish the ring's px-per-viewBox-unit so the legend can draw its sample
+    // lines at the exact same scale (matched dash lengths + stroke width).
+    setRingPxPerUnit(scale);
     const contentLeft = (rect.width - viewBox.w * scale) / 2;
     const contentTop = (rect.height - viewBox.h * scale) / 2;
 
@@ -298,11 +361,12 @@ export function buildRingSvg(ringIds, names, edges, localPid, options) {
     return wrap;
   }
 
-  populateRing(svg, geo, names, edges, {
+  renderRingInteractive(svg, geo, names, edges, {
     viewerPid,
     selectedNodeIds,
     onNodeToggle,
-    portraitsToPlace
+    portraitsToPlace,
+    wrap
   });
 
   // Place leader portraits as HTML overlays in PIXEL coords over the wrap,
@@ -314,9 +378,36 @@ export function buildRingSvg(ringIds, names, edges, localPid, options) {
     { w: viewBoxW, h: viewBoxH },
     onNodeToggle
   );
-  deferToFrame(placePortraits);
+  // Expose the placement so the caller can run it AFTER mounting the wrap (the
+  // overlays need the laid-out wrap to measure). Running it synchronously
+  // post-mount paints them in the same frame as the SVG - no flicker on
+  // re-render. placePortraits self-defers a frame only if layout isn't ready.
+  /** @type {*} */ (wrap).__placePortraits = placePortraits;
 
   return wrap;
+}
+
+/**
+ * Populate the ring (edges + nodes), collecting per-edge hover geometry, then wire
+ * the HTML-wrap hover (Coherent doesn't deliver mouse events to SVG lines).
+ * @param {Element} svg The SVG root.
+ * @param {RingGeometry} geo The ring geometry.
+ * @param {Record<string, NodeInfo>} names Node display-info map.
+ * @param {Edge[]} edges Edges to draw.
+ * @param {*} opts Render fields: viewerPid, selectedNodeIds, onNodeToggle,
+ *   portraitsToPlace, and `wrap` (the HTML ring wrap that receives mouse events).
+ */
+function renderRingInteractive(svg, geo, names, edges, opts) {
+  /** @type {*[]} */
+  const edgeRecords = [];
+  populateRing(svg, geo, names, edges, {
+    viewerPid: opts.viewerPid,
+    selectedNodeIds: opts.selectedNodeIds,
+    onNodeToggle: opts.onNodeToggle,
+    portraitsToPlace: opts.portraitsToPlace,
+    edgeRecords
+  });
+  setupEdgeHover(opts.wrap, svg, geo, edgeRecords, createEdgeTooltip(opts.wrap));
 }
 
 /**
@@ -331,6 +422,129 @@ function appendEmptyRing(wrap) {
 }
 
 /**
+ * Create the hover tooltip for edges: an absolutely-positioned DOM chip in the
+ * ring wrap, shown/moved at the cursor while hovering a line. (A DOM tip is the
+ * reliable route in Coherent; native SVG `<title>` tooltips are not honored.)
+ * @param {HTMLElement} wrap The ring wrap (positioning context).
+ * @returns {{ show: (text: string, x: number, y: number) => void, hide: () => void }} Controller.
+ */
+function createEdgeTooltip(wrap) {
+  const tip = document.createElement("div");
+  tip.className = "demographics-relations-edge-tip font-body text-xs";
+  tip.style.display = "none";
+  wrap.appendChild(tip);
+  return {
+    show(text, clientX, clientY) {
+      tip.textContent = text;
+      tip.style.display = "block";
+      const r = wrap.getBoundingClientRect();
+      // Anchor at the cursor; the gap that keeps the label out from under the
+      // pointer is a CSS transform on the tip (so it hot-reloads on screen reopen
+      // — this view's JS is lazy-loaded and only reloads on a full app restart).
+      tip.style.left = clientX - r.left + "px";
+      tip.style.top = clientY - r.top + "px";
+    },
+    hide() {
+      tip.style.display = "none";
+    }
+  };
+}
+
+// How close (in viewBox units) the cursor must be to a line to highlight it.
+const HOVER_DIST = 1.9;
+
+/**
+ * Convert client (px) coords to the SVG's viewBox coords, accounting for the
+ * xMidYMid-meet letterboxing. Returns null when the SVG isn't laid out yet.
+ * @param {Element} svg The ring SVG.
+ * @param {RingGeometry} geo The ring geometry (viewBox dims).
+ * @param {number} cx Client x.
+ * @param {number} cy Client y.
+ * @returns {{x: number, y: number}|null} ViewBox-space point, or null.
+ */
+function clientToViewBox(svg, geo, cx, cy) {
+  const r = svg.getBoundingClientRect();
+  if (!r || r.width <= 0 || r.height <= 0) return null;
+  const scale = Math.min(r.width / geo.viewBoxW, r.height / geo.viewBoxH);
+  if (!(scale > 0)) return null;
+  const offX = r.left + (r.width - geo.viewBoxW * scale) / 2;
+  const offY = r.top + (r.height - geo.viewBoxH * scale) / 2;
+  return { x: (cx - offX) / scale, y: (cy - offY) / scale };
+}
+
+/**
+ * Minimum distance from a point to a set of sampled curve points (viewBox units).
+ * @param {{x: number, y: number}[]} pts Sampled points.
+ * @param {{x: number, y: number}} pt The query point.
+ * @returns {number} The nearest distance.
+ */
+function distToPts(pts, pt) {
+  let min = Infinity;
+  for (const p of pts) {
+    const dx = p.x - pt.x;
+    const dy = p.y - pt.y;
+    const d = dx * dx + dy * dy;
+    if (d < min) min = d;
+  }
+  return Math.sqrt(min);
+}
+
+/**
+ * The edge record nearest a point, within HOVER_DIST; null when none qualify.
+ * @param {*[]} records Edge hover records.
+ * @param {{x: number, y: number}} pt The query point (viewBox coords).
+ * @returns {*} The nearest record, or null.
+ */
+function nearestEdge(records, pt) {
+  let best = null;
+  let bestD = HOVER_DIST;
+  for (const rec of records) {
+    const d = distToPts(rec.pts, pt);
+    if (d < bestD) {
+      bestD = d;
+      best = rec;
+    }
+  }
+  return best;
+}
+
+/**
+ * Drive edge hover from the HTML wrap: on mousemove, find the nearest line to the
+ * cursor and toggle its `.is-hovered` highlight + show the tooltip. This replaces
+ * SVG hover entirely (Coherent doesn't deliver mouse events to SVG line elements).
+ * @param {HTMLElement} wrap The ring wrap (HTML; receives the mouse events).
+ * @param {Element} svg The ring SVG (for the coordinate mapping).
+ * @param {RingGeometry} geo The ring geometry.
+ * @param {*[]} records Per-edge hover records.
+ * @param {{ show: (t: string, x: number, y: number) => void, hide: () => void }} tooltip Tip ctrl.
+ */
+function setupEdgeHover(wrap, svg, geo, records, tooltip) {
+  let current = /** @type {*} */ (null);
+  const clear = () => {
+    if (current) {
+      current.g.classList.remove("is-hovered");
+      current = null;
+    }
+    tooltip.hide();
+  };
+  wrap.addEventListener("mousemove", (/** @type {*} */ ev) => {
+    const pt = clientToViewBox(svg, geo, ev.clientX, ev.clientY);
+    const hit = pt ? nearestEdge(records, pt) : null;
+    if (!hit) {
+      clear();
+      return;
+    }
+    if (hit !== current) {
+      if (current) current.g.classList.remove("is-hovered");
+      hit.g.classList.add("is-hovered");
+      current = hit;
+    }
+    tooltip.show(hit.label, ev.clientX, ev.clientY);
+  });
+  wrap.addEventListener("mouseleave", clear);
+}
+
+/**
  * Draw the ring's edges (grouped by undirected pair into parallel offset lines)
  * then its nodes.
  * @param {Element} svg The SVG root.
@@ -340,11 +554,35 @@ function appendEmptyRing(wrap) {
  * @param {RingRenderCtx} ringCtx Per-ring render context.
  */
 function populateRing(svg, geo, names, edges, ringCtx) {
+  // Cinematic backdrop first so depth rings / radar sweep sit behind everything.
+  appendRingBackdrop(svg, geo);
   const focus = computeFocus(edges, ringCtx.selectedNodeIds);
   ringCtx.focusNodes = focus.nodes;
+  const radii = buildNodeRadii(geo, names, ringCtx);
+  const records = ringCtx.edgeRecords || null;
   const edgeGroups = groupEdgesByPair(edges, geo.positions);
-  for (const entries of edgeGroups.values()) appendEdgeGroup(svg, entries, focus.selected);
+  for (const entries of edgeGroups.values()) {
+    appendEdgeGroup(svg, entries, focus.selected, radii, records);
+  }
   for (const id of geo.positions.keys()) appendRingNode(svg, id, geo, names, ringCtx);
+}
+
+/**
+ * Build a pid → node-radius (viewBox units) map so edges can terminate at each
+ * node's circle rather than its center. Mirrors the node renderer's own sizing.
+ * @param {RingGeometry} geo The ring geometry (supplies density).
+ * @param {Record<string, NodeInfo>} names Node display-info map.
+ * @param {RingRenderCtx} ringCtx Per-ring render context (supplies viewerPid).
+ * @returns {Map<number, number>} Node radii by pid.
+ */
+function buildNodeRadii(geo, names, ringCtx) {
+  /** @type {Map<number, number>} */
+  const radii = new Map();
+  for (const id of geo.positions.keys()) {
+    const info = names[id] || /** @type {*} */ ({});
+    radii.set(id, nodeRadius(id === ringCtx.viewerPid, !!info.isCityState, geo.density));
+  }
+  return radii;
 }
 
 /**
@@ -365,13 +603,4 @@ function computeFocus(edges, selectedNodeIds) {
     else if (selected.has(e.b)) nodes.add(e.a);
   }
   return { selected, nodes };
-}
-
-/**
- * Run `fn` on the next animation frame (falling back to a 16ms timeout).
- * @param {() => void} fn The callback.
- */
-function deferToFrame(fn) {
-  if (typeof requestAnimationFrame === "function") requestAnimationFrame(fn);
-  else setTimeout(fn, 16);
 }

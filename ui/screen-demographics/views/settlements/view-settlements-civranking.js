@@ -162,15 +162,21 @@ function buildCivPodiumCard(c, place, st, deps) {
   if (c.owner.readable || c.owner.primary) {
     card.style.borderColor = c.owner.readable || c.owner.primary;
   }
-  card.appendChild(deps.buildLaurelMedal(place));
-  card.appendChild(deps.buildOwnerAvatar(c.owner));
-  card.appendChild(div("demographics-settle-podium-name", c.name));
-  card.appendChild(div("demographics-settle-podium-owner", c.owner.leaderName || ""));
-  card.appendChild(buildCivMeta(c));
-  const scoreRow = div("demographics-settle-podium-scorerow");
-  scoreRow.appendChild(div("demographics-settle-podium-score", fmt(c.score)));
-  card.appendChild(scoreRow);
-  card.appendChild(deps.buildOutputStrip(c));
+  // Horizontal card: [medal + avatar] · [name / owner / meta] · [score].
+  const left = div("demographics-settle-podium-left");
+  left.appendChild(deps.buildLaurelMedal(place));
+  left.appendChild(deps.buildOwnerAvatar(c.owner));
+  card.appendChild(left);
+
+  const body = div("demographics-settle-podium-body");
+  body.appendChild(div("demographics-settle-podium-name", c.name));
+  body.appendChild(div("demographics-settle-podium-owner", c.owner.leaderName || ""));
+  body.appendChild(buildCivMeta(c));
+  card.appendChild(body);
+
+  const scoreCol = div("demographics-settle-podium-scorecol");
+  scoreCol.appendChild(div("demographics-settle-podium-score", fmt(c.score)));
+  card.appendChild(scoreCol);
   return card;
 }
 
@@ -205,12 +211,15 @@ function buildCivRow(c, st, deps) {
  * @param {*[]} top The top civ aggregates.
  * @param {*} st The render state.
  * @param {CivRankingDeps} deps Rendering dependencies.
+ * @param {boolean} [vertical] Stack gold→bronze top-to-bottom (left-column layout).
  * @returns {HTMLElement} The podium element.
  */
-function buildCivPodium(top, st, deps) {
+function buildCivPodium(top, st, deps, vertical) {
   const podium = div("demographics-settle-podium");
-  const order = [top[1], top[0], top[2]];
-  const places = [2, 1, 3];
+  // Horizontal podium centers the winner (2-1-3); the vertical (left-column)
+  // layout reads top-to-bottom, so emit gold → silver → bronze instead.
+  const order = vertical ? [top[0], top[1], top[2]] : [top[1], top[0], top[2]];
+  const places = vertical ? [1, 2, 3] : [2, 1, 3];
   for (let i = 0; i < order.length; i++) {
     if (order[i]) {
       podium.appendChild(buildCivPodiumCard(order[i], places[i], st, deps));
@@ -230,16 +239,22 @@ export function renderCivRankingPanel(st, deps) {
     st.content.appendChild(deps.buildEmpty());
     return;
   }
-  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE"));
-  st.content.appendChild(
-    div("demographics-settle-note", t("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE"))
-  );
-  st.content.appendChild(buildCivPodium(civs.slice(0, 3), st, deps));
-  st.content.appendChild(
-    deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE")
-  );
+  // Two-column layout: podium + score note (left) beside the full ranked list
+  // (right) so the wide window's horizontal space is used.
+  const split = div("demographics-settle-split");
+  const left = div("demographics-settle-split-left");
+  left.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE"));
+  left.appendChild(div("demographics-settle-note", t("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE")));
+  left.appendChild(buildCivPodium(civs.slice(0, 3), st, deps, true));
+  split.appendChild(left);
+
+  const right = div("demographics-settle-split-right");
+  right.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE"));
   const list = div("demographics-settle-list");
   list.appendChild(deps.buildListHeader("LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV"));
   for (const c of civs) list.appendChild(buildCivRow(c, st, deps));
-  st.content.appendChild(list);
+  right.appendChild(list);
+  split.appendChild(right);
+
+  st.content.appendChild(split);
 }

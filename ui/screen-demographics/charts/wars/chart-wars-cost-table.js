@@ -2,9 +2,9 @@
 //
 // The shared row-major cost table (label column + one value column per entry, so
 // labels, stat icons, values, and portrait headers all line up by column).
-// Extracted from chart-wars-gantt.js so the Crises pages can build the same
+// Extracted from chart-conflicts-timeline.js so the Crises pages can build the same
 // table without importing the big gantt render module. Used by the war-timeline
-// tooltip (chart-wars-gantt) and the Crisis Stages cost sections
+// tooltip (chart-conflicts-timeline) and the Crisis Stages cost sections
 // (chart-crisis-stages).
 
 import {
@@ -12,7 +12,7 @@ import {
   formatCostFigure,
   formatMagnitude,
   costMetricTitle
-} from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost.js";
+} from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
@@ -56,7 +56,7 @@ function participantIdentity(pid, samples) {
 
 /**
  * Build a round leader-portrait element: a real <fxs-icon> when a LEADER_* type
- * is known (the element the Factbook uses), else a neutral placeholder circle.
+ * is known (the element the WorldRankingsAllCivs uses), else a neutral placeholder circle.
  * @param {string|null} leaderType The LEADER_* type string.
  * @returns {HTMLElement} The portrait wrapper.
  */

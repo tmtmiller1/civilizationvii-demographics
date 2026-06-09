@@ -117,7 +117,7 @@ const DEFAULTS = {
   // Controls what the line chart shows for a civ AFTER you meet it, when
   // hideUnmetStats is on:
   //   true  (default): back-fill - reveal the civ's ENTIRE history once met
-  //                    (matches the radar / factbook current-state views).
+  //                    (matches the radar / worldrankings-allcivs current-state views).
   //   false:           reveal only data from the moment of first contact
   //                    forward; pre-contact history stays hidden.
   // Ignored when hideUnmetStats is off (everything shows regardless).

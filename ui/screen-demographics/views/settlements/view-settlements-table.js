@@ -17,6 +17,7 @@ import {
  *   rerenderContent: (st: *) => void,
  *   displayOf: (st: *, s: *) => *,
  *   buildOwnerCell: (owner: *) => HTMLElement,
+ *   buildOwnerAvatar: (owner: *) => HTMLElement,
  *   buildTypeBadge: (isTown: boolean) => HTMLElement,
  *   buildSectionTitle: (key: string) => HTMLElement,
  *   buildEmpty: () => HTMLElement
@@ -45,24 +46,28 @@ const FILTERS = [
  * Build one category leader card.
  * @param {{ id: string, icon: string, label: string }} col The output column.
  * @param {*} L The display leader settlement.
+ * @param {TableDeps} deps Rendering dependencies.
  * @returns {HTMLElement} The leader card.
  */
-function buildLeaderCard(col, L) {
+function buildLeaderCard(col, L, deps) {
   const card = div("demographics-settle-leader-card");
+  // Identity FIRST: leader portrait + settlement name on top, owner just beneath.
+  // The category icon + value and the "#1 <category>" label follow below.
+  const id = div("demographics-settle-leader-id");
+  id.appendChild(deps.buildOwnerAvatar(L.owner));
+  const names = div("demographics-settle-leader-idnames");
+  names.appendChild(div("demographics-settle-leader-name", L.name));
+  names.appendChild(div("demographics-settle-leader-val", L.owner.leaderName || ""));
+  id.appendChild(names);
+  card.appendChild(id);
   const head = div("demographics-settle-leader-head");
   head.appendChild(iconEl(col.icon, "demographics-settle-leader-icon"));
-  head.appendChild(
+  head.appendChild(div("demographics-settle-leader-headval", fmt(valueOf(L, col.id))));
+  card.appendChild(head);
+  card.appendChild(
     div(
       "demographics-settle-leader-cat",
       t("LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN", t(col.label))
-    )
-  );
-  card.appendChild(head);
-  card.appendChild(div("demographics-settle-leader-name", L.name));
-  card.appendChild(
-    div(
-      "demographics-settle-leader-val",
-      fmt(valueOf(L, col.id)) + " · " + (L.owner.leaderName || "")
     )
   );
   return card;
@@ -102,7 +107,7 @@ function buildLeadersStrip(st, deps) {
   for (const col of SETTLEMENT_OUTPUTS) {
     const leader = leaderFor(pool, col.id);
     if (!leader) continue;
-    strip.appendChild(buildLeaderCard(col, deps.displayOf(st, leader)));
+    strip.appendChild(buildLeaderCard(col, deps.displayOf(st, leader), deps));
   }
   return strip;
 }
@@ -123,7 +128,8 @@ function buildFilterRow(st, deps) {
     chip.addEventListener("click", () => {
       if (st.filter === f.id) return;
       st.filter = f.id;
-      deps.setSetting(st.settings, "settlementsFilter", f.id);
+      // Session-only: the ranking always reopens on All (see view-settlements.js),
+      // so the chosen filter is intentionally not persisted.
       deps.safePlaySound("data-audio-activate");
       deps.rerenderContent(st);
     });

@@ -106,7 +106,7 @@
 .demographics-body {
     width: 100%;
     /* Fill all available height inside the frame so the view-host (and the
-       Factbook matrix inside it) can expand to fill the modal. */
+       WorldRankingsAllCivs matrix inside it) can expand to fill the modal. */
     flex: 1 1 auto;
     min-height: 0;
     display: flex;
@@ -248,12 +248,14 @@
     /* No flat border — the BLP carries the visual frame. */
     border: 0;
     background: transparent;
-    transition: filter 0.12s, color 0.12s;
+    transition: color 0.12s, text-shadow 0.12s;
 }
 .demographics-chart-toolbar-btn:hover {
     color: var(--ia-accent-gold);
-    /* Subtle glow on hover — mimics the engine's button rollover. */
-    filter: brightness(1.15) drop-shadow(0 0 0.2rem rgba(243, 195, 76, 0.4));
+    /* Rollover glow via text-shadow only. A CSS `filter` (brightness/drop-shadow)
+       here forces the border-image BLP to re-rasterize each frame in GameFace,
+       which flickers — text-shadow gives the same glow without that repaint. */
+    text-shadow: 0 0 0.35rem rgba(243, 195, 76, 0.55);
 }
 .demographics-chart-viewer-dropdown {
     min-width: 14rem;
@@ -436,15 +438,15 @@
     letter-spacing: 0.02em;
 }
 
-/* Factbook column header: "(formerly X, Y)" suffix below current civ name. */
-.demographics-factbook-civ-header-formerly {
+/* WorldRankingsAllCivs column header: "(formerly X, Y)" suffix below current civ name. */
+.demographics-worldrankings-allcivs-civ-header-formerly {
     color: rgba(243, 231, 196, 0.65);
     font-style: italic;
     margin-top: 0.1rem;
 }
 
 /* Reset button shown in the corner cell when civs are hidden. */
-.demographics-factbook-reset-btn {
+.demographics-worldrankings-allcivs-reset-btn {
     padding: 0.2rem 0.5rem;
     border: 1px solid rgba(201, 162, 76, 0.6);
     border-radius: 0.2rem;
@@ -454,7 +456,7 @@
     text-align: center;
     white-space: nowrap;
 }
-.demographics-factbook-reset-btn:hover {
+.demographics-worldrankings-allcivs-reset-btn:hover {
     border-color: rgba(243, 195, 76, 0.9);
     background: rgba(60, 45, 20, 0.85);
 }

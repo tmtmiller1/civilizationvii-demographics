@@ -168,12 +168,36 @@ export function updateFlybyProgress(flowState, index, total) {
 export function captionText(caption) {
   if (!caption) return "";
   if (caption.text) return caption.text;
+  if (caption.foundedYear) {
+    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", caption.foundedYear);
+  }
+  if (typeof caption.standingRank === "number") {
+    const rank = caption.standingRank;
+    const ord = isEnglishLocale() ? ordinalWord(rank) : String(rank);
+    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN", ord);
+  }
+  if (caption.touringCity) {
+    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING", caption.touringCity);
+  }
   if (caption.textKey) return t(caption.textKey);
   if (!caption.nameKey) return "";
   const name = t(caption.nameKey);
   return caption.year
     ? name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", caption.year)
     : name;
+}
+
+/**
+ * Build the secondary "flavor" sub-line shown beneath the caption (a quarter's
+ * description, a wonder's lore, etc.). Empty when the caption carries no flavor.
+ * @param {*} caption The caption object (may carry `flavor` raw text / `flavorKey`).
+ * @returns {string} The flavor text, or "".
+ */
+export function flavorText(caption) {
+  if (!caption) return "";
+  if (caption.flavor) return caption.flavor;
+  if (caption.flavorKey) return t(caption.flavorKey);
+  return "";
 }
 
 /**
@@ -324,6 +348,21 @@ export function buildCongrats(settlement) {
 }
 
 /**
+ * Append the flyby caption + flavor sub-line elements to the card and stash them
+ * on the flow state so the tour can update them per shot.
+ * @param {HTMLElement} card The overlay card.
+ * @param {*} flowState The active flow state (may be undefined).
+ */
+function appendFlybyCaption(card, flowState) {
+  const caption = div("demographics-map-overlay-caption", "");
+  if (flowState) flowState.caption = caption;
+  card.appendChild(caption);
+  const flavor = div("demographics-map-overlay-flavor", "");
+  if (flowState) flowState.flavor = flavor;
+  card.appendChild(flavor);
+}
+
+/**
  * Build the full overlay card.
  * @param {*} settlement The settlement record.
  * @param {string} mode The camera mode.
@@ -339,9 +378,7 @@ export function buildOverlayCard(settlement, mode, options) {
   card.appendChild(buildOverlayMeta(settlement));
   if (mode === "flyby") {
     card.appendChild(buildFlybyProgress(options.flowState));
-    const caption = div("demographics-map-overlay-caption", "");
-    if (options.flowState) options.flowState.caption = caption;
-    card.appendChild(caption);
+    appendFlybyCaption(card, options.flowState);
   }
   const back = div("demographics-map-overlay-back demographics-settle-clickable");
   back.textContent = t("LOC_DEMOGRAPHICS_SETTLEMENTS_BACK");
