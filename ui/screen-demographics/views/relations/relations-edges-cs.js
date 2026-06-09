@@ -5,7 +5,11 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { getAttitudeColors } from "/demographics/ui/core/demographics-palette.js";
-import { dlog, safeCall } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
+import {
+  CS_AGREEMENT_TYPES,
+  dlog,
+  safeCall
+} from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 
 /**
  * One relationship edge between two ring nodes.
@@ -16,6 +20,7 @@ import { dlog, safeCall } from "/demographics/ui/screen-demographics/views/relat
  * @property {string} [label] Optional edge label.
  * @property {string} [filterKey] Filter category.
  * @property {boolean} [dashed] Legacy dashed-line flag.
+ * @property {boolean} [directed] When set, render a→b direction chevrons.
  * @property {number} [width] Per-edge stroke width.
  * @property {number} [opacity] Per-edge stroke opacity.
  * @property {string|null} [_dashOverride] Per-tab dash-pattern override.
@@ -211,35 +216,38 @@ export function resolveCsType(pid) {
 }
 
 /** @type {Record<string, { label: string, color: string, icon: string }>} */
+// City-state type colors use the SAME vivid game-yield palette as the agreement
+// chart (militaristic = military red, cultural = culture purple, economic = gold,
+// scientific = science blue, expansionist = production, diplomatic = influence).
 const CS_TYPE_META = {
   MILITARISTIC: {
     label: "LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC",
-    color: "#d97c7c",
+    color: "#e8493c", // military (vivid red)
     icon: "blp:bonus_militaristic"
   },
   CULTURAL: {
     label: "LOC_DEMOGRAPHICS_CSTYPE_CULTURAL",
-    color: "#c9a2dc",
+    color: "#b25ce0", // culture (vivid purple)
     icon: "blp:bonus_cultural"
   },
   ECONOMIC: {
     label: "LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC",
-    color: "#e6c14c",
+    color: "#f0c33c", // gold (vivid)
     icon: "blp:bonus_economic"
   },
   SCIENTIFIC: {
     label: "LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC",
-    color: "#7fb3e6",
+    color: "#4ea6ec", // science (vivid blue)
     icon: "blp:bonus_scientific"
   },
   EXPANSIONIST: {
     label: "LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST",
-    color: "#9ad17a",
+    color: "#d97b2c", // production (vivid burnt orange)
     icon: "blp:bonustype_expansionist"
   },
   DIPLOMATIC: {
     label: "LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC",
-    color: "#5fb3b3",
+    color: "#2fc79a", // influence (vivid teal)
     icon: "blp:bonustype_diplomatic"
   }
 };
@@ -363,6 +371,111 @@ export function buildCsTradeEdges(metIds, csIds, localPid) {
           filterKey: "trade"
         });
       }
+    }
+  }
+  return edges;
+}
+
+/**
+ * Read a player's diplomatic events list defensively.
+ * @param {number} pid Player id whose events to read.
+ * @returns {*[]} The events array (empty on any error).
+ */
+function getPlayerEventsSafe(pid) {
+  return (
+    safeCall("getPlayerEvents(" + pid + ")", () => {
+      if (
+        typeof Game === "undefined" ||
+        !Game.Diplomacy ||
+        typeof Game.Diplomacy.getPlayerEvents !== "function"
+      )
+        return [];
+      return Game.Diplomacy.getPlayerEvents(pid) || [];
+    }) || []
+  );
+}
+
+/**
+ * Resolve the "other" player id in a diplomacy event relative to `self`.
+ * @param {*} ev Diplomacy event.
+ * @param {number} self Player whose events list this came from.
+ * @returns {number|undefined} The other player id, or undefined.
+ */
+function eventOther(ev, self) {
+  let other = ev.targetPlayer;
+  if (typeof other !== "number") other = ev.otherPlayer;
+  if (typeof other !== "number") other = ev.initialPlayer !== self ? ev.initialPlayer : undefined;
+  return other;
+}
+
+/**
+ * Pre-resolve CS agreement action ints + colors/keys, skipping enums absent at
+ * runtime (e.g. an action not present in the current age).
+ * @returns {{ t: number, color: string, key: string }[]} Resolved lookups.
+ */
+function resolveCsAgreementLookups() {
+  /** @type {{ t: number, color: string, key: string }[]} */
+  const out = [];
+  const Types = typeof DiplomacyActionTypes !== "undefined" ? DiplomacyActionTypes : null;
+  if (!Types) return out;
+  for (const entry of CS_AGREEMENT_TYPES) {
+    const actionInt = Types[entry.action];
+    if (typeof actionInt === "number") {
+      out.push({ t: actionInt, color: entry.color, key: entry.key });
+    }
+  }
+  return out;
+}
+
+/**
+ * @typedef {Object} CsAgreementCtx
+ * @property {Set<string>} seen Dedupe key set (mutated).
+ * @property {Set<number>} majors Major ids in scope.
+ * @property {{ t: number, color: string, key: string }[]} lookups Resolved action lookups.
+ */
+
+/**
+ * Match one CS diplomacy event against the agreement lookups and append a
+ * major -> CS edge (deduped on major + CS + action) if it qualifies.
+ * @param {Edge[]} edges Accumulator.
+ * @param {*} ev One diplomacy event from the CS's event list.
+ * @param {number} csId The city-state id.
+ * @param {CsAgreementCtx} ctx Match context.
+ */
+function appendCsAgreementEdge(edges, ev, csId, ctx) {
+  if (!ev || typeof ev.actionType !== "number") return;
+  const hit = ctx.lookups.find((l) => l.t === ev.actionType);
+  if (!hit) return;
+  const major = eventOther(ev, csId);
+  if (typeof major !== "number" || !ctx.majors.has(major)) return;
+  const key = major + "|" + csId + "|" + hit.t;
+  if (ctx.seen.has(key)) return;
+  ctx.seen.add(key);
+  edges.push({ a: major, b: csId, color: hit.color, filterKey: hit.key, directed: true });
+}
+
+/**
+ * Build City-State cooperative-agreement edges (major -> CS): befriending plus the
+ * suzerain benefit directives. Mirrors the major-civ agreement scan but reads each
+ * CS's own event list — the base befriend-independent screen reads
+ * `getPlayerEvents(targetIndependent)` and matches `GIVE_INFLUENCE_TOKEN`.
+ * @param {number[]} metIds Met major ids.
+ * @param {number[]} csIds City-state ids.
+ * @param {number} [localPid] Local player id.
+ * @returns {Edge[]} CS agreement edges.
+ */
+export function buildCsAgreementEdges(metIds, csIds, localPid) {
+  /** @type {Edge[]} */
+  const edges = [];
+  if (typeof Players === "undefined" || typeof Players.get !== "function") return edges;
+  const lookups = resolveCsAgreementLookups();
+  if (lookups.length === 0) return edges;
+  const majors = new Set(metIds);
+  if (typeof localPid === "number") majors.add(localPid);
+  const ctx = { seen: new Set(), majors, lookups };
+  for (const csId of csIds) {
+    for (const ev of getPlayerEventsSafe(csId)) {
+      appendCsAgreementEdge(edges, ev, csId, ctx);
     }
   }
   return edges;

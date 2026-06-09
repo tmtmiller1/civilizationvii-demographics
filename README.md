@@ -7,7 +7,7 @@ Intended to be the spiritual successor to robk's InfoAddict (Civ V) and Gedemon'
 ## Tabs
 
 - **Historical Data**: per-turn time-series charts and dashboards.
-- **World Rankings**: civilization and settlement leaderboards, per-civ factbook profiles, and a Top 25 settlements board with map fly-to.
+- **World Rankings**: civilization and settlement leaderboards, per-civ All Civilizations profiles, and a Top 25 settlements board with map fly-to.
 - **Global Relations**: concentric relationship ring of met civilizations and city-states.
 - **Options**: sampling, visibility, and display settings.
 
@@ -30,7 +30,7 @@ Supports per-civ colors, time-range filters, year axis labels, per-metric format
 Four sub-tabs:
 
 - **Civilization Ranking**: civilizations ordered by cumulative settlement score.
-- **All Civilizations**: per-civ cards with current metric values and world ranks (the factbook). Unmet civilizations show as placeholders unless name revelation is enabled in Options.
+- **All Civilizations**: per-civ cards with current metric values and world ranks (the All Civilizations table). Unmet civilizations show as placeholders unless name revelation is enabled in Options.
 - **Top 25 Settlements**: a podium-and-ranked-list board of the strongest settlements. Each card can snap the camera to the city (**View on map**), play a smooth **Cinematic view**, or — with the experimental settlement flyby enabled in Options — run a short keyframed flyby.
 - **All Settlements**: a dense, sortable table filterable by All / Cities / Towns.
 
@@ -59,7 +59,7 @@ The Conflicts page in Historical Data is a Gantt chart of wars from diplomacy ev
 ## Usage
 
 - Open from the Demographics icon in the subsystem dock.
-- Top tabs switch views. In Historical Data, the second row picks a metric page and the third picks the metric; in World Rankings, the second row switches between the rankings, factbook, and settlement boards.
+- Top tabs switch views. In Historical Data, the second row picks a metric page and the third picks the metric; in World Rankings, the second row switches between the rankings, All Civilizations, and settlement boards.
 
 ## Compatibility
 

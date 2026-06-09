@@ -1,4 +1,4 @@
-// chart-legacy-radar.js
+// chart-triumphs-radar.js
 //
 // The Legacy Path radar (6-axis polar chart, one polygon per civ):
 // renderLegacyRadar plus its private civ-loading, geometry, grid, and

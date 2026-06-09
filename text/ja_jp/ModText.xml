@@ -46,7 +46,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="ja_JP"><Text>領土面積</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="ja_JP"><Text>所有する領土の総面積（平方キロメートル）で、支配しているヘクスタイルから換算されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="ja_JP"><Text>歴史データ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK" Language="ja_JP"><Text>ワールドファクトブック</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS" Language="ja_JP"><Text>産出量別文明ランキング</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ja_JP"><Text>グローバル関係</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ja_JP"><Text>オプション</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ja_JP"><Text>経済</Text></Replace>
@@ -78,10 +78,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="ja_JP"><Text>遺産</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="ja_JP"><Text>このプレイヤーが全時代を通じて建設した遺産の総数。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="ja_JP"><Text>（未実装）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD" Language="ja_JP"><Text>対 世界</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC" Language="ja_JP"><Text>指標</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE" Language="ja_JP"><Text>値</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK" Language="ja_JP"><Text>順位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD" Language="ja_JP"><Text>対 世界</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="ja_JP"><Text>指標</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="ja_JP"><Text>値</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="ja_JP"><Text>順位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="ja_JP">
+            <Text>値</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ja_JP"><Text>凡例に未遭遇の文明を表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ja_JP"><Text>グラフの線を平滑化（3ターン移動平均）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ja_JP"><Text>排除された文明を表示</Text></Replace>
@@ -172,6 +175,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="ja_JP"><Text>紛争（戦争ごとに1本のバー）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="ja_JP"><Text>（主要文明なし）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="ja_JP"><Text>進行中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN" Language="ja_JP">
+            <Text>増加</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS" Language="ja_JP">
+            <Text>損失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA" Language="ja_JP">
+            <Text>データなし</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="ja_JP"><Text>終結</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="ja_JP"><Text>進行中</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="ja_JP"><Text>不明</Text></Replace>
@@ -237,26 +249,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="ja_JP"><Text>拡張主義</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="ja_JP"><Text>外交</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="ja_JP"><Text>すべてオン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS" Language="ja_JP">
+            <Text>政治と関係</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION" Language="ja_JP">
+            <Text>評判</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" Language="ja_JP">
+            <Text>協定</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="ja_JP"><Text>すべてオフ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL" Language="ja_JP">
+            <Text>すべて</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE" Language="ja_JP">
+            <Text>なし</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET" Language="ja_JP">
+            <Text>リセット</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="ja_JP"><Text>{1_Label}（クリックで非表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="ja_JP"><Text>{1_Label}（クリックで表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="ja_JP"><Text>表示する文明がありません。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER" Language="ja_JP"><Text>未遭遇のリーダー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER" Language="ja_JP"><Text>未遭遇のリーダー</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="ja_JP"><Text>プレイヤー {1_Pid}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY" Language="ja_JP"><Text>（旧 {1_Names}）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF" Language="ja_JP"><Text>順位 {1_Rank}/{2_Total}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET" Language="ja_JP"><Text>リセット（{1_Count} 件非表示）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP" Language="ja_JP"><Text>非表示のすべての文明を表示します</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT" Language="ja_JP"><Text>文明の見出しをクリックすると非表示になり、比較対象を絞り込めます。もう一度クリックすると再表示されます。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT" Language="ja_JP"><Text>未遭遇</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示 — クリックで表示）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE" Language="ja_JP"><Text>クリックで非表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY" Language="ja_JP"><Text>（旧 {1_Names}）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="ja_JP"><Text>順位 {1_Rank}/{2_Total}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="ja_JP"><Text>リセット（{1_Count} 件非表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ja_JP"><Text>非表示のすべての文明を表示します</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ja_JP"><Text>列をクリックすると、その指標で文明を並べ替えます。ランク／値の切り替えで各セルの表示を変更できます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ja_JP"><Text>未遭遇</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示 — クリックで表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ja_JP"><Text>クリックで非表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ja_JP"><Text>トライアンフレーダー — 全文明、6つの属性パスすべて</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ja_JP"><Text>時系列トライアンフ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ja_JP"><Text>（累計数、属性別に積み上げ）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ja_JP"><Text>時系列資源配分（積み上げ面）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ja_JP"><Text>紛争タイムライン — このゲームで発生したすべての戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="ja_JP"><Text>紛争タイムライン</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ja_JP"><Text>まだ利用できません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ja_JP"><Text>オプション</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ja_JP"><Text>まだ遭遇していない文明の実際の名前を表示（ネタバレ）</Text></Replace>
@@ -769,16 +799,16 @@
             <Text>危機</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="ja_JP">
-            <Text>危機段階</Text>
+            <Text>危機の影響</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="ja_JP">
-            <Text>危機段階</Text>
+            <Text>危機の影響</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="ja_JP">
-            <Text>危機の影響</Text>
+            <Text>危機の影響グラフ</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="ja_JP">
-            <Text>危機の影響</Text>
+            <Text>危機の影響グラフ</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="ja_JP">
             <Text>文明</Text>
@@ -915,9 +945,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="ja_JP">
             <Text>戦争への投入</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO" Language="ja_JP">
-            <Text>これらは「戦争」タブの各戦争のポップアップに表示される数値です。すべての数値は、その戦争における交戦国の参戦期間にわたって測定されます——参戦したターンから離脱したターンまで、戦争が継続中であれば現在までで、ゲームは1ターンごとに1回サンプリングされます。緑の数字は増加、赤の数字は損失を表し、ダッシュ（—）はその戦争についてデータが記録されなかったことを意味します。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="ja_JP">
             <Text>戦争終了時点（継続中の場合は最新ターン）における、あなたの常備軍事力——軍隊の総戦闘力です。これは損失ではなく自軍の規模であり、下の「軍事力（損失）」が損害を追跡します。</Text>
         </Replace>
@@ -945,9 +972,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="ja_JP">
             <Text>あなたが戦争遂行に費やした生産力です。戦争中に完成させたすべての軍事ユニット、および軍事建造物や防御施設（城壁など）の生産コストを合算したものです。民間ユニット、経済建造物、遺産は数えません。これは損失ではなく戦争への意図的な投資であるため、中立的な数値として表示されます。コストはそれを建設した都市における実効コストであり、リーダー、文明、政策による割引はすでに反映されています。ゴールドや信仰で直接購入したものは、生産力ではなく国庫からの支出であるため数えません。アイテム間の生産力の繰り越しも厳密には分離されません。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE" Language="ja_JP">
-            <Text>一部の列が純増減で、他が総計である理由について。領土、入植地、生産力は双方向に変動し、取り消すこともできるため、純変化として表示されます。戦力と人口は、他での増加によって決して隠されるべきでない破壊であるため、累積損失として表示されます。破壊された入植地は、その定義上、恒久的なものです。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="ja_JP">
             <Text>履歴は各時代の移行時にリセットされます。</Text>
         </Replace>
@@ -959,9 +983,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="ja_JP">
             <Text>現在の時代、または年代範囲のフィルターを使用してください。</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE" Language="ja_JP">
-            <Text>戦争コストガイド — 各数値の意味と測定方法</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="ja_JP">
             <Text>戦争の影響 — 選択した戦争における各交戦国の推移</Text>
@@ -983,6 +1004,21 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="ja_JP">
             <Text>なし</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="ja_JP">
+            <Text>Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="ja_JP">
+            <Text>All Ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="ja_JP">
+            <Text>Antiquity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="ja_JP">
+            <Text>Exploration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="ja_JP">
+            <Text>Modern</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="ja_JP">
             <Text>すべて</Text>
@@ -1007,7 +1043,7 @@
             <Text>トップ25入植地</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="ja_JP">
-            <Text>すべての集落</Text>
+            <Text>産出量別集落ランキング</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="ja_JP">
             <Text>すべて</Text>
@@ -1029,6 +1065,9 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="ja_JP">
             <Text>順位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CITY_STATE" Language="ja_JP">
+            <Text>都市国家</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="ja_JP">
             <Text>所有者</Text>
@@ -1244,6 +1283,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="ja_JP">
             <Text>フライバイ</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING" Language="ja_JP">
+            <Text>{1_City}の航空映像</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="ja_JP">
             <Text>トップ集落カメラ</Text>
         </Replace>
@@ -1293,25 +1335,25 @@
             <Text>部門別トップ</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ja_JP">
-            <Text>全入植地</Text>
+            <Text>産出量別集落ランキング</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="ja_JP">
             <Text>最も偉大な集落</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="ja_JP">
-            <Text>総合順位</Text>
+            <Text>全入植地ランキング</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="ja_JP">
             <Text>世界ランキング</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="ja_JP">
-            <Text>全文明</Text>
+            <Text>産出量別文明ランキング</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="ja_JP">
             <Text>文明ランキング</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="ja_JP">
-            <Text>最も卓越した文明</Text>
+            <Text>最も偉大な文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="ja_JP">
             <Text>文明総合順位</Text>

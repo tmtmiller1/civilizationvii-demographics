@@ -50,7 +50,7 @@
        footprint on the major-civs tab (11 entries) AND the city-states
        tab (8 entries). Earlier max-width let it shrink to the widest
        pill, making the CS legend visibly narrower than the civ legend. */
-    width: 22rem;
+    width: 24rem;
     /* Min-height so the shorter CS legend doesn't look truncated next to
        the major-civs legend — they read as the same "panel," just with
        different lists inside. */
@@ -120,6 +120,27 @@
     margin: 0 0 0.5rem 0;
     padding: 0 0 0.35rem 0;
     border-bottom: 1px solid rgba(168, 132, 90, 0.45);
+}
+/* ── Sub-group chip row (Politics / Reputation / Agreements) ───────────────
+   A segmented selector under the Civ/CS tabs, mirroring the settlements
+   All/Cities/Towns control (chips reuse .demographics-chart-time-filter-pill). */
+.demographics-relations-subtab-host {
+    display: flex;
+    justify-content: center;
+}
+.demographics-relations-subgroup-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Match the settlements All/Cities/Towns control exactly (.demographics-settle-
+       filters): same gap + same chip font-size/padding (rule below). */
+    gap: 0.4rem;
+    padding: 0.3rem 0 0.15rem;
+}
+.demographics-relations-subgroup-row .demographics-chart-time-filter-pill {
+    font-size: 1.05rem;
+    padding: 0.4rem 1rem;
 }
 .demographics-relations-filter-label {
     color: var(--ia-text-secondary);
@@ -205,15 +226,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Warm vignette: a faint glow at the ring's center falling off to dark
-       edges gives the diagram depth instead of a flat panel. */
-    background: radial-gradient(ellipse at 50% 42%,
-        rgba(58, 46, 26, 0.5) 0%,
-        rgba(20, 16, 10, 0.6) 55%,
-        rgba(8, 6, 3, 0.8) 100%);
-    border: 1px solid rgba(201, 162, 76, 0.35);
+    /* Holographic console: a warm core glow over a deep near-black field, with a
+       faint gold horizon ring, gives the diagram real depth behind the glowing
+       lines. Layered radial gradients (top → bottom in paint order). */
+    background:
+        radial-gradient(ellipse at 50% 44%, rgba(243, 195, 76, 0.05) 0%, rgba(243, 195, 76, 0) 36%),
+        radial-gradient(ellipse at 50% 44%, rgba(40, 32, 20, 0.5) 0%, rgba(12, 10, 6, 0.9) 62%, rgba(4, 3, 2, 0.97) 100%);
+    border: 1px solid rgba(201, 162, 76, 0.4);
     border-radius: 0.4rem;
-    box-shadow: inset 0 0 2.5rem rgba(0, 0, 0, 0.55);
+    box-shadow:
+        inset 0 0 3rem rgba(0, 0, 0, 0.7),
+        inset 0 0 0.5rem rgba(243, 195, 76, 0.05);
 }
 .demographics-relations-ring-svg {
     width: 100%;
@@ -222,9 +245,15 @@
     max-height: 100%;
 }
 
+/* Backdrop (quiet orbit ring) + edge glow are non-interactive. */
+.demographics-relations-backdrop,
+.demographics-relations-edge-glow {
+    pointer-events: none;
+}
+
 /* Leader portrait HTML overlay positioned in pixel coords over the SVG
    wrap (computed from svg.getBoundingClientRect after layout). Uses the
-   same fxs-icon path the factbook header uses. */
+   same fxs-icon path the worldrankings-allcivs header uses. */
 .demographics-relations-portrait {
     position: absolute;
     border-radius: 50%;
@@ -233,25 +262,85 @@
     /* Thin bronze frame + a dark backing disc so portraits/icons read as set
        INTO the diagram, with a soft drop shadow for depth. background-color
        (not the shorthand) survives the inline background-image CS icons set. */
-    border: 0.09rem solid rgba(201, 162, 76, 0.4);
+    border: 0.09rem solid rgba(216, 178, 96, 0.55);
     background-color: rgba(14, 10, 5, 0.55);
-    box-shadow: 0 0.05rem 0.22rem rgba(0, 0, 0, 0.6);
-    pointer-events: none;
-    transition: box-shadow 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
-}
-/* Clicked / focused leader node: brighten to a gold ring + glow and lift it
-   slightly, so the selection reads even though the portrait covers the node. */
-.demographics-relations-portrait.is-selected {
-    border-color: #f3c34c;
+    /* Ambient bronze halo + drop shadow so every node reads as a lit token set
+       into the console. */
     box-shadow:
-        0 0 0.5rem 0.08rem rgba(243, 195, 76, 0.85),
-        0 0.05rem 0.3rem rgba(0, 0, 0, 0.7);
-    transform: scale(1.06);
+        0 0 0.4rem 0.04rem rgba(243, 195, 76, 0.28),
+        0 0.05rem 0.28rem rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+    transition: box-shadow 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
+}
+/* Hover lift (only interactive when click-to-focus wired pointer-events:auto). */
+.demographics-relations-portrait:hover {
+    transform: scale(1.08);
+    z-index: 2;
+}
+/* Clicked / focused node: lift it slightly; the gold rim brightens + a warm
+   radial glow blooms behind it (see hex-glow below) — restrained, like the
+   game's own selection highlight rather than a neon pulse. */
+.demographics-relations-portrait.is-selected {
+    transform: scale(1.13);
     z-index: 3;
 }
 /* Faded back when another node holds focus (click-to-focus). */
 .demographics-relations-portrait.is-dimmed {
-    opacity: 0.18;
+    opacity: 0.2;
+}
+
+/* ── Leader hex token (gold-rimmed hexagon tinted by civ color) ─────────────
+   Pure-CSS hexes via clip-path so there's no texture/tint dependency. Layered
+   back→front: select glow, gold rim, color fill, leader portrait. */
+.demographics-relations-portrait-hex {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    overflow: visible;
+}
+.demographics-relations-hex-rim,
+.demographics-relations-hex-fill,
+.demographics-relations-hex-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+/* Gold rim hex (the full token). */
+.demographics-relations-hex-rim {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: linear-gradient(150deg, #ffe7a6 0%, #e8c46a 38%, #b8893c 100%);
+}
+/* Civ-color fill hex, inset so the rim shows as a bezel; tint set inline. */
+.demographics-relations-hex-fill {
+    inset: 9%;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background-color: #2a2118;
+    box-shadow: inset 0 0 0.25rem rgba(0, 0, 0, 0.6);
+}
+/* The leader portrait, clipped to the hex and inset within the fill. */
+.demographics-relations-portrait-hex .demographics-relations-portrait-icon {
+    position: absolute;
+    inset: 15%;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+/* Warm radial bloom behind a selected token (hidden until selected). */
+.demographics-relations-hex-glow {
+    inset: -40%;
+    background: radial-gradient(closest-side,
+        rgba(255, 228, 150, 0.85) 0%,
+        rgba(243, 195, 76, 0.35) 45%,
+        rgba(243, 195, 76, 0) 75%);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+.demographics-relations-portrait.is-selected .demographics-relations-hex-glow {
+    opacity: 1;
+}
+/* Selected/hovered hex brightens its gold rim. */
+.demographics-relations-portrait.is-selected .demographics-relations-hex-rim,
+.demographics-relations-portrait-hex:hover .demographics-relations-hex-rim {
+    background: linear-gradient(150deg, #fff1c8 0%, #ffd76a 45%, #d8a64c 100%);
 }
 /* CS type-icon variant — static background-image chrome (the URL is set inline
    per-placement); inset slightly so the icon sits within the bronze frame. */
@@ -267,6 +356,24 @@
 }
 .demographics-relations-line {
     opacity: 0.85;
+}
+
+/* Ring node name labels: the SAME font/weight/color as the historical-data chart
+   labels (.demographics-chart-line-label), just smaller and with no bounding box.
+   A soft shadow keeps them legible over the ring. */
+.demographics-relations-node-label {
+    position: absolute;
+    transform: translateX(-50%);
+    color: var(--ia-text-secondary);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow: 0 0 0.12rem #0a0804, 0 0 0.12rem #0a0804;
+}
+.demographics-relations-node-label.is-dimmed {
+    opacity: 0.18;
 }
 
 /* ── Options ──────────────────────────────────────────────────────────── */
@@ -320,3 +427,33 @@
     min-width: 18rem;
 }
 
+
+/* ── Edge hover: highlight the whole line + a tooltip naming it ───────────────
+   Coherent does NOT deliver mouse events to SVG elements, so hover is driven from
+   the HTML ring wrap (mousemove → nearest-edge hit test in relations-ring-svg.js).
+   The SVG is therefore pointer-events:none so the wrap reliably receives the
+   events; the hit test toggles .is-hovered on the matched edge group, and this
+   rule thickens + brightens every piece of that line. */
+.demographics-relations-ring-svg {
+    pointer-events: none;
+}
+.demographics-relations-edge.is-hovered .demographics-relations-line {
+    stroke-width: 0.85;
+    stroke-opacity: 1;
+    fill-opacity: 1;
+}
+.demographics-relations-edge-tip {
+    position: absolute;
+    z-index: 30;
+    pointer-events: none;
+    padding: 0.2rem 0.5rem;
+    background: rgba(12, 9, 5, 0.95);
+    border: 1px solid rgba(201, 162, 76, 0.7);
+    border-radius: 0.25rem;
+    color: #f3e7c4;
+    white-space: nowrap;
+    /* JS anchors the tip at the cursor; this transform is the readable gap that
+       keeps it out from under the pointer (in CSS so it hot-reloads on reopen).
+       Pushed well to the right so the cursor graphic never covers the label. */
+    transform: translate(2.6rem, 1.2rem);
+}

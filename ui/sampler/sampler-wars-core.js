@@ -139,12 +139,17 @@ function buildNewWar(args) {
   const declarer = pidInfo(snapshot, /** @type {number} */ (info.initialPid));
   const startTurn =
     typeof info.headerStartTurn === "number" ? info.headerStartTurn : turn;
+  // Global (cross-age) chart turn for the timeline. `startTurn` is age-local
+  // (resets each age); the Gantt plots on chartTurn so ages don't overlap.
+  const chartTurn = typeof snapshot?.chartTurn === "number" ? snapshot.chartTurn : startTurn;
   const sideACivs = aRoster.map((r) => ({ ...r, joinTurn: startTurn, active: true }));
   const sideBCivs = bRoster.map((r) => ({ ...r, joinTurn: startTurn, active: true }));
   return {
     warUniqueID: /** @type {number} */ (info.uniqueID),
     startTurn,
     endTurn: null,
+    startChartTurn: chartTurn,
+    lastChartTurn: chartTurn,
     startYear: gameYear,
     endYear: null,
     sideA: info.sideA.slice(),
@@ -178,12 +183,16 @@ function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
   for (const w of wars) {
     if (typeof w.warUniqueID === "number") knownByID.set(w.warUniqueID, w);
   }
+  const chartTurn = typeof snapshot?.chartTurn === "number" ? snapshot.chartTurn : turn;
   for (const [uid, info] of activeWarsByID) {
     const existing = knownByID.get(uid);
     const aRoster = info.sideA.map((p) => pidInfo(snapshot, p));
     const bRoster = info.sideB.map((p) => pidInfo(snapshot, p));
     if (existing) {
       updateExistingWar(existing, info, { a: aRoster, b: bRoster }, uid, turn);
+      // Track the latest global turn the war is active so its end maps to the
+      // continuous timeline when it closes.
+      existing.lastChartTurn = chartTurn;
       continue;
     }
     const newWar = buildNewWar({

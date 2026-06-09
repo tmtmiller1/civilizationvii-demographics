@@ -93,6 +93,10 @@ export default [
         "error",
         { max: 50, skipBlankLines: true, skipComments: true, IIFEs: true }
       ],
+      "max-lines": [
+        "error",
+        { max: 500, skipBlankLines: true, skipComments: true }
+      ],
       // Soft quality guardrails from demographics-code-quality-catalogue.md.
       "max-len": [
         "warn",
@@ -119,7 +123,22 @@ export default [
   },
   {
     // Declarative data catalogs are data, not logic; exempt from the length gate.
-    files: ["ui/demographics-metrics.js"],
-    rules: { "max-lines-per-function": "off" }
+    files: ["ui/metrics/demographics-metrics.js"],
+    rules: {
+      "max-lines-per-function": "off",
+      "max-lines": "off"
+    }
+  },
+  {
+    // Accepted large modules (see monoliths-analysis.md "need no work"): the screen
+    // controller and the storage facade are already decomposed into helper modules -
+    // their length is irreducible lifecycle / public-API surface plus JSDoc, not a
+    // logic tangle. Every method passes the per-function gate; exempt from max-lines
+    // so the file-level cap doesn't force splitting the app's two most central classes.
+    files: [
+      "ui/screen-demographics/screen/screen-demographics.js",
+      "ui/storage/demographics-storage.js"
+    ],
+    rules: { "max-lines": "off" }
   }
 ];

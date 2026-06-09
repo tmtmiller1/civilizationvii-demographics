@@ -1,6 +1,6 @@
 // chart-war-military.js
 //
-// Side/mode military graph helpers used by chart-war-graphs.
+// Side/mode military graph helpers used by chart-conflicts-graphs.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
