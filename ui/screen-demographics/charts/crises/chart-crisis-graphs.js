@@ -25,7 +25,7 @@ import {
   COST_METRICS,
   buildCostIcon,
   graphMetricTitle
-} from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost.js";
+} from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { computeAgeOffsets, sampleX } from "/demographics/ui/screen-demographics/charts/line/chart-line-axis.js";
 import {
   crisisStageOnsets,
@@ -65,6 +65,72 @@ const Y_LABEL = {
 const CRISIS_GRAPH_METRICS = COST_METRICS.filter(
   (m) => m.id !== "warProdCum" && m.id !== "razedCum"
 ).map((m) => ({ ...m, series: SERIES_KEY[m.id] || m.id, yLabel: Y_LABEL[m.id] || "" }));
+
+/**
+ * Dropdown scope label (LOC tag) per crisis-bearing age. Each age runs its own
+ * crisis; this lets the user view one age's crisis in isolation.
+ * @type {Record<string, string>}
+ */
+const AGE_SCOPE_LABEL = {
+  AGE_ANTIQUITY: "LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY",
+  AGE_EXPLORATION: "LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION",
+  AGE_MODERN: "LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN"
+};
+
+/**
+ * The distinct ages that have at least one crisis onset, in chronological
+ * (first-seen) order, plus the most recent such age. Ages only ever advance, so
+ * the last first-seen age is the newest crisis.
+ * @param {*} history The history blob.
+ * @returns {{ ages: string[], latest: (string|undefined) }} Crisis ages + newest.
+ */
+function crisisAges(history) {
+  const samples = Array.isArray(history.samples) ? history.samples : [];
+  const seen = [];
+  const set = new Set();
+  for (const o of crisisStageOnsets(samples)) {
+    const age = o.sample && typeof o.sample.age === "string" ? o.sample.age : undefined;
+    if (!age || set.has(age)) continue;
+    set.add(age);
+    seen.push(age);
+  }
+  return { ages: seen, latest: seen.length ? seen[seen.length - 1] : undefined };
+}
+
+/**
+ * The selectable crisis scopes for the toolbar dropdown: an "All Ages" combined
+ * view followed by one entry per crisis-bearing age. Returns [] until a SECOND
+ * crisis exists, so the dropdown only appears once (e.g.) the Exploration crisis
+ * has begun - a single Antiquity crisis needs no selector.
+ * @param {*} history The history blob.
+ * @returns {{ id: string, label: string }[]} The scope options ([] when < 2 crises).
+ */
+export function collectCrisisScopes(history) {
+  const { ages } = crisisAges(history || {});
+  if (ages.length < 2) return [];
+  const scopes = [{ id: "all", label: t("LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL") }];
+  for (const age of ages) {
+    scopes.push({ id: age, label: t(AGE_SCOPE_LABEL[age] || "") || age });
+  }
+  return scopes;
+}
+
+/**
+ * Resolve a stored scope id - which may be the "latest" sentinel (follow the
+ * newest crisis), "all", a concrete age, or a stale age from an earlier game -
+ * to a concrete render scope. Returns "all" whenever fewer than two crises
+ * exist, so single-crisis games render exactly as before.
+ * @param {*} history The history blob.
+ * @param {*} scopeId The stored scope selection.
+ * @returns {string} "all" or a concrete age type.
+ */
+export function resolveCrisisScope(history, scopeId) {
+  const { ages, latest } = crisisAges(history || {});
+  if (ages.length < 2) return "all";
+  if (scopeId === "all") return "all";
+  if (typeof scopeId === "string" && ages.includes(scopeId)) return scopeId;
+  return latest || "all";
+}
 
 /** Stable series keys (civ identities) the user has toggled off, shared by all graphs. */
 const hiddenKeys = new Set();
@@ -123,23 +189,38 @@ const PRE_CRISIS_LEAD = 8;
  * @param {*} history The history blob.
  * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
  * @param {number|undefined} minX The earliest chart-X to keep (or undefined for all).
+ * @param {number|undefined} maxX The latest chart-X to keep (or undefined for all).
  * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]} The series.
  */
-function seriesFor(m, history, rosterMap, minX) {
+function seriesFor(m, history, rosterMap, minX, maxX) {
   const raw = buildSeriesFromHistory(history, m.series).series;
   const out = [];
   for (const s of raw) {
     if (hiddenKeys.has(s.leaderType)) continue;
-    const meta = rosterMap.get(s.leaderType);
-    const points = [];
-    for (const p of s.points) {
-      if (typeof minX === "number" && p.t < minX) continue;
-      points.push({ x: p.t, y: p.v });
-    }
+    const points = clipPoints(s.points, minX, maxX);
     if (!points.length) continue;
+    const meta = rosterMap.get(s.leaderType);
     out.push({ name: meta ? meta.name : s.name, color: meta ? meta.color : s.color, points });
   }
   return out;
+}
+
+/**
+ * Map a sampled series' points to chart {x,y}, dropping any outside the shared
+ * x-window so a scoped view doesn't draw the other ages' runs.
+ * @param {{ t: number, v: number }[]} rawPoints The series points.
+ * @param {number|undefined} minX The earliest chart-X to keep (or undefined for all).
+ * @param {number|undefined} maxX The latest chart-X to keep (or undefined for all).
+ * @returns {{ x: number, y: number }[]} The clipped points.
+ */
+function clipPoints(rawPoints, minX, maxX) {
+  const points = [];
+  for (const p of rawPoints) {
+    if (typeof minX === "number" && p.t < minX) continue;
+    if (typeof maxX === "number" && p.t > maxX) continue;
+    points.push({ x: p.t, y: p.v });
+  }
+  return points;
 }
 
 /**
@@ -149,23 +230,43 @@ function seriesFor(m, history, rosterMap, minX) {
  * every graph so they share one time scale (markers line up across all graphs);
  * it starts a short lead before the FIRST crisis onset rather than at the game's
  * first turn, so the long pre-crisis stretch isn't shown.
+ * When `scopeAge` is a concrete age (not "all"), only that age's onsets and
+ * samples are considered, so the graphs zoom to that single crisis's window.
  * @param {*} history The history blob.
+ * @param {string} scopeAge "all" or the age type to isolate.
  * @returns {{ markers: { x: number, color: string, label: string }[],
  *   xDomain: ({ xMin: number, xMax: number }|null) }}
  *   The markers and the shared x-domain.
  */
-function crisisAxis(history) {
+function crisisAxis(history, scopeAge) {
   const samples = Array.isArray(history.samples) ? history.samples : [];
   const boundaries = Array.isArray(history.ageBoundaries) ? history.ageBoundaries : [];
   const { offsets } = computeAgeOffsets(samples, boundaries);
-  const { lo, hi } = sampleXRange(samples, offsets, boundaries);
-  const { markers, firstOnset } = buildCrisisMarkers(samples, offsets, boundaries);
+  const { lo, hi } = scopeXRange(samples, offsets, boundaries, scopeAge);
+  const { markers, firstOnset } = buildCrisisMarkers(samples, offsets, boundaries, scopeAge);
   if (!isFinite(lo) || !isFinite(hi)) return { markers, xDomain: null };
   const xMin =
     markers.length && isFinite(firstOnset)
       ? Math.max(lo, firstOnset - PRE_CRISIS_LEAD)
       : lo;
   return { markers, xDomain: { xMin, xMax: hi } };
+}
+
+/**
+ * The chart-X range to plot: the whole game for "all", or just the samples of
+ * one age when scoped to a single crisis.
+ * @param {Snapshot[]} samples The sample stream.
+ * @param {Map<string, number>} offsets The age offsets.
+ * @param {*[]} boundaries The age boundary table.
+ * @param {string} scopeAge "all" or the age type to isolate.
+ * @returns {{ lo: number, hi: number }} The chart-X range.
+ */
+function scopeXRange(samples, offsets, boundaries, scopeAge) {
+  const scoped =
+    scopeAge && scopeAge !== "all"
+      ? samples.filter((s) => s && s.age === scopeAge)
+      : samples;
+  return sampleXRange(scoped, offsets, boundaries);
 }
 
 /**
@@ -193,13 +294,15 @@ function sampleXRange(samples, offsets, boundaries) {
  * @param {Snapshot[]} samples The sample stream.
  * @param {Map<string, number>} offsets The age offsets.
  * @param {*[]} boundaries The age boundary table.
+ * @param {string} scopeAge "all", or an age type to keep only that crisis's onsets.
  * @returns {{ markers: { x: number, color: string, label: string }[],
  *   firstOnset: number }} The markers + first onset.
  */
-function buildCrisisMarkers(samples, offsets, boundaries) {
+function buildCrisisMarkers(samples, offsets, boundaries, scopeAge) {
   const markers = [];
   let firstOnset = Infinity;
   for (const o of crisisStageOnsets(samples)) {
+    if (scopeAge && scopeAge !== "all" && o.sample && o.sample.age !== scopeAge) continue;
     const x = sampleX(o.sample, offsets, boundaries);
     if (typeof x !== "number") continue;
     if (x < firstOnset) firstOnset = x;
@@ -238,7 +341,13 @@ function buildCell(m, history, rosterMap, axis) {
   cell.className = "demographics-war-graph-cell";
   cell.appendChild(buildCellHead(m));
   const chart = buildLineChartFromSeries(
-    seriesFor(m, history, rosterMap, axis.xDomain ? axis.xDomain.xMin : undefined),
+    seriesFor(
+      m,
+      history,
+      rosterMap,
+      axis.xDomain ? axis.xDomain.xMin : undefined,
+      axis.xDomain ? axis.xDomain.xMax : undefined
+    ),
     m.yLabel,
     axis.markers,
     axis.xDomain
@@ -340,7 +449,7 @@ function buildHeader(roster, onChange) {
 /**
  * Render (or re-render) the Crisis Graphs panel into `host`.
  * @param {HTMLElement} host The chart host.
- * @param {{ history?: * }} opts Render options.
+ * @param {{ history?: *, crisisAge?: * }} opts Render options.
  */
 function renderInto(host, opts) {
   clearHost(host);
@@ -351,9 +460,10 @@ function renderInto(host, opts) {
     return;
   }
   pruneHiddenKeys(roster);
+  const scopeAge = resolveCrisisScope(history, opts.crisisAge);
   const rosterMap = buildCrisisRosterMap(roster);
   const panel = buildCrisisPanel(host, opts, roster);
-  const axis = crisisAxis(history);
+  const axis = crisisAxis(history, scopeAge);
   const grid = buildCrisisGrid(history, rosterMap, axis);
   panel.appendChild(grid);
   host.appendChild(panel);
@@ -403,7 +513,8 @@ function buildCrisisGrid(history, rosterMap, axis) {
 /**
  * Render the Crises "Graphs" sub-tab into `host`.
  * @param {HTMLElement} host The chart host (cleared and repopulated).
- * @param {{ history?: * }} [opts] Render options.
+ * @param {{ history?: *, crisisAge?: * }} [opts] Render options (crisisAge scopes
+ *   to one age's crisis: "all", a concrete age, or the "latest" sentinel).
  * @returns {null} Always null (no chart handle).
  */
 export function renderCrisisGraphs(host, opts) {

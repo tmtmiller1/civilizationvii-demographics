@@ -370,7 +370,7 @@ export const METRICS = [
   {
     id: "triumphs_cultural",
     category: "age",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
@@ -381,7 +381,7 @@ export const METRICS = [
   {
     id: "triumphs_diplomatic",
     category: "age",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
@@ -392,7 +392,7 @@ export const METRICS = [
   {
     id: "triumphs_economic",
     category: "age",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
@@ -403,7 +403,7 @@ export const METRICS = [
   {
     id: "triumphs_scientific",
     category: "age",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
@@ -414,7 +414,7 @@ export const METRICS = [
   {
     id: "triumphs_militaristic",
     category: "age",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
@@ -425,7 +425,7 @@ export const METRICS = [
   {
     id: "triumphs_expansionist",
     category: "age",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
@@ -453,7 +453,7 @@ export const METRICS = [
     title: "Crisis Stage — 1 = Begins · 2 = Intensifies · 3 = Culminates · 4 = Ends",
     category: "age",
     global: true,
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     // Discrete integer metric - Chart.js auto-generates fractional ticks
     // (0, 0.5, 1, …) over our 0–4 range and the formatter rounds them,
     // so labels appear 9 times instead of 5. This flag tells the chart
@@ -495,7 +495,7 @@ export const METRICS = [
     label: "Bonus",
     title: "Bonus Resources Assigned",
     category: "resources",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
      * @returns {number | undefined} Bonus resources assigned.
@@ -509,7 +509,7 @@ export const METRICS = [
     label: "Empire",
     title: "Empire Resources Assigned",
     category: "resources",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
      * @returns {number | undefined} Empire resources assigned.
@@ -523,7 +523,7 @@ export const METRICS = [
     label: "City",
     title: "City Resources Assigned",
     category: "resources",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
      * @returns {number | undefined} City resources assigned.
@@ -537,7 +537,7 @@ export const METRICS = [
     label: "Factory",
     title: "Factory Resources (Modern age)",
     category: "resources",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
      * @returns {number | undefined} Factory resources assigned.
@@ -551,7 +551,7 @@ export const METRICS = [
     label: "Treasure",
     title: "Treasure Resources (Exploration / Distant Lands)",
     category: "resources",
-    factbookHidden: true,
+    worldRankingsAllCivsHidden: true,
     /**
      * @param {MetricCtx} ctx Per-player accessor context.
      * @returns {number | undefined} Treasure resources assigned.

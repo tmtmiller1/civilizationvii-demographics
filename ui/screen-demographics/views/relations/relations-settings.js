@@ -2,7 +2,10 @@
 //
 // Persisted settings and in-memory caches for the Global Relations view.
 
-import { filtersForView } from "/demographics/ui/screen-demographics/views/relations/relations-filters.js";
+import {
+  FILTER_GROUPS,
+  filtersForView
+} from "/demographics/ui/screen-demographics/views/relations/relations-filters.js";
 
 // Coherent localStorage can be unreliable in this UI context; keep an
 // in-memory authoritative cache for filter sets and persist best-effort.
@@ -41,6 +44,36 @@ export function readShowUnmetNames(settings) {
 }
 
 /**
+ * Read the persisted active filter sub-group ("politics"/"reputation"/
+ * "agreements"), defaulting to "politics".
+ * @param {*} settings Settings accessor.
+ * @returns {string} Validated sub-group key.
+ */
+export function readActiveSubGroup(settings) {
+  let g = "politics";
+  try {
+    g = settings?.getSetting?.("relationsSubGroup", "politics") || "politics";
+    if (!FILTER_GROUPS.some((x) => x.key === g)) g = "politics";
+  } catch (_) {
+    // Storage boundary can throw; keep default.
+  }
+  return g;
+}
+
+/**
+ * Persist the active filter sub-group (best-effort).
+ * @param {*} settings Settings accessor.
+ * @param {string} key The sub-group key.
+ */
+export function writeActiveSubGroup(settings, key) {
+  try {
+    settings?.setSetting?.("relationsSubGroup", key);
+  } catch (_) {
+    // Persistence is best-effort; the live render state already holds the value.
+  }
+}
+
+/**
  * Resolve the CS-tab viewer pid, falling back to local when needed.
  * @param {*} settings Settings accessor.
  * @param {number|undefined} localId Local player id.
@@ -65,7 +98,10 @@ export function readCsViewerPid(settings, localId, metIds) {
  * @returns {string} Settings key.
  */
 function filterKeyForState(topTab) {
-  return topTab === "civ" ? "relationsCivFilters" : "relationsCsFilters";
+  // Versioned keys: when the filter vocabulary changes, a fresh key resets everyone
+  // to all-on rather than leaving new pills stale-off. CS bumped to v3 when the CS
+  // agreement pills (befriend / suzerain directives) were added.
+  return topTab === "civ" ? "relationsCivFilters2" : "relationsCsFilters3";
 }
 
 /**

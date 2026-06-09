@@ -4,3 +4,4 @@
 declare const _default: any;
 export default _default;
 export const ContextManager: any;
+export const DisplayQueueManager: any;

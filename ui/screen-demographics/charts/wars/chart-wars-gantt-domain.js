@@ -78,11 +78,14 @@ function ganttWarSpan(filtered, turnRange, latestTurn) {
 function extendDomainFuture(filtered, xMin, xMax, latestTurn) {
   let max = xMax;
   if (isFinite(latestTurn) && latestTurn > max) max = latestTurn;
-  if (filtered.some((war) => typeof war.endTurn !== "number")) {
-    const futurePad = Math.max(4, Math.round((max - xMin) * 0.08));
-    max = (isFinite(latestTurn) ? latestTurn : max) + futurePad;
-  }
-  return max;
+  // Always leave trailing room on the all-time view so the timeline visibly
+  // "trails off" past the latest event - giving the tail markers (final crisis
+  // stage, age transition) space to the right of their lines, and making ongoing
+  // wars (which get a touch more) read as still running.
+  const ongoing = filtered.some((war) => typeof war.endTurn !== "number");
+  const span = Math.max(1, max - xMin);
+  const futurePad = Math.max(ongoing ? 6 : 3, Math.round(span * (ongoing ? 0.1 : 0.06)));
+  return max + futurePad;
 }
 
 /**

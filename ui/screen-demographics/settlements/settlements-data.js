@@ -224,10 +224,13 @@ function resolveOwner(pid, handle) {
   const civRow = lookupRow(gameInfoTable("Civilizations"), rawType(handle, "civilizationType", "CivilizationType"));
   const primary = playerColor(pid, "getPrimaryColorValueAsString");
   const secondary = playerColor(pid, "getSecondaryColorValueAsString");
+  const major = !!handle?.isMajor;
+  // Independent (non-major) owners surface from the engine as "Villages"; always
+  // present them as "City-State" instead (project-wide terminology).
   return {
     pid,
-    leaderName: compose(leaderRow?.Name) || "Player " + pid,
-    civName: compose(civRow?.Name) || undefined,
+    leaderName: major ? compose(leaderRow?.Name) || "Player " + pid : compose("LOC_DEMOGRAPHICS_CITY_STATE"),
+    civName: major ? compose(civRow?.Name) || undefined : undefined,
     leaderType: canonicalLeaderType(leaderRow, rawLeader),
     primary,
     secondary,
@@ -236,7 +239,7 @@ function resolveOwner(pid, handle) {
     // lift any still-dark color to a readable tone. Used for every colored
     // accent so a black civ color never vanishes against the dark UI.
     readable: readableAccent(primary, secondary),
-    isMajor: !!handle?.isMajor,
+    isMajor: major,
     met: localHasMet(pid)
   };
 }
@@ -263,7 +266,7 @@ function localDiplomacy(localId) {
 /**
  * Whether the LOCAL player has met `pid` (the local player is always met).
  * Returns undefined when diplomacy is unreadable so callers can decline to
- * mask on uncertainty (mirrors the factbook's "only mask when met === false"
+ * mask on uncertainty (mirrors the worldrankings-allcivs's "only mask when met === false"
  * rule).
  * @param {number} pid The owner player id.
  * @returns {boolean|undefined} Met state, or undefined when unknown.

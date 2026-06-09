@@ -165,7 +165,7 @@ function hideUnmetEnabled() {
  * Sub-option of the spoiler guard (only meaningful when {@link hideUnmetEnabled}
  * is on): how a civ's line chart behaves once the local player meets it.
  * When true (default), the civ's ENTIRE history is back-filled on meeting
- * (matching the radar / factbook current-state views). When false, only data
+ * (matching the radar / worldrankings-allcivs current-state views). When false, only data
  * from first contact forward is shown. Reads fresh each render so the toggle is
  * reversible without a reload. Defaults to back-fill on read error.
  * @returns {boolean} True to reveal full history once met.

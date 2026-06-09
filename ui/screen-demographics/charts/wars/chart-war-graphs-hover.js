@@ -9,6 +9,7 @@ import {
 } from "/demographics/ui/screen-demographics/charts/wars/chart-war-series.js";
 import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { buildCostIcon } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import {
   MINI_H,
   MINI_W,
@@ -34,11 +35,13 @@ function barVal(n) {
  * @param {HTMLElement} tip The tooltip element.
  * @param {{ name: string, color: string, net: number }[]} civs Per-civ nets.
  * @param {string} label The header text.
+ * @param {string} [blp] The metric's guide cost-icon BLP.
  */
-function fillBarTip(tip, civs, label) {
+function fillBarTip(tip, civs, label, blp) {
   const head = document.createElement("div");
   head.className = "demographics-war-graph-hovertip-head";
-  head.textContent = label;
+  if (blp) head.appendChild(buildCostIcon(blp));
+  head.appendChild(document.createTextNode(label));
   tip.appendChild(head);
   for (const c of civs) {
     const row = document.createElement("div");
@@ -57,16 +60,19 @@ function fillBarTip(tip, civs, label) {
 }
 
 /**
- * Build the hover tooltip header.
+ * Build the hover tooltip header: the metric's guide cost-icon (when known) plus
+ * "Turn N · <metric>".
  * @param {number} turn Hovered turn.
- * @param {string} yLabel Y-axis metric label.
+ * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
  * @returns {HTMLElement} Header element.
  */
-function buildHoverTipHeader(turn, yLabel) {
-  const head = document.createElement("div");
-  head.className = "demographics-war-graph-hovertip-head";
-  head.textContent = "Turn " + turn + (yLabel ? " · " + yLabel : "");
-  return head;
+function buildHoverTipHeader(turn, head) {
+  const el = document.createElement("div");
+  el.className = "demographics-war-graph-hovertip-head";
+  if (head && head.blp) el.appendChild(buildCostIcon(head.blp));
+  const yLabel = head ? head.yLabel : "";
+  el.appendChild(document.createTextNode("Turn " + turn + (yLabel ? " · " + yLabel : "")));
+  return el;
 }
 
 /**
@@ -135,12 +141,12 @@ function appendCrisisHoverRow(tip, turn, markers) {
  * @param {number} turn The hovered turn.
  * @param {{ name?: string, color: string, points: { x: number,
  *   y: number }[] }[]} series The series.
- * @param {string} yLabel The metric unit (shown in the header).
+ * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
  * @param {{ x: number, color: string, label?: string }[]} [markers] Optional crisis markers.
  */
-function fillHoverTip(tip, turn, series, yLabel, markers) {
+function fillHoverTip(tip, turn, series, head, markers) {
   while (tip.firstChild) tip.removeChild(tip.firstChild);
-  tip.appendChild(buildHoverTipHeader(turn, yLabel));
+  tip.appendChild(buildHoverTipHeader(turn, head));
   appendCrisisHoverRow(tip, turn, markers);
   appendSeriesHoverRows(tip, turn, series);
 }
@@ -149,7 +155,7 @@ function fillHoverTip(tip, turn, series, yLabel, markers) {
  * Move handler: snap to the nearest turn, position the crosshair, and fill the
  * tooltip with each civ's value there.
  * @param {*} ev The mouse event.
- * @param {*} ctx The hover context (svg, cross, cell, tip, turns, series, bounds, yLabel, markers).
+ * @param {*} ctx The hover context (svg, cross, cell, tip, turns, series, bounds, head, markers).
  */
 function onHoverMove(ev, ctx) {
   const sRect = ctx.svg.getBoundingClientRect();
@@ -163,7 +169,7 @@ function onHoverMove(ev, ctx) {
   ctx.cross.setAttribute("x1", xPx);
   ctx.cross.setAttribute("x2", xPx);
   ctx.cross.setAttribute("visibility", "visible");
-  fillHoverTip(ctx.tip, turn, ctx.series, ctx.yLabel, ctx.markers);
+  fillHoverTip(ctx.tip, turn, ctx.series, ctx.head, ctx.markers);
   const cRect = ctx.cell.getBoundingClientRect();
   ctx.tip.style.left = ev.clientX - cRect.left + 14 + "px";
   ctx.tip.style.top = ev.clientY - cRect.top + 14 + "px";
@@ -176,12 +182,13 @@ function onHoverMove(ev, ctx) {
  * @param {HTMLElement} cell The chart cell (positioned container).
  * @param {{ name: string, color: string, net: number }[]} civs Per-civ nets.
  * @param {string} label The tooltip header (metric name).
+ * @param {string} [blp] The metric's guide cost-icon BLP.
  */
-export function attachBarHover(cell, civs, label) {
+export function attachBarHover(cell, civs, label, blp) {
   cell.style.position = "relative";
   const tip = document.createElement("div");
   tip.className = "demographics-war-graph-hovertip";
-  fillBarTip(tip, civs, label);
+  fillBarTip(tip, civs, label, blp);
   cell.appendChild(tip);
   cell.addEventListener("mousemove", (ev) => {
     const cRect = cell.getBoundingClientRect();
@@ -198,7 +205,8 @@ export function attachBarHover(cell, civs, label) {
  * Wire the crosshair + per-civ hover tooltip onto a time-series chart cell.
  * @param {HTMLElement} cell The chart cell (positioned container).
  * @param {SVGElement} svg The chart SVG (gets the crosshair line).
- * @param {{ series: *[], bounds: *, yLabel: string, markers?: * }} hover The hover data.
+ * @param {{ series: *[], bounds: *, yLabel: string, blp?: string, markers?: * }} hover
+ *   The hover data.
  */
 export function attachHover(cell, svg, hover) {
   const turns = collectTurns(hover.series);
@@ -224,7 +232,7 @@ export function attachHover(cell, svg, hover) {
     turns,
     series: hover.series,
     bounds: hover.bounds,
-    yLabel: hover.yLabel,
+    head: { yLabel: hover.yLabel, blp: hover.blp },
     markers: hover.markers
   };
   cell.addEventListener("mousemove", (ev) => onHoverMove(ev, ctx));

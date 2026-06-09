@@ -15,7 +15,6 @@ import {
   resolveTurnRange,
   getXAxisMode,
   nearestByTurn,
-  buildStackTurnYears,
   civOptionLabel,
   hideUnmetEnabled,
   isCivUnmet
@@ -162,10 +161,21 @@ function buildStackPoints(samples, targetPid, bands) {
     const pid = targetPid ? targetPid : Object.keys(s.players)[0];
     const ps = s.players[pid];
     if (!ps?.metrics) continue;
-    const row = buildStackRow(s.turn, ps.metrics, bands);
+    const row = buildStackRow(stackTurnOf(s), ps.metrics, bands);
     if (row) points.push(row);
   }
   return points;
+}
+
+/**
+ * The continuous (cross-age) x value for a sample: the global `chartTurn` when
+ * present, else the raw turn. `snapshot.turn` is AGE-LOCAL (resets each age), so
+ * using it would overlap ages on one axis - chartTurn keeps the timeline linear.
+ * @param {Snapshot|*} s One sample.
+ * @returns {number} The continuous turn value.
+ */
+function stackTurnOf(s) {
+  return typeof s?.chartTurn === "number" ? s.chartTurn : s.turn;
 }
 
 /**
@@ -500,12 +510,63 @@ function buildStackSvg(samples, points, bands, dims) {
   });
   const gridCfg = buildStackGridConfig();
   drawStackGrid(svg, L, dom.yMax, gridCfg, svgEl);
-  const stackTurnYears = buildStackTurnYears(samples);
+  const stackTurnYears = buildStackTurnYearMap(samples);
   const tickPositions = drawStackXTicks(
     svg,
     { L, dom, turnYearMap: stackTurnYears },
     { cfg: gridCfg, nearestByTurn, svgEl }
   );
   drawStackBands(svg, points, bands, L);
+  drawStackAgeLines(svg, samples, L, dom);
   return { svg, tickPositions };
+}
+
+/**
+ * A chartTurn-keyed turn → game-year map (the shared buildStackTurnYears keys by
+ * the age-local turn, which doesn't match this chart's continuous x).
+ * @param {Snapshot[]} samples The sample stream.
+ * @returns {Map<number, string>} chartTurn → game-year.
+ */
+function buildStackTurnYearMap(samples) {
+  /** @type {Map<number, string>} */
+  const map = new Map();
+  for (const s of samples) {
+    if (s && typeof s.gameYear === "string" && s.gameYear.length > 0) {
+      map.set(stackTurnOf(s), s.gameYear);
+    }
+  }
+  return map;
+}
+
+/**
+ * Draw a purple vertical divider at each age transition (where a sample's age
+ * differs from the previous one), matching the historical line charts' age
+ * markers. (Coherent ignores SVG stroke-dasharray, so the line is solid.)
+ * @param {SVGElement} svg The chart SVG.
+ * @param {Snapshot[]} samples The sample stream.
+ * @param {StackLayout} L The layout.
+ * @param {{ xMin: number, xMax: number, yMax: number }} dom The domain.
+ */
+function drawStackAgeLines(svg, samples, L, dom) {
+  let prevAge = null;
+  for (const s of samples) {
+    const age = s && typeof s.age === "string" ? s.age : null;
+    if (prevAge !== null && age !== null && age !== prevAge) {
+      const tx = stackTurnOf(s);
+      if (tx >= dom.xMin && tx <= dom.xMax) {
+        svg.appendChild(
+          svgEl("line", {
+            x1: L.xOf(tx),
+            y1: L.padT,
+            x2: L.xOf(tx),
+            y2: L.padT + L.innerH,
+            stroke: "#b78cff",
+            "stroke-width": "1.8",
+            "stroke-opacity": "0.9"
+          })
+        );
+      }
+    }
+    if (age !== null) prevAge = age;
+  }
 }

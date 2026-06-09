@@ -153,8 +153,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_TAB_HISTORY">
             <Text>Historical Data</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TAB_FACTBOOK">
-            <Text>World Factbook</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS">
+            <Text>Civilization Rank by Yield</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS">
             <Text>Global Relations</Text>
@@ -186,16 +186,16 @@
             <Text>Crises</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE">
-            <Text>Crisis Stages</Text>
+            <Text>Crisis Impact</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES">
-            <Text>Crisis Stages</Text>
+            <Text>Crisis Impact</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS">
-            <Text>Crisis Impact</Text>
+            <Text>Crisis Impact Graphs</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE">
-            <Text>Crisis Impact</Text>
+            <Text>Crisis Impact Graphs</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND">
             <Text>Civilizations</Text>
@@ -205,6 +205,21 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE">
             <Text>None</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE">
+            <Text>Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL">
+            <Text>All Ages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY">
+            <Text>Antiquity</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION">
+            <Text>Exploration</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN">
+            <Text>Modern</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY">
             <Text>No data recorded yet.</Text>
@@ -372,20 +387,23 @@
             <Text>(not yet implemented)</Text>
         </Row>
 
-        <!-- Factbook header sub-label -->
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_VS_WORLD">
+        <!-- All Civilizations header sub-label -->
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD">
             <Text>vs. world</Text>
         </Row>
 
-        <!-- Factbook column headers -->
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_METRIC">
+        <!-- All Civilizations column headers -->
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC">
             <Text>Metric</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_VALUE">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE">
             <Text>Value</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK">
             <Text>Rank</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE">
+            <Text>Value</Text>
         </Row>
 
         <!-- Options labels -->
@@ -422,7 +440,7 @@
             <Text>Show names of unmet civilizations and city-states</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP">
-            <Text>When off, unmet civilizations and city-states appear as generic placeholders in charts, the factbook, and global relations.</Text>
+            <Text>When off, unmet civilizations and city-states appear as generic placeholders in charts, the rankings, and global relations.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK">
             <Text>Player {1_Pid}</Text>
@@ -661,6 +679,15 @@
         <Row Tag="LOC_DEMOGRAPHICS_WARS_ONGOING">
             <Text>ongoing</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN">
+            <Text>Gain</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS">
+            <Text>Loss</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA">
+            <Text>No data</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED">
             <Text>concluded</Text>
         </Row>
@@ -689,7 +716,7 @@
             <Text>{1_Turns} turns</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_NOW">
-            <Text>Now (T-{1_Turn})</Text>
+            <Text>Present (T-{1_Turn})</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH">
             <Text>strength {1_Value}</Text>
@@ -751,9 +778,6 @@
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD">
             <Text>Directed to War</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_INTRO">
-            <Text>These are the figures shown in each war's pop-up on the Wars tab. Every figure is measured over a combatant's time in that war — from the turn it joined to the turn it left, or to now if the war is still going — and the game is sampled once per turn. A green number is a gain, a red number is a loss, and a dash (—) means no data was recorded for that war.</Text>
-        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER">
             <Text>Your standing Military Power — the total combat strength of your army — at the end of the war (or the latest turn while it is ongoing). This is the size of your forces, not a loss; "Military Power Lost" below tracks the casualties.</Text>
         </Row>
@@ -780,9 +804,6 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD">
             <Text>Production you spent on the war effort: the production cost of every military unit and military or fortification building (walls, etc.) you completed while the war was on, added up. Civilian units, economic buildings, and wonders don't count. This is deliberate investment in the war, not a loss, so it is shown as a neutral figure. The cost is the effective cost in the city that built it — your leader, civilization, and policy discounts are already baked in. Items bought outright with gold or faith aren't counted, since that's treasury, not production; production overflow between items isn't split out exactly.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_NOTE">
-            <Text>Why some columns are net and others are totals: territory, settlements, and production swing both ways and can be undone, so they are shown as a net change. Strength and population are destruction that should never be hidden by gains elsewhere, so they are shown as cumulative losses. Razed settlements are permanent by definition.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS">
             <Text>No wars yet. Once any civ declares war, the timeline will populate.</Text>
@@ -949,8 +970,26 @@
         <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON">
             <Text>All On</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS">
+            <Text>Politics &amp; Relationships</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION">
+            <Text>Reputation</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS">
+            <Text>Agreements</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF">
             <Text>All Off</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL">
+            <Text>All</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE">
+            <Text>None</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET">
+            <Text>Reset</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP">
             <Text>{1_Label} (click to hide)</Text>
@@ -961,37 +1000,37 @@
         <Row Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS">
             <Text>No civilizations to show.</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_LEADER">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER">
             <Text>Unmet Leader</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK">
             <Text>Player {1_Pid}</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_FORMERLY">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY">
             <Text>(formerly {1_Names})</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RANK_OF">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF">
             <Text>Rank {1_Rank}/{2_Total}</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET">
             <Text>Reset ({1_Count} hidden)</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_RESET_TOOLTIP">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP">
             <Text>Show all hidden civilizations</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_HINT">
-            <Text>Tip: click a civilization header to hide it and focus the comparison. Click it again in the right column to restore it.</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT">
+            <Text>Click a metric column to sort the civilizations by it. Use the Rank / Value toggle to switch what each cell shows.</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_UNMET_SHORT">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT">
             <Text>Unmet</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_HIDDEN_CLICK">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK">
             <Text>(hidden — click to show)</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW">
             <Text>Click to show</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE">
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE">
             <Text>Click to hide</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE">
@@ -1007,10 +1046,7 @@
             <Text>Resource Allocation Over Time (stacked area)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE">
-            <Text>Conflicts Timeline — every war this game has seen</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_GLOSSARY_TITLE">
-            <Text>War Cost Guide — what each figure means and how it's measured</Text>
+            <Text>Conflicts Timeline</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE">
             <Text>War Impact — each combatant's trajectory through a chosen war</Text>
@@ -1028,7 +1064,7 @@
             <Text>Colorblind mode (high-contrast palette for charts and relations)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL">
-            <Text>Show eliminated civs in chart and factbook</Text>
+            <Text>Show eliminated civs in charts and rankings</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS">
             <Text>Show wonder markers on chart lines</Text>
@@ -1642,7 +1678,7 @@
             <Text>Top 25 Settlements</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE">
-            <Text>All Settlements</Text>
+            <Text>Settlement Rank by Yield</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL">
             <Text>All</Text>
@@ -1664,6 +1700,9 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK">
             <Text>Rank</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CITY_STATE">
+            <Text>City-State</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER">
             <Text>Owner</Text>
@@ -1879,6 +1918,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL">
             <Text>Flyby</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING">
+            <Text>Aerial view of {1_City}</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING">
             <Text>Top Settlements camera</Text>
         </Row>
@@ -1928,25 +1970,25 @@
             <Text>Category Leaders</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE">
-            <Text>All Settlements</Text>
+            <Text>Settlement Rank by Yield</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE">
             <Text>The Greatest Settlements</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE">
-            <Text>Full Rankings</Text>
+            <Text>Full Settlements Rankings</Text>
         </Row>
             <Row Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS">
             <Text>World Rankings</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS">
-            <Text>All Civilizations</Text>
+            <Text>Civilization Rank by Yield</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK">
             <Text>Civilization Ranking</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE">
-            <Text>The Foremost Civilizations</Text>
+            <Text>The Greatest Civilizations</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE">
             <Text>Full Civilization Rankings</Text>

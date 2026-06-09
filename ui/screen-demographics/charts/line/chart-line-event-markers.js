@@ -402,7 +402,7 @@ export function makeAgeMarkerPlugin(ageMarkers) {
         const x = xScale.getPixelForValue(mk.turn);
         ctx2.save();
         strokeAgeLine(ctx2, mk, x, top, bottom);
-        drawAgeLabel(ctx2, mk, x, { top, right, family });
+        drawAgeLabel(ctx2, mk, x, { top, bottom, right, family });
         ctx2.restore();
       }
     }
@@ -437,18 +437,21 @@ function strokeAgeLine(ctx2, mk, x, top, bottom) {
 
 /**
  * Draw an age boundary's label pill (purple chrome), flipping left near the
- * right edge. Sits below a two-line crisis pill so the two don't overlap.
+ * right edge. Anchored to the BOTTOM of the plot so it can never collide with the
+ * crisis labels (which stack from the top) - even when an age transition and a
+ * crisis fall close together early in a new age.
  * @param {*} ctx2 The 2D canvas context.
  * @param {AgeMarker} mk The age marker.
  * @param {number} x The marker pixel x.
- * @param {{ top: number, right: number, family: string }} area Chart-area top/right + font.
+ * @param {{ top: number, bottom: number, right: number, family: string }} area
+ *   Chart-area top/bottom/right + font.
  */
 function drawAgeLabel(ctx2, mk, x, area) {
   ctx2.font = "17px " + area.family;
   const pillW = ctx2.measureText(mk.label).width + 16;
   const pillH = 24;
   const dx = x + 4 + pillW > area.right ? -(pillW + 4) : 4;
-  ctx2.translate(x + dx, area.top + 48);
+  ctx2.translate(x + dx, area.bottom - pillH - 6);
   // Dark pill with a colored left accent bar so the age label reads as a
   // prominent, highlighted chip (matching the crisis-label treatment).
   ctx2.fillStyle = "rgba(20, 16, 10, 0.9)";

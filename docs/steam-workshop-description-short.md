@@ -9,7 +9,7 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [b]The Mod Includes:[/b]
 [list]
 [*]Historical charts for economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
-[*]A World Factbook view with current values and world rankings for each civilization.
+[*]A All Civilizations view with current values and world rankings for each civilization.
 [*]A Global Relations view with met civilizations and city-states arranged in a ring layout.
 [*]A war timeline built from diplomacy events.
 [*]Readable shipped source modules (release builds are not minified by default; written in readable JS with JSDoc types and tsc --noEmit).

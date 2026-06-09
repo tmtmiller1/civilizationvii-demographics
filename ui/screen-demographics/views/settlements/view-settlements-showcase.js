@@ -75,35 +75,6 @@ function buildCityMeta(s, deps) {
 }
 
 /**
- * Make a card/row open the city detail panel on click.
- * @param {HTMLElement} el The clickable element.
- * @param {*} st The render state.
- * @param {*} s The settlement.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- */
-function makeCityClickable(el, st, s, deps) {
-  el.classList.add("demographics-settle-clickable");
-  el.addEventListener("click", () => {
-    st.detail = s;
-    deps.safePlaySound("data-audio-activate");
-    deps.rerenderContent(st);
-  });
-}
-
-/**
- * Build a podium card's score row.
- * @param {*} s The settlement.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The score-row element.
- */
-function buildPodiumScoreRow(s, deps) {
-  const scoreRow = div("demographics-settle-podium-scorerow");
-  scoreRow.appendChild(div("demographics-settle-podium-score", fmt(s.composite)));
-  scoreRow.appendChild(deps.buildTypeBadge(s.isTown));
-  return scoreRow;
-}
-
-/**
  * Build a civ-colored composite score bar.
  * @param {*} s The settlement.
  * @returns {HTMLElement} The bar element.
@@ -116,6 +87,25 @@ function buildScoreBar(s) {
     s.owner.readable || s.owner.primary || "rgba(243, 195, 76, 0.85)";
   bar.appendChild(fill);
   return bar;
+}
+
+/**
+ * Build a podium card's body column (name / owner / meta + map & cinematic buttons).
+ * @param {*} s The settlement.
+ * @param {*} st The render state.
+ * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @returns {HTMLElement} The body element.
+ */
+function buildPodiumBody(s, st, deps) {
+  const body = div("demographics-settle-podium-body");
+  body.appendChild(div("demographics-settle-podium-name", s.name));
+  body.appendChild(
+    div("demographics-settle-podium-owner", s.owner.leaderName || s.owner.civName || "")
+  );
+  body.appendChild(buildCityMeta(s, deps));
+  const cams = deps.buildCameraButtons(s, st);
+  if (cams) body.appendChild(cams);
+  return body;
 }
 
 /**
@@ -132,18 +122,19 @@ function buildPodiumCard(s, place, st, deps) {
   if (s.owner.readable || s.owner.primary) {
     card.style.borderColor = s.owner.readable || s.owner.primary;
   }
-  card.appendChild(deps.buildLaurelMedal(place));
-  card.appendChild(deps.buildOwnerAvatar(s.owner));
-  card.appendChild(div("demographics-settle-podium-name", s.name));
-  const wr = buildWonderRow(s);
-  if (wr) card.appendChild(wr);
-  card.appendChild(div("demographics-settle-podium-owner", s.owner.leaderName || s.owner.civName || ""));
-  card.appendChild(buildCityMeta(s, deps));
-  card.appendChild(buildPodiumScoreRow(s, deps));
-  card.appendChild(deps.buildOutputStrip(s));
-  const cams = deps.buildCameraButtons(s, st);
-  if (cams) card.appendChild(cams);
-  makeCityClickable(card, st, s, deps);
+  // Horizontal card: [medal + avatar] · [name / owner / meta] · [score + type].
+  const left = div("demographics-settle-podium-left");
+  left.appendChild(deps.buildLaurelMedal(place));
+  left.appendChild(deps.buildOwnerAvatar(s.owner));
+  card.appendChild(left);
+
+  card.appendChild(buildPodiumBody(s, st, deps));
+
+  const scoreCol = div("demographics-settle-podium-scorecol");
+  scoreCol.appendChild(div("demographics-settle-podium-score", fmt(s.composite)));
+  scoreCol.appendChild(deps.buildTypeBadge(s.isTown));
+  card.appendChild(scoreCol);
+
   return card;
 }
 
@@ -159,12 +150,23 @@ function buildShowcaseMid(s, st, deps) {
   const nameRow = div("demographics-settle-list-namerow");
   nameRow.appendChild(div("demographics-settle-list-name", s.name));
   nameRow.appendChild(deps.buildTypeBadge(s.isTown));
+  if (s.isCapital) {
+    nameRow.appendChild(
+      div(
+        "demographics-settle-badge demographics-settle-badge-city",
+        t("LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL")
+      )
+    );
+  }
   const cams = deps.buildCameraButtons(s, st);
   if (cams) nameRow.appendChild(cams);
   mid.appendChild(nameRow);
   const wr = buildWonderRow(s);
   if (wr) mid.appendChild(wr);
   mid.appendChild(buildCityMeta(s, deps));
+  // Per-yield breakdown inline (folds in the old detail dossier so it isn't a
+  // separate view), then the composite score bar.
+  mid.appendChild(deps.buildOutputStrip(s));
   mid.appendChild(buildScoreBar(s));
   return mid;
 }
@@ -186,7 +188,6 @@ function buildShowcaseRow(s, st, deps) {
   row.appendChild(deps.buildOwnerAvatar(s.owner));
   row.appendChild(buildShowcaseMid(s, st, deps));
   row.appendChild(div("demographics-settle-list-score", fmt(s.composite)));
-  makeCityClickable(row, st, s, deps);
   return row;
 }
 
@@ -195,12 +196,15 @@ function buildShowcaseRow(s, st, deps) {
  * @param {*[]} top The composite-sorted top settlements.
  * @param {*} st The render state.
  * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {boolean} [vertical] Stack gold→bronze top-to-bottom (left-column layout).
  * @returns {HTMLElement} The podium element.
  */
-function buildPodium(top, st, deps) {
+function buildPodium(top, st, deps, vertical) {
   const podium = div("demographics-settle-podium");
-  const order = [top[1], top[0], top[2]];
-  const places = [2, 1, 3];
+  // Horizontal podium centers the winner (2-1-3); the vertical (left-column)
+  // layout reads top-to-bottom, so emit gold → silver → bronze instead.
+  const order = vertical ? [top[0], top[1], top[2]] : [top[1], top[0], top[2]];
+  const places = vertical ? [1, 2, 3] : [2, 1, 3];
   for (let i = 0; i < order.length; i++) {
     if (order[i]) podium.appendChild(buildPodiumCard(order[i], places[i], st, deps));
   }
@@ -218,9 +222,30 @@ export function renderShowcasePanel(st, deps) {
     st.content.appendChild(deps.buildEmpty());
     return;
   }
-  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE"));
-  st.content.appendChild(buildPodium(top, st, deps));
-  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE"));
+  // Two-column layout: the podium (left) beside the full ranked list (right) so
+  // the wide window's space is used instead of stacking everything vertically.
+  const split = div("demographics-settle-split");
+  const left = div("demographics-settle-split-left");
+  left.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE"));
+  left.appendChild(buildPodium(top, st, deps, true));
+  split.appendChild(left);
+
+  const right = div("demographics-settle-split-right");
+  right.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE"));
+  right.appendChild(buildShowcaseList(top, st, deps));
+  split.appendChild(right);
+
+  st.content.appendChild(split);
+}
+
+/**
+ * Build the full ranked showcase list (header + rows + the "top 10" divider).
+ * @param {*[]} top The composite-sorted top settlements.
+ * @param {*} st The render state.
+ * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @returns {HTMLElement} The list element.
+ */
+function buildShowcaseList(top, st, deps) {
   const list = div("demographics-settle-list");
   list.appendChild(deps.buildListHeader());
   for (let i = 0; i < top.length; i++) {
@@ -229,5 +254,5 @@ export function renderShowcasePanel(st, deps) {
       list.appendChild(div("demographics-settle-top10", t("LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10")));
     }
   }
-  st.content.appendChild(list);
+  return list;
 }

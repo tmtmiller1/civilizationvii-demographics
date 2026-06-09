@@ -5,6 +5,8 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/core/demographics-a11y.js";
 import { safePlaySound, playActivate } from "/demographics/ui/core/demographics-audio.js";
 import { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/history/history-csv.js";
+import { warsCsv } from "/demographics/ui/screen-demographics/views/history/history-tables-csv.js";
+import { copyTableAsCsv } from "/demographics/ui/core/demographics-csv.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
@@ -328,12 +330,33 @@ function buildCsvInfoIcon() {
   return el;
 }
 
+/** History pages whose data lives in history.wars (not the per-turn samples). */
+const WARS_PAGES = new Set(["wars_gantt", "war_graphs"]);
+
+/**
+ * Run the CSV export appropriate to the active page: the war list on the
+ * Conflicts pages, otherwise the full per-turn sample matrix (which underlies
+ * every metric / resources / crisis chart).
+ * @param {*} ctx Toolbar context (carries history).
+ * @param {HTMLElement} host Host for the confirmation toast.
+ * @param {string} activeMetric The active page's metric id.
+ */
+function runCsvExport(ctx, host, activeMetric) {
+  if (WARS_PAGES.has(activeMetric)) {
+    const { headers, rows } = warsCsv(ctx.history);
+    copyTableAsCsv({ host, title: "Wars", headers, rows });
+    return;
+  }
+  exportHistoryAsCsv(ctx.history, host);
+}
+
 /**
  * @param {HTMLElement} toolbar
  * @param {HTMLElement} host
  * @param {*} ctx
+ * @param {string} activeMetric
  */
-function appendCsvControls(toolbar, host, ctx) {
+function appendCsvControls(toolbar, host, ctx, activeMetric) {
   const csvInfo = buildCsvInfoIcon();
   const csvBtn = document.createElement("div");
   csvBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
@@ -342,7 +365,7 @@ function appendCsvControls(toolbar, host, ctx) {
   makeClickable(csvBtn, (ev) => {
     ev?.stopPropagation?.();
     safePlaySound("data-audio-activate", "options");
-    exportHistoryAsCsv(ctx.history, host);
+    runCsvExport(ctx, host, activeMetric);
   });
   const csvGroup = document.createElement("div");
   csvGroup.className = "demographics-history-csv-group";
@@ -360,7 +383,51 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
   if (activeMetric === "legacy_radar") appendRadarControls(toolbar, ctx);
   else if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
   else if (activeMetric === "war_graphs") appendWarGraphsControls(toolbar, ctx);
+  else if (activeMetric === "crisis_graphs") appendCrisisGraphsControls(toolbar, ctx);
   else if (activeMetric === "resources_stack") appendResourcesViewerIfReady(toolbar, ctx);
+}
+
+/**
+ * Append the Crisis Graphs age-scope selector. The chart module reports the
+ * available scopes ("All Ages" + one per crisis-bearing age) and returns an
+ * empty list until a second crisis exists, so the dropdown only appears once
+ * (e.g.) the Exploration crisis has begun.
+ * @param {HTMLElement} toolbar The toolbar element.
+ * @param {*} ctx Toolbar context.
+ */
+function appendCrisisGraphsControls(toolbar, ctx) {
+  const chartMod = ctx.chartMod;
+  if (!chartMod || typeof chartMod.collectCrisisScopes !== "function") return;
+  const opts = chartMod.collectCrisisScopes(ctx.history);
+  if (!opts.length) return;
+  toolbar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE")));
+  toolbar.appendChild(buildCrisisScopeDropdown(opts, ctx));
+}
+
+/**
+ * Build the Crisis Graphs scope dropdown.
+ * @param {Array<{ id: string, label: string }>} opts Scope options.
+ * @param {*} ctx Toolbar context.
+ * @returns {HTMLElement} Dropdown element.
+ */
+function buildCrisisScopeDropdown(opts, ctx) {
+  const dd = document.createElement("fxs-dropdown");
+  dd.classList.add("demographics-chart-viewer-dropdown");
+  dd.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  dd.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
+  const active =
+    typeof ctx.chartMod.resolveCrisisScope === "function"
+      ? ctx.chartMod.resolveCrisisScope(ctx.history, ctx.crisisGraphsAge)
+      : ctx.crisisGraphsAge;
+  let didx = opts.findIndex((o) => o.id === active);
+  if (didx < 0) didx = 0;
+  dd.setAttribute("selected-item-index", String(didx));
+  dd.addEventListener("dropdown-selection-change", (event) => {
+    const i = /** @type {*} */ (event)?.detail?.selectedIndex;
+    if (typeof i !== "number" || i < 0 || i >= opts.length) return;
+    if (typeof ctx.setCrisisGraphsAge === "function") ctx.setCrisisGraphsAge(opts[i].id);
+  });
+  return dd;
 }
 
 /**
@@ -439,8 +506,7 @@ const WONDERS_TOGGLE_HIDDEN_FOR = new Set([
   "legacy_radar",
   "resources_stack",
   "wars_gantt",
-  "war_graphs",
-  "wars_glossary"
+  "war_graphs"
 ]);
 
 /**
@@ -458,7 +524,7 @@ export function buildToolbar(host, ctx, activeMetric) {
   appendClearFocus(toolbar, ctx);
   if (!TIME_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendTimeUnitsToggle(toolbar, ctx);
   if (!WONDERS_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendWondersToggle(toolbar, ctx, activeMetric);
-  appendCsvControls(toolbar, host, ctx);
+  appendCsvControls(toolbar, host, ctx, activeMetric);
 
   if (toolbar.children.length) host.appendChild(toolbar);
 }

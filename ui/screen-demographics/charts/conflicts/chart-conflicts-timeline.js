@@ -1,11 +1,10 @@
-// chart-wars-gantt.js
+// chart-conflicts-timeline.js
 //
 // The conflicts Gantt timeline (one bar per major-vs-major war):
-// collectWarCivOptions + renderWarsGantt and their private filtering,
+// collectWarCivOptions + renderConflictsTimeline and their private filtering,
 // layout, bar-drawing, war-naming, tooltip, and hover helpers (romanize,
 // parseYear, casualty estimate, etc). Migrated verbatim from
 // demographics-chart.js.
-/* eslint-disable max-params, max-statements, max-len */
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -15,16 +14,12 @@ import {
   historySamples,
   appendEmptyNotice,
   resolveTurnRange,
-  getXAxisMode,
-  nearestByTurn,
-  buildStackTurnYears
+  nearestByTurn
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import {
   buildStackGridConfig,
   drawStackGrid,
-  drawStackXTicks,
-  mountStackAxisTitles,
-  mountStackXTicks
+  drawStackXTicks
 } from "/demographics/ui/screen-demographics/charts/shared/chart-stack-grid.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import {
@@ -38,17 +33,12 @@ import {
   createGanttTooltip,
   wireGanttHover
 } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-interactions.js";
-import {
-  buildContinentMap,
-  buildWarNameOverrides,
-  warLabelText
-} from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
+import { mountGanttOverlays } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-timeline-overlays.js";
 import {
   CRISIS_STAGE_COLORS,
-  CRISIS_STAGE_LABELS,
   crisisStageOnsets
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
-import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 
 // Wars Gantt - one horizontal bar per war, stacked vertically by start turn.
 // X-axis = turn (with year ticks). Bars colored by the attacker's primary
@@ -158,8 +148,8 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
  */
 
 /**
- * Draw the vertical "current turn" marker: a dashed red line across the plot at
- * the latest sampled turn (where the solid bars end and the future tails begin).
+ * Draw the vertical "current turn" marker: a dashed yellow line across the plot
+ * at the latest sampled turn (where the solid bars end and the future tails begin).
  * @param {SVGElement} svg The chart SVG.
  * @param {GanttLayout} L The layout.
  * @param {{ xMin: number, xMax: number }} dom The x-domain.
@@ -174,7 +164,7 @@ function drawCurrentTurnLine(svg, L, dom, latestTurn) {
       x2: x,
       y1: L.padT,
       y2: L.padT + L.innerH,
-      stroke: "#e8453c",
+      stroke: "#ffdf3b",
       "stroke-width": "2",
       "stroke-dasharray": "5 3"
     })
@@ -211,161 +201,7 @@ function drawCrisisMarkers(svg, L, dom, onsets) {
 }
 
 /**
- * Mount the crisis stage-onset HTML labels atop each overlay line: a two-line
- * pill (stage label in the stage color, crisis name below), staggered down so
- * adjacent onsets don't collide. Mirrors the historical charts' marker labels.
- * @param {HTMLElement} wrap The chart canvas.
- * @param {GanttLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
- * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The crisis onsets.
- * @param {string} seed The game seed (for the flavor crisis name).
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- */
-function mountCrisisLabels(wrap, L, dom, onsets, seed, W, H) {
-  (onsets || []).forEach((o, i) => {
-    if (o.turn < dom.xMin || o.turn > dom.xMax) return;
-    const idx = Math.max(0, Math.min(3, o.stage - 1));
-    const x = L.xOf(o.turn);
-    const div = document.createElement("div");
-    div.className = "demographics-wars-crisis-label";
-    // Per-marker geometry stays dynamic; stagger each label down to reduce overlap.
-    div.style.left = (x / W) * 100 + "%";
-    div.style.top = ((L.padT + 2 + (i % 3) * 30) / H) * 100 + "%";
-    const stage = document.createElement("div");
-    stage.className = "demographics-wars-crisis-label-stage";
-    stage.style.color = CRISIS_STAGE_COLORS[idx];
-    stage.textContent = t(CRISIS_STAGE_LABELS[idx]);
-    div.appendChild(stage);
-    const name = document.createElement("div");
-    name.className = "demographics-wars-crisis-label-name";
-    name.textContent = flavorCrisisName(o.sample, o.stage, seed);
-    div.appendChild(name);
-    wrap.appendChild(div);
-  });
-}
-
-/**
- * Mount one war-name label: the FULL name in a neutral box (never truncated),
- * anchored at the bar's left edge - or, for a bar in the right third of the
- * chart, with its right edge at the bar end so a long name grows left and isn't
- * clipped by the canvas edge.
- * @param {HTMLElement} wrap The chart canvas.
- * @param {BarRect} rect The bar hit-test rect.
- * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>, latestTurn: number, W: number, H: number }} env Shared inputs.
- */
-function mountOneWarLabel(wrap, rect, env) {
-  const { nameOverride, turnYearMap, latestTurn, W, H } = env;
-  const { war, x, y, h } = rect;
-  const xRight = x + (rect.hitW ?? rect.w);
-  const label = warLabelText(war, nameOverride, turnYearMap, latestTurn);
-  const div = document.createElement("div");
-  div.className = "demographics-chart-war-label demographics-wars-label";
-  // Per-bar geometry stays dynamic (pixel-derived percentages).
-  div.style.top = ((y + h / 2) / H) * 100 + "%";
-  if (x <= W * 0.66) {
-    div.style.left = (x / W) * 100 + "%";
-  } else {
-    div.classList.add("demographics-wars-label-anchor-right");
-    div.style.left = (xRight / W) * 100 + "%";
-  }
-  // The name sits in a neutral box so it stays readable over any banner color.
-  const box = document.createElement("span");
-  box.className = "demographics-wars-label-box";
-  box.textContent = label;
-  div.appendChild(box);
-  wrap.appendChild(div);
-}
-
-/**
- * Mount the per-bar war-name labels into the canvas.
- * @param {HTMLElement} wrap The chart canvas.
- * @param {BarRect[]} barRects The bar rects.
- * @param {Map<*, string>} nameOverride war → display label.
- * @param {Map<number, string>} turnYearMap chart-turn → year map.
- * @param {number} latestTurn The latest sampled turn.
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- */
-function mountWarLabels(wrap, barRects, nameOverride, turnYearMap, latestTurn, W, H) {
-  const env = { nameOverride, turnYearMap, latestTurn, W, H };
-  for (const rect of barRects) mountOneWarLabel(wrap, rect, env);
-}
-
-/**
- * Mount the Gantt X-tick HTML labels (year and/or turn per axis mode).
- * @param {HTMLElement} wrap The chart wrap.
- * @param {{ t: number, x: number, year: string|null }[]} tickPositions Ticks.
- * @param {GanttLayout} L The layout.
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- */
-function mountGanttXTicks(wrap, tickPositions, L, W, H) {
-  mountStackXTicks(wrap, tickPositions.map((tick) => ({
-    t: tick.t,
-    x: tick.x,
-    year: tick.year,
-    labelY: L.padT + L.innerH + 8
-  })), {
-    W,
-    H,
-    mode: /** @type {"turn"|"year"|"both"} */ (getXAxisMode()),
-    className: "demographics-chart-x-tick demographics-wars-x-tick",
-    turnParenWhenBoth: true
-  });
-}
-
-/**
- * Mount the Gantt axis titles.
- * @param {HTMLElement} wrap The chart wrap.
- * @param {GanttLayout} L The layout.
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- */
-function mountGanttAxisTitles(wrap, L, W, H) {
-  mountStackAxisTitles(wrap, {
-    L,
-    W,
-    H,
-    xClassName:
-      "demographics-chart-axis-title demographics-chart-axis-x demographics-wars-axis-title demographics-wars-axis-x",
-    yClassName:
-      "demographics-chart-axis-title demographics-chart-axis-y demographics-wars-axis-title demographics-wars-axis-y",
-    xText: t("LOC_DEMOGRAPHICS_AXIS_TIME"),
-    yText: t("LOC_DEMOGRAPHICS_AXIS_CONFLICTS")
-  });
-}
-
-/**
- * Mount the "Now" label atop the current-turn (red) line, when that turn is in
- * range.
- * @param {HTMLElement} wrap The chart canvas.
- * @param {GanttLayout} L The layout.
- * @param {number} latestTurn The latest sampled turn.
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- */
-function mountCurrentTurnLabel(wrap, L, latestTurn, W, H) {
-  if (!isFinite(latestTurn)) return;
-  const x = L.xOf(latestTurn);
-  if (x < L.padL || x > L.padL + L.innerW) return;
-  const div = document.createElement("div");
-  div.className = "demographics-wars-now-label";
-  // Per-marker position stays dynamic (pixel-derived percentages).
-  div.style.left = (x / W) * 100 + "%";
-  div.style.top = (L.padT / H) * 100 + "%";
-  div.textContent = t("LOC_DEMOGRAPHICS_WARS_NOW", latestTurn);
-  wrap.appendChild(div);
-}
-
-
-
-
-
-
-
-/**
- * Options accepted by {@link renderWarsGantt}.
+ * Options accepted by {@link renderConflictsTimeline}.
  * @typedef {Object} GanttOptions
  * @property {DemoHistory|*} [history] The history blob (wars + samples).
  * @property {number} [width] Canvas width.
@@ -382,12 +218,12 @@ function mountCurrentTurnLabel(wrap, L, latestTurn, W, H) {
  * @param {GanttOptions} [options] Render options.
  * @returns {{ svg: SVGElement }|null} The mounted SVG handle, or `null`.
  */
-export function renderWarsGantt(host, options) {
+export function renderConflictsTimeline(host, options) {
   if (!host) return null;
   while (host.firstChild) host.removeChild(host.firstChild);
   const opts = options || {};
   const viewportW = opts.width || 1400;
-  const prep = prepareGanttData(host, opts);
+  const prep = prepareConflictsTimelineData(host, opts);
   if (!prep) return null;
   const { wars, merged, filtered, latestTurn, samples, filterPid, showActiveOnly } = prep;
 
@@ -398,11 +234,7 @@ export function renderWarsGantt(host, options) {
   const W = computeGanttWidth(viewportW, dom);
   const L = buildGanttLayout(W, opts.height || 600, filtered, dom);
   const H = L.H;
-  const turnYearMap = buildStackTurnYears(samples);
-  // Crisis stage-onset overlay (same markers the historical line charts draw).
-  const crisisOnsets = crisisStageOnsets(samples);
-  const crisisSeed = getGameSeed();
-  const env = { turnYearMap, latestTurn, samples, W, H, dom, crisisOnsets, crisisSeed };
+  const env = buildGanttOverlayEnv(samples, latestTurn, W, H, dom);
 
   const { svg, barRects, tickPositions } = buildGanttSvg(filtered, L, dom, tr, env);
   const wrap = mountGanttWrap(svg, { merged, barRects, tickPositions, L, ...env });
@@ -416,6 +248,31 @@ export function renderWarsGantt(host, options) {
     "activeOnly=" + showActiveOnly
   );
   return { svg };
+}
+
+/**
+ * Assemble the shared overlay environment: the year map plus the crisis-onset
+ * and age markers (mapped onto the continuous chart turn), the game seed, and
+ * the canvas geometry - the bundle every overlay mounter and the SVG builder read.
+ * @param {Snapshot[]} samples The sample stream.
+ * @param {number} latestTurn The latest sampled (continuous) turn.
+ * @param {number} W Canvas width.
+ * @param {number} H Canvas height.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @returns {*} The shared overlay environment.
+ */
+function buildGanttOverlayEnv(samples, latestTurn, W, H, dom) {
+  const turnYearMap = ganttTurnYearMap(samples);
+  // Crisis + age overlays on the continuous chart turn (matching the line charts).
+  const crisisOnsets = crisisStageOnsets(samples).map((o) => ({
+    ...o,
+    turn: typeof o.sample?.chartTurn === "number" ? o.sample.chartTurn : o.turn
+  }));
+  const ageMarkers = collectGanttAgeMarkers(samples);
+  const crisisSeed = getGameSeed();
+  return {
+    turnYearMap, latestTurn, samples, W, H, dom, crisisOnsets, ageMarkers, crisisSeed
+  };
 }
 
 
@@ -438,15 +295,153 @@ export function renderWarsGantt(host, options) {
  * @param {GanttOptions} opts The render options.
  * @returns {GanttPrep|null} The prepared data, or `null`.
  */
-function prepareGanttData(host, opts) {
+/**
+ * Latest continuous (cross-age) chart turn from the samples.
+ * @param {Snapshot[]} samples The sample stream.
+ * @returns {number} The latest chart turn.
+ */
+function latestChartTurn(samples) {
+  if (!samples.length) return 0;
+  const last = samples[samples.length - 1] || {};
+  return typeof last.chartTurn === "number" ? last.chartTurn : (last.turn ?? 0);
+}
+
+/**
+ * game-year → chart-turn map (fallback for mapping legacy wars, recorded before
+ * we stamped chartTurn, onto the continuous timeline via their year labels).
+ * @param {Snapshot[]} samples The sample stream.
+ * @returns {Map<string, number>} game-year → chartTurn.
+ */
+function buildYearToChartMap(samples) {
+  /** @type {Map<string, number>} */
+  const m = new Map();
+  for (const s of samples) {
+    if (s && typeof s.gameYear === "string" && typeof s.chartTurn === "number" && !m.has(s.gameYear)) {
+      m.set(s.gameYear, s.chartTurn);
+    }
+  }
+  return m;
+}
+
+/**
+ * Resolve a war endpoint on the continuous timeline: the recorded chart turn,
+ * else the year-mapped chart turn, else the raw age-local value.
+ * @param {number|undefined} chartVal Recorded chart turn (if any).
+ * @param {string|null|undefined} year The endpoint's game-year label.
+ * @param {number|null|undefined} localVal The age-local turn fallback.
+ * @param {Map<string, number>} yearToChart game-year → chartTurn.
+ * @returns {number|null} The global turn, or null.
+ */
+function pickGlobalTurn(chartVal, year, localVal, yearToChart) {
+  if (typeof chartVal === "number") return chartVal;
+  if (year && yearToChart.has(year)) return /** @type {number} */ (yearToChart.get(year));
+  return typeof localVal === "number" ? localVal : null;
+}
+
+/**
+ * Return a copy of a war with its start/end turns remapped to the continuous
+ * (cross-age) chart turn, so the whole Gantt pipeline plots on one timeline.
+ * @param {*} w The war record.
+ * @param {Map<string, number>} yearToChart game-year → chartTurn.
+ * @returns {*} The remapped war copy.
+ */
+function toGlobalTurns(w, yearToChart) {
+  const start = pickGlobalTurn(w.startChartTurn, w.startYear, w.startTurn, yearToChart);
+  const ended = typeof w.endTurn === "number";
+  const end = ended ? pickGlobalTurn(w.endChartTurn, w.endYear, w.endTurn, yearToChart) : null;
+  return { ...w, startTurn: start, endTurn: end };
+}
+
+/**
+ * chart-turn → game-year map for the Gantt x-ticks (the shared buildStackTurnYears
+ * keys by the age-local turn, which doesn't match the Gantt's continuous x).
+ * @param {Snapshot[]} samples The sample stream.
+ * @returns {Map<number, string>} chartTurn → game-year.
+ */
+function ganttTurnYearMap(samples) {
+  /** @type {Map<number, string>} */
+  const map = new Map();
+  for (const s of samples) {
+    if (s && typeof s.chartTurn === "number" && typeof s.gameYear === "string" && s.gameYear) {
+      map.set(s.chartTurn, s.gameYear);
+    }
+  }
+  return map;
+}
+
+/**
+ * Detect age-transition markers on the continuous chart turn (where a sample's
+ * age differs from the previous one).
+ * @param {Snapshot[]} samples The sample stream.
+ * @returns {{ turn: number, label: string }[]} Age markers.
+ */
+function collectGanttAgeMarkers(samples) {
+  /** @type {Record<string, string>} */
+  const names = {
+    AGE_ANTIQUITY: t("LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS"),
+    AGE_EXPLORATION: t("LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS"),
+    AGE_MODERN: t("LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS")
+  };
+  /** @type {{ turn: number, label: string }[]} */
+  const markers = [];
+  let prevAge = null;
+  for (const s of samples) {
+    const age = s && typeof s.age === "string" ? s.age : null;
+    if (prevAge !== null && age !== null && age !== prevAge && typeof s.chartTurn === "number") {
+      markers.push({ turn: s.chartTurn, label: names[age] || age.replace(/^AGE_/, "") + " Begins" });
+    }
+    if (age !== null) prevAge = age;
+  }
+  return markers;
+}
+
+/**
+ * Draw the age-transition vertical lines (purple long-dash, like the line charts).
+ * @param {SVGElement} svg The chart SVG.
+ * @param {GanttLayout} L The layout.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {{ turn: number, label: string }[]} markers Age markers.
+ */
+function drawGanttAgeMarkers(svg, L, dom, markers) {
+  for (const m of markers || []) {
+    if (m.turn < dom.xMin || m.turn > dom.xMax) continue;
+    const x = L.xOf(m.turn);
+    svg.appendChild(
+      svgEl("line", {
+        x1: x,
+        x2: x,
+        y1: L.padT,
+        y2: L.padT + L.innerH,
+        stroke: "#b78cff",
+        "stroke-width": "2",
+        "stroke-dasharray": "8 4",
+        "stroke-opacity": "0.95"
+      })
+    );
+  }
+}
+
+/**
+ * Load, remap-to-global-chartTurn, merge, sort, and filter the war set.
+ * @param {HTMLElement} host The view host (for empty-state notices).
+ * @param {*} opts Render options.
+ * @returns {{ wars: any[], merged: any[], filtered: any[], latestTurn: number,
+ *   samples: Snapshot[], filterPid: number|null, showActiveOnly: boolean }|null}
+ *   The prepared data, or null when there is nothing to draw.
+ */
+function prepareConflictsTimelineData(host, opts) {
   /** @type {any[]} */
-  const wars = opts.history && Array.isArray(opts.history.wars) ? opts.history.wars.slice() : [];
+  const rawWars = opts.history && Array.isArray(opts.history.wars) ? opts.history.wars : [];
   const samples = historySamples(opts.history);
-  if (wars.length === 0) {
+  if (rawWars.length === 0) {
     appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS"));
     return null;
   }
-  const latestTurn = samples.length > 0 ? (samples[samples.length - 1].turn ?? 0) : 0;
+  // Plot on the continuous chart turn so ages don't overlap; remap each war's
+  // age-local start/end onto it before anything else sees them.
+  const latestTurn = latestChartTurn(samples);
+  const yearToChart = buildYearToChartMap(samples);
+  const wars = rawWars.map((w) => toGlobalTurns(w, yearToChart));
   // Collapse concurrent, overlapping wars that share a belligerent into single
   // multi-front wars before anything else, so the whole view (bars, tooltip,
   // naming) sees one war per front-group.
@@ -472,7 +467,8 @@ function prepareGanttData(host, opts) {
  * @param {{ xMin: number, xMax: number }} dom The x-domain.
  * @param {{ min: number, max: number }|null} tr Time-range filter, or null.
  * @param {*} env Shared environment (turnYearMap, latestTurn, samples, W, H).
- * @returns {{ svg: SVGElement, barRects: BarRect[], tickPositions: { t: number, x: number, year: string|null }[] }}
+ * @returns {{ svg: SVGElement, barRects: BarRect[],
+ *   tickPositions: { t: number, x: number, year: string|null }[] }}
  *   The SVG, bar rects, and x-tick positions.
  */
 function buildGanttSvg(filtered, L, dom, tr, env) {
@@ -489,6 +485,7 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
   const tickPositions = drawGanttGrid(svg, L, dom, turnYearMap);
   const barRects = drawWarBars(svg, filtered, { L, dom, tr, latestTurn, samples });
   drawCrisisMarkers(svg, L, dom, env.crisisOnsets);
+  drawGanttAgeMarkers(svg, L, dom, env.ageMarkers);
   drawCurrentTurnLine(svg, L, dom, latestTurn);
   return { svg, barRects, tickPositions };
 }
@@ -509,12 +506,12 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
  * @param {number} env.H Canvas height.
  * @param {{ xMin: number, xMax: number }} env.dom The x-domain.
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} env.crisisOnsets Crisis onsets.
+ * @param {{ turn: number, label: string }[]} env.ageMarkers Age-transition markers.
  * @param {string} env.crisisSeed The game seed (for crisis names).
  * @returns {HTMLElement} The chart wrap.
  */
 function mountGanttWrap(svg, env) {
-  const { merged, barRects, tickPositions, L, turnYearMap, latestTurn, samples, W, H } = env;
-  const { dom, crisisOnsets, crisisSeed } = env;
+  const { barRects, turnYearMap, latestTurn, samples, W, H } = env;
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap demographics-wars-wrap";
   // Inner canvas: fills the viewport (width/height 100% in CSS) but is forced to
@@ -529,17 +526,7 @@ function mountGanttWrap(svg, env) {
   canvas.appendChild(svg);
   wrap.appendChild(canvas);
 
-  mountGanttXTicks(canvas, tickPositions, L, W, H);
-  mountGanttAxisTitles(canvas, L, W, H);
-  mountCurrentTurnLabel(canvas, L, latestTurn, W, H);
-  mountCrisisLabels(canvas, L, dom, crisisOnsets, crisisSeed, W, H);
-
-  // Name over the FULL merged set (not just the filtered subset) so the names -
-  // including recurrence ordinals + world-war numbering - match the War Graphs
-  // picker and header, which name the same full set.
-  const continentMap = buildContinentMap(samples);
-  const nameOverride = buildWarNameOverrides(merged, turnYearMap, latestTurn, continentMap);
-  mountWarLabels(canvas, barRects, nameOverride, turnYearMap, latestTurn, W, H);
+  const nameOverride = mountGanttOverlays(canvas, env);
 
   // Hover tooltip - custom callout replacing the unreliable `title` attribute.
   const tooltip = createGanttTooltip();

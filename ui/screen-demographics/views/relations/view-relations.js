@@ -31,8 +31,10 @@ import {
   derr
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
+  FILTER_GROUPS,
   makeFilterPillRow
 } from "/demographics/ui/screen-demographics/views/relations/relations-filters.js";
+import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { buildRingSvg } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg.js";
 import {
   getLocalId,
@@ -49,9 +51,10 @@ import {
   makeNodeSelectionWriter,
   readCsViewerPid,
   readShowUnmetNames,
-  readTopTab
+  writeActiveSubGroup
 } from "/demographics/ui/screen-demographics/views/relations/relations-settings.js";
 import {
+  applyCivEdgeOverrides,
   applyCsEdgeOverrides,
   buildFilterDefs,
   computeCivRingData,
@@ -206,6 +209,7 @@ function addChild(parent, className) {
  * @property {Record<string, NodeInfo>} namesBase Base name map.
  * @property {boolean} showUnmetNames "Show unmet names" toggle.
  * @property {string} topTab Active top tab.
+ * @property {string} activeSubGroup Active filter sub-group ("politics"/"reputation"/"agreements").
  * @property {number|undefined} csViewerPid Active CS-tab viewer pid.
  * @property {(top: string) => Set<string>} readFilterSet Filter-set reader.
  * @property {(top: string, set: Set<string>) => void} writeFilterSet Writer.
@@ -218,6 +222,7 @@ function addChild(parent, className) {
  * @property {Record<string, { key: string, edges: Edge[] }>} edgeCacheByTop
  *   Cached full edge set keyed by turn/viewer snapshot.
  * @property {() => void} repaint Repaint entry point.
+ * @property {() => void} repaintRing Ring-body-only repaint (node-focus toggles).
  */
 
 /**
@@ -247,27 +252,78 @@ function filterEdgesBySelectedNodes(edges, selected) {
 }
 
 /**
- * Build the filter-pill row into the filter host, wiring per-pill and bulk
- * toggles to update the filter set and repaint.
+ * The filter descriptors for the active sub-group (Politics / Reputation /
+ * Agreements) on the current top tab.
  * @param {RenderState} rs The render-loop state.
- * @param {FilterDef[]} filterDefs The visual-resolved filter descriptors.
+ * @returns {FilterDef[]} Visible-group filter descriptors.
  */
-function buildFilterRow(rs, filterDefs) {
+function visibleGroupDefs(rs) {
+  return buildFilterDefs(rs.topTab).filter((f) => f.group === rs.activeSubGroup);
+}
+
+/**
+ * The active filter set restricted to the visible sub-group's keys, so the ring
+ * shows only that group's toggled-on edges.
+ * @param {RenderState} rs The render-loop state.
+ * @returns {Set<string>} The group-scoped active set.
+ */
+function effectiveActiveSet(rs) {
+  const activeSet = rs.readFilterSet(rs.topTab);
+  const groupKeys = new Set(visibleGroupDefs(rs).map((f) => f.key));
+  const out = new Set();
+  for (const k of activeSet) if (groupKeys.has(k)) out.add(k);
+  return out;
+}
+
+/**
+ * Build the Politics / Reputation / Agreements sub-tab chip row into the sub-tab
+ * host (mirrors the settlements All/Cities/Towns control). Selecting a chip swaps
+ * which group's pills + lines are shown.
+ * @param {RenderState} rs The render-loop state.
+ */
+function buildSubGroupChips(rs) {
+  const { subTabHost } = rs.sc;
+  while (subTabHost.firstChild) subTabHost.removeChild(subTabHost.firstChild);
+  const row = document.createElement("div");
+  row.className = "demographics-relations-subgroup-row";
+  for (const group of FILTER_GROUPS) {
+    const chip = document.createElement("div");
+    chip.className =
+      "demographics-chart-time-filter-pill" +
+      (rs.activeSubGroup === group.key ? " is-active" : "");
+    chip.textContent = t(group.label);
+    chip.addEventListener("click", () => {
+      if (rs.activeSubGroup === group.key) return;
+      rs.activeSubGroup = group.key;
+      writeActiveSubGroup(rs.settings, group.key);
+      safePlaySound("data-audio-activate", "audio-panel-diplo-ribbon");
+      rs.repaint();
+    });
+    row.appendChild(chip);
+  }
+  subTabHost.appendChild(row);
+}
+
+/**
+ * Build the filter-pill row for the active sub-group into the filter host, wiring
+ * per-pill and group "All On/Off" toggles to update the filter set and repaint.
+ * @param {RenderState} rs The render-loop state.
+ */
+function buildFilterRow(rs) {
   const { filterHost } = rs.sc;
   while (filterHost.firstChild) filterHost.removeChild(filterHost.firstChild);
 
   const title = document.createElement("div");
   title.className = "demographics-relations-filter-title font-title text-xs";
-  title.textContent =
-    rs.topTab === "civ"
-      ? t("LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS")
-      : t("LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES");
+  const group = FILTER_GROUPS.find((g) => g.key === rs.activeSubGroup);
+  title.textContent = group ? t(group.label) : "";
   filterHost.appendChild(title);
 
+  const defs = visibleGroupDefs(rs);
   const activeSet = rs.readFilterSet(rs.topTab);
   filterHost.appendChild(
     makeFilterPillRow(
-      filterDefs,
+      defs,
       activeSet,
       (key) => {
         const cur = rs.readFilterSet(rs.topTab);
@@ -277,9 +333,13 @@ function buildFilterRow(rs, filterDefs) {
         rs.repaint();
       },
       (turnOn) => {
-        // Bulk-set every filter for the active topTab in one repaint.
-        const next = turnOn ? new Set(filterDefs.map((f) => f.key)) : new Set();
-        rs.writeFilterSet(rs.topTab, next);
+        // Bulk-toggle only the visible sub-group's filters.
+        const cur = rs.readFilterSet(rs.topTab);
+        for (const f of defs) {
+          if (turnOn) cur.add(f.key);
+          else cur.delete(f.key);
+        }
+        rs.writeFilterSet(rs.topTab, cur);
         rs.repaint();
       }
     )
@@ -328,7 +388,7 @@ function buildFocusedRingSvg(rs, ringIds, names, focusedEdges, opts) {
         if (cur.has(pid)) cur.delete(pid);
         else cur.add(pid);
         rs.writeNodeSelection(rs.topTab, cur);
-        rs.repaint();
+        rs.repaintRing();
       }
     }
   );
@@ -351,9 +411,24 @@ function appendFocusClearButton(caption, rs) {
   clearBtn.textContent = "Clear focus";
   clearBtn.addEventListener("click", () => {
     rs.writeNodeSelection(rs.topTab, new Set());
-    rs.repaint();
+    rs.repaintRing();
   });
   caption.appendChild(clearBtn);
+}
+
+/**
+ * Tag each edge with its relationship-type label (from the filter definitions) so
+ * the ring's hover tooltip can name the line.
+ * @param {Edge[]} edges The edges to tag.
+ * @param {string} topTab The active top tab ("civ"/"cs").
+ */
+function tagEdgeTypeLabels(edges, topTab) {
+  /** @type {Map<string, string>} */
+  const labels = new Map();
+  for (const f of buildFilterDefs(topTab)) labels.set(f.key, f.label);
+  for (const e of edges) {
+    /** @type {*} */ (e)._typeLabel = (e.filterKey && labels.get(e.filterKey)) || "";
+  }
 }
 
 /**
@@ -362,7 +437,9 @@ function appendFocusClearButton(caption, rs) {
  */
 function renderRingBody(rs) {
   const { body, caption } = rs.sc;
-  const activeSet = rs.readFilterSet(rs.topTab);
+  // Scope the ring to the active sub-group: only filter keys in the selected
+  // group (Politics / Reputation / Agreements) that are also toggled on.
+  const effectiveSet = effectiveActiveSet(rs);
 
   while (body.firstChild) body.removeChild(body.firstChild);
   while (caption.firstChild) caption.removeChild(caption.firstChild);
@@ -374,13 +451,18 @@ function renderRingBody(rs) {
 
   const { ringIds, edges, names, capText: baseCapText, ringViewerPid } = computeRingData(
     rs,
-    activeSet
+    effectiveSet
   );
   let capText = baseCapText;
 
-  // Apply per-topTab visual overrides to edges (CS tab uses a different
-  // color/dash vocabulary). Edits are non-destructive.
+  // Align edge colors with the filter-pill legend so each line's color tells you
+  // which filter owns it. CS uses its own color/dash vocabulary; the civ tab
+  // collapses the diplomacy-event per-action colors onto the pill color.
   if (rs.topTab === "cs") applyCsEdgeOverrides(edges);
+  else applyCivEdgeOverrides(edges);
+
+  // Tag each edge with its human-readable relationship type for the hover tooltip.
+  tagEdgeTypeLabels(edges, rs.topTab);
 
   // Node-focus filter: click one or more ring nodes to show only their edges.
   const { selected, focusedEdges } = resolveFocus(rs, edges, ringIds);
@@ -393,11 +475,25 @@ function renderRingBody(rs) {
 
   // Civ-tab always uses the local player as the viewer; CS-tab uses the
   // selected viewer so its node keeps the larger "focus" size.
-  body.appendChild(
-    buildFocusedRingSvg(rs, ringIds, names, focusedEdges, { viewerPid: ringViewerPid, selected })
-  );
+  mountRing(body, buildFocusedRingSvg(rs, ringIds, names, focusedEdges, {
+    viewerPid: ringViewerPid,
+    selected
+  }));
   caption.textContent = capText;
   if (selected.size > 0) appendFocusClearButton(caption, rs);
+}
+
+/**
+ * Mount a ring wrap into the body and immediately place its portrait/label
+ * overlays (the wrap must be in the DOM first so they can measure), so they
+ * paint with the SVG rather than a frame later (avoids click flicker).
+ * @param {HTMLElement} body The ring body element.
+ * @param {HTMLElement} ringWrap The ring wrap to mount.
+ */
+function mountRing(body, ringWrap) {
+  body.appendChild(ringWrap);
+  const place = /** @type {*} */ (ringWrap).__placePortraits;
+  if (typeof place === "function") place();
 }
 
 /**
@@ -467,9 +563,10 @@ function repaintView(rs) {
   //   core/ui/components/fxs-dropdown.js       ("dropdown-selection-change")
   //   core/ui/options/screen-options.js  (handler pattern)
   buildViewerDropdownPanel(rs);
-  // Filter pill row - one pill per relationship type. All toggles apply to
-  // the same ring; no subtab indirection.
-  buildFilterRow(rs, buildFilterDefs(rs.topTab));
+  // Politics / Reputation / Agreements sub-tab chips (which group is shown).
+  buildSubGroupChips(rs);
+  // Filter pill row - one pill per type within the active sub-group.
+  buildFilterRow(rs);
   // Body: ring SVG + caption.
   renderRingBody(rs);
 }
@@ -487,11 +584,12 @@ export function render(host, ctx) {
 
   const settings = ctx.settings;
 
-  // ---- read persisted state ----------------------------------------
-  // Sub-tabs were collapsed into a single ring per top tab - users now see
-  // every relationship type overlaid. The old `relationsTab` setting is
-  // ignored; we key only by top tab now.
-  const topTab = readTopTab(settings);
+  // ---- initial tab state -------------------------------------------
+  // Always OPEN to the leftmost tab in each set: top tab → "civ" (Major
+  // Civilizations), sub-group → FILTER_GROUPS[0] (Politics & Relationships).
+  // The persisted values still update as the user switches within the session,
+  // but every fresh open starts at the leftmost, as requested.
+  const topTab = "civ";
   const localId = getLocalId();
   const namesBase = buildNameMap(ctx.history);
   const metIds = typeof localId === "number" ? getMetMajorIds(localId) : [];
@@ -512,6 +610,7 @@ export function render(host, ctx) {
     namesBase,
     showUnmetNames,
     topTab,
+    activeSubGroup: FILTER_GROUPS[0].key,
     csViewerPid,
     readFilterSet: makeFilterSetReader(settings),
     writeFilterSet: makeFilterSetWriter(settings),
@@ -522,7 +621,11 @@ export function render(host, ctx) {
       civ: { key: "", edges: [] },
       cs: { key: "", edges: [] }
     },
-    repaint: () => repaintView(rs)
+    repaint: () => repaintView(rs),
+    // Ring-only repaint for node focus toggles: rebuilds just the ring body (not
+    // the filter pills / viewer dropdown), so clicking an icon doesn't flicker
+    // the whole panel.
+    repaintRing: () => renderRingBody(rs)
   };
 
   try {

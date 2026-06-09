@@ -5,7 +5,7 @@ import {
   buildCivColumn,
   buildGhostCivColumn,
   buildLabelColumn
-} from "/demographics/ui/screen-demographics/views/factbook/factbook-render.js";
+} from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
 
 const DBG = false;
 /**
@@ -13,18 +13,11 @@ const DBG = false;
  * @param {...*} a Values to log.
  */
 function dlog(...a) {
-  if (DBG) console.warn("[Demographics.view-factbook]", ...a);
+  if (DBG) console.warn("[Demographics.view-worldrankings-allcivs]", ...a);
 }
 
-/**
- * @typedef {import("/demographics/ui/screen-demographics/views/factbook/factbook-profiles.js").
- *   CivProfile} CivProfile
- */
-
-/**
- * @typedef {import("/demographics/ui/screen-demographics/views/factbook/factbook-profiles.js").
- *   FactbookCtx} FactbookCtx
- */
+/** @typedef {import("./worldrankings-allcivs-profiles.js").CivProfile} CivProfile */
+/** @typedef {import("./worldrankings-allcivs-profiles.js").WorldRankingsAllCivsCtx} AllCivsCtx */
 
 /**
  * Mutable state backing the interactive strip, threaded through the
@@ -34,7 +27,7 @@ function dlog(...a) {
  * @property {Record<string, CivProfile>} profiles All civ profiles.
  * @property {string} localPid The local-column pid.
  * @property {string[]} otherPids Sorted non-local pids.
- * @property {FactbookCtx} ctx Render context.
+ * @property {AllCivsCtx} ctx Render context.
  * @property {boolean} showUnmetNames When false, unmet civs are masked.
  * @property {Set<string>} hiddenCivs The currently hidden pid set.
  */
@@ -61,15 +54,15 @@ export function stripIsUnmet(st, pid) {
 
 /**
  * Read the persisted hidden-civ set, defensively, into a string `Set`.
- * @param {FactbookCtx} ctx Render context.
+ * @param {AllCivsCtx} ctx Render context.
  * @returns {Set<string>} The persisted hidden pids (empty on any error).
  */
 export function readHiddenCivs(ctx) {
   try {
-    const raw = ctx.settings?.getSetting?.("factbookHiddenCivs", []);
+    const raw = ctx.settings?.getSetting?.("worldRankingsAllCivsHiddenCivs", []);
     if (Array.isArray(raw)) return new Set(raw.map((v) => String(v)));
   } catch (_) {
-    // settings.getSetting("factbookHiddenCivs") can throw at the storage
+    // settings.getSetting("worldRankingsAllCivsHiddenCivs") can throw at the storage
     // boundary; start with an empty hidden set.
   }
   return new Set();
@@ -81,9 +74,9 @@ export function readHiddenCivs(ctx) {
  */
 export function saveHiddenCivs(st) {
   try {
-    st.ctx.settings?.setSetting?.("factbookHiddenCivs", Array.from(st.hiddenCivs));
+    st.ctx.settings?.setSetting?.("worldRankingsAllCivsHiddenCivs", Array.from(st.hiddenCivs));
   } catch (_) {
-    // settings.setSetting("factbookHiddenCivs") persistence is best-effort;
+    // settings.setSetting("worldRankingsAllCivsHiddenCivs") persistence is best-effort;
     // st.hiddenCivs already holds the live set for this session.
   }
 }
@@ -127,16 +120,16 @@ export function buildOtherColumn(st, pid) {
     ? buildGhostCivColumn(st.profiles[pid], stripIsUnmet(st, pid), headerOpts)
     : buildCivColumn(st.profiles[pid], st.profiles, false, stripIsUnmet(st, pid), headerOpts);
   const header = /** @type {HTMLElement|null} */ (
-    col.querySelector(".demographics-factbook-civ-header")
+    col.querySelector(".demographics-worldrankings-allcivs-civ-header")
   );
   if (header) {
-    header.classList.add("demographics-factbook-civ-header-clickable");
+    header.classList.add("demographics-worldrankings-allcivs-civ-header-clickable");
     header.title = isHidden
-      ? t("LOC_DEMOGRAPHICS_FACTBOOK_CLICK_SHOW")
-      : t("LOC_DEMOGRAPHICS_FACTBOOK_CLICK_HIDE");
+      ? t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW")
+      : t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE");
     header.addEventListener("click", () => {
       safePlaySound("data-audio-checkbox-press", "audio-screen-unlocks");
-      dlog("factbook header click pid=" + pid, "wasHidden=" + isHidden);
+      dlog("worldrankings-allcivs header click pid=" + pid, "wasHidden=" + isHidden);
       toggleCiv(st, pid);
     });
   }
@@ -153,12 +146,12 @@ export function appendStickyColumns(st) {
     hiddenCount: st.hiddenCivs.size,
     onReset: () => resetHidden(st)
   });
-  labelCol.classList.add("demographics-factbook-col-sticky");
+  labelCol.classList.add("demographics-worldrankings-allcivs-col-sticky");
   st.strip.appendChild(labelCol);
 
   // Column 2: local player (sticky-left, never hidable).
   const localCol = buildCivColumn(st.profiles[st.localPid], st.profiles, true, false);
-  localCol.classList.add("demographics-factbook-col-sticky-2");
+  localCol.classList.add("demographics-worldrankings-allcivs-col-sticky-2");
   st.strip.appendChild(localCol);
 }
 
@@ -188,19 +181,19 @@ export function renderStrip(st) {
 }
 
 /**
- * Mount the interactive factbook strip and return a controller exposing its
+ * Mount the interactive worldrankings-allcivs strip and return a controller exposing its
  * re-render entry point. Owns the per-civ visibility set, which persists in
- * `modSettings.demographics.factbookHiddenCivs` as an array of pid strings;
+ * `modSettings.demographics.worldRankingsAllCivsHiddenCivs` as an array of pid strings;
  * the local player is never hidden.
  * @param {HTMLElement} strip The strip container to populate.
  * @param {Record<string, CivProfile>} profiles All civ profiles.
  * @param {{ localPid: string, otherPids: string[] }} pids The local-column pid
  *   and the sorted non-local pids.
- * @param {FactbookCtx} ctx Render context.
+ * @param {AllCivsCtx} ctx Render context.
  * @param {boolean} showUnmetNames When false, unmet civs are masked.
  * @returns {StripController} The mounted strip controller.
  */
-export function mountFactbookStrip(strip, profiles, pids, ctx, showUnmetNames) {
+export function mountWorldRankingsAllCivsStrip(strip, profiles, pids, ctx, showUnmetNames) {
   /** @type {StripState} */
   const st = {
     strip,

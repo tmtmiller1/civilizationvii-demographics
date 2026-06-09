@@ -17,9 +17,13 @@
 //   DiplomacyActionTypes.DIPLOMACY_ACTION_OPEN_BORDERS
 //   Game.Diplomacy.getPlayerEvents(playerId)
 
-import { safeCall } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
+import {
+  AGREEMENT_TYPES,
+  safeCall
+} from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import { getAttitudeColors } from "/demographics/ui/core/demographics-palette.js";
 export {
+  buildCsAgreementEdges,
   buildCsAttitudeEdges,
   buildCsSuzerainEdges,
   buildCsTradeEdges,
@@ -37,6 +41,7 @@ export {
  * @property {string} [label] Optional human-readable edge label.
  * @property {string} [filterKey] Filter category this edge belongs to.
  * @property {boolean} [dashed] Legacy dashed-line flag (suzerain edges).
+ * @property {boolean} [directed] When set, render a→b direction chevrons.
  * @property {number} [width] Per-edge stroke width (currently ignored).
  * @property {number} [opacity] Per-edge stroke opacity (currently ignored).
  * @property {string|null} [_dashOverride] Per-tab dash-pattern override.
@@ -49,6 +54,7 @@ export {
  * @property {number} t Engine `DiplomacyActionTypes` int.
  * @property {string} color Edge color for this action.
  * @property {string} name Original `DIPLOMACY_ACTION_*` name.
+ * @property {string} key Per-action filter key (the edge's `filterKey`).
  */
 
 // ---- diplomatic queries ---------------------------------------------------
@@ -152,28 +158,6 @@ function categoryColor(key) {
   return colors[key] || "#bfbfbf";
 }
 
-// Action-type display config for endeavor-class diplomatic actions.
-/** @type {Record<string, { name: string, color: string }[]>} */
-const ENDEAVOR_ACTIONS = {
-  research: [
-    { name: "DIPLOMACY_ACTION_RESEARCH_COLLABORATION", color: "#c084fc" },
-    { name: "DIPLOMACY_ACTION_SHARE_INNOVATIONS", color: "#c084fc" },
-    { name: "DIPLOMACY_ACTION_SABOTAGE_RESEARCH", color: "#aa3030" }
-  ],
-  endeavors: [
-    { name: "DIPLOMACY_ACTION_CULTURAL_EXCHANGE", color: "#c9a2dc" },
-    { name: "DIPLOMACY_ACTION_IMPROVE_TRADE_RELATIONS", color: "#3fbf3f" },
-    { name: "DIPLOMACY_ACTION_FARMERS_MARKET", color: "#9ad17a" },
-    { name: "DIPLOMACY_ACTION_LOCAL_FESTIVALS", color: "#e6a23c" },
-    { name: "DIPLOMACY_ACTION_PIONEERING", color: "#dba268" },
-    { name: "DIPLOMACY_ACTION_GINSING_AGREEMENT", color: "#f5a060" },
-    { name: "DIPLOMACY_ACTION_FRIEND_OF_WA", color: "#f5a060" },
-    { name: "DIPLOMACY_ACTION_SEND_DELEGATION", color: "#a0d0e0" },
-    { name: "DIPLOMACY_ACTION_TRADE_MAP", color: "#81a2be" },
-    { name: "DIPLOMACY_ACTION_MILITARY_AID", color: "#d97c7c" }
-  ]
-};
-
 // ---- per-subtab edge builders ---------------------------------------------
 // Each builder returns an array of edge objects:
 //   { a, b, color, label?, dashed?, width?, opacity? }
@@ -275,15 +259,34 @@ function actionPairFromEvent(ev, sourcePid, actionType, metSet) {
 }
 
 /**
- * Build undirected edges for a single diplomatic action type queried via
- * `getPlayerEvents`, deduping reciprocal events with a sorted pair key.
+ * Orient an edge so `a` is the initiating player when the event exposes one
+ * (used for directed actions like denounce: denouncer → denounced).
+ * @param {Edge} edge The edge (mutated).
+ * @param {*} ev The diplomacy event.
+ * @param {Set<number>} metSet Met-major pid set.
+ */
+function orientByInitiator(edge, ev, metSet) {
+  const init = ev && typeof ev.initialPlayer === "number" ? ev.initialPlayer : undefined;
+  if (init === undefined || !metSet.has(init)) return;
+  if (edge.b === init) {
+    const tmp = edge.a;
+    edge.a = edge.b;
+    edge.b = tmp;
+  }
+}
+
+/**
+ * Build edges for a single diplomatic action type queried via `getPlayerEvents`,
+ * deduping reciprocal events with a sorted pair key. When `directed`, each edge
+ * is oriented initiator → target and flagged so the renderer draws chevrons.
  * @param {number[]} metIds Met major ids.
  * @param {number|undefined} actionType The `DIPLOMACY_ACTION_*` int to match.
  * @param {string} color Edge color.
  * @param {string} filterKey Filter key to tag edges with.
+ * @param {boolean} [directed] Whether to orient + flag edges as directional.
  * @returns {Edge[]} The matching edges.
  */
-function buildActionTypeEdges(metIds, actionType, color, filterKey) {
+function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
   /** @type {Edge[]} */
   const edges = [];
   if (actionType === undefined) return edges;
@@ -297,16 +300,22 @@ function buildActionTypeEdges(metIds, actionType, color, filterKey) {
       const key = Math.min(pair.a, pair.b) + "|" + Math.max(pair.a, pair.b);
       if (seen.has(key)) continue;
       seen.add(key);
-      edges.push({ a: pair.a, b: pair.b, color, filterKey });
+      /** @type {Edge} */
+      const edge = { a: pair.a, b: pair.b, color, filterKey };
+      if (directed) {
+        orientByInitiator(edge, ev, metSet);
+        edge.directed = true;
+      }
+      edges.push(edge);
     }
   }
   return edges;
 }
 
 /**
- * Pre-resolve an endeavor action list into engine int + color lookups,
- * skipping entries with no runtime `DiplomacyActionTypes` int.
- * @param {{ name: string, color: string }[]} actionList Endeavor entries.
+ * Pre-resolve an agreement-type list into engine int + color + per-action key
+ * lookups, skipping entries with no runtime `DiplomacyActionTypes` int.
+ * @param {{ key: string, action: string, color: string }[]} actionList Agreement entries.
  * @returns {ActionLookup[]} Resolved lookups.
  */
 function resolveEndeavorLookups(actionList) {
@@ -315,9 +324,9 @@ function resolveEndeavorLookups(actionList) {
   const Types = typeof DiplomacyActionTypes !== "undefined" ? DiplomacyActionTypes : null;
   if (!Types) return lookups;
   for (const entry of actionList) {
-    const actionInt = Types[entry.name];
+    const actionInt = Types[entry.action];
     if (typeof actionInt === "number") {
-      lookups.push({ t: actionInt, color: entry.color, name: entry.name });
+      lookups.push({ t: actionInt, color: entry.color, name: entry.action, key: entry.key });
     }
   }
   return lookups;
@@ -336,24 +345,23 @@ function endeavorLabel(name) {
 }
 
 /**
- * Generic endeavor / treaty scanner. Each diplomatic action type appears in
- * BOTH participants' `getPlayerEvents()` list, so we dedupe via a sorted pair
- * + action-type key. Each entry carries its own edge color.
- * @param {{ name: string, color: string }[]} actionList ENDEAVOR_ACTIONS entry.
+ * Build every individual cooperative-agreement edge among the met-major ring.
+ * Each diplomatic action type appears in BOTH participants' `getPlayerEvents()`
+ * list, so we dedupe via a sorted pair + action-type key. Every edge is tagged
+ * with its OWN per-action `filterKey` (from {@link AGREEMENT_TYPES}) so each deal
+ * type is its own filter + uniquely-styled line.
  * @param {number[]} metIds Met major ids.
- * @param {string} filterKey Filter key to tag edges with.
- * @returns {Edge[]} The endeavor edges.
+ * @returns {Edge[]} The agreement edges.
  */
-function pushEndeavorEdges(actionList, metIds, filterKey) {
+function buildAgreementEdges(metIds) {
   /** @type {Edge[]} */
   const edges = [];
-  if (!actionList || actionList.length === 0) return edges;
-  // Pre-resolve action-type ints + their colors so the inner loop is
+  // Pre-resolve action-type ints + their colors/keys so the inner loop is
   // O(events × types) without repeating string→enum lookups.
-  const lookups = resolveEndeavorLookups(actionList);
+  const lookups = resolveEndeavorLookups(AGREEMENT_TYPES);
   if (lookups.length === 0) return edges;
-  /** @type {{ metIds: number[], lookups: ActionLookup[], filterKey: string }} */
-  const ctx = { metIds, lookups, filterKey };
+  /** @type {{ metIds: number[], lookups: ActionLookup[] }} */
+  const ctx = { metIds, lookups };
   const seen = new Set();
   for (const a of metIds) {
     for (const ev of getPlayerEvents(a)) {
@@ -364,29 +372,29 @@ function pushEndeavorEdges(actionList, metIds, filterKey) {
 }
 
 /**
- * Match one diplomacy event against the endeavor lookups and append an edge
- * (deduped on sorted pair + action type) if it qualifies.
+ * Match one diplomacy event against the agreement lookups and append an edge
+ * (deduped on sorted pair + action type) if it qualifies, tagged with the
+ * matched action's own per-action filter key.
  * @param {Edge[]} edges Accumulator to push into.
  * @param {Set<string>} seen Dedupe key set (mutated).
  * @param {*} ev One diplomacy event.
  * @param {number} a The player whose events list `ev` came from.
- * @param {{ metIds: number[], lookups: ActionLookup[], filterKey: string }} ctx
- *   Shared match context.
+ * @param {{ metIds: number[], lookups: ActionLookup[] }} ctx Shared match context.
  */
 function pushOneEndeavorEdge(edges, seen, ev, a, ctx) {
-  const { metIds, lookups, filterKey } = ctx;
+  const { metIds, lookups } = ctx;
   if (!ev || typeof ev.actionType !== "number") return;
   const hit = lookups.find((l) => l.t === ev.actionType);
   if (!hit) return;
   const other = resolveEventOther(ev, a);
   if (typeof other !== "number" || other === a) return;
   if (!metIds.includes(other)) return;
-  // Dedupe pair + action-type so different endeavors between the same pair
+  // Dedupe pair + action-type so different agreements between the same pair
   // show as separate edges.
   const key = Math.min(a, other) + "|" + Math.max(a, other) + "|" + hit.t;
   if (seen.has(key)) return;
   seen.add(key);
-  edges.push({ a, b: other, color: hit.color, filterKey, label: endeavorLabel(hit.name) });
+  edges.push({ a, b: other, color: hit.color, filterKey: hit.key, label: endeavorLabel(hit.name) });
 }
 
 /**
@@ -410,9 +418,6 @@ export function buildPoliticalEdges(metIds, filterKey) {
 
   if (filterKey === "alliance") return buildAllianceEdges(metIds);
   if (filterKey === "war") return buildWarEdges(metIds);
-  if (filterKey === "research" || filterKey === "endeavors") {
-    return pushEndeavorEdges(ENDEAVOR_ACTIONS[filterKey], metIds, filterKey);
-  }
   if (filterKey === "denounced") {
     // Denunciations are diplomatic actions, queried via getPlayerEvents the
     // same way Open Borders is. Direction matters (A denounced B is not
@@ -422,7 +427,8 @@ export function buildPoliticalEdges(metIds, filterKey) {
       metIds,
       actionTypeByName("DIPLOMACY_ACTION_DENOUNCE"),
       "#ff7f1a",
-      "denounced"
+      "denounced",
+      true // directed: denouncer → denounced
     );
   }
   if (filterKey === "openborders") {
@@ -484,7 +490,8 @@ function pushTradeEdgesForSource(edges, trade, fromPid, pids) {
       b: toPid,
       color: "#4dc6c6",
       opacity: 0.5 + weight * 0.5,
-      filterKey: "trade"
+      filterKey: "trade",
+      directed: true
     });
   }
 }
@@ -554,8 +561,9 @@ export function buildAttitudeEdges(metIds, _localPid) {
   return edges;
 }
 
-/** Political filter keys that are sourced from diplomacy-event scans. */
-const POLITICAL_EVENT_FILTER_KEYS = ["openborders", "denounced", "research", "endeavors"];
+/** Political filter keys sourced from diplomacy-event scans (cooperative
+ *  agreements are built separately via {@link buildAgreementEdges}). */
+const POLITICAL_EVENT_FILTER_KEYS = ["openborders", "denounced"];
 
 /**
  * Context for fused pairwise civ-edge construction.
@@ -604,7 +612,8 @@ function appendPairTradeEdges(edges, a, b, tradeA, tradeB) {
         b,
         color: "#4dc6c6",
         opacity: 0.5 + wAB * 0.5,
-        filterKey: "trade"
+        filterKey: "trade",
+        directed: true
       });
     }
   }
@@ -617,7 +626,8 @@ function appendPairTradeEdges(edges, a, b, tradeA, tradeB) {
         b: a,
         color: "#4dc6c6",
         opacity: 0.5 + wBA * 0.5,
-        filterKey: "trade"
+        filterKey: "trade",
+        directed: true
       });
     }
   }
@@ -671,5 +681,7 @@ export function buildCivTaggedEdges(metIds, localPid, includeAttitude) {
   for (const k of POLITICAL_EVENT_FILTER_KEYS) {
     edges = edges.concat(buildPoliticalEdges(metIds, k));
   }
+  // Each cooperative agreement type is its own per-action-tagged line.
+  edges = edges.concat(buildAgreementEdges(metIds));
   return edges;
 }

@@ -28,13 +28,13 @@ section below by `release.sh`.
 - Options screen: the sample-cap and poll-interval choices no longer show a missing-glyph box ("[]") before their performance caveats; the caveats now read as plain parentheticals (e.g. "Unlimited (very large saves, may slow performance)"), in every language.
 
 ### Improved
-- Faster Demographics screen (lazy loading): the heavy World Factbook and Global Relations tabs, and the Conflicts charts (the wars timeline and the per-war graphs), now load on demand the first time you open them, instead of all being parsed when the screen first opens. The default Historical Data view is unchanged.
+- Faster Demographics screen (lazy loading): the heavy All Civilizations and Global Relations tabs, and the Conflicts charts (the wars timeline and the per-war graphs), now load on demand the first time you open them, instead of all being parsed when the screen first opens. The default Historical Data view is unchanged.
 - Smaller download and faster load (minification): shipped builds are now minified, cutting the mod's JavaScript size by roughly 70% (about 1.0 MB down to 0.3 MB) with no change in behavior.
 
 ### Internal
 - Dead-code removal: deleted the unused in-screen triumph charts (`chart-triumphs.js`, ~1,080 lines) together with their now-orphaned CSS (~380 lines) and leftover view state — about 1.5k lines in total. The native Triumphs decorator is unaffected.
 - Build pipeline (minification): `release.sh` now minifies every shipped JS file in place (esbuild, per-file transform) while preserving the module layout and import paths, and constant-folds out the debug logging. Source stays unminified and readable; only the shipped `dist/` copy is minified, so players never need any build tooling.
-- Loading architecture: the chart barrel (`demographics-chart.js`) now imports the heavy Conflicts charts on demand via `ensureChartForMetric`, and the screen imports the Factbook/Relations tab modules on first open — replacing the previous all-at-once static imports.
+- Loading architecture: the chart barrel (`demographics-chart.js`) now imports the heavy Conflicts charts on demand via `ensureChartForMetric`, and the screen imports the All Civilizations/Relations tab modules on first open — replacing the previous all-at-once static imports.
 
 ## [1.1.12] - 2026-06-04
 
@@ -122,7 +122,7 @@ section below by `release.sh`.
 - Met-history reveal mode: a new Options sub-toggle under "Hide unmet civ stats" that chooses, once you meet a civilization, whether to reveal its entire history (default) or only data from first contact forward.
 
 ### Fixed
-- The line chart now reveals a civ's full history the moment you meet them, instead of being stuck showing only data from the meeting turn forward (now consistent with the Radar and Factbook views).
+- The line chart now reveals a civ's full history the moment you meet them, instead of being stuck showing only data from the meeting turn forward (now consistent with the Radar and All Civilizations views).
 - Greatly reduced settings log spam: the shared `modSettings` localStorage blob is parsed quietly with a single warning per session instead of an error on every settings write.
 
 ## [1.1.6] - 2026-05-31
@@ -157,5 +157,5 @@ section below by `release.sh`.
 Initial public releases established the core read-only analytics dashboard:
 Historical Data time-series (Economy / Power / Knowledge & Influence / Triumphs)
 with per-civ colors, time-range filters, smoothing, and CSV export; the World
-Factbook current-values-and-ranks view; the Global Relations ring; and Triumph
+All Civilizations current-values-and-ranks view; the Global Relations ring; and Triumph
 card progress overlays. Detailed per-version notes predate this changelog.

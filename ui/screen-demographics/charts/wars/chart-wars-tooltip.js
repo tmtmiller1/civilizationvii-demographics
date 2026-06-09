@@ -2,7 +2,7 @@
 //
 // The war-timeline hover tooltip CONTENT: the structured tooltip body, the
 // per-side cost columns, and the full city-state (suzerain) layout. Extracted
-// from chart-wars-gantt.js so the gantt module is just rendering + wiring; this
+// from chart-conflicts-timeline.js so the gantt module is just rendering + wiring; this
 // module owns what the tooltip shows. renderWarTooltip() fills the tooltip
 // element the gantt creates.
 
@@ -15,7 +15,7 @@ import {
   participantMilPowerLost,
   warWindow,
   costMetricTitle
-} from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost.js";
+} from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import {
   buildCostTable,
   buildVsCell
@@ -142,6 +142,54 @@ export function renderWarTooltip(tooltip, w, ctx) {
   tooltip.appendChild(buildSidesEl(tip, samples, win));
 
   appendCsAllies(tooltip, tip, samples, win);
+
+  // Sign key — explains the green/red/dash figure convention right where the
+  // figures are (replaces the old Guide tab's intro/legend note).
+  appendDivider(tooltip);
+  tooltip.appendChild(buildTooltipKey());
+}
+
+/** The three sign-key entries (color class + sign glyph + label). */
+const SIGN_KEY_ITEMS = [
+  { cls: "is-gain", sign: "+", label: "LOC_DEMOGRAPHICS_WARS_KEY_GAIN" },
+  { cls: "is-loss", sign: "−", label: "LOC_DEMOGRAPHICS_WARS_KEY_LOSS" },
+  { cls: "is-none", sign: "—", label: "LOC_DEMOGRAPHICS_WARS_KEY_NODATA" }
+];
+
+/**
+ * Append one sign-key entry (an optional separator, the colored sign glyph, and
+ * its label) to the key row.
+ * @param {HTMLElement} key The key row element.
+ * @param {{ cls: string, sign: string, label: string }} it The key entry.
+ * @param {boolean} withSep Whether to prepend a "·" separator.
+ */
+function appendKeyItem(key, it, withSep) {
+  if (withSep) {
+    const sep = document.createElement("span");
+    sep.className = "demographics-wars-tooltip-key-sep";
+    sep.textContent = "·";
+    key.appendChild(sep);
+  }
+  const sign = document.createElement("span");
+  sign.className = "demographics-wars-tooltip-leader-val " + it.cls;
+  sign.textContent = it.sign;
+  key.appendChild(sign);
+  const lbl = document.createElement("span");
+  lbl.className = "demographics-wars-tooltip-key-label";
+  lbl.textContent = t(it.label);
+  key.appendChild(lbl);
+}
+
+/**
+ * Build the compact sign-key footer: "+ gain · − loss · — no data", each sign in
+ * the same color the cost figures use.
+ * @returns {HTMLElement} The key element.
+ */
+function buildTooltipKey() {
+  const key = document.createElement("div");
+  key.className = "demographics-wars-tooltip-key";
+  SIGN_KEY_ITEMS.forEach((it, i) => appendKeyItem(key, it, i > 0));
+  return key;
 }
 
 /**

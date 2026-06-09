@@ -55,26 +55,37 @@ dlog("module evaluating");
 
 const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 
+// Flat tint applied to our dock icon so it reads as the same color as the
+// vanilla subsystem-dock icons (tech/civic/…), which are flat light-parchment
+// silhouettes. We MASK the SVG (silhouette only) and fill it with this color,
+// rather than painting the SVG's own gradient + gold outline — the latter made
+// our icon look gold-edged and out of place next to the others. (Same technique
+// the base theme uses for its mask icons, e.g. .checkmark-icon in default.css.)
+const ICON_TINT = "#ecdfbf";
+
 /**
- * Inject the one-time `<style>` that paints our dock-button icon from the
- * file-shipped SVG. Idempotent: re-runs are a no-op once the style exists.
+ * Inject the one-time `<style>` that paints our dock-button icon. The icon is a
+ * MASK filled with {@link ICON_TINT} so it matches the flat tint of the other
+ * dock icons. Idempotent: re-runs are a no-op once the style exists.
  */
 function injectIconStyle() {
   if (document.getElementById("demographics-dock-icon-style")) return;
   const style = document.createElement("style");
   style.id = "demographics-dock-icon-style";
-  // Vanilla `.ssb__button-icon` is already absolute/centered/contain
-  // (panel-sub-system-dock.css:364-372). We just supply the image and
-  // tame the sizing so the bars don't bleed to the button edges.
+  // Vanilla `.ssb__button-icon` is already absolute/centered (panel-sub-system-
+  // dock.css). We fill the box with the tint and clip it to the SVG silhouette
+  // via a mask, sized so the bars don't bleed to the button edges.
   style.textContent =
     `.ssb__button-icon.demographics {` +
-    ` background-image: url("${ICON_URL}");` +
-    ` background-size: 60%;` +
-    ` background-position: center;` +
-    ` background-repeat: no-repeat;` +
+    ` background-image: none;` +
+    ` background-color: ${ICON_TINT};` +
+    ` mask-image: url("${ICON_URL}");` +
+    ` mask-size: 62%;` +
+    ` mask-position: center;` +
+    ` mask-repeat: no-repeat;` +
     ` }`;
   document.head.appendChild(style);
-  dlog("icon style injected (fs:// url)");
+  dlog("icon style injected (mask + flat tint)");
 }
 
 /**

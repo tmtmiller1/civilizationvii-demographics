@@ -1,6 +1,6 @@
-// view-factbook.js
+// view-worldrankings-allcivs.js
 //
-// "World Factbook" view: a spreadsheet-style matrix built from flex
+// "All Civilizations" view: a spreadsheet-style matrix built from flex
 // columns rather than an HTML <table>.
 //
 // Layout: each civ is a vertical column, each metric is a horizontal row.
@@ -15,17 +15,14 @@
 
 import {
   buildCivProfiles,
-  pickLocalPid,
   readBoolSetting,
-  sortOtherPids,
   stripEliminatedCivs,
   stripUnmetDiplomacy
-} from "/demographics/ui/screen-demographics/views/factbook/factbook-profiles.js";
+} from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 import {
-  appendEmptyState,
-  buildHint
-} from "/demographics/ui/screen-demographics/views/factbook/factbook-render.js";
-import { mountFactbookStrip } from "/demographics/ui/screen-demographics/views/factbook/factbook-controller.js";
+  appendEmptyState
+} from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
+import { renderCivTable } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-table.js";
 
 const DBG = false;
 /**
@@ -33,29 +30,29 @@ const DBG = false;
  * @param {...*} a Values to log.
  */
 function dlog(...a) {
-  if (DBG) console.warn("[Demographics.view-factbook]", ...a);
+  if (DBG) console.warn("[Demographics.view-worldrankings-allcivs]", ...a);
 }
 
 /**
  * Persisted-setting accessor surface read off the render context.
- * @typedef {Object} FactbookSettings
+ * @typedef {Object} WorldRankingsAllCivsSettings
  * @property {(key: string, fallback?: *) => *} [getSetting] Read a setting.
  * @property {(key: string, value: *) => void} [setSetting] Write a setting.
  */
 
 /**
  * Render context handed to `render`.
- * @typedef {Object} FactbookCtx
+ * @typedef {Object} WorldRankingsAllCivsCtx
  * @property {DemoHistory} [history] The full persisted history blob.
- * @property {FactbookSettings} [settings] Persisted-setting accessor.
+ * @property {WorldRankingsAllCivsSettings} [settings] Persisted-setting accessor.
  */
 
 /**
- * Render the World Factbook matrix into `host`. Clears the host, folds the
+ * Render the All Civilizations matrix into `host`. Clears the host, folds the
  * history into per-civ profiles, applies the `showEliminatedCivs` /
  * `showUnmetNames` settings, then mounts the interactive strip.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
- * @param {FactbookCtx} ctx Render context (history + settings accessors).
+ * @param {WorldRankingsAllCivsCtx} ctx Render context (history + settings accessors).
  */
 export function render(host, ctx) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -67,22 +64,20 @@ export function render(host, ctx) {
     return;
   }
 
-  const localPid = pickLocalPid(profiles, allPids);
-  const otherPids = sortOtherPids(profiles, allPids, localPid);
-
   // Read "show unmet names" setting (Fix 4). When false, mask unmet civs.
   const showUnmetNames = readBoolSetting(ctx, "showUnmetNames", false);
 
-  dlog("rendering factbook; local=", localPid, "others=", otherPids.length);
+  dlog("rendering all-civilizations table; civs=", allPids.length);
 
-  host.appendChild(buildHint());
-  const strip = buildFactbookStripShell(host);
-  mountFactbookStrip(strip, profiles, { localPid, otherPids }, ctx, showUnmetNames);
+  // Settlements-style sortable table (civs as rows, metrics as scrollable columns)
+  // with a Rank/Value cell toggle. The rerender closure re-runs this render so a
+  // toggle or sort change repaints from fresh profiles.
+  renderCivTable(host, profiles, ctx, showUnmetNames, () => render(host, ctx));
 }
 
 /**
- * Build and post-process factbook profiles from history/settings.
- * @param {FactbookCtx} ctx Render context.
+ * Build and post-process worldrankings-allcivs profiles from history/settings.
+ * @param {WorldRankingsAllCivsCtx} ctx Render context.
  * @returns {Record<string, *>} Profile map.
  */
 function prepareProfiles(ctx) {
@@ -94,20 +89,4 @@ function prepareProfiles(ctx) {
     stripUnmetDiplomacy(profiles);
   }
   return profiles;
-}
-
-/**
- * Build the scroll shell and return the strip element.
- * @param {HTMLElement} host The root host.
- * @returns {HTMLElement} The strip container.
- */
-function buildFactbookStripShell(host) {
-  const scrollWrap = document.createElement("div");
-  scrollWrap.className = "demographics-factbook-matrix";
-  host.appendChild(scrollWrap);
-
-  const strip = document.createElement("div");
-  strip.className = "demographics-factbook-strip";
-  scrollWrap.appendChild(strip);
-  return strip;
 }
