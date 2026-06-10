@@ -41,9 +41,9 @@ function sortTooltipDataPoints(tooltip, chart) {
   if (dataPoints.length && chart.data && chart.data.datasets) {
     const dsOrder = chart.data.datasets.map((/** @type {*} */ ds) => ds.label);
     dataPoints.sort((/** @type {*} */ a, /** @type {*} */ b) => {
-      const ai = dsOrder.indexOf(a.dataset.label);
-      const bi = dsOrder.indexOf(b.dataset.label);
-      return ai - bi;
+      const aIdx = dsOrder.indexOf(a.dataset.label);
+      const bIdx = dsOrder.indexOf(b.dataset.label);
+      return aIdx - bIdx;
     });
   }
   return dataPoints;
