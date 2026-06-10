@@ -138,6 +138,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ru_RU"><Text>При первом контакте</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ru_RU"><Text>Начинать сбор статистики при встрече с новой цивилизацией</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ru_RU"><Text>Суммарный ущерб за все стадии</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="ru_RU"><Text>Общее влияние кризисов за все эпохи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ru_RU"><Text>Начало кризиса</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ru_RU"><Text>Кризис усиливается</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ru_RU"><Text>Кульминация кризиса</Text></Replace>

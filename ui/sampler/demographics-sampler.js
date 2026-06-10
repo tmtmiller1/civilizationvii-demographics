@@ -74,8 +74,10 @@ import { buildAgeBoundaryDeps } from "/demographics/ui/sampler/sampler-age-bound
 import {
   buildPlayerCtx,
   buildMinorMilitaryCtx,
+  computeNodeBaselines,
   getCurrentAgeType,
-  resetAgeCaches
+  resetAgeCaches,
+  setNodeBaselineByPid
 } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { onPlayerAgeTransitionComplete } from "/demographics/ui/sampler/sampler-age-boundary.js";
 import { runWarTracker } from "/demographics/ui/sampler/sampler-wars-core.js";
@@ -303,6 +305,24 @@ export function safeNum(v) {
  * @returns {Snapshot | null} The recorded snapshot, or null.
  */
 /**
+ * Seed the per-pid cumulative tech/civic baseline from prior ages so Techs,
+ * Civics, and the score fallback stay continuous across the age boundary
+ * instead of resetting to the new age's fresh tree (see computeNodeBaselines).
+ * @param {string | undefined} ageType The age being sampled now.
+ */
+function seedNodeBaselinesForSample(ageType) {
+  try {
+    const priorHistory = DemographicsStorage.load();
+    setNodeBaselineByPid(
+      computeNodeBaselines(priorHistory ? priorHistory.samples : undefined, ageType)
+    );
+  } catch (e) {
+    setNodeBaselineByPid(null);
+    elog("computeNodeBaselines threw; tech/civic baseline skipped this sample:", e);
+  }
+}
+
+/**
  * Build and persist one sampling snapshot when enough major civs are alive.
  * @returns {Snapshot | null} The recorded snapshot, or null when skipped.
  */
@@ -316,6 +336,7 @@ function doSample() {
   const tStart = perfNow();
   const globalAge = getGlobalAgeContext(safeCall);
   const ageType = getCurrentAgeType();
+  seedNodeBaselinesForSample(ageType);
   const chartTurn = computeChartTurn(ageType, localTurn);
   // Each sample is stamped with:
   //   localTurn - Game.turn at sample time (age-local; resets per age)
