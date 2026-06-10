@@ -47,7 +47,7 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [list]
 [*]It does not add cross-age charts or track information across ages. No mechanism is currently provided for mods to persist data across the age boundary. If/when such support is provided, we will happily update the mod to accommodate.
 [*]It does not change gameplay balance.
-[*]It does not alter AI behavior.
+[*]It does not alter opponent behavior.
 [*]It does not overwrite base-game files.
 [/list]
 
