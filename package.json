@@ -9,7 +9,9 @@
     "lint": "eslint ui",
     "test:remediation-23": "node --loader ./tests/loader.mjs ./tests/remediation-23.mjs",
     "test:civ-color-utils": "node --loader ./tests/loader.mjs ./tests/civ-color-utils.mjs",
-    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23"
+    "test:node-baselines": "node --loader ./tests/loader.mjs ./tests/node-baselines.mjs",
+    "test:crisis-segments": "node --loader ./tests/loader.mjs ./tests/crisis-segments.mjs",
+    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments"
   },
   "devDependencies": {
     "esbuild": "^0.28.0",

@@ -150,7 +150,13 @@ export function scaleLandArea(raw) {
 }
 
 /**
- * Heuristic score fallback when the engine score path is unavailable.
+ * Heuristic score: tech + civic count + 2·settlements + gold/100. This is the
+ * mod's authoritative score (see scoreAccessor): Civ7 has no cumulative civ
+ * "score" - its scoring is per-age Legacy Points - so we synthesize a stable,
+ * monotonic one. techsCount/civicsCount are made cumulative across ages by the
+ * sampler (see sampler-collectors-economy.js#computeNodeBaselines), and
+ * settlements/gold are inherently continuous, so this stays continuous across
+ * age boundaries instead of collapsing when each age's fresh trees reset.
  * @param {{ [key: string]: * }} ctx Per-player accessor context.
  * @returns {number} The heuristic score.
  */
@@ -163,21 +169,29 @@ export function scoreFallback(ctx) {
 }
 
 /**
- * Score accessor: prefer the engine score, else the heuristic.
+ * Score accessor. Civ7 exposes no cumulative civilization score on the player
+ * Stats handle (scoring is per-age Legacy Points via player.LegacyPaths), so
+ * the heuristic in {@link scoreFallback} is authoritative. We still consult an
+ * engine `getScore()` IF some build/mod adds one AND it is non-decreasing - a
+ * per-age engine score would re-introduce the age-boundary cliff, so we reject
+ * any value below the continuous heuristic and keep the heuristic instead.
  * @param {{ [key: string]: * }} ctx Per-player accessor context.
  * @returns {number} The civilization score.
  */
 export function scoreAccessor(ctx) {
+  const heuristic = scoreFallback(ctx);
   try {
     const s = ctx.stats;
     if (s && typeof s.getScore === "function") {
-      const value = s.getScore();
-      if (safeNum(value) !== undefined) return value;
+      const value = safeNum(s.getScore());
+      // Only trust an engine score that doesn't regress below the continuous
+      // heuristic; this guards against a per-age engine score cliffing the line.
+      if (value !== undefined && value >= heuristic) return value;
     }
   } catch (_e) {
-    /* fall through */
+    /* fall through to the heuristic */
   }
-  return scoreFallback(ctx);
+  return heuristic;
 }
 
 /**

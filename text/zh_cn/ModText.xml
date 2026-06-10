@@ -354,6 +354,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="zh_Hans_CN"><Text>首次接触时</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="zh_Hans_CN"><Text>从遭遇新文明时开始记录统计数据</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="zh_Hans_CN"><Text>所有阶段的累计影响</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="zh_Hans_CN"><Text>所有时代的危机总体影响</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hans_CN">
             <Text>危机开始</Text>
         </Replace>

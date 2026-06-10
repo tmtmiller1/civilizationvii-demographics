@@ -138,6 +138,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="it_IT"><Text>Al primo contatto</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="it_IT"><Text>Inizia a tracciare le statistiche all'incontro con una nuova civiltà</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="it_IT"><Text>Impatto cumulativo su tutte le fasi</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="it_IT"><Text>Impatto totale delle crisi in tutte le ere</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="it_IT"><Text>Inizio della crisi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="it_IT"><Text>La crisi si intensifica</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="it_IT"><Text>La crisi culmina</Text></Replace>

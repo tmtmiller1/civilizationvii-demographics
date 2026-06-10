@@ -19,8 +19,10 @@ import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demograph
 import {
   CRISIS_STAGE_COLORS as STAGE_COLORS,
   CRISIS_STAGE_LABELS as STAGE_LABELS,
+  ageLastTurns,
   crisisStageOnsets,
-  crisisStageSegments
+  crisisStageSegments,
+  sampleAgeKey
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
@@ -230,8 +232,109 @@ function buildCrisisGroup(group, ctx) {
 }
 
 /**
+ * Build a per-group render context whose samples + year map are restricted to
+ * the group's age. Crisis windows key off age-local `s.turn`, which resets each
+ * age, so an unfiltered stream would let a later age's coincident turn numbers
+ * leak into (or invert) this crisis's windows. Filtering to the age makes every
+ * downstream turn lookup unambiguous.
+ * @param {*} ctx Base render context (samples / seed / yearMap / mode).
+ * @param {{ sample: Snapshot }} group The crisis group.
+ * @returns {*} The same context with samples + yearMap scoped to the group's age.
+ */
+function groupCtx(ctx, group) {
+  const age = sampleAgeKey(group.sample);
+  const gSamples = ctx.samples.filter((/** @type {Snapshot} */ s) => sampleAgeKey(s) === age);
+  return { ...ctx, samples: gSamples, yearMap: buildYearMap(gSamples) };
+}
+
+// m.key -> reduction mode, for summing each cost metric across crises.
+/** @type {Record<string, string>} */
+const COST_KEY_MODE = {};
+for (const m of CRISIS_METRICS) COST_KEY_MODE[m.key] = m.mode;
+
+/**
+ * Merge one crisis's per-metric cost figures into an accumulator: summable modes
+ * (losses / net / accrued / spent) add up; a "level" metric (standing Military
+ * Power) is a snapshot, not a flow, so the latest crisis's value wins.
+ * @param {Record<string, number>} acc The running per-metric accumulator (mutated).
+ * @param {Record<string, number|null>} add One crisis's per-metric cost.
+ */
+function mergeCost(acc, add) {
+  for (const key of Object.keys(add)) {
+    const v = add[key];
+    if (typeof v !== "number" || !isFinite(v)) continue;
+    if (COST_KEY_MODE[key] === "level") acc[key] = v;
+    else acc[key] = (typeof acc[key] === "number" ? acc[key] : 0) + v;
+  }
+}
+
+/**
+ * Aggregate every participant's cost across all crisis groups into cost-table
+ * columns, each crisis windowed within its own age.
+ * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
+ * @param {Snapshot[]} samples The full sample stream.
+ * @returns {{ entry: { pid: number }, cs: null, cost: Record<string, number> }[]} The columns.
+ */
+function aggregateOverallCols(groups, samples) {
+  /** @type {Map<number, { entry: { pid:number }, cs: null, cost: Record<string, number> }>} */
+  const byPid = new Map();
+  for (const group of groups) {
+    const age = sampleAgeKey(group.sample);
+    const gSamples = samples.filter((s) => sampleAgeKey(s) === age);
+    for (const p of crisisParticipants(gSamples, group.start, group.end)) {
+      let col = byPid.get(p.pid);
+      if (!col) {
+        col = { entry: { pid: p.pid }, cs: null, cost: {} };
+        byPid.set(p.pid, col);
+      }
+      mergeCost(col.cost, participantCost(gSamples, p, group.start, group.end));
+    }
+  }
+  return Array.from(byPid.values());
+}
+
+/**
+ * Build the gated OVERALL cumulative block summing every age's crisis. Only
+ * meaningful once crises span more than one age, so the caller renders it solely
+ * when a second age's crisis (e.g. Exploration) exists.
+ * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
+ * @param {{ samples: Snapshot[] }} ctx Render context (full samples, for identity).
+ * @returns {HTMLElement} The overall block.
+ */
+function buildOverallBlock(groups, ctx) {
+  const block = document.createElement("div");
+  block.className =
+    "demographics-crisis-stage demographics-crisis-cumulative demographics-crisis-overall";
+  const cap = document.createElement("div");
+  cap.className = "demographics-crisis-cumulative-caption";
+  cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_OVERALL");
+  block.appendChild(cap);
+  const costs = document.createElement("div");
+  costs.className = "demographics-crisis-stage-costs";
+  costs.appendChild(
+    buildCostTable(aggregateOverallCols(groups, ctx.samples), CRISIS_METRICS, ctx.samples, -1)
+  );
+  block.appendChild(costs);
+  return block;
+}
+
+/**
+ * Append the overall cross-age cumulative block, but only once crises exist in
+ * at least two distinct ages (i.e. after the Exploration crisis occurs).
+ * @param {HTMLElement} panel The page panel.
+ * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
+ * @param {{ samples: Snapshot[] }} ctx Render context.
+ */
+function appendOverallBlock(panel, groups, ctx) {
+  const ages = new Set(groups.map((g) => sampleAgeKey(g.sample)));
+  if (ages.size < 2) return;
+  panel.appendChild(buildOverallBlock(groups, ctx));
+}
+
+/**
  * Render the Crises page: each age's crisis as its own titled group (separated
- * visually), with one block per stage and a cumulative table on the final stage.
+ * visually), with one block per stage and a per-age cumulative on the final
+ * stage, plus a single overall cumulative once crises span two or more ages.
  * @param {HTMLElement} host The chart host (cleared and repopulated).
  * @param {{ history?: * }} [opts] Render options.
  * @returns {null} Always null (no chart handle).
@@ -253,10 +356,11 @@ export function renderCrisisStages(host, opts) {
     yearMap: buildYearMap(samples),
     mode: getXAxisMode()
   };
-  const groups = groupCrises(crisisStageSegments(onsets, latestTurn));
+  const groups = groupCrises(crisisStageSegments(onsets, latestTurn, ageLastTurns(samples)));
   const panel = document.createElement("div");
   panel.className = "demographics-crisis-stages";
-  for (const group of groups) panel.appendChild(buildCrisisGroup(group, ctx));
+  for (const group of groups) panel.appendChild(buildCrisisGroup(group, groupCtx(ctx, group)));
+  appendOverallBlock(panel, groups, ctx);
   host.appendChild(panel);
   return null;
 }

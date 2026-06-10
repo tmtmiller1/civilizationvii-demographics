@@ -6,7 +6,9 @@
  * Build major-player snapshot map for one sample pass.
  * @param {number[]} ids Alive major player ids.
  * @param {*} globalAge Global age context.
- * @param {number} turn Current turn.
+ * @param {number} turn Monotonic chart turn used for era-scaling metrics
+ *   (GDP/Population). NOT the age-local turn - using the latter would collapse
+ *   the scaled series at every age boundary.
  * @param {{
  *   buildPlayerCtx: (pid:number) => any,
  *   computeMetrics: (ctx:any, turn:number) => Record<string, number>,

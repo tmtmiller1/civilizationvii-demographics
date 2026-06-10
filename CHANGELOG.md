@@ -7,6 +7,10 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+### Fixed
+- Crisis Impact tab: each age's crisis now stays bounded within its own age, so the antiquity crisis's "Ends" stage and its per-age cumulative impact keep their real values after you advance into Exploration (previously they went blank because the window ran into the next age's reset turn numbers). A separate "Overall crisis impact across all ages" total now appears only once crises exist in two or more ages (i.e. after the Exploration crisis occurs). Crisis-stage detection also no longer mistakes a crisis level lingering from the previous age into the new age's first turns for a fresh crisis — it waits for that age to report a pre-crisis reading first — so a phantom next-age crisis no longer appears before the real one begins.
+- Historical Data charts no longer collapse at the start of a new age. GDP and Population dropped toward zero at every age boundary because their era-scaling used the age-local turn (`Game.turn`), which restarts at 1 each age — they now scale off the monotonic chart turn and stay continuous. Techs, Civics, and Score (which falls back to techs + civics) reset to 0 each age because each age has its own fresh tech/culture tree; they are now carried forward cumulatively across ages. Trade Routes still step down at an age boundary, which is correct — routes genuinely end at the age transition.
+
 ### Improved
 - Release packaging now ships readable JavaScript by default. Dist minification is opt-in via `MINIFY_DIST_JS=1` in `release.sh`.
 - Workshop and README copy now state the readable-source release posture and companion `triumphs-progress-overlay` split.

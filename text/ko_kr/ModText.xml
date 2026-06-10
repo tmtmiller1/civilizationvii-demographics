@@ -138,6 +138,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ko_KR"><Text>첫 접촉 시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ko_KR"><Text>새 문명을 만난 시점부터 통계 기록 시작</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ko_KR"><Text>모든 단계의 누적 영향</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="ko_KR"><Text>모든 시대에 걸친 위기의 종합 영향</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ko_KR"><Text>위기 시작</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="ko_KR"><Text>위기 심화</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="ko_KR"><Text>위기 절정</Text></Replace>
