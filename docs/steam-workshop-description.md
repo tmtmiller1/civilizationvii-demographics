@@ -10,12 +10,20 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [b]The Mod Includes:[/b]
 [list]
 [*]Historical charts, now continuous across the age boundary, for economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
-[*]A All Civilizations view with current values and world rankings for each civilization.
+[*]A World Rankings view: an All Civilizations matrix of current values and world rank for every metric (detailed below).
 [*]A Global Relations view with met civilizations and city-states arranged in a ring layout.
 [*]A war timeline built from diplomacy events.
 [*]Readable shipped source modules (release builds are not minified by default; the source is written in readable JS with JSDoc types and checked with tsc --noEmit).
 [*]Copy-to-CSV for recorded history (true export unavailable for modding).
 [*]Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
+[/list]
+
+[b]World Rankings:[/b]
+[list]
+[*]An "All Civilizations" matrix with every metric as a row and every met civilization as a column — your own civ pinned first with a gold border so comparisons are easy to read.
+[*]Click any metric to sort every civilization by it, and flip each cell between its raw Value and its world Rank (for example "Rank 3/8") with the Rank / Value toggle.
+[*]Spans the full metric set — score, economy, military power, population, knowledge, influence, resources, and more — so you can see at a glance who leads the world in each.
+[*]Respects the same unmet-name masking, eliminated-civilization, and colorblind options as the rest of the mod, and lets you hide or show individual civilizations.
 [/list]
 
 [b]Triumphs Overlay:[/b]
@@ -36,6 +44,15 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [*]The current age's crisis broken into its stages (Begins, Intensifies, Culminates, Ends), shown as severity-colored bars that match the crisis markers on the line charts.
 [*]Beneath each stage, a permanent cost table lists every civilization's losses accrued during that stage, so you can see who the crisis hit hardest and when.
 [*]A Crisis Graphs view charts every crisis statistic per civilization across the whole game as a grid of small line charts, with one shared legend that toggles a civ in every graph at once.
+[/list]
+
+[b]Top Settlements & Cinematic Camera:[/b]
+[list]
+[*]A ranked Top Settlements board of the largest cities and towns in the world, each with its owner, population, and output strip, plus gold / silver / bronze medals for the leaders.
+[*]"View on map" flies the camera straight to any settlement so you can see it in context, then restores the Demographics screen when you return.
+[*]"Cinematic view" glides into the city with a smooth camera approach; "Flyby" runs a short aerial tour that orbits the settlement and its wonders and finishes with a fireworks send-off.
+[*]The flyby mounts an on-screen card naming the city, its world rank (gold/silver/bronze laurels), and its notable districts and wonders.
+[*]Everything restores cleanly on Back / ESC — camera, zoom, and the Demographics screen all return to where you left them. Camera style (instant, cinematic, or flyby), subtle rotation, and flyby length are all configurable in Options.
 [/list]
 
 [b]Recent UI Polish:[/b]
@@ -66,6 +83,11 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [*]Download or subscribe to the mod.
 [*]Place the [b]demographics[/b] folder in the Civilization VII Mods directory.
 [*]Enable Demographics from Additional Content in-game.
+[/list]
+
+[b]Source:[/b]
+[list]
+[*]Open source on GitHub: https://github.com/tmtmiller1/civilizationvii-demographics
 [/list]
 
 [b]Credits:[/b]
