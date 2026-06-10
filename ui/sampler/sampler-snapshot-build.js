@@ -12,9 +12,9 @@
  *   globalAge: any,
  *   ids: number[],
  *   buildMajorPlayerSnapshots:
- *     (ids:number[], globalAge:any, turn:number, deps:any) => Record<string, *>,
+ *     (ids:number[], globalAge:any, scaleTurn:number, deps:any) => Record<string, *>,
  *   buildPlayerCtx: (pid:number) => any,
- *   computeMetrics: (ctx:any, turn:number) => Record<string, number>,
+ *   computeMetrics: (ctx:any, scaleTurn:number) => Record<string, number>,
  *   stampWarMetrics: (metrics:Record<string, number>, pid:number, ctx:any) => void,
  *   buildSnapshotPlayer: (ctx:any, metrics:Record<string, number>) => object
  * }} deps Snapshot dependencies.
@@ -28,7 +28,14 @@ export function buildSamplerSnapshot(deps) {
     age: deps.ageType,
     gameYear: deps.gameYear,
     crisisEventType: deps.globalAge.crisisEventType,
-    players: deps.buildMajorPlayerSnapshots(deps.ids, deps.globalAge, deps.localTurn, {
+    // Scale metrics off the MONOTONIC chartTurn, not the age-local localTurn.
+    // localTurn resets to 1 at every age boundary, and the era-scaled metrics
+    // (GDP = raw × turn × 1e6, Population = raw^1.11 × 90000 × 1.009^turn) would
+    // then collapse at each transition - the "drop to ~0 at Exploration Begins"
+    // discontinuity. chartTurn advances continuously across ages, so the scaled
+    // series stay continuous. localTurn/turn are still stored on the snapshot for
+    // age-aware X-axis placement.
+    players: deps.buildMajorPlayerSnapshots(deps.ids, deps.globalAge, deps.chartTurn, {
       buildPlayerCtx: deps.buildPlayerCtx,
       computeMetrics: deps.computeMetrics,
       stampWarMetrics: deps.stampWarMetrics,
