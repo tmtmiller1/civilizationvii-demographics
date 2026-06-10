@@ -354,6 +354,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="fr_FR"><Text>Au premier contact</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="fr_FR"><Text>Commencer le suivi des statistiques à la rencontre d'une nouvelle civilisation</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="fr_FR"><Text>Impact cumulé sur toutes les phases</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="fr_FR"><Text>Impact total des crises sur tous les âges</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="fr_FR">
             <Text>Début de la crise</Text>
         </Replace>

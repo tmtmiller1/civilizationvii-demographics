@@ -39,7 +39,8 @@ export function applyMetricScale(metric, value, scaleCtx, playerCtx, elog) {
 /**
  * Compute all configured metrics for one player context.
  * @param {PlayerCtx} playerCtx Per-civ context.
- * @param {number} turn Current turn.
+ * @param {number} turn Monotonic chart turn (NOT age-local) used by the
+ *   era-scaling metrics, so GDP/Population stay continuous across age boundaries.
  * @param {(label: string, e: any) => void} tripIfTooMany Error hook.
  * @param {( ...a: any[] ) => void} elog Error logger.
  * @returns {Record<string, number>} Metric id -> value map.

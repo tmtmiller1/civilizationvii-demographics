@@ -354,6 +354,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="es_ES"><Text>Al primer contacto</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="es_ES"><Text>Comenzar a registrar estadísticas al conocer una nueva civilización</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="es_ES"><Text>Impacto acumulado en todas las etapas</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="es_ES"><Text>Impacto total de las crisis en todas las eras</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="es_ES">
             <Text>Comienza la crisis</Text>
         </Replace>

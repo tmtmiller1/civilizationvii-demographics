@@ -17,8 +17,10 @@ import {
   collectTechAndCivicCounts,
   collectTradeRoutes,
   collectYieldsAndSizes,
+  computeNodeBaselines,
   getCurrentAgeType,
-  resetAgeCaches
+  resetAgeCaches,
+  setNodeBaselineByPid
 } from "/demographics/ui/sampler/sampler-collectors-economy.js";
 import {
   collectMilitaryPower,
@@ -559,4 +561,13 @@ export function buildMinorMilitaryCtx(id) {
   return ctx;
 }
 
-export { getCurrentAgeType, resetAgeCaches, safeCall, safeNum, getLocalPlayerID, getPlayer };
+export {
+  getCurrentAgeType,
+  resetAgeCaches,
+  computeNodeBaselines,
+  setNodeBaselineByPid,
+  safeCall,
+  safeNum,
+  getLocalPlayerID,
+  getPlayer
+};

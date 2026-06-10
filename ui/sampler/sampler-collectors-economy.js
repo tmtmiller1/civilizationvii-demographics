@@ -360,16 +360,102 @@ export function collectContinent(ctx, cityList) {
   });
 }
 
+// Per-pid cumulative tech/civic baseline for the CURRENT sample: the sum of
+// completed nodes from all PRIOR ages. Each Civ7 age has its own fresh tech /
+// culture tree, so the live engine count (current-age trees only) restarts at 0
+// every age. Adding this baseline keeps Techs/Civics - and the score fallback
+// that reads them - continuous across age boundaries. Set once per sample by
+// the sampler (see computeNodeBaselines); read here per pid.
+/** @type {Record<string, { techs: number, civics: number }> | null} */
+let _nodeBaselineByPid = null;
+
 /**
- * Count fully-unlocked tech + culture nodes and store them on `ctx`.
+ * Set the per-pid cumulative tech/civic baseline for the current sample.
+ * @param {Record<string, { techs: number, civics: number }> | null} map Baseline
+ *   map keyed by pid, or null to clear (treated as all-zero).
+ */
+export function setNodeBaselineByPid(map) {
+  _nodeBaselineByPid = map && typeof map === "object" ? map : null;
+}
+
+/**
+ * Resolve one pid's cumulative tech/civic baseline, defaulting to zeros.
+ * @param {Pid} id The player id.
+ * @returns {{ techs: number, civics: number }} Prior-age completed-node totals.
+ */
+function nodeBaselineFor(id) {
+  const m = _nodeBaselineByPid;
+  const b = m ? m[String(id)] || m[/** @type {*} */ (id)] : undefined;
+  return {
+    techs: b && typeof b.techs === "number" ? b.techs : 0,
+    civics: b && typeof b.civics === "number" ? b.civics : 0
+  };
+}
+
+/**
+ * Compute each pid's cumulative tech/civic baseline from history: the highest
+ * stored techsCount/civicsCount across all samples from EARLIER ages (any age
+ * other than the one being sampled now). Stored counts are themselves
+ * cumulative and only grow within an age, so taking the max is robust to
+ * old-sample decimation. Untagged (age-less) legacy samples are ignored so they
+ * can never be mistaken for a prior age relative to the first (Antiquity) age.
+ * @param {*} samples The persisted sample stream (array; tolerates undefined).
+ * @param {string | undefined} currentAge The age being sampled now.
+ * @returns {Record<string, { techs: number, civics: number }>} Per-pid baseline.
+ */
+export function computeNodeBaselines(samples, currentAge) {
+  /** @type {Record<string, { techs: number, civics: number }>} */
+  const out = {};
+  if (!Array.isArray(samples) || typeof currentAge !== "string") return out;
+  for (const s of samples) foldNodeBaselineSample(out, s, currentAge);
+  return out;
+}
+
+/**
+ * Fold one prior-age sample's per-pid tech/civic counts into the running max
+ * baseline. No-ops for the current age, untagged, or player-less samples.
+ * @param {Record<string, { techs: number, civics: number }>} out Baseline map (mutated).
+ * @param {*} s One persisted sample.
+ * @param {string} currentAge The age being sampled now.
+ */
+function foldNodeBaselineSample(out, s, currentAge) {
+  if (!s || typeof s.age !== "string" || s.age === currentAge || !s.players) return;
+  for (const pid of Object.keys(s.players)) {
+    const m = s.players[pid] && s.players[pid].metrics;
+    if (m) bumpBaselineMax(out[pid] || (out[pid] = { techs: 0, civics: 0 }), m);
+  }
+}
+
+/**
+ * Raise a pid's running tech/civic baseline to the max seen so far. Reads the
+ * STORED metric keys (`metrics.techs` / `metrics.civics` - the metric ids set by
+ * computeMetrics), NOT the `*Count` ctx field names; those stored values are
+ * themselves already cumulative under this scheme.
+ * @param {{ techs: number, civics: number }} cur The pid's baseline (mutated).
+ * @param {*} m One sample's metric map for that pid.
+ */
+function bumpBaselineMax(cur, m) {
+  if (typeof m.techs === "number" && m.techs > cur.techs) cur.techs = m.techs;
+  if (typeof m.civics === "number" && m.civics > cur.civics) cur.civics = m.civics;
+}
+
+/**
+ * Count fully-unlocked tech + culture nodes and store them on `ctx`, made
+ * cumulative across ages by adding the prior-age baseline (see
+ * {@link computeNodeBaselines}). When the current age's tree handle isn't ready
+ * yet (e.g. turn 1 of a new age), the count holds at the baseline rather than
+ * dipping back toward zero.
  * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
  * @param {Pid} id The player id.
  */
 export function collectTechAndCivicCounts(ctx, id) {
+  const base = nodeBaselineFor(id);
   const techsN = countCompletedNodes(id, "Techs");
-  if (typeof techsN === "number") ctx.techsCount = techsN;
+  if (typeof techsN === "number") ctx.techsCount = techsN + base.techs;
+  else if (base.techs > 0) ctx.techsCount = base.techs;
   const civicsN = countCompletedNodes(id, "Culture");
-  if (typeof civicsN === "number") ctx.civicsCount = civicsN;
+  if (typeof civicsN === "number") ctx.civicsCount = civicsN + base.civics;
+  else if (base.civics > 0) ctx.civicsCount = base.civics;
 }
 
 /**

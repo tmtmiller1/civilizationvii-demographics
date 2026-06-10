@@ -568,6 +568,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE">
             <Text>Cumulative impact across all stages</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL">
+            <Text>Overall crisis impact across all ages</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS">
             <Text>Crisis Begins</Text>
         </Row>
