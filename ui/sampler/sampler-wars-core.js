@@ -45,10 +45,11 @@ function mergeWarParticipants(list, live, turn) {
   for (const r of live) {
     const e = list.find((x) => x.pid === r.pid);
     if (e) {
-      e.civ = r.civ;
+      // Do NOT overwrite e.civ / e.civTypeString: a player's civ changes each age, and these are
+      // pinned to the war's start age (re-derived in migrateWarRecords from the start sample).
+      // Refreshing them from the live (current-age) roster is what mislabeled cross-age wars.
       e.leader = r.leader;
       e.color = r.color;
-      e.civTypeString = r.civTypeString;
       e.isCS = r.isCS;
       e.active = true;
       delete e.leaveTurn;
@@ -282,7 +283,7 @@ export function runWarTracker(snapshot, turn, history) {
     const caller = history || null;
     const h = resolveWarHistory(caller);
     const wars = h.wars || [];
-    migrateWarRecords(snapshot, wars);
+    migrateWarRecords(snapshot, wars, h.samples);
     const gameYear = readTurnDate();
     const allPlayers = typeof Players?.getAlive === "function" ? Players.getAlive() : null;
     if (!Array.isArray(allPlayers)) return;

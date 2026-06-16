@@ -1,0 +1,10 @@
+{
+  "all": true,
+  "src": ["ui"],
+  "include": ["ui/**/*.js"],
+  "exclude": ["tests/**", "**/*.d.ts"],
+  "reporter": ["text", "text-summary", "json-summary"],
+  "report-dir": "coverage",
+  "clean": true,
+  "skip-full": false
+}

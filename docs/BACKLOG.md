@@ -9,15 +9,25 @@ across all stages" block (and likely its per-stage tables) eventually shows only
 one populated row — "Military Power (Current)" — while the loss columns
 (Population / Crop / Production Lost, etc.) go blank.
 
-**Status:** Partially addressed. The age-boundary windowing bugs are fixed —
-each crisis is now bounded within its own age (`crisisStageSegments` +
-`ageLastTurns` in
-[crisis-stage-data.js](../ui/screen-demographics/charts/crises/crisis-stage-data.js)),
-windows are age-scoped (`groupCtx` in
-[chart-crisis-stages.js](../ui/screen-demographics/charts/crises/chart-crisis-stages.js)),
-and phantom next-age crises from a lingering crisis stage are suppressed
-(onset "arming" in `crisisStageOnsets`). The remaining thin-out is a separate
-cause.
+**Status:** RESOLVED for the cumulative + cross-age overall blocks (the confirmed
+symptom). Diagnosis confirmed in code as **sample decimation** (below), not a
+windowing bug: the loss figures route through `sumDeclines` (needs ≥2 dense
+samples → null/"—" otherwise) while Military Power uses `lastFinite` (survives on
+one sample). Fix: each age's per-civ **cumulative crisis cost is snapshotted at
+the age boundary**, while that age's samples are still dense, mirroring the
+triumph snapshot (`_snapshotCrisisCost` in
+[sampler-age-boundary.js](../ui/sampler/sampler-age-boundary.js) →
+`history.crisisSnapshots[age]`). The render prefers the snapshot for a finished
+age (`buildAgeCrisisCols` / `mergeAgeCols` in the new
+[crisis-cost-model.js](../ui/screen-demographics/charts/crises/crisis-cost-model.js)),
+falling back to live computation for the current age. Earlier age-boundary
+windowing bugs were already fixed (`crisisStageSegments` + `ageLastTurns`;
+age-scoped `groupCtx`; onset "arming" in `crisisStageOnsets`).
+
+**Remaining:** the per-STAGE tables still recompute live, so a heavily-decimated
+finished age could still thin its per-stage (not cumulative) loss columns. The
+cumulative is snapshot-backed; extend the same snapshot to per-stage windows if a
+screenshot confirms the per-stage tables are also sparse.
 
 **Leading hypothesis:** sample decimation. Old samples are thinned as the game
 grows to cap save size (see `ui/storage/storage-cap.js` /
