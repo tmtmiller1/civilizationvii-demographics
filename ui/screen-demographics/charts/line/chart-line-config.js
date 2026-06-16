@@ -135,7 +135,7 @@ export function buildLineChartConfig(parts) {
       parsing: false,
       normalized: true,
       interaction: { mode: "nearest", intersect: false, axis: "x" },
-      plugins: buildChartPluginsOpts(formatters),
+      plugins: buildChartPluginsOpts(formatters, metricMeta),
       scales: buildChartScalesOpts(metricMeta, formatters)
     }
   };
@@ -144,9 +144,10 @@ export function buildLineChartConfig(parts) {
 /**
  * Build the Chart.js `options.plugins` block (legend / tooltip / title).
  * @param {AxisFormatters} formatters The axis tick formatters.
+ * @param {*} [metricMeta] Optional metric metadata.
  * @returns {Record<string, *>} The plugins options block.
  */
-function buildChartPluginsOpts(formatters) {
+function buildChartPluginsOpts(formatters, metricMeta) {
   const { fmtX, fmtY } = formatters;
   return {
     // The civ legend is rendered as a custom HTML list beside the chart
@@ -160,7 +161,7 @@ function buildChartPluginsOpts(formatters) {
       // gradient native tooltips use. Each row gets a small leader icon next
       // to the civ label.
       enabled: false,
-      external: makeTooltipExternal(fmtX, fmtY)
+      external: makeTooltipExternal(fmtX, fmtY, metricMeta)
     },
     // The chart already has an HTML title above it (buildChartTitle); the
     // Chart.js canvas title would be a redundant second title, so it's off.

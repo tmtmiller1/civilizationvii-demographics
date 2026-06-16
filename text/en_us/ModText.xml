@@ -781,6 +781,12 @@
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD">
             <Text>Directed to War</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES">
+            <Text>Refugees</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES">
+            <Text>Population displaced by siege, pillage, or conquest during the war and resettled elsewhere — contributed by the Emigration mod when it is installed.</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER">
             <Text>Your standing Military Power — the total combat strength of your army — at the end of the war (or the latest turn while it is ongoing). This is the size of your forces, not a loss; "Military Power Lost" below tracks the casualties.</Text>
         </Row>
