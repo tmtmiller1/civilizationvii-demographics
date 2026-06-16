@@ -590,4 +590,92 @@ export function getMetric(id) {
   return /** @type {MetricDef} */ (METRICS.find((m) => m.id === id) || METRICS[0]);
 }
 
+// ── Companion-mod extension API (inert unless another mod calls it) ────────
+// Lets a separate mod (e.g. "emigration") contribute a metric that flows through
+// the normal sample → store → line-chart pipeline. Pushed metrics are picked up
+// live by the sampler (computeMetrics iterates METRICS each turn); page
+// placements are applied by view-history at render time. Nothing here runs unless
+// an external mod invokes the API, so the base mod's behavior is unchanged.
+
+/**
+ * Pending external page placements: {pageId, metricId}. view-history merges
+ * these into PAGES at render (kept here so the API lives in one boot-loaded
+ * module regardless of when the screen's view modules evaluate).
+ * @type {{pageId:string, metricId:string, afterMetricId:(string|null)}[]}
+ */
+export const EXTERNAL_PAGE_METRICS = [];
+
+/**
+ * Register an external metric into the live registry (ignored if its id is
+ * already present). Surfacing it as a graph also needs registerMetricToPage.
+ * @param {*} spec A metric spec ({id,label,title,category,accessor,format,...}).
+ * @returns {boolean} Whether it was added.
+ */
+export function registerMetric(spec) {
+  if (!spec || typeof spec.id !== "string") return false;
+  if (METRICS.find((m) => m.id === spec.id)) return false;
+  METRICS.push(spec);
+  return true;
+}
+
+/**
+ * Request that a metric id appear on a page's tab row.
+ * @param {string} pageId A PAGES id (e.g. "power").
+ * @param {string} metricId A metric id registered via registerMetric.
+ * @param {string} [afterMetricId] Place the tab immediately after this metric id on
+ *   the page (e.g. "population"); appended at the end when omitted or not found.
+ * @returns {boolean} Whether the placement was recorded.
+ */
+export function registerMetricToPage(pageId, metricId, afterMetricId) {
+  if (typeof pageId !== "string" || typeof metricId !== "string") return false;
+  if (EXTERNAL_PAGE_METRICS.some((e) => e.pageId === pageId && e.metricId === metricId)) {
+    return false;
+  }
+  EXTERNAL_PAGE_METRICS.push({
+    pageId,
+    metricId,
+    afterMetricId: typeof afterMetricId === "string" ? afterMetricId : null
+  });
+  return true;
+}
+
+/**
+ * Pending external dashboard PANELS. Unlike registerMetricToPage (which adds a line-chart tab to an
+ * existing page), a panel is a whole companion-owned page whose body the companion renders itself —
+ * the screen just hands it a container. Consumed by view-history at render time.
+ * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function}[]}
+ */
+export const EXTERNAL_PANELS = [];
+
+/**
+ * Register an external dashboard panel as its own page. `spec.render(container, ctx)` is invoked by
+ * the screen to fill the page body (the companion owns all of it). Ignored on a duplicate id.
+ * @param {*} spec A panel spec ({id, pageLabel, tabLabel, title, render}).
+ * @returns {boolean} Whether it was added.
+ */
+export function registerPanel(spec) {
+  if (!spec || typeof spec.id !== "string" || typeof spec.render !== "function") return false;
+  if (EXTERNAL_PANELS.some((p) => p.id === spec.id)) return false;
+  EXTERNAL_PANELS.push(spec);
+  return true;
+}
+
+const _api = (/** @type {*} */ (globalThis).DemographicsMetricsAPI ??= {});
+_api.registerMetric = registerMetric;
+_api.registerMetricToPage = registerMetricToPage;
+_api.registerPanel = registerPanel;
+// This module is imported lazily (the sampler is dynamic-imported after
+// engine.whenReady), so a companion mod may have booted first and queued its
+// registrations on `pending`. Drain them now that the real API exists. This
+// makes the handshake order-independent: whoever loads second completes it.
+if (Array.isArray(_api.pending)) {
+  for (const job of _api.pending.splice(0)) {
+    try {
+      job(_api);
+    } catch (_) {
+      /* a companion mod's registration must never break ours */
+    }
+  }
+}
+
 dlog("metrics module loaded; registry size=", METRICS.length);

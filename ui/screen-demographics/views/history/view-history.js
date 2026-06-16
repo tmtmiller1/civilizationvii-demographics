@@ -14,7 +14,11 @@
 // exportHistoryAsCsv) is preserved by re-exporting the relocated symbols here.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
+import {
+  getMetric,
+  EXTERNAL_PAGE_METRICS,
+  EXTERNAL_PANELS
+} from "/demographics/ui/metrics/demographics-metrics.js";
 import {
   buildPageTabRow,
   buildMetricTabRow,
@@ -315,6 +319,62 @@ function buildChartHost(host, ctx, activeMetric, turnRange) {
 }
 
 /**
+ * Fold any companion-mod page placements (registerMetricToPage) into PAGES and
+ * return PAGES. Idempotent and called each render, so it applies regardless of
+ * when the external mod registered relative to this module loading.
+ * @returns {typeof PAGES} The (possibly augmented) PAGES array.
+ */
+function mergeExternalPageMetrics() {
+  mergeExternalPanels();
+  for (const e of EXTERNAL_PAGE_METRICS) {
+    const page = PAGES.find((p) => p.id === e.pageId);
+    if (!page || !Array.isArray(page.metrics) || page.metrics.includes(e.metricId)) continue;
+    const at = e.afterMetricId ? page.metrics.indexOf(e.afterMetricId) : -1;
+    if (at >= 0) page.metrics.splice(at + 1, 0, e.metricId);
+    else page.metrics.push(e.metricId);
+  }
+  return PAGES;
+}
+
+/**
+ * Fold any companion-mod PANELS (registerPanel) into PAGES: each becomes its own page with a single
+ * synthetic metric that routes to the companion's render callback (handled in the chart-render
+ * dispatch). Idempotent; called each render so it applies regardless of registration order.
+ */
+/**
+ * Register a synthetic-metric entry for an external panel (so the screen treats its single tab as
+ * renderable and titled), if not already present.
+ * @param {*} panel The external panel spec.
+ */
+function ensureExternalSynthetic(panel) {
+  if (SYNTHETIC_METRICS[panel.id]) return;
+  SYNTHETIC_METRICS[panel.id] = {
+    label: panel.tabLabel || "View",
+    title: panel.title || panel.pageLabel || panel.id
+  };
+}
+
+function mergeExternalPanels() {
+  for (const panel of EXTERNAL_PANELS) {
+    if (!panel || typeof panel.id !== "string") continue;
+    ensureExternalSynthetic(panel);
+    if (PAGES.some((p) => p.id === panel.id)) continue;
+    const label = panel.pageLabel || panel.title || panel.id;
+    PAGES.push({ id: panel.id, label, metrics: [panel.id] });
+  }
+}
+
+/**
+ * Whether `id` is a companion-registered external panel (a whole-page custom render), for which the
+ * time-range filter and CSV toolbar don't apply.
+ * @param {string} id The metric/panel id.
+ * @returns {boolean} True if external.
+ */
+function isExternalPanel(id) {
+  return EXTERNAL_PANELS.some((p) => p.id === id);
+}
+
+/**
  * Render the Historical Data view into `host`: clears the host, then builds the
  * page tab row, metric tab row, chart title + captions, time-range filter row,
  * toolbar, and chart host in their fixed display order.
@@ -325,7 +385,8 @@ export function render(host, ctx) {
   clearHost(host);
 
   // ── Page tab row ────────────────────────────────────────────────────
-  const activePage = resolveActivePageState(ctx, PAGES);
+  // mergeExternalPageMetrics() folds in companion-mod panels (whole pages) + metric placements.
+  const activePage = resolveActivePageState(ctx, mergeExternalPageMetrics());
   buildPageTabRow(host, ctx, activePage);
 
   // ── Metric tab row (for the active page) ───────────────────────────
@@ -366,7 +427,7 @@ export function render(host, ctx) {
   // Stages tables show fixed per-stage windows, so the current-age/year time
   // filter would be misleading - hide it there.
   const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
-  if (!TIME_FILTER_HIDDEN_FOR.has(activeMetric)) {
+  if (!TIME_FILTER_HIDDEN_FOR.has(activeMetric) && !isExternalPanel(activeMetric)) {
     const filterRow = buildTimeFilterRow(activeFilter, (id) => {
       if (typeof ctx.setActiveTimeFilter === "function") ctx.setActiveTimeFilter(id);
     });
@@ -374,7 +435,8 @@ export function render(host, ctx) {
   }
 
   // ── Toolbar: viewer dropdown (resources only), focus-clear, CSV ──
-  buildToolbar(host, ctx, activeMetric);
+  // Skipped for external panels (the companion owns the body; CSV/focus don't apply).
+  if (!isExternalPanel(activeMetric)) buildToolbar(host, ctx, activeMetric);
 
   // ── Chart host ─────────────────────────────────────────────────────
   buildChartHost(host, ctx, activeMetric, turnRange);

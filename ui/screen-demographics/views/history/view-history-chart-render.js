@@ -2,6 +2,8 @@
 //
 // Chart host and render routing for the Historical Data view.
 
+import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+
 /**
  * @typedef {{ min: number, max: number }} TurnRange
  */
@@ -53,8 +55,29 @@ function measureChartSize(chartHost) {
  * @param {{ width: number, height: number }} size Chart size.
  */
 function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
+  if (tryRenderExternalPanel(chartHost, ctx, activeMetric)) return;
   if (tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size)) return;
   renderStandardChart(chartHost, ctx, activeMetric, turnRange, size);
+}
+
+/**
+ * Render a companion-registered external panel (registerPanel) by handing it the chart host. The
+ * companion owns the entire body; a throw inside it must never break the screen.
+ * @param {HTMLElement} chartHost Chart host element.
+ * @param {*} ctx Render context.
+ * @param {string} activeMetric Active metric/panel id.
+ * @returns {boolean} True if an external panel handled it.
+ */
+function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
+  const panel = EXTERNAL_PANELS.find((p) => p.id === activeMetric);
+  if (!panel || typeof panel.render !== "function") return false;
+  try {
+    chartHost.innerHTML = "";
+    panel.render(chartHost, ctx);
+  } catch (e) {
+    if (ctx && typeof ctx.derr === "function") ctx.derr("external panel render:", e);
+  }
+  return true;
 }
 
 /**
