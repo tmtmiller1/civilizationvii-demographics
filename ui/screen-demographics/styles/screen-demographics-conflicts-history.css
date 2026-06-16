@@ -1229,6 +1229,10 @@
 .demographics-line-legend-overlay.demographics-line-legend-overlay-wide {
     left: 7.5rem;
 }
+/* Signed, spelled-out people counts (migration metrics) are wider still: shift further right. */
+.demographics-line-legend-overlay.demographics-line-legend-overlay-extra-wide {
+    left: 9rem;
+}
 /* "Legend" title above the entries. */
 .demographics-line-legend-title {
     font-weight: 700;

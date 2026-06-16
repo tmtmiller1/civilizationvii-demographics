@@ -11,7 +11,8 @@
     "test:civ-color-utils": "node --loader ./tests/loader.mjs ./tests/civ-color-utils.mjs",
     "test:node-baselines": "node --loader ./tests/loader.mjs ./tests/node-baselines.mjs",
     "test:crisis-segments": "node --loader ./tests/loader.mjs ./tests/crisis-segments.mjs",
-    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments"
+    "test:modinfo": "node ./tests/modinfo.mjs",
+    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments && npm run test:modinfo"
   },
   "devDependencies": {
     "esbuild": "^0.28.0",
