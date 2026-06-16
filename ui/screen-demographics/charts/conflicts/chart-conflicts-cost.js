@@ -277,6 +277,17 @@ export const COST_METRICS = [
     label: "LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD",
     blp: "blp:Yield_Production",
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD"
+  },
+  {
+    // Refugees produced during the war — population displaced by siege, pillage, or
+    // conquest — contributed per-civ by the Emigration mod (metrics.refugeesCum).
+    // Accrued (cumulative); renders "— no data" when Emigration isn't installed.
+    id: "refugeesCum",
+    key: "refugees",
+    mode: "accrued",
+    label: "LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES",
+    blp: "blp:action_specialists",
+    glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES"
   }
 ];
 

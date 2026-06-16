@@ -79,6 +79,19 @@ const WIDE_Y_LEGEND = new Set([
   "approval"
 ]);
 
+/**
+ * Metrics with EXTRA-wide Y-axis tick labels (signed, spelled-out people counts like
+ * "+240 million" / "-12 thousand"), which need the overlaid legend nudged further right than the
+ * regular wide tier. Externally registered by the Emigration mod.
+ * @type {Set<string>}
+ */
+const EXTRA_WIDE_Y_LEGEND = new Set([
+  "emig_net_migration",
+  "emig_out",
+  "emig_in",
+  "emig_refugees"
+]);
+
 // Line chart - Chart.js implementation.
 // Replaces the prior custom SVG renderer. Chart.js is loaded into Civ7's
 // runtime by the engine (used by <fxs-hof-chart>), so we can instantiate
@@ -625,7 +638,9 @@ function mountPreparedLineChart(args) {
 function buildLegendForMetric(datasets, opts, metricId) {
   if (!datasets.length) return null;
   const legendEl = buildLineLegend(datasets, opts);
-  if (WIDE_Y_LEGEND.has(metricId)) {
+  if (EXTRA_WIDE_Y_LEGEND.has(metricId)) {
+    legendEl.classList.add("demographics-line-legend-overlay-extra-wide");
+  } else if (WIDE_Y_LEGEND.has(metricId)) {
     legendEl.classList.add("demographics-line-legend-overlay-wide");
   }
   return legendEl;
