@@ -2,6 +2,9 @@
 //
 // Age-transition boundary recording extracted from demographics-sampler.js.
 
+import { buildAgeCrisisCols } from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
+import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
+
 /**
  * The persisted history blob as consumed by age-boundary recording.
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").WarHistory} WarHistory
@@ -128,6 +131,24 @@ export function _buildLegacySnapshot(h) {
 }
 
 /**
+ * Snapshot the finished age's per-civ CUMULATIVE crisis cost while its samples are still dense.
+ * The crisis "losses" figures (population/crop/production) are sums of per-turn declines, so they
+ * need dense samples; once old samples are decimated to cap the save, recomputing them from the
+ * thinned stream collapses those columns to "—". Capturing them here lets the Crises page render a
+ * finished age's cumulative impact from the snapshot. No-op when the age had no crisis.
+ * @param {*} h The persisted history blob (mutated).
+ * @param {string} finishedAge The age that just ended.
+ */
+export function _snapshotCrisisCost(h, finishedAge) {
+  if (!h.crisisSnapshots || typeof h.crisisSnapshots !== "object") h.crisisSnapshots = {};
+  const ageSamples = (h.samples || []).filter(
+    (/** @type {*} */ s) => sampleAgeKey(s) === finishedAge
+  );
+  const cols = buildAgeCrisisCols(ageSamples);
+  if (cols.length) h.crisisSnapshots[finishedAge] = cols;
+}
+
+/**
  * Persist the age boundary (deduped across the per-pid stream) plus the
  * age-end triumph snapshot, bumping the cumulative turn-offset bookkeeping.
  * @param {string | undefined} newAge The new age type.
@@ -157,6 +178,7 @@ export function recordAgeBoundary(newAge, turn, deps) {
   const finishedAge = _resolveFinishedAge(h, newAge, turn);
   const snap = _buildLegacySnapshot(h);
   h.legacySnapshots[finishedAge] = snap;
+  _snapshotCrisisCost(h, finishedAge);
   deps.saveHistory(h);
   deps.ilog(
     "appended ageBoundary turn=",

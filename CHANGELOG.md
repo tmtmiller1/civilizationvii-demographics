@@ -7,6 +7,26 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+### Fixed
+- Crisis Impact's per-civ losses (Population / Crop / Production Lost) blanked out
+  to "—" when an earlier age's crisis was viewed from a later age, leaving only
+  Military Power. Those figures are sums of per-turn declines, so they need dense
+  samples — but old samples are decimated as the game grows, and recomputing from
+  the thinned stream loses the dips (while one-sample figures survive). Each age's
+  per-civ **cumulative crisis cost is now snapshotted at the age boundary**, while
+  that age's samples are still dense (alongside the existing triumph snapshot), and
+  the Crises page renders a finished age's cumulative + the cross-age overall block
+  from the snapshot, falling back to live computation for the current age. (Per-stage
+  tables still compute live; the confirmed symptom was the cumulative/overall.)
+- War names used the player's **current-age** civilization instead of the civ
+  they were when the war happened (a player is Han in Antiquity but Qajar in
+  Modern, yet an Antiquity war showed as "Qajar"). War rosters were re-stamped
+  from the live (current) civ every sample — and never cleared on war end — even
+  though a player's civilization changes each age while history persists across
+  ages. Roster civ identity is now pinned to the war's **start age**, re-derived
+  from the recorded sample at the war's start chart-turn, which also corrects
+  existing saves on the next sample.
+
 ### Added
 - Companion-mod metric hook (`globalThis.DemographicsMetricsAPI` with
   `registerMetric` + `registerMetricToPage`). Lets a separate mod contribute a
