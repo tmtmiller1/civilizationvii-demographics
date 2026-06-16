@@ -4,6 +4,18 @@
 import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { getCurrentAgeType } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+
+/**
+ * The tab label for a companion external panel (whose id can't follow the
+ * LOC_DEMOGRAPHICS_METRIC_<ID> convention), or null when `id` isn't one.
+ * @param {string} id Metric/panel id.
+ * @returns {string|null} The panel's own tab label, or null.
+ */
+function externalTabLabel(id) {
+  const p = EXTERNAL_PANELS.find((x) => x.id === id);
+  return p ? p.tabLabel || p.title || id : null;
+}
 
 const DBG = false;
 
@@ -114,6 +126,8 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
   metricBar.setAttribute("tab-item-class", "font-title text-base");
   const metrics = visibleMetricsForAge(page.metrics);
   const metricTabs = metrics.map((mid) => {
+    const ext = externalTabLabel(mid);
+    if (ext) return { id: mid, label: ext };
     const exists = metricExists(mid);
     return {
       id: mid,
@@ -175,10 +189,20 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
     title.textContent = activeMetric;
   }
   host.appendChild(title);
+  // Subtitle: synthetic metrics carry their own; registered metrics opt in with a
+  // LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE key (a brief definition under the title).
+  let subtitle = "";
   if (synthMeta && synthMeta.subtitle) {
+    subtitle = synthMeta.subtitle;
+  } else if (!synthMeta) {
+    const subKey = "LOC_DEMOGRAPHICS_METRIC_" + String(activeMetric).toUpperCase() + "_SUBTITLE";
+    const localized = t(subKey);
+    if (localized && localized !== subKey) subtitle = localized;
+  }
+  if (subtitle) {
     const sub = document.createElement("div");
     sub.className = "demographics-chart-subtitle demographics-history-subtitle font-body text-sm";
-    sub.textContent = synthMeta.subtitle;
+    sub.textContent = subtitle;
     host.appendChild(sub);
   }
 }
