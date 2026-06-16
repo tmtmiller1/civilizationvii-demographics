@@ -146,63 +146,118 @@ function detectCityState(p) {
 }
 
 /**
- * Migrate legacy war records (aPid/bPid scalars) to sideA/sideB arrays and
- * refresh rosters from current pidInfo so the isCS flag reflects current state.
- * @param {Snapshot} snapshot The current snapshot (for pidInfo).
+ * Migrate legacy war records (aPid/bPid scalars) to sideA/sideB arrays and reconcile each side's
+ * roster. Civ identity is pinned to the war's START age: a player's CIVILIZATION changes each age
+ * (the leader is constant) while war history persists across ages, so naming a roster from the
+ * player's CURRENT civ mislabels old wars (e.g. a Han-era war showing the player's Modern civ).
+ * We re-derive each belligerent's civ from the recorded sample at the war's start chart-turn, which
+ * also heals saves that an earlier build already stamped with a later-age civ.
+ * @param {Snapshot} snapshot The current snapshot (transient fields + legacy backfill).
  * @param {WarRecord[]} wars The history.wars array (mutated in place).
+ * @param {Snapshot[]} [samples] The recorded per-turn samples (for start-age civ lookup).
  */
-export function migrateWarRecords(snapshot, wars) {
+export function migrateWarRecords(snapshot, wars, samples) {
   for (const w of wars) {
     migrateWarRecord(w);
-    const open = w.endTurn == null;
-    w.sideACivs = prepareWarSideRoster(
+    const opts = {
       snapshot,
-      w.sideACivs,
-      w.sideA,
-      w.startTurn,
-      open
-    );
-    w.sideBCivs = prepareWarSideRoster(
-      snapshot,
-      w.sideBCivs,
-      w.sideB,
-      w.startTurn,
-      open
-    );
+      startTurn: w.startTurn,
+      warOpen: w.endTurn == null,
+      startPlayers: startSamplePlayers(samples, w)
+    };
+    w.sideACivs = prepareWarSideRoster(w.sideACivs, w.sideA, opts);
+    w.sideBCivs = prepareWarSideRoster(w.sideBCivs, w.sideB, opts);
   }
 }
 
 /**
- * Prepare a war side's cumulative participation roster for the current sample.
- * @param {Snapshot} snapshot The current snapshot.
+ * The recorded players-by-pid map from the sample at (or just before) a war's start chart-turn —
+ * the civ identities as they were when the war began. Null when start data isn't available.
+ * @param {Snapshot[]|undefined} samples The recorded samples.
+ * @param {WarRecord} war The war record.
+ * @returns {Record<string, *>|null} pid → snapshot player at war start, or null.
+ */
+function startSamplePlayers(samples, war) {
+  const target = typeof war.startChartTurn === "number" ? war.startChartTurn : null;
+  if (target == null || !Array.isArray(samples)) return null;
+  const best = findStartSample(samples, target);
+  return best && best.players ? best.players : null;
+}
+
+/**
+ * The sample with the greatest chart-turn at or before `target` (the war's start).
+ * @param {Snapshot[]} samples The recorded samples.
+ * @param {number} target The war's start chart-turn.
+ * @returns {Snapshot|null} The matching sample, or null.
+ */
+function findStartSample(samples, target) {
+  let best = null;
+  let bestTurn = -Infinity;
+  for (const s of samples) {
+    const ct = s.chartTurn;
+    if (typeof ct === "number" && ct <= target && ct > bestTurn) {
+      bestTurn = ct;
+      best = s;
+    }
+  }
+  return best;
+}
+
+/**
+ * Pin a roster entry's civ identity to the war's start age, read from the start sample. No-op when
+ * that data isn't available (then the existing/current value stands).
+ * @param {WarParticipant} e The roster entry (mutated).
+ * @param {Record<string, *>|null} startPlayers pid → snapshot player at war start.
+ */
+function applyHistoricalCiv(e, startPlayers) {
+  const sp = startPlayers ? startPlayers[e.pid] : null;
+  if (!sp) return;
+  if (typeof sp.civTypeString === "string" && sp.civTypeString) e.civTypeString = sp.civTypeString;
+  if (typeof sp.civName === "string" && sp.civName) e.civ = sp.civName;
+}
+
+/**
+ * Prepare a war side's cumulative participation roster for the current sample. Civ identity is
+ * pinned to the war's start age (see migrateWarRecords); only transient fields (leader/color/isCS)
+ * track the live player, and the current snapshot is used only to backfill a missing civ.
  * @param {WarParticipant[]|object[]|undefined} civs The stored side roster.
  * @param {number[]|undefined} pids The side's pid list (for legacy backfill).
- * @param {number|null|undefined} startTurn The war's start turn.
- * @param {boolean} warOpen Whether the war is currently open.
+ * @param {{snapshot:Snapshot, startTurn:(number|null|undefined), warOpen:boolean,
+ *   startPlayers:(Record<string, *>|null)}} opts Reconciliation inputs.
  * @returns {WarParticipant[]} The prepared cumulative roster.
  */
-function prepareWarSideRoster(snapshot, civs, pids, startTurn, warOpen) {
+function prepareWarSideRoster(civs, pids, opts) {
+  const { snapshot, startTurn, warOpen, startPlayers } = opts;
   const list = /** @type {WarParticipant[]} */ (Array.isArray(civs) ? civs : []);
   const hasHistory = list.some((e) => e && typeof e.joinTurn === "number");
   if (!hasHistory) {
     const st = typeof startTurn === "number" ? startTurn : 0;
-    return (pids || []).map((p) => ({
-      ...pidInfo(snapshot, p),
-      joinTurn: st,
-      active: warOpen
-    }));
+    return (pids || []).map((p) => {
+      const entry = { ...pidInfo(snapshot, p), joinTurn: st, active: warOpen };
+      applyHistoricalCiv(entry, startPlayers);
+      return entry;
+    });
   }
   for (const e of list) {
-    if (e.active) {
-      const info = pidInfo(snapshot, e.pid);
-      e.civ = info.civ;
-      e.leader = info.leader;
-      e.color = info.color;
-      e.civTypeString = info.civTypeString;
-      e.isCS = info.isCS;
-    }
+    if (e.active) refreshActiveEntry(e, snapshot);
+    applyHistoricalCiv(e, startPlayers); // authoritative: the civ as it was at war start
   }
   return list;
+}
+
+/**
+ * Refresh an active roster entry's transient fields (leader/color/isCS) from the live player, and
+ * backfill its civ ONLY when missing. Civ identity is pinned by applyHistoricalCiv, not here.
+ * @param {WarParticipant} e The roster entry (mutated).
+ * @param {Snapshot} snapshot The current snapshot.
+ */
+function refreshActiveEntry(e, snapshot) {
+  const info = pidInfo(snapshot, e.pid);
+  e.leader = info.leader;
+  e.color = info.color;
+  e.isCS = info.isCS;
+  if (!e.civ || /^Player\s/.test(e.civ)) e.civ = info.civ;
+  if (!e.civTypeString && info.civTypeString) e.civTypeString = info.civTypeString;
 }
 
 /**

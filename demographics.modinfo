@@ -63,6 +63,7 @@
                     <Item>ui/screen-demographics/charts/shared/chart-shared.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-names.js</Item>
+                    <Item>ui/screen-demographics/charts/triumphs/chart-triumphs-radar-data.js</Item>
                     <Item>ui/screen-demographics/charts/triumphs/chart-triumphs-radar.js</Item>
                     <Item>ui/screen-demographics/charts/resources/chart-resources.js</Item>
                     <Item>ui/screen-demographics/charts/shared/chart-stack-grid.js</Item>
@@ -119,6 +120,7 @@
                     <Item>ui/screen-demographics/charts/wars/chart-wars-naming.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-wars-tooltip.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-stage-data.js</Item>
+                    <Item>ui/screen-demographics/charts/crises/crisis-cost-model.js</Item>
                     <!-- Submodules split out of the modules above during the monolith→focused-module
                          refactors. Imported (statically) by declared modules, so they're listed here
                          to keep ImportFiles a complete, accurate inventory of the mod's JS. -->

@@ -13,7 +13,7 @@ import {
   appendEmptyNotice,
   getXAxisMode
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
-import { COST_METRICS, participantCost } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
+import { participantCost } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { buildCostTable } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost-table.js";
 import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
@@ -24,39 +24,15 @@ import {
   crisisStageSegments,
   sampleAgeKey
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
+import {
+  CRISIS_METRICS,
+  crisisParticipants,
+  groupCrises,
+  buildAgeCrisisCols,
+  toTableCols,
+  mergeAgeCols
+} from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-
-// Cost metrics shown per stage: every war-cost figure EXCEPT production directed
-// to war and settlements razed (both war-specific).
-const CRISIS_METRICS = COST_METRICS.filter(
-  (m) => m.id !== "warProdCum" && m.id !== "razedCum"
-);
-
-/**
- * Every major civ present in the samples within [start, end] (one cost column
- * each), in first-seen order. Iterating `s.players` yields majors only - the
- * sampler stores city-states / independents in a separate `s.minors` map (see
- * sampleMinors in demographics-sampler.js), so no isCS filter is needed here.
- * @param {Snapshot[]} samples The sample stream.
- * @param {number} start The window start turn.
- * @param {number} end The window end turn.
- * @returns {{ pid: number }[]} The participant column entries.
- */
-function crisisParticipants(samples, start, end) {
-  const seen = new Set();
-  const out = [];
-  for (const s of samples) {
-    if (typeof s?.turn !== "number" || s.turn < start || s.turn > end) continue;
-    for (const pid in s.players || {}) {
-      const n = Number(pid);
-      if (!seen.has(n)) {
-        seen.add(n);
-        out.push({ pid: n });
-      }
-    }
-  }
-  return out;
-}
 
 /**
  * Build a turn -> game-year lookup from the samples (for the year/both span modes).
@@ -124,22 +100,56 @@ function buildStageBar(seg, idx, seed, spanText) {
 }
 
 /**
- * Build a per-civ cost-table section over [start, end].
+ * Live per-civ cost-table columns over [start, end] (computed from the samples).
+ * @param {Snapshot[]} samples The sample stream.
+ * @param {number} start Window start turn.
+ * @param {number} end Window end turn.
+ * @returns {*[]} The table columns.
+ */
+function liveCrisisCols(samples, start, end) {
+  return crisisParticipants(samples, start, end).map((p) => ({
+    entry: p,
+    cs: null,
+    cost: participantCost(samples, p, start, end)
+  }));
+}
+
+/**
+ * Wrap pre-built cost columns in a cost-table section element.
+ * @param {*[]} cols The table columns.
+ * @param {Snapshot[]} samples The sample stream (portrait identity fallback).
+ * @returns {HTMLElement} The cost section.
+ */
+function costSection(cols, samples) {
+  const costs = document.createElement("div");
+  costs.className = "demographics-crisis-stage-costs";
+  costs.appendChild(buildCostTable(cols, CRISIS_METRICS, samples, -1));
+  return costs;
+}
+
+/**
+ * Build a live per-civ cost-table section over [start, end].
  * @param {Snapshot[]} samples The sample stream.
  * @param {number} start Window start turn.
  * @param {number} end Window end turn.
  * @returns {HTMLElement} The cost section.
  */
 function buildCostSection(samples, start, end) {
-  const cols = crisisParticipants(samples, start, end).map((p) => ({
-    entry: p,
-    cs: null,
-    cost: participantCost(samples, p, start, end)
-  }));
-  const costs = document.createElement("div");
-  costs.className = "demographics-crisis-stage-costs";
-  costs.appendChild(buildCostTable(cols, CRISIS_METRICS, samples, -1));
-  return costs;
+  return costSection(liveCrisisCols(samples, start, end), samples);
+}
+
+/**
+ * The cumulative cost columns for a crisis group, preferring the age-end SNAPSHOT (persisted while
+ * the finished age's samples were still dense) over recomputing from now-decimated samples — which
+ * is what made the loss columns blank out from a later age.
+ * @param {{ start:number, end:number, sample:Snapshot }} group The crisis run.
+ * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
+ * @returns {*[]} The cost-table columns.
+ */
+function cumulativeCols(group, ctx) {
+  const snap = ctx.crisisSnapshots && ctx.crisisSnapshots[sampleAgeKey(group.sample)];
+  if (Array.isArray(snap)) return toTableCols(snap);
+  return liveCrisisCols(ctx.samples, group.start, group.end);
 }
 
 /**
@@ -167,8 +177,8 @@ function buildStageBlock(seg, ctx) {
  * "Ends" (stage 4) sample was ever captured — the engine often resolves a crisis
  * straight from "Culminates" without a stage-4 reading, so gating on stage 4
  * silently dropped the cumulative table.
- * @param {{ start: number, end: number }} group The crisis run.
- * @param {{ samples: Snapshot[] }} ctx Render context.
+ * @param {{ start: number, end: number, sample: Snapshot }} group The crisis run.
+ * @param {{ samples: Snapshot[], crisisSnapshots?: Record<string, *[]> }} ctx Render context.
  * @returns {HTMLElement} The cumulative block.
  */
 function buildCumulativeBlock(group, ctx) {
@@ -178,36 +188,8 @@ function buildCumulativeBlock(group, ctx) {
   cap.className = "demographics-crisis-cumulative-caption";
   cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE");
   block.appendChild(cap);
-  block.appendChild(buildCostSection(ctx.samples, group.start, group.end));
+  block.appendChild(costSection(cumulativeCols(group, ctx), ctx.samples));
   return block;
-}
-
-/**
- * Split the flat stage segments into per-crisis runs. A new crisis begins at each
- * stage-1 onset (crisis_stage resets to 0 between ages, so the next age's crisis
- * starts a fresh run) - which lets the page separate each age's crisis.
- * @param {{ stage:number, start:number, end:number, sample:Snapshot }[]} segments The segments.
- * @returns {{ segments:any[], start:number, end:number, sample:Snapshot }[]} The crisis groups.
- */
-function groupCrises(segments) {
-  /** @type {{ segments:any[], start:number, end:number, sample:Snapshot, age:* }[]} */
-  const groups = [];
-  /** @type {{ segments:any[], start:number, end:number, sample:Snapshot, age:* }|null} */
-  let cur = null;
-  for (const seg of segments) {
-    const age = seg.sample && seg.sample.age;
-    // Start a fresh crisis run at each stage-1 onset OR whenever the age changes —
-    // each age has its own crisis, so the Antiquity and Exploration crises always
-    // get their own group (and thus their own cumulative-impact table), even if a
-    // crisis's stage 1 wasn't captured.
-    if (!cur || seg.stage === 1 || age !== cur.age) {
-      cur = { segments: [], start: seg.start, end: seg.end, sample: seg.sample, age };
-      groups.push(cur);
-    }
-    cur.segments.push(seg);
-    cur.end = seg.end;
-  }
-  return groups;
 }
 
 /**
@@ -247,57 +229,36 @@ function groupCtx(ctx, group) {
   return { ...ctx, samples: gSamples, yearMap: buildYearMap(gSamples) };
 }
 
-// m.key -> reduction mode, for summing each cost metric across crises.
-/** @type {Record<string, string>} */
-const COST_KEY_MODE = {};
-for (const m of CRISIS_METRICS) COST_KEY_MODE[m.key] = m.mode;
-
 /**
- * Merge one crisis's per-metric cost figures into an accumulator: summable modes
- * (losses / net / accrued / spent) add up; a "level" metric (standing Military
- * Power) is a snapshot, not a flow, so the latest crisis's value wins.
- * @param {Record<string, number>} acc The running per-metric accumulator (mutated).
- * @param {Record<string, number|null>} add One crisis's per-metric cost.
+ * One age's cumulative crisis cost columns (raw {pid,leaderType,color,cost}), preferring the
+ * persisted age-end snapshot over recomputing from now-decimated samples.
+ * @param {string} age The age key.
+ * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
+ * @returns {*[]} The age's cumulative cost columns.
  */
-function mergeCost(acc, add) {
-  for (const key of Object.keys(add)) {
-    const v = add[key];
-    if (typeof v !== "number" || !isFinite(v)) continue;
-    if (COST_KEY_MODE[key] === "level") acc[key] = v;
-    else acc[key] = (typeof acc[key] === "number" ? acc[key] : 0) + v;
-  }
+function ageOverallCols(age, ctx) {
+  const snap = ctx.crisisSnapshots && ctx.crisisSnapshots[age];
+  if (Array.isArray(snap)) return snap;
+  return buildAgeCrisisCols(ctx.samples.filter((s) => sampleAgeKey(s) === age));
 }
 
 /**
- * Aggregate every participant's cost across all crisis groups into cost-table
- * columns, each crisis windowed within its own age.
- * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
- * @param {Snapshot[]} samples The full sample stream.
- * @returns {{ entry: { pid: number }, cs: null, cost: Record<string, number> }[]} The columns.
+ * Aggregate every participant's cost across all ages' crises into cost-table columns: each age's
+ * cumulative (snapshot or live) merged by pid.
+ * @param {{ sample: Snapshot }[]} groups The crisis groups.
+ * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
+ * @returns {*[]} The overall table columns.
  */
-function aggregateOverallCols(groups, samples) {
-  /** @type {Map<number, { entry: { pid:number }, cs: null, cost: Record<string, number> }>} */
-  const byPid = new Map();
-  for (const group of groups) {
-    const age = sampleAgeKey(group.sample);
-    const gSamples = samples.filter((s) => sampleAgeKey(s) === age);
-    for (const p of crisisParticipants(gSamples, group.start, group.end)) {
-      let col = byPid.get(p.pid);
-      if (!col) {
-        col = { entry: { pid: p.pid }, cs: null, cost: {} };
-        byPid.set(p.pid, col);
-      }
-      mergeCost(col.cost, participantCost(gSamples, p, group.start, group.end));
-    }
-  }
-  return Array.from(byPid.values());
+function aggregateOverallCols(groups, ctx) {
+  const ages = [...new Set(groups.map((g) => sampleAgeKey(g.sample)))];
+  return mergeAgeCols(ages.map((age) => ageOverallCols(age, ctx)));
 }
 
 /**
  * Build the gated OVERALL cumulative block summing every age's crisis. Only
  * meaningful once crises span more than one age, so the caller renders it solely
  * when a second age's crisis (e.g. Exploration) exists.
- * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
+ * @param {{ sample: Snapshot }[]} groups The crisis groups.
  * @param {{ samples: Snapshot[] }} ctx Render context (full samples, for identity).
  * @returns {HTMLElement} The overall block.
  */
@@ -309,12 +270,7 @@ function buildOverallBlock(groups, ctx) {
   cap.className = "demographics-crisis-cumulative-caption";
   cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_OVERALL");
   block.appendChild(cap);
-  const costs = document.createElement("div");
-  costs.className = "demographics-crisis-stage-costs";
-  costs.appendChild(
-    buildCostTable(aggregateOverallCols(groups, ctx.samples), CRISIS_METRICS, ctx.samples, -1)
-  );
-  block.appendChild(costs);
+  block.appendChild(costSection(aggregateOverallCols(groups, ctx), ctx.samples));
   return block;
 }
 
@@ -329,6 +285,15 @@ function appendOverallBlock(panel, groups, ctx) {
   const ages = new Set(groups.map((g) => sampleAgeKey(g.sample)));
   if (ages.size < 2) return;
   panel.appendChild(buildOverallBlock(groups, ctx));
+}
+
+/**
+ * The persisted per-age crisis-cost snapshots from the history blob (empty when none).
+ * @param {*} history The history blob.
+ * @returns {Record<string, *[]>} Age key → cumulative cost columns.
+ */
+function historyCrisisSnapshots(history) {
+  return (history && history.crisisSnapshots) || {};
 }
 
 /**
@@ -354,7 +319,11 @@ export function renderCrisisStages(host, opts) {
     samples,
     seed: getGameSeed(),
     yearMap: buildYearMap(samples),
-    mode: getXAxisMode()
+    mode: getXAxisMode(),
+    // Per-age cumulative crisis costs captured at each age boundary (while that age's samples were
+    // still dense). The cumulative + overall blocks prefer these for a finished age, so its loss
+    // columns survive later sample decimation. Absent for the current (ongoing) age → live compute.
+    crisisSnapshots: historyCrisisSnapshots(history)
   };
   const groups = groupCrises(crisisStageSegments(onsets, latestTurn, ageLastTurns(samples)));
   const panel = document.createElement("div");
