@@ -119,6 +119,52 @@
                     <Item>ui/screen-demographics/charts/wars/chart-wars-naming.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-wars-tooltip.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-stage-data.js</Item>
+                    <!-- Submodules split out of the modules above during the monolith→focused-module
+                         refactors. Imported (statically) by declared modules, so they're listed here
+                         to keep ImportFiles a complete, accurate inventory of the mod's JS. -->
+                    <Item>ui/core/demographics-csv.js</Item>
+                    <Item>ui/metrics/demographics-metrics-helpers.js</Item>
+                    <Item>ui/sampler/sampler-age-boundary-deps.js</Item>
+                    <Item>ui/sampler/sampler-age-context.js</Item>
+                    <Item>ui/sampler/sampler-chart-turn.js</Item>
+                    <Item>ui/sampler/sampler-event-gate.js</Item>
+                    <Item>ui/sampler/sampler-game-readers.js</Item>
+                    <Item>ui/sampler/sampler-minors.js</Item>
+                    <Item>ui/sampler/sampler-player-ids.js</Item>
+                    <Item>ui/sampler/sampler-players.js</Item>
+                    <Item>ui/sampler/sampler-registration.js</Item>
+                    <Item>ui/sampler/sampler-runtime-state.js</Item>
+                    <Item>ui/sampler/sampler-sample-lifecycle.js</Item>
+                    <Item>ui/sampler/sampler-snapshot-build.js</Item>
+                    <Item>ui/sampler/sampler-snapshot-helpers.js</Item>
+                    <Item>ui/sampler/sampler-turn-gate.js</Item>
+                    <Item>ui/sampler/sampler-turn-handler.js</Item>
+                    <Item>ui/screen-demographics/camera/city-camera-controller-utils.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-timeline-overlays.js</Item>
+                    <Item>ui/screen-demographics/charts/wars/chart-war-graphs-hover.js</Item>
+                    <Item>ui/screen-demographics/charts/wars/chart-wars-gantt-bars.js</Item>
+                    <Item>ui/screen-demographics/charts/wars/chart-wars-gantt-domain.js</Item>
+                    <Item>ui/screen-demographics/charts/wars/chart-wars-gantt-interactions.js</Item>
+                    <Item>ui/screen-demographics/screen/screen-history-context.js</Item>
+                    <Item>ui/screen-demographics/views/history/history-tables-csv.js</Item>
+                    <Item>ui/screen-demographics/views/history/view-history-chart-render.js</Item>
+                    <Item>ui/screen-demographics/views/history/view-history-state.js</Item>
+                    <Item>ui/screen-demographics/views/options/view-options-actions.js</Item>
+                    <Item>ui/screen-demographics/views/options/view-options-storage-controls.js</Item>
+                    <Item>ui/screen-demographics/views/relations/relations-node-info.js</Item>
+                    <Item>ui/screen-demographics/views/relations/relations-ring-svg-backdrop.js</Item>
+                    <Item>ui/screen-demographics/views/relations/relations-ring-svg-edges.js</Item>
+                    <Item>ui/screen-demographics/views/relations/relations-ring-svg-nodes.js</Item>
+                    <Item>ui/screen-demographics/views/relations/relations-viewer-controls.js</Item>
+                    <Item>ui/screen-demographics/views/settlements/view-settlements-civranking.js</Item>
+                    <Item>ui/screen-demographics/views/settlements/view-settlements-showcase.js</Item>
+                    <Item>ui/screen-demographics/views/settlements/view-settlements-table.js</Item>
+                    <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-table.js</Item>
+                    <Item>ui/storage/storage-backend.js</Item>
+                    <Item>ui/storage/storage-cap.js</Item>
+                    <Item>ui/storage/storage-load.js</Item>
+                    <Item>ui/storage/storage-retention.js</Item>
+                    <Item>ui/storage/storage-schema.js</Item>
                     <Item>images/demographics-icon.svg</Item>
                 </ImportFiles>
                 <UpdateText>

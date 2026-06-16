@@ -89,6 +89,22 @@ export function buildSnapshotPlayer(playerCtx, metrics) {
 }
 
 /**
+ * The cumulative refugees a civ has produced, from the Emigration mod's EmigrationData
+ * hook (if installed), else undefined.
+ * @param {number} playerId Player id.
+ * @returns {number|undefined} Cumulative refugees, or undefined.
+ */
+function stampEmigrationRefugees(playerId) {
+  try {
+    const api = /** @type {*} */ (globalThis).EmigrationData;
+    const v = api && typeof api.refugeesCumFor === "function" ? api.refugeesCumFor(playerId) : undefined;
+    return typeof v === "number" && isFinite(v) ? v : undefined;
+  } catch (_) {
+    return undefined;
+  }
+}
+
+/**
  * Stamp event-derived war metrics onto a player's metric map.
  * @param {Record<string, number>} metrics Metric map to augment.
  * @param {number} playerId Player id.
@@ -100,6 +116,10 @@ export function stampWarMetrics(metrics, playerId, playerCtx) {
   metrics.warProdCum = getCumulativeWarProd(playerId);
   metrics.cityWarNetCum = getCumulativeCityWarNet(playerId);
   metrics.warLandCum = getCumulativeWarLand(playerId);
+  // Refugees produced by war/disaster/conquest, contributed by the Emigration mod (if
+  // installed). Absent → left unset, which the cost table renders as "— no data".
+  const refugees = stampEmigrationRefugees(playerId);
+  if (typeof refugees === "number") metrics.refugeesCum = refugees;
 
   if (
     typeof playerCtx.totalPopulation === "number" &&
