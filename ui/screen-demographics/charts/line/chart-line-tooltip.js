@@ -91,12 +91,39 @@ export function buildLeaderIconGroup(ds, color) {
 }
 
 /**
- * Build one tooltip row element (icon group + civ label + value).
+ * Append an optional source-attribution line to a tooltip row (for metrics that supply a
+ * `tooltipAttribution` callback, e.g. the Emigration per-cause breakdown). No-op otherwise; a
+ * callback throw is swallowed so a bad attribution can't break the tooltip.
+ * @param {HTMLElement} row The tooltip row element.
+ * @param {*} metricMeta Metric metadata (may carry tooltipAttribution).
+ * @param {*} ds The Chart.js dataset.
+ * @param {string} color The row's (lifted) text color.
+ */
+function appendAttribution(row, metricMeta, ds, color) {
+  if (!metricMeta || typeof metricMeta.tooltipAttribution !== "function") return;
+  try {
+    const att = metricMeta.tooltipAttribution({ id: ds.pidForContext || ds.label });
+    if (!att) return;
+    const attEl = document.createElement("div");
+    attEl.className = "demographics-line-tip-attribution";
+    attEl.style.color = color;
+    attEl.style.fontSize = "0.85em";
+    attEl.style.marginTop = "2px";
+    attEl.textContent = att;
+    row.appendChild(attEl);
+  } catch (_) {
+    // Silently ignore attribution errors
+  }
+}
+
+/**
+ * Build one tooltip row element (icon group + civ label + value + optional source attribution).
  * @param {*} dp One Chart.js tooltip data point.
  * @param {(v: number) => string} fmtY Y-value formatter.
+ * @param {*} [metricMeta] Optional metric metadata with tooltipAttribution callback.
  * @returns {HTMLElement} The row element.
  */
-function buildTooltipRow(dp, fmtY) {
+function buildTooltipRow(dp, fmtY, metricMeta) {
   const ds = dp.dataset;
   const rawColor = typeof ds.borderColor === "string" ? ds.borderColor : "#e5d2ac";
   // Lift dark civ colors (dark blue/purple) so the value column and the
@@ -117,6 +144,7 @@ function buildTooltipRow(dp, fmtY) {
   val.style.color = color;
   val.textContent = fmtY(dp.parsed.y);
   row.appendChild(val);
+  appendAttribution(row, metricMeta, ds, color);
   return row;
 }
 
@@ -160,12 +188,13 @@ function positionChartTooltip(tip, chart, tooltip, wrap) {
 }
 
 /**
- * Build the Chart.js `tooltip.external` handler bound to the axis formatters.
+ * Build the Chart.js `tooltip.external` handler bound to the axis formatters and metric metadata.
  * @param {(v: number) => string} fmtX X-value formatter.
  * @param {(v: number) => string} fmtY Y-value formatter.
+ * @param {*} [metricMeta] Optional metric metadata.
  * @returns {(context: *) => void} The external tooltip handler.
  */
-export function makeTooltipExternal(fmtX, fmtY) {
+export function makeTooltipExternal(fmtX, fmtY, metricMeta) {
   return function (context) {
     const { chart, tooltip } = context;
     const wrap = chart.canvas.parentNode;
@@ -182,7 +211,7 @@ export function makeTooltipExternal(fmtX, fmtY) {
     const dataPoints = sortTooltipDataPoints(tooltip, chart);
     while (tip.firstChild) tip.removeChild(tip.firstChild);
     tip.appendChild(buildTooltipHeader(titleText));
-    for (const dp of dataPoints) tip.appendChild(buildTooltipRow(dp, fmtY));
+    for (const dp of dataPoints) tip.appendChild(buildTooltipRow(dp, fmtY, metricMeta));
     positionChartTooltip(tip, chart, tooltip, wrap);
   };
 }
