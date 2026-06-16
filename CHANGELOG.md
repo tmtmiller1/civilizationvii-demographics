@@ -7,6 +7,23 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+### Added
+- Companion-mod metric hook (`globalThis.DemographicsMetricsAPI` with
+  `registerMetric` + `registerMetricToPage`). Lets a separate mod contribute a
+  metric that flows through the normal sample → store → line-chart pipeline and
+  appears on a chosen Historical Data page. Inert unless another mod calls it, so
+  base behavior is unchanged. The handshake is load-order-independent: this module
+  is dynamic-imported (after `engine.whenReady`), so it drains any registrations a
+  companion mod queued before it loaded. (Used by the companion **Emigration** mod
+  to add a net-migration graph next to Population.)
+- Companion-mod **panel** hook (`DemographicsMetricsAPI.registerPanel`). Beyond a
+  line-chart metric, a companion mod can contribute a whole **page** whose body it
+  renders itself: the Historical Data screen adds it as its own page/tab and hands the
+  companion's `render(container, ctx)` callback a container (the time-filter and CSV
+  toolbar are suppressed for these custom pages). Inert unless called; the base mod
+  gains no dependency on the companion. (Used by **Emigration** to add a dedicated
+  Migration dashboard page.)
+
 ## [1.3.0] - 2026-06-09
 
 ### Fixed
