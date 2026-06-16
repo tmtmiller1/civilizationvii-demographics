@@ -11,10 +11,18 @@
     "test:civ-color-utils": "node --loader ./tests/loader.mjs ./tests/civ-color-utils.mjs",
     "test:node-baselines": "node --loader ./tests/loader.mjs ./tests/node-baselines.mjs",
     "test:crisis-segments": "node --loader ./tests/loader.mjs ./tests/crisis-segments.mjs",
+    "test:wars-civ-naming": "node --loader ./tests/loader.mjs ./tests/wars-civ-naming.mjs",
+    "test:crisis-cost-snapshot": "node --loader ./tests/loader.mjs ./tests/crisis-cost-snapshot.mjs",
     "test:modinfo": "node ./tests/modinfo.mjs",
-    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments && npm run test:modinfo"
+    "test:js": "npm run test:remediation-23 && npm run test:civ-color-utils && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot",
+    "coverage": "c8 npm run test:js",
+    "hotspots": "node scripts/hotspot-score.mjs",
+    "mutation": "stryker run",
+    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot && npm run test:modinfo"
   },
   "devDependencies": {
+    "@stryker-mutator/core": "^9.6.1",
+    "c8": "^11.0.0",
     "esbuild": "^0.28.0",
     "eslint": "^9.0.0",
     "typescript": "^5.4.0"
