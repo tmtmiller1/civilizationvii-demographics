@@ -540,7 +540,7 @@ function rerenderContent(st) {
   while (st.content.firstChild) st.content.removeChild(st.content.firstChild);
   // Civilizations = the per-civ All Civilizations matrix (built from sampled
   // history); the other two are the live settlement rankings. (The old per-city
-  // detail dossier was folded into the Top-25 rows — no separate view.)
+  // detail dossier was folded into the Top-25 rows , no separate view.)
   if (st.subTab === "civranking") {
     renderCivRanking(st);
   } else if (st.subTab === "civilizations") {

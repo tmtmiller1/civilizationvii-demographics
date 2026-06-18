@@ -124,9 +124,9 @@ export function safeCall(label, fn, fb) {
 // ABOUT (food = green, science = blue, culture = purple, trade/gold = gold,
 // production = orange, military = red, diplomacy/influence = teal, happiness =
 // amber), using the game's recognizable yield palette. When several agreements
-// share a category (same color), the DASH STYLE separates them — e.g. both food
+// share a category (same color), the DASH STYLE separates them , e.g. both food
 // deals are green, but one is a long dash and the other a medium dash.
-// (SABOTAGE_RESEARCH is intentionally NOT here — it isn't an agreement.)
+// (SABOTAGE_RESEARCH is intentionally NOT here ; it isn't an agreement.)
 // In-game yield HUES, at full saturation. The earlier pale .text-yield-* pastels
 // all sat at the same low chroma / high value, so the eight categories were nearly
 // indistinguishable on the ring. These keep the game's recognizable yield-color
@@ -172,7 +172,7 @@ export const AGREEMENT_TYPES = [
 
 /**
  * Cooperative agreement types specific to City-States (independents). Befriending
- * (GIVE_INFLUENCE_TOKEN — the influence-token project, confirmed by the base
+ * (GIVE_INFLUENCE_TOKEN , the influence-token project, confirmed by the base
  * befriend-independent screen) plus the suzerain benefit directives. Each is its
  * own filter + uniquely-styled line on the CS ring, mirroring AGREEMENT_TYPES for
  * majors. Trade is built separately (its own economic builder), as for majors.
@@ -235,7 +235,7 @@ export function diplomacyActionLabel(actionName) {
 }
 
 // Per-filter line STYLE token. The renderer supports exactly four visual
-// categories: solid (""), "dashed", "dotted", and — orthogonally — directed edges,
+// categories: solid (""), "dashed", "dotted", and , orthogonally , directed edges,
 // which draw as a solid line with animated arrow chevrons (set via `e.directed`,
 // not here). Coherent ignores SVG stroke-dasharray, so the renderer synthesizes
 // dashes/dots; keeping the token set tiny is what makes them render cleanly.

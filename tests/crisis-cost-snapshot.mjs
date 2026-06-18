@@ -52,7 +52,7 @@ function testDecimationBlanksTheLossLive() {
   const cols = buildAgeCrisisCols(sparse);
   const c = cols.find((x) => x.pid === 7);
   assert.ok(c, "player 7 still present (identity survives)");
-  // The loss can no longer be summed (< 2 points): the figure is blank — null/absent, which the
+  // The loss can no longer be summed (< 2 points): the figure is blank , null/absent, which the
   // cost table renders as "—". (mergeCost drops a null figure, so the key is simply absent.)
   assert.ok(c.cost.popLost == null, "popLost is blank under decimation");
 }

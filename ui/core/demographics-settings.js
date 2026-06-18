@@ -122,7 +122,7 @@ const DEFAULTS = {
   analyticsPolicy: "met-civs-only",
   // ─── UI complexity tier (combined design plan P1.5) ────────────────
   // Progressive-disclosure profile: "basic" (core stat pages only),
-  // "standard" (all pages/tabs; advanced tuning hidden — default), or
+  // "standard" (all pages/tabs; advanced tuning hidden ; default), or
   // "analyst" (everything, including storage/sampling controls).
   uiComplexity: "standard",
   // ─── Met-history reveal mode (sub-option of hideUnmetStats) ─────────

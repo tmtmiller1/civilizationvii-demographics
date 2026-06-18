@@ -140,7 +140,7 @@ function buildCostSection(samples, start, end) {
 
 /**
  * The cumulative cost columns for a crisis group, preferring the age-end SNAPSHOT (persisted while
- * the finished age's samples were still dense) over recomputing from now-decimated samples — which
+ * the finished age's samples were still dense) over recomputing from now-decimated samples , which
  * is what made the loss columns blank out from a later age.
  * @param {{ start:number, end:number, sample:Snapshot }} group The crisis run.
  * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
@@ -172,9 +172,9 @@ function buildStageBlock(seg, ctx) {
 
 /**
  * Build the crisis-wide cumulative-impact block: a caption plus a cost table
- * spanning the entire crisis ([group.start, group.end] — every stage summed).
+ * spanning the entire crisis ([group.start, group.end] ; every stage summed).
  * Rendered once per crisis beneath its stage blocks, INDEPENDENT of whether an
- * "Ends" (stage 4) sample was ever captured — the engine often resolves a crisis
+ * "Ends" (stage 4) sample was ever captured , the engine often resolves a crisis
  * straight from "Culminates" without a stage-4 reading, so gating on stage 4
  * silently dropped the cumulative table.
  * @param {{ start: number, end: number, sample: Snapshot }} group The crisis run.

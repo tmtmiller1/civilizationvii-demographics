@@ -171,7 +171,7 @@ export function migrateWarRecords(snapshot, wars, samples) {
 }
 
 /**
- * The recorded players-by-pid map from the sample at (or just before) a war's start chart-turn —
+ * The recorded players-by-pid map from the sample at (or just before) a war's start chart-turn ,
  * the civ identities as they were when the war began. Null when start data isn't available.
  * @param {Snapshot[]|undefined} samples The recorded samples.
  * @param {WarRecord} war The war record.

@@ -81,7 +81,7 @@ function currentTurn() {
  * companion owns the entire body; a throw inside it must never break the screen.
  *
  * Perf plan P1 #5: an external panel (e.g. Emigration's Migration page) only depends on its own
- * page being selected + the turn — NOT on unrelated history-view state (time filters, other
+ * page being selected + the turn , NOT on unrelated history-view state (time filters, other
  * metrics). So when the same panel is already rendered into this same host for the same turn, skip
  * the rebuild; any real change (page switch, new host, turn advance) re-renders normally.
  * @param {HTMLElement} chartHost Chart host element.
@@ -95,7 +95,7 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
   const turn = currentTurn();
   if (_extLast.id === activeMetric && _extLast.turn === turn && _extLast.host === chartHost
     && chartHost.childElementCount > 0) {
-    return true; // unchanged since last render into this host — leave the existing DOM in place
+    return true; // unchanged since last render into this host , leave the existing DOM in place
   }
   try {
     chartHost.innerHTML = "";

@@ -53,7 +53,7 @@ const ENDPOINT_GAP = 0.7; // viewBox units beyond the node radius
 const DEFAULT_NODE_R = 5; // fallback radius when a node's radius is unknown
 
 // Separating the lines of a pair. The PRIMARY separator is a PERPENDICULAR OFFSET
-// that slides each line sideways off the chord — this keeps the lines apart along
+// that slides each line sideways off the chord , this keeps the lines apart along
 // their ENTIRE length (a curve-only fan converges back together at the endpoints,
 // which is why two ties could still sit on top of each other near the nodes). A
 // gentle curve, varied in direction, is layered on top for readability + the
@@ -129,8 +129,8 @@ export function groupEdgesByPair(edges, positions) {
     if (!pa || !pb) continue;
     // Key by GEOMETRIC endpoints, not pids. Two ties between the same two nodes
     // resolve to the same two points, so they ALWAYS land in one group (and thus
-    // get separate lanes). Keying by pid let a string-vs-number pid — or any other
-    // representation mismatch between engine queries — split one visual pair into
+    // get separate lanes). Keying by pid let a string-vs-number pid , or any other
+    // representation mismatch between engine queries , split one visual pair into
     // two single-edge groups, which then drew on the identical lone curve.
     const key = geoPairKey(pa, pb);
     let group = edgeGroups.get(key);
@@ -254,7 +254,7 @@ function appendDashSeg(svg, color, pts) {
 }
 
 /**
- * Append one small filled dot (`<circle>`) — the unit of a dotted line.
+ * Append one small filled dot (`<circle>`) , the unit of a dotted line.
  * @param {Element} svg The SVG root.
  * @param {string} color Fill color.
  * @param {{x: number, y: number}} p Center.
@@ -306,7 +306,7 @@ function appendSolidCurve(svg, e, q, opacity) {
 }
 
 // Canonical dash + dot metrics (viewBox units). One clean dash pattern and one
-// clean dot spacing — the whole point of (2) is a tiny, reliable vocabulary.
+// clean dot spacing , the whole point of (2) is a tiny, reliable vocabulary.
 const DASH_ON = 2.0;
 const DASH_OFF = 1.8;
 const DOT_SPACING = 2.3;
@@ -339,7 +339,7 @@ function appendDashedCurve(svg, e, q, opacity) {
 
 /**
  * Render a DOTTED curved edge: walk the bezier by arc length and drop a small
- * `<circle>` at every DOT_SPACING (crisp, evenly-spaced dots — far more reliable
+ * `<circle>` at every DOT_SPACING (crisp, evenly-spaced dots , far more reliable
  * than trying to coax round dots out of the dash synthesizer).
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
@@ -424,7 +424,7 @@ function appendChevrons(svg, e, q, opacity) {
  * bow are computed on a CONSISTENT perpendicular regardless of each edge's own a→b
  * order. Without this, two ties built with opposite a/b order (e.g. an attitude
  * edge vs an event-scan edge) flip the perpendicular and their symmetric offsets
- * cancel — landing both lines in the same lane.
+ * cancel , landing both lines in the same lane.
  * @param {{x: number, y: number}} a Endpoint a.
  * @param {{x: number, y: number}} b Endpoint b.
  * @returns {number} +1 or −1.
@@ -435,7 +435,7 @@ function canonicalSign(a, b) {
 }
 
 /**
- * Slide a chord sideways (perpendicular) by `off` viewBox units — the primary way
+ * Slide a chord sideways (perpendicular) by `off` viewBox units , the primary way
  * a pair's lines are kept apart along their whole length.
  * @param {{x: number, y: number}} a Endpoint a.
  * @param {{x: number, y: number}} b Endpoint b.
@@ -542,7 +542,7 @@ export function appendEdgeGroup(svg, entries, selectedSet, radii, records) {
 
 /**
  * Draw a single straight sample edge into an SVG, using the SAME color / style
- * synthesis / chevron code (and the same viewBox units) the ring uses — so a
+ * synthesis / chevron code (and the same viewBox units) the ring uses , so a
  * legend swatch is literally a miniature of the line it labels. Straight (control
  * point at the midpoint) to stay readable in a short swatch.
  * @param {Element} svg Target SVG (its viewBox units must match the line units).

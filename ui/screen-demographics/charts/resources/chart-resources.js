@@ -342,7 +342,7 @@ function mountStackLegend(wrap, bands, points, dims) {
     txt.className = "demographics-chart-line-label-text";
     // Latest value of this band.
     const latest = points[points.length - 1]?.values?.[band.id] || 0;
-    txt.textContent = band.label + " — " + latest;
+    txt.textContent = band.label + " , " + latest;
     div.appendChild(txt);
 
     wrap.appendChild(div);

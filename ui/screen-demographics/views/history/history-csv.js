@@ -519,7 +519,7 @@ function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
         sizeMB +
         " MB · " +
         lineCount +
-        " rows) — skipping full log dump." +
+        " rows) , skipping full log dump." +
         " Clipboard write was " +
         (clipboardOk ? "OK" : "FAILED") +
         "."

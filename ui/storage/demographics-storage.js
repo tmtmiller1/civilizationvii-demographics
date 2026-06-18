@@ -238,7 +238,7 @@ class StorageImpl {
         parsed.samples.length +
         " < _mem=" +
         memSamples +
-        " — preferring _mem"
+        " , preferring _mem"
     );
     try {
       store.write(PAYLOAD_KEY, JSON.stringify(this._mem));

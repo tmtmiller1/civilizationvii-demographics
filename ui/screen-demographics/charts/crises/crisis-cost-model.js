@@ -5,7 +5,7 @@
 //
 // Why a snapshot exists: the per-civ "losses" figures (population / crop / production lost) are
 // sums of per-turn declines (sumDeclines in chart-conflicts-cost.js), so they need DENSE
-// turn-by-turn samples. As a game grows, old samples are decimated to cap the save — and once a
+// turn-by-turn samples. As a game grows, old samples are decimated to cap the save , and once a
 // finished age's samples are thinned, those loss columns collapse to "—" while one-sample figures
 // (e.g. current Military Power) survive. Computing the totals at the age boundary, while the
 // finished age's samples are still dense, and persisting them lets the Crises page render a

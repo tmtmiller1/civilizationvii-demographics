@@ -221,8 +221,8 @@ function withDisplayQueue(fn) {
 
 /**
  * Suspend the engine popup/notification queue while a cinematic owns the screen,
- * so civic-discovery (and similar) popups don't appear over — and trap the player
- * in — the flyby. Suspended popups queue and re-surface on teardown, exactly how
+ * so civic-discovery (and similar) popups don't appear over , and trap the player
+ * in , the flyby. Suspended popups queue and re-surface on teardown, exactly how
  * the base game's own cinematics defer them. We only claim the suspension when it
  * isn't already suspended, so teardown never resumes a suspension we didn't own.
  * @param {*} flowState The active flow state (flagged so teardown resumes once).

@@ -1,7 +1,7 @@
 // worldrankings-allcivs-table.js
 //
 // "All Civilizations" sortable table. Civs are ROWS and every (non-hidden) metric
-// is a column, inside a horizontal scroller — the All Settlements table styling,
+// is a column, inside a horizontal scroller , the All Settlements table styling,
 // made wide. A Rank/Value toggle switches what each metric cell shows; clicking a
 // metric header sorts the civilizations by that metric. Rank + Civilization
 // columns are sticky-left so identity stays visible while scrolling the metrics.
