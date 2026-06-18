@@ -113,6 +113,18 @@ const DEFAULTS = {
   // withheld for civilizations the local player has not met (the charts
   // show a gap, not a value). Turn off to record and show those too.
   hideUnmetStats: true,
+  // ─── Analytics-visibility governance (combined design plan P0.1) ─────
+  // The local player's preferred analytics policy. A multiplayer HOST can cap
+  // this via a GameConfiguration ceiling (see demographics-governance.js); the
+  // effective policy is the more restrictive of the two. When unset, it derives
+  // from the legacy hideUnmetStats toggle. One of: "disabled", "own-civ-only",
+  // "met-civs-only", "full".
+  analyticsPolicy: "met-civs-only",
+  // ─── UI complexity tier (combined design plan P1.5) ────────────────
+  // Progressive-disclosure profile: "basic" (core stat pages only),
+  // "standard" (all pages/tabs; advanced tuning hidden — default), or
+  // "analyst" (everything, including storage/sampling controls).
+  uiComplexity: "standard",
   // ─── Met-history reveal mode (sub-option of hideUnmetStats) ─────────
   // Controls what the line chart shows for a civ AFTER you meet it, when
   // hideUnmetStats is on:
@@ -140,6 +152,8 @@ const SCHEMA = {
   sampleEveryNTurns: { type: "int", min: 1, max: 200 },
   showWonderMarkers: { type: "boolean" },
   hideUnmetStats: { type: "boolean" },
+  analyticsPolicy: { type: "string" },
+  uiComplexity: { type: "string" },
   backfillMetHistory: { type: "boolean" }
 };
 

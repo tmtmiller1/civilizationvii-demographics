@@ -1362,5 +1362,68 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="ko_KR">
             <Text>여기서 "점수"는 문명의 총 산출량입니다. 모든 정착지의 식량·생산력·금·과학·문화를 합한 값입니다. 승리 화면의 공식 게임 점수와는 계산 방식이 다릅니다.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="ko_KR">
+            <Text>분석 표시 범위</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="ko_KR">
+            <Text>호스트로서 이 제한은 이 게임의 모든 플레이어의 비교 분석에 적용됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="ko_KR">
+            <Text>호스트가 이 게임의 최대 분석 표시 범위를 설정합니다. 자신의 보기는 더 제한할 수 있습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="ko_KR">
+            <Text>비활성화(자국만)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="ko_KR">
+            <Text>자국만</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="ko_KR">
+            <Text>만난 문명만</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="ko_KR">
+            <Text>모든 문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="ko_KR">
+            <Text>호스트 분석 정책: {1}. 비교 데이터가 모든 플레이어에게 제한됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="ko_KR">
+            <Text>분석 정책: {1}.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="ko_KR">
+            <Text>인터페이스</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="ko_KR">
+            <Text>복잡도</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="ko_KR">
+            <Text>기본</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="ko_KR">
+            <Text>표준</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="ko_KR">
+            <Text>분석가</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="ko_KR">
+            <Text>핵심 통계 페이지만 표시되며 고급 그래프, 관계 네트워크, 조정 컨트롤은 숨겨집니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="ko_KR">
+            <Text>모든 그래프와 탭이 표시되며 고급 저장 및 샘플링 컨트롤은 숨겨진 상태로 유지됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="ko_KR">
+            <Text>저장 한도, 데시메이션, 샘플링 속도를 포함한 모든 항목.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="ko_KR">
+            <Text>시대 업적 진행도: 각 문명의 유산 경로 레이더.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="ko_KR">
+            <Text>시간에 따른 카테고리별 자원 배분.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="ko_KR">
+            <Text>전쟁 타임라인(간트)과 전쟁별 상세 그래프.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="ko_KR">
+            <Text>위기 단계와 문명별 비용.</Text>
+        </Replace>
     </LocalizedText>
 </Database>

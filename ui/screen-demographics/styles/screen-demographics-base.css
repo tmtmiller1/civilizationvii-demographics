@@ -656,3 +656,29 @@
     text-align: center;
 }
 
+/* Multiplayer analytics-governance policy banner (P0.1): a constrained-visibility
+   notice shown above the active view whenever the effective policy is not "full". */
+.demographics-policy-banner-host {
+    width: 100%;
+}
+.demographics-policy-banner {
+    margin: 0.3rem 0;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.35);
+    border-left: 0.18rem solid var(--ia-accent-gold-soft);
+    color: var(--ia-accent-gold-soft);
+    text-align: center;
+}
+.demographics-option-hint {
+    margin: 0.1rem 0 0.4rem 1.6rem;
+    opacity: 0.75;
+}
+
+/* Contextual description caption under an advanced History page tab row (P1.5). */
+.demographics-page-desc {
+    margin: 0.05rem 0 0.35rem 0;
+    opacity: 0.7;
+    color: var(--ia-accent-gold-soft);
+}
+

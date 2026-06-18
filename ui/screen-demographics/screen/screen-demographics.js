@@ -13,6 +13,14 @@
 import Panel from "/core/ui/panel-support.js";
 import * as ViewHistory from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen/screen-history-context.js";
+import { t } from "/demographics/ui/core/demographics-i18n.js";
+import {
+  bannerInfo,
+  POLICY_DISABLED,
+  POLICY_OWN,
+  POLICY_MET
+} from "/demographics/ui/core/demographics-governance.js";
+import { viewTabVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 
 // The two heavy tabs (WorldRankingsAllCivs ~0.9k lines, Relations ~2.5k lines incl. the
 // network graph) are imported on first open instead of statically, so they are
@@ -84,6 +92,18 @@ const VIEW_TABS = [
 /** Filters disabled in the runtime (see CROSS_AGE_DISABLED_TOOLTIP). "all" is the
  * default time window; only the per-age presets remain disabled. */
 const DISABLED_FILTERS = new Set(["age1", "age2", "age3"]);
+
+/**
+ * Localized display label for an analytics-governance policy id (P0.1).
+ * @param {string} policy A policy id.
+ * @returns {string} The localized policy label.
+ */
+function policyLabel(policy) {
+  if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
+  if (policy === POLICY_OWN) return t("LOC_DEMOGRAPHICS_POLICY_OWN");
+  if (policy === POLICY_MET) return t("LOC_DEMOGRAPHICS_POLICY_MET");
+  return t("LOC_DEMOGRAPHICS_POLICY_FULL");
+}
 
 /**
  * Run `fn`, returning its result, or `fb` if it throws. Never throws.
@@ -356,10 +376,11 @@ class ScreenDemographics extends Panel {
     tabBar.classList.add("demographics-view-tabs", "w-full", "font-title", "text-sm");
     tabBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
     tabBar.setAttribute("tab-item-class", "font-title text-base");
-    tabBar.setAttribute("tab-items", JSON.stringify(VIEW_TABS));
+    const visibleTabs = this._visibleViewTabs();
+    tabBar.setAttribute("tab-items", JSON.stringify(visibleTabs));
     const idx = Math.max(
       0,
-      VIEW_TABS.findIndex((v) => v.id === this.activeView)
+      visibleTabs.findIndex((v) => v.id === this.activeView)
     );
     tabBar.setAttribute("selected-tab-index", String(idx));
     this._applyTabBarNavHints(tabBar);
@@ -368,6 +389,17 @@ class ScreenDemographics extends Panel {
     host.appendChild(tabBar);
     this.viewTabBar = tabBar;
     dlog("view tab bar built; active=", this.activeView, "index=", idx);
+  }
+
+  /**
+   * The view tabs visible under the active UI complexity tier (P1.5), clamping
+   * the active view to a visible one (the Relations tab is hidden at Basic).
+   * @returns {ViewTab[]} The visible tab descriptors.
+   */
+  _visibleViewTabs() {
+    const visibleTabs = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
+    if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "history";
+    return visibleTabs;
   }
 
   /**
@@ -421,6 +453,7 @@ class ScreenDemographics extends Panel {
    * render errors are logged, not thrown.
    */
   renderActiveView() {
+    safeCall(() => this._renderPolicyBanner());
     const host = this.Root.querySelector(".demographics-view-host");
     if (!host) {
       derr("view-host missing");
@@ -433,6 +466,28 @@ class ScreenDemographics extends Panel {
     } catch (e) {
       derr("renderActiveView threw:", e);
     }
+  }
+
+  /**
+   * Render (or clear) the analytics-governance policy banner above the view host
+   * (combined design plan P0.1). Shown whenever the effective policy withholds
+   * data, so every player can see the comparative analytics are constrained -
+   * and whether the multiplayer host (not just their own preference) is the
+   * binding constraint. Re-evaluated on every view render.
+   */
+  _renderPolicyBanner() {
+    const banhost = this.Root.querySelector(".demographics-policy-banner-host");
+    if (!banhost) return;
+    while (banhost.firstChild) banhost.removeChild(banhost.firstChild);
+    const info = bannerInfo();
+    if (!info.show) return;
+    const label = policyLabel(info.policy);
+    const banner = document.createElement("div");
+    banner.className = "demographics-policy-banner font-body text-sm";
+    banner.textContent = info.hostEnforced
+      ? t("LOC_DEMOGRAPHICS_POLICY_BANNER_HOST", label)
+      : t("LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL", label);
+    banhost.appendChild(banner);
   }
 
   /**

@@ -3,6 +3,7 @@
 // Engine query helpers for the Global Relations view.
 
 import { safeCall } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
+import { policyOwnCivOnly } from "/demographics/ui/core/demographics-governance.js";
 
 /**
  * Resolve the local player id from `GameContext`, defensively.
@@ -59,6 +60,11 @@ function pushIfMetMajor(out, id, localPid, humanDiplo) {
  * @returns {number[]} Met major ids.
  */
 export function getMetMajorIds(localPid) {
+  // Governance (P0.1): own-civ-only / disabled restricts the relations network
+  // to the local player's own civ.
+  if (safeCall("ownCivOnly", () => policyOwnCivOnly(), false)) {
+    return typeof localPid === "number" ? [localPid] : [];
+  }
   return safeCall(
     "getMetMajorIds",
     () => {

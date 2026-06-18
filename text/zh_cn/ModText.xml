@@ -1920,5 +1920,68 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="zh_Hans_CN">
             <Text>此处的“得分”为文明的总产出，即其所有定居点的食物、生产力、金币、科技与文化之和，并非胜利画面中按不同方式计算的官方游戏得分。</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="zh_CN">
+            <Text>分析可见性</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="zh_CN">
+            <Text>作为主机，此限制适用于本局所有玩家的对比分析。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="zh_CN">
+            <Text>主机设定本局分析的最大可见性；你可以进一步限制自己的视图。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="zh_CN">
+            <Text>禁用（仅自己的文明）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="zh_CN">
+            <Text>仅自己的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="zh_CN">
+            <Text>仅已会面的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="zh_CN">
+            <Text>所有文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="zh_CN">
+            <Text>主机分析策略：{1}。对比数据对所有玩家受限。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="zh_CN">
+            <Text>分析策略：{1}。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="zh_CN">
+            <Text>界面</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="zh_CN">
+            <Text>复杂度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="zh_CN">
+            <Text>基础</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="zh_CN">
+            <Text>标准</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="zh_CN">
+            <Text>分析师</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="zh_CN">
+            <Text>仅显示核心统计页面；高级图表、关系网络和调节控件均被隐藏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="zh_CN">
+            <Text>显示所有图表和标签页；高级存储与采样控件保持隐藏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="zh_CN">
+            <Text>全部内容，包括存储上限、抽稀和采样率控件。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="zh_CN">
+            <Text>时代成就进度：各文明的遗产路径雷达图。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="zh_CN">
+            <Text>按类别随时间变化的资源分配。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="zh_CN">
+            <Text>战争时间线（甘特图）和各场战争的详细图表。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="zh_CN">
+            <Text>危机阶段及其对各文明的代价。</Text>
+        </Replace>
     </LocalizedText>
 </Database>

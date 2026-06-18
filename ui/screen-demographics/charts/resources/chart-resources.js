@@ -16,8 +16,7 @@ import {
   getXAxisMode,
   nearestByTurn,
   civOptionLabel,
-  hideUnmetEnabled,
-  isCivUnmet
+  civDroppedByPolicy
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import {
   buildStackGridConfig,
@@ -70,14 +69,13 @@ function hasResourceMetric(m) {
  */
 export function collectResourceCivOptions(history) {
   const samps = history && Array.isArray(history.samples) ? history.samples : [];
-  const gate = hideUnmetEnabled();
   /** @type {Map<string, { pid: string, label: string }>} */
   const seen = new Map();
   for (const s of samps) {
     if (!s?.players) continue;
     for (const pid of Object.keys(s.players)) {
-      // Spoiler guard: don't offer unmet civs as a pickable stack target.
-      if (gate && isCivUnmet(samps, pid)) continue;
+      // Governance (P0.1): don't offer policy-hidden civs as a pickable target.
+      if (civDroppedByPolicy(samps, pid)) continue;
       foldResourceCivOption(seen, s.players[pid], pid);
     }
   }

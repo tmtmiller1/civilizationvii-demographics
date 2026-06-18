@@ -1362,5 +1362,68 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="ja_JP">
             <Text>ここでの「スコア」は文明の総産出量です。すべての入植地の食料・生産・ゴールド・科学・文化の合計を指します。勝利画面に表示されるゲーム公式のスコアとは計算方法が異なります。</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="ja_JP">
+            <Text>分析の表示範囲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="ja_JP">
+            <Text>ホストとして、この制限はこのゲームの全プレイヤーの比較分析に適用されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="ja_JP">
+            <Text>ホストがこのゲームの分析の最大表示範囲を設定します。自分の表示はさらに制限できます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="ja_JP">
+            <Text>無効（自国のみ）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="ja_JP">
+            <Text>自国のみ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="ja_JP">
+            <Text>遭遇した文明のみ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="ja_JP">
+            <Text>すべての文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="ja_JP">
+            <Text>ホストの分析ポリシー：{1}。比較データは全プレイヤーに対して制限されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="ja_JP">
+            <Text>分析ポリシー：{1}。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="ja_JP">
+            <Text>インターフェース</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="ja_JP">
+            <Text>複雑さ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="ja_JP">
+            <Text>基本</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="ja_JP">
+            <Text>標準</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="ja_JP">
+            <Text>アナリスト</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="ja_JP">
+            <Text>主要な統計ページのみ。詳細グラフ、関係ネットワーク、調整コントロールは非表示です。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="ja_JP">
+            <Text>すべてのグラフとタブ。詳細なストレージとサンプリングのコントロールは非表示のままです。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="ja_JP">
+            <Text>ストレージ上限、間引き、サンプリングレートを含むすべて。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="ja_JP">
+            <Text>時代の偉業の進捗：各文明のレガシー経路レーダー。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="ja_JP">
+            <Text>カテゴリ別の資源配分の推移。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="ja_JP">
+            <Text>戦争のタイムライン（ガント）と戦争ごとの詳細グラフ。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="ja_JP">
+            <Text>危機の段階と文明ごとのコスト。</Text>
+        </Replace>
     </LocalizedText>
 </Database>

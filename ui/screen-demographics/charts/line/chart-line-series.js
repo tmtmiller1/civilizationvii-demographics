@@ -21,6 +21,10 @@ import {
   safeTextColor,
   deconflictColors
 } from "/demographics/ui/core/civ-color-utils.js";
+import {
+  policyOwnCivOnly,
+  isLocalCiv
+} from "/demographics/ui/core/demographics-governance.js";
 
 /**
  * One per-civ data series built from history for a single metric.
@@ -391,10 +395,14 @@ function buildSeriesFromHistory(history, metricId) {
   const { offsets: ageOffsets } = computeAgeOffsets(samples, ageBoundariesLocal);
 
   const { backfill, fromContactOnly } = resolveUnmetGateModes();
+  // Governance (P0.1): under own-civ-only / disabled, only the local player's
+  // own series may render at all.
+  const ownOnly = policyOwnCivOnly();
   const pids = collectPidSet(samples);
   /** @type {ChartSeries[]} */
   const series = [];
   pids.forEach((pid, idx) => {
+    if (ownOnly && !isLocalCiv(pid)) return;
     const fold = foldPidSamples(samples, pid, metricId, {
       ageOffsets,
       ageBoundariesLocal,

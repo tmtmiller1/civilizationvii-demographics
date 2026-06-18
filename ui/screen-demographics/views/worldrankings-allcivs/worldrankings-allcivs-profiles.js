@@ -268,6 +268,21 @@ export function stripUnmetDiplomacy(profiles) {
 }
 
 /**
+ * Governance (P0.1): drop every NON-local civ from the profile map in place,
+ * for the own-civ-only / disabled analytics policy. When the local player can't
+ * be resolved, leaves the map untouched (the render layer's banner still warns).
+ * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
+ */
+export function stripNonLocalCivs(profiles) {
+  const localId = getLocalId();
+  if (typeof localId !== "number") return;
+  const keep = String(localId);
+  for (const pid of Object.keys(profiles)) {
+    if (pid !== keep) delete profiles[pid];
+  }
+}
+
+/**
  * Pick the local player's pid: the resolved engine id when it has a profile,
  * otherwise the first available pid.
  * @param {Record<string, CivProfile>} profiles All profiles.

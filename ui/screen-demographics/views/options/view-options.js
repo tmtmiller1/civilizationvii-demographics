@@ -10,6 +10,25 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
+  POLICY_ORDER,
+  POLICY_DISABLED,
+  POLICY_OWN,
+  POLICY_MET,
+  POLICY_FULL,
+  localPolicy,
+  setHostPolicy,
+  isMultiplayer,
+  canSetHostPolicy
+} from "/demographics/ui/core/demographics-governance.js";
+import {
+  TIER_ORDER,
+  TIER_BASIC,
+  TIER_STANDARD,
+  getTier,
+  showCameraOptionsInTier,
+  showStorageOptionsInTier
+} from "/demographics/ui/core/demographics-tiers.js";
+import {
   appendStorageControlsPanel
 } from "/demographics/ui/screen-demographics/views/options/view-options-storage-controls.js";
 import {
@@ -162,6 +181,67 @@ function buildSubheading(text) {
 }
 
 /**
+ * Localized label for an analytics-governance policy id (P0.1).
+ * @param {string} policy A policy id.
+ * @returns {string} The display label.
+ */
+function policyOptionLabel(policy) {
+  if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
+  if (policy === POLICY_OWN) return t("LOC_DEMOGRAPHICS_POLICY_OWN");
+  if (policy === POLICY_MET) return t("LOC_DEMOGRAPHICS_POLICY_MET");
+  return t("LOC_DEMOGRAPHICS_POLICY_FULL");
+}
+
+/**
+ * Apply a chosen analytics policy (P0.1): persist the local preference, keep the
+ * legacy `hideUnmetStats` / `showUnmetNames` keys in lockstep so every existing
+ * consumer keeps working, push the host ceiling in multiplayer when hosting, and
+ * reload so the banner + views reflect the new policy immediately.
+ * @param {OptionsCtx} ctx Render context.
+ * @param {string} mode The chosen policy id.
+ */
+function applyAnalyticsPolicy(ctx, mode) {
+  ctx.settings.setSetting("analyticsPolicy", mode);
+  const hideUnmet = mode !== POLICY_FULL;
+  ctx.settings.setSetting("hideUnmetStats", hideUnmet);
+  ctx.settings.setSetting("showUnmetNames", !hideUnmet);
+  if (isMultiplayer() && canSetHostPolicy()) setHostPolicy(mode);
+  ctx.requestReload?.();
+}
+
+/**
+ * Build the analytics-visibility policy dropdown (combined design plan P0.1):
+ * how much comparative data the screen exposes. In multiplayer a host's choice
+ * also writes the GameConfiguration ceiling for all players (a hint row notes
+ * this); a non-host only constrains their own view. Subsumes the legacy spoiler
+ * toggle, which it keeps in sync.
+ * @param {OptionsCtx} ctx Render context.
+ * @returns {HTMLElement} The policy-control element (dropdown row + optional hint).
+ */
+function buildAnalyticsPolicyControl(ctx) {
+  const opts = POLICY_ORDER.map((id) => ({ id, label: policyOptionLabel(id) }));
+  const cur = localPolicy();
+  const idx = Math.max(0, POLICY_ORDER.indexOf(cur));
+  const wrap = document.createElement("div");
+  const row = buildDropdownRow(
+    t("LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY"),
+    opts,
+    idx,
+    (i) => applyAnalyticsPolicy(ctx, POLICY_ORDER[i])
+  );
+  wrap.appendChild(row);
+  if (isMultiplayer()) {
+    const hint = document.createElement("div");
+    hint.className = "demographics-option-hint font-body text-xs";
+    hint.textContent = canSetHostPolicy()
+      ? t("LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT")
+      : t("LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT");
+    wrap.appendChild(hint);
+  }
+  return wrap;
+}
+
+/**
  * Build the "on first contact" reveal-mode dropdown (a sub-row of the spoiler
  * toggle): reveal a civ's full back-history when met, or only track it forward
  * from first contact. Maps to the legacy `backfillMetHistory` boolean.
@@ -203,15 +283,7 @@ function buildRevealModeControl(ctx) {
  */
 function appendToggles(wrap, ctx) {
   wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING")));
-  wrap.appendChild(
-    makeToggle(
-      t("LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO"),
-      "hideUnmetStats",
-      true,
-      ctx.settings,
-      (value) => ctx.settings.setSetting("showUnmetNames", !value)
-    )
-  );
+  wrap.appendChild(buildAnalyticsPolicyControl(ctx));
   wrap.appendChild(buildRevealModeControl(ctx));
 
   wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING")));
@@ -387,10 +459,57 @@ export function render(host, ctx) {
   host.appendChild(wrap);
 
   wrap.appendChild(buildHeading());
+  appendInterfaceTier(wrap, ctx);
   appendToggles(wrap, ctx);
-  appendCameraOptions(wrap, ctx);
-  appendStorageControls(wrap, ctx);
+  // UI complexity tiers (P1.5): progressive disclosure of advanced control groups.
+  if (showCameraOptionsInTier()) appendCameraOptions(wrap, ctx);
+  if (showStorageOptionsInTier()) appendStorageControls(wrap, ctx);
   wrap.appendChild(buildSamplerRecoveryRow(ctx));
   wrap.appendChild(buildButtonRow(ctx));
   wrap.appendChild(buildSessionInfo(ctx));
+}
+
+/**
+ * Localized label for a UI complexity tier id (P1.5).
+ * @param {string} tier A tier id.
+ * @returns {string} The display label.
+ */
+function tierOptionLabel(tier) {
+  if (tier === TIER_BASIC) return t("LOC_DEMOGRAPHICS_TIER_BASIC");
+  if (tier === TIER_STANDARD) return t("LOC_DEMOGRAPHICS_TIER_STANDARD");
+  return t("LOC_DEMOGRAPHICS_TIER_ANALYST");
+}
+
+/**
+ * Localized one-line description for a UI complexity tier id (P1.5).
+ * @param {string} tier A tier id.
+ * @returns {string} The description.
+ */
+function tierDescription(tier) {
+  if (tier === TIER_BASIC) return t("LOC_DEMOGRAPHICS_TIER_BASIC_DESC");
+  if (tier === TIER_STANDARD) return t("LOC_DEMOGRAPHICS_TIER_STANDARD_DESC");
+  return t("LOC_DEMOGRAPHICS_TIER_ANALYST_DESC");
+}
+
+/**
+ * Append the "Interface" section: the UI complexity tier dropdown plus a live
+ * description of the chosen tier (P1.5). Changing it reloads so the disclosed
+ * pages / tabs / controls update immediately.
+ * @param {HTMLElement} wrap The options container to append into.
+ * @param {OptionsCtx} ctx Render context.
+ */
+function appendInterfaceTier(wrap, ctx) {
+  wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING")));
+  const opts = TIER_ORDER.map((id) => ({ id, label: tierOptionLabel(id) }));
+  const cur = getTier();
+  const idx = Math.max(0, TIER_ORDER.indexOf(cur));
+  const desc = document.createElement("div");
+  desc.className = "demographics-option-hint font-body text-xs";
+  desc.textContent = tierDescription(cur);
+  const row = buildDropdownRow(t("LOC_DEMOGRAPHICS_OPT_COMPLEXITY"), opts, idx, (i) => {
+    ctx.settings.setSetting("uiComplexity", TIER_ORDER[i]);
+    ctx.requestReload?.();
+  });
+  wrap.appendChild(row);
+  wrap.appendChild(desc);
 }
