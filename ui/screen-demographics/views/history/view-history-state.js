@@ -2,16 +2,24 @@
 //
 // Active page/metric/filter state resolution for the Historical Data view.
 
+import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
+
 /**
- * Resolve active page id, defaulting to economy when invalid.
+ * Resolve active page id, defaulting to economy when invalid. Under a UI
+ * complexity tier (P1.5) a page hidden by the active tier clamps to the first
+ * visible page so a tier downgrade never strands the view on a hidden page.
  * @param {*} ctx Render context.
  * @param {{ id: string }[]} pages Page list.
- * @returns {string} Valid page id.
+ * @returns {string} Valid, tier-visible page id.
  */
 export function resolveActivePageState(ctx, pages) {
-  return ctx.activePage && pages.some((p) => p.id === ctx.activePage)
-    ? ctx.activePage
-    : "economy";
+  let id =
+    ctx.activePage && pages.some((p) => p.id === ctx.activePage) ? ctx.activePage : "economy";
+  if (!pageVisibleInTier(id)) {
+    const firstVisible = pages.find((p) => pageVisibleInTier(p.id));
+    id = firstVisible ? firstVisible.id : id;
+  }
+  return id;
 }
 
 /**

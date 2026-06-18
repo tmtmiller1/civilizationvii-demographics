@@ -3,9 +3,13 @@
 // Effective sample-cap and decimation-setting resolution.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { retentionScale } from "/demographics/ui/core/demographics-hardware.js";
 
 /** Absolute ceiling on retained samples, regardless of user override. */
 export const HARD_MAX_SAMPLES = 50000;
+
+/** Floor on the auto-derived cap so a weak-hardware scale never starves history. */
+const ADAPTIVE_MIN = 250;
 
 /** @type {Record<string, number>} */
 export const ADAPTIVE_DEFAULTS_BY_SPEED = {
@@ -100,13 +104,22 @@ function capFromString(override) {
 }
 
 /**
- * Resolve adaptive cap from game speed.
+ * Resolve adaptive cap from game speed, then scale by the hardware-capability /
+ * game-size factor (P1.6) so weak machines and many-civ games retain fewer
+ * samples — floored at ADAPTIVE_MIN and capped at HARD_MAX_SAMPLES.
  * @returns {{ cap: number, source: string }} Effective cap.
  */
 function adaptiveCap() {
   const speed = detectGameSpeedType();
-  const adaptive = (speed && ADAPTIVE_DEFAULTS_BY_SPEED[speed]) || FALLBACK_DEFAULT;
-  return { cap: adaptive, source: "auto:" + (speed || "fallback") };
+  const base = (speed && ADAPTIVE_DEFAULTS_BY_SPEED[speed]) || FALLBACK_DEFAULT;
+  let scale = 1;
+  try {
+    scale = retentionScale();
+  } catch (_) {
+    scale = 1;
+  }
+  const cap = Math.min(HARD_MAX_SAMPLES, Math.max(ADAPTIVE_MIN, Math.round(base * scale)));
+  return { cap, source: "auto:" + (speed || "fallback") + ":hw" + scale.toFixed(2) };
 }
 
 /**

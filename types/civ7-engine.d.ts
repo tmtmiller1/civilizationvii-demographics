@@ -108,6 +108,12 @@ declare global {
     [key: string]: any;
   };
 
+  const Network: {
+    isHost?(): boolean;
+    isConnectedToNetwork?(): boolean;
+    [key: string]: any;
+  };
+
   const Controls: {
     define(tag: string, definition: any): void;
     decorate(tag: string, factory: (...args: any[]) => any): void;

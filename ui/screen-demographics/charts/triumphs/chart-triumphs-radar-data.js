@@ -10,8 +10,7 @@
 
 import {
   PALETTE,
-  hideUnmetEnabled,
-  isCivUnmet
+  civDroppedByPolicy
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /**
@@ -317,14 +316,14 @@ function radarSourceCivs(opts, samples) {
 }
 
 /**
- * Remove unmet civs in place when spoiler guard is enabled.
+ * Remove policy-hidden civs in place (governance P0.1): unmet civs under the
+ * spoiler guard, and every non-local civ under own-civ-only / disabled.
  * @param {Map<string, RadarCiv>} civs Radar civ map.
  * @param {Snapshot[]} samples Sample stream.
  */
 function filterUnmetRadarCivs(civs, samples) {
-  if (!hideUnmetEnabled()) return;
   for (const pid of Array.from(civs.keys())) {
-    if (isCivUnmet(samples, pid)) civs.delete(pid);
+    if (civDroppedByPolicy(samples, pid)) civs.delete(pid);
   }
 }
 
