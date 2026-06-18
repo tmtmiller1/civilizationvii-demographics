@@ -1425,5 +1425,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="ru_RU">
             <Text>Этапы кризиса и их издержки для каждой цивилизации.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="ru_RU"><Text>Беженцы</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="ru_RU"><Text>Население, вытесненное осадой, грабежом или завоеванием во время войны и переселившееся в другое место, предоставляется модом Emigration, если он установлен.</Text></Replace>
     </LocalizedText>
 </Database>
