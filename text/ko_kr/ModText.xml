@@ -24,11 +24,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ko_KR"><Text>GDP</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ko_KR"><Text>턴당 산출량과 경과 턴 수를 바탕으로 한 경제 규모 비교 지표입니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ko_KR"><Text>PPT</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ko_KR"><Text>턴당 생산력 — 도시가 건설하는 것.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ko_KR"><Text>턴당 생산력, 도시가 건설하는 것.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>과학</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 과학 — 기술 연구를 촉진합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 과학, 기술 연구를 촉진합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ko_KR"><Text>문화</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 문화 — 사회 제도 진행을 촉진합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 문화, 사회 제도 진행을 촉진합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ko_KR"><Text>작물 산출량</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ko_KR"><Text>모든 정착지에 걸친 턴당 순 식량 산출량.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ko_KR"><Text>외교 지지도</Text></Replace>
@@ -106,7 +106,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="ko_KR"><Text>과학</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="ko_KR"><Text>팽창주의</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="ko_KR"><Text>기타</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다 — 한 턴을 진행한 후 다시 여세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다, 한 턴을 진행한 후 다시 여세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="ko_KR"><Text>만나지 않은 문명</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ko_KR"><Text>불가사의</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ko_KR"><Text>건설자</Text></Replace>
@@ -147,15 +147,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="ko_KR"><Text>탐험 시대 시작</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="ko_KR"><Text>현대 시대 시작</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="ko_KR"><Text>상한 100%</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ko_KR"><Text>차트를 사용할 수 없음 — Chart.js가 로드되지 않았습니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ko_KR"><Text>차트 렌더링 실패 — UI.log를 확인하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ko_KR"><Text>차트를 사용할 수 없음, Chart.js가 로드되지 않았습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ko_KR"><Text>차트 렌더링 실패, UI.log를 확인하세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="ko_KR"><Text>보너스</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="ko_KR"><Text>제국</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="ko_KR"><Text>도시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="ko_KR"><Text>공장</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="ko_KR"><Text>보물</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="ko_KR"><Text>시간(턴 / 연도)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ko_KR"><Text>아직 자원 샘플이 없습니다 — 첫 자원을 배정하면 차트가 채워집니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ko_KR"><Text>아직 자원 샘플이 없습니다, 첫 자원을 배정하면 차트가 채워집니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="ko_KR"><Text>배정된 자원(개수)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="ko_KR"><Text>위업</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="ko_KR"><Text>기념 · {1_Label}</Text></Replace>
@@ -201,7 +201,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ko_KR"><Text>(관측된 변화)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ko_KR"><Text>아직 전쟁이 없습니다. 어떤 문명이든 전쟁을 선포하면 타임라인이 채워집니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ko_KR"><Text>현재 필터에 해당하는 전쟁이 없습니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다 — 먼저 한 턴을 진행하세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ko_KR"><Text>아직 샘플이 없습니다, 먼저 한 턴을 진행하세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ko_KR"><Text>CSV가 너무 큽니다({1_SizeMB} MB). 옵션에서 샘플 상한을 낮추고 다시 시도하세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ko_KR"><Text>복사됨 · {1_Rows}행 × {2_Cols}열{3_SizeTag} · Excel / Sheets / .csv 파일에 붙여 넣으세요</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ko_KR"><Text>클립보드를 사용할 수 없습니다. CSV를 UI.log에 기록했습니다.</Text></Replace>
@@ -222,7 +222,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ko_KR"><Text>1번째 시대 종료</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ko_KR"><Text>2번째 시대 종료</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ko_KR"><Text>스냅샷:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ko_KR"><Text>아직 스냅샷이 없습니다 — 시대가 종료되지 않았습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ko_KR"><Text>아직 스냅샷이 없습니다, 시대가 종료되지 않았습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ko_KR"><Text>새로 고침</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ko_KR"><Text>레거시 진행도를 다시 불러옵니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ko_KR"><Text>모든 주요 문명</Text></Replace>
@@ -280,10 +280,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ko_KR"><Text>숨겨진 모든 문명을 표시합니다</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ko_KR"><Text>열을 클릭하면 해당 지표로 문명을 정렬합니다. 순위／값 전환으로 각 칸의 표시를 바꿉니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ko_KR"><Text>만나지 않음</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ko_KR"><Text>(숨김 — 클릭하여 표시)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ko_KR"><Text>(숨김, 클릭하여 표시)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ko_KR"><Text>클릭하여 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ko_KR"><Text>클릭하여 숨기기</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ko_KR"><Text>위업 레이더 — 모든 문명, 6가지 속성 경로 전부</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ko_KR"><Text>위업 레이더, 모든 문명, 6가지 속성 경로 전부</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ko_KR"><Text>시간에 따른 위업</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ko_KR"><Text>(누적 개수, 속성별 누적)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ko_KR"><Text>시간에 따른 자원 배분(누적 영역)</Text></Replace>
@@ -785,13 +785,13 @@
             <Text>위기</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="ko_KR">
-            <Text>기록 상한 {1_Cap} — 오래된 샘플은 용량에 맞게 솎아냅니다.</Text>
+            <Text>기록 상한 {1_Cap}, 오래된 샘플은 용량에 맞게 솎아냅니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="ko_KR">
-            <Text>기록 상한 {1_Cap} — 아직 솎아내기 없음.</Text>
+            <Text>기록 상한 {1_Cap}, 아직 솎아내기 없음.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="ko_KR">
-            <Text>솎아내기 비활성화 — 모든 샘플 유지.</Text>
+            <Text>솎아내기 비활성화, 모든 샘플 유지.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ko_KR">
             <Text>만나지 않은 문명의 외교/관계 통계 숨기기</Text>
@@ -947,22 +947,22 @@
             <Text>전쟁에 투입</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="ko_KR">
-            <Text>전쟁 종료 시점(진행 중이라면 가장 최근 턴) 기준 당신의 상시 군사력 — 군대의 총 전투력입니다. 이는 손실이 아니라 보유 병력의 규모이며, 아래의 "군사력 손실"이 사상자를 추적합니다.</Text>
+            <Text>전쟁 종료 시점(진행 중이라면 가장 최근 턴) 기준 당신의 상시 군사력, 군대의 총 전투력입니다. 이는 손실이 아니라 보유 병력의 규모이며, 아래의 "군사력 손실"이 사상자를 추적합니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="ko_KR">
-            <Text>전투 중 실제로 전사한 당신의 유닛들의 전투력으로, 각 유닛이 사망할 때마다 그 기본 전투력을 합산한 값입니다. 이는 진짜 사상자 수치로 — 대체 병력을 건설해도 손실이 가려지지 않으며, 상시 군대의 규모로부터 도출되지도 않습니다. 이 추적 기능이 존재하기 전에 치러진 전쟁은 대신 군대 총 전투력의 순 감소량으로 대체 산정됩니다.</Text>
+            <Text>전투 중 실제로 전사한 당신의 유닛들의 전투력으로, 각 유닛이 사망할 때마다 그 기본 전투력을 합산한 값입니다. 이는 진짜 사상자 수치로, 대체 병력을 건설해도 손실이 가려지지 않으며, 상시 군대의 규모로부터 도출되지도 않습니다. 이 추적 기능이 존재하기 전에 치러진 전쟁은 대신 군대 총 전투력의 순 감소량으로 대체 산정됩니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="ko_KR">
-            <Text>점령으로 얻거나 잃은 순 정착지 수: 당신이 점령한 정착지는 +1, 당신에게서 점령당한 정착지는 −1로 계산됩니다. 개척자로 새 정착지를 건설하는 것은 포함되지 않으며 — 실제로 주인이 바뀐 정착지만 셉니다. 순 수치이므로, 잃었다가 다시 탈환한 정착지는 상쇄되어 0이 됩니다. 점령 이벤트로부터 기록되므로, 이 기능이 추가되기 전에 치러진 전쟁은 수치가 표시되지 않습니다.</Text>
+            <Text>점령으로 얻거나 잃은 순 정착지 수: 당신이 점령한 정착지는 +1, 당신에게서 점령당한 정착지는 −1로 계산됩니다. 개척자로 새 정착지를 건설하는 것은 포함되지 않으며, 실제로 주인이 바뀐 정착지만 셉니다. 순 수치이므로, 잃었다가 다시 탈환한 정착지는 상쇄되어 0이 됩니다. 점령 이벤트로부터 기록되므로, 이 기능이 추가되기 전에 치러진 전쟁은 수치가 표시되지 않습니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="ko_KR">
-            <Text>당신의 정착지 중 영구히 파괴된(초토화된) 수입니다. 도시를 초토화한 정복자가 아니라, 도시가 점령되기 전의 소유주였던 당신에게 부과됩니다. 도시를 되찾아 되돌릴 수 있는 점령과 달리 — 초토화된 도시는 영영 사라집니다. 이 추적 기능이 추가된 이후에 치러진 전쟁에 대해서만 기록됩니다.</Text>
+            <Text>당신의 정착지 중 영구히 파괴된(초토화된) 수입니다. 도시를 초토화한 정복자가 아니라, 도시가 점령되기 전의 소유주였던 당신에게 부과됩니다. 도시를 되찾아 되돌릴 수 있는 점령과 달리, 초토화된 도시는 영영 사라집니다. 이 추적 기능이 추가된 이후에 치러진 전쟁에 대해서만 기록됩니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="ko_KR">
-            <Text>전쟁에서 실제로 주인이 바뀐 영토로, 제곱킬로미터 단위입니다(각 지도 타일은 약 7,000 km²). 적에게서 점령했거나 — 적에게 잃은 — 정착지의 영토만 계산하며, 평화로운 확장과 국경 성장은 제외됩니다. 양수는 당신이 영토를 차지했음을, 음수는 영토를 잃었음을 의미합니다.</Text>
+            <Text>전쟁에서 실제로 주인이 바뀐 영토로, 제곱킬로미터 단위입니다(각 지도 타일은 약 7,000 km²). 적에게서 점령했거나, 적에게 잃은, 정착지의 영토만 계산하며, 평화로운 확장과 국경 성장은 제외됩니다. 양수는 당신이 영토를 차지했음을, 음수는 영토를 잃었음을 의미합니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="ko_KR">
-            <Text>당신이 잃은 총 인구로, 인구가 감소한 모든 턴을 합산한 값입니다 — 인구가 증가한 턴은 무시되므로, 정상적인 성장이 전시 손실을 결코 가릴 수 없습니다. 두 가지 한계가 있습니다: 같은 기간에 발생한 전쟁 사망과 기근을 구별할 수 없으며, 나중에 다시 탈환한 도시의 인구도 처음 잃은 턴에는 손실로 계산됩니다.</Text>
+            <Text>당신이 잃은 총 인구로, 인구가 감소한 모든 턴을 합산한 값입니다, 인구가 증가한 턴은 무시되므로, 정상적인 성장이 전시 손실을 결코 가릴 수 없습니다. 두 가지 한계가 있습니다: 같은 기간에 발생한 전쟁 사망과 기근을 구별할 수 없으며, 나중에 다시 탈환한 도시의 인구도 처음 잃은 턴에는 손실로 계산됩니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="ko_KR">
             <Text>식량 교란: 당신의 작물 산출량(턴당 순 식량)이 감소한 모든 턴마다 그 감소분이 합산됩니다(증가한 턴은 무시되므로 평범한 성장이 이를 가릴 수 없습니다). 큰 감소는 약탈된 농장과 타일, 그리고 점령되거나 상실된 도시에서 비롯됩니다. 이는 산출률 감소의 합계로, 교란의 대용 지표이지 식량의 총량이 아닙니다.</Text>
@@ -971,7 +971,7 @@
             <Text>생산력 교란: 당신의 턴당 생산력이 감소한 모든 턴마다 그 감소분이 합산됩니다(증가한 턴은 무시되므로 평범한 경제 성장이 이를 가릴 수 없습니다). 큰 감소는 약탈된 타일과 점령되거나 상실된 도시에서 비롯됩니다. 이는 산출률 감소의 합계로, 교란의 대용 지표이지 생산력의 총량이 아닙니다. 당신이 의도적으로 전쟁에 쏟아부은 생산력은 "전쟁에 투입"에서 별도로 추적됩니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="ko_KR">
-            <Text>당신이 전쟁 수행에 쓴 생산력: 전쟁 중에 완성한 모든 군사 유닛과 군사 또는 방어 시설 건물(성벽 등)의 생산 비용을 합산한 값입니다. 민간 유닛, 경제 건물, 불가사의는 포함되지 않습니다. 이는 손실이 아니라 전쟁에 대한 의도적 투자이므로 중립적인 수치로 표시됩니다. 비용은 해당 건물을 건설한 도시에서의 실효 비용이며 — 지도자, 문명, 정책 할인이 이미 반영되어 있습니다. 금이나 신앙으로 즉시 구매한 항목은 국고에서 나온 것이지 생산력이 아니므로 포함되지 않으며, 항목 간 생산력 이월분은 정확히 분리되지 않습니다.</Text>
+            <Text>당신이 전쟁 수행에 쓴 생산력: 전쟁 중에 완성한 모든 군사 유닛과 군사 또는 방어 시설 건물(성벽 등)의 생산 비용을 합산한 값입니다. 민간 유닛, 경제 건물, 불가사의는 포함되지 않습니다. 이는 손실이 아니라 전쟁에 대한 의도적 투자이므로 중립적인 수치로 표시됩니다. 비용은 해당 건물을 건설한 도시에서의 실효 비용이며, 지도자, 문명, 정책 할인이 이미 반영되어 있습니다. 금이나 신앙으로 즉시 구매한 항목은 국고에서 나온 것이지 생산력이 아니므로 포함되지 않으며, 항목 간 생산력 이월분은 정확히 분리되지 않습니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="ko_KR">
             <Text>역사는 시대가 전환될 때마다 초기화됩니다.</Text>
@@ -986,7 +986,7 @@
             <Text>현재 시대 또는 시대 범위 필터를 사용하세요.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="ko_KR">
-            <Text>전쟁 영향 — 선택한 전쟁에서 각 교전국의 궤적</Text>
+            <Text>전쟁 영향, 선택한 전쟁에서 각 교전국의 궤적</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ko_KR">
             <Text>문명을 만났을 때 전체 역사 공개</Text>
@@ -1126,7 +1126,7 @@
             <Text>마을</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="ko_KR">
-            <Text>내 마을을 실시간으로 — 특화, 규모, 성장을 한눈에.</Text>
+            <Text>내 마을을 실시간으로, 특화, 규모, 성장을 한눈에.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="ko_KR">
             <Text>마을이 없습니다. 정착지를 건설하거나 전환하면 여기에 표시됩니다.</Text>
@@ -1207,7 +1207,7 @@
             <Text>이 마을에 가장 알맞은 선택입니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="ko_KR">
-            <Text>아직 두드러진 타일이 없습니다 — 계속 성장(식량).</Text>
+            <Text>아직 두드러진 타일이 없습니다, 계속 성장(식량).</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="ko_KR">
             <Text>인구 {1_Pop}이(가) {2_Min} 미만입니다; 전환 전에 성장하세요.</Text>
@@ -1216,7 +1216,7 @@
             <Text>골드 {1_Cost} 필요; 국고에 {2_Gold} 보유.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="ko_KR">
-            <Text>인구 {1_Pop}이며 비용 가능 — 도시는 생산과 구역을 해금합니다.</Text>
+            <Text>인구 {1_Pop}이며 비용 가능, 도시는 생산과 구역을 해금합니다.</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="ko_KR">
             <Text>제국: 도시 {1_Cities}, 마을 {2_Towns} · 가장 부족한 산출: {3_Need}</Text>

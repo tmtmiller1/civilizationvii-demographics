@@ -16,7 +16,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ru_RU"><Text>Поселения</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ru_RU"><Text>Технологии</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ru_RU"><Text>Соц. институты</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ru_RU"><Text>Совокупный показатель мощи — то же число, что используется на экране победы.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ru_RU"><Text>Совокупный показатель мощи, то же число, что используется на экране победы.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="ru_RU"><Text>Текущий баланс казны.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="ru_RU"><Text>Общее число принадлежащих вам городов и поселков.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="ru_RU"><Text>Число полностью изученных узлов технологий в дереве текущей эпохи.</Text></Replace>
@@ -24,11 +24,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ru_RU"><Text>ВВП</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ru_RU"><Text>Сравнительная оценка масштаба экономики на основе доходов за ход и длительности партии.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ru_RU"><Text>Пр-во/ход</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ru_RU"><Text>Производство за ход — то, что строят ваши города.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ru_RU"><Text>Производство за ход, то, что строят ваши города.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ru_RU"><Text>Наука</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ru_RU"><Text>Наука за ход — двигает исследование технологий.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ru_RU"><Text>Наука за ход, двигает исследование технологий.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ru_RU"><Text>Культура</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ru_RU"><Text>Культура за ход — двигает прогресс соц. институтов.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ru_RU"><Text>Культура за ход, двигает прогресс соц. институтов.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ru_RU"><Text>Урожайность</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ru_RU"><Text>Чистое производство еды за ход по всем поселениям.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ru_RU"><Text>Дипломатическое одобрение</Text></Replace>
@@ -106,7 +106,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="ru_RU"><Text>Наука</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="ru_RU"><Text>Экспансия</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="ru_RU"><Text>Прочее</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок — сыграйте ход и откройте снова.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок, сыграйте ход и откройте снова.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="ru_RU"><Text>Невстреченная цивилизация</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ru_RU"><Text>Чудо</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ru_RU"><Text>Построено</Text></Replace>
@@ -147,15 +147,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="ru_RU"><Text>Начало Эпохи освоения</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="ru_RU"><Text>Начало Современности</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="ru_RU"><Text>Лимит 100%</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ru_RU"><Text>Графики недоступны — Chart.js не загружен.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ru_RU"><Text>Не удалось отрисовать график — см. UI.log.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ru_RU"><Text>Графики недоступны, Chart.js не загружен.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ru_RU"><Text>Не удалось отрисовать график, см. UI.log.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="ru_RU"><Text>Бонус</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="ru_RU"><Text>Империя</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="ru_RU"><Text>Город</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="ru_RU"><Text>Фабрика</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="ru_RU"><Text>Сокровище</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="ru_RU"><Text>Время (ход / год)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ru_RU"><Text>Пока нет выборок ресурсов — как только вы назначите первый ресурс, график заполнится.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ru_RU"><Text>Пока нет выборок ресурсов, как только вы назначите первый ресурс, график заполнится.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="ru_RU"><Text>Назначено ресурсов (количество)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="ru_RU"><Text>Триумф</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="ru_RU"><Text>Памятный · {1_Label}</Text></Replace>
@@ -201,7 +201,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ru_RU"><Text>(наблюдаемое изменение)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ru_RU"><Text>Пока нет войн. Как только любая цивилизация объявит войну, временная шкала заполнится.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ru_RU"><Text>Нет войн, соответствующих текущим фильтрам.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок — сначала сыграйте ход.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ru_RU"><Text>Пока нет выборок, сначала сыграйте ход.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ru_RU"><Text>CSV слишком большой ({1_SizeMB} МБ). Снизьте лимит выборок в настройках и повторите.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ru_RU"><Text>Скопировано · {1_Rows} строк × {2_Cols} столбцов{3_SizeTag} · вставьте в Excel / Sheets / файл .csv</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ru_RU"><Text>Буфер обмена недоступен. CSV записан в UI.log.</Text></Replace>
@@ -217,12 +217,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="ru_RU"><Text>&lt;p&gt;Этот показатель суммирует относительный экономический вес цивилизации по ходу партии.&lt;/p&gt;&lt;p&gt;Он объединяет основные доходы и учитывает число прошедших ходов, чтобы было проще сравнивать империи на разных этапах одной и той же партии.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Описательный индикатор: не меняет игровые механики.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="ru_RU"><Text>ⓘ Дипломатическое одобрение: сводка внешних отношений  ·  наведите для деталей</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="ru_RU"><Text>Дипломатическое одобрение</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ru_RU"><Text>&lt;p&gt;Этот показатель кратко отражает общее состояние дипломатических отношений со встреченными цивилизациями.&lt;/p&gt;&lt;p&gt;Более высокие значения означают более благоприятную обстановку, более низкие — более враждебную или нестабильную.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Описательный индикатор: не меняет игровые механики.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="ru_RU"><Text>&lt;p&gt;Этот показатель кратко отражает общее состояние дипломатических отношений со встреченными цивилизациями.&lt;/p&gt;&lt;p&gt;Более высокие значения означают более благоприятную обстановку, более низкие, более враждебную или нестабильную.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Описательный индикатор: не меняет игровые механики.&lt;/i&gt;&lt;/p&gt;</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="ru_RU"><Text>Текущий</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ru_RU"><Text>Конец 1-й эпохи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ru_RU"><Text>Конец 2-й эпохи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ru_RU"><Text>Снимок:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ru_RU"><Text>Пока нет снимка — эпоха не завершилась.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ru_RU"><Text>Пока нет снимка, эпоха не завершилась.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ru_RU"><Text>Обновить</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ru_RU"><Text>Перезагрузить прогресс наследия.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ru_RU"><Text>Все крупные цивилизации</Text></Replace>
@@ -280,10 +280,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ru_RU"><Text>Показать все скрытые цивилизации</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ru_RU"><Text>Нажмите на столбец, чтобы отсортировать цивилизации по нему. Переключатель «Ранг / Значение» меняет содержимое ячеек.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ru_RU"><Text>Не встречена</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто — нажмите, чтобы показать)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто, нажмите, чтобы показать)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ru_RU"><Text>Нажмите, чтобы показать</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ru_RU"><Text>Нажмите, чтобы скрыть</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ru_RU"><Text>Радар триумфов — все цивилизации, все 6 путей атрибутов</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ru_RU"><Text>Радар триумфов, все цивилизации, все 6 путей атрибутов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ru_RU"><Text>Триумфы с течением времени</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ru_RU"><Text>(Накопительный счет, с разбивкой по атрибутам)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ru_RU"><Text>Распределение ресурсов с течением времени (область с накоплением)</Text></Replace>
@@ -310,7 +310,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ru_RU"><Text>Каждые 10 ходов</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ru_RU"><Text>Каждые 25 ходов (грубые графики)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ru_RU"><Text>Частота выборки (производительность):</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Чем выше значение, тем реже создаётся снимок, поэтому мод выполняет меньше работы за ход — легче на медленных компьютерах и в долгих партиях. Применяется со следующего хода; существующие выборки сохраняются.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ru_RU"><Text>Чем выше значение, тем реже создаётся снимок, поэтому мод выполняет меньше работы за ход, легче на медленных компьютерах и в долгих партиях. Применяется со следующего хода; существующие выборки сохраняются.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ru_RU"><Text>Отключить прореживание и сохранять все выборки даже после достижения лимита.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ru_RU"><Text>Очистить все записанные выборки Демографии?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ru_RU"><Text>Очистить все записанные войны? История выборок и другие данные будут сохранены.</Text></Replace>
@@ -785,13 +785,13 @@
             <Text>Кризис</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="ru_RU">
-            <Text>Лимит истории {1_Cap} — старые выборки прореживаются для умещения.</Text>
+            <Text>Лимит истории {1_Cap}, старые выборки прореживаются для умещения.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="ru_RU">
-            <Text>Лимит истории {1_Cap} — прореживания пока нет.</Text>
+            <Text>Лимит истории {1_Cap}, прореживания пока нет.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="ru_RU">
-            <Text>Прореживание отключено — сохраняются все выборки.</Text>
+            <Text>Прореживание отключено, сохраняются все выборки.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ru_RU">
             <Text>Скрывать данные дипломатии/отношений для невстреченных цивилизаций</Text>
@@ -947,22 +947,22 @@
             <Text>Направлено на войну</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="ru_RU">
-            <Text>Ваша текущая военная мощь — суммарная боевая сила вашей армии — на момент окончания войны (или на последний ход, пока она продолжается). Это размер ваших войск, а не потери; показатель «Военная мощь (потеряно)» ниже отражает потери.</Text>
+            <Text>Ваша текущая военная мощь, суммарная боевая сила вашей армии, на момент окончания войны (или на последний ход, пока она продолжается). Это размер ваших войск, а не потери; показатель «Военная мощь (потеряно)» ниже отражает потери.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="ru_RU">
-            <Text>Боевая сила ваших юнитов, фактически убитых в бою, суммированная по мере гибели каждого юнита (его базовая боевая сила). Это истинные потери — постройка замены никогда не скрывает потерю, и показатель не выводится из размера вашей действующей армии. Войны, которые велись до появления этого учёта, вместо этого опираются на чистое падение суммарной силы вашей армии.</Text>
+            <Text>Боевая сила ваших юнитов, фактически убитых в бою, суммированная по мере гибели каждого юнита (его базовая боевая сила). Это истинные потери, постройка замены никогда не скрывает потерю, и показатель не выводится из размера вашей действующей армии. Войны, которые велись до появления этого учёта, вместо этого опираются на чистое падение суммарной силы вашей армии.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="ru_RU">
-            <Text>Чистое число поселений, выигранных или потерянных при захвате: захваченное вами поселение засчитывается как +1, захваченное у вас — как −1. Основание нового поселения с помощью поселенца не засчитывается — учитываются только поселения, которые действительно переходят из рук в руки. Поскольку это чистый показатель, поселение, которое вы потеряли и затем отбили, обнуляется до нуля. Он записывается по событиям захвата, поэтому война, которая велась до его добавления, не показывает значения.</Text>
+            <Text>Чистое число поселений, выигранных или потерянных при захвате: захваченное вами поселение засчитывается как +1, захваченное у вас, как −1. Основание нового поселения с помощью поселенца не засчитывается, учитываются только поселения, которые действительно переходят из рук в руки. Поскольку это чистый показатель, поселение, которое вы потеряли и затем отбили, обнуляется до нуля. Он записывается по событиям захвата, поэтому война, которая велась до его добавления, не показывает значения.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="ru_RU">
-            <Text>Сколько ваших поселений было безвозвратно уничтожено (разрушено). Это засчитывается вам как владельцу на момент до захвата города, а не завоевателю, который его разрушил. В отличие от захвата — который можно обратить, отбив город, — разрушенный город потерян навсегда. Записывается только для войн, которые велись после добавления этого учёта.</Text>
+            <Text>Сколько ваших поселений было безвозвратно уничтожено (разрушено). Это засчитывается вам как владельцу на момент до захвата города, а не завоевателю, который его разрушил. В отличие от захвата, который можно обратить, отбив город, разрушенный город потерян навсегда. Записывается только для войн, которые велись после добавления этого учёта.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="ru_RU">
-            <Text>Территория, которая действительно перешла из рук в руки в войне, в квадратных километрах (каждая клетка карты — около 7000 км²). Учитывается только земля поселений, захваченных у врага или потерянных в его пользу; мирное расширение и рост границ исключаются. Положительное число означает, что вы заняли территорию; отрицательное — что вы её потеряли.</Text>
+            <Text>Территория, которая действительно перешла из рук в руки в войне, в квадратных километрах (каждая клетка карты, около 7000 км²). Учитывается только земля поселений, захваченных у врага или потерянных в его пользу; мирное расширение и рост границ исключаются. Положительное число означает, что вы заняли территорию; отрицательное, что вы её потеряли.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="ru_RU">
-            <Text>Суммарное население, которое вы потеряли, сложенное по каждому ходу, когда ваше население падало, — ходы, когда оно росло, игнорируются, так что обычный рост никогда не может замаскировать военные потери. Два ограничения: невозможно отличить гибель на войне от голода в тот же период, а население города, который вы позже отбили, всё равно считается потерянным на тот ход, когда оно впервые упало.</Text>
+            <Text>Суммарное население, которое вы потеряли, сложенное по каждому ходу, когда ваше население падало, ходы, когда оно росло, игнорируются, так что обычный рост никогда не может замаскировать военные потери. Два ограничения: невозможно отличить гибель на войне от голода в тот же период, а население города, который вы позже отбили, всё равно считается потерянным на тот ход, когда оно впервые упало.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="ru_RU">
             <Text>Нарушение снабжения едой: за каждый ход, когда ваша урожайность (чистая еда за ход) падала, это падение суммируется (ходы, когда она росла, игнорируются, так что обычный рост не может его скрыть). Большие падения происходят из-за разграбленных ферм и клеток, а также из-за оккупированных или потерянных городов. Это сумма падений скорости, косвенный показатель нарушения, а не общее количество еды.</Text>
@@ -971,7 +971,7 @@
             <Text>Нарушение производства: за каждый ход, когда ваше производство за ход падало, это падение суммируется (ходы, когда оно росло, игнорируются, так что обычный экономический рост не может его скрыть). Большие падения происходят из-за разграбленных клеток, а также из-за оккупированных или потерянных городов. Это сумма падений скорости, косвенный показатель нарушения, а не общее количество производства. Производство, которое вы намеренно вложили в войну, учитывается отдельно в разделе «Направлено на войну».</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="ru_RU">
-            <Text>Производство, которое вы потратили на военные нужды: производственная стоимость каждого военного юнита и каждого военного или фортификационного здания (стены и т. п.), завершённого вами во время войны, суммированная воедино. Гражданские юниты, экономические здания и чудеса не учитываются. Это намеренное вложение в войну, а не потеря, поэтому оно показано как нейтральное значение. Стоимость — это эффективная стоимость в построившем городе; скидки вашего лидера, цивилизации и политических курсов уже учтены. Предметы, купленные напрямую за золото или веру, не учитываются, поскольку это казна, а не производство; излишек производства между предметами не выделяется точно.</Text>
+            <Text>Производство, которое вы потратили на военные нужды: производственная стоимость каждого военного юнита и каждого военного или фортификационного здания (стены и т. п.), завершённого вами во время войны, суммированная воедино. Гражданские юниты, экономические здания и чудеса не учитываются. Это намеренное вложение в войну, а не потеря, поэтому оно показано как нейтральное значение. Стоимость, это эффективная стоимость в построившем городе; скидки вашего лидера, цивилизации и политических курсов уже учтены. Предметы, купленные напрямую за золото или веру, не учитываются, поскольку это казна, а не производство; излишек производства между предметами не выделяется точно.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="ru_RU">
             <Text>История сбрасывается при каждом переходе между эпохами.</Text>
@@ -986,7 +986,7 @@
             <Text>Используйте текущую эпоху или фильтр по диапазону эпох.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="ru_RU">
-            <Text>Последствия войны — траектория каждой воюющей стороны в выбранной войне</Text>
+            <Text>Последствия войны, траектория каждой воюющей стороны в выбранной войне</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ru_RU">
             <Text>Раскрывать всю историю при встрече с цивилизацией</Text>
@@ -1126,7 +1126,7 @@
             <Text>Посёлки</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="ru_RU">
-            <Text>Ваши посёлки в реальном времени — специализация, размер и рост с одного взгляда.</Text>
+            <Text>Ваши посёлки в реальном времени, специализация, размер и рост с одного взгляда.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="ru_RU">
             <Text>У вас нет посёлков. Основайте или преобразуйте поселение, чтобы увидеть его здесь.</Text>
@@ -1162,7 +1162,7 @@
             <Text>Советник</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="ru_RU">
-            <Text>Эвристические подсказки по клеткам, размеру и доходам каждого посёлка. Только советы — в игре ничего не меняется.</Text>
+            <Text>Эвристические подсказки по клеткам, размеру и доходам каждого посёлка. Только советы, в игре ничего не меняется.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="ru_RU">
             <Text>{1_Name} (нас. {2_Pop})</Text>
@@ -1183,19 +1183,19 @@
             <Text>Оставить посёлком</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="ru_RU">
-            <Text>{1_Count} клеток ферм/пастбищ/плантаций — в пользу еды.</Text>
+            <Text>{1_Count} клеток ферм/пастбищ/плантаций, в пользу еды.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="ru_RU">
-            <Text>{1_Count} клеток шахт/карьеров/лагерей — в пользу производства.</Text>
+            <Text>{1_Count} клеток шахт/карьеров/лагерей, в пользу производства.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="ru_RU">
-            <Text>{1_Count} прибрежных/рыболовных клеток — в пользу рыболовства.</Text>
+            <Text>{1_Count} прибрежных/рыболовных клеток, в пользу рыболовства.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="ru_RU">
             <Text>Центральное расположение связывает {1_Count} поселений.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="ru_RU">
-            <Text>Высокий доход золота — в пользу торгового фокуса.</Text>
+            <Text>Высокий доход золота, в пользу торгового фокуса.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="ru_RU">
             <Text>Большое население ({1_Count}) подходит для городского центра.</Text>
@@ -1207,7 +1207,7 @@
             <Text>Лучший общий выбор для этого посёлка.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="ru_RU">
-            <Text>Пока нет выдающихся клеток — продолжайте расти (еда).</Text>
+            <Text>Пока нет выдающихся клеток, продолжайте расти (еда).</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="ru_RU">
             <Text>Население {1_Pop} ниже {2_Min}; сначала вырастите.</Text>
@@ -1216,7 +1216,7 @@
             <Text>Нужно {1_Cost} золота; в казне {2_Gold}.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="ru_RU">
-            <Text>Население {1_Pop} и по карману — город откроет производство и районы.</Text>
+            <Text>Население {1_Pop} и по карману, город откроет производство и районы.</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="ru_RU">
             <Text>Держава: городов {1_Cities}, посёлков {2_Towns} · слабее всего: {3_Need}</Text>
@@ -1360,7 +1360,7 @@
             <Text>Полный рейтинг цивилизаций</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="ru_RU">
-            <Text>Здесь «Очки» — это суммарный выпуск цивилизации: еда, производство, золото, наука и культура всех её поселений. Это не официальные игровые очки из окна побед, которые считаются иначе.</Text>
+            <Text>Здесь «Очки», это суммарный выпуск цивилизации: еда, производство, золото, наука и культура всех её поселений. Это не официальные игровые очки из окна побед, которые считаются иначе.</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="ru_RU">
             <Text>Видимость аналитики</Text>
