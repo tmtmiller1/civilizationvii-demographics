@@ -353,7 +353,7 @@ class ScreenDemographics extends Panel {
    */
   _ensureInitialSample() {
     if (!(this.history.samples?.length > 0) && this.sampler?.sampleNow) {
-      dlog("history empty — forcing on-demand sampleNow()");
+      dlog("history empty ; forcing on-demand sampleNow()");
       safeCall(() => {
         this.sampler.sampleNow();
         if (this.storage?.load) this.history = this.storage.load() || this.history;
@@ -718,7 +718,7 @@ try {
     dlog("about to call Controls.define('screen-demographics', ...)");
     Controls.define("screen-demographics", {
       createInstance: ScreenDemographics,
-      description: "Demographics — multi-view stats panel.",
+      description: "Demographics , multi-view stats panel.",
       // GameFace honors only the FIRST CSS @import, so load each split stylesheet
       // here (cascade order preserved) instead of @import-chaining them through
       // screen-demographics.css.

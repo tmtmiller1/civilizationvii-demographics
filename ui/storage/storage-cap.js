@@ -106,7 +106,7 @@ function capFromString(override) {
 /**
  * Resolve adaptive cap from game speed, then scale by the hardware-capability /
  * game-size factor (P1.6) so weak machines and many-civ games retain fewer
- * samples — floored at ADAPTIVE_MIN and capped at HARD_MAX_SAMPLES.
+ * samples , floored at ADAPTIVE_MIN and capped at HARD_MAX_SAMPLES.
  * @returns {{ cap: number, source: string }} Effective cap.
  */
 function adaptiveCap() {

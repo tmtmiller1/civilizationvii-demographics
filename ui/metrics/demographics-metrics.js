@@ -450,7 +450,7 @@ export const METRICS = [
   {
     id: "crisis_stage",
     label: "Crisis Stage",
-    title: "Crisis Stage — 1 = Begins · 2 = Intensifies · 3 = Culminates · 4 = Ends",
+    title: "Crisis Stage , 1 = Begins · 2 = Intensifies · 3 = Culminates · 4 = Ends",
     category: "age",
     global: true,
     worldRankingsAllCivsHidden: true,
@@ -641,7 +641,7 @@ export function registerMetricToPage(pageId, metricId, afterMetricId) {
 
 /**
  * Pending external dashboard PANELS. Unlike registerMetricToPage (which adds a line-chart tab to an
- * existing page), a panel is a whole companion-owned page whose body the companion renders itself —
+ * existing page), a panel is a whole companion-owned page whose body the companion renders itself ,
  * the screen just hands it a container. Consumed by view-history at render time.
  * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function}[]}
  */

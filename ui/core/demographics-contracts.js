@@ -102,7 +102,7 @@ export function logContractReport() {
     if (!status.ok) {
       console.error(
         "[Demographics.contracts] '" + feature +
-        "' degraded — disabled; missing: " + status.missing.join(", ")
+        "' degraded , disabled; missing: " + status.missing.join(", ")
       );
     }
   }

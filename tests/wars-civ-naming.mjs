@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 // War rosters must name each belligerent by the civ they WERE when the war happened, not the
 // player's current-age civ (a player is Han in Antiquity but Qajar in Modern; history persists
 // across ages). migrateWarRecords re-derives civ identity from the recorded sample at the war's
-// start chart-turn. Engine globals are absent here, so pidInfo falls back to the snapshot — the
+// start chart-turn. Engine globals are absent here, so pidInfo falls back to the snapshot , the
 // deterministic path asserted below.
 import { migrateWarRecords } from "/demographics/ui/sampler/sampler-wars-augment.js";
 

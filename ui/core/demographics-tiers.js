@@ -14,7 +14,7 @@
 //   analyst  - everything, including the storage cap / decimation / sample-rate
 //              power-user controls.
 //
-// Nothing is deleted — a higher tier reveals more. Reads fail safe to `standard`
+// Nothing is deleted , a higher tier reveals more. Reads fail safe to `standard`
 // so a thrown/absent setting never hides core functionality.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
@@ -79,7 +79,7 @@ export function viewTabVisibleInTier(viewId) {
 }
 
 /**
- * Whether the advanced camera (cinematic / flyby) options are shown — standard+.
+ * Whether the advanced camera (cinematic / flyby) options are shown , standard+.
  * @returns {boolean} True at standard or analyst.
  */
 export function showCameraOptionsInTier() {
@@ -87,7 +87,7 @@ export function showCameraOptionsInTier() {
 }
 
 /**
- * Whether the advanced storage / sampling tuning options are shown — analyst only.
+ * Whether the advanced storage / sampling tuning options are shown , analyst only.
  * @returns {boolean} True at analyst.
  */
 export function showStorageOptionsInTier() {

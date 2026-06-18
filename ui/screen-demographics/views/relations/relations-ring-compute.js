@@ -141,7 +141,7 @@ export function applyCsEdgeOverrides(edges) {
  * filter-pill swatch is a faithful key for the lines on the ring.
  *
  * The diplomacy-event builders ("Research Agreements", "Other Endeavors") tagged
- * each edge with its own per-action color — so endeavor lines came out in nine
+ * each edge with its own per-action color , so endeavor lines came out in nine
  * different hues and research's sabotage edge came out red, none matching the
  * single-color pill. That made it impossible to tell which line a filter owned
  * (a purple endeavor line looked like "Research"). Aligning color to the pill
@@ -207,7 +207,7 @@ export function computeCivRingData(rs, activeSet, names) {
     ringIds: rs.metIds.slice(),
     edges: filterEdgesByActiveSet(slot.edges, activeSet),
     names,
-    // No descriptive caption — the diagram + legend are self-explanatory. (The
+    // No descriptive caption , the diagram + legend are self-explanatory. (The
     // focus hint still appends here when nodes are selected.)
     capText: "",
     ringViewerPid: localId

@@ -3,7 +3,7 @@
 // Balance telemetry + alert thresholds (combined design plan P2.7).
 //
 // Beyond the per-sample DURATION timing already logged from the sampler, this
-// emits a BALANCE-health signal: a suspected runaway leader — one civ whose
+// emits a BALANCE-health signal: a suspected runaway leader , one civ whose
 // score dominates the field (by share of total AND multiple of the median).
 // That's the demographics-side analogue of the emigration net-flow / refugee
 // concentration alerts, surfacing snowballing during playtests.

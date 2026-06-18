@@ -4,7 +4,7 @@
 
 Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays.
 
-It is intended to be the spiritual successor to robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and an extension of Slothoth's Global Relations for Civilization VII that adds additional diplomatic concerns and filtering.
+It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and Slothoth's Global Relations for Civilization VII with added diplomatic concerns and filtering.
 
 [b]The Mod Includes:[/b]
 [list]
@@ -12,8 +12,8 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [*]A All Civilizations view with current values and world rankings for each civilization.
 [*]A Global Relations view with met civilizations and city-states arranged in a ring layout.
 [*]A war timeline built from diplomacy events.
-[*]Readable shipped source modules (release builds are not minified by default; written in readable JS with JSDoc types and tsc --noEmit).
-[*]Copy-to-CSV for recorded history (true export unavailable for modding).
+[*]Clear metric definitions and transparent behavior descriptions so each charted value is easy to interpret.
+[*]Copy-to-CSV for recorded history so captured trends can be reviewed outside the game.
 [*]Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
 [/list]
 

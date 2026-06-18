@@ -58,7 +58,7 @@ const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 // Flat tint applied to our dock icon so it reads as the same color as the
 // vanilla subsystem-dock icons (tech/civic/…), which are flat light-parchment
 // silhouettes. We MASK the SVG (silhouette only) and fill it with this color,
-// rather than painting the SVG's own gradient + gold outline — the latter made
+// rather than painting the SVG's own gradient + gold outline , the latter made
 // our icon look gold-edged and out of place next to the others. (Same technique
 // the base theme uses for its mask icons, e.g. .checkmark-icon in default.css.)
 const ICON_TINT = "#ecdfbf";

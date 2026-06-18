@@ -340,7 +340,7 @@ function buildRadarLegendDot(c, isHidden) {
 function buildRadarLegendText(c) {
   const txt = document.createElement("span");
   txt.className = "demographics-chart-line-label-text";
-  txt.textContent = c.name + " — Σ " + radarTriumphTotal(c);
+  txt.textContent = c.name + " , Σ " + radarTriumphTotal(c);
   return txt;
 }
 

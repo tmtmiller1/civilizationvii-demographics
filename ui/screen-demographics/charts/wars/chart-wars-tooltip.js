@@ -143,7 +143,7 @@ export function renderWarTooltip(tooltip, w, ctx) {
 
   appendCsAllies(tooltip, tip, samples, win);
 
-  // Sign key — explains the green/red/dash figure convention right where the
+  // Sign key , explains the green/red/dash figure convention right where the
   // figures are (replaces the old Guide tab's intro/legend note).
   appendDivider(tooltip);
   tooltip.appendChild(buildTooltipKey());

@@ -457,7 +457,7 @@ function appendCsAgreementEdge(edges, ev, csId, ctx) {
 /**
  * Build City-State cooperative-agreement edges (major -> CS): befriending plus the
  * suzerain benefit directives. Mirrors the major-civ agreement scan but reads each
- * CS's own event list — the base befriend-independent screen reads
+ * CS's own event list , the base befriend-independent screen reads
  * `getPlayerEvents(targetIndependent)` and matches `GIVE_INFLUENCE_TOKEN`.
  * @param {number[]} metIds Met major ids.
  * @param {number[]} csIds City-state ids.

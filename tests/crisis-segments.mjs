@@ -85,7 +85,7 @@ function testLingeringStageDoesNotSpawnPhantomCrisis() {
     crisisSample(A, 2, 1),
     crisisSample(A, 3, 2),
     crisisSample(A, 4, 3),
-    crisisSample(E, 1, 3), // lingering — must NOT count as an onset
+    crisisSample(E, 1, 3), // lingering , must NOT count as an onset
     crisisSample(E, 2, 3),
     crisisSample(E, 3, 0), // pre-crisis confirmed -> armed
     crisisSample(E, 4, 1), // genuine Exploration onset

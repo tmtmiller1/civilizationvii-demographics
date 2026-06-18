@@ -113,7 +113,7 @@ function testDarkGreyPrimarySwapsToSecondary() {
 }
 
 function testDarkButSaturatedPrimaryIsKept() {
-  // A dark navy is saturated, not a grey — keep its identity, don't swap.
+  // A dark navy is saturated, not a grey , keep its identity, don't swap.
   assert.equal(
     preferReadableColor("#1a3a6e", "#ffffff"),
     "#1a3a6e",

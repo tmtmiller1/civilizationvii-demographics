@@ -13,11 +13,11 @@ The in-game stats screen Civilization VII is missing: per-turn graphs, leaderboa
 - **Real-world scale:** figures rendered as representative populations (millions), GDP ($billions), and territory (km²).
 - **Yours to tune:** per-civ colors, time-range filters, hide/focus, smoothing, colorblind mode, CSV export, and adjustable sampling.
 
-Everything below is the full reference. New to the mod? Open it from the subsystem dock and explore the tabs; the bullets above are all you need to start.
+The sections below explain each feature and setting in detail. Start with the tabs, then use later sections for specific mechanics and behavior.
 
 ---
 
-Intended to be the spiritual successor to robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and an extension of Slothoth's Global Relations panel with added filters (Civ VII). Open source, with full readable source included.
+Built on the foundations of robk's InfoAddict (Civ V), Gedemon's CivGraphs (Civ VI), and Slothoth's Global Relations panel (Civ VII), with added filters. Open source, with full readable source included.
 
 ---
 
@@ -120,10 +120,10 @@ Because losses are summed from per-turn dips, coarse sampling (or the decimation
 - Settings persist in `localStorage`. Recorded history persists per save game via the GameConfiguration store, carrying across quit/load and age transitions.
 - History sample caps scale with game speed and can be overridden in Options. Lower the sample frequency there to cut per-turn work on slow machines or long games.
 - The auto sample cap also adapts to hardware (CPU cores / device memory / mobile) and game size (player count), shrinking retention on weak machines and many-civ games (floored so history is never starved); an explicit override always wins. Chart rendering is additionally clamped to a per-series point budget scaled by the same capability factor, so a marathon-length line plots a bounded number of points after the visible-range filter.
-- UI complexity tiers (Options → Interface → *Complexity*) progressively disclose features: **Basic** shows only the core stat pages (Economy / Power / Knowledge) and hides the advanced History pages, the Relations network tab, and the tuning controls; **Standard** (default) shows every page and tab but keeps the advanced storage/sampling controls hidden; **Analyst** exposes everything, including the storage-cap, decimation, and sample-rate controls. Advanced History pages also carry a one-line description so their purpose is clear. Nothing is removed — a higher tier reveals more.
+- UI complexity tiers (Options → Interface → *Complexity*) progressively disclose features: **Basic** shows only the core stat pages (Economy / Power / Knowledge) and hides the advanced History pages, the Relations network tab, and the tuning controls; **Standard** (default) shows every page and tab but keeps the advanced storage/sampling controls hidden; **Analyst** exposes everything, including the storage-cap, decimation, and sample-rate controls. Advanced History pages also carry a one-line description so their purpose is clear. Nothing is removed: a higher tier reveals more.
 - Colorblind mode swaps chart and relationship colors to a colorblind-safe set.
-- Analytics visibility is governed by a single policy (Options → Spoilers → *Analytics visibility*), with four levels: **All civilizations**, **Met civilizations only** (default — diplomacy/influence/relations for unmet civs are withheld and the charts show a gap), **Own civilization only**, and **Disabled (own civ only)**. The policy is enforced at both the data layer (chart series, rankings table, and relations network drop the hidden civs) and the render layer (a banner above the views states the active policy).
-- Multiplayer governance: the host's chosen policy is written to the shared `GameConfiguration` and becomes a ceiling for every player that game — each client can restrict their own view further but never see more than the host allows. The in-screen banner notes when the host (rather than a local preference) is the binding constraint. In single-player you are effectively the host, so the dropdown simply sets your own visibility.
+- Analytics visibility is governed by a single policy (Options → Spoilers → *Analytics visibility*), with four levels: **All civilizations**, **Met civilizations only** (default: diplomacy/influence/relations for unmet civs are withheld and the charts show a gap), **Own civilization only**, and **Disabled (own civ only)**. The policy is enforced at both the data layer (chart series, rankings table, and relations network drop the hidden civs) and the render layer (a banner above the views states the active policy).
+- Multiplayer governance: the host's chosen policy is written to the shared `GameConfiguration` and becomes a ceiling for every player that game: each client can restrict their own view further but never see more than the host allows. The in-screen banner notes when the host (rather than a local preference) is the binding constraint. In single-player you are effectively the host, so the dropdown simply sets your own visibility.
 
 ## 8. Companion-mod integration
 
@@ -137,14 +137,14 @@ The handshake is load-order-independent: registrations made before this screen l
 
 ### Performance on large saves (with Emigration installed)
 
-If late-game turns feel heavy with both mods active, two safe levers help — in this order:
+If late-game turns feel heavy with both mods active, two safe levers help, in this order:
 
 1. **Lower Demographics' sampling frequency first** (Options → sampling): this mod samples every met civilization's metrics each turn, so a coarser cadence is the bigger per-turn win. It only changes how *often* the charts gain a data point, never the figures themselves.
 2. **Then raise Emigration's `turnInterval`** (Options → Mods → Emigration - Advanced) so its migration pass runs less often.
 
-Both are pure cadence levers — they change update frequency, not behavior or graph semantics.
+Both are pure cadence levers, they change update frequency, not behavior or graph semantics.
 
-**Measuring the combined cost** (developer recipe, not gameplay): on a turn where both mods fire, the debug logs report Emigration's pass duration and Demographics' sample duration; opening the **Migration** page exercises the shared render core. Comparing those three tells you whether a turn spike is the Emigration pass, the Demographics sample, or the embedded page — the cross-mod bridge itself is a thin read-only layer over each mod's existing tallies.
+**Measuring the combined cost** (developer recipe, not gameplay): on a turn where both mods fire, the debug logs report Emigration's pass duration and Demographics' sample duration; opening the **Migration** page exercises the shared render core. Comparing those three tells you whether a turn spike is the Emigration pass, the Demographics sample, or the embedded page: the cross-mod bridge itself is a thin read-only layer over each mod's existing tallies.
 
 ## 9. Install and run
 

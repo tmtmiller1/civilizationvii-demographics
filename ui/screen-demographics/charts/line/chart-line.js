@@ -558,7 +558,7 @@ function prepareLineChartRender(host, options) {
   const metricId = opts.metric || "score";
 
   if (typeof Chart === "undefined") {
-    console.error("[Demographics.chart] Chart.js global missing — cannot render");
+    console.error("[Demographics.chart] Chart.js global missing ; cannot render");
     return null;
   }
   applyEngineChartDefaults();
