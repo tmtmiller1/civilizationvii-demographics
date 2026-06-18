@@ -1425,5 +1425,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="ja_JP">
             <Text>危機の段階と文明ごとのコスト。</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="ja_JP"><Text>難民</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="ja_JP"><Text>戦争中の包囲・略奪・征服によって追われ、他所へ再定住した人口。Emigration モッドが導入されている場合に提供されます。</Text></Replace>
     </LocalizedText>
 </Database>

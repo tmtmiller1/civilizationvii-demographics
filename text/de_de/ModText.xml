@@ -1983,5 +1983,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="de_DE">
             <Text>Krisenphasen und ihre Kosten pro Zivilisation.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="de_DE"><Text>Flüchtlinge</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="de_DE"><Text>Bevölkerung, die während des Krieges durch Belagerung, Plünderung oder Eroberung vertrieben und anderswo neu angesiedelt wurde, beigesteuert vom Emigration-Mod, sofern installiert.</Text></Replace>
     </LocalizedText>
 </Database>

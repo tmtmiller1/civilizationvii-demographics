@@ -1425,5 +1425,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="it_IT">
             <Text>Fasi della crisi e i loro costi per civiltà.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="it_IT"><Text>Profughi</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="it_IT"><Text>Popolazione sfollata da assedio, saccheggio o conquista durante la guerra e reinsediata altrove, fornita dal mod Emigration quando è installato.</Text></Replace>
     </LocalizedText>
 </Database>
