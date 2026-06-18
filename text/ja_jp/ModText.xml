@@ -24,11 +24,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ja_JP"><Text>GDP</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの産出と経過ターン数に基づく、経済規模の比較用指標です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ja_JP"><Text>PPT</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの生産力 — 都市が建設するもの。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの生産力、都市が建設するもの。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ja_JP"><Text>科学</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの科学 — テクノロジー研究を推進します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの科学、テクノロジー研究を推進します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ja_JP"><Text>文化</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの文化 — 社会制度の進捗を推進します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの文化、社会制度の進捗を推進します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ja_JP"><Text>作物産出</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ja_JP"><Text>全入植地における1ターンあたりの純食料産出。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ja_JP"><Text>外交的支持</Text></Replace>
@@ -106,7 +106,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="ja_JP"><Text>科学</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="ja_JP"><Text>拡張主義</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="ja_JP"><Text>その他</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません — 1ターンプレイしてから再度開いてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません、1ターンプレイしてから再度開いてください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="ja_JP"><Text>未遭遇の文明</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="ja_JP"><Text>遺産</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="ja_JP"><Text>建設者</Text></Replace>
@@ -147,15 +147,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="ja_JP"><Text>探検の時代の始まり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="ja_JP"><Text>近代の始まり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="ja_JP"><Text>上限 100%</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ja_JP"><Text>グラフを利用できません — Chart.js が読み込まれていません。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ja_JP"><Text>グラフの描画に失敗しました — UI.log を確認してください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="ja_JP"><Text>グラフを利用できません、Chart.js が読み込まれていません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="ja_JP"><Text>グラフの描画に失敗しました、UI.log を確認してください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="ja_JP"><Text>ボーナス</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="ja_JP"><Text>帝国</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="ja_JP"><Text>都市</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="ja_JP"><Text>工場</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="ja_JP"><Text>財宝</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="ja_JP"><Text>時間（ターン / 年）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ja_JP"><Text>まだ資源のサンプルがありません — 最初の資源を割り当てるとグラフに反映されます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="ja_JP"><Text>まだ資源のサンプルがありません、最初の資源を割り当てるとグラフに反映されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="ja_JP"><Text>割り当て済み資源（数）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="ja_JP"><Text>トライアンフ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="ja_JP"><Text>記念 · {1_Label}</Text></Replace>
@@ -201,7 +201,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="ja_JP"><Text>（観測された変化）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="ja_JP"><Text>まだ戦争はありません。いずれかの文明が宣戦布告すると、タイムラインに反映されます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="ja_JP"><Text>現在のフィルターに一致する戦争はありません。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません — まず1ターンプレイしてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="ja_JP"><Text>まだサンプルがありません、まず1ターンプレイしてください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="ja_JP"><Text>CSV が大きすぎます（{1_SizeMB} MB）。オプションでサンプル上限を下げて再試行してください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="ja_JP"><Text>コピー済み · {1_Rows} 行 × {2_Cols} 列{3_SizeTag} · Excel / Sheets / .csv ファイルに貼り付けてください</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="ja_JP"><Text>クリップボードを利用できません。CSV を UI.log に書き込みました。</Text></Replace>
@@ -222,7 +222,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="ja_JP"><Text>第1の時代の終わり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="ja_JP"><Text>第2の時代の終わり</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="ja_JP"><Text>スナップショット:</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ja_JP"><Text>まだスナップショットがありません — 時代がまだ終わっていません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="ja_JP"><Text>まだスナップショットがありません、時代がまだ終わっていません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="ja_JP"><Text>更新</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="ja_JP"><Text>レガシー進捗を再読み込みします。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="ja_JP"><Text>すべての主要文明</Text></Replace>
@@ -280,10 +280,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ja_JP"><Text>非表示のすべての文明を表示します</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ja_JP"><Text>列をクリックすると、その指標で文明を並べ替えます。ランク／値の切り替えで各セルの表示を変更できます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ja_JP"><Text>未遭遇</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示 — クリックで表示）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示、クリックで表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ja_JP"><Text>クリックで非表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ja_JP"><Text>トライアンフレーダー — 全文明、6つの属性パスすべて</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ja_JP"><Text>トライアンフレーダー、全文明、6つの属性パスすべて</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ja_JP"><Text>時系列トライアンフ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ja_JP"><Text>（累計数、属性別に積み上げ）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ja_JP"><Text>時系列資源配分（積み上げ面）</Text></Replace>
@@ -785,13 +785,13 @@
             <Text>危機</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="ja_JP">
-            <Text>履歴上限 {1_Cap} — 古いサンプルは収まるよう間引かれます。</Text>
+            <Text>履歴上限 {1_Cap}、古いサンプルは収まるよう間引かれます。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="ja_JP">
-            <Text>履歴上限 {1_Cap} — まだ間引きは行われていません。</Text>
+            <Text>履歴上限 {1_Cap}、まだ間引きは行われていません。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="ja_JP">
-            <Text>間引き無効 — すべてのサンプルを保持します。</Text>
+            <Text>間引き無効、すべてのサンプルを保持します。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ja_JP">
             <Text>未遭遇の文明の外交・関係の統計を非表示にする</Text>
@@ -947,13 +947,13 @@
             <Text>戦争への投入</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="ja_JP">
-            <Text>戦争終了時点（継続中の場合は最新ターン）における、あなたの常備軍事力——軍隊の総戦闘力です。これは損失ではなく自軍の規模であり、下の「軍事力（損失）」が損害を追跡します。</Text>
+            <Text>戦争終了時点（継続中の場合は最新ターン）における、あなたの常備軍事力、軍隊の総戦闘力です。これは損失ではなく自軍の規模であり、下の「軍事力（損失）」が損害を追跡します。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="ja_JP">
-            <Text>実際に戦闘で失われたユニットの戦闘力で、各ユニットが倒れるたびにその基礎戦闘力を合算したものです。これは真の損害であり——代替ユニットを建設しても損失が隠れることはなく、この数値は常備軍の規模から導出されたものではありません。この追跡が導入される前の戦争では、代わりに自軍の総戦力の純減少分が用いられます。</Text>
+            <Text>実際に戦闘で失われたユニットの戦闘力で、各ユニットが倒れるたびにその基礎戦闘力を合算したものです。これは真の損害であり、代替ユニットを建設しても損失が隠れることはなく、この数値は常備軍の規模から導出されたものではありません。この追跡が導入される前の戦争では、代わりに自軍の総戦力の純減少分が用いられます。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="ja_JP">
-            <Text>占領によって獲得または喪失した入植地の純数です。占領した入植地は+1、奪われた入植地は−1として数えます。開拓者で新たな入植地を建設しても数えません——実際に支配が移った入植地のみが対象です。純数であるため、一度失って再び奪い返した入植地は差し引きゼロになります。占領イベントから記録されるため、この機能が追加される前の戦争では数値が表示されません。</Text>
+            <Text>占領によって獲得または喪失した入植地の純数です。占領した入植地は+1、奪われた入植地は−1として数えます。開拓者で新たな入植地を建設しても数えません、実際に支配が移った入植地のみが対象です。純数であるため、一度失って再び奪い返した入植地は差し引きゼロになります。占領イベントから記録されるため、この機能が追加される前の戦争では数値が表示されません。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="ja_JP">
             <Text>あなたの入植地のうち、何件が恒久的に破壊（破壊）されたかを示します。これは破壊した征服者ではなく、都市が占領される前の所有者であるあなたに計上されます。都市を奪い返せば取り消せる占領とは異なり、破壊された都市は永久に失われます。この追跡が追加された後の戦争についてのみ記録されます。</Text>
@@ -962,7 +962,7 @@
             <Text>戦争で実際に支配が移った領土を平方キロメートルで示します（各マップタイルは約7,000 km²）。敵から占領した、または敵に奪われた入植地の領土のみを数え、平和的な拡張や国境の成長は除外されます。正の数はあなたが領土を獲得したこと、負の数は失ったことを意味します。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="ja_JP">
-            <Text>あなたが失った総人口で、人口が減少したすべてのターンから合算したものです——増加したターンは無視されるため、通常の成長が戦時の損失を覆い隠すことは決してありません。2つの制約があります。同じ期間における戦死と飢饉を区別できないこと、そして後に奪い返した都市の人口も、最初に失われたターンの損失として依然計上されることです。</Text>
+            <Text>あなたが失った総人口で、人口が減少したすべてのターンから合算したものです、増加したターンは無視されるため、通常の成長が戦時の損失を覆い隠すことは決してありません。2つの制約があります。同じ期間における戦死と飢饉を区別できないこと、そして後に奪い返した都市の人口も、最初に失われたターンの損失として依然計上されることです。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="ja_JP">
             <Text>食料の混乱です。作物産出（1ターンあたりの純食料）が減少したターンごとに、その減少分が合算されます（増加したターンは無視されるため、通常の成長が覆い隠すことはできません）。大きな減少は、略奪された農場やタイル、占領または喪失した都市から生じます。これは比率の減少の合計であり、混乱の代理指標であって、食料の総量ではありません。</Text>
@@ -986,7 +986,7 @@
             <Text>現在の時代、または年代範囲のフィルターを使用してください。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="ja_JP">
-            <Text>戦争の影響 — 選択した戦争における各交戦国の推移</Text>
+            <Text>戦争の影響、選択した戦争における各交戦国の推移</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ja_JP">
             <Text>文明と遭遇したときに全履歴を表示する</Text>
@@ -1126,7 +1126,7 @@
             <Text>町</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="ja_JP">
-            <Text>自分の町をライブ表示——特化・規模・成長が一目でわかります。</Text>
+            <Text>自分の町をライブ表示、特化・規模・成長が一目でわかります。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="ja_JP">
             <Text>町がありません。集落を建設または変換するとここに表示されます。</Text>
@@ -1207,7 +1207,7 @@
             <Text>この町にとって総合的に最適です。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="ja_JP">
-            <Text>目立つタイルはまだなし——成長を優先（食料）。</Text>
+            <Text>目立つタイルはまだなし、成長を優先（食料）。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="ja_JP">
             <Text>人口{1_Pop}は{2_Min}未満。変換前に成長を。</Text>
@@ -1216,7 +1216,7 @@
             <Text>{1_Cost}ゴールド必要。国庫は{2_Gold}。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="ja_JP">
-            <Text>人口{1_Pop}で予算内——都市化で生産と地区が解放されます。</Text>
+            <Text>人口{1_Pop}で予算内、都市化で生産と地区が解放されます。</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="ja_JP">
             <Text>帝国: 都市 {1_Cities}、町 {2_Towns} · 最も不足: {3_Need}</Text>
