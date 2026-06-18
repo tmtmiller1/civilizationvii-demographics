@@ -1007,19 +1007,19 @@
             <Text>Nessuna</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="it_IT">
-            <Text>Crisis</Text>
+            <Text>Crisi</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="it_IT">
-            <Text>All Ages</Text>
+            <Text>Tutte le ere</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="it_IT">
-            <Text>Antiquity</Text>
+            <Text>Antichità</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="it_IT">
-            <Text>Exploration</Text>
+            <Text>Esplorazione</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="it_IT">
-            <Text>Modern</Text>
+            <Text>Età moderna</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="it_IT">
             <Text>Tutte</Text>

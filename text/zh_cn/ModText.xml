@@ -1565,19 +1565,19 @@
             <Text>无</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="zh_Hans_CN">
-            <Text>Crisis</Text>
+            <Text>危机</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="zh_Hans_CN">
-            <Text>All Ages</Text>
+            <Text>所有时代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="zh_Hans_CN">
-            <Text>Antiquity</Text>
+            <Text>远古时代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="zh_Hans_CN">
-            <Text>Exploration</Text>
+            <Text>探索时代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="zh_Hans_CN">
-            <Text>Modern</Text>
+            <Text>现代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="zh_Hans_CN">
             <Text>全部</Text>
