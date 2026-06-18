@@ -2005,5 +2005,68 @@
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE">
             <Text>"Score" here is a civilization's total output: its settlements' combined food, production, gold, science, and culture. It is not the official game Score in the Victories screen, which is calculated differently.</Text>
         </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY">
+            <Text>Analytics visibility</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT">
+            <Text>As host, this limit applies to comparative analytics for ALL players this game.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT">
+            <Text>The host sets the maximum analytics visibility this game; you can restrict your own view further.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED">
+            <Text>Disabled (own civ only)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_POLICY_OWN">
+            <Text>Own civilization only</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_POLICY_MET">
+            <Text>Met civilizations only</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_POLICY_FULL">
+            <Text>All civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST">
+            <Text>Host analytics policy: {1}. Comparative data is limited for all players.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL">
+            <Text>Analytics policy: {1}.</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING">
+            <Text>Interface</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY">
+            <Text>Complexity</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TIER_BASIC">
+            <Text>Basic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TIER_STANDARD">
+            <Text>Standard</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TIER_ANALYST">
+            <Text>Analyst</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC">
+            <Text>Core stat pages only; advanced graphs, the relations network, and tuning controls are hidden.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC">
+            <Text>All graphs and tabs; advanced storage and sampling controls stay hidden.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC">
+            <Text>Everything, including storage cap, decimation, and sample-rate controls.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE">
+            <Text>Age triumph progress: the legacy-path radar for each civilization.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES">
+            <Text>Resource allocation by category over time.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS">
+            <Text>War timeline (Gantt) and per-war detail graphs.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES">
+            <Text>Crisis stages and their per-civilization costs.</Text>
+        </Row>
     </EnglishText>
 </Database>

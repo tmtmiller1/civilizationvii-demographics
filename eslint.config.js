@@ -10,6 +10,7 @@ const ENGINE_GLOBALS = {
   GameplayMap: "readonly",
   RevealedStates: "readonly",
   Configuration: "readonly",
+  Network: "readonly",
   Locale: "readonly",
   engine: "readonly",
   Database: "readonly",

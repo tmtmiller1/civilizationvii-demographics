@@ -10,6 +10,7 @@ import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { resolveLocalPid } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
+import { renderPointBudget, lodDownsample } from "/demographics/ui/core/demographics-hardware.js";
 
 /**
  * @typedef {import("/demographics/ui/screen-demographics/charts/line/chart-line-series.js").
@@ -196,6 +197,10 @@ function applyUnmetNames(allSeries) {
  * @returns {Record<string, *>[]} The Chart.js datasets.
  */
 function buildChartDatasets(allSeries, muted, focused, tr) {
+  // Hardware-adaptive render clamp (P1.6): bound plotted points per series after
+  // the visible-range filter, so weak machines / marathon saves don't draw
+  // thousands of points. Computed once per render pass.
+  const pointBudget = renderPointBudget();
   return allSeries.map((s) => {
     const isMuted = muted.has(s.leaderType);
     const anyFocused = focused.size > 0;
@@ -204,9 +209,8 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
     // legend (All/None or a row), OR when another civ is focused and this one
     // isn't. Backgrounded lines STAY on the chart, dimmed - they don't vanish.
     const isDimmed = isMuted || (anyFocused && !focused.has(s.leaderType));
-    const dataPoints = s.points
-      .filter((p) => !tr || (p.t >= tr.min && p.t <= tr.max))
-      .map((p) => ({ x: p.t, y: p.v }));
+    const inRange = s.points.filter((p) => !tr || (p.t >= tr.min && p.t <= tr.max));
+    const dataPoints = lodDownsample(inRange, pointBudget).map((p) => ({ x: p.t, y: p.v }));
     // Lift dim blue civ colors so the line / label / value reads on
     // the dark chart background (same lift used in the tooltip).
     const baseColor = safeTextColor(s.color) || s.color;

@@ -7,6 +7,11 @@
 
 import { getPalette } from "/demographics/ui/core/demographics-palette.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import {
+  policyHidesUnmet,
+  policyOwnCivOnly,
+  isLocalCiv
+} from "/demographics/ui/core/demographics-governance.js";
 
 /**
  * @typedef {import(
@@ -148,14 +153,36 @@ export { collectCivHistory, displayName };
  * Whether the "hide unmet stats" spoiler guard is enabled (default on). When
  * on, every chart withholds data for civs the local player has not met -
  * seeing any of an unmet civ's history (score, economy, military, diplomacy)
- * is treated as a spoiler. Reads fresh each render so the Options toggle is
- * fully reversible without a reload. Fails spoiler-safe (on) if the setting
- * read throws.
+ * is treated as a spoiler. Now derived from the EFFECTIVE analytics-governance
+ * policy (combined design plan P0.1): every policy except `full` hides unmet
+ * civs, and a multiplayer host can force this on regardless of the client's own
+ * toggle. Read fresh each render so the Options control is fully reversible
+ * without a reload. Fails spoiler-safe (on) if the policy read throws.
  * @returns {boolean} True to gate unmet civs.
  */
 function hideUnmetEnabled() {
   try {
-    return DemographicsSettings.getSetting("hideUnmetStats", true) !== false;
+    return policyHidesUnmet();
+  } catch (_) {
+    return true;
+  }
+}
+
+/**
+ * Whether a whole civ must be dropped from a CURRENT-STATE chart (radar,
+ * resources, settlements) under the effective governance policy: hidden when
+ * the policy is own-civ-only / disabled and the civ is not the local player, or
+ * when unmet civs are hidden and this civ is currently unmet. Centralizes the
+ * data-access enforcement so every current-state picker drops the same civs the
+ * banner says are withheld. Fails safe (drop) on error.
+ * @param {Snapshot[]|*} samples The sample stream.
+ * @param {string|number} pid The civ player id.
+ * @returns {boolean} True to drop the civ entirely.
+ */
+function civDroppedByPolicy(samples, pid) {
+  try {
+    if (policyOwnCivOnly()) return !isLocalCiv(pid);
+    return policyHidesUnmet() && isCivUnmet(samples, pid);
   } catch (_) {
     return true;
   }
@@ -199,7 +226,7 @@ function isCivUnmet(samples, pid) {
   return false;
 }
 
-export { hideUnmetEnabled, backfillMetHistoryEnabled, isCivUnmet };
+export { hideUnmetEnabled, backfillMetHistoryEnabled, isCivUnmet, civDroppedByPolicy };
 
 // X-axis time-unit mode shared across every history chart (line, stacks,
 // gantt). "both" = "T-N / Year", "turn" = "T-N", "year" = "Year". Toolbar

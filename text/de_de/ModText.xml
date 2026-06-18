@@ -1920,5 +1920,68 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="de_DE">
             <Text>„Wertung“ ist hier die Gesamtproduktion einer Zivilisation: Nahrung, Produktion, Gold, Wissenschaft und Kultur aller ihrer Siedlungen zusammen. Sie ist nicht die offizielle Spielwertung im Siege-Fenster, die anders berechnet wird.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="de_DE">
+            <Text>Analyse-Sichtbarkeit</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="de_DE">
+            <Text>Als Host gilt diese Beschränkung für die Vergleichsanalysen ALLER Spieler in dieser Partie.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="de_DE">
+            <Text>Der Host legt die maximale Analyse-Sichtbarkeit für diese Partie fest; du kannst deine eigene Ansicht weiter einschränken.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="de_DE">
+            <Text>Deaktiviert (nur eigene Zivilisation)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="de_DE">
+            <Text>Nur eigene Zivilisation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="de_DE">
+            <Text>Nur getroffene Zivilisationen</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="de_DE">
+            <Text>Alle Zivilisationen</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="de_DE">
+            <Text>Host-Analyserichtlinie: {1}. Vergleichsdaten sind für alle Spieler eingeschränkt.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="de_DE">
+            <Text>Analyserichtlinie: {1}.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="de_DE">
+            <Text>Oberfläche</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="de_DE">
+            <Text>Komplexität</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="de_DE">
+            <Text>Einfach</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="de_DE">
+            <Text>Standard</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="de_DE">
+            <Text>Experte</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="de_DE">
+            <Text>Nur die Kernstatistikseiten; erweiterte Diagramme, das Beziehungsnetz und Feineinstellungen sind ausgeblendet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="de_DE">
+            <Text>Alle Diagramme und Tabs; erweiterte Speicher- und Abtasteinstellungen bleiben ausgeblendet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="de_DE">
+            <Text>Alles, einschließlich Speicherlimit, Ausdünnung und Abtastrate.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="de_DE">
+            <Text>Zeitalter-Triumphfortschritt: das Vermächtnispfad-Radar jeder Zivilisation.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="de_DE">
+            <Text>Ressourcenverteilung nach Kategorie im Zeitverlauf.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="de_DE">
+            <Text>Kriegszeitleiste (Gantt) und Detaildiagramme pro Krieg.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="de_DE">
+            <Text>Krisenphasen und ihre Kosten pro Zivilisation.</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -1362,5 +1362,68 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="ru_RU">
             <Text>Здесь «Очки» — это суммарный выпуск цивилизации: еда, производство, золото, наука и культура всех её поселений. Это не официальные игровые очки из окна побед, которые считаются иначе.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="ru_RU">
+            <Text>Видимость аналитики</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="ru_RU">
+            <Text>Как хост, это ограничение применяется к сравнительной аналитике ВСЕХ игроков в этой игре.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="ru_RU">
+            <Text>Хост задаёт максимальную видимость аналитики в этой игре; вы можете дополнительно ограничить свой обзор.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="ru_RU">
+            <Text>Отключено (только своя цивилизация)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="ru_RU">
+            <Text>Только своя цивилизация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="ru_RU">
+            <Text>Только встреченные цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="ru_RU">
+            <Text>Все цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="ru_RU">
+            <Text>Политика аналитики хоста: {1}. Сравнительные данные ограничены для всех игроков.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="ru_RU">
+            <Text>Политика аналитики: {1}.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="ru_RU">
+            <Text>Интерфейс</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="ru_RU">
+            <Text>Сложность</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="ru_RU">
+            <Text>Базовый</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="ru_RU">
+            <Text>Стандартный</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="ru_RU">
+            <Text>Аналитик</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="ru_RU">
+            <Text>Только основные страницы статистики; расширенные графики, сеть отношений и настройки скрыты.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="ru_RU">
+            <Text>Все графики и вкладки; расширенные настройки хранения и выборки остаются скрытыми.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="ru_RU">
+            <Text>Всё, включая лимит хранения, прореживание и частоту выборки.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="ru_RU">
+            <Text>Прогресс триумфов эпохи: радар путей наследия для каждой цивилизации.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="ru_RU">
+            <Text>Распределение ресурсов по категориям с течением времени.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="ru_RU">
+            <Text>Хронология войн (диаграмма Ганта) и подробные графики по каждой войне.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="ru_RU">
+            <Text>Этапы кризиса и их издержки для каждой цивилизации.</Text>
+        </Replace>
     </LocalizedText>
 </Database>

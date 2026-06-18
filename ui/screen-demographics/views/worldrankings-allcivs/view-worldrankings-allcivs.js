@@ -17,8 +17,13 @@ import {
   buildCivProfiles,
   readBoolSetting,
   stripEliminatedCivs,
-  stripUnmetDiplomacy
+  stripUnmetDiplomacy,
+  stripNonLocalCivs
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
+import {
+  policyHidesUnmet,
+  policyOwnCivOnly
+} from "/demographics/ui/core/demographics-governance.js";
 import {
   appendEmptyState
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
@@ -85,7 +90,11 @@ function prepareProfiles(ctx) {
   if (!readBoolSetting(ctx, "showEliminatedCivs", true)) {
     stripEliminatedCivs(profiles, ctx.history);
   }
-  if (readBoolSetting(ctx, "hideUnmetStats", true)) {
+  // Governance (P0.1): own-civ-only / disabled drops every non-local civ; the
+  // unmet gate is now driven by the effective policy (so a host can force it).
+  if (policyOwnCivOnly()) {
+    stripNonLocalCivs(profiles);
+  } else if (policyHidesUnmet()) {
     stripUnmetDiplomacy(profiles);
   }
   return profiles;
