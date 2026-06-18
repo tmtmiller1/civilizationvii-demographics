@@ -115,7 +115,7 @@ function isNewOnset(state, raw, s) {
 
 /**
  * Normalize a sample's age to a stable key, treating untagged legacy samples
- * (no `age`) as Antiquity — the only age that existed before age-tagging.
+ * (no `age`) as Antiquity , the only age that existed before age-tagging.
  * @param {Snapshot|*} sample One sample.
  * @returns {string} The age key.
  */
@@ -126,7 +126,7 @@ export function sampleAgeKey(sample) {
 /**
  * Map each age to the last (max) turn sampled in it. Used to cap a finished
  * age's crisis stages at that age's end instead of letting the final stage run
- * to the global latest turn — which, once a later age begins, lives in a RESET
+ * to the global latest turn , which, once a later age begins, lives in a RESET
  * age-local turn space and would invert the [start, end] window.
  * @param {Snapshot[]} samples The sample stream.
  * @returns {Map<string, number>} Age key -> last sampled turn.

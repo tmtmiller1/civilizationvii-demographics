@@ -2,11 +2,11 @@
 
 Open items not yet addressed. Newest first.
 
-## Crisis Impact — antiquity per-age cumulative thins out over time
+## Crisis Impact: antiquity per-age cumulative thins out over time
 
 **Symptom:** Viewed from a later age, the antiquity crisis's "Cumulative impact
 across all stages" block (and likely its per-stage tables) eventually shows only
-one populated row — "Military Power (Current)" — while the loss columns
+one populated row, "Military Power (Current)", while the loss columns
 (Population / Crop / Production Lost, etc.) go blank.
 
 **Status:** RESOLVED for the cumulative + cross-age overall blocks (the confirmed
@@ -37,7 +37,7 @@ turn-by-turn samples to sum the per-turn dips; once the antiquity crisis turns
 are decimated, only "Military Power (Current)" survives (it needs just one
 sample via `lastFinite`). The per-stage tables and the cumulative share the same
 code path over the same age-scoped samples, so if the cumulative is sparse the
-stages should be too — which would confirm decimation rather than a windowing
+stages should be too, which would confirm decimation rather than a windowing
 bug.
 
 **Proposed fix:** snapshot each crisis's total impact when its age ends, the way
@@ -49,7 +49,7 @@ them from the snapshot regardless of later decimation. Render path would prefer
 the stored snapshot for a finished age and fall back to live windowing for the
 current age's ongoing crisis.
 
-**Before building:** confirm the diagnosis with a fresh screenshot — specifically
+**Before building:** confirm the diagnosis with a fresh screenshot: specifically
 whether the antiquity Intensifies / Culminates per-stage tables are *also*
 sparse now. If the stages are full but only the cumulative is sparse, it's a
 windowing bug to find instead, not decimation.

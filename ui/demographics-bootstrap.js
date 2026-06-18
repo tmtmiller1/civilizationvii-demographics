@@ -115,7 +115,7 @@ try {
         startSampler();
       });
   } else {
-    derr("engine or engine.whenReady missing — loading decorator immediately as fallback");
+    derr("engine or engine.whenReady missing ; loading decorator immediately as fallback");
     checkContracts();
     loadDecorator();
     startSampler();

@@ -7,7 +7,7 @@
 //
 // Coherent GameFace exposes no `URL.createObjectURL` / `<a download>`, so the
 // CSV is handed to the player via the engine clipboard
-// (UI.setClipboardText / UI.isClipboardAvailable — cite: pause-menu-model.js),
+// (UI.setClipboardText / UI.isClipboardAvailable ; cite: pause-menu-model.js),
 // with a UI.log fallback and a visible confirmation toast. The toast + button
 // styling reuse the existing .demographics-csv-toast / .demographics-chart-
 // toolbar-btn rules.
@@ -189,7 +189,7 @@ function writeCsvToClipboard(csv) {
 }
 
 /**
- * Dump the CSV to UI.log as a recoverable fallback — full dump under the soft
+ * Dump the CSV to UI.log as a recoverable fallback , full dump under the soft
  * limit, summary line above it.
  * @param {string} csv The full CSV text.
  * @param {string} sizeMB Formatted CSV size in MB.
@@ -202,7 +202,7 @@ function logCsvDump(csv, sizeMB, clipboardOk) {
     console.warn("[Demographics.csv] END_DEMOGRAPHICS_CSV");
   } else {
     console.warn(
-      "[Demographics.csv] CSV is large (" + sizeMB + " MB) — skipping full log dump." +
+      "[Demographics.csv] CSV is large (" + sizeMB + " MB) , skipping full log dump." +
         " Clipboard write was " + (clipboardOk ? "OK" : "FAILED") + "."
     );
   }
