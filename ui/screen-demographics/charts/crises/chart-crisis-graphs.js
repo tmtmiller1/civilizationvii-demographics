@@ -459,6 +459,15 @@ function renderInto(host, opts) {
     appendEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY"));
     return;
   }
+  // Gate on a crisis actually having begun, exactly as the Crises "Stages" sub-tab does
+  // (chart-crisis-stages.js). A non-empty roster only means civs exist — without this the graphs
+  // would plot ordinary metric history before any crisis, reading as "crisis impact" that hasn't
+  // happened yet.
+  const samples = Array.isArray(history.samples) ? history.samples : [];
+  if (!crisisStageOnsets(samples).length) {
+    appendEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE"));
+    return;
+  }
   pruneHiddenKeys(roster);
   const scopeAge = resolveCrisisScope(history, opts.crisisAge);
   const rosterMap = buildCrisisRosterMap(roster);

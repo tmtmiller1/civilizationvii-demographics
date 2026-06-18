@@ -2,7 +2,7 @@
 //
 // Chart host and render routing for the Historical Data view.
 
-import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { EXTERNAL_PANELS, PANEL_SUBTAB_SEP } from "/demographics/ui/metrics/demographics-metrics.js";
 
 /**
  * @typedef {{ min: number, max: number }} TurnRange
@@ -77,21 +77,38 @@ function currentTurn() {
 }
 
 /**
+ * Resolve `activeMetric` to its owning external panel and (for multi-tab panels) the bare sub-tab
+ * id, or null when it isn't an external panel/sub-tab.
+ * @param {string} activeMetric The active metric id (a panel id, or "panelId::subId").
+ * @returns {{panel:*, subId:(string|undefined)}|null} The owning panel + sub-tab id, or null.
+ */
+function findPanelFor(activeMetric) {
+  for (const p of EXTERNAL_PANELS) {
+    if (activeMetric === p.id) return { panel: p, subId: undefined };
+    const prefix = p.id + PANEL_SUBTAB_SEP;
+    if (typeof activeMetric === "string" && activeMetric.startsWith(prefix)) {
+      return { panel: p, subId: activeMetric.slice(prefix.length) };
+    }
+  }
+  return null;
+}
+
+/**
  * Render a companion-registered external panel (registerPanel) by handing it the chart host. The
  * companion owns the entire body; a throw inside it must never break the screen.
  *
  * Perf plan P1 #5: an external panel (e.g. Emigration's Migration page) only depends on its own
- * page being selected + the turn , NOT on unrelated history-view state (time filters, other
- * metrics). So when the same panel is already rendered into this same host for the same turn, skip
- * the rebuild; any real change (page switch, new host, turn advance) re-renders normally.
+ * page/sub-tab being selected + the turn , NOT on unrelated history-view state (time filters, other
+ * metrics). So when the same metric is already rendered into this same host for the same turn, skip
+ * the rebuild; any real change (page/sub-tab switch, new host, turn advance) re-renders normally.
  * @param {HTMLElement} chartHost Chart host element.
  * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric/panel id.
+ * @param {string} activeMetric Active metric/panel/sub-tab id.
  * @returns {boolean} True if an external panel handled it.
  */
 function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
-  const panel = EXTERNAL_PANELS.find((p) => p.id === activeMetric);
-  if (!panel || typeof panel.render !== "function") return false;
+  const found = findPanelFor(activeMetric);
+  if (!found || typeof found.panel.render !== "function") return false;
   const turn = currentTurn();
   if (_extLast.id === activeMetric && _extLast.turn === turn && _extLast.host === chartHost
     && chartHost.childElementCount > 0) {
@@ -99,7 +116,7 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
   }
   try {
     chartHost.innerHTML = "";
-    panel.render(chartHost, ctx);
+    found.panel.render(chartHost, ctx, found.subId);
     _extLast = { id: activeMetric, turn, host: chartHost };
   } catch (e) {
     if (ctx && typeof ctx.derr === "function") ctx.derr("external panel render:", e);

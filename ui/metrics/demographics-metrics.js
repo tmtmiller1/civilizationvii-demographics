@@ -642,15 +642,28 @@ export function registerMetricToPage(pageId, metricId, afterMetricId) {
 /**
  * Pending external dashboard PANELS. Unlike registerMetricToPage (which adds a line-chart tab to an
  * existing page), a panel is a whole companion-owned page whose body the companion renders itself ,
- * the screen just hands it a container. Consumed by view-history at render time.
- * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function}[]}
+ * the screen just hands it a container. Consumed by view-history at render time. A panel may declare
+ * `tabs` to contribute several native Demographics sub-tabs (one synthetic metric each) instead of a
+ * single tab; `render` then receives the selected sub-tab id as its third argument.
+ * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function,
+ *   tabs?:{id:string, label?:string, title?:string}[]}[]}
  */
 export const EXTERNAL_PANELS = [];
 
 /**
- * Register an external dashboard panel as its own page. `spec.render(container, ctx)` is invoked by
- * the screen to fill the page body (the companion owns all of it). Ignored on a duplicate id.
- * @param {*} spec A panel spec ({id, pageLabel, tabLabel, title, render}).
+ * Separator joining an external panel id to one of its sub-tab ids ("panelId::subId"). A panel that
+ * declares `tabs` contributes one Demographics sub-tab (synthetic metric) per tab under this scheme.
+ */
+export const PANEL_SUBTAB_SEP = "::";
+
+/**
+ * Register an external dashboard panel as its own page. `spec.render(container, ctx, subId)` is
+ * invoked by the screen to fill the page body (the companion owns all of it). Ignored on a duplicate
+ * id. A panel may declare `tabs: [{id, label, title}]` to contribute several native Demographics
+ * sub-tabs (one synthetic metric each) instead of a single tab; `render` then receives the selected
+ * sub-tab's `id` as its third argument. Without `tabs`, it's a single-tab panel (legacy) and `subId`
+ * is undefined.
+ * @param {*} spec A panel spec ({id, pageLabel, tabLabel, title, render, tabs?}).
  * @returns {boolean} Whether it was added.
  */
 export function registerPanel(spec) {
