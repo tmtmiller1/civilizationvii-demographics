@@ -128,6 +128,15 @@ export class DemographicsDockDecorator {
    */
   _addDockButton() {
     try {
+      // Idempotent: never add a second Demographics dock button. Guards against the dock
+      // re-attaching, or another mod re-initializing the dock (e.g. the map-cheat-panel mod
+      // monkey-patches panel-sub-system-dock's prototype onInitialize with a retry timer), which
+      // could otherwise fire this twice and duplicate our button. There is exactly one subsystem
+      // dock, so a document-wide check is correct.
+      if (typeof document !== "undefined" && document.querySelector(".demographics-dock-button")) {
+        dlog("dock button already present; skipping duplicate");
+        return;
+      }
       if (!this._panel || typeof this._panel.addButton !== "function") {
         derr("panel.addButton missing; aborting");
         return;
