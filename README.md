@@ -132,6 +132,17 @@ Other mods can contribute to the Historical Data screen through an optional, ord
 
 The handshake is load-order-independent: registrations made before this screen loads are queued and drained when it initializes. The companion **Emigration** mod uses all three, contributing net-migration, emigration, and immigration graphs with per-cause source attribution plus a dedicated **Migration** dashboard page.
 
+### Performance on large saves (with Emigration installed)
+
+If late-game turns feel heavy with both mods active, two safe levers help — in this order:
+
+1. **Lower Demographics' sampling frequency first** (Options → sampling): this mod samples every met civilization's metrics each turn, so a coarser cadence is the bigger per-turn win. It only changes how *often* the charts gain a data point, never the figures themselves.
+2. **Then raise Emigration's `turnInterval`** (Options → Mods → Emigration - Advanced) so its migration pass runs less often.
+
+Both are pure cadence levers — they change update frequency, not behavior or graph semantics.
+
+**Measuring the combined cost** (developer recipe, not gameplay): on a turn where both mods fire, the debug logs report Emigration's pass duration and Demographics' sample duration; opening the **Migration** page exercises the shared render core. Comparing those three tells you whether a turn spike is the Emigration pass, the Demographics sample, or the embedded page — the cross-mod bridge itself is a thin read-only layer over each mod's existing tallies.
+
 ## 9. Install and run
 
 1. Subscribe, or place the `demographics` folder in the Mods directory:
