@@ -1983,5 +1983,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="zh_CN">
             <Text>危机阶段及其对各文明的代价。</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="zh_Hans_CN"><Text>难民</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="zh_Hans_CN"><Text>在战争期间因围城、劫掠或征服而流离失所、并在别处重新定居的人口。由 Emigration 模组在安装时提供。</Text></Replace>
     </LocalizedText>
 </Database>

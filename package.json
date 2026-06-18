@@ -14,11 +14,12 @@
     "test:wars-civ-naming": "node --loader ./tests/loader.mjs ./tests/wars-civ-naming.mjs",
     "test:crisis-cost-snapshot": "node --loader ./tests/loader.mjs ./tests/crisis-cost-snapshot.mjs",
     "test:modinfo": "node ./tests/modinfo.mjs",
+    "test:i18n": "node ./tests/i18n.mjs",
     "test:js": "npm run test:remediation-23 && npm run test:civ-color-utils && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot",
     "coverage": "c8 npm run test:js",
     "hotspots": "node scripts/hotspot-score.mjs",
     "mutation": "stryker run",
-    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot && npm run test:modinfo"
+    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot && npm run test:modinfo && npm run test:i18n"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^9.6.1",
