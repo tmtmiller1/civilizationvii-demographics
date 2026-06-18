@@ -5,6 +5,17 @@ import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/
 import { getCurrentAgeType } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
+
+// Short contextual descriptions for the advanced History pages (P1.5), shown as
+// a caption under the page tab row so a newcomer knows what an advanced page is.
+/** @type {Record<string, string>} */
+const PAGE_DESCRIPTIONS = {
+  age: "LOC_DEMOGRAPHICS_PAGE_DESC_AGE",
+  resources: "LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES",
+  conflicts: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS",
+  crises: "LOC_DEMOGRAPHICS_PAGE_DESC_CRISES"
+};
 
 /**
  * The tab label for a companion external panel (whose id can't follow the
@@ -41,11 +52,13 @@ export function buildPageTabRow(host, ctx, activePage) {
   pageBar.classList.add("demographics-page-tabs", "w-full", "font-title", "text-sm");
   pageBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   pageBar.setAttribute("tab-item-class", "font-title text-base");
-  const pageTabs = PAGES.map((p) => ({ id: p.id, label: p.label }));
+  // UI complexity tiers (P1.5): only show pages the active tier discloses.
+  const visiblePages = PAGES.filter((p) => pageVisibleInTier(p.id));
+  const pageTabs = visiblePages.map((p) => ({ id: p.id, label: p.label }));
   pageBar.setAttribute("tab-items", JSON.stringify(pageTabs));
   const pageIdx = Math.max(
     0,
-    PAGES.findIndex((p) => p.id === activePage)
+    visiblePages.findIndex((p) => p.id === activePage)
   );
   pageBar.setAttribute("selected-tab-index", String(pageIdx));
   pageBar.addEventListener("tab-selected", (event) => {
@@ -53,6 +66,21 @@ export function buildPageTabRow(host, ctx, activePage) {
     onPageTabSelected(ctx, activePage, id);
   });
   pageHost.appendChild(pageBar);
+  appendPageDescription(pageHost, activePage);
+}
+
+/**
+ * Append the advanced-page contextual description caption (P1.5), if any.
+ * @param {HTMLElement} pageHost The page-tab host.
+ * @param {string} activePage The active page id.
+ */
+function appendPageDescription(pageHost, activePage) {
+  const key = PAGE_DESCRIPTIONS[activePage];
+  if (!key) return;
+  const desc = document.createElement("div");
+  desc.className = "demographics-page-desc font-body text-xs";
+  desc.textContent = t(key);
+  pageHost.appendChild(desc);
 }
 
 /**

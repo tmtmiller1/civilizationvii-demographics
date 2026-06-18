@@ -2,6 +2,8 @@
 //
 // PlayerTurnActivated handler orchestration for sampler runtime.
 
+import { reportBalanceSignals } from "/demographics/ui/core/demographics-telemetry.js";
+
 /**
  * A monotonic millisecond clock for debug timing (Perf plan P2 #6); 0 if unavailable.
  * @returns {number} Milliseconds.
@@ -51,7 +53,11 @@ export function handlePlayerTurnActivated(deps) {
     const t0 = nowMs(); // Perf plan P2 #6: time the per-turn sample (debug-only via vlog).
     const snap = deps.doSample();
     deps.vlog("sampled turn in", Math.round(nowMs() - t0), "ms");
-    if (snap) deps.noteSampleSucceeded(curTurn);
+    if (snap) {
+      deps.noteSampleSucceeded(curTurn);
+      // Balance telemetry (P2.7): throttled runaway-leader alert (debug-gated).
+      reportBalanceSignals(snap, curTurn);
+    }
   } catch (e) {
     deps.tripIfTooMany("onPlayerTurnActivated", e);
   }

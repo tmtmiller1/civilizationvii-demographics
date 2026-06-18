@@ -1920,5 +1920,68 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="es_ES">
             <Text>Aquí la "Puntuación" es la producción total de una civilización: la suma de comida, producción, oro, ciencia y cultura de todos sus asentamientos. No es la Puntuación oficial del juego (pantalla de Victorias), que se calcula de otra forma.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="es_ES">
+            <Text>Visibilidad de análisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="es_ES">
+            <Text>Como anfitrión, este límite se aplica a los análisis comparativos de TODOS los jugadores de esta partida.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="es_ES">
+            <Text>El anfitrión define la visibilidad máxima de análisis de esta partida; puedes restringir aún más tu propia vista.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="es_ES">
+            <Text>Desactivado (solo tu civilización)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="es_ES">
+            <Text>Solo tu civilización</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="es_ES">
+            <Text>Solo civilizaciones conocidas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="es_ES">
+            <Text>Todas las civilizaciones</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="es_ES">
+            <Text>Política de análisis del anfitrión: {1}. Los datos comparativos están limitados para todos los jugadores.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="es_ES">
+            <Text>Política de análisis: {1}.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="es_ES">
+            <Text>Interfaz</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="es_ES">
+            <Text>Complejidad</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="es_ES">
+            <Text>Básico</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="es_ES">
+            <Text>Estándar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="es_ES">
+            <Text>Analista</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="es_ES">
+            <Text>Solo las páginas de estadísticas principales; los gráficos avanzados, la red de relaciones y los controles de ajuste están ocultos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="es_ES">
+            <Text>Todos los gráficos y pestañas; los controles avanzados de almacenamiento y muestreo permanecen ocultos.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="es_ES">
+            <Text>Todo, incluidos el límite de almacenamiento, el diezmado y la frecuencia de muestreo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="es_ES">
+            <Text>Progreso de triunfos de la era: el radar de senda de legado de cada civilización.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="es_ES">
+            <Text>Asignación de recursos por categoría a lo largo del tiempo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="es_ES">
+            <Text>Cronología de guerras (Gantt) y gráficos detallados por guerra.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="es_ES">
+            <Text>Etapas de crisis y sus costes por civilización.</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -47,6 +47,10 @@
                     <Item>ui/metrics/demographics-metrics.js</Item>
                     <Item>ui/metrics/metrics-format.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
+                    <Item>ui/core/demographics-governance.js</Item>
+                    <Item>ui/core/demographics-tiers.js</Item>
+                    <Item>ui/core/demographics-hardware.js</Item>
+                    <Item>ui/core/demographics-telemetry.js</Item>
                     <Item>ui/core/demographics-contracts.js</Item>
                     <Item>ui/core/ui-helpers.js</Item>
                     <Item>ui/core/demographics-audio.js</Item>
