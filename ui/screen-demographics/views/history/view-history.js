@@ -17,7 +17,8 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
   getMetric,
   EXTERNAL_PAGE_METRICS,
-  EXTERNAL_PANELS
+  EXTERNAL_PANELS,
+  PANEL_SUBTAB_SEP
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
   buildPageTabRow,
@@ -342,11 +343,43 @@ function mergeExternalPageMetrics() {
  * dispatch). Idempotent; called each render so it applies regardless of registration order.
  */
 /**
- * Register a synthetic-metric entry for an external panel (so the screen treats its single tab as
- * renderable and titled), if not already present.
+ * The metric ids a panel contributes: one synthetic per declared sub-tab (so each shows as a native
+ * Demographics sub-tab), else a single id for the whole panel (legacy single-tab panels).
+ * @param {*} panel The external panel spec.
+ * @returns {string[]} The metric ids.
+ */
+function panelMetricIds(panel) {
+  return Array.isArray(panel.tabs) && panel.tabs.length
+    ? panel.tabs.map((/** @type {*} */ tab) => panel.id + PANEL_SUBTAB_SEP + tab.id)
+    : [panel.id];
+}
+
+/**
+ * Register one synthetic metric per declared sub-tab of a multi-tab panel.
+ * @param {*} panel The external panel spec (with `tabs`).
+ */
+function registerPanelTabSynthetics(panel) {
+  const fallbackTitle = panel.title || panel.pageLabel || panel.id;
+  for (const tab of /** @type {*[]} */ (panel.tabs)) {
+    const id = panel.id + PANEL_SUBTAB_SEP + tab.id;
+    if (SYNTHETIC_METRICS[id]) continue;
+    SYNTHETIC_METRICS[id] = {
+      label: tab.label || tab.title || tab.id,
+      title: tab.title || tab.label || fallbackTitle
+    };
+  }
+}
+
+/**
+ * Register synthetic-metric entries for an external panel (so the screen treats each tab as
+ * renderable + titled): one per sub-tab when the panel declares `tabs`, else one for the panel.
  * @param {*} panel The external panel spec.
  */
 function ensureExternalSynthetic(panel) {
+  if (Array.isArray(panel.tabs) && panel.tabs.length) {
+    registerPanelTabSynthetics(panel);
+    return;
+  }
   if (SYNTHETIC_METRICS[panel.id]) return;
   SYNTHETIC_METRICS[panel.id] = {
     label: panel.tabLabel || "View",
@@ -360,7 +393,7 @@ function mergeExternalPanels() {
     ensureExternalSynthetic(panel);
     if (PAGES.some((p) => p.id === panel.id)) continue;
     const label = panel.pageLabel || panel.title || panel.id;
-    PAGES.push({ id: panel.id, label, metrics: [panel.id] });
+    PAGES.push({ id: panel.id, label, metrics: panelMetricIds(panel) });
   }
 }
 
@@ -371,7 +404,8 @@ function mergeExternalPanels() {
  * @returns {boolean} True if external.
  */
 function isExternalPanel(id) {
-  return EXTERNAL_PANELS.some((p) => p.id === id);
+  return typeof id === "string"
+    && EXTERNAL_PANELS.some((p) => id === p.id || id.startsWith(p.id + PANEL_SUBTAB_SEP));
 }
 
 /**

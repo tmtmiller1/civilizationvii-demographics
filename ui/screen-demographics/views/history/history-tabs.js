@@ -4,7 +4,7 @@
 import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { getCurrentAgeType } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { EXTERNAL_PANELS, PANEL_SUBTAB_SEP } from "/demographics/ui/metrics/demographics-metrics.js";
 import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 
 // Short contextual descriptions for the advanced History pages (P1.5), shown as
@@ -18,14 +18,34 @@ const PAGE_DESCRIPTIONS = {
 };
 
 /**
+ * The label for a multi-tab panel's sub-tab id ("panelId::subId"), or null when `id` isn't one.
+ * @param {string} id The metric/sub-tab id.
+ * @returns {string|null} The sub-tab's label, or null.
+ */
+function subTabLabel(id) {
+  const sep = id.indexOf(PANEL_SUBTAB_SEP);
+  if (sep <= 0) return null;
+  const owner = EXTERNAL_PANELS.find((x) => x.id === id.slice(0, sep));
+  if (!owner || !Array.isArray(owner.tabs)) return null;
+  const subId = id.slice(sep + PANEL_SUBTAB_SEP.length);
+  const tab = owner.tabs.find((/** @type {*} */ tt) => tt.id === subId);
+  return tab ? tab.label || tab.title || subId : null;
+}
+
+/**
  * The tab label for a companion external panel (whose id can't follow the
- * LOC_DEMOGRAPHICS_METRIC_<ID> convention), or null when `id` isn't one.
- * @param {string} id Metric/panel id.
+ * LOC_DEMOGRAPHICS_METRIC_<ID> convention) or one of its sub-tabs, or null when `id` isn't one.
+ * @param {string} id Metric/panel/sub-tab id.
  * @returns {string|null} The panel's own tab label, or null.
  */
 function externalTabLabel(id) {
-  const p = EXTERNAL_PANELS.find((x) => x.id === id);
-  return p ? p.tabLabel || p.title || id : null;
+  // Legacy single-tab panel: the id IS the panel id.
+  const direct = EXTERNAL_PANELS.find((x) => x.id === id);
+  if (direct && !(Array.isArray(direct.tabs) && direct.tabs.length)) {
+    return direct.tabLabel || direct.title || id;
+  }
+  // Sub-tab of a multi-tab panel: id is "panelId::subId".
+  return typeof id === "string" ? subTabLabel(id) : null;
 }
 
 const DBG = false;
