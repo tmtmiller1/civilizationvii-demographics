@@ -277,7 +277,7 @@ function renderMilChart(m, view, body, mode) {
   }
   body.appendChild(buildPlot(chart.svg, chart.labels));
   // buildLineChartFromSeries doesn't know the cost metric, so graft on the BLP
-  // here — otherwise the two military graphs' hover headers lack the cost icon
+  // here , otherwise the two military graphs' hover headers lack the cost icon
   // the other seven graphs show.
   if (chart.hover) {
     chart.hover.blp = m.blp;

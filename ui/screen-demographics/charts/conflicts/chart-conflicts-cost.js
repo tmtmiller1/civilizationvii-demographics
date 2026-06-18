@@ -279,8 +279,8 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD"
   },
   {
-    // Refugees produced during the war — population displaced by siege, pillage, or
-    // conquest — contributed per-civ by the Emigration mod (metrics.refugeesCum).
+    // Refugees produced during the war , population displaced by siege, pillage, or
+    // conquest , contributed per-civ by the Emigration mod (metrics.refugeesCum).
     // Accrued (cumulative); renders "— no data" when Emigration isn't installed.
     id: "refugeesCum",
     key: "refugees",

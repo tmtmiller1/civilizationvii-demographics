@@ -126,7 +126,7 @@ export function runResumeKickoff(deps) {
     }
 
     deps.ilog(
-      "startSampler: skipping resume sample — turn",
+      "startSampler: skipping resume sample , turn",
       curTurn,
       "off-cadence; last sampled turn",
       deps.getLastSampledTurn()

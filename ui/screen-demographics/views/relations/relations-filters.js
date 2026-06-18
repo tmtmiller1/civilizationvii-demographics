@@ -42,7 +42,7 @@ const FILTER_PILL_COLORS = {
 // Each individual agreement type contributes its own pill/line color so the
 // legend swatch and the ring line match (applyCivEdgeOverrides reads this).
 for (const _a of AGREEMENT_TYPES) FILTER_PILL_COLORS[_a.key] = _a.color;
-// City-State agreement types (befriend / suzerain directives) likewise — their CS
+// City-State agreement types (befriend / suzerain directives) likewise , their CS
 // ring edges keep their builder color, so the pill swatch must use the same hue.
 for (const _c of CS_AGREEMENT_TYPES) FILTER_PILL_COLORS[_c.key] = _c.color;
 

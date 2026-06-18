@@ -20,7 +20,7 @@ function warnNoEngineHash(derr) {
   if (noHashWarned) return;
   noHashWarned = true;
   derr(
-    "Database.makeHash unavailable — history persistence DISABLED this session " +
+    "Database.makeHash unavailable , history persistence DISABLED this session " +
       "(no fallback hash is used, to avoid silently desyncing from engine keys). " +
       "In-memory history still works until the UI reloads."
   );

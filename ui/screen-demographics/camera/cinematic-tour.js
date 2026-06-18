@@ -264,7 +264,7 @@ export function establishShot(city, rotate, role, caption) {
 }
 
 /**
- * Build the city-flavor caption descriptor for an establish shot — the line shown
+ * Build the city-flavor caption descriptor for an establish shot , the line shown
  * over the wide city overview that the opening + finale shots previously left
  * blank. Returns RAW DATA only (no localization here, so this module needs no
  * imports); the overlay's captionText() resolves it. The opening leads with the
@@ -311,7 +311,7 @@ export function obliqueShot(plot, angle, duration, caption) {
 /**
  * Build a two-shot POI vignette: an approach fly-past, then an orbit that centers
  * on the POI. The approach carries a NEUTRAL city interstitial (`approachCap`, e.g.
- * "Aerial view of Rome") — never the POI name — so the fly-past, which sweeps past
+ * "Aerial view of Rome") , never the POI name , so the fly-past, which sweeps past
  * the target onto whatever's beyond it, can't mislabel a neighbor. The POI's own
  * caption appears only on the orbit, once the camera is actually centered on it.
  * Every leg still says something.

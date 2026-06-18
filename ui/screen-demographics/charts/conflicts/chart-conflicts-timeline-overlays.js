@@ -3,7 +3,7 @@
 // HTML overlays for the Conflicts Gantt timeline: the absolutely-positioned
 // labels mounted ON TOP of the SVG (crisis pills, war-name boxes, x-ticks, axis
 // titles, the "Present" marker, age chips). Extracted from chart-conflicts-timeline.js
-// so that file keeps the SVG drawing + data prep while label rendering lives here —
+// so that file keeps the SVG drawing + data prep while label rendering lives here ,
 // the same sibling pattern as chart-wars-gantt-bars / -domain / -interactions.
 //
 // mountGanttOverlays() is the single entry point; the per-overlay mounters below

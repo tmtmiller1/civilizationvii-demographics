@@ -24,7 +24,7 @@ import {
 import {
   appendRingBackdrop
 } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-backdrop.js";
-// (radar/bezel/emblem removed — see relations-ring-svg-backdrop.js, now a quiet
+// (radar/bezel/emblem removed , see relations-ring-svg-backdrop.js, now a quiet
 //  single orbit ring matching the game's restrained art.)
 import {
   appendRingNode,
@@ -440,7 +440,7 @@ function createEdgeTooltip(wrap) {
       const r = wrap.getBoundingClientRect();
       // Anchor at the cursor; the gap that keeps the label out from under the
       // pointer is a CSS transform on the tip (so it hot-reloads on screen reopen
-      // — this view's JS is lazy-loaded and only reloads on a full app restart).
+      // , this view's JS is lazy-loaded and only reloads on a full app restart).
       tip.style.left = clientX - r.left + "px";
       tip.style.top = clientY - r.top + "px";
     },
