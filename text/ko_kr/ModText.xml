@@ -1425,5 +1425,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="ko_KR">
             <Text>위기 단계와 문명별 비용.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="ko_KR"><Text>난민</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="ko_KR"><Text>전쟁 중 공성, 약탈 또는 정복으로 쫓겨나 다른 곳에 재정착한 인구. Emigration 모드가 설치된 경우 제공됩니다.</Text></Replace>
     </LocalizedText>
 </Database>

@@ -1983,5 +1983,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="fr_FR">
             <Text>Étapes de crise et leurs coûts par civilisation.</Text>
         </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="fr_FR"><Text>Réfugiés</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="fr_FR"><Text>Population déplacée par les sièges, le pillage ou la conquête pendant la guerre et réinstallée ailleurs, fournie par le mod Emigration lorsqu'il est installé.</Text></Replace>
     </LocalizedText>
 </Database>
