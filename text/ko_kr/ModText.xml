@@ -1007,19 +1007,19 @@
             <Text>없음</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="ko_KR">
-            <Text>Crisis</Text>
+            <Text>위기</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="ko_KR">
-            <Text>All Ages</Text>
+            <Text>모든 시대</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="ko_KR">
-            <Text>Antiquity</Text>
+            <Text>고대</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="ko_KR">
-            <Text>Exploration</Text>
+            <Text>탐험의 시대</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="ko_KR">
-            <Text>Modern</Text>
+            <Text>현대</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="ko_KR">
             <Text>전체</Text>

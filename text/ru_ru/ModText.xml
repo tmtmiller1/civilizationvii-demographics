@@ -1007,19 +1007,19 @@
             <Text>Нет</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="ru_RU">
-            <Text>Crisis</Text>
+            <Text>Кризис</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="ru_RU">
-            <Text>All Ages</Text>
+            <Text>Все эпохи</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="ru_RU">
-            <Text>Antiquity</Text>
+            <Text>Античность</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="ru_RU">
-            <Text>Exploration</Text>
+            <Text>Эпоха освоения</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="ru_RU">
-            <Text>Modern</Text>
+            <Text>Современность</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="ru_RU">
             <Text>Все</Text>
