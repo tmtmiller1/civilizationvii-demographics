@@ -60,9 +60,30 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
   renderStandardChart(chartHost, ctx, activeMetric, turnRange, size);
 }
 
+// Last external-panel render, to skip redundant rebuilds (Perf plan P1 #5).
+/** @type {{ id: string|null, turn: number, host: HTMLElement|null }} */
+let _extLast = { id: null, turn: -1, host: null };
+
+/**
+ * The current game turn (for external-panel render-skip invalidation), or -1 off-engine.
+ * @returns {number} The turn.
+ */
+function currentTurn() {
+  try {
+    return typeof Game !== "undefined" && typeof Game.turn === "number" ? Game.turn : -1;
+  } catch (_) {
+    return -1;
+  }
+}
+
 /**
  * Render a companion-registered external panel (registerPanel) by handing it the chart host. The
  * companion owns the entire body; a throw inside it must never break the screen.
+ *
+ * Perf plan P1 #5: an external panel (e.g. Emigration's Migration page) only depends on its own
+ * page being selected + the turn — NOT on unrelated history-view state (time filters, other
+ * metrics). So when the same panel is already rendered into this same host for the same turn, skip
+ * the rebuild; any real change (page switch, new host, turn advance) re-renders normally.
  * @param {HTMLElement} chartHost Chart host element.
  * @param {*} ctx Render context.
  * @param {string} activeMetric Active metric/panel id.
@@ -71,9 +92,15 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
 function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
   const panel = EXTERNAL_PANELS.find((p) => p.id === activeMetric);
   if (!panel || typeof panel.render !== "function") return false;
+  const turn = currentTurn();
+  if (_extLast.id === activeMetric && _extLast.turn === turn && _extLast.host === chartHost
+    && chartHost.childElementCount > 0) {
+    return true; // unchanged since last render into this host — leave the existing DOM in place
+  }
   try {
     chartHost.innerHTML = "";
     panel.render(chartHost, ctx);
+    _extLast = { id: activeMetric, turn, host: chartHost };
   } catch (e) {
     if (ctx && typeof ctx.derr === "function") ctx.derr("external panel render:", e);
   }
