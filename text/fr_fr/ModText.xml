@@ -71,19 +71,19 @@
             <Text>PPT</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="fr_FR">
-            <Text>Production par tour — ce que vos villes construisent.</Text>
+            <Text>Production par tour, ce que vos villes construisent.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="fr_FR">
             <Text>Science</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="fr_FR">
-            <Text>Science par tour — alimente la recherche technologique.</Text>
+            <Text>Science par tour, alimente la recherche technologique.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="fr_FR">
             <Text>Culture</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="fr_FR">
-            <Text>Culture par tour — fait progresser les civiques.</Text>
+            <Text>Culture par tour, fait progresser les civiques.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="fr_FR">
             <Text>Rendement agricole</Text>
@@ -311,7 +311,7 @@
             <Text>Autre</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="fr_FR">
-            <Text>Aucun échantillon pour l'instant — jouez un tour et rouvrez.</Text>
+            <Text>Aucun échantillon pour l'instant, jouez un tour et rouvrez.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="fr_FR">
             <Text>Civilisation non rencontrée</Text>
@@ -380,10 +380,10 @@
             <Text>Plafond 100 %</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="fr_FR">
-            <Text>Graphiques indisponibles — Chart.js non chargé.</Text>
+            <Text>Graphiques indisponibles, Chart.js non chargé.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="fr_FR">
-            <Text>Échec du rendu du graphique — voir UI.log.</Text>
+            <Text>Échec du rendu du graphique, voir UI.log.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="fr_FR">
             <Text>Bonus</Text>
@@ -404,7 +404,7 @@
             <Text>Temps (tour / année)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="fr_FR">
-            <Text>Aucun échantillon de ressources pour l'instant — le graphique se remplira une fois votre première ressource attribuée.</Text>
+            <Text>Aucun échantillon de ressources pour l'instant, le graphique se remplira une fois votre première ressource attribuée.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="fr_FR">
             <Text>Ressources attribuées (nombre)</Text>
@@ -524,7 +524,7 @@
             <Text>Aucune guerre ne correspond aux filtres actuels.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="fr_FR">
-            <Text>Aucun échantillon pour l'instant — jouez d'abord un tour.</Text>
+            <Text>Aucun échantillon pour l'instant, jouez d'abord un tour.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="fr_FR">
             <Text>CSV trop volumineux ({1_SizeMB} Mo) · ferait planter le presse-papiers. Réduisez le plafond d'échantillons dans les Options et réessayez.</Text>
@@ -563,16 +563,16 @@
             <Text>Produit intérieur brut</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="fr_FR">
-            <Text>&lt;p&gt;Une valeur pseudo-réaliste combinant les rendements par tour d'une civilisation, pondérés selon la contribution de chaque rendement à une économie réelle.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formule :&lt;/b&gt; Σ (rendement × poids) × tour × 1 000 000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Poids&lt;/b&gt; (par point de rendement) :&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Or&lt;/b&gt; — 1.0 (monnaie = commerce direct)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Production&lt;/b&gt; — 1.0 (production industrielle)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Science&lt;/b&gt; — 1.2 (l'innovation se cumule avec le temps)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Culture&lt;/b&gt; — 1.2 (puissance douce &amp; tourisme)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Vivres&lt;/b&gt; — 0.5 (subsistance ; seul le surplus est assimilable au PIB)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influence&lt;/b&gt; — 1.5 (levier diplomatique / de traités)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Pourquoi multiplier par le tour ?&lt;/b&gt; Les économies réelles se cumulent : une civilisation au tour 200 ayant les mêmes rendements par tour qu'une civilisation au tour 50 représente 4× la masse économique accumulée.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Présentation seulement — n'affecte jamais l'état de la partie.&lt;/i&gt;&lt;/p&gt;</Text>
+            <Text>&lt;p&gt;Une valeur pseudo-réaliste combinant les rendements par tour d'une civilisation, pondérés selon la contribution de chaque rendement à une économie réelle.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Formule :&lt;/b&gt; Σ (rendement × poids) × tour × 1 000 000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Poids&lt;/b&gt; (par point de rendement) :&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Or&lt;/b&gt;: 1.0 (monnaie = commerce direct)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Production&lt;/b&gt;: 1.0 (production industrielle)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Science&lt;/b&gt;: 1.2 (l'innovation se cumule avec le temps)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Culture&lt;/b&gt;: 1.2 (puissance douce &amp; tourisme)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Vivres&lt;/b&gt;: 0.5 (subsistance ; seul le surplus est assimilable au PIB)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influence&lt;/b&gt;: 1.5 (levier diplomatique / de traités)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Pourquoi multiplier par le tour ?&lt;/b&gt; Les économies réelles se cumulent : une civilisation au tour 200 ayant les mêmes rendements par tour qu'une civilisation au tour 50 représente 4× la masse économique accumulée.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Présentation seulement, n'affecte jamais l'état de la partie.&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="fr_FR">
             <Text>ⓘ Approbation diplomatique : synthèse des relations extérieures  ·  survolez pour les détails</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="fr_FR">
-            <Text>Approbation diplomatique — réputation internationale</Text>
+            <Text>Approbation diplomatique, réputation internationale</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="fr_FR">
-            <Text>&lt;p&gt;Un agrégat signé de ce que chaque autre civilisation pense actuellement de vous. Il &lt;b&gt;augmente&lt;/b&gt; lorsque vous avez des alliés et des amis ; il &lt;b&gt;diminue&lt;/b&gt; lorsque vous êtes entouré d'hostiles ou en guerre.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contribution par civilisation majeure&lt;/b&gt; (selon l'énumération de relation affichée par l'écran de diplomatie) :&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alliance&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Serviable&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Amicale&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutre&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Inamicale&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostile&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;En guerre&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Contribution des cités-États :&lt;/b&gt; +2 par cité-État dont vous êtes le suzerain, atténuée par 0,3× (afin que les stratégies axées sur les cités-États n'éclipsent pas les relations entre civilisations majeures).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Score = Σ(poids majeurs) + 0,3 × Σ(bonus de suzeraineté)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Échantillonné à chaque tour du point de vue de chaque civilisation sur le joueur local. Présentation seulement.&lt;/i&gt;&lt;/p&gt;</Text>
+            <Text>&lt;p&gt;Un agrégat signé de ce que chaque autre civilisation pense actuellement de vous. Il &lt;b&gt;augmente&lt;/b&gt; lorsque vous avez des alliés et des amis ; il &lt;b&gt;diminue&lt;/b&gt; lorsque vous êtes entouré d'hostiles ou en guerre.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contribution par civilisation majeure&lt;/b&gt; (selon l'énumération de relation affichée par l'écran de diplomatie) :&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alliance&lt;/b&gt;: +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Serviable&lt;/b&gt;: +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Amicale&lt;/b&gt;: +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutre&lt;/b&gt;: 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Inamicale&lt;/b&gt;: −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostile&lt;/b&gt;: −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;En guerre&lt;/b&gt;: −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Contribution des cités-États :&lt;/b&gt; +2 par cité-État dont vous êtes le suzerain, atténuée par 0,3× (afin que les stratégies axées sur les cités-États n'éclipsent pas les relations entre civilisations majeures).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Score = Σ(poids majeurs) + 0,3 × Σ(bonus de suzeraineté)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Échantillonné à chaque tour du point de vue de chaque civilisation sur le joueur local. Présentation seulement.&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="fr_FR">
             <Text>Actuel</Text>
@@ -587,7 +587,7 @@
             <Text>Instantané :</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="fr_FR">
-            <Text>Aucun instantané pour l'instant — l'ère ne s'est pas terminée.</Text>
+            <Text>Aucun instantané pour l'instant, l'ère ne s'est pas terminée.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="fr_FR">
             <Text>Actualiser</Text>
@@ -647,7 +647,7 @@
             <Text>&lt;p style="margin:0;"&gt;Copie chaque tour échantillonné de chaque civilisation dans votre presse-papiers. Collez dans Excel, Sheets, ou enregistrez en &lt;code&gt;.csv&lt;/code&gt;. Le bac à sable de l'interface de Civ&amp;nbsp;7 n'a pas d'API d'écriture de fichiers, le presse-papiers est donc le seul moyen de transfert.&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="fr_FR">
-            <Text>Copier tout l'historique échantillonné dans le presse-papiers en CSV — collez dans Excel, Google Sheets, ou un fichier .csv</Text>
+            <Text>Copier tout l'historique échantillonné dans le presse-papiers en CSV, collez dans Excel, Google Sheets, ou un fichier .csv</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="fr_FR">
             <Text>Militariste</Text>
@@ -725,7 +725,7 @@
             <Text>Non rencontrée</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="fr_FR">
-            <Text>(masquée — cliquez pour afficher)</Text>
+            <Text>(masquée, cliquez pour afficher)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="fr_FR">
             <Text>Cliquez pour afficher</Text>
@@ -734,7 +734,7 @@
             <Text>Cliquez pour masquer</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="fr_FR">
-            <Text>Radar des Triumphs — toutes les civilisations, les 6 axes d'attributs</Text>
+            <Text>Radar des Triumphs, toutes les civilisations, les 6 axes d'attributs</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="fr_FR">
             <Text>Triumphs au fil du temps</Text>
@@ -749,7 +749,7 @@
             <Text>Chronologie des conflits</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="fr_FR">
-            <Text>Pas encore implémenté — à venir dans une prochaine itération.</Text>
+            <Text>Pas encore implémenté, à venir dans une prochaine itération.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="fr_FR">
             <Text>Options</Text>
@@ -815,10 +815,10 @@
             <Text>Fréquence d'échantillonnage (performances) :</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="fr_FR">
-            <Text>Des valeurs plus élevées prennent un instantané moins souvent, donc le mod fait moins de travail à chaque tour — plus léger sur les machines lentes et les longues parties. S'applique au tour suivant ; les échantillons existants sont conservés.</Text>
+            <Text>Des valeurs plus élevées prennent un instantané moins souvent, donc le mod fait moins de travail à chaque tour, plus léger sur les machines lentes et les longues parties. S'applique au tour suivant ; les échantillons existants sont conservés.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="fr_FR">
-            <Text>Désactiver le sous-échantillonnage (conserver l'échantillon de chaque tour même après l'atteinte du plafond) — mode expert ; à associer à un plafond élevé ou Illimité.</Text>
+            <Text>Désactiver le sous-échantillonnage (conserver l'échantillon de chaque tour même après l'atteinte du plafond), mode expert ; à associer à un plafond élevé ou Illimité.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="fr_FR">
             <Text>Effacer tous les échantillons de Démographie enregistrés ?</Text>
@@ -1343,13 +1343,13 @@
             <Text>La crise</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="fr_FR">
-            <Text>Limite d'historique {1_Cap} — les anciens échantillons sont sous-échantillonnés.</Text>
+            <Text>Limite d'historique {1_Cap}, les anciens échantillons sont sous-échantillonnés.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="fr_FR">
-            <Text>Limite d'historique {1_Cap} — pas encore de sous-échantillonnage.</Text>
+            <Text>Limite d'historique {1_Cap}, pas encore de sous-échantillonnage.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="fr_FR">
-            <Text>Sous-échantillonnage désactivé — chaque échantillon est conservé.</Text>
+            <Text>Sous-échantillonnage désactivé, chaque échantillon est conservé.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="fr_FR">
             <Text>Masquer les données de diplomatie/relations des civilisations non rencontrées</Text>
@@ -1505,22 +1505,22 @@
             <Text>Consacrée à la guerre</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="fr_FR">
-            <Text>Votre puissance militaire actuelle — la force de combat totale de votre armée — à la fin de la guerre (ou au dernier tour tant qu'elle est en cours). Il s'agit de la taille de vos forces, et non d'une perte ; la « puissance militaire perdue » ci-dessous suit les pertes subies.</Text>
+            <Text>Votre puissance militaire actuelle, la force de combat totale de votre armée, à la fin de la guerre (ou au dernier tour tant qu'elle est en cours). Il s'agit de la taille de vos forces, et non d'une perte ; la « puissance militaire perdue » ci-dessous suit les pertes subies.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="fr_FR">
-            <Text>Force de combat de vos unités réellement tuées au combat, additionnée à mesure que chaque unité meurt (sa force de combat de base). Il s'agit des pertes réelles — remplacer les unités ne masque jamais une perte, et le chiffre n'est pas dérivé de la taille de votre armée active. Les guerres menées avant l'existence de ce suivi se rabattent sur la baisse nette de la force totale de votre armée.</Text>
+            <Text>Force de combat de vos unités réellement tuées au combat, additionnée à mesure que chaque unité meurt (sa force de combat de base). Il s'agit des pertes réelles, remplacer les unités ne masque jamais une perte, et le chiffre n'est pas dérivé de la taille de votre armée active. Les guerres menées avant l'existence de ce suivi se rabattent sur la baisse nette de la force totale de votre armée.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="fr_FR">
-            <Text>Colonies nettes gagnées ou perdues par capture : une colonie que vous capturez compte +1, une qui vous est prise compte −1. Fonder une nouvelle colonie avec un colon ne compte pas — seules les colonies qui changent réellement de mains. Comme il s'agit d'un chiffre net, une colonie que vous perdez puis reprenez revient à zéro. Il est enregistré à partir des événements de capture, donc une guerre menée avant l'ajout de ce suivi n'affiche aucun chiffre.</Text>
+            <Text>Colonies nettes gagnées ou perdues par capture : une colonie que vous capturez compte +1, une qui vous est prise compte −1. Fonder une nouvelle colonie avec un colon ne compte pas, seules les colonies qui changent réellement de mains. Comme il s'agit d'un chiffre net, une colonie que vous perdez puis reprenez revient à zéro. Il est enregistré à partir des événements de capture, donc une guerre menée avant l'ajout de ce suivi n'affiche aucun chiffre.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="fr_FR">
-            <Text>Combien de vos colonies ont été définitivement détruites (rasées). Cela vous est imputé en tant que propriétaire avant la capture de la ville, et non au conquérant qui l'a rasée. Contrairement à une capture — qui peut être annulée en reprenant la ville — une ville rasée est perdue à jamais. Enregistré uniquement pour les guerres menées après l'ajout de ce suivi.</Text>
+            <Text>Combien de vos colonies ont été définitivement détruites (rasées). Cela vous est imputé en tant que propriétaire avant la capture de la ville, et non au conquérant qui l'a rasée. Contrairement à une capture, qui peut être annulée en reprenant la ville, une ville rasée est perdue à jamais. Enregistré uniquement pour les guerres menées après l'ajout de ce suivi.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="fr_FR">
-            <Text>Territoire ayant réellement changé de mains pendant la guerre, en kilomètres carrés (chaque case de la carte fait environ 7 000 km²). Ne compte que les terres des colonies capturées à l'ennemi — ou perdues à son profit ; l'expansion pacifique et la croissance des frontières sont exclues. Un nombre positif signifie que vous avez gagné du terrain ; un nombre négatif que vous en avez perdu.</Text>
+            <Text>Territoire ayant réellement changé de mains pendant la guerre, en kilomètres carrés (chaque case de la carte fait environ 7 000 km²). Ne compte que les terres des colonies capturées à l'ennemi, ou perdues à son profit ; l'expansion pacifique et la croissance des frontières sont exclues. Un nombre positif signifie que vous avez gagné du terrain ; un nombre négatif que vous en avez perdu.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="fr_FR">
-            <Text>Population totale que vous avez perdue, additionnée à partir de chaque tour où votre population a chuté — les tours où elle a augmenté sont ignorés, de sorte que la croissance normale ne peut jamais masquer les pertes de guerre. Deux limites : il ne peut distinguer une mort de guerre d'une famine sur la même période, et la population d'une ville que vous reprenez ensuite compte tout de même comme perdue au tour où elle a chuté pour la première fois.</Text>
+            <Text>Population totale que vous avez perdue, additionnée à partir de chaque tour où votre population a chuté, les tours où elle a augmenté sont ignorés, de sorte que la croissance normale ne peut jamais masquer les pertes de guerre. Deux limites : il ne peut distinguer une mort de guerre d'une famine sur la même période, et la population d'une ville que vous reprenez ensuite compte tout de même comme perdue au tour où elle a chuté pour la première fois.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="fr_FR">
             <Text>Perturbation alimentaire : chaque tour où votre rendement agricole (vivres nets par tour) a chuté, cette baisse est additionnée (les tours où il a augmenté sont ignorés, de sorte que la croissance ordinaire ne peut la masquer). Les fortes baisses proviennent des fermes et des cases pillées et des villes occupées ou perdues. Il s'agit d'une somme de baisses de taux, un indicateur de perturbation, et non d'une quantité totale de vivres.</Text>
@@ -1529,7 +1529,7 @@
             <Text>Perturbation de la production : chaque tour où votre production par tour a chuté, cette baisse est additionnée (les tours où elle a augmenté sont ignorés, de sorte que la croissance économique ordinaire ne peut la masquer). Les fortes baisses proviennent des cases pillées et des villes occupées ou perdues. Il s'agit d'une somme de baisses de taux, un indicateur de perturbation, et non d'une quantité totale de production. La production que vous avez délibérément consacrée à la guerre est suivie séparément sous « Consacrée à la guerre ».</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="fr_FR">
-            <Text>Production que vous avez consacrée à l'effort de guerre : le coût en production de chaque unité militaire et de chaque bâtiment militaire ou de fortification (murs, etc.) que vous avez achevé pendant la guerre, additionné. Les unités civiles, les bâtiments économiques et les merveilles ne comptent pas. Il s'agit d'un investissement délibéré dans la guerre, et non d'une perte, c'est pourquoi il est affiché comme un chiffre neutre. Le coût est le coût effectif dans la ville qui l'a construit — les réductions liées à votre dirigeant, votre civilisation et vos doctrines sont déjà prises en compte. Les éléments achetés directement avec de l'or ou de la foi ne sont pas comptés, car cela relève de la trésorerie et non de la production ; le report de production entre éléments n'est pas réparti avec exactitude.</Text>
+            <Text>Production que vous avez consacrée à l'effort de guerre : le coût en production de chaque unité militaire et de chaque bâtiment militaire ou de fortification (murs, etc.) que vous avez achevé pendant la guerre, additionné. Les unités civiles, les bâtiments économiques et les merveilles ne comptent pas. Il s'agit d'un investissement délibéré dans la guerre, et non d'une perte, c'est pourquoi il est affiché comme un chiffre neutre. Le coût est le coût effectif dans la ville qui l'a construit, les réductions liées à votre dirigeant, votre civilisation et vos doctrines sont déjà prises en compte. Les éléments achetés directement avec de l'or ou de la foi ne sont pas comptés, car cela relève de la trésorerie et non de la production ; le report de production entre éléments n'est pas réparti avec exactitude.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="fr_FR">
             <Text>L'historique est réinitialisé à chaque transition d'ère.</Text>
@@ -1544,7 +1544,7 @@
             <Text>Utilisez l'ère actuelle ou un filtre par plage d'ères.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="fr_FR">
-            <Text>Impact de la guerre — la trajectoire de chaque belligérant au cours d'une guerre choisie</Text>
+            <Text>Impact de la guerre, la trajectoire de chaque belligérant au cours d'une guerre choisie</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="fr_FR">
             <Text>Révéler tout l'historique lorsque vous rencontrez une civilisation</Text>
@@ -1684,7 +1684,7 @@
             <Text>Villes</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="fr_FR">
-            <Text>Vos villes, en direct — spécialisation, taille et croissance en un coup d’œil.</Text>
+            <Text>Vos villes, en direct, spécialisation, taille et croissance en un coup d’œil.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="fr_FR">
             <Text>Vous n’avez aucune ville. Fondez ou convertissez une colonie pour la voir ici.</Text>
@@ -1720,7 +1720,7 @@
             <Text>Conseiller</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="fr_FR">
-            <Text>Suggestions heuristiques d’après les cases, la taille et les rendements de chaque ville. Conseils uniquement — rien ne change en jeu.</Text>
+            <Text>Suggestions heuristiques d’après les cases, la taille et les rendements de chaque ville. Conseils uniquement, rien ne change en jeu.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="fr_FR">
             <Text>{1_Name} (pop. {2_Pop})</Text>
@@ -1765,7 +1765,7 @@
             <Text>Meilleur choix global pour cette ville.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="fr_FR">
-            <Text>Pas encore de cases marquantes — continuez à croître (nourriture).</Text>
+            <Text>Pas encore de cases marquantes, continuez à croître (nourriture).</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="fr_FR">
             <Text>Pop. {1_Pop} sous {2_Min} ; croissez avant de convertir.</Text>
@@ -1774,7 +1774,7 @@
             <Text>Nécessite {1_Cost} d’or ; le trésor en a {2_Gold}.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="fr_FR">
-            <Text>Pop. {1_Pop} et abordable — une cité débloque production et quartiers.</Text>
+            <Text>Pop. {1_Pop} et abordable, une cité débloque production et quartiers.</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="fr_FR">
             <Text>Empire : {1_Cities} villes, {2_Towns} bourgs · rendement le plus faible : {3_Need}</Text>

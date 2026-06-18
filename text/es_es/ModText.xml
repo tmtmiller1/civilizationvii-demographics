@@ -563,16 +563,16 @@
             <Text>Producto interior bruto</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="es_ES">
-            <Text>&lt;p&gt;Un valor pseudorrealista que combina los rendimientos por turno de una civilización, ponderados según cuánto contribuye cada rendimiento a una economía real.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Fórmula:&lt;/b&gt; Σ (rendimiento × peso) × turno × 1.000.000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Pesos&lt;/b&gt; (por punto de rendimiento):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Oro&lt;/b&gt; — 1.0 (moneda = comercio directo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Producción&lt;/b&gt; — 1.0 (producción industrial)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Ciencia&lt;/b&gt; — 1.2 (la innovación se acumula con el tiempo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Cultura&lt;/b&gt; — 1.2 (poder blando &amp; turismo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Alimentos&lt;/b&gt; — 0.5 (subsistencia; solo el excedente es similar al PIB)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influencia&lt;/b&gt; — 1.5 (apalancamiento diplomático / de tratados)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;¿Por qué multiplicar por el turno?&lt;/b&gt; Las economías reales se acumulan: una civilización en el turno 200 con los mismos rendimientos por turno que una en el turno 50 representa 4× la masa económica acumulada.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Solo presentacional: nunca afecta al estado del juego.&lt;/i&gt;&lt;/p&gt;</Text>
+            <Text>&lt;p&gt;Un valor pseudorrealista que combina los rendimientos por turno de una civilización, ponderados según cuánto contribuye cada rendimiento a una economía real.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Fórmula:&lt;/b&gt; Σ (rendimiento × peso) × turno × 1.000.000&lt;/p&gt;&lt;p&gt;&lt;b&gt;Pesos&lt;/b&gt; (por punto de rendimiento):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Oro&lt;/b&gt;: 1.0 (moneda = comercio directo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Producción&lt;/b&gt;: 1.0 (producción industrial)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Ciencia&lt;/b&gt;: 1.2 (la innovación se acumula con el tiempo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Cultura&lt;/b&gt;: 1.2 (poder blando &amp; turismo)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Alimentos&lt;/b&gt;: 0.5 (subsistencia; solo el excedente es similar al PIB)&lt;/li&gt;&lt;li&gt;&lt;b&gt;Influencia&lt;/b&gt;: 1.5 (apalancamiento diplomático / de tratados)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;¿Por qué multiplicar por el turno?&lt;/b&gt; Las economías reales se acumulan: una civilización en el turno 200 con los mismos rendimientos por turno que una en el turno 50 representa 4× la masa económica acumulada.&lt;/p&gt;&lt;p&gt;&lt;i&gt;Solo presentacional: nunca afecta al estado del juego.&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="es_ES">
             <Text>ⓘ Aprobación diplomática: resumen de las relaciones exteriores  ·  pasa el cursor para ver los detalles</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="es_ES">
-            <Text>Aprobación diplomática — reputación internacional</Text>
+            <Text>Aprobación diplomática, reputación internacional</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="es_ES">
-            <Text>&lt;p&gt;Un agregado con signo de lo que todas las demás civilizaciones sienten actualmente por ti. &lt;b&gt;Sube&lt;/b&gt; cuando tienes aliados y amigos; &lt;b&gt;baja&lt;/b&gt; cuando estás rodeado de hostiles o en guerra.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contribución por civilización principal&lt;/b&gt; (según el estado de relación que muestra la pantalla de diplomacia):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alianza&lt;/b&gt; — +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Servicial&lt;/b&gt; — +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Amistosa&lt;/b&gt; — +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutral&lt;/b&gt; — 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Antipática&lt;/b&gt; — −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostil&lt;/b&gt; — −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;En guerra&lt;/b&gt; — −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Contribución de ciudades estado:&lt;/b&gt; +2 por cada ciudad estado de la que eres protector, amortiguada por 0.3× (para que las estrategias centradas en ciudades estado no eclipsen las relaciones con civilizaciones principales).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Puntuación = Σ(pesos principales) + 0.3 × Σ(bonificaciones de protector)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Muestreada cada turno desde la perspectiva de cada civilización sobre el jugador local. Solo presentacional.&lt;/i&gt;&lt;/p&gt;</Text>
+            <Text>&lt;p&gt;Un agregado con signo de lo que todas las demás civilizaciones sienten actualmente por ti. &lt;b&gt;Sube&lt;/b&gt; cuando tienes aliados y amigos; &lt;b&gt;baja&lt;/b&gt; cuando estás rodeado de hostiles o en guerra.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contribución por civilización principal&lt;/b&gt; (según el estado de relación que muestra la pantalla de diplomacia):&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;Alianza&lt;/b&gt;: +5&lt;/li&gt;&lt;li&gt;&lt;b&gt;Servicial&lt;/b&gt;: +3&lt;/li&gt;&lt;li&gt;&lt;b&gt;Amistosa&lt;/b&gt;: +2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Neutral&lt;/b&gt;: 0&lt;/li&gt;&lt;li&gt;&lt;b&gt;Antipática&lt;/b&gt;: −2&lt;/li&gt;&lt;li&gt;&lt;b&gt;Hostil&lt;/b&gt;: −3&lt;/li&gt;&lt;li&gt;&lt;b&gt;En guerra&lt;/b&gt;: −5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;Contribución de ciudades estado:&lt;/b&gt; +2 por cada ciudad estado de la que eres protector, amortiguada por 0.3× (para que las estrategias centradas en ciudades estado no eclipsen las relaciones con civilizaciones principales).&lt;/p&gt;&lt;p&gt;&lt;b&gt;Puntuación = Σ(pesos principales) + 0.3 × Σ(bonificaciones de protector)&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;i&gt;Muestreada cada turno desde la perspectiva de cada civilización sobre el jugador local. Solo presentacional.&lt;/i&gt;&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="es_ES">
             <Text>Actual</Text>
@@ -734,7 +734,7 @@
             <Text>Haz clic para ocultar</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="es_ES">
-            <Text>Radar de Triumphs — todas las civilizaciones, las 6 rutas de atributos</Text>
+            <Text>Radar de Triumphs, todas las civilizaciones, las 6 rutas de atributos</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="es_ES">
             <Text>Triumphs a lo largo del tiempo</Text>
@@ -1505,7 +1505,7 @@
             <Text>Destinada a la guerra</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="es_ES">
-            <Text>Tu poder militar permanente —la fuerza de combate total de tu ejército— al final de la guerra (o el último turno mientras está en curso). Es el tamaño de tus fuerzas, no una pérdida; el «Poder militar perdido» de abajo registra las bajas.</Text>
+            <Text>Tu poder militar permanente, la fuerza de combate total de tu ejército, al final de la guerra (o el último turno mientras está en curso). Es el tamaño de tus fuerzas, no una pérdida; el «Poder militar perdido» de abajo registra las bajas.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="es_ES">
             <Text>Fuerza de combate de tus unidades que mueren realmente en combate, sumada a medida que cae cada unidad (su fuerza de combate base). Estas son bajas reales: construir reemplazos nunca oculta una pérdida, y la cifra no se deriva del tamaño de tu ejército permanente. Las guerras libradas antes de que existiera este seguimiento recurren en su lugar a la caída neta de la fuerza total de tu ejército.</Text>
@@ -1514,10 +1514,10 @@
             <Text>Asentamientos netos ganados o perdidos por captura: un asentamiento que capturas cuenta +1, uno capturado a ti cuenta −1. Fundar un nuevo asentamiento con un colono no cuenta: solo los asentamientos que realmente cambian de manos. Como es una cifra neta, un asentamiento que pierdes y luego recuperas se anula a cero. Se registra a partir de eventos de captura, por lo que una guerra librada antes de que se añadiera esto no muestra ninguna cifra.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="es_ES">
-            <Text>Cuántos de tus asentamientos fueron destruidos permanentemente (arrasados). Se te imputa a ti como propietario anterior a la captura de la ciudad, no al conquistador que la arrasó. A diferencia de una captura —que puede revertirse recuperando la ciudad—, una ciudad arrasada se pierde para siempre. Solo se registra en las guerras libradas después de añadir este seguimiento.</Text>
+            <Text>Cuántos de tus asentamientos fueron destruidos permanentemente (arrasados). Se te imputa a ti como propietario anterior a la captura de la ciudad, no al conquistador que la arrasó. A diferencia de una captura, que puede revertirse recuperando la ciudad, una ciudad arrasada se pierde para siempre. Solo se registra en las guerras libradas después de añadir este seguimiento.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="es_ES">
-            <Text>Territorio que realmente cambió de manos en la guerra, en kilómetros cuadrados (cada casilla del mapa equivale a unos 7000 km²). Cuenta únicamente la tierra de los asentamientos capturados al enemigo —o perdidos ante él—; la expansión pacífica y el crecimiento de fronteras quedan excluidos. Un número positivo significa que ganaste terreno; un número negativo significa que lo perdiste.</Text>
+            <Text>Territorio que realmente cambió de manos en la guerra, en kilómetros cuadrados (cada casilla del mapa equivale a unos 7000 km²). Cuenta únicamente la tierra de los asentamientos capturados al enemigo, o perdidos ante él; la expansión pacífica y el crecimiento de fronteras quedan excluidos. Un número positivo significa que ganaste terreno; un número negativo significa que lo perdiste.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="es_ES">
             <Text>Población total que perdiste, sumada de cada turno en que tu población cayó: los turnos en que creció se ignoran, de modo que el crecimiento normal nunca puede enmascarar las pérdidas de guerra. Dos límites: no puede distinguir una muerte de guerra de una hambruna en el mismo periodo, y la población de una ciudad que más tarde recuperas sigue contando como perdida en el turno en que cayó por primera vez.</Text>
@@ -1544,7 +1544,7 @@
             <Text>Usa la era actual o un filtro de rango de eras.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="es_ES">
-            <Text>Impacto de la guerra — la trayectoria de cada combatiente a lo largo de una guerra elegida</Text>
+            <Text>Impacto de la guerra, la trayectoria de cada combatiente a lo largo de una guerra elegida</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="es_ES">
             <Text>Revelar el historial completo al encontrar una civilización</Text>
