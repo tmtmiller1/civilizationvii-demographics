@@ -1007,19 +1007,19 @@
             <Text>なし</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="ja_JP">
-            <Text>Crisis</Text>
+            <Text>危機</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="ja_JP">
-            <Text>All Ages</Text>
+            <Text>全時代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="ja_JP">
-            <Text>Antiquity</Text>
+            <Text>古代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="ja_JP">
-            <Text>Exploration</Text>
+            <Text>探索の時代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="ja_JP">
-            <Text>Modern</Text>
+            <Text>現代</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="ja_JP">
             <Text>すべて</Text>

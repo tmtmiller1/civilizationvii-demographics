@@ -1565,19 +1565,19 @@
             <Text>Keine</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="de_DE">
-            <Text>Crisis</Text>
+            <Text>Krise</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="de_DE">
-            <Text>All Ages</Text>
+            <Text>Alle Zeitalter</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="de_DE">
-            <Text>Antiquity</Text>
+            <Text>Antike</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="de_DE">
-            <Text>Exploration</Text>
+            <Text>Erkundung</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="de_DE">
-            <Text>Modern</Text>
+            <Text>Moderne</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="de_DE">
             <Text>Alle</Text>
