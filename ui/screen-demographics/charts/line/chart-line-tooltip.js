@@ -102,13 +102,21 @@ export function buildLeaderIconGroup(ds, color) {
 function appendAttribution(row, metricMeta, ds, color) {
   if (!metricMeta || typeof metricMeta.tooltipAttribution !== "function") return;
   try {
-    const att = metricMeta.tooltipAttribution({ id: ds.pidForContext || ds.label });
+    // Use `!= null` (not `||`): the LOCAL player is pid 0, which `||` would wrongly treat as falsy
+    // and fall back to the civ name — breaking the attribution lookup for your own civ.
+    const id = ds.pidForContext != null ? ds.pidForContext : ds.label;
+    const att = metricMeta.tooltipAttribution({ id });
     if (!att) return;
     const attEl = document.createElement("div");
     attEl.className = "demographics-line-tip-attribution";
     attEl.style.color = color;
     attEl.style.fontSize = "0.85em";
     attEl.style.marginTop = "2px";
+    // Own line inside the (column) row; wrap within the box rather than running off the right edge.
+    // (The companion CSS file isn't loaded, so these must be inline.)
+    attEl.style.display = "block";
+    attEl.style.whiteSpace = "normal";
+    attEl.style.overflowWrap = "break-word";
     attEl.textContent = att;
     row.appendChild(attEl);
   } catch (_) {
@@ -117,7 +125,37 @@ function appendAttribution(row, metricMeta, ds, color) {
 }
 
 /**
- * Build one tooltip row element (icon group + civ label + value + optional source attribution).
+ * Build the horizontal top line of a tooltip row: leader icon + civ name + value.
+ * @param {*} ds The Chart.js dataset.
+ * @param {*} dp One Chart.js tooltip data point.
+ * @param {(v: number) => string} fmtY Y-value formatter.
+ * @param {string} color The row's (lifted) text color.
+ * @returns {HTMLElement} The top-line element.
+ */
+function buildTooltipTopLine(ds, dp, fmtY, color) {
+  // Top line: icon + civ name + value, laid out horizontally.
+  const top = document.createElement("div");
+  top.style.display = "flex";
+  top.style.alignItems = "center";
+  top.style.gap = "0.45rem";
+  top.appendChild(buildLeaderIconGroup(ds, color));
+
+  const label = document.createElement("span");
+  label.className = "demographics-line-tip-name";
+  label.textContent = ds.label || "";
+  top.appendChild(label);
+
+  const val = document.createElement("span");
+  val.className = "demographics-line-tip-val";
+  val.style.color = color;
+  val.textContent = fmtY(dp.parsed.y);
+  top.appendChild(val);
+  return top;
+}
+
+/**
+ * Build one tooltip row: a vertical stack of the top line (icon + civ + value) and, below it, the
+ * optional source-attribution line.
  * @param {*} dp One Chart.js tooltip data point.
  * @param {(v: number) => string} fmtY Y-value formatter.
  * @param {*} [metricMeta] Optional metric metadata with tooltipAttribution callback.
@@ -130,20 +168,13 @@ function buildTooltipRow(dp, fmtY, metricMeta) {
   // colored dot stay readable on the dark tooltip background.
   const color = safeTextColor(rawColor);
 
+  // Outer = vertical stack so the attribution sits on its OWN line below the civ row. (Relying on
+  // flex-wrap is fragile in the GameFace CSS engine; an explicit column container is robust.)
   const row = document.createElement("div");
   row.className = "demographics-line-tip-row";
-  row.appendChild(buildLeaderIconGroup(ds, color));
-
-  const label = document.createElement("span");
-  label.className = "demographics-line-tip-name";
-  label.textContent = ds.label || "";
-  row.appendChild(label);
-
-  const val = document.createElement("span");
-  val.className = "demographics-line-tip-val";
-  val.style.color = color;
-  val.textContent = fmtY(dp.parsed.y);
-  row.appendChild(val);
+  row.style.flexDirection = "column";
+  row.style.alignItems = "stretch";
+  row.appendChild(buildTooltipTopLine(ds, dp, fmtY, color));
   appendAttribution(row, metricMeta, ds, color);
   return row;
 }
@@ -177,6 +208,10 @@ function positionChartTooltip(tip, chart, tooltip, wrap) {
   // Clamp so it doesn't escape the wrap.
   const wrapW = wrap.clientWidth,
     wrapH = wrap.clientHeight;
+  // Bound the box to the chart area so a tall multi-civ tooltip can't run off the bottom; if it
+  // would still exceed, let it scroll within itself rather than overflow.
+  tip.style.maxHeight = Math.max(0, wrapH - 8) + "px";
+  tip.style.overflowY = "auto";
   const tipW = tip.offsetWidth,
     tipH = tip.offsetHeight;
   if (left + tipW > wrapW) left = offsetLeft + tooltip.caretX - tipW - 14;

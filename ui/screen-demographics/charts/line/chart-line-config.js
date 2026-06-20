@@ -128,6 +128,11 @@ export function buildLineChartConfig(parts) {
   // datasets/scales and natively handle negative values (bars below the zero baseline) and grouping
   // (one clustered bar per civ at each turn). Datasets already set backgroundColor = civ colour.
   const type = metricMeta && metricMeta.chartType === "bar" ? "bar" : "line";
+  // A signed metric charted as bars (e.g. Net Migration) gets a SYMMETRIC, zero-centred y-axis so
+  // positive and negative read evenly above/below the baseline. Without it, Chart.js auto-ranges to
+  // [0, max], which on a near-zero / empty chart collapses to a degenerate "+0/+1" axis with no
+  // negative side. The half-range floors at 1 so even an empty chart shows -1 / 0 / +1.
+  const symBound = type === "bar" ? symmetricYBound(datasets) : null;
   return {
     type,
     data: { datasets },
@@ -138,11 +143,44 @@ export function buildLineChartConfig(parts) {
       animation: false,
       parsing: false,
       normalized: true,
-      interaction: { mode: "nearest", intersect: false, axis: "x" },
+      // Default "nearest" shows the single closest line; a metric can opt into "index" (via
+      // metricMeta.tooltipMode) so hovering a turn lists EVERY civ at that turn — the readable way to
+      // tell apart overlapping lines (e.g. Net Migration, where civ lines cluster near the baseline).
+      interaction: {
+        mode: (metricMeta && metricMeta.tooltipMode) || "nearest",
+        intersect: false,
+        axis: "x"
+      },
       plugins: buildChartPluginsOpts(formatters, metricMeta),
-      scales: buildChartScalesOpts(metricMeta, formatters)
+      scales: buildChartScalesOpts(metricMeta, formatters, symBound)
     }
   };
+}
+
+/**
+ * The absolute y-value of a chart data point, or 0 when missing/non-finite.
+ * @param {*} pt A {x, y} data point.
+ * @returns {number} |y|, or 0.
+ */
+function ptAbsY(pt) {
+  return pt && typeof pt.y === "number" && isFinite(pt.y) ? Math.abs(pt.y) : 0;
+}
+
+/**
+ * The symmetric y-axis half-range for a diverging bar chart: the largest absolute data value across
+ * every dataset, floored at 1 (so an empty/all-zero chart still shows a -1 / 0 / +1 axis).
+ * @param {Record<string, *>[]} datasets The chart datasets.
+ * @returns {number} A positive half-range bound.
+ */
+function symmetricYBound(datasets) {
+  let m = 0;
+  for (const ds of datasets || []) {
+    for (const pt of (ds && ds.data) || []) {
+      const y = ptAbsY(pt);
+      if (y > m) m = y;
+    }
+  }
+  return m > 0 ? m : 1;
 }
 
 /**
@@ -177,10 +215,15 @@ function buildChartPluginsOpts(formatters, metricMeta) {
  * Build the Chart.js `options.scales` block (linear x + y axes).
  * @param {*} metricMeta The metric metadata.
  * @param {AxisFormatters} formatters The axis tick formatters.
+ * @param {number|null} [symBound] Symmetric y half-range for a diverging bar chart (null = auto).
  * @returns {Record<string, *>} The scales options block.
  */
-function buildChartScalesOpts(metricMeta, formatters) {
+function buildChartScalesOpts(metricMeta, formatters, symBound) {
   const { fmtX, fmtY } = formatters;
+  // A diverging bar chart pins the y-axis to [-symBound, +symBound] (0 centred); everything else
+  // auto-ranges from zero.
+  const diverging = typeof symBound === "number";
+  const yBounds = diverging ? { min: -symBound, max: symBound } : { beginAtZero: true };
   return {
     x: {
       type: "linear",
@@ -197,17 +240,17 @@ function buildChartScalesOpts(metricMeta, formatters) {
     },
     y: {
       type: "linear",
-      beginAtZero: true,
+      ...yBounds,
       title: axisTitleOpts(yAxisTitle(metricMeta)),
       ticks: {
         color: AXIS_COLOR,
         font: { family: resolveChartFontFamily(), size: 17 },
-        // For metrics flagged `integerOnly`, blank out fractional tick labels
-        // so e.g. Crisis Stage doesn't repeat "Stage 1 (Begins)" at 1, 1.5,
-        // and 2 all rounding to the same integer. Chart.js still draws
-        // gridlines at fractional positions; only the labels are suppressed.
+        // Blank fractional tick labels for `integerOnly` metrics (e.g. Crisis Stage) AND for diverging
+        // bar charts — so a near-zero Net Migration axis shows clean -1 / 0 / +1 instead of repeating
+        // "+0/+1" at every fractional gridline. Chart.js still draws the gridlines; only labels hide.
         callback: (/** @type {number} */ v) => {
           if (metricMeta && metricMeta.integerOnly && Math.round(v) !== v) return "";
+          if (diverging && Math.round(v) !== v) return "";
           return fmtY(v);
         },
         // Force integer step + zero decimals for integer-only metrics. The only
