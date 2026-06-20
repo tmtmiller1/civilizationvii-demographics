@@ -13,6 +13,12 @@
   margin-left: 0;
   opacity: 0.9;
   line-height: 1.2;
+  /* Wrap the (sometimes long) "In … (causes) · Out … (causes)" text instead of overflowing the
+     tooltip box. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 22rem;
   /* Inherits color from parent row */
 }
 

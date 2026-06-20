@@ -217,6 +217,10 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
     const color = isDimmed ? colorWithAlpha(baseColor, 0.35) : baseColor;
     return {
       label: s.name,
+      // The civ's player id, so a metric's tooltipAttribution callback gets the PID (not the civ
+      // name) — without it, attribution lookups keyed by pid (e.g. Emigration's net-migration "why"
+      // breakdown) silently resolve to 0 and show nothing.
+      pidForContext: s.pid,
       data: dataPoints,
       borderColor: color,
       backgroundColor: color,

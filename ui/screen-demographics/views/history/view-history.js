@@ -391,16 +391,19 @@ function resolveGroupMember(host, ctx, activeMetric) {
   if (!group) return activeMetric;
   const rerender = () => { if (typeof ctx.requestReload === "function") ctx.requestReload(); };
   return Array.isArray(group.members) && Array.isArray(group.views)
-    ? resolve2DGroup(host, group, rerender)
+    ? resolve2DGroup(host, ctx, group, rerender)
     : resolveFlatGroup(host, group, rerender);
 }
 
 /** 2D group: a metric toggle (members) + a view toggle (views). Returns members[metric][view]. */
-function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
+function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
   const sel = GROUP_SEL[group.id] || {};
   const mIdx = Number.isInteger(sel.metric) && sel.metric >= 0 && sel.metric < group.members.length
     ? sel.metric : 0;
   const vId = group.views.some((/** @type {*} */ v) => v.id === sel.view) ? sel.view : group.views[0].id;
+  // Surface the active view to a companion-panel member (e.g. the Emigration "Net Migration (Table)"),
+  // so a panel that isn't a chart can mirror the Scaled / Civ-numbers toggle in its own render.
+  if (ctx) ctx.groupView = vId;
   host.appendChild(pillRow(group.members.map((/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })),
     mIdx, (k) => { GROUP_SEL[group.id] = { metric: k, view: vId }; rerender(); }));
   host.appendChild(pillRow(group.views.map((/** @type {*} */ v) => ({ key: v.id, label: v.label })),
