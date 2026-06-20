@@ -7,6 +7,9 @@
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="zh_Hans_CN">
             <Text>每回合历史图表、世界年鉴、全球关系环、冲突甘特图，以及每个已遇文明的原生成就进度条。</Text>
         </Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="zh_Hans_CN">
+            <Text>人口统计</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="zh_Hans_CN">
             <Text>人口统计</Text>
         </Replace>

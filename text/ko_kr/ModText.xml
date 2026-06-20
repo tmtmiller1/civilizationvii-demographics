@@ -3,6 +3,7 @@
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ko_KR"><Text>인구 통계</Text></Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ko_KR"><Text>턴별 역사 그래프, 세계 정보 자료집, 글로벌 관계 링, 분쟁 간트 차트, 그리고 만난 모든 문명의 네이티브 위업 진행 막대를 제공합니다.</Text></Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="ko_KR"><Text>인구 통계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ko_KR"><Text>인구 통계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ko_KR"><Text>인구 통계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ko_KR"><Text>시간에 따른 점수</Text></Replace>

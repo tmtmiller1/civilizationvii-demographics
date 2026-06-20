@@ -2,6 +2,46 @@
 // Metric explanation captions and popovers for Historical Data view.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import {
+  bannerInfo,
+  POLICY_DISABLED,
+  POLICY_OWN,
+  POLICY_MET
+} from "/demographics/ui/core/demographics-governance.js";
+
+/**
+ * The localized label for an analytics-governance policy.
+ * @param {string} policy The policy key.
+ * @returns {string} The localized label.
+ */
+function policyLabel(policy) {
+  if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
+  if (policy === POLICY_OWN) return t("LOC_DEMOGRAPHICS_POLICY_OWN");
+  if (policy === POLICY_MET) return t("LOC_DEMOGRAPHICS_POLICY_MET");
+  return t("LOC_DEMOGRAPHICS_POLICY_FULL");
+}
+
+/**
+ * Build the analytics-governance policy banner element, or null when the effective policy is "full"
+ * (nothing withheld). Shared so the screen and the Historical Data view can place it consistently.
+ * @returns {HTMLElement|null} The banner element, or null.
+ */
+export function buildPolicyBanner() {
+  const info = bannerInfo();
+  if (!info.show) return null;
+  const label = policyLabel(info.policy);
+  // A full-width centering wrapper holds a content-sized red "pill" - so the red shading hugs the
+  // text with padding instead of striping the whole row.
+  const wrap = document.createElement("div");
+  wrap.className = "demographics-policy-banner-wrap";
+  const banner = document.createElement("div");
+  banner.className = "demographics-policy-banner font-body text-sm";
+  banner.textContent = info.hostEnforced
+    ? t("LOC_DEMOGRAPHICS_POLICY_BANNER_HOST", label)
+    : t("LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL", label);
+  wrap.appendChild(banner);
+  return wrap;
+}
 
 /**
  * @returns {{ triggerText: string, title: string, bodyHtml: string }}
@@ -37,6 +77,8 @@ export function appendMetricCaptions(host, activeMetric) {
   if (activeMetric === "approval") {
     host.appendChild(buildMetricInfoCaption(approvalCaption()));
   }
+  // A registered metric's one-line `description` is shown as a hover tooltip ON the chart title
+  // (see buildChartTitle), not as a standalone on-page caption.
 }
 
 /**

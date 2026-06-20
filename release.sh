@@ -21,6 +21,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# Quality gate: never package a red build. `verify` runs tsc + eslint + the test suite.
+# Set SKIP_VERIFY=1 to bypass (e.g. an emergency hotfix where the gate is knowingly red).
+if [ "${SKIP_VERIFY:-0}" != "1" ]; then
+  echo "release: running 'npm run verify' (set SKIP_VERIFY=1 to skip)..."
+  npm run verify || { echo "release: 'npm run verify' FAILED — aborting."; exit 1; }
+fi
+
 # Source detection: this script lives at the mod root (next to demographics.modinfo),
 # but the zip needs `demographics/` as the root folder name regardless.
 DIST_DIR="dist"

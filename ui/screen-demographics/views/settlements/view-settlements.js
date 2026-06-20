@@ -28,6 +28,7 @@ import * as ViewWorldRankingsAllCivs from "/demographics/ui/screen-demographics/
 import { renderCivRankingPanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js";
 import { renderShowcasePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
 import { renderTablePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-table.js";
+import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 
 const TOP_N = 25;
 
@@ -547,6 +548,25 @@ function rerenderContent(st) {
     ViewWorldRankingsAllCivs.render(st.content, { history: st.history, settings: st.settings });
   } else if (st.subTab === "table") renderTable(st);
   else renderShowcase(st);
+  insertOptionsToolbar(st);
+}
+
+/**
+ * Insert the Options button (a right-aligned `.demographics-chart-toolbar`, matching the Historical
+ * Data tabs) directly BELOW the filter pill row — the `.demographics-settle-filters` row used by both
+ * the Table and the All-Civilizations sub-views. Falls back to the top of the content for sub-views
+ * that render no pill row.
+ * @param {SettleState} st The render state.
+ */
+function insertOptionsToolbar(st) {
+  const bar = div("demographics-chart-toolbar");
+  bar.appendChild(buildOptionsButton());
+  const pills = st.content.querySelector(".demographics-settle-filters");
+  if (pills && pills.parentNode) {
+    pills.parentNode.insertBefore(bar, pills.nextSibling);
+  } else {
+    st.content.insertBefore(bar, st.content.firstChild);
+  }
 }
 
 /**

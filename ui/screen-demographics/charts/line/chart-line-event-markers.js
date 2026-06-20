@@ -88,6 +88,14 @@ export function collectCrisisMarkers(metricId, history, crisisCtx) {
 }
 
 /**
+ * The Emigration refugees metrics (scaled people + raw Civ points). These show their OWN cause-driven
+ * markers (war / disaster onsets) instead of the game-wide crisis-stage markers, so crisis collection
+ * is suppressed for them.
+ * @type {Set<string>}
+ */
+const REFUGEE_METRIC_IDS = new Set(["emig_refugees", "emig_refugees_pts"]);
+
+/**
  * Decide whether crisis-marker collection should no-op.
  * @param {string} metricId Active metric id.
  * @param {DemoHistory|*} history The history blob.
@@ -95,6 +103,7 @@ export function collectCrisisMarkers(metricId, history, crisisCtx) {
  */
 function shouldSkipCrisisMarkers(metricId, history) {
   if (metricId === "crisis_stage") return true;
+  if (REFUGEE_METRIC_IDS.has(metricId)) return true;
   if (!history || !Array.isArray(history.samples)) return true;
   return history.samples.length === 0;
 }
@@ -462,4 +471,218 @@ function drawAgeLabel(ctx2, mk, x, area) {
   // a clear category chip rather than low-contrast purple-on-dark.
   ctx2.fillStyle = "#e5d2ac";
   ctx2.fillText(mk.label, 9, 17);
+}
+
+// ── Refugees-chart event markers: war + disaster onsets ──────────────────────────────────────────
+// The Emigration refugees graph annotates WHEN displacement happened: war onsets (from the
+// Demographics war history) and notable disaster onsets (from the Emigration mod's exposed event
+// log). Both are placed on the continuous timeline by their recorded chart turn, else by matching
+// their game-year label to a sampled year (the same remap the conflicts Gantt uses), so cross-mod
+// turn clocks never have to agree.
+
+const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red — war onsets
+const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber — disaster onsets
+
+/**
+ * Build a game-year → chart-X (chartTurn) map from the sample stream, so an event carrying only a
+ * year label can be placed on the continuous timeline.
+ * @param {Snapshot[]|*[]} samples The sample stream.
+ * @returns {Map<string, number>} game-year → chartTurn.
+ */
+function buildYearToChartTurn(samples) {
+  /** @type {Map<string, number>} */
+  const m = new Map();
+  for (const s of samples) {
+    if (s && typeof s.gameYear === "string" && typeof s.chartTurn === "number" && !m.has(s.gameYear)) {
+      m.set(s.gameYear, s.chartTurn);
+    }
+  }
+  return m;
+}
+
+/**
+ * Resolve an event's chart-X: its recorded continuous chart turn, else its year-mapped chart turn,
+ * else the raw age-local value (last resort, only when its year wasn't a sampled year).
+ * @param {number|undefined} chartVal Recorded continuous chart turn, if any.
+ * @param {string|null|undefined} year The event's game-year label.
+ * @param {number|null|undefined} localVal Age-local turn fallback.
+ * @param {Map<string, number>} yearToChart game-year → chartTurn.
+ * @returns {number|null} The chart-X, or null.
+ */
+function resolveEventX(chartVal, year, localVal, yearToChart) {
+  if (typeof chartVal === "number" && isFinite(chartVal)) return chartVal;
+  if (year && yearToChart.has(year)) return /** @type {number} */ (yearToChart.get(year));
+  return typeof localVal === "number" && isFinite(localVal) ? localVal : null;
+}
+
+/**
+ * Append a marker for each war's onset (its name + start year), positioned by its recorded start
+ * chart turn, else its start-year label.
+ * @param {DemoHistory|*} history The history blob.
+ * @param {Map<string, number>} yearToChart game-year → chartTurn.
+ * @param {{turn:number, label:string, year:string, color:string}[]} out Markers (appended).
+ */
+function collectWarOnsetMarkers(history, yearToChart, out) {
+  const wars = history && Array.isArray(history.wars) ? history.wars : [];
+  for (const w of wars) {
+    if (!w) continue;
+    const x = resolveEventX(w.startChartTurn, w.startYear, w.startTurn, yearToChart);
+    if (x === null) continue;
+    out.push({ turn: x, label: w.name || "War", year: w.startYear || "", color: REFUGEE_WAR_COLOR });
+  }
+}
+
+/**
+ * Append a marker for each notable disaster onset (name + year) exposed by the Emigration mod. A
+ * silent no-op when Emigration isn't installed / exposes no event log.
+ * @param {Map<string, number>} yearToChart game-year → chartTurn.
+ * @param {{turn:number, label:string, year:string, color:string}[]} out Markers (appended).
+ */
+function collectDisasterMarkers(yearToChart, out) {
+  let events = [];
+  try {
+    const api = /** @type {*} */ (globalThis).EmigrationData;
+    events = api && typeof api.disasterEvents === "function" ? api.disasterEvents() : [];
+  } catch (_) {
+    events = [];
+  }
+  for (const d of events || []) {
+    if (!d) continue;
+    const x = resolveEventX(undefined, d.year, d.turn, yearToChart);
+    if (x === null) continue;
+    out.push({
+      turn: x,
+      label: d.name || "Disaster",
+      year: d.year || "",
+      color: REFUGEE_DISASTER_COLOR
+    });
+  }
+}
+
+/**
+ * Collect war + disaster onset markers for the Emigration refugees chart. Empty for any non-refugee
+ * metric (so the markers only annotate the graph whose subject they explain).
+ * @param {string} metricId Active metric id.
+ * @param {DemoHistory|*} history The history blob.
+ * @returns {{turn:number, label:string, year:string, color:string}[]} The markers.
+ */
+export function collectRefugeeEventMarkers(metricId, history) {
+  if (!REFUGEE_METRIC_IDS.has(metricId)) return [];
+  const samples = history && Array.isArray(history.samples) ? history.samples : [];
+  const yearToChart = buildYearToChartTurn(samples);
+  /** @type {{turn:number, label:string, year:string, color:string}[]} */
+  const markers = [];
+  collectWarOnsetMarkers(history, yearToChart, markers);
+  collectDisasterMarkers(yearToChart, markers);
+  return markers;
+}
+
+/**
+ * Build per-marker draw layouts: pixel x, single-line pill size, left/right-flipped label box, and a
+ * vertical LANE so labels whose pills would overlap stack instead of hiding one another.
+ * @param {*} ctx2 The 2D canvas context.
+ * @param {{turn:number,label:string,year:string,color:string}[]} markers The markers.
+ * @param {*} xScale The Chart.js x scale.
+ * @param {number} right Plot-area right edge.
+ * @param {string} family Font family.
+ * @returns {*[]} The layouts.
+ */
+function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
+  const items = [];
+  for (const mk of markers) {
+    if (mk.turn < xScale.min || mk.turn > xScale.max) continue;
+    const x = xScale.getPixelForValue(mk.turn);
+    const text = mk.label + (mk.year ? " · " + mk.year : "");
+    ctx2.font = "15px " + family;
+    const pillW = ctx2.measureText(text).width + 14;
+    const dx = x + 4 + pillW > right ? -(pillW + 4) : 4;
+    items.push({ mk, x, dx, lane: 0, pillW, pillH: 22, text });
+  }
+  items.sort((a, b) => a.x - b.x);
+  assignRefugeeLanes(items);
+  return items;
+}
+
+/**
+ * Greedy vertical-lane assignment (by each pill's horizontal box) so overlapping labels stack down.
+ * @param {*[]} items Layouts (sorted by x; mutated).
+ */
+function assignRefugeeLanes(items) {
+  /** @type {number[]} */
+  const laneRight = [];
+  for (const it of items) {
+    const left = it.x + it.dx;
+    let lane = 0;
+    while (lane < laneRight.length && laneRight[lane] > left) lane++;
+    it.lane = lane;
+    laneRight[lane] = left + it.pillW + 2; // +2px gap
+  }
+}
+
+/**
+ * Draw one refugee event marker: a dashed vertical line in its color + a single-line "name · year"
+ * pill (dark background, colored left accent bar, cream text) at its assigned lane.
+ * @param {*} ctx2 The 2D canvas context.
+ * @param {*} L The marker layout (from {@link layoutRefugeeMarkers}).
+ * @param {number} top Plot-area top.
+ * @param {number} bottom Plot-area bottom.
+ * @param {string} family Font family for label text.
+ */
+function drawRefugeeMarkerLayout(ctx2, L, top, bottom, family) {
+  ctx2.save();
+  ctx2.strokeStyle = L.mk.color;
+  ctx2.lineWidth = 1.4;
+  ctx2.setLineDash([4, 3]);
+  ctx2.globalAlpha = 0.85;
+  ctx2.beginPath();
+  ctx2.moveTo(L.x, top);
+  ctx2.lineTo(L.x, bottom);
+  ctx2.stroke();
+  ctx2.setLineDash([]);
+  ctx2.globalAlpha = 1;
+  drawRefugeeLabel(ctx2, L, top + 6 + L.lane * (L.pillH + 4), family);
+  ctx2.restore();
+}
+
+/**
+ * Draw a refugee marker's label pill (dark background, colored left accent bar, cream "name · year").
+ * @param {*} ctx2 The 2D canvas context (already saved by the caller).
+ * @param {*} L The per-marker layout (x/dx/pill size/text/color).
+ * @param {number} stackY The lane-stacked y offset.
+ * @param {string} family The font family.
+ */
+function drawRefugeeLabel(ctx2, L, stackY, family) {
+  ctx2.translate(L.x + L.dx, stackY);
+  ctx2.fillStyle = "rgba(20, 16, 10, 0.85)";
+  ctx2.fillRect(0, 0, L.pillW, L.pillH);
+  ctx2.fillStyle = L.mk.color;
+  ctx2.fillRect(0, 0, 3, L.pillH); // colored left accent bar
+  ctx2.font = "15px " + family;
+  ctx2.fillStyle = "#e5d2ac";
+  ctx2.fillText(L.text, 8, 16);
+}
+
+/**
+ * Build the refugees-chart event-marker Chart.js plugin: dashed vertical lines + "name · year" label
+ * pills at each war / disaster onset, lane-stacked from the top, clipped to the active x-scale range.
+ * @param {{turn:number, label:string, year:string, color:string}[]} markers The markers to draw.
+ * @returns {Record<string, *>} The Chart.js plugin object.
+ */
+export function makeRefugeeEventMarkerPlugin(markers) {
+  return {
+    id: "demographicsRefugeeEventMarkers",
+    /**
+     * @param {*} c The Chart instance.
+     */
+    afterDatasetsDraw(c) {
+      if (!markers || markers.length === 0) return;
+      const xScale = c.scales.x;
+      if (!xScale) return;
+      const ctx2 = c.ctx;
+      const { top, bottom, right } = c.chartArea;
+      const family = resolveChartFontFamily(c);
+      const layouts = layoutRefugeeMarkers(ctx2, markers, xScale, right, family);
+      for (const L of layouts) drawRefugeeMarkerLayout(ctx2, L, top, bottom, family);
+    }
+  };
 }

@@ -18,15 +18,22 @@ import {
   getMetric,
   EXTERNAL_PAGE_METRICS,
   EXTERNAL_PANELS,
+  EXTERNAL_METRIC_GROUPS,
   PANEL_SUBTAB_SEP
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
   buildPageTabRow,
   buildMetricTabRow,
-  buildChartTitle
+  buildChartTitle,
+  visibleMetricsForAge
 } from "/demographics/ui/screen-demographics/views/history/history-tabs.js";
-import { appendMetricCaptions } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
+import {
+  appendMetricCaptions,
+  buildPolicyBanner
+} from "/demographics/ui/screen-demographics/views/history/history-captions.js";
+import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 import { buildToolbar } from "/demographics/ui/screen-demographics/views/history/history-controls.js";
+import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 import {
   TIME_FILTERS,
   computeTurnRange,
@@ -334,7 +341,84 @@ function mergeExternalPageMetrics() {
     if (at >= 0) page.metrics.splice(at + 1, 0, e.metricId);
     else page.metrics.push(e.metricId);
   }
+  mergeMetricGroups();
   return PAGES;
+}
+
+/** Per-group selection: 2D groups store {metric:idx, view:viewId}; flat groups store a metric id. */
+/** @type {Record<string, *>} */
+const GROUP_SEL = {};
+
+/** Every member metric id of a group (2D members×views, or a flat metricIds list). */
+function groupMemberIds(/** @type {*} */ g) {
+  if (Array.isArray(g.members) && Array.isArray(g.views)) {
+    return g.members.flatMap((/** @type {*} */ m) => g.views.map((/** @type {*} */ v) => m[v.id]))
+      .filter(Boolean);
+  }
+  return Array.isArray(g.metricIds) ? g.metricIds : [];
+}
+
+/**
+ * Fold companion metric GROUPS into PAGES: register a synthetic-meta label for each group id, drop the
+ * group's member metrics from their page's tab row (they're shown via the in-tab toggle instead), and
+ * place the group id as a tab (at the front when `first`). Idempotent; called each render.
+ */
+function mergeMetricGroups() {
+  for (const g of EXTERNAL_METRIC_GROUPS) {
+    const page = PAGES.find((p) => p.id === g.pageId);
+    if (!page || !Array.isArray(page.metrics)) continue;
+    if (!SYNTHETIC_METRICS[g.id]) SYNTHETIC_METRICS[g.id] = { label: g.label, title: g.label };
+    const members = groupMemberIds(g);
+    page.metrics = page.metrics.filter((m) => !members.includes(m));
+    if (!page.metrics.includes(g.id)) {
+      if (g.first) page.metrics.unshift(g.id);
+      else page.metrics.push(g.id);
+    }
+  }
+}
+
+/**
+ * If `activeMetric` is a metric group, append its toggle(s) to `host` and return the metric id to
+ * actually chart; otherwise return `activeMetric` unchanged. Supports 2D (members × views, two
+ * toggles) and flat (metricIds, one toggle) groups.
+ * @param {HTMLElement} host View host.
+ * @param {*} ctx Render context.
+ * @param {string} activeMetric Active metric/group id.
+ * @returns {string} The effective metric id to render.
+ */
+function resolveGroupMember(host, ctx, activeMetric) {
+  const group = EXTERNAL_METRIC_GROUPS.find((g) => g.id === activeMetric);
+  if (!group) return activeMetric;
+  const rerender = () => { if (typeof ctx.requestReload === "function") ctx.requestReload(); };
+  return Array.isArray(group.members) && Array.isArray(group.views)
+    ? resolve2DGroup(host, group, rerender)
+    : resolveFlatGroup(host, group, rerender);
+}
+
+/** 2D group: a metric toggle (members) + a view toggle (views). Returns members[metric][view]. */
+function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
+  const sel = GROUP_SEL[group.id] || {};
+  const mIdx = Number.isInteger(sel.metric) && sel.metric >= 0 && sel.metric < group.members.length
+    ? sel.metric : 0;
+  const vId = group.views.some((/** @type {*} */ v) => v.id === sel.view) ? sel.view : group.views[0].id;
+  host.appendChild(pillRow(group.members.map((/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })),
+    mIdx, (k) => { GROUP_SEL[group.id] = { metric: k, view: vId }; rerender(); }));
+  host.appendChild(pillRow(group.views.map((/** @type {*} */ v) => ({ key: v.id, label: v.label })),
+    vId, (k) => { GROUP_SEL[group.id] = { metric: mIdx, view: k }; rerender(); }));
+  const member = group.members[mIdx];
+  return member[vId] || member[group.views[0].id];
+}
+
+/** Flat group: a single metric toggle over `metricIds`. Returns the selected metric id. */
+function resolveFlatGroup(/** @type {*} */ host, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
+  const ids = group.metricIds || [];
+  const sel = GROUP_SEL[group.id];
+  const effective = typeof sel === "string" && ids.includes(sel) ? sel : ids[0];
+  host.appendChild(pillRow(ids.map((/** @type {string} */ mid) => {
+    const m = getMetric(mid);
+    return { key: mid, label: m && m.label ? m.label : mid };
+  }), effective, (k) => { GROUP_SEL[group.id] = k; rerender(); }));
+  return effective;
 }
 
 /**
@@ -409,71 +493,179 @@ function isExternalPanel(id) {
 }
 
 /**
+ * The active metric for `page`, coerced to one the tab row will actually show. Age-gated metrics
+ * (resources_treasure/_factory) are dropped from the tab row in the wrong age, but a persisted
+ * selection can still resolve to one — which would highlight tab 0 while the chart renders the
+ * hidden metric. Coercing to a tab-VISIBLE metric keeps the row and the chart in agreement.
+ * @param {*} ctx Render context.
+ * @param {{id:string, metrics:string[]}} page The active page.
+ * @returns {string} The visible active metric id.
+ */
+function resolveVisibleActiveMetric(ctx, page) {
+  const active = resolveActiveMetricState(ctx, page, metricExists);
+  const visible = visibleMetricsForAge(page.metrics);
+  return visible.length && !visible.includes(active) ? visible[0] : active;
+}
+
+/**
+ * Resolve the active page and build the page-tab row. `mergeExternalPageMetrics()` folds in
+ * companion-mod panels (whole pages) + metric placements first. When `opts.onlyPage` is set, render
+ * is being driven AS a companion `topLevel` panel's own view tab: pin to that page and emit NO page
+ * tab row. Otherwise, exclude any `topLevel` companion panel from the selectable Historical-Data
+ * pages (they live as their own top-level tabs) and build the normal page-tab row.
+ * @param {HTMLElement} host The view host element.
+ * @param {*} ctx Render context.
+ * @param {{onlyPage?:string}|undefined} opts Render options.
+ * @returns {string} The active page id.
+ */
+function resolvePageAndTabRow(host, ctx, opts) {
+  const allPages = mergeExternalPageMetrics();
+  if (opts && opts.onlyPage && allPages.some((p) => p.id === opts.onlyPage)) return opts.onlyPage;
+  const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
+  const activePage = resolveActivePageState(ctx, allPages.filter((p) => !topLevelIds.has(p.id)));
+  buildPageTabRow(host, ctx, activePage);
+  return activePage;
+}
+
+// Metrics that ignore the turn window (snapshot/cross-age views) — the time-range filter is hidden.
+const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
+
+/**
+ * Build the combined controls row: the time-range filter pills on the LEFT and the chart toolbar
+ * (Time / Wonders / Copy as CSV) on the RIGHT, on one horizontal row. Either side is omitted when not
+ * applicable (filter hidden for snapshot metrics; toolbar skipped for external panels).
+ * @param {HTMLElement} host View host.
+ * @param {*} ctx Render context.
+ * @param {string} effective The metric being charted.
+ * @param {string} activeFilter The active time-range filter id.
+ */
+function buildControlsRow(host, ctx, effective, activeFilter) {
+  const row = document.createElement("div");
+  row.className = "demographics-history-controls-row";
+  const hasFilters = !TIME_FILTER_HIDDEN_FOR.has(effective) && !isExternalPanel(effective);
+  const hasToolbar = !isExternalPanel(effective);
+  // When both are present, pull the toolbar OUT of flow (CSS `--centered`) so the filter pills center
+  // on the FULL row width. A flex child can't shrink below its content, so an in-flow toolbar steals
+  // space and shoves the pills left of true center; absolute-positioning it sidesteps that entirely.
+  if (hasFilters && hasToolbar) row.classList.add("demographics-history-controls-row--centered");
+  if (hasFilters) {
+    row.appendChild(buildTimeFilterRow(activeFilter, (id) => {
+      if (typeof ctx.setActiveTimeFilter === "function") ctx.setActiveTimeFilter(id);
+    }));
+  }
+  if (hasToolbar) {
+    buildToolbar(row, ctx, effective); // includes the Options button
+  } else {
+    // External companion panel (e.g. Emigration) has no chart toolbar, but still gets the Options
+    // button in the same top-right location as the historical-data graphs.
+    const toolbar = document.createElement("div");
+    toolbar.className = "demographics-chart-toolbar";
+    toolbar.appendChild(buildOptionsButton());
+    row.appendChild(toolbar);
+  }
+  if (row.children.length) host.appendChild(row);
+}
+
+/**
+ * The Emigration mod's timeline-detail note text (read cross-mod) — only for the sub-tab the companion
+ * scopes it to (its `metricId`); "" otherwise / when absent / not coarse.
+ * @param {string} effective The metric/sub-tab id being rendered.
+ * @returns {string} The note text, or "".
+ */
+function readTimelineNote(effective) {
+  try {
+    const n = /** @type {*} */ (globalThis).EmigrationTimelineNote;
+    // The companion declares which sub-tab the note belongs to (its `metricId`); only show it there,
+    // not on every panel sub-tab.
+    if (n && typeof n.text === "function" && n.metricId === effective) return n.text() || "";
+  } catch (_) {
+    /* ignore */
+  }
+  return "";
+}
+
+/**
+ * Append the bottom-centre notes row: the analytics-governance policy banner and, on a companion
+ * panel (Emigration), the timeline-detail note — side by side in one centered row, matching fonts.
+ * @param {HTMLElement} host The view host element.
+ * @param {string} effective The metric/panel being rendered.
+ */
+function appendBottomNotes(host, effective) {
+  let wrap = buildPolicyBanner();
+  const note = readTimelineNote(effective);
+  if (!wrap && !note) return;
+  if (!wrap) {
+    wrap = document.createElement("div");
+    wrap.className = "demographics-policy-banner-wrap";
+  }
+  if (note) {
+    const el = document.createElement("div");
+    el.className = "demographics-timeline-note font-body text-sm";
+    el.textContent = note;
+    wrap.appendChild(el);
+  }
+  host.appendChild(wrap);
+}
+
+/**
  * Render the Historical Data view into `host`: clears the host, then builds the
  * page tab row, metric tab row, chart title + captions, time-range filter row,
  * toolbar, and chart host in their fixed display order.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {HistoryCtx} ctx Render context (history, selection state, callbacks).
+ * @param {{onlyPage?:string}} [opts] When `onlyPage` is set, render that single page pinned (no page
+ *   tab row) - used to present a companion `topLevel` panel as its own top-level view tab.
  */
-export function render(host, ctx) {
+export function render(host, ctx, opts) {
   clearHost(host);
 
   // ── Page tab row ────────────────────────────────────────────────────
-  // mergeExternalPageMetrics() folds in companion-mod panels (whole pages) + metric placements.
-  const activePage = resolveActivePageState(ctx, mergeExternalPageMetrics());
-  buildPageTabRow(host, ctx, activePage);
+  const activePage = resolvePageAndTabRow(host, ctx, opts);
 
   // ── Metric tab row (for the active page) ───────────────────────────
   const page = PAGES.find((p) => p.id === activePage) || PAGES[0];
-  // Active metric: only valid if it's in this page AND exists.
-  const activeMetric = resolveActiveMetricState(ctx, page, metricExists);
+  const activeMetric = resolveVisibleActiveMetric(ctx, page);
   buildMetricTabRow(host, ctx, page, activeMetric);
+
+  // A metric GROUP tab keeps itself selected in the row above, but renders a member toggle and the
+  // SELECTED member's chart below. `effective` is the metric actually charted (the group's member, or
+  // just activeMetric when it isn't a group).
+  const effective = resolveGroupMember(host, ctx, activeMetric);
 
   // ── Chart title (full descriptive name above the plot) ────────────
   const metricObj = (() => {
     try {
-      return getMetric(activeMetric);
+      return getMetric(effective);
     } catch (e) {
       derr("resolve metricObj:", e);
       return null;
     }
   })();
-  const synthMeta = isSynthetic(activeMetric) ? resolveSyntheticMeta(activeMetric) : null;
-  buildChartTitle(host, activeMetric, metricObj, synthMeta);
-
-  // ── Per-metric explanation caption (moved ABOVE the filter row so the
-  //    page reads top-down as: title → caption → filters → chart). ──
-  appendMetricCaptions(host, activeMetric);
-
-  // ── Time-range filter row ─────────────────────────────────────────
-  // The time-range filter is only meaningful for time-series charts.
-  // Race / Completion show a snapshot of current legacies and ignore the
-  // turn window entirely, so hide the row for those metrics to avoid
-  // suggesting they're filterable.
-  //
-  // If the persisted active filter is now disabled (cross-age filters
-  // are greyed out - see CROSS_AGE_DISABLED_TOOLTIP), silently fall
-  // back to "age" (Current Age) so the chart still renders a sane
-  // default instead of an empty window.
-  const activeFilter = resolveActiveFilterState(ctx, TIME_FILTERS);
-  const turnRange = computeTurnRange(ctx.history, activeFilter);
-  // Crisis Graphs span every age (they ignore the turn window) and the Crisis
-  // Stages tables show fixed per-stage windows, so the current-age/year time
-  // filter would be misleading - hide it there.
-  const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
-  if (!TIME_FILTER_HIDDEN_FOR.has(activeMetric) && !isExternalPanel(activeMetric)) {
-    const filterRow = buildTimeFilterRow(activeFilter, (id) => {
-      if (typeof ctx.setActiveTimeFilter === "function") ctx.setActiveTimeFilter(id);
-    });
-    host.appendChild(filterRow);
+  const synthMeta = isSynthetic(effective) ? resolveSyntheticMeta(effective) : null;
+  // A companion panel subtab (Emigration's Network / Civilizations / …) renders its own headers and
+  // content, and the section TAB already names it — so skip the redundant chart title + caption that
+  // would otherwise open a gap above the panel's own pills/controls. Graphs and built-in metrics
+  // (effective is a real metric id, not a panel) keep theirs.
+  if (!isExternalPanel(effective)) {
+    buildChartTitle(host, effective, metricObj, synthMeta);
+    // ── Per-metric explanation caption (above the filter row so the page reads
+    //    top-down: title → caption → filters → chart). ──
+    appendMetricCaptions(host, effective);
   }
 
-  // ── Toolbar: viewer dropdown (resources only), focus-clear, CSV ──
-  // Skipped for external panels (the companion owns the body; CSV/focus don't apply).
-  if (!isExternalPanel(activeMetric)) buildToolbar(host, ctx, activeMetric);
+  // ── Controls row: time-range filters (left) + toolbar (right) on ONE row ──
+  // The time-range filter is only meaningful for time-series charts; snapshot/cross-age metrics hide
+  // it (see TIME_FILTER_HIDDEN_FOR). A persisted-but-now-disabled filter falls back to "all".
+  const activeFilter = resolveActiveFilterState(ctx, TIME_FILTERS);
+  const turnRange = computeTurnRange(ctx.history, activeFilter);
+  buildControlsRow(host, ctx, effective, activeFilter);
 
   // ── Chart host ─────────────────────────────────────────────────────
-  buildChartHost(host, ctx, activeMetric, turnRange);
+  buildChartHost(host, ctx, effective, turnRange);
+
+  // ── Bottom-centre notes: the analytics-governance policy banner and (on the Emigration page) the
+  //    timeline-detail note, side by side in one centered row. ──
+  appendBottomNotes(host, effective);
 
   // Line labels on the right edge of the chart now serve as the legend
   // (clickable to hide; hidden civs appear as faded labels below the

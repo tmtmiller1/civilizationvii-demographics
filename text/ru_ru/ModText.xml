@@ -3,6 +3,7 @@
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ru_RU"><Text>Исторические графики по ходам, всемирный справочник, кольца глобальных отношений, диаграмма Ганта конфликтов и встроенные индикаторы прогресса триумфов для каждой встреченной цивилизации.</Text></Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ru_RU"><Text>Очки с течением времени</Text></Replace>

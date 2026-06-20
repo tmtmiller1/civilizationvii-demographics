@@ -20,14 +20,17 @@ import { buildLineChartConfig } from "/demographics/ui/screen-demographics/chart
 import {
   collectAgeMarkers,
   collectCrisisMarkers,
+  collectRefugeeEventMarkers,
   makeAgeMarkerPlugin,
   makeCrisisMarkerPlugin,
+  makeRefugeeEventMarkerPlugin,
   maxCrisisPillWidth
 } from "/demographics/ui/screen-demographics/charts/line/chart-line-event-markers.js";
 import {
   makeCapLimitLinePlugin,
   makeFocusGlowPlugin,
-  makeHoverCrosshairPlugin
+  makeHoverCrosshairPlugin,
+  makeSignZonesPlugin
 } from "/demographics/ui/screen-demographics/charts/line/chart-line-plugins.js";
 import {
   collectWonderDestructions,
@@ -86,9 +89,11 @@ const WIDE_Y_LEGEND = new Set([
  * @type {Set<string>}
  */
 const EXTRA_WIDE_Y_LEGEND = new Set([
-  "emig_net_migration",
-  "emig_out",
-  "emig_in",
+  // The Emigration "Scaled" lines use signed, spelled-out people counts ("+240 million"); the "Civ
+  // numbers" point variants use plain grouped integers, so they don't need the extra-wide tier.
+  "emig_net_cum",
+  "emig_out_cum",
+  "emig_in_cum",
   "emig_refugees"
 ]);
 
@@ -452,13 +457,17 @@ function buildChartPluginSet(opts, metricId, prep) {
     sampleX
   });
   const ageMarkers = collectAgeMarkers(opts.history, ageOffsets);
+  // Refugees-chart war/disaster onset markers (empty for every other metric).
+  const refugeeMarkers = collectRefugeeEventMarkers(metricId, opts.history);
 
   const plugins = [
+    makeSignZonesPlugin(),
     makeFocusGlowPlugin(),
     wonderMarkersPlugin,
     makeHoverCrosshairPlugin(),
     makeAgeMarkerPlugin(ageMarkers),
     makeCrisisMarkerPlugin(crisisMarkers),
+    makeRefugeeEventMarkerPlugin(refugeeMarkers),
     makeCapLimitLinePlugin(metricId)
   ];
   return { plugins, crisisMarkers };

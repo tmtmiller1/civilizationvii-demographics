@@ -3,6 +3,7 @@
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ja_JP"><Text>ターンごとの歴史グラフ、ワールドファクトブック、グローバル関係リング、紛争ガントチャート、そして遭遇したすべての文明のトライアンフ進捗バーを表示します。</Text></Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="ja_JP"><Text>時系列スコア</Text></Replace>

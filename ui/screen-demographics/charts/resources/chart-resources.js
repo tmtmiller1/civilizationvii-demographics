@@ -255,7 +255,9 @@ function sumBands(values, bands) {
  */
 function buildStackLayout(W, H, dom) {
   const padL = 70,
-    padR = 200,
+    // Legend moved to a row on top of the chart (like the other graphs), so the right margin no
+    // longer reserves space for it — just enough to keep the last x-tick label from clipping.
+    padR = 40,
     padT = 30,
     padB = 64;
   const innerW = W - padL - padR;
@@ -316,38 +318,38 @@ function drawStackBands(svg, points, bands, L) {
 }
 
 /**
- * Mount the stack chart's right-margin band legend (label + latest value).
- * @param {HTMLElement} wrap The chart wrap.
+ * Build the stack chart's band legend as a horizontal row shown ON TOP of the chart (matching the
+ * other graphs), instead of a vertical list in the right margin. Each item is a colour dot + the
+ * band label and its latest value.
  * @param {StackBand[]} bands The band set.
  * @param {StackPoint[]} points The stack rows.
- * @param {{ L: StackLayout, W: number, H: number }} dims Layout + canvas size.
+ * @returns {HTMLElement} The legend row.
  */
-function mountStackLegend(wrap, bands, points, dims) {
-  const { L, W, H } = dims;
-  let gy = L.padT + 8;
-  const gx = L.padL + L.innerW + 16;
+function buildStackLegendTop(bands, points) {
+  const row = document.createElement("div");
+  row.className = "demographics-resources-legend-top";
+  row.style.cssText =
+    "display:flex;flex-wrap:wrap;justify-content:center;align-items:center;" +
+    "gap:0.25rem 1.2rem;width:100%;margin:0.2rem 0 0.4rem;";
   bands.forEach((band) => {
-    const div = document.createElement("div");
-    div.className = "demographics-chart-line-label demographics-resources-legend-label";
-    // Per-band geometry stays inline.
-    div.style.left = (gx / W) * 100 + "%";
-    div.style.top = (gy / H) * 100 + "%";
+    const item = document.createElement("div");
+    item.className = "demographics-chart-line-label demographics-resources-legend-label";
+    item.style.cssText = "display:inline-flex;align-items:center;gap:0.35rem;position:static;";
 
     const dot = document.createElement("span");
     dot.className = "demographics-chart-line-label-dot";
     dot.style.backgroundColor = band.color;
-    div.appendChild(dot);
+    item.appendChild(dot);
 
     const txt = document.createElement("span");
     txt.className = "demographics-chart-line-label-text";
-    // Latest value of this band.
     const latest = points[points.length - 1]?.values?.[band.id] || 0;
     txt.textContent = band.label + " , " + latest;
-    div.appendChild(txt);
+    item.appendChild(txt);
 
-    wrap.appendChild(div);
-    gy += 26;
+    row.appendChild(item);
   });
+  return row;
 }
 
 /**
@@ -384,8 +386,10 @@ export function renderResourcesStack(host, options) {
   const dom = computeStackDomain(points, BANDS);
   const L = buildStackLayout(W, H, dom);
   const { svg, tickPositions } = buildStackSvg(samples, points, BANDS, { L, dom, W, H });
-  const wrap = mountStackWrap(svg, opts, { bands: BANDS, points, tickPositions }, { L, W, H });
+  const wrap = mountStackWrap(svg, opts, { tickPositions }, { L, W, H });
 
+  // Band legend on top of the chart (like the other graphs), then the chart wrap below it.
+  hostEl.appendChild(buildStackLegendTop(BANDS, points));
   hostEl.appendChild(wrap);
   dlog("resources stacked area mounted; turns=", points.length, "yMax=", dom.yMax);
   return { svg };
@@ -444,16 +448,14 @@ function guardPointsPresent(host, points) {
  * band legend overlays.
  * @param {SVGElement} svg The chart SVG.
  * @param {StackOptions} opts The render options (for yAxisLabel).
- * @param {{ bands: StackBand[], points: StackPoint[],
- *   tickPositions: { t: number, x: number, year: string|null, labelY: number }[] }} data
- *   Band set, stack rows, and x-tick positions.
+ * @param {{ tickPositions: { t: number, x: number, year: string|null, labelY: number }[] }} data
+ *   The x-tick positions (the band legend now mounts on top of the chart, outside this wrap).
  * @param {{ L: StackLayout, W: number, H: number }} dims Layout + canvas size.
  * @returns {HTMLElement} The chart wrap.
  */
 function mountStackWrap(svg, opts, data, dims) {
-  const { bands, points, tickPositions } = data;
+  const { tickPositions } = data;
   const { L, W, H } = dims;
-  // Legend at right margin (HTML overlay, clickable later if we add toggles).
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap";
   wrap.appendChild(svg);
@@ -480,7 +482,6 @@ function mountStackWrap(svg, opts, data, dims) {
     mode: /** @type {"turn"|"year"|"both"} */ (getXAxisMode()),
     className: "demographics-chart-x-tick demographics-resources-x-tick"
   });
-  mountStackLegend(wrap, bands, points, { L, W, H });
   return wrap;
 }
 

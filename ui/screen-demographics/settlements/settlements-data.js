@@ -24,6 +24,7 @@ import {
   getFounded,
   getCityTrend
 } from "/demographics/ui/screen-demographics/settlements/settlements-trace.js";
+import { applyPopulationVarianceAndEnsureUnique } from "/demographics/ui/screen-demographics/settlements/settlements-population-variance.js";
 import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 
 /**
@@ -444,7 +445,12 @@ function buildSettlement(city, pid, owner, idx) {
     isTown: !!city.isTown,
     isCapital: !!safeBool(() => city.isCapital),
     population,
-    populationEstimate: scaleCityPopulationAt(population, currentTurn()),
+    populationEstimate: scaleCityPopulationAt(
+      population,
+      currentTurn(),
+      currentAgeType(),
+      currentAgeProgressPct()
+    ),
     owner,
     outputs: readOutputs(city),
     wonders: readWonderList(city),
@@ -558,10 +564,6 @@ function safeBool(fn) {
   }
 }
 
-/**
- * The current monotonic turn (for the population world-estimate).
- * @returns {number} Game.turn, or 0.
- */
 function currentTurn() {
   try {
     if (typeof Game !== "undefined" && typeof Game.turn === "number") return Game.turn;
@@ -569,6 +571,38 @@ function currentTurn() {
     // Game.turn can throw mid-transition.
   }
   return 0;
+}
+
+function currentAgeType() {
+  try {
+    if (typeof Game === "undefined" || Game.age === undefined) return undefined;
+    if (typeof GameInfo === "undefined" || typeof GameInfo?.Ages?.lookup !== "function") {
+      return undefined;
+    }
+    const row = GameInfo.Ages.lookup(Game.age);
+    return row?.AgeType || undefined;
+  } catch (_) {
+    // Game.age / GameInfo.Ages.lookup() can be absent or throw mid-transition.
+    return undefined;
+  }
+}
+
+function ageProgressValue(/** @type {*} */ apm, /** @type {string} */ method) {
+  if (!apm || typeof apm[method] !== "function") return undefined;
+  const value = apm[method]();
+  return typeof value === "number" && isFinite(value) ? value : undefined;
+}
+
+function currentAgeProgressPct() {
+  try {
+    const apm = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
+    const cur = ageProgressValue(apm, "getCurrentAgeProgressionPoints");
+    const max = ageProgressValue(apm, "getMaxAgeProgressionPoints");
+    if (cur === undefined || max === undefined || max <= 0) return undefined;
+    return (cur / max) * 100;
+  } catch (_) {
+    return undefined;
+  }
 }
 
 /**
@@ -693,6 +727,7 @@ function gatherSettlements() {
   const players = alivePlayers();
   if (!Array.isArray(players)) return list;
   for (const p of players) if (p) gatherPlayerSettlements(p, list);
+  applyPopulationVarianceAndEnsureUnique(list);
   slog("gathered", list.length, "settlements");
   return list;
 }

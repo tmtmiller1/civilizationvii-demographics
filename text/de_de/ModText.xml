@@ -7,6 +7,9 @@
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="de_DE">
             <Text>Historische Diagramme pro Runde, Weltfaktbuch, globale Beziehungsringe, Konflikt-Gantt und native Triumph-Fortschrittsbalken für jede getroffene Zivilisation.</Text>
         </Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="de_DE">
+            <Text>Demografie</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="de_DE">
             <Text>Demografie</Text>
         </Replace>
