@@ -124,8 +124,12 @@ function axisTitleOpts(text) {
  */
 export function buildLineChartConfig(parts) {
   const { datasets, plugins, metricMeta, formatters } = parts;
+  // A metric may opt into a bar chart (`chartType:"bar"` on its spec) — Chart.js bars share the same
+  // datasets/scales and natively handle negative values (bars below the zero baseline) and grouping
+  // (one clustered bar per civ at each turn). Datasets already set backgroundColor = civ colour.
+  const type = metricMeta && metricMeta.chartType === "bar" ? "bar" : "line";
   return {
-    type: "line",
+    type,
     data: { datasets },
     plugins,
     options: {

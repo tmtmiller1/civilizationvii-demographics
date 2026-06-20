@@ -89,7 +89,8 @@ function localeComposeSafe(key) {
   if (typeof Locale?.compose === "function") {
     try {
       const s = Locale.compose(key);
-      if (typeof s === "string" && s.length > 0) return s;
+      // Guard against a missing tag echoing the raw key back (it would render "LOC_..." on a node).
+      if (typeof s === "string" && s.length > 0 && !s.startsWith("LOC_")) return s;
     } catch (_) {
       // Fall through to raw key.
     }

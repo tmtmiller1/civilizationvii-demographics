@@ -3,6 +3,7 @@
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="pt_BR"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="pt_BR"><Text>Gráficos históricos por turno, almanaque mundial, anéis de relações globais, gráfico de Gantt de conflitos e barras de progresso de Triunfos nativos para cada civilização conhecida.</Text></Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="pt_BR"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="pt_BR"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="pt_BR"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="pt_BR"><Text>Pontuação ao longo do tempo</Text></Replace>

@@ -7,6 +7,9 @@
         <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
             <Text>Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for every met civilization.</Text>
         </Row>
+        <Row Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS">
+            <Text>Demographics</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPEN">
             <Text>Demographics</Text>
         </Row>
