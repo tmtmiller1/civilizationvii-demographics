@@ -63,6 +63,7 @@ import {
 import {
   buildViewerDropdownPanel
 } from "/demographics/ui/screen-demographics/views/relations/relations-viewer-controls.js";
+import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 
 /**
  * One relationship edge between two ring nodes. `a`/`b` are player ids; the
@@ -176,6 +177,11 @@ function buildScaffold(host) {
   const wrap = addChild(host, "demographics-relations-wrap");
   const topTabHost = addChild(wrap, "demographics-relations-toptab-host");
   const subTabHost = addChild(wrap, "demographics-relations-subtab-host");
+  // Options button in a right-aligned toolbar row directly BELOW the sub-tabs — same structure and
+  // position as the Historical Data tabs. (The absolutely-anchored viewer/legend offsets below are
+  // bumped to clear this extra row.)
+  const optBar = addChild(wrap, "demographics-chart-toolbar");
+  optBar.appendChild(buildOptionsButton());
   // CS viewer dropdown host (only populated when topTab === "cs").
   const viewerHost = addChild(wrap, "demographics-relations-viewer-host");
   const body = addChild(wrap, "demographics-relations-body");

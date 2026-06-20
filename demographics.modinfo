@@ -18,6 +18,35 @@
         </Criteria>
     </ActionCriteria>
     <ActionGroups>
+        <ActionGroup id="demographics-shell" scope="shell" criteria="always">
+            <Properties>
+                <LoadOrder>50</LoadOrder>
+            </Properties>
+            <Actions>
+                <UpdateText>
+                    <Item>text/en_us/ModText.xml</Item>
+                    <Item locale="de_DE">text/de_de/ModText.xml</Item>
+                    <Item locale="es_ES">text/es_es/ModText.xml</Item>
+                    <Item locale="fr_FR">text/fr_fr/ModText.xml</Item>
+                    <Item locale="it_IT">text/it_it/ModText.xml</Item>
+                    <Item locale="ja_JP">text/ja_jp/ModText.xml</Item>
+                    <Item locale="ko_KR">text/ko_kr/ModText.xml</Item>
+                    <Item locale="pt_BR">text/pt_br/ModText.xml</Item>
+                    <Item locale="ru_RU">text/ru_ru/ModText.xml</Item>
+                    <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>
+                </UpdateText>
+                <UIScripts>
+                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/core/demographics-settings.js</Item>
+                    <Item>ui/demographics-options.js</Item>
+                </UIScripts>
+                <ImportFiles>
+                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/core/demographics-settings.js</Item>
+                    <Item>ui/demographics-options.js</Item>
+                </ImportFiles>
+            </Actions>
+        </ActionGroup>
         <ActionGroup id="demographics-game" scope="game" criteria="always">
             <Properties>
                 <LoadOrder>50</LoadOrder>
@@ -26,8 +55,12 @@
                 <UIScripts>
                     <Item>ui/demographics-bootstrap.js</Item>
                     <Item>ui/screen-demographics/screen/screen-demographics.js</Item>
+                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/demographics-options.js</Item>
                 </UIScripts>
                 <ImportFiles>
+                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/demographics-options.js</Item>
                     <Item>ui/core/demographics-i18n.js</Item>
                     <Item>ui/core/demographics-dock-decorator.js</Item>
                     <Item>ui/sampler/demographics-sampler.js</Item>
@@ -79,6 +112,8 @@
                     <Item>ui/screen-demographics/charts/wars/chart-war-military.js</Item>
                     <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-graphs.js</Item>
                     <Item>ui/screen-demographics/charts/crises/chart-crisis-stages.js</Item>
+                    <Item>ui/screen-demographics/views/shared/view-pills.js</Item>
+                    <Item>ui/screen-demographics/views/shared/options-button.js</Item>
                     <Item>ui/screen-demographics/views/history/view-history.js</Item>
                     <Item>ui/screen-demographics/views/history/history-tabs.js</Item>
                     <Item>ui/screen-demographics/views/history/history-captions.js</Item>
@@ -92,6 +127,7 @@
                     <Item>ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js</Item>
                     <Item>ui/screen-demographics/views/settlements/view-settlements.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-data.js</Item>
+                    <Item>ui/screen-demographics/settlements/settlements-population-variance.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-trace.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-overlay.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-tour.js</Item>

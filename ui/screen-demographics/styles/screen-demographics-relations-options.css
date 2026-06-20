@@ -19,12 +19,25 @@
    clashes with the body's top border on CS while sitting clean on civ. */
 .demographics-relations-viewer-host {
     position: absolute;
-    top: 7.5rem;
+    top: 9.5rem;
     left: 1.5rem;
     display: flex;
     align-items: center;
+    /* Never grow into the filter legend on the right (right:1.5rem + width:24rem = 25.5rem, plus
+       this host's own left:1.5rem and a 0.5rem gap = 27.5rem reserved). A long locale label then
+       ellipsizes (rule below) instead of colliding with or sliding under the legend. */
+    max-width: calc(100% - 27.5rem);
+    overflow: hidden;
     z-index: 4;
     pointer-events: auto;
+}
+/* The "Showing relations from:" label shrinks + ellipsizes within the capped host so the dropdown
+   control stays intact and nothing overruns the legend, regardless of locale text length. */
+.demographics-relations-viewer-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .demographics-relations-viewer-host:empty {
     display: none;
@@ -44,7 +57,7 @@
        major civs that left a clean gap, but on CS the dropdown landed in
        that gap and the legend visually overlapped it. 7.5rem clears both
        on either tab so the two views are pixel-equivalent. */
-    top: 7.5rem;
+    top: 9.5rem;
     right: 1.5rem;
     /* FIXED width (not max-width) so the box has the same horizontal
        footprint on the major-civs tab (11 entries) AND the city-states
@@ -57,6 +70,9 @@
     min-height: 14rem;
     padding: 0.6rem 0.85rem;
     box-sizing: border-box;
+    /* Clip a too-long localized pill rather than letting it spill out of the fixed-width box and
+       across the ring; the per-label ellipsis below keeps it readable. */
+    overflow: hidden;
     background: linear-gradient(180deg, rgba(18, 14, 8, 0.85), rgba(8, 6, 3, 0.72));
     border: 1px solid rgba(201, 162, 76, 0.4);
     border-radius: 0.3rem;
@@ -145,6 +161,11 @@
 .demographics-relations-filter-label {
     color: var(--ia-text-secondary);
     white-space: nowrap;
+    /* Ellipsize an over-long localized label inside the fixed-width legend rather than overflowing
+       the pill. Needs min-width:0 so the flex item is allowed to shrink below its content width. */
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .demographics-relations-filter-pill.is-hidden .demographics-relations-filter-label {
     color: var(--ia-accent-gold-soft);
