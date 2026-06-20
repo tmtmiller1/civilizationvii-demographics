@@ -5,10 +5,12 @@
         <div class="demographics-body relative flex flex-col flex-auto px-6 pb-6">
             <!-- TOP-LEVEL view tab bar (Historical Data / WorldRankingsAllCivs / Relations / Options) -->
             <div class="demographics-view-tab-host w-full"></div>
-            <!-- Multiplayer analytics-governance policy banner (P0.1); shown only when constrained -->
-            <div class="demographics-policy-banner-host w-full"></div>
             <!-- The currently-active view renders into this host -->
             <div class="demographics-view-host w-full flex flex-col flex-auto"></div>
+            <!-- Multiplayer analytics-governance policy banner (P0.1); shown only when constrained.
+                 Below the view host so views that don't render it themselves (Rankings / Relations)
+                 show it at the BOTTOM, matching the Historical Data tabs. -->
+            <div class="demographics-policy-banner-host w-full"></div>
         </div>
         <fxs-close-button data-ia-close
             data-audio-group-ref="audio-screen-unlocks"

@@ -1,10 +1,11 @@
 // screen-demographics.js
 //
-// The modal panel. A top-level fxs-tab-bar selects between four views:
+// The modal panel. A top-level fxs-tab-bar selects between three views:
 //   history    - Historical Data (default)  → view-history.js
 //   rankings   - World Rankings             → view-settlements.js
 //   relations  - Global Relations            → view-relations.js
-//   options    - Options                     → view-options.js
+// Settings live in the native Options screen (Mods → Demographics; see demographics-options.js); a
+// toolbar button opens it.
 //
 // The Controls.define + fxs-tab-bar wiring follows vanilla
 // screen-great-works.js (for the tabs) and wonders-screen-continued's
@@ -13,14 +14,9 @@
 import Panel from "/core/ui/panel-support.js";
 import * as ViewHistory from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen/screen-history-context.js";
-import { t } from "/demographics/ui/core/demographics-i18n.js";
-import {
-  bannerInfo,
-  POLICY_DISABLED,
-  POLICY_OWN,
-  POLICY_MET
-} from "/demographics/ui/core/demographics-governance.js";
+import { buildPolicyBanner } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
 import { viewTabVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
+import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
 
 // The two heavy tabs (WorldRankingsAllCivs ~0.9k lines, Relations ~2.5k lines incl. the
 // network graph) are imported on first open instead of statically, so they are
@@ -29,8 +25,7 @@ import { viewTabVisibleInTier } from "/demographics/ui/core/demographics-tiers.j
 /** @type {Record<string, string>} */
 const LAZY_VIEW_SPECIFIERS = {
   rankings: "/demographics/ui/screen-demographics/views/settlements/view-settlements.js",
-  relations: "/demographics/ui/screen-demographics/views/relations/view-relations.js",
-  options: "/demographics/ui/screen-demographics/views/options/view-options.js"
+  relations: "/demographics/ui/screen-demographics/views/relations/view-relations.js"
 };
 
 // Metrics whose chart renderer is loaded on demand (the heavy Conflicts charts,
@@ -85,25 +80,12 @@ dlog("module evaluating");
 const VIEW_TABS = [
   { id: "history", label: "LOC_DEMOGRAPHICS_TAB_HISTORY" },
   { id: "rankings", label: "LOC_DEMOGRAPHICS_TAB_RANKINGS" },
-  { id: "relations", label: "LOC_DEMOGRAPHICS_TAB_RELATIONS" },
-  { id: "options", label: "LOC_DEMOGRAPHICS_TAB_OPTIONS" }
+  { id: "relations", label: "LOC_DEMOGRAPHICS_TAB_RELATIONS" }
 ];
 
 /** Filters disabled in the runtime (see CROSS_AGE_DISABLED_TOOLTIP). "all" is the
  * default time window; only the per-age presets remain disabled. */
 const DISABLED_FILTERS = new Set(["age1", "age2", "age3"]);
-
-/**
- * Localized display label for an analytics-governance policy id (P0.1).
- * @param {string} policy A policy id.
- * @returns {string} The localized policy label.
- */
-function policyLabel(policy) {
-  if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
-  if (policy === POLICY_OWN) return t("LOC_DEMOGRAPHICS_POLICY_OWN");
-  if (policy === POLICY_MET) return t("LOC_DEMOGRAPHICS_POLICY_MET");
-  return t("LOC_DEMOGRAPHICS_POLICY_FULL");
-}
 
 /**
  * Run `fn`, returning its result, or `fb` if it throws. Never throws.
@@ -123,7 +105,7 @@ function safeCall(fn, fb) {
 
 /**
  * The Demographics modal: a top-level `fxs-tab-bar` that swaps between the
- * history, rankings, relations, and options views. Restores its
+ * history, rankings, and relations views. Restores its
  * view/metric/filter state from persisted settings on attach and persists
  * each change back through the settings module.
  */
@@ -372,23 +354,29 @@ class ScreenDemographics extends Panel {
       derr("view-tab-bar host missing");
       return;
     }
+    const tabBar = this._makeViewTabBar();
+    host.appendChild(tabBar);
+    this.viewTabBar = tabBar;
+    dlog("view tab bar built; active=", this.activeView);
+  }
+
+  /**
+   * Create and configure the `fxs-tab-bar` view selector (items, selection, nav hints, listener).
+   * @returns {HTMLElement} The configured tab bar.
+   */
+  _makeViewTabBar() {
     const tabBar = document.createElement("fxs-tab-bar");
     tabBar.classList.add("demographics-view-tabs", "w-full", "font-title", "text-sm");
     tabBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
     tabBar.setAttribute("tab-item-class", "font-title text-base");
     const visibleTabs = this._visibleViewTabs();
     tabBar.setAttribute("tab-items", JSON.stringify(visibleTabs));
-    const idx = Math.max(
-      0,
-      visibleTabs.findIndex((v) => v.id === this.activeView)
-    );
+    const idx = Math.max(0, visibleTabs.findIndex((v) => v.id === this.activeView));
     tabBar.setAttribute("selected-tab-index", String(idx));
     this._applyTabBarNavHints(tabBar);
     this.viewTabBarListener = (/** @type {*} */ event) => this._onViewTabSelected(event);
     tabBar.addEventListener("tab-selected", this.viewTabBarListener);
-    host.appendChild(tabBar);
-    this.viewTabBar = tabBar;
-    dlog("view tab bar built; active=", this.activeView, "index=", idx);
+    return tabBar;
   }
 
   /**
@@ -397,9 +385,29 @@ class ScreenDemographics extends Panel {
    * @returns {ViewTab[]} The visible tab descriptors.
    */
   _visibleViewTabs() {
-    const visibleTabs = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
+    const base = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
+    // Companion mods can contribute a top-level view tab (a `topLevel` registerPanel). Insert those
+    // right after Historical Data, in registration order.
+    const ext = this._topLevelPanelTabs();
+    /** @type {ViewTab[]} */
+    const visibleTabs = [];
+    for (const v of base) {
+      visibleTabs.push(v);
+      if (v.id === "history") visibleTabs.push(...ext);
+    }
     if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "history";
     return visibleTabs;
+  }
+
+  /**
+   * Companion top-level panel view tabs (e.g. Emigration), from the registered external panels
+   * flagged `topLevel`. Empty when no such companion is installed.
+   * @returns {ViewTab[]} Tab descriptors.
+   */
+  _topLevelPanelTabs() {
+    return EXTERNAL_PANELS
+      .filter((p) => p && p.topLevel)
+      .map((p) => ({ id: p.id, label: p.pageLabel || p.title || p.id }));
   }
 
   /**
@@ -453,7 +461,13 @@ class ScreenDemographics extends Panel {
    * render errors are logged, not thrown.
    */
   renderActiveView() {
-    safeCall(() => this._renderPolicyBanner());
+    // The Historical Data view and companion top-level panels render the policy banner INSIDE the view
+    // (at the bottom); every other view (Rankings / Relations) shows it via the banner-host, which now
+    // sits BELOW the view host so it lands at the bottom too. Either way the banner-host is cleared so
+    // a stale banner never lingers across view switches.
+    const usesHistoryRender = this.activeView === "history"
+      || this._topLevelPanelTabs().some((v) => v.id === this.activeView);
+    safeCall(() => this._renderPolicyBanner(usesHistoryRender));
     const host = this.Root.querySelector(".demographics-view-host");
     if (!host) {
       derr("view-host missing");
@@ -475,19 +489,18 @@ class ScreenDemographics extends Panel {
    * and whether the multiplayer host (not just their own preference) is the
    * binding constraint. Re-evaluated on every view render.
    */
-  _renderPolicyBanner() {
+  /**
+   * Render (or clear) the analytics-governance policy banner in the screen-level banner host.
+   * @param {boolean} [renderedInView] When true the active view renders the banner itself (below its
+   *   sub-tabs), so this only clears the host to avoid a duplicate.
+   */
+  _renderPolicyBanner(renderedInView) {
     const banhost = this.Root.querySelector(".demographics-policy-banner-host");
     if (!banhost) return;
     while (banhost.firstChild) banhost.removeChild(banhost.firstChild);
-    const info = bannerInfo();
-    if (!info.show) return;
-    const label = policyLabel(info.policy);
-    const banner = document.createElement("div");
-    banner.className = "demographics-policy-banner font-body text-sm";
-    banner.textContent = info.hostEnforced
-      ? t("LOC_DEMOGRAPHICS_POLICY_BANNER_HOST", label)
-      : t("LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL", label);
-    banhost.appendChild(banner);
+    if (renderedInView) return;
+    const banner = buildPolicyBanner();
+    if (banner) banhost.appendChild(banner);
   }
 
   /**
@@ -495,13 +508,16 @@ class ScreenDemographics extends Panel {
    * @param {HTMLElement} host The cleared view-host element.
    */
   _dispatchView(host) {
+    // A companion top-level panel (e.g. Emigration): render the history machinery pinned to that
+    // panel's page (its sub-tabs + native charts), with no page-tab row.
+    if (this._topLevelPanelTabs().some((v) => v.id === this.activeView)) {
+      this._renderHistoricalDataView(host, this.activeView);
+      return;
+    }
     switch (this.activeView) {
       case "rankings":
       case "relations":
         this._renderLazyView(host, this.activeView);
-        break;
-      case "options":
-        this._renderLazyOptionsView(host);
         break;
       case "history":
       default:
@@ -538,45 +554,22 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Render the lazily-imported Options tab, importing once and caching it.
-   * @param {HTMLElement} host The cleared view-host element.
-   */
-  _renderLazyOptionsView(host) {
-    const cache =
-      this._lazyViews || (this._lazyViews = /** @type {Record<string, *>} */ ({}));
-    const cached = cache.options;
-    const args = {
-      settings: this.settings,
-      storage: this.storage,
-      sampler: this.sampler,
-      history: this.history,
-      requestReload: () => this._reload()
-    };
-    if (cached) {
-      cached.render(host, args);
-      return;
-    }
-    import(LAZY_VIEW_SPECIFIERS.options)
-      .then((mod) => {
-        cache.options = mod;
-        if (this.activeView !== "options") return;
-        while (host.firstChild) host.removeChild(host.firstChild);
-        mod.render(host, args);
-      })
-      .catch((/** @type {*} */ e) => derr("lazy view load failed:", "options", e));
-  }
-
-  /**
    * Render the Historical Data view. Common metrics render synchronously from
    * the statically-loaded chart barrel; the heavy Conflicts metrics first
    * ensure their on-demand chart module is imported, then render once. The
    * re-render is skipped if the user navigated away while the import was in
    * flight.
    * @param {HTMLElement} host The cleared view-host element.
+   * @param {string} [pinnedPage] When set, render only that page pinned (a companion top-level panel
+   *   like Emigration) with no page-tab row, instead of the full Historical Data view.
    */
-  _renderHistoricalDataView(host) {
+  _renderHistoricalDataView(host, pinnedPage) {
+    const opts = pinnedPage ? { onlyPage: pinnedPage } : undefined;
     const metric = this.activeMetric;
+    // The lazy-chart path only applies to the full Historical Data view (its heavy Conflicts/Crises
+    // metrics); a pinned companion page renders synchronously.
     if (
+      !pinnedPage &&
       this.chartMod &&
       typeof this.chartMod.ensureChartForMetric === "function" &&
       LAZY_CHART_METRICS.has(metric)
@@ -591,7 +584,7 @@ class ScreenDemographics extends Panel {
         .catch((/** @type {*} */ e) => derr("lazy chart load failed:", metric, e));
       return;
     }
-    ViewHistory.render(host, buildHistoryContext(this));
+    ViewHistory.render(host, buildHistoryContext(this), opts);
   }
 
   /**
@@ -702,6 +695,26 @@ class ScreenDemographics extends Panel {
       if (this.storage && typeof this.storage.flush === "function") this.storage.flush();
     });
     super.onDetach();
+  }
+
+  /**
+   * Panel lifecycle: another context was pushed ON TOP of us (e.g. the native Options screen, opened
+   * from the Options button). Our window is `position:fixed; z-index:90` to float above queued dock
+   * popups, which would also float it above that pushed screen — so drop our stacking while we're not
+   * the focused context, letting the screen on top show and be usable. Restored in onReceiveFocus.
+   */
+  onLoseFocus() {
+    this.Root.classList.add("demographics-screen-obscured");
+    super.onLoseFocus();
+  }
+
+  /**
+   * Panel lifecycle: the context on top of us was popped (e.g. the Options screen closed) and we're
+   * the focused context again — restore our stacking so we float above queued popups as before.
+   */
+  onReceiveFocus() {
+    this.Root.classList.remove("demographics-screen-obscured");
+    super.onReceiveFocus();
   }
 
   /**

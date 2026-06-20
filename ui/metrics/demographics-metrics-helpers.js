@@ -68,12 +68,41 @@ export function scalePopulationAt(raw, turn) {
  * The world-estimate population for a single settlement.
  * @param {number} raw The settlement's raw population.
  * @param {number} turn The (monotonic) turn for the era multiplier.
+ * @param {string | undefined} [ageType] Optional age type (e.g. AGE_MODERN).
+ * @param {number | undefined} [ageProgressPct] Optional age progress percent [0,100].
  * @returns {number} The scaled city population (0 for non-positive/invalid input).
  */
-export function scaleCityPopulationAt(raw, turn) {
+// Calibrated so normal cities stay readable while true late-game megacities are rare
+// but possible in Modern only, with a smooth in-age ramp so crossing the age
+// boundary never causes a sudden jump. Typical outputs: raw ~5 at turn ~60 reads
+// ~100–150k, raw ~10 at turn ~120 reads ~450–500k, raw ~20 at turn ~220 reads
+// ~2.4M, and raw ~45–50 at turn ~220 can reach ~20M+ late in AGE_MODERN.
+export function scaleCityPopulationAt(raw, turn, ageType, ageProgressPct) {
   if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
   const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
-  return Math.pow(raw, 1.11) * 3000 * Math.pow(1.009, t);
+  const base = Math.pow(raw, 1.11) * 12000 * Math.pow(1.009, t);
+  // Keep everyday cities on the same curve, but let true late-game megacities
+  // occasionally emerge by boosting only high-raw settlements in Modern.
+  const megaTarget = raw > 20 ? Math.pow(raw / 20, 1.5) : 1;
+  const ramp = modernMegaRamp(ageType, ageProgressPct);
+  const megaBoost = 1 + (megaTarget - 1) * ramp;
+  return base * megaBoost;
+}
+
+/**
+ * Smooth Modern-only ramp factor for the city megacity boost.
+ * @param {string | undefined} ageType Current age type.
+ * @param {number | undefined} ageProgressPct Age progress percent.
+ * @returns {number} Ramp in [0,1].
+ */
+function modernMegaRamp(ageType, ageProgressPct) {
+  if (ageType !== "AGE_MODERN") return 0;
+  if (typeof ageProgressPct !== "number" || !isFinite(ageProgressPct)) return 0;
+  const p = Math.max(0, Math.min(1, ageProgressPct / 100));
+  // Start the ramp after the opening turns of Modern and complete before the
+  // final turns, so growth feels gradual across the era.
+  const x = Math.max(0, Math.min(1, (p - 0.1) / 0.8));
+  return x * x * (3 - 2 * x); // smoothstep
 }
 
 /**

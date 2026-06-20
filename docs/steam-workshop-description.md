@@ -5,6 +5,8 @@ Charts and tracked history are now continuous across the age boundary: economy, 
 
 Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays.
 
+Storytelling is a core purpose of this mod: the goal is to make the world's shifts readable as a lived narrative, not just a spreadsheet of numbers.
+
 It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and Slothoth's Global Relations for Civilization VII with added diplomatic concerns and filtering.
 
 [b]The Mod Includes:[/b]

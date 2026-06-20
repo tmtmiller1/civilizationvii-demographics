@@ -129,6 +129,54 @@ export function makeHoverCrosshairPlugin() {
 }
 
 /**
+ * Sign zones for bar charts: a faint green wash above the zero line and a faint red wash below it,
+ * plus a bold zero baseline, so positive vs. negative bars read at a glance without recolouring the
+ * per-civ bars. Self-gates on bar charts (no-op for line charts).
+ * @returns {Record<string, *>} A Chart.js plugin.
+ */
+export function makeSignZonesPlugin() {
+  const GREEN = "rgba(74, 168, 96, 0.12)";
+  const RED = "rgba(206, 76, 64, 0.13)";
+  const ZERO = "rgba(229, 210, 172, 0.6)";
+  return {
+    id: "demographicsSignZones",
+    /** @param {*} c The Chart instance. */
+    beforeDraw(c) {
+      if (!c.config || c.config.type !== "bar") return;
+      const y = c.scales && c.scales.y;
+      const area = c.chartArea;
+      if (!y || !area) return;
+      const y0 = Math.max(area.top, Math.min(area.bottom, y.getPixelForValue(0)));
+      const ctx2 = c.ctx;
+      ctx2.save();
+      ctx2.fillStyle = GREEN;
+      ctx2.fillRect(area.left, area.top, area.right - area.left, y0 - area.top);
+      ctx2.fillStyle = RED;
+      ctx2.fillRect(area.left, y0, area.right - area.left, area.bottom - y0);
+      ctx2.restore();
+    },
+    /** @param {*} c The Chart instance. */
+    afterDatasetsDraw(c) {
+      if (!c.config || c.config.type !== "bar") return;
+      const y = c.scales && c.scales.y;
+      const area = c.chartArea;
+      if (!y || !area) return;
+      const y0 = y.getPixelForValue(0);
+      if (y0 < area.top || y0 > area.bottom) return;
+      const ctx2 = c.ctx;
+      ctx2.save();
+      ctx2.strokeStyle = ZERO;
+      ctx2.lineWidth = 1.6;
+      ctx2.beginPath();
+      ctx2.moveTo(area.left, y0);
+      ctx2.lineTo(area.right, y0);
+      ctx2.stroke();
+      ctx2.restore();
+    }
+  };
+}
+
+/**
  * Build the cap-limit-line Chart.js plugin: a red rule at y=100 on the
  * Settlement Cap Utilization chart. No-op on other metrics.
  * @param {string} metricId Active metric id.

@@ -83,6 +83,13 @@
     pointer-events: auto;
 }
 
+/* While another context (e.g. the native Options screen) is pushed on top, drop our z-index so that
+   screen — a later sibling in the same context target — renders ABOVE us instead of behind our
+   z-index:90 window. Toggled by onLoseFocus/onReceiveFocus; restored to 90 when we regain focus. */
+.demographics-screen.demographics-screen-obscured {
+    z-index: auto;
+}
+
 .demographics-frame {
     width: 96vw;
     height: 94vh;
@@ -216,6 +223,46 @@
     padding: 0.05rem 0.4rem;
     width: 100%;
     flex: 0 0 auto;
+}
+/* Combined controls row: time-range filter pills (left, flexible) + toolbar (right). */
+.demographics-history-controls-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.4rem;
+    /* Default: keep the toolbar at the far right. When no time filter is present (e.g. the Crises
+       page) the toolbar is the lone child, and Coherent doesn't reliably honor `margin-left:auto`
+       for flex alignment — justify-content does. The `--centered` modifier overrides this to center. */
+    justify-content: flex-end;
+}
+.demographics-history-controls-row > .demographics-chart-time-filter-row {
+    width: auto;
+    flex: 1 1 auto;
+    justify-content: center;
+}
+.demographics-history-controls-row > .demographics-chart-toolbar {
+    width: auto;
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+/* Both filter row AND toolbar present: center the filter pills on the FULL row width by lifting the
+   toolbar out of flow (absolute, pinned right). An in-flow toolbar can't shrink below its buttons, so
+   it would steal space and push the pills left of true center. */
+.demographics-history-controls-row--centered {
+    position: relative;
+    justify-content: center;
+}
+.demographics-history-controls-row--centered > .demographics-chart-time-filter-row {
+    flex: 0 0 auto;
+}
+.demographics-history-controls-row--centered > .demographics-chart-toolbar {
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0; /* override toolbar-wars margin-top, which would offset the absolute toolbar */
 }
 /* Wars view: extra gap between the age-filter pill row and this toolbar. */
 .demographics-chart-toolbar-wars {
@@ -661,13 +708,30 @@
 .demographics-policy-banner-host {
     width: 100%;
 }
+.demographics-policy-banner-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* Pin to the bottom of the (flex-column) view when there's slack; harmless (= 0) in block hosts. */
+    margin: auto 0 0.3rem 0;
+}
 .demographics-policy-banner {
-    margin: 0.3rem 0;
-    padding: 0.35rem 0.7rem;
-    border-radius: 0.25rem;
-    background-color: rgba(0, 0, 0, 0.35);
-    border-left: 0.18rem solid var(--ia-accent-gold-soft);
-    color: var(--ia-accent-gold-soft);
+    padding: 0.35rem 0.9rem;
+    border-radius: 0.4rem;
+    background-color: rgba(120, 28, 24, 0.4);
+    border: 0.0555rem solid #e0726a;
+    color: #ec8e84;
+    text-align: center;
+}
+/* Emigration "timeline detail" note: sits in the same centered bottom row as the policy banner
+   (gold, to stay distinct from the red policy pill). Font size comes from the `text-sm` class so it
+   matches the banner. */
+.demographics-timeline-note {
+    padding: 0.35rem 0.9rem;
+    border-radius: 0.9rem;
+    background-color: rgba(243, 195, 76, 0.12);
+    border: 0.0555rem solid rgba(243, 195, 76, 0.4);
+    color: #f3c34c;
     text-align: center;
 }
 .demographics-option-hint {

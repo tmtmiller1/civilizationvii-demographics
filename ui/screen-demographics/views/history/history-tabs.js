@@ -4,8 +4,13 @@
 import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { getCurrentAgeType } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { EXTERNAL_PANELS, PANEL_SUBTAB_SEP } from "/demographics/ui/metrics/demographics-metrics.js";
+import {
+  EXTERNAL_PANELS,
+  EXTERNAL_METRIC_GROUPS,
+  PANEL_SUBTAB_SEP
+} from "/demographics/ui/metrics/demographics-metrics.js";
 import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
+import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 
 // Short contextual descriptions for the advanced History pages (P1.5), shown as
 // a caption under the page tab row so a newcomer knows what an advanced page is.
@@ -13,8 +18,16 @@ import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 const PAGE_DESCRIPTIONS = {
   age: "LOC_DEMOGRAPHICS_PAGE_DESC_AGE",
   resources: "LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES",
-  conflicts: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS",
-  crises: "LOC_DEMOGRAPHICS_PAGE_DESC_CRISES"
+  conflicts: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS"
+  // crises: deliberately omitted — its description rides as a hover tooltip on the chart title instead
+  // of a standalone on-page note (see CHART_TITLE_TOOLTIPS / buildChartTitle).
+};
+
+// Metrics whose chart title carries a hover tooltip (in place of a standalone page-description note).
+/** @type {Record<string, string>} */
+const CHART_TITLE_TOOLTIPS = {
+  crisis_stages: "LOC_DEMOGRAPHICS_PAGE_DESC_CRISES",
+  crisis_graphs: "LOC_DEMOGRAPHICS_PAGE_DESC_CRISES"
 };
 
 /**
@@ -44,6 +57,9 @@ function externalTabLabel(id) {
   if (direct && !(Array.isArray(direct.tabs) && direct.tabs.length)) {
     return direct.tabLabel || direct.title || id;
   }
+  // A companion metric-group tab (one tab that toggles among member metrics).
+  const group = EXTERNAL_METRIC_GROUPS.find((g) => g.id === id);
+  if (group) return group.label;
   // Sub-tab of a multi-tab panel: id is "panelId::subId".
   return typeof id === "string" ? subTabLabel(id) : null;
 }
@@ -72,8 +88,10 @@ export function buildPageTabRow(host, ctx, activePage) {
   pageBar.classList.add("demographics-page-tabs", "w-full", "font-title", "text-sm");
   pageBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   pageBar.setAttribute("tab-item-class", "font-title text-base");
-  // UI complexity tiers (P1.5): only show pages the active tier discloses.
-  const visiblePages = PAGES.filter((p) => pageVisibleInTier(p.id));
+  // UI complexity tiers (P1.5): only show pages the active tier discloses. Also drop any companion
+  // panel marked `topLevel` - it has its own top-level view tab, so it must not appear as a page here.
+  const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
+  const visiblePages = PAGES.filter((p) => pageVisibleInTier(p.id) && !topLevelIds.has(p.id));
   const pageTabs = visiblePages.map((p) => ({ id: p.id, label: p.label }));
   pageBar.setAttribute("tab-items", JSON.stringify(pageTabs));
   const pageIdx = Math.max(
@@ -119,25 +137,6 @@ function onPageTabSelected(ctx, activePage, id) {
   if (typeof ctx.setActivePage === "function") ctx.setActivePage(id);
 }
 
-/**
- * @param {HTMLElement} metricBar
- */
-function applyNavHelpClasses(metricBar) {
-  try {
-    if (
-      typeof UI !== "undefined" &&
-      typeof UI.getViewExperience === "function" &&
-      typeof UIViewExperience !== "undefined" &&
-      UI.getViewExperience() !== UIViewExperience.Mobile
-    ) {
-      metricBar.setAttribute("nav-help-right-class", "relative right-0");
-      metricBar.setAttribute("nav-help-left-class", "relative left-0");
-    }
-  } catch (_) {
-    // Engine boundary can throw; skip optional nav-help classes.
-  }
-}
-
 /** @type {Record<string, string>} */
 const AGE_GATED_METRICS = {
   resources_treasure: "AGE_EXPLORATION",
@@ -148,7 +147,7 @@ const AGE_GATED_METRICS = {
  * @param {string[]} metrics
  * @returns {string[]}
  */
-function visibleMetricsForAge(metrics) {
+export function visibleMetricsForAge(metrics) {
   const age = getCurrentAgeType();
   return metrics.filter((mid) => {
     const requiredAge = AGE_GATED_METRICS[mid];
@@ -157,51 +156,83 @@ function visibleMetricsForAge(metrics) {
 }
 
 /**
- * Build and append the metric tab bar for `page`.
+ * Build and append the metric selector for `page` as a row of PILLS (the 3rd-level selector; the page
+ * tab row above it stays as native tabs). One pill per visible metric; selecting one sets the active
+ * metric (persisted + re-rendered by the host).
  * @param {HTMLElement} host
  * @param {*} ctx
  * @param {{id:string,label:string,metrics:string[]}} page
  * @param {string} activeMetric
  */
 export function buildMetricTabRow(host, ctx, page, activeMetric) {
+  const metrics = visibleMetricsForAge(page.metrics);
+  // A page with a single metric (e.g. Age → the triumphs/legacy radar) needs no selector — a one-pill
+  // row is pointless. Skip it; the lone metric still renders below.
+  if (metrics.length <= 1) return;
+
+  const items = metrics.map((mid) => {
+    const ext = externalTabLabel(mid);
+    if (ext) return { key: mid, label: ext };
+    const exists = metricExists(mid);
+    return {
+      key: mid,
+      label: t(exists ? "LOC_DEMOGRAPHICS_METRIC_" + mid.toUpperCase() : "LOC_DEMOGRAPHICS_NYI")
+    };
+  });
+
+  // A top-level companion panel (e.g. Emigration) emits no page-tab row, so its section selector
+  // (Graphs / Network / Civilizations / …) is the row directly under the view-tab bar. Render it as
+  // native tabs there — section navigation, not the 3rd-level metric pills — so the in-section toggles
+  // (a group's member/view pill rows) read as a clear level below it.
+  if (isTopLevelPanelPage(page.id)) {
+    buildSectionTabBar(host, ctx, items, activeMetric);
+    return;
+  }
+
   const metricHost = document.createElement("div");
   metricHost.className = "demographics-tab-bar-host w-full";
   host.appendChild(metricHost);
+  metricHost.appendChild(pillRow(items, activeMetric, (/** @type {string} */ id) => {
+    if (typeof ctx.setActiveMetric === "function") ctx.setActiveMetric(id);
+  }));
+}
 
-  const metricBar = document.createElement("fxs-tab-bar");
-  metricBar.classList.add("demographics-tabs", "w-full", "font-title", "text-sm");
-  metricBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
-  metricBar.setAttribute("tab-item-class", "font-title text-base");
-  const metrics = visibleMetricsForAge(page.metrics);
-  const metricTabs = metrics.map((mid) => {
-    const ext = externalTabLabel(mid);
-    if (ext) return { id: mid, label: ext };
-    const exists = metricExists(mid);
-    return {
-      id: mid,
-      label: exists ? "LOC_DEMOGRAPHICS_METRIC_" + mid.toUpperCase() : "LOC_DEMOGRAPHICS_NYI"
-    };
-  });
-  metricBar.setAttribute("tab-items", JSON.stringify(metricTabs));
+/**
+ * Whether `pageId` is a companion panel shown as its own top-level view tab (Emigration). Such pages
+ * have no page-tab row, so their section selector renders as a native tab bar instead of pills.
+ * @param {string} pageId The active page id.
+ * @returns {boolean} True for a top-level companion panel.
+ */
+function isTopLevelPanelPage(pageId) {
+  return EXTERNAL_PANELS.some((p) => p && p.topLevel && p.id === pageId);
+}
 
-  const mIdx = Math.max(
-    0,
-    metrics.findIndex((m) => m === activeMetric)
-  );
-  metricBar.setAttribute("selected-tab-index", String(mIdx));
-  applyNavHelpClasses(metricBar);
-  metricBar.addEventListener("tab-selected", (event) => {
+/**
+ * Build the section selector for a top-level panel page as a native `fxs-tab-bar` (the second row of
+ * tabs, under the view-tab bar) instead of a pill row. Selecting a tab sets the active metric/section.
+ * @param {HTMLElement} host The view host.
+ * @param {*} ctx Render context.
+ * @param {{key:string,label:string}[]} items The section items (metric id + label).
+ * @param {string} activeMetric The active section/metric id.
+ */
+function buildSectionTabBar(host, ctx, items, activeMetric) {
+  const tabHost = document.createElement("div");
+  tabHost.className = "demographics-page-tab-host w-full";
+  host.appendChild(tabHost);
+
+  const bar = document.createElement("fxs-tab-bar");
+  bar.classList.add("demographics-page-tabs", "w-full", "font-title", "text-sm");
+  bar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  bar.setAttribute("tab-item-class", "font-title text-base");
+  bar.setAttribute("tab-items", JSON.stringify(items.map((it) => ({ id: it.key, label: it.label }))));
+  const idx = Math.max(0, items.findIndex((it) => it.key === activeMetric));
+  bar.setAttribute("selected-tab-index", String(idx));
+  bar.addEventListener("tab-selected", (event) => {
     const id = /** @type {*} */ (event)?.detail?.selectedItem?.id;
     if (!id || id === activeMetric) return;
-    if (!metricExists(id)) {
-      dlog("metric-selected but unimplemented:", id);
-      if (typeof ctx.setActiveMetric === "function") ctx.setActiveMetric(id);
-      return;
-    }
-    dlog("metric-selected:", id);
     if (typeof ctx.setActiveMetric === "function") ctx.setActiveMetric(id);
   });
-  metricHost.appendChild(metricBar);
+  tabHost.appendChild(bar);
 }
 
 /**
@@ -236,9 +267,27 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
   } else {
     title.textContent = activeMetric;
   }
+  // A metric's explanatory note rides as a title hover tooltip instead of a standalone on-page
+  // caption: the Crises page description (CHART_TITLE_TOOLTIPS), else a registered metric's own
+  // one-line `description` (e.g. the Emigration graphs). The strict id check avoids getMetric()'s
+  // METRICS[0] fallback for an unknown id.
+  if (CHART_TITLE_TOOLTIPS[activeMetric]) {
+    title.title = t(CHART_TITLE_TOOLTIPS[activeMetric]);
+  } else if (metricObj && metricObj.id === activeMetric && typeof metricObj.description === "string") {
+    title.title = metricObj.description;
+  }
   host.appendChild(title);
-  // Subtitle: synthetic metrics carry their own; registered metrics opt in with a
-  // LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE key (a brief definition under the title).
+  appendChartSubtitle(host, activeMetric, synthMeta);
+}
+
+/**
+ * Append the optional subtitle line under the chart title: synthetic metrics carry their own
+ * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key.
+ * @param {HTMLElement} host The title host.
+ * @param {string} activeMetric The active metric id.
+ * @param {*} synthMeta The synthetic-metric meta, when the metric is synthetic.
+ */
+function appendChartSubtitle(host, activeMetric, synthMeta) {
   let subtitle = "";
   if (synthMeta && synthMeta.subtitle) {
     subtitle = synthMeta.subtitle;
@@ -247,10 +296,9 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
     const localized = t(subKey);
     if (localized && localized !== subKey) subtitle = localized;
   }
-  if (subtitle) {
-    const sub = document.createElement("div");
-    sub.className = "demographics-chart-subtitle demographics-history-subtitle font-body text-sm";
-    sub.textContent = subtitle;
-    host.appendChild(sub);
-  }
+  if (!subtitle) return;
+  const sub = document.createElement("div");
+  sub.className = "demographics-chart-subtitle demographics-history-subtitle font-body text-sm";
+  sub.textContent = subtitle;
+  host.appendChild(sub);
 }

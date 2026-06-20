@@ -7,6 +7,9 @@
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="es_ES">
             <Text>Gráficas históricas por turno, anuario mundial, anillos de relaciones globales, diagrama de Gantt de conflictos y barras de progreso Triumphs nativas para cada civilización encontrada.</Text>
         </Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="es_ES">
+            <Text>Demografía</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="es_ES">
             <Text>Demografía</Text>
         </Replace>

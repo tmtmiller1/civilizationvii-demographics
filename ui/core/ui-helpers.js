@@ -36,14 +36,11 @@ export function fmt(v) {
 }
 
 /**
- * Format a large population estimate compactly (B/M/K).
+ * Format a population estimate as an exact rounded integer with separators.
  * @param {number} v Value to format.
- * @returns {string} Compact population string.
+ * @returns {string} Exact population string.
  */
 export function fmtPop(v) {
   if (typeof v !== "number" || !isFinite(v) || v <= 0) return "—";
-  if (v >= 1e9) return (v / 1e9).toFixed(1) + "B";
-  if (v >= 1e6) return (v / 1e6).toFixed(1) + "M";
-  if (v >= 1e3) return (v / 1e3).toFixed(0) + "K";
-  return String(Math.round(v));
+  return Math.round(v).toLocaleString();
 }

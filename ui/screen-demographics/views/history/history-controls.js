@@ -9,6 +9,7 @@ import { warsCsv } from "/demographics/ui/screen-demographics/views/history/hist
 import { copyTableAsCsv } from "/demographics/ui/core/demographics-csv.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
+import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 
 const DBG = false;
 
@@ -295,41 +296,6 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
   dlog("wonders button mounted; activeMetric=" + activeMetric + " wondersOn=" + wondersOn);
 }
 
-/** @returns {HTMLElement} */
-function buildCsvInfoTooltip() {
-  const tip = document.createElement("div");
-  tip.className =
-    "demographics-tip-chrome demographics-history-tip demographics-history-tip-csv";
-  const HDR =
-    "color:rgb(236,224,198);font-family:TitilliumWeb, sans-serif;" +
-    "font-weight:700;text-transform:uppercase;letter-spacing:0.04em;" +
-    "font-size:1.02rem;margin-bottom:0.65rem;padding-bottom:0.4rem;" +
-    "border-bottom:1px solid rgba(204,188,163,0.2);";
-  tip.innerHTML =
-    `<div style="${HDR}">` +
-    t("LOC_DEMOGRAPHICS_BTN_COPY_CSV") +
-    `</div>` +
-    t("LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY");
-  return tip;
-}
-
-/** @returns {HTMLElement} */
-function buildCsvInfoIcon() {
-  const el = document.createElement("div");
-  el.className = "demographics-chart-toolbar-info demographics-history-csv-info-icon";
-  const tip = buildCsvInfoTooltip();
-  el.appendChild(tip);
-  el.addEventListener("mouseenter", () => {
-    tip.style.opacity = "1";
-    el.style.opacity = "1";
-  });
-  el.addEventListener("mouseleave", () => {
-    tip.style.opacity = "0";
-    el.style.opacity = "0.75";
-  });
-  return el;
-}
-
 /** History pages whose data lives in history.wars (not the per-turn samples). */
 const WARS_PAGES = new Set(["wars_gantt", "war_graphs"]);
 
@@ -357,7 +323,6 @@ function runCsvExport(ctx, host, activeMetric) {
  * @param {string} activeMetric
  */
 function appendCsvControls(toolbar, host, ctx, activeMetric) {
-  const csvInfo = buildCsvInfoIcon();
   const csvBtn = document.createElement("div");
   csvBtn.className = "demographics-chart-toolbar-btn font-body text-xs";
   csvBtn.textContent = t("LOC_DEMOGRAPHICS_BTN_COPY_CSV");
@@ -367,11 +332,7 @@ function appendCsvControls(toolbar, host, ctx, activeMetric) {
     safePlaySound("data-audio-activate", "options");
     runCsvExport(ctx, host, activeMetric);
   });
-  const csvGroup = document.createElement("div");
-  csvGroup.className = "demographics-history-csv-group";
-  csvGroup.appendChild(csvBtn);
-  csvGroup.appendChild(csvInfo);
-  toolbar.appendChild(csvGroup);
+  toolbar.appendChild(csvBtn);
 }
 
 /**
@@ -525,6 +486,7 @@ export function buildToolbar(host, ctx, activeMetric) {
   if (!TIME_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendTimeUnitsToggle(toolbar, ctx);
   if (!WONDERS_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendWondersToggle(toolbar, ctx, activeMetric);
   appendCsvControls(toolbar, host, ctx, activeMetric);
+  toolbar.appendChild(buildOptionsButton());
 
   if (toolbar.children.length) host.appendChild(toolbar);
 }

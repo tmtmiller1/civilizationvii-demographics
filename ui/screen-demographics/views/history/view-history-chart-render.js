@@ -119,7 +119,10 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
     found.panel.render(chartHost, ctx, found.subId);
     _extLast = { id: activeMetric, turn, host: chartHost };
   } catch (e) {
+    // The history ctx doesn't carry derr, so a companion-panel throw was previously swallowed with
+    // no trace; log it so a broken external panel is at least diagnosable.
     if (ctx && typeof ctx.derr === "function") ctx.derr("external panel render:", e);
+    else console.error("[Demographics] external panel render:", e);
   }
   return true;
 }
