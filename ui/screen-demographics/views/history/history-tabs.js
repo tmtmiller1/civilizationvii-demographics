@@ -277,17 +277,20 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
     title.title = metricObj.description;
   }
   host.appendChild(title);
-  appendChartSubtitle(host, activeMetric, synthMeta);
+  appendChartSubtitle(host, activeMetric, synthMeta, metricObj);
 }
 
 /**
  * Append the optional subtitle line under the chart title: synthetic metrics carry their own
- * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key.
+ * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key, or — for
+ * companion-registered metrics that use raw strings, not LOC keys (e.g. the Emigration graphs) — a
+ * plain `subtitle` string on the metric descriptor.
  * @param {HTMLElement} host The title host.
  * @param {string} activeMetric The active metric id.
  * @param {*} synthMeta The synthetic-metric meta, when the metric is synthetic.
+ * @param {*} [metricObj] The metric descriptor (for a raw `subtitle` fallback).
  */
-function appendChartSubtitle(host, activeMetric, synthMeta) {
+function appendChartSubtitle(host, activeMetric, synthMeta, metricObj) {
   let subtitle = "";
   if (synthMeta && synthMeta.subtitle) {
     subtitle = synthMeta.subtitle;
@@ -295,6 +298,11 @@ function appendChartSubtitle(host, activeMetric, synthMeta) {
     const subKey = "LOC_DEMOGRAPHICS_METRIC_" + String(activeMetric).toUpperCase() + "_SUBTITLE";
     const localized = t(subKey);
     if (localized && localized !== subKey) subtitle = localized;
+    // A companion metric (e.g. the Emigration graphs) supplies its definition as a raw `subtitle`
+    // string. The strict id check avoids getMetric()'s METRICS[0] fallback for an unknown id.
+    else if (metricObj && metricObj.id === activeMetric && typeof metricObj.subtitle === "string") {
+      subtitle = metricObj.subtitle;
+    }
   }
   if (!subtitle) return;
   const sub = document.createElement("div");

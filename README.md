@@ -44,7 +44,11 @@ Built on the foundations of robk's InfoAddict (Civ V), Gedemon's CivGraphs (Civ 
 - **Historical Data**: per-turn time-series charts and dashboards.
 - **World Rankings**: civilization and settlement leaderboards, per-civ All Civilizations profiles, and a Top 25 settlements board with map fly-to.
 - **Global Relations**: concentric relationship ring of met civilizations and city-states.
-- **Options**: sampling, visibility, and display settings.
+
+Settings live in the game's own **Options** screen, under **Mods → Demographics** (display, interface
+complexity, on-first-contact reveal mode, and the Top-Cities camera). A persistent **Options** button
+sits in the chart toolbar (and beside the sub-tabs on World Rankings / Global Relations) so you can
+open them directly on top of the panel.
 
 ## 2. Historical Data
 
@@ -118,12 +122,11 @@ Because losses are summed from per-turn dips, coarse sampling (or the decimation
 ## 7. Behavior and persistence
 
 - Settings persist in `localStorage`. Recorded history persists per save game via the GameConfiguration store, carrying across quit/load and age transitions.
-- History sample caps scale with game speed and can be overridden in Options. Lower the sample frequency there to cut per-turn work on slow machines or long games.
-- The auto sample cap also adapts to hardware (CPU cores / device memory / mobile) and game size (player count), shrinking retention on weak machines and many-civ games (floored so history is never starved); an explicit override always wins. Chart rendering is additionally clamped to a per-series point budget scaled by the same capability factor, so a marathon-length line plots a bounded number of points after the visible-range filter.
-- UI complexity tiers (Options → Interface → *Complexity*) progressively disclose features: **Basic** shows only the core stat pages (Economy / Power / Knowledge) and hides the advanced History pages, the Relations network tab, and the tuning controls; **Standard** (default) shows every page and tab but keeps the advanced storage/sampling controls hidden; **Analyst** exposes everything, including the storage-cap, decimation, and sample-rate controls. Advanced History pages also carry a one-line description so their purpose is clear. Nothing is removed: a higher tier reveals more.
+- History sample caps are **automatic**: they scale with game speed and adapt to hardware (CPU cores / device memory / mobile) and game size (player count), shrinking retention on weak machines and many-civ games (floored so history is never starved). Chart rendering is additionally clamped to a per-series point budget scaled by the same capability factor, so a marathon-length line plots a bounded number of points after the visible-range filter.
+- UI complexity tiers (game Options → Mods → Demographics → *Interface complexity*) progressively disclose features: **Basic** shows only the core stat pages (Economy / Power / Knowledge) and hides the advanced History pages and the Relations network tab; **Standard** (default) shows every page and tab; **Analyst** also reveals the experimental Top-Cities camera/flyby controls. Advanced History pages carry a one-line description so their purpose is clear. Nothing is removed: a higher tier reveals more.
 - Colorblind mode swaps chart and relationship colors to a colorblind-safe set.
-- Analytics visibility is governed by a single policy (Options → Spoilers → *Analytics visibility*), with four levels: **All civilizations**, **Met civilizations only** (default: diplomacy/influence/relations for unmet civs are withheld and the charts show a gap), **Own civilization only**, and **Disabled (own civ only)**. The policy is enforced at both the data layer (chart series, rankings table, and relations network drop the hidden civs) and the render layer (a banner above the views states the active policy).
-- Multiplayer governance: the host's chosen policy is written to the shared `GameConfiguration` and becomes a ceiling for every player that game: each client can restrict their own view further but never see more than the host allows. The in-screen banner notes when the host (rather than a local preference) is the binding constraint. In single-player you are effectively the host, so the dropdown simply sets your own visibility.
+- Unmet-civilization visibility: the **Hide unmet civilization stats** option (Options → Mods → Demographics) withholds diplomacy/influence/relations data for civilizations you haven't met (the charts show a gap, and unmet civs render as placeholders). When data is withheld, a banner above the views states the active analytics policy.
+- Multiplayer governance: an analytics policy stored in the shared `GameConfiguration` is enforced as a ceiling for every player that game — clients drop any civ the host's policy hides, and the banner notes when the host (rather than a local preference) is the binding constraint.
 
 ## 8. Companion-mod integration
 
@@ -131,18 +134,14 @@ Other mods can contribute to the Historical Data screen through an optional, ord
 
 - **`registerMetric(spec)`**: add a per-civ line-chart metric that flows through the normal sample, store, and chart pipeline. A spec may include a `tooltipAttribution(ctx)` callback whose returned string is shown as a source-attribution line in that metric's tooltip.
 - **`registerMetricToPage(pageId, metricId, afterMetricId?)`**: place the metric's tab on an existing page (for example, next to Population on **Power**).
-- **`registerPanel(spec)`**: contribute a whole **page** whose body the companion renders itself. The screen adds it as its own tab and calls `spec.render(container, ctx)` to fill it (the time-range filter and CSV toolbar are suppressed for these custom pages). Demographics gains no dependency on the companion.
+- **`registerMetricGroup(spec)`**: collapse several related metrics behind one tab with up to two pill-row toggles (a metric row and a view/units row), charting one member at a time. Member metrics stay individually registered (and sampled); the group just picks which one is shown.
+- **`registerPanel(spec)`**: contribute a whole **page** (optionally with its own sub-tabs) whose body the companion renders itself. The screen adds it as its own top-level tab and calls `spec.render(container, ctx, subId)` to fill it (the chart title, time-range filter, and CSV toolbar are suppressed for these custom pages). Demographics gains no dependency on the companion.
 
-The handshake is load-order-independent: registrations made before this screen loads are queued and drained when it initializes. The companion **Emigration** mod uses all three, contributing net-migration, emigration, and immigration graphs with per-cause source attribution plus a dedicated **Migration** dashboard page.
+The handshake is load-order-independent: registrations made before this screen loads are queued and drained when it initializes. The companion **Emigration** mod uses all of these, contributing a top-level **Emigration** tab whose **Graphs** section toggles between **Net Migration / Emigration / Immigration / Refugees** in either scaled "people" or raw Civ population numbers, with cause-breakdown tooltips and war/disaster event markers on the Refugees chart — alongside its own Network, Civilizations, Causes, Settlements, Immigration-Policies, and Guide sections.
 
 ### Performance on large saves (with Emigration installed)
 
-If late-game turns feel heavy with both mods active, two safe levers help, in this order:
-
-1. **Lower Demographics' sampling frequency first** (Options → sampling): this mod samples every met civilization's metrics each turn, so a coarser cadence is the bigger per-turn win. It only changes how *often* the charts gain a data point, never the figures themselves.
-2. **Then raise Emigration's `turnInterval`** (Options → Mods → Emigration - Advanced) so its migration pass runs less often.
-
-Both are pure cadence levers, they change update frequency, not behavior or graph semantics.
+If late-game turns feel heavy with both mods active, **raise Emigration's `turnInterval`** (game Options → Mods → Emigration → Advanced) so its migration pass runs less often. This is a pure cadence lever: it changes how often migration updates, not behavior or graph semantics. (Demographics' own sampling cadence is automatic and adapts to hardware/game size, so there's no manual frequency knob to tune.)
 
 **Measuring the combined cost** (developer recipe, not gameplay): on a turn where both mods fire, the debug logs report Emigration's pass duration and Demographics' sample duration; opening the **Migration** page exercises the shared render core. Comparing those three tells you whether a turn spike is the Emigration pass, the Demographics sample, or the embedded page: the cross-mod bridge itself is a thin read-only layer over each mod's existing tallies.
 
@@ -156,7 +155,8 @@ Both are pure cadence levers, they change update frequency, not behavior or grap
 ## 10. Usage
 
 - Open from the Demographics icon in the subsystem dock.
-- Top tabs switch views. In Historical Data, the second row picks a metric page and the third picks the metric; in World Rankings, the second row switches between the rankings, All Civilizations, and settlement boards.
+- Top tabs switch views (Historical Data / World Rankings / Global Relations, plus an **Emigration** tab when that companion mod is installed). In Historical Data, the second row picks a metric page and the third picks the metric; in World Rankings, the second row switches between the rankings, All Civilizations, and settlement boards.
+- The **Options** button (in the chart toolbar, and beside the sub-tabs on World Rankings / Global Relations) opens the game's Options screen at **Mods → Demographics**.
 
 ## 11. Compatibility
 
