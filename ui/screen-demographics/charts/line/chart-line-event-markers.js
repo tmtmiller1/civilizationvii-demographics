@@ -7,6 +7,7 @@
 // offset table, so they ride together.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
   CRISIS_STAGE_COLORS,
@@ -484,6 +485,20 @@ const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red — war onsets
 const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber — disaster onsets
 
 /**
+ * Read the `showWarMarkers` setting (default ON): the Options toggle for the Refugees chart's war +
+ * disaster onset markers, mirroring the wonder-markers filter (shouldShowWonders).
+ * @returns {boolean} Whether to show the refugees-chart event markers.
+ */
+export function shouldShowWarMarkers() {
+  try {
+    return !!DemographicsSettings.getSetting("showWarMarkers", true);
+  } catch (_) {
+    // DemographicsSettings.getSetting may throw; default to showing them.
+    return true;
+  }
+}
+
+/**
  * Build a game-year → chart-X (chartTurn) map from the sample stream, so an event carrying only a
  * year label can be placed on the continuous timeline.
  * @param {Snapshot[]|*[]} samples The sample stream.
@@ -568,6 +583,7 @@ function collectDisasterMarkers(yearToChart, out) {
  */
 export function collectRefugeeEventMarkers(metricId, history) {
   if (!REFUGEE_METRIC_IDS.has(metricId)) return [];
+  if (!shouldShowWarMarkers()) return []; // user toggle (Options), mirroring the wonder-markers filter
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
   const yearToChart = buildYearToChartTurn(samples);
   /** @type {{turn:number, label:string, year:string, color:string}[]} */

@@ -294,6 +294,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="it_IT"><Text>Mostra i nomi reali delle civiltà che non ho incontrato (spoiler)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="it_IT"><Text>Modalità daltonici (palette ad alto contrasto per grafici e relazioni)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="it_IT"><Text>Mostra le civiltà eliminate nel grafico e nelle classifiche mondiali</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="it_IT">
+            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="it_IT"><Text>Mostra indicatori delle meraviglie sulle linee del grafico</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="it_IT"><Text>Automatico (predefinito in base alla velocità di gioco)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="it_IT"><Text>1.000 campioni</Text></Replace>

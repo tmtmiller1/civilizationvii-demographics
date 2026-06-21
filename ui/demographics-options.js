@@ -126,6 +126,19 @@ function registerWonderMarkers() {
   });
 }
 
+function registerWarMarkers() {
+  Options.addOption({
+    category: CategoryType.Mods,
+    group: MAIN_GROUP,
+    type: OptionType.Checkbox,
+    id: "demographics-show-war-markers",
+    initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showWarMarkers", true)),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) =>
+      DemographicsSettings.setSetting("showWarMarkers", !!value),
+    label: "LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS"
+  });
+}
+
 function registerComplexity() {
   Options.addOption({
     category: CategoryType.Mods,
@@ -152,6 +165,7 @@ Options.addInitCallback(() => {
   registerHideUnmet();
   registerColorblind();
   registerWonderMarkers();
+  registerWarMarkers();
   registerComplexity();
   // Settings migrated from the (removed) in-screen Options tab, so all Demographics options live in
   // the one native location.
