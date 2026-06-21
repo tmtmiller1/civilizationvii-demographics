@@ -294,6 +294,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ja_JP"><Text>まだ遭遇していない文明の実際の名前を表示（ネタバレ）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード（グラフと関係表示に高コントラスト配色を使用）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ja_JP"><Text>排除された文明をグラフとファクトブックに表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="ja_JP">
+            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>グラフの線上に遺産マーカーを表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ja_JP"><Text>自動（ゲーム速度の既定値）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ja_JP"><Text>1,000 サンプル</Text></Replace>
