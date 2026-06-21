@@ -295,7 +295,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников (высококонтрастные цвета для графиков и отношений)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ru_RU"><Text>Показывать уничтоженные цивилизации на графике и в справочнике</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="ru_RU">
-            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+            <Text>Show war onset markers on the Emigration refugees chart</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="ru_RU">
+            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Показывать отметки чудес на линиях графика</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ru_RU"><Text>Авто (по умолчанию для скорости игры)</Text></Replace>
