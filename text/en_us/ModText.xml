@@ -1079,7 +1079,10 @@
             <Text>Show eliminated civs in charts and rankings</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS">
-            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+            <Text>Show war onset markers on the Emigration refugees chart</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS">
+            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS">
             <Text>Show wonder markers on chart lines</Text>

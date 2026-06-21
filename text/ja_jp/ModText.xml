@@ -295,7 +295,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード（グラフと関係表示に高コントラスト配色を使用）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ja_JP"><Text>排除された文明をグラフとファクトブックに表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="ja_JP">
-            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+            <Text>Show war onset markers on the Emigration refugees chart</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="ja_JP">
+            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>グラフの線上に遺産マーカーを表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ja_JP"><Text>自動（ゲーム速度の既定値）</Text></Replace>

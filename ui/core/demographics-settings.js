@@ -36,7 +36,8 @@
  * @property {boolean} [disableDecimation] Skip per-Nth decimation pass.
  * @property {number} [sampleEveryNTurns] Turns between snapshot captures.
  * @property {boolean} [showWonderMarkers] Overlay wonder-count markers.
- * @property {boolean} [showWarMarkers] Overlay war/disaster onset markers on the Emigration refugees chart.
+ * @property {boolean} [showWarMarkers] Overlay war onset markers on the Emigration refugees chart.
+ * @property {boolean} [showDisasterMarkers] Overlay disaster onset markers on the Emigration refugees chart.
  */
 
 /**
@@ -110,9 +111,10 @@ const DEFAULTS = {
   // civ's wonders count incremented. Toggle from the Options tab.
   showWonderMarkers: true,
   // ─── War / disaster markers (Emigration refugees chart) ─────────────
-  // Overlay each war + notable disaster onset on the Emigration refugees
-  // graph's timeline. Toggle from the Options tab, like wonder markers.
+  // Overlay war onsets and disaster onsets on the Emigration refugees
+  // graph's timeline. Two independent toggles, like wonder markers.
   showWarMarkers: true,
+  showDisasterMarkers: true,
   // ─── Spoiler guard ─────────────────────────────────────────────────
   // When true (default), diplomacy / influence / relations figures are
   // withheld for civilizations the local player has not met (the charts
@@ -157,6 +159,7 @@ const SCHEMA = {
   sampleEveryNTurns: { type: "int", min: 1, max: 200 },
   showWonderMarkers: { type: "boolean" },
   showWarMarkers: { type: "boolean" },
+  showDisasterMarkers: { type: "boolean" },
   hideUnmetStats: { type: "boolean" },
   analyticsPolicy: { type: "string" },
   uiComplexity: { type: "string" },

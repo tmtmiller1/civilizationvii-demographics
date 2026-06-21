@@ -485,15 +485,28 @@ const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red — war onsets
 const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber — disaster onsets
 
 /**
- * Read the `showWarMarkers` setting (default ON): the Options toggle for the Refugees chart's war +
- * disaster onset markers, mirroring the wonder-markers filter (shouldShowWonders).
- * @returns {boolean} Whether to show the refugees-chart event markers.
+ * Read the `showWarMarkers` setting (default ON): the Options toggle for the Refugees chart's WAR
+ * onset markers, mirroring the wonder-markers filter.
+ * @returns {boolean} Whether to show the war onset markers.
  */
 export function shouldShowWarMarkers() {
   try {
     return !!DemographicsSettings.getSetting("showWarMarkers", true);
   } catch (_) {
     // DemographicsSettings.getSetting may throw; default to showing them.
+    return true;
+  }
+}
+
+/**
+ * Read the `showDisasterMarkers` setting (default ON): the Options toggle for the Refugees chart's
+ * DISASTER onset markers (independent of the war-markers toggle).
+ * @returns {boolean} Whether to show the disaster onset markers.
+ */
+export function shouldShowDisasterMarkers() {
+  try {
+    return !!DemographicsSettings.getSetting("showDisasterMarkers", true);
+  } catch (_) {
     return true;
   }
 }
@@ -583,13 +596,13 @@ function collectDisasterMarkers(yearToChart, out) {
  */
 export function collectRefugeeEventMarkers(metricId, history) {
   if (!REFUGEE_METRIC_IDS.has(metricId)) return [];
-  if (!shouldShowWarMarkers()) return []; // user toggle (Options), mirroring the wonder-markers filter
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
   const yearToChart = buildYearToChartTurn(samples);
   /** @type {{turn:number, label:string, year:string, color:string}[]} */
   const markers = [];
-  collectWarOnsetMarkers(history, yearToChart, markers);
-  collectDisasterMarkers(yearToChart, markers);
+  // War and disaster onsets are INDEPENDENT user toggles (both default on), mirroring wonder markers.
+  if (shouldShowWarMarkers()) collectWarOnsetMarkers(history, yearToChart, markers);
+  if (shouldShowDisasterMarkers()) collectDisasterMarkers(yearToChart, markers);
   return markers;
 }
 

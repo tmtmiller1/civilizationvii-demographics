@@ -295,7 +295,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="pt_BR"><Text>Modo daltônico (paleta de alto contraste para gráficos e relações)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="pt_BR"><Text>Mostrar civilizações eliminadas no gráfico e no almanaque</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="pt_BR">
-            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+            <Text>Show war onset markers on the Emigration refugees chart</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="pt_BR">
+            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="pt_BR"><Text>Mostrar marcadores de maravilhas nas linhas do gráfico</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="pt_BR"><Text>Automático (padrão da velocidade do jogo)</Text></Replace>

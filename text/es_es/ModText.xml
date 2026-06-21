@@ -767,7 +767,10 @@
             <Text>Mostrar civilizaciones eliminadas en la gráfica y el anuario</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="es_ES">
-            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+            <Text>Show war onset markers on the Emigration refugees chart</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="es_ES">
+            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="es_ES">
             <Text>Mostrar los marcadores de maravillas construidas en las líneas de la gráfica (icono pequeño en el turno en que cada civilización completó una maravilla)</Text>

@@ -767,7 +767,10 @@
             <Text>在图表和年鉴中显示已淘汰文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="zh_CN">
-            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+            <Text>Show war onset markers on the Emigration refugees chart</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="zh_CN">
+            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="zh_Hans_CN">
             <Text>在图表曲线上显示奇观建成标记（在各文明完成奇观的回合处显示小图标）</Text>
