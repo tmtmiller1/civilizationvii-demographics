@@ -766,6 +766,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="fr_FR">
             <Text>Afficher les civilisations éliminées dans le graphique et l'annuaire</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="fr_FR">
+            <Text>Show war &amp; disaster markers on the Emigration refugees chart</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="fr_FR">
             <Text>Afficher les marqueurs de merveilles construites sur les courbes du graphique (petite icône au tour où chaque civilisation a achevé une merveille)</Text>
         </Replace>
