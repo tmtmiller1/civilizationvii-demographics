@@ -139,6 +139,19 @@ function registerWarMarkers() {
   });
 }
 
+function registerDisasterMarkers() {
+  Options.addOption({
+    category: CategoryType.Mods,
+    group: MAIN_GROUP,
+    type: OptionType.Checkbox,
+    id: "demographics-show-disaster-markers",
+    initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showDisasterMarkers", true)),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) =>
+      DemographicsSettings.setSetting("showDisasterMarkers", !!value),
+    label: "LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS"
+  });
+}
+
 function registerComplexity() {
   Options.addOption({
     category: CategoryType.Mods,
@@ -166,6 +179,7 @@ Options.addInitCallback(() => {
   registerColorblind();
   registerWonderMarkers();
   registerWarMarkers();
+  registerDisasterMarkers();
   registerComplexity();
   // Settings migrated from the (removed) in-screen Options tab, so all Demographics options live in
   // the one native location.
