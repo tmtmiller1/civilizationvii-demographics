@@ -17,6 +17,7 @@ import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen
 import { buildPolicyBanner } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
 import { viewTabVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { publishEffectivePolicy } from "/demographics/ui/core/demographics-governance.js";
 
 // The two heavy tabs (WorldRankingsAllCivs ~0.9k lines, Relations ~2.5k lines incl. the
 // network graph) are imported on first open instead of statically, so they are
@@ -183,6 +184,9 @@ class ScreenDemographics extends Panel {
   onAttach() {
     dlog("onAttach");
     super.onAttach();
+    // Mirror the (possibly persisted) analytics policy to GameConfiguration up front, so the
+    // companion Emigration tabs read the player's live choice instead of the wiped localStorage.
+    safeCall(() => publishEffectivePolicy());
     this._wireCloseButton();
     this._loadModulesThenRender();
   }
