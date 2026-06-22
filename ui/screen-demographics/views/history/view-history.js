@@ -14,6 +14,7 @@
 // exportHistoryAsCsv) is preserved by re-exporting the relocated symbols here.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import {
   getMetric,
   EXTERNAL_PAGE_METRICS,
@@ -345,9 +346,41 @@ function mergeExternalPageMetrics() {
   return PAGES;
 }
 
-/** Per-group selection: 2D groups store {metric:idx, view:viewId}; flat groups store a metric id. */
-/** @type {Record<string, *>} */
-const GROUP_SEL = {};
+// Per-group selection (2D groups store {metric:idx, view:viewId}; flat groups store a metric id),
+// PERSISTED so a Scaled/Civ (and metric) choice is sticky across reopening the screen — otherwise it
+// reset to the first view each open and, via the companion-panel groupView, clobbered the Emigration
+// tabs' remembered number mode.
+const GROUP_SEL_KEY = "historyGroupSel";
+/** @type {Record<string, *>|null} */
+let _groupSel = null;
+
+/** The persisted per-group selection map (lazily loaded from settings). */
+function groupSelAll() {
+  if (_groupSel) return _groupSel;
+  let stored = null;
+  try {
+    stored = DemographicsSettings.getSetting(GROUP_SEL_KEY, null);
+  } catch (_) {
+    /* settings unavailable → in-memory only */
+  }
+  const next = stored && typeof stored === "object" ? stored : {};
+  _groupSel = next;
+  return next;
+}
+
+/**
+ * Set + persist one group's selection.
+ * @param {string} id The group id.
+ * @param {*} val The selection ({metric, view} for 2D groups; a metric id for flat groups).
+ */
+function setGroupSel(id, val) {
+  groupSelAll()[id] = val;
+  try {
+    DemographicsSettings.setSetting(GROUP_SEL_KEY, _groupSel);
+  } catch (_) {
+    /* settings unavailable → in-memory only */
+  }
+}
 
 /** Every member metric id of a group (2D members×views, or a flat metricIds list). */
 function groupMemberIds(/** @type {*} */ g) {
@@ -397,7 +430,7 @@ function resolveGroupMember(host, ctx, activeMetric) {
 
 /** 2D group: a metric toggle (members) + a view toggle (views). Returns members[metric][view]. */
 function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
-  const sel = GROUP_SEL[group.id] || {};
+  const sel = groupSelAll()[group.id] || {};
   const mIdx = Number.isInteger(sel.metric) && sel.metric >= 0 && sel.metric < group.members.length
     ? sel.metric : 0;
   const vId = group.views.some((/** @type {*} */ v) => v.id === sel.view) ? sel.view : group.views[0].id;
@@ -405,9 +438,9 @@ function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {
   // so a panel that isn't a chart can mirror the Scaled / Civ-numbers toggle in its own render.
   if (ctx) ctx.groupView = vId;
   host.appendChild(pillRow(group.members.map((/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })),
-    mIdx, (k) => { GROUP_SEL[group.id] = { metric: k, view: vId }; rerender(); }));
+    mIdx, (k) => { setGroupSel(group.id, { metric: k, view: vId }); rerender(); }));
   host.appendChild(pillRow(group.views.map((/** @type {*} */ v) => ({ key: v.id, label: v.label })),
-    vId, (k) => { GROUP_SEL[group.id] = { metric: mIdx, view: k }; rerender(); }));
+    vId, (k) => { setGroupSel(group.id, { metric: mIdx, view: k }); rerender(); }));
   const member = group.members[mIdx];
   return member[vId] || member[group.views[0].id];
 }
@@ -415,12 +448,12 @@ function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {
 /** Flat group: a single metric toggle over `metricIds`. Returns the selected metric id. */
 function resolveFlatGroup(/** @type {*} */ host, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
   const ids = group.metricIds || [];
-  const sel = GROUP_SEL[group.id];
+  const sel = groupSelAll()[group.id];
   const effective = typeof sel === "string" && ids.includes(sel) ? sel : ids[0];
   host.appendChild(pillRow(ids.map((/** @type {string} */ mid) => {
     const m = getMetric(mid);
     return { key: mid, label: m && m.label ? m.label : mid };
-  }), effective, (k) => { GROUP_SEL[group.id] = k; rerender(); }));
+  }), effective, (k) => { setGroupSel(group.id, k); rerender(); }));
   return effective;
 }
 
