@@ -648,7 +648,7 @@ export function registerMetricToPage(pageId, metricId, afterMetricId) {
  * `topLevel: true` to be shown as its own top-level view tab (right of Historical Data) instead of a
  * page inside Historical Data.
  * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function,
- *   topLevel?:boolean, tabs?:{id:string, label?:string, title?:string}[]}[]}
+ *   topLevel?:boolean, tabs?:{id:string, label?:string, title?:string, hidePolicyBanner?:boolean}[]}[]}
  */
 export const EXTERNAL_PANELS = [];
 

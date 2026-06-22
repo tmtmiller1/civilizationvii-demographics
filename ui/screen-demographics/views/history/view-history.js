@@ -588,13 +588,32 @@ function readTimelineNote(effective) {
 }
 
 /**
+ * Whether the active external-panel sub-tab opts out of the analytics-policy banner. A sub-tab that
+ * shows no per-civ data (a static reference page, e.g. Emigration's Guide) sets `hidePolicyBanner`,
+ * since the visibility policy is moot there. `effective` is "panelId::subId".
+ * @param {string} effective The active metric/panel id.
+ * @returns {boolean} True when the banner should be suppressed.
+ */
+function panelSubtabHidesPolicy(effective) {
+  if (typeof effective !== "string") return false;
+  const sep = effective.indexOf(PANEL_SUBTAB_SEP);
+  if (sep < 0) return false;
+  const panelId = effective.slice(0, sep);
+  const subId = effective.slice(sep + PANEL_SUBTAB_SEP.length);
+  const panel = EXTERNAL_PANELS.find((p) => p && p.id === panelId);
+  const tabs = panel && Array.isArray(panel.tabs) ? panel.tabs : null;
+  const tab = tabs ? tabs.find((/** @type {*} */ tt) => tt && tt.id === subId) : null;
+  return !!(tab && tab.hidePolicyBanner);
+}
+
+/**
  * Append the bottom-centre notes row: the analytics-governance policy banner and, on a companion
  * panel (Emigration), the timeline-detail note — side by side in one centered row, matching fonts.
  * @param {HTMLElement} host The view host element.
  * @param {string} effective The metric/panel being rendered.
  */
 function appendBottomNotes(host, effective) {
-  let wrap = buildPolicyBanner();
+  let wrap = panelSubtabHidesPolicy(effective) ? null : buildPolicyBanner();
   const note = readTimelineNote(effective);
   if (!wrap && !note) return;
   if (!wrap) {
