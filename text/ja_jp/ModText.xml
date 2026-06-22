@@ -932,6 +932,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="ja_JP">
             <Text>軍事力（損失）</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="ja_JP">
+            <Text>失ったユニット数</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="ja_JP">
+            <Text>この戦争で戦闘中に失ったユニットの数（破壊された1ユニットにつき1）。上の軍事力の補完です。ツールチップには、戦死した兵士の推定値（各ユニット≈時代とともに拡大する部隊）も表示され、スケール人口と比較できます。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="ja_JP">
             <Text>入植地</Text>
         </Replace>
