@@ -17,6 +17,7 @@ import {
   POLICY_FULL,
   localPolicy,
   setHostPolicy,
+  publishEffectivePolicy,
   isMultiplayer,
   canSetHostPolicy
 } from "/demographics/ui/core/demographics-governance.js";
@@ -206,6 +207,7 @@ function applyAnalyticsPolicy(ctx, mode) {
   ctx.settings.setSetting("hideUnmetStats", hideUnmet);
   ctx.settings.setSetting("showUnmetNames", !hideUnmet);
   if (isMultiplayer() && canSetHostPolicy()) setHostPolicy(mode);
+  publishEffectivePolicy(); // mirror to GameConfiguration so the Emigration tabs see the change
   ctx.requestReload?.();
 }
 
