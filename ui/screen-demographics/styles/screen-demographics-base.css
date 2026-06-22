@@ -247,6 +247,15 @@
     flex: 0 0 auto;
     margin-left: auto;
 }
+/* Companion panel (Emigration): its own control pills fill the left of the row, so the Options button
+   at the right reads as part of one cohesive controls row rather than floating alone. */
+.demographics-history-controls-row > .demographics-panel-controls {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
 /* Both filter row AND toolbar present: center the filter pills on the FULL row width by lifting the
    toolbar out of flow (absolute, pinned right). An in-flow toolbar can't shrink below its buttons, so
    it would steal space and push the pills left of true center. */
