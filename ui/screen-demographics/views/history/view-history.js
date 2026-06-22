@@ -618,8 +618,14 @@ function buildControlsRow(host, ctx, effective, activeFilter) {
   if (hasToolbar) {
     buildToolbar(row, ctx, effective); // includes the Options button
   } else {
-    // External companion panel (e.g. Emigration) has no chart toolbar, but still gets the Options
-    // button in the same top-right location as the historical-data graphs.
+    // External companion panel (e.g. Emigration): give the panel a LEFT controls area to fill with its
+    // own pills (via ctx.panelControls) and pin the Options button at the RIGHT, so the panel's
+    // controls + Options share one row (matching the historical-data tabs) instead of the button
+    // floating alone at the far right.
+    const panelControls = document.createElement("div");
+    panelControls.className = "demographics-panel-controls";
+    row.appendChild(panelControls);
+    ctx.panelControls = panelControls;
     const toolbar = document.createElement("div");
     toolbar.className = "demographics-chart-toolbar";
     toolbar.appendChild(buildOptionsButton());
