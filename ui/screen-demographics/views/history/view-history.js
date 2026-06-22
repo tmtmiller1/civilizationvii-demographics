@@ -428,19 +428,45 @@ function resolveGroupMember(host, ctx, activeMetric) {
     : resolveFlatGroup(host, group, rerender);
 }
 
+/**
+ * The group's active view id. When the group declares a `viewBinding` (an external owner of the
+ * Scaled/Civ choice, e.g. Emigration's number mode), read it from there so this toggle and the owner's
+ * own control stay one setting; otherwise from the persisted per-group selection.
+ * @param {*} group The metric group.
+ * @param {*} sel The group's persisted selection.
+ * @returns {string} The active view id.
+ */
+function groupViewId(group, sel) {
+  const b = group.viewBinding;
+  const cur = b && typeof b.get === "function" ? b.get() : sel.view;
+  return group.views.some((/** @type {*} */ v) => v.id === cur) ? cur : group.views[0].id;
+}
+
+/**
+ * Commit a view change: write through the group's `viewBinding` (if any) AND persist it locally, so
+ * the choice sticks whether or not an external owner backs it.
+ * @param {*} group The metric group.
+ * @param {number} mIdx The active member index.
+ * @param {string} k The chosen view id.
+ */
+function setGroupView(group, mIdx, k) {
+  if (group.viewBinding && typeof group.viewBinding.set === "function") group.viewBinding.set(k);
+  setGroupSel(group.id, { metric: mIdx, view: k });
+}
+
 /** 2D group: a metric toggle (members) + a view toggle (views). Returns members[metric][view]. */
 function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
   const sel = groupSelAll()[group.id] || {};
   const mIdx = Number.isInteger(sel.metric) && sel.metric >= 0 && sel.metric < group.members.length
     ? sel.metric : 0;
-  const vId = group.views.some((/** @type {*} */ v) => v.id === sel.view) ? sel.view : group.views[0].id;
+  const vId = groupViewId(group, sel);
   // Surface the active view to a companion-panel member (e.g. the Emigration "Net Migration (Table)"),
   // so a panel that isn't a chart can mirror the Scaled / Civ-numbers toggle in its own render.
   if (ctx) ctx.groupView = vId;
   host.appendChild(pillRow(group.members.map((/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })),
     mIdx, (k) => { setGroupSel(group.id, { metric: k, view: vId }); rerender(); }));
   host.appendChild(pillRow(group.views.map((/** @type {*} */ v) => ({ key: v.id, label: v.label })),
-    vId, (k) => { setGroupSel(group.id, { metric: mIdx, view: k }); rerender(); }));
+    vId, (k) => { setGroupView(group, mIdx, k); rerender(); }));
   const member = group.members[mIdx];
   return member[vId] || member[group.views[0].id];
 }
