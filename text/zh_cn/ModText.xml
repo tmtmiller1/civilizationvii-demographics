@@ -1492,6 +1492,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="zh_Hans_CN">
             <Text>军事实力（损失）</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="zh_Hans_CN">
+            <Text>损失的单位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="zh_Hans_CN">
+            <Text>本场战争中你在战斗中阵亡的单位数（逐个计数：每毁灭一个单位计一），作为上方军事实力的补充。提示中还会显示阵亡士兵的缩放估计（每个单位≈随时代增长的一支部队），可与缩放人口指标比较。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="zh_Hans_CN">
             <Text>定居点</Text>
         </Replace>

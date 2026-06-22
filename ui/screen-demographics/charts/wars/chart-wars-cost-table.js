@@ -112,9 +112,21 @@ function buildValueCell(m, cost, csTotals) {
   if (m.blp) cell.appendChild(buildCostIcon(m.blp));
   const val = document.createElement("span");
   val.className = "demographics-wars-tooltip-leader-val " + fig.cls;
-  val.textContent = fig.text + alliedSuffix(m, cost, csTotals);
+  val.textContent = fig.text + alliedSuffix(m, cost, csTotals) + scaledCasualtySuffix(m, cost);
   cell.appendChild(val);
   return cell;
+}
+
+/**
+ * The "≈ soldiers killed" parenthetical for the Units-Lost row: the raw unit count scaled to a
+ * population-comparable figure (computed in participantCost). "" for every other metric.
+ * @param {*} m The cost-metric descriptor.
+ * @param {*} cost The participant's per-metric figures.
+ * @returns {string} The scaled suffix (may be "").
+ */
+function scaledCasualtySuffix(m, cost) {
+  if (m.key !== "unitsLost" || !(cost.unitsLostScaled > 0)) return "";
+  return " (≈" + formatMagnitude(cost.unitsLostScaled) + ")";
 }
 
 /**

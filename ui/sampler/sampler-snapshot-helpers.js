@@ -5,6 +5,7 @@
 import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
   getCumulativeCasualty,
+  getCumulativeUnitsLost,
   getCumulativeCityWarNet,
   getCumulativeRazed,
   getCumulativeWarLand,
@@ -112,6 +113,7 @@ function stampEmigrationRefugees(playerId) {
  */
 export function stampWarMetrics(metrics, playerId, playerCtx) {
   metrics.milLostCum = getCumulativeCasualty(playerId);
+  metrics.unitsLostCum = getCumulativeUnitsLost(playerId);
   metrics.razedCum = getCumulativeRazed(playerId);
   metrics.warProdCum = getCumulativeWarProd(playerId);
   metrics.cityWarNetCum = getCumulativeCityWarNet(playerId);

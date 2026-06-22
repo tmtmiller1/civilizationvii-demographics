@@ -81,6 +81,13 @@ const unitStrengthCache = new Map();
 const casualtyByPid = new Map();
 
 /**
+ * Cumulative COUNT of each player's units killed in combat, keyed by pid. The body-count companion to
+ * {@link casualtyByPid} (which sums combat STRENGTH); monotonic, seeded from persisted history.
+ * @type {Map<number, number>}
+ */
+const unitsLostByPid = new Map();
+
+/**
  * Last-sampled owner pid of the city at each map location ("x,y"), refreshed
  * every sample. Keyed by LOCATION (not ComponentID) because a city's
  * ComponentID owner changes on capture while its plot does not.
@@ -188,6 +195,16 @@ export function recordUnitStrength(uid, owner, strength) {
  */
 export function getCumulativeCasualty(pid) {
   const v = casualtyByPid.get(Number(pid));
+  return typeof v === "number" && isFinite(v) ? v : 0;
+}
+
+/**
+ * The cumulative COUNT of a player's units killed in combat.
+ * @param {*} pid The player id.
+ * @returns {number} The cumulative unit-loss count (0 if untracked).
+ */
+export function getCumulativeUnitsLost(pid) {
+  const v = unitsLostByPid.get(Number(pid));
   return typeof v === "number" && isFinite(v) ? v : 0;
 }
 
@@ -452,6 +469,7 @@ function onUnitKilledInCombat(data) {
       return;
     }
     casualtyByPid.set(cached.owner, (casualtyByPid.get(cached.owner) || 0) + cached.strength);
+    unitsLostByPid.set(cached.owner, (unitsLostByPid.get(cached.owner) || 0) + 1); // body count
     unitStrengthCache.delete(key);
     clog("casualty owner=", cached.owner, "str=", cached.strength, "cum=", casualtyByPid.get(cached.owner));
   } catch (e) {
@@ -474,6 +492,7 @@ function onUnitKilledInCombat(data) {
 export function seedWarEventsFromHistory(samples) {
   try {
     casualtyByPid.clear();
+    unitsLostByPid.clear();
     razedByPid.clear();
     warProdByPid.clear();
     cityWarNetByPid.clear();
@@ -494,6 +513,7 @@ export function seedWarEventsFromHistory(samples) {
  */
 function seedOnePlayer(pid, metrics) {
   seedOnePid(casualtyByPid, pid, metrics?.milLostCum);
+  seedOnePid(unitsLostByPid, pid, metrics?.unitsLostCum);
   seedOnePid(razedByPid, pid, metrics?.razedCum);
   seedOnePid(warProdByPid, pid, metrics?.warProdCum);
   seedOnePid(cityWarNetByPid, pid, metrics?.cityWarNetCum);
@@ -690,6 +710,7 @@ function exposeWarData() {
     const g = /** @type {*} */ (globalThis);
     g.DemographicsData = Object.assign(g.DemographicsData || {}, {
       casualtyCumFor: (/** @type {number} */ pid) => getCumulativeCasualty(pid),
+      unitsLostCumFor: (/** @type {number} */ pid) => getCumulativeUnitsLost(pid),
       razedCumFor: (/** @type {number} */ pid) => getCumulativeRazed(pid),
       warLandCumFor: (/** @type {number} */ pid) => getCumulativeWarLand(pid),
       cityWarNetCumFor: (/** @type {number} */ pid) => getCumulativeCityWarNet(pid),

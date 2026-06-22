@@ -932,6 +932,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="ru_RU">
             <Text>Военная мощь (потеряно)</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="ru_RU">
+            <Text>Потери юнитов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="ru_RU">
+            <Text>Число ваших юнитов, погибших в бою за эту войну (поштучно: один на уничтоженный юнит), дополнение к военной мощи выше. Во всплывающей подсказке также показана масштабированная оценка погибших солдат (каждый юнит ≈ формирование, растущее с эпохой), сравнимая с масштабированным населением.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="ru_RU">
             <Text>Поселения</Text>
         </Replace>
