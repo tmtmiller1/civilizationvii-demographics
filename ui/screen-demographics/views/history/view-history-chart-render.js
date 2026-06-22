@@ -3,6 +3,7 @@
 // Chart host and render routing for the Historical Data view.
 
 import { EXTERNAL_PANELS, PANEL_SUBTAB_SEP } from "/demographics/ui/metrics/demographics-metrics.js";
+import { effectivePolicy } from "/demographics/ui/core/demographics-governance.js";
 
 /**
  * @typedef {{ min: number, max: number }} TurnRange
@@ -60,9 +61,11 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
   renderStandardChart(chartHost, ctx, activeMetric, turnRange, size);
 }
 
-// Last external-panel render, to skip redundant rebuilds (Perf plan P1 #5).
-/** @type {{ id: string|null, turn: number, host: HTMLElement|null }} */
-let _extLast = { id: null, turn: -1, host: null };
+// Last external-panel render, to skip redundant rebuilds (Perf plan P1 #5). Includes the effective
+// analytics-visibility policy so a Spoilers change re-renders the companion panel (e.g. the Emigration
+// tabs mask unmet civs by it) instead of leaving the stale, unmasked DOM in place on the same turn.
+/** @type {{ id: string|null, turn: number, host: HTMLElement|null, policy: string }} */
+let _extLast = { id: null, turn: -1, host: null, policy: "" };
 
 /**
  * The current game turn (for external-panel render-skip invalidation), or -1 off-engine.
@@ -73,6 +76,18 @@ function currentTurn() {
     return typeof Game !== "undefined" && typeof Game.turn === "number" ? Game.turn : -1;
   } catch (_) {
     return -1;
+  }
+}
+
+/**
+ * The effective analytics-visibility policy, defensively (for the render-skip key).
+ * @returns {string} The policy id, or "" off-engine.
+ */
+function safePolicy() {
+  try {
+    return effectivePolicy() || "";
+  } catch (_) {
+    return "";
   }
 }
 
@@ -93,14 +108,28 @@ function findPanelFor(activeMetric) {
   return null;
 }
 
+// Perf plan P1 #5: an external panel (e.g. Emigration's Migration page) only depends on its own
+// page/sub-tab being selected + the turn (and the analytics policy it masks by), NOT on unrelated
+// history-view state (time filters, other metrics). Skip the rebuild when nothing relevant changed.
+
+/**
+ * Whether the external panel is already rendered into this host for the same id, turn, and policy
+ * (so the rebuild can be skipped).
+ * @param {string} activeMetric Active metric/panel/sub-tab id.
+ * @param {number} turn Current game turn.
+ * @param {string} policy Effective analytics-visibility policy.
+ * @param {HTMLElement} chartHost Chart host element.
+ * @returns {boolean} True when the existing DOM can be kept.
+ */
+function extUnchanged(activeMetric, turn, policy, chartHost) {
+  return _extLast.id === activeMetric && _extLast.turn === turn && _extLast.host === chartHost
+    && _extLast.policy === policy && chartHost.childElementCount > 0;
+}
+
 /**
  * Render a companion-registered external panel (registerPanel) by handing it the chart host. The
- * companion owns the entire body; a throw inside it must never break the screen.
- *
- * Perf plan P1 #5: an external panel (e.g. Emigration's Migration page) only depends on its own
- * page/sub-tab being selected + the turn , NOT on unrelated history-view state (time filters, other
- * metrics). So when the same metric is already rendered into this same host for the same turn, skip
- * the rebuild; any real change (page/sub-tab switch, new host, turn advance) re-renders normally.
+ * companion owns the entire body; a throw inside it must never break the screen. Re-renders on any
+ * real change (page/sub-tab switch, new host, turn advance, analytics-policy change), else skips.
  * @param {HTMLElement} chartHost Chart host element.
  * @param {*} ctx Render context.
  * @param {string} activeMetric Active metric/panel/sub-tab id.
@@ -110,14 +139,14 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
   const found = findPanelFor(activeMetric);
   if (!found || typeof found.panel.render !== "function") return false;
   const turn = currentTurn();
-  if (_extLast.id === activeMetric && _extLast.turn === turn && _extLast.host === chartHost
-    && chartHost.childElementCount > 0) {
+  const policy = safePolicy();
+  if (extUnchanged(activeMetric, turn, policy, chartHost)) {
     return true; // unchanged since last render into this host , leave the existing DOM in place
   }
   try {
     chartHost.innerHTML = "";
     found.panel.render(chartHost, ctx, found.subId);
-    _extLast = { id: activeMetric, turn, host: chartHost };
+    _extLast = { id: activeMetric, turn, host: chartHost, policy };
   } catch (e) {
     // The history ctx doesn't carry derr, so a companion-panel throw was previously swallowed with
     // no trace; log it so a broken external panel is at least diagnosable.
