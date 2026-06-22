@@ -475,11 +475,22 @@ export function participantCost(samples, participant, warStart, warEnd) {
   for (const m of COST_METRICS) {
     acc[m.key] = participantMetricFigure(win, participant.pid, m);
   }
-  // Scaled "soldiers killed" beside the raw units-lost count, at the war's end era.
-  const endTurn = Number((win.length ? win[win.length - 1]?.turn : warEnd)) || 0;
-  acc.unitsLostScaled = typeof acc.unitsLost === "number" && acc.unitsLost > 0
-    ? scaleCasualtiesAt(acc.unitsLost, endTurn) : null;
+  acc.unitsLostScaled = scaledCasualtyFigure(win, acc.unitsLost, warEnd);
   return acc;
+}
+
+/**
+ * The scaled "soldiers killed" figure beside a raw units-lost count, evaluated at the war's end era
+ * (the last window sample's turn, or the war end). null when no units were lost.
+ * @param {Snapshot[]} win The participant's window samples.
+ * @param {number|null} rawUnits The raw units-lost figure.
+ * @param {number} warEnd The war's end turn (fallback era).
+ * @returns {number|null} The scaled figure, or null.
+ */
+function scaledCasualtyFigure(win, rawUnits, warEnd) {
+  if (typeof rawUnits !== "number" || rawUnits <= 0) return null;
+  const endTurn = Number((win.length ? win[win.length - 1]?.turn : warEnd)) || 0;
+  return scaleCasualtiesAt(rawUnits, endTurn);
 }
 
 /**
