@@ -932,6 +932,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="it_IT">
             <Text>Potenza militare (persa)</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="it_IT">
+            <Text>Unità perse</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="it_IT">
+            <Text>Il numero delle tue unità uccise in combattimento in questa guerra (un conteggio: una per unità distrutta), complemento della potenza militare sopra. Il tooltip mostra anche una stima ≈ di soldati uccisi (ogni unità ≈ una formazione che cresce con l'era), confrontabile con la popolazione in scala.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="it_IT">
             <Text>Insediamenti</Text>
         </Replace>

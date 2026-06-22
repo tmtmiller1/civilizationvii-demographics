@@ -11,6 +11,7 @@
 // same catalog drives the tooltip figures and the graphs.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 
 /**
  * Descriptive display title per cost-metric id, shared by the tooltip and the
@@ -182,6 +183,17 @@ export const COST_METRICS = [
     label: "LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH",
     blp: "blp:fi_military_64",
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH"
+  },
+  {
+    // Units LOST (body count): the increase in the cumulative unitsLostCum counter (+1 per unit killed
+    // in combat) over the war window — the companion to the STRENGTH figure above. The tooltip appends
+    // a scaled "≈ soldiers killed" estimate (scaleCasualties) beside the raw unit count.
+    id: "unitsLostCum",
+    key: "unitsLost",
+    mode: "accrued",
+    label: "LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST",
+    blp: "blp:fi_military_64",
+    glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST"
   },
   {
     // Net cities won/lost by CAPTURE over the war (event-based cityWarNetCum:
@@ -463,6 +475,10 @@ export function participantCost(samples, participant, warStart, warEnd) {
   for (const m of COST_METRICS) {
     acc[m.key] = participantMetricFigure(win, participant.pid, m);
   }
+  // Scaled "soldiers killed" beside the raw units-lost count, at the war's end era.
+  const endTurn = Number((win.length ? win[win.length - 1]?.turn : warEnd)) || 0;
+  acc.unitsLostScaled = typeof acc.unitsLost === "number" && acc.unitsLost > 0
+    ? scaleCasualtiesAt(acc.unitsLost, endTurn) : null;
   return acc;
 }
 

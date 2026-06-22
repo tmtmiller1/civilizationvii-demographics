@@ -1492,6 +1492,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="de_DE">
             <Text>Militärische Macht (verloren)</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="de_DE">
+            <Text>Verlorene Einheiten</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="de_DE">
+            <Text>Die Anzahl deiner im Kampf getöteten Einheiten in diesem Krieg (eine Zählung: eine pro zerstörter Einheit), als Ergänzung zur Militärmacht oben. Der Tooltip zeigt zudem eine skalierte Schätzung getöteter Soldaten (jede Einheit ≈ ein Verband, der mit dem Zeitalter wächst), vergleichbar mit der skalierten Bevölkerung.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="de_DE">
             <Text>Siedlungen</Text>
         </Replace>

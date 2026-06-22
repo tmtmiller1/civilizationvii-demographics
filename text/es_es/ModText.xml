@@ -1492,6 +1492,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="es_ES">
             <Text>Poder militar (perdido)</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="es_ES">
+            <Text>Unidades perdidas</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="es_ES">
+            <Text>El número de tus unidades muertas en combate durante esta guerra (un recuento: una por unidad destruida), complemento del poderío militar de arriba. La información también muestra una estimación ≈ de soldados muertos (cada unidad ≈ una formación que crece con la era), comparable a la población escalada.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="es_ES">
             <Text>Asentamientos</Text>
         </Replace>
