@@ -863,6 +863,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="ja_JP">
             <Text>戦力</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" Language="ja_JP"><Text>ユニット</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" Language="ja_JP"><Text>兵士</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS" Language="ja_JP"><Text>ユニット</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED" Language="ja_JP"><Text>換算</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="ja_JP">
             <Text>入植地（純増減）</Text>
         </Replace>

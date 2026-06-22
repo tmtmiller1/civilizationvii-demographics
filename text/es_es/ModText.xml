@@ -1423,6 +1423,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="es_ES">
             <Text>Fuerza</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" Language="es_ES"><Text>unidades</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" Language="es_ES"><Text>soldados</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS" Language="es_ES"><Text>Unidades</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED" Language="es_ES"><Text>Escalado</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="es_ES">
             <Text>Asentamientos (neto)</Text>
         </Replace>

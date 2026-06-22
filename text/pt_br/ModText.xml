@@ -863,6 +863,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="pt_BR">
             <Text>Força</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" Language="pt_BR"><Text>unidades</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" Language="pt_BR"><Text>soldados</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS" Language="pt_BR"><Text>Unidades</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED" Language="pt_BR"><Text>Em escala</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="pt_BR">
             <Text>Assentamentos (líquido)</Text>
         </Replace>
