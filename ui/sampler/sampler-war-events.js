@@ -672,11 +672,32 @@ function onCityProductionCompleted(data) {
  */
 export function startWarEventTracker() {
   stopWarEventTracker();
+  exposeWarData();
   if (typeof engine === "undefined" || typeof engine.on !== "function") return;
   killHandlerRef = subscribe("UnitKilledInCombat", onUnitKilledInCombat);
   transferHandlerRef = subscribe("CityTransfered", onCityTransfered);
   razeHandlerRef = subscribe("CityRazingStarted", onCityRazingStarted);
   prodHandlerRef = subscribe("CityProductionCompleted", onCityProductionCompleted);
+}
+
+/**
+ * Publish the cumulative per-civ war tallies on a read-only global surface so OTHER mods (e.g.
+ * Emigration's war-severity model + its Causes-tab reporting) can read them. Additive: merges onto any
+ * existing globalThis.DemographicsData. The accessors read the live counters, so values stay current.
+ */
+function exposeWarData() {
+  try {
+    const g = /** @type {*} */ (globalThis);
+    g.DemographicsData = Object.assign(g.DemographicsData || {}, {
+      casualtyCumFor: (/** @type {number} */ pid) => getCumulativeCasualty(pid),
+      razedCumFor: (/** @type {number} */ pid) => getCumulativeRazed(pid),
+      warLandCumFor: (/** @type {number} */ pid) => getCumulativeWarLand(pid),
+      cityWarNetCumFor: (/** @type {number} */ pid) => getCumulativeCityWarNet(pid),
+      warProdCumFor: (/** @type {number} */ pid) => getCumulativeWarProd(pid)
+    });
+  } catch (_) {
+    /* exposing data must never break the tracker */
+  }
 }
 
 /**
