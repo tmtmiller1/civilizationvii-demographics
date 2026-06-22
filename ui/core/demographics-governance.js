@@ -49,6 +49,12 @@ export const POLICY_ORDER = [POLICY_DISABLED, POLICY_OWN, POLICY_MET, POLICY_FUL
 // host-set; clients only read it.
 const HOST_POLICY_KEY = "DemographicsAnalyticsPolicy_v1";
 
+// GameConfiguration key holding the EFFECTIVE policy this client resolved (host ceiling ∧ local
+// preference). Published here so companion mods (Emigration) can read the live value reliably — the
+// Coherent UI localStorage they'd otherwise read is wiped between reads, so a direct read of our
+// settings slice returns stale/empty and the companion can't see the player's choice.
+const EFFECTIVE_POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
+
 /**
  * A known policy id, or null when the value is unrecognized.
  * @param {*} v Candidate value.
@@ -100,6 +106,20 @@ export function effectivePolicy() {
   const host = hostPolicy();
   if (!host) return local;
   return POLICY_RANK[host] <= POLICY_RANK[local] ? host : local;
+}
+
+/**
+ * Publish the current effective policy to GameConfiguration so companion mods (Emigration) can read
+ * the player's live choice reliably (the shared localStorage they'd otherwise read is wiped between
+ * reads in this UI context). Idempotent; safe to call on screen open and on every policy change.
+ * @returns {void}
+ */
+export function publishEffectivePolicy() {
+  try {
+    Configuration?.editGame?.()?.setValue?.(EFFECTIVE_POLICY_KEY, effectivePolicy());
+  } catch (_) {
+    /* GameConfiguration unavailable → companion falls back to its own read */
+  }
 }
 
 /**
