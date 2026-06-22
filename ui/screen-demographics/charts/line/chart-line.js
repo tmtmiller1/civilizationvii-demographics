@@ -44,6 +44,7 @@ import { buildSeriesFromHistory } from "/demographics/ui/screen-demographics/cha
 import {
   applyShowEliminated,
   applySmoothChart,
+  applyPolicyHide,
   applyUnmetNames,
   buildChartDatasets,
   collapseGlobalMetric,
@@ -385,8 +386,10 @@ function prepareChartData(opts, metricId) {
   const metricMeta = resolveMetricMeta(metricId);
   allSeries = collapseGlobalMetric(allSeries, metricMeta, metricId);
 
-  // showUnmetNames masking.
-  allSeries = applyUnmetNames(allSeries);
+  // Analytics-visibility policy: drop civs the policy withholds (unmet under met-only, every non-local
+  // civ under own-civ-only), so the graphs hide them like the rest of the screen and the Emigration
+  // tabs do — then showUnmetNames handles name masking for any civ that remains.
+  allSeries = applyUnmetNames(applyPolicyHide(allSeries));
 
   const tr = resolveTurnRange(opts);
 

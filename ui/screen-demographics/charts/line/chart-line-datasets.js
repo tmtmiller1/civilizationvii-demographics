@@ -11,6 +11,10 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { resolveLocalPid } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { renderPointBudget, lodDownsample } from "/demographics/ui/core/demographics-hardware.js";
+import {
+  policyHidesUnmet,
+  policyOwnCivOnly
+} from "/demographics/ui/core/demographics-governance.js";
 
 /**
  * @typedef {import("/demographics/ui/screen-demographics/charts/line/chart-line-series.js").
@@ -166,6 +170,26 @@ function collapseGlobalMetric(allSeries, metricMeta, metricId) {
 }
 
 /**
+ * Apply the analytics-visibility POLICY: drop the series for any civ the effective policy withholds,
+ * so the line graphs honor the same "Met civilizations only" / "Own civilization only" setting the
+ * rest of the screen (and the Emigration tabs) mask by — never plotting a hidden civ's trend at all,
+ * rather than just renaming it. The local player's own civ is never dropped. "All civilizations"
+ * keeps everyone (then applyUnmetNames handles any name masking).
+ * @param {ChartSeries[]} allSeries The series list.
+ * @returns {ChartSeries[]} The filtered series list.
+ */
+function applyPolicyHide(allSeries) {
+  const ownOnly = policyOwnCivOnly();
+  if (!ownOnly && !policyHidesUnmet()) return allSeries; // "All civilizations": show every civ
+  const localPid = resolveLocalPid();
+  return allSeries.filter((s) => {
+    if (localPid !== undefined && s.pid === localPid) return true; // own civ is always shown
+    if (ownOnly) return false; // own-civ-only: hide every other civ
+    return s.met !== false; // met-civs-only: hide civs the player hasn't met
+  });
+}
+
+/**
  * Apply the `showUnmetNames` setting (default false): when disabled, mask each
  * non-local unmet civ's series name with a generic placeholder.
  * @param {ChartSeries[]} allSeries The series list.
@@ -248,6 +272,7 @@ export {
   applySmoothChart,
   resolveMetricMeta,
   collapseGlobalMetric,
+  applyPolicyHide,
   applyUnmetNames,
   buildChartDatasets
 };
