@@ -555,6 +555,10 @@
 }
 .demographics-war-graph-cell {
     flex: 1 1 42rem;
+    /* Cap the grow so a lone cell on an under-full last row (e.g. a 10th graph) stays ~one column
+       wide instead of stretching edge-to-edge across the whole row. Full rows are unaffected: their
+       cells want ~one basis width anyway, well under this cap. */
+    max-width: 50rem;
     box-sizing: border-box;
     margin: 0 0.9rem 0.9rem 0;
     background: rgba(0, 0, 0, 0.18);
