@@ -64,6 +64,34 @@ export function scalePopulationAt(raw, turn) {
   return Math.pow(raw, 1.11) * 90000 * Math.pow(1.009, t);
 }
 
+// A military unit represents roughly this many soldiers (a legion/regiment/division), growing with the
+// era exactly like population does — so "war dead" reads in the same scaled-people units as population.
+const SOLDIERS_PER_UNIT = 1000;
+
+/**
+ * Scale a raw units-lost COUNT into a turn-aware "soldiers killed" figure, comparable to the scaled
+ * population metric.
+ * @param {number} raw Raw units-lost count.
+ * @param {{ turn?: number } | null | undefined} scaleCtx Per-player scale context.
+ * @param {{ turn?: number } | null | undefined} ctx Per-player accessor context.
+ * @returns {number} The scaled casualty figure (0 for non-positive/invalid input).
+ */
+export function scaleCasualties(raw, scaleCtx, ctx) {
+  return scaleCasualtiesAt(raw, resolveTurn(ctx, scaleCtx));
+}
+
+/**
+ * The "soldiers killed" estimate from a units-lost count at an explicit turn.
+ * @param {number} raw Units-lost count.
+ * @param {number} turn The (monotonic) turn for the era multiplier.
+ * @returns {number} The scaled casualty figure (0 for non-positive/invalid input).
+ */
+export function scaleCasualtiesAt(raw, turn) {
+  if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
+  const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
+  return raw * SOLDIERS_PER_UNIT * Math.pow(1.009, t);
+}
+
 /**
  * The world-estimate population for a single settlement.
  * @param {number} raw The settlement's raw population.

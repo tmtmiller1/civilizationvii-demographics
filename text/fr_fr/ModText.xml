@@ -1492,6 +1492,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="fr_FR">
             <Text>Puissance militaire (perdue)</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="fr_FR">
+            <Text>Unités perdues</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="fr_FR">
+            <Text>Le nombre de vos unités tuées au combat durant cette guerre (un décompte : une par unité détruite), complément de la puissance militaire ci-dessus. L'infobulle affiche aussi une estimation ≈ de soldats tués (chaque unité ≈ une formation qui croît avec l'ère), comparable à la population mise à l'échelle.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="fr_FR">
             <Text>Colonies</Text>
         </Replace>

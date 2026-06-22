@@ -932,6 +932,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="ko_KR">
             <Text>군사력 (손실)</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="ko_KR">
+            <Text>잃은 유닛</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="ko_KR">
+            <Text>이 전쟁에서 전투 중 잃은 유닛의 수(파괴된 유닛당 1개씩 세는 수)로, 위의 군사력을 보완합니다. 툴팁에는 전사한 병사의 추정치(각 유닛 ≈ 시대에 따라 커지는 부대)도 표시되어 스케일 인구와 비교할 수 있습니다.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="ko_KR">
             <Text>정착지</Text>
         </Replace>

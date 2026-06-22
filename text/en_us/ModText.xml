@@ -763,6 +763,12 @@
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH">
             <Text>Military Power (Lost)</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST">
+            <Text>Units Lost</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST">
+            <Text>The number of your units killed in combat over this war (a body count: one per unit destroyed), companion to the Military Power figure above. The tooltip also shows a scaled ≈ soldiers-killed estimate (each unit ≈ a formation that grows with the era), comparable to the scaled population metric.</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS">
             <Text>Settlements</Text>
         </Row>
