@@ -863,6 +863,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="it_IT">
             <Text>Forza</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" Language="it_IT"><Text>unità</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" Language="it_IT"><Text>soldati</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS" Language="it_IT"><Text>Unità</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED" Language="it_IT"><Text>In scala</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="it_IT">
             <Text>Insediamenti (netto)</Text>
         </Replace>

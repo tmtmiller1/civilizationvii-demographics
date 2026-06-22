@@ -35,6 +35,7 @@ import {
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 import {
   attachBarHover,
   attachHover,
@@ -54,7 +55,8 @@ const Y_LABEL = {
   crops: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS",
   production: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD",
   warProdCum: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD",
-  milpowerLevel: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH"
+  milpowerLevel: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH",
+  unitsLostCum: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS"
 };
 
 /**
@@ -154,7 +156,96 @@ function buildCellHead(m) {
  */
 function buildMetricCell(m, view) {
   if (MIL_GRAPH_IDS.has(m.id)) return buildMilitaryCell(m, view);
+  if (m.id === "unitsLostCum") return buildCasualtyCell(m, view);
   return buildPlainMetricCell(m, visibleParticipants(view.participants), view.win);
+}
+
+/** The two casualties-graph representation modes: raw unit count vs scaled "soldiers killed". */
+const CAS_MODES = [
+  { id: "units", label: "LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS", y: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" },
+  { id: "scaled", label: "LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED", y: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" }
+];
+
+/** Current representation per casualties graph id (persists across re-renders). */
+const casMode = /** @type {Record<string, string>} */ ({});
+
+/**
+ * Build the casualties graph cell: head, a 2-way Units ↔ Scaled toggle, then a body that re-renders
+ * in place. "Scaled" multiplies the loss line by the era's soldiers-per-unit factor (scaleCasualties),
+ * matching the war tooltip's scaled estimate and the population metric's units.
+ * @param {*} m The COST_METRICS entry.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
+ * @returns {HTMLElement} The cell element.
+ */
+function buildCasualtyCell(m, view) {
+  const cell = document.createElement("div");
+  cell.className = "demographics-war-graph-cell";
+  cell.appendChild(buildCellHead(m));
+  const body = document.createElement("div");
+  body.className = "demographics-war-graph-mil-body";
+  cell.appendChild(buildCasToggle(m, view, body));
+  cell.appendChild(body);
+  renderCasualtyChart(m, view, body, casMode[m.id] || "units");
+  return cell;
+}
+
+/**
+ * Build the 2-way Units ↔ Scaled toggle pills for the casualties graph; clicking re-renders the body.
+ * @param {*} m The COST_METRICS entry.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
+ * @param {HTMLElement} body The chart body to re-render.
+ * @returns {HTMLElement} The toggle row.
+ */
+function buildCasToggle(m, view, body) {
+  const row = document.createElement("div");
+  row.className = "demographics-war-graph-filter";
+  for (const mode of CAS_MODES) {
+    const btn = document.createElement("div");
+    btn.className = "demographics-war-graph-filter-btn";
+    btn.textContent = t(mode.label);
+    if ((casMode[m.id] || "units") === mode.id) btn.classList.add("is-active");
+    btn.addEventListener("click", () => {
+      casMode[m.id] = mode.id;
+      for (const b of Array.from(row.children)) b.classList.remove("is-active");
+      btn.classList.add("is-active");
+      renderCasualtyChart(m, view, body, mode.id);
+    });
+    row.appendChild(btn);
+  }
+  return row;
+}
+
+/**
+ * Render (or re-render) the casualties chart for the chosen representation. "scaled" multiplies every
+ * loss-line value by scaleCasualties at the war-end era (a constant, so the shape is unchanged).
+ * @param {*} m The COST_METRICS entry.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
+ * @param {HTMLElement} body The chart body container.
+ * @param {string} mode The active representation id ("units" | "scaled").
+ */
+function renderCasualtyChart(m, view, body, mode) {
+  while (body.firstChild) body.removeChild(body.firstChild);
+  const win = view.win;
+  const parts = visibleParticipants(view.participants);
+  let seriesList = parts.map((p) => lossSeriesCounter(p, win, "unitsLostCum", "milpower"));
+  const ySpec = mode === "scaled" ? CAS_MODES[1].y : CAS_MODES[0].y;
+  if (mode === "scaled") {
+    const endTurn = win.length ? Number(win[win.length - 1]?.turn) || 0 : 0;
+    const factor = scaleCasualtiesAt(1, endTurn); // soldiers per unit at the war's end era
+    seriesList = seriesList.map((s) => ({
+      ...s, points: s.points.map((pt) => ({ x: pt.x, y: pt.y * factor }))
+    }));
+  }
+  const chart = buildLineChartFromSeries(seriesList, ySpec);
+  if (!chart) {
+    body.appendChild(buildNoData());
+    return;
+  }
+  body.appendChild(buildPlot(chart.svg, chart.labels));
+  if (chart.hover) {
+    chart.hover.blp = m.blp;
+    attachHover(body, chart.svg, chart.hover);
+  }
 }
 
 /**
@@ -343,7 +434,9 @@ const GRAPH_SPEC = {
   // Level line of cumulative production directed to war; clarified title.
   warProdCum: { title: "LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" },
   // 9th graph: standing army strength over the war (a level line, not a loss).
-  milpowerLevel: { series: "milpower" }
+  milpowerLevel: { series: "milpower" },
+  // Units lost (body count): cumulative-loss line from the unitsLostCum counter; toggles raw ↔ scaled.
+  unitsLostCum: { kind: "loss", counter: "unitsLostCum", fallback: "milpower" }
 };
 
 /**
@@ -368,6 +461,7 @@ for (const m of EXTRA_GRAPHS) GRAPH_BY_ID[m.id] = m;
 const GRAPH_ORDER = [
   "milpowerLevel", // Military Power
   "milpower", // Military Power Lost
+  "unitsLostCum", // Units Lost (count ↔ scaled toggle)
   "warProdCum", // Prod. Directed to War
   "cityWarNetCum", // Settlements Lost/Gained
   "razedCum", // Settlements Razed

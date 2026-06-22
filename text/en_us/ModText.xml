@@ -275,6 +275,10 @@
         <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH">
             <Text>Strength</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS"><Text>units</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS"><Text>soldiers</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS"><Text>Units</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED"><Text>Scaled</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES">
             <Text>Settlements (net)</Text>
         </Row>
