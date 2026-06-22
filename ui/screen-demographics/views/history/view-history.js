@@ -465,8 +465,10 @@ function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {
   if (ctx) ctx.groupView = vId;
   host.appendChild(pillRow(group.members.map((/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })),
     mIdx, (k) => { setGroupSel(group.id, { metric: k, view: vId }); rerender(); }));
+  // The VIEW row (e.g. Scaled / Civ numbers) transforms the data → render it as flat filter buttons,
+  // matching the time/age filters; the metric row above stays rounded view pills.
   host.appendChild(pillRow(group.views.map((/** @type {*} */ v) => ({ key: v.id, label: v.label })),
-    vId, (k) => { setGroupView(group, mIdx, k); rerender(); }));
+    vId, (k) => { setGroupView(group, mIdx, k); rerender(); }, "filter"));
   const member = group.members[mIdx];
   return member[vId] || member[group.views[0].id];
 }
