@@ -418,7 +418,7 @@
             <Text>Show unmet civs in legend</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH">
-            <Text>Smooth chart lines (3-turn moving average)</Text>
+            <Text>Smooth chart lines</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED">
             <Text>Show eliminated civs</Text>
@@ -564,13 +564,13 @@
             <Text>Display</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO">
-            <Text>Hide information and stats for civilizations you haven't met yet.</Text>
+            <Text>Hides the names, charts, and diplomacy and relations stats of civilizations you haven't met yet, so the screen never spoils a civ before you encounter it. On by default.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE">
-            <Text>On first contact</Text>
+            <Text>History on first contact</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET">
-            <Text>Start stats tracking upon meeting a new civilization</Text>
+            <Text>Track from first contact</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE">
             <Text>Cumulative impact across all stages</Text>
@@ -1083,19 +1083,19 @@
             <Text>Show real names for civilizations I haven't met (spoiler)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND">
-            <Text>Colorblind mode (high-contrast palette for charts and relations)</Text>
+            <Text>Colorblind mode</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL">
-            <Text>Show eliminated civs in charts and rankings</Text>
+            <Text>Show eliminated civilizations</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>War markers</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>Disaster markers</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS">
-            <Text>Show wonder markers on chart lines</Text>
+            <Text>Wonder markers</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO">
             <Text>Auto (game-speed default)</Text>
@@ -1684,10 +1684,10 @@
             <Text>Downsampling disabled, keeping every sample.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS">
-            <Text>Spoil Guard</Text>
+            <Text>Spoiler guard</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY">
-            <Text>Reveal full history when you meet a civilization</Text>
+            <Text>Reveal full back-history</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT">
             <Text>On: meeting a civ reveals its entire past on the charts. Off: lines begin at the moment of first contact.</Text>
@@ -1956,10 +1956,10 @@
             <Text>Cinematic settlement view</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY">
-            <Text>Experimental settlement flyby</Text>
+            <Text>Settlement flyby (experimental)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE">
-            <Text>Enable subtle rotate</Text>
+            <Text>Subtle camera rotation</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET">
             <Text>Flyby length</Text>
@@ -2200,6 +2200,42 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS">
             <Text>Disasters</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO">
+            <Text>Controls what happens when you meet a new civilization: reveal its full back-history on the charts, or track it only from the moment you meet. Only applies while the Spoiler guard is on.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO">
+            <Text>Uses a high-contrast, colorblind-friendly palette for chart lines and the relations network.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO">
+            <Text>Marks the turn each Wonder was completed along the history chart lines.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO">
+            <Text>Marks the turn each war began on the Emigration refugees chart. Requires the Emigration companion mod.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO">
+            <Text>Marks the turn each disaster struck on the Emigration refugees chart. Requires the Emigration companion mod.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO">
+            <Text>How much of the screen to show. Basic is core stat pages only; Standard adds every graph and tab; Analyst also exposes storage, decimation, and sample-rate controls.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO">
+            <Text>Draws history lines as a 3-turn moving average so trends read more clearly. The underlying data is unchanged.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO">
+            <Text>Keeps civilizations that have been eliminated visible in charts and rankings instead of dropping them.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO">
+            <Text>Enables the Cinematic view button that pans the camera across a settlement from the Top Cities list.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO">
+            <Text>Automatically flies the camera between the top settlements. Experimental — turn it off if the camera misbehaves.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO">
+            <Text>How long the settlement flyby lingers on each city.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO">
+            <Text>Adds a gentle rotation to the flyby camera as it lingers on each settlement.</Text>
         </Row>
     </EnglishText>
 </Database>

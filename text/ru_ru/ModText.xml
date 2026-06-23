@@ -87,7 +87,7 @@
             <Text>Значение</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ru_RU"><Text>Показывать невстреченные цивилизации в легенде</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ru_RU"><Text>Сглаживать линии графиков (скользящее среднее по 3 ходам)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ru_RU"><Text>Сглаживать линии графиков</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ru_RU"><Text>Показывать уничтоженные цивилизации</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="ru_RU"><Text>Очистить историю</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="ru_RU"><Text>Обновить выборку сейчас</Text></Replace>
@@ -135,9 +135,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ru_RU"><Text>стадия</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="ru_RU"><Text>Спойлеры</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="ru_RU"><Text>Отображение</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ru_RU"><Text>Скрывать информацию о неоткрытых цивилизациях (спойлер)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ru_RU"><Text>При первом контакте</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ru_RU"><Text>Начинать сбор статистики при встрече с новой цивилизацией</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ru_RU"><Text>Скрывает имена, графики и показатели дипломатии и отношений цивилизаций, которых вы ещё не встретили, чтобы экран не раскрывал их заранее. Включено по умолчанию.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ru_RU"><Text>История при первой встрече</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ru_RU"><Text>Вести учёт с первой встречи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ru_RU"><Text>Суммарный ущерб за все стадии</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="ru_RU"><Text>Общее влияние кризисов за все эпохи</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ru_RU"><Text>Начало кризиса</Text></Replace>
@@ -292,15 +292,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ru_RU"><Text>Пока недоступно.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ru_RU"><Text>Настройки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ru_RU"><Text>Показывать настоящие названия цивилизаций, которые я не встретил (спойлер)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников (высококонтрастные цвета для графиков и отношений)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ru_RU"><Text>Показывать уничтоженные цивилизации на графике и в справочнике</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ru_RU"><Text>Режим для дальтоников</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ru_RU"><Text>Показывать выбывшие цивилизации</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="ru_RU">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>Метки войн</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="ru_RU">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>Метки катастроф</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Показывать отметки чудес на линиях графика</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ru_RU"><Text>Метки чудес</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ru_RU"><Text>Авто (по умолчанию для скорости игры)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ru_RU"><Text>1 000 выборок</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ru_RU"><Text>2 500 выборок</Text></Replace>
@@ -801,7 +801,7 @@
             <Text>Прореживание отключено, сохраняются все выборки.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ru_RU">
-            <Text>Скрывать данные дипломатии/отношений для невстреченных цивилизаций</Text>
+            <Text>Защита от спойлеров</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="ru_RU">
             <Text>Кризисы</Text>
@@ -1006,7 +1006,7 @@
             <Text>Последствия войны, траектория каждой воюющей стороны в выбранной войне</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ru_RU">
-            <Text>Раскрывать всю историю при встрече с цивилизацией</Text>
+            <Text>Показать всю историю</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="ru_RU">
             <Text>Вкл.: встреча с цивилизацией раскрывает всё её прошлое на графиках. Выкл.: линии начинаются с момента первого контакта.</Text>
@@ -1311,10 +1311,10 @@
             <Text>Кинематографичный вид поселения</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="ru_RU">
-            <Text>Экспериментальный облёт поселения</Text>
+            <Text>Облёт поселений (экспериментально)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="ru_RU">
-            <Text>Включить лёгкое вращение</Text>
+            <Text>Лёгкое вращение камеры</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="ru_RU">
             <Text>Длительность облёта</Text>
@@ -1482,5 +1482,17 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="ru_RU"><Text>Agreements (Count Over Time)</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="ru_RU"><Text>Wars</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="ru_RU"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="ru_RU"><Text>Определяет, что происходит при встрече с новой цивилизацией: показать всю её историю на графиках или вести учёт только с момента встречи. Действует только при включённой защите от спойлеров.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="ru_RU"><Text>Использует контрастную палитру, удобную для дальтоников, для линий графиков и сети отношений.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ru_RU"><Text>Отмечает на линиях графиков ход, когда было построено каждое чудо.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="ru_RU"><Text>Отмечает на графике беженцев Emigration ход, когда началась каждая война. Требуется дополнение Emigration.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="ru_RU"><Text>Отмечает на графике беженцев Emigration ход, когда произошла каждая катастрофа. Требуется дополнение Emigration.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ru_RU"><Text>Сколько показывать на экране. «Базовый» — только основные страницы статистики; «Стандартный» добавляет все графики и вкладки; «Аналитик» также открывает настройки хранения, прореживания и частоты выборки.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="ru_RU"><Text>Рисует линии истории как скользящее среднее за 3 хода, чтобы тенденции читались чётче. Исходные данные не меняются.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="ru_RU"><Text>Оставляет выбывшие цивилизации видимыми на графиках и в рейтингах, а не убирает их.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="ru_RU"><Text>Включает кнопку «Кинематографический вид», которая ведёт камеру по поселению из списка лучших городов.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="ru_RU"><Text>Автоматически перемещает камеру между лучшими поселениями. Экспериментально — отключите, если камера ведёт себя странно.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ru_RU"><Text>Как долго облёт поселений задерживается на каждом городе.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ru_RU"><Text>Добавляет плавное вращение камере облёта, пока она задерживается на каждом поселении.</Text></Replace>
     </LocalizedText>
 </Database>
