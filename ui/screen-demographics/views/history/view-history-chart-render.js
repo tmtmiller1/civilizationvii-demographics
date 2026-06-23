@@ -311,8 +311,11 @@ export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
       routeChartRender(chartHost, ctx, activeMetric, turnRange, { width, height });
     }, deps.derr);
 
+  // Measure after TWO frames so GameFace has finished laying out the flex column (controls row +
+  // chart host). One frame can read a not-yet-settled host and clamp the canvas to its small floor,
+  // which renders a chart that stays small instead of filling the window.
   if (typeof requestAnimationFrame === "function") {
-    requestAnimationFrame(doRender);
+    requestAnimationFrame(() => requestAnimationFrame(doRender));
   } else {
     setTimeout(doRender, 0);
   }
