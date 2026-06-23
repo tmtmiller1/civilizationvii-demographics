@@ -103,7 +103,7 @@ function appendAttribution(row, metricMeta, ds, color) {
   if (!metricMeta || typeof metricMeta.tooltipAttribution !== "function") return;
   try {
     // Use `!= null` (not `||`): the LOCAL player is pid 0, which `||` would wrongly treat as falsy
-    // and fall back to the civ name — breaking the attribution lookup for your own civ.
+    // and fall back to the civ name, breaking the attribution lookup for your own civ.
     const id = ds.pidForContext != null ? ds.pidForContext : ds.label;
     const att = metricMeta.tooltipAttribution({ id });
     if (!att) return;

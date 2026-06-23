@@ -181,7 +181,7 @@ function appendKeyItem(key, it, withSep) {
 }
 
 /**
- * Build the compact sign-key footer: "+ gain · − loss · — no data", each sign in
+ * Build the compact sign-key footer: "+ gain · − loss ·, no data", each sign in
  * the same color the cost figures use.
  * @returns {HTMLElement} The key element.
  */

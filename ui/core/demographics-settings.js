@@ -37,7 +37,8 @@
  * @property {number} [sampleEveryNTurns] Turns between snapshot captures.
  * @property {boolean} [showWonderMarkers] Overlay wonder-count markers.
  * @property {boolean} [showWarMarkers] Overlay war onset markers on the Emigration refugees chart.
- * @property {boolean} [showDisasterMarkers] Overlay disaster onset markers on the Emigration refugees chart.
+ * @property {boolean} [showDisasterMarkers] Overlay disaster onset markers on the Emigration
+ * refugees chart.
  */
 
 /**

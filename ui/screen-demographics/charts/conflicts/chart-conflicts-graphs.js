@@ -171,7 +171,8 @@ const casMode = /** @type {Record<string, string>} */ ({});
 
 /**
  * Build the casualties graph cell: head, a 2-way Units ↔ Scaled toggle, then a body that re-renders
- * in place. "Scaled" multiplies the loss line by the era's soldiers-per-unit factor (scaleCasualties),
+ * in place. "Scaled" multiplies the loss line by the era's soldiers-per-unit factor
+ * (scaleCasualties),
  * matching the war tooltip's scaled estimate and the population metric's units.
  * @param {*} m The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
@@ -190,7 +191,8 @@ function buildCasualtyCell(m, view) {
 }
 
 /**
- * Build the 2-way Units ↔ Scaled toggle pills for the casualties graph; clicking re-renders the body.
+ * Build the 2-way Units ↔ Scaled toggle pills for the casualties graph; clicking re-renders the
+ * body.
  * @param {*} m The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
  * @param {HTMLElement} body The chart body to re-render.
@@ -216,8 +218,9 @@ function buildCasToggle(m, view, body) {
 }
 
 /**
- * Render (or re-render) the casualties chart for the chosen representation. "scaled" multiplies every
- * loss-line value by scaleCasualties at the war-end era (a constant, so the shape is unchanged).
+ * Render (or re-render) the casualties chart for the chosen representation. "scaled" multiplies
+ * every loss-line value by scaleCasualties at the war-end era (a constant, so the shape is
+ * unchanged).
  * @param {*} m The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
  * @param {HTMLElement} body The chart body container.
@@ -435,7 +438,8 @@ const GRAPH_SPEC = {
   warProdCum: { title: "LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" },
   // 9th graph: standing army strength over the war (a level line, not a loss).
   milpowerLevel: { series: "milpower" },
-  // Units lost (body count): cumulative-loss line from the unitsLostCum counter; toggles raw ↔ scaled.
+  // Units lost (body count): cumulative-loss line from the unitsLostCum counter; toggles raw ↔
+  // scaled.
   unitsLostCum: { kind: "loss", counter: "unitsLostCum", fallback: "milpower" }
 };
 

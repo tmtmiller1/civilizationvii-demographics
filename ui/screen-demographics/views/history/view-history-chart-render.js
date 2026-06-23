@@ -62,8 +62,9 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
 }
 
 // Last external-panel render, to skip redundant rebuilds (Perf plan P1 #5). Includes the effective
-// analytics-visibility policy so a Spoilers change re-renders the companion panel (e.g. the Emigration
-// tabs mask unmet civs by it) instead of leaving the stale, unmasked DOM in place on the same turn.
+// analytics-visibility policy so a Spoilers change re-renders the companion panel (e.g. the
+// Emigration tabs mask unmet civs by it) instead of leaving the stale, unmasked DOM in place on the
+// same turn.
 /** @type {{ id: string|null, turn: number, host: HTMLElement|null, policy: string }} */
 let _extLast = { id: null, turn: -1, host: null, policy: "" };
 

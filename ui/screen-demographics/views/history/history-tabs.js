@@ -16,14 +16,15 @@ import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-
 // a caption under the page tab row so a newcomer knows what an advanced page is.
 /** @type {Record<string, string>} */
 const PAGE_DESCRIPTIONS = {
-  age: "LOC_DEMOGRAPHICS_PAGE_DESC_AGE",
-  resources: "LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES",
-  conflicts: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS"
-  // crises: deliberately omitted — its description rides as a hover tooltip on the chart title instead
-  // of a standalone on-page note (see CHART_TITLE_TOOLTIPS / buildChartTitle).
+  // Age + Resources page notes intentionally removed (per design): the radar / resource titles are
+  // self-explanatory, so the standalone caption was redundant.
+  wars: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS"
+  // crises: deliberately omitted, its description rides as a hover tooltip on the chart title
+  // instead of a standalone on-page note (see CHART_TITLE_TOOLTIPS / buildChartTitle).
 };
 
-// Metrics whose chart title carries a hover tooltip (in place of a standalone page-description note).
+// Metrics whose chart title carries a hover tooltip (in place of a standalone page-description
+// note).
 /** @type {Record<string, string>} */
 const CHART_TITLE_TOOLTIPS = {
   crisis_stages: "LOC_DEMOGRAPHICS_PAGE_DESC_CRISES",
@@ -78,8 +79,10 @@ function dlog(...a) {
  * @param {HTMLElement} host
  * @param {*} ctx
  * @param {string} activePage
+ * @param {{id:string,label:string,tier?:string}[]} [pages] Hub-scoped page list (defaults to all
+ * PAGES).
  */
-export function buildPageTabRow(host, ctx, activePage) {
+export function buildPageTabRow(host, ctx, activePage, pages) {
   const pageHost = document.createElement("div");
   pageHost.className = "demographics-page-tab-host w-full";
   host.appendChild(pageHost);
@@ -89,9 +92,12 @@ export function buildPageTabRow(host, ctx, activePage) {
   pageBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   pageBar.setAttribute("tab-item-class", "font-title text-base");
   // UI complexity tiers (P1.5): only show pages the active tier discloses. Also drop any companion
-  // panel marked `topLevel` - it has its own top-level view tab, so it must not appear as a page here.
+  // panel marked `topLevel` - it has its own top-level view tab, so it must not appear as a page
+  // here.
+  // `pages` is the hub-scoped list resolved upstream (falls back to all PAGES for legacy callers).
   const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
-  const visiblePages = PAGES.filter((p) => pageVisibleInTier(p.id) && !topLevelIds.has(p.id));
+  const source = pages || PAGES;
+  const visiblePages = source.filter((p) => pageVisibleInTier(p) && !topLevelIds.has(p.id));
   const pageTabs = visiblePages.map((p) => ({ id: p.id, label: p.label }));
   pageBar.setAttribute("tab-items", JSON.stringify(pageTabs));
   const pageIdx = Math.max(
@@ -156,18 +162,19 @@ export function visibleMetricsForAge(metrics) {
 }
 
 /**
- * Build and append the metric selector for `page` as a row of PILLS (the 3rd-level selector; the page
- * tab row above it stays as native tabs). One pill per visible metric; selecting one sets the active
+ * Build and append the metric selector for `page` as a row of PILLS (the 3rd-level selector; the
+ * page tab row above it stays as native tabs). One pill per visible metric; selecting one sets the
+ * active
  * metric (persisted + re-rendered by the host).
  * @param {HTMLElement} host
  * @param {*} ctx
- * @param {{id:string,label:string,metrics:string[]}} page
+ * @param {{id:string,label:string,metrics?:string[]}} page
  * @param {string} activeMetric
  */
 export function buildMetricTabRow(host, ctx, page, activeMetric) {
-  const metrics = visibleMetricsForAge(page.metrics);
-  // A page with a single metric (e.g. Age → the triumphs/legacy radar) needs no selector — a one-pill
-  // row is pointless. Skip it; the lone metric still renders below.
+  const metrics = visibleMetricsForAge(page.metrics || []);
+  // A page with a single metric (e.g. Age → the triumphs/legacy radar) needs no selector, a
+  // one-pill row is pointless. Skip it; the lone metric still renders below.
   if (metrics.length <= 1) return;
 
   const items = metrics.map((mid) => {
@@ -181,8 +188,9 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
   });
 
   // A top-level companion panel (e.g. Emigration) emits no page-tab row, so its section selector
-  // (Graphs / Network / Civilizations / …) is the row directly under the view-tab bar. Render it as
-  // native tabs there — section navigation, not the 3rd-level metric pills — so the in-section toggles
+  // (Graphs / Network / Civilizations / …) is the row directly under the view-tab bar. Render it
+  // as native tabs there, section navigation, not the 3rd-level metric pills, so the in-section
+  // toggles
   // (a group's member/view pill rows) read as a clear level below it.
   if (isTopLevelPanelPage(page.id)) {
     buildSectionTabBar(host, ctx, items, activeMetric);
@@ -198,8 +206,9 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
 }
 
 /**
- * Whether `pageId` is a companion panel shown as its own top-level view tab (Emigration). Such pages
- * have no page-tab row, so their section selector renders as a native tab bar instead of pills.
+ * Whether `pageId` is a companion panel shown as its own top-level view tab (Emigration). Such
+ * pages have no page-tab row, so their section selector renders as a native tab bar instead of
+ * pills.
  * @param {string} pageId The active page id.
  * @returns {boolean} True for a top-level companion panel.
  */
@@ -208,8 +217,9 @@ function isTopLevelPanelPage(pageId) {
 }
 
 /**
- * Build the section selector for a top-level panel page as a native `fxs-tab-bar` (the second row of
- * tabs, under the view-tab bar) instead of a pill row. Selecting a tab sets the active metric/section.
+ * Build the section selector for a top-level panel page as a native `fxs-tab-bar` (the second row
+ * of tabs, under the view-tab bar) instead of a pill row. Selecting a tab sets the active
+ * metric/section.
  * @param {HTMLElement} host The view host.
  * @param {*} ctx Render context.
  * @param {{key:string,label:string}[]} items The section items (metric id + label).
@@ -251,6 +261,21 @@ function localizedMetricName(id, metricObj) {
 }
 
 /**
+ * The chart TITLE for a real metric: an explicit `LOC_DEMOGRAPHICS_METRIC_<ID>_TITLE` override when
+ * present (so the big title can read fuller than the short pill, e.g. pill "GDP" → title "Gross
+ * Domestic Product (GDP)"), else the metric's display name (identical to the pill).
+ * @param {string} id Metric id.
+ * @param {*} metricObj Metric descriptor.
+ * @returns {string} The chart title text.
+ */
+function metricChartTitle(id, metricObj) {
+  const key = "LOC_DEMOGRAPHICS_METRIC_" + String(id).toUpperCase() + "_TITLE";
+  const override = t(key);
+  if (override && override !== key) return override;
+  return localizedMetricName(id, metricObj);
+}
+
+/**
  * Build and append the chart title (and optional synthetic subtitle line).
  * @param {HTMLElement} host
  * @param {string} activeMetric
@@ -263,7 +288,7 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
   if (synthMeta) {
     title.textContent = synthMeta.title;
   } else if (metricObj) {
-    title.textContent = localizedMetricName(activeMetric, metricObj);
+    title.textContent = metricChartTitle(activeMetric, metricObj);
   } else {
     title.textContent = activeMetric;
   }
@@ -282,8 +307,8 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
 
 /**
  * Append the optional subtitle line under the chart title: synthetic metrics carry their own
- * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key, or — for
- * companion-registered metrics that use raw strings, not LOC keys (e.g. the Emigration graphs) — a
+ * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key, or, for
+ * companion-registered metrics that use raw strings, not LOC keys (e.g. the Emigration graphs), a
  * plain `subtitle` string on the metric descriptor.
  * @param {HTMLElement} host The title host.
  * @param {string} activeMetric The active metric id.

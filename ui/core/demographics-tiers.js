@@ -29,12 +29,8 @@ export const TIER_ORDER = [TIER_BASIC, TIER_STANDARD, TIER_ANALYST];
 /** @type {Record<string, number>} */
 const TIER_RANK = { [TIER_BASIC]: 0, [TIER_STANDARD]: 1, [TIER_ANALYST]: 2 };
 
-// History pages shown at the BASIC tier. Everything else (age / resources /
-// conflicts / crises) is an advanced page revealed at standard+.
-const BASIC_PAGES = new Set(["economy", "power", "knowledge"]);
-
-// Top-level view tabs hidden at the BASIC tier (the analyst-heavy network view).
-const BASIC_HIDDEN_VIEWS = new Set(["relations"]);
+// Hub reorg: BASIC-tier page visibility is now per-page (`page.tier === "basic"`), not a fixed set,
+// see pageVisibleInTier. Hub tabs are always visible.
 
 /**
  * The active complexity tier, defaulting to `standard`. Fails safe to standard.
@@ -59,22 +55,24 @@ export function tierAtLeast(tier) {
 }
 
 /**
- * Whether a History page id is visible under the active tier.
- * @param {string} pageId The page id.
+ * Whether a page is visible under the active tier. Hub reorg: gating is per-page via `page.tier`
+ * (default standard); the BASIC tier shows only pages declared `tier: "basic"`.
+ * @param {{tier?:string}|string} page The page descriptor (or a bare id for legacy callers).
  * @returns {boolean} True when the page should be shown.
  */
-export function pageVisibleInTier(pageId) {
-  if (getTier() === TIER_BASIC) return BASIC_PAGES.has(pageId);
-  return true;
+export function pageVisibleInTier(page) {
+  if (getTier() !== TIER_BASIC) return true;
+  const tier = typeof page === "string" ? undefined : page && page.tier;
+  return tier === TIER_BASIC;
 }
 
 /**
- * Whether a top-level view tab id is visible under the active tier.
- * @param {string} viewId The view id (history / rankings / relations / options).
- * @returns {boolean} True when the tab should be shown.
+ * Whether a top-level hub tab is visible under the active tier. All four hubs are visible at every
+ * tier (the basic tier hides advanced PAGES within a hub, not the hub itself).
+ * @param {string} _viewId The hub/view id.
+ * @returns {boolean} Always true.
  */
-export function viewTabVisibleInTier(viewId) {
-  if (getTier() === TIER_BASIC) return !BASIC_HIDDEN_VIEWS.has(viewId);
+export function viewTabVisibleInTier(_viewId) {
   return true;
 }
 

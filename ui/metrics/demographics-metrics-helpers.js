@@ -64,8 +64,9 @@ export function scalePopulationAt(raw, turn) {
   return Math.pow(raw, 1.11) * 90000 * Math.pow(1.009, t);
 }
 
-// A military unit represents roughly this many soldiers (a legion/regiment/division), growing with the
-// era exactly like population does — so "war dead" reads in the same scaled-people units as population.
+// A military unit represents roughly this many soldiers (a legion/regiment/division), growing
+// with the era exactly like population does, so "war dead" reads in the same scaled-people units
+// as population.
 const SOLDIERS_PER_UNIT = 1000;
 
 /**

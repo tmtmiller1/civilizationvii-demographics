@@ -185,9 +185,10 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH"
   },
   {
-    // Units LOST (body count): the increase in the cumulative unitsLostCum counter (+1 per unit killed
-    // in combat) over the war window — the companion to the STRENGTH figure above. The tooltip appends
-    // a scaled "≈ soldiers killed" estimate (scaleCasualties) beside the raw unit count.
+    // Units LOST (body count): the increase in the cumulative unitsLostCum counter (+1 per unit
+    // killed in combat) over the war window, the companion to the STRENGTH figure above. The
+    // tooltip appends a scaled "≈ soldiers killed" estimate (scaleCasualties) beside the raw unit
+    // count.
     id: "unitsLostCum",
     key: "unitsLost",
     mode: "accrued",

@@ -256,7 +256,7 @@ function sumBands(values, bands) {
 function buildStackLayout(W, H, dom) {
   const padL = 70,
     // Legend moved to a row on top of the chart (like the other graphs), so the right margin no
-    // longer reserves space for it — just enough to keep the last x-tick label from clipping.
+    // longer reserves space for it, just enough to keep the last x-tick label from clipping.
     padR = 40,
     padT = 30,
     padB = 64;

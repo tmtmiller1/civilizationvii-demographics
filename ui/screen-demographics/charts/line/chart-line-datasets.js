@@ -170,10 +170,11 @@ function collapseGlobalMetric(allSeries, metricMeta, metricId) {
 }
 
 /**
- * Apply the analytics-visibility POLICY: drop the series for any civ the effective policy withholds,
- * so the line graphs honor the same "Met civilizations only" / "Own civilization only" setting the
- * rest of the screen (and the Emigration tabs) mask by — never plotting a hidden civ's trend at all,
- * rather than just renaming it. The local player's own civ is never dropped. "All civilizations"
+ * Apply the analytics-visibility POLICY: drop the series for any civ the effective policy
+ * withholds, so the line graphs honor the same "Met civilizations only" / "Own civilization only"
+ * setting the rest of the screen (and the Emigration tabs) mask by, never plotting a hidden civ's
+ * trend at all, rather than just renaming it. The local player's own civ is never dropped. "All
+ * civilizations"
  * keeps everyone (then applyUnmetNames handles any name masking).
  * @param {ChartSeries[]} allSeries The series list.
  * @returns {ChartSeries[]} The filtered series list.
@@ -242,7 +243,7 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
     return {
       label: s.name,
       // The civ's player id, so a metric's tooltipAttribution callback gets the PID (not the civ
-      // name) — without it, attribution lookups keyed by pid (e.g. Emigration's net-migration "why"
+      // name), without it, attribution lookups keyed by pid (e.g. Emigration's net-migration "why"
       // breakdown) silently resolve to 0 and show nothing.
       pidForContext: s.pid,
       data: dataPoints,

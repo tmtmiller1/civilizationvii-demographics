@@ -367,7 +367,7 @@ function applyFlybyFallback(target, flowState, ctx) {
  */
 export function buildTour(target, cfg) {
   const rotate = cfg("topCities.flybyAllowRotate", true) === true;
-  const medium = cfg("topCities.flybyPreset", "short") === "medium";
+  const medium = cfg("topCities.flybyPreset", "medium") === "medium";
   const city = target.location;
   const pois = cityHighlights(target);
   const maxPois = Math.min(pois.length, 10);

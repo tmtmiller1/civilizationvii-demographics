@@ -124,7 +124,7 @@ function axisTitleOpts(text) {
  */
 export function buildLineChartConfig(parts) {
   const { datasets, plugins, metricMeta, formatters } = parts;
-  // A metric may opt into a bar chart (`chartType:"bar"` on its spec) — Chart.js bars share the same
+  // A metric may opt into a bar chart (`chartType:"bar"` on its spec), Chart.js bars share the same
   // datasets/scales and natively handle negative values (bars below the zero baseline) and grouping
   // (one clustered bar per civ at each turn). Datasets already set backgroundColor = civ colour.
   const type = metricMeta && metricMeta.chartType === "bar" ? "bar" : "line";
@@ -144,8 +144,9 @@ export function buildLineChartConfig(parts) {
       parsing: false,
       normalized: true,
       // Default "nearest" shows the single closest line; a metric can opt into "index" (via
-      // metricMeta.tooltipMode) so hovering a turn lists EVERY civ at that turn — the readable way to
-      // tell apart overlapping lines (e.g. Net Migration, where civ lines cluster near the baseline).
+      // metricMeta.tooltipMode) so hovering a turn lists EVERY civ at that turn, the readable way
+      // to tell apart overlapping lines (e.g. Net Migration, where civ lines cluster near the
+      // baseline).
       interaction: {
         mode: (metricMeta && metricMeta.tooltipMode) || "nearest",
         intersect: false,
@@ -245,9 +246,10 @@ function buildChartScalesOpts(metricMeta, formatters, symBound) {
       ticks: {
         color: AXIS_COLOR,
         font: { family: resolveChartFontFamily(), size: 17 },
-        // Blank fractional tick labels for `integerOnly` metrics (e.g. Crisis Stage) AND for diverging
-        // bar charts — so a near-zero Net Migration axis shows clean -1 / 0 / +1 instead of repeating
-        // "+0/+1" at every fractional gridline. Chart.js still draws the gridlines; only labels hide.
+        // Blank fractional tick labels for `integerOnly` metrics (e.g. Crisis Stage) AND for
+        // diverging bar charts, so a near-zero Net Migration axis shows clean -1 / 0 / +1 instead
+        // of repeating "+0/+1" at every fractional gridline. Chart.js still draws the gridlines;
+        // only labels hide.
         callback: (/** @type {number} */ v) => {
           if (metricMeta && metricMeta.integerOnly && Math.round(v) !== v) return "";
           if (diverging && Math.round(v) !== v) return "";
