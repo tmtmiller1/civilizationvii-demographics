@@ -87,7 +87,7 @@
             <Text>値</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ja_JP"><Text>凡例に未遭遇の文明を表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ja_JP"><Text>グラフの線を平滑化（3ターン移動平均）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ja_JP"><Text>グラフ線を滑らかにする</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ja_JP"><Text>排除された文明を表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="ja_JP"><Text>履歴を消去</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="ja_JP"><Text>今すぐサンプルを更新</Text></Replace>
@@ -135,9 +135,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ja_JP"><Text>段階</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="ja_JP"><Text>ネタバレ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="ja_JP"><Text>表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ja_JP"><Text>未遭遇の文明の情報を隠す（ネタバレ）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ja_JP"><Text>初接触時</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ja_JP"><Text>新しい文明と遭遇した時点から統計の記録を開始</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ja_JP"><Text>まだ遭遇していない文明の名前・グラフ・外交や関係の統計を隠し、遭遇する前にネタバレしないようにします。既定でオン。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ja_JP"><Text>初遭遇時の履歴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ja_JP"><Text>初遭遇時から記録</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ja_JP"><Text>全段階の累積的影響</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="ja_JP"><Text>全時代にわたる危機の総合的影響</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ja_JP"><Text>危機の始まり</Text></Replace>
@@ -292,15 +292,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ja_JP"><Text>まだ利用できません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ja_JP"><Text>オプション</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ja_JP"><Text>まだ遭遇していない文明の実際の名前を表示（ネタバレ）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード（グラフと関係表示に高コントラスト配色を使用）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ja_JP"><Text>排除された文明をグラフとファクトブックに表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ja_JP"><Text>色覚サポートモード</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ja_JP"><Text>消滅した文明を表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="ja_JP">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>戦争マーカー</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="ja_JP">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>災害マーカー</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>グラフの線上に遺産マーカーを表示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ja_JP"><Text>遺産マーカー</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ja_JP"><Text>自動（ゲーム速度の既定値）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ja_JP"><Text>1,000 サンプル</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ja_JP"><Text>2,500 サンプル</Text></Replace>
@@ -801,7 +801,7 @@
             <Text>間引き無効、すべてのサンプルを保持します。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ja_JP">
-            <Text>未遭遇の文明の外交・関係の統計を非表示にする</Text>
+            <Text>ネタバレ防止</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="ja_JP">
             <Text>危機</Text>
@@ -1006,7 +1006,7 @@
             <Text>戦争の影響、選択した戦争における各交戦国の推移</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ja_JP">
-            <Text>文明と遭遇したときに全履歴を表示する</Text>
+            <Text>過去の履歴をすべて表示</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="ja_JP">
             <Text>オン: 文明と遭遇すると、その過去すべてがグラフに表示されます。オフ: 線は最初に接触した時点から始まります。</Text>
@@ -1311,10 +1311,10 @@
             <Text>集落のシネマティック表示</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="ja_JP">
-            <Text>実験的な集落フライバイ</Text>
+            <Text>集落フライバイ（実験的）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="ja_JP">
-            <Text>緩やかな回転を有効化</Text>
+            <Text>控えめなカメラ回転</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="ja_JP">
             <Text>フライバイの長さ</Text>
@@ -1482,5 +1482,17 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="ja_JP"><Text>Agreements (Count Over Time)</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="ja_JP"><Text>Wars</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="ja_JP"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="ja_JP"><Text>新しい文明と遭遇したときの動作を設定します。グラフに過去の履歴をすべて表示するか、遭遇した時点からのみ記録します。ネタバレ防止がオンのときのみ有効です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="ja_JP"><Text>グラフの線と関係ネットワークに、高コントラストで色覚に配慮したパレットを使用します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ja_JP"><Text>各遺産が完成したターンを履歴グラフの線上に表示します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="ja_JP"><Text>各戦争が始まったターンを Emigration の難民グラフ上に表示します。連携モッド Emigration が必要です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="ja_JP"><Text>各災害が発生したターンを Emigration の難民グラフ上に表示します。連携モッド Emigration が必要です。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ja_JP"><Text>画面にどこまで表示するかを設定します。ベーシックは主要な統計ページのみ、スタンダードはすべてのグラフとタブを追加、アナリストはさらに保存・間引き・サンプリング間隔の設定を表示します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="ja_JP"><Text>履歴の線を3ターンの移動平均で描画し、傾向を読み取りやすくします。元のデータは変更されません。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="ja_JP"><Text>消滅した文明をグラフやランキングから消さずに表示し続けます。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="ja_JP"><Text>トップシティ一覧から都市をカメラでパンする「シネマティック表示」ボタンを有効にします。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="ja_JP"><Text>主要な集落の間をカメラが自動的に移動します。実験的機能です。カメラの挙動がおかしい場合はオフにしてください。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ja_JP"><Text>集落フライバイが各都市にとどまる長さです。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ja_JP"><Text>フライバイ中、各集落でとどまる間にカメラを緩やかに回転させます。</Text></Replace>
     </LocalizedText>
 </Database>
