@@ -1494,5 +1494,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="ru_RU"><Text>Автоматически перемещает камеру между лучшими поселениями. Экспериментально — отключите, если камера ведёт себя странно.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ru_RU"><Text>Как долго облёт поселений задерживается на каждом городе.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ru_RU"><Text>Добавляет плавное вращение камере облёта, пока она задерживается на каждом поселении.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="ru_RU"><Text>Эмиграция</Text></Replace>
     </LocalizedText>
 </Database>

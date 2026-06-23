@@ -2054,5 +2054,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="de_DE"><Text>Bewegt die Kamera automatisch zwischen den Top-Siedlungen. Experimentell – bei Kameraproblemen deaktivieren.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="de_DE"><Text>Wie lange der Siedlungs-Überflug bei jeder Stadt verweilt.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="de_DE"><Text>Fügt der Überflug-Kamera eine sanfte Drehung hinzu, während sie bei jeder Siedlung verweilt.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="de_DE"><Text>Auswanderung</Text></Replace>
     </LocalizedText>
 </Database>

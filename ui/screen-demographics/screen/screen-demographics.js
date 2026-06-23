@@ -16,7 +16,10 @@ import * as ViewHistory from "/demographics/ui/screen-demographics/views/history
 import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen/screen-history-context.js";
 import { buildPolicyBanner } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
 import { viewTabVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
-import { EXTERNAL_PANELS } from "/demographics/ui/metrics/demographics-metrics.js";
+import {
+  EXTERNAL_PANELS,
+  migrationHubHasCompanion
+} from "/demographics/ui/metrics/demographics-metrics.js";
 import { publishEffectivePolicy } from "/demographics/ui/core/demographics-governance.js";
 
 // The two heavy tabs (WorldRankingsAllCivs ~0.9k lines, Relations ~2.5k lines incl. the
@@ -398,16 +401,28 @@ class ScreenDemographics extends Panel {
    */
   _visibleViewTabs() {
     const base = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
-    // Companion mods can contribute a top-level view tab (a legacy `topLevel` registerPanel, e.g.
-    // an un-updated Emigration). Until Phase 3 moves them INTO the Migration hub, insert them right
-    // after Migration so they read as migration-adjacent, in registration order.
+    // The Migration hub exists only to host the Emigration companion (its sole native page,
+    // Population, moves to the Society page when standalone — see placePopulationAnchor). So
+    // hide the tab entirely when Emigration isn't active, and when it IS, label it "Emigration"
+    // so the player can tell the companion mod loaded.
+    const hasEmigration = migrationHubHasCompanion();
+    // Companion mods can also contribute a top-level view tab (a legacy `topLevel` registerPanel,
+    // e.g. an un-updated Emigration). Insert those right after Migration so they read as
+    // migration-adjacent, in registration order.
     const ext = this._topLevelPanelTabs();
     /** @type {ViewTab[]} */
     const visibleTabs = [];
     for (const v of base) {
+      if (v.id === "migration") {
+        if (!hasEmigration) continue;
+        visibleTabs.push({ id: v.id, label: "LOC_DEMOGRAPHICS_TAB_EMIGRATION" });
+        visibleTabs.push(...ext);
+        continue;
+      }
       visibleTabs.push(v);
-      if (v.id === "migration") visibleTabs.push(...ext);
     }
+    // Legacy safety: a top-level companion tab with the Migration hub hidden — still surface it.
+    if (!hasEmigration && ext.length) visibleTabs.push(...ext);
     if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "statistics";
     return visibleTabs;
   }

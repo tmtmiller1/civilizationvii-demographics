@@ -256,34 +256,38 @@
     align-items: center;
     justify-content: center;
 }
-/* Both filter row AND toolbar present: center the filter pills on the FULL row width by lifting the
-   toolbar out of flow (absolute, pinned right). An in-flow toolbar can't shrink below its buttons, so
-   it would steal space and push the pills left of true center. */
+/* Filter row AND toolbar present: stack them as TWO centered rows — pills on top, toolbar (and any
+   far-left bar) below — by switching the controls row to a COLUMN. flex-direction:column is a basic,
+   reliably-supported primitive; GameFace does NOT honor the flex-basis tricks (`flex-basis:0`/`100%`)
+   we tried before, which silently left everything on one row. This removes the old pills-vs-toolbar
+   gap, can never overlap (separate rows), and keeps a stable controls height so the chart below
+   measures correctly and fills the window. The pill row centers and wraps within its own full row. */
 .demographics-history-controls-row--centered {
-    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap; /* in a column, keep the rows stacked (don't spill into extra columns) */
+    row-gap: 0.35rem;
+}
+/* First row: the pill row. For metric/radar pages that's the time-filter/snapshot pills; for a
+   companion panel (Emigration) it's the panel's own controls (`.demographics-panel-controls`). */
+.demographics-history-controls-row--centered > .demographics-chart-time-filter-row,
+.demographics-history-controls-row--centered > .demographics-panel-controls {
+    flex: 0 0 auto;
+    max-width: 100%;
+    flex-wrap: wrap;
     justify-content: center;
 }
-.demographics-history-controls-row--centered > .demographics-chart-time-filter-row {
-    flex: 0 0 auto;
-}
 .demographics-history-controls-row--centered > .demographics-chart-toolbar {
-    position: absolute;
-    right: 0.4rem;
-    top: 50%;
-    transform: translateY(-50%);
-    margin: 0; /* override toolbar-wars margin-top, which would offset the absolute toolbar */
+    flex: 0 0 auto;
+    margin: 0; /* centered on its row via the column's align-items, not pinned right */
 }
-/* Far-left bar (mirrors the absolute-right toolbar) — e.g. the War Graphs "Pick war" dropdown, pinned
-   left while the filter row stays centered and the toolbar stays right. */
 .demographics-history-controls-row--centered > .demographics-chart-leftbar {
-    position: absolute;
-    left: 0.4rem;
-    top: 50%;
-    transform: translateY(-50%);
+    flex: 0 0 auto;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    margin: 0;
 }
 /* Wars view: extra gap between the age-filter pill row and this toolbar. */
 .demographics-chart-toolbar-wars {

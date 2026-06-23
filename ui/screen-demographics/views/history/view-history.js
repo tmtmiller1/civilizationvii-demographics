@@ -21,7 +21,8 @@ import {
   EXTERNAL_PANELS,
   EXTERNAL_METRIC_GROUPS,
   EXTERNAL_HUB_PAGES,
-  PANEL_SUBTAB_SEP
+  PANEL_SUBTAB_SEP,
+  migrationHubHasCompanion
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
   buildPageTabRow,
@@ -298,10 +299,15 @@ export function pagesForHub(allPages, hub) {
   const pages = allPages.filter((p) => p.hub === hub);
   // When a companion fills the Migration hub, it owns Population too, folded into its
   // combined "Population & Migration" page as the first pill, so drop the host's standalone
-  // Population page to avoid showing it twice. Standalone Demographics (no companion) keeps
-  // Population as its own page.
-  if (hub === "migration" && EXTERNAL_HUB_PAGES.some((e) => e.hubId === "migration")) {
+  // Population page to avoid showing it twice.
+  if (hub === "migration" && migrationHubHasCompanion()) {
     return pages.filter((p) => p.id !== "population");
+  }
+  // Standalone Demographics hides the Migration hub entirely, so surface its Population anchor
+  // as the first pill on the Global Statistics "Society" page instead. Idempotent.
+  if (hub === "statistics" && !migrationHubHasCompanion()) {
+    const m = pages.find((p) => p.id === "society")?.metrics;
+    if (m && !m.includes("population")) m.unshift("population");
   }
   return pages;
 }
@@ -744,9 +750,10 @@ function resolvePageAndTabRow(host, ctx, opts) {
 const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
 
 /**
- * External companion panel controls: a LEFT controls area the panel fills with its own pills (via
- * ctx.panelControls) + the Options button pinned RIGHT, so the panel's controls + Options share one
- * row (matching the historical-data tabs) instead of the button floating alone at the far right.
+ * External companion panel controls: a controls area the panel fills with its own pills (via
+ * ctx.panelControls) plus the Options button. Under the `--centered` column the panel's pills sit
+ * on the first centered row and the Options button on the centered row below — matching every other
+ * page's two-row controls formatting.
  * @param {HTMLElement} row The controls row.
  * @param {*} ctx Render context (receives `panelControls`).
  */
@@ -777,11 +784,11 @@ function buildControlsRow(host, ctx, effective, activeFilter) {
   const hasFilters = !TIME_FILTER_HIDDEN_FOR.has(effective) && !isExternalPanel(effective);
   const isRadar = effective === "legacy_radar";
   const hasToolbar = !isExternalPanel(effective);
-  // When a centered filter row is present alongside the toolbar, pull the toolbar OUT of
-  // flow (CSS `--centered`) so the filter pills center on the FULL row width. A flex child
-  // can't shrink below its content, so an in-flow toolbar steals space and shoves the pills
-  // left of true center.
-  if ((hasFilters || isRadar) && hasToolbar) row.classList.add("demographics-history-controls-row--centered");
+  // Stack the controls as two centered rows (CSS `--centered`, a flex column): the pill/control row
+  // on top, the toolbar below. Applies to metric/radar pages (filters/snapshot + toolbar) AND to
+  // companion panels like Emigration (`!hasToolbar` → their own controls + the Options button), so
+  // they get the same formatting. Toolbar-only pages (e.g. Crises) are left as a single right row.
+  if (!hasToolbar || hasFilters || isRadar) row.classList.add("demographics-history-controls-row--centered");
   if (hasFilters) {
     row.appendChild(buildTimeFilterRow(activeFilter, (id) => {
       if (typeof ctx.setActiveTimeFilter === "function") ctx.setActiveTimeFilter(id);

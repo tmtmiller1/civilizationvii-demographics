@@ -2,7 +2,7 @@
 
 [b]Full Description:[/b]
 
-Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays.
+Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays. With the Emigration companion mod (updated for the 1.4.1 systems) installed, it also hosts a dedicated Migration tab and a Net Migration graph.
 
 Storytelling is a core purpose of this mod: the goal is to make the world's shifts readable as a lived narrative, not just a spreadsheet of numbers.
 

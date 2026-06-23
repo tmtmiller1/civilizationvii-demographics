@@ -7,6 +7,8 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-06-23
+
 ### Fixed
 - Crisis Impact's per-civ losses (Population / Crop / Production Lost) blanked out
   to "—" when an earlier age's crisis was viewed from a later age, leaving only

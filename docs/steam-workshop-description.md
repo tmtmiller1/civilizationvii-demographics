@@ -33,6 +33,11 @@ It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civil
 [*]Triumph card progress overlays now ship as a separate companion mod: triumphs-progress-overlay.
 [/list]
 
+[b]Pairs with Emigration:[/b]
+[list]
+[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts a dedicated [b]Emigration[/b] tab and a Net Migration graph beside Population, so migration flows, refugees, and the reasons behind them read right alongside the rest of the world's history. Emigration is updated for the Civilization VII 1.4.1 systems; Demographics is its analytics home. The companion hooks are inert when Emigration isn't installed, so the base mod is unchanged.
+[/list]
+
 [b]Conflicts:[/b]
 [list]
 [*]A Gantt timeline of every war, reconstructed from diplomacy events: the declarer, their supporters, and their opposers are grouped under one stable war ID, so coalitions and multi-front wars read as a single conflict.
