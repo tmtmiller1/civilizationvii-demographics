@@ -254,7 +254,7 @@
             <Text>在图例中显示未遇文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="zh_Hans_CN">
-            <Text>平滑图表曲线（3 回合移动平均）</Text>
+            <Text>平滑图表线条</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="zh_Hans_CN">
             <Text>显示已淘汰文明</Text>
@@ -353,9 +353,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="zh_Hans_CN"><Text>阶段</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="zh_Hans_CN"><Text>剧透</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="zh_Hans_CN"><Text>显示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="zh_Hans_CN"><Text>隐藏未遭遇文明的信息（剧透）</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="zh_Hans_CN"><Text>首次接触时</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="zh_Hans_CN"><Text>从遭遇新文明时开始记录统计数据</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="zh_Hans_CN"><Text>隐藏尚未遇到的文明的名称、图表以及外交和关系数据，让界面不会提前剧透任何文明。默认开启。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="zh_Hans_CN"><Text>首次接触时的历史</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="zh_Hans_CN"><Text>从首次接触开始记录</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="zh_Hans_CN"><Text>所有阶段的累计影响</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="zh_Hans_CN"><Text>所有时代的危机总体影响</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hans_CN">
@@ -761,19 +761,19 @@
             <Text>显示我尚未遇见的文明的真实名称（剧透）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="zh_Hans_CN">
-            <Text>色盲模式（图表与关系配色采用高对比度 Wong 调色板）</Text>
+            <Text>色盲模式</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="zh_Hans_CN">
-            <Text>在图表和年鉴中显示已淘汰文明</Text>
+            <Text>显示已消亡的文明</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="zh_CN">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>战争标记</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="zh_CN">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>灾害标记</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="zh_Hans_CN">
-            <Text>在图表曲线上显示奇观建成标记（在各文明完成奇观的回合处显示小图标）</Text>
+            <Text>奇观标记</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="zh_Hans_CN">
             <Text>自动（游戏速度默认值）</Text>
@@ -1361,7 +1361,7 @@
             <Text>已禁用抽稀，保留每个样本。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="zh_Hans_CN">
-            <Text>隐藏未遇见文明的外交/关系数据</Text>
+            <Text>剧透保护</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="zh_Hans_CN">
             <Text>危机</Text>
@@ -1566,7 +1566,7 @@
             <Text>战争影响，各参战方在所选战争中的轨迹</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="zh_Hans_CN">
-            <Text>遇见文明时揭示其全部历史</Text>
+            <Text>显示完整历史</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="zh_Hans_CN">
             <Text>开启：遇见某文明时会在图表上揭示其全部过往。关闭：曲线从首次接触的那一刻开始。</Text>
@@ -1871,10 +1871,10 @@
             <Text>聚落电影视角</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="zh_Hans_CN">
-            <Text>实验性聚落飞览</Text>
+            <Text>定居点飞掠（实验性）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="zh_Hans_CN">
-            <Text>启用轻微旋转</Text>
+            <Text>轻微镜头旋转</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="zh_Hans_CN">
             <Text>飞览时长</Text>
@@ -2042,5 +2042,17 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="zh_Hans_CN"><Text>Agreements (Count Over Time)</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="zh_Hans_CN"><Text>Wars</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="zh_Hans_CN"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="zh_Hans_CN"><Text>控制遇到新文明时的行为：在图表中显示其完整历史，或仅从相遇时开始记录。仅在剧透保护开启时生效。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="zh_Hans_CN"><Text>为图表线条和关系网络使用高对比度、色盲友好的配色。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="zh_Hans_CN"><Text>在历史图表线条上标记每座奇观建成的回合。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="zh_Hans_CN"><Text>在 Emigration 难民图表上标记每场战争开始的回合。需要配套模组 Emigration。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="zh_Hans_CN"><Text>在 Emigration 难民图表上标记每次灾害发生的回合。需要配套模组 Emigration。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="zh_Hans_CN"><Text>界面显示的详细程度。基础仅包含核心统计页面；标准会加入所有图表和标签页；分析师还会显示存储、抽稀和采样率控制。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="zh_Hans_CN"><Text>以 3 回合移动平均绘制历史线条，让趋势更清晰。底层数据保持不变。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="zh_Hans_CN"><Text>在图表和排名中继续显示已消亡的文明，而不是将其移除。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="zh_Hans_CN"><Text>启用“电影视角”按钮，从热门城市列表中平移镜头浏览定居点。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="zh_Hans_CN"><Text>自动在主要定居点之间移动镜头。实验性功能——若镜头异常请关闭。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="zh_Hans_CN"><Text>定居点飞掠在每座城市停留的时长。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="zh_Hans_CN"><Text>飞掠镜头在每座定居点停留时加入轻微旋转。</Text></Replace>
     </LocalizedText>
 </Database>
