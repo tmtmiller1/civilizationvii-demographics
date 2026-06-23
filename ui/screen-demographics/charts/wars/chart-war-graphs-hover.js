@@ -152,6 +152,27 @@ function fillHoverTip(tip, turn, series, head, markers) {
 }
 
 /**
+ * Position the hover tooltip near the cursor, flipping it to the LEFT of the cursor when a
+ * right-side placement would overflow the viewport's right edge, so tooltips on right-side graphs
+ * stay fully on-screen and readable instead of being clipped.
+ * @param {HTMLElement} tip The tooltip element (already filled, so its width is meaningful).
+ * @param {*} ev The mouse event.
+ * @param {DOMRect} cRect The cell's bounding rect (the positioned container the tip lives in).
+ */
+function placeTip(tip, ev, cRect) {
+  const GAP = 14;
+  tip.style.display = "block"; // ensure it's laid out before measuring its width
+  const tipW = tip.offsetWidth || 0;
+  const viewW = (typeof window !== "undefined" && window.innerWidth) || cRect.right;
+  const localX = ev.clientX - cRect.left;
+  // Default to the right of the cursor; flip left when that would run past the viewport's right
+  // edge.
+  const flipLeft = ev.clientX + GAP + tipW > viewW;
+  tip.style.left = (flipLeft ? localX - GAP - tipW : localX + GAP) + "px";
+  tip.style.top = ev.clientY - cRect.top + GAP + "px";
+}
+
+/**
  * Move handler: snap to the nearest turn, position the crosshair, and fill the
  * tooltip with each civ's value there.
  * @param {*} ev The mouse event.
@@ -170,10 +191,7 @@ function onHoverMove(ev, ctx) {
   ctx.cross.setAttribute("x2", xPx);
   ctx.cross.setAttribute("visibility", "visible");
   fillHoverTip(ctx.tip, turn, ctx.series, ctx.head, ctx.markers);
-  const cRect = ctx.cell.getBoundingClientRect();
-  ctx.tip.style.left = ev.clientX - cRect.left + 14 + "px";
-  ctx.tip.style.top = ev.clientY - cRect.top + 14 + "px";
-  ctx.tip.style.display = "block";
+  placeTip(ctx.tip, ev, ctx.cell.getBoundingClientRect());
 }
 
 /**
@@ -190,12 +208,7 @@ export function attachBarHover(cell, civs, label, blp) {
   tip.className = "demographics-war-graph-hovertip";
   fillBarTip(tip, civs, label, blp);
   cell.appendChild(tip);
-  cell.addEventListener("mousemove", (ev) => {
-    const cRect = cell.getBoundingClientRect();
-    tip.style.left = ev.clientX - cRect.left + 14 + "px";
-    tip.style.top = ev.clientY - cRect.top + 14 + "px";
-    tip.style.display = "block";
-  });
+  cell.addEventListener("mousemove", (ev) => placeTip(tip, ev, cell.getBoundingClientRect()));
   cell.addEventListener("mouseleave", () => {
     tip.style.display = "none";
   });

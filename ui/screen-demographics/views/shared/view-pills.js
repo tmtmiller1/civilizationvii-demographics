@@ -5,8 +5,9 @@
 // metric/view group, etc.). One button per item; clicking a different one calls onPick(key).
 
 /**
- * The inline style for one selector button. Default = a rounded gold-FILLED pill (view choices, e.g.
- * the metric selector). `variant: "filter"` = the flat, square-cornered, gold-BOXED look the time/age
+ * The inline style for one selector button. Default = a rounded gold-FILLED pill (view choices,
+ * e.g. the metric selector). `variant: "filter"` = the flat, square-cornered, gold-BOXED look the
+ * time/age
  * filters use, for choices that FILTER/transform the data (e.g. Scaled vs Civ numbers).
  * @param {boolean} on Whether this button is the active one.
  * @param {string} [variant] "filter" for the flat boxed filter look, else the rounded pill.
