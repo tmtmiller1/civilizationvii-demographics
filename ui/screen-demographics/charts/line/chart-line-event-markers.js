@@ -89,12 +89,15 @@ export function collectCrisisMarkers(metricId, history, crisisCtx) {
 }
 
 /**
- * The Emigration refugees metrics (scaled people + raw Civ points). These show their OWN cause-driven
- * markers (war / disaster onsets) instead of the game-wide crisis-stage markers, so crisis collection
- * is suppressed for them.
+ * The Emigration refugees metrics (scaled people + raw Civ points). These show their OWN
+ * cause-driven markers (war / disaster onsets) instead of the game-wide crisis-stage markers, so
+ * crisis collection is suppressed for them.
  * @type {Set<string>}
  */
-const REFUGEE_METRIC_IDS = new Set(["emig_refugees", "emig_refugees_pts"]);
+const REFUGEE_METRIC_IDS = new Set([
+  "emig_refugees", "emig_refugees_pts",        // Refugees (Left)
+  "emig_refugees_in", "emig_refugees_in_pts"   // Refugees (Arrived), same war/disaster onset markers
+]);
 
 /**
  * Decide whether crisis-marker collection should no-op.
@@ -481,8 +484,8 @@ function drawAgeLabel(ctx2, mk, x, area) {
 // their game-year label to a sampled year (the same remap the conflicts Gantt uses), so cross-mod
 // turn clocks never have to agree.
 
-const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red — war onsets
-const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber — disaster onsets
+const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red, war onsets
+const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber, disaster onsets
 
 /**
  * Read the `showWarMarkers` setting (default ON): the Options toggle for the Refugees chart's WAR
@@ -600,15 +603,16 @@ export function collectRefugeeEventMarkers(metricId, history) {
   const yearToChart = buildYearToChartTurn(samples);
   /** @type {{turn:number, label:string, year:string, color:string}[]} */
   const markers = [];
-  // War and disaster onsets are INDEPENDENT user toggles (both default on), mirroring wonder markers.
+  // War and disaster onsets are INDEPENDENT user toggles (both default on), mirroring wonder
+  // markers.
   if (shouldShowWarMarkers()) collectWarOnsetMarkers(history, yearToChart, markers);
   if (shouldShowDisasterMarkers()) collectDisasterMarkers(yearToChart, markers);
   return markers;
 }
 
 /**
- * Build per-marker draw layouts: pixel x, single-line pill size, left/right-flipped label box, and a
- * vertical LANE so labels whose pills would overlap stack instead of hiding one another.
+ * Build per-marker draw layouts: pixel x, single-line pill size, left/right-flipped label box, and
+ * a vertical LANE so labels whose pills would overlap stack instead of hiding one another.
  * @param {*} ctx2 The 2D canvas context.
  * @param {{turn:number,label:string,year:string,color:string}[]} markers The markers.
  * @param {*} xScale The Chart.js x scale.
@@ -674,7 +678,8 @@ function drawRefugeeMarkerLayout(ctx2, L, top, bottom, family) {
 }
 
 /**
- * Draw a refugee marker's label pill (dark background, colored left accent bar, cream "name · year").
+ * Draw a refugee marker's label pill (dark background, colored left accent bar, cream "name ·
+ * year").
  * @param {*} ctx2 The 2D canvas context (already saved by the caller).
  * @param {*} L The per-marker layout (x/dx/pill size/text/color).
  * @param {number} stackY The lane-stacked y offset.
@@ -692,8 +697,9 @@ function drawRefugeeLabel(ctx2, L, stackY, family) {
 }
 
 /**
- * Build the refugees-chart event-marker Chart.js plugin: dashed vertical lines + "name · year" label
- * pills at each war / disaster onset, lane-stacked from the top, clipped to the active x-scale range.
+ * Build the refugees-chart event-marker Chart.js plugin: dashed vertical lines + "name · year"
+ * label pills at each war / disaster onset, lane-stacked from the top, clipped to the active
+ * x-scale range.
  * @param {{turn:number, label:string, year:string, color:string}[]} markers The markers to draw.
  * @returns {Record<string, *>} The Chart.js plugin object.
  */

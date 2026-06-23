@@ -460,7 +460,7 @@ function renderInto(host, opts) {
     return;
   }
   // Gate on a crisis actually having begun, exactly as the Crises "Stages" sub-tab does
-  // (chart-crisis-stages.js). A non-empty roster only means civs exist — without this the graphs
+  // (chart-crisis-stages.js). A non-empty roster only means civs exist, without this the graphs
   // would plot ordinary metric history before any crisis, reading as "crisis impact" that hasn't
   // happened yet.
   const samples = Array.isArray(history.samples) ? history.samples : [];

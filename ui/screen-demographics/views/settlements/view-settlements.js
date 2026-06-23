@@ -552,8 +552,9 @@ function rerenderContent(st) {
 }
 
 /**
- * Insert the Options button (a right-aligned `.demographics-chart-toolbar`, matching the Historical
- * Data tabs) directly BELOW the filter pill row — the `.demographics-settle-filters` row used by both
+ * Insert the Options button (a right-aligned `.demographics-chart-toolbar`, matching the
+ * Historical Data tabs) directly BELOW the filter pill row, the `.demographics-settle-filters` row
+ * used by both
  * the Table and the All-Civilizations sub-views. Falls back to the top of the content for sub-views
  * that render no pill row.
  * @param {SettleState} st The render state.

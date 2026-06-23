@@ -261,6 +261,19 @@ export const METRICS = [
     format: formatBigNumber,
     unit: "people"
   },
+  {
+    // Raw Civ population points, the SAME sampled total as `population`, but WITHOUT the
+    // people-scaling, so the Migration hub's "Civ numbers" view shows the exact Civ figures (and
+    // the Y axis rescales). The Population group pill maps Scaled → `population`, Civ → this. Title
+    // matches so the toggle only changes the curve/axis, not the heading.
+    id: "population_civ",
+    label: "Population",
+    title: "Population Over Time",
+    category: "people",
+    accessor: (/** @type {MetricCtx} */ ctx) => safeNum(ctx.totalPopulation),
+    format: formatBigNumber,
+    unit: "points"
+  },
 
   // ---- V7-specific creative ------------------------------------------
   {
@@ -640,41 +653,44 @@ export function registerMetricToPage(pageId, metricId, afterMetricId) {
 }
 
 /**
- * Pending external dashboard PANELS. Unlike registerMetricToPage (which adds a line-chart tab to an
- * existing page), a panel is a whole companion-owned page whose body the companion renders itself ,
- * the screen just hands it a container. Consumed by view-history at render time. A panel may declare
- * `tabs` to contribute several native Demographics sub-tabs (one synthetic metric each) instead of a
- * single tab; `render` then receives the selected sub-tab id as its third argument. A panel may set
- * `topLevel: true` to be shown as its own top-level view tab (right of Historical Data) instead of a
- * page inside Historical Data.
+ * Pending external dashboard PANELS. Unlike registerMetricToPage (which adds a line-chart tab to
+ * an existing page), a panel is a whole companion-owned page whose body the companion renders
+ * itself , the screen just hands it a container. Consumed by view-history at render time. A panel
+ * may declare `tabs` to contribute several native Demographics sub-tabs (one synthetic metric
+ * each) instead of a single tab; `render` then receives the selected sub-tab id as its third
+ * argument. A panel may set `topLevel: true` to be shown as its own top-level view tab (right of
+ * Historical Data) instead of a page inside Historical Data.
  * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function,
- *   topLevel?:boolean, tabs?:{id:string, label?:string, title?:string, hidePolicyBanner?:boolean}[]}[]}
+ *   topLevel?:boolean,
+ *   tabs?:{id:string, label?:string, title?:string, hidePolicyBanner?:boolean}[]}[]}
  */
 export const EXTERNAL_PANELS = [];
 
 /**
- * Separator joining an external panel id to one of its sub-tab ids ("panelId::subId"). A panel that
- * declares `tabs` contributes one Demographics sub-tab (synthetic metric) per tab under this scheme.
+ * Separator joining an external panel id to one of its sub-tab ids ("panelId::subId"). A panel
+ * that declares `tabs` contributes one Demographics sub-tab (synthetic metric) per tab under this
+ * scheme.
  */
 export const PANEL_SUBTAB_SEP = "::";
 
 /**
  * Register an external dashboard panel as its own page. `spec.render(container, ctx, subId)` is
- * invoked by the screen to fill the page body (the companion owns all of it). Ignored on a duplicate
- * id. A panel may declare `tabs: [{id, label, title}]` to contribute several native Demographics
- * sub-tabs (one synthetic metric each) instead of a single tab; `render` then receives the selected
- * sub-tab's `id` as its third argument. Without `tabs`, it's a single-tab panel (legacy) and `subId`
- * is undefined.
+ * invoked by the screen to fill the page body (the companion owns all of it). Ignored on a
+ * duplicate id. A panel may declare `tabs: [{id, label, title}]` to contribute several native
+ * Demographics sub-tabs (one synthetic metric each) instead of a single tab; `render` then
+ * receives the selected sub-tab's `id` as its third argument. Without `tabs`, it's a single-tab
+ * panel (legacy) and `subId` is undefined.
  * @param {*} spec A panel spec ({id, pageLabel, tabLabel, title, render, tabs?}).
  * @returns {boolean} Whether it was added.
  */
 export function registerPanel(spec) {
   if (!spec || typeof spec.id !== "string" || typeof spec.render !== "function") return false;
   if (EXTERNAL_PANELS.some((p) => p.id === spec.id)) return false;
-  // Don't let a companion panel id shadow a built-in metric id (the render dispatch would then route
-  // that real metric's tab to the panel). Sub-tab ids are namespaced with "::", so they can't collide
-  // with a plain built-in id. NOTE: use a STRICT existence check here, not getMetric() - getMetric
-  // falls back to METRICS[0] for an unknown id (never returns falsy), so it would reject every panel.
+  // Don't let a companion panel id shadow a built-in metric id (the render dispatch would then
+  // route that real metric's tab to the panel). Sub-tab ids are namespaced with "::", so they
+  // can't collide with a plain built-in id. NOTE: use a STRICT existence check here, not
+  // getMetric() - getMetric falls back to METRICS[0] for an unknown id (never returns falsy), so
+  // it would reject every panel.
   if (METRICS.some((m) => m.id === spec.id)) return false;
   EXTERNAL_PANELS.push(spec);
   return true;
@@ -683,9 +699,9 @@ export function registerPanel(spec) {
 /**
  * External metric GROUPS: a single tab (on a page) that presents related metrics behind toggles,
  * showing one full chart at a time, instead of N separate tabs. Two shapes are supported:
- *  • flat — `metricIds: string[]` (one metric toggle); or
- *  • 2D — `members: [{label, <viewId>: metricId, ...}]` + `views: [{id, label}]` (a metric toggle AND
- *    a view toggle; the shown metric is `members[metricSel][viewSel]`).
+ *  • flat, `metricIds: string[]` (one metric toggle); or
+ *  • 2D, `members: [{label, <viewId>: metricId, ...}]` + `views: [{id, label}]` (a metric toggle
+ *    AND a view toggle; the shown metric is `members[metricSel][viewSel]`).
  * Consumed by view-history. Member metrics must be registered separately so they're sampled.
  * @type {{pageId:string, id:string, label:string, first?:boolean, metricIds?:string[],
  *   views?:{id:string,label:string}[], members?:*[]}[]}
@@ -693,7 +709,7 @@ export function registerPanel(spec) {
 export const EXTERNAL_METRIC_GROUPS = [];
 
 /**
- * Register a metric group (flat or 2D — see EXTERNAL_METRIC_GROUPS).
+ * Register a metric group (flat or 2D, see EXTERNAL_METRIC_GROUPS).
  * @param {*} spec The group spec.
  * @returns {boolean} Whether it registered.
  */
@@ -705,11 +721,48 @@ export function registerMetricGroup(spec) {
   return true;
 }
 
+/** Hub ids a companion may inject pages into (Rankings is its own view; not injectable). */
+export const HUB_IDS = Object.freeze(["statistics", "migration", "geopolitics"]);
+
+/**
+ * Pending hub-page contributions: whole companion-owned PAGES injected into a named hub at a
+ * position. Each page is a PageDef ({id, label, tier?, render | metrics}); `after` is an anchor
+ * page id within the hub (else appended). Consumed by view-history's mergeHubPages at render time.
+ * This is the hub-targeted cousin of registerPanel (which makes a sibling top-level tab); a hub
+ * page lives INSIDE a hub's page row.
+ * @type {{hubId:string, page:*, after:(string|null)}[]}
+ */
+export const EXTERNAL_HUB_PAGES = [];
+
+/**
+ * Register one or more pages into a named hub (e.g. Emigration's Network/Causes/… into
+ * "migration"). Additive; existing registerPanel/registerMetricGroup callers are unaffected.
+ * Duplicate page ids and unknown hub ids are ignored.
+ * @param {string} hubId One of HUB_IDS.
+ * @param {*[]} pages PageDefs to inject (in display order).
+ * @param {{after?:string}} [opts] `after` = anchor page id within the hub; else appended.
+ * @returns {boolean} Whether at least one page was added.
+ */
+export function registerHubPages(hubId, pages, opts) {
+  if (!HUB_IDS.includes(hubId) || !Array.isArray(pages)) return false;
+  const after = opts && typeof opts.after === "string" ? opts.after : null;
+  let added = 0;
+  for (const page of pages) {
+    if (!page || typeof page.id !== "string") continue;
+    if (EXTERNAL_HUB_PAGES.some((e) => e.page.id === page.id)) continue;
+    EXTERNAL_HUB_PAGES.push({ hubId, page: Object.assign({ hub: hubId }, page), after });
+    added++;
+  }
+  return added > 0;
+}
+
 const _api = (/** @type {*} */ (globalThis).DemographicsMetricsAPI ??= {});
 _api.registerMetric = registerMetric;
 _api.registerMetricToPage = registerMetricToPage;
 _api.registerPanel = registerPanel;
 _api.registerMetricGroup = registerMetricGroup;
+_api.registerHubPages = registerHubPages;
+_api.HUB_IDS = HUB_IDS;
 // This module is imported lazily (the sampler is dynamic-imported after
 // engine.whenReady), so a companion mod may have booted first and queued its
 // registrations on `pending`. Drain them now that the real API exists. This

@@ -23,17 +23,8 @@ function dlog(...a) {
  * @param {*} ctx
  */
 function appendRadarControls(toolbar, ctx) {
-  const ageOpts = [
-    { id: "current", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT") },
-    { id: "AGE_ANTIQUITY", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1") },
-    { id: "AGE_EXPLORATION", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2") }
-  ];
-  const active = ctx.activeRadarAge || "current";
-  const radarLabel = document.createElement("div");
-  radarLabel.className = "demographics-chart-toolbar-label font-body text-xs";
-  radarLabel.textContent = t("LOC_DEMOGRAPHICS_LABEL_SNAPSHOT");
-  toolbar.appendChild(radarLabel);
-  for (const opt of ageOpts) toolbar.appendChild(buildRadarSnapshotPill(opt, active, ctx));
+  // The snapshot SELECTOR pills now live in a centered filter row (buildRadarSnapshotRow), like the
+  // time filters on other graphs; the toolbar keeps only the Refresh action.
   const refresh = document.createElement("div");
   refresh.className = "demographics-chart-toolbar-btn font-body text-xs";
   refresh.textContent = t("LOC_DEMOGRAPHICS_BTN_REFRESH");
@@ -44,6 +35,30 @@ function appendRadarControls(toolbar, ctx) {
     if (typeof ctx.requestReload === "function") ctx.requestReload();
   });
   toolbar.appendChild(refresh);
+}
+
+/**
+ * Build the radar SNAPSHOT selector as a centered filter row (matching the time-filter row on other
+ * graphs): a "Snapshot:" label + one pill per age snapshot. Replaces the old right-aligned toolbar
+ * placement so the snapshot filters center like the year filters elsewhere.
+ * @param {*} ctx Render context (carries activeRadarAge, history, setActiveRadarAge).
+ * @returns {HTMLElement} The centered filter row.
+ */
+export function buildRadarSnapshotRow(ctx) {
+  const row = document.createElement("div");
+  row.className = "demographics-chart-time-filter-row font-body text-xs";
+  const ageOpts = [
+    { id: "current", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT") },
+    { id: "AGE_ANTIQUITY", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1") },
+    { id: "AGE_EXPLORATION", label: t("LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2") }
+  ];
+  const active = ctx.activeRadarAge || "current";
+  const radarLabel = document.createElement("div");
+  radarLabel.className = "demographics-chart-toolbar-label font-body text-xs";
+  radarLabel.textContent = t("LOC_DEMOGRAPHICS_LABEL_SNAPSHOT");
+  row.appendChild(radarLabel);
+  for (const opt of ageOpts) row.appendChild(buildRadarSnapshotPill(opt, active, ctx));
+  return row;
 }
 
 /**
@@ -296,6 +311,58 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
   dlog("wonders button mounted; activeMetric=" + activeMetric + " wondersOn=" + wondersOn);
 }
 
+/**
+ * The Refugees graphs (Left/Arrived, both units), they carry the war/disaster event-marker toggles.
+ */
+const REFUGEE_METRICS = new Set([
+  "emig_refugees", "emig_refugees_pts", "emig_refugees_in", "emig_refugees_in_pts"
+]);
+
+/**
+ * Append one event-marker filter toggle (e.g. Wars / Disasters), mirroring the Wonders toggle:
+ * reads a boolean setting (default ON), dims when off, flips + re-renders on click. The refugee
+ * chart already gates its war/disaster markers on these same settings, this just surfaces them at
+ * the top.
+ * @param {HTMLElement} toolbar The toolbar.
+ * @param {*} ctx Render context.
+ * @param {string} key Setting key (showWarMarkers / showDisasterMarkers).
+ * @param {string} label Button label.
+ */
+function appendMarkerToggle(toolbar, ctx, key, label) {
+  let on = true;
+  try {
+    on = !!ctx.settings?.getSetting?.(key, true);
+  } catch (_) {
+    on = true;
+  }
+  const btn = document.createElement("div");
+  btn.className = "demographics-chart-toolbar-btn font-body text-xs";
+  btn.textContent = label;
+  btn.title = label;
+  if (!on) btn.classList.add("demographics-history-wonders-off");
+  makeClickable(btn, (ev) => {
+    ev?.stopPropagation?.();
+    safePlaySound("data-audio-activate", "options");
+    try {
+      ctx.settings?.setSetting?.(key, !on);
+    } catch (_) {
+      /* best-effort persistence */
+    }
+    ctx.requestReload?.();
+  });
+  toolbar.appendChild(btn);
+}
+
+/**
+ * Append the Wars + Disasters event-marker filter toggles for the Refugees graphs.
+ * @param {HTMLElement} toolbar The toolbar.
+ * @param {*} ctx Render context.
+ */
+function appendRefugeeMarkerToggles(toolbar, ctx) {
+  appendMarkerToggle(toolbar, ctx, "showWarMarkers", t("LOC_DEMOGRAPHICS_BTN_WAR_MARKERS"));
+  appendMarkerToggle(toolbar, ctx, "showDisasterMarkers", t("LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS"));
+}
+
 /** History pages whose data lives in history.wars (not the per-turn samples). */
 const WARS_PAGES = new Set(["wars_gantt", "war_graphs"]);
 
@@ -343,7 +410,8 @@ function appendCsvControls(toolbar, host, ctx, activeMetric) {
 function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
   if (activeMetric === "legacy_radar") appendRadarControls(toolbar, ctx);
   else if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
-  else if (activeMetric === "war_graphs") appendWarGraphsControls(toolbar, ctx);
+  // war_graphs: the "Pick war" dropdown moves to the LEFT bar (buildWarGraphsPicker), not the
+  // toolbar.
   else if (activeMetric === "crisis_graphs") appendCrisisGraphsControls(toolbar, ctx);
   else if (activeMetric === "resources_stack") appendResourcesViewerIfReady(toolbar, ctx);
 }
@@ -392,10 +460,14 @@ function buildCrisisScopeDropdown(opts, ctx) {
 }
 
 /**
- * @param {HTMLElement} toolbar
- * @param {*} ctx
+ * Build the War Graphs "Pick war" selector as a LEFT bar (a dropdown of every war), so it sits on
+ * the far left of the controls row while the filters stay centered and the toolbar stays right.
+ * @param {*} ctx Render context (carries history, warGraphsWarId, setWarGraphsWarId).
+ * @returns {HTMLElement} The left-bar element.
  */
-function appendWarGraphsControls(toolbar, ctx) {
+export function buildWarGraphsPicker(ctx) {
+  const bar = document.createElement("div");
+  bar.className = "demographics-chart-leftbar font-body text-xs";
   const h = ctx.history || {};
   const rawWars = Array.isArray(h.wars) ? h.wars : [];
   const samples = Array.isArray(h.samples) ? h.samples : [];
@@ -409,9 +481,9 @@ function appendWarGraphsControls(toolbar, ctx) {
       label: names.get(w.warUniqueID) || w.name || "War #" + w.warUniqueID
     }))
     .reverse();
-  toolbar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK")));
-  if (!opts.length) return;
-  toolbar.appendChild(buildWarGraphsDropdown(opts, ctx));
+  bar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK")));
+  if (opts.length) bar.appendChild(buildWarGraphsDropdown(opts, ctx));
+  return bar;
 }
 
 /**
@@ -485,6 +557,7 @@ export function buildToolbar(host, ctx, activeMetric) {
   appendClearFocus(toolbar, ctx);
   if (!TIME_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendTimeUnitsToggle(toolbar, ctx);
   if (!WONDERS_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendWondersToggle(toolbar, ctx, activeMetric);
+  if (REFUGEE_METRICS.has(activeMetric)) appendRefugeeMarkerToggles(toolbar, ctx);
   appendCsvControls(toolbar, host, ctx, activeMetric);
   toolbar.appendChild(buildOptionsButton());
 
