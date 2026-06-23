@@ -1,22 +1,27 @@
 [h1]Demographics[/h1]
 
-[b]Full Description:[/b]
+[b]★ Updated for Civilization VII 1.4.1 ★[/b]
+Compatible with the 1.4.1 update, and now pairs with the [b]Emigration[/b] companion mod for a dedicated Emigration tab and a Net Migration graph. History stays continuous across the age boundary, so charts no longer reset at each age transition. Special thanks to [b]Slothoth[/b] for the keys to data persistence across ages.
 
-Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays. With the Emigration companion mod (updated for 1.4.1) installed, it also hosts a dedicated Migration tab and a Net Migration graph.
+Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it as charts, rankings, relationship views, and war history. Storytelling is a core purpose of this mod, and the goal is to make the world's shifts readable as a lived narrative.
 
-Storytelling is a core purpose of this mod: the goal is to make the world's shifts readable as a lived narrative, not just a spreadsheet of numbers.
-
-It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and Slothoth's Global Relations for Civilization VII with added diplomatic concerns and filtering.
+It is intended to be the spiritual successor to robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and an extension of Slothoth's Global Relations for Civilization VII that adds additional diplomatic concerns and filtering.
 
 [b]The Mod Includes:[/b]
 [list]
-[*]Historical charts for economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
-[*]An All Civilizations view with current values and world rankings for each civilization.
+[*]Historical charts, continuous across the age boundary, for economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
+[*]A World Rankings view: an All Civilizations matrix of current values and world rank for every metric.
 [*]A Global Relations view with met civilizations and city-states arranged in a ring layout.
-[*]A war timeline built from diplomacy events.
-[*]Clear metric definitions and transparent behavior descriptions so each charted value is easy to interpret.
-[*]Copy-to-CSV for recorded history so captured trends can be reviewed outside the game.
+[*]A Gantt war timeline built from diplomacy events, with per-war cost and a per-war Graphs view.
+[*]A Crises view with per-stage cost tables and per-civilization crisis graphs.
+[*]A Top Settlements board with a cinematic flyby and map fly-to.
+[*]Copy-to-CSV for recorded history (true export is unavailable for modding).
 [*]Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
+[/list]
+
+[b]Pairs with Emigration:[/b]
+[list]
+[*]With the [b]Emigration[/b] companion mod installed (updated for 1.4.1), Demographics hosts a dedicated Emigration tab and a Net Migration graph beside Population. The hooks stay inert when Emigration is not installed, so the base mod is unchanged.
 [/list]
 
 [b]Triumphs Overlay:[/b]
@@ -36,7 +41,6 @@ It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civil
 [*]Read-only presentation layer.
 [*]No base-game file replacement.
 [*]Per-save data storage.
-[*]Additive Triumphs overlay.
 [/list]
 
 [b]Installation:[/b]
@@ -50,6 +54,11 @@ It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civil
 [list]
 [*]robk for InfoAddict for Civilization V.
 [*]Gedemon for CivGraphs for Civilization VI.
-[*]Slothoth for Global Relations for Civilization VII.
+[*]Slothoth for Global Relations for Civilization VII, and for the keys to data persistence across ages: co-author credit offered.
 [*]Tower for the Civilization VII implementation and expansion work.
+[/list]
+
+[b]Special Thanks[/b]
+[list]
+[*]Potato McWhisky: for teaching me to love again (Civilization VI) after being a Civilization II, IV, V player. Making this mod was an act of faith that they'll eventually make this game as good as the previous entries.
 [/list]
