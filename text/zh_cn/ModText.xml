@@ -2054,5 +2054,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="zh_Hans_CN"><Text>自动在主要定居点之间移动镜头。实验性功能——若镜头异常请关闭。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="zh_Hans_CN"><Text>定居点飞掠在每座城市停留的时长。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="zh_Hans_CN"><Text>飞掠镜头在每座定居点停留时加入轻微旋转。</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="zh_Hans_CN"><Text>移居</Text></Replace>
     </LocalizedText>
 </Database>

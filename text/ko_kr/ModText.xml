@@ -1494,5 +1494,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="ko_KR"><Text>주요 정착지 사이로 카메라가 자동으로 이동합니다. 실험적 기능이며, 카메라가 이상하면 끄세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ko_KR"><Text>정착지 플라이바이가 각 도시에 머무는 시간입니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ko_KR"><Text>플라이바이 중 각 정착지에 머무는 동안 카메라를 부드럽게 회전시킵니다.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="ko_KR"><Text>이주</Text></Replace>
     </LocalizedText>
 </Database>

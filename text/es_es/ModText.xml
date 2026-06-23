@@ -2054,5 +2054,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="es_ES"><Text>Desplaza la cámara automáticamente entre los mejores asentamientos. Experimental: desactívalo si la cámara falla.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="es_ES"><Text>Cuánto se detiene el sobrevuelo de asentamientos en cada ciudad.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="es_ES"><Text>Añade una rotación suave a la cámara del sobrevuelo mientras se detiene en cada asentamiento.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="es_ES"><Text>Emigración</Text></Replace>
     </LocalizedText>
 </Database>

@@ -1494,5 +1494,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="it_IT"><Text>Sposta automaticamente la telecamera tra gli insediamenti principali. Sperimentale: disattivalo se la telecamera dà problemi.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="it_IT"><Text>Quanto a lungo il sorvolo degli insediamenti si sofferma su ogni città.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="it_IT"><Text>Aggiunge una leggera rotazione alla telecamera di sorvolo mentre si sofferma su ogni insediamento.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="it_IT"><Text>Emigrazione</Text></Replace>
     </LocalizedText>
 </Database>

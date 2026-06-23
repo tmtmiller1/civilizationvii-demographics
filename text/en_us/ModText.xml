@@ -2237,5 +2237,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO">
             <Text>Adds a gentle rotation to the flyby camera as it lingers on each settlement.</Text>
         </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION">
+            <Text>Emigration</Text>
+        </Row>
     </EnglishText>
 </Database>

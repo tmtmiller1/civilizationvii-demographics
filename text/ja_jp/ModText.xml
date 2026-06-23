@@ -1494,5 +1494,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="ja_JP"><Text>主要な集落の間をカメラが自動的に移動します。実験的機能です。カメラの挙動がおかしい場合はオフにしてください。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ja_JP"><Text>集落フライバイが各都市にとどまる長さです。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ja_JP"><Text>フライバイ中、各集落でとどまる間にカメラを緩やかに回転させます。</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="ja_JP"><Text>移住</Text></Replace>
     </LocalizedText>
 </Database>

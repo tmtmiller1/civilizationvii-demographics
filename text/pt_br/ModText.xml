@@ -1494,5 +1494,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="pt_BR"><Text>Move a câmera automaticamente entre os principais assentamentos. Experimental — desative se a câmera se comportar mal.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="pt_BR"><Text>Quanto tempo o sobrevoo de assentamentos permanece em cada cidade.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="pt_BR"><Text>Adiciona uma rotação suave à câmera de sobrevoo enquanto ela permanece em cada assentamento.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="pt_BR"><Text>Emigração</Text></Replace>
     </LocalizedText>
 </Database>

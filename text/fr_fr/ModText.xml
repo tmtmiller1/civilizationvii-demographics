@@ -2054,5 +2054,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="fr_FR"><Text>Déplace automatiquement la caméra entre les meilleurs établissements. Expérimental : désactivez-le si la caméra se comporte mal.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="fr_FR"><Text>Durée pendant laquelle le survol des établissements s'attarde sur chaque ville.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="fr_FR"><Text>Ajoute une légère rotation à la caméra de survol lorsqu'elle s'attarde sur chaque établissement.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="fr_FR"><Text>Émigration</Text></Replace>
     </LocalizedText>
 </Database>
