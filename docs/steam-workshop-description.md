@@ -1,7 +1,7 @@
 [h1]Demographics[/h1]
 
-[b]★ Major Update, Data Now Persists Across Ages ★[/b]
-Charts and tracked history are now continuous across the age boundary: economy, power, population, knowledge, conflicts, and Triumph progress carry from Antiquity into Exploration and beyond instead of resetting at each age transition. Special thanks to [b]Slothoth[/b], whose work provided the keys to data persistence across ages. A co-author credit is gladly offered.
+[b]★ Updated for Civilization VII 1.4.1 ★[/b]
+Compatible with the 1.4.1 update, and now pairs with the new [b]Emigration[/b] companion mod for a dedicated Emigration tab and a Net Migration graph beside Population. History also stays continuous across the age boundary: economy, power, population, knowledge, conflicts, and Triumph progress carry from Antiquity into Exploration and beyond instead of resetting at each age transition. Special thanks to [b]Slothoth[/b], whose work provided the keys to data persistence across ages. A co-author credit is gladly offered.
 
 Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays. Storytelling is a core purpose of this mod, and the goal is to make the world's shifts readable as a lived narrative.
 
