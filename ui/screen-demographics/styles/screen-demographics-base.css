@@ -273,6 +273,18 @@
     transform: translateY(-50%);
     margin: 0; /* override toolbar-wars margin-top, which would offset the absolute toolbar */
 }
+/* Far-left bar (mirrors the absolute-right toolbar) — e.g. the War Graphs "Pick war" dropdown, pinned
+   left while the filter row stays centered and the toolbar stays right. */
+.demographics-history-controls-row--centered > .demographics-chart-leftbar {
+    position: absolute;
+    left: 0.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0;
+}
 /* Wars view: extra gap between the age-filter pill row and this toolbar. */
 .demographics-chart-toolbar-wars {
     margin-top: 0.7rem;

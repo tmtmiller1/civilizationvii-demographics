@@ -7,6 +7,7 @@
 
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { buildLeaderIconGroup } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
 import {
   dlog,
   SVG_NS,
@@ -295,68 +296,34 @@ function drawRadarPolyDots(svg, p) {
 }
 
 /**
- * Build one radar legend entry (colored dot + civ name + Σ total), wiring its
- * click-to-toggle handler.
+ * Build one radar legend row, styled exactly like the line-chart legend rows
+ * (colored dot + civ name), with the radar's per-civ Σ triumph total appended.
+ * Clicking toggles the civ via `onToggle`.
  * @param {RadarCiv} c The civ.
  * @param {boolean} isHidden Whether the civ is hidden.
- * @param {{ legendX: number, gy: number, W: number, H: number }} pos Placement.
  * @param {((leaderType: string) => void)|null} onToggle Toggle callback.
- * @returns {HTMLElement} The legend entry element.
+ * @returns {HTMLElement} The legend row element.
  */
-function buildRadarLegendEntry(c, isHidden, pos, onToggle) {
-  const div = document.createElement("div");
-  div.className = "demographics-chart-line-label demographics-radar-legend-label";
-  if (isHidden) div.classList.add("is-hidden");
-  // Per-civ geometry stays inline; cursor depends on whether toggle is wired.
-  div.style.left = (pos.legendX / pos.W) * 100 + "%";
-  div.style.top = (pos.gy / pos.H) * 100 + "%";
-  div.style.cursor = onToggle ? "pointer" : "default";
-  div.appendChild(buildRadarLegendDot(c, isHidden));
-  div.appendChild(buildRadarLegendText(c));
-  wireRadarLegendToggle(div, c, onToggle);
-  return div;
-}
-
-/**
- * Build the radar legend color dot.
- * @param {RadarCiv} c The civ.
- * @param {boolean} isHidden Whether the civ is hidden.
- * @returns {HTMLElement} Dot element.
- */
-function buildRadarLegendDot(c, isHidden) {
-  const dot = document.createElement("span");
-  dot.className = "demographics-chart-line-label-dot";
-  if (isHidden) dot.classList.add("is-hollow");
-  dot.style.backgroundColor = isHidden ? "transparent" : c.color;
-  dot.style.borderColor = c.color;
-  return dot;
-}
-
-/**
- * Build the radar legend text segment.
- * @param {RadarCiv} c The civ.
- * @returns {HTMLElement} Text element.
- */
-function buildRadarLegendText(c) {
-  const txt = document.createElement("span");
-  txt.className = "demographics-chart-line-label-text";
-  txt.textContent = c.name + " , Σ " + radarTriumphTotal(c);
-  return txt;
-}
-
-/**
- * Wire click-to-toggle behavior for one legend entry.
- * @param {HTMLElement} div Legend entry element.
- * @param {RadarCiv} c The civ.
- * @param {((leaderType: string) => void)|null} onToggle Toggle callback.
- */
-function wireRadarLegendToggle(div, c, onToggle) {
-  if (!onToggle) return;
-  div.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    safePlaySound("data-audio-select-press", "audio-screen-unlocks");
-    onToggle(c.leaderType);
-  });
+function buildRadarLegendRow(c, isHidden, onToggle) {
+  const row = document.createElement("div");
+  row.className = "demographics-line-legend-row";
+  if (isHidden) row.classList.add("is-hidden");
+  // Same icon+dot group the line legend/tooltip use (no portrait, RadarCiv
+  // carries no LEADER_* string, so buildLeaderIconGroup renders just the colored
+  // dot, matching a portrait-less line legend row).
+  row.appendChild(buildLeaderIconGroup({ leaderType: c.leaderType }, c.color));
+  const name = document.createElement("span");
+  name.className = "demographics-line-legend-name";
+  name.textContent = c.name + " , Σ " + radarTriumphTotal(c);
+  row.appendChild(name);
+  if (onToggle) {
+    row.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      safePlaySound("data-audio-select-press", "audio-screen-unlocks");
+      onToggle(c.leaderType);
+    });
+  }
+  return row;
 }
 
 /**
@@ -473,7 +440,9 @@ function buildRadarSvg(params) {
 }
 
 /**
- * Mount the radar side legend (one entry per civ) into the wrap.
+ * Mount the radar legend into the wrap, a `.demographics-line-legend` overlay
+ * box (top-left of the plot) with a "Legend" title and one clickable row per
+ * civ, matching the line/other charts' legend.
  * @param {{
  *   wrap: HTMLElement,
  *   civs: Map<string, RadarCiv>,
@@ -484,17 +453,17 @@ function buildRadarSvg(params) {
  * }} params Legend mount inputs.
  */
 function mountRadarLegend(params) {
-  const { wrap, civs, hidden, opts, W, H } = params;
+  const { wrap, civs, hidden, opts, H } = params;
   const onToggle = typeof opts.onToggleCiv === "function" ? opts.onToggleCiv : null;
-  let gy = 18;
-  civs.forEach((c) => {
-    const entry = buildRadarLegendEntry(
-      c,
-      hidden.has(c.leaderType),
-      { legendX: 16, gy, W, H },
-      onToggle
-    );
-    wrap.appendChild(entry);
-    gy += 26;
-  });
+  const legend = document.createElement("div");
+  legend.className = "demographics-line-legend demographics-line-legend-overlay";
+  legend.style.maxHeight = Math.max(80, (H || 600) - 64) + "px";
+  const title = document.createElement("div");
+  title.className = "demographics-line-legend-title";
+  title.textContent = t("LOC_DEMOGRAPHICS_LEGEND_TITLE") || "Legend";
+  legend.appendChild(title);
+  civs.forEach((c) =>
+    legend.appendChild(buildRadarLegendRow(c, hidden.has(c.leaderType), onToggle))
+  );
+  wrap.appendChild(legend);
 }

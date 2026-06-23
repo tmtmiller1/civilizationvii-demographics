@@ -26,9 +26,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ko_KR"><Text>턴당 산출량과 경과 턴 수를 바탕으로 한 경제 규모 비교 지표입니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ko_KR"><Text>PPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ko_KR"><Text>턴당 생산력, 도시가 건설하는 것.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>Science Per Turn</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 과학, 기술 연구를 촉진합니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ko_KR"><Text>문화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ko_KR"><Text>Culture Per Turn</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 문화, 사회 제도 진행을 촉진합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ko_KR"><Text>작물 산출량</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ko_KR"><Text>모든 정착지에 걸친 턴당 순 식량 산출량.</Text></Replace>
@@ -284,7 +284,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ko_KR"><Text>(숨김, 클릭하여 표시)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ko_KR"><Text>클릭하여 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ko_KR"><Text>클릭하여 숨기기</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ko_KR"><Text>위업 레이더, 모든 문명, 6가지 속성 경로 전부</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ko_KR"><Text>Triumphs Radar</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ko_KR"><Text>시간에 따른 위업</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ko_KR"><Text>(누적 개수, 속성별 누적)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ko_KR"><Text>시간에 따른 자원 배분(누적 영역)</Text></Replace>
@@ -1444,5 +1444,43 @@
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="ko_KR"><Text>난민</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="ko_KR"><Text>전쟁 중 공성, 약탈 또는 정복으로 쫓겨나 다른 곳에 재정착한 인구. Emigration 모드가 설치된 경우 제공됩니다.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="ko_KR"><Text>Global Statistics</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="ko_KR"><Text>Migration</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="ko_KR"><Text>Geopolitics</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="ko_KR"><Text>Science &amp; Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="ko_KR"><Text>Society</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="ko_KR"><Text>Expansion</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="ko_KR"><Text>Population</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ko_KR"><Text>Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="ko_KR"><Text>Wars</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ko_KR"><Text>Relations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="ko_KR"><Text>Agreements</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="ko_KR"><Text>Gross Domestic Product (GDP)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="ko_KR"><Text>Gold Per Turn (GPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="ko_KR"><Text>Production Per Turn (PPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="ko_KR"><Text>Crop Yield (Food Per Turn)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="ko_KR"><Text>Number of Trade Routes over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="ko_KR"><Text>Total Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="ko_KR"><Text>Bonus Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="ko_KR"><Text>Empire Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="ko_KR"><Text>City Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="ko_KR"><Text>Treasure Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="ko_KR"><Text>Factory Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="ko_KR"><Text>Count of Techs Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="ko_KR"><Text>Count of Civics Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="ko_KR"><Text>Happiness Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="ko_KR"><Text>Influence Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="ko_KR"><Text>Settlements Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="ko_KR"><Text>Settlement Cap Utilization Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="ko_KR"><Text>Land Area Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="ko_KR"><Text>Wonders Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="ko_KR"><Text>Score Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="ko_KR"><Text>Gold Reserves Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="ko_KR"><Text>Diplomatic Approval Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="ko_KR"><Text>Population Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="ko_KR"><Text>Military Power Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="ko_KR"><Text>Agreements (Count Over Time)</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="ko_KR"><Text>Wars</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="ko_KR"><Text>Disasters</Text></Replace>
     </LocalizedText>
 </Database>

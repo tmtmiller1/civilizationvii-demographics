@@ -2,8 +2,8 @@
 //
 // Time-range filtering for the "Historical Data" view: resolving a filter id to
 // an inclusive {min, max} turn window, plus the pill row that lets the player
-// pick a window. Cross-age filters are greyed out with a custom HTML tooltip
-// (Coherent ignores native `title`).
+// pick a window. All filters are selectable, including the cross-age Age I/II/III
+// windows (history is retained across ages via the GameConfiguration backend).
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/core/demographics-a11y.js";
@@ -18,7 +18,7 @@ import {
  * @typedef {Object} TimeFilterDef
  * @property {string} id Stable filter id ("25", "age", "all", ...).
  * @property {string} label Pill caption.
- * @property {boolean} [disabled] When true the pill renders greyed/non-clickable.
+ * @property {boolean} [disabled] When true the pill is skipped (not rendered).
  */
 
 /**
@@ -55,23 +55,6 @@ export const TIME_FILTERS = [
   { id: "age3", label: "LOC_DEMOGRAPHICS_FILTER_AGE3" },
   { id: "all", label: "LOC_DEMOGRAPHICS_FILTER_ALL_TIME" }
 ];
-
-/**
- * Cross-age filter tooltip content: a title and an ordered list of body lines.
- * Each line is rendered as its own block element (Coherent strips `<br>` and
- * force-breaks inline `<b>`, so real line breaks need real elements). The last
- * line is the call-to-action and gets a distinct accent style.
- * @type {{ title: string, lines: string[] }}
- */
-const CROSS_AGE_DISABLED_TOOLTIP = {
-  title: "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE",
-  lines: [
-    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1",
-    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2",
-    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3",
-    "LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4"
-  ]
-};
 
 /**
  * Parse "2375 BCE" → -2375 ; "300 CE" → 300 ; "1450" (no era) → 1450.
@@ -263,141 +246,6 @@ export function computeTurnRange(history, filterId) {
 }
 
 /**
- * Nudge `tip` back into the viewport via a translate transform when any edge
- * overflows; clear the transform when it fits.
- * @param {HTMLElement} tip The tooltip element.
- */
-function repositionTooltip(tip) {
-  if (!tip.parentElement) return;
-  const rect = tip.getBoundingClientRect();
-  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-  const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-  const dx = overflowShift(rect.left, rect.right, vw);
-  const dy = overflowShift(rect.top, rect.bottom, vh);
-  if (dx !== 0 || dy !== 0) {
-    tip.style.transform = `translate(${dx}px, ${dy}px)`;
-  } else {
-    tip.style.transform = "";
-  }
-}
-
-/**
- * Compute the translate delta along one axis that brings a [near, far] span
- * back inside the [0, extent] viewport, with an 8px margin. Far-edge overflow
- * takes precedence over near-edge.
- * @param {number} near Leading edge coordinate (left or top).
- * @param {number} far Trailing edge coordinate (right or bottom).
- * @param {number} extent Viewport size along this axis.
- * @returns {number} The shift in pixels (0 when it already fits).
- */
-function overflowShift(near, far, extent) {
-  if (far > extent) return extent - far - 8;
-  if (near < 0) return -near + 8;
-  return 0;
-}
-
-/**
- * Attach the cross-age "why is this disabled?" tooltip to a pill. Mirrors the
- * CSV info-icon pattern: an absolutely-positioned <div> child of the pill,
- * styled with the engine's tooltip chrome, toggled on mouseenter / mouseleave.
- * Coherent GameFace ignores the native `title` attribute, so we render the
- * structured CROSS_AGE_DISABLED_TOOLTIP content as proper HTML.
- * @param {HTMLElement} pill The disabled filter pill.
- */
-function attachDisabledFilterTooltip(pill) {
-  const tip = buildDisabledFilterTooltipEl();
-  let hoverTimer = 0;
-  const HOVER_DELAY_MS = 360;
-
-  // Gameface does not reliably honor `pointer-events: none` for hit-testing, so
-  // a permanently-present (opacity-0) tip still registers its 38rem box as part
-  // of the pill for `mouseenter` - firing the tooltip far to the right/below the
-  // pill. Fix: keep the tip OUT of the DOM unless actually shown, so there is no
-  // phantom hover region. Reposition once it has been appended.
-  tip.addEventListener("transitionend", () => repositionTooltip(tip));
-
-  pill.addEventListener("mouseenter", () => {
-    if (hoverTimer) clearTimeout(hoverTimer);
-    hoverTimer = setTimeout(() => {
-      hoverTimer = 0;
-      pill.appendChild(tip);
-      tip.style.opacity = "1";
-      repositionTooltip(tip);
-    }, HOVER_DELAY_MS);
-  });
-  pill.addEventListener("mouseleave", () => {
-    if (hoverTimer) {
-      clearTimeout(hoverTimer);
-      hoverTimer = 0;
-    }
-    tip.style.opacity = "0";
-    if (tip.parentElement) tip.remove();
-  });
-}
-
-/**
- * Build the cross-age disabled-filter tooltip element (chrome + title + body),
- * initially transparent. Content from CROSS_AGE_DISABLED_TOOLTIP.
- * @returns {HTMLElement} The tooltip element.
- */
-function buildDisabledFilterTooltipEl() {
-  const content = CROSS_AGE_DISABLED_TOOLTIP;
-
-  const tip = document.createElement("div");
-  tip.className =
-    "demographics-tip-chrome demographics-history-tip demographics-history-tip-disabled-filter";
-  // Belt-and-suspenders with the transient-DOM approach in attachDisabledFilter-
-  // Tooltip: keep pointer-events off so this 38rem-wide tip never acts as a hover
-  // target for the pill's mouseenter even while it is briefly in the DOM.
-  tip.style.pointerEvents = "none";
-
-  const title = document.createElement("div");
-  title.className = "demographics-history-tip-title";
-  title.textContent = t(content.title);
-  tip.appendChild(title);
-
-  const body = document.createElement("div");
-  body.className = "demographics-history-tip-body";
-  content.lines.forEach((loc, i) => {
-    const line = document.createElement("div");
-    line.className = "demographics-history-tip-line";
-    // Last line is the call-to-action - accent it.
-    if (i === content.lines.length - 1) line.classList.add("demographics-history-tip-line-action");
-    line.textContent = t(loc);
-    body.appendChild(line);
-  });
-  tip.appendChild(body);
-
-  return tip;
-}
-
-/**
- * Build a disabled (greyed, non-clickable) filter pill carrying the cross-age
- * tooltip. Clicks are swallowed so audio + selection never fire.
- * @param {TimeFilterDef} f The filter definition.
- * @returns {HTMLElement} The disabled pill element.
- */
-function buildDisabledFilterPill(f) {
-  const pill = document.createElement("div");
-  pill.className = "demographics-chart-time-filter-pill";
-  // Visual greying via color / border alpha rather than CSS
-  // `opacity`. Opacity compounds onto children, which would
-  // dim the disabled-filter tooltip below to the point of
-  // illegibility; muting the foreground colors instead leaves
-  // the tooltip free to render at full strength. See the
-  // `.demographics-chart-time-filter-pill.is-disabled` rule.
-  pill.classList.add("is-disabled");
-  pill.textContent = t(f.label);
-  attachDisabledFilterTooltip(pill);
-  // Swallow clicks so audio + selection don't fire.
-  pill.addEventListener("click", (ev) => {
-    ev?.stopPropagation?.();
-    ev?.preventDefault?.();
-  });
-  return pill;
-}
-
-/**
  * Build an enabled filter pill wired to `onSelect`, marked active when its id
  * matches `activeFilter`.
  * @param {TimeFilterDef} f The filter definition.
@@ -424,25 +272,19 @@ function buildEnabledFilterPill(f, activeFilter, onSelect) {
 /**
  * Build the pill row of time-range filter buttons. Same single-div pattern that
  * works in view-relations.js - class + textContent + click handler. Persists
- * the active filter via `onSelect` (round-trips through settings). Filters
- * flagged `disabled` render greyed and non-clickable with a custom HTML tooltip
- * (Coherent ignores native `title`).
+ * the active filter via `onSelect` (round-trips through settings). Every filter
+ * in {@link TIME_FILTERS} is rendered; a def may opt out by setting `disabled`
+ * (none do by default).
  * @param {string} activeFilter Currently active filter id.
  * @param {(id: string) => void} onSelect Called with the chosen filter id.
  * @returns {HTMLElement} The filter-row element.
  */
 export function buildTimeFilterRow(activeFilter, onSelect) {
   const row = document.createElement("div");
-  // Row needs to be the positioning context for absolutely-placed
-  // tooltips on disabled pills (the pill itself is a flex child and
-  // its own bounds are too narrow for a multi-line tooltip) - see the
-  // position:relative in the .demographics-chart-time-filter-row rule.
   row.className = "demographics-chart-time-filter-row font-body text-xs";
   for (const f of TIME_FILTERS) {
-    const pill = f.disabled
-      ? buildDisabledFilterPill(f)
-      : buildEnabledFilterPill(f, activeFilter, onSelect);
-    row.appendChild(pill);
+    if (f.disabled) continue;
+    row.appendChild(buildEnabledFilterPill(f, activeFilter, onSelect));
   }
   return row;
 }

@@ -79,14 +79,14 @@ dlog("module evaluating");
 /** The view tabs, in display order. The first entry is the default view. */
 /** @type {ViewTab[]} */
 const VIEW_TABS = [
-  { id: "history", label: "LOC_DEMOGRAPHICS_TAB_HISTORY" },
-  { id: "rankings", label: "LOC_DEMOGRAPHICS_TAB_RANKINGS" },
-  { id: "relations", label: "LOC_DEMOGRAPHICS_TAB_RELATIONS" }
+  { id: "statistics", label: "LOC_DEMOGRAPHICS_TAB_STATISTICS" },
+  { id: "migration", label: "LOC_DEMOGRAPHICS_TAB_MIGRATION" },
+  { id: "geopolitics", label: "LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" },
+  { id: "rankings", label: "LOC_DEMOGRAPHICS_TAB_RANKINGS" }
 ];
 
-/** Filters disabled in the runtime (see CROSS_AGE_DISABLED_TOOLTIP). "all" is the
- * default time window; only the per-age presets remain disabled. */
-const DISABLED_FILTERS = new Set(["age1", "age2", "age3"]);
+/** Hub view ids that render through the (generalized) history machinery, scoped to the hub. */
+const HUB_VIEWS = new Set(["statistics", "migration", "geopolitics"]);
 
 /**
  * Run `fn`, returning its result, or `fb` if it throws. Never throws.
@@ -112,7 +112,7 @@ function safeCall(fn, fb) {
  */
 class ScreenDemographics extends Panel {
   /** @type {string} The active top-level view id (one of {@link VIEW_TABS}). */
-  activeView = "history";
+  activeView = "statistics";
   /** @type {string} The active history metric id. */
   activeMetric = "score";
   /** @type {string} The active worldrankings-allcivs/history page id. */
@@ -187,8 +187,22 @@ class ScreenDemographics extends Panel {
     // Mirror the (possibly persisted) analytics policy to GameConfiguration up front, so the
     // companion Emigration tabs read the player's live choice instead of the wiped localStorage.
     safeCall(() => publishEffectivePolicy());
+    // Live-refresh hook: while this screen is open, a change to any Demographics option in the
+    // native Options screen calls this to re-publish the policy + re-render, so toggles (e.g. Spoil
+    // Guard) take effect immediately instead of needing a close/reopen. Cleared on detach.
+    /** @type {*} */ (globalThis).DemographicsLiveRefresh =
+      () => safeCall(() => this._liveRefresh());
     this._wireCloseButton();
     this._loadModulesThenRender();
+  }
+
+  /**
+   * Re-publish the effective analytics policy and re-render the active view. Invoked by the global
+   * live-refresh hook when an option changes while this screen is open.
+   */
+  _liveRefresh() {
+    safeCall(() => publishEffectivePolicy());
+    this.renderActiveView();
   }
 
   /**
@@ -237,14 +251,14 @@ class ScreenDemographics extends Panel {
 
   /**
    * Restore the active view / metric / page / time-filter state from
-   * persisted settings. Coerces away now-disabled filters and migrates the
-   * legacy scalar time filter into the per-metric map.
+   * persisted settings. Migrates the legacy scalar time filter into the
+   * per-metric map.
    */
   _restoreState() {
-    // Always OPEN to Historical Data → Economy → Score, regardless of the last
+    // Always OPEN to Global Statistics → Economy → Score, regardless of the last
     // session's location. (Within a session the user's navigation still persists
     // and updates these settings; we just ignore the stored values on each open.)
-    this.activeView = "history";
+    this.activeView = "statistics";
     this.activeMetric = "score";
     this.activePage = "economy";
     this._restoreTimeFilters();
@@ -269,26 +283,20 @@ class ScreenDemographics extends Panel {
    * Each metric remembers its own last-chosen filter, defaulting to "age"
    * (Current Age) - except the wars Gantt, which defaults to "50" (a 50-year
    * window) so users land on a useful slice instead of a centuries-wide pile.
-   * "all" (All Time) is the default window; only the per-age presets
-   * ("age1"/"age2"/"age3") remain disabled in the runtime. The legacy scalar
-   * `activeTimeFilter` is kept as the fallback so existing user settings migrate
-   * cleanly; a now-disabled value coerces to "age".
+   * "all" (All Time) is the default window. The cross-age presets
+   * ("age1"/"age2"/"age3") are honored and persist like any other filter, now
+   * that history is retained across ages. The legacy scalar `activeTimeFilter`
+   * is kept as the fallback so existing user settings migrate cleanly;
+   * `resolveActiveFilterState` coerces any unknown id to "all" at render time.
    */
   _restoreTimeFilters() {
     const legacyFilter = this.settings.getSetting("activeTimeFilter", "all");
     const storedMap = this.settings.getSetting("timeFiltersByMetric", null);
     this.timeFiltersByMetric = storedMap && typeof storedMap === "object" ? storedMap : {};
-    // Migrate any persisted disabled selections to "age".
-    for (const k of Object.keys(this.timeFiltersByMetric)) {
-      if (DISABLED_FILTERS.has(this.timeFiltersByMetric[k])) {
-        this.timeFiltersByMetric[k] = "age";
-      }
-    }
     if (!this.timeFiltersByMetric.wars_gantt) {
       this.timeFiltersByMetric.wars_gantt = "50";
     }
-    const resolvedLegacy = DISABLED_FILTERS.has(legacyFilter) ? "age" : legacyFilter;
-    this.activeTimeFilter = this.timeFiltersByMetric[this.activeMetric] || resolvedLegacy;
+    this.activeTimeFilter = this.timeFiltersByMetric[this.activeMetric] || legacyFilter;
   }
 
   /**
@@ -390,16 +398,17 @@ class ScreenDemographics extends Panel {
    */
   _visibleViewTabs() {
     const base = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
-    // Companion mods can contribute a top-level view tab (a `topLevel` registerPanel). Insert those
-    // right after Historical Data, in registration order.
+    // Companion mods can contribute a top-level view tab (a legacy `topLevel` registerPanel, e.g.
+    // an un-updated Emigration). Until Phase 3 moves them INTO the Migration hub, insert them right
+    // after Migration so they read as migration-adjacent, in registration order.
     const ext = this._topLevelPanelTabs();
     /** @type {ViewTab[]} */
     const visibleTabs = [];
     for (const v of base) {
       visibleTabs.push(v);
-      if (v.id === "history") visibleTabs.push(...ext);
+      if (v.id === "migration") visibleTabs.push(...ext);
     }
-    if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "history";
+    if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "statistics";
     return visibleTabs;
   }
 
@@ -445,6 +454,14 @@ class ScreenDemographics extends Panel {
     if (!id || id === this.activeView) return;
     dlog("view-tab-selected:", id);
     this.activeView = id;
+    // Open the new hub on its FIRST page + first metric/member, not a stale prior selection, so
+    // e.g. Migration always lands on "Population & Migration" → Population. (Resets in-memory; the
+    // resolver picks the first visible page/metric.)
+    this.activePage = "";
+    this.activeMetric = "";
+    safeCall(() => ViewHistory.resetGroupSelections());
+    // Rankings always opens on its first sub-tab (Civilization Ranking), not a stale prior sub-tab.
+    if (id === "rankings") safeCall(() => this.settings.setSetting("settlementsSubTab", "civranking"));
     safeCall(() => this.settings.setSetting("activeView", id));
     this.renderActiveView();
   }
@@ -465,11 +482,11 @@ class ScreenDemographics extends Panel {
    * render errors are logged, not thrown.
    */
   renderActiveView() {
-    // The Historical Data view and companion top-level panels render the policy banner INSIDE the view
-    // (at the bottom); every other view (Rankings / Relations) shows it via the banner-host, which now
-    // sits BELOW the view host so it lands at the bottom too. Either way the banner-host is cleared so
-    // a stale banner never lingers across view switches.
-    const usesHistoryRender = this.activeView === "history"
+    // The Historical Data view and companion top-level panels render the policy banner INSIDE the
+    // view (at the bottom); every other view (Rankings / Relations) shows it via the banner-host,
+    // which now sits BELOW the view host so it lands at the bottom too. Either way the banner-host
+    // is cleared so a stale banner never lingers across view switches.
+    const usesHistoryRender = HUB_VIEWS.has(this.activeView)
       || this._topLevelPanelTabs().some((v) => v.id === this.activeView);
     safeCall(() => this._renderPolicyBanner(usesHistoryRender));
     const host = this.Root.querySelector(".demographics-view-host");
@@ -495,8 +512,8 @@ class ScreenDemographics extends Panel {
    */
   /**
    * Render (or clear) the analytics-governance policy banner in the screen-level banner host.
-   * @param {boolean} [renderedInView] When true the active view renders the banner itself (below its
-   *   sub-tabs), so this only clears the host to avoid a duplicate.
+   * @param {boolean} [renderedInView] When true the active view renders the banner itself (below
+   *   its sub-tabs), so this only clears the host to avoid a duplicate.
    */
   _renderPolicyBanner(renderedInView) {
     const banhost = this.Root.querySelector(".demographics-policy-banner-host");
@@ -512,22 +529,19 @@ class ScreenDemographics extends Panel {
    * @param {HTMLElement} host The cleared view-host element.
    */
   _dispatchView(host) {
-    // A companion top-level panel (e.g. Emigration): render the history machinery pinned to that
-    // panel's page (its sub-tabs + native charts), with no page-tab row.
+    // A companion top-level panel (e.g. a legacy Emigration): render the history machinery pinned
+    // to that panel's page (its sub-tabs + native charts), with no page-tab row.
     if (this._topLevelPanelTabs().some((v) => v.id === this.activeView)) {
-      this._renderHistoricalDataView(host, this.activeView);
+      this._renderHistoricalDataView(host, { onlyPage: this.activeView });
       return;
     }
-    switch (this.activeView) {
-      case "rankings":
-      case "relations":
-        this._renderLazyView(host, this.activeView);
-        break;
-      case "history":
-      default:
-        this._renderHistoricalDataView(host);
-        break;
+    // Rankings is its own (settlements) view; the three metric hubs render the history machinery
+    // scoped to the hub's pages.
+    if (this.activeView === "rankings") {
+      this._renderLazyView(host, this.activeView);
+      return;
     }
+    this._renderHistoricalDataView(host, { hub: HUB_VIEWS.has(this.activeView) ? this.activeView : "statistics" });
   }
 
   /**
@@ -564,16 +578,17 @@ class ScreenDemographics extends Panel {
    * re-render is skipped if the user navigated away while the import was in
    * flight.
    * @param {HTMLElement} host The cleared view-host element.
-   * @param {string} [pinnedPage] When set, render only that page pinned (a companion top-level panel
-   *   like Emigration) with no page-tab row, instead of the full Historical Data view.
+   * @param {{hub?:string, onlyPage?:string}} [opts] `hub` scopes the page row to one hub;
+   *   `onlyPage` pins a single companion page (no page-tab row). Omit both for the legacy
+   *   all-pages view.
    */
-  _renderHistoricalDataView(host, pinnedPage) {
-    const opts = pinnedPage ? { onlyPage: pinnedPage } : undefined;
+  _renderHistoricalDataView(host, opts) {
+    const onlyPage = opts && opts.onlyPage;
     const metric = this.activeMetric;
-    // The lazy-chart path only applies to the full Historical Data view (its heavy Conflicts/Crises
-    // metrics); a pinned companion page renders synchronously.
+    // The lazy-chart path applies to the hub views' heavy Wars/Crises metrics; a pinned companion
+    // page renders synchronously.
     if (
-      !pinnedPage &&
+      !onlyPage &&
       this.chartMod &&
       typeof this.chartMod.ensureChartForMetric === "function" &&
       LAZY_CHART_METRICS.has(metric)
@@ -581,9 +596,9 @@ class ScreenDemographics extends Panel {
       this.chartMod
         .ensureChartForMetric(metric)
         .then(() => {
-          if (this.activeView !== "history" || this.activeMetric !== metric) return;
+          if (!HUB_VIEWS.has(this.activeView) || this.activeMetric !== metric) return;
           while (host.firstChild) host.removeChild(host.firstChild);
-          ViewHistory.render(host, buildHistoryContext(this));
+          ViewHistory.render(host, buildHistoryContext(this), opts);
         })
         .catch((/** @type {*} */ e) => derr("lazy chart load failed:", metric, e));
       return;
@@ -690,6 +705,8 @@ class ScreenDemographics extends Panel {
    */
   onDetach() {
     dlog("onDetach");
+    // stop options from poking a closed screen
+    /** @type {*} */ (globalThis).DemographicsLiveRefresh = null;
     if (this.viewTabBar && this.viewTabBarListener) {
       safeCall(() => this.viewTabBar.removeEventListener("tab-selected", this.viewTabBarListener));
     }
@@ -702,10 +719,11 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Panel lifecycle: another context was pushed ON TOP of us (e.g. the native Options screen, opened
-   * from the Options button). Our window is `position:fixed; z-index:90` to float above queued dock
-   * popups, which would also float it above that pushed screen — so drop our stacking while we're not
-   * the focused context, letting the screen on top show and be usable. Restored in onReceiveFocus.
+   * Panel lifecycle: another context was pushed ON TOP of us (e.g. the native Options screen,
+   * opened from the Options button). Our window is `position:fixed; z-index:90` to float above
+   * queued dock popups, which would also float it above that pushed screen, so drop our stacking
+   * while we're not the focused context, letting the screen on top show and be usable. Restored in
+   * onReceiveFocus.
    */
   onLoseFocus() {
     this.Root.classList.add("demographics-screen-obscured");
@@ -714,7 +732,7 @@ class ScreenDemographics extends Panel {
 
   /**
    * Panel lifecycle: the context on top of us was popped (e.g. the Options screen closed) and we're
-   * the focused context again — restore our stacking so we float above queued popups as before.
+   * the focused context again, restore our stacking so we float above queued popups as before.
    */
   onReceiveFocus() {
     this.Root.classList.remove("demographics-screen-obscured");

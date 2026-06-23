@@ -16,9 +16,9 @@ const COMPLEXITY_ITEMS = [
   { label: "LOC_DEMOGRAPHICS_TIER_ANALYST" }
 ];
 
-// Reveal mode (formerly the Spoilers dropdown): "full" reveals a civ's back-history on first contact,
-// "forward" tracks only from the meeting. Persisted as the legacy `backfillMetHistory` boolean. Each
-// item carries the stored `value` for its index alongside its display `label`.
+// Reveal mode (formerly the Spoilers dropdown): "full" reveals a civ's back-history on first
+// contact, "forward" tracks only from the meeting. Persisted as the legacy `backfillMetHistory`
+// boolean. Each item carries the stored `value` for its index alongside its display `label`.
 const REVEAL_ITEMS = [
   { value: true, label: "LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" },
   { value: false, label: "LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" }
@@ -35,6 +35,19 @@ function getBool(/** @type {string} */ key, /** @type {*} */ fallback) {
 }
 
 /**
+ * Poke the open Demographics screen to re-render after an option change, so toggles take effect
+ * live
+ * (the screen installs `globalThis.DemographicsLiveRefresh` while open; no-op when it's closed).
+ */
+function notifyLiveRefresh() {
+  try {
+    /** @type {*} */ (globalThis).DemographicsLiveRefresh?.();
+  } catch (_) {
+    /* screen not open / hook absent */
+  }
+}
+
+/**
  * Register a plain Demographics checkbox setting under Mods → Demographics.
  * @param {string} id The option id.
  * @param {string} key The DemographicsSettings key.
@@ -48,7 +61,10 @@ function registerCheckbox(id, key, dflt, label) {
     type: OptionType.Checkbox,
     id,
     initListener: (/** @type {*} */ info) => (info.currentValue = getBool(key, dflt)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => DemographicsSettings.setSetting(key, !!value),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
+      DemographicsSettings.setSetting(key, !!value);
+      notifyLiveRefresh();
+    },
     label
   });
 }
@@ -76,6 +92,7 @@ function registerDropdown(id, key, items, dflt, label) {
       if (Number.isInteger(idx) && idx >= 0 && idx < items.length) {
         DemographicsSettings.setSetting(key, items[idx].value);
       }
+      notifyLiveRefresh();
     },
     label,
     dropdownItems: items.map((it) => ({ label: it.label }))
@@ -95,6 +112,7 @@ function registerHideUnmet() {
         hideUnmetStats: enabled,
         showUnmetNames: !enabled
       });
+      notifyLiveRefresh();
     },
     label: "LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS",
     description: "LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO"
@@ -108,7 +126,10 @@ function registerColorblind() {
     type: OptionType.Checkbox,
     id: "demographics-colorblind-mode",
     initListener: (/** @type {*} */ info) => (info.currentValue = getBool("colorblindMode", false)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => DemographicsSettings.setSetting("colorblindMode", !!value),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
+      DemographicsSettings.setSetting("colorblindMode", !!value);
+      notifyLiveRefresh();
+    },
     label: "LOC_DEMOGRAPHICS_OPT_COLORBLIND"
   });
 }
@@ -120,8 +141,10 @@ function registerWonderMarkers() {
     type: OptionType.Checkbox,
     id: "demographics-show-wonder-markers",
     initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showWonderMarkers", true)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) =>
-      DemographicsSettings.setSetting("showWonderMarkers", !!value),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
+      DemographicsSettings.setSetting("showWonderMarkers", !!value);
+      notifyLiveRefresh();
+    },
     label: "LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS"
   });
 }
@@ -133,8 +156,10 @@ function registerWarMarkers() {
     type: OptionType.Checkbox,
     id: "demographics-show-war-markers",
     initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showWarMarkers", true)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) =>
-      DemographicsSettings.setSetting("showWarMarkers", !!value),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
+      DemographicsSettings.setSetting("showWarMarkers", !!value);
+      notifyLiveRefresh();
+    },
     label: "LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS"
   });
 }
@@ -146,8 +171,10 @@ function registerDisasterMarkers() {
     type: OptionType.Checkbox,
     id: "demographics-show-disaster-markers",
     initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showDisasterMarkers", true)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) =>
-      DemographicsSettings.setSetting("showDisasterMarkers", !!value),
+    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
+      DemographicsSettings.setSetting("showDisasterMarkers", !!value);
+      notifyLiveRefresh();
+    },
     label: "LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS"
   });
 }
@@ -167,6 +194,7 @@ function registerComplexity() {
       const idx = Number(value);
       if (!Number.isInteger(idx) || idx < 0 || idx >= COMPLEXITY_VALUES.length) return;
       DemographicsSettings.setSetting("uiComplexity", COMPLEXITY_VALUES[idx]);
+      notifyLiveRefresh();
     },
     label: "LOC_DEMOGRAPHICS_OPT_COMPLEXITY",
     description: "LOC_DEMOGRAPHICS_TIER_STANDARD_DESC",
@@ -192,7 +220,7 @@ Options.addInitCallback(() => {
     "LOC_DEMOGRAPHICS_OPT_CINEMATIC");
   registerCheckbox("demographics-flyby", "topCities.flybyEnabled", true,
     "LOC_DEMOGRAPHICS_OPT_FLYBY");
-  registerDropdown("demographics-flyby-preset", "topCities.flybyPreset", FLYBY_ITEMS, "short",
+  registerDropdown("demographics-flyby-preset", "topCities.flybyPreset", FLYBY_ITEMS, "medium",
     "LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET");
   registerCheckbox("demographics-flyby-rotate", "topCities.flybyAllowRotate", true,
     "LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE");

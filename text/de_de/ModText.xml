@@ -77,13 +77,13 @@
             <Text>Produktion pro Runde, was Ihre Städte bauen.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="de_DE">
-            <Text>Wissenschaft</Text>
+            <Text>Science Per Turn</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="de_DE">
             <Text>Wissenschaft pro Runde, treibt die Technologieforschung an.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="de_DE">
-            <Text>Kultur</Text>
+            <Text>Culture Per Turn</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="de_DE">
             <Text>Kultur pro Runde, treibt den Ausrichtungsfortschritt an.</Text>
@@ -737,7 +737,7 @@
             <Text>Zum Ausblenden klicken</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="de_DE">
-            <Text>Triumph-Radar, alle Zivs, alle 6 Attributpfade</Text>
+            <Text>Triumphs Radar</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="de_DE">
             <Text>Triumphe im Zeitverlauf</Text>
@@ -2004,5 +2004,43 @@
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="de_DE"><Text>Flüchtlinge</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="de_DE"><Text>Bevölkerung, die während des Krieges durch Belagerung, Plünderung oder Eroberung vertrieben und anderswo neu angesiedelt wurde, beigesteuert vom Emigration-Mod, sofern installiert.</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="de_DE"><Text>Global Statistics</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="de_DE"><Text>Migration</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="de_DE"><Text>Geopolitics</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="de_DE"><Text>Science &amp; Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="de_DE"><Text>Society</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="de_DE"><Text>Expansion</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="de_DE"><Text>Population</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="de_DE"><Text>Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="de_DE"><Text>Wars</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="de_DE"><Text>Relations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="de_DE"><Text>Agreements</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="de_DE"><Text>Gross Domestic Product (GDP)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="de_DE"><Text>Gold Per Turn (GPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="de_DE"><Text>Production Per Turn (PPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="de_DE"><Text>Crop Yield (Food Per Turn)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="de_DE"><Text>Number of Trade Routes over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="de_DE"><Text>Total Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="de_DE"><Text>Bonus Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="de_DE"><Text>Empire Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="de_DE"><Text>City Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="de_DE"><Text>Treasure Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="de_DE"><Text>Factory Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="de_DE"><Text>Count of Techs Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="de_DE"><Text>Count of Civics Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="de_DE"><Text>Happiness Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="de_DE"><Text>Influence Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="de_DE"><Text>Settlements Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="de_DE"><Text>Settlement Cap Utilization Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="de_DE"><Text>Land Area Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="de_DE"><Text>Wonders Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="de_DE"><Text>Score Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="de_DE"><Text>Gold Reserves Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="de_DE"><Text>Diplomatic Approval Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="de_DE"><Text>Population Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="de_DE"><Text>Military Power Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="de_DE"><Text>Agreements (Count Over Time)</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="de_DE"><Text>Wars</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="de_DE"><Text>Disasters</Text></Replace>
     </LocalizedText>
 </Database>

@@ -386,9 +386,9 @@ function prepareChartData(opts, metricId) {
   const metricMeta = resolveMetricMeta(metricId);
   allSeries = collapseGlobalMetric(allSeries, metricMeta, metricId);
 
-  // Analytics-visibility policy: drop civs the policy withholds (unmet under met-only, every non-local
-  // civ under own-civ-only), so the graphs hide them like the rest of the screen and the Emigration
-  // tabs do — then showUnmetNames handles name masking for any civ that remains.
+  // Analytics-visibility policy: drop civs the policy withholds (unmet under met-only, every
+  // non-local civ under own-civ-only), so the graphs hide them like the rest of the screen and the
+  // Emigration tabs do, then showUnmetNames handles name masking for any civ that remains.
   allSeries = applyUnmetNames(applyPolicyHide(allSeries));
 
   const tr = resolveTurnRange(opts);

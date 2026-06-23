@@ -77,13 +77,13 @@
             <Text>每回合生产力，你的城市所建造的产出。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="zh_Hans_CN">
-            <Text>科学</Text>
+            <Text>Science Per Turn</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合科学，推动科技研究。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="zh_Hans_CN">
-            <Text>文化</Text>
+            <Text>Culture Per Turn</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合文化，推动公民进度。</Text>
@@ -737,7 +737,7 @@
             <Text>点击隐藏</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="zh_Hans_CN">
-            <Text>成就雷达图，所有文明，全部 6 条属性路径</Text>
+            <Text>Triumphs Radar</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="zh_Hans_CN">
             <Text>成就随时间变化</Text>
@@ -2004,5 +2004,43 @@
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="zh_Hans_CN"><Text>难民</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="zh_Hans_CN"><Text>在战争期间因围城、劫掠或征服而流离失所、并在别处重新定居的人口。由 Emigration 模组在安装时提供。</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="zh_Hans_CN"><Text>Global Statistics</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="zh_Hans_CN"><Text>Migration</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="zh_Hans_CN"><Text>Geopolitics</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="zh_Hans_CN"><Text>Science &amp; Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="zh_Hans_CN"><Text>Society</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="zh_Hans_CN"><Text>Expansion</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="zh_Hans_CN"><Text>Population</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="zh_Hans_CN"><Text>Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="zh_Hans_CN"><Text>Wars</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="zh_Hans_CN"><Text>Relations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="zh_Hans_CN"><Text>Agreements</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="zh_Hans_CN"><Text>Gross Domestic Product (GDP)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="zh_Hans_CN"><Text>Gold Per Turn (GPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="zh_Hans_CN"><Text>Production Per Turn (PPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="zh_Hans_CN"><Text>Crop Yield (Food Per Turn)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="zh_Hans_CN"><Text>Number of Trade Routes over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="zh_Hans_CN"><Text>Total Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="zh_Hans_CN"><Text>Bonus Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="zh_Hans_CN"><Text>Empire Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="zh_Hans_CN"><Text>City Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="zh_Hans_CN"><Text>Treasure Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="zh_Hans_CN"><Text>Factory Resources Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="zh_Hans_CN"><Text>Count of Techs Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="zh_Hans_CN"><Text>Count of Civics Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="zh_Hans_CN"><Text>Happiness Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="zh_Hans_CN"><Text>Influence Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="zh_Hans_CN"><Text>Settlements Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="zh_Hans_CN"><Text>Settlement Cap Utilization Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="zh_Hans_CN"><Text>Land Area Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="zh_Hans_CN"><Text>Wonders Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="zh_Hans_CN"><Text>Score Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="zh_Hans_CN"><Text>Gold Reserves Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="zh_Hans_CN"><Text>Diplomatic Approval Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="zh_Hans_CN"><Text>Population Over Time</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="zh_Hans_CN"><Text>Military Power Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="zh_Hans_CN"><Text>Agreements (Count Over Time)</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="zh_Hans_CN"><Text>Wars</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="zh_Hans_CN"><Text>Disasters</Text></Replace>
     </LocalizedText>
 </Database>

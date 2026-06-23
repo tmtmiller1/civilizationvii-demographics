@@ -81,7 +81,8 @@ const unitStrengthCache = new Map();
 const casualtyByPid = new Map();
 
 /**
- * Cumulative COUNT of each player's units killed in combat, keyed by pid. The body-count companion to
+ * Cumulative COUNT of each player's units killed in combat, keyed by pid. The body-count
+ * companion to
  * {@link casualtyByPid} (which sums combat STRENGTH); monotonic, seeded from persisted history.
  * @type {Map<number, number>}
  */
@@ -702,8 +703,9 @@ export function startWarEventTracker() {
 
 /**
  * Publish the cumulative per-civ war tallies on a read-only global surface so OTHER mods (e.g.
- * Emigration's war-severity model + its Causes-tab reporting) can read them. Additive: merges onto any
- * existing globalThis.DemographicsData. The accessors read the live counters, so values stay current.
+ * Emigration's war-severity model + its Causes-tab reporting) can read them. Additive: merges onto
+ * any existing globalThis.DemographicsData. The accessors read the live counters, so values stay
+ * current.
  */
 function exposeWarData() {
   try {

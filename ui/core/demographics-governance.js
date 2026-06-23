@@ -50,7 +50,7 @@ export const POLICY_ORDER = [POLICY_DISABLED, POLICY_OWN, POLICY_MET, POLICY_FUL
 const HOST_POLICY_KEY = "DemographicsAnalyticsPolicy_v1";
 
 // GameConfiguration key holding the EFFECTIVE policy this client resolved (host ceiling ∧ local
-// preference). Published here so companion mods (Emigration) can read the live value reliably — the
+// preference). Published here so companion mods (Emigration) can read the live value reliably, the
 // Coherent UI localStorage they'd otherwise read is wiped between reads, so a direct read of our
 // settings slice returns stale/empty and the companion can't see the player's choice.
 const EFFECTIVE_POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
@@ -72,8 +72,11 @@ function asPolicy(v) {
  */
 export function localPolicy() {
   try {
-    const explicit = asPolicy(DemographicsSettings.getSetting("analyticsPolicy", null));
-    if (explicit) return explicit;
+    // The Spoil Guard checkbox (`hideUnmetStats`, default ON) is the single local control: ON
+    // hides unmet civilizations (met-civs-only), OFF reveals all. The legacy `analyticsPolicy`
+    // override was
+    // dropped here — it had no UI, so a stale stored value silently disabled the checkbox (the bug
+    // where toggling Spoil Guard did nothing). Defaults to met-civs-only (hide) when unset.
     const hideUnmet = DemographicsSettings.getSetting("hideUnmetStats", true) !== false;
     return hideUnmet ? POLICY_MET : POLICY_FULL;
   } catch (_) {

@@ -4,19 +4,29 @@
 
 import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 
+// Hub reorg: pages whose ids were retired/split. A persisted selection lands on the closest
+// surviving page when its hub is the one being shown (else the first-visible clamp below takes
+// over).
+/** @type {Record<string, string>} */
+const PAGE_ID_ALIASES = { power: "expansion", knowledge: "science_culture", conflicts: "wars" };
+
 /**
- * Resolve active page id, defaulting to economy when invalid. Under a UI
- * complexity tier (P1.5) a page hidden by the active tier clamps to the first
- * visible page so a tier downgrade never strands the view on a hidden page.
+ * Resolve active page id within the given (hub-scoped) page list, defaulting to the first page
+ * when invalid. Retired page ids are aliased first; then, under a UI complexity tier (P1.5), a page
+ * hidden
+ * by the active tier clamps to the first visible page so a downgrade never strands the view.
  * @param {*} ctx Render context.
- * @param {{ id: string }[]} pages Page list.
+ * @param {{ id: string, tier?: string }[]} pages Page list (already scoped to the active hub).
  * @returns {string} Valid, tier-visible page id.
  */
 export function resolveActivePageState(ctx, pages) {
-  let id =
-    ctx.activePage && pages.some((p) => p.id === ctx.activePage) ? ctx.activePage : "economy";
-  if (!pageVisibleInTier(id)) {
-    const firstVisible = pages.find((p) => pageVisibleInTier(p.id));
+  const fallback = pages.length ? pages[0].id : "economy";
+  let want = ctx.activePage || "";
+  if (PAGE_ID_ALIASES[want]) want = PAGE_ID_ALIASES[want];
+  let id = want && pages.some((p) => p.id === want) ? want : fallback;
+  const def = pages.find((p) => p.id === id);
+  if (def && !pageVisibleInTier(def)) {
+    const firstVisible = pages.find((p) => pageVisibleInTier(p));
     id = firstVisible ? firstVisible.id : id;
   }
   return id;
@@ -25,15 +35,16 @@ export function resolveActivePageState(ctx, pages) {
 /**
  * Resolve active metric id within a page, falling back to first renderable.
  * @param {*} ctx Render context.
- * @param {{ metrics: string[] }} page Active page.
+ * @param {{ metrics?: string[] }} page Active page.
  * @param {(id: string) => boolean} metricExists Metric-existence predicate.
  * @returns {string} Valid metric id.
  */
 export function resolveActiveMetricState(ctx, page, metricExists) {
+  const metrics = page.metrics || [];
   let activeMetric = ctx.activeMetric || "";
-  const activeInPage = page.metrics.includes(activeMetric) && metricExists(activeMetric);
+  const activeInPage = metrics.includes(activeMetric) && metricExists(activeMetric);
   if (!activeInPage) {
-    activeMetric = page.metrics.find(metricExists) || "score";
+    activeMetric = metrics.find(metricExists) || "score";
   }
   return activeMetric;
 }

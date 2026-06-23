@@ -90,13 +90,13 @@
             <Text>Production generated per turn.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD">
-            <Text>Science</Text>
+            <Text>Science Per Turn</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP">
             <Text>Science per turn, drives technology research.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD">
-            <Text>Culture</Text>
+            <Text>Culture Per Turn</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP">
             <Text>Culture per turn, drives civics progress.</Text>
@@ -564,7 +564,7 @@
             <Text>Display</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO">
-            <Text>Hide information for civilizations you haven't met (spoiler)</Text>
+            <Text>Hide information and stats for civilizations you haven't met yet.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE">
             <Text>On first contact</Text>
@@ -1056,7 +1056,7 @@
             <Text>Click to hide</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE">
-            <Text>Triumph Radar, all civs, all 6 attribute paths</Text>
+            <Text>Triumphs Radar</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE">
             <Text>Triumphs Over Time</Text>
@@ -1684,7 +1684,7 @@
             <Text>Downsampling disabled, keeping every sample.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS">
-            <Text>Hide diplomacy/relations stats for civilizations you haven't met</Text>
+            <Text>Spoil Guard</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY">
             <Text>Reveal full history when you meet a civilization</Text>
@@ -2086,6 +2086,120 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES">
             <Text>Crisis stages and their per-civilization costs.</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS">
+            <Text>Global Statistics</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION">
+            <Text>Migration</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS">
+            <Text>Geopolitics</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE">
+            <Text>Science &amp; Culture</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY">
+            <Text>Society</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION">
+            <Text>Expansion</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY">
+            <Text>Military</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_WARS">
+            <Text>Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS">
+            <Text>Relations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS">
+            <Text>Agreements</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE">
+            <Text>Gross Domestic Product (GDP)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE">
+            <Text>Gold Per Turn (GPT)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE">
+            <Text>Production Per Turn (PPT)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE">
+            <Text>Crop Yield (Food Per Turn)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE">
+            <Text>Number of Trade Routes over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE">
+            <Text>Total Resources Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE">
+            <Text>Bonus Resources Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE">
+            <Text>Empire Resources Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE">
+            <Text>City Resources Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE">
+            <Text>Treasure Resources Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE">
+            <Text>Factory Resources Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE">
+            <Text>Count of Techs Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE">
+            <Text>Count of Civics Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE">
+            <Text>Happiness Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE">
+            <Text>Influence Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE">
+            <Text>Settlements Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE">
+            <Text>Settlement Cap Utilization Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE">
+            <Text>Land Area Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE">
+            <Text>Wonders Over Time</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE">
+            <Text>Score Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE">
+            <Text>Gold Reserves Over Time</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE">
+            <Text>Diplomatic Approval Over Time</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE">
+            <Text>Population Over Time</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE">
+            <Text>Military Power Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE">
+            <Text>Agreements (Count Over Time)</Text>
+        </Row>
+            <Row Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS">
+            <Text>Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS">
+            <Text>Disasters</Text>
         </Row>
     </EnglishText>
 </Database>

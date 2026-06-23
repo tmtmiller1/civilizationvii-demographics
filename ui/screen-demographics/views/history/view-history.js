@@ -20,6 +20,7 @@ import {
   EXTERNAL_PAGE_METRICS,
   EXTERNAL_PANELS,
   EXTERNAL_METRIC_GROUPS,
+  EXTERNAL_HUB_PAGES,
   PANEL_SUBTAB_SEP
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
@@ -33,7 +34,7 @@ import {
   buildPolicyBanner
 } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
-import { buildToolbar } from "/demographics/ui/screen-demographics/views/history/history-controls.js";
+import { buildToolbar, buildRadarSnapshotRow, buildWarGraphsPicker } from "/demographics/ui/screen-demographics/views/history/history-controls.js";
 import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 import {
   TIME_FILTERS,
@@ -63,7 +64,14 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @typedef {Object} PageDef
  * @property {string} id Stable page id.
  * @property {string} label Localization key for the page tab label.
- * @property {string[]} metrics Metric ids in display order.
+ * @property {string} [hub] Owning hub id ("statistics" | "migration" | "geopolitics").
+ *   Pages without a hub (legacy/external metric pages) are not shown under any hub.
+ * @property {string} [tier] Min UI-complexity tier ("basic" | "standard" | "analyst");
+ *   default standard.
+ * @property {string[]} [metrics] Metric ids in display order (a line/synthetic page).
+ *   EXCLUSIVE with `render`.
+ * @property {(host: HTMLElement, ctx: *) => void} [render] Custom view as a page (e.g.
+ *   Relations). EXCLUSIVE with `metrics`.
  */
 
 /**
@@ -163,52 +171,22 @@ function derr(...a) {
  * @type {PageDef[]}
  */
 export const PAGES = [
+  // ── GLOBAL STATISTICS hub ───────────────────────────────────────────────
   {
     id: "economy",
     label: "LOC_DEMOGRAPHICS_PAGE_ECONOMY",
+    hub: "statistics",
+    tier: "basic",
     metrics: ["score", "gdp", "gold", "gpt", "production", "crops", "trade"]
   },
   {
-    id: "power",
-    label: "LOC_DEMOGRAPHICS_PAGE_POWER",
-    metrics: ["milpower", "population", "settlements", "settlement_cap_pct", "land", "wonders"]
-  },
-  {
-    id: "knowledge",
-    label: "LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE",
-    metrics: [
-      "techs",
-      "civics",
-      "science_yield",
-      "culture_yield",
-      "influence",
-      "hpt",
-      "approval",
-      "deals"
-    ]
-  },
-  {
-    // Civ7 Test of Time triumph dashboard + crisis stage. All four
-    // triumph views are SYNTHETIC metrics - they route to dedicated
-    // renderers in demographics-chart.js rather than the line-chart
-    // pipeline. The per-attribute line graphs were removed; a step-
-    // counter over hundreds of turns is poor info density next to the
-    // radar / race / completion / stack views below.
-    id: "age",
-    label: "LOC_DEMOGRAPHICS_PAGE_AGE",
-    // `triumphs_race` and `triumphs_completion` removed - per-civ progress
-    // bars now ride on the native Legacies → Triumphs cards via the
-    // standalone `triumphs-progress-overlay` mod. Cloning them inside Info
-    // Addict was redundant once the in-game cards carry the same data.
-    metrics: ["legacy_radar"]
-  },
-  {
-    // Resource-allocation page. First metric is a stacked-area page-
-    // level view showing the LOCAL player's per-category resource
-    // count over time; the rest are per-category line charts that
-    // compare ALL civs in the standard chart pipeline.
+    // Resource-allocation page. First metric is a stacked-area page-level view of the
+    // LOCAL player's per-category resource count over time; the rest are per-category
+    // line charts comparing ALL civs.
     id: "resources",
     label: "LOC_DEMOGRAPHICS_PAGE_RESOURCES",
+    hub: "statistics",
+    tier: "standard",
     metrics: [
       "resources_stack",
       "resources_total",
@@ -220,20 +198,126 @@ export const PAGES = [
     ]
   },
   {
-    // Conflicts page: Gantt chart of every war this game has seen.
-    // Tracked by the sampler against `history.wars`.
-    id: "conflicts",
-    label: "LOC_DEMOGRAPHICS_PAGE_CONFLICTS",
+    // The two advancement tracks: research (science→techs) and culture (culture→civics), yield then
+    // count, kept adjacent. Pills: Science · Techs · Culture · Civics.
+    id: "science_culture",
+    label: "LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE",
+    hub: "statistics",
+    tier: "basic",
+    metrics: ["science_yield", "techs", "culture_yield", "civics"]
+  },
+  {
+    // Governance / social standing.
+    id: "society",
+    label: "LOC_DEMOGRAPHICS_PAGE_SOCIETY",
+    hub: "statistics",
+    tier: "basic",
+    metrics: ["approval", "hpt", "influence"]
+  },
+  {
+    // Empire footprint.
+    id: "expansion",
+    label: "LOC_DEMOGRAPHICS_PAGE_EXPANSION",
+    hub: "statistics",
+    tier: "basic",
+    metrics: ["settlements", "settlement_cap_pct", "land", "wonders"]
+  },
+  {
+    // Civ7 Test of Time triumph dashboard. `legacy_radar` is a SYNTHETIC metric routing
+    // to a dedicated renderer rather than the line-chart pipeline.
+    id: "age",
+    label: "LOC_DEMOGRAPHICS_PAGE_AGE",
+    hub: "statistics",
+    tier: "standard",
+    metrics: ["legacy_radar"]
+  },
+
+  // ── MIGRATION hub ───────────────────────────────────────────────────────
+  {
+    // Population is the Migration hub's headline + anchor. Standalone Demographics shows
+    // only this; the Emigration companion injects the rest of the hub after it (Phase 3).
+    id: "population",
+    label: "LOC_DEMOGRAPHICS_PAGE_POPULATION",
+    hub: "migration",
+    tier: "basic",
+    metrics: ["population"]
+  },
+
+  // ── GEOPOLITICS hub ─────────────────────────────────────────────────────
+  {
+    // Diplomacy. A RENDER page (the former top-level Relations view). First in the hub +
+    // the default page loaded when Geopolitics is selected.
+    id: "relations",
+    label: "LOC_DEMOGRAPHICS_PAGE_RELATIONS",
+    hub: "geopolitics",
+    tier: "basic",
+    render: renderRelationsPage
+  },
+  {
+    id: "military",
+    label: "LOC_DEMOGRAPHICS_PAGE_MILITARY",
+    hub: "geopolitics",
+    tier: "basic",
+    metrics: ["milpower"]
+  },
+  {
+    // Gantt + graphs of every war this game has seen (sampler `history.wars`).
+    id: "wars",
+    label: "LOC_DEMOGRAPHICS_PAGE_WARS",
+    hub: "geopolitics",
+    tier: "standard",
     metrics: ["wars_gantt", "war_graphs"]
   },
   {
-    // Crises page: the current age's crisis broken into its stages, each with a
-    // permanent per-civ cost section (the war-tooltip table sans war-only rows).
+    // The current age's crisis, broken into stages with a per-civ cost section.
     id: "crises",
     label: "LOC_DEMOGRAPHICS_PAGE_CRISES",
+    hub: "geopolitics",
+    tier: "standard",
     metrics: ["crisis_stages", "crisis_graphs"]
+  },
+  {
+    id: "agreements",
+    label: "LOC_DEMOGRAPHICS_PAGE_AGREEMENTS",
+    hub: "geopolitics",
+    tier: "standard",
+    metrics: ["deals"]
   }
 ];
+
+/** Hub ids whose pages render via the (generalized) history machinery. Rankings is its own view. */
+export const HUBS = Object.freeze(["statistics", "migration", "geopolitics"]);
+
+/**
+ * Pages belonging to a hub, in display order.
+ * @param {PageDef[]} allPages The merged page list.
+ * @param {string} hub The hub id.
+ * @returns {PageDef[]} The hub's pages.
+ */
+export function pagesForHub(allPages, hub) {
+  const pages = allPages.filter((p) => p.hub === hub);
+  // When a companion fills the Migration hub, it owns Population too, folded into its
+  // combined "Population & Migration" page as the first pill, so drop the host's standalone
+  // Population page to avoid showing it twice. Standalone Demographics (no companion) keeps
+  // Population as its own page.
+  if (hub === "migration" && EXTERNAL_HUB_PAGES.some((e) => e.hubId === "migration")) {
+    return pages.filter((p) => p.id !== "population");
+  }
+  return pages;
+}
+
+/**
+ * Render the Relations diplomacy view as a Geopolitics page. Lazily imports the view
+ * module (matching the old lazy-view path) and renders it into the page body; the host
+ * was already cleared upstream.
+ * @param {HTMLElement} host The page body.
+ * @param {*} ctx Render context (carries `history`, `settings`).
+ */
+function renderRelationsPage(host, ctx) {
+  import("/demographics/ui/screen-demographics/views/relations/view-relations.js")
+    .then((mod) => mod.render(host, { history: ctx.history, settings: ctx.settings }))
+    .catch((/** @type {*} */ e) => derr("relations page load failed:", e));
+}
 
 /**
  * Synthetic "metrics" that route to a custom renderer instead of the
@@ -335,6 +419,7 @@ function buildChartHost(host, ctx, activeMetric, turnRange) {
  */
 function mergeExternalPageMetrics() {
   mergeExternalPanels();
+  mergeHubPages();
   for (const e of EXTERNAL_PAGE_METRICS) {
     const page = PAGES.find((p) => p.id === e.pageId);
     if (!page || !Array.isArray(page.metrics) || page.metrics.includes(e.metricId)) continue;
@@ -346,10 +431,36 @@ function mergeExternalPageMetrics() {
   return PAGES;
 }
 
-// Per-group selection (2D groups store {metric:idx, view:viewId}; flat groups store a metric id),
-// PERSISTED so a Scaled/Civ (and metric) choice is sticky across reopening the screen — otherwise it
-// reset to the first view each open and, via the companion-panel groupView, clobbered the Emigration
-// tabs' remembered number mode.
+/** Index of the last page belonging to `hub`, or -1. @param {string} hub @returns {number} */
+function lastHubPageIndex(hub) {
+  let li = -1;
+  PAGES.forEach((p, i) => {
+    if (p.hub === hub) li = i;
+  });
+  return li;
+}
+
+/**
+ * Fold companion-registered hub pages (registerHubPages) into PAGES, in registration
+ * order, contiguous with their hub. Idempotent: a page already present (by id) is skipped.
+ * Inserted after the hub's last current page (so they group cleanly after the host's own
+ * pages, e.g. Migration's Population anchor).
+ */
+function mergeHubPages() {
+  for (const e of EXTERNAL_HUB_PAGES) {
+    if (PAGES.some((p) => p.id === e.page.id)) continue;
+    const def = Object.assign({ tier: "standard" }, e.page, { hub: e.hubId });
+    const li = lastHubPageIndex(e.hubId);
+    const anchorIdx = li < 0 && e.after ? PAGES.findIndex((p) => p.id === e.after) : li;
+    if (anchorIdx >= 0) PAGES.splice(anchorIdx + 1, 0, def);
+    else PAGES.push(def);
+  }
+}
+
+// Per-group selection (2D groups store {metric:idx, view:viewId}; flat groups store a
+// metric id), PERSISTED so a Scaled/Civ (and metric) choice is sticky across reopening the
+// screen, otherwise it reset to the first view each open and, via the companion-panel
+// groupView, clobbered the Emigration tabs' remembered number mode.
 const GROUP_SEL_KEY = "historyGroupSel";
 /** @type {Record<string, *>|null} */
 let _groupSel = null;
@@ -382,6 +493,21 @@ function setGroupSel(id, val) {
   }
 }
 
+/**
+ * Reset every group's member selection to its default (member 0), called on a top-level
+ * hub switch so a hub opens on its first page's first member (e.g. Migration → "Population
+ * & Migration" → Population), rather than restoring a stale member. The Scaled/Civ view is
+ * bound to NumberMode, so it's untouched.
+ */
+export function resetGroupSelections() {
+  _groupSel = {};
+  try {
+    DemographicsSettings.setSetting(GROUP_SEL_KEY, _groupSel);
+  } catch (_) {
+    /* settings unavailable → in-memory only */
+  }
+}
+
 /** Every member metric id of a group (2D members×views, or a flat metricIds list). */
 function groupMemberIds(/** @type {*} */ g) {
   if (Array.isArray(g.members) && Array.isArray(g.views)) {
@@ -392,9 +518,10 @@ function groupMemberIds(/** @type {*} */ g) {
 }
 
 /**
- * Fold companion metric GROUPS into PAGES: register a synthetic-meta label for each group id, drop the
- * group's member metrics from their page's tab row (they're shown via the in-tab toggle instead), and
- * place the group id as a tab (at the front when `first`). Idempotent; called each render.
+ * Fold companion metric GROUPS into PAGES: register a synthetic-meta label for each group
+ * id, drop the group's member metrics from their page's tab row (they're shown via the
+ * in-tab toggle instead), and place the group id as a tab (at the front when `first`).
+ * Idempotent; called each render.
  */
 function mergeMetricGroups() {
   for (const g of EXTERNAL_METRIC_GROUPS) {
@@ -429,9 +556,10 @@ function resolveGroupMember(host, ctx, activeMetric) {
 }
 
 /**
- * The group's active view id. When the group declares a `viewBinding` (an external owner of the
- * Scaled/Civ choice, e.g. Emigration's number mode), read it from there so this toggle and the owner's
- * own control stay one setting; otherwise from the persisted per-group selection.
+ * The group's active view id. When the group declares a `viewBinding` (an external owner
+ * of the Scaled/Civ choice, e.g. Emigration's number mode), read it from there so this
+ * toggle and the owner's own control stay one setting; otherwise from the persisted
+ * per-group selection.
  * @param {*} group The metric group.
  * @param {*} sel The group's persisted selection.
  * @returns {string} The active view id.
@@ -455,18 +583,28 @@ function setGroupView(group, mIdx, k) {
 }
 
 /** 2D group: a metric toggle (members) + a view toggle (views). Returns members[metric][view]. */
-function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
+function resolve2DGroup(
+  /** @type {*} */ host,
+  /** @type {*} */ ctx,
+  /** @type {*} */ group,
+  /** @type {()=>void} */ rerender
+) {
   const sel = groupSelAll()[group.id] || {};
   const mIdx = Number.isInteger(sel.metric) && sel.metric >= 0 && sel.metric < group.members.length
     ? sel.metric : 0;
   const vId = groupViewId(group, sel);
-  // Surface the active view to a companion-panel member (e.g. the Emigration "Net Migration (Table)"),
-  // so a panel that isn't a chart can mirror the Scaled / Civ-numbers toggle in its own render.
+  // Surface the active view to a companion-panel member (e.g. the Emigration "Net
+  // Migration (Table)"), so a panel that isn't a chart can mirror the Scaled / Civ-numbers
+  // toggle in its own render.
   if (ctx) ctx.groupView = vId;
-  host.appendChild(pillRow(group.members.map((/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })),
+  const memberPills = group.members.map(
+    (/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })
+  );
+  host.appendChild(pillRow(memberPills,
     mIdx, (k) => { setGroupSel(group.id, { metric: k, view: vId }); rerender(); }));
-  // The VIEW row (e.g. Scaled / Civ numbers) transforms the data → render it as flat filter buttons,
-  // matching the time/age filters; the metric row above stays rounded view pills.
+  // The VIEW row (e.g. Scaled / Civ numbers) transforms the data → render it as flat
+  // filter buttons, matching the time/age filters; the metric row above stays rounded view
+  // pills.
   host.appendChild(pillRow(group.views.map((/** @type {*} */ v) => ({ key: v.id, label: v.label })),
     vId, (k) => { setGroupView(group, mIdx, k); rerender(); }, "filter"));
   const member = group.members[mIdx];
@@ -474,7 +612,11 @@ function resolve2DGroup(/** @type {*} */ host, /** @type {*} */ ctx, /** @type {
 }
 
 /** Flat group: a single metric toggle over `metricIds`. Returns the selected metric id. */
-function resolveFlatGroup(/** @type {*} */ host, /** @type {*} */ group, /** @type {()=>void} */ rerender) {
+function resolveFlatGroup(
+  /** @type {*} */ host,
+  /** @type {*} */ group,
+  /** @type {()=>void} */ rerender
+) {
   const ids = group.metricIds || [];
   const sel = groupSelAll()[group.id];
   const effective = typeof sel === "string" && ids.includes(sel) ? sel : ids[0];
@@ -486,9 +628,10 @@ function resolveFlatGroup(/** @type {*} */ host, /** @type {*} */ group, /** @ty
 }
 
 /**
- * Fold any companion-mod PANELS (registerPanel) into PAGES: each becomes its own page with a single
- * synthetic metric that routes to the companion's render callback (handled in the chart-render
- * dispatch). Idempotent; called each render so it applies regardless of registration order.
+ * Fold any companion-mod PANELS (registerPanel) into PAGES: each becomes its own page with
+ * a single synthetic metric that routes to the companion's render callback (handled in the
+ * chart-render dispatch). Idempotent; called each render so it applies regardless of
+ * registration order.
  */
 /**
  * The metric ids a panel contributes: one synthetic per declared sub-tab (so each shows as a native
@@ -559,15 +702,15 @@ function isExternalPanel(id) {
 /**
  * The active metric for `page`, coerced to one the tab row will actually show. Age-gated metrics
  * (resources_treasure/_factory) are dropped from the tab row in the wrong age, but a persisted
- * selection can still resolve to one — which would highlight tab 0 while the chart renders the
+ * selection can still resolve to one, which would highlight tab 0 while the chart renders the
  * hidden metric. Coercing to a tab-VISIBLE metric keeps the row and the chart in agreement.
  * @param {*} ctx Render context.
- * @param {{id:string, metrics:string[]}} page The active page.
+ * @param {{id:string, metrics?:string[]}} page The active page.
  * @returns {string} The visible active metric id.
  */
 function resolveVisibleActiveMetric(ctx, page) {
   const active = resolveActiveMetricState(ctx, page, metricExists);
-  const visible = visibleMetricsForAge(page.metrics);
+  const visible = visibleMetricsForAge(page.metrics || []);
   return visible.length && !visible.includes(active) ? visible[0] : active;
 }
 
@@ -579,25 +722,50 @@ function resolveVisibleActiveMetric(ctx, page) {
  * pages (they live as their own top-level tabs) and build the normal page-tab row.
  * @param {HTMLElement} host The view host element.
  * @param {*} ctx Render context.
- * @param {{onlyPage?:string}|undefined} opts Render options.
+ * @param {{onlyPage?:string, hub?:string}|undefined} opts Render options.
  * @returns {string} The active page id.
  */
 function resolvePageAndTabRow(host, ctx, opts) {
   const allPages = mergeExternalPageMetrics();
   if (opts && opts.onlyPage && allPages.some((p) => p.id === opts.onlyPage)) return opts.onlyPage;
+  // Hub-scoped: a hub view (Statistics / Migration / Geopolitics) shows only its own pages.
+  // The legacy "all pages in one row" path (no hub) still works for any caller that passes
+  // no hub.
   const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
-  const activePage = resolveActivePageState(ctx, allPages.filter((p) => !topLevelIds.has(p.id)));
-  buildPageTabRow(host, ctx, activePage);
+  const scoped = (opts && opts.hub ? pagesForHub(allPages, opts.hub) : allPages)
+    .filter((p) => !topLevelIds.has(p.id));
+  const activePage = resolveActivePageState(ctx, scoped);
+  buildPageTabRow(host, ctx, activePage, scoped);
   return activePage;
 }
 
-// Metrics that ignore the turn window (snapshot/cross-age views) — the time-range filter is hidden.
+// Metrics that ignore the turn window (snapshot/cross-age views), the time-range filter is
+// hidden.
 const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
 
 /**
- * Build the combined controls row: the time-range filter pills on the LEFT and the chart toolbar
- * (Time / Wonders / Copy as CSV) on the RIGHT, on one horizontal row. Either side is omitted when not
- * applicable (filter hidden for snapshot metrics; toolbar skipped for external panels).
+ * External companion panel controls: a LEFT controls area the panel fills with its own pills (via
+ * ctx.panelControls) + the Options button pinned RIGHT, so the panel's controls + Options share one
+ * row (matching the historical-data tabs) instead of the button floating alone at the far right.
+ * @param {HTMLElement} row The controls row.
+ * @param {*} ctx Render context (receives `panelControls`).
+ */
+function appendExternalPanelControls(row, ctx) {
+  const panelControls = document.createElement("div");
+  panelControls.className = "demographics-panel-controls";
+  row.appendChild(panelControls);
+  ctx.panelControls = panelControls;
+  const toolbar = document.createElement("div");
+  toolbar.className = "demographics-chart-toolbar";
+  toolbar.appendChild(buildOptionsButton());
+  row.appendChild(toolbar);
+}
+
+/**
+ * Build the combined controls row: the time-range filter pills on the LEFT and the chart
+ * toolbar (Time / Wonders / Copy as CSV) on the RIGHT, on one horizontal row. Either side
+ * is omitted when not applicable (filter hidden for snapshot metrics; toolbar skipped for
+ * external panels).
  * @param {HTMLElement} host View host.
  * @param {*} ctx Render context.
  * @param {string} effective The metric being charted.
@@ -607,46 +775,41 @@ function buildControlsRow(host, ctx, effective, activeFilter) {
   const row = document.createElement("div");
   row.className = "demographics-history-controls-row";
   const hasFilters = !TIME_FILTER_HIDDEN_FOR.has(effective) && !isExternalPanel(effective);
+  const isRadar = effective === "legacy_radar";
   const hasToolbar = !isExternalPanel(effective);
-  // When both are present, pull the toolbar OUT of flow (CSS `--centered`) so the filter pills center
-  // on the FULL row width. A flex child can't shrink below its content, so an in-flow toolbar steals
-  // space and shoves the pills left of true center; absolute-positioning it sidesteps that entirely.
-  if (hasFilters && hasToolbar) row.classList.add("demographics-history-controls-row--centered");
+  // When a centered filter row is present alongside the toolbar, pull the toolbar OUT of
+  // flow (CSS `--centered`) so the filter pills center on the FULL row width. A flex child
+  // can't shrink below its content, so an in-flow toolbar steals space and shoves the pills
+  // left of true center.
+  if ((hasFilters || isRadar) && hasToolbar) row.classList.add("demographics-history-controls-row--centered");
   if (hasFilters) {
     row.appendChild(buildTimeFilterRow(activeFilter, (id) => {
       if (typeof ctx.setActiveTimeFilter === "function") ctx.setActiveTimeFilter(id);
     }));
+  } else if (isRadar) {
+    // The radar hides the time-filter row; center its Snapshot selector here instead of
+    // the toolbar.
+    row.appendChild(buildRadarSnapshotRow(ctx));
   }
-  if (hasToolbar) {
-    buildToolbar(row, ctx, effective); // includes the Options button
-  } else {
-    // External companion panel (e.g. Emigration): give the panel a LEFT controls area to fill with its
-    // own pills (via ctx.panelControls) and pin the Options button at the RIGHT, so the panel's
-    // controls + Options share one row (matching the historical-data tabs) instead of the button
-    // floating alone at the far right.
-    const panelControls = document.createElement("div");
-    panelControls.className = "demographics-panel-controls";
-    row.appendChild(panelControls);
-    ctx.panelControls = panelControls;
-    const toolbar = document.createElement("div");
-    toolbar.className = "demographics-chart-toolbar";
-    toolbar.appendChild(buildOptionsButton());
-    row.appendChild(toolbar);
-  }
+  if (hasToolbar) buildToolbar(row, ctx, effective); // includes the Options button
+  else appendExternalPanelControls(row, ctx);
+  // War Graphs: pin its "Pick war" dropdown to the far LEFT (filters stay centered,
+  // toolbar stays right).
+  if (effective === "war_graphs") row.appendChild(buildWarGraphsPicker(ctx));
   if (row.children.length) host.appendChild(row);
 }
 
 /**
- * The Emigration mod's timeline-detail note text (read cross-mod) — only for the sub-tab the companion
- * scopes it to (its `metricId`); "" otherwise / when absent / not coarse.
+ * The Emigration mod's timeline-detail note text (read cross-mod), only for the sub-tab
+ * the companion scopes it to (its `metricId`); "" otherwise / when absent / not coarse.
  * @param {string} effective The metric/sub-tab id being rendered.
  * @returns {string} The note text, or "".
  */
 function readTimelineNote(effective) {
   try {
     const n = /** @type {*} */ (globalThis).EmigrationTimelineNote;
-    // The companion declares which sub-tab the note belongs to (its `metricId`); only show it there,
-    // not on every panel sub-tab.
+    // The companion declares which sub-tab the note belongs to (its `metricId`); only show
+    // it there, not on every panel sub-tab.
     if (n && typeof n.text === "function" && n.metricId === effective) return n.text() || "";
   } catch (_) {
     /* ignore */
@@ -655,9 +818,10 @@ function readTimelineNote(effective) {
 }
 
 /**
- * Whether the active external-panel sub-tab opts out of the analytics-policy banner. A sub-tab that
- * shows no per-civ data (a static reference page, e.g. Emigration's Guide) sets `hidePolicyBanner`,
- * since the visibility policy is moot there. `effective` is "panelId::subId".
+ * Whether the active external-panel sub-tab opts out of the analytics-policy banner. A
+ * sub-tab that shows no per-civ data (a static reference page, e.g. Emigration's Guide)
+ * sets `hidePolicyBanner`, since the visibility policy is moot there. `effective` is
+ * "panelId::subId".
  * @param {string} effective The active metric/panel id.
  * @returns {boolean} True when the banner should be suppressed.
  */
@@ -675,7 +839,7 @@ function panelSubtabHidesPolicy(effective) {
 
 /**
  * Append the bottom-centre notes row: the analytics-governance policy banner and, on a companion
- * panel (Emigration), the timeline-detail note — side by side in one centered row, matching fonts.
+ * panel (Emigration), the timeline-detail note, side by side in one centered row, matching fonts.
  * @param {HTMLElement} host The view host element.
  * @param {string} effective The metric/panel being rendered.
  */
@@ -697,31 +861,36 @@ function appendBottomNotes(host, effective) {
 }
 
 /**
- * Render the Historical Data view into `host`: clears the host, then builds the
- * page tab row, metric tab row, chart title + captions, time-range filter row,
- * toolbar, and chart host in their fixed display order.
- * @param {HTMLElement} host The view host element (cleared and repopulated).
- * @param {HistoryCtx} ctx Render context (history, selection state, callbacks).
- * @param {{onlyPage?:string}} [opts] When `onlyPage` is set, render that single page pinned (no page
- *   tab row) - used to present a companion `topLevel` panel as its own top-level view tab.
+ * Render a custom (non-metric) page body, e.g. the Relations diplomacy view hosted as a Geopolitics
+ * page. The page-tab row was already built by the caller.
+ * @param {HTMLElement} host The view host.
+ * @param {PageDef} page The active page.
+ * @param {*} ctx Render context.
+ * @returns {boolean} True when `page` is a render page and was handled.
  */
-export function render(host, ctx, opts) {
-  clearHost(host);
+function renderCustomPageBody(host, page, ctx) {
+  if (typeof page.render !== "function") return false;
+  const body = document.createElement("div");
+  body.className = "demographics-history-render-page w-full";
+  host.appendChild(body);
+  page.render(body, ctx);
+  return true;
+}
 
-  // ── Page tab row ────────────────────────────────────────────────────
-  const activePage = resolvePageAndTabRow(host, ctx, opts);
-
-  // ── Metric tab row (for the active page) ───────────────────────────
-  const page = PAGES.find((p) => p.id === activePage) || PAGES[0];
+/**
+ * Render a metric page: metric tab row, group-member resolution, chart title/captions,
+ * controls row, chart host, and bottom notes, the standard Historical-Data flow.
+ * @param {HTMLElement} host The view host.
+ * @param {*} ctx Render context.
+ * @param {PageDef} page The active (metric) page.
+ */
+function renderMetricFlow(host, ctx, page) {
   const activeMetric = resolveVisibleActiveMetric(ctx, page);
   buildMetricTabRow(host, ctx, page, activeMetric);
-
-  // A metric GROUP tab keeps itself selected in the row above, but renders a member toggle and the
-  // SELECTED member's chart below. `effective` is the metric actually charted (the group's member, or
-  // just activeMetric when it isn't a group).
+  // A metric GROUP tab keeps itself selected above, but renders a member toggle + the
+  // SELECTED member's chart below. `effective` is the metric actually charted (the group
+  // member, or activeMetric).
   const effective = resolveGroupMember(host, ctx, activeMetric);
-
-  // ── Chart title (full descriptive name above the plot) ────────────
   const metricObj = (() => {
     try {
       return getMetric(effective);
@@ -731,36 +900,37 @@ export function render(host, ctx, opts) {
     }
   })();
   const synthMeta = isSynthetic(effective) ? resolveSyntheticMeta(effective) : null;
-  // A companion panel subtab (Emigration's Network / Civilizations / …) renders its own headers and
-  // content, and the section TAB already names it — so skip the redundant chart title + caption that
-  // would otherwise open a gap above the panel's own pills/controls. Graphs and built-in metrics
-  // (effective is a real metric id, not a panel) keep theirs.
+  // A companion panel subtab renders its own headers, so skip the redundant chart title + caption.
   if (!isExternalPanel(effective)) {
     buildChartTitle(host, effective, metricObj, synthMeta);
-    // ── Per-metric explanation caption (above the filter row so the page reads
-    //    top-down: title → caption → filters → chart). ──
     appendMetricCaptions(host, effective);
   }
-
-  // ── Controls row: time-range filters (left) + toolbar (right) on ONE row ──
-  // The time-range filter is only meaningful for time-series charts; snapshot/cross-age metrics hide
-  // it (see TIME_FILTER_HIDDEN_FOR). A persisted-but-now-disabled filter falls back to "all".
   const activeFilter = resolveActiveFilterState(ctx, TIME_FILTERS);
   const turnRange = computeTurnRange(ctx.history, activeFilter);
   buildControlsRow(host, ctx, effective, activeFilter);
-
-  // ── Chart host ─────────────────────────────────────────────────────
   buildChartHost(host, ctx, effective, turnRange);
-
-  // ── Bottom-centre notes: the analytics-governance policy banner and (on the Emigration page) the
-  //    timeline-detail note, side by side in one centered row. ──
   appendBottomNotes(host, effective);
+}
 
-  // Line labels on the right edge of the chart now serve as the legend
-  // (clickable to hide; hidden civs appear as faded labels below the
-  // plot area, clickable to restore). The bottom legend list was
-  // removed to simplify the UI.
-  // Per-metric explanation captions are appended ABOVE the chart (after
-  // the title) - see the earlier block in this function. Kept the
-  // bottom-of-chart block free of duplicates.
+/**
+ * Render the Historical Data view into `host`: clears the host, then builds the
+ * page tab row, metric tab row, chart title + captions, time-range filter row,
+ * toolbar, and chart host in their fixed display order.
+ * @param {HTMLElement} host The view host element (cleared and repopulated).
+ * @param {HistoryCtx} ctx Render context (history, selection state, callbacks).
+ * @param {{onlyPage?:string, hub?:string}} [opts] `onlyPage` pins a single page (no tab
+ *   row) for a companion `topLevel` panel; `hub` scopes the page row to one hub (Statistics
+ *   / Migration / Geopolitics).
+ */
+export function render(host, ctx, opts) {
+  clearHost(host);
+
+  // ── Page tab row ────────────────────────────────────────────────────
+  const activePage = resolvePageAndTabRow(host, ctx, opts);
+
+  // ── Metric tab row (for the active page) ───────────────────────────
+  const page = PAGES.find((p) => p.id === activePage) || PAGES[0];
+  // A RENDER page (e.g. Relations) draws its own body and has no metric/chart pipeline.
+  if (renderCustomPageBody(host, page, ctx)) return;
+  renderMetricFlow(host, ctx, page);
 }
