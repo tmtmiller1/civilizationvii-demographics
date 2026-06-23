@@ -735,6 +735,17 @@ export const HUB_IDS = Object.freeze(["statistics", "migration", "geopolitics"])
 export const EXTERNAL_HUB_PAGES = [];
 
 /**
+ * True when a companion (the Emigration mod) has registered pages into the Migration hub.
+ * Drives the host's Migration-hub visibility + Population placement: with no companion the
+ * hub is hidden and Population moves to the Society page; with one, the hub shows (labelled
+ * "Emigration") and the companion owns the Population anchor.
+ * @returns {boolean} Whether the Migration hub has companion pages.
+ */
+export function migrationHubHasCompanion() {
+  return EXTERNAL_HUB_PAGES.some((e) => e.hubId === "migration");
+}
+
+/**
  * Register one or more pages into a named hub (e.g. Emigration's Network/Causes/… into
  * "migration"). Additive; existing registerPanel/registerMetricGroup callers are unaffected.
  * Duplicate page ids and unknown hub ids are ignored.
