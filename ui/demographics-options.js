@@ -52,9 +52,9 @@ function notifyLiveRefresh() {
  * @param {string} id The option id.
  * @param {string} key The DemographicsSettings key.
  * @param {boolean} dflt Default value.
- * @param {string} label LOC label key.
+ * @param {{label:string, description?:string}} text LOC label key + optional tooltip key.
  */
-function registerCheckbox(id, key, dflt, label) {
+function registerCheckbox(id, key, dflt, text) {
   Options.addOption({
     category: CategoryType.Mods,
     group: MAIN_GROUP,
@@ -65,7 +65,8 @@ function registerCheckbox(id, key, dflt, label) {
       DemographicsSettings.setSetting(key, !!value);
       notifyLiveRefresh();
     },
-    label
+    label: text.label,
+    ...(text.description ? { description: text.description } : {})
   });
 }
 
@@ -75,9 +76,9 @@ function registerCheckbox(id, key, dflt, label) {
  * @param {string} key The DemographicsSettings key.
  * @param {{value:*, label:string}[]} items Dropdown items (stored value + display label).
  * @param {*} dflt Default stored value.
- * @param {string} label LOC label key.
+ * @param {{label:string, description?:string}} text LOC label key + optional tooltip key.
  */
-function registerDropdown(id, key, items, dflt, label) {
+function registerDropdown(id, key, items, dflt, text) {
   Options.addOption({
     category: CategoryType.Mods,
     group: MAIN_GROUP,
@@ -94,7 +95,8 @@ function registerDropdown(id, key, items, dflt, label) {
       }
       notifyLiveRefresh();
     },
-    label,
+    label: text.label,
+    ...(text.description ? { description: text.description } : {}),
     dropdownItems: items.map((it) => ({ label: it.label }))
   });
 }
@@ -119,66 +121,6 @@ function registerHideUnmet() {
   });
 }
 
-function registerColorblind() {
-  Options.addOption({
-    category: CategoryType.Mods,
-    group: MAIN_GROUP,
-    type: OptionType.Checkbox,
-    id: "demographics-colorblind-mode",
-    initListener: (/** @type {*} */ info) => (info.currentValue = getBool("colorblindMode", false)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
-      DemographicsSettings.setSetting("colorblindMode", !!value);
-      notifyLiveRefresh();
-    },
-    label: "LOC_DEMOGRAPHICS_OPT_COLORBLIND"
-  });
-}
-
-function registerWonderMarkers() {
-  Options.addOption({
-    category: CategoryType.Mods,
-    group: MAIN_GROUP,
-    type: OptionType.Checkbox,
-    id: "demographics-show-wonder-markers",
-    initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showWonderMarkers", true)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
-      DemographicsSettings.setSetting("showWonderMarkers", !!value);
-      notifyLiveRefresh();
-    },
-    label: "LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS"
-  });
-}
-
-function registerWarMarkers() {
-  Options.addOption({
-    category: CategoryType.Mods,
-    group: MAIN_GROUP,
-    type: OptionType.Checkbox,
-    id: "demographics-show-war-markers",
-    initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showWarMarkers", true)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
-      DemographicsSettings.setSetting("showWarMarkers", !!value);
-      notifyLiveRefresh();
-    },
-    label: "LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS"
-  });
-}
-
-function registerDisasterMarkers() {
-  Options.addOption({
-    category: CategoryType.Mods,
-    group: MAIN_GROUP,
-    type: OptionType.Checkbox,
-    id: "demographics-show-disaster-markers",
-    initListener: (/** @type {*} */ info) => (info.currentValue = getBool("showDisasterMarkers", true)),
-    updateListener: (/** @type {*} */ _info, /** @type {*} */ value) => {
-      DemographicsSettings.setSetting("showDisasterMarkers", !!value);
-      notifyLiveRefresh();
-    },
-    label: "LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS"
-  });
-}
-
 function registerComplexity() {
   Options.addOption({
     category: CategoryType.Mods,
@@ -197,31 +139,60 @@ function registerComplexity() {
       notifyLiveRefresh();
     },
     label: "LOC_DEMOGRAPHICS_OPT_COMPLEXITY",
-    description: "LOC_DEMOGRAPHICS_TIER_STANDARD_DESC",
+    description: "LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO",
     dropdownItems: COMPLEXITY_ITEMS
   });
 }
 
 Options.addInitCallback(() => {
+  // Spoiler controls.
   registerHideUnmet();
-  registerColorblind();
-  registerWonderMarkers();
-  registerWarMarkers();
-  registerDisasterMarkers();
+  registerDropdown("demographics-reveal-mode", "backfillMetHistory", REVEAL_ITEMS, true, {
+    label: "LOC_DEMOGRAPHICS_OPT_REVEAL_MODE",
+    description: "LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO"
+  });
+  // Display.
   registerComplexity();
-  // Settings migrated from the (removed) in-screen Options tab, so all Demographics options live in
-  // the one native location.
-  registerDropdown("demographics-reveal-mode", "backfillMetHistory", REVEAL_ITEMS, true,
-    "LOC_DEMOGRAPHICS_OPT_REVEAL_MODE");
-  registerCheckbox("demographics-smooth-chart", "smoothChart", false, "LOC_DEMOGRAPHICS_OPT_SMOOTH");
-  registerCheckbox("demographics-show-eliminated", "showEliminatedCivs", true,
-    "LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL");
-  registerCheckbox("demographics-cinematic", "topCities.cinematicEnabled", true,
-    "LOC_DEMOGRAPHICS_OPT_CINEMATIC");
-  registerCheckbox("demographics-flyby", "topCities.flybyEnabled", true,
-    "LOC_DEMOGRAPHICS_OPT_FLYBY");
-  registerDropdown("demographics-flyby-preset", "topCities.flybyPreset", FLYBY_ITEMS, "medium",
-    "LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET");
-  registerCheckbox("demographics-flyby-rotate", "topCities.flybyAllowRotate", true,
-    "LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE");
+  registerCheckbox("demographics-colorblind-mode", "colorblindMode", false, {
+    label: "LOC_DEMOGRAPHICS_OPT_COLORBLIND",
+    description: "LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO"
+  });
+  registerCheckbox("demographics-smooth-chart", "smoothChart", false, {
+    label: "LOC_DEMOGRAPHICS_OPT_SMOOTH",
+    description: "LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO"
+  });
+  registerCheckbox("demographics-show-eliminated", "showEliminatedCivs", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL",
+    description: "LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO"
+  });
+  // Chart markers.
+  registerCheckbox("demographics-show-wonder-markers", "showWonderMarkers", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS",
+    description: "LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO"
+  });
+  registerCheckbox("demographics-show-war-markers", "showWarMarkers", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS",
+    description: "LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO"
+  });
+  registerCheckbox("demographics-show-disaster-markers", "showDisasterMarkers", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS",
+    description: "LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO"
+  });
+  // Top Cities camera.
+  registerCheckbox("demographics-cinematic", "topCities.cinematicEnabled", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_CINEMATIC",
+    description: "LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO"
+  });
+  registerCheckbox("demographics-flyby", "topCities.flybyEnabled", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_FLYBY",
+    description: "LOC_DEMOGRAPHICS_OPT_FLYBY_INFO"
+  });
+  registerDropdown("demographics-flyby-preset", "topCities.flybyPreset", FLYBY_ITEMS, "medium", {
+    label: "LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET",
+    description: "LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO"
+  });
+  registerCheckbox("demographics-flyby-rotate", "topCities.flybyAllowRotate", true, {
+    label: "LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE",
+    description: "LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO"
+  });
 });

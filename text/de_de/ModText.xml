@@ -254,7 +254,7 @@
             <Text>Nicht getroffene Zivilisationen in der Legende anzeigen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="de_DE">
-            <Text>Diagrammlinien glätten (gleitender 3-Runden-Durchschnitt)</Text>
+            <Text>Diagrammlinien glätten</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="de_DE">
             <Text>Eliminierte Zivilisationen anzeigen</Text>
@@ -353,9 +353,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="de_DE"><Text>Stufe</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="de_DE"><Text>Spoiler</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="de_DE"><Text>Anzeige</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="de_DE"><Text>Informationen zu noch nicht getroffenen Zivilisationen verbergen (Spoiler)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="de_DE"><Text>Bei Erstkontakt</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="de_DE"><Text>Statistik-Erfassung ab dem Treffen einer neuen Zivilisation beginnen</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="de_DE"><Text>Verbirgt Namen, Diagramme sowie Diplomatie- und Beziehungswerte von Zivilisationen, die du noch nicht getroffen hast, damit der Bildschirm keine Zivilisation vorab verrät. Standardmäßig aktiviert.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="de_DE"><Text>Verlauf bei Erstkontakt</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="de_DE"><Text>Erst ab Erstkontakt erfassen</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="de_DE"><Text>Kumulative Auswirkung über alle Stufen</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="de_DE"><Text>Gesamtauswirkung der Krisen über alle Zeitalter</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="de_DE">
@@ -761,19 +761,19 @@
             <Text>Echte Namen für Zivilisationen anzeigen, die ich nicht getroffen habe (Spoiler)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="de_DE">
-            <Text>Farbenblind-Modus (kontrastreiche Wong-Palette für Diagramm- + Beziehungsfarben)</Text>
+            <Text>Farbenblind-Modus</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="de_DE">
-            <Text>Eliminierte Zivilisationen in Diagramm und Faktbuch anzeigen</Text>
+            <Text>Ausgeschiedene Zivilisationen anzeigen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="de_DE">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>Kriegsmarkierungen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="de_DE">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>Katastrophenmarkierungen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="de_DE">
-            <Text>Wunder-Baumarkierungen auf den Diagrammlinien anzeigen (kleines Symbol an der Runde, in der jede Zivilisation ein Wunder fertiggestellt hat)</Text>
+            <Text>Wundermarkierungen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="de_DE">
             <Text>Auto (Spielgeschwindigkeits-Standard)</Text>
@@ -1361,7 +1361,7 @@
             <Text>Ausdünnung deaktiviert, jede Stichprobe wird behalten.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="de_DE">
-            <Text>Diplomatie-/Beziehungswerte für nicht getroffene Zivilisationen ausblenden</Text>
+            <Text>Spoiler-Schutz</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="de_DE">
             <Text>Krisen</Text>
@@ -1566,7 +1566,7 @@
             <Text>Kriegsauswirkungen, der Verlauf jedes Kombattanten durch einen ausgewählten Krieg</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="de_DE">
-            <Text>Vollständigen Verlauf anzeigen, wenn Sie eine Zivilisation treffen</Text>
+            <Text>Gesamten Verlauf anzeigen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="de_DE">
             <Text>Ein: Das Treffen einer Zivilisation enthüllt ihre gesamte Vergangenheit in den Diagrammen. Aus: Die Linien beginnen im Moment des ersten Kontakts.</Text>
@@ -1871,10 +1871,10 @@
             <Text>Filmische Siedlungsansicht</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="de_DE">
-            <Text>Experimenteller Siedlungsflug</Text>
+            <Text>Siedlungs-Überflug (experimentell)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="de_DE">
-            <Text>Leichte Drehung aktivieren</Text>
+            <Text>Dezente Kameradrehung</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="de_DE">
             <Text>Fluglänge</Text>
@@ -2042,5 +2042,17 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="de_DE"><Text>Agreements (Count Over Time)</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="de_DE"><Text>Wars</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="de_DE"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="de_DE"><Text>Legt fest, was bei der Begegnung mit einer neuen Zivilisation geschieht: ihren gesamten Verlauf in den Diagrammen anzeigen oder sie erst ab dem Treffen erfassen. Gilt nur bei aktiviertem Spoiler-Schutz.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="de_DE"><Text>Verwendet eine kontrastreiche, farbenblindfreundliche Palette für Diagrammlinien und das Beziehungsnetz.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="de_DE"><Text>Markiert auf den Verlaufsdiagrammen die Runde, in der jedes Wunder fertiggestellt wurde.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="de_DE"><Text>Markiert im Flüchtlingsdiagramm von Emigration die Runde, in der jeder Krieg begann. Erfordert das Begleit-Mod Emigration.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="de_DE"><Text>Markiert im Flüchtlingsdiagramm von Emigration die Runde, in der jede Katastrophe eintrat. Erfordert das Begleit-Mod Emigration.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="de_DE"><Text>Wie viel des Bildschirms angezeigt wird. Basis zeigt nur die Kern-Statistikseiten, Standard ergänzt alle Diagramme und Tabs, Analyst zeigt zusätzlich Speicher-, Ausdünnungs- und Abtastraten-Optionen.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="de_DE"><Text>Zeichnet die Verlaufslinien als gleitenden 3-Runden-Durchschnitt, damit Trends klarer erkennbar sind. Die zugrunde liegenden Daten bleiben unverändert.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="de_DE"><Text>Hält ausgeschiedene Zivilisationen in Diagrammen und Ranglisten sichtbar, statt sie zu entfernen.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="de_DE"><Text>Aktiviert die Schaltfläche „Filmische Ansicht“, die die Kamera über eine Siedlung aus der Liste der Top-Städte schwenkt.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="de_DE"><Text>Bewegt die Kamera automatisch zwischen den Top-Siedlungen. Experimentell – bei Kameraproblemen deaktivieren.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="de_DE"><Text>Wie lange der Siedlungs-Überflug bei jeder Stadt verweilt.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="de_DE"><Text>Fügt der Überflug-Kamera eine sanfte Drehung hinzu, während sie bei jeder Siedlung verweilt.</Text></Replace>
     </LocalizedText>
 </Database>

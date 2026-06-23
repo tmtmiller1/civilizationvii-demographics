@@ -87,7 +87,7 @@
             <Text>Valor</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="pt_BR"><Text>Mostrar civilizações desconhecidas na legenda</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="pt_BR"><Text>Suavizar linhas do gráfico (média móvel de 3 turnos)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="pt_BR"><Text>Suavizar linhas dos gráficos</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="pt_BR"><Text>Mostrar civilizações eliminadas</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="pt_BR"><Text>Limpar histórico</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="pt_BR"><Text>Atualizar amostra agora</Text></Replace>
@@ -135,9 +135,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="pt_BR"><Text>estágio</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="pt_BR"><Text>Spoilers</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="pt_BR"><Text>Exibição</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="pt_BR"><Text>Ocultar informações de civilizações que você não conheceu (spoiler)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="pt_BR"><Text>No primeiro contato</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="pt_BR"><Text>Começar a registrar estatísticas ao conhecer uma nova civilização</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="pt_BR"><Text>Oculta os nomes, gráficos e estatísticas de diplomacia e relações das civilizações que você ainda não conheceu, para que a tela nunca revele uma civilização antes de você encontrá-la. Ativado por padrão.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="pt_BR"><Text>Histórico no primeiro contato</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="pt_BR"><Text>Acompanhar a partir do primeiro contato</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="pt_BR"><Text>Impacto cumulativo em todas as fases</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="pt_BR"><Text>Impacto total das crises em todas as eras</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="pt_BR"><Text>Crise Começa</Text></Replace>
@@ -292,15 +292,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="pt_BR"><Text>Ainda não disponível.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="pt_BR"><Text>Opções</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="pt_BR"><Text>Mostrar nomes reais de civilizações que ainda não conheci (spoiler)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="pt_BR"><Text>Modo daltônico (paleta de alto contraste para gráficos e relações)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="pt_BR"><Text>Mostrar civilizações eliminadas no gráfico e no almanaque</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="pt_BR"><Text>Modo para daltônicos</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="pt_BR"><Text>Mostrar civilizações eliminadas</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="pt_BR">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>Marcadores de guerra</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="pt_BR">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>Marcadores de desastres</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="pt_BR"><Text>Mostrar marcadores de maravilhas nas linhas do gráfico</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="pt_BR"><Text>Marcadores de maravilhas</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="pt_BR"><Text>Automático (padrão da velocidade do jogo)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="pt_BR"><Text>1.000 amostras</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="pt_BR"><Text>2.500 amostras</Text></Replace>
@@ -801,7 +801,7 @@
             <Text>Redução desativada, mantendo todas as amostras.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="pt_BR">
-            <Text>Ocultar dados de diplomacia/relações de civilizações não conhecidas</Text>
+            <Text>Proteção contra spoilers</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="pt_BR">
             <Text>Crises</Text>
@@ -1006,7 +1006,7 @@
             <Text>Impacto da Guerra, a trajetória de cada combatente em uma guerra escolhida</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="pt_BR">
-            <Text>Revelar o histórico completo ao conhecer uma civilização</Text>
+            <Text>Revelar todo o histórico</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="pt_BR">
             <Text>Ligado: conhecer uma civilização revela todo o seu passado nos gráficos. Desligado: as linhas começam no momento do primeiro contato.</Text>
@@ -1311,10 +1311,10 @@
             <Text>Visão cinematográfica do assentamento</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="pt_BR">
-            <Text>Sobrevoo de assentamento experimental</Text>
+            <Text>Sobrevoo de assentamentos (experimental)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="pt_BR">
-            <Text>Ativar rotação sutil</Text>
+            <Text>Rotação sutil da câmera</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="pt_BR">
             <Text>Duração do sobrevoo</Text>
@@ -1482,5 +1482,17 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="pt_BR"><Text>Agreements (Count Over Time)</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="pt_BR"><Text>Wars</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="pt_BR"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="pt_BR"><Text>Controla o que acontece quando você conhece uma nova civilização: revelar todo o histórico dela nos gráficos ou acompanhá-la apenas a partir do encontro. Só se aplica com a proteção contra spoilers ativada.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="pt_BR"><Text>Usa uma paleta de alto contraste e adequada para daltônicos nas linhas dos gráficos e na rede de relações.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="pt_BR"><Text>Marca nas linhas dos gráficos o turno em que cada maravilha foi concluída.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="pt_BR"><Text>Marca no gráfico de refugiados do Emigration o turno em que cada guerra começou. Requer o mod complementar Emigration.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="pt_BR"><Text>Marca no gráfico de refugiados do Emigration o turno em que cada desastre ocorreu. Requer o mod complementar Emigration.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="pt_BR"><Text>Quanto da tela mostrar. Básico inclui apenas as páginas de estatísticas principais; Padrão adiciona todos os gráficos e abas; Analista também exibe os controles de armazenamento, dizimação e taxa de amostragem.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="pt_BR"><Text>Desenha as linhas do histórico como uma média móvel de 3 turnos para que as tendências fiquem mais claras. Os dados subjacentes não mudam.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="pt_BR"><Text>Mantém as civilizações eliminadas visíveis nos gráficos e classificações em vez de removê-las.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="pt_BR"><Text>Ativa o botão Visão cinematográfica que desliza a câmera por um assentamento na lista das Melhores cidades.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="pt_BR"><Text>Move a câmera automaticamente entre os principais assentamentos. Experimental — desative se a câmera se comportar mal.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="pt_BR"><Text>Quanto tempo o sobrevoo de assentamentos permanece em cada cidade.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="pt_BR"><Text>Adiciona uma rotação suave à câmera de sobrevoo enquanto ela permanece em cada assentamento.</Text></Replace>
     </LocalizedText>
 </Database>

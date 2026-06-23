@@ -87,7 +87,7 @@
             <Text>값</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="ko_KR"><Text>범례에 만나지 않은 문명 표시</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ko_KR"><Text>차트 선 부드럽게(3턴 이동 평균)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="ko_KR"><Text>그래프 선 부드럽게</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="ko_KR"><Text>제거된 문명 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="ko_KR"><Text>기록 지우기</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="ko_KR"><Text>지금 샘플 새로 고침</Text></Replace>
@@ -135,9 +135,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ko_KR"><Text>단계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="ko_KR"><Text>스포일러</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="ko_KR"><Text>표시</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ko_KR"><Text>만나지 않은 문명의 정보 숨기기 (스포일러)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ko_KR"><Text>첫 접촉 시</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ko_KR"><Text>새 문명을 만난 시점부터 통계 기록 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ko_KR"><Text>아직 만나지 않은 문명의 이름, 그래프, 외교 및 관계 통계를 숨겨 만나기 전에 화면이 문명을 미리 보여주지 않도록 합니다. 기본값은 켜짐.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="ko_KR"><Text>첫 접촉 시 기록</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="ko_KR"><Text>첫 접촉부터 기록</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="ko_KR"><Text>모든 단계의 누적 영향</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="ko_KR"><Text>모든 시대에 걸친 위기의 종합 영향</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="ko_KR"><Text>위기 시작</Text></Replace>
@@ -292,15 +292,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="ko_KR"><Text>아직 사용할 수 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="ko_KR"><Text>옵션</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="ko_KR"><Text>아직 만나지 않은 문명의 실제 이름 표시(스포일러)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ko_KR"><Text>색각 보조 모드(차트와 관계 표시에 고대비 색상 사용)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ko_KR"><Text>차트와 정보 자료집에 제거된 문명 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="ko_KR"><Text>색맹 모드</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="ko_KR"><Text>멸망한 문명 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="ko_KR">
-            <Text>Show war onset markers on the Emigration refugees chart</Text>
+            <Text>전쟁 표시</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="ko_KR">
-            <Text>Show disaster onset markers on the Emigration refugees chart</Text>
+            <Text>재해 표시</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ko_KR"><Text>차트 선에 불가사의 표식을 표시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="ko_KR"><Text>불가사의 표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="ko_KR"><Text>자동(게임 속도 기본값)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="ko_KR"><Text>1,000개 샘플</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="ko_KR"><Text>2,500개 샘플</Text></Replace>
@@ -801,7 +801,7 @@
             <Text>솎아내기 비활성화, 모든 샘플 유지.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="ko_KR">
-            <Text>만나지 않은 문명의 외교/관계 통계 숨기기</Text>
+            <Text>스포일러 방지</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="ko_KR">
             <Text>위기</Text>
@@ -1006,7 +1006,7 @@
             <Text>전쟁 영향, 선택한 전쟁에서 각 교전국의 궤적</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="ko_KR">
-            <Text>문명을 만났을 때 전체 역사 공개</Text>
+            <Text>전체 기록 표시</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="ko_KR">
             <Text>켜짐: 문명을 만나면 그 문명의 모든 과거가 차트에 공개됩니다. 꺼짐: 선이 첫 접촉 시점부터 시작됩니다.</Text>
@@ -1311,10 +1311,10 @@
             <Text>정착지 시네마틱 보기</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="ko_KR">
-            <Text>실험적 정착지 플라이바이</Text>
+            <Text>정착지 플라이바이(실험적)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="ko_KR">
-            <Text>미세 회전 사용</Text>
+            <Text>은은한 카메라 회전</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="ko_KR">
             <Text>플라이바이 길이</Text>
@@ -1482,5 +1482,17 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="ko_KR"><Text>Agreements (Count Over Time)</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="ko_KR"><Text>Wars</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="ko_KR"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="ko_KR"><Text>새 문명을 만났을 때의 동작을 설정합니다. 그래프에 전체 과거 기록을 표시하거나, 만난 시점부터만 기록합니다. 스포일러 방지가 켜져 있을 때만 적용됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="ko_KR"><Text>그래프 선과 관계 네트워크에 고대비의 색맹 친화적 팔레트를 사용합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ko_KR"><Text>각 불가사의가 완성된 턴을 기록 그래프 선에 표시합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="ko_KR"><Text>각 전쟁이 시작된 턴을 Emigration 난민 그래프에 표시합니다. 연동 모드 Emigration이 필요합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="ko_KR"><Text>각 재해가 발생한 턴을 Emigration 난민 그래프에 표시합니다. 연동 모드 Emigration이 필요합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ko_KR"><Text>화면에 얼마나 표시할지 설정합니다. 기본은 핵심 통계 페이지만, 표준은 모든 그래프와 탭을 추가하고, 분석가는 저장, 데시메이션, 샘플링 속도 설정까지 표시합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="ko_KR"><Text>기록 선을 3턴 이동 평균으로 그려 추세를 더 명확하게 보여줍니다. 원본 데이터는 바뀌지 않습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="ko_KR"><Text>멸망한 문명을 제거하지 않고 그래프와 순위에 계속 표시합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="ko_KR"><Text>주요 도시 목록에서 정착지를 카메라로 훑는 시네마틱 보기 버튼을 활성화합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="ko_KR"><Text>주요 정착지 사이로 카메라가 자동으로 이동합니다. 실험적 기능이며, 카메라가 이상하면 끄세요.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ko_KR"><Text>정착지 플라이바이가 각 도시에 머무는 시간입니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ko_KR"><Text>플라이바이 중 각 정착지에 머무는 동안 카메라를 부드럽게 회전시킵니다.</Text></Replace>
     </LocalizedText>
 </Database>
