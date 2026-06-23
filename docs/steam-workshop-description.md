@@ -1,7 +1,7 @@
 [h1]Demographics[/h1]
 
 [b]★ Major Update, Data Now Persists Across Ages ★[/b]
-Charts and tracked history are now continuous across the age boundary: economy, power, population, knowledge, conflicts, and Triumph progress carry from Antiquity into Exploration and beyond instead of resetting at each age transition. Special thanks to [b]Slothoth[/b], whose work provided the keys to unlocking data persistence across ages, a co-author credit is gladly offered.
+Charts and tracked history are now continuous across the age boundary: economy, power, population, knowledge, conflicts, and Triumph progress carry from Antiquity into Exploration and beyond instead of resetting at each age transition. Special thanks to [b]Slothoth[/b], whose work provided the keys to data persistence across ages. A co-author credit is gladly offered.
 
 Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it through charts, rankings, relationship views, war history, and Triumph progress overlays.
 
@@ -35,7 +35,7 @@ It builds on robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civil
 
 [b]Pairs with Emigration:[/b]
 [list]
-[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts a dedicated [b]Emigration[/b] tab and a Net Migration graph beside Population, so migration flows, refugees, and the reasons behind them read right alongside the rest of the world's history. Emigration is updated for the Civilization VII 1.4.1 systems; Demographics is its analytics home. The companion hooks are inert when Emigration isn't installed, so the base mod is unchanged.
+[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts a dedicated [b]Emigration[/b] tab and a Net Migration graph beside Population, so migration flows, refugees, and their causes appear alongside the rest of the world's history. Emigration is updated for Civilization VII 1.4.1. When Emigration is not installed these hooks stay inert, so the base mod is unchanged.
 [/list]
 
 [b]Conflicts:[/b]
