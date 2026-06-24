@@ -62,8 +62,13 @@
     /* FIXED width (not max-width) so the box has the same horizontal
        footprint on the major-civs tab (11 entries) AND the city-states
        tab (8 entries). Earlier max-width let it shrink to the widest
-       pill, making the CS legend visibly narrower than the civ legend. */
+       pill, making the CS legend visibly narrower than the civ legend.
+       Cap it so on a narrow frame (low resolution / tall aspect) it can
+       never grow past the panel edge — max-width overrides the fixed width
+       once 24rem + the 1.5rem side gaps no longer fit. (GameFace supports
+       calc() in max-width but not the min()/max()/clamp() value functions.) */
     width: 24rem;
+    max-width: calc(100% - 3rem);
     /* Min-height so the shorter CS legend doesn't look truncated next to
        the major-civs legend — they read as the same "panel," just with
        different lists inside. */
@@ -446,6 +451,7 @@
 /* Inline dropdown next to a label in the Options view. */
 .demographics-option-dropdown {
     min-width: 18rem;
+    max-width: 100%;
 }
 
 
