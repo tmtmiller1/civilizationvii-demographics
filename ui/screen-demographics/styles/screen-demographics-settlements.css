@@ -253,6 +253,10 @@
     flex-direction: column;
     align-items: center;
     width: 18rem;
+    /* Three 18rem cards + gaps overflow a narrow frame (low resolution / tall
+       aspect). min-width:0 lets the flex row shrink the cards to fit instead of
+       spilling off-screen, keeping the podium centered and balanced. */
+    min-width: 0;
     padding: 1.1rem 1rem 1.2rem;
     border: 2px solid var(--ia-frame-border);
     border-top-width: 4px;
@@ -740,8 +744,11 @@
     margin-top: 0.3rem;
 }
 .demographics-advisor-card {
-    flex: 1 1 18rem;
-    min-width: 16rem;
+    /* Target ~16rem per card via flex-basis (so the wrap grid lays out the same
+       as before), but min-width:0 lets a card shrink below that on a narrow
+       frame instead of the hard 16rem floor pushing the wrapped row off-screen. */
+    flex: 1 1 16rem;
+    min-width: 0;
     border: 1px solid rgba(201, 162, 76, 0.25);
     border-radius: 0.25rem;
     padding: 0.4rem 0.55rem;
@@ -1123,6 +1130,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    /* Bottom-centered flyout over the map. 30rem is well under any supported
+       Civ7 viewport width, so it never overflows; max-width keeps the plate from
+       getting too wide on large displays. */
     min-width: 30rem;
     max-width: 44rem;
     padding: 1.1rem 1.6rem;
