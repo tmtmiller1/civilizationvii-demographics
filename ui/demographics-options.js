@@ -5,7 +5,7 @@
 
 import { CategoryType, OptionType, Options } from "/core/ui/options/model-options.js";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
-import "/demographics/ui/mod-options.js";
+import "/demographics/ui/demographics-mod-options.js";
 
 const MAIN_GROUP = "demographics";
 

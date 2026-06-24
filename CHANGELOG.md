@@ -7,6 +7,19 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.0.3] - 2026-06-25
+
+### Fixed
+- **Critical mod-compatibility fix (dead Begin Game button / missing mod options).**
+  Demographics shipped a file named `mod-options.js` — the same basename many other
+  mods use for their options bootstrap. The game's UI module loader resolves these by
+  basename, so Demographics' copy (which has no default export) shadowed every other
+  mod's `mod-options.js`, making their option modules fail with "does not provide an
+  export named 'default'". That broke the Begin Game button after the load screen and
+  hid those mods' options entirely. Demographics' bootstrap is now
+  `demographics-mod-options.js` — a unique name that can never shadow another mod.
+  (Companion to the 2.0.2 shared-settings fix.)
+
 ## [2.0.2] - 2026-06-25
 
 ### Fixed
