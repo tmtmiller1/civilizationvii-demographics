@@ -340,6 +340,52 @@ function writeRoot(root) {
   });
 }
 
+let _clobberGuardWarned = false;
+/**
+ * Read the shared `modSettings` blob in preparation for a WRITE, with a hard
+ * guarantee that we never destroy sibling mods' slices.
+ *
+ * `modSettings` is shared by every ModOptions-based mod (sib, trixie, beezany,
+ * us, …), one slice per mod id. The danger: Coherent's localStorage can hand
+ * back a transient empty/garbage read, and another mod can leave a value that
+ * isn't valid JSON. If we treated either as "the store is empty" and wrote back
+ * only our slice, we'd wipe every other mod's settings — the field-reported
+ * "Demographics cannibalized my settings" bug. So:
+ *   - an empty first read is RE-READ once (a populated re-read means the first
+ *     was a flaky wipe — trust the populated one);
+ *   - a present-but-unparseable value means siblings exist that we can't safely
+ *     round-trip, so we REFUSE to write (in-memory bucket still serves reads);
+ *   - only a genuinely-absent value (empty both times) yields a fresh `{}`.
+ * @returns {{root: SettingsRoot, safe: boolean}} The current root and whether a
+ *   write may proceed. When `safe` is false the caller must not persist.
+ */
+function readRootForWrite() {
+  if (!hasLocalStorage()) return { root: {}, safe: false };
+  let raw = safeCall(() => localStorage.getItem(ROOT_KEY), null);
+  // Defeat Coherent's transient empty reads: a populated second read proves the
+  // first was flaky, so we'd otherwise have clobbered real sibling data.
+  if (!raw) raw = safeCall(() => localStorage.getItem(ROOT_KEY), null);
+  if (!raw) return { root: {}, safe: true }; // genuinely first-run / empty store
+  let parsed = null;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (_e) {
+    // Siblings are present but unparseable — overwriting would destroy them.
+    if (!_clobberGuardWarned) {
+      _clobberGuardWarned = true;
+      derr(
+        "shared '" +
+          ROOT_KEY +
+          "' is present but not valid JSON; skipping persistence this session so " +
+          "another mod's settings are never overwritten. Using in-memory values."
+      );
+    }
+    return { root: {}, safe: false };
+  }
+  if (!parsed || typeof parsed !== "object") return { root: {}, safe: false };
+  return { root: /** @type {SettingsRoot} */ (parsed), safe: true };
+}
+
 let _integrityWarned = false;
 /**
  * One-time heads-up if our persisted slice came back missing while OTHER mods'
@@ -480,12 +526,17 @@ export const DemographicsSettings = {
     // Coherent wipes the key during this session, the in-memory bucket
     // still serves correct reads.
     if (hasLocalStorage()) {
-      const root = readRoot() || {};
-      const slice = normalizeSlice({ ...DEFAULTS, ...(root[MOD_ID] || {}) });
-      Object.assign(slice, entries);
-      slice[SCHEMA_KEY] = SCHEMA_VERSION;
-      root[MOD_ID] = slice;
-      writeRoot(root);
+      // Read the FULL shared blob through the clobber guard: it preserves every
+      // sibling mod's slice and refuses to write when the current value can't be
+      // safely round-tripped, so we can only ever add/update our OWN slice.
+      const { root, safe } = readRootForWrite();
+      if (safe) {
+        const slice = normalizeSlice({ ...DEFAULTS, ...(root[MOD_ID] || {}) });
+        Object.assign(slice, entries);
+        slice[SCHEMA_KEY] = SCHEMA_VERSION;
+        root[MOD_ID] = slice;
+        writeRoot(root);
+      }
     }
     dlog("setSettings", Object.keys(entries).join(","));
   }
