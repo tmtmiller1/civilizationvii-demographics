@@ -7,6 +7,20 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-06-25
+
+### Fixed
+- **Critical mod-compatibility fix.** Demographics could wipe other mods' settings
+  out of the shared options store. Mods share one `modSettings` blob (one slice
+  each), and when the game's UI layer handed back a momentarily-empty or unreadable
+  copy of it, Demographics wrote back only its own slice — deleting every other
+  mod's saved options. The visible result was other mods (e.g. Classic Leader
+  Screens, Dynamic Main Menu, Flag Corps, Map Trix) behaving as if uninstalled and,
+  in some setups, the "Start Game" button doing nothing after the load screen.
+  Demographics now re-reads on an empty result, refuses to write when the shared
+  store can't be safely read, and only ever touches its own slice — so it can never
+  drop another mod's settings.
+
 ## [2.0.1] - 2026-06-24
 
 ### Changed
