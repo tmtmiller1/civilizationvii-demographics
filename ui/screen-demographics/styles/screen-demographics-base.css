@@ -134,6 +134,22 @@
     width: 100%;
 }
 
+/* ── Resolution hardening: keep tab rows inside the frame ─────────────────────
+   The engine's `fxs-tab-item` is laid out `flex-1` with an auto-shrinking
+   `font-fit-shrink` label, BUT flex children default to `min-width: auto`, so a
+   row of tabs can never shrink below its combined min-content width. At lower
+   resolutions (the engine scales rem up, so labels get physically larger) or
+   with long localized labels, that min-content width exceeds the bar and the
+   tabs spill past the frame — and, since the bar is full-frame-width, past the
+   window edge. `min-width: 0` on each item (and its label) lets the existing
+   `font-fit-shrink` actually shrink the tabs to share the available width, the
+   same way the native game tabs do. Scoped to our screen so we don't touch
+   other panels' tab bars. */
+.demographics-screen fxs-tab-bar fxs-tab-item,
+.demographics-screen fxs-tab-bar fxs-tab-item .font-fit-shrink {
+    min-width: 0;
+}
+
 .demographics-chart-title {
     width: 100%;
     text-align: center;
@@ -331,6 +347,7 @@
 }
 .demographics-chart-viewer-dropdown {
     min-width: 14rem;
+    max-width: 100%;
 }
 
 /* War label sitting on top of each Gantt bar. */

@@ -7,6 +7,22 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-06-24
+
+### Changed
+- UI now scales cleanly across resolutions. Tab rows (the Geopolitics / Global
+  Relations tabs and every other tab bar) could overflow past the window edge at
+  lower resolutions or with long localized labels; each tab now shrinks to share
+  the available width instead of spilling off-screen. The Global Relations filter
+  legend, the Settlements podium/advisor cards, and the inline dropdowns likewise
+  clamp to the panel so they never run past a narrow frame.
+
+### Fixed
+- Hardened the Options-screen category bootstrap that runs at the main menu: its
+  writes to the engine's shared Options model are now fully guarded, so a future
+  game patch that reshapes that model can no longer throw there and take the main
+  menu down with it.
+
 ## [2.0.0] - 2026-06-23
 
 ### Fixed
