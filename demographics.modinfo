@@ -7,7 +7,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.0.2</Version>
+        <Version>2.0.3</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -36,12 +36,12 @@
                     <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>
                 </UpdateText>
                 <UIScripts>
-                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
                     <Item>ui/demographics-options.js</Item>
                 </UIScripts>
                 <ImportFiles>
-                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
                     <Item>ui/demographics-options.js</Item>
                 </ImportFiles>
@@ -55,11 +55,11 @@
                 <UIScripts>
                     <Item>ui/demographics-bootstrap.js</Item>
                     <Item>ui/screen-demographics/screen/screen-demographics.js</Item>
-                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/demographics-options.js</Item>
                 </UIScripts>
                 <ImportFiles>
-                    <Item>ui/mod-options.js</Item>
+                    <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/demographics-options.js</Item>
                     <Item>ui/core/demographics-i18n.js</Item>
                     <Item>ui/core/demographics-dock-decorator.js</Item>
