@@ -7,6 +7,13 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+### Fixed
+- **Hardened two dropdowns against the same overflow trap as the relations ring.**
+  `.demographics-option-dropdown` and `.demographics-chart-viewer-dropdown` set a
+  fixed `min-width` alongside `max-width: 100%`; since CSS `min-width` overrides
+  `max-width`, they could overflow a narrow container at a large Interface Size.
+  Dropped the `min-width` floors so `max-width: 100%` actually constrains them.
+
 ## [2.0.4] - 2026-06-25
 
 ### Fixed

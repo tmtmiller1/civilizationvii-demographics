@@ -454,7 +454,11 @@
 
 /* Inline dropdown next to a label in the Options view. */
 .demographics-option-dropdown {
-    min-width: 18rem;
+    /* No min-width floor: CSS min-width overrides max-width, so a fixed floor
+       lets the dropdown overflow a narrow options panel (high Interface Size)
+       instead of being capped at the container. max-width: 100% constrains it;
+       the dropdown sizes to its content below that. (Same min-overrides-max
+       trap as the relations ring's old min-height.) */
     max-width: 100%;
 }
 
