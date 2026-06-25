@@ -247,7 +247,7 @@
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
-    gap: 0.4rem;
+    gap: 0.4rem 0.4rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
     /* Default: keep the toolbar at the far right. When no time filter is present (e.g. the Crises
        page) the toolbar is the lone child, and Coherent doesn't reliably honor `margin-left:auto`
        for flex alignment — justify-content does. The `--centered` modifier overrides this to center. */
@@ -429,7 +429,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 0.35rem;
+    gap: 0.35rem 0.35rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
     padding: 0.05rem 0.4rem;
     width: 100%;
     flex: 0 0 auto;
@@ -780,9 +780,13 @@
     color: #f3c34c;
     text-align: center;
 }
+/* Hint caption under an option control (Options view). Single source of truth —
+   a duplicate previously lived in screen-demographics-relations-options.css and
+   won purely by load order; these are the values that were actually shipping. */
 .demographics-option-hint {
-    margin: 0.1rem 0 0.4rem 1.6rem;
-    opacity: 0.75;
+    color: rgba(243, 231, 196, 0.65);
+    margin: 0.15rem 0 0.4rem 0.4rem;
+    line-height: 1.3;
 }
 
 /* Contextual description caption under an advanced History page tab row (P1.5). */

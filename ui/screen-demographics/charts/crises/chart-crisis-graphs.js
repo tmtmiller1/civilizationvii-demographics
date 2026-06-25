@@ -136,6 +136,42 @@ export function resolveCrisisScope(history, scopeId) {
 const hiddenKeys = new Set();
 
 /**
+ * Cache of parsed series keyed by (history object identity → series key). A
+ * legend toggle re-renders the whole grid via renderInto, which previously
+ * re-walked the ENTIRE sample stream once PER metric (~7×) on every click even
+ * though only the hiddenKeys VISIBILITY filter changed. Keying on the history
+ * object means a toggle (same history) reuses the parsed raw series, while fresh
+ * data (a new history object) misses and rebuilds. Raw series are never mutated
+ * downstream (seriesFor/canonicalRoster clip+map into new arrays), so sharing
+ * the cached arrays is safe.
+ * @type {WeakMap<object, Map<string, any[]>>}
+ */
+const _rawSeriesCache = new WeakMap();
+
+/**
+ * Parse (or reuse a cached) per-civ series for one metric out of `history`.
+ * @param {*} history The history blob.
+ * @param {string} seriesKey The metric series id.
+ * @returns {any[]} The raw per-civ series array.
+ */
+function rawSeriesFor(history, seriesKey) {
+  if (!history || typeof history !== "object") {
+    return buildSeriesFromHistory(history, seriesKey).series;
+  }
+  let byKey = _rawSeriesCache.get(history);
+  if (!byKey) {
+    byKey = new Map();
+    _rawSeriesCache.set(history, byKey);
+  }
+  let raw = byKey.get(seriesKey);
+  if (!raw) {
+    raw = buildSeriesFromHistory(history, seriesKey).series;
+    byKey.set(seriesKey, raw);
+  }
+  return raw;
+}
+
+/**
  * Drop hidden-civ keys not present in the current roster, so a stale toggle from
  * an earlier history/game can't linger or coincidentally match a reused leader
  * key. Keeps the module-global set bounded to the civs actually on screen.
@@ -174,8 +210,8 @@ function appendEmpty(host, msg) {
  * @returns {{ key: string, name: string, color: string }[]} The roster.
  */
 function canonicalRoster(history) {
-  const built = buildSeriesFromHistory(history, "milpower");
-  return built.series.map((s) => ({ key: s.leaderType, name: s.name, color: s.color }));
+  const raw = rawSeriesFor(history, "milpower");
+  return raw.map((s) => ({ key: s.leaderType, name: s.name, color: s.color }));
 }
 
 /** Lead-in (in chart-X turns) shown before the first crisis onset. */
@@ -193,7 +229,7 @@ const PRE_CRISIS_LEAD = 8;
  * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]} The series.
  */
 function seriesFor(m, history, rosterMap, minX, maxX) {
-  const raw = buildSeriesFromHistory(history, m.series).series;
+  const raw = rawSeriesFor(history, m.series);
   const out = [];
   for (const s of raw) {
     if (hiddenKeys.has(s.leaderType)) continue;

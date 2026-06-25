@@ -7,12 +7,56 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.0.5] - 2026-06-25
+
+A correctness + robustness pass from a full multi-subsystem audit.
+
 ### Fixed
-- **Hardened two dropdowns against the same overflow trap as the relations ring.**
-  `.demographics-option-dropdown` and `.demographics-chart-viewer-dropdown` set a
-  fixed `min-width` alongside `max-width: 100%`; since CSS `min-width` overrides
-  `max-width`, they could overflow a narrow container at a large Interface Size.
-  Dropped the `min-width` floors so `max-width: 100%` actually constrains them.
+- **CSV export dropped most rows in multi-age games.** The per-turn CSV keyed
+  rows by `turn`, which resets to 1 each age, so same-numbered turns across ages
+  collided and all but the last age's row was silently lost (~2/3 of rows in a
+  3-age game). Rows are now keyed/sorted by the monotonic `chartTurn`, and a new
+  `age` column disambiguates the (still age-local) `turn` value.
+- **CSV formula-injection guard.** A player-renamed civ/leader/town name starting
+  with `=`, `+`, `-`, or `@` was written verbatim and would execute as a formula
+  when the CSV was opened in Excel/Sheets. Such cells are now prefixed with a
+  single quote (numbers, including negative/BCE years, are left untouched).
+- **Saved settings no longer freeze old defaults.** Each write baked every current
+  default value into the saved slice, so a later change to a shipped default would
+  never reach anyone who had ever opened the options. Only real overrides are now
+  persisted (defaults are overlaid at read time); this also heals already-baked
+  saves on their next write.
+- **History now resets on a new game / different save.** History is stamped with
+  the game seed but the seed was never checked on load, so a prior game's data
+  could load into a new one (and a stale in-memory mirror could resurrect it).
+  Added a seed-mismatch reset on both the stored payload and the memory mirror.
+- **Settlements "Options" button vanished** after sorting/toggling inside the All
+  Civilizations sub-tab, because that view clears its host on each internal
+  re-render. The toolbar is now re-attached after every re-render (idempotently).
+- **Chart tooltips clipped off the bottom.** The war-graphs hover tooltip and the
+  Gantt tooltip only flipped horizontally; both now also flip vertically so hovers
+  in the lower rows of scrollable grids stay on-screen.
+- **Crisis graphs re-parsed the entire sample history on every legend toggle**
+  (~8× per click). Parsed series are now cached per game, so a visibility toggle
+  reuses them instead of re-walking the whole stream.
+- **Global Relations diagram robustness.** An orphaned ring's deferred portrait
+  placement could spin in an unbounded animation-frame loop against a detached
+  node after rapid re-renders; added a liveness check and a retry cap. The view's
+  in-memory filter / node-focus caches now reset when the game/save changes, so a
+  second game in one session no longer inherits the previous game's selections.
+- **Wrapped rows could overlap vertically.** Several `flex-wrap` containers used a
+  single-value `gap`, whose row-gap GameFace drops on wrap; converted to explicit
+  two-value gaps. Hardened two dropdowns (`.demographics-option-dropdown`,
+  `.demographics-chart-viewer-dropdown`) against the same `min-width` >
+  `max-width` overflow trap as the relations ring, and de-duplicated a conflicting
+  `.demographics-option-hint` rule that resolved differently by file load order.
+
+### Internal
+- Markers that relied on `stroke-dasharray` (which Coherent ignores) had the no-op
+  attribute removed and the color-based differentiation documented inline.
+- Release tooling: the Workshop change-note now keeps multi-line bullet text and
+  always leads with the version; the `verify` gate runs the two tests it had been
+  skipping (`test:settlements-data`, `test:civ-color-utils`).
 
 ## [2.0.4] - 2026-06-25
 
