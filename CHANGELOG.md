@@ -7,6 +7,17 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.0.4] - 2026-06-25
+
+### Fixed
+- **Global Relations diagram clipped / "too big for the UI" on some displays.**
+  The relations ring (the Politics & Relationships / Agreements view) is an SVG
+  that scales to fit its panel, but a `min-height: 22rem` floor on the SVG
+  overrode that — CSS `min-height` wins over both `height` and `max-height` — so
+  at a larger Interface Size or on a short window the diagram overflowed its
+  container and got cut off. Removed the SVG floor so the ring always scales to
+  fit the space available. (Reported on the Steam Workshop page.)
+
 ## [2.0.3] - 2026-06-25
 
 ### Fixed
