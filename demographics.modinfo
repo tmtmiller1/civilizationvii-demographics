@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- NOTE (audited 2.0.5): the Mod element's version="1" is the ModInfo SCHEMA
+     version (constant since 1.3.0), NOT the release version. The release version
+     is <Properties><Version> below. Do not "sync" them — they are different things. -->
 <Mod id="demographics" version="1" xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_DEMOGRAPHICS_NAME</Name>
@@ -7,7 +10,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.0.4</Version>
+        <Version>2.0.5</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />

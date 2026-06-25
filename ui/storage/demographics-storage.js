@@ -224,6 +224,19 @@ class StorageImpl {
   }
 
   /**
+   * Whether the in-memory mirror is stamped with a KNOWN seed that differs from
+   * the current game's — i.e. it belongs to a different game and must not be
+   * reconciled into this one. False when either seed is the "unknown" sentinel.
+   * @returns {boolean} True when _mem is for a different game.
+   */
+  _memIsForDifferentGame() {
+    if (!this._mem || this._seed === "unknown") return false;
+    const memSeed = this._mem.seed;
+    if (memSeed === undefined || memSeed === null || memSeed === "unknown") return false;
+    return String(memSeed) !== String(this._seed);
+  }
+
+  /**
    * Prefer the in-memory history when it has strictly more samples than the
    * persisted payload, then write it back to storage for convergence.
    * @param {StoredHistory} parsed Parsed persisted history.
@@ -232,6 +245,12 @@ class StorageImpl {
    */
   _preferMemWhenNewer(parsed, store) {
     const memSamples = this._mem?.samples?.length || 0;
+    // Never resurrect a DIFFERENT game's in-memory history: if _mem is stamped
+    // with a seed that doesn't match the current game, prefer the freshly-parsed
+    // (current-game) payload regardless of sample counts. Pairs with the seed
+    // guard in loadParsed (storage-load.js) so neither the store payload nor the
+    // _mem mirror can leak a prior game's data into a new one.
+    if (this._memIsForDifferentGame()) return parsed;
     if (memSamples <= parsed.samples.length) return parsed;
     dlog(
       "load: persistent=" +

@@ -545,7 +545,15 @@ function rerenderContent(st) {
   if (st.subTab === "civranking") {
     renderCivRanking(st);
   } else if (st.subTab === "civilizations") {
-    ViewWorldRankingsAllCivs.render(st.content, { history: st.history, settings: st.settings });
+    // The All-Civ view re-renders itself on every sort/toggle, clearing st.content
+    // (incl. any toolbar a one-shot insert would add). afterRender re-attaches the
+    // Options toolbar after each of its (re)renders; insertOptionsToolbar is
+    // idempotent so this never stacks duplicates.
+    ViewWorldRankingsAllCivs.render(st.content, {
+      history: st.history,
+      settings: st.settings,
+      afterRender: () => insertOptionsToolbar(st)
+    });
   } else if (st.subTab === "table") renderTable(st);
   else renderShowcase(st);
   insertOptionsToolbar(st);
@@ -560,6 +568,10 @@ function rerenderContent(st) {
  * @param {SettleState} st The render state.
  */
 function insertOptionsToolbar(st) {
+  // Idempotent: drop any existing toolbar first so repeat calls (e.g. the
+  // All-Civ view's afterRender on each internal sort/toggle) never stack copies.
+  const prior = st.content.querySelector(".demographics-chart-toolbar");
+  if (prior) prior.remove();
   const bar = div("demographics-chart-toolbar");
   bar.appendChild(buildOptionsButton());
   const pills = st.content.querySelector(".demographics-settle-filters");

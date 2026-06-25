@@ -149,13 +149,20 @@ function orderMetricColumns(metricKeys) {
 }
 
 /**
- * Quote a CSV cell when it contains a comma, quote, or newline.
+ * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
+ * when it contains a comma, quote, or newline.
  * @param {*} v The cell value.
  * @returns {string} The CSV-safe cell.
  */
 function csvCell(v) {
   if (v === null || v === undefined) return "";
-  const s = String(v);
+  let s = String(v);
+  // Formula-injection guard: Excel/Sheets execute a cell starting with = + - @
+  // (or a leading tab/CR) as a formula, so a player-renamed civ/leader/town
+  // name like "=cmd|..." would run on open. Prefix a single quote to neutralize
+  // it — but skip plain numbers (incl. negatives / BCE years like "-3000") so
+  // numeric values keep their meaning.
+  if (/^[=+\-@\t\r]/.test(s) && !/^[+-]?[0-9]/.test(s)) s = "'" + s;
   if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;
 }
@@ -175,12 +182,26 @@ function fmtNum(v) {
 }
 
 /**
- * Build & DEDUPLICATE CSV rows by (turn, pid). The sampler can fire twice per
- * turn under certain engine event ordering; last-write-wins so the latest
- * snapshot for each (turn, pid) is preserved.
+ * The monotonic, cross-age-unique turn for a snapshot. `turn` is `localTurn`,
+ * which RESETS to 1 at every age boundary, so it collides across ages; the CSV
+ * must key/sort by `chartTurn` (continuous across ages) instead. Falls back to
+ * `turn` only for ancient pre-chartTurn saves.
+ * @param {Snapshot} s The sample row.
+ * @returns {number} The monotonic turn used as the row key + sort key.
+ */
+function rowSortTurn(s) {
+  if (typeof s.chartTurn === "number" && isFinite(s.chartTurn)) return s.chartTurn;
+  return typeof s.turn === "number" ? s.turn : 0;
+}
+
+/**
+ * Build & DEDUPLICATE CSV rows by (chartTurn, pid). The sampler can fire twice
+ * per turn under certain engine event ordering; last-write-wins so the latest
+ * snapshot for each (chartTurn, pid) is preserved. Keying by chartTurn (not the
+ * age-local `turn`) keeps cross-age rows distinct so they are not dropped.
  * @param {DemoHistory} history The persisted history blob.
  * @param {string[]} metricCols Ordered metric column ids.
- * @returns {Map<string, string[]>} Map of "turn:pid" → cell array.
+ * @returns {Map<string, string[]>} Map of "chartTurn:pid" → cell array.
  */
 function buildCsvRowMap(history, metricCols) {
   /** @type {Map<string, string[]>} */
@@ -189,7 +210,7 @@ function buildCsvRowMap(history, metricCols) {
     if (!s?.players) continue;
     for (const pid of Object.keys(s.players)) {
       const cells = buildCsvRowCells(s, pid, s.players[pid], metricCols);
-      rowByKey.set(s.turn + ":" + pid, cells);
+      rowByKey.set(rowSortTurn(s) + ":" + pid, cells);
     }
   }
   return rowByKey;
@@ -207,6 +228,7 @@ function buildCsvRowMap(history, metricCols) {
 function buildCsvRowCells(s, pid, ps, metricCols) {
   const cells = [
     csvCell(s.turn),
+    csvCell(s.age || ""),
     csvCell(s.gameYear || ""),
     csvCell(pid),
     csvCell(ps.leaderName || ""),
@@ -450,6 +472,7 @@ function buildCsvDocument(history) {
   const metricCols = orderMetricColumns(metricKeys);
   const headers = [
     "turn",
+    "age",
     "gameYear",
     "pid",
     "leaderName",
@@ -459,7 +482,8 @@ function buildCsvDocument(history) {
     ...metricCols
   ];
   const rowByKey = buildCsvRowMap(history, metricCols);
-  // Emit sorted by (turn ASC, pid ASC) for predictable spreadsheet order.
+  // Emit sorted by (chartTurn ASC, pid ASC) for predictable, chronological
+  // spreadsheet order across ages (the key is "chartTurn:pid").
   const sortedKeys = Array.from(rowByKey.keys()).sort((a, b) => {
     const [ta, pa] = a.split(":").map(Number);
     const [tb, pb] = b.split(":").map(Number);

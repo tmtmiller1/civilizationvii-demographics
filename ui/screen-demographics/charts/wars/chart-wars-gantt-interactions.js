@@ -52,7 +52,9 @@ function hideGanttTooltip(state) {
 }
 
 /**
- * Position the Gantt tooltip near the cursor with right-edge flip.
+ * Position the Gantt tooltip near the cursor with right-edge AND bottom-edge
+ * flip (the wrap scrolls both ways; without the vertical flip a hover on a war
+ * bar low in a tall Gantt pushes the tooltip below the visible area).
  * @param {{ wrap: HTMLElement, tooltip: HTMLElement }} state Hover state.
  * @param {*} ev Mouse event.
  * @param {*} rect SVG client rect.
@@ -65,8 +67,15 @@ function positionGanttTooltip(state, ev, rect) {
   if (left + tooltipWidth > visibleRight) {
     left = Math.max(state.wrap.scrollLeft + 8, localX - 14 - tooltipWidth);
   }
+  const localY = ev.clientY - rect.top;
+  let top = localY + 14;
+  const tooltipHeight = state.tooltip.offsetHeight * TOOLTIP_SCALE;
+  const visibleBottom = state.wrap.scrollTop + state.wrap.clientHeight - 8;
+  if (top + tooltipHeight > visibleBottom) {
+    top = Math.max(state.wrap.scrollTop + 8, localY - 14 - tooltipHeight);
+  }
   state.tooltip.style.left = left + "px";
-  state.tooltip.style.top = ev.clientY - rect.top + 14 + "px";
+  state.tooltip.style.top = top + "px";
 }
 
 /**

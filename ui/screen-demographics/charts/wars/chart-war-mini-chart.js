@@ -57,7 +57,8 @@ function drawGraphMarkers(svg, markers, b) {
         y2: MINI_H - PAD_B,
         stroke: m.color,
         "stroke-width": "1.4",
-        "stroke-dasharray": "4 3",
+        // No stroke-dasharray: Coherent ignores it (audited 2.0.5). Marker COLOR
+        // is the differentiator; solid to match the other chart markers.
         "stroke-opacity": "0.85"
       })
     );

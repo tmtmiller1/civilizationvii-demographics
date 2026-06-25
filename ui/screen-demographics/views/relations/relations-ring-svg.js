@@ -266,28 +266,45 @@ function stripOldOverlays(wrap) {
  * @returns {() => void} The placement routine.
  */
 function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) {
+  // Bound the layout-wait re-defer. repaintRing wipes + rebuilds the ring on
+  // every node click, so an OLD ring's deferred placement can fire a frame later
+  // against a now-detached node whose rect stays 0×0 forever — previously that
+  // re-deferred UNBOUNDED, leaking one runaway rAF loop per orphaned ring. The
+  // retry cap is the hard backstop; the isConnected check below short-circuits
+  // sooner when the engine supports it (Coherent may not, hence both).
+  let retries = 0;
+  const MAX_LAYOUT_RETRIES = 120; // ~2s at 60fps; a ring unlaid by then is dead
+  // Re-run next frame while layout isn't ready, up to the retry cap. The cap is
+  // the hard backstop against an unbounded rAF loop when an OLD ring (detached by
+  // a newer repaint) never lays out and its rect stays 0×0 forever.
+  function scheduleRetry() {
+    if (++retries > MAX_LAYOUT_RETRIES) return;
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(placePortraits);
+    else setTimeout(placePortraits, 16);
+  }
+  // getBoundingClientRect can throw on a detached node; treat that as not-ready.
+  function measuredRect() {
+    try {
+      return svg.getBoundingClientRect();
+    } catch (_) {
+      return null;
+    }
+  }
   /**
    * Position every queued overlay, deferring a frame if layout isn't ready.
    */
   function placePortraits() {
     if (portraitsToPlace.length === 0) return;
-    let rect;
-    try {
-      rect = svg.getBoundingClientRect();
-    } catch (_) {
-      // svg.getBoundingClientRect() can throw if the node is detached; treat
-      // as not-yet-laid-out and re-defer a frame below.
-      rect = null;
-    }
+    // Liveness guard: a newer repaint detached this wrap → stop (don't paint into
+    // or spin on an orphan). Only bails when isConnected is explicitly false, so
+    // an engine without isConnected (undefined) falls through to the retry cap.
+    if (wrap && wrap.isConnected === false) return;
+    const rect = measuredRect();
     if (!rect || rect.width === 0 || rect.height === 0) {
-      // Layout not ready yet - try again next frame.
-      if (typeof requestAnimationFrame === "function") {
-        requestAnimationFrame(placePortraits);
-      } else {
-        setTimeout(placePortraits, 16);
-      }
+      scheduleRetry();
       return;
     }
+    retries = 0;
     stripOldOverlays(wrap);
     const scale = Math.min(rect.width / viewBox.w, rect.height / viewBox.h);
     // Publish the ring's px-per-viewBox-unit so the legend can draw its sample

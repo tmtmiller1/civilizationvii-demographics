@@ -191,15 +191,36 @@ ABS_PREVIEW=""
 # back to a generic note if CHANGELOG.md or the matching section is absent.
 CHANGELOG_FILE="$SRC_DIR/CHANGELOG.md"
 CHANGENOTE="v${VERSION} release."
+# Escape regex metachars (notably '.') in the version so "2.0.5" can't match
+# "2X0X5" when interpolated into the awk pattern below.
+VERSION_RE="$(printf '%s' "$VERSION" | sed -E 's/[][(){}.^$*+?|\\]/\\&/g')"
 if [ -f "$CHANGELOG_FILE" ]; then
-    # awk: print lines between "## [VERSION]" and the next "## " header.
-    BULLETS="$(awk -v ver="$VERSION" '
-        $0 ~ ("^## \\[" ver "\\]") { grab = 1; next }
-        grab && /^## / { exit }
-        grab { print }
+    # awk: collect the bullets in the "## [VERSION]" section, JOINING each
+    # bullet's wrapped continuation lines into one logical bullet (Keep a
+    # Changelog bullets span multiple lines; we must not drop the continuations).
+    # "### Fixed"-style subheaders and blank lines are skipped.
+    BULLETS="$(awk -v verre="$VERSION_RE" '
+        function flush() { if (cur != "") { print cur; cur = "" } }
+        $0 ~ ("^## \\[" verre "\\]") { grab = 1; next }
+        grab && /^## / { flush(); exit }
+        !grab { next }
+        /^###/ { next }
+        /^[[:space:]]*[-*][[:space:]]+/ {
+            flush()
+            line = $0
+            sub(/^[[:space:]]*[-*][[:space:]]+/, "", line)
+            cur = line
+            next
+        }
+        /^[[:space:]]*$/ { next }
+        cur != "" {
+            line = $0
+            sub(/^[[:space:]]+/, "", line)
+            cur = cur " " line
+        }
+        END { flush() }
     ' "$CHANGELOG_FILE" \
-        | sed -nE 's/^[[:space:]]*[-*][[:space:]]+(.*)$/[*]\1/p' \
-        | sed -E 's/\*\*//g; s/`//g' \
+        | sed -E 's/^/[*]/; s/\*\*//g; s/`//g' \
         | tr '\n' ' ')"
     if [ -n "$BULLETS" ]; then
         # Lead with a bold version header so the Workshop change note always

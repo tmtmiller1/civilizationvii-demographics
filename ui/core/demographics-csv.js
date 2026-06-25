@@ -30,13 +30,20 @@ function derr(...a) {
 }
 
 /**
- * Quote a CSV cell when it contains a comma, quote, or newline.
+ * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
+ * when it contains a comma, quote, or newline.
  * @param {*} v The cell value.
  * @returns {string} The CSV-safe cell.
  */
 export function csvCell(v) {
   if (v === null || v === undefined) return "";
-  const s = String(v);
+  let s = String(v);
+  // Formula-injection guard: Excel/Sheets execute a cell starting with = + - @
+  // (or a leading tab/CR) as a formula, so a player-renamed civ/leader/town
+  // name like "=cmd|..." would run on open. Prefix a single quote to neutralize
+  // it — but skip plain numbers (incl. negatives / BCE years like "-3000") so
+  // numeric values keep their meaning.
+  if (/^[=+\-@\t\r]/.test(s) && !/^[+-]?[0-9]/.test(s)) s = "'" + s;
   if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;
 }
