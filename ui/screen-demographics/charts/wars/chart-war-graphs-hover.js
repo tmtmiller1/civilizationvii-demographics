@@ -161,15 +161,22 @@ function fillHoverTip(tip, turn, series, head, markers) {
  */
 function placeTip(tip, ev, cRect) {
   const GAP = 14;
-  tip.style.display = "block"; // ensure it's laid out before measuring its width
+  tip.style.display = "block"; // ensure it's laid out before measuring its size
   const tipW = tip.offsetWidth || 0;
+  const tipH = tip.offsetHeight || 0;
   const viewW = (typeof window !== "undefined" && window.innerWidth) || cRect.right;
+  const viewH = (typeof window !== "undefined" && window.innerHeight) || cRect.bottom;
   const localX = ev.clientX - cRect.left;
-  // Default to the right of the cursor; flip left when that would run past the viewport's right
-  // edge.
+  const localY = ev.clientY - cRect.top;
+  // Default to the right of / below the cursor; flip when that would run past the
+  // viewport edge, so tooltips on right-side or lower-row graphs stay fully
+  // on-screen instead of clipping (horizontal flip was here; vertical added so
+  // hovers in the lower rows of the scrollable small-multiples grid don't clip
+  // off the bottom).
   const flipLeft = ev.clientX + GAP + tipW > viewW;
+  const flipUp = ev.clientY + GAP + tipH > viewH;
   tip.style.left = (flipLeft ? localX - GAP - tipW : localX + GAP) + "px";
-  tip.style.top = ev.clientY - cRect.top + GAP + "px";
+  tip.style.top = (flipUp ? localY - GAP - tipH : localY + GAP) + "px";
 }
 
 /**

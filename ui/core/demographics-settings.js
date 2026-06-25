@@ -531,8 +531,24 @@ export const DemographicsSettings = {
       // safely round-tripped, so we can only ever add/update our OWN slice.
       const { root, safe } = readRootForWrite();
       if (safe) {
-        const slice = normalizeSlice({ ...DEFAULTS, ...(root[MOD_ID] || {}) });
-        Object.assign(slice, entries);
+        // Merge our stored slice with the new entries, then persist only REAL
+        // overrides: keys absent from DEFAULTS are genuine per-view state (active
+        // tab/metric/filters) and always persist; keys present in DEFAULTS persist
+        // only when they DIFFER from the shipped default. The old code folded
+        // DEFAULTS into the slice, freezing the then-current default into every
+        // save — so a later change to a default value would never reach anyone who
+        // had ever touched settings. Stripping default-equal keys also heals
+        // already-baked slices on their next write. Reads stay correct because
+        // getSettings()/getSetting() overlay DEFAULTS over the (now partial) slice.
+        const merged = normalizeSlice({ ...(root[MOD_ID] || {}), ...entries });
+        /** @type {SettingsBucket} */
+        const slice = {};
+        for (const k of Object.keys(merged)) {
+          if (k === SCHEMA_KEY) continue;
+          const matchesDefault =
+            k in DEFAULTS && JSON.stringify(merged[k]) === JSON.stringify(DEFAULTS[k]);
+          if (!matchesDefault) slice[k] = merged[k];
+        }
         slice[SCHEMA_KEY] = SCHEMA_VERSION;
         root[MOD_ID] = slice;
         writeRoot(root);

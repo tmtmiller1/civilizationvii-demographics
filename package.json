@@ -24,7 +24,7 @@
     "coverage": "c8 npm run test:js",
     "hotspots": "node scripts/hotspot-score.mjs",
     "mutation": "stryker run",
-    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot && npm run test:options && npm run test:settings-clobber && npm run test:history-time-filter && npm run test:migration-hub && npm run test:modinfo && npm run test:i18n && npm run test:no-empty-catch",
+    "verify": "tsc --noEmit && eslint ui && npm run test:remediation-23 && npm run test:civ-color-utils && npm run test:node-baselines && npm run test:crisis-segments && npm run test:wars-civ-naming && npm run test:crisis-cost-snapshot && npm run test:options && npm run test:settings-clobber && npm run test:history-time-filter && npm run test:migration-hub && npm run test:settlements-data && npm run test:modinfo && npm run test:i18n && npm run test:no-empty-catch",
     "test:settings-clobber": "node --loader ./tests/loader.mjs ./tests/settings-clobber.mjs"
   },
   "devDependencies": {
