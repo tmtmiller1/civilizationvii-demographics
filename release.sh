@@ -202,8 +202,10 @@ if [ -f "$CHANGELOG_FILE" ]; then
         | sed -E 's/\*\*//g; s/`//g' \
         | tr '\n' ' ')"
     if [ -n "$BULLETS" ]; then
-        # Wrap as a BBCode list and escape backslashes/quotes for the VDF string.
-        CHANGENOTE="$(printf '[list]%s[/list]' "$BULLETS" \
+        # Lead with a bold version header so the Workshop change note always
+        # names the release (older 2.0.x pushes shipped with no version string),
+        # then the BBCode list. Escape backslashes/quotes for the VDF string.
+        CHANGENOTE="$(printf '[b]v%s[/b] [list]%s[/list]' "$VERSION" "$BULLETS" \
             | sed -E 's/\\/\\\\/g; s/"/\\"/g')"
     fi
 fi
