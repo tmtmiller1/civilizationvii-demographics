@@ -51,6 +51,7 @@ import {
   makeNodeSelectionWriter,
   readCsViewerPid,
   readShowUnmetNames,
+  resetRelationsCachesIfGameChanged,
   writeActiveSubGroup
 } from "/demographics/ui/screen-demographics/views/relations/relations-settings.js";
 import {
@@ -587,6 +588,11 @@ function repaintView(rs) {
  */
 export function render(host, ctx) {
   while (host.firstChild) host.removeChild(host.firstChild);
+
+  // Drop in-memory filter/node-focus caches if this is a different game/save
+  // than the one they were populated for (no-op on same-game repaints), so we
+  // don't inherit the previous game's filters or stale node pids.
+  resetRelationsCachesIfGameChanged();
 
   const settings = ctx.settings;
 

@@ -476,7 +476,7 @@
 .demographics-settle-leaders {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
+    gap: 0.45rem 0.45rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
     justify-content: center;
 }
 .demographics-settle-leader-card {
@@ -740,7 +740,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.5rem 0.5rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
     margin-top: 0.3rem;
 }
 .demographics-advisor-card {
@@ -831,7 +831,7 @@
 .demographics-settle-wonders {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.2rem;
+    gap: 0.2rem 0.2rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
     margin: 0.15rem 0;
 }
 .demographics-settle-wonder-icon {
@@ -960,7 +960,7 @@
 .demographics-settle-detail-stats {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    gap: 0.6rem 0.6rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
 }
 .demographics-settle-statchip {
     display: flex;
@@ -1018,7 +1018,7 @@
 .demographics-settle-detail-wonder-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.5rem 0.5rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
 }
 .demographics-settle-detail-wonder {
     display: flex;
@@ -1099,7 +1099,7 @@
 .demographics-settle-mapbtns {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem;
+    gap: 0.3rem 0.3rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
     align-items: center;
     margin: 0.1rem 0;
 }

@@ -14,6 +14,48 @@ const _filterSetCache = new Map();
 // In-memory node-focus selections keyed by top tab ("civ" / "cs").
 const _nodeSelectionCache = new Map();
 
+// Token of the game these caches belong to. The caches are module singletons,
+// so without this a second game in the same app session ("Play Another Game" /
+// loading a different save without a UI reload) would short-circuit on the
+// stale cache and show the PREVIOUS game's filters / node-focus instead of the
+// new save's persisted values.
+/** @type {string|null} */
+let _cacheGameToken = null;
+
+/**
+ * Best-effort per-game token (the configured game seed) used to scope the
+ * in-memory caches to a single game/save.
+ * @returns {string|null} The token, or null when unavailable.
+ */
+function currentGameToken() {
+  try {
+    if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
+      const g = Configuration.getGame();
+      const seed = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
+      if (seed !== undefined && seed !== null) return String(seed);
+    }
+  } catch (_) {
+    // Engine boundary can throw; treat as unavailable.
+  }
+  return null;
+}
+
+/**
+ * Clear the in-memory relations caches when the active game/save changes, so a
+ * new game re-reads its OWN persisted filters and starts with a clean node-focus
+ * selection. Only acts on a CONFIRMED change (both tokens known and different);
+ * an unavailable token never wipes a populated same-session cache, and same-game
+ * repaints are a no-op. Call once at the top of the relations view render.
+ */
+export function resetRelationsCachesIfGameChanged() {
+  const token = currentGameToken();
+  if (token !== null && _cacheGameToken !== null && token !== _cacheGameToken) {
+    _filterSetCache.clear();
+    _nodeSelectionCache.clear();
+  }
+  if (token !== null) _cacheGameToken = token;
+}
+
 /**
  * Read the persisted top tab ("civ"/"cs"), defaulting to "civ".
  * @param {*} settings Settings accessor.
