@@ -11,6 +11,12 @@ section below by `release.sh`.
 
 A correctness + robustness pass from a full multi-subsystem audit.
 
+### Changed
+- **Removed the Refresh and Time buttons from the Triumphs radar screen.** Both
+  were meaningless on a snapshot view (the radar reloads when you pick a snapshot,
+  and the turn/year toggle has no time axis to act on); the snapshot selector,
+  Copy CSV, and Options controls remain.
+
 ### Fixed
 - **CSV export dropped most rows in multi-age games.** The per-turn CSV keyed
   rows by `turn`, which resets to 1 each age, so same-numbered turns across ages
