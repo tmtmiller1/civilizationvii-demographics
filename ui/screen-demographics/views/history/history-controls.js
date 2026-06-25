@@ -19,25 +19,6 @@ function dlog(...a) {
 }
 
 /**
- * @param {HTMLElement} toolbar
- * @param {*} ctx
- */
-function appendRadarControls(toolbar, ctx) {
-  // The snapshot SELECTOR pills now live in a centered filter row (buildRadarSnapshotRow), like the
-  // time filters on other graphs; the toolbar keeps only the Refresh action.
-  const refresh = document.createElement("div");
-  refresh.className = "demographics-chart-toolbar-btn font-body text-xs";
-  refresh.textContent = t("LOC_DEMOGRAPHICS_BTN_REFRESH");
-  refresh.title = t("LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP");
-  makeClickable(refresh, (ev) => {
-    ev?.stopPropagation?.();
-    playActivate();
-    if (typeof ctx.requestReload === "function") ctx.requestReload();
-  });
-  toolbar.appendChild(refresh);
-}
-
-/**
  * Build the radar SNAPSHOT selector as a centered filter row (matching the time-filter row on other
  * graphs): a "Snapshot:" label + one pill per age snapshot. Replaces the old right-aligned toolbar
  * placement so the snapshot filters center like the year filters elsewhere.
@@ -408,8 +389,10 @@ function appendCsvControls(toolbar, host, ctx, activeMetric) {
  * @param {string} activeMetric
  */
 function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
-  if (activeMetric === "legacy_radar") appendRadarControls(toolbar, ctx);
-  else if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
+  // legacy_radar intentionally gets NO toolbar action here: its snapshot
+  // selector lives in the centered row (buildRadarSnapshotRow), and the Refresh
+  // button it used to carry was redundant (the snapshot reloads on selection).
+  if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
   // war_graphs: the "Pick war" dropdown moves to the LEFT bar (buildWarGraphsPicker), not the
   // toolbar.
   else if (activeMetric === "crisis_graphs") appendCrisisGraphsControls(toolbar, ctx);
@@ -529,7 +512,9 @@ function appendResourcesViewerIfReady(toolbar, ctx) {
   }
 }
 
-const TIME_TOGGLE_HIDDEN_FOR = new Set(["crisis_graphs"]);
+// Time-units (turn/year) toggle is meaningless on views with no time axis:
+// crisis graphs and the radar SNAPSHOT.
+const TIME_TOGGLE_HIDDEN_FOR = new Set(["crisis_graphs", "legacy_radar"]);
 // Wonder markers only draw on the standard per-civ line charts; hide the toggle
 // on every synthetic view (radar, resources stack, the wars pages, crises) where
 // it would do nothing.
