@@ -165,8 +165,11 @@ function drawCurrentTurnLine(svg, L, dom, latestTurn) {
       y1: L.padT,
       y2: L.padT + L.innerH,
       stroke: "#ffdf3b",
-      "stroke-width": "2",
-      "stroke-dasharray": "5 3"
+      "stroke-width": "2"
+      // NOTE (audited 2.0.5): no stroke-dasharray — Coherent ignores it (see
+      // chart-resources.js drawStackAgeLines). Overlay markers are intentionally
+      // SOLID and distinguished by COLOR: current-turn yellow #ffdf3b here,
+      // crisis stage-colored, age purple #b78cff. Don't re-add dasharray.
     })
   );
 }
@@ -193,7 +196,8 @@ function drawCrisisMarkers(svg, L, dom, onsets) {
         y2: L.padT + L.innerH,
         stroke: color,
         "stroke-width": "1.4",
-        "stroke-dasharray": "4 3",
+        // No stroke-dasharray: Coherent ignores it (audited 2.0.5). Stage COLOR
+        // is the differentiator; kept solid to match the other chart markers.
         "stroke-opacity": "0.85"
       })
     );
@@ -414,7 +418,8 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
         y2: L.padT + L.innerH,
         stroke: "#b78cff",
         "stroke-width": "2",
-        "stroke-dasharray": "8 4",
+        // No stroke-dasharray: Coherent ignores it (audited 2.0.5). Age markers
+        // read by their purple COLOR; solid to match the other chart markers.
         "stroke-opacity": "0.95"
       })
     );

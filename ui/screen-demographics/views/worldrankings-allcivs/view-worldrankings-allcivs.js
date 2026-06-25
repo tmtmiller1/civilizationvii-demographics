@@ -50,6 +50,8 @@ function dlog(...a) {
  * @typedef {Object} WorldRankingsAllCivsCtx
  * @property {DemoHistory} [history] The full persisted history blob.
  * @property {WorldRankingsAllCivsSettings} [settings] Persisted-setting accessor.
+ * @property {(host: HTMLElement) => void} [afterRender] Optional hook run after
+ *   every (re)render so an owner can re-attach chrome it placed in `host`.
  */
 
 /**
@@ -66,6 +68,11 @@ export function render(host, ctx) {
   const allPids = Object.keys(profiles);
   if (allPids.length === 0) {
     appendEmptyState(host);
+    // afterRender runs on EVERY render (incl. the internal sort/toggle re-render
+    // below, which clears `host`), so an owner can re-attach chrome it placed in
+    // host — e.g. the Settlements Options toolbar, which a one-shot insert would
+    // lose on the first sort. See view-settlements rerenderContent.
+    if (typeof ctx.afterRender === "function") ctx.afterRender(host);
     return;
   }
 
@@ -78,6 +85,8 @@ export function render(host, ctx) {
   // with a Rank/Value cell toggle. The rerender closure re-runs this render so a
   // toggle or sort change repaints from fresh profiles.
   renderCivTable(host, profiles, ctx, showUnmetNames, () => render(host, ctx));
+  // See note above: let the owner re-attach host chrome after each (re)render.
+  if (typeof ctx.afterRender === "function") ctx.afterRender(host);
 }
 
 /**

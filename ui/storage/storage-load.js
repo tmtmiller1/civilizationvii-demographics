@@ -54,6 +54,21 @@ export function loadEmpty(options) {
 }
 
 /**
+ * Whether a stored seed is KNOWN and differs from the current game's seed (so
+ * the payload belongs to a different game). Skipped when either side is the
+ * "unknown" sentinel, so unresolved seeds never trigger a reset of valid data.
+ * @param {string | number | undefined | null} storedSeed Seed stamped on the payload.
+ * @param {string | number} seed Current game seed.
+ * @returns {boolean} True when the seeds are both known and differ.
+ */
+function seedMismatch(storedSeed, seed) {
+  if (seed === "unknown" || storedSeed === undefined || storedSeed === null || storedSeed === "unknown") {
+    return false;
+  }
+  return String(storedSeed) !== String(seed);
+}
+
+/**
  * Parse and validate a raw payload.
  * @param {{
  *   raw: string,
@@ -96,6 +111,17 @@ export function loadParsed(options) {
   if (!isValid(parsed, version)) {
     derr("load: malformed history, resetting", parsed && parsed.version);
     return mem || emptyHistory(seed, version);
+  }
+
+  // New-game guard: history is stamped with the seed of the game that wrote it.
+  // If the stored seed is KNOWN and differs from the current game's seed, this
+  // payload belongs to a different game — don't load another game's data. Prefer
+  // the current game's in-memory mirror if we have it, else start fresh. This
+  // realizes the documented "stamped with the game seed and self-resets on a new
+  // game" behavior.
+  if (seedMismatch(parsed.seed, seed)) {
+    derr("load: seed mismatch (stored=" + parsed.seed + " current=" + seed + "), resetting for new game");
+    return mem && String(mem.seed) === String(seed) ? mem : emptyHistory(seed, version);
   }
 
   normalize(parsed);
