@@ -204,6 +204,14 @@ export function scalePopulationAt(raw, _turn, ctx) {
 // as population.
 const SOLDIERS_PER_UNIT = 1000;
 
+// The era multiplier on soldiers-per-unit (a Modern division dwarfs an ancient legion) is the same
+// 1.009^turn growth population USED to use — but unbounded it ran to 8,000× on a long Marathon game,
+// rendering casualties in the billions. Population dropped the exponential for a bounded age curve;
+// casualties keep the cheap exponential but CAP it at a full-game's worth of era growth
+// (1.009^~270 ≈ 11×), so the figure stays sane and is consistent across game length / speed instead of
+// ballooning with the raw turn count.
+const CASUALTY_MAX_ERA_MULT = 11;
+
 /**
  * Scale a raw units-lost COUNT into a turn-aware "soldiers killed" figure, comparable to the scaled
  * population metric.
@@ -225,7 +233,8 @@ export function scaleCasualties(raw, scaleCtx, ctx) {
 export function scaleCasualtiesAt(raw, turn) {
   if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
   const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
-  return raw * SOLDIERS_PER_UNIT * Math.pow(1.009, t);
+  const eraMult = Math.min(CASUALTY_MAX_ERA_MULT, Math.pow(1.009, t));
+  return raw * SOLDIERS_PER_UNIT * eraMult;
 }
 
 /**
@@ -292,6 +301,7 @@ function softCeil(x, ceiling) {
   const knee = CEIL_KNEE * ceiling;
   if (x <= knee) return x;
   const span = ceiling - knee;
+  if (!(span > 0)) return x; // defensive: a non-positive ceiling would divide by zero
   return knee + span * (1 - Math.exp(-(x - knee) / span));
 }
 
@@ -321,6 +331,13 @@ export function scaleCityPopulationAt(raw, _turn, ageType, ageProgressPct) {
   // it isn't double-applied. The Emigration mod mirrors this same principle for its own figures.
 }
 
+// GDP multiplies per-turn yield by the turn count to approximate a CUMULATIVE economy, but unbounded
+// that turn factor makes a mature empire read ~500× richer at turn 500 purely because time passed (and
+// worse on Marathon, where turns accrue faster than game-progress). Cap the factor at a full game's
+// worth of turns so a normal game is unchanged while overtime / slow speeds / very long games can't run
+// the figure away.
+const GDP_TURN_CAP = 300;
+
 /**
  * Scale a raw weighted-yield sum into a $billions-scale GDP figure.
  * @param {number} raw Weighted per-turn yield sum.
@@ -330,7 +347,7 @@ export function scaleCityPopulationAt(raw, _turn, ageType, ageProgressPct) {
  */
 export function scaleGDP(raw, scaleCtx, ctx) {
   if (typeof raw !== "number" || !isFinite(raw)) return 0;
-  return raw * resolveTurn(ctx, scaleCtx) * 1000000;
+  return raw * Math.min(GDP_TURN_CAP, resolveTurn(ctx, scaleCtx)) * 1000000;
 }
 
 /**

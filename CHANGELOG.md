@@ -7,6 +7,27 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-06-27
+
+A correctness pass on two charted figures that could balloon to absurd values on
+long or slow (Marathon) games — the same "a number escaped its bound" class the
+2.1.0 population rework addressed, now closed for war casualties and GDP. No
+saves affected; presentation only.
+
+### Fixed
+- **War-casualties no longer read in the billions on long / slow games.** The
+  "soldiers killed" chart used an unbounded `1.009^turn` era multiplier (the same
+  term the population formula already dropped), which ran to thousands× on a long
+  Marathon game. It is now capped at a full game's worth of era growth, so casualty
+  figures stay sane and comparable across eras and speeds.
+- **GDP no longer balloons purely because time passed.** The GDP figure multiplied
+  per-turn yield by the raw turn counter with no bound, making a mature empire read
+  hundreds of times "richer" late game (worse on Marathon). The turn factor is now
+  capped at a full game's length, so a normal game is unchanged while overtime / slow
+  speeds / very long games can't run the figure away.
+- **Hardened the population soft ceiling** against a divide-by-zero in the (today
+  impossible) case of a zero ceiling.
+
 ## [2.1.0] - 2026-06-27
 
 A population-realism release. The scaled "people" figures the dashboard shows
