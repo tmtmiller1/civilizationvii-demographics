@@ -169,12 +169,19 @@ function applyEngineChartDefaults() {
 }
 
 /**
- * Resolve viewport dimensions with safe defaults.
+ * Resolve viewport dimensions. When the engine doesn't expose `window.inner*`,
+ * fall back to the caller-measured host size (the real laid-out dimensions) rather
+ * than a hardcoded 16:9 guess, so a non-16:9 / ultrawide display isn't mis-sized.
+ * A final 1920×1080 default covers the case where neither is available.
+ * @param {number} [fallbackW] Caller-measured host width.
+ * @param {number} [fallbackH] Caller-measured host height.
  * @returns {{ vw: number, vh: number }} Viewport width and height.
  */
-function viewportSize() {
-  const vw = typeof window !== "undefined" && window.innerWidth ? window.innerWidth : 1920;
-  const vh = typeof window !== "undefined" && window.innerHeight ? window.innerHeight : 1080;
+function viewportSize(fallbackW, fallbackH) {
+  const vw =
+    typeof window !== "undefined" && window.innerWidth ? window.innerWidth : fallbackW || 1920;
+  const vh =
+    typeof window !== "undefined" && window.innerHeight ? window.innerHeight : fallbackH || 1080;
   return { vw, vh };
 }
 
@@ -201,7 +208,7 @@ function clampRenderByHint(render, hint) {
 function computeRenderSize(opts, W, H) {
   let renderW, renderH;
   try {
-    const { vw, vh } = viewportSize();
+    const { vw, vh } = viewportSize(W, H);
     renderW = Math.max(960, Math.round(vw * 0.92));
     renderH = Math.max(420, Math.round(vh * 0.62));
     // Honor the caller's W/H as an upper bound (caller measured chartHost
@@ -636,7 +643,25 @@ function mountPreparedLineChart(args) {
   // future padding sized to the widest crisis label so it draws right of its
   // line on every metric, including wide-y-axis ones.
   applyCrisisRightPadding(chart, crisisMarkers, datasets);
+  // Align the overlaid legend to the plot's MEASURED inner-left so it clears the
+  // Y-axis tick labels at any Interface Size, instead of relying on fixed rem
+  // offsets (the -wide tiers) that under-cleared the axis when its labels grow.
+  alignLegendToPlot(chart, legendEl);
   return { canvas, chart };
+}
+
+/**
+ * Align the overlaid legend's left edge to the plot's measured inner-left (just
+ * inside the Y axis), so it never overlaps the Y-axis tick labels regardless of
+ * their width or the Interface Size. No-op (keeping the CSS rem-tier fallback) if
+ * the plot area isn't available yet. A small gap keeps it off the axis line.
+ * @param {*} chart The mounted Chart.js instance.
+ * @param {HTMLElement|null} legendEl The overlaid legend element.
+ */
+function alignLegendToPlot(chart, legendEl) {
+  if (!legendEl || !chart || !chart.chartArea) return;
+  const left = chart.chartArea.left;
+  if (typeof left === "number" && left >= 0) legendEl.style.left = Math.round(left + 6) + "px";
 }
 
 /**

@@ -204,26 +204,62 @@ function buildAllToggleLink(labelLoc, onClick) {
 }
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-const SWATCH_PX_W = 116; // on-screen swatch width in px
+// Swatch width as a REM multiple (was a flat 116px). Expressed in rem so the
+// swatch grows with Interface Size like the label beside it, instead of staying a
+// fixed pixel width that looks undersized at large Interface Sizes. 7.25rem ≈ the
+// legacy 116px at the default 16px root, so default-size layouts are unchanged.
+const SWATCH_W_REM = 7.25;
 const SWATCH_VB_H = 4; // swatch viewBox height in (ring) units
+
+// Pixels-per-rem at the current Interface Size, measured once via a probe (GameFace
+// has no reliable getComputedStyle; getBoundingClientRect is the codebase's standard
+// measurement). Cached for the session — Interface Size changes mid-session are rare
+// and the screen re-measures on its next open.
+let _remPxCache = 0;
+
+/**
+ * Measure the on-screen px length of 1rem at the current Interface Size.
+ * @returns {number} Pixels per rem (falls back to 16 if unmeasurable).
+ */
+function remPx() {
+  if (_remPxCache > 0) return _remPxCache;
+  try {
+    const probe = document.createElement("div");
+    probe.style.position = "absolute";
+    probe.style.width = "1rem";
+    probe.style.height = "0";
+    probe.style.visibility = "hidden";
+    probe.style.pointerEvents = "none";
+    document.body.appendChild(probe);
+    const w = probe.getBoundingClientRect().width;
+    document.body.removeChild(probe);
+    _remPxCache = w > 0 ? w : 16;
+  } catch (_) {
+    _remPxCache = 16;
+  }
+  return _remPxCache;
+}
 
 /**
  * Build a filter pill's sample-line swatch: a small SVG that draws the filter's
  * actual line (same color, dash synthesis, and direction chevron the ring uses)
  * AT THE RING'S MEASURED px-per-unit, so dash lengths + stroke width match the
- * ring lines exactly. The viewBox width is derived from that scale so a fixed-px
- * swatch shows the line at ring scale (a portion of an edge, same dash size).
+ * ring lines exactly. The on-screen WIDTH now scales with Interface Size (rem),
+ * and the viewBox width is derived from that px width so the 1:1 viewBox→px scale
+ * is preserved — the line still shows at ring scale (a portion of an edge, same
+ * dash size), just in a swatch that's proportional to its label at any size.
  * @param {FilterDef} f The filter descriptor.
  * @returns {SVGElement} The swatch SVG.
  */
 function buildFilterSwatch(f) {
   const pxu = getRingPxPerUnit() || 5; // fallback until the ring is first measured
-  const vbW = SWATCH_PX_W / pxu;
+  const swatchPxW = SWATCH_W_REM * remPx(); // physical width scales with Interface Size
+  const vbW = swatchPxW / pxu; // keep viewBox 1:1 with px so dashes match the ring exactly
   const svg = /** @type {SVGElement} */ (document.createElementNS(SVG_NS, "svg"));
   svg.setAttribute("viewBox", "0 0 " + vbW + " " + SWATCH_VB_H);
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
   svg.setAttribute("class", "demographics-relations-swatch");
-  svg.style.width = SWATCH_PX_W + "px";
+  svg.style.width = swatchPxW + "px";
   svg.style.height = SWATCH_VB_H * pxu + "px";
   const y = SWATCH_VB_H / 2;
   appendSampleEdge(

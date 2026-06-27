@@ -41,27 +41,162 @@ export function resolveTurn(primary, fallback) {
   return 1;
 }
 
+// ── Population scaling — grounded in Civ VII's REAL per-era growth formula ──────────────────────────
+// Civ VII grows a settlement by charging food per size step: cost(x) = Flat + Scalar·x + Exponent·x²,
+// with DIFFERENT {Flat,Scalar,Exponent} per age (the game's own per-age system). The cumulative food a
+// settlement of size N has absorbed, W(N) = Σ cost(1..N), is its demographic "weight"; one global
+// constant POP_K turns that weight into people. This reproduces real history AND the live readouts
+// (an Exploration city of size ~21 → ~0.97M, matching the in-game figure), and — because the per-era
+// params already differ — is per-age by construction, with no turn-based multiplier that resets each
+// age. See reports/population-scaling-per-age-design.md.
+//
+// Source: CivFanatics "More tables for the new growth formula" (v1.1.2 params).
+/** @type {Record<string, {flat:number,scalar:number,exp:number}>} */
+const ERA_GROWTH_PARAMS = {
+  AGE_ANTIQUITY: { flat: 5, scalar: 20, exp: 4 },
+  AGE_EXPLORATION: { flat: 30, scalar: 50, exp: 5 },
+  AGE_MODERN: { flat: 60, scalar: 60, exp: 6 }
+};
+const ERA_ORDER = ["AGE_ANTIQUITY", "AGE_EXPLORATION", "AGE_MODERN"];
+// People per food-unit — the single global scale anchor (top Exploration city, size ~20 → ~0.8M).
+const POP_K = 31;
+// Over the first BLEND_PCT of a new age, blend the previous era's params → the current era's, so a
+// settlement whose size carries across an age boundary reads continuously (no jump). This is the
+// "dynamic connection" between ages, done with the game's real per-era numbers.
+const BLEND_PCT = 25;
+
+// Modern-only megacity allowance. The growth curve alone tops out around ~17M (size 60); real 20th–21st
+// century megacities reach ~25–38M. A super-linear bump above MEGA_KNEE, ramped by age-progress so it
+// emerges gradually through the Modern age (never pops in at the boundary), lifts the largest cities
+// into that band. Tuned so size ~50 late-Modern ≈ 28M.
+const MEGA_KNEE = 35;
+const MEGA_STRENGTH = 5.0;
+const MEGA_POW = 1.3;
+
+// Per-era hard ceiling = the largest single city historically plausible for the age (Rome ~1.6M;
+// early-modern Beijing/Edo ~2.5M; modern Tokyo ~38M). The people figure SATURATES smoothly toward this
+// (see softCeil), which does double duty: (a) it is the megacity cap, and (b) it is an elegant safety
+// bound — if the engine ever hands us a wildly out-of-range size, the figure degrades gracefully to
+// "the largest city this age could hold" instead of resurrecting a multi-billion blow-up. Blended
+// across boundaries (geometric) like the growth params, so it too is continuous.
+/** @type {Record<string, number>} */
+const ERA_CEILING = {
+  AGE_ANTIQUITY: 1.6e6,
+  AGE_EXPLORATION: 2.5e6,
+  AGE_MODERN: 38e6
+};
+// Below CEIL_KNEE·ceiling the figure is untouched; above it, it bends smoothly (C¹) toward the ceiling.
+const CEIL_KNEE = 0.7;
+
+// "One more turn": the final (Modern) age has no successor, so when play continues past its natural end
+// the age-progress runs PAST 100%. We let the Modern ceiling expand with that overtime fraction, so
+// megacities keep scaling into a speculative future instead of slamming into the historical cap — the
+// cap softens/lifts exactly when the player chooses to keep playing. No effect at or below 100% (normal
+// play). The expansion is smoothstep-eased in over the first OVERTIME_EASE of overtime (so the ceiling
+// stays C¹ — no slope kink at the natural age end) and capped at OVERTIME_MAX, so even a pathological
+// engine progress reading can NEVER resurrect a multi-billion single-city figure (worst case
+// = base ceiling × OVERTIME_MAX, i.e. ~190M/city in Modern).
+const OVERTIME_CEILING_RATE = 1.0; // base ceilings per full extra age of overtime (pre-cap)
+const OVERTIME_EASE = 0.1; // smoothstep-ease the onset over the first 10% of overtime fraction (C¹)
+const OVERTIME_MAX = 5; // hard cap on the multiplier — bounds the absolute worst case
+
 /**
- * Scale a raw population count into a turn-aware "realistic" figure.
- * @param {number} raw Raw per-civ population total.
- * @param {{ turn?: number } | null | undefined} scaleCtx Per-player scale context.
- * @param {{ turn?: number } | null | undefined} ctx Per-player accessor context.
- * @returns {number} The scaled population (0 for non-positive/invalid input).
+ * Smoothstep on [0,1].
+ * @param {number} x Input.
+ * @returns {number} Smoothed value.
  */
-export function scalePopulation(raw, scaleCtx, ctx) {
-  return scalePopulationAt(raw, resolveTurn(ctx, scaleCtx));
+function smoothstep(x) {
+  const c = Math.max(0, Math.min(1, x));
+  return c * c * (3 - 2 * c);
 }
 
 /**
- * The world-estimate population formula at an explicit turn.
- * @param {number} raw Raw population count.
- * @param {number} turn The (monotonic) turn for the era multiplier.
+ * The effective per-era growth params for an age, blended from the previous era's over the opening
+ * BLEND_PCT of the age so the people curve is continuous across age boundaries.
+ * @param {string | undefined} ageType Current age (e.g. AGE_EXPLORATION).
+ * @param {number | undefined} ageProgressPct Age progress percent [0,100].
+ * @returns {{flat:number,scalar:number,exp:number}} The effective params.
+ */
+export function eraGrowthParams(ageType, ageProgressPct) {
+  const key = typeof ageType === "string" && ERA_GROWTH_PARAMS[ageType] ? ageType : "AGE_EXPLORATION";
+  const cur = ERA_GROWTH_PARAMS[key];
+  const idx = ERA_ORDER.indexOf(key);
+  const prev = idx > 0 ? ERA_GROWTH_PARAMS[ERA_ORDER[idx - 1]] : cur;
+  if (prev === cur) return cur;
+  // Default for UNREADABLE progress: 100 ("treat a known age as a fully-developed member of itself").
+  // Deliberate hot default — safe because the result is bounded by softCeil (no blow-up) and the real
+  // engine API (getCurrent/MaxAgeProgressionPoints) is well-guarded, so this only matters in a rare
+  // degenerate case. See reports/population-scaling-per-age-design.md (#4).
+  const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
+  const s = smoothstep(p / BLEND_PCT);
+  if (s <= 0) return prev; // exact at the boundary (bit-identical continuity)
+  if (s >= 1) return cur;
+  return {
+    flat: prev.flat + (cur.flat - prev.flat) * s,
+    scalar: prev.scalar + (cur.scalar - prev.scalar) * s,
+    exp: prev.exp + (cur.exp - prev.exp) * s
+  };
+}
+
+/**
+ * Cumulative growth effort W(N) = Σ cost(1..N) for a settlement of size N under the given era params.
+ * Closed form of the sums: Flat·N + Scalar·N(N+1)/2 + Exp·N(N+1)(2N+1)/6.
+ * @param {number} n Settlement size (raw population points).
+ * @param {{flat:number,scalar:number,exp:number}} params Era growth params.
+ * @returns {number} The cumulative effort (0 for non-positive size).
+ */
+export function growthEffort(n, params) {
+  if (typeof n !== "number" || !isFinite(n) || n <= 0) return 0;
+  const s1 = (n * (n + 1)) / 2;
+  const s2 = (n * (n + 1) * (2 * n + 1)) / 6;
+  return params.flat * n + params.scalar * s1 + params.exp * s2;
+}
+
+/**
+ * Per-player context passed to the population scale functions.
+ * @typedef {Object} PopScaleCtx
+ * @property {number} [turn] Sample turn.
+ * @property {number} [populationScaled] Pre-summed per-settlement people total (preferred).
+ * @property {string} [ageType] Current age type.
+ * @property {number} [ageProgressPct] Current age-progress percent [0,100].
+ */
+
+/**
+ * The metric `scale` for the civ population total. The empire figure is the SUM of its settlements'
+ * scaled people (computed at sample time, see the sampler's `populationScaled`); summing per-settlement
+ * is required because W is super-linear, so scaling the aggregate would over-count. Falls back to a
+ * coarse aggregate estimate only for legacy samples that predate `populationScaled`.
+ * @param {number} raw Raw per-civ population total (sum of settlement sizes).
+ * @param {{ turn?: number } | null | undefined} scaleCtx Per-player scale context.
+ * @param {PopScaleCtx | null | undefined} ctx Per-player accessor context.
+ * @returns {number} The scaled civ population.
+ */
+export function scalePopulation(raw, scaleCtx, ctx) {
+  const summed = ctx && typeof ctx.populationScaled === "number" && isFinite(ctx.populationScaled)
+    ? ctx.populationScaled
+    : undefined;
+  if (typeof summed === "number") return summed;
+  // Legacy fallback: no per-settlement sum available. Approximate the empire as same-size settlements
+  // so we never resurrect the old 90000·raw^1.11 blow-up.
+  return scalePopulationAt(raw, resolveTurn(ctx, scaleCtx), ctx);
+}
+
+/**
+ * Coarse civ-population estimate from the aggregate raw total (legacy/fallback path only). Treats the
+ * empire as a handful of average settlements so the figure stays in the per-settlement regime.
+ * @param {number} raw Raw population total (sum of settlement sizes).
+ * @param {number} _turn Unused (kept for signature compatibility; scaling is age-based now).
+ * @param {PopScaleCtx | null | undefined} [ctx] Optional age context.
  * @returns {number} The scaled population (0 for non-positive/invalid input).
  */
-export function scalePopulationAt(raw, turn) {
+export function scalePopulationAt(raw, _turn, ctx) {
   if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
-  const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
-  return Math.pow(raw, 1.11) * 90000 * Math.pow(1.009, t);
+  const ageType = ctx && typeof ctx.ageType === "string" ? ctx.ageType : undefined;
+  const ageProgressPct = ctx && typeof ctx.ageProgressPct === "number" ? ctx.ageProgressPct : undefined;
+  // Assume ~8 average settlements; per-settlement scaling avoids the super-linear aggregate blow-up.
+  const settlements = 8;
+  const avg = raw / settlements;
+  return settlements * scaleCityPopulationAt(avg, _turn, ageType, ageProgressPct);
 }
 
 // A military unit represents roughly this many soldiers (a legion/regiment/division), growing
@@ -94,44 +229,96 @@ export function scaleCasualtiesAt(raw, turn) {
 }
 
 /**
- * The world-estimate population for a single settlement.
- * @param {number} raw The settlement's raw population.
- * @param {number} turn The (monotonic) turn for the era multiplier.
- * @param {string | undefined} [ageType] Optional age type (e.g. AGE_MODERN).
- * @param {number | undefined} [ageProgressPct] Optional age progress percent [0,100].
- * @returns {number} The scaled city population (0 for non-positive/invalid input).
+ * Modern-only megacity multiplier: a super-linear bump above {@link MEGA_KNEE}, ramped smoothly by
+ * age-progress so it emerges over the Modern age rather than popping in at the boundary. 1 (no-op) for
+ * non-Modern ages, sizes at/below the knee, or the opening of the Modern age.
+ * @param {number} n Settlement size.
+ * @param {string | undefined} ageType Age type.
+ * @param {number | undefined} ageProgressPct Age progress percent [0,100].
+ * @returns {number} Multiplier (>= 1).
  */
-// Calibrated so normal cities stay readable while true late-game megacities are rare
-// but possible in Modern only, with a smooth in-age ramp so crossing the age
-// boundary never causes a sudden jump. Typical outputs: raw ~5 at turn ~60 reads
-// ~100–150k, raw ~10 at turn ~120 reads ~450–500k, raw ~20 at turn ~220 reads
-// ~2.4M, and raw ~45–50 at turn ~220 can reach ~20M+ late in AGE_MODERN.
-export function scaleCityPopulationAt(raw, turn, ageType, ageProgressPct) {
-  if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
-  const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
-  const base = Math.pow(raw, 1.11) * 12000 * Math.pow(1.009, t);
-  // Keep everyday cities on the same curve, but let true late-game megacities
-  // occasionally emerge by boosting only high-raw settlements in Modern.
-  const megaTarget = raw > 20 ? Math.pow(raw / 20, 1.5) : 1;
-  const ramp = modernMegaRamp(ageType, ageProgressPct);
-  const megaBoost = 1 + (megaTarget - 1) * ramp;
-  return base * megaBoost;
+function modernMegacityBoost(n, ageType, ageProgressPct) {
+  if (ageType !== "AGE_MODERN" || n <= MEGA_KNEE) return 1;
+  const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
+  const ramp = smoothstep((p / 100 - 0.1) / 0.8);
+  if (ramp <= 0) return 1;
+  return 1 + MEGA_STRENGTH * ramp * Math.pow((n - MEGA_KNEE) / MEGA_KNEE, MEGA_POW);
 }
 
 /**
- * Smooth Modern-only ramp factor for the city megacity boost.
- * @param {string | undefined} ageType Current age type.
- * @param {number | undefined} ageProgressPct Age progress percent.
- * @returns {number} Ramp in [0,1].
+ * The per-era population ceiling, blended (geometric) across age boundaries like the growth params.
+ * @param {string | undefined} ageType Age type.
+ * @param {number | undefined} ageProgressPct Age progress percent [0,100].
+ * @returns {number} The ceiling (people).
  */
-function modernMegaRamp(ageType, ageProgressPct) {
-  if (ageType !== "AGE_MODERN") return 0;
-  if (typeof ageProgressPct !== "number" || !isFinite(ageProgressPct)) return 0;
-  const p = Math.max(0, Math.min(1, ageProgressPct / 100));
-  // Start the ramp after the opening turns of Modern and complete before the
-  // final turns, so growth feels gradual across the era.
-  const x = Math.max(0, Math.min(1, (p - 0.1) / 0.8));
-  return x * x * (3 - 2 * x); // smoothstep
+function eraCeiling(ageType, ageProgressPct) {
+  const key = typeof ageType === "string" && ERA_CEILING[ageType] ? ageType : "AGE_EXPLORATION";
+  const cur = ERA_CEILING[key];
+  const idx = ERA_ORDER.indexOf(key);
+  const prev = idx > 0 ? ERA_CEILING[ERA_ORDER[idx - 1]] : cur;
+  if (prev === cur) return cur;
+  const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
+  const s = smoothstep(p / BLEND_PCT);
+  if (s <= 0) return prev; // exact at the boundary (bit-identical continuity)
+  if (s >= 1) return cur;
+  return Math.exp(Math.log(prev) + (Math.log(cur) - Math.log(prev)) * s);
+}
+
+/**
+ * The endgame ("one more turn") ceiling multiplier: 1 in normal play, growing linearly once the final
+ * age's progress runs past 100%. Modern-only (only the last age has overtime).
+ * @param {string | undefined} ageType Age type.
+ * @param {number | undefined} ageProgressPct Age progress percent (may exceed 100 in overtime).
+ * @returns {number} Multiplier (>= 1).
+ */
+function overtimeCeilingFactor(ageType, ageProgressPct) {
+  if (ageType !== "AGE_MODERN") return 1;
+  if (typeof ageProgressPct !== "number" || !isFinite(ageProgressPct) || ageProgressPct <= 100) return 1;
+  const over = (ageProgressPct - 100) / 100;
+  const grown = OVERTIME_CEILING_RATE * over * smoothstep(over / OVERTIME_EASE);
+  return 1 + Math.min(OVERTIME_MAX - 1, grown);
+}
+
+/**
+ * Smoothly saturate `x` toward `ceiling`: identity below CEIL_KNEE·ceiling, then a C¹ exponential
+ * approach that never exceeds the ceiling. Continuous value AND slope at the knee (slope 1 there), so
+ * normal cities are untouched and only the extreme tail bends. This is the safety bound: any input,
+ * however large, lands at or below the ceiling.
+ * @param {number} x The raw figure.
+ * @param {number} ceiling The asymptotic maximum.
+ * @returns {number} The saturated figure.
+ */
+function softCeil(x, ceiling) {
+  const knee = CEIL_KNEE * ceiling;
+  if (x <= knee) return x;
+  const span = ceiling - knee;
+  return knee + span * (1 - Math.exp(-(x - knee) / span));
+}
+
+/**
+ * The world-estimate people count for a single settlement, from the game's real per-era growth curve:
+ * `POP_K · W(size, eraGrowthParams(age, progress))`, with a Modern-only megacity bump and a smooth
+ * saturation toward the era's historical max-city ceiling (which also safely bounds any out-of-range
+ * input). Naturally per-age and continuous across age boundaries (see {@link eraGrowthParams}); no
+ * turn-based multiplier. Examples (size → people): size 5 → ~17k/37k/48k, size 20 → ~0.50M/0.80M/0.98M
+ * across Antiquity/Exploration/Modern; size ~50 late-Modern ≈ 28M. A size ~21 Exploration city →
+ * ~0.97M (matches the live readout).
+ * @param {number} raw The settlement's size (raw population points).
+ * @param {number} [_turn] Unused (kept for signature compatibility; scaling is age-based now).
+ * @param {string | undefined} [ageType] Age type (e.g. AGE_MODERN).
+ * @param {number | undefined} [ageProgressPct] Age progress percent [0,100].
+ * @returns {number} The scaled city people count (0 for non-positive/invalid input).
+ */
+export function scaleCityPopulationAt(raw, _turn, ageType, ageProgressPct) {
+  if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
+  const base = POP_K * growthEffort(raw, eraGrowthParams(ageType, ageProgressPct));
+  const boosted = base * modernMegacityBoost(raw, ageType, ageProgressPct);
+  const ceiling = eraCeiling(ageType, ageProgressPct) * overtimeCeilingFactor(ageType, ageProgressPct);
+  return softCeil(boosted, ceiling);
+  // NOTE: per-settlement VARIATION (so two same-size settlements never read identically) is applied
+  // downstream by settlements-population-variance.js (applyPopulationVarianceAndEnsureUnique), which
+  // also guarantees unique, strictly-ordered estimates for the board. Keep variation out of here so
+  // it isn't double-applied. The Emigration mod mirrors this same principle for its own figures.
 }
 
 /**

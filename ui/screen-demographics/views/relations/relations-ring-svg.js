@@ -254,6 +254,89 @@ function stripOldOverlays(wrap) {
 }
 
 /**
+ * Find the nearest ancestor carrying `cls` by walking up `parentElement`.
+ * (GameFace's `Element.closest` is unreliable; an explicit walk is portable.)
+ * @param {Element|null} el Starting element (inclusive).
+ * @param {string} cls Class name to match.
+ * @returns {Element|null} The matching ancestor, or null.
+ */
+function ancestorByClass(el, cls) {
+  let cur = el;
+  while (cur) {
+    if (cur.classList && cur.classList.contains(cls)) return cur;
+    cur = cur.parentElement;
+  }
+  return null;
+}
+
+/**
+ * The on-screen bottom edge (px, viewport coords) the diagram must stay above:
+ * the demographics frame's bottom, falling back to the viewport height. Measured
+ * at runtime, so it tracks the actual resolution / Interface Size with no
+ * hard-coded sizes.
+ * @param {Element} wrap The ring wrap.
+ * @returns {number} The bottom limit in px, or 0 if it can't be determined.
+ */
+function ringBottomLimit(wrap) {
+  const frame = ancestorByClass(wrap.parentElement, "demographics-frame");
+  if (frame && typeof frame.getBoundingClientRect === "function") {
+    const r = frame.getBoundingClientRect();
+    if (r && r.height > 0) return r.bottom;
+  }
+  if (typeof window !== "undefined" && window.innerHeight) return window.innerHeight;
+  return 0;
+}
+
+/**
+ * Height (px) to keep free below the diagram for the caption row that sits under
+ * it (the focus hint). Measured off the live element so it scales with Interface
+ * Size, plus a hairline gap so the lowest node label never touches the frame edge.
+ * @param {Element} wrap The ring wrap.
+ * @returns {number} Reserve height in px.
+ */
+function ringBottomReserve(wrap) {
+  const relWrap = ancestorByClass(wrap, "demographics-relations-wrap");
+  const cap =
+    relWrap && typeof relWrap.querySelector === "function"
+      ? relWrap.querySelector(".demographics-relations-caption")
+      : null;
+  const r = cap && typeof cap.getBoundingClientRect === "function" ? cap.getBoundingClientRect() : null;
+  return (r && r.height > 0 ? r.height : 0) + 4;
+}
+
+/**
+ * Cap the diagram region's height to the space actually visible on-screen,
+ * measured in pixels at runtime, so the ring's bottom node can never hang below
+ * the frame off-screen — at ANY resolution or Interface Size.
+ *
+ * GameFace can resolve the relations flex height chain taller than the frame
+ * (most visibly at larger Interface Sizes / shorter windows, and with the full-
+ * size N=7..12 ring, where the bottom ~20% fell off-screen), letting the SVG box
+ * extend past the frame's bottom edge. The SVG already scales to fit its box via
+ * `preserveAspectRatio=meet`, so the fix is purely to bound the BOX: we measure
+ * the body's top and the frame's bottom and set an explicit max-height on the
+ * body (the wrap's flex parent — capping the body, not just the wrap, also pulls
+ * the caption row back on-screen). No hard-coded sizes; re-runs on resize.
+ * @param {HTMLElement} wrap The ring wrap (its flex parent is the relations body).
+ */
+function constrainRingHeight(wrap) {
+  const body = /** @type {HTMLElement} */ (
+    ancestorByClass(wrap.parentElement, "demographics-relations-body") || wrap
+  );
+  // Clear any prior cap first so we read the body's natural top (fixed by the
+  // tab/toolbar chrome above it) and never compound caps across resize re-runs.
+  body.style.maxHeight = "";
+  const rect = typeof body.getBoundingClientRect === "function" ? body.getBoundingClientRect() : null;
+  if (!rect || rect.width === 0 || rect.height === 0) return;
+  const bottom = ringBottomLimit(wrap);
+  if (!(bottom > 0)) return;
+  const avail = bottom - rect.top - ringBottomReserve(wrap);
+  // Only cap when there's a sane positive budget that actually shrinks the box;
+  // never set a tiny/negative height that would collapse the ring to nothing.
+  if (avail > 0 && avail < rect.height) body.style.maxHeight = avail + "px";
+}
+
+/**
  * Build the deferred-placement routine for portrait/icon overlays. The SVG's
  * viewBox is letterboxed via `xMidYMid meet`; whichever axis is tighter sets
  * `scale` and the other axis is centered. Re-defers a frame if layout isn't
@@ -299,11 +382,16 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) 
     // or spin on an orphan). Only bails when isConnected is explicitly false, so
     // an engine without isConnected (undefined) falls through to the retry cap.
     if (wrap && wrap.isConnected === false) return;
-    const rect = measuredRect();
+    let rect = measuredRect();
     if (!rect || rect.width === 0 || rect.height === 0) {
       scheduleRetry();
       return;
     }
+    // Cap the diagram to the on-screen budget BEFORE measuring scale, so the SVG
+    // we letterbox into — and the overlays placed over it — use the visible box
+    // (not a box that overruns the frame). Re-measure after the cap reflows the SVG.
+    if (wrap) constrainRingHeight(wrap);
+    rect = measuredRect() || rect;
     retries = 0;
     stripOldOverlays(wrap);
     const scale = Math.min(rect.width / viewBox.w, rect.height / viewBox.h);
@@ -455,11 +543,26 @@ function createEdgeTooltip(wrap) {
       tip.textContent = text;
       tip.style.display = "block";
       const r = wrap.getBoundingClientRect();
-      // Anchor at the cursor; the gap that keeps the label out from under the
-      // pointer is a CSS transform on the tip (so it hot-reloads on screen reopen
-      // , this view's JS is lazy-loaded and only reloads on a full app restart).
-      tip.style.left = clientX - r.left + "px";
-      tip.style.top = clientY - r.top + "px";
+      // Cursor position within the wrap.
+      const x = clientX - r.left;
+      const y = clientY - r.top;
+      // Default offset down-right of the cursor (a readable gap so the pointer
+      // graphic never covers the label), but FLIP to up-left near the wrap's
+      // right / bottom edge so the tip never clips off-panel — at any resolution.
+      // (Mirrors the war-graph / Gantt tooltip edge-flip; previously a fixed CSS
+      // down-right transform meant edges near the panel's right/bottom clipped.)
+      const GAP_X = 14;
+      const GAP_Y = 8;
+      const tw = tip.offsetWidth || 0;
+      const th = tip.offsetHeight || 0;
+      const wrapW = wrap.clientWidth || r.width;
+      const wrapH = wrap.clientHeight || r.height;
+      let left = x + GAP_X;
+      let top = y + GAP_Y;
+      if (left + tw > wrapW) left = Math.max(0, x - GAP_X - tw);
+      if (top + th > wrapH) top = Math.max(0, y - GAP_Y - th);
+      tip.style.left = left + "px";
+      tip.style.top = top + "px";
     },
     hide() {
       tip.style.display = "none";

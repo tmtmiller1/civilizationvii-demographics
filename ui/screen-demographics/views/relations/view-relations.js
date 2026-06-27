@@ -490,6 +490,122 @@ function renderRingBody(rs) {
   if (selected.size > 0) appendFocusClearButton(caption, rs);
 }
 
+// The most-recently mounted ring wrap + the live render state, plus a one-time
+// window-resize hook that re-fits the diagram AND re-anchors the absolutely-
+// positioned overlays. The ring's placement routine re-measures the on-screen
+// budget and re-caps the diagram every time it runs (see relations-ring-svg.js),
+// so a resolution / window / Interface-Size change after the screen is open
+// re-fits dynamically. A SINGLE module-level listener (rather than one per wrap)
+// avoids leaks across the frequent ring repaints; it no-ops once the wrap detaches.
+/** @type {HTMLElement|null} */
+let activeRingWrap = null;
+/** @type {RenderState|null} */
+let activeRelationsRs = null;
+let resizeReflowWired = false;
+
+/**
+ * Resolve the measured rects needed to anchor the Relations overlays, or null if
+ * the body isn't laid out yet (so callers bail cleanly).
+ * @param {RenderState} rs The render-loop state.
+ * @returns {{ sc: RelationsScaffold, wrapRect: DOMRect, bodyRect: DOMRect }|null} Metrics or null.
+ */
+function relationsOverlayMetrics(rs) {
+  const sc = rs && rs.sc;
+  if (!sc || !sc.body) return null;
+  const body = sc.body;
+  const wrap = body.parentElement;
+  if (!wrap || typeof body.getBoundingClientRect !== "function") return null;
+  const wrapRect = wrap.getBoundingClientRect();
+  const bodyRect = body.getBoundingClientRect();
+  if (!wrapRect || !bodyRect || bodyRect.height === 0) return null;
+  return { sc, wrapRect, bodyRect };
+}
+
+/**
+ * Set an overlay element's inline `top` in px (no-op when absent).
+ * @param {HTMLElement|undefined} el The overlay element.
+ * @param {number} topPx Top offset in px.
+ */
+function setOverlayTop(el, topPx) {
+  if (el && el.style) el.style.top = topPx + "px";
+}
+
+/**
+ * Pin the absolutely-positioned Relations overlays (the filter legend and the CS
+ * "viewer" dropdown) to the TOP of the ring body, MEASURED at runtime. They were
+ * anchored at a hardcoded `top: 9.5rem` chosen to clear the tab + toolbar chrome,
+ * but that chrome's height scales with Interface Size, so at larger sizes the
+ * fixed offset stopped clearing it and the legend overlapped the tabs. Measuring
+ * the body's real top keeps both overlays in the ring's empty top corners at any
+ * size, and caps the legend's height to the body so it can never spill past it.
+ * @param {RenderState} rs The render-loop state.
+ */
+function anchorRelationsOverlays(rs) {
+  const m = relationsOverlayMetrics(rs);
+  if (!m) return;
+  const { sc, wrapRect, bodyRect } = m;
+  // A small inset so the overlay sits just inside the panel corner, not straddling
+  // the body's top border.
+  const inset = 4;
+  const overlayTop = Math.max(0, Math.round(bodyRect.top - wrapRect.top)) + inset;
+  setOverlayTop(sc.filterHost, overlayTop);
+  setOverlayTop(sc.viewerHost, overlayTop);
+  // Cap the legend to the body height (it scrolls internally past that) so a tall
+  // legend at a large Interface Size never extends below the ring panel.
+  const avail = Math.max(0, Math.round(bodyRect.height - inset * 2));
+  if (sc.filterHost && sc.filterHost.style && avail > 0) sc.filterHost.style.maxHeight = avail + "px";
+}
+
+/**
+ * Install the one-time window-resize → re-fit hook (idempotent). rAF-debounced so
+ * a resize drag coalesces to one re-layout per frame. Re-fits the ring and
+ * re-anchors the overlays against the new layout.
+ */
+function ensureResizeReflow() {
+  if (resizeReflowWired) return;
+  if (typeof window === "undefined" || typeof window.addEventListener !== "function") return;
+  resizeReflowWired = true;
+  let scheduled = false;
+  const run = () => {
+    scheduled = false;
+    const wrap = activeRingWrap;
+    if (wrap && wrap.isConnected !== false) {
+      const place = /** @type {*} */ (wrap).__placePortraits;
+      if (typeof place === "function") place();
+    }
+    if (activeRelationsRs) anchorRelationsOverlays(activeRelationsRs);
+  };
+  window.addEventListener("resize", () => {
+    if (scheduled) return;
+    scheduled = true;
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+    else setTimeout(run, 16);
+  });
+}
+
+/**
+ * Schedule a deferred overlay anchor, retrying (bounded) until the body is laid
+ * out so the measurement is valid (mirrors the ring's deferred placement).
+ * @param {RenderState} rs The render-loop state.
+ */
+function scheduleOverlayAnchor(rs) {
+  let tries = 0;
+  const MAX = 120; // ~2s at 60fps; a body unlaid by then isn't going to lay out
+  const defer = (/** @type {() => void} */ fn) =>
+    typeof requestAnimationFrame === "function" ? requestAnimationFrame(fn) : setTimeout(fn, 16);
+  const run = () => {
+    const body = rs && rs.sc && rs.sc.body;
+    const r =
+      body && typeof body.getBoundingClientRect === "function" ? body.getBoundingClientRect() : null;
+    if ((!r || r.height === 0) && ++tries <= MAX) {
+      defer(run);
+      return;
+    }
+    anchorRelationsOverlays(rs);
+  };
+  defer(run);
+}
+
 /**
  * Mount a ring wrap into the body and immediately place its portrait/label
  * overlays (the wrap must be in the DOM first so they can measure), so they
@@ -499,6 +615,9 @@ function renderRingBody(rs) {
  */
 function mountRing(body, ringWrap) {
   body.appendChild(ringWrap);
+  // Track the live wrap so the resize hook re-fits THIS ring (not an orphan).
+  activeRingWrap = ringWrap;
+  ensureResizeReflow();
   const place = /** @type {*} */ (ringWrap).__placePortraits;
   if (typeof place === "function") place();
 }
@@ -576,6 +695,11 @@ function repaintView(rs) {
   buildFilterRow(rs);
   // Body: ring SVG + caption.
   renderRingBody(rs);
+  // Pin the absolutely-positioned legend/viewer overlays to the measured top of
+  // the body (their top offset must track the tab/toolbar chrome height, which
+  // scales with Interface Size), and register this state for the resize re-anchor.
+  activeRelationsRs = rs;
+  scheduleOverlayAnchor(rs);
 }
 
 /**
