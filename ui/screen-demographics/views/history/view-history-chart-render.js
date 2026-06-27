@@ -36,15 +36,57 @@ function safeCall(fn, derr, fb) {
 }
 
 /**
- * Compute clamped chart dimensions from host bounds.
+ * Compute chart dimensions from the measured host. When the host is laid out we
+ * trust its real size (so the canvas matches the panel at ANY resolution /
+ * Interface Size); a 16:9-ish default is used ONLY when the rect is still 0
+ * (pre-layout). The generous clamp keeps a high-res / ultrawide display crisp
+ * (the old 2800×1400 ceiling left the canvas under-resolved and dead space on
+ * wide monitors) without ever sizing absurdly. The resize re-fit
+ * ({@link ensureChartResizeReflow}) re-measures on any later change.
  * @param {HTMLElement} chartHost The chart host element.
- * @returns {{ width: number, height: number }} Clamped dimensions.
+ * @returns {{ width: number, height: number }} Dimensions.
  */
 function measureChartSize(chartHost) {
   const hostRect = chartHost.getBoundingClientRect?.();
-  const width = Math.max(960, Math.min(2800, Math.round(hostRect?.width || 1600)));
-  const height = Math.max(360, Math.min(1400, Math.round(hostRect?.height || 600)));
+  const rawW = Math.round(hostRect?.width || 0);
+  const rawH = Math.round(hostRect?.height || 0);
+  const width = rawW > 0 ? Math.max(480, Math.min(4096, rawW)) : 1600;
+  const height = rawH > 0 ? Math.max(320, Math.min(2304, rawH)) : 600;
   return { width, height };
+}
+
+// Re-fit the active history chart on window resize / Interface-Size change. Every
+// chart bakes pixel dimensions measured once from its host (measureChartSize), so
+// without this they keep a stale size when the window resizes or the player
+// changes Interface Size while Demographics is open — the canvas/SVG then no
+// longer matches the reflowed host. Mirrors the relations ring's resize re-fit:
+// a SINGLE module-level listener re-runs the latest chart's render (every render
+// path clears its host first, so re-running is idempotent); it no-ops once the
+// host detaches.
+/** @type {(() => void) | null} */
+let activeChartReflow = null;
+let chartResizeWired = false;
+
+/**
+ * Install the one-time window-resize → chart re-fit hook (idempotent), rAF-
+ * debounced so a resize drag coalesces to one re-render per frame.
+ */
+function ensureChartResizeReflow() {
+  if (chartResizeWired) return;
+  if (typeof window === "undefined" || typeof window.addEventListener !== "function") return;
+  chartResizeWired = true;
+  let scheduled = false;
+  const run = () => {
+    scheduled = false;
+    const reflow = activeChartReflow;
+    if (typeof reflow === "function") reflow();
+  };
+  window.addEventListener("resize", () => {
+    if (scheduled) return;
+    scheduled = true;
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+    else setTimeout(run, 16);
+  });
 }
 
 /**
@@ -292,6 +334,10 @@ function renderStandardChart(chartHost, ctx, activeMetric, turnRange, size) {
  * @param {ChartRenderDeps} deps Render dependencies.
  */
 export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
+  // Building a fresh host: drop any prior chart's reflow so a resize during the
+  // NYI-placeholder case (below) can't re-render a stale, detached chart.
+  activeChartReflow = null;
+
   const chartHost = document.createElement("div");
   chartHost.className = "demographics-chart-host relative flex flex-col items-center";
   host.appendChild(chartHost);
@@ -310,6 +356,20 @@ export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
       deps.dlog("chart render size=" + width + "x" + height, "activeMetric=" + activeMetric);
       routeChartRender(chartHost, ctx, activeMetric, turnRange, { width, height });
     }, deps.derr);
+
+  // Re-fit THIS chart on resize / Interface-Size change. External panels skip
+  // redundant rebuilds keyed by turn (extUnchanged); a resize isn't a turn change,
+  // so clear that skip cache first to force them to re-measure too. Bail (and
+  // release the closure) once the host detaches.
+  activeChartReflow = () => {
+    if (chartHost.isConnected === false) {
+      activeChartReflow = null;
+      return;
+    }
+    _extLast = { id: null, turn: -1, host: null, policy: "" };
+    doRender();
+  };
+  ensureChartResizeReflow();
 
   // Measure after TWO frames so GameFace has finished laying out the flex column (controls row +
   // chart host). One frame can read a not-yet-settled host and clamp the canvas to its small floor,

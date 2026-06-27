@@ -175,8 +175,13 @@ function placeTip(tip, ev, cRect) {
   // off the bottom).
   const flipLeft = ev.clientX + GAP + tipW > viewW;
   const flipUp = ev.clientY + GAP + tipH > viewH;
-  tip.style.left = (flipLeft ? localX - GAP - tipW : localX + GAP) + "px";
-  tip.style.top = (flipUp ? localY - GAP - tipH : localY + GAP) + "px";
+  const left = flipLeft ? localX - GAP - tipW : localX + GAP;
+  const top = flipUp ? localY - GAP - tipH : localY + GAP;
+  // Clamp the lower edge: near a cell's left/top corner (a small left-column cell
+  // with a wide/tall tip), the flip subtracts past 0 and the tip clips off the
+  // cell edge. A min margin keeps it on-cell (mirrors the Gantt tooltip's clamp).
+  tip.style.left = Math.max(4, left) + "px";
+  tip.style.top = Math.max(4, top) + "px";
 }
 
 /**

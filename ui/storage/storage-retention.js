@@ -2,6 +2,18 @@
 //
 // History-save preparation and sample-retention mutations.
 
+/** Persisted payload-envelope schema version. */
+const PAYLOAD_SCHEMA_VERSION = 2;
+
+/**
+ * Serialize a history object as an envelope payload.
+ * @param {object} history History object to serialize.
+ * @returns {string} Serialized payload envelope.
+ */
+export function serializePayload(history) {
+  return JSON.stringify({ v: PAYLOAD_SCHEMA_VERSION, data: history });
+}
+
 /**
  * Validate, normalize, and cap a history before persistence.
  * @param {*} history History object (mutated when valid).
@@ -39,7 +51,7 @@ export function prepareHistoryForSave(history, options) {
 export function writeStorePayload(store, payloadKey, history, derr) {
   let serialized;
   try {
-    serialized = JSON.stringify(history);
+    serialized = serializePayload(history);
   } catch (e) {
     derr("save: stringify threw:", e);
     return false;

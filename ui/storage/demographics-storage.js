@@ -35,6 +35,7 @@ import {
   insertSnapshot,
   maybeDecimate,
   prepareHistoryForSave,
+  serializePayload,
   writeStorePayload
 } from "/demographics/ui/storage/storage-retention.js";
 import { loadEmpty, loadParsed, readRaw } from "/demographics/ui/storage/storage-load.js";
@@ -260,7 +261,8 @@ class StorageImpl {
         " , preferring _mem"
     );
     try {
-      store.write(PAYLOAD_KEY, JSON.stringify(this._mem));
+      const mem = this._mem;
+      if (mem) store.write(PAYLOAD_KEY, serializePayload(mem));
     } catch (e) {
       derr("_loadParsed: recovery store.write threw:", e);
     }
@@ -633,7 +635,7 @@ class StorageImpl {
     const store = this._pickStore();
     if (store) {
       try {
-        store.write(PAYLOAD_KEY, JSON.stringify(empty));
+        store.write(PAYLOAD_KEY, serializePayload(empty));
       } catch (e) {
         derr("clear: store.write threw:", e);
       }

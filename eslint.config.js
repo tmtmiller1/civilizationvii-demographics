@@ -98,11 +98,12 @@ export default [
         "error",
         { max: 500, skipBlankLines: true, skipComments: true }
       ],
-      // Soft quality guardrails from demographics-code-quality-catalogue.md.
+      // Enforced hard ceiling (120). Strings / templates / regex / urls are exempt so data and
+      // localized copy aren't penalized; everything else, including comments, must wrap.
       "max-len": [
-        "warn",
+        "error",
         {
-          code: 100,
+          code: 120,
           ignoreUrls: true,
           ignoreStrings: true,
           ignoreTemplateLiterals: true,
@@ -115,7 +116,7 @@ export default [
       // Correctness checks.
       "no-undef": "error",
       "no-unused-vars": [
-        "warn",
+        "error",
         { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }
       ],
       // Match the engine's own `== null` undefined-check idiom.

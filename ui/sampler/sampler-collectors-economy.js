@@ -9,6 +9,7 @@ import {
   safeCall
 } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { recordCity } from "/demographics/ui/sampler/sampler-war-events.js";
+import { scaleCityPopulationAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 
 /**
  * Resolve the `NODE_STATE_FULLY_UNLOCKED` enum value once.
@@ -344,8 +345,63 @@ export function collectCities(ctx, id, p) {
     if (Array.isArray(cityList)) {
       for (const c of cityList) recordCity(c, id);
     }
+
+    collectScaledPopulation(ctx, cityList);
   }
   return cityList;
+}
+
+/**
+ * Read a settlement's size (raw population points) defensively: `population`, else urban+rural.
+ * @param {*} c City handle.
+ * @returns {number} The size (0 when unreadable).
+ */
+function readCitySize(c) {
+  try {
+    if (typeof c?.population === "number" && isFinite(c.population)) return c.population;
+    const u = typeof c?.urbanPopulation === "number" ? c.urbanPopulation : 0;
+    const r = typeof c?.ruralPopulation === "number" ? c.ruralPopulation : 0;
+    return u + r;
+  } catch (_) {
+    return 0;
+  }
+}
+
+/**
+ * Read current age-progress percent [0,100] from the AgeProgressManager (undefined when unavailable).
+ * @returns {number | undefined} Progress percent, or undefined.
+ */
+function readAgeProgressPct() {
+  try {
+    const apm = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
+    if (!apm || typeof apm.getCurrentAgeProgressionPoints !== "function") return undefined;
+    const cur = apm.getCurrentAgeProgressionPoints();
+    const max = apm.getMaxAgeProgressionPoints();
+    if (typeof cur === "number" && typeof max === "number" && max > 0) return (cur / max) * 100;
+  } catch (_) {
+    // APM can be absent / throw mid-transition.
+  }
+  return undefined;
+}
+
+/**
+ * Compute the civ's scaled people total as the SUM of its settlements' per-city estimates (the same
+ * growth-formula curve the Settlements board uses), and stash the age context for the metric layer.
+ * Summing per-settlement — never scaling the aggregate — is required because the curve is super-linear.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
+ * @param {*} cityList The player's city list.
+ */
+function collectScaledPopulation(ctx, cityList) {
+  if (!Array.isArray(cityList)) return;
+  const ageType = getCurrentAgeType();
+  const ageProgressPct = readAgeProgressPct();
+  ctx.ageType = ageType;
+  ctx.ageProgressPct = ageProgressPct;
+  let sum = 0;
+  for (const c of cityList) {
+    sum += scaleCityPopulationAt(readCitySize(c), undefined, ageType, ageProgressPct);
+  }
+  ctx.populationScaled = sum;
 }
 
 /**
