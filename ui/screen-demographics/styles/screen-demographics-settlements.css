@@ -399,14 +399,15 @@
     flex-shrink: 0;
 }
 .demographics-settle-bar {
-    height: 8px;
-    border-radius: 4px;
+    /* rem so the bar scales with Interface Size like the rem-sized text around it. */
+    height: 0.5rem;
+    border-radius: 0.25rem;
     background: rgba(255, 255, 255, 0.08);
     overflow: hidden;
 }
 .demographics-settle-bar-fill {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     background: var(--ia-accent-gold);
 }
 
@@ -551,7 +552,10 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    max-height: 2.3rem;
+    /* Two lines = 0.95rem × 1.15 ≈ 2.19rem; the extra headroom keeps a fallback
+       font with larger metrics (or sub-pixel rounding) from shaving the 2nd line's
+       descenders. The -webkit-line-clamp is what actually caps it at two lines. */
+    max-height: 2.5rem;
 }
 .demographics-settle-leader-val {
     color: var(--ia-text-accent);
@@ -873,19 +877,20 @@
     height: 0;
     flex-shrink: 0;
 }
+/* rem on the triangle/flat glyph borders so they scale with Interface Size. */
 .demographics-settle-trend-up {
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-bottom: 6px solid #6fcf73;
+    border-left: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-bottom: 0.375rem solid #6fcf73;
 }
 .demographics-settle-trend-down {
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 6px solid #e0584c;
+    border-left: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-top: 0.375rem solid #e0584c;
 }
 .demographics-settle-trend-flat {
-    width: 7px;
-    height: 2px;
+    width: 0.44rem;
+    height: 0.125rem;
     background: var(--ia-text-accent);
 }
 
@@ -1300,7 +1305,11 @@
     box-sizing: border-box;
 }
 .demographics-settle-split-left {
-    flex: 0 0 32rem;
+    /* Shrinkable (0 1, not 0 0): at a large Interface Size on a narrow frame a
+       fixed 32rem basis can't shrink, crushing the right ranked list and hard-
+       truncating its names. Allowing shrink lets the podium column give ground so
+       both columns stay usable. */
+    flex: 0 1 32rem;
     min-width: 0;
     display: flex;
     flex-direction: column;

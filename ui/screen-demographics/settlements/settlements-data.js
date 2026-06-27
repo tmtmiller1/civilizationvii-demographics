@@ -54,6 +54,8 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
  * @property {boolean} [explored] Whether the settlement's city center is revealed (camera gate).
  * @property {*} [componentId] City ComponentID (`city.id`) for `Cities.get` / `lookAtID`.
  * @property {number} population Total population.
+ * @property {number} [urban] Urban sub-population (real signal for estimate variation).
+ * @property {number} [rural] Rural sub-population (real signal for estimate variation).
  * @property {number} [populationEstimate] World-estimate population (scaleCityPopulationAt).
  * @property {SettlementOwner} owner Resolved owner identity.
  * @property {Record<string, number>} outputs Per-output value, keyed by output id.
@@ -403,6 +405,22 @@ function readPopulation(city) {
 }
 
 /**
+ * Read a city's urban or rural sub-population defensively (0 when unreadable). Used as a real-signal
+ * input for population-estimate variation (urban:rural ratio).
+ * @param {*} city City handle.
+ * @param {"urbanPopulation"|"ruralPopulation"} prop Which sub-population.
+ * @returns {number} The value (0 on miss/throw).
+ */
+function readSubPopulation(city, prop) {
+  try {
+    const v = city?.[prop];
+    return typeof v === "number" && isFinite(v) ? v : 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+/**
  * Stable key for a settlement: its plot ("pid:x,y", stable across capture), else
  * its index within the owner's list.
  * @param {number} pid The owner id.
@@ -445,6 +463,8 @@ function buildSettlement(city, pid, owner, idx) {
     isTown: !!city.isTown,
     isCapital: !!safeBool(() => city.isCapital),
     population,
+    urban: readSubPopulation(city, "urbanPopulation"),
+    rural: readSubPopulation(city, "ruralPopulation"),
     populationEstimate: scaleCityPopulationAt(
       population,
       currentTurn(),

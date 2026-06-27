@@ -130,13 +130,18 @@ function drawRadarSpokes(svg, geo) {
         "stroke-width": "1"
       })
     );
+    // Anchor side labels INWARD (right-side axis → "end", left-side → "start") so a
+    // long localized path name grows toward the center instead of off the meet-fit
+    // viewBox's left/right edge and getting clipped; top/bottom stay centered.
+    const cosA = Math.cos(a.angle);
+    const anchor = cosA > 0.25 ? "end" : cosA < -0.25 ? "start" : "middle";
     const lbl = svgEl("text", {
-      x: cx + Math.cos(a.angle) * (R + 22),
+      x: cx + cosA * (R + 22),
       y: cy + Math.sin(a.angle) * (R + 22),
       fill: "#f3c34c",
       "font-size": "18",
       "font-weight": "600",
-      "text-anchor": "middle",
+      "text-anchor": anchor,
       "dominant-baseline": "middle",
       stroke: "#1c1408",
       "stroke-width": "3",

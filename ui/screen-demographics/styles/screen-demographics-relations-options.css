@@ -56,7 +56,10 @@
        <civ>"). Previously the legend hovered just below the tab bar — on
        major civs that left a clean gap, but on CS the dropdown landed in
        that gap and the legend visually overlapped it. 7.5rem clears both
-       on either tab so the two views are pixel-equivalent. */
+       on either tab so the two views are pixel-equivalent. This rem value is only
+       a PRE-LAYOUT FALLBACK now: JS (anchorRelationsOverlays) measures the actual
+       chrome height at runtime and overrides `top` in px, so the legend tracks the
+       tab/toolbar height at any Interface Size instead of assuming it's ~9.5rem. */
     top: 9.5rem;
     right: 1.5rem;
     /* FIXED width (not max-width) so the box has the same horizontal
@@ -69,15 +72,18 @@
        calc() in max-width but not the min()/max()/clamp() value functions.) */
     width: 24rem;
     max-width: calc(100% - 3rem);
-    /* Min-height so the shorter CS legend doesn't look truncated next to
-       the major-civs legend — they read as the same "panel," just with
-       different lists inside. */
-    min-height: 14rem;
+    /* No min-height floor: a fixed floor (was 14rem) could exceed the available
+       body height at a large Interface Size / short window and push the legend's
+       bottom off-screen — the same min-* > max-* trap that clipped the ring. JS
+       caps the legend's height to the body (anchorRelationsOverlays); content sets
+       the natural height otherwise. */
     padding: 0.6rem 0.85rem;
     box-sizing: border-box;
-    /* Clip a too-long localized pill rather than letting it spill out of the fixed-width box and
-       across the ring; the per-label ellipsis below keeps it readable. */
-    overflow: hidden;
+    /* Scroll a too-tall legend (many Agreements pills at a large Interface Size)
+       within its capped box instead of clipping it; the per-label ellipsis below
+       still handles a too-long single pill horizontally. */
+    overflow-x: hidden;
+    overflow-y: auto;
     background: linear-gradient(180deg, rgba(18, 14, 8, 0.85), rgba(8, 6, 3, 0.72));
     border: 1px solid rgba(201, 162, 76, 0.4);
     border-radius: 0.3rem;
@@ -483,9 +489,11 @@
     border: 1px solid rgba(201, 162, 76, 0.7);
     border-radius: 0.25rem;
     color: #f3e7c4;
-    white-space: nowrap;
-    /* JS anchors the tip at the cursor; this transform is the readable gap that
-       keeps it out from under the pointer (in CSS so it hot-reloads on reopen).
-       Pushed well to the right so the cursor graphic never covers the label. */
-    transform: translate(2.6rem, 1.2rem);
+    /* Cap the width and allow wrapping so a long localized relationship label can
+       never overrun the ring panel even when anchored at the left edge after an
+       edge-flip. The cursor gap AND the near-edge flip (down-right → up-left) are
+       computed in JS (createEdgeTooltip.show) so the label stays on-panel at every
+       resolution; no fixed directional transform here. */
+    max-width: 22rem;
+    word-break: break-word;
 }

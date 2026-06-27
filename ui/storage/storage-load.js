@@ -2,6 +2,8 @@
 //
 // Load-path helper functions for demographics history persistence.
 
+import { serializePayload } from "/demographics/ui/storage/storage-retention.js";
+
 /**
  * Read raw payload text from a store.
  * @param {{ read: (key: string) => string | null }} store Active store.
@@ -16,6 +18,20 @@ export function readRaw(store, payloadKey, derr) {
     derr("store.read threw:", e);
     return null;
   }
+}
+
+/**
+ * Extract the history payload from either an envelope ({v,data}) or a legacy raw
+ * history blob, keeping backward compatibility for existing saves.
+ * @param {*} parsed Parsed JSON value.
+ * @returns {*} Candidate history payload.
+ */
+function payloadFromBlob(parsed) {
+  if (!parsed || typeof parsed !== "object") return parsed;
+  if (typeof parsed.v === "number" && parsed.data && typeof parsed.data === "object") {
+    return parsed.data;
+  }
+  return parsed;
 }
 
 /**
@@ -43,7 +59,7 @@ export function loadEmpty(options) {
         ")"
     );
     try {
-      store.write(payloadKey, JSON.stringify(mem));
+      store.write(payloadKey, serializePayload(mem));
     } catch (e) {
       derr("_loadEmpty: recovery store.write threw:", e);
     }
@@ -102,7 +118,7 @@ export function loadParsed(options) {
 
   let parsed = null;
   try {
-    parsed = JSON.parse(raw);
+    parsed = payloadFromBlob(JSON.parse(raw));
   } catch (e) {
     derr("load: JSON parse failed, resetting:", e);
     return mem || emptyHistory(seed, version);
