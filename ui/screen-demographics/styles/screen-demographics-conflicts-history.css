@@ -1053,7 +1053,8 @@
     position: absolute;
     width: 0;
     height: 0;
-    border: 8px solid transparent;
+    /* rem so the arrow tracks Interface Size with the tooltip it points from. */
+    border: 0.5rem solid transparent;
     z-index: 31;
     pointer-events: none;
 }
@@ -1062,8 +1063,10 @@
    (per-event position) stay inline. */
 .demographics-line-wonder-marker {
     position: absolute;
-    width: 28px;
-    height: 28px;
+    /* rem so the marker scales with Interface Size instead of staying a fixed
+       pixel size that looks tiny next to rem-sized icons at large Interface Sizes. */
+    width: 1.75rem;
+    height: 1.75rem;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -1101,10 +1104,11 @@
    "destroyed" signal stays legible over the faded wonder icon. */
 .demographics-line-wonder-raze-badge {
     position: absolute;
-    right: -4px;
-    bottom: -4px;
-    width: 16px;
-    height: 16px;
+    /* rem so the badge + its corner offset scale with the marker at any Interface Size. */
+    right: -0.25rem;
+    bottom: -0.25rem;
+    width: 1rem;
+    height: 1rem;
     background-image: url("blp:fi_plot_burning_64");
     background-size: contain;
     background-repeat: no-repeat;

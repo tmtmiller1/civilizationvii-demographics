@@ -10,7 +10,7 @@ The in-game stats screen Civilization VII is missing: per-turn graphs, leaderboa
 - **World Rankings:** civilization and settlement leaderboards, per-civ profile cards, and a Top 25 settlements board with map fly-to.
 - **Global Relations:** a diplomacy ring of the civilizations and city-states you've met.
 - **Wars and crises:** a timeline of every war with real, sampled costs, plus an age-by-age breakdown of each crisis's toll.
-- **Real-world scale:** figures rendered as representative populations (millions), GDP ($billions), and territory (km²).
+- **Real-world scale:** figures rendered as representative populations (thousands to tens of millions, per era), GDP ($billions), and territory (km²).
 - **Yours to tune:** per-civ colors, time-range filters, hide/focus, smoothing, colorblind mode, CSV export, and adjustable sampling.
 
 The sections below explain each feature and setting in detail. Start with the tabs, then use later sections for specific mechanics and behavior.
@@ -95,7 +95,7 @@ Most metrics are read straight off the player each turn with no transform: the p
 
 A few figures apply a deterministic transform so the raw game number reads at a believable real-world scale. These are **cosmetic** and never affect gameplay:
 
-- **Population (scaled):** `raw_population ^ 1.11 × 90,000 × 1.009 ^ turn`, rendered in millions. The exponent spreads small early populations; the `1.009 ^ turn` growth keeps later eras from looking flat. (Migration "people" counts use the same shape with a smaller base, which is how the Emigration companion mod stays aligned.)
+- **Population (scaled):** derived from **Civilization VII's own per-era growth formula** (the food cost the game charges to grow a settlement, which differs by age), turned into a representative people count by a single calibration constant. Each settlement is valued for *whatever age it's in* — towns in the thousands, great cities up to ~1M pre-modern, and 10–38M megacities only in the Modern age — with a smooth, continuous hand-off across age boundaries (no jump at an age change) and an upper safety bound. A small per-settlement variation, drawn from real signals (happiness, urban/rural mix, growth trend), keeps any two same-size settlements from reading identically. The **civ-wide** figure is the **sum of its settlements'** estimates (not a separate, hotter aggregate), so "empire" and "sum of cities" agree. (The Emigration companion mod shares this exact curve, pinned by a cross-mod test.) See `reports/population-scaling-per-age-design.md`.
 - **GDP:** a weighted sum of the per-turn yields, `× turn × 1,000,000`, shown in `$M`/`$B`. Weights: Gold 1.0, Production 1.0, Food 0.5, Science 1.2, Culture 1.2, Influence 1.5. Multiplying by the turn count approximates a cumulative economy rather than a single turn's output.
 - **Land Area:** `owned_tiles × 7,000 km²` (a hex's nominal real-world area).
 - **Military Power:** the summed combat strength of the civ's military units, totaled in the sampler (there is no clean player-level engine accessor).
@@ -107,7 +107,7 @@ A few figures apply a deterministic transform so the raw game number reads at a 
 
 War costs (the per-combatant tables) and crisis costs (the per-civ stage and cumulative tables) share one engine: each figure is a participant's metric series reduced over its **active window** (`[join turn, leave turn or war/age end]`) by a mode chosen per figure:
 
-- **Losses** (Strength Lost, Population/Crop/Production Lost): the **sum of every turn-over-turn decline** in the series, with rises ignored so ordinary growth can never mask a loss. This needs reasonably dense samples to catch each dip (see the caveat below). Population Lost reads **raw** population, not the rescaled chart value, so the growth multiplier can't hide real drops.
+- **Losses** (Strength Lost, Population/Crop/Production Lost): the **sum of every turn-over-turn decline** in the series, with rises ignored so ordinary growth can never mask a loss. This needs reasonably dense samples to catch each dip (see the caveat below). Population Lost reads **raw** population, not the rescaled chart value, so neither the people-scaling nor the age-reset bridge on the Population chart can hide real drops.
 - **Net** (Settlements, Land): `last − first` over the window, signed (`+gained` / `-lost`). These are event-based (cities/territory that actually changed hands by capture), so they read "-" for wars that predate the tracking rather than a misleading 0.
 - **Accrued / Spent** (Settlements Razed, Production Directed to War, Refugees): the increase of a cumulative event counter over the window (`last − first`).
 - **Level** (current Military Power): the last sampled value, a standing figure rather than a flow.

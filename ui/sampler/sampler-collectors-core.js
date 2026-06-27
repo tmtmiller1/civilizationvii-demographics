@@ -63,7 +63,10 @@ import {
  * @property {number} [yieldProduction] Net production yield.
  * @property {number} [yieldFood] Net food yield.
  * @property {number} [yieldDiplomacy] Net diplomacy (influence) yield.
- * @property {number} [totalPopulation] Total population.
+ * @property {number} [totalPopulation] Total population (raw, sum of settlement sizes).
+ * @property {number} [populationScaled] Civ scaled people total (Σ per-settlement growth-formula estimate).
+ * @property {string} [ageType] Current age type at sample time (e.g. AGE_EXPLORATION).
+ * @property {number} [ageProgressPct] Current age-progress percent [0,100] at sample time.
  * @property {number} [citiesCount] Number of cities.
  * @property {number} [townsCount] Number of towns.
  * @property {number} [tilesOwned] Total owned tiles across cities.

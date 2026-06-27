@@ -155,6 +155,104 @@ function collectPidSet(samples) {
     return { t: x, v: value };
   }
 
+// Metrics that the game mechanically RESETS at an age boundary (Civ VII slashes urban/rural population
+// on age rollover; see age-transition-gameeffects.xml). Their raw series dips sharply at each boundary
+// and recovers over the new age — an artifact of the mechanic, not a real demographic collapse. For
+// these we bridge the dip on the DISPLAYED line so it reads continuously across the boundary.
+const AGE_RESET_BRIDGED_METRICS = new Set(["population"]);
+
+/**
+ * The chart x-positions of age boundaries: each later age starts at its cumulative offset (the first
+ * age starts at 0, which is not a boundary). Sorted ascending.
+ * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
+ * @returns {number[]} Boundary x-positions.
+ */
+function ageBoundaryXs(ageOffsets) {
+  if (!ageOffsets || typeof ageOffsets.values !== "function") return [];
+  return Array.from(ageOffsets.values())
+    .filter((v) => typeof v === "number" && isFinite(v) && v > 0)
+    .sort((a, b) => a - b);
+}
+
+/**
+ * Index of the last point at or before x (−1 if none). Points are ascending by `t`. Inclusive because
+ * a prior age's final sample sits exactly AT the boundary x (its max local turn equals the next age's
+ * cumulative offset), and that peak is the value we bridge from.
+ * @param {{t:number}[]} points Points. @param {number} x Threshold. @returns {number} Index or −1.
+ */
+function lastIndexAtOrBefore(points, x) {
+  let i = -1;
+  for (let k = 0; k < points.length; k++) {
+    if (points[k].t <= x) i = k;
+    else break;
+  }
+  return i;
+}
+
+/**
+ * Add back the mechanic's reset as an OFFSET that tapers out by ACTUAL regrowth — NOT by lifting onto a
+ * recovery line. The offset is the boundary drop (peak → FIRST post-boundary sample); it shrinks in
+ * proportion to how far the running-max has climbed back toward the peak. Because it keys off the
+ * running-max (never decreasing), a genuine post-boundary loss (war, razing) still appears as a real
+ * drop on the shifted line instead of being masked — which a recovery-line fill could not distinguish.
+ *
+ * The trough is taken as the FIRST post-boundary sample, deliberately. The sampler records every turn
+ * by default (`sampleEveryNTurns: 1`), so the one-turn mechanic reset lands in exactly one sample and
+ * this is exact. Under SPARSE sampling the true bottom can fall between samples — we then UNDER-correct
+ * (a small residual dip), which is the safe failure: a multi-sample "descent" look-back could instead
+ * swallow a real loss a turn or two after the boundary and mask it. Fully separating a multi-sample
+ * reset from a reset+loss is impossible from the (t,v) line alone; it would need the mechanic-
+ * attributable drop recorded at sample time (the sampler knows the exact transition turn). See the
+ * design doc / review-round3 (#3). Mutates; only raises.
+ * @param {{t:number,v:number}[]} points Points (mutated). @param {number} i Pre-boundary peak index.
+ * @param {number} segEnd Segment-end x. @param {number} vPre Pre-boundary value.
+ */
+function applyResetOffset(points, i, segEnd, vPre) {
+  const trough = points[i + 1].v;
+  const drop = vPre - trough; // the mechanic's reset magnitude (conservative: first post-boundary sample)
+  if (drop <= 0) return;
+  let runningMax = trough;
+  for (let k = i + 1; k < points.length && points[k].t < segEnd && points[k].v < vPre; k++) {
+    if (points[k].v > runningMax) runningMax = points[k].v;
+    const offset = drop * (1 - Math.max(0, Math.min(1, (runningMax - trough) / drop)));
+    const lifted = points[k].v + offset;
+    if (lifted > points[k].v) points[k] = { t: points[k].t, v: lifted };
+  }
+}
+
+/**
+ * Bridge one age boundary's dip in place (if there is one). The first point after the boundary (within
+ * the segment) must dip below the pre-boundary value to qualify.
+ * @param {{t:number,v:number}[]} points Points (mutated). @param {number} bx Boundary x.
+ * @param {number} segEnd Segment-end x (next boundary or Infinity).
+ */
+function bridgeOneBoundary(points, bx, segEnd) {
+  const i = lastIndexAtOrBefore(points, bx);
+  if (i < 0 || i + 1 >= points.length) return;
+  const next = points[i + 1];
+  const vPre = points[i].v;
+  if (!(next.t < segEnd) || next.v >= vPre) return; // no reset dip in this segment
+  applyResetOffset(points, i, segEnd, vPre);
+}
+
+/**
+ * Bridge the post-boundary dip in a reset-prone series by adding back the mechanic's instantaneous
+ * reset as a regrowth-tapered offset (see {@link applyResetOffset}). This removes the artificial notch
+ * while PRESERVING any genuine post-boundary loss (a war crash still shows as a drop on the shifted
+ * line). Capped to the same age segment; only raises points; raw samples untouched.
+ * @param {{t:number,v:number}[]} points The series points.
+ * @param {number[]} boundaryXs Age boundary x-positions (ascending).
+ * @returns {{t:number,v:number}[]} The bridged points.
+ */
+function bridgeAgeResetDips(points, boundaryXs) {
+  if (!Array.isArray(points) || points.length < 3 || !boundaryXs.length) return points;
+  for (let m = 0; m < boundaryXs.length; m++) {
+    const segEnd = m + 1 < boundaryXs.length ? boundaryXs[m + 1] : Infinity;
+    bridgeOneBoundary(points, boundaryXs[m], segEnd);
+  }
+  return points;
+}
+
 /**
  * Fold one pid's per-sample data into points + identity state.
  * @param {Snapshot[]} samples The sample stream.
@@ -191,6 +289,11 @@ function foldPidSamples(samples, pid, metricId, opts) {
     if (fromContactOnly && ps.met === false) continue;
     const point = metricPoint(s, ps, metricId, ageOffsets, ageBoundariesLocal);
     if (point) fold.points.push(point);
+  }
+  // Smooth the mechanical age-reset dip on reset-prone metrics so the displayed line bridges the
+  // boundary instead of plunging (the underlying samples are untouched).
+  if (AGE_RESET_BRIDGED_METRICS.has(metricId)) {
+    bridgeAgeResetDips(fold.points, ageBoundaryXs(ageOffsets));
   }
   return fold;
 }
