@@ -7,6 +7,175 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-06-27
+
+A population-realism release. The scaled "people" figures the dashboard shows
+are completely reworked so that **every age reads at a believable historical
+scale** — towns in the thousands, great cities up to ~1 million in the
+pre-modern world, and true 10–38 million megacities only in the Modern age — and
+the empire total is now the exact **sum of its settlements** rather than a
+separate, hotter number. Existing saves are unaffected; this is presentation
+only and never touches gameplay.
+
+### Changed
+- **Population scaling is now grounded in Civilization VII's own per-era growth
+  formula.** The old `raw^1.11 × 90,000 × 1.009^turn` curve (which slammed late
+  games into billions and reset awkwardly at every age) is gone. Each settlement
+  is now valued from the game's real growth cost per era, so a settlement reads
+  at a sane size for *whatever age it's in*, with a smooth, continuous hand-off
+  across age boundaries (no jump when a new age begins).
+- **The civ-wide Population metric is the sum of its settlements' estimates.**
+  Previously the empire total used a separate, much hotter formula on the
+  aggregate, which over-counted badly in the late game. It now adds up the same
+  per-settlement people figures shown on the Settlements board, so "empire" and
+  "sum of cities" finally agree, and the number is historically sane.
+- **Per-settlement variation is now drawn from real game signals.** Two
+  same-size settlements still never read identically, but the small spread is now
+  derived from each settlement's actual happiness, urban/rural mix, and growth
+  trend (with its identity only as a final tie-breaker) — a thriving city reads a
+  touch larger than a stagnant one — instead of a bare name hash.
+
+### Added
+- **Modern megacities.** In the Modern age the largest cities can now grow into
+  the real 10–38 million range, emerging gradually as the age advances rather
+  than popping in at the boundary.
+- **"One more turn" keeps scaling.** If you continue past the natural end of the
+  game, population keeps growing into a speculative future instead of flat-lining
+  at the historical cap (bounded so it can never run away).
+- **The Population chart bridges age transitions.** Civ VII mechanically slashes
+  settlement population when an age rolls over; the people line now smooths across
+  that artificial reset so it reads as a continuous history — while still showing
+  a genuine war or collapse that happens to land near the boundary.
+
+### Internal
+- A historical-anchor + age-boundary-continuity test suite, a cross-mod parity
+  guard pinning the shared scaling to the **Emigration** companion mod, and an
+  upper safety bound so a bad engine read can never resurrect a multi-billion
+  figure. Design + review notes under `reports/`.
+
+## [2.0.8] - 2026-06-27
+
+A stability and quality-assurance release. No charts, metrics, or behaviour
+changed for the player. This hardens how the mod stores its history and adds a
+large automated test-coverage pass (around four dozen new regression harnesses)
+that exercises the error paths and edge cases of nearly every screen and
+subsystem, so corrupt input, missing data, and unavailable engine APIs are
+handled gracefully instead of crashing.
+
+### Changed
+- **Saved-history persistence now uses a versioned envelope.** Demographics
+  history is written as `{ v: 2, data: ... }` instead of a bare payload, so future
+  schema changes can be migrated cleanly. Loading remains fully
+  backward-compatible: legacy raw payloads from older versions are still read,
+  so existing saves are unaffected.
+
+### Added
+- **Storage / persistence hardening harnesses** covering the persistence layer's
+  failure modes, so a corrupt, truncated, or old-schema blob is handled
+  gracefully instead of throwing: `storage-schema` (versioned-envelope shape),
+  `storage-load-branches` (malformed / legacy load paths), `storage-backend-branches`
+  (storage-backend availability fallbacks), `storage-cap-branches` (bounded-growth
+  caps), and `governance-branches` (analytics-visibility governance paths).
+- **Relations-graph coverage** — the largest area, hardening the Global Relations
+  diagram end to end: `relations-queries-branches`, `relations-shared-branches`,
+  `relations-settings-branches`, `relations-filters-branches`,
+  `relations-filters-dom-branches`, `relations-viewer-controls-branches`,
+  `relations-node-info-branches`, `relations-edges-branches`,
+  `relations-edges-cs-branches`, `relations-ring-compute-branches`,
+  `relations-ring-svg-branches`, `relations-ring-svg-nodes-branches`,
+  `relations-ring-svg-edges-branches`, `relations-ring-svg-backdrop-branches`,
+  and `relations-render-integration`.
+- **Line-chart coverage** for the history graphs: `chart-line-axis-branches`,
+  `chart-line-config-branches`, `chart-line-datasets-branches`,
+  `chart-line-series-branches`, `chart-line-legend-branches`,
+  `chart-line-plugins-branches`, `chart-line-event-markers-branches`,
+  `chart-line-wonder-markers-branches`, and `chart-line-render-integration`.
+- **Settlements and city-map coverage**: `settlements-pure-branches`,
+  `settlements-detail-render-branches`, `settlements-render-integration`, and
+  `city-map-view-branches`.
+- **Radar, World Rankings and resources coverage**: `radar-data-branches`,
+  `worldrankings-profiles-branches`, `resources-radar-render-integration`, and
+  `options-worldrankings-render-integration`.
+- **Crisis, conflicts and history view render coverage**:
+  `crisis-render-integration`, `conflicts-render-integration`, and
+  `history-view-render-integration`.
+- **Bootstrap, registration and shared-helper coverage**: `bootstrap-branches`,
+  `hardware-branches`, `screen-demographics-registration-branches`,
+  `re-export-barrels-branches`, `ui-helpers-contracts-branches`,
+  `camera-utils-branches`, `view-pills-branches`, and `wars-naming-branches`.
+- New shared test scaffolding (`tests/_dom-stub.mjs`, an engine panel-support
+  stub) so the render-integration harnesses can drive the real view code
+  off-engine.
+- **`scripts/required-scripts-gate.mjs`** — a script-integrity guard that fails
+  the build if a required test script is missing from `package.json` or from the
+  `verify` chain, so a harness can't be silently dropped.
+- **`release:gate`** script chaining `required-scripts`, `verify`, and `coverage`
+  into a single pre-release check.
+
+### Internal
+- Strengthened the package gates so `verify` and the coverage chain (`test:js`)
+  run the new harnesses, preventing accidental script-chain regressions; the
+  automated suite now runs roughly four dozen more harnesses than 2.0.7.
+- Pruned generated coverage temp artifacts (`coverage/tmp`) from the working tree
+  to keep local outputs reproducible and avoid stale report carryover.
+
+## [2.0.7] - 2026-06-25
+
+A full-codebase resolution / Interface-Size hardening pass (follow-up to the 2.0.6
+ring fix), driven by an audit for every place content could clip, overflow, or
+mis-scale at a non-default resolution or Interface Size.
+
+### Fixed
+- **History charts now re-fit when the window or Interface Size changes.** Every
+  chart (line, war Gantt, war/crisis graphs, resources, Legacy radar) measured its
+  size once and kept it; changing Interface Size or resizing while Demographics was
+  open left the chart stale (overflowing or shrunk) until a metric was re-picked.
+  They now re-render on resize, mirroring the relations ring.
+- **Charts size to the real panel at every resolution.** Chart dimensions now come
+  from the measured host (with a generous high-res / ultrawide ceiling, replacing a
+  fixed 2800×1400 cap that left wide monitors under-resolved), and the line chart no
+  longer falls back to a hardcoded 1920×1080 when the engine hides `window.inner*`.
+- **Global Relations edge tooltips no longer clip off-panel.** The ring's edge-hover
+  label was nudged a fixed amount down-right with no edge detection, so hovering an
+  edge near the panel's right/bottom clipped it. It now flips to up-left near those
+  edges and wraps long localized labels (same edge-flip the war graphs got in 2.0.5).
+- **War / crisis graph tooltips no longer clip at a cell's left/top corner.** The
+  hover tip flipped near the viewport edge but could land at a negative offset on a
+  small left-column cell; it's now clamped to stay on-cell.
+- **Global Relations filter legend tracks the Interface Size.** The legend and the
+  City-State "viewer" dropdown were pinned at a hardcoded offset chosen to clear the
+  tab/toolbar rows, but that chrome grows with Interface Size, so at larger sizes the
+  legend overlapped the tabs. Their position is now measured at runtime, the legend's
+  height is capped to the panel (a fixed `min-height` floor that could push it
+  off-screen was removed — the same min-over-max trap as the ring), and its sample-
+  line swatches scale with Interface Size.
+- **Line-chart legend clears the Y axis at every Interface Size.** The overlaid
+  legend used fixed offsets to clear the Y-axis labels; it now aligns to the plot's
+  measured inner edge, so it never overlaps the axis numbers when they grow.
+- **Settlements podium column can shrink** so the ranked list beside it isn't crushed
+  (and its names hard-truncated) on a narrow frame at a large Interface Size.
+- **Radar axis labels stay on-canvas.** Long localized Legacy-path labels now anchor
+  inward instead of overrunning the chart's edge.
+- **Small UI glyphs now scale with Interface Size.** The wonder/raze markers, town
+  population bars, and population-trend arrows were fixed pixel sizes (tiny next to
+  rem-scaled text at large Interface Sizes); they're now in rem. The two-line
+  settlement-name clamp got a touch more headroom so a tall fallback font can't shave
+  its second line.
+
+## [2.0.6] - 2026-06-25
+
+### Fixed
+- **Global Relations diagram still clipped at the bottom on some setups.** The
+  ring's bottom node (and ~20% of the wheel) could hang below the frame off-screen
+  at larger Interface Sizes / shorter windows, most visibly with a full lobby
+  (7–12 majors, the largest ring). Earlier fixes removed the SVG min-height floors,
+  but the diagram's flex container could still resolve taller than the frame in
+  GameFace, so the box itself overran the bottom edge. The view now **measures the
+  visible space in pixels at runtime** (the body's top to the frame's bottom, minus
+  the caption row) and caps the diagram to it — so the whole ring always fits at
+  **any resolution or Interface Size**, with no hard-coded sizes. The fit re-runs on
+  window resize, and the SVG keeps scaling to the capped box via `meet`.
+
 ## [2.0.5] - 2026-06-25
 
 A correctness + robustness pass from a full multi-subsystem audit.

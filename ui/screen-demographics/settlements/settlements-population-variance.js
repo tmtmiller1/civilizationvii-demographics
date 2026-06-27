@@ -18,17 +18,91 @@ function hashKey(key) {
 }
 
 /**
- * Deterministic per-settlement population variation around the scaled base.
+ * Coerce to a finite number or 0.
+ * @param {*} v Value. @returns {number} Finite number (0 otherwise).
+ */
+function num(v) {
+  return typeof v === "number" && isFinite(v) ? v : 0;
+}
+
+/** Clamp to [-1, 1]. @param {number} x Value. @returns {number} Clamped. */
+function clampUnit(x) {
+  return x < -1 ? -1 : x > 1 ? 1 : x;
+}
+
+// Soft scales that map a raw signal onto roughly [-1,1] via x/(|x|+SCALE). Chosen so ordinary spreads
+// land mid-range, not pinned at the rails.
+const HAPPINESS_SCALE = 10; // net amenities/happiness output
+const GROWTH_SCALE = 0.5; // population growth per turn
+
+/**
+ * A directional bias in [-1,1] from NATURALLY-CENTERED real signals: net happiness, the urban:rural
+ * mix (denser cities lean higher), and the population growth trend. This is the "lean" of the
+ * variation — grounded in game state, not invented — so a thriving city reads a touch larger than a
+ * stagnant one of the same size.
+ * @param {*} s Settlement record (population/urban/rural/outputs/trend).
+ * @returns {number} Bias in [-1,1].
+ */
+function metricBias(s) {
+  const o = (s && s.outputs) || {};
+  const happy = num(o.happiness);
+  const happySig = happy / (Math.abs(happy) + HAPPINESS_SCALE);
+  const urban = num(s && s.urban);
+  const rural = num(s && s.rural);
+  const denom = urban + rural;
+  const urbanSig = denom > 0 ? (urban / denom - 0.5) * 2 : 0;
+  const growth = s && s.trend ? num(s.trend.popGrowthPerTurn) : 0;
+  const growthSig = growth / (Math.abs(growth) + GROWTH_SCALE);
+  return clampUnit(0.5 * happySig + 0.3 * urbanSig + 0.2 * growthSig);
+}
+
+/**
+ * Deterministic ENTROPY seeded from the settlement's real metric state (food/production/gold/happiness,
+ * urban/rural, founding turn) — NOT its name. Two cities differing in any of these get different
+ * variation; a city's figure also shifts as its situation changes. The name/id is folded in last only
+ * as a tie-breaker so identical-state cities still separate.
+ * @param {*} s Settlement record.
+ * @param {string} idKey Stable id (tie-breaker).
+ * @returns {number} Entropy in [-1,1].
+ */
+function metricEntropy(s, idKey) {
+  const o = (s && s.outputs) || {};
+  const founded = s && s.founded && typeof s.founded.turn === "number" ? Math.round(s.founded.turn) : 0;
+  const parts = [
+    Math.round(num(o.food)),
+    Math.round(num(o.production)),
+    Math.round(num(o.gold)),
+    Math.round(num(o.happiness)),
+    Math.round(num(s && s.urban)),
+    Math.round(num(s && s.rural)),
+    founded,
+    idKey
+  ].join(":");
+  return (hashKey(parts) / 4294967295) * 2 - 1;
+}
+
+/**
+ * Deterministic per-settlement population variation around the scaled base, GROUNDED IN REAL GAME
+ * METRICS (see {@link metricBias}, {@link metricEntropy}) rather than a bare name hash. The id only
+ * contributes as a final tie-breaker. Magnitude stays a narrow ±1.5% (≥ ±2500 floor) so figures read
+ * as a believable census, and downstream {@link claimUniquePopulation} still guarantees uniqueness.
  * @param {number} base Base scaled population.
- * @param {string} key Stable settlement key.
+ * @param {*} s Settlement record.
  * @returns {number} Varied estimate.
  */
-function variedPopulation(base, key) {
+function variedPopulation(base, s) {
+  // `base` already includes the era ceiling (softCeil). The narrow variation here runs ON TOP, so the
+  // displayed figure may sit a hair above the ceiling — intentional: the era ceiling is a SOFT target
+  // (and explicitly expandable in "one more turn" overtime), not a hard display wall. A hard
+  // post-variation clamp is avoided on purpose — it would collapse near-ceiling cities to the same
+  // value and break the uniqueness guarantee. See design doc (#1).
   const b = Math.max(1, Math.round(base));
   const range = Math.max(2500, Math.round(b * 0.015));
-  const h = hashKey(key);
-  const frac = h / 4294967295;
-  const centered = (frac * 2) - 1;
+  const idKey = settlementVarianceKey(s);
+  const bias = metricBias(s);
+  const entropy = metricEntropy(s, idKey);
+  const tie = (hashKey(idKey) / 4294967295) * 2 - 1;
+  const centered = clampUnit(0.55 * bias + 0.4 * entropy + 0.05 * tie);
   return Math.max(1, b + Math.round(centered * range));
 }
 
@@ -75,7 +149,7 @@ function buildBandCandidates(band) {
   return band
     .map((s) => {
       const key = settlementVarianceKey(s);
-      return { s, key, cand: variedPopulation(s.populationEstimate, key) };
+      return { s, key, cand: variedPopulation(s.populationEstimate, s) };
     })
     .sort((a, b) => a.cand - b.cand || a.key.localeCompare(b.key));
 }
