@@ -10,7 +10,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.1.1</Version>
+        <Version>2.1.2</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -99,6 +99,7 @@
                     <Item>ui/screen-demographics/styles/screen-demographics-relations-options.css</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics-conflicts-history.css</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics-settlements.css</Item>
+                    <Item>ui/screen-demographics/styles/screen-demographics-density.css</Item>
                     <Item>ui/screen-demographics/screen/demographics-chart.js</Item>
                     <Item>ui/screen-demographics/charts/shared/chart-shared.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line.js</Item>

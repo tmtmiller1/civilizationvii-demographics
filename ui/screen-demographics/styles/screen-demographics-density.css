@@ -1,0 +1,254 @@
+/* screen-demographics-density.css
+   ────────────────────────────────────────────────────────────────────────────
+   Resolution-aware chrome compaction. Loaded LAST in the screen's styles[] array
+   so these rules win the cascade over the base sheet.
+
+   Two layers, both pure CSS (no JavaScript controller):
+
+     1. HISTORY-VIEW CHROME — stepped via @media (max-height: …rem). The History
+        view wraps a flex-grow chart (already continuously fluid); only the small
+        chrome around it (title/tab-bar/controls/caption margins) steps in at two
+        breakpoints. The steps are sub-perceptual inter-block nudges, and the
+        chart absorbs whatever they free up, so stepping reads as smooth.
+          • comfortable  > 54rem tall  (1080p / 1440p / 2160p — full spacing)
+          • compact      ≤ 54rem       (short laptop viewport, e.g. 1600x900)
+          • micro        ≤ 44rem       (very short, e.g. 1366x768; also hides the
+                                        supplementary caption — its text stays
+                                        reachable via the ⓘ tooltip)
+
+     2. NON-HISTORY CONTENT — fluid via clamp() (see the block lower down). Every
+        other view carries fixed-rem content (matrix header band, avatars, cell
+        type) that would visibly jump at a breakpoint, so it scales continuously
+        with viewport height instead of stepping.
+
+   max-height is expressed in rem so the breakpoint tracks the engine's scaled
+   root font-size (so it responds to both resolution AND the Interface Size
+   accessibility setting), exactly as the base game's own screens do
+   (advisor-screen, pause-menu, load-screen all use @media (max-height: …rem)).
+   At the canonical resolutions the viewport is ~60rem tall, so the stepped block
+   never fires there. Only spacing / font-size is touched — never the flex
+   structure or anything that changes WHAT is shown.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ══ COMPACT (short laptop viewports — viewport ≲ 54rem tall) ════════════════
+   max-height in rem so the breakpoint tracks the engine's scaled root font: at
+   the canonical resolutions the viewport is ~60rem tall (these rules never fire);
+   on a sub-1080p laptop (or a larger Interface Size) it drops below 54rem and the
+   chrome compacts. This mirrors the base game's own screens, which adapt with
+   @media (max-height: …rem) (e.g. advisor-screen, pause-menu, load-screen). */
+@media (max-height: 53.9rem) {
+    /* Frame title: trim the vertical margins that bracket the header filigree. */
+    .demographics-screen .demographics-title {
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+    }
+    /* Body padding: the design uses pb-6/px-6 (1.5rem) utility padding. Reclaim
+       the bottom and tighten the sides a touch. */
+    .demographics-screen .demographics-body {
+        padding-bottom: 0.9rem;
+    }
+    /* The two tab bars (view selector + page/metric rows): tighten margins. */
+    .demographics-screen .demographics-tab-bar-host {
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+    /* Chart title: smaller and tighter. */
+    .demographics-screen .demographics-chart-title {
+        margin-top: 0.2rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+    }
+    /* The big explanatory caption block: tighten it (kept readable). */
+    .demographics-screen .demographics-chart-caption {
+        margin: 0.2rem auto 0.1rem;
+        padding: 0.25rem 0.6rem;
+        line-height: 1.25;
+    }
+    /* Controls row + pills: tighten gaps and pill padding so the (possibly
+       two-row) controls block is shorter. */
+    .demographics-screen .demographics-history-controls-row {
+        row-gap: 0.25rem;
+    }
+    .demographics-screen .demographics-chart-time-filter-row {
+        gap: 0.25rem 0.25rem;
+        padding: 0 0.3rem;
+    }
+    .demographics-screen .demographics-chart-time-filter-pill {
+        padding: 0.12rem 0.45rem;
+        font-size: 0.74rem;
+    }
+    .demographics-screen .demographics-chart-toolbar {
+        padding: 0 0.3rem;
+    }
+    .demographics-screen .demographics-chart-toolbar-btn {
+        padding: 0.16rem 0.7rem;
+    }
+    /* Legend below the chart: pull it up under the plot. */
+    .demographics-screen .demographics-legend-row {
+        margin-top: 0.3rem;
+    }
+    /* Bottom notes (policy banner / timeline note): tighten. */
+    .demographics-screen .demographics-policy-banner-wrap {
+        margin-top: 0.3rem;
+    }
+    /* The metric captions row (per-metric short notes appended under the title)
+       is supplementary — tighten here, hidden at micro below. */
+    .demographics-screen .demographics-chart-caption-compact {
+        margin-top: 0.1rem;
+    }
+}
+
+/* ══ MICRO (very short viewports — viewport ≲ 44rem tall) ════════════════════
+   Cascades on top of the compact block above (both apply below 44rem; these win
+   by source order), so only the extra tightening is listed. */
+@media (max-height: 43.9rem) {
+    .demographics-screen .demographics-title {
+        margin-top: 0.1rem;
+        margin-bottom: 0.1rem;
+    }
+    .demographics-screen .demographics-body {
+        padding-bottom: 0.5rem;
+    }
+    .demographics-screen .demographics-tab-bar-host {
+        margin-top: 0.15rem;
+        margin-bottom: 0.15rem;
+    }
+    .demographics-screen .demographics-chart-title {
+        margin-top: 0.1rem;
+        margin-bottom: 0.15rem;
+        font-size: 0.9rem;
+    }
+    /* The full caption block is supplementary (its text is also surfaced via the
+       ⓘ tooltip popover); at a very short viewport drop it entirely so the chart
+       gets the height. The single-line compact caption affordance stays. */
+    .demographics-screen .demographics-chart-caption {
+        display: none;
+    }
+    .demographics-screen .demographics-history-controls-row {
+        row-gap: 0.2rem;
+    }
+    .demographics-screen .demographics-chart-time-filter-row {
+        gap: 0.2rem 0.2rem;
+        padding: 0 0.2rem;
+    }
+    .demographics-screen .demographics-chart-time-filter-pill {
+        padding: 0.08rem 0.4rem;
+        font-size: 0.72rem;
+    }
+    .demographics-screen .demographics-chart-toolbar-btn {
+        padding: 0.12rem 0.6rem;
+    }
+    .demographics-screen .demographics-legend-row {
+        margin-top: 0.2rem;
+    }
+    .demographics-screen .demographics-policy-banner-wrap {
+        margin-top: 0.2rem;
+    }
+    .demographics-screen .demographics-chart-caption-compact {
+        display: none;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   NON-HISTORY VIEWS — FLUID (continuous) sizing
+   The History block above tunes a flex-grow chart (already continuous) via small
+   tiered chrome nudges. Every other view (Settlements / World Rankings, Relations,
+   Conflicts) instead carries FIXED-rem content — the matrix header band, the
+   avatars and sub-tabs, the cell type — that would visibly "jump" at a tier
+   threshold. So these scale fluidly with available viewport height using
+   clamp(floor, K·vh, canonical): the engine makes the viewport ~60rem tall at
+   every design resolution (1080p / 1440p / 4K), so choosing K = canonical / 0.6
+   makes K·vh reach the ceiling there (= canonical, unchanged) and ease
+   continuously toward a readable floor as the window shortens — no buckets. The
+   clamp is self-bounding: canonical is never exceeded and readability never drops
+   below the floor, regardless of resolution. These are unconditional (no media
+   query needed — clamp does the work and recomputes live on every resize).
+   Only spacing / font-size is touched; structure and data are unchanged.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared section cards (used by every non-history view) ─────────────────── */
+.demographics-screen .demographics-section {
+    padding: clamp(0.3rem, 0.92vh, 0.55rem) 0.8rem clamp(0.4rem, 1.17vh, 0.7rem);
+}
+.demographics-screen .demographics-section-title {
+    font-size: clamp(0.9rem, 1.75vh, 1.05rem);
+}
+
+/* ── World Rankings (all-civs matrix) ─────────────────────────────────────────
+   The two header bands are a fixed 7.5rem tall and the leader/civ/value text is
+   fixed; on a short viewport that header would eat the column. These scale the
+   band and text fluidly with available height — canonical at 1080p+ (the clamp
+   ceiling), easing toward a readable floor as the viewport shortens. The avatar
+   is JS-sized to 3-4rem and stays, so the band still clears it. */
+.demographics-screen .demographics-worldrankings-allcivs-civ-header,
+.demographics-screen .demographics-worldrankings-allcivs-corner {
+    height: clamp(5.7rem, 12.5vh, 7.5rem);
+}
+.demographics-screen .demographics-worldrankings-allcivs-civ-header-leader {
+    font-size: clamp(0.95rem, 1.97vh, 1.18rem);
+}
+.demographics-screen .demographics-worldrankings-allcivs-civ-header-civ {
+    font-size: clamp(0.82rem, 1.67vh, 1rem);
+}
+.demographics-screen .demographics-worldrankings-allcivs-avatar-placeholder {
+    font-size: clamp(1.3rem, 2.58vh, 1.55rem);
+}
+.demographics-screen .demographics-worldrankings-allcivs-label-cell {
+    min-height: clamp(1.95rem, 4.33vh, 2.6rem);
+    font-size: clamp(0.9rem, 1.75vh, 1.05rem);
+}
+.demographics-screen .demographics-worldrankings-allcivs-value-cell {
+    min-height: clamp(1.95rem, 4.33vh, 2.6rem);
+}
+.demographics-screen .demographics-worldrankings-allcivs-cell-value {
+    font-size: clamp(0.98rem, 1.97vh, 1.18rem);
+}
+
+/* ── Settlements (showcase / table leaderboard) ───────────────────────────── */
+.demographics-screen .demographics-settle-view {
+    gap: clamp(0.3rem, 1vh, 0.6rem);
+    padding: clamp(0.2rem, 0.67vh, 0.4rem) 0.6rem 0;
+}
+.demographics-screen .demographics-settle-subtab {
+    padding: clamp(0.16rem, 0.5vh, 0.3rem) 1.1rem;
+    font-size: clamp(0.82rem, 1.53vh, 0.92rem);
+}
+.demographics-screen .demographics-settle-content {
+    gap: clamp(0.4rem, 1.17vh, 0.7rem);
+    padding-bottom: clamp(0.5rem, 1.67vh, 1rem);
+}
+.demographics-screen .demographics-settle-avatar {
+    width: clamp(2.5rem, 6vh, 3.6rem);
+    height: clamp(2.5rem, 6vh, 3.6rem);
+}
+.demographics-screen .demographics-settle-avatar-initial {
+    font-size: clamp(0.95rem, 1.83vh, 1.1rem);
+}
+
+/* ── Relations (filter chips / bulk toggles) ──────────────────────────────── */
+.demographics-screen .demographics-relations-filter-ctrl-row {
+    margin-bottom: clamp(0.2rem, 0.75vh, 0.45rem);
+    padding-bottom: clamp(0.2rem, 0.67vh, 0.4rem);
+}
+.demographics-screen .demographics-relations-all-toggle {
+    padding: clamp(0.08rem, 0.17vh, 0.1rem) 0.55rem;
+    font-size: clamp(0.66rem, 1.2vh, 0.72rem);
+}
+
+/* ── Conflicts (wars Gantt timeline labels) ───────────────────────────────────
+   The timeline itself is a flex-grow chart (already sized by the History flex
+   chain); only its absolutely-positioned overlay labels carry fixed type, scaled
+   fluidly with available height so a dense timeline reads cleanly at any size. */
+.demographics-screen .demographics-wars-label {
+    font-size: clamp(0.74rem, 1.42vh, 0.85rem);
+}
+.demographics-screen .demographics-wars-crisis-label-stage {
+    font-size: clamp(0.66rem, 1.2vh, 0.72rem);
+}
+.demographics-screen .demographics-wars-crisis-label-name {
+    font-size: clamp(0.64rem, 1.17vh, 0.7rem);
+}
+.demographics-screen .demographics-wars-age-label,
+.demographics-screen .demographics-wars-now-label {
+    font-size: clamp(0.66rem, 1.2vh, 0.72rem);
+}
