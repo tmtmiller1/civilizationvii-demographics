@@ -7,6 +7,22 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-06-28
+
+Every screen now scales smoothly to lower resolutions.
+
+### Fixed
+- **Every screen now renders properly on lower resolutions.** On sub-1080p
+  displays (1366×768, 1600×900 and similar) the game pins the UI font at its
+  smallest size, so all the fixed elements — titles, tab bars, the chart toolbar
+  and legends, the World Rankings header band, the Settlements avatars and
+  sub-tabs, the Relations filter chips — kept their full size and crowded the
+  actual data into a sliver (the reported "charts only use 20% of the screen").
+  The fixed-size content now scales *continuously* with the available height:
+  each element eases smoothly from its full size down to a readable floor as the
+  window gets shorter, with no abrupt jumps between resolutions. At the standard
+  resolutions (1080p / 1440p / 4K) nothing changes.
+
 ## [2.1.1] - 2026-06-27
 
 A correctness pass on two charted figures that could balloon to absurd values on
