@@ -187,6 +187,10 @@ class ScreenDemographics extends Panel {
   onAttach() {
     dlog("onAttach");
     super.onAttach();
+    // Resolution hardening is now pure CSS: screen-demographics-density.css scales fixed-size
+    // content fluidly with clamp() and steps the History chrome at @media (max-height) breakpoints,
+    // so there is no measurement/re-render to wire here. The charts redraw on their own resize
+    // listeners (see view-history-chart-render.js / view-relations.js).
     // Mirror the (possibly persisted) analytics policy to GameConfiguration up front, so the
     // companion Emigration tabs read the player's live choice instead of the wiped localStorage.
     safeCall(() => publishEffectivePolicy());
@@ -777,7 +781,8 @@ try {
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-worldrankings-allcivs.css",
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-relations-options.css",
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-conflicts-history.css",
-        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-settlements.css"
+        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-settlements.css",
+        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-density.css"
       ],
       content: ["fs://game/demographics/ui/screen-demographics/screen-demographics.html"],
       attributes: [],
