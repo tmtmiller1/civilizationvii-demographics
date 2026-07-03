@@ -1120,6 +1120,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="ko_KR">
             <Text>문화</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE" Language="ko_KR">
+            <Text>영향력</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="ko_KR">
             <Text>불가사의</Text>
         </Replace>
