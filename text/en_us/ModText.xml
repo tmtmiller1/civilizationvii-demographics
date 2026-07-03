@@ -1765,6 +1765,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE">
             <Text>Culture</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE">
+            <Text>Influence</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS">
             <Text>Wonders</Text>
         </Row>

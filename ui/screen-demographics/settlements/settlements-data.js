@@ -76,9 +76,12 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
  * flags outputs folded into the overall score, and `weight` is their relative
  * contribution: economic yields weigh 1; WONDERS weigh 2 so wonder-rich
  * settlements get a bonus beyond the yields their wonders already emit (the
- * classic "most wonderful city" idea). Population is a size and happiness a
- * state, so both are ranked as columns but excluded from the composite
- * (`composite:false`, `weight:0`).
+ * classic "most wonderful city" idea). Population is a size, happiness a state,
+ * and influence an empire-pooled yield that settlements only sparsely emit
+ * per-tile (via adjacency buildings), so all three are ranked as columns but
+ * excluded from the composite (`composite:false`, `weight:0`) - counting
+ * influence in the economic Score would skew it toward the handful of civs
+ * with influence-generating buildings.
  * `icon` is the engine BLP icon path (verified present in yield-icons.xml /
  * the fonticon set) so the UI uses real game icons, never tofu glyphs.
  * @type {Array<{ id: string, yt: string|null, label: string, icon: string,
@@ -91,6 +94,9 @@ export const SETTLEMENT_OUTPUTS = [
   { id: "gold", yt: "YIELD_GOLD", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD", icon: "blp:Yield_Gold", composite: true, weight: 1 },
   { id: "science", yt: "YIELD_SCIENCE", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE", icon: "blp:Yield_Science", composite: true, weight: 1 },
   { id: "culture", yt: "YIELD_CULTURE", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE", icon: "blp:Yield_Culture", composite: true, weight: 1 },
+  // Influence uses the engine's lowercase icon key (yield-icons.xml maps
+  // YIELD_DIPLOMACY -> blp:yield_influence, unlike the capitalized Yield_* keys).
+  { id: "influence", yt: "YIELD_DIPLOMACY", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE", icon: "blp:yield_influence", composite: false, weight: 0 },
   { id: "wonders", yt: null, label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS", icon: "blp:fonticon_wonders", composite: true, weight: 2 },
   { id: "happiness", yt: "YIELD_HAPPINESS", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY", icon: "blp:Yield_Happiness", composite: false, weight: 0 }
 ];
