@@ -1120,6 +1120,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="it_IT">
             <Text>Cultura</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE" Language="it_IT">
+            <Text>Influenza</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="it_IT">
             <Text>Meraviglie</Text>
         </Replace>

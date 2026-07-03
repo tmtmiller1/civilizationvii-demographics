@@ -1120,6 +1120,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="ru_RU">
             <Text>Культура</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE" Language="ru_RU">
+            <Text>Влияние</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="ru_RU">
             <Text>Чудеса</Text>
         </Replace>

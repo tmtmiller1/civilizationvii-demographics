@@ -216,7 +216,14 @@ function testSettlementOutputsStructure() {
   const ids = SETTLEMENT_OUTPUTS.map((o) => o.id);
   assert.ok(ids.includes("population"), "population output exists");
   assert.ok(ids.includes("food"), "food output exists");
+  assert.ok(ids.includes("influence"), "influence output exists");
   assert.ok(!ids.includes("composite"), "composite is not an output itself");
+
+  // Influence is shown as a ranked column but excluded from the composite Score
+  // (empire-pooled yield, only sparsely emitted per settlement).
+  const influence = SETTLEMENT_OUTPUTS.find((o) => o.id === "influence");
+  assert.equal(influence.yt, "YIELD_DIPLOMACY", "influence maps to YIELD_DIPLOMACY");
+  assert.equal(influence.composite, false, "influence is not in the composite");
 }
 
 testValueOfComposite();

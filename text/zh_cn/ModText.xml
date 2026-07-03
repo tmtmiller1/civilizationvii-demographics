@@ -1680,6 +1680,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="zh_Hans_CN">
             <Text>文化</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE" Language="zh_Hans_CN">
+            <Text>影响力</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="zh_Hans_CN">
             <Text>奇观</Text>
         </Replace>

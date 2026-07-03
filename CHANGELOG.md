@@ -7,6 +7,20 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-07-02
+
+Influence now shows in the Settlement rankings, alongside the other yields.
+
+### Added
+- **Influence column in the Settlement rankings.** The "Settlement Rank by
+  Yield" table (and the settlement showcase, per-settlement dossier, and
+  category-leader strip) now show Influence alongside the other yields, matching
+  the "Civilization Rank by Yield" tab which already listed it. Influence is a
+  ranked/sortable column but stays out of the composite Score — it is an
+  empire-pooled yield only sparsely emitted per settlement, so counting it would
+  skew the economic Score toward the few civs with influence-generating
+  buildings. Localized in all supported languages.
+
 ## [2.1.2] - 2026-06-28
 
 Every screen now scales smoothly to lower resolutions.
