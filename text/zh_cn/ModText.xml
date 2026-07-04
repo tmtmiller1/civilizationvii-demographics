@@ -77,13 +77,13 @@
             <Text>每回合生产力，你的城市所建造的产出。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="zh_Hans_CN">
-            <Text>Science Per Turn</Text>
+            <Text>每回合科技</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合科学，推动科技研究。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="zh_Hans_CN">
-            <Text>Culture Per Turn</Text>
+            <Text>每回合文化</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合文化，推动公民进度。</Text>
@@ -737,7 +737,7 @@
             <Text>点击隐藏</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="zh_Hans_CN">
-            <Text>Triumphs Radar</Text>
+            <Text>壮举雷达图</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="zh_Hans_CN">
             <Text>成就随时间变化</Text>
@@ -1910,7 +1910,7 @@
             <Text>其最为富庶的城区。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="zh_Hans_CN">
-            <Text>{1_Cat} #1</Text>
+            <Text>{1_Cat} ➊</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="zh_Hans_CN">
             <Text>各项之最</Text>
@@ -2007,44 +2007,44 @@
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="zh_Hans_CN"><Text>难民</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="zh_Hans_CN"><Text>在战争期间因围城、劫掠或征服而流离失所、并在别处重新定居的人口。由 Emigration 模组在安装时提供。</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="zh_Hans_CN"><Text>Global Statistics</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="zh_Hans_CN"><Text>Migration</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="zh_Hans_CN"><Text>Geopolitics</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="zh_Hans_CN"><Text>Science &amp; Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="zh_Hans_CN"><Text>Society</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="zh_Hans_CN"><Text>Expansion</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="zh_Hans_CN"><Text>Population</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="zh_Hans_CN"><Text>Military</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="zh_Hans_CN"><Text>Wars</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="zh_Hans_CN"><Text>Relations</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="zh_Hans_CN"><Text>Agreements</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="zh_Hans_CN"><Text>Gross Domestic Product (GDP)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="zh_Hans_CN"><Text>Gold Per Turn (GPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="zh_Hans_CN"><Text>Production Per Turn (PPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="zh_Hans_CN"><Text>Crop Yield (Food Per Turn)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="zh_Hans_CN"><Text>Number of Trade Routes over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="zh_Hans_CN"><Text>Total Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="zh_Hans_CN"><Text>Bonus Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="zh_Hans_CN"><Text>Empire Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="zh_Hans_CN"><Text>City Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="zh_Hans_CN"><Text>Treasure Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="zh_Hans_CN"><Text>Factory Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="zh_Hans_CN"><Text>Count of Techs Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="zh_Hans_CN"><Text>Count of Civics Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="zh_Hans_CN"><Text>Happiness Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="zh_Hans_CN"><Text>Influence Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="zh_Hans_CN"><Text>Settlements Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="zh_Hans_CN"><Text>Settlement Cap Utilization Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="zh_Hans_CN"><Text>Land Area Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="zh_Hans_CN"><Text>Wonders Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="zh_Hans_CN"><Text>Score Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="zh_Hans_CN"><Text>Gold Reserves Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="zh_Hans_CN"><Text>Diplomatic Approval Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="zh_Hans_CN"><Text>Population Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="zh_Hans_CN"><Text>Military Power Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="zh_Hans_CN"><Text>Agreements (Count Over Time)</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="zh_Hans_CN"><Text>Wars</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="zh_Hans_CN"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="zh_Hans_CN"><Text>全球统计</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="zh_Hans_CN"><Text>迁徙</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="zh_Hans_CN"><Text>地缘政治</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="zh_Hans_CN"><Text>科技与文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="zh_Hans_CN"><Text>社会</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="zh_Hans_CN"><Text>扩张</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="zh_Hans_CN"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="zh_Hans_CN"><Text>军事</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="zh_Hans_CN"><Text>战争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="zh_Hans_CN"><Text>关系</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="zh_Hans_CN"><Text>协议</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="zh_Hans_CN"><Text>国内生产总值（GDP）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="zh_Hans_CN"><Text>每回合金币（GPT）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="zh_Hans_CN"><Text>每回合生产力（PPT）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="zh_Hans_CN"><Text>作物产出（每回合食物）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="zh_Hans_CN"><Text>贸易路线数量随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="zh_Hans_CN"><Text>资源总量随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="zh_Hans_CN"><Text>奖励资源随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="zh_Hans_CN"><Text>帝国资源随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="zh_Hans_CN"><Text>城市资源随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="zh_Hans_CN"><Text>珍宝资源随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="zh_Hans_CN"><Text>工厂资源随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="zh_Hans_CN"><Text>科技数量随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="zh_Hans_CN"><Text>社会制度数量随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="zh_Hans_CN"><Text>幸福度随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="zh_Hans_CN"><Text>影响力随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="zh_Hans_CN"><Text>聚落随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="zh_Hans_CN"><Text>聚落上限利用率随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="zh_Hans_CN"><Text>领土面积随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="zh_Hans_CN"><Text>奇观随时间变化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="zh_Hans_CN"><Text>得分随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="zh_Hans_CN"><Text>金币储备随时间变化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="zh_Hans_CN"><Text>外交好感度随时间变化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="zh_Hans_CN"><Text>人口随时间变化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="zh_Hans_CN"><Text>军事实力随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="zh_Hans_CN"><Text>协议（数量随时间变化）</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="zh_Hans_CN"><Text>战争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="zh_Hans_CN"><Text>灾害</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="zh_Hans_CN"><Text>控制遇到新文明时的行为：在图表中显示其完整历史，或仅从相遇时开始记录。仅在剧透保护开启时生效。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="zh_Hans_CN"><Text>为图表线条和关系网络使用高对比度、色盲友好的配色。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="zh_Hans_CN"><Text>在历史图表线条上标记每座奇观建成的回合。</Text></Replace>
@@ -2058,5 +2058,21 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="zh_Hans_CN"><Text>定居点飞掠在每座城市停留的时长。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="zh_Hans_CN"><Text>飞掠镜头在每座定居点停留时加入轻微旋转。</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="zh_Hans_CN"><Text>移居</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV" Language="zh_Hans_CN"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV_TITLE" Language="zh_Hans_CN"><Text>人口随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLEAR_FOCUS" Language="zh_Hans_CN"><Text>清除专精</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE" Language="zh_Hans_CN"><Text>按类别划分的资源随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR" Language="zh_Hans_CN"><Text>传承之路雷达图</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE" Language="zh_Hans_CN"><Text>冲突时间线</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_25Y" Language="zh_Hans_CN"><Text>25年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_50Y" Language="zh_Hans_CN"><Text>50年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_100Y" Language="zh_Hans_CN"><Text>100年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_300Y" Language="zh_Hans_CN"><Text>300年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_500Y" Language="zh_Hans_CN"><Text>500年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_1000Y" Language="zh_Hans_CN"><Text>1000年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT" Language="zh_Hans_CN"><Text>（已专注{1_Count}个；点击图标切换）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="zh_Hans_CN"><Text>未知</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="zh_Hans_CN"><Text>第{1_Ordinal}次{2_Adjective}战争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="zh_Hans_CN"><Text>战争 #{1_Id}</Text></Replace>
     </LocalizedText>
 </Database>

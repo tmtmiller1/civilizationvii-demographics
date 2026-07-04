@@ -12,7 +12,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="it_IT"><Text>Panoramica storica della partita corrente.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="it_IT"><Text>Punteggio</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="it_IT"><Text>Tesoro</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="it_IT"><Text>GPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="it_IT"><Text>OPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="it_IT"><Text>Entrate d'oro per turno (nette).</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="it_IT"><Text>Insediamenti</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="it_IT"><Text>Tecnologie</Text></Replace>
@@ -26,9 +26,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="it_IT"><Text>Stima comparativa della dimensione economica, basata sui rendimenti per turno e sulla durata della partita.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="it_IT"><Text>PPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="it_IT"><Text>Produzione per turno, ciò che costruiscono le tue città.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="it_IT"><Text>Science Per Turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="it_IT"><Text>Scienza per turno</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="it_IT"><Text>Scienza per turno, alimenta la ricerca tecnologica.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="it_IT"><Text>Culture Per Turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="it_IT"><Text>Cultura per turno</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="it_IT"><Text>Cultura per turno, alimenta i progressi dei civismi.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="it_IT"><Text>Resa agricola</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="it_IT"><Text>Produzione netta di cibo per turno in tutti gli insediamenti.</Text></Replace>
@@ -284,7 +284,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="it_IT"><Text>(nascosta, clicca per mostrare)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="it_IT"><Text>Clicca per mostrare</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="it_IT"><Text>Clicca per nascondere</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="it_IT"><Text>Triumphs Radar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="it_IT"><Text>Radar dei trionfi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="it_IT"><Text>Trionfi nel tempo</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="it_IT"><Text>(Conteggio cumulativo, impilato per attributo)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="it_IT"><Text>Allocazione delle risorse nel tempo (area impilata)</Text></Replace>
@@ -1158,7 +1158,7 @@
             <Text>Pop.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="it_IT">
-            <Text>Focus</Text>
+            <Text>Specializzazione</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="it_IT">
             <Text>Crescita</Text>
@@ -1350,7 +1350,7 @@
             <Text>Il suo quartiere più ricco.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="it_IT">
-            <Text>#1 {1_Cat}</Text>
+            <Text>➊ {1_Cat}</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="it_IT">
             <Text>Leader di categoria</Text>
@@ -1447,44 +1447,44 @@
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="it_IT"><Text>Profughi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="it_IT"><Text>Popolazione sfollata da assedio, saccheggio o conquista durante la guerra e reinsediata altrove, fornita dal mod Emigration quando è installato.</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="it_IT"><Text>Global Statistics</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="it_IT"><Text>Migration</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="it_IT"><Text>Geopolitics</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="it_IT"><Text>Science &amp; Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="it_IT"><Text>Society</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="it_IT"><Text>Expansion</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="it_IT"><Text>Population</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="it_IT"><Text>Military</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="it_IT"><Text>Wars</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="it_IT"><Text>Relations</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="it_IT"><Text>Agreements</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="it_IT"><Text>Gross Domestic Product (GDP)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="it_IT"><Text>Gold Per Turn (GPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="it_IT"><Text>Production Per Turn (PPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="it_IT"><Text>Crop Yield (Food Per Turn)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="it_IT"><Text>Number of Trade Routes over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="it_IT"><Text>Total Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="it_IT"><Text>Bonus Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="it_IT"><Text>Empire Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="it_IT"><Text>City Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="it_IT"><Text>Treasure Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="it_IT"><Text>Factory Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="it_IT"><Text>Count of Techs Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="it_IT"><Text>Count of Civics Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="it_IT"><Text>Happiness Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="it_IT"><Text>Influence Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="it_IT"><Text>Settlements Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="it_IT"><Text>Settlement Cap Utilization Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="it_IT"><Text>Land Area Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="it_IT"><Text>Wonders Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="it_IT"><Text>Score Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="it_IT"><Text>Gold Reserves Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="it_IT"><Text>Diplomatic Approval Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="it_IT"><Text>Population Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="it_IT"><Text>Military Power Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="it_IT"><Text>Agreements (Count Over Time)</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="it_IT"><Text>Wars</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="it_IT"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="it_IT"><Text>Statistiche globali</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="it_IT"><Text>Migrazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="it_IT"><Text>Geopolitica</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="it_IT"><Text>Scienza e cultura</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="it_IT"><Text>Società</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="it_IT"><Text>Espansione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="it_IT"><Text>Popolazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="it_IT"><Text>Militare</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="it_IT"><Text>Guerre</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="it_IT"><Text>Relazioni</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="it_IT"><Text>Accordi</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="it_IT"><Text>Prodotto interno lordo (PIL)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="it_IT"><Text>Oro per turno (OPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="it_IT"><Text>Produzione per turno (PPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="it_IT"><Text>Resa agricola (cibo per turno)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="it_IT"><Text>Numero di rotte commerciali nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="it_IT"><Text>Risorse totali nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="it_IT"><Text>Risorse bonus nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="it_IT"><Text>Risorse dell'impero nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="it_IT"><Text>Risorse cittadine nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="it_IT"><Text>Risorse tesoro nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="it_IT"><Text>Risorse manifatturiere nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="it_IT"><Text>Numero di tecnologie nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="it_IT"><Text>Numero di civiche nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="it_IT"><Text>Felicità nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="it_IT"><Text>Influenza nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="it_IT"><Text>Insediamenti nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="it_IT"><Text>Utilizzo del limite di insediamenti nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="it_IT"><Text>Superficie territoriale nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="it_IT"><Text>Meraviglie nel tempo</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="it_IT"><Text>Punteggio nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="it_IT"><Text>Riserve d'oro nel tempo</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="it_IT"><Text>Approvazione diplomatica nel tempo</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="it_IT"><Text>Popolazione nel tempo</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="it_IT"><Text>Potenza militare nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="it_IT"><Text>Accordi (numero nel tempo)</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="it_IT"><Text>Guerre</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="it_IT"><Text>Disastri</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="it_IT"><Text>Controlla cosa accade quando incontri una nuova civiltà: mostrare tutta la sua cronologia nei grafici o tracciarla solo dal momento dell'incontro. Si applica solo con la protezione anti-spoiler attiva.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="it_IT"><Text>Usa una palette ad alto contrasto e adatta ai daltonici per le linee dei grafici e la rete delle relazioni.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="it_IT"><Text>Segna sulle linee dei grafici il turno in cui ogni meraviglia è stata completata.</Text></Replace>
@@ -1498,5 +1498,21 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="it_IT"><Text>Quanto a lungo il sorvolo degli insediamenti si sofferma su ogni città.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="it_IT"><Text>Aggiunge una leggera rotazione alla telecamera di sorvolo mentre si sofferma su ogni insediamento.</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="it_IT"><Text>Emigrazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV" Language="it_IT"><Text>Popolazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV_TITLE" Language="it_IT"><Text>Popolazione nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLEAR_FOCUS" Language="it_IT"><Text>Azzera specializzazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE" Language="it_IT"><Text>Risorse per categoria nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR" Language="it_IT"><Text>Radar dei percorsi eredità</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE" Language="it_IT"><Text>Cronologia dei conflitti</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_25Y" Language="it_IT"><Text>25 a</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_50Y" Language="it_IT"><Text>50 a</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_100Y" Language="it_IT"><Text>100 a</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_300Y" Language="it_IT"><Text>300 a</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_500Y" Language="it_IT"><Text>500 a</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_1000Y" Language="it_IT"><Text>1000 a</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT" Language="it_IT"><Text>({1_Count} selezionati; clicca le icone per attivare/disattivare)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="it_IT"><Text>Sconosciuta</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="it_IT"><Text>{1_Ordinal} guerra {2_Adjective}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="it_IT"><Text>Guerra n. {1_Id}</Text></Replace>
     </LocalizedText>
 </Database>

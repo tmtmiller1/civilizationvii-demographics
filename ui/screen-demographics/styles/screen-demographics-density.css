@@ -185,23 +185,23 @@
     height: clamp(5.7rem, 12.5vh, 7.5rem);
 }
 .demographics-screen .demographics-worldrankings-allcivs-civ-header-leader {
-    font-size: clamp(0.95rem, 1.97vh, 1.18rem);
+    font-size: clamp(0.78rem, 1.58vh, 0.95rem);
 }
 .demographics-screen .demographics-worldrankings-allcivs-civ-header-civ {
-    font-size: clamp(0.82rem, 1.67vh, 1rem);
+    font-size: clamp(0.68rem, 1.37vh, 0.82rem);
 }
 .demographics-screen .demographics-worldrankings-allcivs-avatar-placeholder {
-    font-size: clamp(1.3rem, 2.58vh, 1.55rem);
+    font-size: clamp(1rem, 2vh, 1.2rem);
 }
 .demographics-screen .demographics-worldrankings-allcivs-label-cell {
     min-height: clamp(1.95rem, 4.33vh, 2.6rem);
-    font-size: clamp(0.9rem, 1.75vh, 1.05rem);
+    font-size: clamp(0.74rem, 1.47vh, 0.88rem);
 }
 .demographics-screen .demographics-worldrankings-allcivs-value-cell {
     min-height: clamp(1.95rem, 4.33vh, 2.6rem);
 }
 .demographics-screen .demographics-worldrankings-allcivs-cell-value {
-    font-size: clamp(0.98rem, 1.97vh, 1.18rem);
+    font-size: clamp(0.8rem, 1.58vh, 0.95rem);
 }
 
 /* ── Settlements (showcase / table leaderboard) ───────────────────────────── */

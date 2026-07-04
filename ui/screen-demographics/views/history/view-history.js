@@ -17,6 +17,7 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import {
   getMetric,
+  localizedMetricName,
   EXTERNAL_PAGE_METRICS,
   EXTERNAL_PANELS,
   EXTERNAL_METRIC_GROUPS,
@@ -604,7 +605,7 @@ function resolve2DGroup(
   // toggle in its own render.
   if (ctx) ctx.groupView = vId;
   const memberPills = group.members.map(
-    (/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: m.label })
+    (/** @type {*} */ m, /** @type {number} */ i) => ({ key: i, label: localizedMetricName(m) })
   );
   host.appendChild(pillRow(memberPills,
     mIdx, (k) => { setGroupSel(group.id, { metric: k, view: vId }); rerender(); }));
@@ -628,7 +629,7 @@ function resolveFlatGroup(
   const effective = typeof sel === "string" && ids.includes(sel) ? sel : ids[0];
   host.appendChild(pillRow(ids.map((/** @type {string} */ mid) => {
     const m = getMetric(mid);
-    return { key: mid, label: m && m.label ? m.label : mid };
+    return { key: mid, label: m && m.label ? localizedMetricName(m) : mid };
   }), effective, (k) => { setGroupSel(group.id, k); rerender(); }));
   return effective;
 }

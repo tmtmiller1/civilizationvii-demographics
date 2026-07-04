@@ -220,7 +220,7 @@ if [ -f "$CHANGELOG_FILE" ]; then
         }
         END { flush() }
     ' "$CHANGELOG_FILE" \
-        | sed -E 's/^/[*]/; s/\*\*//g; s/`//g' \
+        | sed -E 's/\*//g; s/`//g; s/^/[*]/' \
         | tr '\n' ' ')"
     if [ -n "$BULLETS" ]; then
         # Lead with a bold version header so the Workshop change note always

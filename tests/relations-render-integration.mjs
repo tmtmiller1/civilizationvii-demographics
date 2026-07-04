@@ -147,7 +147,7 @@ function testRelationsRenderIntegration() {
   assert.ok(caption, "caption should exist");
 
   topBar.dispatch("tab-selected", { detail: { selectedItem: { id: "civ" } } });
-  assert.equal(String(caption.textContent).includes("focuses"), true, "multi-focus caption should use plural suffix");
+  assert.equal(String(caption.textContent).includes("FOCUS_HINT"), true, "multi-focus caption should show the localized focus hint");
   const clearFocusBtn = findByClass(host, "demographics-relations-clear-focus-btn");
   assert.ok(clearFocusBtn, "clear-focus button should render for active focus");
   clearFocusBtn.dispatch("click");

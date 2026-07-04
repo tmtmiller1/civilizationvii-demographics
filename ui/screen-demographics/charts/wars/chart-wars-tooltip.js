@@ -307,10 +307,10 @@ function groupCSBySuzerain(majors, csList) {
  */
 function csDisplayName(ally) {
   try {
-    return csLiveName(ally.pid) || ally.civ || "City-State " + ally.pid;
+    return csLiveName(ally.pid) || ally.civ || t("LOC_DEMOGRAPHICS_CITY_STATE") + " " + ally.pid;
   } catch (_) {
     // Players.get()/Locale.compose() can throw mid age-transition; fall back.
-    return ally.civ || "City-State " + ally.pid;
+    return ally.civ || t("LOC_DEMOGRAPHICS_CITY_STATE") + " " + ally.pid;
   }
 }
 

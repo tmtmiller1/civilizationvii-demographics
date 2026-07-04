@@ -156,7 +156,7 @@ function adjectiveFromCivType(civType) {
  * @returns {string} The adjective.
  */
 function civAdjectiveFromName(name) {
-  if (typeof name !== "string" || !name.length) return "Unknown";
+  if (typeof name !== "string" || !name.length) return t("LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ");
   if (CIV_ADJECTIVE[name]) return CIV_ADJECTIVE[name];
   const cleaned = name.replace(/^the\s+/i, "").trim();
   if (CIV_ADJECTIVE[cleaned]) return CIV_ADJECTIVE[cleaned];
@@ -459,16 +459,47 @@ function composeWarLabel(w, pairCounts, worldWars, continentMap) {
   // true three-way "tripartite" war (which this two-sided model can't represent).
   // Route it to the coalition namer ("Regional/Great <A>-<B> War (+N others)").
   if (n >= 3) return largeWarLabel({ w, a, b, adjA, adjB, n, worldWars, continentMap });
+  return smallWarLabel({ n, adjA, adjB, pairCounts, w });
+}
+
+/**
+ * Emit a recurring-matchup ordinal label: looks up how many times `key` has
+ * been seen, advances it, and composes `template` with the ordinal word + the
+ * given adjective params. Shared by the bilateral and single-belligerent namers
+ * so the same matchup gets "First…", "Second…" prefixes on reruns.
+ * @param {Map<string, number>} pairCounts Recurring-matchup counts (mutated).
+ * @param {string} key Stable matchup key.
+ * @param {string} template WARNAME LOC key.
+ * @param {...string} adjs Adjective params for the template.
+ * @returns {string} The composed label.
+ */
+function recurringOrdinalLabel(pairCounts, key, template, ...adjs) {
+  const count = (pairCounts.get(key) || 0) + 1;
+  pairCounts.set(key, count);
+  return t(template, ordinalWord(count), ...adjs);
+}
+
+/**
+ * Name a small (1-2 major) war: standard bilateral, single-belligerent (a major
+ * vs only city-states / independents), or the persisted fallback when there are
+ * no majors at all. All localized so no English name leaks to non-English UIs.
+ * @param {{ n: number, adjA: string[], adjB: string[],
+ *   pairCounts: Map<string, number>, w: * }} args Naming inputs.
+ * @returns {string} The label.
+ */
+function smallWarLabel({ n, adjA, adjB, pairCounts, w }) {
+  const unknown = t("LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ");
   if (n === 2) {
-    // Standard bilateral. Build a stable adjective key (alpha order) so reruns
-    // of the same matchup get ordinal prefixes ("Second Roman–Egyptian War").
-    const pair = [adjA[0] || "Unknown", adjB[0] || "Unknown"].sort();
-    const key = pair.join("|");
-    const count = (pairCounts.get(key) || 0) + 1;
-    pairCounts.set(key, count);
-    return t("LOC_DEMOGRAPHICS_WARNAME_BILATERAL", ordinalWord(count), pair[0], pair[1]);
+    // Stable adjective key (alpha order) so reruns get ordinal prefixes.
+    const pair = [adjA[0] || unknown, adjB[0] || unknown].sort();
+    return recurringOrdinalLabel(
+      pairCounts, pair.join("|"), "LOC_DEMOGRAPHICS_WARNAME_BILATERAL", pair[0], pair[1]);
   }
-  return w.name; // single-party / odd fallback
+  if (n === 1) {
+    const adj = adjA[0] || adjB[0] || unknown;
+    return recurringOrdinalLabel(pairCounts, adj, "LOC_DEMOGRAPHICS_WARNAME_SINGLE", adj);
+  }
+  return w.name; // no majors at all — persisted fallback (essentially never shown)
 }
 
 /**
