@@ -1995,7 +1995,7 @@
             <Text>Its most bountiful quarter.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN">
-            <Text>#1 {1_Cat}</Text>
+            <Text>➊ {1_Cat}</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE">
             <Text>Category Leaders</Text>
@@ -2242,6 +2242,54 @@
         </Row>
             <Row Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION">
             <Text>Emigration</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV_TITLE">
+            <Text>Population Over Time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CLEAR_FOCUS">
+            <Text>Clear focus</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE">
+            <Text>Resources by category over time</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR">
+            <Text>Legacy Path radar</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE">
+            <Text>Conflicts timeline</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_25Y">
+            <Text>25y</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_50Y">
+            <Text>50y</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_100Y">
+            <Text>100y</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_300Y">
+            <Text>300y</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_500Y">
+            <Text>500y</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_FILTER_1000Y">
+            <Text>1000y</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT">
+            <Text>({1_Count} focused; click icons to toggle)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ">
+            <Text>Unknown</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE">
+            <Text>{1_Ordinal} {2_Adjective} War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME">
+            <Text>War #{1_Id}</Text>
         </Row>
     </EnglishText>
 </Database>

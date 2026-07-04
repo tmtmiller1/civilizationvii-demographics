@@ -7,6 +7,56 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-07-04
+
+A localization release. Polish is now a supported language, and every remaining
+hardcoded interface string has been moved behind a translation tag so the whole
+UI can be localized. Also fixes oversized World Rankings text at 4K.
+
+### Added
+- **Polish (pl_PL) localization.** Polish is now a registered language with a
+  translation file covering every string in the mod. It ships as English
+  placeholders pending community translation, so any not-yet-translated row
+  falls back cleanly to English — exactly as an untranslated string does in the
+  other languages.
+- **The other nine languages are now fully translated.** German, Spanish,
+  French, Italian, Japanese, Korean, Portuguese (BR), Russian and Simplified
+  Chinese had a backlog of interface strings still showing English (chart
+  titles, tab and column labels, page names, and more). Every one is now
+  translated, using the game's own terminology, so those languages read as a
+  complete localization rather than a partial one.
+- **Full translation coverage for the interface.** The strings that were still
+  hardcoded in English — the History time-range filter pills (*25y … 1000y*),
+  the Relations node-focus caption, the City-State ally fallback, and the
+  "Player N" / "War #N" fallback labels — now resolve through translation tags,
+  so they localize with the rest of the UI. The Relations focus caption also
+  drops an English-only plural suffix in favour of a count-based phrasing that
+  translates correctly in every language. This closes the gaps a translator
+  would otherwise hit.
+- **War display names now fully localize.** The dynamic war names (recurrence
+  ordinals, world/great/regional labels, duration flair) were already built from
+  translation templates; the last English leaks in that path — the "Unknown"
+  fallback adjective that could surface inside a name, and single-belligerent
+  wars that fell back to the raw stored name — are now localized too. The names
+  are composed at display time, so nothing is baked into save files and existing
+  saves are unaffected.
+
+### Fixed
+- **Numbers now format for the player's language.** Grouped figures and
+  abbreviated magnitudes (e.g. *1.23M*, *12,345 km²*, *+3.4/turn*) previously
+  always used English separators (`1,234.5`) regardless of language. They now
+  route through the game's own `Locale.toNumber`, the same API the base game
+  uses, so a German player sees `1.234,5`, a French player `1 234,5`, and so on.
+  Off-engine (and if the API is ever unavailable) it falls back to the previous
+  formatting, so nothing regresses.
+- **World Rankings text no longer oversized at 4K.** Every tab of the World
+  Rankings screen used a larger type scale than the rest of the mod, which read
+  as oversized on high-resolution displays and left too little room for longer
+  names. The leader, civilization, metric-label and value text is retuned to
+  match the mod's other tables (and the civilization-table name column widened),
+  so names — including longer localized ones — fit, while the smooth
+  per-resolution scaling introduced in 2.1.2 is preserved.
+
 ## [2.2.0] - 2026-07-02
 
 Influence now shows in the Settlement rankings, alongside the other yields.

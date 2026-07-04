@@ -1,0 +1,2288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Polish (pl_PL) localization for the Demographics mod.
+
+  Generated from text/en_us/ModText.xml as English placeholders so every LOC key is
+  present (this locale is covered by the tests/i18n.mjs parity gate). Translate each
+  <Text> in place to Polish; until a row is translated it shows the English string,
+  exactly as an untranslated key does in every other locale here.
+
+  Regenerate (overwrites Polish work — only for a clean re-baseline) with:
+    sed -e 's#<EnglishText>#<LocalizedText>#' -e 's#</EnglishText>#</LocalizedText>#' \
+        -e 's#<Row Tag="\([^"]*\)">#<Replace Tag="\1" Language="pl_PL">#' \
+        -e 's#</Row>#</Replace>#' text/en_us/ModText.xml > text/pl_pl/ModText.xml
+-->
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="pl_PL">
+            <Text>Demographics</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="pl_PL">
+            <Text>Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for every met civilization.</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="pl_PL">
+            <Text>Demographics</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="pl_PL">
+            <Text>Demographics</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="pl_PL">
+            <Text>Demographics</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="pl_PL">
+            <Text>Score over time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="pl_PL">
+            <Text>Turn-by-turn world history.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="pl_PL">
+            <Text>Close</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="pl_PL">
+            <Text>Track each civilization across the course of the game.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_TITLE" Language="pl_PL">
+            <Text>Legend</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_ALL" Language="pl_PL">
+            <Text>All</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="pl_PL">
+            <Text>None</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="pl_PL">
+            <Text>Score</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="pl_PL">
+            <Text>Treasury</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="pl_PL">
+            <Text>GPT</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="pl_PL">
+            <Text>Gold income per turn (net).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="pl_PL">
+            <Text>Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="pl_PL">
+            <Text>Techs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="pl_PL">
+            <Text>Civics</Text>
+        </Replace>
+
+        <!-- Tooltips for the original 5 metrics -->
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="pl_PL">
+            <Text>Composite power score, the same number the Victory screen uses.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="pl_PL">
+            <Text>Current treasury balance.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="pl_PL">
+            <Text>Total number of cities and towns owned.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="pl_PL">
+            <Text>Number of fully-researched technology nodes in the current age tree.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="pl_PL">
+            <Text>Number of fully-unlocked civic nodes in the current age tree.</Text>
+        </Replace>
+
+        <!-- Economy metrics -->
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="pl_PL">
+            <Text>GDP</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="pl_PL">
+            <Text>Estimated economic output based on per-turn yields and turns elapsed.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="pl_PL">
+            <Text>PPT</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="pl_PL">
+            <Text>Production generated per turn.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="pl_PL">
+            <Text>Science Per Turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="pl_PL">
+            <Text>Science per turn, drives technology research.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="pl_PL">
+            <Text>Culture Per Turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="pl_PL">
+            <Text>Culture per turn, drives civics progress.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="pl_PL">
+            <Text>Crop Yield</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="pl_PL">
+            <Text>Net food output per turn across all settlements.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="pl_PL">
+            <Text>Diplomatic Approval</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="pl_PL">
+            <Text>Summary of current diplomatic standing across met civilizations and suzerain city-states.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="pl_PL">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="pl_PL">
+            <Text>Scaled real-world population, exponentially derived from total citizen count.</Text>
+        </Replace>
+
+        <!-- V7-specific creative -->
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="pl_PL">
+            <Text>Influence</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="pl_PL">
+            <Text>Happiness</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="pl_PL">
+            <Text>Net happiness yield per turn.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="pl_PL">
+            <Text>Net diplomatic Influence generated per turn.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="pl_PL">
+            <Text>Ongoing Deals</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="pl_PL">
+            <Text>Active diplomatic actions, endeavors, sanctions, and espionage involving this leader.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="pl_PL">
+            <Text>Trade Routes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="pl_PL">
+            <Text>Number of active trade routes leaving this player's cities.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="pl_PL">
+            <Text>Land Area</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="pl_PL">
+            <Text>Total territory owned in square kilometers, scaled from controlled hex tiles.</Text>
+        </Replace>
+
+        <!-- Top-level view tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="pl_PL">
+            <Text>Historical Data</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS" Language="pl_PL">
+            <Text>Civilization Rank by Yield</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="pl_PL">
+            <Text>Global Relations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="pl_PL">
+            <Text>Options</Text>
+        </Replace>
+
+        <!-- Historical Data sub-page tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="pl_PL">
+            <Text>Economy</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="pl_PL">
+            <Text>Power</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="pl_PL">
+            <Text>Knowledge &amp; Influence</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="pl_PL">
+            <Text>Triumphs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="pl_PL">
+            <Text>Resources</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="pl_PL">
+            <Text>Conflicts</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="pl_PL">
+            <Text>Crises</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="pl_PL">
+            <Text>Crisis Impact</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="pl_PL">
+            <Text>Crisis Impact</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="pl_PL">
+            <Text>Crisis Impact Graphs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="pl_PL">
+            <Text>Crisis Impact Graphs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="pl_PL">
+            <Text>Civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL" Language="pl_PL">
+            <Text>All</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="pl_PL">
+            <Text>None</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="pl_PL">
+            <Text>Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="pl_PL">
+            <Text>All Ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="pl_PL">
+            <Text>Antiquity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="pl_PL">
+            <Text>Exploration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="pl_PL">
+            <Text>Modern</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY" Language="pl_PL">
+            <Text>No data recorded yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE" Language="pl_PL">
+            <Text>No crisis has begun in this age yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="pl_PL">
+            <Text>War Timeline</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GLOSSARY" Language="pl_PL">
+            <Text>Guide</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WAR_GRAPHS" Language="pl_PL">
+            <Text>War Impact</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="pl_PL">
+            <Text>All</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE" Language="pl_PL">
+            <Text>None</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK" Language="pl_PL">
+            <Text>War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE" Language="pl_PL">
+            <Text>No wars yet. Once any civ declares war, you can graph it here.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA" Language="pl_PL">
+            <Text>No data recorded for this war.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_STRENGTH" Language="pl_PL">
+            <Text>Military Power (Lost)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_SETTLEMENTS" Language="pl_PL">
+            <Text>Settlements Lost/Gained</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_RAZED" Language="pl_PL">
+            <Text>Settlements Razed</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_LAND" Language="pl_PL">
+            <Text>Land Area Lost</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_POP" Language="pl_PL">
+            <Text>Population Lost</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN" Language="pl_PL">
+            <Text>Turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="pl_PL">
+            <Text>Strength</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" Language="pl_PL"><Text>units</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" Language="pl_PL"><Text>soldiers</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS" Language="pl_PL"><Text>Units</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED" Language="pl_PL"><Text>Scaled</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="pl_PL">
+            <Text>Settlements (net)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_RAZED" Language="pl_PL">
+            <Text>Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_LAND" Language="pl_PL">
+            <Text>km²</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_POP" Language="pl_PL">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS" Language="pl_PL">
+            <Text>Food / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD" Language="pl_PL">
+            <Text>Production / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD" Language="pl_PL">
+            <Text>Production</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER" Language="pl_PL">
+            <Text>Military Power (Over Time)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" Language="pl_PL">
+            <Text>Prod. Directed to War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS" Language="pl_PL">
+            <Text>Belligerent Civs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS" Language="pl_PL">
+            <Text>City State Allies</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CUMULATIVE" Language="pl_PL">
+            <Text>Cumulative Allied</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE" Language="pl_PL">
+            <Text>{1_Civ} side</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE_UNKNOWN" Language="pl_PL">
+            <Text>Allied side</Text>
+        </Replace>
+
+        <!-- Civ7-specific Age mechanics -->
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="pl_PL">
+            <Text>Radar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="pl_PL">
+            <Text>Race</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="pl_PL">
+            <Text>Completion</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="pl_PL">
+            <Text>Triumphs Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="pl_PL">
+            <Text>Cap Utilization</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="pl_PL">
+            <Text>Percentage of the settlement cap this player has used. 100% means at the limit.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="pl_PL">
+            <Text>Age Progress</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="pl_PL">
+            <Text>How close the current age is to ending. Same for all civilizations.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="pl_PL">
+            <Text>Crisis Stage</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="pl_PL">
+            <Text>Current crisis stage (0 = none, 3 = peak crisis). Game-wide value.</Text>
+        </Replace>
+
+        <!-- Resources page metrics -->
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="pl_PL">
+            <Text>Stacked</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="pl_PL">
+            <Text>Total</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="pl_PL">
+            <Text>Bonus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="pl_PL">
+            <Text>Empire</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="pl_PL">
+            <Text>City</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="pl_PL">
+            <Text>Factory</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="pl_PL">
+            <Text>Treasure</Text>
+        </Replace>
+
+        <!-- Power-page metrics: military strength and wonders -->
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="pl_PL">
+            <Text>Military Power</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="pl_PL">
+            <Text>Summed combat strength across all of this player's military units (land, naval, and air formations).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="pl_PL">
+            <Text>Wonders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="pl_PL">
+            <Text>Total wonders constructed by this player across all ages.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="pl_PL">
+            <Text>(not yet implemented)</Text>
+        </Replace>
+
+        <!-- All Civilizations header sub-label -->
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD" Language="pl_PL">
+            <Text>vs. world</Text>
+        </Replace>
+
+        <!-- All Civilizations column headers -->
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="pl_PL">
+            <Text>Metric</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="pl_PL">
+            <Text>Value</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="pl_PL">
+            <Text>Rank</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="pl_PL">
+            <Text>Value</Text>
+        </Replace>
+
+        <!-- Options labels -->
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="pl_PL">
+            <Text>Show unmet civs in legend</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="pl_PL">
+            <Text>Smooth chart lines</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="pl_PL">
+            <Text>Show eliminated civs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="pl_PL">
+            <Text>Clear history</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="pl_PL">
+            <Text>Refresh sample now</Text>
+        </Replace>
+
+        <!-- Unmet placeholder strings (Fix 4) -->
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="pl_PL">
+            <Text>Unmet Civilization</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="pl_PL">
+            <Text>This civilization is still unmet. Enable "Show names of unmet civilizations and city-states" in Options to show real names.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="pl_PL">
+            <Text>Unmet City State</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="pl_PL">
+            <Text>This city-state is still unmet. Enable "Show names of unmet civilizations and city-states" in Options to show real names.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="pl_PL">
+            <Text>Show names of unmet civilizations and city-states</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="pl_PL">
+            <Text>When off, unmet civilizations and city-states appear as generic placeholders in charts, the rankings, and global relations.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="pl_PL">
+            <Text>Player {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="pl_PL">
+            <Text>Civilization Progress</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="pl_PL">
+            <Text>No civilization has made progress yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="pl_PL">
+            <Text>Militaristic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="pl_PL">
+            <Text>Economic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="pl_PL">
+            <Text>Diplomatic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="pl_PL">
+            <Text>Cultural</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="pl_PL">
+            <Text>Scientific</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="pl_PL">
+            <Text>Expansionist</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="pl_PL">
+            <Text>Other</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="pl_PL">
+            <Text>No samples yet, play a turn and reopen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="pl_PL">
+            <Text>Unmet Civilization</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="pl_PL">
+            <Text>Wonder</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="pl_PL">
+            <Text>Built by</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="pl_PL">
+            <Text>Turn {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="pl_PL">
+            <Text>Destroyed</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE" Language="pl_PL">
+            <Text>Pre-Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_POINTS" Language="pl_PL">
+            <Text>points</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD" Language="pl_PL">
+            <Text>gold</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN" Language="pl_PL">
+            <Text>gold / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CITIES" Language="pl_PL">
+            <Text>cities</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TECHS" Language="pl_PL">
+            <Text>techs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN" Language="pl_PL">
+            <Text>food / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN" Language="pl_PL">
+            <Text>production / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN" Language="pl_PL">
+            <Text>science / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN" Language="pl_PL">
+            <Text>culture / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN" Language="pl_PL">
+            <Text>happiness / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN" Language="pl_PL">
+            <Text>influence / turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION" Language="pl_PL">
+            <Text>reputation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE" Language="pl_PL">
+            <Text>people</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_DEALS" Language="pl_PL">
+            <Text>deals</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES" Language="pl_PL">
+            <Text>routes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH" Language="pl_PL">
+            <Text>strength</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="pl_PL">
+            <Text>wonders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="pl_PL">
+            <Text>resources</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="pl_PL">
+            <Text>stage</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="pl_PL">
+            <Text>Spoilers</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="pl_PL">
+            <Text>Display</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="pl_PL">
+            <Text>Hides the names, charts, and diplomacy and relations stats of civilizations you haven't met yet, so the screen never spoils a civ before you encounter it. On by default.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="pl_PL">
+            <Text>History on first contact</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="pl_PL">
+            <Text>Track from first contact</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="pl_PL">
+            <Text>Cumulative impact across all stages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="pl_PL">
+            <Text>Overall crisis impact across all ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="pl_PL">
+            <Text>Crisis Begins</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="pl_PL">
+            <Text>Crisis Intensifies</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="pl_PL">
+            <Text>Crisis Culminates</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="pl_PL">
+            <Text>Crisis Ends</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="pl_PL">
+            <Text>Antiquity Begins</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="pl_PL">
+            <Text>Exploration Begins</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="pl_PL">
+            <Text>Modern Begins</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="pl_PL">
+            <Text>Cap 100%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="pl_PL">
+            <Text>Charts unavailable, Chart.js not loaded.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="pl_PL">
+            <Text>Chart failed to render, see UI.log.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="pl_PL">
+            <Text>Bonus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="pl_PL">
+            <Text>Empire</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="pl_PL">
+            <Text>City</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="pl_PL">
+            <Text>Factory</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="pl_PL">
+            <Text>Treasure</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="pl_PL">
+            <Text>Time (turn / year)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="pl_PL">
+            <Text>No resource samples yet, once you assign your first resource the chart will populate.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="pl_PL">
+            <Text>Resources Assigned (count)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="pl_PL">
+            <Text>Triumph</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="pl_PL">
+            <Text>Commemorative · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="pl_PL">
+            <Text>Instant · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="pl_PL">
+            <Text>Reward: </Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="pl_PL">
+            <Text>No progress yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="pl_PL">
+            <Text>Triumph data is unavailable.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="pl_PL">
+            <Text>No civs sampled yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="pl_PL">
+            <Text>No triumphs available in {1_Age}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="pl_PL">
+            <Text>No triumphs available.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="pl_PL">
+            <Text>Current age: {1_Age}. Cells show triggered / total available; bar is filled percent.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="pl_PL">
+            <Text>unknown</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="pl_PL">
+            <Text>{1_Count} triumph available</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="pl_PL">
+            <Text>{1_Count} triumphs available</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="pl_PL">
+            <Text>Triumphs (count)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="pl_PL">
+            <Text>{1_Years} yr</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="pl_PL">
+            <Text>{1_Years} yrs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="pl_PL">
+            <Text>Conflicts (one bar per war)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="pl_PL">
+            <Text>(no major civs)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="pl_PL">
+            <Text>ongoing</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN" Language="pl_PL">
+            <Text>Gain</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS" Language="pl_PL">
+            <Text>Loss</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA" Language="pl_PL">
+            <Text>No data</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="pl_PL">
+            <Text>concluded</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="pl_PL">
+            <Text>ongoing</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="pl_PL">
+            <Text>unknown</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="pl_PL">
+            <Text>Attackers:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="pl_PL">
+            <Text>Defenders:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_VS" Language="pl_PL">
+            <Text>vs</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="pl_PL">
+            <Text>Declared by: {1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="pl_PL">
+            <Text>Duration: {1_Years} years</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="pl_PL">
+            <Text>{1_Turns} turns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="pl_PL">
+            <Text>Present (T-{1_Turn})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="pl_PL">
+            <Text>strength {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="pl_PL">
+            <Text>settlements {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="pl_PL">
+            <Text>pop {1_Value} (scaled)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="pl_PL">
+            <Text>production {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="pl_PL">
+            <Text>Cost during war</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="pl_PL">
+            <Text>(observed change)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="pl_PL">
+            <Text>City State Allies</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_COMBINED" Language="pl_PL">
+            <Text>City States (Combined)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE" Language="pl_PL">
+            <Text>{1_Civ} side</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE_UNKNOWN" Language="pl_PL">
+            <Text>Allied side</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_NONE" Language="pl_PL">
+            <Text>None</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_MILPOWER" Language="pl_PL">
+            <Text>Military Power (Current)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="pl_PL">
+            <Text>Military Power (Lost)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="pl_PL">
+            <Text>Units Lost</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="pl_PL">
+            <Text>The number of your units killed in combat over this war (a body count: one per unit destroyed), companion to the Military Power figure above. The tooltip also shows a scaled ≈ soldiers-killed estimate (each unit ≈ a formation that grows with the era), comparable to the scaled population metric.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="pl_PL">
+            <Text>Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_LAND" Language="pl_PL">
+            <Text>Land Area</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_RAZED" Language="pl_PL">
+            <Text>Razed</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_POP" Language="pl_PL">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_CROPLOST" Language="pl_PL">
+            <Text>Crop Yield Lost</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_PRODLOST" Language="pl_PL">
+            <Text>Production Lost</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="pl_PL">
+            <Text>Directed to War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="pl_PL">
+            <Text>Refugees</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="pl_PL">
+            <Text>Population displaced by siege, pillage, or conquest during the war and resettled elsewhere, contributed by the Emigration mod when it is installed.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="pl_PL">
+            <Text>Your standing Military Power (the total combat strength of your army) at the end of the war (or the latest turn while it is ongoing). This is the size of your forces, not a loss; "Military Power Lost" below tracks the casualties.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="pl_PL">
+            <Text>Combat strength of your units actually killed in combat, summed as each unit dies (its base combat strength). This is true casualties, building replacements never hides a loss, and the figure is not derived from the size of your standing army. Wars fought before this tracking existed instead fall back to the net drop in your army's total strength.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="pl_PL">
+            <Text>Net settlements won or lost by capture: a settlement you capture counts +1, one captured from you counts −1. Founding a new settlement with a settler does not count, only settlements that actually change hands. Because it is a net figure, a settlement you lose and then retake cancels back to zero. It is recorded from capture events, so a war fought before this was added shows no figure.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="pl_PL">
+            <Text>How many of your settlements were permanently destroyed (razed). It is charged to you as the owner from before the city was captured, not to the conqueror who razed it. Unlike a capture, which can be reversed by retaking the city, a razed city is gone for good. Only recorded for wars fought after this tracking was added.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="pl_PL">
+            <Text>Territory that actually changed hands in the war, in square kilometres (each map tile is about 7,000 km²). Counts only the land of settlements captured from or lost to the enemy; peaceful expansion and border growth are excluded. A positive number means you took ground; a negative number means you lost it.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="pl_PL">
+            <Text>Total population you lost, added up from every turn your population fell, turns where it grew are ignored, so normal growth can never mask wartime losses. Two limits: it cannot tell a war death from a famine in the same span, and population from a city you later recapture still counts as lost on the turn it first fell.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="pl_PL">
+            <Text>Food disruption: every turn your crop yield (net food per turn) fell, that drop is added up (turns it rose are ignored, so ordinary growth can't hide it). Big drops come from pillaged farms and tiles and from cities being occupied or lost. It is a sum of rate drops, a proxy for disruption, not a total amount of food.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST" Language="pl_PL">
+            <Text>Production disruption: every turn your production-per-turn fell, that drop is added up (turns it rose are ignored, so ordinary economic growth can't hide it). Big drops come from pillaged tiles and cities being occupied or lost. It is a sum of rate drops, a proxy for disruption, not a total amount of production. Production you deliberately poured into the war is tracked separately under "Directed to War".</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="pl_PL">
+            <Text>Production you spent on the war effort: the production cost of every military unit and military or fortification building (walls, etc.) you completed while the war was on, added up. Civilian units, economic buildings, and wonders don't count. This is deliberate investment in the war, not a loss, so it is shown as a neutral figure. The cost is the effective cost in the city that built it, your leader, civilization, and policy discounts are already baked in. Items bought outright with gold or faith aren't counted, since that's treasury, not production; production overflow between items isn't split out exactly.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="pl_PL">
+            <Text>No wars yet. Once any civ declares war, the timeline will populate.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="pl_PL">
+            <Text>No wars match the current filters.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="pl_PL">
+            <Text>No samples yet, play a turn first.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="pl_PL">
+            <Text>CSV is too large ({1_SizeMB} MB). Lower the history cap in Options and try again.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="pl_PL">
+            <Text>Copied · {1_Rows} rows × {2_Cols} cols{3_SizeTag} · paste into Excel / Sheets / a .csv file</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="pl_PL">
+            <Text>Clipboard export unavailable. CSV written to UI.log.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="pl_PL">
+            <Text>Current Age</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="pl_PL">
+            <Text>1st Age</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="pl_PL">
+            <Text>2nd Age</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="pl_PL">
+            <Text>3rd Age</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="pl_PL">
+            <Text>All Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="pl_PL">
+            <Text>Cross-Age Charts Unavailable</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="pl_PL">
+            <Text>History resets at each age transition.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2" Language="pl_PL">
+            <Text>As there is no method of Data persistence,</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3" Language="pl_PL">
+            <Text>a single chart cannot span multiple ages</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="pl_PL">
+            <Text>Use current age or an age range filter.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="pl_PL">
+            <Text>{1_Label} filter</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="pl_PL">
+            <Text>ⓘ GDP estimate</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="pl_PL">
+            <Text>Gross Domestic Product</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="pl_PL">
+            <Text>&lt;p&gt;An estimated economic output score based on per-turn yields and turns elapsed.&lt;/p&gt;&lt;p&gt;It is a display metric for comparing civilizations over time. It does not affect game state.&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="pl_PL">
+            <Text>ⓘ Diplomatic standing</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="pl_PL">
+            <Text>Diplomatic Standing</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="pl_PL">
+            <Text>&lt;p&gt;A summary of current diplomatic relationships with met civilizations and suzerain city-states.&lt;/p&gt;&lt;p&gt;Higher values reflect stronger relations. Lower values reflect hostility or war. This is a display metric only.&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="pl_PL">
+            <Text>Current</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="pl_PL">
+            <Text>End of 1st Age</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="pl_PL">
+            <Text>End of 2nd Age</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="pl_PL">
+            <Text>Snapshot:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="pl_PL">
+            <Text>No snapshot yet, the age hasn't ended.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="pl_PL">
+            <Text>Refresh</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="pl_PL">
+            <Text>Refresh Triumph progress</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="pl_PL">
+            <Text>All major civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="pl_PL">
+            <Text>Civ:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="pl_PL">
+            <Text>Ongoing only</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="pl_PL">
+            <Text>All wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="pl_PL">
+            <Text>Viewing:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="pl_PL">
+            <Text>Clear Focus ({1_Count})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="pl_PL">
+            <Text>Show all civs at full opacity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="pl_PL">
+            <Text>Time: Both</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="pl_PL">
+            <Text>Time: Turn</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="pl_PL">
+            <Text>Time: Year</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="pl_PL">
+            <Text>Toggle X-axis time units between turn number, in-game year, or both</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="pl_PL">
+            <Text>Wonders: ON</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="pl_PL">
+            <Text>Wonders: OFF</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="pl_PL">
+            <Text>Hide wonder-built markers on chart lines</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="pl_PL">
+            <Text>Show wonder-built markers on chart lines (icon at the turn each civ completed a wonder)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="pl_PL">
+            <Text>Copy as CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="pl_PL">
+            <Text>&lt;p style="margin:0;"&gt;Copies all sampled turns for all civilizations to the clipboard as CSV. Paste into Excel, Sheets, or another spreadsheet tool to save or analyze the data.&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="pl_PL">
+            <Text>Copy all sampled history as CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="pl_PL">
+            <Text>Militaristic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="pl_PL">
+            <Text>Cultural</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="pl_PL">
+            <Text>Economic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="pl_PL">
+            <Text>Scientific</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="pl_PL">
+            <Text>Expansionist</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="pl_PL">
+            <Text>Diplomatic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="pl_PL">
+            <Text>All On</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS" Language="pl_PL">
+            <Text>Politics &amp; Relationships</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION" Language="pl_PL">
+            <Text>Reputation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" Language="pl_PL">
+            <Text>Agreements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="pl_PL">
+            <Text>All Off</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL" Language="pl_PL">
+            <Text>All</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE" Language="pl_PL">
+            <Text>None</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET" Language="pl_PL">
+            <Text>Reset</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="pl_PL">
+            <Text>{1_Label} (click to hide)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="pl_PL">
+            <Text>{1_Label} (click to show)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="pl_PL">
+            <Text>No civilizations to show.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER" Language="pl_PL">
+            <Text>Unmet Leader</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="pl_PL">
+            <Text>Player {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY" Language="pl_PL">
+            <Text>(formerly {1_Names})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="pl_PL">
+            <Text>Rank {1_Rank}/{2_Total}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="pl_PL">
+            <Text>Reset ({1_Count} hidden)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="pl_PL">
+            <Text>Show all hidden civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="pl_PL">
+            <Text>Click a metric column to sort the civilizations by it. Use the Rank / Value toggle to switch what each cell shows.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="pl_PL">
+            <Text>Unmet</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="pl_PL">
+            <Text>(hidden; click to show)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="pl_PL">
+            <Text>Click to show</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="pl_PL">
+            <Text>Click to hide</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="pl_PL">
+            <Text>Triumphs Radar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="pl_PL">
+            <Text>Triumphs Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="pl_PL">
+            <Text>(Cumulative Count, Stacked by Attribute)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="pl_PL">
+            <Text>Resource Allocation Over Time (stacked area)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="pl_PL">
+            <Text>Conflicts Timeline</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="pl_PL">
+            <Text>War Impact, each combatant's trajectory through a chosen war</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="pl_PL">
+            <Text>Not yet implemented.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="pl_PL">
+            <Text>Options</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="pl_PL">
+            <Text>Show real names for civilizations I haven't met (spoiler)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="pl_PL">
+            <Text>Colorblind mode</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="pl_PL">
+            <Text>Show eliminated civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="pl_PL">
+            <Text>War markers</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="pl_PL">
+            <Text>Disaster markers</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="pl_PL">
+            <Text>Wonder markers</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="pl_PL">
+            <Text>Auto (game-speed default)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="pl_PL">
+            <Text>1,000 samples</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="pl_PL">
+            <Text>2,500 samples</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="pl_PL">
+            <Text>5,000 samples</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="pl_PL">
+            <Text>10,000 samples (may slow performance)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="pl_PL">
+            <Text>Unlimited (very large saves, may slow performance)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="pl_PL">
+            <Text>History sample cap:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="pl_PL">
+            <Text>unknown</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="pl_PL">
+            <Text>unlimited</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="pl_PL">
+            <Text>Current effective cap: {1_Cap}  ·  Game speed detected: {2_Speed}  ·  Hard ceiling: {3_Ceiling}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="pl_PL">
+            <Text>Every turn (default)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="pl_PL">
+            <Text>Every 2 turns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="pl_PL">
+            <Text>Every 5 turns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="pl_PL">
+            <Text>Every 10 turns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="pl_PL">
+            <Text>Every 25 turns (coarse graphs)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="pl_PL">
+            <Text>Sample frequency (performance):</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="pl_PL">
+            <Text>Higher values take a snapshot less often, so the mod does less work each turn, lighter on slow machines and long games. Applies next turn; existing samples are kept. If the Emigration mod is also installed, lower this first for combined-mode relief, then raise Emigration's turn interval.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="pl_PL">
+            <Text>Disable downsampling and keep every recorded turn after the cap is reached. Best used with a high cap or Unlimited.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="pl_PL">
+            <Text>Clear all recorded Demographics samples?</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="pl_PL">
+            <Text>Clear all recorded wars? Sample history and other data will be kept.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="pl_PL">
+            <Text>Reset war history</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="pl_PL">
+            <Text>Samples: {1_Samples}    Schema: v{2_Schema}    Backend: {3_Backend}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="pl_PL">
+            <Text>At War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="pl_PL">
+            <Text>Alliance</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="pl_PL">
+            <Text>Helpful</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="pl_PL">
+            <Text>Friendly</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="pl_PL">
+            <Text>Unfriendly</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="pl_PL">
+            <Text>Hostile</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="pl_PL">
+            <Text>Open Borders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="pl_PL">
+            <Text>Denounced</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="pl_PL">
+            <Text>Research Agreements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="pl_PL">
+            <Text>Other Endeavors</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="pl_PL">
+            <Text>Trade Routes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="pl_PL">
+            <Text>Suzerainty</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="pl_PL">
+            <Text>Unmet CS</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="pl_PL">
+            <Text>Viewer:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="pl_PL">
+            <Text>You</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="pl_PL">
+            <Text>{1_Name} (You)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="pl_PL">
+            <Text>Ring node = met major civ. Multiple lines between two civs = multiple relationships.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="pl_PL">
+            <Text>Viewer-civ ↔ city-state relationships. Multiple lines = multiple relationships.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="pl_PL">
+            <Text>Local player not available (observer mode).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="pl_PL">
+            <Text>Major Civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="pl_PL">
+            <Text>City States</Text>
+        </Replace>
+
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="pl_PL">
+            <Text>withdrew T-{1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="pl_PL">
+            <Text>World War {1_Roman}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="pl_PL">
+            <Text>Great War: {1_A} vs {2_B} (+{3_Extra} civs)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_REGIONAL" Language="pl_PL">
+            <Text>Regional War: {1_A} vs {2_B} (+{3_Extra} civs)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="pl_PL">
+            <Text>Tripartite {1_A}–{2_B}–{3_C} War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="pl_PL">
+            <Text>{1_Ordinal} {2_A}–{3_B} War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="pl_PL">
+            <Text>{1_Base} (Hundred Years' War)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="pl_PL">
+            <Text>{1_Base} (Long War)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_YEARS" Language="pl_PL">
+            <Text>{1_Base} ({2_Years}-Year War)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_CENTURIES" Language="pl_PL">
+            <Text>{1_Base} (Centuries' War)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="pl_PL">
+            <Text>First</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="pl_PL">
+            <Text>Second</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="pl_PL">
+            <Text>Third</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="pl_PL">
+            <Text>Fourth</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="pl_PL">
+            <Text>Fifth</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="pl_PL">
+            <Text>{1_Num}th</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="pl_PL">
+            <Text>The Bronze Age Collapse</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="pl_PL">
+            <Text>The Great Migration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="pl_PL">
+            <Text>The Age of Migrations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="pl_PL">
+            <Text>The Coming of the Sea Peoples</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="pl_PL">
+            <Text>The Barbarian Invasions</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="pl_PL">
+            <Text>The Barbarian Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="pl_PL">
+            <Text>The Great Horde</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="pl_PL">
+            <Text>The Coming of the Horse Lords</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="pl_PL">
+            <Text>The March of Strangers</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="pl_PL">
+            <Text>The Years of Devastation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="pl_PL">
+            <Text>The Years of Turmoil</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="pl_PL">
+            <Text>The Frontier Collapse</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="pl_PL">
+            <Text>The Crisis of the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="pl_PL">
+            <Text>The Frontier Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="pl_PL">
+            <Text>The Northern Invasions</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="pl_PL">
+            <Text>The Eastern Invasions</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="pl_PL">
+            <Text>The Storm from the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="pl_PL">
+            <Text>The Storm from the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="pl_PL">
+            <Text>The Storm from the Steppe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="pl_PL">
+            <Text>The Storm from the Coast</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="pl_PL">
+            <Text>The Storm from the Heartland</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="pl_PL">
+            <Text>The Sack of the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="pl_PL">
+            <Text>The Sack of the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="pl_PL">
+            <Text>The Sack of the Steppe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="pl_PL">
+            <Text>The Sack of the Coast</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="pl_PL">
+            <Text>The Sack of the Heartland</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="pl_PL">
+            <Text>The Border Raids</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="pl_PL">
+            <Text>The Fall of the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="pl_PL">
+            <Text>The Antonine Plague</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="pl_PL">
+            <Text>The Plague of Galen</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="pl_PL">
+            <Text>The Great Pestilence</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="pl_PL">
+            <Text>The Great Mortality</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="pl_PL">
+            <Text>The Great Fever</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING" Language="pl_PL">
+            <Text>The Great Perishing</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="pl_PL">
+            <Text>The Plague Years</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="pl_PL">
+            <Text>The Dying Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="pl_PL">
+            <Text>The Time of Pestilence</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="pl_PL">
+            <Text>The Years of Mortality</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="pl_PL">
+            <Text>The Years of Ashes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="pl_PL">
+            <Text>The Sweating Sickness</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="pl_PL">
+            <Text>The Wasting Plague</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="pl_PL">
+            <Text>The Summer Plague</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="pl_PL">
+            <Text>The Winter Sickness</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="pl_PL">
+            <Text>The Silent Death</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="pl_PL">
+            <Text>The Black Death</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="pl_PL">
+            <Text>The Red Death</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="pl_PL">
+            <Text>The Grey Death</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="pl_PL">
+            <Text>The Ashen Death</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="pl_PL">
+            <Text>The Plague of the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="pl_PL">
+            <Text>The Plague of the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="pl_PL">
+            <Text>The Plague of the Steppe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="pl_PL">
+            <Text>The Plague of the Coast</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="pl_PL">
+            <Text>The Plague of the Heartland</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="pl_PL">
+            <Text>The Servile Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="pl_PL">
+            <Text>The Civil Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="pl_PL">
+            <Text>The Years of Revolt</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="pl_PL">
+            <Text>The Years of Anarchy</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="pl_PL">
+            <Text>The Time of Tyrants</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="pl_PL">
+            <Text>The Age of Usurpers</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="pl_PL">
+            <Text>The Age of Pretenders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="pl_PL">
+            <Text>The Age of Warlords</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="pl_PL">
+            <Text>The Crisis of the Third Century</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="pl_PL">
+            <Text>The Crisis of Succession</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="pl_PL">
+            <Text>The Crisis of Legitimacy</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="pl_PL">
+            <Text>The Crisis of Authority</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="pl_PL">
+            <Text>The Collapse of Authority</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="pl_PL">
+            <Text>The Great Fracturing</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="pl_PL">
+            <Text>The Sundering</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST" Language="pl_PL">
+            <Text>The Great Unrest</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="pl_PL">
+            <Text>The Soldier's Revolt</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="pl_PL">
+            <Text>The Pretenders' War</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="pl_PL">
+            <Text>The War of Succession</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="pl_PL">
+            <Text>The Provincial Revolts</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="pl_PL">
+            <Text>The Crisis of the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="pl_PL">
+            <Text>The Revolt of the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="pl_PL">
+            <Text>The Revolt of the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="pl_PL">
+            <Text>The Revolt of the Steppe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="pl_PL">
+            <Text>The Revolt of the Coast</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="pl_PL">
+            <Text>The Revolt of the Heartland</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="pl_PL">
+            <Text>The Age of Revolutions</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="pl_PL">
+            <Text>The Age of Reform</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="pl_PL">
+            <Text>The Revolutionary Years</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="pl_PL">
+            <Text>The National Revolutions</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="pl_PL">
+            <Text>The Spring of Nations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="pl_PL">
+            <Text>The Year of Liberty</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="pl_PL">
+            <Text>The Year of the Republic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="pl_PL">
+            <Text>The Glorious Revolution</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="pl_PL">
+            <Text>The Great Awakening</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="pl_PL">
+            <Text>The Reform Movement</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="pl_PL">
+            <Text>The People's Rising</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="pl_PL">
+            <Text>The People's Revolution</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="pl_PL">
+            <Text>The National Rising</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="pl_PL">
+            <Text>The Republican Rising</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="pl_PL">
+            <Text>The Crisis of the Crown</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="pl_PL">
+            <Text>The Crisis of the Republic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="pl_PL">
+            <Text>The Fall of the Crown</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="pl_PL">
+            <Text>The Constitutional Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="pl_PL">
+            <Text>The Risings in the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="pl_PL">
+            <Text>The Risings in the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="pl_PL">
+            <Text>The Risings in the Steppe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="pl_PL">
+            <Text>The Risings in the Coast</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="pl_PL">
+            <Text>The Risings in the Heartland</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="pl_PL">
+            <Text>The Great Schism</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="pl_PL">
+            <Text>The Sacred Schism</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="pl_PL">
+            <Text>The Temple Schism</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="pl_PL">
+            <Text>The Provincial Schism</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="pl_PL">
+            <Text>The Reformation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="pl_PL">
+            <Text>The Counter-Reformation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="pl_PL">
+            <Text>The Reformation of the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="pl_PL">
+            <Text>The Wars of Religion</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="pl_PL">
+            <Text>The Age of Heresies</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="pl_PL">
+            <Text>The Age of Prophets</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="pl_PL">
+            <Text>The Religious Upheaval</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="pl_PL">
+            <Text>The Crisis of Faith</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="pl_PL">
+            <Text>The Crisis of Orthodoxy</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="pl_PL">
+            <Text>The Sacred Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="pl_PL">
+            <Text>The War of the Faithful</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="pl_PL">
+            <Text>The War of the Prophets</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="pl_PL">
+            <Text>The Iconoclast Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="pl_PL">
+            <Text>The Temple Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="pl_PL">
+            <Text>The Pilgrim Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="pl_PL">
+            <Text>The Northern Reformation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="pl_PL">
+            <Text>The Eastern Reformation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="pl_PL">
+            <Text>The Heresy of the Frontier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="pl_PL">
+            <Text>The Heresy of the Provinces</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="pl_PL">
+            <Text>The Heresy of the Steppe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="pl_PL">
+            <Text>The Heresy of the Coast</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="pl_PL">
+            <Text>The Heresy of the Heartland</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="pl_PL">
+            <Text>The Age of Upheaval</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="pl_PL">
+            <Text>The Time of Troubles</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="pl_PL">
+            <Text>The Crisis of Empire</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="pl_PL">
+            <Text>The Reform Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="pl_PL">
+            <Text>The Crisis</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="pl_PL">
+            <Text>History sample cap {1_Cap}, older samples are downsampled to fit.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="pl_PL">
+            <Text>History sample cap {1_Cap}, no downsampling yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="pl_PL">
+            <Text>Downsampling disabled, keeping every sample.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="pl_PL">
+            <Text>Spoiler guard</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="pl_PL">
+            <Text>Reveal full back-history</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="pl_PL">
+            <Text>On: meeting a civ reveals its entire past on the charts. Off: lines begin at the moment of first contact.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED" Language="pl_PL">
+            <Text>Demographics paused due to engine errors.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE" Language="pl_PL">
+            <Text>Re-enable sampling</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="pl_PL">
+            <Text>Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="pl_PL">
+            <Text>Top 25 Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="pl_PL">
+            <Text>Settlement Rank by Yield</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="pl_PL">
+            <Text>All</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="pl_PL">
+            <Text>Cities</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="pl_PL">
+            <Text>Towns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="pl_PL">
+            <Text>City</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="pl_PL">
+            <Text>Town</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="pl_PL">
+            <Text>No settlements to show.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="pl_PL">
+            <Text>Rank</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CITY_STATE" Language="pl_PL">
+            <Text>City-State</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="pl_PL">
+            <Text>Owner</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="pl_PL">
+            <Text>Settlement</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="pl_PL">
+            <Text>Civilization</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="pl_PL">
+            <Text>Type</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="pl_PL">
+            <Text>Score</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="pl_PL">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="pl_PL">
+            <Text>Food</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="pl_PL">
+            <Text>Production</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="pl_PL">
+            <Text>Gold</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="pl_PL">
+            <Text>Science</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="pl_PL">
+            <Text>Culture</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE" Language="pl_PL">
+            <Text>Influence</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="pl_PL">
+            <Text>Wonders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="pl_PL">
+            <Text>Happiness</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="pl_PL">
+            <Text>Top 10</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="pl_PL">
+            <Text>Towns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="pl_PL">
+            <Text>Town Advisor</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="pl_PL">
+            <Text>Show Town Advisor tab</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="pl_PL">
+            <Text>Towns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="pl_PL">
+            <Text>Your towns, read live, specialization, size, and growth at a glance.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="pl_PL">
+            <Text>You have no towns. Found or convert a settlement to see it here.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="pl_PL">
+            <Text>Town</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="pl_PL">
+            <Text>Pop</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="pl_PL">
+            <Text>Focus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="pl_PL">
+            <Text>Growth</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="pl_PL">
+            <Text>Tiles (F/P/Fish)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="pl_PL">
+            <Text>Unspecialized</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="pl_PL">
+            <Text>{1_Turns} turns</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="pl_PL">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="pl_PL">
+            <Text>Copy CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="pl_PL">
+            <Text>Town Advisor</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="pl_PL">
+            <Text>Heuristic suggestions from each town's tiles, size, and yields. Advice only, nothing changes in-game.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="pl_PL">
+            <Text>{1_Name} (pop {2_Pop})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="pl_PL">
+            <Text>Current focus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="pl_PL">
+            <Text>Suggested focus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="pl_PL">
+            <Text>Upgrade to city?</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="pl_PL">
+            <Text>Recommended</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="pl_PL">
+            <Text>Keep as town</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="pl_PL">
+            <Text>{1_Count} farm/pasture/plantation tiles favor food.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="pl_PL">
+            <Text>{1_Count} mine/quarry/camp tiles favor production.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="pl_PL">
+            <Text>{1_Count} coastal/fishing tiles favor fishing.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="pl_PL">
+            <Text>Central location links {1_Count} settlements.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="pl_PL">
+            <Text>Strong gold output favors a trade focus.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="pl_PL">
+            <Text>Large population ({1_Count}) suits an urban center.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="pl_PL">
+            <Text>Exposed frontier ({1_Count} open borders) suits a fort.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="pl_PL">
+            <Text>Best overall match for this town.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="pl_PL">
+            <Text>No standout tiles yet, keep growing (food).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="pl_PL">
+            <Text>Pop {1_Pop} is below {2_Min}; grow before converting.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="pl_PL">
+            <Text>Needs {1_Cost} gold; treasury has {2_Gold}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="pl_PL">
+            <Text>Pop {1_Pop} and affordable, a city unlocks production and districts.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="pl_PL">
+            <Text>Empire: {1_Cities} cities, {2_Towns} towns · weakest yield: {3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="pl_PL">
+            <Text>Addresses your empire's {1_Yield} shortfall.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="pl_PL">
+            <Text>Chosen to balance your towns' roles.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="pl_PL">
+            <Text>Alternative considered: {1_Alt}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="pl_PL">
+            <Text>Town-heavy empire: {1_Towns} towns vs {2_Cities} cities. A new city adds production and districts.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="pl_PL">
+            <Text>Population is climbing; urbanizing compounds the growth.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="pl_PL">
+            <Text>Population has stalled; a growth focus may help more than specializing.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="pl_PL">
+            <Text>Founded {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="pl_PL">
+            <Text>Founded ~{1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="pl_PL">
+            <Text>Founded</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="pl_PL">
+            <Text>Unknown</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="pl_PL">
+            <Text>Back to Top Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="pl_PL">
+            <Text>Capital</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="pl_PL">
+            <Text>Wonders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="pl_PL">
+            <Text>No wonders recorded</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="pl_PL">
+            <Text>Unknown Settlement</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="pl_PL">
+            <Text>View on map</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="pl_PL">
+            <Text>Unavailable: you haven't met this civilization yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="pl_PL">
+            <Text>Unavailable: you haven't discovered this settlement yet.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="pl_PL">
+            <Text>Cinematic view</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="pl_PL">
+            <Text>Play flyby</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="pl_PL">
+            <Text>Flyby</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING" Language="pl_PL">
+            <Text>Aerial view of {1_City}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="pl_PL">
+            <Text>Top Settlements camera</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="pl_PL">
+            <Text>Cinematic settlement view</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="pl_PL">
+            <Text>Settlement flyby (experimental)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="pl_PL">
+            <Text>Subtle camera rotation</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="pl_PL">
+            <Text>Flyby length</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="pl_PL">
+            <Text>Short</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="pl_PL">
+            <Text>Medium</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="pl_PL">
+            <Text>Built {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="pl_PL">
+            <Text>Founded in {1_Year}, and flourishing still.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="pl_PL">
+            <Text>Recognized as the {1_Ord} greatest settlement in the world.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="pl_PL">
+            <Text>It houses {1_List}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="pl_PL">
+            <Text>and</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="pl_PL">
+            <Text>A natural wonder graces its lands.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="pl_PL">
+            <Text>Its most bountiful quarter.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="pl_PL">
+            <Text>➊ {1_Cat}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="pl_PL">
+            <Text>Category Leaders</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="pl_PL">
+            <Text>Settlement Rank by Yield</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="pl_PL">
+            <Text>The Greatest Settlements</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="pl_PL">
+            <Text>Full Settlements Rankings</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="pl_PL">
+            <Text>World Rankings</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="pl_PL">
+            <Text>Civilization Rank by Yield</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="pl_PL">
+            <Text>Civilization Ranking</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="pl_PL">
+            <Text>The Greatest Civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="pl_PL">
+            <Text>Full Civilization Rankings</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="pl_PL">
+            <Text>"Score" here is a civilization's total output: its settlements' combined food, production, gold, science, and culture. It is not the official game Score in the Victories screen, which is calculated differently.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="pl_PL">
+            <Text>Analytics visibility</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="pl_PL">
+            <Text>As host, this limit applies to comparative analytics for ALL players this game.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="pl_PL">
+            <Text>The host sets the maximum analytics visibility this game; you can restrict your own view further.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="pl_PL">
+            <Text>Disabled (own civ only)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="pl_PL">
+            <Text>Own civilization only</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="pl_PL">
+            <Text>Met civilizations only</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="pl_PL">
+            <Text>All civilizations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="pl_PL">
+            <Text>Host analytics policy: {1}. Comparative data is limited for all players.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="pl_PL">
+            <Text>Analytics policy: {1}.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="pl_PL">
+            <Text>Interface</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="pl_PL">
+            <Text>Complexity</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="pl_PL">
+            <Text>Basic</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="pl_PL">
+            <Text>Standard</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="pl_PL">
+            <Text>Analyst</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="pl_PL">
+            <Text>Core stat pages only; advanced graphs, the relations network, and tuning controls are hidden.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="pl_PL">
+            <Text>All graphs and tabs; advanced storage and sampling controls stay hidden.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="pl_PL">
+            <Text>Everything, including storage cap, decimation, and sample-rate controls.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="pl_PL">
+            <Text>Age triumph progress: the legacy-path radar for each civilization.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="pl_PL">
+            <Text>Resource allocation by category over time.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="pl_PL">
+            <Text>War timeline (Gantt) and per-war detail graphs.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="pl_PL">
+            <Text>Crisis stages and their per-civilization costs.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="pl_PL">
+            <Text>Global Statistics</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="pl_PL">
+            <Text>Migration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="pl_PL">
+            <Text>Geopolitics</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="pl_PL">
+            <Text>Science &amp; Culture</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="pl_PL">
+            <Text>Society</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="pl_PL">
+            <Text>Expansion</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="pl_PL">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="pl_PL">
+            <Text>Military</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="pl_PL">
+            <Text>Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="pl_PL">
+            <Text>Relations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="pl_PL">
+            <Text>Agreements</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="pl_PL">
+            <Text>Gross Domestic Product (GDP)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="pl_PL">
+            <Text>Gold Per Turn (GPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="pl_PL">
+            <Text>Production Per Turn (PPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="pl_PL">
+            <Text>Crop Yield (Food Per Turn)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="pl_PL">
+            <Text>Number of Trade Routes over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="pl_PL">
+            <Text>Total Resources Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="pl_PL">
+            <Text>Bonus Resources Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="pl_PL">
+            <Text>Empire Resources Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="pl_PL">
+            <Text>City Resources Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="pl_PL">
+            <Text>Treasure Resources Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="pl_PL">
+            <Text>Factory Resources Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="pl_PL">
+            <Text>Count of Techs Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="pl_PL">
+            <Text>Count of Civics Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="pl_PL">
+            <Text>Happiness Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="pl_PL">
+            <Text>Influence Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="pl_PL">
+            <Text>Settlements Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="pl_PL">
+            <Text>Settlement Cap Utilization Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="pl_PL">
+            <Text>Land Area Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="pl_PL">
+            <Text>Wonders Over Time</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="pl_PL">
+            <Text>Score Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="pl_PL">
+            <Text>Gold Reserves Over Time</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="pl_PL">
+            <Text>Diplomatic Approval Over Time</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="pl_PL">
+            <Text>Population Over Time</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="pl_PL">
+            <Text>Military Power Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="pl_PL">
+            <Text>Agreements (Count Over Time)</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="pl_PL">
+            <Text>Wars</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="pl_PL">
+            <Text>Disasters</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="pl_PL">
+            <Text>Controls what happens when you meet a new civilization: reveal its full back-history on the charts, or track it only from the moment you meet. Only applies while the Spoiler guard is on.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="pl_PL">
+            <Text>Uses a high-contrast, colorblind-friendly palette for chart lines and the relations network.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="pl_PL">
+            <Text>Marks the turn each Wonder was completed along the history chart lines.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="pl_PL">
+            <Text>Marks the turn each war began on the Emigration refugees chart. Requires the Emigration companion mod.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="pl_PL">
+            <Text>Marks the turn each disaster struck on the Emigration refugees chart. Requires the Emigration companion mod.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="pl_PL">
+            <Text>How much of the screen to show. Basic is core stat pages only; Standard adds every graph and tab; Analyst also exposes storage, decimation, and sample-rate controls.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="pl_PL">
+            <Text>Draws history lines as a 3-turn moving average so trends read more clearly. The underlying data is unchanged.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="pl_PL">
+            <Text>Keeps civilizations that have been eliminated visible in charts and rankings instead of dropping them.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="pl_PL">
+            <Text>Enables the Cinematic view button that pans the camera across a settlement from the Top Cities list.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="pl_PL">
+            <Text>Automatically flies the camera between the top settlements. Experimental — turn it off if the camera misbehaves.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="pl_PL">
+            <Text>How long the settlement flyby lingers on each city.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="pl_PL">
+            <Text>Adds a gentle rotation to the flyby camera as it lingers on each settlement.</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="pl_PL">
+            <Text>Emigration</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV" Language="pl_PL">
+            <Text>Population</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV_TITLE" Language="pl_PL">
+            <Text>Population Over Time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLEAR_FOCUS" Language="pl_PL">
+            <Text>Clear focus</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE" Language="pl_PL">
+            <Text>Resources by category over time</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR" Language="pl_PL">
+            <Text>Legacy Path radar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE" Language="pl_PL">
+            <Text>Conflicts timeline</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_25Y" Language="pl_PL"><Text>25y</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_50Y" Language="pl_PL"><Text>50y</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_100Y" Language="pl_PL"><Text>100y</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_300Y" Language="pl_PL"><Text>300y</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_500Y" Language="pl_PL"><Text>500y</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_1000Y" Language="pl_PL"><Text>1000y</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT" Language="pl_PL"><Text>({1_Count} focused; click icons to toggle)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="pl_PL"><Text>Unknown</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="pl_PL"><Text>{1_Ordinal} {2_Adjective} War</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="pl_PL"><Text>War #{1_Id}</Text></Replace>
+    </LocalizedText>
+</Database>
