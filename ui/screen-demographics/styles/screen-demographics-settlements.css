@@ -534,6 +534,11 @@
     color: var(--ia-text-secondary);
 }
 .demographics-settle-leader-cat {
+    /* Full body font stack (not "BodyFont, sans-serif") so the CJK fallbacks
+       stay in the chain: the "➊" rank glyph (U+2776) in LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN
+       is absent from the Latin BodyFont and only renders via per-glyph fallback
+       to BodyFont-SC (NotoSansSC). */
+    font-family: BodyFont, BodyFont-SC, BodyFont-TC, BodyFont-JP, BodyFont-KR;
     text-transform: uppercase;
     letter-spacing: 0.04rem;
     font-size: 1rem;

@@ -415,7 +415,7 @@ function appendFocusClearButton(caption, rs) {
   const clearBtn = document.createElement("button");
   clearBtn.type = "button";
   clearBtn.className = "demographics-relations-clear-focus-btn font-body text-xs";
-  clearBtn.textContent = "Clear focus";
+  clearBtn.textContent = t("LOC_DEMOGRAPHICS_CLEAR_FOCUS");
   clearBtn.addEventListener("click", () => {
     rs.writeNodeSelection(rs.topTab, new Set());
     rs.repaintRing();
@@ -475,9 +475,7 @@ function renderRingBody(rs) {
   const { selected, focusedEdges } = resolveFocus(rs, edges, ringIds);
 
   if (selected.size > 0) {
-    capText += "  " +
-      "(" + selected.size + " focus" + (selected.size === 1 ? "" : "es") +
-      "; click icons to toggle)";
+    capText += "  " + t("LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT", selected.size);
   }
 
   // Civ-tab always uses the local player as the viewer; CS-tab uses the

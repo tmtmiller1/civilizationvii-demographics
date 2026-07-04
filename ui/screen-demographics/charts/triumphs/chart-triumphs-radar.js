@@ -426,7 +426,7 @@ function buildRadarSvg(params) {
     height: String(H),
     preserveAspectRatio: "xMidYMid meet",
     class: "demographics-chart-svg",
-    "aria-label": "Legacy Path radar"
+    "aria-label": t("LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR")
   });
   drawRadarGrid(svg, geo, scaleMax);
   // Build all polys, then draw back-to-front by area so darker fills don't

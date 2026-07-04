@@ -1,5 +1,5 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { METRICS, localizedMetricName } from "/demographics/ui/metrics/demographics-metrics.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { iconEl } from "/demographics/ui/core/ui-helpers.js";
 
@@ -328,7 +328,7 @@ function appendMetricLabelRows(col) {
     row.className =
       "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-label-cell font-body text-sm";
     if (rowIdx > 0 && rowIdx % 4 === 0) row.classList.add("is-heavy-divider");
-    row.textContent = m.label;
+    row.textContent = localizedMetricName(m);
     col.appendChild(row);
     rowIdx++;
   }
