@@ -52,7 +52,7 @@ const FILTERS = [
 function buildLeaderCard(col, L, deps) {
   const card = div("demographics-settle-leader-card");
   // Identity FIRST: leader portrait + settlement name on top, owner just beneath.
-  // The category icon + value and the "#1 <category>" label follow below.
+  // The category icon + value and the "➊ <category>" label follow below.
   const id = div("demographics-settle-leader-id");
   id.appendChild(deps.buildOwnerAvatar(L.owner));
   const names = div("demographics-settle-leader-idnames");

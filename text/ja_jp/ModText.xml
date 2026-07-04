@@ -26,9 +26,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの産出と経過ターン数に基づく、経済規模の比較用指標です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ja_JP"><Text>PPT</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの生産力、都市が建設するもの。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ja_JP"><Text>Science Per Turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ja_JP"><Text>科学/ターン</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの科学、テクノロジー研究を推進します。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ja_JP"><Text>Culture Per Turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ja_JP"><Text>文化/ターン</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ja_JP"><Text>1ターンあたりの文化、社会制度の進捗を推進します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ja_JP"><Text>作物産出</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ja_JP"><Text>全入植地における1ターンあたりの純食料産出。</Text></Replace>
@@ -284,7 +284,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示、クリックで表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="ja_JP"><Text>クリックで非表示</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ja_JP"><Text>Triumphs Radar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="ja_JP"><Text>偉業レーダー</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="ja_JP"><Text>時系列トライアンフ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="ja_JP"><Text>（累計数、属性別に積み上げ）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="ja_JP"><Text>時系列資源配分（積み上げ面）</Text></Replace>
@@ -1350,7 +1350,7 @@
             <Text>最も豊かな地区。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="ja_JP">
-            <Text>{1_Cat} #1</Text>
+            <Text>{1_Cat} ➊</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="ja_JP">
             <Text>部門別トップ</Text>
@@ -1447,44 +1447,44 @@
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="ja_JP"><Text>難民</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="ja_JP"><Text>戦争中の包囲・略奪・征服によって追われ、他所へ再定住した人口。Emigration モッドが導入されている場合に提供されます。</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="ja_JP"><Text>Global Statistics</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="ja_JP"><Text>Migration</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="ja_JP"><Text>Geopolitics</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="ja_JP"><Text>Science &amp; Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="ja_JP"><Text>Society</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="ja_JP"><Text>Expansion</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="ja_JP"><Text>Population</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ja_JP"><Text>Military</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="ja_JP"><Text>Wars</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ja_JP"><Text>Relations</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="ja_JP"><Text>Agreements</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="ja_JP"><Text>Gross Domestic Product (GDP)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="ja_JP"><Text>Gold Per Turn (GPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="ja_JP"><Text>Production Per Turn (PPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="ja_JP"><Text>Crop Yield (Food Per Turn)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="ja_JP"><Text>Number of Trade Routes over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="ja_JP"><Text>Total Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="ja_JP"><Text>Bonus Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="ja_JP"><Text>Empire Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="ja_JP"><Text>City Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="ja_JP"><Text>Treasure Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="ja_JP"><Text>Factory Resources Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="ja_JP"><Text>Count of Techs Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="ja_JP"><Text>Count of Civics Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="ja_JP"><Text>Happiness Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="ja_JP"><Text>Influence Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="ja_JP"><Text>Settlements Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="ja_JP"><Text>Settlement Cap Utilization Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="ja_JP"><Text>Land Area Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="ja_JP"><Text>Wonders Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="ja_JP"><Text>Score Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="ja_JP"><Text>Gold Reserves Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="ja_JP"><Text>Diplomatic Approval Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="ja_JP"><Text>Population Over Time</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="ja_JP"><Text>Military Power Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="ja_JP"><Text>Agreements (Count Over Time)</Text></Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="ja_JP"><Text>Wars</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="ja_JP"><Text>Disasters</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="ja_JP"><Text>世界統計</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="ja_JP"><Text>移住</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="ja_JP"><Text>地政学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="ja_JP"><Text>科学と文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="ja_JP"><Text>社会</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="ja_JP"><Text>拡張</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="ja_JP"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ja_JP"><Text>軍事</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="ja_JP"><Text>戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ja_JP"><Text>関係</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="ja_JP"><Text>協定</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="ja_JP"><Text>国内総生産（GDP）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="ja_JP"><Text>ターンごとのゴールド（GPT）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="ja_JP"><Text>ターンごとの生産力（PPT）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="ja_JP"><Text>作物収穫量（ターンごとの食料）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="ja_JP"><Text>交易路数の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="ja_JP"><Text>総資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="ja_JP"><Text>ボーナス資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="ja_JP"><Text>帝国資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="ja_JP"><Text>都市資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="ja_JP"><Text>財宝資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="ja_JP"><Text>工場資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="ja_JP"><Text>技術数の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="ja_JP"><Text>社会制度数の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="ja_JP"><Text>幸福度の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="ja_JP"><Text>影響力の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="ja_JP"><Text>集落の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="ja_JP"><Text>集落上限使用率の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="ja_JP"><Text>領土面積の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="ja_JP"><Text>遺産数の推移</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="ja_JP"><Text>スコアの推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="ja_JP"><Text>ゴールド備蓄の推移</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="ja_JP"><Text>外交的支持の推移</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="ja_JP"><Text>人口の推移</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="ja_JP"><Text>軍事力の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="ja_JP"><Text>協定（数の推移）</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="ja_JP"><Text>戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="ja_JP"><Text>災害</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="ja_JP"><Text>新しい文明と遭遇したときの動作を設定します。グラフに過去の履歴をすべて表示するか、遭遇した時点からのみ記録します。ネタバレ防止がオンのときのみ有効です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="ja_JP"><Text>グラフの線と関係ネットワークに、高コントラストで色覚に配慮したパレットを使用します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ja_JP"><Text>各遺産が完成したターンを履歴グラフの線上に表示します。</Text></Replace>
@@ -1498,5 +1498,21 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="ja_JP"><Text>集落フライバイが各都市にとどまる長さです。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="ja_JP"><Text>フライバイ中、各集落でとどまる間にカメラを緩やかに回転させます。</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="ja_JP"><Text>移住</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV" Language="ja_JP"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV_TITLE" Language="ja_JP"><Text>人口の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLEAR_FOCUS" Language="ja_JP"><Text>特化を解除</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE" Language="ja_JP"><Text>カテゴリー別資源の推移</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR" Language="ja_JP"><Text>レガシーパスレーダー</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE" Language="ja_JP"><Text>紛争のタイムライン</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_25Y" Language="ja_JP"><Text>25年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_50Y" Language="ja_JP"><Text>50年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_100Y" Language="ja_JP"><Text>100年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_300Y" Language="ja_JP"><Text>300年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_500Y" Language="ja_JP"><Text>500年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_1000Y" Language="ja_JP"><Text>1000年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT" Language="ja_JP"><Text>（{1_Count}件を選択中。アイコンをクリックで切替）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="ja_JP"><Text>不明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="ja_JP"><Text>第{1_Ordinal}次{2_Adjective}戦争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="ja_JP"><Text>戦争 #{1_Id}</Text></Replace>
     </LocalizedText>
 </Database>

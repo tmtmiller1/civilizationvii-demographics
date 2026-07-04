@@ -19,6 +19,7 @@
 //
 // Every accessor is cited to vanilla Civ7 source in demographics-sampler.js.
 
+import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
   formatArea,
   formatBigNumber,
@@ -601,6 +602,25 @@ export function getMetric(id) {
   // The catalog's inferred element type is looser than MetricDef (the hidden
   // triumph entries omit `label`); cast at this boundary.
   return /** @type {MetricDef} */ (METRICS.find((m) => m.id === id) || METRICS[0]);
+}
+
+/**
+ * The localized display name for a metric, resolved from its
+ * `LOC_DEMOGRAPHICS_METRIC_<ID>` key — the same key the history tabs and chart
+ * axis derive (see history-tabs.js `localizedMetricName`, chart-line-config.js
+ * `yAxisTitle`). The metric table's English `label`/`title` are the fallback
+ * used only when the key is unresolved (t() returns the key unchanged on a
+ * miss). Use this anywhere a metric name is shown to the user so it translates
+ * instead of rendering the raw English `label`.
+ * @param {*} metric A metric descriptor (needs `id`; `label`/`title` are fallback).
+ * @returns {string} The localized metric name, or "" for a nullish metric.
+ */
+export function localizedMetricName(metric) {
+  if (!metric) return "";
+  const key = "LOC_DEMOGRAPHICS_METRIC_" + String(metric.id).toUpperCase();
+  const localized = t(key);
+  if (localized && localized !== key) return localized;
+  return metric.label || metric.title || String(metric.id || "");
 }
 
 // ── Companion-mod extension API (inert unless another mod calls it) ────────

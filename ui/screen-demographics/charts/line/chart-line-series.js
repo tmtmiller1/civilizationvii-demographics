@@ -5,6 +5,7 @@
 // unmet/back-fill spoiler modes, and emit one ChartSeries per civ. Pure data -
 // no Chart.js. Extracted from chart-line.js.
 
+import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
   PALETTE,
   collectCivHistory,
@@ -113,12 +114,12 @@ function composeLeaderName(name) {
  * @returns {string} The display name.
  */
 function leaderDisplayName(leaderType, pid) {
-  if (!leaderType) return "Player " + pid;
+  if (!leaderType) return t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", pid);
   const resolved = lookupLeaderName(leaderType);
   if (resolved) return resolved;
   const s = String(leaderType);
   // Avoid surfacing a raw numeric hash as the display name.
-  if (/^-?\d+$/.test(s)) return "Player " + pid;
+  if (/^-?\d+$/.test(s)) return t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", pid);
   return s.replace(/^LEADER_/, "").replace(/_/g, " ");
 }
 
@@ -393,7 +394,7 @@ function composeLocale(tag) {
 function leaderOnlyLabel(leaderName, leaderType, pid) {
   if (leaderName) return leaderName;
   if (leaderType !== null) return leaderDisplayName(leaderType, pid);
-  return "Player " + pid;
+  return t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", pid);
 }
 
 /**

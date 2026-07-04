@@ -43,12 +43,12 @@ function dlog(...a) {
 
 /** @type {TimeFilterDef[]} */
 export const TIME_FILTERS = [
-  { id: "25", label: "25y" },
-  { id: "50", label: "50y" },
-  { id: "100", label: "100y" },
-  { id: "300", label: "300y" },
-  { id: "500", label: "500y" },
-  { id: "1000", label: "1000y" },
+  { id: "25", label: "LOC_DEMOGRAPHICS_FILTER_25Y" },
+  { id: "50", label: "LOC_DEMOGRAPHICS_FILTER_50Y" },
+  { id: "100", label: "LOC_DEMOGRAPHICS_FILTER_100Y" },
+  { id: "300", label: "LOC_DEMOGRAPHICS_FILTER_300Y" },
+  { id: "500", label: "LOC_DEMOGRAPHICS_FILTER_500Y" },
+  { id: "1000", label: "LOC_DEMOGRAPHICS_FILTER_1000Y" },
   { id: "age", label: "LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" },
   { id: "age1", label: "LOC_DEMOGRAPHICS_FILTER_AGE1" },
   { id: "age2", label: "LOC_DEMOGRAPHICS_FILTER_AGE2" },

@@ -461,7 +461,7 @@ export function buildWarGraphsPicker(ctx) {
     .filter((w) => typeof w?.warUniqueID === "number")
     .map((w) => ({
       id: w.warUniqueID,
-      label: names.get(w.warUniqueID) || w.name || "War #" + w.warUniqueID
+      label: names.get(w.warUniqueID) || w.name || t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", w.warUniqueID)
     }))
     .reverse();
   bar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK")));
