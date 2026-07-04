@@ -43,6 +43,8 @@ Demographics adds graphs, civilization rankings, global relations, war history, 
 [*]Triumph card progress overlays now ship as a separate companion mod: triumphs-progress-overlay.
 [/list]
 
+[b]Languages:[/b] Fully localized in English, German, Spanish, French, Italian, Japanese, Korean, Portuguese (Brazil), Russian and Simplified Chinese, and using the game's own number formatting per language. Polish is included and in progress. Numbers, tables, and chart titles read in your language.
+
 [b]Notes:[/b] Read-only and additive: it does not change balance, alter opponents, or overwrite base-game files. Per-save data storage. Install: place the [b]demographics[/b] folder in the Civ VII Mods folder and enable it from Additional Content.
 
 [b]Source:[/b] Open source: https://github.com/tmtmiller1/civilizationvii-demographics

@@ -10,7 +10,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.2.0</Version>
+        <Version>2.3.0</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -34,6 +34,7 @@
                     <Item locale="it_IT">text/it_it/ModText.xml</Item>
                     <Item locale="ja_JP">text/ja_jp/ModText.xml</Item>
                     <Item locale="ko_KR">text/ko_kr/ModText.xml</Item>
+                    <Item locale="pl_PL">text/pl_pl/ModText.xml</Item>
                     <Item locale="pt_BR">text/pt_br/ModText.xml</Item>
                     <Item locale="ru_RU">text/ru_ru/ModText.xml</Item>
                     <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>
@@ -221,6 +222,7 @@
                     <Item locale="it_IT">text/it_it/ModText.xml</Item>
                     <Item locale="ja_JP">text/ja_jp/ModText.xml</Item>
                     <Item locale="ko_KR">text/ko_kr/ModText.xml</Item>
+                    <Item locale="pl_PL">text/pl_pl/ModText.xml</Item>
                     <Item locale="pt_BR">text/pt_br/ModText.xml</Item>
                     <Item locale="ru_RU">text/ru_ru/ModText.xml</Item>
                     <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>

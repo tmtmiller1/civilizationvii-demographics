@@ -485,7 +485,7 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
     height: String(H),
     preserveAspectRatio: "none",
     class: "demographics-chart-svg",
-    "aria-label": "Conflicts timeline"
+    "aria-label": t("LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE")
   });
   const tickPositions = drawGanttGrid(svg, L, dom, turnYearMap);
   const barRects = drawWarBars(svg, filtered, { L, dom, tr, latestTurn, samples });

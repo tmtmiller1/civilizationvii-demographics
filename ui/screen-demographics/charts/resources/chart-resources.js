@@ -505,7 +505,7 @@ function buildStackSvg(samples, points, bands, dims) {
     height: String(H),
     preserveAspectRatio: "none",
     class: "demographics-chart-svg",
-    "aria-label": "Resources by category over time"
+    "aria-label": t("LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE")
   });
   const gridCfg = buildStackGridConfig();
   drawStackGrid(svg, L, dom.yMax, gridCfg, svgEl);

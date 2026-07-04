@@ -138,7 +138,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
-    font-size: 1.18rem;
+    font-size: 0.95rem;
     line-height: 1.15;
 }
 .demographics-worldrankings-allcivs-civ-header-civ {
@@ -148,7 +148,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
-    font-size: 1rem;
+    font-size: 0.82rem;
     line-height: 1.15;
 }
 
@@ -174,7 +174,7 @@
 .demographics-worldrankings-allcivs-avatar-placeholder {
     color: var(--ia-accent-gold);
     font-family: inherit;
-    font-size: 1.55rem;
+    font-size: 1.2rem;
     font-weight: 600;
     text-align: center;
 }
@@ -193,7 +193,7 @@
     align-items: center !important;
     justify-content: flex-start !important;
     font-variant-numeric: tabular-nums;
-    font-size: 1.05rem;
+    font-size: 0.88rem;
     line-height: 1.2;
 }
 
@@ -219,7 +219,7 @@
 }
 .demographics-worldrankings-allcivs-cell-value {
     color: var(--ia-text-secondary);
-    font-size: 1.18rem;
+    font-size: 0.95rem;
     line-height: 1.15;
     font-weight: 600;
 }
@@ -236,7 +236,7 @@
     white-space: nowrap;
     color: var(--ia-accent-gold-soft);
     opacity: 0.85;
-    font-size: 0.86rem;
+    font-size: 0.76rem;
     line-height: 1.1;
 }
 /* Yield icon as a fixed-size, non-shrinking flex item inside that row. */
@@ -305,8 +305,8 @@
     min-width: 2.8rem;
 }
 .demographics-civtable .demographics-civtable-col-civ {
-    flex: 0 0 12rem;
-    min-width: 12rem;
+    flex: 0 0 13rem;
+    min-width: 13rem;
 }
 .demographics-civtable .demographics-civtable-civ {
     flex-direction: row;

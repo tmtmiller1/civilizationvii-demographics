@@ -9,7 +9,7 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { div, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
-import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { METRICS, localizedMetricName } from "/demographics/ui/metrics/demographics-metrics.js";
 import { computeRanks } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 import {
   METRIC_ICONS,
@@ -212,7 +212,7 @@ function buildLeaderCard(metric, profile, showUnmetNames) {
   );
   card.appendChild(head);
   card.appendChild(
-    div("demographics-settle-leader-cat", t("LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN", metric.label))
+    div("demographics-settle-leader-cat", t("LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN", localizedMetricName(metric)))
   );
   return card;
 }
@@ -281,7 +281,7 @@ function buildMetricHeader(metric, sortKey, onSort) {
   const inner = div("demographics-settle-th-inner");
   const icon = METRIC_ICONS[metric.id];
   if (icon) inner.appendChild(iconEl(icon, "demographics-settle-yield-icon"));
-  inner.appendChild(div("demographics-settle-th-label", metric.label));
+  inner.appendChild(div("demographics-settle-th-label", localizedMetricName(metric)));
   const cell = div(
     "demographics-settle-th demographics-civtable-metric" +
       (sortKey === metric.id ? " is-sorted" : "")
