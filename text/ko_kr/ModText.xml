@@ -1514,5 +1514,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="ko_KR"><Text>알 수 없음</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="ko_KR"><Text>{1_Ordinal} {2_Adjective} 전쟁</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="ko_KR"><Text>전쟁 #{1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ko_KR"><Text>Scaled</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ko_KR"><Text>Civ</Text></Replace>
     </LocalizedText>
 </Database>

@@ -1514,5 +1514,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="it_IT"><Text>Sconosciuta</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="it_IT"><Text>{1_Ordinal} guerra {2_Adjective}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="it_IT"><Text>Guerra n. {1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="it_IT"><Text>Scaled</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="it_IT"><Text>Civ</Text></Replace>
     </LocalizedText>
 </Database>

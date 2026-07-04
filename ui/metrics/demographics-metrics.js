@@ -271,6 +271,10 @@ export const METRICS = [
     label: "Population",
     title: "Population Over Time",
     category: "people",
+    // The All Civilizations matrix already shows "Population" (the scaled `population`
+    // metric) and swaps to THIS raw-Civ twin via its Scaled/Civ toggle, so it must not
+    // also render as its own duplicate "Population" row there.
+    worldRankingsAllCivsHidden: true,
     accessor: (/** @type {MetricCtx} */ ctx) => safeNum(ctx.totalPopulation),
     format: formatBigNumber,
     unit: "points"

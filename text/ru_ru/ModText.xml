@@ -1514,5 +1514,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="ru_RU"><Text>Неизвестная</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="ru_RU"><Text>{1_Ordinal} {2_Adjective} война</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="ru_RU"><Text>Война №{1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ru_RU"><Text>Scaled</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ru_RU"><Text>Civ</Text></Replace>
     </LocalizedText>
 </Database>

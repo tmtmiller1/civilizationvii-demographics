@@ -2291,5 +2291,7 @@
         <Row Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME">
             <Text>War #{1_Id}</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED"><Text>Scaled</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV"><Text>Civ</Text></Row>
     </EnglishText>
 </Database>

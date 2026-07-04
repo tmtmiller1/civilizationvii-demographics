@@ -7,6 +7,43 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.3.2] - 2026-07-04
+
+A follow-up to the 2.3.0 4K fix. The All Civilizations comparison is transposed so
+its labels are readable at every resolution and UI scale, plus a Scaled/Civ toggle,
+score-ordered columns, heading icons, and larger table text.
+
+### Changed
+- **All Civilizations view is now metrics-as-rows (no more clipped/tiny headers).**
+  The comparison previously put each of the ~21 metrics in its own *column*, so at
+  4K / low UI scale there was no room for the localized column headers — Polish
+  "Pozycja", "Technologie", "Powierzchnia terenu" were cut off ("Pozycja" →
+  "ozycj") or shrunk to nothing. It now lays out each **metric as a row** with its
+  name in a wide left column (which reads at full size), and each **civilization as
+  a column** — far fewer columns, and the long labels have horizontal room. Every
+  cell shows the world rank with its value beneath it, the local player's column is
+  pinned on the left, and other civs can still be hidden/shown. Metric names use the
+  engine's font auto-fit (`coh-font-fit-mode: shrink`) so they stay on one line at
+  any resolution without wrapping.
+- **Scaled / Civ toggle in the All Civilizations view.** Metrics that come in a
+  scaled-"people" and a raw-Civ-numbers pair — Population, and (with the Emigration
+  companion) the migration flows — now show a **single row** with a Scaled/Civ
+  button that swaps the whole column in place, matching the toggle on the other
+  tabs, instead of two identically-labelled rows. Fixes the duplicate "Population"
+  row (base `population` vs `population_civ`) the transpose exposed.
+- **Civilizations are ordered as a leaderboard.** Beside the local player's pinned
+  column, the other civilizations are now laid out left→right in descending
+  **civilization-score** order (previously alphabetical by leader name), so the
+  view reads as a ranking. Ties fall back to leader name.
+- **Metric row headings show icons.** Each metric name in the left column now
+  leads with its icon (gold, science, culture, food, production, population,
+  diplomacy, military, wonders, score, …) for faster scanning.
+- **Larger table text.** The metric names, values, ranks and civilization names in
+  the All Civilizations table are set a step larger for readability.
+- **Category-leader cards above the table.** The "rank by category" strip — one
+  card per metric naming the civilization that leads it — is back above the All
+  Civilizations table, matching the All Settlements panel.
+
 ## [2.3.0] - 2026-07-04
 
 A localization release. Polish is now a supported language, and every remaining
