@@ -297,17 +297,24 @@ export function pickLocalPid(profiles, allPids) {
 }
 
 /**
- * Order the non-local pids by leader name (locale-aware), falling back to the
- * pid string when a leader name is absent.
+ * Order the non-local pids by civilization score, highest first (a left→right
+ * leaderboard beside the local player's pinned column). Leader name (locale-aware)
+ * breaks ties and orders any civ missing a score, which sorts last.
  * @param {Record<string, CivProfile>} profiles All profiles.
  * @param {string[]} allPids All profile pids.
  * @param {string} localPid The local-column pid to exclude.
  * @returns {string[]} The sorted non-local pids.
  */
 export function sortOtherPids(profiles, allPids, localPid) {
+  const scoreOf = (/** @type {string} */ p) => {
+    const v = profiles[p]?.latest?.score;
+    return typeof v === "number" && isFinite(v) ? v : -Infinity;
+  };
   return allPids
     .filter((p) => p !== localPid)
     .sort((a, b) => {
+      const d = scoreOf(b) - scoreOf(a); // descending score
+      if (d !== 0) return d;
       const na = profiles[a].leaderName || a;
       const nb = profiles[b].leaderName || b;
       return na.localeCompare(nb);

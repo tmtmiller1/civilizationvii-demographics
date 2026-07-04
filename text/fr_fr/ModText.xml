@@ -2074,5 +2074,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="fr_FR"><Text>Inconnue</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="fr_FR"><Text>{1_Ordinal} guerre {2_Adjective}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="fr_FR"><Text>Guerre n°{1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="fr_FR"><Text>Scaled</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="fr_FR"><Text>Civ</Text></Replace>
     </LocalizedText>
 </Database>

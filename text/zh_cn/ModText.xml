@@ -2074,5 +2074,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="zh_Hans_CN"><Text>未知</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="zh_Hans_CN"><Text>第{1_Ordinal}次{2_Adjective}战争</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="zh_Hans_CN"><Text>战争 #{1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="zh_CN"><Text>Scaled</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="zh_CN"><Text>Civ</Text></Replace>
     </LocalizedText>
 </Database>

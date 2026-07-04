@@ -1,16 +1,98 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { METRICS, localizedMetricName } from "/demographics/ui/metrics/demographics-metrics.js";
+import {
+  METRICS,
+  EXTERNAL_METRIC_GROUPS,
+  localizedMetricName
+} from "/demographics/ui/metrics/demographics-metrics.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { iconEl } from "/demographics/ui/core/ui-helpers.js";
 
 import { computeRanks } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 
+// ── Scaled / Civ number mode ──────────────────────────────────────────────────
+// Several metrics come in a matched pair: a scaled-"people" version (the visible
+// row) and a raw Civ-numbers twin (registered but hidden), e.g. Population
+// (population ↔ population_civ) and every Emigration flow (emig_out_cum ↔
+// emig_out_cum_pts). Rather than render both as duplicate rows, the All
+// Civilizations matrix shows ONE row per pair and a single Scaled/Civ toggle
+// swaps which side every paired row displays — the same toggle pattern the
+// history tab uses. The mode is a module-level flag set by the view before it
+// (re)builds the strip, so the label column and every civ column read the same
+// swapped metric list and stay aligned.
+const NUMBER_MODES = ["scaled", "civ"];
+let _numberMode = "scaled";
+
 /**
- * The metrics shown in the All Civilizations views (non-hidden), in order.
+ * Set the active Scaled/Civ number mode for the matrix. Call before rebuilding.
+ * @param {string} mode "scaled" or "civ".
+ */
+export function setMatrixNumberMode(mode) {
+  _numberMode = NUMBER_MODES.includes(mode) ? mode : "scaled";
+}
+
+/**
+ * Add a 2D metric group's scaled→civ member pairs into `map`, when the group
+ * exposes both a "scaled" and a "civ" view.
+ * @param {Map<string, string>} map Accumulator (mutated).
+ * @param {*} g A registered metric group.
+ */
+function addGroupPairs(map, g) {
+  if (!Array.isArray(g.members) || !Array.isArray(g.views)) return;
+  const viewIds = g.views.map((/** @type {*} */ v) => v && v.id);
+  if (!viewIds.includes("scaled") || !viewIds.includes("civ")) return;
+  for (const m of g.members) addMemberPair(map, m);
+}
+
+/**
+ * Record one group member's scaled→civ id pair (when both are distinct strings).
+ * @param {Map<string, string>} map Accumulator (mutated).
+ * @param {*} m A group member ({scaled, civ, ...}).
+ */
+function addMemberPair(map, m) {
+  const s = m && m.scaled;
+  const c = m && m.civ;
+  if (typeof s === "string" && typeof c === "string" && s !== c) map.set(s, c);
+}
+
+/**
+ * Map every scaled metric id to its raw-Civ-numbers twin id. Seeded with the base
+ * Population pair and extended from any registered 2D metric group that exposes
+ * scaled/civ views (e.g. the Emigration Migration graphs), so companions get the
+ * toggle for free.
+ * @returns {Map<string, string>} scaled id → civ id.
+ */
+function scaledToCivPairs() {
+  const map = new Map([["population", "population_civ"]]);
+  for (const g of EXTERNAL_METRIC_GROUPS) addGroupPairs(map, g);
+  return map;
+}
+
+/**
+ * True when at least one visible metric has a Civ-numbers twin (so the Scaled/Civ
+ * toggle is meaningful). The base Population pair guarantees this in practice.
+ * @returns {boolean} Whether the number-mode toggle should be offered.
+ */
+export function matrixHasNumberModePairs() {
+  const pairs = scaledToCivPairs();
+  return METRICS.some((m) => !m.worldRankingsAllCivsHidden && pairs.has(m.id));
+}
+
+/**
+ * The metrics shown in the All Civilizations views (non-hidden), in order. In
+ * "civ" mode each scaled metric that has a Civ-numbers twin is swapped for that
+ * twin, so the row shows Civ values/ranks under the same (shared) label.
  * @returns {*[]} The shown metric definitions.
  */
 function shownMetrics() {
-  return /** @type {*[]} */ (METRICS).filter((m) => !m.worldRankingsAllCivsHidden);
+  const base = /** @type {*[]} */ (METRICS).filter((m) => !m.worldRankingsAllCivsHidden);
+  if (_numberMode !== "civ") return base;
+  const pairs = scaledToCivPairs();
+  return base.map((m) => {
+    const civId = pairs.get(m.id);
+    if (!civId) return m;
+    const civ = METRICS.find((x) => x.id === civId);
+    return civ || m;
+  });
 }
 
 /** @typedef {import("./worldrankings-allcivs-profiles.js").CivProfile} CivProfile */
@@ -184,17 +266,28 @@ export function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
 // just show "(55)".
 /** @type {Record<string, string>} */
 export const METRIC_ICONS = {
+  score: "blp:popup_laurels",
   gold: "blp:Yield_Gold",
   gpt: "blp:Yield_Gold",
   gdp: "blp:Yield_Gold",
+  settlements: "blp:Yield_Cities",
+  settlement_cap_pct: "blp:Yield_Cities",
+  techs: "blp:Yield_Science",
+  civics: "blp:Yield_Culture",
   crops: "blp:Yield_Food",
   production: "blp:Yield_Production",
   science_yield: "blp:Yield_Science",
   culture_yield: "blp:Yield_Culture",
-  approval: "blp:Yield_Happiness",
+  approval: "blp:bonustype_diplomatic",
   hpt: "blp:Yield_Happiness",
   population: "blp:Yield_Population",
+  // Civ-numbers twin of population (shown when the Scaled/Civ toggle is on Civ),
+  // so the Population row keeps its icon in both modes.
+  population_civ: "blp:Yield_Population",
   influence: "blp:yield_influence",
+  deals: "blp:bonustype_diplomatic",
+  trade: "blp:bonus_economic",
+  milpower: "blp:bonus_militaristic",
   wonders: "blp:fonticon_wonders"
 };
 
@@ -328,7 +421,14 @@ function appendMetricLabelRows(col) {
     row.className =
       "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-label-cell font-body text-sm";
     if (rowIdx > 0 && rowIdx % 4 === 0) row.classList.add("is-heavy-divider");
-    row.textContent = localizedMetricName(m);
+    // Icon (when we have one for this metric) + name, so the row headings read at a
+    // glance. The text carries the font-fit; the icon is a fixed-size leading glyph.
+    const icon = METRIC_ICONS[m.id];
+    if (icon) row.appendChild(iconEl(icon, "demographics-worldrankings-allcivs-metric-icon"));
+    const label = document.createElement("span");
+    label.className = "demographics-worldrankings-allcivs-metric-label-text";
+    label.textContent = localizedMetricName(m);
+    row.appendChild(label);
     col.appendChild(row);
     rowIdx++;
   }

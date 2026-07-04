@@ -36,9 +36,9 @@
     max-width: 22rem;
 }
 .demographics-worldrankings-allcivs-col-labels {
-    flex: 0 0 10rem;
-    min-width: 10rem;
-    max-width: 10rem;
+    flex: 0 0 12rem;
+    min-width: 12rem;
+    max-width: 12rem;
 }
 .demographics-worldrankings-allcivs-col-civ.is-local {
     flex: 1 0 11rem;
@@ -138,7 +138,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     line-height: 1.15;
 }
 .demographics-worldrankings-allcivs-civ-header-civ {
@@ -148,7 +148,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     line-height: 1.15;
 }
 
@@ -193,8 +193,30 @@
     align-items: center !important;
     justify-content: flex-start !important;
     font-variant-numeric: tabular-nums;
-    font-size: 0.88rem;
+    font-size: 1.05rem;
     line-height: 1.2;
+    overflow: hidden;
+}
+/* Leading metric glyph in each row heading (fixed size so the names line up). */
+.demographics-worldrankings-allcivs-metric-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    flex-shrink: 0;
+    margin-right: 0.4rem;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/* Metric name: keep long localized strings ("Powierzchnia terenu") on ONE line —
+   the engine shrinks the font to fit the column rather than wrapping; overflow +
+   ellipsis is only the ultimate fallback. */
+.demographics-worldrankings-allcivs-metric-label-text {
+    flex: 0 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    coh-font-fit-mode: shrink;
 }
 
 /* Value cell: value on top, rank on bottom. Same flex-grow as the label
@@ -219,7 +241,7 @@
 }
 .demographics-worldrankings-allcivs-cell-value {
     color: var(--ia-text-secondary);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     line-height: 1.15;
     font-weight: 600;
 }
@@ -236,7 +258,7 @@
     white-space: nowrap;
     color: var(--ia-accent-gold-soft);
     opacity: 0.85;
-    font-size: 0.76rem;
+    font-size: 0.9rem;
     line-height: 1.1;
 }
 /* Yield icon as a fixed-size, non-shrinking flex item inside that row. */
@@ -265,19 +287,19 @@
 }
 
 
-/* ── All Civilizations TABLE (settlements styling, made wide + scrollable) ────
+/* ── All Civilizations TABLE (settlements styling) ────────────────────────────
    Civs are rows; every metric is a column. Reuses the .demographics-settle-*
-   row/cell look. The table grows past the container (max-content) and the
-   .demographics-worldrankings-allcivs-matrix wrapper scrolls. Rank + Civilization are sticky
-   so identity stays put while the metric columns scroll — and they're kept
-   compact so the metric columns get the space (no wasted leading width). */
+   row/cell look. Scaling model = the BASE GAME's canonical multi-column recipe
+   (flex-auto columns + min-width:0 + white-space:nowrap + coh-font-fit-mode:shrink,
+   see the cell rules below): every column flex-shares the frame width and the
+   engine auto-shrinks each header's font to fit its column, so the table fills the
+   available space and stays readable at ANY resolution / UI scale without clipping
+   or wrapping. The table therefore fills the frame (width:100%) rather than forcing
+   a max-content horizontal scroll. */
 .demographics-civtable {
-    /* Fill the viewport when there's room (width:100%), but never shrink below the
-       sum of the columns' min-widths — past that the matrix wrapper scrolls. */
     width: 100%;
-    min-width: max-content;
-    /* Override .demographics-settle-table's overflow:hidden so it isn't its own
-       scroll container (which would break the sticky columns). */
+    /* Override .demographics-settle-table's overflow:hidden so the wrapper (which
+       carries the frame border) is the scroll context, not this inner table. */
     overflow: visible;
     /* The wrapper carries the frame border; the inner table is borderless so they
        don't double up. */
@@ -286,23 +308,48 @@
 }
 .demographics-civtable .demographics-settle-row {
     width: 100%;
-    min-width: max-content;
 }
-/* Every metric column GROWS to share spare width (so the table fills the screen)
-   but won't shrink below its min-width (so ~19 columns trigger a scroll instead
-   of squishing to nothing). */
+/* Metric columns: the base-game recipe. `flex: 1 1 auto` makes every column share
+   the frame width equally; `min-width: 0` lets them shrink below their content
+   width (flex children default to min-width:auto, which is exactly what used to
+   force the header to overflow and clip). Identical flex on `th`/`td` keeps the
+   header row and data rows column-aligned. */
 .demographics-civtable .demographics-settle-th,
 .demographics-civtable .demographics-settle-td {
-    flex: 1 0 4.6rem;
-    min-width: 4.6rem;
+    flex: 1 1 auto;
+    min-width: 0;
 }
-/* Compact, sticky Rank column. */
-/* Rank + Civilization columns: fixed widths (like the All Settlements rank/owner
-   columns) and NO sticky/dark-band treatment — they scroll with the rest so the
-   table reads exactly like the All Settlements table. */
+.demographics-civtable .demographics-settle-th-inner {
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+}
+/* Header label: one line + the engine's font-fit (coh-font-fit-mode: shrink, the
+   `.font-fit-shrink` class the base game puts on every column header). The engine
+   shrinks the font until the localized string — Polish "Powierzchnia terenu",
+   "Technologie", "Pozycja" — fits the column, at any resolution / UI scale. No
+   wrapping; overflow:hidden + ellipsis is just the ultimate fallback. */
+.demographics-civtable .demographics-settle-th-label {
+    width: 100%;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    coh-font-fit-mode: shrink;
+    text-align: center;
+    line-height: 1.1;
+}
+/* Data cells hold short numbers, but at very narrow widths font-fit keeps them
+   readable and on one line too (matches how the base game treats value cells). */
+.demographics-civtable .demographics-settle-td.demographics-civtable-metric {
+    white-space: nowrap;
+    coh-font-fit-mode: shrink;
+}
+/* Rank column: compact and non-growing (data are short numbers). Its header
+   ("Rank" / Polish "Pozycja") font-fit-shrinks to fit via the label rule above. */
 .demographics-civtable .demographics-settle-col-rank {
-    flex: 0 0 2.8rem;
-    min-width: 2.8rem;
+    flex: 0 0 3.6rem;
+    min-width: 0;
 }
 .demographics-civtable .demographics-civtable-col-civ {
     flex: 0 0 13rem;
