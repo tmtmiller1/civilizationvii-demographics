@@ -2076,5 +2076,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="es_ES"><Text>Guerra n.º {1_Id}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="es_ES"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="es_ES"><Text>Civ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="es_ES"><Text>/turn</Text></Replace>
     </LocalizedText>
 </Database>

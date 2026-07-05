@@ -7,6 +7,16 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.3.3] - 2026-07-04
+
+### Fixed
+- **The per-turn rate suffix now localizes.** Signed per-turn figures (e.g.
+  "+12/turn") appended a hardcoded English "/turn". It now resolves through
+  `LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX`, so it translates with the rest of the
+  interface (Polish "/tura") instead of needing a manual JS patch after each
+  update. Off-engine (and if a translation is missing) it still falls back to
+  "/turn".
+
 ## [2.3.2] - 2026-07-04
 
 A follow-up to the 2.3.0 4K fix. The All Civilizations comparison is transposed so
