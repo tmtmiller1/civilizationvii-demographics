@@ -27,6 +27,11 @@
     width: 100%;
     min-width: 100%;
     min-height: 100%;
+    /* Columns cap at max-width, so with only a few met civs on a wide screen the
+       row can't fill the frame. Center the capped group (symmetric side margins)
+       instead of letting flex-start shove it to the left with dead space on the
+       right. When there ARE enough civs to fill/overflow, this is a no-op. */
+    justify-content: center;
 }
 .demographics-worldrankings-allcivs-col {
     display: flex;
@@ -138,7 +143,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
-    font-size: 1.1rem;
     line-height: 1.15;
 }
 .demographics-worldrankings-allcivs-civ-header-civ {
@@ -148,7 +152,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 100%;
-    font-size: 0.95rem;
     line-height: 1.15;
 }
 
@@ -174,7 +177,7 @@
 .demographics-worldrankings-allcivs-avatar-placeholder {
     color: var(--ia-accent-gold);
     font-family: inherit;
-    font-size: 1.2rem;
+    font-size: var(--dg-fs-120);
     font-weight: 600;
     text-align: center;
 }
@@ -193,7 +196,6 @@
     align-items: center !important;
     justify-content: flex-start !important;
     font-variant-numeric: tabular-nums;
-    font-size: 1.05rem;
     line-height: 1.2;
     overflow: hidden;
 }
@@ -241,7 +243,6 @@
 }
 .demographics-worldrankings-allcivs-cell-value {
     color: var(--ia-text-secondary);
-    font-size: 1.15rem;
     line-height: 1.15;
     font-weight: 600;
 }
@@ -258,7 +259,6 @@
     white-space: nowrap;
     color: var(--ia-accent-gold-soft);
     opacity: 0.85;
-    font-size: 0.9rem;
     line-height: 1.1;
 }
 /* Yield icon as a fixed-size, non-shrinking flex item inside that row. */
