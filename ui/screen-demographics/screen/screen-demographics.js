@@ -110,7 +110,10 @@ function safeCall(fn, fb) {
 // An 8-step type scale (rem) the World Rankings pages' CSS snaps to. Each is
 // published as `--dg-fs-<size×100>` scaled by the font-size setting. Keep in sync
 // with the `.demographics-screen` defaults in the density stylesheet.
-const FONT_SIZE_LADDER = [0.72, 0.85, 0.95, 1.05, 1.2, 1.6, 1.85, 2.4];
+// The 1.4 step isn't used by Demographics' own CSS, but the Emigration companion
+// (whose content renders inside this screen's Migration page) references it, so we
+// publish it here too — the emig content inherits these vars from .demographics-screen.
+const FONT_SIZE_LADDER = [0.65, 0.72, 0.85, 0.95, 1.05, 1.2, 1.4, 1.6, 1.85, 2.4];
 
 /**
  * Read the player's in-game font-size setting (`uiFontScale`: 0 XSmall … 4 XLarge)
