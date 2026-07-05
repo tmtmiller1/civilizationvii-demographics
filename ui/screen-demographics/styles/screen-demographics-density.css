@@ -56,7 +56,7 @@
     .demographics-screen .demographics-chart-title {
         margin-top: 0.2rem;
         margin-bottom: 0.25rem;
-        font-size: 0.95rem;
+        font-size: var(--dg-fs-95);
     }
     /* The big explanatory caption block: tighten it (kept readable). */
     .demographics-screen .demographics-chart-caption {
@@ -75,7 +75,7 @@
     }
     .demographics-screen .demographics-chart-time-filter-pill {
         padding: 0.12rem 0.45rem;
-        font-size: 0.74rem;
+        font-size: var(--dg-fs-72);
     }
     .demographics-screen .demographics-chart-toolbar {
         padding: 0 0.3rem;
@@ -116,7 +116,7 @@
     .demographics-screen .demographics-chart-title {
         margin-top: 0.1rem;
         margin-bottom: 0.15rem;
-        font-size: 0.9rem;
+        font-size: var(--dg-fs-95);
     }
     /* The full caption block is supplementary (its text is also surfaced via the
        ⓘ tooltip popover); at a very short viewport drop it entirely so the chart
@@ -133,7 +133,7 @@
     }
     .demographics-screen .demographics-chart-time-filter-pill {
         padding: 0.08rem 0.4rem;
-        font-size: 0.72rem;
+        font-size: var(--dg-fs-72);
     }
     .demographics-screen .demographics-chart-toolbar-btn {
         padding: 0.12rem 0.6rem;
@@ -210,14 +210,16 @@
     --dg-fs-card-sub: 0.78rem;
     --dg-fs-card-val: 1.15rem;
     --dg-fs-card-cat: 0.85rem;
-    /* 8-step type scale used by the settlements-based World Rankings pages +
-       section headings. Defaults = the base sizes, so text renders correctly even
-       before JS publishes the scaled value. */
+    /* Type-scale steps used across every tab (settlements/World Rankings, History,
+       Conflicts, Relations, section headings). Defaults = the base sizes, so text
+       renders correctly even before JS publishes the scaled value. */
+    --dg-fs-65: 0.65rem;
     --dg-fs-72: 0.72rem;
     --dg-fs-85: 0.85rem;
     --dg-fs-95: 0.95rem;
     --dg-fs-105: 1.05rem;
     --dg-fs-120: 1.2rem;
+    --dg-fs-140: 1.4rem; /* used by the Emigration companion's Migration-page content */
     --dg-fs-160: 1.6rem;
     --dg-fs-185: 1.85rem;
     --dg-fs-240: 2.4rem;

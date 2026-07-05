@@ -302,7 +302,7 @@ function drawRadarPolyDots(svg, p) {
 
 /**
  * Build one radar legend row, styled exactly like the line-chart legend rows
- * (colored dot + civ name), with the radar's per-civ Σ triumph total appended.
+ * (colored dot + civ name), with the radar's per-civ total triumph count appended.
  * Clicking toggles the civ via `onToggle`.
  * @param {RadarCiv} c The civ.
  * @param {boolean} isHidden Whether the civ is hidden.
@@ -319,7 +319,10 @@ function buildRadarLegendRow(c, isHidden, onToggle) {
   row.appendChild(buildLeaderIconGroup({ leaderType: c.leaderType }, c.color));
   const name = document.createElement("span");
   name.className = "demographics-line-legend-name";
-  name.textContent = c.name + " , Σ " + radarTriumphTotal(c);
+  // Civ name + its total triumph count in parens. (Avoid a "Σ" prefix here: that
+  // glyph isn't in the Latin BodyFont and Coherent renders it as a missing-glyph
+  // box "[]".)
+  name.textContent = c.name + " (" + radarTriumphTotal(c) + ")";
   row.appendChild(name);
   if (onToggle) {
     row.addEventListener("click", (ev) => {
