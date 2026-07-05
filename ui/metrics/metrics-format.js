@@ -31,6 +31,28 @@ function localeNumber(n, spec, fallback) {
 }
 
 /**
+ * Resolve a `LOC_*` tag through the engine, or return `fallback` (the prior English
+ * text) when the Locale API is unavailable or the tag is missing — mirrors
+ * {@link localeNumber}'s graceful fallback so a localized suffix reads in the
+ * player's language on-engine yet stays stable off-engine (Node tests).
+ * @param {string} key The `LOC_*` tag.
+ * @param {string} fallback The off-engine result (must match the prior output).
+ * @returns {string} The localized text, or `fallback`.
+ */
+function localeText(key, fallback) {
+  try {
+    if (typeof Locale !== "undefined" && typeof Locale.compose === "function") {
+      const s = Locale.compose(key);
+      // Locale.compose echoes the tag back for a missing key; treat that as absent.
+      if (s && s !== key) return s;
+    }
+  } catch (_) {
+    // Locale.compose can throw on a malformed/missing tag; use the fallback.
+  }
+  return fallback;
+}
+
+/**
  * Format a number with a magnitude suffix, e.g. `1234567` -> `"1.23M"`.
  * Handles negatives and sub-1000 values (no suffix). The mantissa is localized;
  * the suffix tier is a mod convention (the engine does not abbreviate).
@@ -101,5 +123,5 @@ export function formatSignedRate(n) {
   const rounded = Math.abs(n) > 100 ? Math.trunc(n) : Math.trunc(n * 10) / 10;
   const prefix = n >= 0 ? "+" : "";
   const num = localeNumber(rounded, Number.isInteger(rounded) ? "" : "0.0", String(rounded));
-  return `${prefix}${num}/turn`;
+  return `${prefix}${num}${localeText("LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX", "/turn")}`;
 }

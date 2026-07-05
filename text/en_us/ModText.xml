@@ -2293,5 +2293,6 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED"><Text>Scaled</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV"><Text>Civ</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX"><Text>/turn</Text></Row>
     </EnglishText>
 </Database>
