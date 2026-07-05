@@ -374,24 +374,14 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) 
     }
   }
   /**
-   * Position every queued overlay, deferring a frame if layout isn't ready.
+   * Measure the (post-cap) SVG box and paint every queued overlay into it. Must run
+   * AFTER constrainRingHeight has reflowed, or the overlays letterbox into a stale
+   * (taller) box and the outer portraits fling off their nodes.
    */
-  function placePortraits() {
-    if (portraitsToPlace.length === 0) return;
-    // Liveness guard: a newer repaint detached this wrap → stop (don't paint into
-    // or spin on an orphan). Only bails when isConnected is explicitly false, so
-    // an engine without isConnected (undefined) falls through to the retry cap.
+  function paintOverlays() {
     if (wrap && wrap.isConnected === false) return;
-    let rect = measuredRect();
-    if (!rect || rect.width === 0 || rect.height === 0) {
-      scheduleRetry();
-      return;
-    }
-    // Cap the diagram to the on-screen budget BEFORE measuring scale, so the SVG
-    // we letterbox into — and the overlays placed over it — use the visible box
-    // (not a box that overruns the frame). Re-measure after the cap reflows the SVG.
-    if (wrap) constrainRingHeight(wrap);
-    rect = measuredRect() || rect;
+    const rect = measuredRect();
+    if (!rect || rect.width === 0 || rect.height === 0) return;
     retries = 0;
     stripOldOverlays(wrap);
     const scale = Math.min(rect.width / viewBox.w, rect.height / viewBox.h);
@@ -400,11 +390,34 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) 
     setRingPxPerUnit(scale);
     const contentLeft = (rect.width - viewBox.w * scale) / 2;
     const contentTop = (rect.height - viewBox.h * scale) / 2;
-
     for (const p of portraitsToPlace) {
       appendPortraitDiv(wrap, p, { contentLeft, contentTop, scale }, onNodeToggle);
     }
-    dlog("placed " + portraitsToPlace.length + " portraits " + "@scale=" + scale.toFixed(2));
+    dlog("placed " + portraitsToPlace.length + " portraits @scale=" + scale.toFixed(2));
+  }
+  /**
+   * Position every queued overlay, deferring a frame if layout isn't ready.
+   */
+  function placePortraits() {
+    if (portraitsToPlace.length === 0) return;
+    // Liveness guard: a newer repaint detached this wrap → stop (don't paint into
+    // or spin on an orphan). Only bails when isConnected is explicitly false, so
+    // an engine without isConnected (undefined) falls through to the retry cap.
+    if (wrap && wrap.isConnected === false) return;
+    const rect = measuredRect();
+    if (!rect || rect.width === 0 || rect.height === 0) {
+      scheduleRetry();
+      return;
+    }
+    // Cap the diagram to the on-screen budget so the SVG box can't overrun the
+    // frame. The cap reflows the SVG SMALLER; a same-tick getBoundingClientRect can
+    // still return the pre-cap (taller) size in Gameface, which would make the
+    // overlays' letterbox scale larger than the SVG's own and push the outer
+    // portraits off their nodes (proportional to distance from center). So paint on
+    // the NEXT frame, once the cap has actually reflowed.
+    if (wrap) constrainRingHeight(wrap);
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(paintOverlays);
+    else paintOverlays();
   }
   return placePortraits;
 }
