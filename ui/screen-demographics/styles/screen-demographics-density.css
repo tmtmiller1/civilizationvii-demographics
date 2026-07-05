@@ -171,7 +171,7 @@
     padding: clamp(0.3rem, 0.92vh, 0.55rem) 0.8rem clamp(0.4rem, 1.17vh, 0.7rem);
 }
 .demographics-screen .demographics-section-title {
-    font-size: clamp(0.9rem, 1.75vh, 1.05rem);
+    font-size: var(--dg-fs-105);
 }
 
 /* ── World Rankings (all-civs matrix) ─────────────────────────────────────────
@@ -184,24 +184,58 @@
 .demographics-screen .demographics-worldrankings-allcivs-corner {
     height: clamp(5.7rem, 12.5vh, 7.5rem);
 }
-.demographics-screen .demographics-worldrankings-allcivs-civ-header-leader {
-    font-size: clamp(0.78rem, 1.58vh, 0.95rem);
-}
-.demographics-screen .demographics-worldrankings-allcivs-civ-header-civ {
-    font-size: clamp(0.68rem, 1.37vh, 0.82rem);
-}
 .demographics-screen .demographics-worldrankings-allcivs-avatar-placeholder {
-    font-size: clamp(1rem, 2vh, 1.2rem);
+    font-size: var(--dg-fs-120);
 }
-.demographics-screen .demographics-worldrankings-allcivs-label-cell {
-    min-height: clamp(1.95rem, 4.33vh, 2.6rem);
-    font-size: clamp(0.74rem, 1.47vh, 0.88rem);
-}
+.demographics-screen .demographics-worldrankings-allcivs-label-cell,
 .demographics-screen .demographics-worldrankings-allcivs-value-cell {
     min-height: clamp(1.95rem, 4.33vh, 2.6rem);
 }
+/* Matrix TEXT sizes. Each --dg-fs-* is a FULLY-COMPUTED rem value published by
+   screen-demographics.js (_applyFontScale): base rem × the in-game font-size
+   setting. rem still tracks the UI scale, so referencing it here tracks BOTH the
+   font-size setting and the UI scale — the behaviour the base game gets from its
+   regenerated text-* classes, which the engine does NOT apply to fixed-rem
+   content. We use a plain single-arg `var()` in a longhand property (NOT calc and
+   NOT a two-arg var fallback — Coherent's parser rejects both), with the default
+   values defined below so it resolves before JS runs / off-engine. `.demographics-
+   screen .X` (0,0,2,0) is the single winning source of truth for these. */
+.demographics-screen {
+    --dg-fs-lead: 1.1rem;
+    --dg-fs-civ: 0.95rem;
+    --dg-fs-label: 1.05rem;
+    --dg-fs-value: 1.15rem;
+    --dg-fs-rank: 0.9rem;
+    --dg-fs-card-name: 0.9rem;
+    --dg-fs-card-sub: 0.78rem;
+    --dg-fs-card-val: 1.15rem;
+    --dg-fs-card-cat: 0.85rem;
+    /* 8-step type scale used by the settlements-based World Rankings pages +
+       section headings. Defaults = the base sizes, so text renders correctly even
+       before JS publishes the scaled value. */
+    --dg-fs-72: 0.72rem;
+    --dg-fs-85: 0.85rem;
+    --dg-fs-95: 0.95rem;
+    --dg-fs-105: 1.05rem;
+    --dg-fs-120: 1.2rem;
+    --dg-fs-160: 1.6rem;
+    --dg-fs-185: 1.85rem;
+    --dg-fs-240: 2.4rem;
+}
+.demographics-screen .demographics-worldrankings-allcivs-civ-header-leader {
+    font-size: var(--dg-fs-lead);
+}
+.demographics-screen .demographics-worldrankings-allcivs-civ-header-civ {
+    font-size: var(--dg-fs-civ);
+}
+.demographics-screen .demographics-worldrankings-allcivs-label-cell {
+    font-size: var(--dg-fs-label);
+}
 .demographics-screen .demographics-worldrankings-allcivs-cell-value {
-    font-size: clamp(0.8rem, 1.58vh, 0.95rem);
+    font-size: var(--dg-fs-value);
+}
+.demographics-screen .demographics-worldrankings-allcivs-cell-rank {
+    font-size: var(--dg-fs-rank);
 }
 
 /* ── Settlements (showcase / table leaderboard) ───────────────────────────── */
@@ -211,7 +245,7 @@
 }
 .demographics-screen .demographics-settle-subtab {
     padding: clamp(0.16rem, 0.5vh, 0.3rem) 1.1rem;
-    font-size: clamp(0.82rem, 1.53vh, 0.92rem);
+    font-size: var(--dg-fs-95);
 }
 .demographics-screen .demographics-settle-content {
     gap: clamp(0.4rem, 1.17vh, 0.7rem);
@@ -222,7 +256,7 @@
     height: clamp(2.5rem, 6vh, 3.6rem);
 }
 .demographics-screen .demographics-settle-avatar-initial {
-    font-size: clamp(0.95rem, 1.83vh, 1.1rem);
+    font-size: var(--dg-fs-105);
 }
 
 /* ── Relations (filter chips / bulk toggles) ──────────────────────────────── */
@@ -232,7 +266,7 @@
 }
 .demographics-screen .demographics-relations-all-toggle {
     padding: clamp(0.08rem, 0.17vh, 0.1rem) 0.55rem;
-    font-size: clamp(0.66rem, 1.2vh, 0.72rem);
+    font-size: var(--dg-fs-72);
 }
 
 /* ── Conflicts (wars Gantt timeline labels) ───────────────────────────────────
@@ -240,15 +274,15 @@
    chain); only its absolutely-positioned overlay labels carry fixed type, scaled
    fluidly with available height so a dense timeline reads cleanly at any size. */
 .demographics-screen .demographics-wars-label {
-    font-size: clamp(0.74rem, 1.42vh, 0.85rem);
+    font-size: var(--dg-fs-85);
 }
 .demographics-screen .demographics-wars-crisis-label-stage {
-    font-size: clamp(0.66rem, 1.2vh, 0.72rem);
+    font-size: var(--dg-fs-72);
 }
 .demographics-screen .demographics-wars-crisis-label-name {
-    font-size: clamp(0.64rem, 1.17vh, 0.7rem);
+    font-size: var(--dg-fs-72);
 }
 .demographics-screen .demographics-wars-age-label,
 .demographics-screen .demographics-wars-now-label {
-    font-size: clamp(0.66rem, 1.2vh, 0.72rem);
+    font-size: var(--dg-fs-72);
 }

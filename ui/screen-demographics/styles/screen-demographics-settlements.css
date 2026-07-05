@@ -49,7 +49,7 @@
     color: #e5d2ac;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    font-size: 0.72rem;
+    font-size: var(--dg-fs-72);
     font-family: TitleFont, BodyFont, sans-serif;
     user-select: none;
     transition: color 0.1s, border-color 0.1s, background 0.1s;
@@ -106,7 +106,7 @@
     background: var(--ia-frame-bg);
     color: var(--ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
-    font-size: 0.92rem;
+    font-size: var(--dg-fs-95);
     letter-spacing: 0.02rem;
     cursor: pointer;
 }
@@ -164,7 +164,7 @@
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     color: #fff;
-    font-size: 1.1rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-settle-owner {
     display: flex;
@@ -179,14 +179,14 @@
 }
 .demographics-settle-owner-leader {
     color: var(--ia-text-secondary);
-    font-size: 0.82rem;
+    font-size: var(--dg-fs-85);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .demographics-settle-owner-civ {
     color: var(--ia-text-accent);
-    font-size: 0.68rem;
+    font-size: var(--dg-fs-72);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -195,7 +195,7 @@
     display: inline-block;
     padding: 0.05rem 0.4rem;
     border-radius: 0.6rem;
-    font-size: 0.8rem;
+    font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04rem;
     text-transform: uppercase;
@@ -233,7 +233,7 @@
 }
 .demographics-settle-output-val {
     color: var(--ia-text-secondary);
-    font-size: 0.98rem;
+    font-size: var(--dg-fs-95);
 }
 
 /* ── Showcase: podium (top 3) ──────────────────────────────────────────────── */
@@ -291,7 +291,7 @@
 .demographics-settle-medal-num {
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 2.1rem;
+    font-size: var(--dg-fs-240);
     color: var(--ia-text-secondary);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
     /* nudge the number into the wreath's open center */
@@ -308,13 +308,13 @@
     color: var(--ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 1.7rem;
+    font-size: var(--dg-fs-160);
     margin-top: 0.4rem;
     text-align: center;
 }
 .demographics-settle-podium-owner {
     color: var(--ia-text-accent);
-    font-size: 1.1rem;
+    font-size: var(--dg-fs-105);
     margin-bottom: 0.3rem;
 }
 .demographics-settle-podium-scorerow {
@@ -326,7 +326,7 @@
     color: var(--ia-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 2.6rem;
+    font-size: var(--dg-fs-240);
 }
 
 /* ── Showcase: ranked list (4..25) ─────────────────────────────────────────── */
@@ -337,7 +337,7 @@
     padding: 0 0.6rem;
     text-align: center;
     font-style: italic;
-    font-size: 0.92rem;
+    font-size: var(--dg-fs-95);
     color: var(--ia-text-accent);
     opacity: 0.9;
 }
@@ -366,7 +366,7 @@
     text-align: center;
     color: var(--ia-text-accent);
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: var(--dg-fs-185);
     flex-shrink: 0;
 }
 .demographics-settle-list-mid {
@@ -384,7 +384,7 @@
 }
 .demographics-settle-list-name {
     color: var(--ia-text-secondary);
-    font-size: 1.6rem;
+    font-size: var(--dg-fs-160);
     font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
@@ -393,7 +393,7 @@
 .demographics-settle-list-score {
     color: var(--ia-accent-gold);
     font-weight: 700;
-    font-size: 2rem;
+    font-size: var(--dg-fs-185);
     min-width: 4rem;
     text-align: right;
     flex-shrink: 0;
@@ -418,13 +418,13 @@
     gap: 0.6rem;
     padding: 0 0.6rem 0.2rem;
     color: var(--ia-fxs-header);
-    font-size: 0.86rem;
+    font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04rem;
     text-transform: uppercase;
 }
 .demographics-settle-head-rank {
-    font-size: 0.92rem;
+    font-size: var(--dg-fs-95);
     width: 2rem;
     text-align: center;
     flex-shrink: 0;
@@ -434,11 +434,11 @@
     flex-shrink: 0;
 }
 .demographics-settle-head-name {
-    font-size: 0.92rem;
+    font-size: var(--dg-fs-95);
     flex: 1 1 auto;
 }
 .demographics-settle-head-score {
-    font-size: 0.92rem;
+    font-size: var(--dg-fs-95);
     width: 3rem;
     text-align: right;
     flex-shrink: 0;
@@ -451,7 +451,7 @@
     gap: 0.5rem;
     margin: 0.25rem 0;
     color: #e0584c;
-    font-size: 0.68rem;
+    font-size: var(--dg-fs-72);
     font-weight: 700;
     letter-spacing: 0.08rem;
     text-transform: uppercase;
@@ -471,7 +471,7 @@
     justify-content: center;
 }
 .demographics-settle-filters .demographics-chart-time-filter-pill {
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
     padding: 0.4rem 1rem;
 }
 .demographics-settle-leaders {
@@ -529,7 +529,7 @@
 }
 /* The category value sitting right beside the category icon in the card head. */
 .demographics-settle-leader-headval {
-    font-size: 1.35rem;
+    font-size: var(--dg-fs-card-val);
     font-weight: 700;
     color: var(--ia-text-secondary);
 }
@@ -541,7 +541,7 @@
     font-family: BodyFont, BodyFont-SC, BodyFont-TC, BodyFont-JP, BodyFont-KR;
     text-transform: uppercase;
     letter-spacing: 0.04rem;
-    font-size: 1rem;
+    font-size: var(--dg-fs-card-cat);
     font-weight: 700;
     color: var(--ia-accent-gold);
 }
@@ -549,7 +549,7 @@
     color: var(--ia-text-secondary);
     /* Sized so even long civ/settlement names wrap to at most two lines inside
        the card instead of overflowing or truncating to one. */
-    font-size: 0.95rem;
+    font-size: var(--dg-fs-card-name);
     font-weight: 700;
     line-height: 1.15;
     white-space: normal;
@@ -564,7 +564,7 @@
 }
 .demographics-settle-leader-val {
     color: var(--ia-text-accent);
-    font-size: 0.82rem;
+    font-size: var(--dg-fs-card-sub);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -579,7 +579,7 @@
 }
 .demographics-settle-section-title-text {
     color: var(--ia-accent-gold);
-    font-size: 1.7rem;
+    font-size: var(--dg-fs-160);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.07rem;
@@ -633,7 +633,7 @@
     min-width: 0;
     text-align: center;
     color: var(--ia-text-secondary);
-    font-size: 1.2rem;
+    font-size: var(--dg-fs-120);
     padding: 0 0.3rem;
     display: flex;
     align-items: center;
@@ -657,7 +657,7 @@
     height: 1.5rem;
 }
 .demographics-settle-th-label {
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
     letter-spacing: 0.02rem;
 }
 .demographics-settle-th.is-sorted,
@@ -859,7 +859,7 @@
     flex-wrap: wrap;
     gap: 0.2rem 0.7rem;
     margin: 0.1rem 0;
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
     color: var(--ia-text-accent);
 }
 .demographics-settle-citypop {
@@ -868,11 +868,11 @@
     gap: 0.2rem;
 }
 .demographics-settle-citypop-val {
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
     color: var(--ia-text-secondary);
 }
 .demographics-settle-founded {
-    font-size: 1rem;
+    font-size: var(--dg-fs-105);
     font-style: italic;
 }
 
@@ -913,7 +913,7 @@
     border-radius: 0.25rem;
     background: var(--ia-frame-bg);
     color: var(--ia-text-secondary);
-    font-size: 1rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-header {
     display: flex;
@@ -939,11 +939,11 @@
     color: var(--ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 1.85rem;
+    font-size: var(--dg-fs-185);
 }
 .demographics-settle-detail-sub {
     color: var(--ia-text-accent);
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-badges {
     display: flex;
@@ -959,13 +959,13 @@
 .demographics-settle-detail-rank-num {
     color: var(--ia-text-accent);
     font-weight: 700;
-    font-size: 1.15rem;
+    font-size: var(--dg-fs-120);
 }
 .demographics-settle-detail-score {
     color: var(--ia-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 2.3rem;
+    font-size: var(--dg-fs-240);
 }
 .demographics-settle-detail-stats {
     display: flex;
@@ -983,13 +983,13 @@
 }
 .demographics-settle-statchip-label {
     color: var(--ia-fxs-header);
-    font-size: 0.85rem;
+    font-size: var(--dg-fs-85);
     text-transform: uppercase;
     letter-spacing: 0.04rem;
 }
 .demographics-settle-statchip-value {
     color: var(--ia-text-secondary);
-    font-size: 1.3rem;
+    font-size: var(--dg-fs-120);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -1010,7 +1010,7 @@
 }
 .demographics-settle-detail-yield-val {
     color: var(--ia-text-secondary);
-    font-size: 1.12rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-wonders {
     display: flex;
@@ -1021,7 +1021,7 @@
     color: var(--ia-fxs-header);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: var(--dg-fs-105);
     text-transform: uppercase;
     letter-spacing: 0.03rem;
 }
@@ -1045,12 +1045,12 @@
 }
 .demographics-settle-detail-wonder-name {
     color: var(--ia-text-secondary);
-    font-size: 1.02rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-nowonders {
     color: var(--ia-text-accent);
     font-style: italic;
-    font-size: 0.95rem;
+    font-size: var(--dg-fs-95);
 }
 
 /* ── "View on map" button ────────────────────────────────────────────────────── */
@@ -1066,7 +1066,7 @@
     border-radius: 0.35rem;
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.24) 0%, rgba(243, 195, 76, 0.07) 100%);
     color: var(--ia-accent-gold);
-    font-size: 0.95rem;
+    font-size: var(--dg-fs-95);
     font-weight: 700;
     letter-spacing: 0.02rem;
     cursor: pointer;
@@ -1118,7 +1118,7 @@
 }
 .demographics-settle-detail .demographics-settle-mapbtn {
     padding: 0.55rem 1.2rem;
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
 }
 
 /* ── Map flyout overlay (cinematic; lives on document.body over the map) ──────── */
@@ -1166,30 +1166,30 @@
     flex: 0 0 auto;
 }
 .demographics-map-overlay-medal .demographics-settle-medal-num {
-    font-size: 1.6rem;
+    font-size: var(--dg-fs-160);
     margin-top: -0.1rem;
 }
 .demographics-map-overlay-rank {
     color: var(--ia-text-accent);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: var(--dg-fs-160);
 }
 .demographics-map-overlay-name {
     color: var(--ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 1.95rem;
+    font-size: var(--dg-fs-185);
 }
 .demographics-map-overlay-type {
     color: var(--ia-text-accent);
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
     font-style: italic;
     opacity: 0.9;
 }
 .demographics-map-overlay-owner {
     color: var(--ia-text-accent);
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
 }
 /* Congratulatory block (acclaim + accomplishment lines). */
 .demographics-map-overlay-congrats {
@@ -1199,7 +1199,7 @@
 }
 .demographics-map-overlay-congrats-line {
     color: var(--ia-text-secondary);
-    font-size: 1.1rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-map-overlay-meta {
     display: flex;
@@ -1213,7 +1213,7 @@
     align-items: center;
     gap: 0.3rem;
     color: var(--ia-text-secondary);
-    font-size: 1.05rem;
+    font-size: var(--dg-fs-105);
 }
 .demographics-map-overlay-back {
     align-self: center;
@@ -1224,7 +1224,7 @@
     color: var(--ia-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
-    font-size: 1.3rem;
+    font-size: var(--dg-fs-120);
     letter-spacing: 0.02rem;
     margin-top: 0.6rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -1240,7 +1240,7 @@
 }
 /* Celebratory acclaim line in the map overlay. */
 .demographics-map-overlay-acclaim {
-    font-size: 1.25rem;
+    font-size: var(--dg-fs-120);
     line-height: 1.4;
     color: var(--ia-text-secondary);
     margin: 0 0 0.15rem;
@@ -1255,18 +1255,18 @@
 .demographics-map-overlay-flyby-label {
     text-transform: uppercase;
     letter-spacing: 0.08rem;
-    font-size: 0.8rem;
+    font-size: var(--dg-fs-85);
     color: var(--ia-text-accent);
 }
 .demographics-map-overlay-flyby-dots {
     font-family: TitilliumWeb, sans-serif;
-    font-size: 0.86rem;
+    font-size: var(--dg-fs-85);
     color: var(--ia-text-secondary);
 }
 /* "Now showing" wonder caption (name + build year) during the tour. */
 .demographics-map-overlay-caption {
     font-family: TitilliumWeb, sans-serif;
-    font-size: 1.2rem;
+    font-size: var(--dg-fs-120);
     font-weight: 700;
     color: var(--ia-text-secondary);
     min-height: 1.3rem;
@@ -1276,7 +1276,7 @@
    a label. Wraps to a sensible width; min-height holds space so it never jumps. */
 .demographics-map-overlay-flavor {
     font-family: TitilliumWeb, sans-serif;
-    font-size: 0.95rem;
+    font-size: var(--dg-fs-95);
     font-weight: 400;
     font-style: italic;
     color: var(--ia-text-secondary);
@@ -1339,7 +1339,7 @@
 }
 .demographics-settle-split-left .demographics-settle-section-title-text {
     white-space: nowrap;
-    font-size: 1.65rem;
+    font-size: var(--dg-fs-160);
     letter-spacing: 0.05rem;
     max-width: 100%;
     overflow: hidden;
@@ -1433,7 +1433,7 @@
     margin-bottom: 0;
 }
 .demographics-settle-split-left .demographics-settle-medal-num {
-    font-size: 2rem;
+    font-size: var(--dg-fs-185);
     margin-top: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-card .demographics-settle-avatar {
@@ -1441,7 +1441,7 @@
     height: 4.2rem;
 }
 .demographics-settle-split-left .demographics-settle-podium-name {
-    font-size: 1.6rem;
+    font-size: var(--dg-fs-160);
     margin: 0;
     text-align: left;
     /* Wrap long names ("Unknown Civilization", long city names) instead of
@@ -1451,11 +1451,11 @@
     word-break: break-word;
 }
 .demographics-settle-split-left .demographics-settle-podium-owner {
-    font-size: 1.15rem;
+    font-size: var(--dg-fs-120);
     margin: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-score {
-    font-size: 2.5rem;
+    font-size: var(--dg-fs-240);
 }
 /* Keep both columns' content aligned at the top even when the left title wraps. */
 .demographics-settle-split .demographics-settle-section-title {

@@ -184,7 +184,7 @@ function buildLeaderPortrait(leaderType) {
  */
 export function buildCivHeaderText(text, profile, maskAsUnmet) {
   const leader = document.createElement("div");
-  leader.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-sm";
+  leader.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-base";
   leader.textContent = maskAsUnmet
     ? t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER")
     : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
@@ -192,7 +192,7 @@ export function buildCivHeaderText(text, profile, maskAsUnmet) {
 
   if (maskAsUnmet) {
     const civ = document.createElement("div");
-    civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-xs";
+    civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
     civ.textContent = t("LOC_DEMOGRAPHICS_UNMET_CIV");
     text.appendChild(civ);
   } else if (profile.civName) {
@@ -207,7 +207,7 @@ export function buildCivHeaderText(text, profile, maskAsUnmet) {
  */
 function appendCivNameRows(text, profile) {
   const civ = document.createElement("div");
-  civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-xs";
+  civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
   civ.textContent = profile.civName || "";
   text.appendChild(civ);
 
@@ -318,7 +318,7 @@ export function formatMetricValue(metric, v) {
  */
 function buildValueLine(metric, profile) {
   const line = document.createElement("div");
-  line.className = "demographics-worldrankings-allcivs-cell-rank font-body text-xs";
+  line.className = "demographics-worldrankings-allcivs-cell-rank font-body text-sm";
   const formatted = formatMetricValue(metric, profile.latest?.[metric.id]);
   if (formatted === "—") {
     line.textContent = "—";
@@ -356,7 +356,7 @@ export function buildValueCell(metric, profile, rank) {
   cell.className = "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-value-cell";
 
   const rankLine = document.createElement("div");
-  rankLine.className = "demographics-worldrankings-allcivs-cell-value font-body text-sm";
+  rankLine.className = "demographics-worldrankings-allcivs-cell-value font-body text-lg";
   rankLine.textContent = typeof rank === "number" ? String(rank) : "—";
   cell.appendChild(rankLine);
 
@@ -419,7 +419,7 @@ function appendMetricLabelRows(col) {
   for (const m of shownMetrics()) {
     const row = document.createElement("div");
     row.className =
-      "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-label-cell font-body text-sm";
+      "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-label-cell font-body text-base";
     if (rowIdx > 0 && rowIdx % 4 === 0) row.classList.add("is-heavy-divider");
     // Icon (when we have one for this metric) + name, so the row headings read at a
     // glance. The text carries the font-fit; the icon is a fixed-size leading glyph.
@@ -509,7 +509,7 @@ export function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
   text.appendChild(leader);
 
   const hint = document.createElement("div");
-  hint.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-xs";
+  hint.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
   hint.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK");
   text.appendChild(hint);
 
