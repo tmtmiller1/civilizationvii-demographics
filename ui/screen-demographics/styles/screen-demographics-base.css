@@ -201,7 +201,7 @@
     border: 1px solid var(--ia-frame-border);
     white-space: nowrap;
     line-height: 1.1;
-    font-size: 0.78rem;
+    font-size: var(--dg-fs-72);
     font-weight: 600;
     color: var(--ia-text-secondary);
     pointer-events: auto;
@@ -214,7 +214,7 @@
 .demographics-chart-line-label.is-hidden {
     opacity: 0.55;
     color: var(--ia-text-secondary-2);
-    font-size: 0.72rem;
+    font-size: var(--dg-fs-72);
 }
 .demographics-chart-line-label.is-eliminated {
     opacity: 0.4;
@@ -357,7 +357,7 @@
 /* War label sitting on top of each Gantt bar. */
 .demographics-chart-war-label {
     color: var(--ia-text-secondary);
-    font-size: 0.78rem;
+    font-size: var(--dg-fs-72);
     font-weight: 600;
     white-space: nowrap;
     line-height: 1;
@@ -393,13 +393,13 @@
 .demographics-chart-x-tick-year {
     color: var(--ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
-    font-size: 0.88rem;
+    font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04em;
 }
 .demographics-chart-x-tick-turn {
     color: var(--ia-text-accent-2);
-    font-size: 0.72rem;
+    font-size: var(--dg-fs-72);
     font-weight: 500;
     margin-top: 0.05rem;
 }
@@ -409,7 +409,7 @@
 .demographics-chart-axis-title {
     color: var(--ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
-    font-size: 0.85rem;
+    font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -447,7 +447,7 @@
     cursor: pointer;
     white-space: nowrap;
     line-height: 1.2;
-    font-size: 0.78rem;
+    font-size: var(--dg-fs-72);
     user-select: none;
 }
 .demographics-chart-time-filter-pill:hover {
@@ -483,7 +483,7 @@
     background: rgba(20, 16, 10, 0.95);
     border: 1px solid rgba(243, 195, 76, 0.8);
     border-radius: 0.25rem;
-    font-size: 0.82rem;
+    font-size: var(--dg-fs-85);
     line-height: 1.25;
     color: var(--ia-text-secondary);
     box-shadow: 0 0.15rem 0.6rem rgba(0, 0, 0, 0.7);

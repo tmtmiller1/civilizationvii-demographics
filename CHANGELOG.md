@@ -7,7 +7,26 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
-## [2.4.0] - 2026-07-05
+## [2.4.1] - 2026-07-05
+
+Completes the font-size-setting support across the whole screen, plus two fixes.
+
+### Fixed
+- **Every screen now honors the in-game font-size setting.** 2.4.0 brought this to
+  World Rankings; the remaining tabs — Historical Timeline, Global Statistics,
+  Geopolitics/Relations, Conflicts, Options, and the shared chrome — sized their
+  text with hardcoded values (many via `clamp()`, which Coherent silently drops),
+  so they ignored the setting. All of it now routes through the same font-scale
+  bridge, and the mod's ad-hoc font sizes are consolidated onto one small type
+  scale.
+- **Global Relations ring: leader portraits sit inside their circles again.** After
+  the ring capped its own height to stay on-screen, the portrait overlays measured
+  the pre-cap (taller) box and used a slightly larger scale than the SVG, flinging
+  the outer portraits off their nodes (proportional to distance from center). The
+  overlays now paint a frame later, after the cap has reflowed.
+- **Triumphs legend no longer shows a "□"/"[]" box.** The per-civ total was prefixed
+  with a "Σ" glyph that isn't in the Latin UI font, so Coherent drew it as a
+  missing-glyph box. The total now reads in parentheses, e.g. "Rome (5)".
 
 The World Rankings screens now honor the in-game font-size setting.
 
