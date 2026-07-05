@@ -107,6 +107,27 @@ function safeCall(fn, fb) {
   }
 }
 
+// An 8-step type scale (rem) the World Rankings pages' CSS snaps to. Each is
+// published as `--dg-fs-<size×100>` scaled by the font-size setting. Keep in sync
+// with the `.demographics-screen` defaults in the density stylesheet.
+const FONT_SIZE_LADDER = [0.72, 0.85, 0.95, 1.05, 1.2, 1.6, 1.85, 2.4];
+
+/**
+ * Read the player's in-game font-size setting (`uiFontScale`: 0 XSmall … 4 XLarge)
+ * as a multiplier over the engine's 18px base (16/18 … 24/18), defensively.
+ * @returns {{ idx: number|undefined, scale: number }} The raw index + multiplier.
+ */
+function readUiFontScaleMultiplier() {
+  const PX = [16, 18, 20, 22, 24];
+  try {
+    const idx = typeof Configuration !== "undefined" ? Configuration.getUser?.()?.uiFontScale : undefined;
+    if (typeof idx === "number" && PX[idx]) return { idx, scale: PX[idx] / 18 };
+    return { idx, scale: 1 };
+  } catch (_) {
+    return { idx: undefined, scale: 1 };
+  }
+}
+
 /**
  * The Demographics modal: a top-level `fxs-tab-bar` that swaps between the
  * history, rankings, and relations views. Restores its
@@ -200,7 +221,62 @@ class ScreenDemographics extends Panel {
     /** @type {*} */ (globalThis).DemographicsLiveRefresh =
       () => safeCall(() => this._liveRefresh());
     this._wireCloseButton();
+    // Bridge the in-game font-size setting to a CSS variable the mod's stylesheets
+    // multiply by. The engine applies that setting by REGENERATING its own text-*
+    // classes (not by changing the rem base), which the mod's fixed-rem content
+    // doesn't pick up — so without this the mod ignores small/medium/large/XL.
+    // Updated live while the screen is open; listener torn down in onDetach.
+    const onFontScale = () => safeCall(() => this._applyFontScale());
+    this._onFontScaleChange = onFontScale;
+    safeCall(() => this._applyFontScale());
+    safeCall(() => {
+      if (typeof engine !== "undefined" && typeof engine.on === "function") {
+        engine.on("UIFontScaleChanged", onFontScale);
+      }
+    });
     this._loadModulesThenRender();
+  }
+
+  /**
+   * Read the player's in-game font-size setting (`uiFontScale`: 0 XSmall … 4 XLarge)
+   * and publish it as the `--dg-font-scale` multiplier on the screen root, so the
+   * mod's font sizes track that setting the way the base game's `text-*` classes do.
+   * Multiplier = fontPx / 18 (the engine's `BASE_FONT_SIZE`), matching
+   * global-scaling.js's ladder 16/18/20/22/24 → 0.889/1/1.111/1.222/1.333.
+   */
+  _applyFontScale() {
+    if (!this.Root || !this.Root.style || typeof this.Root.style.setProperty !== "function") return;
+    const { scale } = readUiFontScaleMultiplier();
+    // Coherent's CSS parser rejects `calc(length * var)` and two-arg `var(x, fb)`
+    // (the base game uses neither), so we can't scale in CSS. Instead publish each
+    // size as a FULLY-COMPUTED rem value and reference it with a plain longhand
+    // `font-size: var(--dg-fs-*)` (the same single-arg var form the mod uses for
+    // colors). rem still tracks the UI scale; this multiplies in the font-size
+    // setting. Bases here MUST match the `.demographics-screen` defaults in the CSS.
+    /** @type {Record<string, number>} */
+    const BASES = {
+      "--dg-fs-lead": 1.1,
+      "--dg-fs-civ": 0.95,
+      "--dg-fs-label": 1.05,
+      "--dg-fs-value": 1.15,
+      "--dg-fs-rank": 0.9,
+      // Category-leader cards (top of World Rankings; also the All Settlements panel).
+      // Kept in line with the table's scale so the strip doesn't read oversized.
+      "--dg-fs-card-name": 0.9,
+      "--dg-fs-card-sub": 0.78,
+      "--dg-fs-card-val": 1.15,
+      "--dg-fs-card-cat": 0.85
+    };
+    for (const name of Object.keys(BASES)) {
+      this.Root.style.setProperty(name, (BASES[name] * scale).toFixed(4) + "rem");
+    }
+    // Size-keyed ladder for every other World Rankings page (settlements table /
+    // showcase / civ-ranking, section headings). One var per distinct base size,
+    // named `--dg-fs-<size×100>`; the CSS references them and defines matching
+    // defaults, so an un-set var still renders at the original size.
+    for (const v of FONT_SIZE_LADDER) {
+      this.Root.style.setProperty("--dg-fs-" + Math.round(v * 100), (v * scale).toFixed(4) + "rem");
+    }
   }
 
   /**
@@ -726,6 +802,15 @@ class ScreenDemographics extends Panel {
     dlog("onDetach");
     // stop options from poking a closed screen
     /** @type {*} */ (globalThis).DemographicsLiveRefresh = null;
+    const onFontScale = this._onFontScaleChange;
+    if (onFontScale) {
+      safeCall(() => {
+        if (typeof engine !== "undefined" && typeof engine.off === "function") {
+          engine.off("UIFontScaleChanged", onFontScale);
+        }
+      });
+      this._onFontScaleChange = null;
+    }
     if (this.viewTabBar && this.viewTabBarListener) {
       safeCall(() => this.viewTabBar.removeEventListener("tab-selected", this.viewTabBarListener));
     }

@@ -7,6 +7,32 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-07-05
+
+The World Rankings screens now honor the in-game font-size setting.
+
+### Fixed
+- **World Rankings respects the in-game font-size setting (small / medium / large /
+  extra large).** Every World Rankings page — Civilization Ranking, Civilization
+  Rank by Yield, Top 25 Settlements, Settlement Rank by Yield, and the category-
+  leader cards — sized its text with hardcoded values that only tracked the global
+  UI scale, so the font-size setting did nothing to them (unlike the base game).
+  Root cause turned out to be two engine quirks: the game applies the font-size
+  setting by regenerating its own `text-*` classes (which don't reach fixed-`rem`
+  mod content), **and** Coherent Gameface silently drops `font-size: clamp()` — so
+  the mod's entire `clamp()`-based responsive-font layer had never actually applied.
+  The screens now read the setting in JS and publish each size as a CSS variable
+  the stylesheets reference, so all of that text scales with the font-size setting
+  *and* the UI scale. As part of this, the ad-hoc ~30 distinct font sizes were
+  consolidated to a clean 8-step type scale.
+- **World Rankings comparison table sits centered.** With only a few met
+  civilizations on a wide screen, the columns hit their max width and the grid was
+  left-aligned with dead space on the right; it now centers.
+
+### Changed
+- The All Civilizations comparison table's text is a step larger and the metric
+  rows lead with an icon (carried over from the 2.3.x line).
+
 ## [2.3.3] - 2026-07-04
 
 ### Fixed
