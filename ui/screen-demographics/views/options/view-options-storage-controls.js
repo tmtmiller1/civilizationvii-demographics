@@ -3,6 +3,7 @@
 // Storage-cap, decimation, and polling controls for the Options view.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { formatCount } from "/demographics/ui/metrics/metrics-format.js";
 import {
   resolveEffectiveCap,
   detectGameSpeedType,
@@ -83,13 +84,13 @@ function buildHistoryCapHint() {
     ? speed.replace(/^GAMESPEED_/, "").toLowerCase()
     : t("LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN");
   const capStr = isFinite(eff.cap)
-    ? eff.cap.toLocaleString()
+    ? formatCount(eff.cap)
     : t("LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE");
   hint.textContent = t(
     "LOC_DEMOGRAPHICS_OPT_CAP_HINT",
     capStr,
     speedLbl,
-    HARD_MAX_SAMPLES.toLocaleString()
+    formatCount(HARD_MAX_SAMPLES)
   );
   return hint;
 }

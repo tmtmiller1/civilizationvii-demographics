@@ -1897,6 +1897,24 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="de_DE">
             <Text>Anerkannt als #{1_Ord} der größten Siedlungen der Welt.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1" Language="de_DE">
+            <Text>1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2" Language="de_DE">
+            <Text>2</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3" Language="de_DE">
+            <Text>3</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4" Language="de_DE">
+            <Text>4</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5" Language="de_DE">
+            <Text>5</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="de_DE">
+            <Text>6</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="de_DE">
             <Text>Sie beherbergt {1_List}.</Text>
         </Replace>

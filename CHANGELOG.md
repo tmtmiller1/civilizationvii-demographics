@@ -7,6 +7,62 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+### Fixed
+- **War cost figures no longer bleed across ages.** The War tooltip and War Graphs cost
+  tables windowed the whole-game sample stream by age-local turn numbers (which reset each
+  age), so a war fought after Antiquity mixed in same-numbered turns from earlier ages and
+  showed inflated losses/net/casualties. The sample stream is now scoped to the war's own
+  age before windowing, and an ongoing war is bounded by its age's last turn.
+- **Population and storage-cap numbers respect the game language.** A couple of readouts
+  used JavaScript number formatting (always English grouping in-engine) instead of the
+  mod's locale-aware formatter.
+
+## [2.4.4] - 2026-07-09
+
+A localization release. The Top-6 Settlements cinematic now draws its rank word
+from localization tags, so translators can supply grammatically-inflected forms
+instead of the mod hardcoding English. English and every other language render
+exactly as before.
+
+### Added
+- **The Top-6 cinematic rank word is now localizable.** The "Recognized as the
+  _sixth_ greatest settlement in the world" line previously hardcoded the English
+  ordinal word and fell back to a bare number in every other language. The six
+  ranks now resolve through dedicated tags
+  (`LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1`–`_6`), so languages that need
+  grammatical inflection (e.g. Polish) can provide a properly declined form. The
+  tags ship in all eleven locale files; English keeps its existing wording and the
+  already-translated languages keep the numeric form their sentence frames are
+  built around, so nothing changes on screen until a translation is supplied.
+
+## [2.4.3] - 2026-07-06
+
+A code-quality and test-hardening release. There are **no gameplay, UI, or
+behavior changes** — the mod runs exactly as 2.4.1 did. This release only
+strengthens the automated safety net behind two of the mod's trickier
+subsystems so future changes are less likely to regress them.
+
+### Internal / Quality
+- **New branch-coverage tests for the war tracker.** The Conflicts sampler — the
+  code that detects active wars, ingests each war event's diplomatic data, and
+  runs the per-turn war tracker — gained dedicated test suites
+  (`sampler-wars-detect`, `sampler-wars-ingest`, `sampler-wars-core`) that
+  exercise its edge cases (missing engine data, duplicate declarations, ally and
+  city-state augmentation, record migration). These are wired into the release
+  gate, so a bad edit to war detection now fails `verify` instead of shipping.
+- **New branch-coverage tests for the crisis cost model.** The Crises cost table
+  (`crisis-cost-model.js`) — participant ordering, age-column merging, and
+  cost aggregation — is now covered by its own `crisis-cost-branches` suite,
+  also part of the release gate.
+- **Targeted mutation-testing config added.** `stryker.full.targeted.json`
+  mutation-tests the crisis cost model and the entire wars-sampler pipeline
+  (detect / ingest / core / augment) against the new suites, to confirm the
+  tests actually catch injected faults rather than just executing the code.
+- **Lint gate tightened.** Three per-file `max-lines` exemptions (the metrics
+  catalog, the screen controller, and the storage facade) were removed now that
+  those modules fit the standard limit; the modularization gate applies
+  uniformly with no remaining per-file waivers.
+
 ## [2.4.1] - 2026-07-05
 
 Completes the font-size-setting support across the whole screen, plus two fixes.

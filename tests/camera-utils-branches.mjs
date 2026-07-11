@@ -54,7 +54,7 @@ assert.equal(inputDebounced(s), true);  // within 500ms window
 
 // ── cinematic-overlay ────────────────────────────────────────────────
 const {
-  ORDINAL_WORDS, ordinalWord, joinNames, composeOr, isEnglishLocale,
+  ORDINAL_WORDS, ORDINAL_TAG_MAX, ordinalWord, ordinalText, joinNames, composeOr, isEnglishLocale,
   captionText, flavorText, localeCode, districtPhrase, highlightNames
 } = await import(
   "/demographics/ui/screen-demographics/camera/cinematic-overlay.js"
@@ -64,6 +64,16 @@ assert.ok(Array.isArray(ORDINAL_WORDS));
 assert.equal(ordinalWord(1), "single");
 assert.equal(ordinalWord(2), "second");
 assert.equal(ordinalWord(100), "#100");
+
+// ordinalText: the tag is unresolved in this harness (Locale.compose echoes the key),
+// so it falls back to the English word within the Top-6 range and to ordinalWord beyond it.
+assert.equal(ORDINAL_TAG_MAX, 6);
+assert.equal(ordinalText(1), "single");
+assert.equal(ordinalText(6), "sixth");
+assert.equal(ordinalText(7), "seventh"); // beyond the tag range → English ordinal word
+assert.equal(ordinalText(100), "#100");
+// standingRank caption routes through ordinalText, then composes the sentence frame.
+assert.equal(captionText({ standingRank: 2 }), "LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN");
 assert.equal(joinNames(["A"]), "A");
 assert.equal(joinNames(["A", "B"]), "A LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND B");
 assert.equal(composeOr("hello", "fallback"), "hello");

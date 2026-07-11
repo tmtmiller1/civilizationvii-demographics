@@ -1337,6 +1337,24 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="ko_KR">
             <Text>세계 {1_Ord}위의 위대한 정착지로 인정받습니다.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1" Language="ko_KR">
+            <Text>1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2" Language="ko_KR">
+            <Text>2</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3" Language="ko_KR">
+            <Text>3</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4" Language="ko_KR">
+            <Text>4</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5" Language="ko_KR">
+            <Text>5</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="ko_KR">
+            <Text>6</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="ko_KR">
             <Text>{1_List}이(가) 있습니다.</Text>
         </Replace>

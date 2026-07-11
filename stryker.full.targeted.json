@@ -1,0 +1,28 @@
+{
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "npm run test:crisis-cost-snapshot && npm run test:crisis-cost-branches && npm run test:sampler-wars-detect-branches && npm run test:sampler-wars-ingest-branches && npm run test:sampler-wars-core-branches && npm run test:wars-naming-branches"
+  },
+  "coverageAnalysis": "off",
+  "mutate": [
+    "ui/screen-demographics/charts/crises/crisis-cost-model.js",
+    "ui/sampler/sampler-wars-detect.js",
+    "ui/sampler/sampler-wars-ingest.js",
+    "ui/sampler/sampler-wars-core.js",
+    "ui/sampler/sampler-wars-augment.js"
+  ],
+  "reporters": [
+    "clear-text",
+    "json"
+  ],
+  "jsonReporter": {
+    "fileName": "reports/mutation/mutation.json"
+  },
+  "concurrency": 2,
+  "timeoutMS": 20000,
+  "thresholds": {
+    "high": 75,
+    "low": 60,
+    "break": null
+  }
+}

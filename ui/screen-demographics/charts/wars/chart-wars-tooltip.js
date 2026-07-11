@@ -14,6 +14,7 @@ import {
   participantMilPower,
   participantMilPowerLost,
   warWindow,
+  warAgeScope,
   costMetricTitle
 } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import {
@@ -41,9 +42,12 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
  * @returns {Record<string, *>} The tooltip body fields.
  */
 function buildWarTooltipBody(w, ctx) {
-  const { nameOverride, turnYearMap, latestTurn } = ctx;
+  const { nameOverride, turnYearMap, latestTurn, samples } = ctx;
+  // Age-scope the sample stream to the war's age so cost windowing (age-local turns) can't
+  // pull in same-numbered turns from other ages; ageLastTurn bounds an ongoing war correctly.
+  const { scoped, ageLastTurn } = warAgeScope(samples, w);
   const sTurn = w.startTurn;
-  const eTurn = typeof w.endTurn === "number" ? w.endTurn : latestTurn;
+  const eTurn = typeof w.endTurn === "number" ? w.endTurn : ageLastTurn;
   const startYr = w.startYear || "T-" + sTurn;
   const endYr =
     typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
@@ -71,7 +75,9 @@ function buildWarTooltipBody(w, ctx) {
     yrs,
     turns,
     warStart: typeof sTurn === "number" ? sTurn : 0,
-    warEnd: eTurn
+    warEnd: eTurn,
+    // Age-scoped sample stream for the cost windowing below (warWindow/participantCost).
+    scoped
   };
 }
 
@@ -138,7 +144,7 @@ export function renderWarTooltip(tooltip, w, ctx) {
     t("LOC_DEMOGRAPHICS_WARS_COST_HEADER") + " " + t("LOC_DEMOGRAPHICS_WARS_COST_OBSERVED");
   tooltip.appendChild(costHead);
 
-  const win = warWindow(samples, tip.warStart, tip.warEnd);
+  const win = warWindow(tip.scoped, tip.warStart, tip.warEnd);
   tooltip.appendChild(buildSidesEl(tip, samples, win));
 
   appendCsAllies(tooltip, tip, samples, win);
@@ -243,17 +249,17 @@ function appendCsAllies(tooltip, tip, samples, win) {
  * @param {*[]} cols The accumulating columns.
  * @param {*[]} majors The side's major entries.
  * @param {*[]} csList The side's city-state entries (for the parenthetical total).
- * @param {{ samples: Snapshot[], win: Snapshot[], tip: * }} ctx Sample stream,
- *   war-window samples, and the tooltip body.
+ * @param {{ win: Snapshot[], tip: * }} ctx War-window samples and the tooltip body (which
+ *   carries the age-scoped sample stream for participant cost).
  */
 function pushSideCols(cols, majors, csList, ctx) {
-  const { samples, win, tip } = ctx;
+  const { win, tip } = ctx;
   const csTotals = csList.length ? csSideTotals(csList, win) : null;
   for (const entry of majors) {
     cols.push({
       entry,
       cs: csTotals,
-      cost: participantCost(samples, entry, tip.warStart, tip.warEnd)
+      cost: participantCost(tip.scoped, entry, tip.warStart, tip.warEnd)
     });
   }
 }
