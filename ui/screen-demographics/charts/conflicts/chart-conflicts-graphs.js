@@ -30,7 +30,8 @@ import {
 import {
   COST_METRICS,
   buildCostIcon,
-  graphMetricTitle
+  graphMetricTitle,
+  warAgeScope
 } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
@@ -640,9 +641,12 @@ function buildWarView(history, selectedWarId) {
   const wars = mergeWars(rawWars, latest);
   const war = wars.length ? resolveWar(wars, selectedWarId) : null;
   if (!war) return null;
+  // Age-scope before windowing so a post-Antiquity war doesn't pull in same-numbered
+  // (age-local) turns from earlier ages; ageLastTurn bounds an ongoing war to its own age.
+  const { scoped, ageLastTurn } = warAgeScope(samples, war);
   const wStart = typeof war.startTurn === "number" ? war.startTurn : 0;
-  const wEnd = typeof war.endTurn === "number" ? war.endTurn : latest;
-  const win = samples.filter(
+  const wEnd = typeof war.endTurn === "number" ? war.endTurn : ageLastTurn;
+  const win = scoped.filter(
     (/** @type {*} */ s) => typeof s?.turn === "number" && s.turn >= wStart && s.turn <= wEnd
   );
   // Same fancy name the timeline + picker use (keyed by warUniqueID).

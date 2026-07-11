@@ -12,6 +12,29 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
+import { findStartSample } from "/demographics/ui/sampler/sampler-wars-augment.js";
+import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
+
+/**
+ * Scope the full multi-age sample stream to just the war's age, so per-turn windowing
+ * (which uses AGE-LOCAL turn numbers that reset each age) can't pull in same-numbered turns
+ * from other ages. The war's age is recovered from its global startChartTurn via the start
+ * sample. Also returns that age's last sampled turn, for an ongoing war's end-turn fallback.
+ * @param {Snapshot[]} samples The full sample stream.
+ * @param {*} war The war record (carries startChartTurn).
+ * @returns {{scoped: Snapshot[], ageLastTurn: number}} Age-scoped samples + the age's last turn.
+ */
+export function warAgeScope(samples, war) {
+  const all = Array.isArray(samples) ? samples : [];
+  const start = war && typeof war.startChartTurn === "number" ? war.startChartTurn : Infinity;
+  const warAge = sampleAgeKey(findStartSample(all, start));
+  const scoped = all.filter((/** @type {*} */ s) => sampleAgeKey(s) === warAge);
+  let ageLastTurn = 0;
+  for (const s of scoped) {
+    if (typeof s?.turn === "number" && s.turn > ageLastTurn) ageLastTurn = s.turn;
+  }
+  return { scoped, ageLastTurn };
+}
 
 /**
  * Descriptive display title per cost-metric id, shared by the tooltip and the

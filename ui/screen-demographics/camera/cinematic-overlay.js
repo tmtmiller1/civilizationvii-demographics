@@ -16,6 +16,12 @@ export const ORDINAL_WORDS = [
   "twenty-fourth", "twenty-fifth"
 ];
 
+// The cinematic only showcases the Top-6 settlements, so ranks 1..6 have a dedicated
+// per-rank localization tag (LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1..6). This lets
+// languages that need grammatical inflection (e.g. Polish) supply a properly declined
+// ordinal word instead of the bare number the sentence frames otherwise embed.
+export const ORDINAL_TAG_MAX = 6;
+
 /** @type {Record<string, Record<string, string>>} */
 export const QUARTER_ARTICLE = {
   en: {
@@ -172,8 +178,7 @@ export function captionText(caption) {
     return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", caption.foundedYear);
   }
   if (typeof caption.standingRank === "number") {
-    const rank = caption.standingRank;
-    const ord = isEnglishLocale() ? ordinalWord(rank) : String(rank);
+    const ord = ordinalText(caption.standingRank);
     return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN", ord);
   }
   if (caption.touringCity) {
@@ -258,6 +263,24 @@ export function ordinalWord(rank) {
 }
 
 /**
+ * Resolve the ordinal insert for a settlement's rank in the cinematic sentences.
+ *
+ * Prefers the per-rank localization tag (ranks 1..6) so translators can supply a
+ * grammatically-inflected form. Falls back to the prior behavior when the tag is
+ * unresolved or the rank is outside the Top-6: the English ordinal word for
+ * English locales, or the bare number every other sentence frame is built around.
+ * @param {number} rank The 1-based rank.
+ * @returns {string} The ordinal display text.
+ */
+export function ordinalText(rank) {
+  const fallback = isEnglishLocale() ? ordinalWord(rank) : String(rank);
+  if (rank >= 1 && rank <= ORDINAL_TAG_MAX) {
+    return composeOr(t("LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_" + rank), fallback);
+  }
+  return fallback;
+}
+
+/**
  * Join names into locale-aware list text.
  * @param {string[]} names The names.
  * @returns {string} The joined list.
@@ -311,7 +334,7 @@ export function recognizedSentence(settlement) {
     settlement.ranks && typeof settlement.ranks.composite === "number"
       ? settlement.ranks.composite
       : 0;
-  const ordinal = isEnglishLocale() ? ordinalWord(rank) : String(rank);
+  const ordinal = ordinalText(rank);
   const lead = composeOr(
     t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN", ordinal),
     "Recognized as the " + ordinal + " greatest settlement in the world."
