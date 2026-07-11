@@ -106,7 +106,7 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='*.d.ts' --exclude='text/data' --exclude='tests' \
     --exclude='steam_workshop_id.txt' --exclude='CONTRIBUTING.md' \
     --exclude='coverage' --exclude='.c8rc.json' \
-    --exclude='reports' --exclude='.stryker-tmp' --exclude='stryker.config.json' \
+    --exclude='reports' --exclude='.stryker-tmp' --exclude='stryker*.json' \
     --exclude='scripts' --exclude='README.pdf' \
     "$SRC_DIR"/ "$TARGET_DIR"/
 

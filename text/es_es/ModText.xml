@@ -1897,6 +1897,24 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="es_ES">
             <Text>Reconocido como el {1_Ord}.º asentamiento más grande del mundo.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1" Language="es_ES">
+            <Text>1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2" Language="es_ES">
+            <Text>2</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3" Language="es_ES">
+            <Text>3</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4" Language="es_ES">
+            <Text>4</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5" Language="es_ES">
+            <Text>5</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="es_ES">
+            <Text>6</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="es_ES">
             <Text>Alberga {1_List}.</Text>
         </Replace>

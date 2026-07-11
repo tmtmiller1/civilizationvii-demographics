@@ -1897,6 +1897,24 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="zh_Hans_CN">
             <Text>被誉为世界第{1_Ord}大聚落。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1" Language="zh_Hans_CN">
+            <Text>1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2" Language="zh_Hans_CN">
+            <Text>2</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3" Language="zh_Hans_CN">
+            <Text>3</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4" Language="zh_Hans_CN">
+            <Text>4</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5" Language="zh_Hans_CN">
+            <Text>5</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="zh_Hans_CN">
+            <Text>6</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="zh_Hans_CN">
             <Text>拥有{1_List}。</Text>
         </Replace>

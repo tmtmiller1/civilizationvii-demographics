@@ -1,6 +1,8 @@
 // ui-helpers.js
 // Shared lightweight DOM/format helpers used across Demographics views.
 
+import { formatCount } from "/demographics/ui/metrics/metrics-format.js";
+
 /**
  * Create a div with a class and optional text content.
  * @param {string} cls Class name(s).
@@ -42,5 +44,7 @@ export function fmt(v) {
  */
 export function fmtPop(v) {
   if (typeof v !== "number" || !isFinite(v) || v <= 0) return "—";
-  return Math.round(v).toLocaleString();
+  // Locale-aware grouping (Locale.toNumber via metrics-format) instead of JS toLocaleString,
+  // which in Gameface always renders English grouping regardless of the player's language.
+  return formatCount(v);
 }

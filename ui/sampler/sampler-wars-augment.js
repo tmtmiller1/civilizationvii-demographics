@@ -190,7 +190,7 @@ function startSamplePlayers(samples, war) {
  * @param {number} target The war's start chart-turn.
  * @returns {Snapshot|null} The matching sample, or null.
  */
-function findStartSample(samples, target) {
+export function findStartSample(samples, target) {
   let best = null;
   let bestTurn = -Infinity;
   for (const s of samples) {

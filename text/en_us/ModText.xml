@@ -1982,6 +1982,24 @@
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN">
             <Text>Recognized as the {1_Ord} greatest settlement in the world.</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1">
+            <Text>single</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2">
+            <Text>second</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3">
+            <Text>third</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4">
+            <Text>fourth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5">
+            <Text>fifth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6">
+            <Text>sixth</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST">
             <Text>It houses {1_List}.</Text>
         </Row>

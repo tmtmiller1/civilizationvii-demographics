@@ -1337,6 +1337,24 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="it_IT">
             <Text>Riconosciuto come il {1_Ord}º insediamento più grande del mondo.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1" Language="it_IT">
+            <Text>1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2" Language="it_IT">
+            <Text>2</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3" Language="it_IT">
+            <Text>3</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4" Language="it_IT">
+            <Text>4</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5" Language="it_IT">
+            <Text>5</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="it_IT">
+            <Text>6</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="it_IT">
             <Text>Ospita {1_List}.</Text>
         </Replace>
