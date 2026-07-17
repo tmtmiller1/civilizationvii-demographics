@@ -6,7 +6,8 @@ import {
   _readFiniteProp,
   dlog,
   netYield,
-  safeCall
+  safeCall,
+  safeNum
 } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { recordCity } from "/demographics/ui/sampler/sampler-war-events.js";
 import { scaleCityPopulationAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
@@ -315,6 +316,40 @@ export function collectGold(ctx, id, p) {
       return undefined;
     });
     if (typeof g === "number" && isFinite(g)) ctx.gold = g;
+  }
+}
+
+/**
+ * Read the count of slotted great works off the player's Stats handle.
+ * citation: player.Stats.getTotalGreatWorksSlotted() (base-standard).
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
+ * @param {Pid} id The player id.
+ * @param {*} stats The player Stats handle.
+ */
+export function collectGreatWorks(ctx, id, stats) {
+  if (stats && typeof stats.getTotalGreatWorksSlotted === "function") {
+    const gw = safeCall(
+      "stats.getTotalGreatWorksSlotted() (pid=" + id + ")",
+      () => safeNum(stats.getTotalGreatWorksSlotted())
+    );
+    if (typeof gw === "number") ctx.greatWorks = gw;
+  }
+}
+
+/**
+ * Read the cumulative count of settlements taken by force off the Stats handle.
+ * citation: player.Stats.getNumConqueredSettlements(...) (base-standard).
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
+ * @param {Pid} id The player id.
+ * @param {*} stats The player Stats handle.
+ */
+export function collectConquered(ctx, id, stats) {
+  if (stats && typeof stats.getNumConqueredSettlements === "function") {
+    const n = safeCall(
+      "stats.getNumConqueredSettlements() (pid=" + id + ")",
+      () => safeNum(stats.getNumConqueredSettlements(true, true, true, false))
+    );
+    if (typeof n === "number") ctx.conqueredCum = n;
   }
 }
 

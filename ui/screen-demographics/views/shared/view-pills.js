@@ -28,7 +28,8 @@ function buttonStyle(on, variant) {
 
 /**
  * Build a pill-row selector.
- * @param {{key:*, label:string}[]} items The choices.
+ * @param {{key:*, label:string, marker?:string}[]} items The choices. An item's optional
+ *   `marker` appends a small badge (e.g. "+") after the label to flag a drill-down.
  * @param {*} activeKey The currently-selected key.
  * @param {(key:*)=>void} onPick Called with the chosen key when a different pill is clicked.
  * @param {string} [variant] "filter" → flat boxed filter buttons (vs the default rounded pills).
@@ -42,6 +43,12 @@ export function pillRow(items, activeKey, onPick, variant) {
     const b = document.createElement("div");
     b.textContent = it.label;
     b.style.cssText = buttonStyle(it.key === activeKey, variant);
+    if (it.marker) {
+      const badge = document.createElement("span");
+      badge.textContent = it.marker;
+      badge.style.cssText = "margin-left:0.3rem;font-weight:bold;";
+      b.appendChild(badge);
+    }
     b.addEventListener("click", () => { if (it.key !== activeKey) onPick(it.key); });
     row.appendChild(b);
   }

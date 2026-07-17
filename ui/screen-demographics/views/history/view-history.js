@@ -15,6 +15,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { SYNTHETIC_METRICS } from "/demographics/ui/screen-demographics/views/history/history-synthetic-metrics.js";
 import {
   getMetric,
   localizedMetricName,
@@ -29,14 +30,14 @@ import {
   buildPageTabRow,
   buildMetricTabRow,
   buildChartTitle,
-  visibleMetricsForAge
+  visibleMetrics
 } from "/demographics/ui/screen-demographics/views/history/history-tabs.js";
 import {
   appendMetricCaptions,
   buildPolicyBanner
 } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
-import { buildToolbar, buildRadarSnapshotRow, buildWarGraphsPicker } from "/demographics/ui/screen-demographics/views/history/history-controls.js";
+import { buildToolbar, buildRadarSnapshotRow, buildWarGraphsPicker, buildPopulationModeToggle } from "/demographics/ui/screen-demographics/views/history/history-controls.js";
 import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 import {
   TIME_FILTERS,
@@ -175,63 +176,56 @@ function derr(...a) {
 export const PAGES = [
   // ── GLOBAL STATISTICS hub ───────────────────────────────────────────────
   {
+    // All per-turn output rates in one place (stock/flow split from Economy):
+    // Food · Production · Gold · Science · Culture · Happiness · Influence.
+    id: "yields",
+    label: "LOC_DEMOGRAPHICS_PAGE_YIELDS",
+    hub: "statistics",
+    tier: "basic",
+    metrics: ["gpt", "production", "crops", "science_yield", "culture_yield", "influence", "hpt"]
+  },
+  {
+    // Economy & Resources: wealth stocks (GDP, Treasury, Trade) then the strategic
+    // resource-allocation charts (page-level stacked mix + per-class comparisons).
+    // Keeps id "economy" so the default landing page stays valid.
     id: "economy",
-    label: "LOC_DEMOGRAPHICS_PAGE_ECONOMY",
+    label: "LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES",
     hub: "statistics",
     tier: "basic",
-    metrics: ["score", "gdp", "gold", "gpt", "production", "crops", "trade"]
+    metrics: ["gdp", "gold", "trade", "resources_total", "resources_stack", "resources_bonus",
+      "resources_empire", "resources_city", "resources_factory", "resources_treasure"]
   },
   {
-    // Resource-allocation page. First metric is a stacked-area page-level view of the
-    // LOCAL player's per-category resource count over time; the rest are per-category
-    // line charts comparing ALL civs.
-    id: "resources",
-    label: "LOC_DEMOGRAPHICS_PAGE_RESOURCES",
-    hub: "statistics",
-    tier: "standard",
-    metrics: [
-      "resources_stack",
-      "resources_total",
-      "resources_bonus",
-      "resources_empire",
-      "resources_city",
-      "resources_factory",
-      "resources_treasure"
-    ]
-  },
-  {
-    // The two advancement tracks: research (science→techs) and culture (culture→civics), yield then
-    // count, kept adjacent. Pills: Science · Techs · Culture · Civics.
-    id: "science_culture",
-    label: "LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE",
-    hub: "statistics",
-    tier: "basic",
-    metrics: ["science_yield", "techs", "culture_yield", "civics"]
-  },
-  {
-    // Governance / social standing.
+    // Society & culture: social standing, culture-collection, the wonder group, and the
+    // Legacy Path triumph radar (legacy_radar, folded in from the former Age page).
     id: "society",
     label: "LOC_DEMOGRAPHICS_PAGE_SOCIETY",
     hub: "statistics",
     tier: "basic",
-    metrics: ["approval", "hpt", "influence"]
+    metrics: ["faith", "tourism", "great_people", "great_works", "techs", "civics",
+      "wonders", "wonders_board", "wonder_races", "natural_wonders", "legacy_radar"]
   },
   {
-    // Empire footprint.
-    id: "expansion",
-    label: "LOC_DEMOGRAPHICS_PAGE_EXPANSION",
-    hub: "statistics",
-    tier: "basic",
-    metrics: ["settlements", "settlement_cap_pct", "land", "wonders"]
-  },
-  {
-    // Civ7 Test of Time triumph dashboard. `legacy_radar` is a SYNTHETIC metric routing
-    // to a dedicated renderer rather than the line-chart pipeline.
-    id: "age",
-    label: "LOC_DEMOGRAPHICS_PAGE_AGE",
+    // Religion: spread + by-population over time (line charts) + current standings.
+    id: "religion",
+    label: "LOC_DEMOGRAPHICS_PAGE_RELIGION",
     hub: "statistics",
     tier: "standard",
-    metrics: ["legacy_radar"]
+    // Antiquity shows the pantheons chosen; Exploration/Modern show the founded-religion
+    // standings/spread/by-population charts. The age gate (history-tabs.js) hides whichever
+    // set doesn't apply, so only one "Religion" pill is ever visible for the current age.
+    metrics: ["religion_pantheons", "religion_pantheon_yields", "religion_standings",
+      "religion_spread", "religion_by_pop"]
+  },
+  {
+    // Empire footprint: settlement counts/cap, land area, the size histogram, and the
+    // by-type construction boards (buildings/districts, folded from the former Construction page).
+    id: "settlements_land",
+    label: "LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND",
+    hub: "statistics",
+    tier: "basic",
+    metrics: ["land", "land_share_area", "settlements", "settlements_atlas", "settlement_cap_pct",
+      "settlement_cap", "cities", "towns", "districts_type", "buildings_type"]
   },
 
   // ── MIGRATION hub ───────────────────────────────────────────────────────
@@ -247,8 +241,8 @@ export const PAGES = [
 
   // ── GEOPOLITICS hub ─────────────────────────────────────────────────────
   {
-    // Diplomacy. A RENDER page (the former top-level Relations view). First in the hub +
-    // the default page loaded when Geopolitics is selected.
+    // "Global Relations": a RENDER page (the former top-level Relations view). First in the
+    // hub + the default page loaded when Geopolitics is selected.
     id: "relations",
     label: "LOC_DEMOGRAPHICS_PAGE_RELATIONS",
     hub: "geopolitics",
@@ -256,19 +250,8 @@ export const PAGES = [
     render: renderRelationsPage
   },
   {
-    id: "military",
-    label: "LOC_DEMOGRAPHICS_PAGE_MILITARY",
-    hub: "geopolitics",
-    tier: "basic",
-    metrics: ["milpower"]
-  },
-  {
-    // Gantt + graphs of every war this game has seen (sampler `history.wars`).
-    id: "wars",
-    label: "LOC_DEMOGRAPHICS_PAGE_WARS",
-    hub: "geopolitics",
-    tier: "standard",
-    metrics: ["wars_gantt", "war_graphs"]
+    id: "agreements", label: "LOC_DEMOGRAPHICS_PAGE_AGREEMENTS",
+    hub: "geopolitics", tier: "standard", metrics: ["approval", "deals"]
   },
   {
     // The current age's crisis, broken into stages with a per-civ cost section.
@@ -279,11 +262,25 @@ export const PAGES = [
     metrics: ["crisis_stages", "crisis_graphs"]
   },
   {
-    id: "agreements",
-    label: "LOC_DEMOGRAPHICS_PAGE_AGREEMENTS",
+    // "Soft Power" dashboard: Score, the Score rank-race, the Fingerprint scatters
+    // (civ_scatter/scatter_*), and the Archetype radar. Placed after Crises. tier
+    // omitted ⇒ standard.
+    id: "power",
+    label: "LOC_DEMOGRAPHICS_PAGE_POWER",
     hub: "geopolitics",
-    tier: "standard",
-    metrics: ["deals"]
+    metrics: ["score", "power_race", "civ_scatter", "scatter_wealth_culture", "scatter_soft_power",
+      "power_radar"]
+  },
+  {
+    // "Military Power": strength, kills/losses, combats, wars, conquest, by-type breakdowns.
+    id: "military",
+    label: "LOC_DEMOGRAPHICS_PAGE_MILITARY",
+    hub: "geopolitics",
+    tier: "basic",
+    // War Timeline (wars_gantt) + War Impact (war_graphs) folded in from the former Wars page.
+    metrics: ["milpower", "units_killed", "units_lost", "combats", "wars_declared", "wars_received",
+      "settlements_conquered", "conquest_pct", "wars_gantt", "war_graphs",
+      "units_trained_type", "units_killed_type", "units_lost_type"]
   }
 ];
 
@@ -299,16 +296,17 @@ export const HUBS = Object.freeze(["statistics", "migration", "geopolitics"]);
 export function pagesForHub(allPages, hub) {
   const pages = allPages.filter((p) => p.hub === hub);
   // When a companion fills the Migration hub, it owns Population too, folded into its
-  // combined "Population & Migration" page as the first pill, so drop the host's standalone
-  // Population page to avoid showing it twice.
+  // combined "Population & Migration" page as the first pill (and Population Share is a member of
+  // that page's group, added by the companion), so drop the host's standalone Population page.
   if (hub === "migration" && migrationHubHasCompanion()) {
     return pages.filter((p) => p.id !== "population");
   }
   // Standalone Demographics hides the Migration hub entirely, so surface its Population anchor
-  // as the first pill on the Global Statistics "Society" page instead. Idempotent.
+  // (and Population Share, which travels with it) as the first pills on the Global Statistics
+  // "Society" page instead. Idempotent; leaves Population first, Share right after.
   if (hub === "statistics" && !migrationHubHasCompanion()) {
     const m = pages.find((p) => p.id === "society")?.metrics;
-    if (m && !m.includes("population")) m.unshift("population");
+    if (m && !m.includes("population")) m.unshift("population", "pop_share_area");
   }
   return pages;
 }
@@ -326,39 +324,6 @@ function renderRelationsPage(host, ctx) {
     .catch((/** @type {*} */ e) => derr("relations page load failed:", e));
 }
 
-/**
- * Synthetic "metrics" that route to a custom renderer instead of the
- * standard line-chart pipeline. They live in PAGES.metrics like normal
- * tab IDs but have no entry in METRICS; metricExists() must accept them
- * or the page logic would fall through to the "Not yet implemented" stub.
- * @type {Record<string, SyntheticMeta>}
- */
-const SYNTHETIC_METRICS = {
-  legacy_radar: {
-    label: "Radar",
-    title: "LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE"
-  },
-  resources_stack: {
-    label: "Stacked",
-    title: "LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE"
-  },
-  wars_gantt: {
-    label: "Wars",
-    title: "LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE"
-  },
-  war_graphs: {
-    label: "War Graphs",
-    title: "LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE"
-  },
-  crisis_stages: {
-    label: "Crises",
-    title: "LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE"
-  },
-  crisis_graphs: {
-    label: "Graphs",
-    title: "LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE"
-  }
-};
 
 /**
  * Resolve a synthetic metric's display meta, localizing its title/subtitle
@@ -707,17 +672,19 @@ function isExternalPanel(id) {
 }
 
 /**
- * The active metric for `page`, coerced to one the tab row will actually show. Age-gated metrics
- * (resources_treasure/_factory) are dropped from the tab row in the wrong age, but a persisted
- * selection can still resolve to one, which would highlight tab 0 while the chart renders the
- * hidden metric. Coercing to a tab-VISIBLE metric keeps the row and the chart in agreement.
+ * The active metric for `page`, coerced to one the tab row will actually show. Metrics are dropped
+ * from the tab row both by age gating AND by the empty-data auto-hide; a default/persisted selection
+ * can still resolve to a hidden one, which would highlight tab 0 while the chart renders the hidden
+ * metric — and, for the empty-data case, make the metric appear as a lone pill only while it's the
+ * default active, then vanish when the user picks a populated sibling. Coercing to the DATA-aware
+ * visible set (not just age) keeps the row and chart in agreement and stops the flicker.
  * @param {*} ctx Render context.
  * @param {{id:string, metrics?:string[]}} page The active page.
  * @returns {string} The visible active metric id.
  */
 function resolveVisibleActiveMetric(ctx, page) {
   const active = resolveActiveMetricState(ctx, page, metricExists);
-  const visible = visibleMetricsForAge(page.metrics || []);
+  const visible = visibleMetrics(page.metrics || [], ctx);
   return visible.length && !visible.includes(active) ? visible[0] : active;
 }
 
@@ -801,10 +768,35 @@ function buildControlsRow(host, ctx, effective, activeFilter) {
   }
   if (hasToolbar) buildToolbar(row, ctx, effective); // includes the Options button
   else appendExternalPanelControls(row, ctx);
-  // War Graphs: pin its "Pick war" dropdown to the far LEFT (filters stay centered,
-  // toolbar stays right).
-  if (effective === "war_graphs") row.appendChild(buildWarGraphsPicker(ctx));
+  appendMetricSpecificControl(row, ctx, effective);
   if (row.children.length) host.appendChild(row);
+}
+
+/**
+ * Append the one metric-specific control for pages that have one: the War Graphs
+ * "Pick war" dropdown (pinned far left), or the Population Scaled/Game toggle.
+ * No-op for every other metric.
+ * @param {HTMLElement} row The controls row.
+ * @param {*} ctx Render context.
+ * @param {string} effective The charted metric id.
+ */
+function appendMetricSpecificControl(row, ctx, effective) {
+  if (effective === "war_graphs") row.appendChild(buildWarGraphsPicker(ctx));
+  else if (effective === "population") row.appendChild(buildPopulationModeToggle(ctx));
+}
+
+/**
+ * The metric id actually charted for the Population page: swaps the scaled
+ * `population` for its raw-Civ twin `population_civ` when the toggle is in "civ"
+ * mode. Every other id passes through unchanged.
+ * @param {*} ctx Render context.
+ * @param {string} id The effective (display) metric id.
+ * @returns {string} The metric id to chart.
+ */
+function populationChartId(ctx, id) {
+  if (id !== "population") return id;
+  const mode = ctx?.settings?.getSetting?.("populationNumberMode", "scaled");
+  return mode === "civ" ? "population_civ" : "population";
 }
 
 /**
@@ -916,7 +908,9 @@ function renderMetricFlow(host, ctx, page) {
   const activeFilter = resolveActiveFilterState(ctx, TIME_FILTERS);
   const turnRange = computeTurnRange(ctx.history, activeFilter);
   buildControlsRow(host, ctx, effective, activeFilter);
-  buildChartHost(host, ctx, effective, turnRange);
+  // The Population page keeps its heading/tab as "population" but charts the raw-Civ twin when the
+  // Scaled/Game toggle is in "civ" mode, so only the curve/axis change — not the title.
+  buildChartHost(host, ctx, populationChartId(ctx, effective), turnRange);
   appendBottomNotes(host, effective);
 }
 

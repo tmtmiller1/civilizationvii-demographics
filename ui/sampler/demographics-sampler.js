@@ -98,6 +98,7 @@ import {
   stampWarMetrics
 } from "/demographics/ui/sampler/sampler-snapshot-helpers.js";
 import { buildMinorSnapshots } from "/demographics/ui/sampler/sampler-minors.js";
+import { attachReligionSnapshot } from "/demographics/ui/sampler/sampler-collectors-religion.js";
 import { buildMajorPlayerSnapshots } from "/demographics/ui/sampler/sampler-players.js";
 import { buildSamplerSnapshot } from "/demographics/ui/sampler/sampler-snapshot-build.js";
 
@@ -376,6 +377,9 @@ function doSample() {
     getCumulativeCasualty
   );
   if (minors) snapshot.minors = minors;
+  // Game-wide per-religion followers (settlements + population), for the Religion
+  // Spread / By-Population line charts; stored apart from `players`.
+  attachReligionSnapshot(snapshot, safeCall);
   // Append the local player's town populations to the rolling trend window
   // (independent of the sample stream; never throws the sample).
   recordAuxHistory(
