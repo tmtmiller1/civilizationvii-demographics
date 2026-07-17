@@ -191,7 +191,7 @@ function scatterDataset(civ, xMetric, yMetric, hidden) {
     label: civ.label, leaderType: civ.key, leaderTypeString: civ.leaderTypeString,
     data: [{ x: civ.values[xMetric], y: civ.values[yMetric] }],
     backgroundColor: color, borderColor: color, pointBorderColor: color,
-    pointRadius: 7, pointHoverRadius: 9, showLine: false,
+    pointRadius: 9, pointHoverRadius: 11, showLine: false,
     hidden: hidden.has(civ.key)
   };
 }
