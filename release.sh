@@ -103,7 +103,7 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='release.sh' --exclude='*.bak' --exclude='node_modules' \
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
-    --exclude='*.d.ts' --exclude='text/data' --exclude='tests' \
+    --exclude='*.d.ts' --exclude='text/data' --exclude='text/README.md' --exclude='tests' \
     --exclude='steam_workshop_id.txt' --exclude='CONTRIBUTING.md' \
     --exclude='coverage' --exclude='.c8rc.json' \
     --exclude='reports' --exclude='.stryker-tmp' --exclude='stryker*.json' \

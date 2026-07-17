@@ -2,7 +2,7 @@
 //
 // Side/mode military graph helpers used by chart-conflicts-graphs.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { t, tCsFallback } from "/demographics/ui/core/demographics-i18n.js";
 
 import {
   buildSeries,
@@ -56,7 +56,7 @@ function pushCsParticipant(out, seen, entry) {
   seen.add(entry.pid);
   out.push({
     pid: entry.pid,
-    name: entry.civ || "CS " + entry.pid,
+    name: entry.civ || tCsFallback(entry.pid),
     color: entry.color || "#8c98b8",
     fromMinors: true
   });

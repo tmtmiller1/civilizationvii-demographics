@@ -26,6 +26,8 @@ try {
     }
     if (!CategoryData[CategoryType.Mods]) {
       CategoryData[CategoryType.Mods] = {
+        // Base-game LOC tags (engine-owned; not in our ModText.xml) — see
+        // BASE_GAME_LOC_KEYS in ui/core/demographics-i18n.js.
         title: "LOC_UI_CONTENT_MGR_SUBTITLE",
         description: "LOC_UI_CONTENT_MGR_SUBTITLE_DESCRIPTION"
       };

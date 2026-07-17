@@ -44,7 +44,7 @@ When a function trips a limit, prefer extracting a small, named helper or a cont
 - **Persistence.** History is stored in the GameConfiguration KV store
   (`Configuration.editGame().setValue` / `getGame().getValue`), seed-stamped and self-resetting on a new game. Settings live in the **shared** `localStorage` `modSettings` key (only ever write the single `demographics` slice; never add a second top-level `localStorage` key as other mods wipe `localStorage` when they
   see more than one).
-- **Localization.** User-facing strings are LOC keys. Add every new key to all 10 locales under `text/<locale>/ModText.xml` (en_us is the base/fallback).
+- **Localization.** User-facing strings are LOC keys resolved via `t()` — never hardcode display English in `.js`. Every new tag must be added to `en_us` **and all 10** locales under `text/<locale>/ModText.xml` to keep tag-parity (a tag missing from a locale renders as the raw `LOC_...` string there); non-English `<Text>` may be an English placeholder pending translation. Metric names resolve from `LOC_DEMOGRAPHICS_METRIC_<ID>`, not the `label` in the metric registry. Some tags are base-game-owned and intentionally absent (`BASE_GAME_LOC_KEYS` in `ui/core/demographics-i18n.js`). Full workflow: [`text/README.md`](text/README.md).
 - **Comments.** Explain *why* (engine quirks, workarounds), not *what*. Avoid internal ticket/process references in shipped code.
 
 ## Project layout

@@ -71,7 +71,7 @@ function buildHoverTipHeader(turn, head) {
   el.className = "demographics-war-graph-hovertip-head";
   if (head && head.blp) el.appendChild(buildCostIcon(head.blp));
   const yLabel = head ? head.yLabel : "";
-  el.appendChild(document.createTextNode("Turn " + turn + (yLabel ? " · " + yLabel : "")));
+  el.appendChild(document.createTextNode(t("LOC_DEMOGRAPHICS_WONDER_TURN", turn) + (yLabel ? " · " + yLabel : "")));
   return el;
 }
 

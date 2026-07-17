@@ -141,6 +141,35 @@ function resolveMetricMeta(metricId) {
 }
 
 /**
+ * Build the single donor line that represents a `global` metric: the longest series'
+ * points under the metric's localized name.
+ * @param {ChartSeries[]} allSeries The series list (non-empty).
+ * @param {*} metricMeta The metric metadata.
+ * @param {string} metricId Metric id.
+ * @returns {ChartSeries} The donor line.
+ */
+function globalDonorLine(allSeries, metricMeta, metricId) {
+  const donor =
+    allSeries.reduce(
+      (best, s) => (s.points.length > best.points.length ? s : best),
+      allSeries[0]
+    ) || allSeries[0];
+  const nameKey = "LOC_DEMOGRAPHICS_METRIC_" + String(metricId).toUpperCase();
+  const localizedName = t(nameKey);
+  return {
+    name: localizedName && localizedName !== nameKey
+      ? localizedName
+      : metricMeta.title || metricMeta.label || metricId,
+    pid: donor?.pid,
+    met: true,
+    leaderType: "GLOBAL_" + metricId,
+    color: "#f3c34c",
+    points: donor ? donor.points.slice() : [],
+    allCivNames: []
+  };
+}
+
+/**
  * For a `global` metric, collapse all series into a single donor line.
  * @param {ChartSeries[]} allSeries The series list.
  * @param {*} metricMeta The metric metadata.
@@ -149,22 +178,7 @@ function resolveMetricMeta(metricId) {
  */
 function collapseGlobalMetric(allSeries, metricMeta, metricId) {
   if (metricMeta && metricMeta.global && allSeries.length > 1) {
-    const donor =
-      allSeries.reduce(
-        (best, s) => (s.points.length > best.points.length ? s : best),
-        allSeries[0]
-      ) || allSeries[0];
-    return [
-      {
-        name: metricMeta.title || metricMeta.label || metricId,
-        pid: donor?.pid,
-        met: true,
-        leaderType: "GLOBAL_" + metricId,
-        color: "#f3c34c",
-        points: donor ? donor.points.slice() : [],
-        allCivNames: []
-      }
-    ];
+    return [globalDonorLine(allSeries, metricMeta, metricId)];
   }
   return allSeries;
 }

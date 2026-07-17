@@ -225,7 +225,7 @@ export function collectAgeMarkers(history, ageOffsets) {
     if (typeof baseOffset !== "number") continue;
     ageMarkers.push({
       turn: baseOffset + 1,
-      label: AGE_NAMES[b.age] || b.age.replace(/^AGE_/, "") + " Begins",
+      label: AGE_NAMES[b.age] || t("LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS", b.age.replace(/^AGE_/, "")),
       color: "#b78cff" // soft purple
     });
   }
@@ -559,7 +559,7 @@ function collectWarOnsetMarkers(history, yearToChart, out) {
     if (!w) continue;
     const x = resolveEventX(w.startChartTurn, w.startYear, w.startTurn, yearToChart);
     if (x === null) continue;
-    out.push({ turn: x, label: w.name || "War", year: w.startYear || "", color: REFUGEE_WAR_COLOR });
+    out.push({ turn: x, label: w.name || t("LOC_DEMOGRAPHICS_MARKER_WAR"), year: w.startYear || "", color: REFUGEE_WAR_COLOR });
   }
 }
 
@@ -583,7 +583,7 @@ function collectDisasterMarkers(yearToChart, out) {
     if (x === null) continue;
     out.push({
       turn: x,
-      label: d.name || "Disaster",
+      label: d.name || t("LOC_DEMOGRAPHICS_MARKER_DISASTER"),
       year: d.year || "",
       color: REFUGEE_DISASTER_COLOR
     });
