@@ -119,7 +119,7 @@ const EXTRA_WIDE_Y_LEGEND = new Set([
  * Destroy any prior Chart instance cached on the host before re-mounting.
  * @param {HTMLElement|*} host The chart host element.
  */
-function teardownExistingChart(host) {
+export function teardownExistingChart(host) {
   if (!host) return;
   const cur = host._demographicsChart;
   if (cur && typeof cur.destroy === "function") {
@@ -143,7 +143,7 @@ let _engineDefaultsApplied = false;
  * Apply the engine's `fxs-hof-chart` Chart.defaults (font, color) once, so our
  * charts match the in-game graphs even if hof-chart hasn't loaded yet.
  */
-function applyEngineChartDefaults() {
+export function applyEngineChartDefaults() {
   if (_engineDefaultsApplied) return;
   if (typeof Chart === "undefined") return;
   try {
@@ -205,7 +205,7 @@ function clampRenderByHint(render, hint) {
  * @param {number} H Caller height floor.
  * @returns {{ renderW: number, renderH: number }} The render dimensions.
  */
-function computeRenderSize(opts, W, H) {
+export function computeRenderSize(opts, W, H) {
   let renderW, renderH;
   try {
     const { vw, vh } = viewportSize(W, H);
@@ -294,7 +294,7 @@ function appendChartEmptyMessage(host, locKey) {
  * @param {*} host The chart host.
  * @returns {*|null} Chart instance, or null on failure.
  */
-function tryCreateChart(canvas, config, host) {
+export function tryCreateChart(canvas, config, host) {
   try {
     const ctx2d = canvas.getContext("2d");
     const chart = new Chart(ctx2d, config);
@@ -694,7 +694,7 @@ function buildLegendForMetric(datasets, opts, metricId) {
  * @param {HTMLElement|null} [legendEl] The custom HTML legend, or null.
  * @returns {{ wrap: HTMLElement, canvas: HTMLElement }} The wrap and canvas.
  */
-function buildChartCanvas(renderW, renderH, legendEl) {
+export function buildChartCanvas(renderW, renderH, legendEl) {
   const wrap = document.createElement("div");
   wrap.className = "demographics-chartjs-wrap demographics-line-chartjs-wrap";
   // Render dimensions are dynamic (computed per viewport) - keep inline.

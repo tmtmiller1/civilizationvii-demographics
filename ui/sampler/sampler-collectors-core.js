@@ -8,10 +8,13 @@ import {
   getLocalPlayerID,
   getPlayer
 } from "/demographics/ui/sampler/demographics-sampler.js";
+import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
   collectCities,
+  collectConquered,
   collectContinent,
   collectGold,
+  collectGreatWorks,
   collectOngoingDeals,
   collectSettlementCap,
   collectTechAndCivicCounts,
@@ -33,6 +36,7 @@ import {
   collectResourceCategories,
   collectVictoryPoints
 } from "/demographics/ui/sampler/sampler-collectors-civics.js";
+import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collectors-summary.js";
 
 /**
  * The per-civ context object assembled by {@link buildPlayerCtx}. Engine-
@@ -74,6 +78,17 @@ import {
  * @property {number} [tradeRoutesCount] Player-wide trade-route count.
  * @property {number} [ongoingDealsCount] Ongoing diplomatic action count.
  * @property {number} [wondersCount] Completed wonder count.
+ * @property {number} [greatWorks] Slotted great-works count.
+ * @property {number} [conqueredCum] Cumulative settlements taken by force.
+ * @property {number} [tourism] Tourism total (Game.Summary, city-scope sum).
+ * @property {number} [greatPeople] Great people earned (Game.Summary, cumulative).
+ * @property {number} [unitsKilled] Enemy units killed (Game.Summary, cumulative).
+ * @property {number} [unitsLost] Own units lost (Game.Summary, cumulative).
+ * @property {number} [faith] Faith total (Game.Summary, player-scope level).
+ * @property {number} [combats] Combats fought (Game.Summary, cumulative).
+ * @property {number} [warsDeclared] Wars declared (Game.Summary, cumulative).
+ * @property {number} [warsReceived] Wars received (Game.Summary, cumulative).
+ * @property {number} [naturalWonders] Natural wonders found (Game.Summary, cumulative).
  * @property {string[]} [wonderTypes] ConstructibleType strings of wonders.
  * @property {number} [militaryPower] Summed military unit strength.
  * @property {number} [settlementCap] Settlement cap.
@@ -374,7 +389,7 @@ function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
     "LeaderType",
     rawLeader,
     "LEADER_",
-    "Player " + id
+    tPlayerFallback(id)
   );
 
   const civRow = lookupInfoRow(
@@ -529,6 +544,8 @@ function collectEconomy(ctx, id, p, stats) {
   collectWonderCount(ctx, id, stats, cityList);
   collectWonderTypes(ctx, id, p);
   collectSettlementCap(ctx, stats);
+  collectGreatWorks(ctx, id, stats);
+  collectConquered(ctx, id, stats);
 }
 
 /**
@@ -544,6 +561,7 @@ function collectPowerAndCivics(ctx, id, p) {
   collectVictoryPoints(ctx, p);
   collectDiplomaticApproval(ctx, id, p);
   collectResourceCategories(ctx, id, p);
+  collectSummaryMetrics(ctx, id);
 }
 
 /**

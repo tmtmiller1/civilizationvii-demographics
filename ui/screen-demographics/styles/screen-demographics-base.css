@@ -731,6 +731,19 @@
     width: 100%;
 }
 
+/* Host for a custom render page (renderCustomPageBody: the Relations page + external hub pages such
+   as Emigration's). Fill the view-host's column rather than sizing to content, so a page that wants
+   to size itself against the space available can actually measure it.
+   Without this the box was content-sized, so a page measuring its own container measured its own
+   content — a circular read that reported the space it already occupied and never the space left
+   over (verified 2026-07-17: Emigration's diagram read a 915px "budget" while sitting in 900px, and
+   so could never grow into the ~297px below it).
+   Content still flows from the top, so a page that doesn't opt in is unaffected. */
+.demographics-history-render-page {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
 /* Page tab row (Economy / Power / Knowledge & Influence) under History */
 .demographics-page-tab-host {
     margin-top: 0.3rem;

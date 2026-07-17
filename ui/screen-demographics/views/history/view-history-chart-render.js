@@ -218,7 +218,9 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size) {
       width,
       height,
       ageSource: ctx.activeRadarAge || "current",
-      onToggleCiv: (/** @type {string} */ leaderKey) => ctx.toggleCiv?.(leaderKey)
+      onToggleCiv: (/** @type {string} */ leaderKey) => ctx.toggleCiv?.(leaderKey),
+      onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) =>
+        ctx.setAllCivsHidden?.(h, keys)
     });
     return true;
   }
@@ -235,8 +237,158 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size) {
     });
     return true;
   }
+  if (tryRenderTrend(chartHost, ctx, activeMetric, size)) return true;
   if (tryRenderCrisis(chartHost, ctx, activeMetric)) return true;
+  if (tryRenderBoards(chartHost, ctx, activeMetric, size)) return true;
   return tryRenderWars(chartHost, ctx, activeMetric, turnRange, size);
+}
+
+/**
+ * by-type synthetic ids → their Game.Summary datapoint + GameInfo lookup table.
+ * @type {Record<string, {datapointId:string, lookup:string}>}
+ */
+const BYTYPE_SPECS = {
+  units_trained_type: { datapointId: "UnitsTrainedByType", lookup: "Units" },
+  units_killed_type: { datapointId: "UnitsKilledByType", lookup: "Units" },
+  units_lost_type: { datapointId: "UnitsLostByType", lookup: "Units" }
+};
+
+/**
+ * Per-settlement, per-civ boards: synthetic id → the settlement count field.
+ * Districts / Buildings broken down by settlement, grouped by leader/civilization.
+ * @type {Record<string, {field:string, typesField?:string, empty:string}>}
+ */
+const SETTLEMENT_BOARDS = {
+  buildings_type: { field: "buildings", typesField: "buildingTypes", empty: "LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" }
+};
+
+/**
+ * Synthetic board id → renderer invocation. Renderers are statically exported
+ * (always present), so no per-id `typeof` guard is needed here.
+ * @type {Record<string, (cm:*, host:HTMLElement, ctx:*) => void>}
+ */
+const BOARD_RENDERERS = {
+  wonders_board: (cm, h, ctx) => cm.renderWondersBoard(h, { history: ctx.history }),
+  wonder_races: (cm, h, ctx) => cm.renderWonderRaces(h, { history: ctx.history }),
+  religion_pantheons: (cm, h, ctx) => cm.renderReligionPantheons(h, { history: ctx.history }),
+  religion_pantheon_yields: (cm, h, ctx) => cm.renderReligionPantheonYields(h, { history: ctx.history }),
+  religion_standings: (cm, h) => cm.renderReligionStandings(h, {}),
+  religion_spread: (cm, h, ctx) => cm.renderReligionSpread(h, { history: ctx.history }),
+  religion_by_pop: (cm, h, ctx) => cm.renderReligionByPop(h, { history: ctx.history }),
+  settlements_atlas: (cm, h) => cm.renderSettlementsAtlas(h, {})
+};
+
+/**
+ * Two-axis "Fingerprint" scatters: synthetic id → the metric pair + axis titles.
+ * Each renders every civ as a dot so the cloud shape reveals strategic archetypes.
+ * @type {Record<string, {xMetric:string, yMetric:string, xTitle:string, yTitle:string}>}
+ */
+const SCATTER_SPECS = {
+  civ_scatter: {
+    xMetric: "science_yield", yMetric: "milpower",
+    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT", yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER"
+  },
+  scatter_wealth_culture: {
+    xMetric: "gpt", yMetric: "culture_yield",
+    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT", yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT"
+  },
+  scatter_soft_power: {
+    xMetric: "influence", yMetric: "hpt",
+    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT", yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT"
+  }
+};
+
+/**
+ * Trend/compare charts that share the line-chart legend + civ filter: id → the
+ * chartMod renderer name. Rendered via the synthetic path so they receive the
+ * canvas size and the hidden-civ toggle callbacks.
+ * @type {Record<string, string>}
+ */
+const FILTERABLE_TRENDS = {
+  power_race: "renderPowerRace",
+  pop_share_area: "renderPopShareArea",
+  land_share_area: "renderLandShareArea",
+  power_radar: "renderPowerRadar"
+};
+
+/**
+ * Attempt a filterable trend/compare chart (Power Race, Population Share, Power
+ * Fingerprint): a Chart.js / SVG render wired to the shared civ-filter legend.
+ * @param {HTMLElement} chartHost Chart host element.
+ * @param {*} ctx Render context.
+ * @param {string} activeMetric Active metric id.
+ * @param {{ width: number, height: number }} size Chart size.
+ * @returns {boolean} True if handled.
+ */
+function tryRenderTrend(chartHost, ctx, activeMetric, size) {
+  const fnName = FILTERABLE_TRENDS[activeMetric];
+  const cm = /** @type {*} */ (ctx.chartMod);
+  if (!fnName || typeof cm[fnName] !== "function") return false;
+  cm[fnName](chartHost, {
+    history: ctx.history,
+    width: size.width,
+    height: size.height,
+    hiddenCivs: ctx.hiddenCivs,
+    onToggleCiv: (/** @type {string} */ k) => ctx.toggleCiv?.(k),
+    onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) => ctx.setAllCivsHidden?.(h, keys)
+  });
+  return true;
+}
+
+/**
+ * Attempt plain-DOM / SVG board synthetic rendering (Wonders, by-type, Religion,
+ * Atlas), plus the Chart.js civ scatters (which need the canvas size).
+ * @param {HTMLElement} chartHost Chart host element.
+ * @param {*} ctx Render context.
+ * @param {string} activeMetric Active metric id.
+ * @param {{ width: number, height: number }} [size] Chart size (for the scatters).
+ * @returns {boolean} True if handled.
+ */
+function tryRenderBoards(chartHost, ctx, activeMetric, size) {
+  const cm = /** @type {*} */ (ctx.chartMod);
+  const fn = BOARD_RENDERERS[activeMetric];
+  if (fn) {
+    fn(cm, chartHost, ctx);
+    return true;
+  }
+  const scatter = SCATTER_SPECS[activeMetric];
+  if (scatter && typeof cm.renderCivScatter === "function") {
+    cm.renderCivScatter(chartHost, {
+      history: ctx.history, ...scatter,
+      width: size?.width,
+      height: size?.height,
+      hiddenCivs: ctx.hiddenCivs,
+      onToggleCiv: (/** @type {string} */ k) => ctx.toggleCiv?.(k),
+      onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) => ctx.setAllCivsHidden?.(h, keys)
+    });
+    return true;
+  }
+  return tryConstructibleBoards(cm, chartHost, ctx, activeMetric);
+}
+
+/**
+ * Attempt the constructible-based boards: Quarters (districts_type), the per-settlement
+ * Buildings board, and the Game.Summary by-type breakdowns.
+ * @param {*} cm The chart module. @param {HTMLElement} chartHost The host.
+ * @param {*} ctx Render context. @param {string} activeMetric Active metric id.
+ * @returns {boolean} True if handled.
+ */
+function tryConstructibleBoards(cm, chartHost, ctx, activeMetric) {
+  if (activeMetric === "districts_type" && typeof cm.renderQuartersBoard === "function") {
+    cm.renderQuartersBoard(chartHost, {});
+    return true;
+  }
+  const settle = SETTLEMENT_BOARDS[activeMetric];
+  if (settle && typeof cm.renderConstructiblesBoard === "function") {
+    cm.renderConstructiblesBoard(chartHost, settle);
+    return true;
+  }
+  const spec = BYTYPE_SPECS[activeMetric];
+  if (spec && typeof cm.renderByTypeBoard === "function") {
+    cm.renderByTypeBoard(chartHost, { history: ctx.history, ...spec });
+    return true;
+  }
+  return false;
 }
 
 /**

@@ -19,6 +19,7 @@
 //   UI.Player.getPrimaryColorValueAsString(pid)      - owner banner colors
 //   GameInfo.Leaders/Civilizations.lookup(rawType)   - owner display identity
 
+import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { scaleCityPopulationAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 import {
   getFounded,
@@ -62,6 +63,12 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
  * @property {Array<{type: string, icon: string, nameKey: string,
  *   location: {x: number, y: number}|null}>} [wonders]
  *   Completed wonders (confirmed).
+ * @property {number} [districts] Count of DISTRICT-class constructibles in the settlement.
+ * @property {number} [buildings] Count of BUILDING-class constructibles in the settlement.
+ * @property {string[]} [buildingTypes] Localized names of the settlement's buildings (drill-down).
+ * @property {{type:string, name:string, percent:number|null, turnsLeft:number|null}|null}
+ *   [wonderInProgress] The wonder this settlement is currently building, with progress.
+ * @property {*} [_city] The live city handle (for on-demand quarter reads); not persisted.
  * @property {{turn: number, year: string, exact: boolean}|null} [founded]
  *   Founding (exact via event, else approx).
  * @property {{popGrowthPerTurn: number, dir: number, samples: number}|null}
@@ -131,13 +138,14 @@ function yieldEnum(key) {
  * Localize a tag/string via Locale.compose, returning the input unchanged when
  * Locale is unavailable or throws.
  * @param {*} tag The tag or plain string.
+ * @param {...*} args Optional `{N_Param}` substitution arguments.
  * @returns {string} The composed string ("" for falsy input).
  */
-function compose(tag) {
+function compose(tag, ...args) {
   if (!tag) return "";
   try {
     if (typeof Locale !== "undefined" && typeof Locale.compose === "function") {
-      return Locale.compose(tag);
+      return Locale.compose(tag, ...args);
     }
   } catch (_) {
     // Locale.compose can throw on a malformed tag; fall back to the raw tag.
@@ -238,7 +246,7 @@ function resolveOwner(pid, handle) {
   // present them as "City-State" instead (project-wide terminology).
   return {
     pid,
-    leaderName: major ? compose(leaderRow?.Name) || "Player " + pid : compose("LOC_DEMOGRAPHICS_CITY_STATE"),
+    leaderName: major ? compose(leaderRow?.Name) || tPlayerFallback(pid) : compose("LOC_DEMOGRAPHICS_CITY_STATE"),
     civName: major ? compose(civRow?.Name) || undefined : undefined,
     leaderType: canonicalLeaderType(leaderRow, rawLeader),
     primary,
@@ -456,9 +464,11 @@ function settlementKey(pid, city, idx) {
  */
 function buildSettlement(city, pid, owner, idx) {
   if (!city) return null;
+  // "LOC_CITY_NAME_UNSET" is a base-game LOC tag (see BASE_GAME_LOC_KEYS in demographics-i18n.js).
   const name = compose(city.name) || compose("LOC_CITY_NAME_UNSET") || "—";
   const locId = plotKey(city);
   const population = readPopulation(city);
+  const buildingNames = readConstructibleNames(city, "BUILDING");
   return {
     id: settlementKey(pid, city, idx),
     locId,
@@ -480,6 +490,11 @@ function buildSettlement(city, pid, owner, idx) {
     owner,
     outputs: readOutputs(city),
     wonders: readWonderList(city),
+    districts: countConstructibleClass(city, "DISTRICT"),
+    buildings: buildingNames.length,
+    buildingTypes: buildingNames,
+    wonderInProgress: readWonderInProgress(city),
+    _city: city,
     founded: getFounded(locId),
     trend: getCityTrend(locId),
     composite: 0,
@@ -653,6 +668,78 @@ function readWonderList(city) {
     if (w) out.push(w);
   }
   return out;
+}
+
+/**
+ * A settlement's placed constructible component ids of a class ([] when unreadable).
+ * @param {*} city The city handle. @param {string} className The class.
+ * @returns {*[]} The component ids.
+ */
+function constructibleIds(city, className) {
+  const con = city?.Constructibles;
+  return safeBool(() => typeof con?.getIdsOfClass === "function")
+    ? safeArr(() => con.getIdsOfClass(className)) : [];
+}
+
+/**
+ * Count a settlement's constructibles of a class (DISTRICT / BUILDING / WONDER).
+ * @param {*} city The city handle. @param {string} className The class.
+ * @returns {number} The count.
+ */
+function countConstructibleClass(city, className) {
+  return constructibleIds(city, className).length;
+}
+
+/**
+ * Read a settlement's constructibles of a class as localized display names (for
+ * the drill-down; one entry per placed constructible, duplicates kept).
+ * @param {*} city The city handle.
+ * @param {string} className The constructible class ("BUILDING" | "DISTRICT").
+ * @returns {string[]} The localized names.
+ */
+function readConstructibleNames(city, className) {
+  const out = [];
+  for (const cid of constructibleIds(city, className)) {
+    const c = constructibleById(cid);
+    const info = c && constructibleInfo(c.type);
+    if (!info) continue;
+    const name = (info.Name && compose(info.Name)) || info.ConstructibleType;
+    if (typeof name === "string" && name) out.push(name);
+  }
+  return out;
+}
+
+/**
+ * The wonder a settlement is CURRENTLY building (from its BuildQueue), with
+ * progress, or null. Reads `city.BuildQueue.currentProductionTypeHash` and
+ * `getPercentComplete` / `currentTurnsLeft` (base-game production API).
+ * @param {*} city The city handle.
+ * @returns {{type:string, name:string, percent:number|null, turnsLeft:number|null}|null}
+ */
+function readWonderInProgress(city) {
+  try {
+    const bq = city && city.BuildQueue;
+    if (!bq || bq.isEmpty) return null;
+    const hash = bq.currentProductionTypeHash;
+    const info = constructibleInfo(hash);
+    if (!info || info.ConstructibleClass !== "WONDER") return null;
+    const name = (info.Name && compose(info.Name)) || info.ConstructibleType;
+    return { type: info.ConstructibleType, name, percent: pctVal(bq, hash), turnsLeft: turnsVal(bq) };
+  } catch (_) {
+    return null;
+  }
+}
+
+/** @param {*} bq @param {*} hash @returns {number|null} Percent complete (0-100), clamped. */
+function pctVal(bq, hash) {
+  const pct = Number(bq.getPercentComplete(hash));
+  return isFinite(pct) ? Math.max(0, Math.min(100, Math.round(pct))) : null;
+}
+
+/** @param {*} bq @returns {number|null} Turns left, or null. */
+function turnsVal(bq) {
+  const t = Number(bq.currentTurnsLeft);
+  return isFinite(t) && t >= 0 ? t : null;
 }
 
 /**

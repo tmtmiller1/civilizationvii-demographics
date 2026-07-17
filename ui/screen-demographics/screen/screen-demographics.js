@@ -144,7 +144,7 @@ class ScreenDemographics extends Panel {
   /** @type {string} The active history metric id. */
   activeMetric = "score";
   /** @type {string} The active worldrankings-allcivs/history page id. */
-  activePage = "economy";
+  activePage = "yields";
   /** @type {string} The active time-window filter id. */
   activeTimeFilter = "all";
   /** @type {string} The active radar-chart age selection. */
@@ -342,14 +342,16 @@ class ScreenDemographics extends Panel {
    * per-metric map.
    */
   _restoreState() {
-    // Always OPEN to Global Statistics → Economy → Score, regardless of the last
+    // Always OPEN to Global Statistics → Yields Per Turn, regardless of the last
     // session's location. (Within a session the user's navigation still persists
     // and updates these settings; we just ignore the stored values on each open.)
+    // activeMetric "score" isn't on the Yields page, so it coerces to that page's
+    // first metric (Food/turn) via resolveActiveMetricState.
     // EXCEPTION: a one-shot return-view override (e.g. the Top-Cities cinematic
     // teardown asking to land back on World Rankings) is honored once, then cleared.
     this.activeView = "statistics";
     this.activeMetric = "score";
-    this.activePage = "economy";
+    this.activePage = "yields";
     const pendingView = this._takePendingReturnView();
     if (pendingView) this.activeView = pendingView;
     setNameOrder(this.settings.getSetting("nameOrder", "civLeader"));
@@ -515,23 +517,24 @@ class ScreenDemographics extends Panel {
     // hide the tab entirely when Emigration isn't active, and when it IS, label it "Emigration"
     // so the player can tell the companion mod loaded.
     const hasEmigration = migrationHubHasCompanion();
-    // Companion mods can also contribute a top-level view tab (a legacy `topLevel` registerPanel,
-    // e.g. an un-updated Emigration). Insert those right after Migration so they read as
-    // migration-adjacent, in registration order.
+    // Companion mods can also contribute a top-level view tab (e.g. the Historical Timeline, or a
+    // legacy `topLevel` registerPanel such as an un-updated Emigration). Insert those right after
+    // Geopolitics so Geopolitics reads before them, in registration order.
     const ext = this._topLevelPanelTabs();
+    const hasGeopolitics = base.some((v) => v.id === "geopolitics");
     /** @type {ViewTab[]} */
     const visibleTabs = [];
     for (const v of base) {
       if (v.id === "migration") {
         if (!hasEmigration) continue;
         visibleTabs.push({ id: v.id, label: "LOC_DEMOGRAPHICS_TAB_EMIGRATION" });
-        visibleTabs.push(...ext);
         continue;
       }
       visibleTabs.push(v);
+      if (v.id === "geopolitics") visibleTabs.push(...ext);
     }
-    // Legacy safety: a top-level companion tab with the Migration hub hidden — still surface it.
-    if (!hasEmigration && ext.length) visibleTabs.push(...ext);
+    // Safety: Geopolitics hidden (e.g. Basic tier) but companion tabs exist — still surface them.
+    if (!hasGeopolitics && ext.length) visibleTabs.push(...ext);
     if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "statistics";
     return visibleTabs;
   }

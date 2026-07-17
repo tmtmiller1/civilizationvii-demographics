@@ -1601,12 +1601,129 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="it_IT"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="it_IT"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="it_IT"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="it_IT"><Text>Great Works</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="it_IT"><Text>Great works currently slotted across your buildings and wonders.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="it_IT"><Text>Cities</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="it_IT"><Text>Promoted settlements (cities), as opposed to towns.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="it_IT"><Text>Towns</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="it_IT"><Text>Un-promoted settlements (towns).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="it_IT"><Text>Cap Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="it_IT"><Text>The maximum number of settlements you can hold before over-cap penalties.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="it_IT"><Text>Settlements Conquered</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="it_IT"><Text>Cumulative settlements this civ has taken by force.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="it_IT"><Text>Conquest %</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="it_IT"><Text>Share of a civ's settlements that were taken by force.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="it_IT"><Text>Tourism</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="it_IT"><Text>Tourism total (Culture Victory Points); accrues from wonders, unique improvements, suzerained city-states and celebrations.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="it_IT"><Text>Great People</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="it_IT"><Text>Cumulative Great People this civ has earned.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="it_IT"><Text>Units Killed</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="it_IT"><Text>Cumulative enemy units this civ has killed in combat.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="it_IT"><Text>Units Lost</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="it_IT"><Text>Cumulative units this civ has lost in combat.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="it_IT"><Text>Civ → Leader</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="it_IT"><Text>Leader → Civ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="it_IT"><Text>Wonders Board</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="it_IT"><Text>Wonders Built — by Civilization</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="it_IT"><Text>Units Trained</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="it_IT"><Text>Units Trained — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="it_IT"><Text>Kills by Unit</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="it_IT"><Text>Enemy Units Killed — by Your Unit Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="it_IT"><Text>Losses by Unit</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="it_IT"><Text>Units Lost — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="it_IT"><Text>Buildings</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="it_IT"><Text>Buildings Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="it_IT"><Text>Quarters</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="it_IT"><Text>Districts Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_STANDINGS" Language="it_IT"><Text>Religione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE" Language="it_IT"><Text>Classifica delle religioni — Insediamenti aderenti</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="it_IT"><Text>Construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION" Language="it_IT"><Text>Religione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="it_IT"><Text>Settlement Sizes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="it_IT"><Text>Settlement Size Distribution</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD" Language="it_IT"><Text>Diffusione religiosa</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE" Language="it_IT"><Text>Diffusione religiosa — Insediamenti aderenti nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_BY_POP" Language="it_IT"><Text>Religione per popolazione</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_BY_POP_TITLE" Language="it_IT"><Text>Religione per popolazione — Fedeli nel tempo</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="it_IT"><Text>Wonder Races</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="it_IT"><Text>Wonder Races — First to Build Each Wonder</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="it_IT"><Text>Power Race</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="it_IT"><Text>Power Race — Rank by Score Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="it_IT"><Text>Population Share</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="it_IT"><Text>Population Share of the World Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="it_IT"><Text>Land Area Share</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="it_IT"><Text>Land Area Share of the World Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="it_IT"><Text>Fingerprint</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="it_IT"><Text>Civilization Fingerprint — Science vs Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="it_IT"><Text>Archetype</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="it_IT"><Text>Power Archetype — Every Civilization Compared</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="it_IT"><Text>Faith</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="it_IT"><Text>Total Faith accumulated by this civilization.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="it_IT"><Text>Battles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="it_IT"><Text>Number of battles this civilization has fought.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="it_IT"><Text>Wars Declared</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="it_IT"><Text>Wars this civilization has declared on others.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="it_IT"><Text>Wars Received</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="it_IT"><Text>Wars others have declared on this civilization.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="it_IT"><Text>Natural Wonders</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="it_IT"><Text>Natural wonders this civilization has discovered.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="it_IT"><Text>Rank</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="it_IT"><Text>Share of World</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="it_IT"><Text>Population Share</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="it_IT"><Text>Yields Per Turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="it_IT"><Text>Land &amp; Settlements</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="it_IT"><Text>Economy &amp; Resources</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="it_IT"><Text>Wealth &amp; Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="it_IT"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="it_IT"><Text>Soft Power</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="it_IT"><Text>Soft Power — Influence vs Happiness</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="it_IT"><Text>No wonders built yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="it_IT"><Text>No wonders built or under construction yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="it_IT"><Text>No data recorded for this breakdown yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_RELIGION" Language="it_IT"><Text>Nessuna religione si è ancora diffusa.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="it_IT"><Text>No settlements to chart.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="it_IT"><Text>No settlements yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="it_IT"><Text>No buildings built yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="it_IT"><Text>No comparable data recorded yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="it_IT"><Text>Under Construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="it_IT"><Text>Completed</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="it_IT"><Text>Settlement Sizes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="it_IT"><Text>Most Urbanized</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT" Language="it_IT"><Text>{1_Turns}t</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="it_IT"><Text>{1_Count} pop</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="it_IT"><Text>{1_Pct}% urban</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK" Language="it_IT"><Text>Religione {1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="it_IT"><Text>Player</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="it_IT"><Text>Science</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="it_IT"><Text>Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="it_IT"><Text>Economy</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="it_IT"><Text>Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="it_IT"><Text>People</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="it_IT"><Text>Land</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="it_IT"><Text>Science / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="it_IT"><Text>Military Power →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="it_IT"><Text>Gold / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="it_IT"><Text>Culture / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="it_IT"><Text>Influence / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="it_IT"><Text>Happiness / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="it_IT"><Text>No quarters built yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="it_IT"><Text>Quarter</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="it_IT"><Text>Developing</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="it_IT"><Text>{1_Name} — needs {2_Partner}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="it_IT"><Text>Unique: {1_Note}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="it_IT"><Text>Adjacency (est.): {1_Yields}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="it_IT"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEON_YIELDS" Language="it_IT"><Text>Rendite</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_TITLE" Language="it_IT"><Text>Rendite del pantheon — Bonus stimati per civiltà</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE" Language="it_IT"><Text>Bonus di rendita fissi stimati dai pantheon scelti da ciascuna civiltà. Gli effetti percentuali e condizionali (per popolazione, per risorsa, …) non sono conteggiati.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS" Language="it_IT"><Text>Nessun bonus di rendita fisso del pantheon da stimare per ora.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL" Language="it_IT"><Text>+ effetti condizionali non conteggiati</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="it_IT"><Text>War</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="it_IT"><Text>Disaster</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="it_IT"><Text>{1_Age} Begins</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="it_IT"><Text>Unknown</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="it_IT"><Text>Non è ancora stato fondato alcun pantheon.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="it_IT"><Text>Credenze</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="it_IT"><Text>Pantheon — Credenze scelte e i loro effetti</Text></Replace>
     </LocalizedText>
 </Database>

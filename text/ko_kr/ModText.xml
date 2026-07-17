@@ -1601,12 +1601,129 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ko_KR"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ko_KR"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="ko_KR"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="ko_KR"><Text>Great Works</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="ko_KR"><Text>Great works currently slotted across your buildings and wonders.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="ko_KR"><Text>Cities</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="ko_KR"><Text>Promoted settlements (cities), as opposed to towns.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="ko_KR"><Text>Towns</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="ko_KR"><Text>Un-promoted settlements (towns).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="ko_KR"><Text>Cap Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="ko_KR"><Text>The maximum number of settlements you can hold before over-cap penalties.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="ko_KR"><Text>Settlements Conquered</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="ko_KR"><Text>Cumulative settlements this civ has taken by force.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="ko_KR"><Text>Conquest %</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="ko_KR"><Text>Share of a civ's settlements that were taken by force.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="ko_KR"><Text>Tourism</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="ko_KR"><Text>Tourism total (Culture Victory Points); accrues from wonders, unique improvements, suzerained city-states and celebrations.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="ko_KR"><Text>Great People</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="ko_KR"><Text>Cumulative Great People this civ has earned.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="ko_KR"><Text>Units Killed</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="ko_KR"><Text>Cumulative enemy units this civ has killed in combat.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="ko_KR"><Text>Units Lost</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="ko_KR"><Text>Cumulative units this civ has lost in combat.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="ko_KR"><Text>Civ → Leader</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="ko_KR"><Text>Leader → Civ</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="ko_KR"><Text>Wonders Board</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="ko_KR"><Text>Wonders Built — by Civilization</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="ko_KR"><Text>Units Trained</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="ko_KR"><Text>Units Trained — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="ko_KR"><Text>Kills by Unit</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="ko_KR"><Text>Enemy Units Killed — by Your Unit Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="ko_KR"><Text>Losses by Unit</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="ko_KR"><Text>Units Lost — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="ko_KR"><Text>Buildings</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="ko_KR"><Text>Buildings Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="ko_KR"><Text>Quarters</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="ko_KR"><Text>Districts Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_STANDINGS" Language="ko_KR"><Text>종교</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE" Language="ko_KR"><Text>종교 순위 — 신봉하는 정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="ko_KR"><Text>Construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION" Language="ko_KR"><Text>종교</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="ko_KR"><Text>Settlement Sizes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="ko_KR"><Text>Settlement Size Distribution</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD" Language="ko_KR"><Text>종교 전파</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE" Language="ko_KR"><Text>종교 전파 — 시간에 따른 신봉 정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_BY_POP" Language="ko_KR"><Text>인구별 종교</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_BY_POP_TITLE" Language="ko_KR"><Text>인구별 종교 — 시간에 따른 신자 수</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="ko_KR"><Text>Wonder Races</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="ko_KR"><Text>Wonder Races — First to Build Each Wonder</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="ko_KR"><Text>Power Race</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="ko_KR"><Text>Power Race — Rank by Score Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="ko_KR"><Text>Population Share</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="ko_KR"><Text>Population Share of the World Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="ko_KR"><Text>Land Area Share</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="ko_KR"><Text>Land Area Share of the World Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="ko_KR"><Text>Fingerprint</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="ko_KR"><Text>Civilization Fingerprint — Science vs Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="ko_KR"><Text>Archetype</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="ko_KR"><Text>Power Archetype — Every Civilization Compared</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="ko_KR"><Text>Faith</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="ko_KR"><Text>Total Faith accumulated by this civilization.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="ko_KR"><Text>Battles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="ko_KR"><Text>Number of battles this civilization has fought.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="ko_KR"><Text>Wars Declared</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="ko_KR"><Text>Wars this civilization has declared on others.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="ko_KR"><Text>Wars Received</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="ko_KR"><Text>Wars others have declared on this civilization.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="ko_KR"><Text>Natural Wonders</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="ko_KR"><Text>Natural wonders this civilization has discovered.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="ko_KR"><Text>Rank</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="ko_KR"><Text>Share of World</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="ko_KR"><Text>Population Share</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="ko_KR"><Text>Yields Per Turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="ko_KR"><Text>Land &amp; Settlements</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="ko_KR"><Text>Economy &amp; Resources</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="ko_KR"><Text>Wealth &amp; Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="ko_KR"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="ko_KR"><Text>Soft Power</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="ko_KR"><Text>Soft Power — Influence vs Happiness</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="ko_KR"><Text>No wonders built yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="ko_KR"><Text>No wonders built or under construction yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="ko_KR"><Text>No data recorded for this breakdown yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_RELIGION" Language="ko_KR"><Text>아직 전파된 종교가 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="ko_KR"><Text>No settlements to chart.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="ko_KR"><Text>No settlements yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="ko_KR"><Text>No buildings built yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="ko_KR"><Text>No comparable data recorded yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="ko_KR"><Text>Under Construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="ko_KR"><Text>Completed</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="ko_KR"><Text>Settlement Sizes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="ko_KR"><Text>Most Urbanized</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT" Language="ko_KR"><Text>{1_Turns}t</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="ko_KR"><Text>{1_Count} pop</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="ko_KR"><Text>{1_Pct}% urban</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK" Language="ko_KR"><Text>종교 {1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="ko_KR"><Text>Player</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="ko_KR"><Text>Science</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="ko_KR"><Text>Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="ko_KR"><Text>Economy</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="ko_KR"><Text>Culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="ko_KR"><Text>People</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="ko_KR"><Text>Land</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="ko_KR"><Text>Science / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="ko_KR"><Text>Military Power →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="ko_KR"><Text>Gold / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="ko_KR"><Text>Culture / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="ko_KR"><Text>Influence / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="ko_KR"><Text>Happiness / turn →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="ko_KR"><Text>No quarters built yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="ko_KR"><Text>Quarter</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="ko_KR"><Text>Developing</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="ko_KR"><Text>{1_Name} — needs {2_Partner}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="ko_KR"><Text>Unique: {1_Note}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="ko_KR"><Text>Adjacency (est.): {1_Yields}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="ko_KR"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEON_YIELDS" Language="ko_KR"><Text>산출량</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_TITLE" Language="ko_KR"><Text>판테온 산출량 — 문명별 예상 보너스</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE" Language="ko_KR"><Text>각 문명이 선택한 판테온의 예상 고정 산출 보너스입니다. 백분율 및 조건부(인구당, 자원당, …) 효과는 집계되지 않습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS" Language="ko_KR"><Text>아직 추정할 고정 판테온 산출 보너스가 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL" Language="ko_KR"><Text>+ 조건부 효과는 집계되지 않음</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="ko_KR"><Text>War</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="ko_KR"><Text>Disaster</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="ko_KR"><Text>{1_Age} Begins</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="ko_KR"><Text>Unknown</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="ko_KR"><Text>아직 판테온이 창시되지 않았습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="ko_KR"><Text>교리</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="ko_KR"><Text>판테온 — 선택한 교리와 그 효과</Text></Replace>
     </LocalizedText>
 </Database>
