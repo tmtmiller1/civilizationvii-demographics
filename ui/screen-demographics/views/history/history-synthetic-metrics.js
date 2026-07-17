@@ -108,7 +108,7 @@ export const SYNTHETIC_METRICS = {
     title: "LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE"
   },
   civ_scatter: {
-    label: "Fingerprint",
+    label: "Power & Science",
     title: "LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE"
   },
   scatter_wealth_culture: {
@@ -116,7 +116,7 @@ export const SYNTHETIC_METRICS = {
     title: "LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE"
   },
   scatter_soft_power: {
-    label: "Soft Power",
+    label: "Happiness & Influence",
     title: "LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE"
   },
   power_radar: {
