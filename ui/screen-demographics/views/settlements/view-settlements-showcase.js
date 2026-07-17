@@ -4,6 +4,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { div, fmt, fmtPop, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { orderedNames } from "/demographics/ui/core/player-label.js";
 
 /**
  * @typedef {{
@@ -99,9 +100,17 @@ function buildScoreBar(s) {
 function buildPodiumBody(s, st, deps) {
   const body = div("demographics-settle-podium-body");
   body.appendChild(div("demographics-settle-podium-name", s.name));
-  body.appendChild(
-    div("demographics-settle-podium-owner", s.owner.leaderName || s.owner.civName || "")
-  );
+  // Three-line ownership hierarchy (player feedback): Settlement (primary) /
+  // Civilization (medium) / Leader (smallest, lightest), so the owning civ of a
+  // lesser-known settlement is visible while the settlement stays the focus.
+  // Show each line only when present so masked/unowned rows aren't left blank.
+  const [podPrimary, podSecondary] = orderedNames(s.owner.leaderName, s.owner.civName);
+  if (podPrimary) {
+    body.appendChild(div("demographics-settle-podium-civ", podPrimary));
+  }
+  if (podSecondary) {
+    body.appendChild(div("demographics-settle-podium-owner", podSecondary));
+  }
   body.appendChild(buildCityMeta(s, deps));
   const cams = deps.buildCameraButtons(s, st);
   if (cams) body.appendChild(cams);
@@ -161,6 +170,13 @@ function buildShowcaseMid(s, st, deps) {
   const cams = deps.buildCameraButtons(s, st);
   if (cams) nameRow.appendChild(cams);
   mid.appendChild(nameRow);
+  // Owning civilization beneath the settlement name (player feedback): the
+  // ranked list mixes many civs' settlements, and the avatar disc alone doesn't
+  // say which civ a lesser-known settlement belongs to.
+  const [listPrimary] = orderedNames(s.owner.leaderName, s.owner.civName);
+  if (listPrimary) {
+    mid.appendChild(div("demographics-settle-list-civ", listPrimary));
+  }
   const wr = buildWonderRow(s);
   if (wr) mid.appendChild(wr);
   mid.appendChild(buildCityMeta(s, deps));

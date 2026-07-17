@@ -279,7 +279,10 @@ function popScreen() {
  */
 function reopenScreen() {
   try {
-    DemographicsSettings.setSetting("activeView", "rankings");
+    // One-shot override honored (and cleared) by screen-demographics._restoreState,
+    // which otherwise always opens on Global Statistics. Plain "activeView" is
+    // ignored on restore, so a dedicated pending key is needed to land on rankings.
+    DemographicsSettings.setSetting("pendingReturnView", "rankings");
     DemographicsSettings.setSetting("settlementsSubTab", "showcase");
   } catch (_) {
     // setSetting can throw if storage is wiped; the panel still reopens on its last view.

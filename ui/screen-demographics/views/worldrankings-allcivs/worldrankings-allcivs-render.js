@@ -1,4 +1,5 @@
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
+import { orderedNames } from "/demographics/ui/core/player-label.js";
 import {
   METRICS,
   EXTERNAL_METRIC_GROUPS,
@@ -183,33 +184,43 @@ function buildLeaderPortrait(leaderType) {
  * @param {boolean} maskAsUnmet When true, emit generic unmet placeholders.
  */
 export function buildCivHeaderText(text, profile, maskAsUnmet) {
-  const leader = document.createElement("div");
-  leader.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-base";
-  leader.textContent = maskAsUnmet
-    ? t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER")
-    : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
-  text.appendChild(leader);
+  // Civilization-primary, leader-secondary (player feedback). The prominent
+  // "-civ-header-leader" class now carries the CIV name and the smaller
+  // "-civ-header-civ" carries the leader beneath it; class names (and their
+  // density/font-size CSS) are kept unchanged, only the text is swapped.
+  const primary = document.createElement("div");
+  primary.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-base";
+  primary.textContent = maskAsUnmet
+    ? t("LOC_DEMOGRAPHICS_UNMET_CIV")
+    : orderedNames(profile.leaderName, profile.civName)[0] ||
+      tPlayerFallback(profile.pid);
+  text.appendChild(primary);
 
   if (maskAsUnmet) {
-    const civ = document.createElement("div");
-    civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
-    civ.textContent = t("LOC_DEMOGRAPHICS_UNMET_CIV");
-    text.appendChild(civ);
-  } else if (profile.civName) {
+    const leader = document.createElement("div");
+    leader.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
+    leader.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER");
+    text.appendChild(leader);
+  } else {
     appendCivNameRows(text, profile);
   }
 }
 
 /**
- * Append civ-name + formerly rows for a met civ header.
+ * Append the secondary leader row + "formerly" civ-history row for a met civ
+ * header (the civ name is the primary line above, added by buildCivHeaderText).
  * @param {HTMLElement} text Header text container.
  * @param {CivProfile} profile Source civ profile.
  */
 function appendCivNameRows(text, profile) {
-  const civ = document.createElement("div");
-  civ.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
-  civ.textContent = profile.civName || "";
-  text.appendChild(civ);
+  // Secondary line: the leader. Only when a distinct civ name sits above it, so a
+  // civ-less profile (primary already fell back to the leader) isn't repeated.
+  if (profile.civName && profile.leaderName) {
+    const leader = document.createElement("div");
+    leader.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
+    leader.textContent = orderedNames(profile.leaderName, profile.civName)[1];
+    text.appendChild(leader);
+  }
 
   const all = Array.isArray(profile.civNames) ? profile.civNames : [];
   const prior = all.filter((n) => n && n !== profile.civName);
@@ -501,12 +512,14 @@ export function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
   text.className = "demographics-worldrankings-allcivs-civ-header-text";
   wrap.appendChild(text);
 
-  const leader = document.createElement("div");
-  leader.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-xs";
-  leader.textContent = maskAsUnmet
+  // Civilization-primary (see buildCivHeaderText): the ghost's prominent line is
+  // the civ name so a hidden civ reads by civ, consistent with the live headers.
+  const primary = document.createElement("div");
+  primary.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-xs";
+  primary.textContent = maskAsUnmet
     ? t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT")
-    : profile.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", profile.pid);
-  text.appendChild(leader);
+    : profile.civName || profile.leaderName || tPlayerFallback(profile.pid);
+  text.appendChild(primary);
 
   const hint = document.createElement("div");
   hint.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";

@@ -4,6 +4,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { div, fmt, fmtPop, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { orderedNames } from "/demographics/ui/core/player-label.js";
 import {
   SETTLEMENT_OUTPUTS
 } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
@@ -47,7 +48,7 @@ function newCivAgg(pid, owner) {
   return {
     pid,
     owner,
-    name: owner.civName || owner.leaderName || "—",
+    name: orderedNames(owner.leaderName, owner.civName)[0] || "—",
     score: 0,
     count: 0,
     populationEstimate: 0,
@@ -170,7 +171,7 @@ function buildCivPodiumCard(c, place, st, deps) {
 
   const body = div("demographics-settle-podium-body");
   body.appendChild(div("demographics-settle-podium-name", c.name));
-  body.appendChild(div("demographics-settle-podium-owner", c.owner.leaderName || ""));
+  body.appendChild(div("demographics-settle-podium-owner", orderedNames(c.owner.leaderName, c.owner.civName)[1]));
   body.appendChild(buildCivMeta(c));
   card.appendChild(body);
 

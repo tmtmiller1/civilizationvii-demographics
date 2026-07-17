@@ -6,6 +6,8 @@
 // as the All Settlements "rank by category" panel, so the two read identically.
 
 import { div, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
+import { orderedNames } from "/demographics/ui/core/player-label.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { METRICS, localizedMetricName } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
@@ -92,7 +94,9 @@ function buildCivAvatar(profile, masked) {
 function civAvatarInitial(profile, masked) {
   const src = masked ? "?" : profile.leaderName || profile.civName || "?";
   const initial = src.trim().charAt(0).toUpperCase() || "?";
-  return div("demographics-settle-avatar-initial", initial);
+  const el = div("demographics-settle-avatar-initial", initial);
+  if (!masked && profile.primaryColor) el.style.color = safeTextColor(profile.primaryColor);
+  return el;
 }
 
 /**
@@ -122,12 +126,13 @@ function buildLeaderCard(metric, profile, showUnmetNames) {
   const card = div("demographics-settle-leader-card");
   // Identity FIRST: leader portrait + civ name on top, leader just beneath it; the
   // metric icon + value and the "#1 <metric>" label follow below.
-  const name = masked ? t("LOC_DEMOGRAPHICS_UNMET_CIV") : profile.civName || profile.leaderName || "—";
+  const [primary, secondary] = orderedNames(profile.leaderName, profile.civName);
+  const name = masked ? t("LOC_DEMOGRAPHICS_UNMET_CIV") : primary || "—";
   const id = div("demographics-settle-leader-id");
   id.appendChild(buildCivAvatar(profile, masked));
   const names = div("demographics-settle-leader-idnames");
   names.appendChild(div("demographics-settle-leader-name", name));
-  names.appendChild(div("demographics-settle-leader-val", masked ? "" : profile.leaderName || ""));
+  names.appendChild(div("demographics-settle-leader-val", masked ? "" : secondary));
   id.appendChild(names);
   card.appendChild(id);
   const head = div("demographics-settle-leader-head");

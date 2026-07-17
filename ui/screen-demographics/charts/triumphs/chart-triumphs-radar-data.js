@@ -12,6 +12,8 @@ import {
   PALETTE,
   civDroppedByPolicy
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
+import { inlineLabel } from "/demographics/ui/core/player-label.js";
+import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * @typedef {import(
@@ -95,8 +97,8 @@ function radarEmptyValues() {
  * @returns {string} The display name.
  */
 function radarCivName(src, pid) {
-  if (!src.leaderName) return "Player " + pid;
-  return src.civName ? src.leaderName + " (" + src.civName + ")" : src.leaderName;
+  if (!src.leaderName) return tPlayerFallback(pid);
+  return inlineLabel(src.leaderName, src.civName);
 }
 
 /**
@@ -285,7 +287,7 @@ function mergeLiveMajorTriumphs(civs, pidOrder, pid, counts) {
     civ = {
       pid: pidStr,
       leaderType: "pid:" + pidStr,
-      name: "Player " + pidStr,
+      name: tPlayerFallback(pidStr),
       color: PALETTE[pidOrder.length % PALETTE.length],
       values: radarEmptyValues()
     };

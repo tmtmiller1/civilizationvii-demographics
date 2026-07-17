@@ -2377,6 +2377,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED"><Text>Scaled</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV"><Text>Civ</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX"><Text>/turn</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER"><Text>Civ → Leader</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV"><Text>Leader → Civ</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_CS_FALLBACK"><Text>City-State {1_Pid}</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_MARKER_WAR"><Text>War</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER"><Text>Disaster</Text></Row>
