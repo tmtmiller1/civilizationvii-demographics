@@ -35,7 +35,7 @@ import {
 } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 import {
   attachBarHover,
@@ -104,7 +104,7 @@ function pushMajorParticipant(out, seen, entry) {
   seen.add(entry.pid);
   out.push({
     pid: entry.pid,
-    name: entry.civ || "Player " + entry.pid,
+    name: entry.civ || tPlayerFallback(entry.pid),
     color: entry.color || "#9aa8c8"
   });
 }
@@ -548,14 +548,14 @@ function buildLegendControls(participants, onChange) {
   row.className = "demographics-war-graph-filter demographics-war-graphs-controls";
   const all = document.createElement("div");
   all.className = "demographics-war-graph-filter-btn";
-  all.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL") || "All";
+  all.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL");
   all.addEventListener("click", () => {
     hiddenWarCivs.clear();
     onChange();
   });
   const none = document.createElement("div");
   none.className = "demographics-war-graph-filter-btn";
-  none.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE") || "None";
+  none.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE");
   none.addEventListener("click", () => {
     for (const p of participants) hiddenWarCivs.add(p.pid);
     onChange();

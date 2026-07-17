@@ -35,19 +35,19 @@
             <Text>Schatz</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="de_DE">
-            <Text>GPR</Text>
+            <Text>Gold (GPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="de_DE">
             <Text>Gold-Einkommen pro Runde (netto).</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="de_DE">
-            <Text>Siedlungen</Text>
+            <Text>Settlements Over Time</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="de_DE">
-            <Text>Technologien</Text>
+            <Text>Techs Count</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="de_DE">
-            <Text>Bürger</Text>
+            <Text>Civics Count</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="de_DE">
             <Text>Zusammengesetzte Punktzahl, dieselbe Zahl wie im Sieg-Bildschirm.</Text>
@@ -71,25 +71,25 @@
             <Text>Pseudorealistisches Bruttoinlandsprodukt. Gewichtete Summe der Erträge pro Runde (Produktion 1.0, Gold 1.0, Wissenschaft 1.2, Kultur 1.2, Nahrung 0.5, Einfluss 1.5), multipliziert mit den vergangenen Runden und auf Dollar skaliert.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="de_DE">
-            <Text>PPR</Text>
+            <Text>Production (PPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="de_DE">
             <Text>Produktion pro Runde, was Ihre Städte bauen.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="de_DE">
-            <Text>Wissenschaft pro Runde</Text>
+            <Text>Science (SPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="de_DE">
             <Text>Wissenschaft pro Runde, treibt die Technologieforschung an.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="de_DE">
-            <Text>Kultur pro Runde</Text>
+            <Text>Culture (CPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="de_DE">
             <Text>Kultur pro Runde, treibt den Ausrichtungsfortschritt an.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="de_DE">
-            <Text>Ernteertrag</Text>
+            <Text>Food (FPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="de_DE">
             <Text>Netto-Nahrungsproduktion pro Runde über alle Siedlungen hinweg.</Text>
@@ -107,10 +107,10 @@
             <Text>Skalierte reale Bevölkerung, exponentiell aus der Gesamtzahl der Bürger abgeleitet.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="de_DE">
-            <Text>Einfluss</Text>
+            <Text>Influence (IPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="de_DE">
-            <Text>Zufriedenheit</Text>
+            <Text>Happiness (HPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="de_DE">
             <Text>Netto-Zufriedenheitsertrag pro Runde.</Text>
@@ -151,8 +151,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="de_DE">
             <Text>Wirtschaft</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="de_DE">
-            <Text>Macht</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="de_DE"><Text>Soft Power</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="de_DE">
             <Text>Wissen &amp; Einfluss</Text>
@@ -170,7 +169,7 @@
             <Text>Kriege</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="de_DE">
-            <Text>Radar</Text>
+            <Text>Triumphs Radar</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="de_DE">
             <Text>Wettlauf</Text>
@@ -200,10 +199,10 @@
             <Text>Aktuelle Krisenstufe (0 = keine, 3 = Krisenhöhepunkt). Spielweiter Wert.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="de_DE">
-            <Text>Gestapelt</Text>
+            <Text>Resources Stacked by Type</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="de_DE">
-            <Text>Gesamt</Text>
+            <Text>Total Resources</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="de_DE">
             <Text>Bonus</Text>
@@ -903,6 +902,15 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="de_DE">
             <Text>Stadtstaaten</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="de_DE">
+            <Text>Share Innovations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="de_DE">
+            <Text>Pioneering</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="de_DE">
+            <Text>Give Influence Token</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="de_DE">
             <Text>ausgetreten T-{1_Turn}</Text>
@@ -1915,6 +1923,63 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="de_DE">
             <Text>6</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7" Language="de_DE">
+            <Text>7</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_8" Language="de_DE">
+            <Text>8</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_9" Language="de_DE">
+            <Text>9</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_10" Language="de_DE">
+            <Text>10</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_11" Language="de_DE">
+            <Text>11</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_12" Language="de_DE">
+            <Text>12</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_13" Language="de_DE">
+            <Text>13</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_14" Language="de_DE">
+            <Text>14</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_15" Language="de_DE">
+            <Text>15</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_16" Language="de_DE">
+            <Text>16</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_17" Language="de_DE">
+            <Text>17</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_18" Language="de_DE">
+            <Text>18</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_19" Language="de_DE">
+            <Text>19</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_20" Language="de_DE">
+            <Text>20</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_21" Language="de_DE">
+            <Text>21</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_22" Language="de_DE">
+            <Text>22</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_23" Language="de_DE">
+            <Text>23</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_24" Language="de_DE">
+            <Text>24</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_25" Language="de_DE">
+            <Text>25</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="de_DE">
             <Text>Sie beherbergt {1_List}.</Text>
         </Replace>
@@ -2032,9 +2097,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="de_DE"><Text>Gesellschaft</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="de_DE"><Text>Expansion</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="de_DE"><Text>Bevölkerung</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="de_DE"><Text>Militär</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="de_DE"><Text>Military Power</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="de_DE"><Text>Kriege</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="de_DE"><Text>Beziehungen</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="de_DE"><Text>Global Relations</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="de_DE"><Text>Abkommen</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="de_DE"><Text>Bruttoinlandsprodukt (BIP)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="de_DE"><Text>Gold pro Runde (GPR)</Text></Replace>
@@ -2095,5 +2160,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="de_DE"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="de_DE"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="de_DE"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="de_DE"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="de_DE"><Text>War</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="de_DE"><Text>Disaster</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="de_DE"><Text>{1_Age} Begins</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="de_DE"><Text>Unknown</Text></Replace>
     </LocalizedText>
 </Database>

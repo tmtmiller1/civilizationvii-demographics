@@ -443,14 +443,14 @@ function buildLegendControls(roster, onChange) {
   row.className = "demographics-war-graph-filter demographics-crisis-graphs-controls";
   const all = document.createElement("div");
   all.className = "demographics-war-graph-filter-btn";
-  all.textContent = t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL") || "All";
+  all.textContent = t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL");
   all.addEventListener("click", () => {
     hiddenKeys.clear();
     onChange();
   });
   const none = document.createElement("div");
   none.className = "demographics-war-graph-filter-btn";
-  none.textContent = t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE") || "None";
+  none.textContent = t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE");
   none.addEventListener("click", () => {
     for (const civ of roster) hiddenKeys.add(civ.key);
     onChange();

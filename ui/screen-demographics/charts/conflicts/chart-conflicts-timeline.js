@@ -392,7 +392,7 @@ function collectGanttAgeMarkers(samples) {
   for (const s of samples) {
     const age = s && typeof s.age === "string" ? s.age : null;
     if (prevAge !== null && age !== null && age !== prevAge && typeof s.chartTurn === "number") {
-      markers.push({ turn: s.chartTurn, label: names[age] || age.replace(/^AGE_/, "") + " Begins" });
+      markers.push({ turn: s.chartTurn, label: names[age] || t("LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS", age.replace(/^AGE_/, "")) });
     }
     if (age !== null) prevAge = age;
   }

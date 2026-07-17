@@ -692,7 +692,7 @@ function getOrCreateWonderMarker(params) {
     mk = null;
   }
   if (!mk) {
-    mk = createWonderMarker(tipState, wrap, ev, dsLabel || "Unknown");
+    mk = createWonderMarker(tipState, wrap, ev, dsLabel || t("LOC_DEMOGRAPHICS_CIV_UNKNOWN"));
     wrap.appendChild(mk);
     wonderMarkerEls.set(key, mk);
   }

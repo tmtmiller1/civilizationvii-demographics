@@ -7,7 +7,29 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.4.5] - 2026-07-11
+
+A localization release. Polish is now fully translated, the settlements cinematic
+localizes rank words through the whole Top-25 ranking, and three diplomacy action
+labels that always showed in English are now localizable. Also folds in two fixes
+staged since 2.4.4. English renders exactly as before.
+
+### Added
+- **Polish (pl_PL) is now fully translated.** The Polish locale previously shipped as
+  English placeholders; every string is now translated (contributed and tested in-game by
+  AndySafik).
+- **The settlements cinematic localizes rank words through the full Top-25.** `ORDINAL_TAG_MAX`
+  was raised from 6 to 25 — the cinematic overlay drives the entire Top-25 ranking, not just
+  the Top-6, so ranks 7–25 now draw their ordinal word from `LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7..25`
+  and can be grammatically inflected per language. English and every other locale render as
+  before (English word / bare number fallback until translated).
+
 ### Fixed
+- **Three diplomacy action labels now localize.** *Share Innovations*, *Pioneering*, and
+  *Give Influence Token* do not resolve through `GameInfo.DiplomacyActions.lookup(...).Name`,
+  so they always displayed in English (title-cased enum name). `diplomacyActionLabel` now
+  checks `LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_{SHARE_INNOVATIONS,PIONEERING,GIVE_INFLUENCE_TOKEN}`
+  before the engine lookup / title-case fallback.
 - **War cost figures no longer bleed across ages.** The War tooltip and War Graphs cost
   tables windowed the whole-game sample stream by age-local turn numbers (which reset each
   age), so a war fought after Antiquity mixed in same-numbered turns from earlier ages and

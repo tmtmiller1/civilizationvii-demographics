@@ -237,7 +237,7 @@ function appendCsAllies(tooltip, tip, samples, win) {
   appendDivider(tooltip);
   const csHead = document.createElement("div");
   csHead.className = "demographics-wars-tooltip-cost-header";
-  csHead.textContent = t("LOC_DEMOGRAPHICS_WARS_CS_ALLIES") || "City State Allies";
+  csHead.textContent = t("LOC_DEMOGRAPHICS_WARS_CS_ALLIES");
   tooltip.appendChild(csHead);
   tooltip.appendChild(csTable);
 }

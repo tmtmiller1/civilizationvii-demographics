@@ -44,19 +44,19 @@
             <Text>Treasury</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT">
-            <Text>GPT</Text>
+            <Text>Gold (GPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP">
             <Text>Gold income per turn (net).</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS">
-            <Text>Settlements</Text>
+            <Text>Settlements Over Time</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_TECHS">
-            <Text>Techs</Text>
+            <Text>Techs Count</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS">
-            <Text>Civics</Text>
+            <Text>Civics Count</Text>
         </Row>
 
         <!-- Tooltips for the original 5 metrics -->
@@ -84,25 +84,25 @@
             <Text>Estimated economic output based on per-turn yields and turns elapsed.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION">
-            <Text>PPT</Text>
+            <Text>Production (PPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP">
             <Text>Production generated per turn.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD">
-            <Text>Science Per Turn</Text>
+            <Text>Science (SPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP">
             <Text>Science per turn, drives technology research.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD">
-            <Text>Culture Per Turn</Text>
+            <Text>Culture (CPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP">
             <Text>Culture per turn, drives civics progress.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CROPS">
-            <Text>Crop Yield</Text>
+            <Text>Food (FPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP">
             <Text>Net food output per turn across all settlements.</Text>
@@ -122,10 +122,10 @@
 
         <!-- V7-specific creative -->
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE">
-            <Text>Influence</Text>
+            <Text>Influence (IPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT">
-            <Text>Happiness</Text>
+            <Text>Happiness (HPT)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP">
             <Text>Net happiness yield per turn.</Text>
@@ -170,8 +170,7 @@
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY">
             <Text>Economy</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_PAGE_POWER">
-            <Text>Power</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_PAGE_POWER"><Text>Soft Power</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE">
             <Text>Knowledge &amp; Influence</Text>
@@ -324,7 +323,7 @@
 
         <!-- Civ7-specific Age mechanics -->
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR">
-            <Text>Radar</Text>
+            <Text>Triumphs Radar</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE">
             <Text>Race</Text>
@@ -356,10 +355,10 @@
 
         <!-- Resources page metrics -->
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK">
-            <Text>Stacked</Text>
+            <Text>Resources Stacked by Type</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL">
-            <Text>Total</Text>
+            <Text>Total Resources</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS">
             <Text>Bonus</Text>
@@ -1226,6 +1225,15 @@
         <Row Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES">
             <Text>City States</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS">
+            <Text>Share Innovations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING">
+            <Text>Pioneering</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN">
+            <Text>Give Influence Token</Text>
+        </Row>
 
         <Row Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW">
             <Text>withdrew T-{1_Turn}</Text>
@@ -2000,6 +2008,63 @@
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6">
             <Text>sixth</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7">
+            <Text>seventh</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_8">
+            <Text>eighth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_9">
+            <Text>ninth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_10">
+            <Text>tenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_11">
+            <Text>eleventh</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_12">
+            <Text>twelfth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_13">
+            <Text>thirteenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_14">
+            <Text>fourteenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_15">
+            <Text>fifteenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_16">
+            <Text>sixteenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_17">
+            <Text>seventeenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_18">
+            <Text>eighteenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_19">
+            <Text>nineteenth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_20">
+            <Text>twentieth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_21">
+            <Text>twenty-first</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_22">
+            <Text>twenty-second</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_23">
+            <Text>twenty-third</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_24">
+            <Text>twenty-fourth</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_25">
+            <Text>twenty-fifth</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST">
             <Text>It houses {1_List}.</Text>
         </Row>
@@ -2130,13 +2195,13 @@
             <Text>Population</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY">
-            <Text>Military</Text>
+            <Text>Military Power</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_WARS">
             <Text>Wars</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS">
-            <Text>Relations</Text>
+            <Text>Global Relations</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS">
             <Text>Agreements</Text>
@@ -2312,5 +2377,10 @@
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED"><Text>Scaled</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV"><Text>Civ</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX"><Text>/turn</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CS_FALLBACK"><Text>City-State {1_Pid}</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_MARKER_WAR"><Text>War</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER"><Text>Disaster</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS"><Text>{1_Age} Begins</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN"><Text>Unknown</Text></Row>
     </EnglishText>
 </Database>

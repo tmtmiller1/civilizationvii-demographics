@@ -2,7 +2,7 @@
 //
 // Viewer dropdown controls for the Global Relations city-state tab.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { dlog } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 
 /**
@@ -78,7 +78,7 @@ export function buildViewerDropdownPanel(rs) {
     const baseName = info.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_YOU");
     const nm = isYou
       ? t("LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU", baseName)
-      : info.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_FALLBACK", pid);
+      : info.leaderName || tPlayerFallback(pid);
     return { label: nm, id: "viewer_" + pid, pid };
   });
   let selIdx = rs.metIds.indexOf(/** @type {number} */ (rs.csViewerPid));

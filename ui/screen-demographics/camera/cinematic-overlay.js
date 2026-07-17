@@ -16,11 +16,12 @@ export const ORDINAL_WORDS = [
   "twenty-fourth", "twenty-fifth"
 ];
 
-// The cinematic only showcases the Top-6 settlements, so ranks 1..6 have a dedicated
-// per-rank localization tag (LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1..6). This lets
-// languages that need grammatical inflection (e.g. Polish) supply a properly declined
-// ordinal word instead of the bare number the sentence frames otherwise embed.
-export const ORDINAL_TAG_MAX = 6;
+// The cinematic can showcase settlements from the Top-25 ranking, so ranks 1..25
+// have dedicated per-rank localization tags
+// (LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1..25). This lets languages that need
+// grammatical inflection (e.g. Polish) supply a properly declined ordinal word
+// instead of the bare number.
+export const ORDINAL_TAG_MAX = 25;
 
 /** @type {Record<string, Record<string, string>>} */
 export const QUARTER_ARTICLE = {
@@ -61,6 +62,106 @@ export const QUARTER_ARTICLE = {
     QUARTER_PLAZA: "a ", QUARTER_PURA: "o ", QUARTER_FIVE_HUNDRED_LORDS: "os "
   }
 };
+
+// ── English article system ──────────────────────────────────────────
+// English article choice for proper monument/place names is lexical, not
+// derivable from surface form ("the Parthenon" vs. "Petra" are both single
+// capitalized proper nouns). So we default every named entity to "the " — the
+// correct choice for the large majority of wonders, quarters and natural
+// wonders, and safe for unknown/DLC entities read from GameInfo at runtime —
+// and subtract "the" only for a curated set of toponyms.
+//
+// NO_ARTICLE_TYPES is checked first (stable ConstructibleType / UniqueQuarterType
+// ids). It is the authoritative override once you have verified ids; seed it from
+// an in-game GameInfo dump (see the dev snippet shipped alongside this change).
+// NO_ARTICLE_NAMES is the working fallback that matches on the normalized display
+// name, which is what actually reaches us for natural wonders and any entity
+// without a clean type id.
+//
+// To fix a mis-articled entity: add its type id to NO_ARTICLE_TYPES (preferred)
+// or its display name to NO_ARTICLE_NAMES. A not-yet-listed toponym merely gets a
+// wrong "the " — a one-line fix, never a crash.
+
+/** @type {Set<string>} */
+export const NO_ARTICLE_TYPES = new Set([
+  // Fill with verified ConstructibleType / UniqueQuarterType ids for toponyms.
+  // e.g. "BUILDING_MACHU_PICCHU", "BUILDING_PETRA", "FEATURE_ULURU".
+]);
+
+/** @type {Set<string>} */
+export const NO_ARTICLE_NAMES = new Set([
+  // Wonders that are proper place-names (reject "the").
+  "machu picchu", "angkor wat", "petra", "chichen itza", "nalanda",
+  "mundo perdido", "hagia sophia", "mont saint michel", "notre dame",
+  "borobudur", "sigiriya", "mesa verde", "great zimbabwe", "meidan emam",
+  "chand baori",
+  // Natural wonders that are proper place-names (reject "the").
+  "uluru", "kilimanjaro", "mount kilimanjaro", "mount everest", "everest",
+  "vesuvius", "mount vesuvius", "zhangye danxia", "ha long bay",
+  "lake victoria", "mount kailash"
+]);
+
+/**
+ * Normalize a display name for article-exception matching: strip diacritics and
+ * apostrophes, fold hyphens to spaces, collapse whitespace, lowercase. Keeps the
+ * NO_ARTICLE_NAMES keys robust against accents ("Chichén Itzá") and punctuation
+ * ("Mont-Saint-Michel").
+ * @param {string} name The display name.
+ * @returns {string} The normalized key.
+ */
+export function normalizeArticleName(name) {
+  return String(name || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Whether a name already carries a leading English article, so we must not
+ * prepend another (avoids "the the Forbidden City").
+ * @param {string} name The display name.
+ * @returns {boolean} True when already articled.
+ */
+export function startsWithArticle(name) {
+  return /^(the|an?)\s/i.test(String(name || ""));
+}
+
+/**
+ * English article decision for a single named entity.
+ * @param {string} name The composed display name.
+ * @param {string} typeId The stable type id, or "".
+ * @returns {string} The articled name.
+ */
+export function englishArticled(name, typeId) {
+  if (startsWithArticle(name)) return name;
+  if (typeId && NO_ARTICLE_TYPES.has(typeId)) return name;
+  if (NO_ARTICLE_NAMES.has(normalizeArticleName(name))) return name;
+  return "the " + name;
+}
+
+/**
+ * Apply a locale-appropriate article to a named entity (wonder, quarter, natural
+ * wonder). English uses the default-"the" + toponym-exception system; other
+ * locales preserve the prior per-quarter QUARTER_ARTICLE behavior.
+ * @param {{name: string, typeId?: string}} entity The entity descriptor.
+ * @returns {string} The articled name.
+ */
+export function articledName(entity) {
+  const name = entity && entity.name ? String(entity.name) : "";
+  if (!name) return "";
+  const typeId = entity && entity.typeId ? String(entity.typeId) : "";
+  const lang = localeCode();
+  if (lang === "en") return englishArticled(name, typeId);
+  const table = QUARTER_ARTICLE[lang];
+  if (table && Object.prototype.hasOwnProperty.call(table, typeId)) {
+    return table[typeId] + name;
+  }
+  return name;
+}
 
 /**
  * Build a laurel medal crest for top-3 ranks.
@@ -228,13 +329,7 @@ export function localeCode() {
  */
 export function districtPhrase(district) {
   if (!district || !district.name) return "";
-  const table = QUARTER_ARTICLE[localeCode()];
-  if (!table) return district.name;
-  const quarterType = district.quarterType || "";
-  if (Object.prototype.hasOwnProperty.call(table, quarterType)) {
-    return table[quarterType] + district.name;
-  }
-  return district.name;
+  return articledName({ name: district.name, typeId: district.quarterType || "" });
 }
 
 /**
@@ -245,7 +340,9 @@ export function districtPhrase(district) {
 export function highlightNames(settlement) {
   const out = [];
   for (const wonder of Array.isArray(settlement.wonders) ? settlement.wonders : []) {
-    if (wonder && wonder.nameKey) out.push(t(wonder.nameKey));
+    if (wonder && wonder.nameKey) {
+      out.push(articledName({ name: t(wonder.nameKey), typeId: wonder.type || "" }));
+    }
   }
   for (const district of Array.isArray(settlement.districts) ? settlement.districts : []) {
     if (district && district.name) out.push(districtPhrase(district));
@@ -265,9 +362,9 @@ export function ordinalWord(rank) {
 /**
  * Resolve the ordinal insert for a settlement's rank in the cinematic sentences.
  *
- * Prefers the per-rank localization tag (ranks 1..6) so translators can supply a
+ * Prefers the per-rank localization tag (ranks 1..25) so translators can supply a
  * grammatically-inflected form. Falls back to the prior behavior when the tag is
- * unresolved or the rank is outside the Top-6: the English ordinal word for
+ * unresolved or the rank is outside the Top-25: the English ordinal word for
  * English locales, or the bare number every other sentence frame is built around.
  * @param {number} rank The 1-based rank.
  * @returns {string} The ordinal display text.

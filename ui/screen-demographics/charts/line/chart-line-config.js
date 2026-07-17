@@ -38,7 +38,9 @@ const UNIT_LOC = {
   cities: "LOC_DEMOGRAPHICS_UNIT_CITIES",
   techs: "LOC_DEMOGRAPHICS_UNIT_TECHS",
   // Reuse the base game's own (professionally localized) terms for game-specific
-  // concepts so the labels always match the in-game vocabulary.
+  // concepts so the labels always match the in-game vocabulary. These are
+  // engine-owned base-game LOC tags, NOT defined in our ModText.xml — see
+  // BASE_GAME_LOC_KEYS in demographics-i18n.js.
   civics: "LOC_PEDIA_PAGEGROUP_CIVICS_NAME",
   "food / turn": "LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN",
   "production / turn": "LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN",
@@ -54,7 +56,8 @@ const UNIT_LOC = {
   wonders: "LOC_DEMOGRAPHICS_UNIT_WONDERS",
   resources: "LOC_DEMOGRAPHICS_UNIT_RESOURCES",
   stage: "LOC_DEMOGRAPHICS_UNIT_STAGE",
-  // Resource-class units reuse the base game's canonical class names.
+  // Resource-class units reuse the base game's canonical class names
+  // (base-game LOC tags; see BASE_GAME_LOC_KEYS in demographics-i18n.js).
   bonus: "LOC_RESOURCECLASS_BONUS_NAME",
   city: "LOC_RESOURCECLASS_CITY_NAME",
   empire: "LOC_RESOURCECLASS_EMPIRE_NAME",

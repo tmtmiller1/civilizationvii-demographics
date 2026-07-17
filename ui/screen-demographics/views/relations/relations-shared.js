@@ -217,6 +217,18 @@ function composeDiplomacyName(actionName) {
   return typeof out === "string" && out.length > 0 && out.indexOf("LOC_") !== 0 ? out : "";
 }
 
+/** @type {Record<string, string>} */
+const DIPLOMACY_LABEL_TAGS = {
+  DIPLOMACY_ACTION_SHARE_INNOVATIONS:
+    "LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS",
+
+  DIPLOMACY_ACTION_PIONEERING:
+    "LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING",
+
+  DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN:
+    "LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN",
+};
+
 /**
  * Resolve a localized display label for a diplomacy action, preferring the
  * engine's own name (GameInfo.DiplomacyActions → Locale.compose) so it matches
@@ -226,11 +238,29 @@ function composeDiplomacyName(actionName) {
  */
 export function diplomacyActionLabel(actionName) {
   try {
+    const fallbackTag = DIPLOMACY_LABEL_TAGS[actionName];
+    if (
+      fallbackTag &&
+      typeof Locale !== "undefined" &&
+      typeof Locale.compose === "function"
+    ) {
+      const localized = Locale.compose(fallbackTag);
+
+      if (
+        typeof localized === "string" &&
+        localized.length > 0 &&
+        localized.indexOf("LOC_") !== 0
+      ) {
+        return localized;
+      }
+    }
+
     const out = composeDiplomacyName(actionName);
     if (out) return out;
   } catch (_) {
     // GameInfo/Locale boundary can throw; fall back to the derived label.
   }
+
   return titleCaseAction(actionName);
 }
 
