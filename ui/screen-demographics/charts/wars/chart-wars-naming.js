@@ -140,6 +140,8 @@ function adjectiveFromCivType(civType) {
   if (typeof civType !== "string" || !civType) return null;
   const stem = civType.replace(/^CIVILIZATION_/, "");
   if (!stem) return null;
+  // Base-game LOC tag built from the civ stem (engine-owned; matches
+  // BASE_GAME_LOC_PREFIXES "LOC_CIVILIZATION_" in demographics-i18n.js).
   const tag = "LOC_CIVILIZATION_" + stem + "_ADJECTIVE";
   try {
     return composeAdjective(tag);

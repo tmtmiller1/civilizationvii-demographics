@@ -2,7 +2,7 @@
 //
 // Name-map and city-state node-info resolution for Global Relations.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { t, tCsFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
   dlog,
   safeCall,
@@ -130,9 +130,9 @@ function resolveCsName(pid) {
         const composed = localeComposeSafe(p.name);
         if (typeof composed === "string" && composed.length > 0) return composed;
       }
-      return csNameFromCivType(p) || "City-State " + pid;
+      return csNameFromCivType(p) || tCsFallback(pid);
     },
-    "City-State " + pid
+    tCsFallback(pid)
   );
 }
 
