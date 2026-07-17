@@ -41,6 +41,22 @@ assert.ok(filterRow.className.includes("filter") || filterRow.children.length > 
 const emptyRow = pillRow([], "a", () => {});
 assert.ok(emptyRow);
 
+// Marker items — a "+" drill-down badge is appended after the label, and clicking still fires.
+const markerRow = pillRow(
+  [{ key: "plain", label: "Plain" }, { key: "drill", label: "Buildings", marker: "+" }],
+  "plain",
+  (k) => { lastPick = k; }
+);
+const drillPill = markerRow.children.find((c) => c.textContent === "Buildings");
+assert.ok(drillPill, "drill pill present");
+// The badge is an appended child span reading "+" (label stays in textContent).
+assert.ok(drillPill.children.some((k) => k.textContent === "+"), "drill pill has the + badge");
+const plainPill = markerRow.children.find((c) => c.textContent === "Plain");
+assert.ok(plainPill && !plainPill.children.some((k) => k.textContent === "+"), "plain pill has no badge");
+lastPick = null;
+drillPill.dispatch("click");
+assert.equal(lastPick, "drill", "clicking a marker pill still fires onPick");
+
 delete globalThis.document;
 delete globalThis.Locale;
 console.log("view-pills-branches harness passed");

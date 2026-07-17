@@ -35,6 +35,34 @@ export {
 } from "/demographics/ui/screen-demographics/charts/resources/chart-resources.js";
 export { renderCrisisStages } from "/demographics/ui/screen-demographics/charts/crises/chart-crisis-stages.js";
 export {
+  renderWondersBoard,
+  renderWonderRaces,
+  renderByTypeBoard,
+  renderReligionStandings,
+  renderReligionPantheons,
+  renderReligionPantheonYields,
+  renderSettlementsAtlas
+} from "/demographics/ui/screen-demographics/charts/boards/chart-boards.js";
+export {
+  renderReligionSpread,
+  renderReligionByPop
+} from "/demographics/ui/screen-demographics/charts/boards/chart-religion-lines.js";
+export {
+  renderConstructiblesBoard
+} from "/demographics/ui/screen-demographics/charts/boards/chart-settlement-boards.js";
+export {
+  renderQuartersBoard
+} from "/demographics/ui/screen-demographics/charts/boards/chart-quarters-board.js";
+export {
+  renderPowerRace,
+  renderPopShareArea,
+  renderLandShareArea
+} from "/demographics/ui/screen-demographics/charts/boards/chart-trends-chartjs.js";
+export {
+  renderCivScatter,
+  renderPowerRadar
+} from "/demographics/ui/screen-demographics/charts/boards/chart-compare-svg.js";
+export {
   renderCrisisGraphs,
   collectCrisisScopes,
   resolveCrisisScope

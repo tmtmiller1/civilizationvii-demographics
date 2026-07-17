@@ -8,7 +8,11 @@ import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 // surviving page when its hub is the one being shown (else the first-visible clamp below takes
 // over).
 /** @type {Record<string, string>} */
-const PAGE_ID_ALIASES = { power: "expansion", knowledge: "science_culture", conflicts: "wars" };
+const PAGE_ID_ALIASES = {
+  knowledge: "power", science_culture: "power", age: "society",
+  expansion: "settlements_land", construction: "settlements_land",
+  resources: "economy", conflicts: "military", wars: "military"
+};
 
 /**
  * Resolve active page id within the given (hub-scoped) page list, defaulting to the first page
@@ -20,7 +24,7 @@ const PAGE_ID_ALIASES = { power: "expansion", knowledge: "science_culture", conf
  * @returns {string} Valid, tier-visible page id.
  */
 export function resolveActivePageState(ctx, pages) {
-  const fallback = pages.length ? pages[0].id : "economy";
+  const fallback = pages.length ? pages[0].id : "yields";
   let want = ctx.activePage || "";
   if (PAGE_ID_ALIASES[want]) want = PAGE_ID_ALIASES[want];
   let id = want && pages.some((p) => p.id === want) ? want : fallback;

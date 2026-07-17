@@ -107,8 +107,17 @@ rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude
     --exclude='steam_workshop_id.txt' --exclude='CONTRIBUTING.md' \
     --exclude='coverage' --exclude='.c8rc.json' \
     --exclude='reports' --exclude='.stryker-tmp' --exclude='stryker*.json' \
-    --exclude='scripts' --exclude='README.pdf' \
+    --exclude='scripts' --exclude='README.pdf' --exclude='ui/dev' \
     "$SRC_DIR"/ "$TARGET_DIR"/
+
+# Guard: the T0 dev probe (ui/dev/) is excluded above, so a shipped modinfo must
+# not still reference it — that would dangle a UIScript at load. Fail loudly if the
+# DEV PROBE registration was left in.
+if grep -q 'ui/dev/' "$TARGET_DIR/demographics.modinfo"; then
+    echo "error: demographics.modinfo still references ui/dev/ (the T0 dev probe)."
+    echo "  → remove the DEV PROBE <Item> from the UIScripts block before releasing."
+    exit 1
+fi
 
 echo "==> Disabling debug logging in dist JS files"
 # Both patterns we use across the codebase:

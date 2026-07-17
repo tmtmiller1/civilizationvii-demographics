@@ -7,12 +7,46 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
-A World Rankings usability and consistency release, built from AndySafik's playtest
-feedback. The **Civilization Rank by Yield** screen can once again be a sortable
-civs-as-rows table; several screens now lead with the civilization rather than the
-leader; and the settlement showcase makes ownership clearer.
+## [2.5.0] - 2026-07-17
+
+The largest data release since the mod launched, in two halves.
+
+**New history to explore.** A new **Religion** page tracks pantheons, founded-religion
+standings, spread and followers-by-population. **Wonders & Races** boards show the race for
+each wonder, a **Settlements Atlas** charts empire footprint, and by-type breakdowns open up
+units, buildings and districts. Fifteen new metrics — Faith, Tourism, Great People, Great
+Works, Cities, Towns, Units Killed/Lost, Combats, Wars Declared/Received, Conquest and more —
+join the existing graphs. The dashboard is now reachable from the **end-of-game screen and
+the pause menu**, and pages with nothing to show hide themselves.
+
+**World Rankings usability and consistency**, built from AndySafik's playtest feedback: the
+**Civilization Rank by Yield** screen can once again be a sortable civs-as-rows table; several
+screens now lead with the civilization rather than the leader; and the settlement showcase
+makes ownership clearer.
+
+All new labels are localized across all 11 languages.
 
 ### Added
+- **A new Religion page.** In Antiquity it shows the pantheons each civilization chose and
+  their yields; from Exploration onward it shows founded-religion standings, spread over time,
+  and followers as a share of population. The page is age-gated, so only the set that applies
+  to the current age is shown.
+- **Wonders & Races boards.** A wonders board and a per-wonder race view on the Society page,
+  built from wonder data the mod already samples.
+- **Settlements Atlas.** A size-distribution and urbanization view of the empire footprint on
+  the Settlements & Land page.
+- **By-type breakdowns.** Units trained/killed/lost by unit type on the Military page, and
+  buildings and districts by type (including a Quarters board) on Settlements & Land — with
+  localized type names, stacked by civilization.
+- **Fifteen new metrics.** Society gains Faith, Tourism, Great People and Great Works;
+  Settlements & Land gains Cities, Towns and Settlement Cap; Military gains Units Killed,
+  Units Lost, Combats, Wars Declared, Wars Received, Settlements Conquered and Conquest %;
+  Natural Wonders joins the wonder group.
+- **Reach the dashboard at the end of a game.** A Demographics button now appears on the
+  end-of-game results screen and in the pause menu, so the history stays reachable once the
+  subsystem dock is gone.
+- **Empty pages and metrics hide themselves.** A metric with no data no longer shows an empty
+  graph — it is hidden, and pages and hubs whose metrics are all empty are hidden too.
 - **Civilization Rank by Yield is sortable again — responsively.** The screen now
   renders a civs-as-rows table with click-to-sort yield columns (Score, Food, Science,
   …) when there is width for readable headers, and automatically falls back to the
@@ -26,7 +60,6 @@ leader; and the settlement showcase makes ownership clearer.
   "Civilization (Leader)" instead of "Leader (Civilization)"; the Civilization Rank by
   Yield column headers and the All Settlements owner cell lead with the civilization,
   with the leader as the secondary line — matching the screens that already did so.
-  A Civ → Leader / Leader → Civ toggle in the history controls sets the preference.
 - **Clearer settlement ownership.** The Top 25 Settlements podium cards now show a
   Settlement / Civilization / Leader hierarchy, and each row of the full settlements
   list shows the owning civilization beneath the settlement name.

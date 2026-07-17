@@ -2,6 +2,7 @@
 // Page + metric tab rows and chart title for Historical Data view.
 
 import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/history/view-history.js";
+import { SYNTHETIC_METRICS } from "/demographics/ui/screen-demographics/views/history/history-synthetic-metrics.js";
 import { getCurrentAgeType } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -97,7 +98,9 @@ export function buildPageTabRow(host, ctx, activePage, pages) {
   // `pages` is the hub-scoped list resolved upstream (falls back to all PAGES for legacy callers).
   const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
   const source = pages || PAGES;
-  const visiblePages = source.filter((p) => pageVisibleInTier(p) && !topLevelIds.has(p.id));
+  const visiblePages = source.filter(
+    (p) => pageVisibleInTier(p) && !topLevelIds.has(p.id) && pageHasVisibleContent(p, ctx, activePage)
+  );
   const pageTabs = visiblePages.map((p) => ({ id: p.id, label: p.label }));
   pageBar.setAttribute("tab-items", JSON.stringify(pageTabs));
   const pageIdx = Math.max(
@@ -111,6 +114,24 @@ export function buildPageTabRow(host, ctx, activePage, pages) {
   });
   pageHost.appendChild(pageBar);
   appendPageDescription(pageHost, activePage);
+}
+
+/**
+ * Whether a page should appear in the page-tab row: render-pages (custom bodies,
+ * no `metrics` array) and the active page are always kept; a metric-page is kept
+ * only when at least one of its metrics is currently visible (age + data gated).
+ * This gives the empty-category auto-hide (e.g. a Construction page stays hidden
+ * until something is built) while never stranding the user on their current page.
+ * @param {*} p The page definition.
+ * @param {*} ctx The view context (carries `history`).
+ * @param {string} activePage The active page id (never hidden).
+ * @returns {boolean} True if the page should be shown.
+ */
+function pageHasVisibleContent(p, ctx, activePage) {
+  if (!p) return false;
+  if (p.id === activePage) return true;
+  if (!Array.isArray(p.metrics)) return true;
+  return visibleMetrics(p.metrics, ctx).length > 0;
 }
 
 /**
@@ -143,10 +164,18 @@ function onPageTabSelected(ctx, activePage, id) {
   if (typeof ctx.setActivePage === "function") ctx.setActivePage(id);
 }
 
-/** @type {Record<string, string>} */
+// Metrics that only exist in specific age(s). A single string requires exactly that age; an
+// array admits any listed age. The Religion page swaps content by age: Antiquity shows the
+// chosen pantheons (religion_pantheons); Exploration/Modern show the founded-religion charts.
+/** @type {Record<string, string | string[]>} */
 const AGE_GATED_METRICS = {
   resources_treasure: "AGE_EXPLORATION",
-  resources_factory: "AGE_MODERN"
+  resources_factory: "AGE_MODERN",
+  religion_pantheons: "AGE_ANTIQUITY",
+  religion_pantheon_yields: "AGE_ANTIQUITY",
+  religion_standings: ["AGE_EXPLORATION", "AGE_MODERN"],
+  religion_spread: ["AGE_EXPLORATION", "AGE_MODERN"],
+  religion_by_pop: ["AGE_EXPLORATION", "AGE_MODERN"]
 };
 
 /**
@@ -155,11 +184,69 @@ const AGE_GATED_METRICS = {
  */
 export function visibleMetricsForAge(metrics) {
   const age = getCurrentAgeType();
+  // Fail OPEN when the age can't be resolved (engine not ready): show everything rather than
+  // stranding an age-gated page (e.g. Religion) empty during a momentary unknown-age window.
+  if (!age) return metrics;
   return metrics.filter((mid) => {
-    const requiredAge = AGE_GATED_METRICS[mid];
-    return !requiredAge || requiredAge === age;
+    const required = AGE_GATED_METRICS[mid];
+    if (!required) return true;
+    return Array.isArray(required) ? required.includes(age) : required === age;
   });
 }
+
+/**
+ * Whether any player in one sample has a finite value for `metricId`.
+ * @param {*} sample One persisted sample ({ players: { pid: { metrics } } }).
+ * @param {string} metricId The metric id.
+ * @returns {boolean} True if a finite value is present.
+ */
+function sampleHasMetric(sample, metricId) {
+  const players = sample && sample.players;
+  if (!players) return false;
+  for (const pid in players) {
+    const metrics = players[pid] && players[pid].metrics;
+    const v = metrics ? metrics[metricId] : undefined;
+    if (typeof v === "number" && isFinite(v)) return true;
+  }
+  return false;
+}
+
+/**
+ * Whether any player has ever recorded a finite value for `metricId` across the
+ * persisted samples. Fail-OPEN (returns true) when there is no history yet, so a
+ * fresh game never hides everything before the first sample lands.
+ * @param {string} metricId The sampled metric id.
+ * @param {*} history The persisted history blob (ctx.history), or nullish.
+ * @returns {boolean} True if data exists (or history is unavailable).
+ */
+export function metricHasData(metricId, history) {
+  const samples = history && Array.isArray(history.samples) ? history.samples : null;
+  if (!samples || !samples.length) return true;
+  for (const s of samples) {
+    if (sampleHasMetric(s, metricId)) return true;
+  }
+  return false;
+}
+
+/**
+ * Age gate PLUS data-presence gate: drop metrics that no civ has ever recorded a
+ * value for (e.g. Tourism before any is generated). Synthetic ids (custom
+ * renderers with their own empty handling) and the currently-selected metric are
+ * always kept, and everything is kept when history is unavailable.
+ * @param {string[]} metrics Candidate metric ids in display order.
+ * @param {*} ctx The view context (carries `history`).
+ * @param {string} [keepId] A metric id to always retain (the active selection).
+ * @returns {string[]} The visible metric ids.
+ */
+export function visibleMetrics(metrics, ctx, keepId) {
+  const ageOk = visibleMetricsForAge(metrics);
+  const history = ctx && ctx.history;
+  if (!history || !Array.isArray(history.samples) || !history.samples.length) return ageOk;
+  return ageOk.filter(
+    (mid) => mid === keepId || SYNTHETIC_METRICS[mid] || metricHasData(mid, history)
+  );
+}
+
 
 /**
  * Build and append the metric selector for `page` as a row of PILLS (the 3rd-level selector; the
@@ -172,7 +259,9 @@ export function visibleMetricsForAge(metrics) {
  * @param {string} activeMetric
  */
 export function buildMetricTabRow(host, ctx, page, activeMetric) {
-  const metrics = visibleMetricsForAge(page.metrics || []);
+  // Age gate + data-presence auto-hide (empty metrics like Tourism-before-any drop out); the
+  // active selection is always kept so its chart still renders (with an empty-state message).
+  const metrics = visibleMetrics(page.metrics || [], ctx, activeMetric);
   // A page with a single metric (e.g. Age → the triumphs/legacy radar) needs no selector, a
   // one-pill row is pointless. Skip it; the lone metric still renders below.
   if (metrics.length <= 1) return;

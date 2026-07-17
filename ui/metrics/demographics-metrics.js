@@ -4,6 +4,17 @@
 //   { id, label, category, accessor(ctx)→number|undefined,
 //     scale?(raw, scaleCtx, ctx)→number, format(n)→string, tooltip? }
 //
+// LOCALIZATION — READ BEFORE ADDING/EDITING A METRIC. The `label`/`title` strings
+// below are DEV-FACING FALLBACKS, not what players see. Every metric's on-screen
+// name resolves LOC-first from `LOC_DEMOGRAPHICS_METRIC_<ID>` (uppercased id), with
+// an optional fuller chart title at `LOC_DEMOGRAPHICS_METRIC_<ID>_TITLE`, via
+// localizedMetricName() below / history-tabs.js. So:
+//   • Adding a metric → also add `LOC_DEMOGRAPHICS_METRIC_<ID>` (+ `_TOOLTIP`) to
+//     text/en_us/ModText.xml AND all 10 locales (see text/README.md). Without it the
+//     UI falls back to the raw English `label`, untranslated.
+//   • Renaming a metric → edit the LOC key's <Text>, NOT the `label` here (editing
+//     `label` alone changes nothing a player sees).
+//
 // Accessors take a pre-resolved `ctx` built by the sampler (see
 // demographics-sampler.js#buildPlayerCtx). Every ctx field can be
 // undefined and the accessors have to tolerate that without throwing.
@@ -20,6 +31,7 @@
 // Every accessor is cited to vanilla Civ7 source in demographics-sampler.js.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { EXTRA_METRICS } from "/demographics/ui/metrics/demographics-metrics-extra.js";
 import {
   formatArea,
   formatBigNumber,
@@ -594,7 +606,10 @@ export const METRICS = [
     // format() already appends "km²" to every value; keep unit short
     // so the axis title doesn't double-render the suffix.
     unit: "km²"
-  }
+  },
+  // source-mod-integration additions live in a sibling module to respect the
+  // 500-line file cap; they obey the same MetricDef contract.
+  ...EXTRA_METRICS
 ];
 
 /**

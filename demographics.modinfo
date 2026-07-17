@@ -10,7 +10,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.4.4</Version>
+        <Version>2.5.0</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -58,6 +58,7 @@
             <Actions>
                 <UIScripts>
                     <Item>ui/demographics-bootstrap.js</Item>
+                    <Item>ui/demographics-endgame-entry.js</Item>
                     <Item>ui/screen-demographics/screen/screen-demographics.js</Item>
                     <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/demographics-options.js</Item>
@@ -74,6 +75,9 @@
                     <Item>ui/sampler/sampler-collectors-economy.js</Item>
                     <Item>ui/sampler/sampler-collectors-military.js</Item>
                     <Item>ui/sampler/sampler-collectors-civics.js</Item>
+                    <Item>ui/sampler/sampler-game-summary.js</Item>
+                    <Item>ui/sampler/sampler-collectors-summary.js</Item>
+                    <Item>ui/sampler/sampler-collectors-religion.js</Item>
                     <Item>ui/sampler/sampler-wars-detect.js</Item>
                     <Item>ui/sampler/sampler-wars-ingest.js</Item>
                     <Item>ui/sampler/sampler-wars-augment.js</Item>
@@ -81,6 +85,7 @@
                     <Item>ui/sampler/sampler-wars.js</Item>
                     <Item>ui/sampler/sampler-war-events.js</Item>
                     <Item>ui/storage/demographics-storage.js</Item>
+                    <Item>ui/metrics/demographics-metrics-extra.js</Item>
                     <Item>ui/metrics/demographics-metrics.js</Item>
                     <Item>ui/metrics/metrics-format.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
@@ -118,8 +123,18 @@
                     <Item>ui/screen-demographics/charts/wars/chart-war-military.js</Item>
                     <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-graphs.js</Item>
                     <Item>ui/screen-demographics/charts/crises/chart-crisis-stages.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/board-ui.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/pantheon-effects.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/chart-boards.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/chart-religion-lines.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/chart-settlement-boards.js</Item>
+                    <Item>ui/screen-demographics/settlements/settlements-adjacency.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/chart-quarters-board.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/chart-trends-chartjs.js</Item>
+                    <Item>ui/screen-demographics/charts/boards/chart-compare-svg.js</Item>
                     <Item>ui/screen-demographics/views/shared/view-pills.js</Item>
                     <Item>ui/screen-demographics/views/shared/options-button.js</Item>
+                    <Item>ui/screen-demographics/views/history/history-synthetic-metrics.js</Item>
                     <Item>ui/screen-demographics/views/history/view-history.js</Item>
                     <Item>ui/screen-demographics/views/history/history-tabs.js</Item>
                     <Item>ui/screen-demographics/views/history/history-captions.js</Item>
