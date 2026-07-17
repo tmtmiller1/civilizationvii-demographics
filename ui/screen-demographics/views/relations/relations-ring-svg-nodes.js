@@ -6,6 +6,7 @@ import {
   hexToRgba,
   normalizeCivColor
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
+import { orderedNames } from "/demographics/ui/core/player-label.js";
 
 /**
  * Per-node display info resolved from history + engine lookups. Loose at the
@@ -85,7 +86,10 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  */
 function nodeDisplayName(info, id) {
   if (info.isCityState) return info.csName || "CS-" + id;
-  if (info.leaderName && info.civName) return info.leaderName + ", " + info.civName;
+  if (info.leaderName && info.civName) {
+    const [primary, secondary] = orderedNames(info.leaderName, info.civName);
+    return primary + ", " + secondary;
+  }
   return info.leaderName || info.csName || "P" + id;
 }
 

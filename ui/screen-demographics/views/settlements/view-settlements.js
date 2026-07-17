@@ -16,6 +16,7 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { div, fmt, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import {
   SETTLEMENT_OUTPUTS,
   buildSettlementBoard
@@ -293,7 +294,8 @@ function enrichWonders(s, history) {
  */
 function buildOwnerAvatar(owner) {
   const wrap = div("demographics-settle-avatar");
-  if (owner.readable || owner.primary) wrap.style.backgroundColor = owner.readable || owner.primary;
+  const bg = owner.readable || owner.primary;
+  if (bg) wrap.style.backgroundColor = bg;
   if (owner.secondary) wrap.style.borderColor = owner.secondary;
   if (owner.leaderType) {
     const portrait = document.createElement("fxs-icon");
@@ -303,7 +305,9 @@ function buildOwnerAvatar(owner) {
     wrap.appendChild(portrait);
   } else {
     const initial = (owner.leaderName || owner.civName || "?").trim().charAt(0).toUpperCase() || "?";
-    wrap.appendChild(div("demographics-settle-avatar-initial", initial));
+    const el = div("demographics-settle-avatar-initial", initial);
+    if (bg) el.style.color = safeTextColor(bg);
+    wrap.appendChild(el);
   }
   return wrap;
 }
@@ -317,8 +321,15 @@ function buildOwnerCell(owner) {
   const cell = div("demographics-settle-owner");
   cell.appendChild(buildOwnerAvatar(owner));
   const names = div("demographics-settle-owner-names");
-  names.appendChild(div("demographics-settle-owner-leader", owner.leaderName || "—"));
-  if (owner.civName) names.appendChild(div("demographics-settle-owner-civ", owner.civName));
+  // Civilization-primary, leader-secondary (player feedback: identify with the
+  // civ first). The prominent class ".-owner-leader" now intentionally carries
+  // the CIV name; the smaller ".-owner-civ" carries the leader. Only surface the
+  // secondary leader line when there is a distinct civ name above it.
+  const primary = owner.civName || owner.leaderName || "—";
+  names.appendChild(div("demographics-settle-owner-leader", primary));
+  if (owner.civName && owner.leaderName) {
+    names.appendChild(div("demographics-settle-owner-civ", owner.leaderName));
+  }
   cell.appendChild(names);
   return cell;
 }

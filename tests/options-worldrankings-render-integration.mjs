@@ -85,6 +85,41 @@ rankHost._rect.width = 1200; rankHost._rect.height = 900;
 renderRankings(rankHost, rankCtx);
 assert.ok(rankHost.children.length > 0);
 
+// ── responsive layout gate: table vs matrix ──────────────────────────
+// The worldRankingsAllCivsLayout setting pins the branch; "auto" measures the
+// host's available rem-width (the stub returns _rect.width, and a 10rem probe
+// returns 160, so availableRem === width/16).
+function renderWith(width, layout) {
+  const settings = makeSettings();
+  if (layout) settings.setSetting("worldRankingsAllCivsLayout", layout);
+  const host = document.createElement("div");
+  host._rect.width = width; host._rect.height = 900;
+  renderRankings(host, { history, settings, requestReload: () => {} });
+  return host;
+}
+
+// Explicit override wins regardless of width.
+assert.ok(
+  renderWith(1200, "table").querySelector(".demographics-civtable"),
+  "layout=table renders the sortable civs-as-rows table"
+);
+assert.ok(
+  renderWith(1200, "matrix").querySelector(".demographics-worldrankings-allcivs-strip"),
+  "layout=matrix renders the civs-as-columns matrix"
+);
+// Auto: wide host → table, narrow host → matrix (the 4K-safe fallback).
+assert.ok(
+  renderWith(1600, "auto").querySelector(".demographics-civtable"),
+  "auto layout picks the table when there is width for readable metric columns"
+);
+assert.ok(
+  renderWith(300, "auto").querySelector(".demographics-worldrankings-allcivs-strip"),
+  "auto layout falls back to the matrix on a narrow host"
+);
+// A local-player row is highlighted in the table branch (pid 1 = localPlayerID).
+const localRow = renderWith(1600, "table").querySelector(".is-local");
+assert.ok(localRow, "the local player's row is highlighted in the table");
+
 delete globalThis.document;
 delete globalThis.requestAnimationFrame;
 delete globalThis.Locale;
