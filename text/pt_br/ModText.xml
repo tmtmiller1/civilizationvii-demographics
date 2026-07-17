@@ -1653,8 +1653,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="pt_BR"><Text>Population Share of the World Over Time</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="pt_BR"><Text>Land Area Share</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="pt_BR"><Text>Land Area Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="pt_BR"><Text>Fingerprint</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="pt_BR"><Text>Civilization Fingerprint — Science vs Military</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="pt_BR"><Text>Power &amp; Science</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="pt_BR"><Text>Power &amp; Science</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="pt_BR"><Text>Archetype</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="pt_BR"><Text>Power Archetype — Every Civilization Compared</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="pt_BR"><Text>Faith</Text></Replace>
@@ -1675,8 +1675,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="pt_BR"><Text>Economy &amp; Resources</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="pt_BR"><Text>Wealth &amp; Culture</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="pt_BR"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="pt_BR"><Text>Soft Power</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="pt_BR"><Text>Soft Power — Influence vs Happiness</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="pt_BR"><Text>Happiness &amp; Influence</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="pt_BR"><Text>Happiness &amp; Influence</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="pt_BR"><Text>No wonders built yet.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="pt_BR"><Text>No wonders built or under construction yet.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="pt_BR"><Text>No data recorded for this breakdown yet.</Text></Replace>

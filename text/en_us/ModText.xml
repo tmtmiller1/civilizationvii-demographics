@@ -2434,8 +2434,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE"><Text>Population Share of the World Over Time</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA"><Text>Land Area Share</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE"><Text>Land Area Share of the World Over Time</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER"><Text>Fingerprint</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE"><Text>Civilization Fingerprint — Science vs Military</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER"><Text>Power &amp; Science</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE"><Text>Power &amp; Science</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR"><Text>Archetype</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE"><Text>Power Archetype — Every Civilization Compared</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_FAITH"><Text>Faith</Text></Row>
@@ -2456,8 +2456,8 @@
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES"><Text>Economy &amp; Resources</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE"><Text>Wealth &amp; Culture</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER"><Text>Soft Power</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE"><Text>Soft Power — Influence vs Happiness</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER"><Text>Happiness &amp; Influence</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE"><Text>Happiness &amp; Influence</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS"><Text>No wonders built yet.</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING"><Text>No wonders built or under construction yet.</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN"><Text>No data recorded for this breakdown yet.</Text></Row>
