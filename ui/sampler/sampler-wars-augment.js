@@ -2,6 +2,8 @@
 //
 // War roster augmentation and enrichment helpers.
 
+import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
+
 /**
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").WarHistory} WarHistory
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").WarRecord} WarRecord
@@ -26,7 +28,7 @@ export function pidInfo(snapshot, pid) {
   const civTypeString = resolveRosterCivTypeString(ps, pid);
   return {
     pid,
-    civ: civ || "Player " + pid,
+    civ: civ || tPlayerFallback(pid),
     leader: ps.leaderName || "",
     color: ps.primaryColor || "#9aa8c8",
     civTypeString: civTypeString || undefined,

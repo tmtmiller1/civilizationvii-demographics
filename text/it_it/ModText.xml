@@ -12,11 +12,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="it_IT"><Text>Panoramica storica della partita corrente.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="it_IT"><Text>Punteggio</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="it_IT"><Text>Tesoro</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="it_IT"><Text>OPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="it_IT"><Text>Gold (GPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="it_IT"><Text>Entrate d'oro per turno (nette).</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="it_IT"><Text>Insediamenti</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="it_IT"><Text>Tecnologie</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="it_IT"><Text>Civismi</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="it_IT"><Text>Settlements Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="it_IT"><Text>Techs Count</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="it_IT"><Text>Civics Count</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="it_IT"><Text>Punteggio di potenza composito, lo stesso numero usato dalla schermata della Vittoria.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="it_IT"><Text>Saldo attuale del tesoro.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="it_IT"><Text>Numero totale di città e villaggi posseduti.</Text></Replace>
@@ -24,20 +24,20 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="it_IT"><Text>Numero di nodi civici completamente sbloccati nell'albero dell'era attuale.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="it_IT"><Text>PIL</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="it_IT"><Text>Stima comparativa della dimensione economica, basata sui rendimenti per turno e sulla durata della partita.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="it_IT"><Text>PPT</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="it_IT"><Text>Production (PPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="it_IT"><Text>Produzione per turno, ciò che costruiscono le tue città.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="it_IT"><Text>Scienza per turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="it_IT"><Text>Science (SPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="it_IT"><Text>Scienza per turno, alimenta la ricerca tecnologica.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="it_IT"><Text>Cultura per turno</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="it_IT"><Text>Culture (CPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="it_IT"><Text>Cultura per turno, alimenta i progressi dei civismi.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="it_IT"><Text>Resa agricola</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="it_IT"><Text>Food (FPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="it_IT"><Text>Produzione netta di cibo per turno in tutti gli insediamenti.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="it_IT"><Text>Approvazione diplomatica</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="it_IT"><Text>Indicatore sintetico dei rapporti diplomatici con le civiltà incontrate e, in misura minore, con le città-stato soggette.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="it_IT"><Text>Popolazione</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="it_IT"><Text>Popolazione reale scalata, derivata esponenzialmente dal numero totale di cittadini.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="it_IT"><Text>Influenza</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="it_IT"><Text>Felicità</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="it_IT"><Text>Influence (IPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="it_IT"><Text>Happiness (HPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="it_IT"><Text>Resa netta di felicità per turno.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="it_IT"><Text>Influenza diplomatica netta generata per turno.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="it_IT"><Text>Accordi in corso</Text></Replace>
@@ -51,13 +51,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="it_IT"><Text>Relazioni globali</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="it_IT"><Text>Opzioni</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="it_IT"><Text>Economia</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="it_IT"><Text>Potenza</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="it_IT"><Text>Soft Power</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="it_IT"><Text>Conoscenza &amp; Influenza</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="it_IT"><Text>Trionfi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="it_IT"><Text>Risorse</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="it_IT"><Text>Conflitti</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="it_IT"><Text>Guerre</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="it_IT"><Text>Radar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="it_IT"><Text>Triumphs Radar</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="it_IT"><Text>Corsa</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="it_IT"><Text>Completamento</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="it_IT"><Text>Trionfi nel tempo</Text></Replace>
@@ -67,8 +67,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="it_IT"><Text>Quanto è vicina alla fine l'era attuale. Uguale per tutte le civiltà.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="it_IT"><Text>Fase di crisi</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="it_IT"><Text>Fase di crisi attuale (0 = nessuna, 3 = crisi al culmine). Valore globale di partita.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="it_IT"><Text>Impilate</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="it_IT"><Text>Totale</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="it_IT"><Text>Resources Stacked by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="it_IT"><Text>Total Resources</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="it_IT"><Text>Bonus</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="it_IT"><Text>Impero</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="it_IT"><Text>Città</Text></Replace>
@@ -344,6 +344,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="it_IT"><Text>Giocatore locale non disponibile (modalità osservatore).</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="it_IT"><Text>Civiltà maggiori</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="it_IT"><Text>Città-stato</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="it_IT">
+            <Text>Share Innovations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="it_IT">
+            <Text>Pioneering</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="it_IT">
+            <Text>Give Influence Token</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="it_IT">
             <Text>ritirato T-{1_Turn}</Text>
         </Replace>
@@ -1355,6 +1364,63 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="it_IT">
             <Text>6</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7" Language="it_IT">
+            <Text>7</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_8" Language="it_IT">
+            <Text>8</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_9" Language="it_IT">
+            <Text>9</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_10" Language="it_IT">
+            <Text>10</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_11" Language="it_IT">
+            <Text>11</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_12" Language="it_IT">
+            <Text>12</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_13" Language="it_IT">
+            <Text>13</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_14" Language="it_IT">
+            <Text>14</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_15" Language="it_IT">
+            <Text>15</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_16" Language="it_IT">
+            <Text>16</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_17" Language="it_IT">
+            <Text>17</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_18" Language="it_IT">
+            <Text>18</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_19" Language="it_IT">
+            <Text>19</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_20" Language="it_IT">
+            <Text>20</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_21" Language="it_IT">
+            <Text>21</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_22" Language="it_IT">
+            <Text>22</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_23" Language="it_IT">
+            <Text>23</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_24" Language="it_IT">
+            <Text>24</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_25" Language="it_IT">
+            <Text>25</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="it_IT">
             <Text>Ospita {1_List}.</Text>
         </Replace>
@@ -1472,9 +1538,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="it_IT"><Text>Società</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="it_IT"><Text>Espansione</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="it_IT"><Text>Popolazione</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="it_IT"><Text>Militare</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="it_IT"><Text>Military Power</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="it_IT"><Text>Guerre</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="it_IT"><Text>Relazioni</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="it_IT"><Text>Global Relations</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="it_IT"><Text>Accordi</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="it_IT"><Text>Prodotto interno lordo (PIL)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="it_IT"><Text>Oro per turno (OPT)</Text></Replace>
@@ -1535,5 +1601,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="it_IT"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="it_IT"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="it_IT"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="it_IT"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="it_IT"><Text>War</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="it_IT"><Text>Disaster</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="it_IT"><Text>{1_Age} Begins</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="it_IT"><Text>Unknown</Text></Replace>
     </LocalizedText>
 </Database>

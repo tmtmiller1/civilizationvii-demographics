@@ -11,6 +11,7 @@
 // together) so they stay aligned at any size.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { getXAxisMode } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import {
   mountStackAxisTitles,
@@ -49,7 +50,7 @@ function mountCrisisLabels(wrap, onsets, ctx) {
     div.style.top = ((L.padT + 2 + (i % 3) * 30) / H) * 100 + "%";
     const stage = document.createElement("div");
     stage.className = "demographics-wars-crisis-label-stage";
-    stage.style.color = CRISIS_STAGE_COLORS[idx];
+    stage.style.color = safeTextColor(CRISIS_STAGE_COLORS[idx]);
     stage.textContent = t(CRISIS_STAGE_LABELS[idx]);
     div.appendChild(stage);
     const name = document.createElement("div");

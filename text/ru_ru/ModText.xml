@@ -12,11 +12,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ru_RU"><Text>Краткий исторический обзор текущей партии.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ru_RU"><Text>Очки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ru_RU"><Text>Казна</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ru_RU"><Text>Зол./ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ru_RU"><Text>Gold (GPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="ru_RU"><Text>Доход золота за ход (чистый).</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ru_RU"><Text>Поселения</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ru_RU"><Text>Технологии</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ru_RU"><Text>Соц. институты</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ru_RU"><Text>Settlements Over Time</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ru_RU"><Text>Techs Count</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ru_RU"><Text>Civics Count</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ru_RU"><Text>Совокупный показатель мощи, то же число, что используется на экране победы.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="ru_RU"><Text>Текущий баланс казны.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="ru_RU"><Text>Общее число принадлежащих вам городов и поселков.</Text></Replace>
@@ -24,20 +24,20 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ru_RU"><Text>Число полностью открытых узлов соц. институтов в дереве текущей эпохи.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ru_RU"><Text>ВВП</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ru_RU"><Text>Сравнительная оценка масштаба экономики на основе доходов за ход и длительности партии.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ru_RU"><Text>Пр-во/ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ru_RU"><Text>Production (PPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ru_RU"><Text>Производство за ход, то, что строят ваши города.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ru_RU"><Text>Наука за ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ru_RU"><Text>Science (SPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ru_RU"><Text>Наука за ход, двигает исследование технологий.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ru_RU"><Text>Культура за ход</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ru_RU"><Text>Culture (CPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ru_RU"><Text>Культура за ход, двигает прогресс соц. институтов.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ru_RU"><Text>Урожайность</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ru_RU"><Text>Food (FPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ru_RU"><Text>Чистое производство еды за ход по всем поселениям.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ru_RU"><Text>Дипломатическое одобрение</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ru_RU"><Text>Сводный показатель дипломатических отношений со встреченными цивилизациями и, в меньшей степени, с подвластными городами-государствами.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ru_RU"><Text>Население</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ru_RU"><Text>Масштабированное реальное население, экспоненциально выведенное из общего числа граждан.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ru_RU"><Text>Влияние</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ru_RU"><Text>Довольство</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ru_RU"><Text>Influence (IPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ru_RU"><Text>Happiness (HPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="ru_RU"><Text>Чистый прирост довольства за ход.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="ru_RU"><Text>Чистое дипломатическое влияние, производимое за ход.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="ru_RU"><Text>Текущие соглашения</Text></Replace>
@@ -51,13 +51,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ru_RU"><Text>Глобальные отношения</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ru_RU"><Text>Настройки</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ru_RU"><Text>Экономика</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ru_RU"><Text>Мощь</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ru_RU"><Text>Soft Power</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="ru_RU"><Text>Знания и влияние</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="ru_RU"><Text>Триумфы</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="ru_RU"><Text>Ресурсы</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="ru_RU"><Text>Конфликты</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="ru_RU"><Text>Войны</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ru_RU"><Text>Радар</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ru_RU"><Text>Triumphs Radar</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="ru_RU"><Text>Гонка</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="ru_RU"><Text>Завершение</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="ru_RU"><Text>Триумфы с течением времени</Text></Replace>
@@ -67,8 +67,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="ru_RU"><Text>Насколько близка текущая эпоха к завершению. Одинаково для всех цивилизаций.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="ru_RU"><Text>Стадия кризиса</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="ru_RU"><Text>Текущая стадия кризиса (0 = нет, 3 = пик кризиса). Общее для всей игры значение.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ru_RU"><Text>С накоплением</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ru_RU"><Text>Всего</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ru_RU"><Text>Resources Stacked by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ru_RU"><Text>Total Resources</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="ru_RU"><Text>Бонус</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="ru_RU"><Text>Империя</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="ru_RU"><Text>Город</Text></Replace>
@@ -344,6 +344,15 @@
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="ru_RU"><Text>Местный игрок недоступен (режим наблюдателя).</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ru_RU"><Text>Крупные цивилизации</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ru_RU"><Text>Города-государства</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="ru_RU">
+            <Text>Share Innovations</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="ru_RU">
+            <Text>Pioneering</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="ru_RU">
+            <Text>Give Influence Token</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ru_RU">
             <Text>вышла T-{1_Turn}</Text>
         </Replace>
@@ -1355,6 +1364,63 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="ru_RU">
             <Text>6</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7" Language="ru_RU">
+            <Text>7</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_8" Language="ru_RU">
+            <Text>8</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_9" Language="ru_RU">
+            <Text>9</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_10" Language="ru_RU">
+            <Text>10</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_11" Language="ru_RU">
+            <Text>11</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_12" Language="ru_RU">
+            <Text>12</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_13" Language="ru_RU">
+            <Text>13</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_14" Language="ru_RU">
+            <Text>14</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_15" Language="ru_RU">
+            <Text>15</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_16" Language="ru_RU">
+            <Text>16</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_17" Language="ru_RU">
+            <Text>17</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_18" Language="ru_RU">
+            <Text>18</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_19" Language="ru_RU">
+            <Text>19</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_20" Language="ru_RU">
+            <Text>20</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_21" Language="ru_RU">
+            <Text>21</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_22" Language="ru_RU">
+            <Text>22</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_23" Language="ru_RU">
+            <Text>23</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_24" Language="ru_RU">
+            <Text>24</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_25" Language="ru_RU">
+            <Text>25</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="ru_RU">
             <Text>Здесь находятся: {1_List}.</Text>
         </Replace>
@@ -1472,9 +1538,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="ru_RU"><Text>Общество</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="ru_RU"><Text>Экспансия</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="ru_RU"><Text>Население</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ru_RU"><Text>Армия</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ru_RU"><Text>Military Power</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="ru_RU"><Text>Войны</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ru_RU"><Text>Отношения</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ru_RU"><Text>Global Relations</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="ru_RU"><Text>Соглашения</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="ru_RU"><Text>Валовой внутренний продукт (ВВП)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="ru_RU"><Text>Золото за ход (ЗЗХ)</Text></Replace>
@@ -1535,5 +1601,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ru_RU"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ru_RU"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="ru_RU"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="ru_RU"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="ru_RU"><Text>War</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="ru_RU"><Text>Disaster</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="ru_RU"><Text>{1_Age} Begins</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="ru_RU"><Text>Unknown</Text></Replace>
     </LocalizedText>
 </Database>
