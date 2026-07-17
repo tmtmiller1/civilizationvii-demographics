@@ -12,6 +12,7 @@
 // wonders-screen.js (for the Controls.define call).
 
 import Panel from "/core/ui/panel-support.js";
+import { setNameOrder } from "/demographics/ui/core/player-label.js";
 import * as ViewHistory from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen/screen-history-context.js";
 import { buildPolicyBanner } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
@@ -344,9 +345,14 @@ class ScreenDemographics extends Panel {
     // Always OPEN to Global Statistics → Economy → Score, regardless of the last
     // session's location. (Within a session the user's navigation still persists
     // and updates these settings; we just ignore the stored values on each open.)
+    // EXCEPTION: a one-shot return-view override (e.g. the Top-Cities cinematic
+    // teardown asking to land back on World Rankings) is honored once, then cleared.
     this.activeView = "statistics";
     this.activeMetric = "score";
     this.activePage = "economy";
+    const pendingView = this._takePendingReturnView();
+    if (pendingView) this.activeView = pendingView;
+    setNameOrder(this.settings.getSetting("nameOrder", "civLeader"));
     this._restoreTimeFilters();
     this._restoreViewerPids();
     this._restoreConflictsState();
@@ -361,6 +367,26 @@ class ScreenDemographics extends Panel {
       "hiddenCivs=",
       this.hiddenCivs.size
     );
+  }
+
+  /**
+   * Read and clear the one-shot "return view" override written by a sub-flow
+   * (e.g. the Top-Cities cinematic teardown) so the screen lands back where it
+   * launched exactly once, without permanently overriding the open-on-Statistics
+   * default. Never throws.
+   * @returns {string|null} The override view id (e.g. "rankings"), or null.
+   */
+  _takePendingReturnView() {
+    try {
+      const v = this.settings.getSetting("pendingReturnView", "");
+      if (v) {
+        this.settings.setSetting("pendingReturnView", "");
+        return String(v);
+      }
+    } catch (_) {
+      // settings unavailable → no override; fall through to the default view.
+    }
+    return null;
   }
 
   /**

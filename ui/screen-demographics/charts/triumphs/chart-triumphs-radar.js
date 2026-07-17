@@ -8,6 +8,7 @@
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { buildLeaderIconGroup } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
+import { buildLegendControls } from "/demographics/ui/screen-demographics/charts/line/chart-line-legend.js";
 import {
   dlog,
   SVG_NS,
@@ -449,8 +450,8 @@ function buildRadarSvg(params) {
 
 /**
  * Mount the radar legend into the wrap, a `.demographics-line-legend` overlay
- * box (top-left of the plot) with a "Legend" title and one clickable row per
- * civ, matching the line/other charts' legend.
+ * box (top-left of the plot) with a "Legend" title, the shared All/None bulk
+ * controls, and one clickable row per civ — matching the line/other charts' legend.
  * @param {{
  *   wrap: HTMLElement,
  *   civs: Map<string, RadarCiv>,
@@ -468,8 +469,11 @@ function mountRadarLegend(params) {
   legend.style.maxHeight = Math.max(80, (H || 600) - 64) + "px";
   const title = document.createElement("div");
   title.className = "demographics-line-legend-title";
-  title.textContent = t("LOC_DEMOGRAPHICS_LEGEND_TITLE") || "Legend";
+  title.textContent = t("LOC_DEMOGRAPHICS_LEGEND_TITLE");
   legend.appendChild(title);
+  // Same All/None bulk-select controls the line legend renders.
+  const keys = [...civs.values()].map((c) => c.leaderType).filter(Boolean);
+  legend.appendChild(buildLegendControls(keys, opts.onSetAllHidden));
   civs.forEach((c) =>
     legend.appendChild(buildRadarLegendRow(c, hidden.has(c.leaderType), onToggle))
   );

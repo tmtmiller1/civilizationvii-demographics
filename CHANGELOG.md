@@ -7,6 +7,36 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+A World Rankings usability and consistency release, built from AndySafik's playtest
+feedback. The **Civilization Rank by Yield** screen can once again be a sortable
+civs-as-rows table; several screens now lead with the civilization rather than the
+leader; and the settlement showcase makes ownership clearer.
+
+### Added
+- **Civilization Rank by Yield is sortable again — responsively.** The screen now
+  renders a civs-as-rows table with click-to-sort yield columns (Score, Food, Science,
+  …) when there is width for readable headers, and automatically falls back to the
+  wide civs-as-columns matrix at very large Interface Sizes (where the matrix's font-fit
+  keeps ~22 columns readable, as the 2.3.2 rework intended). The local player's row is
+  highlighted, unmet civilizations stay masked, and a `worldRankingsAllCivsLayout`
+  setting (`auto`/`table`/`matrix`) can pin the layout.
+
+### Changed
+- **Civilization-first labels for consistency.** Graph legends and tooltips now read
+  "Civilization (Leader)" instead of "Leader (Civilization)"; the Civilization Rank by
+  Yield column headers and the All Settlements owner cell lead with the civilization,
+  with the leader as the secondary line — matching the screens that already did so.
+  A Civ → Leader / Leader → Civ toggle in the history controls sets the preference.
+- **Clearer settlement ownership.** The Top 25 Settlements podium cards now show a
+  Settlement / Civilization / Leader hierarchy, and each row of the full settlements
+  list shows the owning civilization beneath the settlement name.
+
+### Fixed
+- **Two-word names stay on one line.** "Great Britain", "Achaemenid Persia" and long
+  settlement names no longer wrap onto a second line in the Civilization Ranking and
+  Top 25 Settlements podium cards — the cards were widened and the name is kept to a
+  single line (with an ellipsis only when genuinely out of room).
+
 ## [2.4.5] - 2026-07-11
 
 A localization release. Polish is now fully translated, the settlements cinematic

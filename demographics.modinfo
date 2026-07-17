@@ -91,6 +91,7 @@
                     <Item>ui/core/demographics-contracts.js</Item>
                     <Item>ui/core/ui-helpers.js</Item>
                     <Item>ui/core/demographics-audio.js</Item>
+                    <Item>ui/core/player-label.js</Item>
                     <Item>ui/core/demographics-palette.js</Item>
                     <Item>ui/core/demographics-a11y.js</Item>
                     <Item>ui/screen-demographics/screen-demographics.html</Item>
@@ -129,6 +130,7 @@
                     <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js</Item>
                     <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js</Item>
                     <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-controller.js</Item>
+                    <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-table.js</Item>
                     <Item>ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js</Item>
                     <Item>ui/screen-demographics/views/settlements/view-settlements.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-data.js</Item>

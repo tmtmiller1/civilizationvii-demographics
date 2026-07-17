@@ -2,6 +2,43 @@
 
 Open items not yet addressed. Newest first.
 
+## Real translations for the 22 Top-25 / diplomacy localization keys
+
+**Status:** open (added alongside the pl_PL full-translation integration). **[Low]**
+
+**Context:** integrating the Polish localization added 22 new LOC keys — the settlement
+ordinals `LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7..25` (19) and
+`LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_{SHARE_INNOVATIONS,PIONEERING,GIVE_INFLUENCE_TOKEN}` (3).
+Polish (`pl_PL`) is fully translated; **en_us** carries the real English words; the other
+nine locales (`de_de es_es fr_fr it_it ja_jp ko_kr pt_br ru_ru zh_cn`) currently hold
+**placeholders** to satisfy the `tests/i18n.mjs` parity gate: ordinals 7–25 use the bare
+digit (matching each locale's existing `ORDINAL_6="6"` convention) and the three diplomacy
+actions use the English string.
+
+**Work:** supply real translations for the ordinal words and the three diplomacy-action
+labels in the nine placeholder locales. Behavior is correct as-is (digit / English fallback);
+this is polish, not a bug. Keep the parity gate green.
+
+## UI/UX feedback from AndySafik (2026-07 playtest) — points 1–5
+
+**Status:** RESOLVED in 2.5.0. All nine sub-items were implemented — the responsive
+sortable Civilization Rank by Yield table (2.1/2.2), Civilization-first labels on the
+legend + matrix header + settlement owner cell (1.1/4/5), the Top 25 Settlements
+Settlement/Civilization/Leader hierarchy and per-row civ line (3.2/3.3), and the
+single-line podium card names (1.2/3.1). Item 1.1 on the Civilization Ranking podium
+needed no change (already civilization-primary). Two follow-ups tracked below.
+
+### Deferred / to-verify from the 2.5.0 hybrid
+
+- **`MIN_METRIC_COL_REM = 2.4` is an untuned guess.** The rem-width threshold in
+  `view-worldrankings-allcivs.js` that switches Civ Rank by Yield between the sortable
+  table and the matrix was set analytically, not measured in-engine. Validate at 4K ×
+  XL Interface Size and adjust (raising it favours the matrix, the safe side).
+- **Table branch intentionally omits matrix-only affordances.** Hiding/ghosting a civ
+  column and the Scaled/Civ population number-mode toggle are matrix-only (they don't
+  map to a rows table); their settings persist so switching back to the matrix restores
+  them. Revisit if players want per-civ hide or the Civ-number mode in the table too.
+
 ## War-cost figures contaminate across age boundaries
 
 **Status:** open (surfaced by the 2026-07-10 corpus bug-hunt audit). **[High · Confirmed]**

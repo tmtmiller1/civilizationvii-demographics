@@ -33,12 +33,89 @@ import {
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
 import { mountWorldRankingsAllCivsStrip } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-controller.js";
 import { buildLeadersSection } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-leaders.js";
+import { renderCivTable } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-table.js";
+import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
 import { div } from "/demographics/ui/core/ui-helpers.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 
 const NUMBER_MODES = ["scaled", "civ"];
+
+// ── Responsive matrix/table layout gate ───────────────────────────────────────
+// The screen renders either the civs-as-rows SORTABLE TABLE (per player feedback
+// wanting sortable yield columns back) or the civs-as-columns MATRIX (the v2.3.2
+// rework that stays readable at 4K / large Interface Size). "auto" picks the table
+// only when there is width for readable per-metric column headers; otherwise the
+// matrix. A `worldRankingsAllCivsLayout` setting ("auto"|"table"|"matrix") pins it.
+const LAYOUT_MODES = ["auto", "table", "matrix"];
+// Readable floor per metric column, and the width the two sticky identity columns
+// (rank + civilization) consume — both in rem so the test folds in resolution AND
+// Interface Size (rem tracks the engine's scaled root font). Tune MIN_METRIC_COL_REM
+// in-engine at 4K × XL Interface Size; when unsure raise it (favours the matrix).
+const MIN_METRIC_COL_REM = 2.4;
+const FIXED_COLS_REM = 3.6 + 13;
+const VISIBLE_METRIC_COUNT = /** @type {*[]} */ (METRICS).filter(
+  (m) => !m.worldRankingsAllCivsHidden
+).length;
+
+/**
+ * Read the persisted layout override ("auto" | "table" | "matrix").
+ * @param {WorldRankingsAllCivsCtx} ctx Render context.
+ * @returns {string} The layout mode.
+ */
+function readLayoutSetting(ctx) {
+  let m;
+  try {
+    m = ctx?.settings?.getSetting?.("worldRankingsAllCivsLayout", "auto");
+  } catch (_) {
+    m = "auto";
+  }
+  return LAYOUT_MODES.includes(m) ? m : "auto";
+}
+
+/**
+ * Available width of `host` in rem, measured with a throwaway 10rem probe so it
+ * tracks the engine's Interface-Size font scaling. Returns 0 when the width can't
+ * be measured (first paint / detached) so the caller falls back to the matrix.
+ * @param {HTMLElement} host The (cleared) view host.
+ * @returns {number} Available width in rem, or 0.
+ */
+function availableRemWidth(host) {
+  let w = 0;
+  try {
+    w = host.getBoundingClientRect().width;
+  } catch (_) {
+    w = 0;
+  }
+  if (!(w > 0)) return 0;
+  const probe = document.createElement("div");
+  probe.style.width = "10rem";
+  host.appendChild(probe);
+  let px = 0;
+  try {
+    px = probe.getBoundingClientRect().width;
+  } catch (_) {
+    px = 0;
+  }
+  host.removeChild(probe);
+  const remPx = px > 0 ? px / 10 : 16;
+  return w / remPx;
+}
+
+/**
+ * Decide the layout for this render: the pinned setting, else the width test.
+ * @param {HTMLElement} host The (cleared) view host.
+ * @param {WorldRankingsAllCivsCtx} ctx Render context.
+ * @returns {"table"|"matrix"} The chosen layout.
+ */
+function chooseLayout(host, ctx) {
+  const mode = readLayoutSetting(ctx);
+  if (mode === "table") return "table";
+  if (mode === "matrix") return "matrix";
+  const need = FIXED_COLS_REM + VISIBLE_METRIC_COUNT * MIN_METRIC_COL_REM;
+  return availableRemWidth(host) >= need ? "table" : "matrix";
+}
 
 /**
  * Resolve the persisted Scaled/Civ number mode.
@@ -146,8 +223,30 @@ export function render(host, ctx) {
   // Read "show unmet names" setting (Fix 4). When false, mask unmet civs.
   const showUnmetNames = readBoolSetting(ctx, "showUnmetNames", false);
 
-  dlog("rendering all-civilizations matrix; civs=", allPids.length);
+  // Responsive branch: the sortable civs-as-rows table when there's width for it,
+  // else the matrix. Both own the same `() => render(host, ctx)` sort/toggle
+  // re-render, so afterRender fires on every re-render and the Settlements Options
+  // toolbar re-attaches.
+  if (chooseLayout(host, ctx) === "table") {
+    dlog("rendering all-civilizations sortable table; civs=", allPids.length);
+    renderCivTable(host, profiles, ctx, showUnmetNames, () => render(host, ctx));
+  } else {
+    dlog("rendering all-civilizations matrix; civs=", allPids.length);
+    renderMatrix(host, profiles, allPids, ctx, showUnmetNames);
+  }
+  // Let the owner re-attach host chrome after each (re)render (see note above).
+  if (typeof ctx.afterRender === "function") ctx.afterRender(host);
+}
 
+/**
+ * Render the civs-as-columns matrix branch (the wide, resolution-robust layout).
+ * @param {HTMLElement} host The view host.
+ * @param {Record<string, *>} profiles Civ profile map.
+ * @param {string[]} allPids All profile pids.
+ * @param {WorldRankingsAllCivsCtx} ctx Render context.
+ * @param {boolean} showUnmetNames Whether unmet identities are shown.
+ */
+function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
   // Metrics-as-ROWS matrix (each metric is a row, each civ a column):
   //   Column 1: metric labels (sticky-left) — a WIDE horizontal column, so long
   //             localized names read at full size and never clip/shrink, unlike
@@ -170,8 +269,6 @@ export function render(host, ctx) {
   // paired rows (Population, Emigration flows) swap in place.
   mountNumberModeToggle(host, ctx, () => render(host, ctx));
   mountMatrix(host, profiles, { localPid, otherPids }, ctx, showUnmetNames);
-  // See note above: let the owner re-attach host chrome after each (re)render.
-  if (typeof ctx.afterRender === "function") ctx.afterRender(host);
 }
 
 /**

@@ -367,3 +367,10 @@
     justify-content: flex-start;
     margin: 0 0 0.4rem 0;
 }
+/* Local player's row highlight (the matrix marks the local COLUMN with a gold
+   border; the sortable table marks the local ROW instead). A background tint plus
+   an inset gold bar, so it doesn't fight the per-civ inline border-left-color. */
+.demographics-civtable .demographics-settle-datarow.is-local {
+    background: rgba(243, 195, 76, 0.12);
+    box-shadow: inset 3px 0 0 0 rgba(243, 195, 76, 0.9);
+}
