@@ -35,6 +35,7 @@ import {
   makeFilterPillRow
 } from "/demographics/ui/screen-demographics/views/relations/relations-filters.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
+import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 import { buildRingSvg } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg.js";
 import {
   getLocalId,
@@ -291,23 +292,16 @@ function effectiveActiveSet(rs) {
 function buildSubGroupChips(rs) {
   const { subTabHost } = rs.sc;
   while (subTabHost.firstChild) subTabHost.removeChild(subTabHost.firstChild);
-  const row = document.createElement("div");
-  row.className = "demographics-relations-subgroup-row";
-  for (const group of FILTER_GROUPS) {
-    const chip = document.createElement("div");
-    chip.className =
-      "demographics-chart-time-filter-pill" +
-      (rs.activeSubGroup === group.key ? " is-active" : "");
-    chip.textContent = t(group.label);
-    chip.addEventListener("click", () => {
-      if (rs.activeSubGroup === group.key) return;
-      rs.activeSubGroup = group.key;
-      writeActiveSubGroup(rs.settings, group.key);
-      safePlaySound("data-audio-activate", "audio-panel-diplo-ribbon");
-      rs.repaint();
-    });
-    row.appendChild(chip);
-  }
+  // Use the shared metric-pill selector (rounded gold pills), matching the pill row on every
+  // other tab, rather than the flat time-filter chip look.
+  const items = FILTER_GROUPS.map((group) => ({ key: group.key, label: t(group.label) }));
+  const row = pillRow(items, rs.activeSubGroup, (/** @type {string} */ key) => {
+    rs.activeSubGroup = key;
+    writeActiveSubGroup(rs.settings, key);
+    safePlaySound("data-audio-activate", "audio-panel-diplo-ribbon");
+    rs.repaint();
+  });
+  row.classList.add("demographics-relations-subgroup-row");
   subTabHost.appendChild(row);
 }
 

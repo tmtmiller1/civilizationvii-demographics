@@ -2160,6 +2160,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="zh_CN"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="zh_CN"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="zh_CN"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="zh_Hans_CN"><Text>Civ → Leader</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="zh_Hans_CN"><Text>Leader → Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="zh_Hans_CN"><Text>City-State {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="zh_Hans_CN"><Text>War</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="zh_Hans_CN"><Text>Disaster</Text></Replace>

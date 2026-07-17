@@ -69,33 +69,33 @@ function buildLegendRow(ds, opts) {
 function buildLegendTitle() {
   const title = document.createElement("div");
   title.className = "demographics-line-legend-title";
-  title.textContent = t("LOC_DEMOGRAPHICS_LEGEND_TITLE") || "Legend";
+  title.textContent = t("LOC_DEMOGRAPHICS_LEGEND_TITLE");
   return title;
 }
 
 /**
- * Build the "All" / "None" bulk-select controls: All shows every civ, None hides
- * them all. No-op when no setAllHidden callback is wired.
- * @param {Record<string, *>[]} datasets The Chart.js datasets.
- * @param {*} opts The render options (carries onSetAllHidden).
+ * Build the shared "All" / "None" bulk-select controls row (All shows every civ,
+ * None hides them all). Exported so every chart's legend — line, radar, etc. —
+ * renders the identical control block. No-op clicks when no callback is wired.
+ * @param {string[]} keys The civ keys (leaderTypes) the buttons bulk-toggle.
+ * @param {((hidden: boolean, keys: string[]) => void)|null|undefined} onSetAllHidden
+ *   Bulk visibility callback: `(true, keys)` hides all, `(false, keys)` shows all.
  * @returns {HTMLElement} The controls row.
  */
-function buildLegendControls(datasets, opts) {
+export function buildLegendControls(keys, onSetAllHidden) {
   const row = document.createElement("div");
   row.className = "demographics-line-legend-controls";
-  const keys = datasets.map((ds) => ds.leaderType).filter(Boolean);
-  const cb = opts && opts.onSetAllHidden;
   const all = document.createElement("div");
   all.className = "demographics-line-legend-btn";
-  all.textContent = t("LOC_DEMOGRAPHICS_LEGEND_ALL") || "All";
+  all.textContent = t("LOC_DEMOGRAPHICS_LEGEND_ALL");
   all.addEventListener("click", () => {
-    if (typeof cb === "function") cb(false, keys);
+    if (typeof onSetAllHidden === "function") onSetAllHidden(false, keys);
   });
   const none = document.createElement("div");
   none.className = "demographics-line-legend-btn";
-  none.textContent = t("LOC_DEMOGRAPHICS_LEGEND_NONE") || "None";
+  none.textContent = t("LOC_DEMOGRAPHICS_LEGEND_NONE");
   none.addEventListener("click", () => {
-    if (typeof cb === "function") cb(true, keys);
+    if (typeof onSetAllHidden === "function") onSetAllHidden(true, keys);
   });
   row.appendChild(all);
   row.appendChild(none);
@@ -114,7 +114,8 @@ export function buildLineLegend(datasets, opts) {
   const legend = document.createElement("div");
   legend.className = "demographics-line-legend";
   legend.appendChild(buildLegendTitle());
-  legend.appendChild(buildLegendControls(datasets, opts));
+  const keys = datasets.map((ds) => ds.leaderType).filter(Boolean);
+  legend.appendChild(buildLegendControls(keys, opts && opts.onSetAllHidden));
   for (const ds of datasets) legend.appendChild(buildLegendRow(ds, opts));
   return legend;
 }

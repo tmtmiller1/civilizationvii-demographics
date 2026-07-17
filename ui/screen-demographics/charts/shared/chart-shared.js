@@ -7,6 +7,8 @@
 
 import { getPalette } from "/demographics/ui/core/demographics-palette.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { orderedNames, inlineLabel } from "/demographics/ui/core/player-label.js";
+import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
   policyHidesUnmet,
   policyOwnCivOnly,
@@ -130,10 +132,11 @@ function collectCivHistory(samples, pid) {
   return list;
 }
 
-// Compose the end-of-line / legend display name.
-//   civHistory.length === 0 → just leader name.
-//   civHistory.length === 1 → "Leader (Civ)".
-//   civHistory.length >= 2  → "Leader (CivOld → CivNew)" using arrow separator.
+// Compose the end-of-line / legend display name. Civilization-primary, leader
+// secondary (player feedback: identify with the civ first, then the leader).
+//   civHistory.length === 0 → just leader name (no civ to lead with).
+//   civHistory.length === 1 → "Civ (Leader)".
+//   civHistory.length >= 2  → "CivOld → CivNew (Leader)" using arrow separator.
 /**
  * Compose the end-of-line / legend display name from a leader name and the
  * civ-name history.
@@ -143,8 +146,9 @@ function collectCivHistory(samples, pid) {
  */
 function displayName(leaderOnly, civHistory) {
   if (!Array.isArray(civHistory) || civHistory.length === 0) return leaderOnly;
-  if (civHistory.length === 1) return leaderOnly + " (" + civHistory[0] + ")";
-  return leaderOnly + " (" + civHistory.join(" → ") + ")";
+  const civ = civHistory.join(" → ");
+  const [primary, secondary] = orderedNames(leaderOnly, civ);
+  return secondary ? primary + " (" + secondary + ")" : primary;
 }
 
 export { collectCivHistory, displayName };
@@ -361,8 +365,8 @@ function buildStackTurnYears(samples) {
  * @returns {string} The option label.
  */
 function civOptionLabel(ps, pid) {
-  if (!ps.leaderName) return "Player " + pid;
-  return ps.civName ? ps.leaderName + " (" + ps.civName + ")" : ps.leaderName;
+  if (!ps.leaderName) return tPlayerFallback(pid);
+  return inlineLabel(ps.leaderName, ps.civName);
 }
 
 /**

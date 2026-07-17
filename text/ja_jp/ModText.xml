@@ -1601,6 +1601,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ja_JP"><Text>Scaled</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ja_JP"><Text>Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="ja_JP"><Text>/turn</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="ja_JP"><Text>Civ → Leader</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="ja_JP"><Text>Leader → Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="ja_JP"><Text>City-State {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="ja_JP"><Text>War</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="ja_JP"><Text>Disaster</Text></Replace>

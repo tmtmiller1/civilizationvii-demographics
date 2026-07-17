@@ -177,15 +177,18 @@
     flex-direction: column;
     overflow: hidden;
 }
+/* Owner label is civilization-primary, leader-secondary (player feedback). The
+   ".-owner-leader" class is the prominent line and now carries the CIV name, so
+   it takes the accent color; ".-owner-civ" is the muted secondary leader line. */
 .demographics-settle-owner-leader {
-    color: var(--ia-text-secondary);
+    color: var(--ia-text-accent);
     font-size: var(--dg-fs-85);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .demographics-settle-owner-civ {
-    color: var(--ia-text-accent);
+    color: var(--ia-text-secondary);
     font-size: var(--dg-fs-72);
     white-space: nowrap;
     overflow: hidden;
@@ -312,8 +315,15 @@
     margin-top: 0.4rem;
     text-align: center;
 }
-.demographics-settle-podium-owner {
+/* Middle line of the Settlement / Civilization / Leader podium hierarchy: the
+   owning civ, more prominent than the leader line below it. */
+.demographics-settle-podium-civ {
     color: var(--ia-text-accent);
+    font-size: var(--dg-fs-120);
+    margin-top: 0.15rem;
+}
+.demographics-settle-podium-owner {
+    color: var(--ia-text-secondary);
     font-size: var(--dg-fs-105);
     margin-bottom: 0.3rem;
 }
@@ -386,6 +396,16 @@
     color: var(--ia-text-secondary);
     font-size: var(--dg-fs-160);
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Owning civilization under a ranked settlement's name (player feedback) —
+   small and muted so the settlement name stays primary. */
+.demographics-settle-list-civ {
+    color: var(--ia-text-secondary);
+    font-size: var(--dg-fs-72);
+    opacity: 0.9;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1311,10 +1331,12 @@
 }
 .demographics-settle-split-left {
     /* Shrinkable (0 1, not 0 0): at a large Interface Size on a narrow frame a
-       fixed 32rem basis can't shrink, crushing the right ranked list and hard-
+       fixed basis can't shrink, crushing the right ranked list and hard-
        truncating its names. Allowing shrink lets the podium column give ground so
-       both columns stay usable. */
-    flex: 0 1 32rem;
+       both columns stay usable. Basis widened to 36rem so multi-word civ/city
+       names ("Great Britain", "Achaemenid Persia") fit the podium cards on one
+       line at normal Interface Sizes; the shrink still protects narrow frames. */
+    flex: 0 1 36rem;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -1444,14 +1466,23 @@
     font-size: var(--dg-fs-160);
     margin: 0;
     text-align: left;
-    /* Wrap long names ("Unknown Civilization", long city names) instead of
-       truncating — the card is wide enough now to read them in full. */
-    white-space: normal;
+    /* Keep multi-word names ("Great Britain", "Achaemenid Persia", long city
+       names) on ONE line (player feedback) — the widened left column has room.
+       Degrade to an ellipsis only when genuinely out of room (small frame / large
+       Interface Size) rather than wrapping onto a second line. */
+    white-space: nowrap;
     line-height: 1.15;
-    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+.demographics-settle-split-left .demographics-settle-podium-civ {
+    font-size: var(--dg-fs-135);
+    margin: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-owner {
-    font-size: var(--dg-fs-120);
+    font-size: var(--dg-fs-110);
+    color: var(--ia-text-secondary);
     margin: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-score {

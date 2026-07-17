@@ -10,6 +10,8 @@ import { copyTableAsCsv } from "/demographics/ui/core/demographics-csv.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
+import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
+import { setNameOrder } from "/demographics/ui/core/player-label.js";
 
 const DBG = false;
 
@@ -540,6 +542,7 @@ export function buildToolbar(host, ctx, activeMetric) {
 
   appendMetricSpecificControls(toolbar, ctx, activeMetric);
   appendClearFocus(toolbar, ctx);
+  appendNameOrderToggle(toolbar, ctx);
   if (!TIME_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendTimeUnitsToggle(toolbar, ctx);
   if (!WONDERS_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendWondersToggle(toolbar, ctx, activeMetric);
   if (REFUGEE_METRICS.has(activeMetric)) appendRefugeeMarkerToggles(toolbar, ctx);
@@ -547,4 +550,50 @@ export function buildToolbar(host, ctx, activeMetric) {
   toolbar.appendChild(buildOptionsButton());
 
   if (toolbar.children.length) host.appendChild(toolbar);
+}
+
+/**
+ * Append the Civ/Leader name-order toggle. Persists `nameOrder`, updates the
+ * global label order, and reloads so every view relabels consistently.
+ * @param {HTMLElement} toolbar The toolbar.
+ * @param {*} ctx Render context.
+ */
+function appendNameOrderToggle(toolbar, ctx) {
+  const order = ctx?.settings?.getSetting?.("nameOrder", "civLeader") || "civLeader";
+  const items = [
+    { key: "civLeader", label: t("LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER") },
+    { key: "leaderCiv", label: t("LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV") }
+  ];
+  toolbar.appendChild(pillRow(items, order, (/** @type {string} */ o) => {
+    try {
+      ctx?.settings?.setSetting?.("nameOrder", o);
+    } catch (_) {
+      /* settings unavailable → in-memory only for this session */
+    }
+    setNameOrder(o);
+    if (typeof ctx.requestReload === "function") ctx.requestReload();
+  }, "filter"));
+}
+
+/**
+ * Scaled/Game(Civ) population toggle for the Population chart, mirroring the World
+ * Rankings number-mode switch (shares its labels). Persists `populationNumberMode`
+ * and reloads the view. Never throws.
+ * @param {*} ctx Render context.
+ * @returns {HTMLElement} The toggle pill row.
+ */
+export function buildPopulationModeToggle(ctx) {
+  const mode = ctx?.settings?.getSetting?.("populationNumberMode", "scaled") || "scaled";
+  const items = [
+    { key: "scaled", label: t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED") },
+    { key: "civ", label: t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV") }
+  ];
+  return pillRow(items, mode, (/** @type {string} */ m) => {
+    try {
+      ctx?.settings?.setSetting?.("populationNumberMode", m);
+    } catch (_) {
+      /* settings unavailable → in-memory only for this session */
+    }
+    if (typeof ctx.requestReload === "function") ctx.requestReload();
+  }, "filter");
 }

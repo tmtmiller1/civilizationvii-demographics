@@ -2414,6 +2414,8 @@
 	</Replace>
 
 
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="pl_PL"><Text>Civ → Leader</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="pl_PL"><Text>Leader → Civ</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="pl_PL"><Text>City-State {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="pl_PL"><Text>War</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="pl_PL"><Text>Disaster</Text></Replace>
