@@ -84,4 +84,4 @@ So the return lands on Global Statistics. (`settlementsSubTab:"showcase"` is hon
 
 ## Suggested order
 
-D2 (bug, small) → D1 (small, tester-visible) → Label toggle (M). All three are independent of the source-mod-gap plan and of each other.
+D2 (bug, small) → D1 (small, tester-visible) → Label toggle (M). All three are independent of each other.
