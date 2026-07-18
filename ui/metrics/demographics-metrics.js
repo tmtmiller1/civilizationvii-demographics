@@ -607,7 +607,7 @@ export const METRICS = [
     // so the axis title doesn't double-render the suffix.
     unit: "km²"
   },
-  // source-mod-integration additions live in a sibling module to respect the
+  // Extended per-civ metrics live in a sibling module to respect the
   // 500-line file cap; they obey the same MetricDef contract.
   ...EXTRA_METRICS
 ];

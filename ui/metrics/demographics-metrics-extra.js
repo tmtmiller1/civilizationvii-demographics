@@ -1,7 +1,6 @@
 // demographics-metrics-extra.js
 //
-// Extended metric registry: per-civ metrics added for the source-mod-integration
-// effort (see docs/plans/source-mod-gap-analysis-and-integration-plan.md). Kept
+// Extended metric registry: per-civ metrics added in the v2.5.0 expansion. Kept
 // out of demographics-metrics.js purely to respect the 500-line file cap as the
 // catalog grows; these entries obey the exact same MetricDef contract and are
 // spread into the canonical METRICS array by that module. Every accessor

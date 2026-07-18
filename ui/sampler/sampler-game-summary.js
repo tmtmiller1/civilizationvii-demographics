@@ -7,7 +7,7 @@
 // contract. Consumers treat an empty/absent value as "no data yet", which the
 // tab auto-hide (history-tabs.js#metricHasData) then handles in the UI.
 //
-// Scope note (from the probe, docs/plans T0 findings): Player-scope datasets
+// Scope note: Player-scope datasets
 // (Gold, Science, GreatPeopleEarned, …) resolve one dataset per player; City-scope
 // datasets (Tourism, Population, …) resolve one per city and must be summed per
 // owning player. Delta datasets (GreatPeopleEarned) accumulate; level datasets
