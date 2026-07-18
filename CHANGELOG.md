@@ -7,6 +7,13 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-07-17
+
+### Changed
+- Renamed the two scatter metrics for clarity across all 11 locales: "Fingerprint" → "Power & Science" and "Soft Power" → "Happiness & Influence" (titles simplified to match).
+- Renamed the Society-page "Natural Wonders" pill to "Natural Wonders Discovered".
+- Enlarged scatter-plot points (radius 7→9, hover 9→11) for readability.
+
 ## [2.5.0] - 2026-07-17
 
 The largest data release since the mod launched, in two halves.

@@ -1665,7 +1665,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="pt_BR"><Text>Wars this civilization has declared on others.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="pt_BR"><Text>Wars Received</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="pt_BR"><Text>Wars others have declared on this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="pt_BR"><Text>Natural Wonders</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="pt_BR"><Text>Natural Wonders Discovered</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="pt_BR"><Text>Natural wonders this civilization has discovered.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="pt_BR"><Text>Rank</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="pt_BR"><Text>Share of World</Text></Replace>
