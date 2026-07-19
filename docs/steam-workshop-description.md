@@ -1,9 +1,9 @@
 [h1]Demographics[/h1]
 
-[b]★ Updated for Civilization VII 1.4.1 ★[/b]
+[b]Updated for Civilization VII 1.4.1[/b]
 Now pairs with the new [b]Emigration[/b] companion mod, and history stays continuous across the age boundary: economy, power, population, knowledge, conflicts, and Triumph progress carry from Antiquity onward. Special thanks to [b]Slothoth[/b] for the keys to data persistence; a co-author credit is gladly offered.
 
-Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII, recording per-civ data every turn as charts, rankings, and relationship views. Its goal is to make the world's shifts readable as a lived narrative. A spiritual successor to robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and an extension of Slothoth's Global Relations (Civ VII) with added diplomacy and filtering.
+Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII, recording per-civ data every turn as charts, rankings, and relationship views, so you can see how the world changes over the course of a game. A spiritual successor to robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and an extension of Slothoth's Global Relations (Civ VII) with added diplomacy and filtering.
 
 [b]The Mod Includes:[/b]
 [list]
