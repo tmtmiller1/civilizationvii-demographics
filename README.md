@@ -6,12 +6,12 @@ A read-only analytics dashboard that samples data for every civilization each tu
 
 The in-game stats screen Civilization VII is missing: per-turn graphs, leaderboards, and a diplomacy map for every civilization you've met, all read-only.
 
-- **Historical Data:** per-turn line charts for economy, power, knowledge, resources, and more, with every civ on one plot.
+- **Historical Data** — per-turn line charts for economy, power, knowledge, resources, and more, with every civ on one plot.
 - **World Rankings:** civilization and settlement leaderboards, per-civ profile cards, and a Top 25 settlements board with map fly-to.
-- **Global Relations:** a diplomacy ring of the civilizations and city-states you've met.
-- **Wars and crises:** a timeline of every war with real, sampled costs, plus an age-by-age breakdown of each crisis's toll.
-- **Real-world scale:** figures rendered as representative populations (thousands to tens of millions, per era), GDP ($billions), and territory (km²).
-- **Yours to tune:** per-civ colors, time-range filters, hide/focus, smoothing, colorblind mode, CSV export, and adjustable sampling.
+- A **Global Relations** diplomacy ring of the civilizations and city-states you've met.
+- Wars get a timeline with real, sampled costs; each crisis gets an age-by-age breakdown of its toll.
+- Figures are shown at real-world scale: representative populations (thousands to tens of millions, per era), GDP ($billions), and territory (km²).
+- Tune it to taste: per-civ colors, time-range filters, hide/focus, smoothing, colorblind mode, CSV export, and adjustable sampling.
 
 The sections below explain each feature and setting in detail. Start with the tabs, then use later sections for specific mechanics and behavior.
 
