@@ -8,7 +8,7 @@ Verify: `npx tsc --noEmit`, `eslint`, and the test harnesses; new LOC keys must 
 
 ---
 
-## Shared groundwork: extract the pill renderer  — ✅ DONE
+## Shared groundwork: extract the pill renderer  — DONE
 
 **Done:** `pillRow(items, activeKey, onPick)` now lives in
 `ui/screen-demographics/views/shared/view-pills.js` (declared in the modinfo); view-history.js imports
@@ -24,7 +24,7 @@ onPick)` (rounded buttons, one highlighted, click → onPick). Both parts below 
 
 ---
 
-## Part 1 — Historical Data: metric row → pills (remove the 3rd-level tab row)  — ✅ DONE (synced)
+## Part 1 — Historical Data: metric row → pills (remove the 3rd-level tab row)  — DONE (synced)
 
 **Done:** `buildMetricTabRow` (history-tabs.js) now renders the 3rd-level metric selector as a
 `pillRow` instead of an `fxs-tab-bar` — applied consistently everywhere it's used (so the Emigration
@@ -67,7 +67,7 @@ that's wanted, or gate pills to non-panel pages only.
 
 ---
 
-## Part 2 — World Rankings: 4 tabs → 2 sub-tabs, each with a pill pair  — ⏸ DEFERRED
+## Part 2 — World Rankings: 4 tabs → 2 sub-tabs, each with a pill pair  — DEFERRED
 
 > Deferred per user (2026-06): not changing World Rankings for now; focus on Historical Data (Part 1).
 > Kept below for when we return to it.
@@ -108,6 +108,6 @@ that's wanted, or gate pills to non-panel pages only.
 3. World Rankings: deferred.
 
 ## Suggested order
-1. Extract `pillRow` to the shared module — ✅ DONE.
-2. Part 1 (Historical Data metric pills) — ✅ DONE.
+1. Extract `pillRow` to the shared module — DONE.
+2. Part 1 (Historical Data metric pills) — DONE.
 3. ~~Part 2 (World Rankings)~~ — deferred.
