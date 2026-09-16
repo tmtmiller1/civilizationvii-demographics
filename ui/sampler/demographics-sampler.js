@@ -34,6 +34,23 @@
 //                                                  - tree-grid/tree-grid.js
 
 import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
+import {
+  elog,
+  getLocalPlayerID,
+  getPlayer,
+  ilog,
+  safeCall,
+  safeNum,
+  setSamplerDebug,
+  setSamplerErrorHandler,
+  vlog
+} from "/demographics/ui/sampler/sampler-shared.js";
+
+// Re-exported so the collectors and snapshot modules that have always imported
+// these from the sampler keep working; they now resolve to the leaf module that
+// breaks the sampler <-> collectors-core import cycle.
+export { safeCall, safeNum, getLocalPlayerID, getPlayer };
+
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { computeChartTurn } from "/demographics/ui/sampler/sampler-chart-turn.js";
 import {
@@ -126,28 +143,6 @@ import { buildSamplerSnapshot } from "/demographics/ui/sampler/sampler-snapshot-
 // and immediately get a duplicate sample on the same turn.
 let lastSampledTurn = -1;
 
-let DEMOGRAPHICS_DEBUG = false;
-/**
- * Verbose debug logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
- * @param {...*} a Values to log.
- */
-function vlog(...a) {
-  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
-}
-/**
- * Informational logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
- * @param {...*} a Values to log.
- */
-function ilog(...a) {
-  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
-}
-/**
- * Error logger; always emits.
- * @param {...*} a Values to log.
- */
-function elog(...a) {
-  console.error("[Demographics.sampler]", ...a);
-}
 
 // ---- kill switch ---------------------------------------------------------
 let errorCount = 0;
@@ -236,67 +231,15 @@ function tripIfTooMany(label, e) {
   }
 }
 
-/**
- * Invoke `fn`, returning its result, or undefined if it throws (counting the
- * failure toward the kill switch). Never throws.
- * @template T
- * @param {string} label A label for logging/error attribution.
- * @param {() => T} fn Thunk to invoke.
- * @returns {T | undefined} The result of `fn`, or undefined on error.
- */
-export function safeCall(label, fn) {
-  try {
-    if (DEMOGRAPHICS_DEBUG) vlog("about to call", label);
-    const v = fn();
-    if (DEMOGRAPHICS_DEBUG)
-      vlog(label, "returned", typeof v, Array.isArray(v) ? "[len=" + v.length + "]" : "");
-    return v;
-  } catch (e) {
-    tripIfTooMany(label, e);
-    return undefined;
-  }
-}
+// Hand the kill switch to the leaf module that owns safeCall. Registered at module
+// evaluation, before any sampling can start, so error accounting is unchanged.
+setSamplerErrorHandler(tripIfTooMany);
 
-/**
- * Resolve the local player (or observer) id defensively.
- * @returns {number | undefined} The numeric id, or undefined if unavailable.
- */
-export function getLocalPlayerID() {
-  try {
-    if (typeof GameContext !== "undefined" && GameContext != null) {
-      const v = GameContext.localPlayerID;
-      if (typeof v === "number") return v;
-      const o = GameContext.localObserverID;
-      if (typeof o === "number") return o;
-    }
-  } catch (e) {
-    elog("getLocalPlayerID threw:", e);
-  }
-  return undefined;
-}
 
-/**
- * Get a player library handle defensively.
- * @param {Pid} id The player id.
- * @returns {*} The player handle, or undefined.
- */
-export function getPlayer(id) {
-  return safeCall("Players.get(" + id + ")", () => {
-    if (typeof Players === "undefined" || typeof Players.get !== "function") return undefined;
-    return Players.get(id);
-  });
-}
+
 
 // ---- numeric helpers -----------------------------------------------------
 
-/**
- * Coerce to a finite number, or undefined.
- * @param {*} v Candidate value.
- * @returns {number | undefined} `v` if it is a finite number, else undefined.
- */
-export function safeNum(v) {
-  return typeof v === "number" && isFinite(v) ? v : undefined;
-}
 
 // ---- the sampler ---------------------------------------------------------
 
@@ -444,7 +387,7 @@ function onPlayerTurnActivated(data) {
           firstSampleSucceeded = v;
         },
         setDebugEnabled: (v) => {
-          DEMOGRAPHICS_DEBUG = v;
+          setSamplerDebug(v);
         },
         ilog
       });

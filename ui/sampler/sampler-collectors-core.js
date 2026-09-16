@@ -3,11 +3,20 @@
 // Per-civ metric collector orchestrators and shared utilities.
 
 import {
+  _readFiniteProp,
+  dlog,
+  getLocalPlayerID,
+  getPlayer,
+  netYield,
   safeCall,
   safeNum,
-  getLocalPlayerID,
-  getPlayer
-} from "/demographics/ui/sampler/demographics-sampler.js";
+  yieldEnum
+} from "/demographics/ui/sampler/sampler-shared.js";
+
+// Re-exported for the modules that have always imported these from core. The
+// definitions now live in the leaf module so core can keep importing the
+// collectors without the two sides forming an import cycle.
+export { dlog, yieldEnum, netYield, _readFiniteProp };
 import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
   collectCities,
@@ -118,49 +127,12 @@ import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collecto
  * @property {number} [crisisStageMax] Game-wide crisis stage max (stamped).
  */
 
-const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
  * @param {...*} a Values to log.
  */
-export function dlog(...a) {
-  if (DBG) console.warn("[Demographics.sampler]", ...a);
-}
 
-/**
- * Resolve a `YieldTypes.YIELD_*` enum value defensively.
- * @param {string} key The enum key, e.g. "YIELD_GOLD".
- * @returns {number | string | undefined} The enum value, or undefined.
- */
-export function yieldEnum(key) {
-  try {
-    if (typeof YieldTypes !== "undefined" && YieldTypes != null) {
-      const v = YieldTypes[key];
-      if (typeof v === "number" || typeof v === "string") return v;
-    }
-  } catch (_e) {
-    // YieldTypes[key] access can throw if the enum global is absent; treat the
-    // yield as unavailable.
-  }
-  return undefined;
-}
 
-/**
- * Read a single net yield off a Stats handle.
- * @param {*} stats The player Stats handle.
- * @param {string} key The `YIELD_*` enum key.
- * @param {Pid} pid The player id (for log attribution).
- * @returns {number | undefined} The finite yield value, or undefined.
- */
-export function netYield(stats, key, pid) {
-  if (!stats || typeof stats.getNetYield !== "function") return undefined;
-  const yt = yieldEnum(key);
-  if (yt === undefined) return undefined;
-  return safeCall("stats.getNetYield(" + key + ") (pid=" + pid + ")", () => {
-    const v = stats.getNetYield(yt);
-    return safeNum(v);
-  });
-}
 
 /**
  * Capture whether the LOCAL player has met `id` at sample time.
@@ -432,21 +404,6 @@ function collectColors(ctx, id) {
   }
 }
 
-/**
- * Read a finite numeric property off an engine handle, swallowing errors.
- * @param {*} obj The engine handle.
- * @param {string} prop The property name.
- * @returns {number | undefined} The finite value, or undefined.
- */
-export function _readFiniteProp(obj, prop) {
-  try {
-    const v = obj[prop];
-    if (typeof v === "number" && isFinite(v)) return v;
-  } catch (_e) {
-    // Reading obj[prop] off an engine Stats handle can throw.
-  }
-  return undefined;
-}
 
 /**
  * Allocate the per-civ context object with every field pre-initialized.

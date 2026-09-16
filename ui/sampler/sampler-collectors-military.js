@@ -2,7 +2,7 @@
 //
 // Military, wonders, and triumph collectors for per-civ sampling.
 
-import { dlog, safeCall, safeNum } from "/demographics/ui/sampler/sampler-collectors-core.js";
+import { dlog, safeCall, safeNum } from "/demographics/ui/sampler/sampler-shared.js";
 import { recordUnitStrength } from "/demographics/ui/sampler/sampler-war-events.js";
 
 /**

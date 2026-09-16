@@ -8,7 +8,7 @@ import {
   netYield,
   safeCall,
   safeNum
-} from "/demographics/ui/sampler/sampler-collectors-core.js";
+} from "/demographics/ui/sampler/sampler-shared.js";
 import { recordCity } from "/demographics/ui/sampler/sampler-war-events.js";
 import { scaleCityPopulationAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 

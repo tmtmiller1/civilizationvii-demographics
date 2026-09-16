@@ -340,6 +340,37 @@ function writeRoot(root) {
   });
 }
 
+/**
+ * Whether a parsed value actually looks like the shared settings root: an object
+ * whose every top-level value is itself an object (one slice per mod id).
+ *
+ * WHY THIS EXISTS. Coherent's `localStorage.getItem()` in this UI context ignores
+ * the key it is given and returns the value of the FIRST key in the store (watched
+ * 2026-09-16: writing `!!zzz` made every read return `!!zzz`'s value, including
+ * reads of `modSettings`). So a read of `modSettings` routinely hands back some
+ * OTHER mod's blob. That blob is usually valid JSON, so the parse check alone lets
+ * it through, and the caller then writes it back under `modSettings` with our slice
+ * appended — copying a foreign archive into the shared settings key and growing it
+ * without bound. The store observed in the wild had three ~370KB near-identical
+ * copies of one history archive spread across `!chronicle`, `htlData` and
+ * `modSettings` for exactly this reason.
+ *
+ * A real settings root has only object values; the foreign blobs carry scalars
+ * (`v: 2`, `updated: 178…`) at the top level, so this is a cheap, reliable
+ * discriminator. When it fails we simply decline to persist — we never delete or
+ * rewrite anything, and the in-memory bucket keeps serving reads.
+ * @param {*} parsed The parsed `modSettings` value.
+ * @returns {boolean} True when it is shaped like a settings root.
+ */
+function looksLikeSettingsRoot(parsed) {
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
+  return Object.keys(parsed).every((k) => {
+    const v = parsed[k];
+    return !!v && typeof v === "object" && !Array.isArray(v);
+  });
+}
+
+let _foreignRootWarned = false;
 let _clobberGuardWarned = false;
 /**
  * Read the shared `modSettings` blob in preparation for a WRITE, with a hard
@@ -383,6 +414,22 @@ function readRootForWrite() {
     return { root: {}, safe: false };
   }
   if (!parsed || typeof parsed !== "object") return { root: {}, safe: false };
+  // The read may be some other mod's blob rather than the settings root (see
+  // looksLikeSettingsRoot). Writing it back would copy that blob into the shared
+  // key, so refuse to persist this session instead.
+  if (!looksLikeSettingsRoot(parsed)) {
+    if (!_foreignRootWarned) {
+      _foreignRootWarned = true;
+      derr(
+        "read of '" +
+          ROOT_KEY +
+          "' returned a value that is not a settings root (Coherent's getItem " +
+          "returns the first key in the store, not the key requested); skipping " +
+          "persistence this session rather than copying it back. Using in-memory values."
+      );
+    }
+    return { root: {}, safe: false };
+  }
   return { root: /** @type {SettingsRoot} */ (parsed), safe: true };
 }
 

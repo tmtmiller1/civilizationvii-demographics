@@ -34,7 +34,7 @@ const CIV_ADJECTIVE = {
   Han: "Han",
   Khmer: "Khmer",
   Maurya: "Mauryan",
-  Maya: "Mayan",
+  Maya: "Maya",
   Mississippian: "Mississippian",
   Persia: "Persian",
   Rome: "Roman",
@@ -45,7 +45,7 @@ const CIV_ADJECTIVE = {
   Inca: "Incan",
   Majapahit: "Majapahit",
   Ming: "Ming",
-  Mongolia: "Mongol",
+  Mongolia: "Mongolian",
   Mongol: "Mongol",
   Norman: "Norman",
   Normans: "Norman",
@@ -89,7 +89,27 @@ const CIV_ADJECTIVE = {
   Sweden: "Swedish",
   Turkey: "Turkish",
   Vietnam: "Vietnamese",
-  Zulu: "Zulu"
+  Zulu: "Zulu",
+  // Verified against the game's own LOC_CIVILIZATION_*_NAME / _ADJECTIVE strings
+  // (all shipped civs audited 2026-09-16, Civilization VII 1.5.0). The keys above
+  // were written from guessed display names, so several never matched: the game
+  // ships "Babylon" not "Babylonia", "Great Britain" not "Britain", "Achaemenid
+  // Persia" not "Persia". These are only consulted when a war record has no
+  // civTypeString to resolve the engine adjective from (older saves); the engine
+  // string still wins whenever it is available.
+  Babylon: "Babylonian",
+  Gauls: "Gallic",
+  Gaul: "Gallic",
+  // England is already correct in the list above; Babylon/Gaul were the gaps.
+  "Great Britain": "British",
+  "Achaemenid Persia": "Achaemenid Persian",
+  "French Empire": "French Imperial",
+  "Meiji Japan": "Meiji Japanese",
+  "Sengoku Japan": "Sengoku",
+  "Hawai'i": "Hawaiian",
+  Goryeo: "Goryeo",
+  Joseon: "Joseon",
+  Nepal: "Nepalese"
 };
 
 /** @type {Array<{ re: RegExp, to: string | ((value: string) => string) }>} */

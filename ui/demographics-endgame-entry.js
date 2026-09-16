@@ -17,6 +17,15 @@ function dlog(...a) {
   if (DBG) console.warn("[Demographics.endgame]", ...a);
 }
 
+// The end-of-game screens we attach to. `endgame-screen` is the results banner
+// shown when a game finishes (pushed by base-standard/ui/endgame/screen-endgame.js);
+// `screen-victory-progress` is the victory tracker that screen and the subsystem
+// dock both open. Both render the same bottom-right action row.
+const RESULT_SCREENS = "screen-victory-progress, endgame-screen";
+// The bottom-right action row inside those screens (where "Continue"/"Exit to Main
+// Menu" sit). It can mount AFTER its screen does, so a miss is never treated as final.
+const ACTION_ROW = ".bottom-10.right-10";
+
 const RESULTS_BTN_ID = "demographics-endgame-button";
 const PAUSE_BTN_ID = "demographics-pause-button";
 
@@ -72,7 +81,12 @@ function makeButton(id, label, focusView) {
  */
 function injectResults(screen) {
   if (!screen || screen.querySelector("#" + RESULTS_BTN_ID)) return;
-  const row = screen.querySelector(".bottom-10.right-10") || screen;
+  // Only ever place the button in the screen's own action row. Falling back to the
+  // screen root would strand a floating button in the top-left corner — the victory
+  // tracker is also reachable mid-game from the dock, where it has no action row at
+  // all. A miss here is not final: inspect() re-enters when the row itself mounts.
+  const row = screen.querySelector(ACTION_ROW);
+  if (!row) return;
   // From the results screen, land on World Rankings — the leaderboard reads as a game recap.
   row.insertBefore(makeButton(RESULTS_BTN_ID, t("LOC_MOD_DEMOGRAPHICS_NAME"), "rankings"), row.firstChild);
 }
@@ -100,17 +114,56 @@ function findPauseContainer(node) {
 }
 
 /**
+ * Whether an element is one of the end-of-game screens we attach to.
+ *
+ * NOTE: Coherent Gameface reports `localName`/`tagName` in UPPERCASE, unlike a
+ * browser, so this MUST compare case-insensitively. A strict lowercase equality
+ * check (`node.localName === "screen-victory-progress"`) silently never matches,
+ * and the button never appears — with no error to show for it.
+ * @param {HTMLElement} node The node to test.
+ * @returns {boolean} True when `node` is a results screen.
+ */
+export function isResultScreen(node) {
+  const ln = String(node.localName || "").toLowerCase();
+  return ln === "screen-victory-progress" || ln === "endgame-screen";
+}
+
+/**
+ * The action row a node either is or contains, if any.
+ * @param {HTMLElement} node The node to search.
+ * @returns {HTMLElement|null} The action row, or null.
+ */
+function actionRowIn(node) {
+  if (node.matches && node.matches(ACTION_ROW)) return node;
+  const found = node.querySelector ? node.querySelector(ACTION_ROW) : null;
+  return found instanceof HTMLElement ? found : null;
+}
+
+/**
+ * Resolve the results screen a mutation-added node implies: the node itself, a
+ * results screen nested inside it, or the screen owning an action row it brought
+ * in (the row can mount after its screen does).
+ * @param {HTMLElement} node The added node.
+ * @returns {HTMLElement|null} The screen to inject into, or null.
+ */
+function resultScreenFor(node) {
+  if (isResultScreen(node)) return node;
+  const nested = node.querySelector ? node.querySelector(RESULT_SCREENS) : null;
+  if (nested instanceof HTMLElement) return nested;
+  const row = actionRowIn(node);
+  const owner = row && row.closest ? row.closest(RESULT_SCREENS) : null;
+  return owner instanceof HTMLElement ? owner : null;
+}
+
+/**
  * Inspect a mutation-added node for the results screen and pause menu.
  * @param {*} node The added node.
  */
 function inspect(node) {
   if (!(node instanceof HTMLElement)) return;
   try {
-    if (node.localName === "screen-victory-progress") injectResults(node);
-    else if (node.querySelector) {
-      const s = node.querySelector("screen-victory-progress");
-      if (s instanceof HTMLElement) injectResults(s);
-    }
+    const screen = resultScreenFor(node);
+    if (screen) injectResults(screen);
     const pause = findPauseContainer(node);
     if (pause) injectPause(pause);
   } catch (e) {
@@ -121,7 +174,7 @@ function inspect(node) {
 /** Install initial injection + a MutationObserver for later screen mounts. */
 function install() {
   try {
-    const existing = document.querySelector("screen-victory-progress");
+    const existing = document.querySelector(RESULT_SCREENS);
     if (existing instanceof HTMLElement) injectResults(existing);
     const pause = document.getElementById("pause-menu-button-container");
     if (pause) injectPause(pause);

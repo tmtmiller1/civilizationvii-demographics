@@ -7,6 +7,34 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.5.2] - 2026-09-16
+
+A compatibility and robustness release. Everything works unchanged on Civilization VII 1.5.0: the dock button,
+dashboard, charts, and every data source were checked against the new patch, and the Babylon, England and Gaul
+civilizations added with it are handled throughout. The release also fixes an end-of-game button that had never
+actually worked, and stops the mod from writing unrelated data into the settings store that Options-page mods share.
+
+### Fixed
+- **War names use the right adjective for every shipped civilization, including the new Babylon, England and Gaul.**
+  War names read a civilization's adjective from the game's own text and only fall back to a bundled list when a war
+  record predates that field. Several entries in that list were keyed to names the game does not actually use, so the
+  fallback invented adjectives instead: Gauls became "Gaulsan" and Babylon "Babylonan". Every shipped civilization was
+  audited against the game's own name and adjective strings and the list corrected, which also fixes Great Britain,
+  Achaemenid Persia, French Empire, Meiji Japan, Sengoku Japan, Hawai'i, Mongolia, Maya, Goryeo, Joseon and Nepal.
+- **The Demographics button now appears on the end-of-game screen.** It had never appeared since shipping in 2.5.0.
+  The check that recognised the screen compared the element's tag name in lowercase, but the game's UI layer reports
+  tag names in uppercase, so the check never matched and the button was skipped with no error. The pause-menu button
+  was unaffected. The button now also attaches to the separate results screen 1.5.0 introduced, and is placed in that
+  screen's own button row rather than falling back to a corner of the display.
+
+### Changed
+- **The shared mod-settings store is no longer overwritten with unrelated data.** When the game's storage layer
+  returns another mod's data in place of the settings store, Demographics now leaves the store untouched for the
+  session instead of saving that data back into it. Settings keep working normally while you play. Nothing is ever
+  deleted or rewritten.
+- **Internal: the module graph is now acyclic.** The sampler's shared helpers and the Historical Data page catalogue
+  moved into dedicated modules, clearing the circular imports the game reported on every load. No behaviour changes.
+
 ## [2.5.1] - 2026-07-17
 
 ### Changed
