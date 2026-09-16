@@ -2,7 +2,7 @@
 //
 // Civic, diplomatic, and resource collectors for per-civ sampling.
 
-import { dlog, safeCall } from "/demographics/ui/sampler/sampler-collectors-core.js";
+import { dlog, safeCall } from "/demographics/ui/sampler/sampler-shared.js";
 
 // Map of Modern victory type → ctx field name.
 /** @type {Record<string, keyof import("./sampler-collectors-core.js").PlayerCtx>} */

@@ -3,7 +3,7 @@
 // Core war reconciliation and orchestration.
 
 import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
-import { safeCall } from "/demographics/ui/sampler/demographics-sampler.js";
+import { safeCall } from "/demographics/ui/sampler/sampler-shared.js";
 import {
   augmentWarsWithAllies,
   augmentWarsWithCityStates,
