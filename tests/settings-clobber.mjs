@@ -89,5 +89,38 @@ settings.setSetting("smoothChart", true);
 blob = JSON.parse(ls.getItem("modSettings"));
 assert.equal(blob.demographics.smoothChart, true, "first-run persistence must still work on an empty store");
 
+// ── Scenario 5: a FOREIGN blob (valid JSON, but not a settings root) must not be written back. ───
+// Coherent's getItem ignores the key and returns the FIRST key in the store, so a read of
+// modSettings routinely hands back some other mod's archive. It parses fine, so the JSON check
+// alone lets it through — and writing it back copies that archive into the shared settings key.
+const FOREIGN = JSON.stringify({
+  v: 2,
+  updated: 1784329667306,
+  games: { "SETUPHASH_-762842782": { fp: { seed: -762842782, setup: "SETUPHASH" }, ages: {} } }
+});
+ls = makeLocalStorage({ modSettings: FOREIGN });
+globalThis.localStorage = ls;
+settings = await loadSettings(5);
+settings.setSetting("smoothChart", true);
+assert.equal(
+  ls.getItem("modSettings"),
+  FOREIGN,
+  "a foreign (non-settings-root) blob must be left byte-identical, never appended to or rewritten"
+);
+assert.equal(
+  settings.getSetting("smoothChart", false),
+  true,
+  "the value still lives in memory for this session"
+);
+
+// A real settings root whose slices are objects must still persist normally.
+ls = makeLocalStorage({ modSettings: JSON.stringify({ [SIB]: { enabled: true } }) });
+globalThis.localStorage = ls;
+settings = await loadSettings(6);
+settings.setSetting("smoothChart", true);
+blob = JSON.parse(ls.getItem("modSettings"));
+assert.equal(blob.demographics.smoothChart, true, "a genuine settings root must still be writable");
+assert.deepEqual(blob[SIB], { enabled: true }, "sibling slice preserved");
+
 delete globalThis.localStorage;
-console.log("settings-clobber harness passed (sibling slices preserved across flaky / unparseable / empty reads)");
+console.log("settings-clobber harness passed (sibling slices preserved across flaky / unparseable / empty / foreign reads)");
