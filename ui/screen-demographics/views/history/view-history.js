@@ -17,6 +17,16 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { SYNTHETIC_METRICS } from "/demographics/ui/screen-demographics/views/history/history-synthetic-metrics.js";
 import {
+  PAGES,
+  isSynthetic,
+  metricExists,
+  setPageRenderer
+} from "/demographics/ui/screen-demographics/views/history/history-pages.js";
+
+// Re-exported so long-standing importers of view-history.js keep working after the
+// catalogue moved to the leaf module that breaks the history-tabs import cycle.
+export { PAGES, metricExists };
+import {
   getMetric,
   localizedMetricName,
   EXTERNAL_PAGE_METRICS,
@@ -168,122 +178,6 @@ function derr(...a) {
   console.error("[Demographics.view-history]", ...a);
 }
 
-/**
- * Page definitions. Each page lists metric IDs in display order. IDs that
- * don't exist in METRICS register as placeholder ("Not yet implemented").
- * @type {PageDef[]}
- */
-export const PAGES = [
-  // ── GLOBAL STATISTICS hub ───────────────────────────────────────────────
-  {
-    // All per-turn output rates in one place (stock/flow split from Economy):
-    // Food · Production · Gold · Science · Culture · Happiness · Influence.
-    id: "yields",
-    label: "LOC_DEMOGRAPHICS_PAGE_YIELDS",
-    hub: "statistics",
-    tier: "basic",
-    metrics: ["gpt", "production", "crops", "science_yield", "culture_yield", "influence", "hpt"]
-  },
-  {
-    // Economy & Resources: wealth stocks (GDP, Treasury, Trade) then the strategic
-    // resource-allocation charts (page-level stacked mix + per-class comparisons).
-    // Keeps id "economy" so the default landing page stays valid.
-    id: "economy",
-    label: "LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES",
-    hub: "statistics",
-    tier: "basic",
-    metrics: ["gdp", "gold", "trade", "resources_total", "resources_stack", "resources_bonus",
-      "resources_empire", "resources_city", "resources_factory", "resources_treasure"]
-  },
-  {
-    // Society & culture: social standing, culture-collection, the wonder group, and the
-    // Legacy Path triumph radar (legacy_radar, folded in from the former Age page).
-    id: "society",
-    label: "LOC_DEMOGRAPHICS_PAGE_SOCIETY",
-    hub: "statistics",
-    tier: "basic",
-    metrics: ["faith", "tourism", "great_people", "great_works", "techs", "civics",
-      "wonders", "wonders_board", "wonder_races", "natural_wonders", "legacy_radar"]
-  },
-  {
-    // Religion: spread + by-population over time (line charts) + current standings.
-    id: "religion",
-    label: "LOC_DEMOGRAPHICS_PAGE_RELIGION",
-    hub: "statistics",
-    tier: "standard",
-    // Antiquity shows the pantheons chosen; Exploration/Modern show the founded-religion
-    // standings/spread/by-population charts. The age gate (history-tabs.js) hides whichever
-    // set doesn't apply, so only one "Religion" pill is ever visible for the current age.
-    metrics: ["religion_pantheons", "religion_pantheon_yields", "religion_standings",
-      "religion_spread", "religion_by_pop"]
-  },
-  {
-    // Empire footprint: settlement counts/cap, land area, the size histogram, and the
-    // by-type construction boards (buildings/districts, folded from the former Construction page).
-    id: "settlements_land",
-    label: "LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND",
-    hub: "statistics",
-    tier: "basic",
-    metrics: ["land", "land_share_area", "settlements", "settlements_atlas", "settlement_cap_pct",
-      "settlement_cap", "cities", "towns", "districts_type", "buildings_type"]
-  },
-
-  // ── MIGRATION hub ───────────────────────────────────────────────────────
-  {
-    // Population is the Migration hub's headline + anchor. Standalone Demographics shows
-    // only this; the Emigration companion injects the rest of the hub after it (Phase 3).
-    id: "population",
-    label: "LOC_DEMOGRAPHICS_PAGE_POPULATION",
-    hub: "migration",
-    tier: "basic",
-    metrics: ["population"]
-  },
-
-  // ── GEOPOLITICS hub ─────────────────────────────────────────────────────
-  {
-    // "Global Relations": a RENDER page (the former top-level Relations view). First in the
-    // hub + the default page loaded when Geopolitics is selected.
-    id: "relations",
-    label: "LOC_DEMOGRAPHICS_PAGE_RELATIONS",
-    hub: "geopolitics",
-    tier: "basic",
-    render: renderRelationsPage
-  },
-  {
-    id: "agreements", label: "LOC_DEMOGRAPHICS_PAGE_AGREEMENTS",
-    hub: "geopolitics", tier: "standard", metrics: ["approval", "deals"]
-  },
-  {
-    // The current age's crisis, broken into stages with a per-civ cost section.
-    id: "crises",
-    label: "LOC_DEMOGRAPHICS_PAGE_CRISES",
-    hub: "geopolitics",
-    tier: "standard",
-    metrics: ["crisis_stages", "crisis_graphs"]
-  },
-  {
-    // "Soft Power" dashboard: Score, the Score rank-race, the Fingerprint scatters
-    // (civ_scatter/scatter_*), and the Archetype radar. Placed after Crises. tier
-    // omitted ⇒ standard.
-    id: "power",
-    label: "LOC_DEMOGRAPHICS_PAGE_POWER",
-    hub: "geopolitics",
-    metrics: ["score", "power_race", "civ_scatter", "scatter_wealth_culture", "scatter_soft_power",
-      "power_radar"]
-  },
-  {
-    // "Military Power": strength, kills/losses, combats, wars, conquest, by-type breakdowns.
-    id: "military",
-    label: "LOC_DEMOGRAPHICS_PAGE_MILITARY",
-    hub: "geopolitics",
-    tier: "basic",
-    // War Timeline (wars_gantt) + War Impact (war_graphs) folded in from the former Wars page.
-    metrics: ["milpower", "units_killed", "units_lost", "combats", "wars_declared", "wars_received",
-      "settlements_conquered", "conquest_pct", "wars_gantt", "war_graphs",
-      "units_trained_type", "units_killed_type", "units_lost_type"]
-  }
-];
-
 /** Hub ids whose pages render via the (generalized) history machinery. Rankings is its own view. */
 export const HUBS = Object.freeze(["statistics", "migration", "geopolitics"]);
 
@@ -324,6 +218,10 @@ function renderRelationsPage(host, ctx) {
     .catch((/** @type {*} */ e) => derr("relations page load failed:", e));
 }
 
+// Bind the Geopolitics "relations" RENDER page. Done here rather than in the page
+// catalogue so history-pages.js stays a leaf and the history import cycle stays broken.
+setPageRenderer("relations", renderRelationsPage);
+
 
 /**
  * Resolve a synthetic metric's display meta, localizing its title/subtitle
@@ -339,24 +237,6 @@ function resolveSyntheticMeta(id) {
   const meta = { label: raw.label, title: t(raw.title) };
   if (raw.subtitle) meta.subtitle = t(raw.subtitle);
   return meta;
-}
-/**
- * Whether `id` names a synthetic metric routed to a custom renderer.
- * @param {string} id Metric id.
- * @returns {boolean} True if synthetic.
- */
-function isSynthetic(id) {
-  return Object.prototype.hasOwnProperty.call(SYNTHETIC_METRICS, id);
-}
-/**
- * Whether `id` is renderable - a synthetic metric or a real METRICS entry.
- * @param {string} id Metric id.
- * @returns {boolean} True if renderable.
- */
-export function metricExists(id) {
-  if (isSynthetic(id)) return true;
-  const metric = getMetric(id);
-  return !!metric && metric.id === id;
 }
 
 /**

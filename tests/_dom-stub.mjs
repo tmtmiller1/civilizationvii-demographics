@@ -24,6 +24,63 @@ function nodeMatchesClass(node, className) {
   return parts.includes(className);
 }
 
+// ── Selector engine ──────────────────────────────────────────────────────────
+//
+// Supports what the mod actually uses: tag names, #id, compound class selectors
+// (`.bottom-10.right-10`), and comma-separated lists. Tag matching is
+// case-INSENSITIVE, mirroring real querySelector, while `tagName`/`localName`
+// report UPPERCASE — the Coherent Gameface behaviour a strict lowercase
+// comparison silently fails against.
+const SIMPLE_PART_RE = /([#.]?)([A-Za-z0-9_-]+)/g;
+
+function parseSimpleSelector(sel) {
+  const out = { tag: null, id: null, classes: [] };
+  SIMPLE_PART_RE.lastIndex = 0;
+  let m;
+  while ((m = SIMPLE_PART_RE.exec(sel)) !== null) {
+    const sigil = m[1];
+    const name = m[2];
+    if (sigil === "#") out.id = name;
+    else if (sigil === ".") out.classes.push(name);
+    else out.tag = name.toUpperCase();
+  }
+  return out;
+}
+
+function parseSelectorList(selector) {
+  if (typeof selector !== "string" || selector.trim() === "") return [];
+  return selector
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map(parseSimpleSelector);
+}
+
+function nodeMatchesSimple(node, simple) {
+  if (!node) return false;
+  if (simple.tag && String(node.tagName || "").toUpperCase() !== simple.tag) return false;
+  if (simple.id && node.id !== simple.id) return false;
+  for (const c of simple.classes) if (!nodeMatchesClass(node, c)) return false;
+  return true;
+}
+
+function nodeMatchesSelector(node, selector) {
+  const list = parseSelectorList(selector);
+  if (list.length === 0) return false;
+  return list.some((simple) => nodeMatchesSimple(node, simple));
+}
+
+function descendants(root) {
+  const out = [];
+  const queue = [...(root.children || [])];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    out.push(node);
+    queue.push(...(node.children || []));
+  }
+  return out;
+}
+
 class FakeElement {
   constructor(tagName) {
     this.tagName = String(tagName || "div").toUpperCase();
@@ -45,10 +102,22 @@ class FakeElement {
     this.attributes = new Map();
     this.listeners = new Map();
     this.className = "";
+    this.id = "";
     this.classList = classListApi(this);
     this.textContent = "";
     this.title = "";
     this._rect = { width: 120, height: 80 };
+  }
+
+  // Gameface reports localName in UPPERCASE (unlike a browser, which lowercases
+  // it). Mirroring that here is what lets a `localName === "some-tag"` bug fail
+  // in tests instead of only in game.
+  get localName() {
+    return this.tagName;
+  }
+
+  get nodeName() {
+    return this.tagName;
   }
 
   get firstChild() {
@@ -117,34 +186,34 @@ class FakeElement {
     }
   }
 
+  matches(selector) {
+    return nodeMatchesSelector(this, selector);
+  }
+
+  closest(selector) {
+    let node = this;
+    while (node) {
+      if (nodeMatchesSelector(node, selector)) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+
   querySelector(selector) {
-    if (typeof selector !== "string" || !selector.startsWith(".")) return null;
-    const className = selector.slice(1);
-    const queue = [...this.children];
-    while (queue.length > 0) {
-      const node = queue.shift();
-      if (nodeMatchesClass(node, className)) return node;
-      queue.push(...(node.children || []));
+    const list = parseSelectorList(selector);
+    if (list.length === 0) return null;
+    for (const node of descendants(this)) {
+      if (list.some((simple) => nodeMatchesSimple(node, simple))) return node;
     }
     return null;
   }
 
   querySelectorAll(selector) {
-    if (typeof selector !== "string") return [];
-    const classes = selector
-      .split(",")
-      .map((s) => s.trim())
-      .filter((s) => s.startsWith("."))
-      .map((s) => s.slice(1));
-    if (classes.length === 0) return [];
-    const out = [];
-    const queue = [...this.children];
-    while (queue.length > 0) {
-      const node = queue.shift();
-      if (classes.some((c) => nodeMatchesClass(node, c))) out.push(node);
-      queue.push(...(node.children || []));
-    }
-    return out;
+    const list = parseSelectorList(selector);
+    if (list.length === 0) return [];
+    return descendants(this).filter((node) =>
+      list.some((simple) => nodeMatchesSimple(node, simple))
+    );
   }
 
   getBoundingClientRect() {
@@ -175,7 +244,11 @@ export function createFakeDocument() {
       textContent: String(text || ""),
       parentNode: null
     }),
-    createElementNS: (_ns, tag) => new FakeElement(tag)
+    createElementNS: (_ns, tag) => new FakeElement(tag),
+    querySelector: (sel) => body.querySelector(sel),
+    querySelectorAll: (sel) => body.querySelectorAll(sel),
+    getElementById: (id) => body.querySelector("#" + id),
+    head: new FakeElement("head")
   };
   return { document: doc, FakeElement };
 }

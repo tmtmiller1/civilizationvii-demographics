@@ -1,7 +1,7 @@
 // history-tabs.js
 // Page + metric tab rows and chart title for Historical Data view.
 
-import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/history/view-history.js";
+import { PAGES, metricExists } from "/demographics/ui/screen-demographics/views/history/history-pages.js";
 import { SYNTHETIC_METRICS } from "/demographics/ui/screen-demographics/views/history/history-synthetic-metrics.js";
 import { getCurrentAgeType } from "/demographics/ui/sampler/sampler-collectors-core.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
