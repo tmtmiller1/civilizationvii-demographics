@@ -37,7 +37,7 @@
 - **Geopolitics:** a diplomacy ring of the civilizations and city-states you have met, agreements over time, each crisis broken down stage by stage, soft-power comparisons, and a full military record with a timeline of every war.
 - **World Rankings:** civilization and settlement leaderboards, a sortable rank-by-yield table for each, and a Top 25 settlements board that can fly the camera to any city.
 - **Real-world scale:** populations in the thousands to tens of millions by era, GDP in dollars, and territory in km².
-- **Your view, your way:** per-civ colors, time-range filters, hide and focus, civ-or-leader labels, colorblind mode, CSV export, and three interface complexity levels.
+- **Your view, your way:** per-civ colors, time-range filters, hide and focus, civ-or-leader labels, colorblind mode, CSV export, and a Basic mode that shows only the core pages.
 - **Companion-ready:** the *Emigration* mod adds its own tab, and any mod can add metrics or pages through a small public API.
 
 Built on the foundations of robk's InfoAddict (Civ V), Gedemon's CivGraphs (Civ VI), and Slothoth's Global Relations panel (Civ VII). Open source, with full readable source included.
