@@ -141,12 +141,15 @@ Most metrics are read straight off the player each turn with no transform: the p
 
 A few figures apply a deterministic transform so the raw game number reads at a believable real-world scale. These are **cosmetic** and never affect gameplay:
 
-- **Population (scaled):** derived from **Civilization VII's own per-era growth formula** (the food cost the game charges to grow a settlement, which differs by age), turned into a representative people count by a single calibration constant. Each settlement is valued for *whatever age it's in* — towns in the thousands, great cities up to ~1M pre-modern, and 10–38M megacities only in the Modern age — with a smooth, continuous hand-off across age boundaries (no jump at an age change) and an upper safety bound. A small per-settlement variation, drawn from real signals (happiness, urban/rural mix, growth trend), keeps any two same-size settlements from reading identically. The **civ-wide** figure is the **sum of its settlements'** estimates (not a separate, hotter aggregate), so "empire" and "sum of cities" agree. (The Emigration companion mod shares this exact curve, pinned by a cross-mod test.) See `reports/population-scaling-per-age-design.md`.
-- **GDP:** a weighted sum of the per-turn yields, `× turn × 1,000,000`, shown in `$M`/`$B`. Weights: Gold 1.0, Production 1.0, Food 0.5, Science 1.2, Culture 1.2, Influence 1.5. Multiplying by the turn count approximates a cumulative economy rather than a single turn's output.
+- **Population (scaled):** derived from **Civilization VII's own per-era growth formula** (the food cost the game charges to grow a settlement, which differs by age), turned into a representative people count by a single calibration constant. Each settlement is valued for *whatever age it's in* — towns in the thousands, great cities up to ~1M pre-modern, and 10–38M megacities only in the Modern age — with a smooth, continuous hand-off across age boundaries (no jump at an age change) and an upper safety bound. A small per-settlement variation, drawn from real signals (happiness, urban/rural mix, growth trend), keeps any two same-size settlements from reading identically. The **civ-wide** figure is the **sum of its settlements'** estimates (not a separate, hotter aggregate), so "empire" and "sum of cities" agree. (The Emigration companion mod shares this exact curve, pinned by a cross-mod test.)
+- **GDP:** a weighted sum of the per-turn yields, `× turn × 1,000,000`, shown in `$M`/`$B`. Weights: Gold 1.0, Production 1.0, Food 0.5, Science 1.2, Culture 1.2, Influence 1.5. Multiplying by the turn count approximates a cumulative economy rather than a single turn's output; the turn factor is capped at 300 so very long games and slow speeds keep a comparable scale.
+- **Score:** `techs + civics + 2 × settlements + ⌊gold ÷ 100⌋`, with techs and civics counted cumulatively across ages so the line never drops at an age change. The **Power Race** plots each civilization's rank by this score.
 - **Land Area:** `owned_tiles × 7,000 km²` (a hex's nominal real-world area).
 - **Military Power:** the summed combat strength of the civ's military units, totaled in the sampler (there is no clean player-level engine accessor).
 - **Diplomatic Approval:** a reputation aggregate. Each met major civ contributes by relationship (Allied +5, Helpful +3, Friendly +2, Neutral 0, Unfriendly -2, Hostile -3, At War -5); suzerained city-states contribute the same weights at `× 0.3`.
 - **Settlement Cap Utilization:** `settlements ÷ settlement_cap × 100`.
+- **Land Area Share** and **Population Share:** each civilization's land (or population) as a share of the total held by all charted civilizations that turn, stacked to 100%.
+- **Conquest %:** settlements a civilization has conquered, as a percentage of the settlements it holds now.
 - **Crisis Stage:** the engine's internal stage (pre-crisis -1 through 3) shifted up by one so it reads "Stage 1" to "Stage 4" and plots cleanly as a step.
 
 ### War and crisis cost
@@ -169,17 +172,17 @@ Because losses are summed from per-turn dips, coarse sampling (or the decimation
 
 - Settings persist in `localStorage`. Recorded history persists per save game via the GameConfiguration store, carrying across quit/load and age transitions.
 - History sample caps are **automatic**: they scale with game speed and adapt to hardware (CPU cores / device memory / mobile) and game size (player count), shrinking retention on weak machines and many-civ games (floored so history is never starved). Chart rendering is additionally clamped to a per-series point budget scaled by the same capability factor, so a marathon-length line plots a bounded number of points after the visible-range filter.
-- Interface complexity (game Options → Mods → Demographics → *Interface complexity*) progressively discloses features: **Basic** shows the core pages (Yields Per Turn, Economy & Resources, Society, Land & Settlements, Population, Global Relations, Military Power); **Standard** (default) adds Religion, Agreements, Crises, and Soft Power, plus the Top 25 camera options; **Analyst** also shows the storage and sampling controls. A higher tier only reveals more.
+- **Complexity** (game Options → Mods → Demographics) sets how much of the dashboard is shown: **Basic** shows the core pages (Yields Per Turn, Economy & Resources, Society, Land & Settlements, Population, Global Relations, Military Power); **Standard** (default) and **Analyst** show every page, adding Religion, Agreements, Crises, and Soft Power.
 - Colorblind mode swaps chart and relationship colors to a colorblind-safe set.
-- Unmet-civilization visibility: the **Hide unmet civilization stats** option (Options → Mods → Demographics) withholds diplomacy/influence/relations data for civilizations you haven't met (the charts show a gap, and unmet civs render as placeholders). A banner below the views states the active analytics policy.
+- **Spoiler guard** (on by default, Options → Mods → Demographics) hides the names, charts, and diplomacy and relations stats of civilizations you haven't met, so unmet civilizations render as placeholders and their lines show a gap. **History on first contact** chooses whether meeting a civilization reveals its full back-history or tracks it only from first contact. A banner below the views states the active analytics policy.
 - Multiplayer governance: an analytics policy stored in the shared `GameConfiguration` is enforced as a ceiling for every player that game — clients drop any civ the host's policy hides, and the banner notes when the host (rather than a local preference) is the binding constraint.
 
 ## 8. Companion-mod integration
 
-Other mods can contribute to the Historical Data screen through an optional, order-independent API on `globalThis.DemographicsMetricsAPI` (inert unless called, so the base mod is unchanged):
+Other mods can contribute to the dashboard through an optional, order-independent API on `globalThis.DemographicsMetricsAPI` (inert unless called, so the base mod is unchanged):
 
 - **`registerMetric(spec)`**: add a per-civ line-chart metric that flows through the normal sample, store, and chart pipeline. A spec may include a `tooltipAttribution(ctx)` callback whose returned string is shown as a source-attribution line in that metric's tooltip.
-- **`registerMetricToPage(pageId, metricId, afterMetricId?)`**: place the metric's tab on an existing page (for example, next to Population on **Power**).
+- **`registerMetricToPage(pageId, metricId, afterMetricId?)`**: place the metric's tab on an existing page (for example, next to Population).
 - **`registerMetricGroup(spec)`**: collapse several related metrics behind one tab with up to two pill-row toggles (a metric row and a view/units row), charting one member at a time. Member metrics stay individually registered (and sampled); the group just picks which one is shown.
 - **`registerPanel(spec)`**: contribute a whole **page** (optionally with its own sub-tabs) whose body the companion renders itself. The screen adds it as its own top-level tab and calls `spec.render(container, ctx, subId)` to fill it (the chart title, time-range filter, and CSV toolbar are suppressed for these custom pages). Demographics gains no dependency on the companion.
 
@@ -187,7 +190,7 @@ The handshake is load-order-independent: registrations made before this screen l
 
 ### Performance on large saves (with Emigration installed)
 
-If late-game turns feel heavy with both mods active, **raise Emigration's `turnInterval`** (game Options → Mods → Emigration → Advanced) so its migration pass runs less often. This is a pure cadence lever: it changes how often migration updates, not behavior or graph semantics. (Demographics' own sampling cadence is automatic and adapts to hardware/game size, so there's no manual frequency knob to tune.)
+If late-game turns feel heavy with both mods active, **raise Emigration's *How often migration runs*** (game Options → Mods → Emigration → Advanced, Pacing group) so its migration pass runs less often. This is a pure cadence lever: it changes how often migration updates, not behavior or graph semantics. (Demographics' own sampling cadence is automatic and adapts to hardware/game size, so there's no manual frequency knob to tune.)
 
 **Measuring the combined cost** (developer recipe, not gameplay): on a turn where both mods fire, the debug logs report Emigration's pass duration and Demographics' sample duration; opening the **Emigration** tab exercises the shared render core. Comparing those three tells you whether a turn spike is the Emigration pass, the Demographics sample, or the embedded page: the cross-mod bridge itself is a thin read-only layer over each mod's existing tallies.
 
