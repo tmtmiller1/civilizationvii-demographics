@@ -5,7 +5,7 @@ notes are archived outside the repo, not kept here.)
 
 ## Subfolders
 
-None.
+- screenshots  -  In-game captures of the dashboard used by the repository README gallery (18 views, 1920 px JPEG).
 
 ## Files
 
