@@ -1743,5 +1743,584 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="ko_KR"><Text>아직 판테온이 창시되지 않았습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="ko_KR"><Text>교리</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="ko_KR"><Text>판테온 — 선택한 교리와 그 효과</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE" Language="ko_KR">
+            <Text>명예의 전당</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MENU_BUTTON" Language="ko_KR">
+            <Text>명예의 전당</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_CHRONICLE" Language="ko_KR">
+            <Text>연대기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_LINEAGE" Language="ko_KR">
+            <Text>계보</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_OVERVIEW" Language="ko_KR">
+            <Text>개요</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS" Language="ko_KR">
+            <Text>순위</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_LEADERS" Language="ko_KR">
+            <Text>지도자</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_CIVS" Language="ko_KR">
+            <Text>문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RECORDS" Language="ko_KR">
+            <Text>기록</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ALL_AGES" Language="ko_KR">
+            <Text>모든 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_ALL" Language="ko_KR">
+            <Text>전체</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_MINE" Language="ko_KR">
+            <Text>내 문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_SETTLEMENTS" Language="ko_KR">
+            <Text>정착지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS" Language="ko_KR">
+            <Text>불가사의</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WAR" Language="ko_KR">
+            <Text>전쟁과 평화</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_FAITH" Language="ko_KR">
+            <Text>종교</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_TRIUMPHS" Language="ko_KR">
+            <Text>대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WORLD" Language="ko_KR">
+            <Text>세계</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST" Language="ko_KR">
+            <Text>최신순</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST" Language="ko_KR">
+            <Text>오래된 순</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_MORE" Language="ko_KR">
+            <Text>더 보기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TURN_N" Language="ko_KR">
+            <Text>{1_Turn}턴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TURNS" Language="ko_KR">
+            <Text>{1_Count}턴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_PERCENT" Language="ko_KR">
+            <Text>{1_Value}%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE" Language="ko_KR">
+            <Text>독립 세력</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET" Language="ko_KR">
+            <Text>만나지 않은 문명과 관련되어 숨겨진 사건: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_LEADERS" Language="ko_KR">
+            <Text>만나지 않아 숨겨진 지도자: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE" Language="ko_KR">
+            <Text>연대기는 다음 턴부터 시작됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_HOF" Language="ko_KR">
+            <Text>아직 기록된 게임이 없습니다. 플레이하는 모든 캠페인이 여기에 추가됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_FOUND" Language="ko_KR">
+            <Text>{1_Civ} 측이 {2_Settlement}을(를) 건설했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CAPTURE" Language="ko_KR">
+            <Text>{1_Civ} 측이 {3_Civ} 측으로부터 {2_Settlement}을(를) 빼앗았습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RAZED" Language="ko_KR">
+            <Text>{2_Civ}의 {1_Settlement}이(가) 사라졌습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WONDER" Language="ko_KR">
+            <Text>{1_Civ} 측이 {2_Wonder}을(를) 완성했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WAR" Language="ko_KR">
+            <Text>{1_Civ}와(과) {2_Civ} 사이에 전쟁이 일어났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_PEACE" Language="ko_KR">
+            <Text>{1_Civ}와(과) {2_Civ}이(가) 평화 조약을 체결했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RELIGION" Language="ko_KR">
+            <Text>{1_Civ} 측이 {2_Religion}을(를) 창시했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_TRIUMPH" Language="ko_KR">
+            <Text>{1_Civ} 측이 대성공 {2_Triumph}을(를) 달성했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_ELIM" Language="ko_KR">
+            <Text>{1_Civ} 측이 멸망했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_AGE" Language="ko_KR">
+            <Text>새로운 시대가 시작됩니다: {1_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CIV" Language="ko_KR">
+            <Text>이제 {1_Leader}이(가) {2_Civ}을(를) 이끕니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_MET" Language="ko_KR">
+            <Text>{1_Civ}와(과) 처음 만났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_VICTORY" Language="ko_KR">
+            <Text>{1_Civ} 측이 승리했습니다: {2_Victory}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_GENERIC" Language="ko_KR">
+            <Text>{1_Civ}: {2_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NARR_LEAD" Language="ko_KR">
+            <Text>이 시대에 {1_Leader}이(가) {2_Civ}을(를) 이끌었습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED" Language="ko_KR">
+            <Text>건설</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED" Language="ko_KR">
+            <Text>점령</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_LOST" Language="ko_KR">
+            <Text>상실</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WONDERS" Language="ko_KR">
+            <Text>불가사의</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS" Language="ko_KR">
+            <Text>대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WARS" Language="ko_KR">
+            <Text>전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_WONDERS" Language="ko_KR">
+            <Text>불가사의:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_RELIGION" Language="ko_KR">
+            <Text>창시한 종교:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_FALLEN" Language="ko_KR">
+            <Text>멸망한 문명:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_TITLE" Language="ko_KR">
+            <Text>지도자와 그들이 이끈 문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN" Language="ko_KR">
+            <Text>멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN" Language="ko_KR">
+            <Text>{1_Turn}턴에 멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_LEADER" Language="ko_KR">
+            <Text>지도자</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION" Language="ko_KR">
+            <Text>문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS" Language="ko_KR">
+            <Text>문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS" Language="ko_KR">
+            <Text>대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS" Language="ko_KR">
+            <Text>정착지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION" Language="ko_KR">
+            <Text>인구</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="ko_KR">
+            <Text>칭호</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="ko_KR">
+            <Text>결과</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS" Language="ko_KR">
+            <Text>턴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED" Language="ko_KR">
+            <Text>플레이 날짜</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TREND" Language="ko_KR">
+            <Text>대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_FATE" Language="ko_KR">
+            <Text>운명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS" Language="ko_KR">
+            <Text>최다 대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS" Language="ko_KR">
+            <Text>평균 턴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_GAMES" Language="ko_KR">
+            <Text>게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES" Language="ko_KR">
+            <Text>승리</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE" Language="ko_KR">
+            <Text>승률</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TURNS" Language="ko_KR">
+            <Text>플레이한 턴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS" Language="ko_KR">
+            <Text>달성한 대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS" Language="ko_KR">
+            <Text>최다 정착지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE" Language="ko_KR">
+            <Text>유형별 승리</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_VICTORIES" Language="ko_KR">
+            <Text>아직 승리가 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FINEST_GAME" Language="ko_KR">
+            <Text>최고의 게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LATEST_GAME" Language="ko_KR">
+            <Text>가장 최근 게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE" Language="ko_KR">
+            <Text>결과(승리 우선), 모든 시대에 걸쳐 달성한 대성공 수, 가장 적은 턴 수 순으로 순위를 매깁니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="ko_KR">
+            <Text>짧은 게임 숨기기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="ko_KR">
+            <Text>모든 게임 보기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ko_KR">
+            <Text>승리</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="ko_KR">
+            <Text>승리: {1_Victory}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="ko_KR">
+            <Text>정복</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="ko_KR">
+            <Text>패배</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_ENDED" Language="ko_KR">
+            <Text>종료</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_IN_PROGRESS" Language="ko_KR">
+            <Text>진행 중</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED" Language="ko_KR">
+            <Text>{1_Turn}턴에 멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED" Language="ko_KR">
+            <Text>생존</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK" Language="ko_KR">
+            <Text>돌아가기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_GAME" Language="ko_KR">
+            <Text>명예의 전당에서 제거</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_CONFIRM" Language="ko_KR">
+            <Text>다시 클릭하면 제거됩니다</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TREND_TITLE" Language="ko_KR">
+            <Text>게임 진행에 따른 대성공과 정착지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS" Language="ko_KR">
+            <Text>하이라이트</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS" Language="ko_KR">
+            <Text>이 게임에는 기록된 하이라이트가 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RIVALS" Language="ko_KR">
+            <Text>경쟁자</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_RIVALS" Language="ko_KR">
+            <Text>이 게임에는 기록된 경쟁자가 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CIVS_NOTE" Language="ko_KR">
+            <Text>이끈 모든 문명이 이끈 시대와 관계없이 집계됩니다. 승률과 막대는 종료된 게임만 반영합니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_WON" Language="ko_KR">
+            <Text>승리: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_NOT_WON" Language="ko_KR">
+            <Text>승리 없음: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_FINISHED" Language="ko_KR">
+            <Text>종료된 게임 없음</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS" Language="ko_KR">
+            <Text>시도</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR" Language="ko_KR">
+            <Text>획득 조건</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_GAVE" Language="ko_KR">
+            <Text>효과</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_UNFINISHED" Language="ko_KR">
+            <Text>진행 중: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE" Language="ko_KR">
+            <Text>플레이한 모든 지도자입니다. 승률과 막대는 종료된 게임만 반영합니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE" Language="ko_KR">
+            <Text>각 기록을 보유한 게임입니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_NOTE" Language="ko_KR">
+            <Text>최고의 게임과 그중 최근 게임의 순위입니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_TRIUMPHS" Language="ko_KR">
+            <Text>최다 대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_WONDERS" Language="ko_KR">
+            <Text>최다 불가사의</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_SETTLEMENTS" Language="ko_KR">
+            <Text>최대 제국</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED" Language="ko_KR">
+            <Text>최다 정착지 점령</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="ko_KR">
+            <Text>최단 승리</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="ko_KR">
+            <Text>최장 게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="ko_KR">
+            <Text>게임은 이 컴퓨터에 저장됩니다. 각 저장 파일에도 자체 기록이 보관됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ko_KR">
+            <Text>이번 세션에서는 저장소에서 지난 게임을 읽을 수 없었습니다. 지금 플레이하는 게임은 계속 표시되며, 각 저장 파일을 불러오면 해당 기록이 복원됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="ko_KR">
+            <Text>아우구스투스</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="ko_KR">
+            <Text>키루스 대왕</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3" Language="ko_KR">
+            <Text>카롤루스 대제</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_4" Language="ko_KR">
+            <Text>함무라비</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_5" Language="ko_KR">
+            <Text>람세스 2세</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_6" Language="ko_KR">
+            <Text>아소카</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_7" Language="ko_KR">
+            <Text>하트셉수트</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_8" Language="ko_KR">
+            <Text>유스티니아누스</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_9" Language="ko_KR">
+            <Text>앨프레드 대왕</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_10" Language="ko_KR">
+            <Text>루이 16세</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_11" Language="ko_KR">
+            <Text>노턴 황제</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_12" Language="ko_KR">
+            <Text>준비되지 않은 왕 애설레드</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE" Language="ko_KR">
+            <Text>기록 시작 전에 멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_BEFORE" Language="ko_KR">
+            <Text>기록 시작 전에 멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL" Language="ko_KR">
+            <Text>{1_Date}부터 기록됨. 이 시대의 이전 사건은 기록되지 않았습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF" Language="ko_KR">
+            <Text>명예의 전당</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY" Language="ko_KR">
+            <Text>역사</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECENT_GAMES" Language="ko_KR">
+            <Text>최근 게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_SCALED" Language="ko_KR">
+            <Text>환산 인구</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_CIV" Language="ko_KR">
+            <Text>문명 인구</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF" Language="ko_KR">
+            <Text>명예의 전당으로 돌아가기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CRISIS" Language="ko_KR">
+            <Text>위기 {2_Stage}단계: {1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED" Language="ko_KR">
+            <Text>시대의 위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TITLE" Language="ko_KR">
+            <Text>연표</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_AGES" Language="ko_KR">
+            <Text>시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CRISES" Language="ko_KR">
+            <Text>위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MILESTONES" Language="ko_KR">
+            <Text>이정표</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH" Language="ko_KR">
+            <Text>{1_Civ}와(과)의 전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED" Language="ko_KR">
+            <Text>인구 {1_Value} 도달</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_STAGE" Language="ko_KR">
+            <Text>{1_Stage}단계</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_DISASTER" Language="ko_KR">
+            <Text>{1_Name}이(가) {2_Civ}을(를) 강타했습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED" Language="ko_KR">
+            <Text>자연재해</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_DISASTERS" Language="ko_KR">
+            <Text>재해</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION_LANE" Language="ko_KR">
+            <Text>이주</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION" Language="ko_KR">
+            <Text>유입 {1_In}, 유출 {2_Out}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ARRIVED" Language="ko_KR">
+            <Text>유입</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_LEFT" Language="ko_KR">
+            <Text>유출</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TURN" Language="ko_KR">
+            <Text>{1_Turn}턴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES" Language="ko_KR">
+            <Text>모든 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PLAY" Language="ko_KR">
+            <Text>재생</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PAUSE" Language="ko_KR">
+            <Text>일시 정지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_GAME_OPTIONS" Language="ko_KR">
+            <Text>게임 옵션</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_NOTE" Language="ko_KR">
+            <Text>게임을 제거하면 이 컴퓨터의 명예의 전당에서 기록이 삭제됩니다. 되돌릴 수 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_SETTLEMENTS" Language="ko_KR">
+            <Text>정착지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_NTH_SETTLEMENT" Language="ko_KR">
+            <Text>{1_N}번째 정착지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_VICTORY" Language="ko_KR">
+            <Text>승리</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_ELIM" Language="ko_KR">
+            <Text>멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_AGE" Language="ko_KR">
+            <Text>새 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WONDER" Language="ko_KR">
+            <Text>불가사의</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RELIGION" Language="ko_KR">
+            <Text>종교</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CAPTURE" Language="ko_KR">
+            <Text>점령</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RAZED" Language="ko_KR">
+            <Text>파괴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_TRIUMPH" Language="ko_KR">
+            <Text>대성공</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WAR" Language="ko_KR">
+            <Text>전쟁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_PEACE" Language="ko_KR">
+            <Text>평화</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CRISIS" Language="ko_KR">
+            <Text>위기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CIV" Language="ko_KR">
+            <Text>새 문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_DISASTER" Language="ko_KR">
+            <Text>재해</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_FOUND" Language="ko_KR">
+            <Text>건설</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_MET" Language="ko_KR">
+            <Text>접촉</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MAP_TITLE" Language="ko_KR">
+            <Text>영토</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CIVS" Language="ko_KR">
+            <Text>문명</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ONLY_MINE" Language="ko_KR">
+            <Text>내 문명만</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_CIVS" Language="ko_KR">
+            <Text>전체</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR" Language="ko_KR">
+            <Text>전쟁: {1_Civ} 대 {2_Other}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS" Language="ko_KR">
+            <Text>정복</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="ko_KR">
+            <Text>승리와 멸망</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="ko_KR">
+            <Text>이 컴퓨터에 지난 게임을 보관할 수 없습니다. 게임의 저장 오류로 인해 다른 모드의 저장 데이터가 방해하고 있습니다. 지금 플레이하는 게임은 계속 표시되며, 각 저장 파일을 불러오면 해당 기록이 복원됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="ko_KR">
+            <Text>최고의 게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE" Language="ko_KR">
+            <Text>최고의 플레이</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST" Language="ko_KR">
+            <Text>상위 10위의 나머지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_THIS_GAME" Language="ko_KR">
+            <Text>이 게임</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF" Language="ko_KR">
+            <Text>{2_Total}개 중 {1_Rank}위</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN" Language="ko_KR">
+            <Text>상위 10위 안에 있습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="ko_KR">
+            <Text>대성공 {1_Count}</Text>
+        </Replace>
     </LocalizedText>
 </Database>

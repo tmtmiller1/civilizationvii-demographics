@@ -32,6 +32,7 @@ import { renderTablePanel } from "/demographics/ui/screen-demographics/views/set
 import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 import { annotateWonderYears } from "/demographics/ui/screen-demographics/settlements/settlements-wonder-years.js";
 import { readAgeArchive } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
+import { renderHallOfFameTab } from "/demographics/ui/screen-demographics/views/settlements/settlements-halloffame.js";
 
 const TOP_N = 25;
 
@@ -476,7 +477,8 @@ const SUBTABS = [
   { id: "civranking", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" },
   { id: "civilizations", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" },
   { id: "showcase", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" },
-  { id: "table", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" }
+  { id: "table", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" },
+  { id: "halloffame", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF" }
 ];
 
 /**
@@ -513,6 +515,7 @@ function buildSubTabs(st) {
  */
 function rerenderContent(st) {
   while (st.content.firstChild) st.content.removeChild(st.content.firstChild);
+  if (st.subTab === "halloffame") return renderHallOfFameTab(st.content);
   // Civilizations = the per-civ All Civilizations matrix (built from sampled
   // history); the other two are the live settlement rankings. (The old per-city
   // detail dossier was folded into the Top-25 rows , no separate view.)

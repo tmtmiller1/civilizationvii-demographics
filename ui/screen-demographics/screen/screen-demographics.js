@@ -30,6 +30,7 @@ import { publishEffectivePolicy } from "/demographics/ui/core/demographics-gover
 /** @type {Record<string, string>} */
 const LAZY_VIEW_SPECIFIERS = {
   rankings: "/demographics/ui/screen-demographics/views/settlements/view-settlements.js",
+  history: "/demographics/ui/history/views/history-app.js",
   relations: "/demographics/ui/screen-demographics/views/relations/view-relations.js"
 };
 
@@ -86,6 +87,7 @@ const VIEW_TABS = [
   { id: "statistics", label: "LOC_DEMOGRAPHICS_TAB_STATISTICS" },
   { id: "migration", label: "LOC_DEMOGRAPHICS_TAB_MIGRATION" },
   { id: "geopolitics", label: "LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" },
+  { id: "history", label: "LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY" },
   { id: "rankings", label: "LOC_DEMOGRAPHICS_TAB_RANKINGS" }
 ];
 
@@ -662,9 +664,9 @@ class ScreenDemographics extends Panel {
       this._renderHistoricalDataView(host, { onlyPage: this.activeView });
       return;
     }
-    // Rankings is its own (settlements) view; the three metric hubs render the history machinery
-    // scoped to the hub's pages.
-    if (this.activeView === "rankings") {
+    // Rankings (settlements + Hall of Fame) and History (chronicle + lineage) are their own lazy
+    // views; the three metric hubs render the history machinery scoped to the hub's pages.
+    if (this.activeView === "rankings" || this.activeView === "history") {
       this._renderLazyView(host, this.activeView);
       return;
     }
@@ -899,7 +901,8 @@ try {
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-relations-options.css",
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-conflicts-history.css",
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-settlements.css",
-        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-density.css"
+        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-density.css",
+        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-history.css"
       ],
       content: ["fs://game/demographics/ui/screen-demographics/screen-demographics.html"],
       attributes: [],

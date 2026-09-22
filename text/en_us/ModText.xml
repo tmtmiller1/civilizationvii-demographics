@@ -2519,5 +2519,584 @@
         <Row Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER"><Text>Disaster</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS"><Text>{1_Age} Begins</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN"><Text>Unknown</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE">
+            <Text>Hall of Fame</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_MENU_BUTTON">
+            <Text>Hall of Fame</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TAB_CHRONICLE">
+            <Text>Chronicle</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TAB_LINEAGE">
+            <Text>Lineage</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_OVERVIEW">
+            <Text>Overview</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS">
+            <Text>Rankings</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_LEADERS">
+            <Text>Leaders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_CIVS">
+            <Text>Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_RECORDS">
+            <Text>Records</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_ALL_AGES">
+            <Text>All Ages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_ALL">
+            <Text>Everything</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_MINE">
+            <Text>Your Civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_SETTLEMENTS">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS">
+            <Text>Wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WAR">
+            <Text>War and Peace</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_FAITH">
+            <Text>Religion</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_TRIUMPHS">
+            <Text>Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WORLD">
+            <Text>World</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST">
+            <Text>Newest first</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST">
+            <Text>Oldest first</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_SHOW_MORE">
+            <Text>Show more</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TURN_N">
+            <Text>Turn {1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_N_TURNS">
+            <Text>{1_Count} turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_PERCENT">
+            <Text>{1_Value}%</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE">
+            <Text>an independent people</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET">
+            <Text>Events hidden because they involve civilizations you have not met: {1_Count}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_LEADERS">
+            <Text>Leaders you have not met, hidden: {1_Count}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE">
+            <Text>The chronicle begins with your next turn.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_HOF">
+            <Text>No games recorded yet. Every campaign you play is added here.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_FOUND">
+            <Text>{1_Civ} founded {2_Settlement}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_CAPTURE">
+            <Text>{1_Civ} took {2_Settlement} from {3_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_RAZED">
+            <Text>{1_Settlement} of {2_Civ} was lost.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_WONDER">
+            <Text>{1_Civ} completed {2_Wonder}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_WAR">
+            <Text>War broke out between {1_Civ} and {2_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_PEACE">
+            <Text>{1_Civ} and {2_Civ} made peace.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_RELIGION">
+            <Text>{1_Civ} founded {2_Religion}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_TRIUMPH">
+            <Text>{1_Civ} earned the Triumph {2_Triumph}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_ELIM">
+            <Text>{1_Civ} was destroyed.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_AGE">
+            <Text>A new age begins: {1_Age}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_CIV">
+            <Text>{1_Leader} now leads {2_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_MET">
+            <Text>First contact with {1_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_VICTORY">
+            <Text>{1_Civ} achieved victory: {2_Victory}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_GENERIC">
+            <Text>{1_Civ}: {2_Name}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_NARR_LEAD">
+            <Text>{1_Leader} led {2_Civ} through this age.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED">
+            <Text>Founded</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED">
+            <Text>Captured</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FACT_LOST">
+            <Text>Lost</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FACT_WONDERS">
+            <Text>Wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS">
+            <Text>Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FACT_WARS">
+            <Text>Wars</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINE_WONDERS">
+            <Text>Wonders:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINE_RELIGION">
+            <Text>Religion founded:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINE_FALLEN">
+            <Text>Civilizations destroyed:</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_TITLE">
+            <Text>Leaders and the civilizations they led</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN">
+            <Text>Fallen</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN">
+            <Text>Destroyed on turn {1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_LEADER">
+            <Text>Leader</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION">
+            <Text>Civilization</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS">
+            <Text>Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS">
+            <Text>Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION">
+            <Text>Population</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE">
+            <Text>Title</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT">
+            <Text>Result</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS">
+            <Text>Turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED">
+            <Text>Played</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_TREND">
+            <Text>Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_FATE">
+            <Text>Fate</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS">
+            <Text>Most Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS">
+            <Text>Average Turns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_GAMES">
+            <Text>Games</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES">
+            <Text>Victories</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE">
+            <Text>Win Rate</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_TURNS">
+            <Text>Turns Played</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS">
+            <Text>Triumphs Earned</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS">
+            <Text>Most Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE">
+            <Text>Victories by type</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_NO_VICTORIES">
+            <Text>No victories yet.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FINEST_GAME">
+            <Text>Your finest game</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LATEST_GAME">
+            <Text>Most recent game</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE">
+            <Text>Ranked by result (victories first), then Triumphs earned across every age, then fewest turns.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT">
+            <Text>Hide short games</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT">
+            <Text>Show all games</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY">
+            <Text>Victory</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY">
+            <Text>Victory: {1_Victory}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION">
+            <Text>Domination</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT">
+            <Text>Defeat</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_ENDED">
+            <Text>Ended</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_IN_PROGRESS">
+            <Text>In progress</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED">
+            <Text>Destroyed on turn {1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED">
+            <Text>Survived</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_BACK">
+            <Text>Back</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_GAME">
+            <Text>Remove from Hall of Fame</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_CONFIRM">
+            <Text>Click again to remove</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TREND_TITLE">
+            <Text>Triumphs and settlements over the game</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS">
+            <Text>Highlights</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS">
+            <Text>No highlights were recorded for this game.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RIVALS">
+            <Text>Rivals</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_NO_RIVALS">
+            <Text>No rivals were recorded for this game.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_CIVS_NOTE">
+            <Text>Every civilization you led counts, in whichever age you led it. Win rate and the bar count finished games only.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_N_WON">
+            <Text>Victories: {1_Count}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_N_NOT_WON">
+            <Text>No victory: {1_Count}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_NO_FINISHED">
+            <Text>No finished games</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS">
+            <Text>Attempts</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR">
+            <Text>Earned for</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_GAVE">
+            <Text>Gave</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_N_UNFINISHED">
+            <Text>In progress: {1_Count}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE">
+            <Text>Every leader you have played. Win rate and the bar count finished games only.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE">
+            <Text>The one game that holds each record.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_BEST_NOTE">
+            <Text>Your best games, and where your latest game stands among them.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_TRIUMPHS">
+            <Text>Most Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_WONDERS">
+            <Text>Most wonders</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_SETTLEMENTS">
+            <Text>Largest empire</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED">
+            <Text>Most settlements taken</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST">
+            <Text>Fastest victory</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST">
+            <Text>Longest game</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK">
+            <Text>Games are saved on this computer. Each save file also keeps its own record.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE">
+            <Text>Past games could not be read from storage in this session. Games played now still appear, and each save restores its own record when you load it.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1">
+            <Text>Augustus Caesar</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2">
+            <Text>Cyrus the Great</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3">
+            <Text>Charlemagne</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_4">
+            <Text>Hammurabi</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_5">
+            <Text>Ramesses II</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_6">
+            <Text>Ashoka</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_7">
+            <Text>Hatshepsut</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_8">
+            <Text>Justinian</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_9">
+            <Text>Alfred the Great</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_10">
+            <Text>Louis XVI</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_11">
+            <Text>Emperor Norton</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_12">
+            <Text>Ethelred the Unready</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE">
+            <Text>Destroyed before records began</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FATE_BEFORE">
+            <Text>Destroyed before records began</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL">
+            <Text>Recorded from {1_Date}. Events earlier in this age were not recorded.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF">
+            <Text>Hall of Fame</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY">
+            <Text>History</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RECENT_GAMES">
+            <Text>Recent games</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_POP_SCALED">
+            <Text>Scaled Pop</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_POP_CIV">
+            <Text>Civ Pop</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF">
+            <Text>Back to Hall of Fame</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_CRISIS">
+            <Text>Crisis, stage {2_Stage}: {1_Name}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED">
+            <Text>Age crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_TITLE">
+            <Text>Timeline</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_AGES">
+            <Text>Ages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_CRISES">
+            <Text>Crises</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_MILESTONES">
+            <Text>Milestones</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH">
+            <Text>War with {1_Civ}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED">
+            <Text>Population reached {1_Value}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_STAGE">
+            <Text>Stage {1_Stage}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_DISASTER">
+            <Text>{1_Name} struck {2_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED">
+            <Text>Natural disaster</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_DISASTERS">
+            <Text>Disasters</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION_LANE">
+            <Text>Migration</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION">
+            <Text>{1_In} arrived, {2_Out} left</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_ARRIVED">
+            <Text>Arrived</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_LEFT">
+            <Text>Left</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_TURN">
+            <Text>T{1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES">
+            <Text>All ages</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_PLAY">
+            <Text>Play</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_PAUSE">
+            <Text>Pause</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_GAME_OPTIONS">
+            <Text>Game options</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_NOTE">
+            <Text>Removing a game deletes its record from the Hall of Fame on this computer. It cannot be undone.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_SETTLEMENTS">
+            <Text>Settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_NTH_SETTLEMENT">
+            <Text>settlement {1_N}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_VICTORY">
+            <Text>Victory</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_ELIM">
+            <Text>Fallen</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_AGE">
+            <Text>New age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_WONDER">
+            <Text>Wonder</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_RELIGION">
+            <Text>Religion</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_CAPTURE">
+            <Text>Conquest</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_RAZED">
+            <Text>Razed</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_TRIUMPH">
+            <Text>Triumph</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_WAR">
+            <Text>War</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_PEACE">
+            <Text>Peace</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_CRISIS">
+            <Text>Crisis</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_CIV">
+            <Text>New civ</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_DISASTER">
+            <Text>Disaster</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_FOUND">
+            <Text>Founded</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KIND_MET">
+            <Text>Contact</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_MAP_TITLE">
+            <Text>Territory</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_CIVS">
+            <Text>Civilizations</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_ONLY_MINE">
+            <Text>Only mine</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_CIVS">
+            <Text>All</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR">
+            <Text>War: {1_Civ} against {2_Other}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS">
+            <Text>Conquests</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES">
+            <Text>Victory &amp; falls</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED">
+            <Text>Past games cannot be kept on this computer: another mod's saved data is in the way, because of a game storage bug. Games played now still appear, and each save restores its own record when you load it.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST">
+            <Text>Best Games</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE">
+            <Text>Your finest playthroughs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST">
+            <Text>The rest of your top ten</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_THIS_GAME">
+            <Text>This game</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF">
+            <Text>#{1_Rank} of {2_Total}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN">
+            <Text>In your top ten.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS">
+            <Text>{1_Count} Triumphs</Text>
+        </Row>
     </EnglishText>
 </Database>

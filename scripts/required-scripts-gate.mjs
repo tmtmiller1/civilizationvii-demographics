@@ -59,7 +59,22 @@ const required = [
   "test:chart-line-datasets-branches",
   "test:chart-line-wonder-markers-branches",
   "test:wars-naming-branches",
-  "test:chart-line-render-integration"
+  "test:chart-line-render-integration",
+  "test:history-diff",
+  "test:history-campaign",
+  "test:history-archive",
+  "test:history-archive-store",
+  "test:history-hof",
+  "test:history-narrate",
+  "test:history-render-integration",
+  "test:history-css",
+  "test:history-crisis",
+  "test:history-timeline",
+  "test:history-capture-disaster",
+  "test:history-map",
+  "test:history-icons",
+  "test:history-stress",
+  "test:history-mapgrid"
 ];
 
 for (const name of required) {
@@ -120,7 +135,22 @@ const verifyRequired = [
   "test:chart-line-datasets-branches",
   "test:chart-line-wonder-markers-branches",
   "test:wars-naming-branches",
-  "test:chart-line-render-integration"
+  "test:chart-line-render-integration",
+  "test:history-diff",
+  "test:history-campaign",
+  "test:history-archive",
+  "test:history-archive-store",
+  "test:history-hof",
+  "test:history-narrate",
+  "test:history-render-integration",
+  "test:history-css",
+  "test:history-crisis",
+  "test:history-timeline",
+  "test:history-capture-disaster",
+  "test:history-map",
+  "test:history-icons",
+  "test:history-stress",
+  "test:history-mapgrid"
 ];
 for (const token of verifyRequired) {
   if (!verify.includes(token)) {
@@ -186,7 +216,22 @@ const testJsRequired = [
   "test:chart-line-datasets-branches",
   "test:chart-line-wonder-markers-branches",
   "test:wars-naming-branches",
-  "test:chart-line-render-integration"
+  "test:chart-line-render-integration",
+  "test:history-diff",
+  "test:history-campaign",
+  "test:history-archive",
+  "test:history-archive-store",
+  "test:history-hof",
+  "test:history-narrate",
+  "test:history-render-integration",
+  "test:history-css",
+  "test:history-crisis",
+  "test:history-timeline",
+  "test:history-capture-disaster",
+  "test:history-map",
+  "test:history-icons",
+  "test:history-stress",
+  "test:history-mapgrid"
 ];
 for (const token of testJsRequired) {
   if (!testJs.includes(token)) {

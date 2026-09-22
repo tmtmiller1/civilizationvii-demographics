@@ -1,9 +1,9 @@
 [h1]Demographics[/h1]
 
-[b]Updated for Civilization VII 1.4.1[/b]
-Compatible with the 1.4.1 update, and now pairs with the [b]Emigration[/b] companion mod for a dedicated Emigration tab and a Net Migration graph. History stays continuous across the age boundary, so charts no longer reset at each age transition. Special thanks to [b]Slothoth[/b] for the keys to data persistence across ages.
+[b]New: History and the Hall of Fame[/b]
+History & Rankings is now part of Demographics: a [b]History[/b] tab with a chronicle, an interactive timeline and territory map, and a lineage of leaders, plus a [b]Hall of Fame[/b] of every campaign you have played, also on the main menu. Works on Civilization VII 1.5.0. Special thanks to [b]Slothoth[/b] for the keys to data persistence across ages.
 
-Demographics adds graphs, civilization rankings, global relations, war history, and Triumph progress to Civilization VII. It records data for each civilization and presents it as charts, rankings, relationship views, and war history, so you can see how the world changes over the course of a game.
+Demographics adds graphs, civilization rankings, global relations, war history, campaign history, and a Hall of Fame to Civilization VII. It records data for each civilization and presents it as charts, rankings, relationship views, and war history, so you can see how the world changes over the course of a game.
 
 It is intended to be the spiritual successor to robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and an extension of Slothoth's Global Relations for Civilization VII that adds additional diplomatic concerns and filtering.
 
@@ -15,13 +15,15 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [*]A Gantt war timeline built from diplomacy events, with per-war cost and a per-war Graphs view.
 [*]A Crises view with per-stage cost tables and per-civilization crisis graphs.
 [*]A Top Settlements board with a cinematic flyby and map fly-to.
-[*]Copy-to-CSV for recorded history (true export is unavailable for modding).
+[*]A History tab: a chronicle of your campaign, an interactive timeline with a territory map that replays your expansion, and a lineage of every leader.
+[*]A Hall of Fame ranking every campaign you have played, with a page for each game.
+[*]Copy-to-CSV for recorded history.
 [*]Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
 [/list]
 
 [b]Pairs with Emigration:[/b]
 [list]
-[*]With the [b]Emigration[/b] companion mod installed (updated for 1.4.1), Demographics hosts a dedicated Emigration tab and a Net Migration graph beside Population. The hooks stay inert when Emigration is not installed, so the base mod is unchanged.
+[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts a dedicated Emigration tab and a Net Migration graph beside Population. The hooks stay inert when Emigration is not installed, so the base mod is unchanged.
 [/list]
 
 [b]Triumphs Overlay:[/b]
@@ -40,7 +42,8 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [list]
 [*]Read-only presentation layer.
 [*]No base-game file replacement.
-[*]Per-save data storage.
+[*]Per-save data storage; the Hall of Fame is kept on your computer.
+[*]Because of a game storage bug, another mod's saved data can keep the Hall of Fame from storing past games; the current game and any save you load still appear, and a note says why.
 [/list]
 
 [b]Installation:[/b]

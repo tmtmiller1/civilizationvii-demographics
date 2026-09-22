@@ -1,0 +1,1129 @@
+/* screen-demographics-history.css - History tab and Hall of Fame
+   One stylesheet (GameFace honors only the first @import). Flexbox only: GameFace has no CSS grid.
+   Sizes are rem so the layout follows Interface Size; text sizes come from the Demographics
+   --dg-fs-* ladder, which each screen republishes from the player's Font Size setting. Palette matches the engine's default
+   theme (core/ui/themes/default/default.css) and the Demographics mod. */
+
+:root {
+    --dgh-text-title:    #e5d2ac;   /* .text-secondary */
+    --dgh-text-title-2:  #c0a875;
+    --dgh-text-body:     #c2c4cc;   /* .text-accent-2 */
+    --dgh-text-muted:    #85878c;   /* .text-accent-4 */
+    --dgh-copper:        #a8845a;   /* .fxs-header */
+    --dgh-gold:          #f3c34c;
+    --dgh-gold-soft:     #c9a24c;
+    /* Results are three: won (green), finished without a victory (red), and nothing yet (grey).
+       Each colour has a stronger fill for bars and marks, and a lighter tint for text. */
+    --dgh-win:           #4fa869;
+    --dgh-win-text:      #86d29a;
+    --dgh-loss:          #c14d45;
+    --dgh-loss-text:     #e5887f;
+    --dgh-empty:         rgba(255, 255, 255, 0.09);
+    --dgh-card-bg:       rgba(20, 16, 10, 0.55);
+    --dgh-card-border:   rgba(168, 132, 90, 0.40);
+    --dgh-row-alt:       rgba(255, 255, 255, 0.025);
+    --dgh-row-hover:     rgba(243, 195, 76, 0.10);
+    --dgh-divider:       rgba(168, 132, 90, 0.30);
+}
+
+/* ---------- main-menu Hall of Fame screen ---------- */
+/* Font ladder defaults (the screen republishes them scaled by the Font Size setting). Inside the
+   Demographics screen the same variables come from .demographics-screen. */
+.dgh-screen {
+    --dg-fs-65: 0.65rem; --dg-fs-72: 0.72rem; --dg-fs-85: 0.85rem; --dg-fs-95: 0.95rem;
+    --dg-fs-105: 1.05rem; --dg-fs-120: 1.2rem; --dg-fs-140: 1.4rem; --dg-fs-160: 1.6rem;
+    --dg-fs-185: 1.85rem; --dg-fs-240: 2.4rem;
+}
+.dgh-screen,
+.dgh-root {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+    pointer-events: auto;
+}
+.dgh-frame {
+    width: 92vw;
+    height: 92vh;
+    max-width: 92vw;
+    max-height: 92vh;
+    min-height: 0;
+}
+@media (max-height: 55.5555555556rem), (max-aspect-ratio: 3/2) {
+    .dgh-frame { width: 98vw; height: 96vh; max-width: 98vw; max-height: 96vh; }
+}
+.dgh-title { margin-top: 0.5rem; margin-bottom: 0.4rem; }
+.dgh-body { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; background-color: rgba(10, 12, 18, 0.72); }
+.dgh-screen-host { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+
+/* ---------- app layout ---------- */
+.dgh-app {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    color: var(--dgh-text-body);
+    font-family: BodyFont, sans-serif;
+    font-size: var(--dg-fs-95);
+}
+.dgh-top-tabs { margin-bottom: 0.5rem; }
+.dgh-subtabs { margin-bottom: 0.4rem; }
+.dgh-view,
+.dgh-view-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.dgh-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.6rem;
+    display: flex;
+    flex-direction: column;
+}
+.dgh-toolbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.2rem 0 0.4rem;
+}
+.dgh-cols { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.35rem; }
+.dgh-col { flex: 1 1 22rem; margin: 0 0.35rem 0.7rem; min-width: 0; }
+
+/* ---------- cards ---------- */
+.dgh-section {
+    background-color: var(--dgh-card-bg);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-card-border);
+    border-top-width: 0.18rem;
+    border-top-style: solid;
+    border-top-color: var(--dgh-copper);
+    border-radius: 0.2rem;
+    padding: 0.6rem 0.85rem 0.75rem;
+    margin-bottom: 0.7rem;
+}
+.dgh-section-title {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-105);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.45rem;
+}
+.dgh-subtitle { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); margin-bottom: 0.4rem; }
+.dgh-lead { color: var(--dgh-text-title); font-size: var(--dg-fs-105); margin-bottom: 0.45rem; }
+.dgh-accent { color: var(--dgh-gold); }
+.dgh-muted { color: var(--dgh-text-muted); }
+.dgh-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-105);
+}
+.dgh-note {
+    margin-top: 0.4rem;
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+    text-align: center;
+}
+.dgh-note--warn { color: var(--dgh-loss); }
+
+/* ---------- pills and buttons ---------- */
+.dgh-pill-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0.2rem 0 0.35rem;
+}
+.dgh-pill {
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0.3rem 1.05rem;
+    margin: 0.15rem 0.2rem;
+    border-radius: 1rem;
+    border: 0.0555rem solid rgba(201, 162, 76, 0.4);
+    color: #bfae86;
+    font-size: var(--dg-fs-95);
+}
+.dgh-pill:hover { color: var(--dgh-text-title); border-color: var(--dgh-gold-soft); }
+.dgh-pill.is-active { color: #1c1408; background-color: var(--dgh-gold); font-weight: bold; }
+.dgh-pill-row--filter .dgh-pill {
+    border-radius: 0.2rem;
+    padding: 0.16rem 0.55rem;
+    font-size: var(--dg-fs-72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background-color: rgba(9, 12, 19, 0.5);
+}
+.dgh-pill-row--filter .dgh-pill.is-active {
+    color: var(--dgh-gold);
+    background-color: rgba(60, 45, 20, 0.85);
+    border-color: rgba(243, 195, 76, 0.95);
+}
+.dgh-button {
+    cursor: pointer;
+    padding: 0.3rem 0.9rem;
+    margin: 0.15rem 0.2rem;
+    border-width: 0.0555rem;
+    border-style: solid;
+    border-color: var(--dgh-gold-soft);
+    border-radius: 0.2rem;
+    background-color: rgba(9, 12, 19, 0.6);
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-85);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.dgh-button:hover { color: var(--dgh-gold); background-color: rgba(60, 45, 20, 0.85); }
+.dgh-button--danger { border-color: rgba(217, 130, 107, 0.6); }
+.dgh-button--back {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.4rem 1.1rem 0.4rem 0.8rem;
+    font-size: var(--dg-fs-105);
+    border-color: var(--dgh-gold-soft);
+    color: var(--dgh-gold);
+}
+.dgh-back-arrow { font-size: var(--dg-fs-140); margin-right: 0.5rem; line-height: 1; }
+.dgh-button--danger.is-armed { color: #1c1408; background-color: var(--dgh-loss); }
+.dgh-more { align-self: center; margin: 0.6rem 0; }
+
+/* ---------- tables ---------- */
+.dgh-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-radius: 0.3rem;
+}
+.dgh-tr {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 2.2rem;
+    border-bottom: 1px solid rgba(168, 132, 90, 0.12);
+}
+.dgh-tr:nth-child(odd) { background-color: var(--dgh-row-alt); }
+.dgh-thead {
+    color: var(--dgh-text-title-2);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-72);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    min-height: 1.8rem;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--dgh-divider);
+}
+.dgh-tr.is-clickable { cursor: pointer; }
+.dgh-tr.is-clickable:hover { background-color: var(--dgh-row-hover); }
+.dgh-tr.is-mine { outline: 0.0555rem solid rgba(243, 195, 76, 0.55); color: var(--dgh-text-title); }
+.dgh-td { padding: 0.2rem 0.45rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dgh-col-xs { flex: 0 0 2.2rem; text-align: right; }
+.dgh-col-icon { flex: 0 0 2.4rem; }
+.dgh-col-sm { flex: 0 0 7.6rem; }
+.dgh-col-md { flex: 0 0 11rem; }
+.dgh-col-lg { flex: 0 0 17rem; }
+.dgh-col-result { flex: 0 0 15rem; }
+.dgh-col-num { flex: 0 0 7rem; text-align: right; }
+.dgh-thead .dgh-td { white-space: normal; overflow: visible; line-height: 1.15; }
+.dgh-col-spark { flex: 0 0 7rem; }
+.dgh-col-grow { flex: 1 1 10rem; }
+
+/* ---------- identity ---------- */
+.dgh-civ { display: flex; flex-direction: row; align-items: center; min-width: 0; margin-right: 0.8rem; }
+.dgh-civ-dot {
+    flex: 0 0 auto;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 0.35rem;
+    margin-right: 0.4rem;
+    border: 0.0555rem solid rgba(0, 0, 0, 0.6);
+}
+.dgh-civ-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dgh-leader-icon { width: 3rem; height: 3rem; flex: 0 0 auto; background-size: contain; background-repeat: no-repeat; background-position: center; }
+.dgh-leader-icon--sm { width: 2rem; height: 2rem; }
+.dgh-leader-icon--lg { width: 5rem; height: 5rem; }
+.dgh-recent { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.3rem; }
+.dgh-recent .dgh-game-card { flex: 0 1 36rem; margin: 0.3rem; }
+.dgh-leader-icon--xl { width: 6.5rem; height: 6.5rem; }
+
+/* ---------- chronicle ---------- */
+.dgh-age-group { margin-bottom: 0.4rem; }
+.dgh-facts { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0.1rem -0.2rem 0.3rem; }
+.dgh-fact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 6.5rem;
+    padding: 0.3rem 0.6rem;
+    margin: 0.2rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-radius: 0.2rem;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+.dgh-fact.is-zero { opacity: 0.45; }
+.dgh-fact-n { color: var(--dgh-gold); font-size: var(--dg-fs-120); font-weight: bold; }
+.dgh-fact-l { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); text-transform: uppercase; letter-spacing: 0.06em; }
+.dgh-line { font-size: var(--dg-fs-85); margin-top: 0.15rem; }
+.dgh-line-k { color: var(--dgh-text-title-2); margin-right: 0.4rem; }
+.dgh-line-v { color: var(--dgh-text-body); }
+.dgh-feed { display: flex; flex-direction: column; margin: 0 0 0.6rem 0.4rem; }
+.dgh-event {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.28rem 0.4rem;
+    border-bottom: 1px solid rgba(168, 132, 90, 0.10);
+}
+.dgh-event.is-mine { background-color: rgba(243, 195, 76, 0.06); }
+.dgh-event-date { flex: 0 0 7.5rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-85); }
+.dgh-event-dot {
+    flex: 0 0 auto;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 0.3rem;
+    margin-right: 0.6rem;
+}
+.dgh-event-text { flex: 1 1 auto; min-width: 0; }
+.dgh-event--victory .dgh-event-text,
+.dgh-event--age .dgh-event-text { color: var(--dgh-gold); font-weight: bold; }
+.dgh-event--wonder .dgh-event-text,
+.dgh-event--triumph .dgh-event-text { color: var(--dgh-text-title); }
+.dgh-event--elim .dgh-event-text,
+.dgh-event--razed .dgh-event-text { color: var(--dgh-loss); }
+
+/* ---------- lineage ---------- */
+.dgh-lineage { display: flex; flex-direction: column; }
+.dgh-lin-row { display: flex; flex-direction: row; align-items: stretch; margin-bottom: 0.3rem; }
+.dgh-lin-row.is-mine .dgh-lin-name { color: var(--dgh-gold); }
+.dgh-lin-head { color: var(--dgh-text-title-2); font-family: TitleFont, BodyFont, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--dg-fs-72); }
+.dgh-lin-leader { flex: 0 0 15rem; display: flex; flex-direction: row; align-items: center; }
+.dgh-lin-name { margin-left: 0.5rem; }
+.dgh-lin-cell {
+    flex: 1 1 0;
+    position: relative;
+    margin-left: 0.3rem;
+    padding: 0.35rem 0.6rem 0.35rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 0.2rem;
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.dgh-lin-cell.is-empty { background-color: transparent; color: var(--dgh-text-muted); }
+.dgh-lin-age { background-color: transparent; padding-left: 0.6rem; }
+.dgh-lin-band { position: absolute; left: 0; top: 0; bottom: 0; width: 0.35rem; }
+.dgh-lin-civ { color: var(--dgh-text-title); font-size: var(--dg-fs-105); }
+.dgh-lin-fell { color: var(--dgh-loss); font-size: var(--dg-fs-72); }
+
+/* ---------- stats, bars, cards ---------- */
+.dgh-tiles { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; }
+.dgh-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 8.5rem;
+    padding: 0.5rem 0.8rem;
+    margin: 0.25rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+.dgh-stat-value { color: var(--dgh-gold); font-size: var(--dg-fs-160); font-weight: bold; }
+.dgh-stat-label { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); text-transform: uppercase; letter-spacing: 0.06em; }
+.dgh-bar-row { display: flex; flex-direction: row; align-items: center; margin: 0.25rem 0; }
+.dgh-bar-label { flex: 0 0 11rem; font-size: var(--dg-fs-85); }
+.dgh-bar { flex: 1 1 auto; height: 0.7rem; background-color: rgba(0, 0, 0, 0.35); border-radius: 0.35rem; }
+.dgh-bar-fill { height: 0.7rem; background-color: var(--dgh-gold-soft); border-radius: 0.35rem; }
+.dgh-bar-n { flex: 0 0 2.5rem; text-align: right; color: var(--dgh-gold); }
+.dgh-game-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.4rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.dgh-game-card.is-clickable { cursor: pointer; }
+.dgh-game-card.is-clickable:hover { background-color: var(--dgh-row-hover); }
+.dgh-game-card-body { margin-left: 0.7rem; min-width: 0; }
+.dgh-game-card-title { color: var(--dgh-text-title); font-size: var(--dg-fs-105); }
+.dgh-game-card-line { font-size: var(--dg-fs-85); }
+.dgh-records { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.35rem; }
+.dgh-record {
+    flex: 0 1 36rem;
+    margin: 0.35rem;
+    padding: 0.5rem 0.6rem 0.6rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-top-width: 0.14rem;
+    border-top-style: solid;
+    border-top-color: var(--dgh-copper);
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.18);
+}
+.dgh-record .dgh-game-card { border: none; background-color: transparent; padding: 0.2rem 0 0; }
+.dgh-record-head { display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0.25rem; }
+.dgh-record-name { color: var(--dgh-text-title-2); text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--dg-fs-85); }
+.dgh-record-value { color: var(--dgh-gold); font-weight: bold; font-size: var(--dg-fs-140); }
+.dgh-result--win { color: var(--dgh-win-text); }
+.dgh-result--loss { color: var(--dgh-loss-text); }
+.dgh-result--ended { color: var(--dgh-text-muted); }
+.dgh-result--open { color: var(--dgh-text-muted); }
+
+/* ---------- detail ---------- */
+.dgh-detail-head { display: flex; flex-direction: row; align-items: center; margin-bottom: 0.7rem; }
+.dgh-detail-top {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+.dgh-detail-top .dgh-detail-head { flex: 0 1 auto; margin-right: 1.5rem; }
+.dgh-detail-figures { display: flex; flex-direction: column; align-items: flex-end; flex: 1 1 auto; margin-bottom: 0.7rem; }
+.dgh-detail-figures .dgh-tiles { justify-content: flex-end; }
+.dgh-detail-figures .dgh-pill-row { margin-bottom: 0.4rem; }
+.dgh-detail-titles { margin-left: 1rem; min-width: 0; }
+.dgh-detail-name { color: var(--dgh-text-title); font-family: TitleFont, BodyFont, sans-serif; font-size: var(--dg-fs-160); text-transform: uppercase; letter-spacing: 0.08em; }
+.dgh-detail-honor { color: var(--dgh-gold); font-size: var(--dg-fs-105); margin-bottom: 0.2rem; }
+.dgh-detail-line { font-size: var(--dg-fs-95); }
+
+/* ---------- charts ---------- */
+.dgh-chart { display: flex; flex-direction: column; }
+.dgh-chart-plot {
+    position: relative;
+    height: 17rem;
+    margin: 0.4rem 0.5rem 1.6rem 3.2rem;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: var(--dgh-divider);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--dgh-divider);
+}
+.dgh-chart--short .dgh-chart-plot { height: 11rem; }
+.dgh-chart-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.dgh-chart-grid { stroke: rgba(168, 132, 90, 0.18); stroke-width: 1; }
+.dgh-chart-marker { stroke: rgba(229, 210, 172, 0.45); stroke-width: 2; stroke-dasharray: 8 6; }
+.dgh-chart-ytick {
+    position: absolute;
+    left: -3.1rem;
+    width: 2.8rem;
+    text-align: right;
+    margin-bottom: -0.5rem;
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+}
+.dgh-chart-mlabel {
+    position: absolute;
+    bottom: -1.4rem;
+    margin-left: 0.3rem;
+    color: var(--dgh-text-title-2);
+    font-size: var(--dg-fs-72);
+    white-space: nowrap;
+}
+.dgh-chart-legend { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; font-size: var(--dg-fs-85); }
+.dgh-spark { width: 6rem; height: 1.4rem; position: relative; }
+.dgh-spark-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+
+@media (max-height: 44rem) {
+    .dgh-chart-plot { height: 12rem; }
+    .dgh-leader-icon--xl { width: 4.5rem; height: 4.5rem; }
+    .dgh-lin-leader { flex-basis: 11rem; }
+}
+
+/* ---------- emblems, victory icons, result marks ---------- */
+.dgh-civ-icon {
+    flex: 0 0 auto;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-right: 0.4rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.dgh-civ-icon--md { width: 1.7rem; height: 1.7rem; }
+.dgh-civ-icon--lg { width: 4rem; height: 4rem; margin-right: 0; }
+/* The laurel images are mostly transparent glow around a small emblem: scale them up so the
+   emblem fills the box. Every result marker takes the same 1.5rem slot so labels line up. */
+.dgh-victory-icon {
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.45rem;
+    background-size: 230%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.dgh-mark { flex: 0 0 auto; }
+.dgh-mark--win, .dgh-mark--loss, .dgh-mark--ended, .dgh-mark--open {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 0.4rem;
+    margin: 0 0.8rem 0 0.35rem;
+}
+.dgh-mark--win { background-color: var(--dgh-win); }
+.dgh-mark--loss { background-color: var(--dgh-loss); }
+.dgh-mark--ended { background-color: var(--dgh-text-muted); }
+.dgh-mark--open { border-width: 0.12rem; border-style: solid; border-color: var(--dgh-text-muted); }
+.dgh-result-row { display: flex; flex-direction: row; align-items: center; min-width: 0; }
+.dgh-lin-civrow { display: flex; flex-direction: row; align-items: center; }
+.dgh-toolbar .dgh-pill-row { flex-wrap: nowrap; }
+
+/* ---------- game options (foot of a game's detail page) ---------- */
+.dgh-options { display: flex; flex-direction: column; align-items: flex-end; margin: 0.8rem 0 0.4rem; }
+.dgh-options-toggle { opacity: 0.75; }
+.dgh-options-toggle.is-open { opacity: 1; }
+.dgh-options-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0.4rem;
+    padding: 0.5rem 0.7rem;
+    background-color: var(--dgh-card-bg);
+    border-width: 0.06rem;
+    border-style: solid;
+    border-color: rgba(217, 130, 107, 0.45);
+    border-radius: 0.2rem;
+}
+.dgh-options-panel.is-hidden { display: none; }
+.dgh-options-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); margin-right: 0.8rem; max-width: 26rem; }
+
+/* What a Triumph asked for and what it gave, under its highlight. */
+.dgh-hl-body { flex: 1 1 auto; min-width: 0; }
+.dgh-hl-blurbs { margin: 0.05rem 0 0.15rem; }
+.dgh-hl-blurb { display: flex; flex-direction: row; align-items: baseline; font-size: var(--dg-fs-72); }
+.dgh-hl-blurb-l {
+    color: var(--dgh-text-title-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    flex: 0 0 auto;
+    margin-right: 0.35rem;
+}
+.dgh-hl-blurb-t { color: var(--dgh-text-muted); flex: 1 1 auto; min-width: 0; }
+
+/* ---------- page heading ---------- */
+.dgh-page-head { margin: 0 0 0.5rem; }
+.dgh-page-title {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-185);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.dgh-page-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); margin-top: 0.1rem; }
+.dgh-toolbar .dgh-page-head { margin-bottom: 0.2rem; }
+
+/* ---------- leader and civilization cards ---------- */
+.dgh-cards { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.3rem; }
+.dgh-person-card {
+    flex: 0 1 29rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.3rem;
+    padding: 0.5rem 0.7rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.22);
+}
+.dgh-person-body { flex: 1 1 auto; min-width: 0; margin-left: 0.8rem; }
+.dgh-person-name {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-120);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+}
+.dgh-person-head { display: flex; flex-direction: row; align-items: baseline; justify-content: space-between; }
+.dgh-person-head .dgh-person-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dgh-person-name { margin-bottom: 0.2rem; }
+.dgh-person-rate { display: flex; flex-direction: row; align-items: baseline; flex: 0 0 auto; margin-left: 0.6rem; white-space: nowrap; }
+.dgh-person-rate-n { color: var(--dgh-gold); font-size: var(--dg-fs-120); font-weight: bold; margin-right: 0.3rem; }
+.dgh-person-rate-n.is-none { color: var(--dgh-text-muted); }
+.dgh-person-rate-l {
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+/* The record as a stacked bar: won, lost, ended, still being played. */
+.dgh-record-bar {
+    display: flex;
+    flex-direction: row;
+    height: 0.55rem;
+    margin-bottom: 0.25rem;
+    border-radius: 0.28rem;
+    background-color: var(--dgh-empty);
+    overflow: hidden;
+}
+.dgh-record-seg { height: 0.55rem; }
+.dgh-record-seg--win { background-color: var(--dgh-win); }
+.dgh-record-seg--loss { background-color: var(--dgh-loss); }
+.dgh-record-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    font-size: var(--dg-fs-72);
+    margin-bottom: 0.3rem;
+}
+.dgh-record-key--win { color: var(--dgh-win-text); }
+.dgh-record-key--loss { color: var(--dgh-loss-text); }
+.dgh-record-key--open { color: var(--dgh-text-muted); }
+.dgh-record-sep { color: var(--dgh-text-muted); margin: 0 0.3rem; }
+.dgh-person-body .dgh-fact { min-width: 5.5rem; padding: 0.2rem 0.4rem; }
+
+/* ---------- civilization progression (emblem + name per age) ---------- */
+.dgh-progression { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; min-width: 0; }
+.dgh-progression-step { display: flex; flex-direction: row; align-items: center; }
+.dgh-progression-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.3rem; }
+.dgh-progression-name { white-space: nowrap; }
+.dgh-progression-arrow { color: var(--dgh-copper); margin: 0 0.5rem; }
+.dgh-progression--sm { font-size: var(--dg-fs-85); }
+.dgh-progression--sm .dgh-progression-icon { width: 1.25rem; height: 1.25rem; }
+.dgh-progression--lg { font-size: var(--dg-fs-120); color: var(--dgh-text-title); margin: 0.2rem 0; }
+.dgh-progression--lg .dgh-progression-icon { width: 2.2rem; height: 2.2rem; margin-right: 0.4rem; }
+.dgh-td .dgh-progression { flex-wrap: nowrap; overflow: hidden; }
+
+/* ---------- timeline ---------- */
+/* Controls on top; under them a fixed label column beside a horizontally scrolling canvas whose
+   lanes are absolutely placed by percentage. Every var() sits in a longhand property. */
+.dgh-tl { display: flex; flex-direction: column; }
+.dgh-tl-controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+.dgh-tl-controls-right { display: flex; flex-direction: row; align-items: center; }
+.dgh-tl-controls .dgh-pill-row { margin-bottom: 0; flex-wrap: nowrap; }
+.dgh-tl-controls-right .dgh-pill-row { margin-right: 0.6rem; }
+.dgh-tl-pan { min-width: 2.2rem; margin-right: 0.3rem; text-align: center; }
+.dgh-tl-play { display: flex; flex-direction: row; align-items: center; min-width: 6rem; justify-content: center; }
+.dgh-tl-play-icon {
+    width: 0;
+    height: 0;
+    margin-right: 0.45rem;
+    border-top-width: 0.38rem;
+    border-bottom-width: 0.38rem;
+    border-left-width: 0.62rem;
+    border-right-width: 0;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: var(--dgh-gold);
+}
+.dgh-tl-pause-icon {
+    width: 0.2rem;
+    height: 0.76rem;
+    margin-right: 0.55rem;
+    background-color: var(--dgh-gold);
+    box-shadow: 0.34rem 0 0 0 #f3c34c;
+}
+
+.dgh-tl-body {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.1rem;
+    background-color: rgba(8, 6, 4, 0.45);
+    border-top-width: 0.06rem;
+    border-bottom-width: 0.06rem;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: var(--dgh-card-border);
+    border-bottom-color: var(--dgh-card-border);
+    padding: 0.2rem 0;
+}
+.dgh-tl-labels { flex: 0 0 8rem; display: flex; flex-direction: column; }
+.dgh-tl-label {
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+    color: var(--dgh-text-title-2);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-65);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-right-width: 0.06rem;
+    border-right-style: solid;
+    border-right-color: var(--dgh-divider);
+}
+.dgh-tl-viewport { flex: 1 1 auto; min-width: 0; overflow-x: auto; overflow-y: hidden; position: relative; }
+.dgh-tl-canvas { position: relative; display: flex; flex-direction: column; min-width: 100%; }
+.dgh-tl-lane { position: relative; flex: 0 0 auto; }
+.dgh-tl-lane--wars,
+.dgh-tl-lane--marks,
+.dgh-tl-lane--disasters { background-color: rgba(255, 255, 255, 0.018); }
+.dgh-tl-grid {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0.06rem;
+    background-color: rgba(229, 210, 172, 0.11);
+    pointer-events: none;
+}
+.dgh-tl-item { position: absolute; white-space: nowrap; font-size: var(--dg-fs-72); }
+
+/* age header */
+.dgh-tl-band {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    padding-left: 0.4rem;
+    border-left-width: 0.16rem;
+    border-left-style: solid;
+    border-left-color: var(--dgh-gold-soft);
+    border-bottom-width: 0.06rem;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(229, 210, 172, 0.35);
+}
+.dgh-tl-band--0 { background-image: linear-gradient(90deg, rgba(190, 142, 78, 0.55) 0%, rgba(120, 86, 44, 0.12) 100%); }
+.dgh-tl-band--1 { background-image: linear-gradient(90deg, rgba(74, 128, 176, 0.55) 0%, rgba(40, 70, 104, 0.12) 100%); }
+.dgh-tl-band--2 { background-image: linear-gradient(90deg, rgba(150, 96, 176, 0.55) 0%, rgba(84, 52, 104, 0.12) 100%); }
+.dgh-tl-band-icon { width: 1.8rem; height: 1.8rem; margin-right: 0.45rem; flex: 0 0 auto; }
+.dgh-tl-band-text { display: flex; flex-direction: column; overflow: hidden; }
+.dgh-tl-band-age {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-95);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.dgh-tl-band-sub { color: var(--dgh-text-body); font-size: var(--dg-fs-72); }
+
+/* wars */
+.dgh-tl-war {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    min-width: 0.5rem;
+    border-radius: 0.7rem;
+    border-width: 0.06rem;
+    border-style: solid;
+    padding-left: 0.12rem;
+    box-shadow: 0 0.1rem 0.25rem 0 rgba(0, 0, 0, 0.55);
+}
+.dgh-tl-war-icon { width: 1rem; height: 1rem; margin-right: 0.25rem; flex: 0 0 auto; }
+.dgh-tl-war-name { color: #fffaf0; font-weight: bold; text-shadow: 0 0 0.2rem #000000; overflow: hidden; }
+
+/* crises */
+.dgh-tl-crisis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-width: 0.4rem;
+    border-right-width: 0.06rem;
+    border-right-style: solid;
+    border-right-color: rgba(0, 0, 0, 0.5);
+}
+.dgh-tl-crisis--1 { background-image: linear-gradient(180deg, #e4b45a 0%, #b88430 100%); }
+.dgh-tl-crisis--2 { background-image: linear-gradient(180deg, #e0883e 0%, #a85a22 100%); }
+.dgh-tl-crisis--3 { background-image: linear-gradient(180deg, #d0543a 0%, #92321e 100%); }
+.dgh-tl-crisis--4 { background-image: linear-gradient(180deg, #b02a32 0%, #6c1218 100%); }
+.dgh-tl-crisis-n { color: #fff4e0; font-weight: bold; font-size: var(--dg-fs-65); text-shadow: 0 0 0.15rem #000000; }
+.dgh-tl-crisis-name { display: flex; flex-direction: row; align-items: center; color: #f0b870; font-size: var(--dg-fs-72); font-style: normal; }
+.dgh-tl-crisis-icon { width: 1.1rem; height: 1.1rem; margin-right: 0.25rem; background-size: cover; }
+
+/* milestones */
+.dgh-tl-stem { width: 0.08rem; margin-left: -0.04rem; background-color: rgba(229, 210, 172, 0.3); }
+.dgh-tl-medal {
+    width: 2.3rem;
+    height: 2.3rem;
+    margin-left: -1.15rem;
+    border-radius: 1.15rem;
+    border-width: 0.12rem;
+    border-style: solid;
+    border-color: var(--dgh-gold-soft);
+    background-color: #1a140c;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 0.35rem 0 rgba(0, 0, 0, 0.85);
+}
+.dgh-tl-medal--victory { width: 2.6rem; height: 2.6rem; margin-left: -1.3rem; border-radius: 1.3rem; }
+
+/* disasters */
+.dgh-tl-disaster {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-left: -0.9rem;
+    border-radius: 0.9rem;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-color: var(--dgh-gold-soft);
+    background-color: #2a2018;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.dgh-tl-disaster.is-foreign { opacity: 0.55; }
+
+/* migration */
+.dgh-tl-mig-axis { background-color: rgba(229, 210, 172, 0.25); }
+.dgh-tl-mig { min-width: 0.15rem; }
+.dgh-tl-mig--in { background-image: linear-gradient(0deg, rgba(80, 180, 170, 0.5) 0%, #7fe0d0 100%); border-top-left-radius: 0.1rem; border-top-right-radius: 0.1rem; }
+.dgh-tl-mig--out { background-image: linear-gradient(180deg, rgba(200, 110, 70, 0.5) 0%, #f0a070 100%); border-bottom-left-radius: 0.1rem; border-bottom-right-radius: 0.1rem; }
+.dgh-tl-swatch { width: 0.8rem; height: 0.8rem; margin-right: 0.35rem; border-radius: 0.1rem; }
+.dgh-tl-swatch--in { background-color: #7fe0d0; }
+.dgh-tl-swatch--out { background-color: #f0a070; }
+
+/* population curve */
+.dgh-tl-curve-box { overflow: hidden; }
+.dgh-tl-curve { width: 100%; height: 100%; }
+.dgh-tl-curve-area { fill: rgba(156, 207, 110, 0.22); stroke-width: 0; }
+.dgh-tl-curve-line { fill: none; stroke: #9ccf6e; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.dgh-tl-poptick {
+    width: 0.06rem;
+    background-color: rgba(156, 207, 110, 0.55);
+}
+.dgh-tl-poptick-label {
+    position: absolute;
+    top: 0;
+    left: 0.2rem;
+    padding: 0 0.2rem;
+    border-radius: 0.15rem;
+    background-color: rgba(20, 30, 14, 0.8);
+    color: #b8e890;
+    font-weight: bold;
+    font-size: var(--dg-fs-65);
+}
+
+/* ruler */
+.dgh-tl-lane--ruler {
+    border-top-width: 0.06rem;
+    border-top-style: solid;
+    border-top-color: rgba(229, 210, 172, 0.45);
+    cursor: pointer;
+}
+.dgh-tl-tick { width: 0.08rem; background-color: rgba(229, 210, 172, 0.5); overflow: visible; }
+.dgh-tl-tick--major { background-color: rgba(229, 210, 172, 0.85); }
+.dgh-tl-tick--age { width: 0.12rem; background-color: var(--dgh-gold-soft); }
+.dgh-tl-tick-label { position: absolute; top: 0.7rem; left: -1rem; width: 2rem; text-align: center; color: var(--dgh-text-muted); font-size: var(--dg-fs-65); }
+.dgh-tl-tick-date { position: absolute; top: 0.95rem; left: 0.25rem; color: var(--dgh-gold-soft); font-size: var(--dg-fs-65); font-weight: bold; }
+
+/* playback */
+.dgh-tl-veil {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(6, 5, 3, 0.62);
+    pointer-events: none;
+}
+.dgh-tl-cursor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0.12rem;
+    margin-left: -0.06rem;
+    background-color: var(--dgh-gold);
+    box-shadow: 0 0 0.4rem 0.05rem rgba(243, 195, 76, 0.8);
+    pointer-events: none;
+}
+.dgh-tl-caption {
+    min-height: 1.4rem;
+    margin: 0.35rem 0 0 8rem;
+    color: var(--dgh-text-title);
+    font-size: var(--dg-fs-85);
+}
+
+.dgh-tl-legend { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0.4rem 0 0 8rem; font-size: var(--dg-fs-72); color: var(--dgh-text-muted); }
+.dgh-tl-legend-item { display: flex; flex-direction: row; align-items: center; margin-right: 1.1rem; margin-bottom: 0.2rem; }
+.dgh-tl-legend-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.35rem; background-size: cover; background-position: center; }
+
+/* settlements lane */
+.dgh-tl-found {
+    width: 0.62rem;
+    height: 0.5rem;
+    margin-left: -0.31rem;
+    margin-top: 0.22rem;
+    border-bottom-left-radius: 0.06rem;
+    border-bottom-right-radius: 0.06rem;
+    box-shadow: 0 0 0.2rem 0 rgba(0, 0, 0, 0.8);
+    overflow: visible;
+}
+.dgh-tl-found-roof {
+    position: absolute;
+    left: -0.06rem;
+    top: -0.3rem;
+    width: 0;
+    height: 0;
+    border-left-width: 0.37rem;
+    border-right-width: 0.37rem;
+    border-bottom-width: 0.3rem;
+    border-top-width: 0;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: #f6e8c8;
+}
+
+/* ---------- territory map (above the timeline) ---------- */
+.dgh-map { display: flex; flex-direction: row; align-items: flex-start; flex: 0 0 auto; }
+.dgh-map-row { display: flex; flex-direction: row; align-items: flex-start; margin-bottom: 0.5rem; }
+.dgh-map-side { flex: 1 1 auto; min-width: 0; margin-left: 1.2rem; }
+.dgh-map-side .dgh-map-title { margin-bottom: 0.3rem; }
+.dgh-map-side .dgh-tr { min-height: 1.75rem; }
+.dgh-map-side .dgh-td { padding: 0.08rem 0.4rem; font-size: var(--dg-fs-85); }
+.dgh-map-frame {
+    flex: 0 0 auto;
+    padding: 0.3rem;
+    background-color: #0b1624;
+    border-width: 0.06rem;
+    border-style: solid;
+    border-color: var(--dgh-card-border);
+    box-shadow: 0 0.15rem 0.6rem 0 rgba(0, 0, 0, 0.7);
+}
+.dgh-map-canvas { display: block; }
+.dgh-map-legend { display: flex; flex-direction: column; margin-left: 0.8rem; min-width: 11rem; }
+.dgh-map-title {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-95);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.dgh-map-when { color: var(--dgh-gold-soft); font-size: var(--dg-fs-72); margin-bottom: 0.35rem; }
+.dgh-map-legend-towns { display: flex; flex-direction: row; align-items: center; margin-left: 0.7rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-72); }
+.dgh-map-house { position: relative; width: 0.62rem; height: 0.5rem; margin: 0.3rem 0.3rem 0 0; background-color: #f6e8c8; }
+.dgh-map-legend-item { display: flex; flex-direction: row; align-items: center; margin-bottom: 0.15rem; color: var(--dgh-text-body); font-size: var(--dg-fs-72); }
+.dgh-map-legend-item.is-mine { color: var(--dgh-gold); font-weight: bold; }
+.dgh-map-legend-icon { width: 1.15rem; height: 1.15rem; margin: 0 0.3rem 0 0.3rem; }
+
+/* ---------- highlights (full width, by age) ---------- */
+.dgh-hl { display: flex; flex-direction: column; }
+.dgh-hl-age {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.35rem 0 0.1rem;
+    padding-bottom: 0.1rem;
+    border-bottom-width: 0.06rem;
+    border-bottom-style: solid;
+    border-bottom-color: var(--dgh-divider);
+}
+.dgh-hl-age-icon { width: 1.4rem; height: 1.4rem; margin-right: 0.5rem; }
+.dgh-hl-age-name {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-105);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 0.8rem;
+}
+.dgh-hl-age-civ { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); }
+.dgh-hl-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.12rem 0.5rem;
+    border-bottom-width: 0.06rem;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(168, 132, 90, 0.1);
+}
+.dgh-hl-row.is-mine { background-color: rgba(243, 195, 76, 0.05); }
+.dgh-hl-date { flex: 0 0 7.5rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-85); }
+.dgh-hl-kind {
+    flex: 0 0 7rem;
+    margin-right: 0.7rem;
+    padding: 0.08rem 0;
+    border-radius: 0.6rem;
+    text-align: center;
+    font-size: var(--dg-fs-65);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #14100a;
+    background-color: #a8845a;
+}
+.dgh-kind--victory { background-color: #f3c34c; }
+.dgh-kind--age { background-color: #e5d2ac; }
+.dgh-kind--wonder { background-color: #e0b85a; }
+.dgh-kind--triumph { background-color: #8ccf7e; }
+.dgh-kind--religion { background-color: #b894e4; }
+.dgh-kind--capture { background-color: #e89a52; }
+.dgh-kind--razed,
+.dgh-kind--elim { background-color: #d9826b; }
+.dgh-kind--war { background-color: #d05a48; color: #fff4e8; }
+.dgh-kind--peace { background-color: #8fb8d8; }
+.dgh-kind--crisis { background-color: #c0703a; color: #fff4e8; }
+.dgh-kind--disaster { background-color: #7f8fa4; color: #fff4e8; }
+.dgh-kind--civ { background-color: #9ab0c8; }
+.dgh-hl-emblem { flex: 0 0 1.9rem; display: flex; align-items: center; }
+.dgh-hl-icon { width: 1.25rem; height: 1.25rem; }
+.dgh-hl-row .dgh-event-text { font-size: var(--dg-fs-85); }
+.dgh-hl-turn { flex: 0 0 auto; margin-left: 0.8rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-72); }
+
+/* ---------- compact game detail page ---------- */
+.dgh-detail .dgh-section { padding: 0.4rem 0.7rem 0.5rem; margin-bottom: 0.5rem; }
+.dgh-detail .dgh-section-title { margin-bottom: 0.3rem; font-size: var(--dg-fs-95); }
+.dgh-detail .dgh-detail-head { margin-bottom: 0.3rem; }
+.dgh-detail .dgh-leader-icon--xl { width: 5rem; height: 5rem; }
+.dgh-detail .dgh-detail-name { font-size: var(--dg-fs-140); }
+.dgh-detail .dgh-progression--lg { font-size: var(--dg-fs-105); margin: 0.1rem 0; }
+.dgh-detail .dgh-progression--lg .dgh-progression-icon { width: 1.7rem; height: 1.7rem; }
+.dgh-detail .dgh-detail-figures { margin-bottom: 0.3rem; }
+.dgh-detail .dgh-stat { min-width: 6.4rem; padding: 0.3rem 0.5rem; margin: 0.15rem; }
+.dgh-detail .dgh-stat-value { font-size: var(--dg-fs-140); }
+.dgh-detail .dgh-stat-label { font-size: var(--dg-fs-65); }
+.dgh-detail .dgh-tl-controls { margin-bottom: 0.3rem; }
+.dgh-detail .dgh-tl-legend { margin-top: 0.2rem; }
+.dgh-detail .dgh-tl-caption { margin-top: 0.2rem; min-height: 1.1rem; font-size: var(--dg-fs-72); }
+.dgh-detail .dgh-options { margin: 0.3rem 0 0.2rem; }
+
+/* hover readout (population curve, ruler) */
+.dgh-tl-hover { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; }
+.dgh-tl-hover.is-hidden { display: none; }
+.dgh-tl-hover-line { position: absolute; top: 0; bottom: 0; left: -0.04rem; width: 0.08rem; background-color: rgba(255, 244, 214, 0.85); }
+.dgh-tl-hover-label {
+    position: absolute;
+    top: 0.1rem;
+    left: 0.35rem;
+    padding: 0.05rem 0.4rem;
+    white-space: nowrap;
+    border-radius: 0.15rem;
+    background-color: rgba(14, 11, 7, 0.92);
+    border-width: 0.06rem;
+    border-style: solid;
+    border-color: var(--dgh-gold-soft);
+    color: var(--dgh-text-title);
+    font-size: var(--dg-fs-72);
+    z-index: 3;
+}
+.dgh-tl-hover-label.is-left { left: auto; right: 0.35rem; }
+
+/* civilization filter */
+.dgh-tl-civs { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; margin-bottom: 0.3rem; }
+.dgh-tl-civs-label {
+    margin-right: 0.5rem;
+    color: var(--dgh-text-title-2);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-65);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.dgh-tl-civ-quick { margin-right: 0.3rem; }
+.dgh-tl-civ {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.1rem 0.25rem 0.1rem 0;
+    padding: 0.08rem 0.5rem 0.08rem 0.35rem;
+    border-radius: 0.8rem;
+    border-width: 0.06rem;
+    border-style: solid;
+    border-color: rgba(168, 132, 90, 0.35);
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+    opacity: 0.6;
+    cursor: pointer;
+}
+.dgh-tl-civ.is-active { opacity: 1; color: var(--dgh-text-title); border-color: var(--dgh-gold-soft); background-color: rgba(243, 195, 76, 0.1); }
+.dgh-tl-civ.is-mine.is-active { color: var(--dgh-gold); }
+.dgh-tl-civ-icon { width: 1.1rem; height: 1.1rem; margin: 0 0.25rem 0 0.25rem; }
+.dgh-tl-war--rivals { opacity: 0.9; }
+.dgh-tl-curve-rival { fill: none; stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+
+/* discs at either end of the chart stay inside it */
+.dgh-tl-medal.dgh-tl-edge-r { margin-left: -2.3rem; }
+.dgh-tl-medal--victory.dgh-tl-edge-r { margin-left: -2.6rem; }
+.dgh-tl-disaster.dgh-tl-edge-r { margin-left: -1.8rem; }
+.dgh-tl-medal.dgh-tl-edge-l,
+.dgh-tl-disaster.dgh-tl-edge-l { margin-left: 0; }
+
+/* ---------- Hall of Fame landing: best games and the current game in context ---------- */
+.dgh-tiles--slim .dgh-stat { min-width: 7rem; padding: 0.25rem 0.6rem; margin: 0.15rem; }
+.dgh-tiles--slim .dgh-stat-value { font-size: var(--dg-fs-120); }
+.dgh-best .dgh-section { margin-bottom: 0.5rem; }
+.dgh-podium { display: flex; flex-direction: row; align-items: flex-end; justify-content: center; padding-top: 0.4rem; }
+.dgh-podium-card {
+    flex: 0 1 26rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0.6rem;
+    padding: 0.7rem 0.8rem 0.8rem;
+    border-width: 0.06rem;
+    border-style: solid;
+    border-color: var(--dgh-divider);
+    border-top-width: 0.22rem;
+    border-top-style: solid;
+    border-radius: 0.3rem;
+    background-color: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+.dgh-podium-card:hover { background-color: var(--dgh-row-hover); }
+.dgh-podium-card--1 { flex-basis: 30rem; padding-top: 1.1rem; padding-bottom: 1.2rem; border-top-color: #f3c34c; background-image: linear-gradient(180deg, rgba(243, 195, 76, 0.16) 0%, rgba(0, 0, 0, 0.25) 60%); }
+.dgh-podium-card--2 { border-top-color: #c9ced8; background-image: linear-gradient(180deg, rgba(201, 206, 216, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%); }
+.dgh-podium-card--3 { border-top-color: #c98a55; background-image: linear-gradient(180deg, rgba(201, 138, 85, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%); }
+.dgh-podium-card.is-current { border-color: var(--dgh-gold); }
+.dgh-podium-rank { font-family: TitleFont, BodyFont, sans-serif; font-size: var(--dg-fs-140); color: var(--dgh-text-title); }
+.dgh-podium-card--1 .dgh-podium-rank { font-size: var(--dg-fs-185); color: var(--dgh-gold); }
+.dgh-podium-portrait { width: 5rem; height: 5rem; margin: 0.2rem 0; }
+.dgh-podium-card--1 .dgh-podium-portrait { width: 6.5rem; height: 6.5rem; }
+.dgh-podium-honor { color: var(--dgh-gold); font-size: var(--dg-fs-95); text-align: center; }
+.dgh-podium-name {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-120);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+.dgh-podium-civs { justify-content: center; margin: 0.2rem 0; }
+.dgh-podium-result { display: flex; flex-direction: row; align-items: center; color: var(--dgh-text-body); font-size: var(--dg-fs-85); }
+.dgh-podium-result .dgh-mark { margin-right: 0.35rem; }
+.dgh-podium-figures { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); margin-top: 0.15rem; }
+.dgh-podium-current {
+    margin-top: 0.4rem;
+    padding: 0.05rem 0.6rem;
+    border-radius: 0.6rem;
+    background-color: var(--dgh-gold);
+    color: #14100a;
+    font-size: var(--dg-fs-65);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.dgh-col--wide { flex: 2 1 40rem; }
+.dgh-col-stack { display: flex; flex-direction: column; flex: 1 1 30rem; }
+.dgh-col-stack > .dgh-section { margin: 0 0.35rem 0.5rem; }
+.dgh-standing { display: flex; flex-direction: row; align-items: baseline; margin-bottom: 0.4rem; }
+.dgh-standing-rank { font-family: TitleFont, BodyFont, sans-serif; color: var(--dgh-gold); font-size: var(--dg-fs-185); margin-right: 0.8rem; }
+.dgh-standing-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); }
