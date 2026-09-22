@@ -309,6 +309,14 @@
 .demographics-civtable .demographics-settle-row {
     width: 100%;
 }
+/* The table branch stacks TWO frames (icon columns / text columns). Each takes its
+   full natural height and the page (.demographics-settle-content) scrolls once;
+   the shared .demographics-worldrankings-allcivs-matrix flex:1 + min-height:0
+   made both frames split the height and scroll inside themselves, showing about
+   6 of 10 civs in each (watched 2026-09-22). The matrix branch keeps its fill. */
+.demographics-civtable-scroll {
+    flex: 0 0 auto;
+}
 /* Metric columns: the base-game recipe. `flex: 1 1 auto` makes every column share
    the frame width equally; `min-width: 0` lets them shrink below their content
    width (flex children default to min-width:auto, which is exactly what used to
@@ -324,20 +332,25 @@
     width: 100%;
     min-width: 0;
 }
-/* Header label: one line + the engine's font-fit (coh-font-fit-mode: shrink, the
-   `.font-fit-shrink` class the base game puts on every column header). The engine
-   shrinks the font until the localized string — Polish "Powierzchnia terenu",
-   "Technologie", "Pozycja" — fits the column, at any resolution / UI scale. No
-   wrapping; overflow:hidden + ellipsis is just the ultimate fallback. */
+/* Header label: ONE shared size for every column, wrapping onto two lines, with the
+   engine's font-fit (coh-font-fit-mode: shrink) kept only as a last resort (a large
+   font-size setting). Shrink alone sized every label independently: short names
+   ("GDP", "Faith") stayed at full size while long ones shrank to unreadable, three
+   visibly different sizes in one header row (watched 2026-09-21). The metrics are
+   split across two tables (icon columns / text columns), which roughly doubles the
+   column width (52 → 108px at 1512pt), so the label can follow the font-size
+   setting: --dg-fs-95 fit every label with nothing clipped, --dg-fs-105 clipped
+   "Settlements Over Time" (watched 2026-09-22). */
 .demographics-civtable .demographics-settle-th-label {
     width: 100%;
     min-width: 0;
-    white-space: nowrap;
+    font-size: var(--dg-fs-95);
+    white-space: normal;
+    max-height: 2.4em;
     overflow: hidden;
-    text-overflow: ellipsis;
     coh-font-fit-mode: shrink;
     text-align: center;
-    line-height: 1.1;
+    line-height: 1.15;
 }
 /* Data cells hold short numbers, but at very narrow widths font-fit keeps them
    readable and on one line too (matches how the base game treats value cells). */
@@ -367,10 +380,8 @@
     justify-content: flex-start;
     margin: 0 0 0.4rem 0;
 }
-/* Local player's row highlight (the matrix marks the local COLUMN with a gold
-   border; the sortable table marks the local ROW instead). A background tint plus
-   an inset gold bar, so it doesn't fight the per-civ inline border-left-color. */
-.demographics-civtable .demographics-settle-datarow.is-local {
-    background: rgba(243, 195, 76, 0.12);
-    box-shadow: inset 3px 0 0 0 rgba(243, 195, 76, 0.9);
-}
+/* Local player's row: the matrix marks the local COLUMN with a gold border; the
+   sortable table marks the local ROW with the same gold outline every World
+   Rankings table uses (.is-local shares the .is-own rule in the settlements
+   stylesheet). No inset box-shadow: GameFace painted it as a solid gold fill that
+   washed out the row's numbers (watched 2026-09-21). */

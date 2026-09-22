@@ -83,6 +83,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="ja_JP"><Text>指標</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="ja_JP"><Text>値</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="ja_JP"><Text>順位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="ja_JP">
+            <Text>合計と集計</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="ja_JP">
             <Text>値</Text>
         </Replace>
@@ -1286,6 +1289,27 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="ja_JP">
             <Text>首都</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="ja_JP">
+            <Text>首都：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="ja_JP">
+            <Text>聖地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="ja_JP">
+            <Text>{1_Religion}の聖地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="ja_JP">
+            <Text>{1_Category}で世界一</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="ja_JP">
+            <Text>現在</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="ja_JP">
+            <Text>{1_Age}の終わり</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="ja_JP">
+            <Text>その時代の最終記録によるトップ10の居住地（{1_Year}）。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="ja_JP">
             <Text>遺産</Text>
         </Replace>
@@ -1432,12 +1456,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="ja_JP">
             <Text>最も豊かな地区。</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="ja_JP">
-            <Text>{1_Cat} ➊</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="ja_JP">
-            <Text>部門別トップ</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ja_JP">
             <Text>産出量別集落ランキング</Text>

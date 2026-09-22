@@ -83,6 +83,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="ru_RU"><Text>Показатель</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="ru_RU"><Text>Значение</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="ru_RU"><Text>Ранг</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="ru_RU">
+            <Text>Итоги и подсчёты</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="ru_RU">
             <Text>Значение</Text>
         </Replace>
@@ -1286,6 +1289,27 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="ru_RU">
             <Text>Столица</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="ru_RU">
+            <Text>Столица: {1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="ru_RU">
+            <Text>Святой город</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="ru_RU">
+            <Text>Святой город религии {1_Religion}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="ru_RU">
+            <Text>Мировой лидер: {1_Category}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="ru_RU">
+            <Text>Сейчас</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="ru_RU">
+            <Text>Конец: {1_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="ru_RU">
+            <Text>10 лучших поселений по последней записи этой эпохи ({1_Year}).</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="ru_RU">
             <Text>Чудеса</Text>
         </Replace>
@@ -1432,12 +1456,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="ru_RU">
             <Text>Его богатейший район.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="ru_RU">
-            <Text>➊ {1_Cat}</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="ru_RU">
-            <Text>Лидеры категорий</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ru_RU">
             <Text>Рейтинг поселений по доходу</Text>

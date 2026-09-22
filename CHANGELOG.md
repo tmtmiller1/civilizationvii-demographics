@@ -7,6 +7,66 @@ section below by `release.sh`.
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-09-22
+
+A World Rankings release. Top 25 Settlements gains holy-city badges, world-leader icons, wonder completion dates, and
+an end-of-age board that keeps each finished age's top ten; all four World Rankings tabs now share one look, with
+podium-colored top rows and your own civilization or settlements outlined; category leaders are marked in the tables
+themselves; and Civilization Rank by Yield is split into two readable tables. Founding years and population trends
+now survive quitting the game. All new text is localized across all 11 languages.
+
+### Added
+- **End-of-age settlement standings.** Once an age ends, the Top 25 Settlements view shows a pill row: "Now" plus one
+  pill per finished age, such as "End of Antiquity". Each archived board holds the top 10 settlements as last recorded
+  in that age, with their owners, scores, yields and wonders as they stood then. Settlements owned by civilizations you
+  have not met stay masked, and archived rows have no camera buttons, since the city may have been razed or captured
+  since.
+- **World-leader icons.** Under each rank number in the Top 25 list, small yield icons mark every output that
+  settlement leads the whole world in, not just the rows shown.
+- **Holy-city badge.** A settlement that is the holy city of a founded religion shows a "Holy City" badge with the
+  religion's icon, and the religion's name on hover. The game only reports a holy city by name, so a settlement whose
+  name is shared with another settlement gets no badge rather than a guessed one. For civilizations you have not met,
+  the badge hides the religion.
+- **Wonder completion dates.** Hovering a wonder icon in the Top 25 list shows the year it was completed, and the
+  cinematic tour captions use the same date. A wonder is dated only when its completion was actually seen: one that
+  already existed when the history began, or that changed hands by capture, stays undated.
+
+### Fixed
+- **Founding years and population trends now survive quitting the game.** Both were kept in the mod's settings, which
+  Civilization VII does not reliably keep between launches, so every time the game started they began again from
+  scratch: every settlement read as founded "around" the first turn you played after launching, and the rising and
+  falling population arrows had no history to compare against. They are now saved inside the game file with the rest
+  of the Demographics history, so they carry over when you load a save and across age transitions. Settlements
+  founded before this update get an approximate founding year the first time they are seen.
+
+### Changed
+- **One look across all four World Rankings tabs.** In Civilization Ranking, Civilization Rank by Yield, Top 25
+  Settlements and Settlement Rank by Yield, places 1-3 carry a faint gold, silver or bronze wash that echoes the podium
+  medals, and your own civilization or settlements get the same gold outline so you can find them at a glance. In the
+  two yield tables the wash follows whichever column you sort by. Civilization Ranking also shows the world-leader icons
+  under each rank, like Top 25.
+- **Category leaders are marked in the tables.** The rows of "Category Leaders" cards above both Rank by Yield
+  tables are gone; instead the cell of whoever leads each column has a gold wash, and hovering it names the category
+  ("World leader in Gold"). Ties are all marked, and a column where everyone is level (for example, no one has any net
+  migration yet) marks no one. The tables now start at the top of the tab.
+- **Civilization Rank by Yield is two tables instead of one.** The single sheet of about 40 columns is split: the
+  columns with icons (score, treasury, the per-turn yields, GDP, population, wonders and the like) stay under
+  Civilization Rank by Yield, and the counts (land, cities and towns, conquests, units, great works, migration) move
+  to a second table below, Totals & Tallies. Each table has twice the room per column. Both share one sort, so
+  clicking any column orders the civilizations the same way in both and their rows line up; the page scrolls once
+  instead of each table scrolling on its own.
+- **Civilization Rank by Yield headers are readable.** Every column label now uses one size, large enough to read,
+  and wraps onto two lines; before, short names like "GDP" and "Faith" stayed large while longer ones shrank until
+  they could not be read.
+- **Your row in Civilization Rank by Yield no longer turns solid gold.** The highlight is the thin gold outline the
+  other tables use, so the numbers in your row stay legible.
+- **The two podiums match.** The Civilization Ranking podium cards now follow the Top 25 cards line for line and are
+  the same size: civilization name, its capital, leader, population and settlement count, and View on map / Cinematic
+  view buttons that go to the capital (unavailable for civilizations you have not met or whose capital you have not
+  seen, as on Top 25). Long second lines stay on one line so all three cards keep one height.
+- **Podium names are sized as intended.** On the Top 25 podium, the civilization and leader lines under each settlement
+  name now step down in size as designed; both had been falling back to one default size.
+
 ## [2.5.2] - 2026-09-16
 
 A compatibility and robustness release. Everything works unchanged on Civilization VII 1.5.0: the dock button,

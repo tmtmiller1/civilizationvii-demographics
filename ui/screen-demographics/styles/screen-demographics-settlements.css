@@ -445,7 +445,8 @@
 }
 .demographics-settle-head-rank {
     font-size: var(--dg-fs-95);
-    width: 2rem;
+    /* Matches .demographics-settle-list-rankcol so "Rank" sits over the numbers. */
+    width: 3.6rem;
     text-align: center;
     flex-shrink: 0;
 }
@@ -493,101 +494,6 @@
 .demographics-settle-filters .demographics-chart-time-filter-pill {
     font-size: var(--dg-fs-105);
     padding: 0.4rem 1rem;
-}
-.demographics-settle-leaders {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem 0.45rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
-    justify-content: center;
-}
-.demographics-settle-leader-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    /* Narrower than before so more cards pack per row — the Civ-tab strip (one
-       card per metric) fits in two rows instead of spilling a lone card to a
-       third. */
-    min-width: 8.4rem;
-    max-width: 11rem;
-    padding: 0.5rem 0.6rem;
-    border: 1px solid var(--ia-frame-border);
-    border-top: 3px solid rgba(243, 195, 76, 0.55);
-    border-radius: 0.35rem;
-    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.85) 0%, rgba(18, 21, 31, 0.6) 100%);
-}
-/* Identity row at the top of a leader card: leader portrait + name/leader. */
-.demographics-settle-leader-id {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
-    overflow: hidden;
-}
-.demographics-settle-leader-id .demographics-settle-avatar {
-    width: 2.4rem;
-    height: 2.4rem;
-}
-.demographics-settle-leader-idnames {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
-}
-/* The "Best <metric>" eyebrow: metric icon + uppercase category name. */
-.demographics-settle-leader-head {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-.demographics-settle-leader-icon {
-    width: 1.6rem;
-    height: 1.6rem;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    flex-shrink: 0;
-}
-/* The category value sitting right beside the category icon in the card head. */
-.demographics-settle-leader-headval {
-    font-size: var(--dg-fs-card-val);
-    font-weight: 700;
-    color: var(--ia-text-secondary);
-}
-.demographics-settle-leader-cat {
-    /* Full body font stack (not "BodyFont, sans-serif") so the CJK fallbacks
-       stay in the chain: the "➊" rank glyph (U+2776) in LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN
-       is absent from the Latin BodyFont and only renders via per-glyph fallback
-       to BodyFont-SC (NotoSansSC). */
-    font-family: BodyFont, BodyFont-SC, BodyFont-TC, BodyFont-JP, BodyFont-KR;
-    text-transform: uppercase;
-    letter-spacing: 0.04rem;
-    font-size: var(--dg-fs-card-cat);
-    font-weight: 700;
-    color: var(--ia-accent-gold);
-}
-.demographics-settle-leader-name {
-    color: var(--ia-text-secondary);
-    /* Sized so even long civ/settlement names wrap to at most two lines inside
-       the card instead of overflowing or truncating to one. */
-    font-size: var(--dg-fs-card-name);
-    font-weight: 700;
-    line-height: 1.15;
-    white-space: normal;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    /* Two lines = 0.95rem × 1.15 ≈ 2.19rem; the extra headroom keeps a fallback
-       font with larger metrics (or sub-pixel rounding) from shaving the 2nd line's
-       descenders. The -webkit-line-clamp is what actually caps it at two lines. */
-    max-height: 2.5rem;
-}
-.demographics-settle-leader-val {
-    color: var(--ia-text-accent);
-    font-size: var(--dg-fs-card-sub);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 /* Stylized section header with flanking filigree (Civ VII-menu flavor). */
 .demographics-settle-section-title {
@@ -1477,11 +1383,20 @@
     min-width: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-civ {
-    font-size: var(--dg-fs-135);
+    /* Snapped to the type ladder (screen-demographics.js FONT_SIZE_LADDER): the
+       old --dg-fs-135 / --dg-fs-110 steps were never published, so both lines
+       silently fell back to the inherited 16px. */
+    font-size: var(--dg-fs-120);
     margin: 0;
+    /* One line, like the name above it, so every podium card is the same height
+       ("Capital: Unknown Settlement" wrapped and made one card taller). */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-owner {
-    font-size: var(--dg-fs-110);
+    font-size: var(--dg-fs-105);
     color: var(--ia-text-secondary);
     margin: 0;
 }
@@ -1492,4 +1407,101 @@
 .demographics-settle-split .demographics-settle-section-title {
     min-height: 3.4rem;
     align-items: center;
+}
+
+/* ── Ranked-row accents (Top 25 list + table) ─────────────────────────────────
+   Places 1-3 get a faint gold / silver / bronze wash so the list echoes the
+   podium medals; the civ-colored left edge stays. The local player's own
+   settlements get a gold outline on the other three sides, so they can be found
+   at a glance without reading every owner name. Two classes each, so the table's
+   zebra rule (.demographics-settle-datarow:nth-child(even)) cannot win over them.
+   All four World Rankings tabs share these: Civilization Ranking and Top 25 (list
+   rows), Civilization and Settlement Rank by Yield (table rows; the civ table marks
+   its local row .is-local). */
+.demographics-settle-list-row.demographics-settle-medalrow-1,
+.demographics-settle-datarow.demographics-settle-medalrow-1 {
+    background: linear-gradient(95deg, rgba(212, 175, 90, 0.3) 0%, rgba(212, 175, 90, 0.1) 55%, rgba(20, 16, 10, 0.35) 100%);
+}
+.demographics-settle-list-row.demographics-settle-medalrow-2,
+.demographics-settle-datarow.demographics-settle-medalrow-2 {
+    background: linear-gradient(95deg, rgba(207, 211, 218, 0.24) 0%, rgba(207, 211, 218, 0.08) 55%, rgba(20, 16, 10, 0.35) 100%);
+}
+.demographics-settle-list-row.demographics-settle-medalrow-3,
+.demographics-settle-datarow.demographics-settle-medalrow-3 {
+    background: linear-gradient(95deg, rgba(205, 127, 71, 0.26) 0%, rgba(205, 127, 71, 0.09) 55%, rgba(20, 16, 10, 0.35) 100%);
+}
+.demographics-settle-list-row.is-own,
+.demographics-settle-datarow.is-own,
+.demographics-settle-datarow.is-local {
+    border-top: 1px solid rgba(232, 215, 161, 0.85);
+    border-right: 1px solid rgba(232, 215, 161, 0.85);
+    border-bottom: 1px solid rgba(232, 215, 161, 0.85);
+}
+
+/* Rank column: the place number with the world-leader icons beneath it. */
+.demographics-settle-list-rankcol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 3.6rem;
+    flex-shrink: 0;
+}
+.demographics-settle-list-rankcol .demographics-settle-list-rank {
+    width: auto;
+}
+.demographics-settle-lead-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.2rem;
+}
+.demographics-settle-lead-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0.05rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Holy-city badge: religion icon + label, in the settlement name row. */
+.demographics-settle-badge-holy {
+    display: flex;
+    align-items: center;
+    color: #e6d3f2;
+    border-color: rgba(200, 170, 225, 0.55);
+}
+.demographics-settle-holy-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-right: 0.25rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* End-of-age board: the pill row above the showcase and its note. */
+.demographics-settle-age-pills {
+    margin-bottom: 0.4rem;
+}
+.demographics-settle-age-note {
+    text-align: center;
+    color: var(--ia-text-secondary);
+    font-size: var(--dg-fs-95);
+    margin-bottom: 0.5rem;
+}
+
+/* Category leaders are marked IN the tables (the separate leader-card strip was
+   removed): the cell of whoever leads a column gets a gold wash, bold gold text and
+   a "World leader in <column>" tooltip. Settlement Rank by Yield, Civilization Rank
+   by Yield, and its matrix layout all use it. */
+.demographics-settle-td.is-leader,
+.demographics-worldrankings-allcivs-value-cell.is-leader {
+    background: rgba(212, 175, 90, 0.26);
+    color: #f3d98a;
+    font-weight: 700;
+    border-radius: 0.2rem;
+}
+.demographics-worldrankings-allcivs-value-cell.is-leader .demographics-worldrankings-allcivs-cell-value {
+    color: #f3d98a;
 }

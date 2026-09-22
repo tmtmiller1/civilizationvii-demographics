@@ -432,6 +432,9 @@
 	<Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="pl_PL">
 		<Text>Pozycja</Text>
 	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="pl_PL">
+		<Text>Sumy i zliczenia</Text>
+	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="pl_PL">
 		<Text>Wartość</Text>
 	</Replace>
@@ -1950,6 +1953,27 @@
 	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="pl_PL">
 		<Text>Stolica</Text>
 	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="pl_PL">
+		<Text>Stolica: {1_Name}</Text>
+	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="pl_PL">
+		<Text>Święte miasto</Text>
+	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="pl_PL">
+		<Text>Święte miasto religii {1_Religion}</Text>
+	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="pl_PL">
+		<Text>Lider światowy: {1_Category}</Text>
+	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="pl_PL">
+		<Text>Teraz</Text>
+	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="pl_PL">
+		<Text>Koniec: {1_Age}</Text>
+	</Replace>
+	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="pl_PL">
+		<Text>10 najlepszych osad według ostatniego zapisu z tej epoki ({1_Year}).</Text>
+	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="pl_PL">
 		<Text>Cuda</Text>
 	</Replace>
@@ -2096,12 +2120,6 @@
 	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="pl_PL">
 		<Text>Jego najbardziej rozwinięta dzielnica.</Text>
-	</Replace>
-	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="pl_PL">
-		<Text>➊ {1_Cat}</Text>
-	</Replace>
-	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="pl_PL">
-		<Text>Liderzy kategorii</Text>
 	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="pl_PL">
 		<Text>Ranking osiedli według dochodów</Text>

@@ -11,6 +11,15 @@ const enXml = fs.readFileSync("text/en_us/ModText.xml", "utf8");
 const SRC = [...enXml.matchAll(/Tag="(LOC_[A-Z0-9_]+)"/g)].map((m) => m[1]);
 const FOLDERS = ["de_de", "es_es", "fr_fr", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br", "ru_ru", "zh_cn"];
 
+// Duplicate tags are fatal in game: the second INSERT hits the LocalizedText unique key and the
+// loader rolls back the WHOLE file, so every string in that language falls back to raw tags.
+for (const f of ["en_us", ...FOLDERS]) {
+  const xml = fs.readFileSync(`text/${f}/ModText.xml`, "utf8");
+  const tags = [...xml.matchAll(/Tag="(LOC_[A-Z0-9_]+)"/g)].map((m) => m[1]);
+  const dupes = tags.filter((k, i) => tags.indexOf(k) !== i);
+  assert.equal(dupes.length, 0, `${f} defines ${dupes.length} tag(s) twice: ${dupes.slice(0, 4).join(", ")}`);
+}
+
 let checked = 0;
 for (const f of FOLDERS) {
   const xml = fs.readFileSync(`text/${f}/ModText.xml`, "utf8");

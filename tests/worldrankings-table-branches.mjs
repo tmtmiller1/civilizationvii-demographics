@@ -63,8 +63,14 @@ const settings = makeSettings();
 let renders = 0;
 renderCivTable(host, profiles, { settings }, true, () => { renders++; });
 
-assert.ok(host.querySelector(".demographics-civtable"), "renders the sortable table");
-const rows = qa(host, "demographics-settle-datarow");
+const tables = qa(host, "demographics-civtable");
+assert.equal(tables.length, 2, "icon metrics and text-only metrics render as two tables");
+const iconHeaders = qa(tables[0].querySelector(".demographics-settle-header"), "demographics-civtable-metric");
+const textHeaders = qa(tables[1].querySelector(".demographics-settle-header"), "demographics-civtable-metric");
+assert.ok(iconHeaders.every((h) => h.querySelector(".demographics-settle-yield-icon")), "table 1 = icon columns");
+assert.ok(textHeaders.every((h) => !h.querySelector(".demographics-settle-yield-icon")), "table 2 = text columns");
+assert.ok(textHeaders.length > 0 && iconHeaders.length > 0);
+const rows = qa(tables[0], "demographics-settle-datarow");
 assert.equal(rows.length, 3, "one row per civ");
 
 // Sorted by score descending: Han(100), Rome(50), Solo(null last).
@@ -100,12 +106,25 @@ assert.equal(
 // Local player's row (pid 1 = Rome, at index 1 after Han) is highlighted.
 assert.ok(rows[1].classList.contains("is-local"), "local player's row is highlighted");
 
+// Places 1-2 in the active sort get the shared medal wash; an unranked civ (no score) gets none.
+assert.ok(rows[0].classList.contains("demographics-settle-medalrow-1"), "rank 1 → gold wash");
+assert.ok(rows[1].classList.contains("demographics-settle-medalrow-2"), "rank 2 → silver wash");
+assert.ok(!rows[2].className.includes("medalrow"), "unranked row has no medal wash");
+assert.ok(!rows[0].classList.contains("is-local"), "only the local row is outlined");
+
+// Category leaders live IN the table: the leading cell per metric gets the gold wash + tooltip; no card strip.
+assert.equal(host.querySelector(".demographics-settle-leaders"), null, "no leader-card strip");
+const leadCells = qa(tables[0], "is-leader");
+assert.equal(leadCells.length, 1, "one metric with data → one leader cell");
+assert.equal(rows[0].querySelector(".is-leader"), leadCells[0], "the leader cell is in Han's row");
+assert.ok(leadCells[0].getAttribute("data-tooltip-content"), "leader cell names the category");
+
 // ── Group 2: clicking a metric header sorts + persists ────────────────────────
-const header = host.querySelector(".demographics-settle-header");
+const header = tables[1].querySelector(".demographics-settle-header");
 const metricHeaders = qa(header, "demographics-civtable-metric");
 assert.ok(metricHeaders.length > 1, "multiple sortable metric columns");
 const before = renders;
-metricHeaders[metricHeaders.length - 1].dispatch("click"); // last column ≠ default "score"
+metricHeaders[metricHeaders.length - 1].dispatch("click"); // a text-table column: the one sort drives both tables
 assert.ok(renders > before, "sort click re-renders");
 assert.ok(
   settings._calls.some(([k]) => k === "worldRankingsAllCivsSortKey"),

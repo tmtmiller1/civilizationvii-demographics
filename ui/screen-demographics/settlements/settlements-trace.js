@@ -4,22 +4,28 @@
 // doesn't carry: (1) FOUNDING turn/year per settlement, and (2) a rolling
 // population window per settlement for rising/falling trend.
 //
-// Both are keyed by stable plot location ("x,y") and persisted INSIDE the mod's
-// existing settings slice (one shared `modSettings` localStorage key - adding a
-// second top-level key would make other mods wipe localStorage), seed-namespaced
-// so it self-resets on a new game. The pop window is capped; the founding map is
-// permanent (founding never changes) but bounded by the settlements in the game.
+// Both are keyed by stable plot location ("x,y") and stored on the sampled
+// history blob (`history.settleTrace`), which is saved into the game itself every
+// turn, so they survive quit/load and the age transition and reset with a new
+// game. They used to live in the mod's settings slice, but localStorage does not
+// survive a game restart in Civ VII 1.5.0 (watched 2026-09-21), so every launch
+// silently started the founding map and trend windows over. The pop window is
+// capped; the founding map is permanent (founding never changes) but bounded by
+// the settlements in the game.
 //
 // Founding has two sources, distinguished as exact vs approximate:
-//   - CityAddedToMap event  → EXACT founding turn (going forward).
+//   - CityAddedToMap event  → EXACT founding turn (going forward). Held in memory
+//     until the next sample folds it into the history.
 //   - first sampler sighting → APPROXIMATE (settlement already existed / old save).
 //
-// recordSettlementsNow() is called once per sample by the sampler; getFounded()
-// and getCityTrend() are read by settlements-data.js at render time.
+// recordSettlementTrace() is called once per sample by the sampler, on the same
+// history blob its single per-turn save commits; getFounded() and getCityTrend()
+// are read by settlements-data.js at render time from an in-memory copy of that
+// trace (loaded once per game from the saved history when the sampler has not
+// run yet this session).
 
-import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { DemographicsStorage } from "/demographics/ui/storage/demographics-storage.js";
 
-const KEY = "settleTrace";
 /** Max population samples retained per settlement. */
 const CAP = 12;
 
@@ -56,15 +62,48 @@ function gameSeed() {
 }
 
 /**
- * Load the trace blob, resetting it when the game seed changed.
- * @param {string} seed Current game seed.
- * @returns {{seed: string, founded: Record<string, *>,
- *   pop: Record<string, Array<{t: number, pop: number}>>}}
+ * The per-settlement trace: founding stamps and rolling population windows.
+ * @typedef {{ founded: Record<string, {turn: number, year: string, exact: boolean}>,
+ *   pop: Record<string, Array<{t: number, pop: number}>> }} Trace
  */
-function loadBlob(seed) {
-  const b = DemographicsSettings.getSetting(KEY, null);
-  if (b && b.seed === seed && b.founded && b.pop) return b;
-  return { seed, founded: {}, pop: {} };
+
+/**
+ * The trace readers use, keyed by the game seed it belongs to. A save loaded
+ * from inside a running game does not recreate the page, so the seed check is
+ * what keeps one game's trace out of another's.
+ * @type {{ seed: string, trace: Trace }|null}
+ */
+let cache = null;
+
+/**
+ * Exact foundings seen via CityAddedToMap since the last sample (plot key →
+ * stamp), folded into the history by the next recordSettlementTrace().
+ * @type {Map<string, {turn: number, year: string, exact: boolean}>}
+ */
+const pendingExact = new Map();
+
+/**
+ * The value as a usable trace, or null.
+ * @param {*} v Candidate trace.
+ * @returns {Trace|null} The trace, or null.
+ */
+function asTrace(v) {
+  return v && typeof v === "object" && v.founded && typeof v.founded === "object" &&
+    v.pop && typeof v.pop === "object" ? v : null;
+}
+
+/**
+ * The trace for the current game: the cached copy, else the one on the saved
+ * history (read once), else an empty one.
+ * @returns {Trace} The trace.
+ */
+function currentTrace() {
+  const seed = gameSeed();
+  if (cache && cache.seed === seed) return cache.trace;
+  const saved = safe(() => DemographicsStorage.load(), null);
+  const trace = asTrace(saved && saved.settleTrace) || { founded: {}, pop: {} };
+  cache = { seed, trace };
+  return trace;
 }
 
 /**
@@ -107,17 +146,14 @@ function cityFromId(cityId) {
 }
 
 /**
- * Persist an exact founding snapshot for one location key.
+ * Hold an exact founding stamp for one location key until the next sample.
  * @param {string} loc Plot key.
  */
-function persistExactFounding(loc) {
-  const seed = gameSeed();
-  const blob = loadBlob(seed);
-  if (blob.founded[loc]) return;
+function noteExactFounding(loc) {
+  if (pendingExact.has(loc) || currentTrace().founded[loc]) return;
   const turn = safe(() => (typeof Game !== "undefined" ? Game.turn : undefined), undefined);
   const year = safe(() => (typeof Game !== "undefined" && Game.getTurnDate ? Game.getTurnDate() : ""), "");
-  blob.founded[loc] = { turn: typeof turn === "number" ? turn : -1, year: year || "", exact: true };
-  DemographicsSettings.setSetting(KEY, blob);
+  pendingExact.set(loc, { turn: typeof turn === "number" ? turn : -1, year: year || "", exact: true });
 }
 
 /**
@@ -131,7 +167,7 @@ function onCityAdded(data) {
     const city = cityFromId(cid);
     const loc = locKey(city);
     if (!loc) return;
-    persistExactFounding(loc);
+    noteExactFounding(loc);
   });
 }
 
@@ -182,25 +218,29 @@ function readAllSettlements() {
 }
 
 /**
- * Compute this sample's settlement populations into the rolling window, and stamp
- * an APPROXIMATE founding for any settlement not yet recorded (and fill the year
- * for an exact-but-yearless founding stamped between samples). Returns the
- * settings key + updated blob for the caller to persist (batched into the single
- * per-turn settings write); null when there is nothing to record.
+ * Fold this sample into the history's trace: each settlement's population goes
+ * into its rolling window, exact foundings seen since the last sample are
+ * stamped, and any settlement still unrecorded gets an APPROXIMATE founding (an
+ * exact-but-yearless stamp gets this sample's year). The caller's single
+ * per-turn save persists it.
+ * @param {*} history The sampled history blob (mutated: `settleTrace`).
  * @param {number} turn The (monotonic) sample turn.
  * @param {string} [year] The sample's game-year string.
- * @returns {{key: string, value: *}|null} The settings entry to persist, or null.
+ * @returns {boolean} True when the trace was updated.
  */
-export function recordSettlementsNow(turn, year) {
+export function recordSettlementTrace(history, turn, year) {
+  if (!history || typeof history !== "object") return false;
   const settlements = readAllSettlements();
-  if (!settlements.length) return null;
-  const seed = gameSeed();
-  const blob = loadBlob(seed);
+  if (!settlements.length) return false;
+  const trace = asTrace(history.settleTrace) || (history.settleTrace = { founded: {}, pop: {} });
+  for (const [loc, stamp] of pendingExact) if (!trace.founded[loc]) trace.founded[loc] = stamp;
+  pendingExact.clear();
   for (const s of settlements) {
-    foldPop(blob, s, turn);
-    foldFounding(blob, s.locId, turn, year);
+    foldPop(trace, s, turn);
+    foldFounding(trace, s.locId, turn, year);
   }
-  return { key: KEY, value: blob };
+  cache = { seed: gameSeed(), trace };
+  return true;
 }
 
 /**
@@ -240,9 +280,7 @@ function foldFounding(blob, locId, turn, year) {
  */
 export function getFounded(locId) {
   if (!locId) return null;
-  const blob = DemographicsSettings.getSetting(KEY, null);
-  if (!blob || blob.seed !== gameSeed() || !blob.founded) return null;
-  return blob.founded[locId] || null;
+  return currentTrace().founded[locId] || pendingExact.get(locId) || null;
 }
 
 /**
@@ -264,10 +302,7 @@ function trendDirection(rate) {
  */
 export function getCityTrend(locId) {
   if (!locId) return null;
-  const blob = DemographicsSettings.getSetting(KEY, null);
-  if (!blob || !blob.pop) return null;
-  if (blob.seed !== gameSeed()) return null;
-  const arr = blob.pop[locId];
+  const arr = currentTrace().pop[locId];
   if (!Array.isArray(arr) || arr.length < 2) return null;
   const first = arr[0];
   const last = arr[arr.length - 1];

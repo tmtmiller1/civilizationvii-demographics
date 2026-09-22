@@ -26,6 +26,8 @@ import {
   getCityTrend
 } from "/demographics/ui/screen-demographics/settlements/settlements-trace.js";
 import { applyPopulationVarianceAndEnsureUnique } from "/demographics/ui/screen-demographics/settlements/settlements-population-variance.js";
+import { attachHolyCities } from "/demographics/ui/screen-demographics/settlements/settlements-holy.js";
+import { localHasMet } from "/demographics/ui/screen-demographics/settlements/settlements-met.js";
 import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 
 /**
@@ -61,8 +63,11 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
  * @property {SettlementOwner} owner Resolved owner identity.
  * @property {Record<string, number>} outputs Per-output value, keyed by output id.
  * @property {Array<{type: string, icon: string, nameKey: string,
- *   location: {x: number, y: number}|null}>} [wonders]
- *   Completed wonders (confirmed).
+ *   location: {x: number, y: number}|null, year?: string}>} [wonders]
+ *   Completed wonders (confirmed); `year` is stamped by settlements-wonder-years.js.
+ * @property {{religionName: string, icon: string}|null} [holy]
+ *   The religion this settlement is the holy city of (settlements-holy.js), or null.
+ * @property {boolean} [archived] True for an end-of-age archive record (no live handle).
  * @property {number} [districts] Count of DISTRICT-class constructibles in the settlement.
  * @property {number} [buildings] Count of BUILDING-class constructibles in the settlement.
  * @property {string[]} [buildingTypes] Localized names of the settlement's buildings (drill-down).
@@ -259,46 +264,6 @@ function resolveOwner(pid, handle) {
     isMajor: major,
     met: localHasMet(pid)
   };
-}
-
-/**
- * Resolve local player id from GameContext.
- * @returns {number|undefined} Local player id.
- */
-function localPlayerId() {
-  if (typeof GameContext === "undefined") return undefined;
-  return GameContext.localPlayerID;
-}
-
-/**
- * Resolve local player's diplomacy handle.
- * @param {number} localId Local player id.
- * @returns {*|null} Diplomacy handle.
- */
-function localDiplomacy(localId) {
-  if (typeof Players === "undefined" || !Players.get) return null;
-  return Players.get(localId)?.Diplomacy || null;
-}
-
-/**
- * Whether the LOCAL player has met `pid` (the local player is always met).
- * Returns undefined when diplomacy is unreadable so callers can decline to
- * mask on uncertainty (mirrors the worldrankings-allcivs's "only mask when met === false"
- * rule).
- * @param {number} pid The owner player id.
- * @returns {boolean|undefined} Met state, or undefined when unknown.
- */
-function localHasMet(pid) {
-  try {
-    const localId = localPlayerId();
-    if (typeof localId !== "number") return undefined;
-    if (pid === localId) return true;
-    const d = localDiplomacy(localId);
-    if (d && typeof d.hasMet === "function") return !!d.hasMet(pid);
-  } catch (_) {
-    // GameContext.localPlayerID / Players.get / Diplomacy.hasMet can throw mid age-transition.
-  }
-  return undefined;
 }
 
 /**
@@ -614,7 +579,11 @@ function currentTurn() {
   return 0;
 }
 
-function currentAgeType() {
+/**
+ * The current age type ("AGE_ANTIQUITY", ...), or undefined when unreadable.
+ * @returns {string|undefined} The age type.
+ */
+export function currentAgeType() {
   try {
     if (typeof Game === "undefined" || Game.age === undefined) return undefined;
     if (typeof GameInfo === "undefined" || typeof GameInfo?.Ages?.lookup !== "function") {
@@ -841,6 +810,7 @@ function gatherSettlements() {
   if (!Array.isArray(players)) return list;
   for (const p of players) if (p) gatherPlayerSettlements(p, list);
   applyPopulationVarianceAndEnsureUnique(list);
+  attachHolyCities(list);
   slog("gathered", list.length, "settlements");
   return list;
 }
