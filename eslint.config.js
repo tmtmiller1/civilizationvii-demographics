@@ -44,7 +44,8 @@ const ENGINE_GLOBALS = {
   UIViewExperience: "readonly",
   VictoryManager: "readonly",
   SerialBase: "readonly",
-  DiplomacyPlayerRelationships: "readonly"
+  DiplomacyPlayerRelationships: "readonly",
+  InputActionStatuses: "readonly"
 };
 
 const BROWSER_GLOBALS = {
@@ -52,6 +53,8 @@ const BROWSER_GLOBALS = {
   document: "readonly",
   console: "readonly",
   setTimeout: "readonly",
+  setInterval: "readonly",
+  clearInterval: "readonly",
   clearTimeout: "readonly",
   requestAnimationFrame: "readonly",
   cancelAnimationFrame: "readonly",

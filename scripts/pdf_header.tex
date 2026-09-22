@@ -1,6 +1,14 @@
 \setlength{\emergencystretch}{4em}
 \sloppy
 
+% Screenshots: full column width, never taller than a page, each centred with its caption.
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,height=0.8\textheight,keepaspectratio}
+% Let figures settle on the page that fits them, but never drift past their section.
+\usepackage{placeins}
+\let\origsection\section
+\renewcommand{\section}{\FloatBarrier\origsection}
+
 % Better line breaks for code and links.
 \usepackage{fvextra}
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,breakanywhere,commandchars=\\\{\}}
