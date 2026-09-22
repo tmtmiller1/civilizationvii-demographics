@@ -8,7 +8,10 @@ import {
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { iconEl } from "/demographics/ui/core/ui-helpers.js";
 
-import { computeRanks } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
+import {
+  computeRanks,
+  leadsMetric
+} from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 
 // ── Scaled / Civ number mode ──────────────────────────────────────────────────
 // Several metrics come in a matched pair: a scaled-"people" version (the visible
@@ -446,6 +449,17 @@ function appendMetricLabelRows(col) {
 }
 
 /**
+ * Mark a matrix cell as its metric's world leader: the same gold leader wash and
+ * tooltip the table branch uses (the leader-card strip above was removed).
+ * @param {HTMLElement} cell The value cell.
+ * @param {MetricDef} m The metric.
+ */
+function markLeaderCell(cell, m) {
+  cell.classList.add("is-leader");
+  cell.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", localizedMetricName(m)));
+}
+
+/**
  * Build a civ column: header on top, one value+rank cell per metric below.
  * @param {CivProfile} profile This column's civ profile.
  * @param {Record<string, CivProfile>} profiles All profiles (for ranking).
@@ -463,8 +477,9 @@ export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
 
   let rowIdx = 0;
   for (const m of shownMetrics()) {
-    const { ranks } = computeRanks(profiles, m.id);
-    const cell = buildValueCell(m, profile, ranks.get(profile.pid));
+    const info = computeRanks(profiles, m.id);
+    const cell = buildValueCell(m, profile, info.ranks.get(profile.pid));
+    if (leadsMetric(info, profile.pid)) markLeaderCell(cell, m);
     if (rowIdx > 0 && rowIdx % 4 === 0) cell.classList.add("is-heavy-divider");
     col.appendChild(cell);
     rowIdx++;

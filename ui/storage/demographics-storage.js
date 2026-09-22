@@ -51,6 +51,8 @@ import { loadEmpty, loadParsed, readRaw } from "/demographics/ui/storage/storage
  * @property {Snapshot[]} samples Per-turn samples.
  * @property {AgeBoundary[]} ageBoundaries Age hand-off markers.
  * @property {Record<string, any>} eliminated Elimination bookkeeping.
+ * @property {*} [settleTrace] Per-settlement founding stamps + population windows (settlements-trace.js).
+ * @property {*} [settleAges] End-of-age top-settlement archive (settlements-age-archive.js).
  */
 
 const DBG = false;

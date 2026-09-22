@@ -36,30 +36,23 @@ export function logSampleTiming(ilog, t, counts) {
 }
 
 /**
- * Record auxiliary settlement/town history for one sample pass. The two
- * recorders only COMPUTE their updated blobs; this collects both and persists
- * them in a single batched settings write, so the shared `modSettings` store is
- * parsed + stringified once per turn instead of once per recorder.
+ * Record auxiliary town history for one sample pass. The recorder only COMPUTES
+ * its updated blob; this persists it in a single batched settings write, so the
+ * shared `modSettings` store is parsed + stringified once per turn. (Settlement
+ * founding/trend history is NOT here: it rides the saved history blob, see
+ * finalizeSampleLifecycle's recordSettlementHistory.)
  * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
  * @param {{
  *   recordLocalTownsNow: (chartTurn: number) => ({key: string, value: *}|null),
- *   recordSettlementsNow: (chartTurn: number, gameYear: string|undefined) =>
- *     ({key: string, value: *}|null),
  *   setSettings: (entries: Record<string, *>) => void
  * }} aux Aux recorders + batched persistence.
  * @param {number} chartTurn Monotonic chart turn.
- * @param {string|undefined} gameYear Game-year label.
  */
-export function recordAuxHistory(safeCall, aux, chartTurn, gameYear) {
+export function recordAuxHistory(safeCall, aux, chartTurn) {
   /** @type {Record<string, *>} */
   const entries = {};
   const towns = safeCall("recordLocalTownsNow", () => aux.recordLocalTownsNow(chartTurn));
   if (towns && towns.key) entries[towns.key] = towns.value;
-  const settle = safeCall(
-    "recordSettlementsNow",
-    () => aux.recordSettlementsNow(chartTurn, gameYear)
-  );
-  if (settle && settle.key) entries[settle.key] = settle.value;
   if (Object.keys(entries).length) {
     safeCall("persistAuxHistory", () => aux.setSettings(entries));
   }
@@ -112,6 +105,7 @@ export function commitSample(storage, tripIfTooMany, history) {
  *   perfNow: () => number,
  *   persistSnapshot: (snapshot: any) => any,
  *   runWarTracker: (snapshot: any, turn: number, history: any) => void,
+ *   recordSettlementHistory: (history: any, snapshot: any) => void,
  *   commitSample: (history: any) => number,
  *   logSampleTiming: (
  *     t: {start:number,work:number,write:number,end:number},
@@ -121,11 +115,12 @@ export function commitSample(storage, tripIfTooMany, history) {
  */
 export function finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, deps) {
   const tWork = deps.perfNow();
-  // One parse + one save per turn: append (no write) → war tracking mutates the
-  // same blob → a single commit persists both.
+  // One parse + one save per turn: append (no write) → war tracking and the
+  // settlement trace + end-of-age archive mutate the same blob → one commit persists all.
   const history = deps.persistSnapshot(snapshot);
   const tWrite = deps.perfNow();
   deps.runWarTracker(snapshot, turn, history);
+  deps.recordSettlementHistory(history, snapshot);
   const storedSamples = deps.commitSample(history);
   const counts = {
     players: Object.keys(snapshot.players || {}).length,

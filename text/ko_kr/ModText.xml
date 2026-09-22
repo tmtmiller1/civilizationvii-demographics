@@ -83,6 +83,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="ko_KR"><Text>지표</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="ko_KR"><Text>값</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="ko_KR"><Text>순위</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="ko_KR">
+            <Text>합계 및 집계</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="ko_KR">
             <Text>값</Text>
         </Replace>
@@ -1286,6 +1289,27 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="ko_KR">
             <Text>수도</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="ko_KR">
+            <Text>수도: {1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="ko_KR">
+            <Text>성지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="ko_KR">
+            <Text>{1_Religion}의 성지</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="ko_KR">
+            <Text>{1_Category} 세계 1위</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="ko_KR">
+            <Text>현재</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="ko_KR">
+            <Text>{1_Age} 종료</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="ko_KR">
+            <Text>해당 시대의 마지막 기록 기준 상위 10개 정착지 ({1_Year})</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="ko_KR">
             <Text>불가사의</Text>
         </Replace>
@@ -1432,12 +1456,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="ko_KR">
             <Text>가장 풍요로운 구역.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="ko_KR">
-            <Text>{1_Cat} ➊</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="ko_KR">
-            <Text>부문별 선두</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="ko_KR">
             <Text>산출량별 정착지 순위</Text>

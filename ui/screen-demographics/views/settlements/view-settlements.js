@@ -30,6 +30,8 @@ import { renderCivRankingPanel } from "/demographics/ui/screen-demographics/view
 import { renderShowcasePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
 import { renderTablePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-table.js";
 import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
+import { annotateWonderYears } from "/demographics/ui/screen-demographics/settlements/settlements-wonder-years.js";
+import { readAgeArchive } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
 
 const TOP_N = 25;
 
@@ -43,6 +45,7 @@ const TOP_N = 25;
  * @property {string} subTab Active sub-view ("showcase" | "table").
  * @property {string} filter Active table filter ("all" | "cities" | "towns").
  * @property {string} sortKey Active table sort key ("composite" | output id).
+ * @property {string} showcaseAge Showcase board: "now", or an archived age type (session-only).
  * @property {*} [detail] The settlement whose detail dossier is open, or null.
  * @property {boolean} showUnmetNames When false (default), settlements owned by
  *   civs the local player has not met are shown with their identity (name +
@@ -214,8 +217,8 @@ function buildMapButton(s) {
 
 /**
  * The dedicated "Cinematic" button (default on; hidden when the cinematic option
- * is turned off). Greyed-out for an unmet civ. Enriches the city's wonders with
- * their build years from history first, so the tour can caption each wonder.
+ * is turned off). Greyed-out for an unmet civ. The wonders already carry their
+ * observed completion years (annotateWonderYears), so the tour can caption them.
  * @param {*} s The settlement.
  * @param {SettleState} st The render state.
  * @returns {HTMLElement|null} The button, or null.
@@ -224,66 +227,25 @@ function buildCinematicButton(s, st) {
   if (getSetting(st.settings, "topCities.cinematicEnabled", true) !== true) return null;
   if (!cameraForbidden(s) && !s.location) return null;
   return cameraButton(!cameraForbidden(s) && !!s.location, "LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW",
-    () => launchCinematic(enrichWonders(s, st.history)), cameraDisabledTip(s));
+    () => launchCinematic(s), cameraDisabledTip(s));
 }
 
 /**
  * Build the camera action row: "View on map" + (default) "Cinematic". Null when
- * neither button applies.
+ * neither button applies, and always for an archived end-of-age record (the
+ * settlement may have been razed or changed hands since).
  * @param {*} s The settlement.
  * @param {SettleState} st The render state.
  * @returns {HTMLElement|null} The button row, or null.
  */
 function buildCameraButtons(s, st) {
+  if (s.archived) return null;
   const row = div("demographics-settle-mapbtns");
   const map = buildMapButton(s);
   if (map) row.appendChild(map);
   const cine = buildCinematicButton(s, st);
   if (cine) row.appendChild(cine);
   return row.firstChild ? row : null;
-}
-
-/**
- * Build a map of wonder ConstructibleType → earliest game-year it appears for an
- * owner in the sampled history (its approximate build year).
- * @param {*} history The sampled history.
- * @param {number} pid The owner player id.
- * @returns {Map<string, string>} type → year.
- */
-function wonderBuildYears(history, pid) {
-  const out = new Map();
-  const samples = history && Array.isArray(history.samples) ? history.samples : [];
-  const key = String(pid);
-  for (const smp of samples) foldSampleWonderYears(out, smp, key);
-  return out;
-}
-
-/**
- * Fold one sample's wonder types into the earliest-year map.
- * @param {Map<string, string>} out type → earliest year (mutated).
- * @param {*} smp The sample.
- * @param {string} key The owner pid key.
- */
-function foldSampleWonderYears(out, smp, key) {
-  const ps = smp && smp.players ? smp.players[key] : null;
-  const types = ps && Array.isArray(ps.wonderTypes) ? ps.wonderTypes : null;
-  if (!types || !smp.gameYear) return;
-  for (const ty of types) if (!out.has(ty)) out.set(ty, smp.gameYear);
-}
-
-/**
- * Annotate a settlement's wonders with their build years (from history) so the
- * cinematic can caption each wonder. Mutates + returns the settlement.
- * @param {*} s The settlement.
- * @param {*} history The sampled history.
- * @returns {*} The settlement.
- */
-function enrichWonders(s, history) {
-  const years = wonderBuildYears(history, s.owner && s.owner.pid);
-  for (const w of Array.isArray(s.wonders) ? s.wonders : []) {
-    if (w && w.type && !w.year && years.has(w.type)) w.year = years.get(w.type);
-  }
-  return s;
 }
 
 /**
@@ -437,7 +399,8 @@ function renderShowcase(st) {
     buildSectionTitle,
     buildListHeader,
     buildEmpty,
-    buildTrendGlyph
+    buildTrendGlyph,
+    archive: readAgeArchive(st.history)
   });
 }
 
@@ -456,6 +419,7 @@ function renderCivRanking(st) {
     buildOwnerAvatar,
     buildOutputStrip,
     buildLaurelMedal,
+    buildCameraButtons,
     maskOwner
   });
 }
@@ -488,7 +452,6 @@ function renderTable(st) {
     rerenderContent,
     displayOf,
     buildOwnerCell,
-    buildOwnerAvatar,
     buildTypeBadge,
     buildSectionTitle,
     buildEmpty
@@ -615,8 +578,10 @@ export function render(host, ctx) {
     // Cities/Towns); switching chips still works for the rest of the session.
     filter: "all",
     sortKey: getSetting(settings, "settlementsSortKey", "composite"),
+    showcaseAge: "now",
     showUnmetNames: getSetting(settings, "showUnmetNames", false) === true
   };
+  annotateWonderYears(st.board.settlements, st.history);
   const wrap = div("demographics-settle-view");
   wrap.appendChild(buildSubTabs(st));
   wrap.appendChild(st.content);

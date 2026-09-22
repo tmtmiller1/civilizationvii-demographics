@@ -246,6 +246,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="es_ES">
             <Text>Posición</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="es_ES">
+            <Text>Totales y recuentos</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="es_ES">
             <Text>Valor</Text>
         </Replace>
@@ -1845,6 +1848,27 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="es_ES">
             <Text>Capital</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="es_ES">
+            <Text>Capital: {1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="es_ES">
+            <Text>Ciudad santa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="es_ES">
+            <Text>Ciudad santa de {1_Religion}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="es_ES">
+            <Text>Líder mundial en {1_Category}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="es_ES">
+            <Text>Ahora</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="es_ES">
+            <Text>Fin de {1_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="es_ES">
+            <Text>Los 10 mejores asentamientos según el último registro de esa era ({1_Year}).</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="es_ES">
             <Text>Maravillas</Text>
         </Replace>
@@ -1991,12 +2015,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="es_ES">
             <Text>Su distrito más próspero.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="es_ES">
-            <Text>➊ en {1_Cat}</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="es_ES">
-            <Text>Líderes por categoría</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="es_ES">
             <Text>Clasificación de asentamientos por rendimiento</Text>

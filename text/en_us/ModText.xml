@@ -408,6 +408,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK">
             <Text>Rank</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE">
+            <Text>Totals &amp; Tallies</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE">
             <Text>Value</Text>
         </Row>
@@ -1930,6 +1933,27 @@
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL">
             <Text>Capital</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF">
+            <Text>Capital: {1_Name}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY">
+            <Text>Holy City</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP">
+            <Text>Holy city of {1_Religion}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP">
+            <Text>World leader in {1_Category}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW">
+            <Text>Now</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END">
+            <Text>End of {1_Age}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE">
+            <Text>Top 10 settlements as last recorded in that age ({1_Year}).</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE">
             <Text>Wonders</Text>
         </Row>
@@ -2076,12 +2100,6 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT">
             <Text>Its most bountiful quarter.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN">
-            <Text>➊ {1_Cat}</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE">
-            <Text>Category Leaders</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE">
             <Text>Settlement Rank by Yield</Text>

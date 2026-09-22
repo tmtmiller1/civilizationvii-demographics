@@ -212,6 +212,21 @@ export function computeRanks(profiles, metricId) {
 }
 
 /**
+ * Whether `pid` leads a metric: ranked first (ties share first place) while at
+ * least one ranked civ is behind. A metric where every civ is equal (all zero
+ * net migration, say) has no leader, so nothing is highlighted for it.
+ * @param {{ ranks: Map<string, number>, total: number }|undefined} info The metric's ranks.
+ * @param {string} pid Player id.
+ * @returns {boolean} True when the civ leads the metric.
+ */
+export function leadsMetric(info, pid) {
+  if (!info || info.ranks.get(pid) !== 1) return false;
+  let firsts = 0;
+  for (const r of info.ranks.values()) if (r === 1) firsts++;
+  return firsts < info.ranks.size;
+}
+
+/**
  * Read a boolean persisted setting defensively, returning `fallback` on any
  * error.
  * @param {WorldRankingsAllCivsCtx} ctx Render context.

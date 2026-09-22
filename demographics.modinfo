@@ -10,7 +10,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.5.2</Version>
+        <Version>2.6.0</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -153,6 +153,10 @@
                     <Item>ui/screen-demographics/settlements/settlements-data.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-population-variance.js</Item>
                     <Item>ui/screen-demographics/settlements/settlements-trace.js</Item>
+                    <Item>ui/screen-demographics/settlements/settlements-met.js</Item>
+                    <Item>ui/screen-demographics/settlements/settlements-holy.js</Item>
+                    <Item>ui/screen-demographics/settlements/settlements-wonder-years.js</Item>
+                    <Item>ui/screen-demographics/settlements/settlements-age-archive.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-overlay.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-tour.js</Item>
                     <Item>ui/screen-demographics/camera/cinematic-tour-highlights.js</Item>
@@ -225,7 +229,6 @@
                     <Item>ui/screen-demographics/views/settlements/view-settlements-civranking.js</Item>
                     <Item>ui/screen-demographics/views/settlements/view-settlements-showcase.js</Item>
                     <Item>ui/screen-demographics/views/settlements/view-settlements-table.js</Item>
-                    <Item>ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-leaders.js</Item>
                     <Item>ui/storage/storage-backend.js</Item>
                     <Item>ui/storage/storage-cap.js</Item>
                     <Item>ui/storage/storage-load.js</Item>
