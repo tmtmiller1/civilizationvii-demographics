@@ -1743,5 +1743,584 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="ru_RU"><Text>Пантеоны ещё не основаны.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="ru_RU"><Text>Верования</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="ru_RU"><Text>Пантеоны — Выбранные верования и их эффекты</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE" Language="ru_RU">
+            <Text>Зал славы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MENU_BUTTON" Language="ru_RU">
+            <Text>Зал славы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_CHRONICLE" Language="ru_RU">
+            <Text>Летопись</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_LINEAGE" Language="ru_RU">
+            <Text>Преемственность</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_OVERVIEW" Language="ru_RU">
+            <Text>Обзор</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS" Language="ru_RU">
+            <Text>Рейтинг</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_LEADERS" Language="ru_RU">
+            <Text>Лидеры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_CIVS" Language="ru_RU">
+            <Text>Цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RECORDS" Language="ru_RU">
+            <Text>Рекорды</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ALL_AGES" Language="ru_RU">
+            <Text>Все эпохи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_ALL" Language="ru_RU">
+            <Text>Всё</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_MINE" Language="ru_RU">
+            <Text>Ваша цивилизация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_SETTLEMENTS" Language="ru_RU">
+            <Text>Поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS" Language="ru_RU">
+            <Text>Чудеса света</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WAR" Language="ru_RU">
+            <Text>Война и мир</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_FAITH" Language="ru_RU">
+            <Text>Религия</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_TRIUMPHS" Language="ru_RU">
+            <Text>Триумфы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WORLD" Language="ru_RU">
+            <Text>Весь мир</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST" Language="ru_RU">
+            <Text>Сначала новые</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST" Language="ru_RU">
+            <Text>Сначала старые</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_MORE" Language="ru_RU">
+            <Text>Показать больше</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TURN_N" Language="ru_RU">
+            <Text>Ход {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TURNS" Language="ru_RU">
+            <Text>Ходов: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_PERCENT" Language="ru_RU">
+            <Text>{1_Value}%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE" Language="ru_RU">
+            <Text>независимый народ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET" Language="ru_RU">
+            <Text>Скрыто событий с неизвестными вам цивилизациями: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_LEADERS" Language="ru_RU">
+            <Text>Скрыто неизвестных вам лидеров: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE" Language="ru_RU">
+            <Text>Летопись начнется со следующего хода.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_HOF" Language="ru_RU">
+            <Text>Записанных игр пока нет. Сюда попадает каждая сыгранная вами кампания.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_FOUND" Language="ru_RU">
+            <Text>{1_Civ}: основано поселение {2_Settlement}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CAPTURE" Language="ru_RU">
+            <Text>{1_Civ}: захвачено поселение {2_Settlement} (прежний владелец — {3_Civ}).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RAZED" Language="ru_RU">
+            <Text>Поселение {1_Settlement} ({2_Civ}) потеряно.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WONDER" Language="ru_RU">
+            <Text>{1_Civ}: построено чудо света {2_Wonder}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WAR" Language="ru_RU">
+            <Text>Началась война: {1_Civ} и {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_PEACE" Language="ru_RU">
+            <Text>Заключен мир: {1_Civ} и {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RELIGION" Language="ru_RU">
+            <Text>{1_Civ}: основана религия {2_Religion}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_TRIUMPH" Language="ru_RU">
+            <Text>{1_Civ}: получен триумф «{2_Triumph}».</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_ELIM" Language="ru_RU">
+            <Text>Цивилизация {1_Civ} уничтожена.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_AGE" Language="ru_RU">
+            <Text>Начинается новая эпоха: {1_Age}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CIV" Language="ru_RU">
+            <Text>{1_Leader} теперь во главе цивилизации {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_MET" Language="ru_RU">
+            <Text>Первый контакт: {1_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_VICTORY" Language="ru_RU">
+            <Text>{1_Civ}: победа ({2_Victory}).</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_GENERIC" Language="ru_RU">
+            <Text>{1_Civ}: {2_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NARR_LEAD" Language="ru_RU">
+            <Text>Лидер цивилизации {2_Civ} в эту эпоху: {1_Leader}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED" Language="ru_RU">
+            <Text>Основано</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED" Language="ru_RU">
+            <Text>Захвачено</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_LOST" Language="ru_RU">
+            <Text>Потеряно</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WONDERS" Language="ru_RU">
+            <Text>Чудеса света</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS" Language="ru_RU">
+            <Text>Триумфы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WARS" Language="ru_RU">
+            <Text>Войны</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_WONDERS" Language="ru_RU">
+            <Text>Чудеса света:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_RELIGION" Language="ru_RU">
+            <Text>Основана религия:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_FALLEN" Language="ru_RU">
+            <Text>Уничтожены цивилизации:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_TITLE" Language="ru_RU">
+            <Text>Лидеры и их цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN" Language="ru_RU">
+            <Text>Пала</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN" Language="ru_RU">
+            <Text>Уничтожена на ходу {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_LEADER" Language="ru_RU">
+            <Text>Лидер</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION" Language="ru_RU">
+            <Text>Цивилизация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS" Language="ru_RU">
+            <Text>Цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS" Language="ru_RU">
+            <Text>Триумфы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS" Language="ru_RU">
+            <Text>Поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION" Language="ru_RU">
+            <Text>Население</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="ru_RU">
+            <Text>Титул</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="ru_RU">
+            <Text>Результат</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS" Language="ru_RU">
+            <Text>Ходы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED" Language="ru_RU">
+            <Text>Дата игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TREND" Language="ru_RU">
+            <Text>Триумфы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_FATE" Language="ru_RU">
+            <Text>Судьба</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS" Language="ru_RU">
+            <Text>Больше всего триумфов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS" Language="ru_RU">
+            <Text>Ходов в среднем</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_GAMES" Language="ru_RU">
+            <Text>Игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES" Language="ru_RU">
+            <Text>Победы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE" Language="ru_RU">
+            <Text>Доля побед</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TURNS" Language="ru_RU">
+            <Text>Сыграно ходов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS" Language="ru_RU">
+            <Text>Получено триумфов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS" Language="ru_RU">
+            <Text>Больше всего поселений</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE" Language="ru_RU">
+            <Text>Победы по типам</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_VICTORIES" Language="ru_RU">
+            <Text>Побед пока нет.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FINEST_GAME" Language="ru_RU">
+            <Text>Ваша лучшая игра</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LATEST_GAME" Language="ru_RU">
+            <Text>Последняя игра</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE" Language="ru_RU">
+            <Text>Порядок: сначала результат (победы выше), затем число триумфов за все эпохи, затем наименьшее число ходов.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="ru_RU">
+            <Text>Скрыть короткие игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="ru_RU">
+            <Text>Показать все игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ru_RU">
+            <Text>Победа</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="ru_RU">
+            <Text>Победа: {1_Victory}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="ru_RU">
+            <Text>Господство</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="ru_RU">
+            <Text>Поражение</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_ENDED" Language="ru_RU">
+            <Text>Завершена</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_IN_PROGRESS" Language="ru_RU">
+            <Text>Идет</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED" Language="ru_RU">
+            <Text>Уничтожена на ходу {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED" Language="ru_RU">
+            <Text>Уцелела</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK" Language="ru_RU">
+            <Text>Назад</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_GAME" Language="ru_RU">
+            <Text>Удалить из Зала славы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_CONFIRM" Language="ru_RU">
+            <Text>Нажмите еще раз, чтобы удалить</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TREND_TITLE" Language="ru_RU">
+            <Text>Триумфы и поселения на протяжении игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS" Language="ru_RU">
+            <Text>Главные события</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS" Language="ru_RU">
+            <Text>В этой игре не записано главных событий.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RIVALS" Language="ru_RU">
+            <Text>Соперники</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_RIVALS" Language="ru_RU">
+            <Text>В этой игре не записано соперников.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CIVS_NOTE" Language="ru_RU">
+            <Text>Учитывается каждая цивилизация, которую вы возглавляли, в той эпохе, когда вы ее возглавляли. Доля побед и полоса учитывают только завершённые игры.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_WON" Language="ru_RU">
+            <Text>Победы: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_NOT_WON" Language="ru_RU">
+            <Text>Без победы: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_FINISHED" Language="ru_RU">
+            <Text>Нет завершённых игр</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS" Language="ru_RU">
+            <Text>Попытки</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR" Language="ru_RU">
+            <Text>Получено за</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_GAVE" Language="ru_RU">
+            <Text>Дало</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_UNFINISHED" Language="ru_RU">
+            <Text>В процессе: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE" Language="ru_RU">
+            <Text>Каждый лидер, за которого вы играли. Доля побед и полоса учитывают только завершённые игры.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE" Language="ru_RU">
+            <Text>Игра, которой принадлежит каждый рекорд.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_NOTE" Language="ru_RU">
+            <Text>Ваши лучшие игры и место последней из них.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_TRIUMPHS" Language="ru_RU">
+            <Text>Больше всего триумфов</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_WONDERS" Language="ru_RU">
+            <Text>Больше всего чудес света</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_SETTLEMENTS" Language="ru_RU">
+            <Text>Крупнейшая империя</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED" Language="ru_RU">
+            <Text>Больше всего захваченных поселений</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="ru_RU">
+            <Text>Самая быстрая победа</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="ru_RU">
+            <Text>Самая долгая игра</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="ru_RU">
+            <Text>Игры сохраняются на этом компьютере. Каждый файл сохранения также хранит собственную запись.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ru_RU">
+            <Text>В этом сеансе не удалось прочитать прошлые игры из хранилища. Текущие игры по-прежнему отображаются, а каждое сохранение восстанавливает свою запись при загрузке.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="ru_RU">
+            <Text>Октавиан Август</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="ru_RU">
+            <Text>Кир Великий</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3" Language="ru_RU">
+            <Text>Карл Великий</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_4" Language="ru_RU">
+            <Text>Хаммурапи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_5" Language="ru_RU">
+            <Text>Рамсес II</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_6" Language="ru_RU">
+            <Text>Ашока</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_7" Language="ru_RU">
+            <Text>Хатшепсут</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_8" Language="ru_RU">
+            <Text>Юстиниан</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_9" Language="ru_RU">
+            <Text>Альфред Великий</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_10" Language="ru_RU">
+            <Text>Людовик XVI</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_11" Language="ru_RU">
+            <Text>Император Нортон</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_12" Language="ru_RU">
+            <Text>Этельред Неразумный</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE" Language="ru_RU">
+            <Text>Уничтожена до начала записей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_BEFORE" Language="ru_RU">
+            <Text>Уничтожена до начала записей</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL" Language="ru_RU">
+            <Text>Записи ведутся с {1_Date}. Более ранние события этой эпохи не записаны.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF" Language="ru_RU">
+            <Text>Зал славы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY" Language="ru_RU">
+            <Text>История</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECENT_GAMES" Language="ru_RU">
+            <Text>Последние игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_SCALED" Language="ru_RU">
+            <Text>Насел. (масштаб)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_CIV" Language="ru_RU">
+            <Text>Насел. (Civ)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF" Language="ru_RU">
+            <Text>Назад в Зал славы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CRISIS" Language="ru_RU">
+            <Text>Кризис, этап {2_Stage}: {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED" Language="ru_RU">
+            <Text>Кризис эпохи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TITLE" Language="ru_RU">
+            <Text>Хронология</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_AGES" Language="ru_RU">
+            <Text>Эпохи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CRISES" Language="ru_RU">
+            <Text>Кризисы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MILESTONES" Language="ru_RU">
+            <Text>Вехи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH" Language="ru_RU">
+            <Text>Война: {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED" Language="ru_RU">
+            <Text>Население достигло {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_STAGE" Language="ru_RU">
+            <Text>Этап {1_Stage}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_DISASTER" Language="ru_RU">
+            <Text>{1_Name}: удар по {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED" Language="ru_RU">
+            <Text>Стихийное бедствие</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_DISASTERS" Language="ru_RU">
+            <Text>Бедствия</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION_LANE" Language="ru_RU">
+            <Text>Миграция</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION" Language="ru_RU">
+            <Text>Прибыло: {1_In}, уехало: {2_Out}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ARRIVED" Language="ru_RU">
+            <Text>Прибыли</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_LEFT" Language="ru_RU">
+            <Text>Уехали</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TURN" Language="ru_RU">
+            <Text>Х{1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES" Language="ru_RU">
+            <Text>Все эпохи</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PLAY" Language="ru_RU">
+            <Text>Воспроизвести</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PAUSE" Language="ru_RU">
+            <Text>Пауза</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_GAME_OPTIONS" Language="ru_RU">
+            <Text>Параметры игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_NOTE" Language="ru_RU">
+            <Text>Удаление игры стирает её запись из Зала славы на этом компьютере. Отменить нельзя.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_SETTLEMENTS" Language="ru_RU">
+            <Text>Поселения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_NTH_SETTLEMENT" Language="ru_RU">
+            <Text>поселение {1_N}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_VICTORY" Language="ru_RU">
+            <Text>Победа</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_ELIM" Language="ru_RU">
+            <Text>Падение</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_AGE" Language="ru_RU">
+            <Text>Новая эпоха</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WONDER" Language="ru_RU">
+            <Text>Чудо</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RELIGION" Language="ru_RU">
+            <Text>Религия</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CAPTURE" Language="ru_RU">
+            <Text>Захват</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RAZED" Language="ru_RU">
+            <Text>Разрушено</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_TRIUMPH" Language="ru_RU">
+            <Text>Триумф</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WAR" Language="ru_RU">
+            <Text>Война</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_PEACE" Language="ru_RU">
+            <Text>Мир</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CRISIS" Language="ru_RU">
+            <Text>Кризис</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CIV" Language="ru_RU">
+            <Text>Новая цивилизация</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_DISASTER" Language="ru_RU">
+            <Text>Бедствие</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_FOUND" Language="ru_RU">
+            <Text>Основание</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_MET" Language="ru_RU">
+            <Text>Контакт</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MAP_TITLE" Language="ru_RU">
+            <Text>Территория</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CIVS" Language="ru_RU">
+            <Text>Цивилизации</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ONLY_MINE" Language="ru_RU">
+            <Text>Только моя</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_CIVS" Language="ru_RU">
+            <Text>Все</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR" Language="ru_RU">
+            <Text>Война: {1_Civ} против {2_Other}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS" Language="ru_RU">
+            <Text>Завоевания</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="ru_RU">
+            <Text>Победа и падения</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="ru_RU">
+            <Text>Прошлые игры нельзя сохранить на этом компьютере: мешают сохранённые данные другого мода из-за ошибки хранения в игре. Текущие игры по-прежнему отображаются, а каждое сохранение восстанавливает свою запись при загрузке.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="ru_RU">
+            <Text>Лучшие игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE" Language="ru_RU">
+            <Text>Ваши лучшие игры</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST" Language="ru_RU">
+            <Text>Остальная десятка лучших</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_THIS_GAME" Language="ru_RU">
+            <Text>Эта игра</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF" Language="ru_RU">
+            <Text>№ {1_Rank} из {2_Total}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN" Language="ru_RU">
+            <Text>В вашей десятке лучших.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="ru_RU">
+            <Text>Триумфы: {1_Count}</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -1743,5 +1743,584 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="it_IT"><Text>Non è ancora stato fondato alcun pantheon.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="it_IT"><Text>Credenze</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="it_IT"><Text>Pantheon — Credenze scelte e i loro effetti</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE" Language="it_IT">
+            <Text>Hall of Fame</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MENU_BUTTON" Language="it_IT">
+            <Text>Hall of Fame</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_CHRONICLE" Language="it_IT">
+            <Text>Cronaca</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_LINEAGE" Language="it_IT">
+            <Text>Discendenza</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_OVERVIEW" Language="it_IT">
+            <Text>Panoramica</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS" Language="it_IT">
+            <Text>Classifiche</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_LEADERS" Language="it_IT">
+            <Text>Leader</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_CIVS" Language="it_IT">
+            <Text>Civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RECORDS" Language="it_IT">
+            <Text>Primati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ALL_AGES" Language="it_IT">
+            <Text>Tutte le epoche</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_ALL" Language="it_IT">
+            <Text>Tutto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_MINE" Language="it_IT">
+            <Text>La tua civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_SETTLEMENTS" Language="it_IT">
+            <Text>Insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS" Language="it_IT">
+            <Text>Meraviglie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WAR" Language="it_IT">
+            <Text>Guerra e pace</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_FAITH" Language="it_IT">
+            <Text>Religione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_TRIUMPHS" Language="it_IT">
+            <Text>Trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WORLD" Language="it_IT">
+            <Text>Mondo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST" Language="it_IT">
+            <Text>Prima i più recenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST" Language="it_IT">
+            <Text>Prima i meno recenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_MORE" Language="it_IT">
+            <Text>Mostra di più</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TURN_N" Language="it_IT">
+            <Text>Turno {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TURNS" Language="it_IT">
+            <Text>{1_Count} turni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_PERCENT" Language="it_IT">
+            <Text>{1_Value}%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE" Language="it_IT">
+            <Text>una potenza indipendente</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET" Language="it_IT">
+            <Text>Eventi nascosti che coinvolgono civiltà non ancora incontrate: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_LEADERS" Language="it_IT">
+            <Text>Leader nascosti non ancora incontrati: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE" Language="it_IT">
+            <Text>La cronaca inizia dal tuo prossimo turno.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_HOF" Language="it_IT">
+            <Text>Nessuna partita registrata. Ogni partita che giochi viene aggiunta qui.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_FOUND" Language="it_IT">
+            <Text>{1_Civ} ha fondato {2_Settlement}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CAPTURE" Language="it_IT">
+            <Text>{1_Civ} ha strappato {2_Settlement} a {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RAZED" Language="it_IT">
+            <Text>{2_Civ} ha perso {1_Settlement}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WONDER" Language="it_IT">
+            <Text>{1_Civ} ha completato {2_Wonder}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WAR" Language="it_IT">
+            <Text>È scoppiata la guerra tra {1_Civ} e {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_PEACE" Language="it_IT">
+            <Text>{1_Civ} e {2_Civ} hanno fatto pace.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RELIGION" Language="it_IT">
+            <Text>{1_Civ} ha fondato {2_Religion}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_TRIUMPH" Language="it_IT">
+            <Text>{1_Civ} ha ottenuto il Trionfo {2_Triumph}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_ELIM" Language="it_IT">
+            <Text>Civiltà distrutta: {1_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_AGE" Language="it_IT">
+            <Text>Una nuova epoca ha inizio: {1_Age}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CIV" Language="it_IT">
+            <Text>{1_Leader} ora guida {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_MET" Language="it_IT">
+            <Text>Primo incontro con {1_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_VICTORY" Language="it_IT">
+            <Text>{1_Civ} ha ottenuto la vittoria: {2_Victory}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_GENERIC" Language="it_IT">
+            <Text>{1_Civ}: {2_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NARR_LEAD" Language="it_IT">
+            <Text>{1_Leader} ha guidato {2_Civ} in questa epoca.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED" Language="it_IT">
+            <Text>Fondati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED" Language="it_IT">
+            <Text>Conquistati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_LOST" Language="it_IT">
+            <Text>Persi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WONDERS" Language="it_IT">
+            <Text>Meraviglie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS" Language="it_IT">
+            <Text>Trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WARS" Language="it_IT">
+            <Text>Guerre</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_WONDERS" Language="it_IT">
+            <Text>Meraviglie:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_RELIGION" Language="it_IT">
+            <Text>Religione fondata:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_FALLEN" Language="it_IT">
+            <Text>Civiltà distrutte:</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_TITLE" Language="it_IT">
+            <Text>I leader e le civiltà che hanno guidato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN" Language="it_IT">
+            <Text>Caduta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN" Language="it_IT">
+            <Text>Distrutta al turno {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_LEADER" Language="it_IT">
+            <Text>Leader</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION" Language="it_IT">
+            <Text>Civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS" Language="it_IT">
+            <Text>Civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS" Language="it_IT">
+            <Text>Trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS" Language="it_IT">
+            <Text>Insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION" Language="it_IT">
+            <Text>Popolazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="it_IT">
+            <Text>Titolo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="it_IT">
+            <Text>Risultato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS" Language="it_IT">
+            <Text>Turni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED" Language="it_IT">
+            <Text>Giocata</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TREND" Language="it_IT">
+            <Text>Trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_FATE" Language="it_IT">
+            <Text>Destino</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS" Language="it_IT">
+            <Text>Record di Trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS" Language="it_IT">
+            <Text>Turni in media</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_GAMES" Language="it_IT">
+            <Text>Partite</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES" Language="it_IT">
+            <Text>Vittorie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE" Language="it_IT">
+            <Text>Percentuale di vittorie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TURNS" Language="it_IT">
+            <Text>Turni giocati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS" Language="it_IT">
+            <Text>Trionfi ottenuti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS" Language="it_IT">
+            <Text>Record di insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE" Language="it_IT">
+            <Text>Vittorie per tipo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_VICTORIES" Language="it_IT">
+            <Text>Ancora nessuna vittoria.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FINEST_GAME" Language="it_IT">
+            <Text>La tua partita migliore</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LATEST_GAME" Language="it_IT">
+            <Text>Partita più recente</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE" Language="it_IT">
+            <Text>Classifica per risultato (prima le vittorie), poi per Trionfi ottenuti in tutte le epoche, poi per il minor numero di turni.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="it_IT">
+            <Text>Nascondi partite brevi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="it_IT">
+            <Text>Mostra tutte le partite</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="it_IT">
+            <Text>Vittoria</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="it_IT">
+            <Text>Vittoria: {1_Victory}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="it_IT">
+            <Text>Dominazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="it_IT">
+            <Text>Sconfitta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_ENDED" Language="it_IT">
+            <Text>Terminata</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_IN_PROGRESS" Language="it_IT">
+            <Text>In corso</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED" Language="it_IT">
+            <Text>Distrutta al turno {1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED" Language="it_IT">
+            <Text>Sopravvissuta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK" Language="it_IT">
+            <Text>Indietro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_GAME" Language="it_IT">
+            <Text>Rimuovi dalla Hall of Fame</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_CONFIRM" Language="it_IT">
+            <Text>Clicca di nuovo per rimuovere</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TREND_TITLE" Language="it_IT">
+            <Text>Trionfi e insediamenti nel corso della partita</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS" Language="it_IT">
+            <Text>Momenti salienti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS" Language="it_IT">
+            <Text>Nessun momento saliente registrato per questa partita.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RIVALS" Language="it_IT">
+            <Text>Rivali</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_RIVALS" Language="it_IT">
+            <Text>Nessun rivale registrato per questa partita.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CIVS_NOTE" Language="it_IT">
+            <Text>Conta ogni civiltà che hai guidato, nell'epoca in cui l'hai guidata. La percentuale e la barra contano solo le partite concluse.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_WON" Language="it_IT">
+            <Text>Vittorie: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_NOT_WON" Language="it_IT">
+            <Text>Senza vittoria: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_FINISHED" Language="it_IT">
+            <Text>Nessuna partita conclusa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS" Language="it_IT">
+            <Text>Tentativi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR" Language="it_IT">
+            <Text>Ottenuto per</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_GAVE" Language="it_IT">
+            <Text>Ha dato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_UNFINISHED" Language="it_IT">
+            <Text>In corso: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE" Language="it_IT">
+            <Text>Ogni leader con cui hai giocato. La percentuale e la barra contano solo le partite concluse.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE" Language="it_IT">
+            <Text>La partita che detiene ciascun record.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_NOTE" Language="it_IT">
+            <Text>Le tue partite migliori e la posizione della più recente.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_TRIUMPHS" Language="it_IT">
+            <Text>Più Trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_WONDERS" Language="it_IT">
+            <Text>Più meraviglie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_SETTLEMENTS" Language="it_IT">
+            <Text>Impero più vasto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED" Language="it_IT">
+            <Text>Più insediamenti conquistati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="it_IT">
+            <Text>Vittoria più rapida</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="it_IT">
+            <Text>Partita più lunga</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="it_IT">
+            <Text>Le partite sono salvate su questo computer. Ogni salvataggio conserva anche il proprio registro.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="it_IT">
+            <Text>Non è stato possibile leggere le partite precedenti dall'archivio in questa sessione. Le partite giocate ora vengono comunque mostrate, e ogni salvataggio ripristina il proprio registro quando lo carichi.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="it_IT">
+            <Text>Cesare Augusto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="it_IT">
+            <Text>Ciro il Grande</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3" Language="it_IT">
+            <Text>Carlo Magno</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_4" Language="it_IT">
+            <Text>Hammurabi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_5" Language="it_IT">
+            <Text>Ramses II</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_6" Language="it_IT">
+            <Text>Ashoka</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_7" Language="it_IT">
+            <Text>Hatshepsut</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_8" Language="it_IT">
+            <Text>Giustiniano</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_9" Language="it_IT">
+            <Text>Alfredo il Grande</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_10" Language="it_IT">
+            <Text>Luigi XVI</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_11" Language="it_IT">
+            <Text>Imperatore Norton</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_12" Language="it_IT">
+            <Text>Etelredo lo Sconsigliato</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE" Language="it_IT">
+            <Text>Distrutta prima dell'inizio delle registrazioni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_BEFORE" Language="it_IT">
+            <Text>Distrutta prima dell'inizio delle registrazioni</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL" Language="it_IT">
+            <Text>Registrato da {1_Date}. Gli eventi precedenti di questa epoca non sono stati registrati.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF" Language="it_IT">
+            <Text>Hall of Fame</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY" Language="it_IT">
+            <Text>Storia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECENT_GAMES" Language="it_IT">
+            <Text>Partite recenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_SCALED" Language="it_IT">
+            <Text>Pop. in scala</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_CIV" Language="it_IT">
+            <Text>Pop. Civ</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF" Language="it_IT">
+            <Text>Torna alla Hall of Fame</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CRISIS" Language="it_IT">
+            <Text>Crisi, fase {2_Stage}: {1_Name}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED" Language="it_IT">
+            <Text>Crisi dell'epoca</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TITLE" Language="it_IT">
+            <Text>Linea temporale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_AGES" Language="it_IT">
+            <Text>Epoche</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CRISES" Language="it_IT">
+            <Text>Crisi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MILESTONES" Language="it_IT">
+            <Text>Traguardi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH" Language="it_IT">
+            <Text>Guerra con {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED" Language="it_IT">
+            <Text>Popolazione raggiunta: {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_STAGE" Language="it_IT">
+            <Text>Fase {1_Stage}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_DISASTER" Language="it_IT">
+            <Text>{1_Name} ha colpito {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED" Language="it_IT">
+            <Text>Disastro naturale</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_DISASTERS" Language="it_IT">
+            <Text>Disastri</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION_LANE" Language="it_IT">
+            <Text>Migrazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION" Language="it_IT">
+            <Text>{1_In} arrivati, {2_Out} partiti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ARRIVED" Language="it_IT">
+            <Text>Arrivati</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_LEFT" Language="it_IT">
+            <Text>Partiti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TURN" Language="it_IT">
+            <Text>T{1_Turn}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES" Language="it_IT">
+            <Text>Tutte le ere</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PLAY" Language="it_IT">
+            <Text>Riproduci</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PAUSE" Language="it_IT">
+            <Text>Pausa</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_GAME_OPTIONS" Language="it_IT">
+            <Text>Opzioni partita</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_NOTE" Language="it_IT">
+            <Text>Rimuovere una partita ne cancella la scheda dalla Hall of Fame su questo computer. L’operazione è irreversibile.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_SETTLEMENTS" Language="it_IT">
+            <Text>Insediamenti</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_NTH_SETTLEMENT" Language="it_IT">
+            <Text>insediamento {1_N}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_VICTORY" Language="it_IT">
+            <Text>Vittoria</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_ELIM" Language="it_IT">
+            <Text>Caduta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_AGE" Language="it_IT">
+            <Text>Nuova era</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WONDER" Language="it_IT">
+            <Text>Meraviglia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RELIGION" Language="it_IT">
+            <Text>Religione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CAPTURE" Language="it_IT">
+            <Text>Conquista</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RAZED" Language="it_IT">
+            <Text>Rasa al suolo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_TRIUMPH" Language="it_IT">
+            <Text>Trionfo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WAR" Language="it_IT">
+            <Text>Guerra</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_PEACE" Language="it_IT">
+            <Text>Pace</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CRISIS" Language="it_IT">
+            <Text>Crisi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CIV" Language="it_IT">
+            <Text>Nuova civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_DISASTER" Language="it_IT">
+            <Text>Disastro</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_FOUND" Language="it_IT">
+            <Text>Fondazione</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_MET" Language="it_IT">
+            <Text>Contatto</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MAP_TITLE" Language="it_IT">
+            <Text>Territorio</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CIVS" Language="it_IT">
+            <Text>Civiltà</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ONLY_MINE" Language="it_IT">
+            <Text>Solo la mia</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_CIVS" Language="it_IT">
+            <Text>Tutte</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR" Language="it_IT">
+            <Text>Guerra: {1_Civ} contro {2_Other}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS" Language="it_IT">
+            <Text>Conquiste</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="it_IT">
+            <Text>Vittoria e cadute</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="it_IT">
+            <Text>Le partite passate non possono essere conservate su questo computer: i dati salvati di un’altra mod lo impediscono, a causa di un bug di archiviazione del gioco. Le partite giocate ora vengono comunque mostrate, e ogni salvataggio ripristina il proprio registro quando lo carichi.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="it_IT">
+            <Text>Partite migliori</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE" Language="it_IT">
+            <Text>Le tue partite migliori</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST" Language="it_IT">
+            <Text>Il resto della tua top ten</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_THIS_GAME" Language="it_IT">
+            <Text>Questa partita</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF" Language="it_IT">
+            <Text>N. {1_Rank} di {2_Total}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN" Language="it_IT">
+            <Text>Nella tua top ten.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="it_IT">
+            <Text>{1_Count} trionfi</Text>
+        </Replace>
     </LocalizedText>
 </Database>

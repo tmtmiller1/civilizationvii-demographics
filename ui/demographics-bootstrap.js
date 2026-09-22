@@ -89,6 +89,18 @@ function startSampler() {
     });
 }
 
+/**
+ * Start the campaign chronicle capture (History tab + Hall of Fame). Isolated like the sampler:
+ * a failure here never affects the rest of Demographics.
+ */
+function startHistory() {
+  import("/demographics/ui/history/capture/history-capture.js")
+    .then((mod) => mod.startCapture())
+    .catch((e) => {
+      derr("history capture import REJECTED:", e);
+    });
+}
+
 // HoF read-through experiment removed: every HallofFame.set* writer is
 // undefined in the UI sandbox, and getGames() returns [] mid-game
 // because the DB only commits on game-end. Full inventory of channels
@@ -107,18 +119,21 @@ try {
         checkContracts();
         loadDecorator();
         startSampler();
+        startHistory();
       })
       .catch((e) => {
         derr("engine.whenReady REJECTED:", e);
         checkContracts();
         loadDecorator(); // best-effort fallback
         startSampler();
+        startHistory();
       });
   } else {
     derr("engine or engine.whenReady missing ; loading decorator immediately as fallback");
     checkContracts();
     loadDecorator();
     startSampler();
+    startHistory();
   }
 } catch (e) {
   derr("bootstrap top-level threw:", e);
