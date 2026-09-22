@@ -66,7 +66,12 @@ Demographics adds graphs, civilization rankings, global relations, war history, 
 
 [b]Compatibility:[/b] Because of a game storage bug, another mod's saved data can keep the Hall of Fame from storing past games. When that happens, Demographics leaves stored games alone so no mod's settings are disturbed, still shows the current game and any save you load, and says so under the Hall of Fame.
 
-[b]Source:[/b] Open source: https://github.com/tmtmiller1/civilizationvii-demographics
+[h2]Source and documentation[/h2]
+[list]
+[*][url=https://github.com/tmtmiller1/civilizationvii-demographics]Open source on GitHub[/url]
+[*][url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.md]Full documentation: every page, every figure, and how each one is calculated[/url]
+[*][url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.pdf]The same document as a typeset PDF, with the screenshots[/url]
+[/list]
 
 [h2]Credits[/h2]
 [list]
