@@ -99,7 +99,7 @@ rm -rf "$DIST_DIR"
 mkdir -p "$TARGET_DIR"
 
 echo "==> Mirroring $SRC_DIR/ → $TARGET_DIR/ (excluding dev cruft)"
-rsync -a --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude='dist' \
+rsync -a --exclude='CHANGELOG.steam.txt' --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude='dist' \
     --exclude='release.sh' --exclude='*.bak' --exclude='node_modules' \
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
@@ -195,50 +195,11 @@ ABS_CONTENT="$(cd "$TARGET_DIR" && pwd)"
 ABS_PREVIEW=""
 [ -f "$PREVIEW_OUT" ] && ABS_PREVIEW="$(cd "$DIST_DIR" && pwd)/preview.png"
 
-# Change note: pull the current version's section out of CHANGELOG.md (Keep a
-# Changelog format) and render its bullet lines as a Steam BBCode list. Falls
-# back to a generic note if CHANGELOG.md or the matching section is absent.
-CHANGELOG_FILE="$SRC_DIR/CHANGELOG.md"
-CHANGENOTE="v${VERSION} release."
-# Escape regex metachars (notably '.') in the version so "2.0.5" can't match
-# "2X0X5" when interpolated into the awk pattern below.
-VERSION_RE="$(printf '%s' "$VERSION" | sed -E 's/[][(){}.^$*+?|\\]/\\&/g')"
-if [ -f "$CHANGELOG_FILE" ]; then
-    # awk: collect the bullets in the "## [VERSION]" section, JOINING each
-    # bullet's wrapped continuation lines into one logical bullet (Keep a
-    # Changelog bullets span multiple lines; we must not drop the continuations).
-    # "### Fixed"-style subheaders and blank lines are skipped.
-    BULLETS="$(awk -v verre="$VERSION_RE" '
-        function flush() { if (cur != "") { print cur; cur = "" } }
-        $0 ~ ("^## \\[" verre "\\]") { grab = 1; next }
-        grab && /^## / { flush(); exit }
-        !grab { next }
-        /^###/ { next }
-        /^[[:space:]]*[-*][[:space:]]+/ {
-            flush()
-            line = $0
-            sub(/^[[:space:]]*[-*][[:space:]]+/, "", line)
-            cur = line
-            next
-        }
-        /^[[:space:]]*$/ { next }
-        cur != "" {
-            line = $0
-            sub(/^[[:space:]]+/, "", line)
-            cur = cur " " line
-        }
-        END { flush() }
-    ' "$CHANGELOG_FILE" \
-        | sed -E 's/\*//g; s/`//g; s/^/[*]/' \
-        | tr '\n' ' ')"
-    if [ -n "$BULLETS" ]; then
-        # Lead with a bold version header so the Workshop change note always
-        # names the release (older 2.0.x pushes shipped with no version string),
-        # then the BBCode list. Escape backslashes/quotes for the VDF string.
-        CHANGENOTE="$(printf '[b]v%s[/b] [list]%s[/list]' "$VERSION" "$BULLETS" \
-            | sed -E 's/\\/\\\\/g; s/"/\\"/g')"
-    fi
-fi
+# Change note: this release's block from CHANGELOG.steam.txt, which scripts/steam-changelog.mjs keeps in step with
+# CHANGELOG.md (that script documents Steam's change-note formatting rules). The block is VDF-safe: no straight
+# double quotes, no backslashes. Edit CHANGELOG.steam.txt to reword a note; a hand-edited block is kept.
+CHANGENOTE="$(node scripts/steam-changelog.mjs note "$VERSION")" \
+    || { echo "error: could not build the Steam change note (see above)"; exit 1; }
 
 write_workshop_vdf() {
     local out_path="$1"
