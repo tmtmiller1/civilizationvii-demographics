@@ -5,7 +5,8 @@ notes are archived outside the repo, not kept here.)
 
 ## Subfolders
 
-- screenshots  -  In-game captures of the dashboard used by the repository README gallery (20 views, 1920 px JPEG).
+- screenshots  -  In-game captures used by the repository README gallery (33 views, 1920 px JPEG).
+- steam-screenshots  -  The subset uploaded to the Steam Workshop listing, copied and numbered in upload order.
 - plans  -  Design plans for larger features (hub reorganization, rankings, labels, trade routes).
 
 ## Files
