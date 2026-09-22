@@ -21,6 +21,7 @@ import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { METRICS, localizedMetricName } from "/demographics/ui/metrics/demographics-metrics.js";
 import {
   computeRanks,
+  leadsMetric,
   pickLocalPid
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 import {
@@ -28,7 +29,6 @@ import {
   buildHint,
   formatMetricValue
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
-import { buildLeadersSection } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-leaders.js";
 
 const VIEW_MODES = ["rank", "value"];
 
@@ -148,6 +148,23 @@ function buildRanksCache(profiles, metrics) {
 function rankOf(cache, metricId, pid) {
   const r = cache.get(metricId)?.ranks.get(pid);
   return typeof r === "number" ? String(r) : "—";
+}
+
+/**
+ * The data row's class list: the shared World Rankings row look, a gold / silver /
+ * bronze wash for places 1-3 in the ACTIVE sort (ties share a place), and the
+ * local player's gold outline.
+ * @param {Map<string, *>} cache Ranks cache.
+ * @param {string} sortKey Active sort key.
+ * @param {string} pid Player id.
+ * @param {boolean} isLocal Whether this is the local player's row.
+ * @returns {string} The class list.
+ */
+function dataRowClass(cache, sortKey, pid, isLocal) {
+  let cls = "demographics-settle-row demographics-settle-datarow";
+  const r = cache.get(sortKey)?.ranks.get(pid);
+  if (typeof r === "number" && r >= 1 && r <= 3) cls += " demographics-settle-medalrow-" + r;
+  return isLocal ? cls + " is-local" : cls;
 }
 
 /**
@@ -332,6 +349,31 @@ function buildCivCell(profile, masked) {
 }
 
 /**
+ * Build one metric cell. The cell of the civ leading that metric carries the gold
+ * leader wash and a "World leader in <metric>" tooltip: the table itself marks the
+ * category leaders (the separate leader-card strip was removed).
+ * @param {*} profile Civ profile.
+ * @param {*} m Metric def.
+ * @param {{ mode: string, sortKey: string, cache: Map<string, *> }} opts Row config.
+ * @returns {HTMLElement} The cell.
+ */
+function buildMetricCell(profile, m, opts) {
+  const lead = leadsMetric(opts.cache.get(m.id), profile.pid);
+  const cls =
+    "demographics-settle-td demographics-civtable-metric" +
+    (opts.sortKey === m.id ? " is-sorted" : "") +
+    (lead ? " is-leader" : "");
+  const cell = div(cls, cellText(profile, m, opts.mode, opts.cache));
+  if (lead) {
+    cell.setAttribute(
+      "data-tooltip-content",
+      t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", localizedMetricName(m))
+    );
+  }
+  return cell;
+}
+
+/**
  * Build one civilization data row.
  * @param {*} profile Civ profile.
  * @param {{ mode: string, sortKey: string, metrics: *[], cache: Map<string, *>,
@@ -339,12 +381,9 @@ function buildCivCell(profile, masked) {
  * @returns {HTMLElement} The row.
  */
 function buildDataRow(profile, opts) {
-  const { mode, sortKey, metrics, cache, showUnmetNames, localPid } = opts;
+  const { sortKey, metrics, cache, showUnmetNames, localPid } = opts;
   const masked = isMasked(profile, showUnmetNames);
-  const row = div(
-    "demographics-settle-row demographics-settle-datarow" +
-      (profile.pid === localPid ? " is-local" : "")
-  );
+  const row = div(dataRowClass(cache, sortKey, profile.pid, profile.pid === localPid));
   if (profile.primaryColor && !masked) {
     row.style.setProperty("border-left-color", profile.primaryColor);
   }
@@ -352,12 +391,7 @@ function buildDataRow(profile, opts) {
     div("demographics-settle-td demographics-settle-col-rank", rankOf(cache, sortKey, profile.pid))
   );
   row.appendChild(buildCivCell(profile, masked));
-  for (const m of metrics) {
-    const cls =
-      "demographics-settle-td demographics-civtable-metric" +
-      (sortKey === m.id ? " is-sorted" : "");
-    row.appendChild(div(cls, cellText(profile, m, mode, cache)));
-  }
+  for (const m of metrics) row.appendChild(buildMetricCell(profile, m, opts));
   return row;
 }
 
@@ -383,15 +417,38 @@ export function renderCivTable(host, profiles, ctx, showUnmetNames, rerender) {
       rerender();
     })
   );
-  // Category-leaders section (shared with the matrix branch — single source of
-  // truth; it renders its own filigree title).
-  const leaders = buildLeadersSection(profiles, showUnmetNames);
-  if (leaders) host.appendChild(leaders);
-  host.appendChild(buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS"));
   const onSort = (/** @type {string} */ k) => {
     setSetting(ctx, "worldRankingsAllCivsSortKey", k);
     rerender();
   };
+  const shared = { profiles, mode, sortKey, cache, showUnmetNames, localPid, onSort };
+  // Two stacked tables instead of one ~40-column sheet (too dense to read): the
+  // metrics that carry an icon (score, treasury, per-turn yields, GDP, population,
+  // wonders: mostly rates and yields) first, the text-only ones below under
+  // "Totals & Tallies" (land, settlements, conquests, units, migration: counts).
+  // One shared sort: clicking any header orders the civs the same way in both, so
+  // a civ's rows line up across the two.
+  const iconMetrics = metrics.filter((m) => METRIC_ICONS[m.id]);
+  const textMetrics = metrics.filter((m) => !METRIC_ICONS[m.id]);
+  host.appendChild(buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS"));
+  host.appendChild(buildCivTableBlock(iconMetrics, shared));
+  if (textMetrics.length) {
+    host.appendChild(buildSectionTitle("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE"));
+    host.appendChild(buildCivTableBlock(textMetrics, shared));
+  }
+}
+
+/**
+ * Build one sortable civ table (header + a row per civ) for a subset of metrics,
+ * wrapped in its scroll frame. Every table shares the sort, ranks cache and
+ * local-player highlight.
+ * @param {*[]} metrics The metrics (columns) this table shows.
+ * @param {{ profiles: Record<string, *>, mode: string, sortKey: string, cache: Map<string, *>,
+ *   showUnmetNames: boolean, localPid: string, onSort: (key: string) => void }} shared Shared render state.
+ * @returns {HTMLElement} The framed table.
+ */
+function buildCivTableBlock(metrics, shared) {
+  const { profiles, mode, sortKey, cache, showUnmetNames, localPid, onSort } = shared;
   const scroll = div("demographics-worldrankings-allcivs-matrix demographics-civtable-scroll");
   const table = div("demographics-settle-table demographics-civtable");
   table.appendChild(buildHeaderRow(metrics, sortKey, onSort));
@@ -401,5 +458,5 @@ export function renderCivTable(host, profiles, ctx, showUnmetNames, rerender) {
     );
   }
   scroll.appendChild(table);
-  host.appendChild(scroll);
+  return scroll;
 }

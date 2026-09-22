@@ -5,6 +5,7 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { div, fmt, fmtPop, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
+import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 
 /**
  * @typedef {{
@@ -20,9 +21,20 @@ import { orderedNames } from "/demographics/ui/core/player-label.js";
  *   buildSectionTitle: (key: string) => HTMLElement,
  *   buildListHeader: (nameKey?: string) => HTMLElement,
  *   buildEmpty: () => HTMLElement,
- *   buildTrendGlyph: (trend: *) => HTMLElement
+ *   buildTrendGlyph: (trend: *) => HTMLElement,
+ *   archive?: Array<{ age: string, label: string, year: string, top: Array<*> }>
  * }} ShowcaseDeps
  */
+
+/**
+ * The wonder icon's tooltip: its name, plus the completion year when one was observed.
+ * @param {{ nameKey?: string, year?: string }} w The wonder.
+ * @returns {string} The tooltip text.
+ */
+function wonderTooltip(w) {
+  const name = t(w.nameKey || "");
+  return w.year ? name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", w.year) : name;
+}
 
 /**
  * Build the horizontal wonder-icon row beneath a city name.
@@ -35,7 +47,7 @@ function buildWonderRow(s) {
   for (const w of wonders) {
     if (!w || !w.icon) continue;
     const ic = iconEl(w.icon, "demographics-settle-wonder-icon");
-    if (w.nameKey) ic.setAttribute("data-tooltip-content", w.nameKey);
+    if (w.nameKey) ic.setAttribute("data-tooltip-content", wonderTooltip(w));
     row.appendChild(ic);
   }
   return row.firstChild ? row : null;
@@ -68,7 +80,8 @@ function buildCityMeta(s, deps) {
   const popWrap = div("demographics-settle-citypop");
   popWrap.appendChild(iconEl("blp:Yield_Population", "demographics-settle-yield-icon"));
   popWrap.appendChild(div("demographics-settle-citypop-val", fmtPop(s.populationEstimate)));
-  popWrap.appendChild(deps.buildTrendGlyph(s.trend));
+  // An archived (end-of-age) record has no live population window to trend.
+  if (!s.archived) popWrap.appendChild(deps.buildTrendGlyph(s.trend));
   meta.appendChild(popWrap);
   const ft = foundedText(s);
   if (ft) meta.appendChild(div("demographics-settle-founded", ft));
@@ -148,14 +161,14 @@ function buildPodiumCard(s, place, st, deps) {
 }
 
 /**
- * Build the showcase row's middle column.
+ * Build the showcase row's name line: name, City/Town, Capital, Holy City, and
+ * the camera buttons.
  * @param {*} s The settlement.
  * @param {*} st The render state.
  * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The middle-column element.
+ * @returns {HTMLElement} The name row.
  */
-function buildShowcaseMid(s, st, deps) {
-  const mid = div("demographics-settle-list-mid");
+function buildShowcaseNameRow(s, st, deps) {
   const nameRow = div("demographics-settle-list-namerow");
   nameRow.appendChild(div("demographics-settle-list-name", s.name));
   nameRow.appendChild(deps.buildTypeBadge(s.isTown));
@@ -167,9 +180,23 @@ function buildShowcaseMid(s, st, deps) {
       )
     );
   }
+  const holy = buildHolyBadge(s);
+  if (holy) nameRow.appendChild(holy);
   const cams = deps.buildCameraButtons(s, st);
   if (cams) nameRow.appendChild(cams);
-  mid.appendChild(nameRow);
+  return nameRow;
+}
+
+/**
+ * Build the showcase row's middle column.
+ * @param {*} s The settlement.
+ * @param {*} st The render state.
+ * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @returns {HTMLElement} The middle-column element.
+ */
+function buildShowcaseMid(s, st, deps) {
+  const mid = div("demographics-settle-list-mid");
+  mid.appendChild(buildShowcaseNameRow(s, st, deps));
   // Owning civilization beneath the settlement name (player feedback): the
   // ranked list mixes many civs' settlements, and the avatar disc alone doesn't
   // say which civ a lesser-known settlement belongs to.
@@ -188,6 +215,81 @@ function buildShowcaseMid(s, st, deps) {
 }
 
 /**
+ * The holy-city badge (religion icon + "Holy City"), or null. A masked
+ * (unmet-owner) settlement keeps the badge but not the religion, which would
+ * name the unmet civ's faith.
+ * @param {*} s The settlement.
+ * @returns {HTMLElement|null} The badge, or null.
+ */
+function buildHolyBadge(s) {
+  if (!s.holy) return null;
+  const badge = div("demographics-settle-badge demographics-settle-badge-holy");
+  if (s.holy.icon && !s.masked) badge.appendChild(iconEl(s.holy.icon, "demographics-settle-holy-icon"));
+  badge.appendChild(div("demographics-settle-holy-label", t("LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY")));
+  if (s.holy.religionName && !s.masked) {
+    badge.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP", s.holy.religionName));
+  }
+  return badge;
+}
+
+/**
+ * The small icons of every output this settlement leads the WORLD in (rank 1
+ * across all settlements, not just the rows shown), or null when it leads none.
+ * @param {*} s The settlement.
+ * @returns {HTMLElement|null} The icon strip, or null.
+ */
+function buildLeaderIcons(s) {
+  const strip = div("demographics-settle-lead-icons");
+  for (const col of SETTLEMENT_OUTPUTS) {
+    if (s.ranks[col.id] !== 1 || !((s.outputs && s.outputs[col.id]) > 0)) continue;
+    const ic = iconEl(col.icon, "demographics-settle-lead-icon");
+    ic.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", t(col.label)));
+    strip.appendChild(ic);
+  }
+  return strip.firstChild ? strip : null;
+}
+
+/**
+ * The rank cell shared by the Top 25 and Civilization Ranking rows: the place
+ * number with the world-leader icons beneath it.
+ * @param {number} place The 1-based place.
+ * @param {*} s The settlement or civ aggregate (reads `ranks` + `outputs`).
+ * @returns {HTMLElement} The rank cell.
+ */
+export function buildRankCell(place, s) {
+  const rank = div("demographics-settle-list-rankcol");
+  rank.appendChild(div("demographics-settle-list-rank", String(place)));
+  const leads = buildLeaderIcons(s);
+  if (leads) rank.appendChild(leads);
+  return rank;
+}
+
+/**
+ * Whether a settlement belongs to the local player (never true for a masked one).
+ * @param {*} s The settlement.
+ * @returns {boolean} True for the local player's own settlement.
+ */
+export function isOwnSettlement(s) {
+  if (!s || s.masked || !s.owner || typeof GameContext === "undefined") return false;
+  return s.owner.pid === GameContext.localPlayerID;
+}
+
+/**
+ * The row classes shared by the showcase list and the table: a gold/silver/bronze
+ * tint for places 1-3 and a gold outline on the local player's own settlements.
+ * @param {string} base The base class list.
+ * @param {*} s The settlement.
+ * @param {number} place The 1-based place in the list.
+ * @returns {string} The class list.
+ */
+export function rankedRowClass(base, s, place) {
+  let cls = base;
+  if (place >= 1 && place <= 3) cls += " demographics-settle-medalrow-" + place;
+  if (isOwnSettlement(s)) cls += " is-own";
+  return cls;
+}
+
+/**
  * Build one ranked-list row of the showcase.
  * @param {*} s The settlement.
  * @param {*} st The render state.
@@ -196,11 +298,11 @@ function buildShowcaseMid(s, st, deps) {
  */
 function buildShowcaseRow(s, st, deps) {
   s = deps.displayOf(st, s);
-  const row = div("demographics-settle-list-row");
+  const row = div(rankedRowClass("demographics-settle-list-row", s, s.ranks.composite));
   if (s.owner.readable || s.owner.primary) {
     row.style.setProperty("border-left-color", s.owner.readable || s.owner.primary);
   }
-  row.appendChild(div("demographics-settle-list-rank", String(s.ranks.composite)));
+  row.appendChild(buildRankCell(s.ranks.composite, s));
   row.appendChild(deps.buildOwnerAvatar(s.owner));
   row.appendChild(buildShowcaseMid(s, st, deps));
   row.appendChild(div("demographics-settle-list-score", fmt(s.composite)));
@@ -228,12 +330,32 @@ function buildPodium(top, st, deps, vertical) {
 }
 
 /**
+ * The settlements the showcase ranks: the live board, or the archived end-of-age
+ * board picked in the age pills. Appends the pill row (and the archive note)
+ * when any finished age has been recorded.
+ * @param {*} st The render state.
+ * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @returns {Array<*>} The ranked settlements.
+ */
+function showcaseSource(st, deps) {
+  const ages = Array.isArray(deps.archive) ? deps.archive : [];
+  if (!ages.length) return st.board.settlements;
+  st.content.appendChild(buildAgePills(st, ages, deps));
+  const pick = ages.find((a) => a.age === st.showcaseAge);
+  if (!pick) return st.board.settlements;
+  st.content.appendChild(
+    div("demographics-settle-age-note", t("LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE", pick.year || pick.label))
+  );
+  return pick.top;
+}
+
+/**
  * Render the artistic Top-25 showcase.
  * @param {*} st The render state.
  * @param {ShowcaseDeps} deps Rendering dependencies.
  */
 export function renderShowcasePanel(st, deps) {
-  const top = st.board.settlements.slice(0, deps.topN);
+  const top = showcaseSource(st, deps).slice(0, deps.topN);
   if (!top.length) {
     st.content.appendChild(deps.buildEmpty());
     return;
@@ -271,4 +393,32 @@ function buildShowcaseList(top, st, deps) {
     }
   }
   return list;
+}
+
+/**
+ * The "Now / End of <age>" pill row that switches the showcase between the live
+ * board and an archived end-of-age board. Session-only, like the table filter.
+ * @param {*} st The render state.
+ * @param {Array<{ age: string, label: string }>} ages The archived ages, oldest first.
+ * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @returns {HTMLElement} The pill row.
+ */
+function buildAgePills(st, ages, deps) {
+  const row = div("demographics-settle-filters demographics-settle-age-pills");
+  const items = [{ id: "now", label: t("LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW") }].concat(
+    ages.map((a) => ({ id: a.age, label: t("LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END", a.label) }))
+  );
+  const active = ages.some((a) => a.age === st.showcaseAge) ? st.showcaseAge : "now";
+  for (const it of items) {
+    const chip = div("demographics-chart-time-filter-pill" + (active === it.id ? " is-active" : ""));
+    chip.textContent = it.label;
+    chip.addEventListener("click", () => {
+      if (active === it.id) return;
+      st.showcaseAge = it.id;
+      deps.safePlaySound("data-audio-activate");
+      deps.rerenderContent(st);
+    });
+    row.appendChild(chip);
+  }
+  return row;
 }
