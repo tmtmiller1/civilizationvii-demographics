@@ -99,9 +99,10 @@ import {
 import { onPlayerAgeTransitionComplete } from "/demographics/ui/sampler/sampler-age-boundary.js";
 import { runWarTracker } from "/demographics/ui/sampler/sampler-wars-core.js";
 import { recordLocalTownsNow } from "/demographics/ui/screen-demographics/views/settlements/towns-history.js";
+import { recordSettlementAge } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
 import {
   startFoundingTracker,
-  recordSettlementsNow
+  recordSettlementTrace
 } from "/demographics/ui/screen-demographics/settlements/settlements-trace.js";
 import {
   getCumulativeCasualty,
@@ -329,14 +330,27 @@ function doSample() {
     safeCall,
     {
       recordLocalTownsNow,
-      recordSettlementsNow,
       setSettings: (entries) => DemographicsSettings.setSettings(entries)
     },
-    chartTurn,
-    gameYear
+    chartTurn
   );
   finalizeSample(snapshot, localTurn, tStart, minors ? Object.keys(minors).length : 0);
   return snapshot;
+}
+
+/**
+ * Fold this sample's per-settlement history onto the in-progress history blob
+ * (committed by the same per-turn save): the founding/trend trace, keyed by the
+ * monotonic chart turn so trend windows span age boundaries, then the current
+ * age's top-settlement archive (which reads the freshly updated trace).
+ * @param {*} history The in-progress history blob (mutated).
+ * @param {Snapshot} built The built snapshot.
+ * @param {number} localTurn The age-local sample turn.
+ */
+function recordSettlementHistory(history, built, localTurn) {
+  const chartTurn = typeof built?.chartTurn === "number" ? built.chartTurn : localTurn;
+  safeCall("recordSettlementTrace", () => recordSettlementTrace(history, chartTurn, built?.gameYear));
+  safeCall("recordSettlementAge", () => recordSettlementAge(history, localTurn, built?.gameYear));
 }
 
 /**
@@ -352,6 +366,7 @@ function finalizeSample(snapshot, turn, tStart, minorCount) {
     persistSnapshot: (builtSnapshot) =>
       persistSnapshot(DemographicsStorage, tripIfTooMany, builtSnapshot),
     runWarTracker,
+    recordSettlementHistory: (history, built) => recordSettlementHistory(history, built, turn),
     commitSample: (history) => commitSample(DemographicsStorage, tripIfTooMany, history),
     logSampleTiming: (timings, counts) => logSampleTiming(ilog, timings, counts)
   });

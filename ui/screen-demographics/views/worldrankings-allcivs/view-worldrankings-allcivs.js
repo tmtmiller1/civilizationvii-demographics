@@ -32,7 +32,6 @@ import {
   matrixHasNumberModePairs
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
 import { mountWorldRankingsAllCivsStrip } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-controller.js";
-import { buildLeadersSection } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-leaders.js";
 import { renderCivTable } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-table.js";
 import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
 import { div } from "/demographics/ui/core/ui-helpers.js";
@@ -261,25 +260,11 @@ function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
   const localPid = pickLocalPid(profiles, allPids);
   const otherPids = sortOtherPids(profiles, allPids, localPid);
 
-  // Category-leader cards on top (one per metric, the civ that leads it) — the same
-  // "rank by category" strip the All Settlements panel shows.
-  appendLeaders(host, profiles, showUnmetNames);
   // Scaled / Civ toggle: applies the number mode BEFORE the strip is built (the
   // strip reads it when laying out its metric rows) and re-renders on change so the
   // paired rows (Population, Emigration flows) swap in place.
   mountNumberModeToggle(host, ctx, () => render(host, ctx));
   mountMatrix(host, profiles, { localPid, otherPids }, ctx, showUnmetNames);
-}
-
-/**
- * Append the category-leaders section (no-op when there's nothing to lead).
- * @param {HTMLElement} host The view host.
- * @param {Record<string, *>} profiles Civ profile map.
- * @param {boolean} showUnmetNames Whether unmet identities are shown.
- */
-function appendLeaders(host, profiles, showUnmetNames) {
-  const leaders = buildLeadersSection(profiles, showUnmetNames);
-  if (leaders) host.appendChild(leaders);
 }
 
 /**

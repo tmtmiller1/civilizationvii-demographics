@@ -246,6 +246,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="zh_Hans_CN">
             <Text>排名</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="zh_Hans_CN">
+            <Text>总计与统计</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="zh_Hans_CN">
             <Text>数值</Text>
         </Replace>
@@ -1845,6 +1848,27 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="zh_Hans_CN">
             <Text>首都</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="zh_Hans_CN">
+            <Text>首都：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="zh_Hans_CN">
+            <Text>圣城</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="zh_Hans_CN">
+            <Text>{1_Religion}的圣城</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="zh_Hans_CN">
+            <Text>{1_Category}世界第一</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="zh_Hans_CN">
+            <Text>当前</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="zh_Hans_CN">
+            <Text>{1_Age}结束时</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="zh_Hans_CN">
+            <Text>该时代最后记录的前10名定居点（{1_Year}）。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="zh_Hans_CN">
             <Text>奇观</Text>
         </Replace>
@@ -1991,12 +2015,6 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="zh_Hans_CN">
             <Text>其最为富庶的城区。</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN" Language="zh_Hans_CN">
-            <Text>{1_Cat} ➊</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE" Language="zh_Hans_CN">
-            <Text>各项之最</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="zh_Hans_CN">
             <Text>按产出排名的聚落</Text>

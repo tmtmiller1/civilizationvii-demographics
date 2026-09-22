@@ -8,6 +8,7 @@ import {
   SETTLEMENT_OUTPUTS,
   valueOf
 } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
+import { rankedRowClass } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
 
 /**
  * @typedef {{
@@ -17,7 +18,6 @@ import {
  *   rerenderContent: (st: *) => void,
  *   displayOf: (st: *, s: *) => *,
  *   buildOwnerCell: (owner: *) => HTMLElement,
- *   buildOwnerAvatar: (owner: *) => HTMLElement,
  *   buildTypeBadge: (isTown: boolean) => HTMLElement,
  *   buildSectionTitle: (key: string) => HTMLElement,
  *   buildEmpty: () => HTMLElement
@@ -43,73 +43,22 @@ const FILTERS = [
 ];
 
 /**
- * Build one category leader card.
- * @param {{ id: string, icon: string, label: string }} col The output column.
- * @param {*} L The display leader settlement.
- * @param {TableDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The leader card.
+ * The leading value of each output within a settlement pool (the rows the active
+ * All/Cities/Towns filter admits, not just the 25 shown), keyed by output id.
+ * An output nobody leads (every settlement equal, or no positive value) is left
+ * out, so nothing is highlighted for it.
+ * @param {*[]} pool The filtered settlements.
+ * @returns {Record<string, number>} Output id → leading value.
  */
-function buildLeaderCard(col, L, deps) {
-  const card = div("demographics-settle-leader-card");
-  // Identity FIRST: leader portrait + settlement name on top, owner just beneath.
-  // The category icon + value and the "➊ <category>" label follow below.
-  const id = div("demographics-settle-leader-id");
-  id.appendChild(deps.buildOwnerAvatar(L.owner));
-  const names = div("demographics-settle-leader-idnames");
-  names.appendChild(div("demographics-settle-leader-name", L.name));
-  names.appendChild(div("demographics-settle-leader-val", L.owner.leaderName || ""));
-  id.appendChild(names);
-  card.appendChild(id);
-  const head = div("demographics-settle-leader-head");
-  head.appendChild(iconEl(col.icon, "demographics-settle-leader-icon"));
-  head.appendChild(div("demographics-settle-leader-headval", fmt(valueOf(L, col.id))));
-  card.appendChild(head);
-  card.appendChild(
-    div(
-      "demographics-settle-leader-cat",
-      t("LOC_DEMOGRAPHICS_SETTLEMENTS_BEST_IN", t(col.label))
-    )
-  );
-  return card;
-}
-
-/**
- * The category leader (highest value in `colId`) within a settlement pool.
- * @param {*[]} pool The settlements to rank.
- * @param {string} colId The output/category id.
- * @returns {*} The leading settlement, or null when the pool is empty.
- */
-function leaderFor(pool, colId) {
-  let best = null;
-  let bestVal = -Infinity;
-  for (const s of pool) {
-    const v = valueOf(s, colId);
-    if (typeof v === "number" && v > bestVal) {
-      bestVal = v;
-      best = s;
-    }
-  }
-  return best;
-}
-
-/**
- * Build the category leaders strip. Leaders are computed over the SAME
- * All/Cities/Towns filter the table below uses, so "best Food" reflects only
- * the rows currently shown.
- * @param {*} st The render state.
- * @param {TableDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The strip element.
- */
-function buildLeadersStrip(st, deps) {
-  const strip = div("demographics-settle-leaders");
-  const filter = FILTERS.find((f) => f.id === st.filter) || FILTERS[0];
-  const pool = st.board.settlements.filter(filter.test);
+function columnLeaders(pool) {
+  /** @type {Record<string, number>} */
+  const out = {};
   for (const col of SETTLEMENT_OUTPUTS) {
-    const leader = leaderFor(pool, col.id);
-    if (!leader) continue;
-    strip.appendChild(buildLeaderCard(col, deps.displayOf(st, leader), deps));
+    const vals = pool.map((s) => valueOf(s, col.id));
+    const max = Math.max(...vals);
+    if (max > 0 && vals.some((v) => v < max)) out[col.id] = max;
   }
-  return strip;
+  return out;
 }
 
 /**
@@ -209,15 +158,37 @@ function buildHeaderRow(st, deps) {
 }
 
 /**
+ * Build one output cell. The leading settlement's cell carries the gold leader
+ * wash and a "World leader in <output>" tooltip: the table itself marks the
+ * category leaders (the separate leader-card strip was removed).
+ * @param {*} s The settlement.
+ * @param {{ id: string, label: string }} col The output column.
+ * @param {string} sortKey The active sort key.
+ * @param {Record<string, number>} leads Output id → leading value.
+ * @returns {HTMLElement} The cell.
+ */
+function buildOutputCell(s, col, sortKey, leads) {
+  const lead = col.id in leads && valueOf(s, col.id) === leads[col.id];
+  const cell = div(
+    "demographics-settle-td demographics-settle-col-" + col.id +
+      (sortKey === col.id ? " is-sorted" : "") + (lead ? " is-leader" : ""),
+    fmt(s.outputs[col.id])
+  );
+  if (lead) cell.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", t(col.label)));
+  return cell;
+}
+
+/**
  * Build one settlement data row for the table.
  * @param {*} s The settlement.
  * @param {number} rank The 1-based rank within the current sort.
  * @param {string} sortKey The active sort key.
+ * @param {Record<string, number>} leads Output id → leading value (see columnLeaders).
  * @param {TableDeps} deps Rendering dependencies.
  * @returns {HTMLElement} The row.
  */
-function buildTableRow(s, rank, sortKey, deps) {
-  const row = div("demographics-settle-row demographics-settle-datarow");
+function buildTableRow(s, rank, sortKey, leads, deps) {
+  const row = div(rankedRowClass("demographics-settle-row demographics-settle-datarow", s, rank));
   if (s.owner.readable || s.owner.primary) {
     row.style.setProperty("border-left-color", s.owner.readable || s.owner.primary);
   }
@@ -236,16 +207,7 @@ function buildTableRow(s, rank, sortKey, deps) {
       fmt(s.composite)
     )
   );
-  for (const col of SETTLEMENT_OUTPUTS) {
-    row.appendChild(
-      div(
-        "demographics-settle-td demographics-settle-col-" +
-          col.id +
-          (sortKey === col.id ? " is-sorted" : ""),
-        fmt(s.outputs[col.id])
-      )
-    );
-  }
+  for (const col of SETTLEMENT_OUTPUTS) row.appendChild(buildOutputCell(s, col, sortKey, leads));
   return row;
 }
 
@@ -260,12 +222,11 @@ export function renderTablePanel(st, deps) {
     st.content.appendChild(deps.buildEmpty());
     return;
   }
-  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_LEADERS_TITLE"));
-  st.content.appendChild(buildLeadersStrip(st, deps));
   st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE"));
   const filter = FILTERS.find((f) => f.id === st.filter) || FILTERS[0];
-  const rows = st.board.settlements
-    .filter(filter.test)
+  const pool = st.board.settlements.filter(filter.test);
+  const leads = columnLeaders(pool);
+  const rows = pool
     .slice()
     .sort(
       (/** @type {*} */ a, /** @type {*} */ b) =>
@@ -275,7 +236,7 @@ export function renderTablePanel(st, deps) {
   const table = div("demographics-settle-table");
   table.appendChild(buildHeaderRow(st, deps));
   for (let i = 0; i < rows.length; i++) {
-    table.appendChild(buildTableRow(deps.displayOf(st, rows[i]), i + 1, st.sortKey, deps));
+    table.appendChild(buildTableRow(deps.displayOf(st, rows[i]), i + 1, st.sortKey, leads, deps));
   }
   st.content.appendChild(table);
 }
