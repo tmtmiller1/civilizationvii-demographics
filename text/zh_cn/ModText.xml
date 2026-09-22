@@ -2302,5 +2302,584 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="zh_Hans_CN"><Text>尚未创建任何万神殿。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="zh_Hans_CN"><Text>信条</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="zh_Hans_CN"><Text>万神殿 — 所选信条及其效果</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE" Language="zh_Hans_CN">
+            <Text>名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MENU_BUTTON" Language="zh_Hans_CN">
+            <Text>名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_CHRONICLE" Language="zh_Hans_CN">
+            <Text>编年史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_LINEAGE" Language="zh_Hans_CN">
+            <Text>传承</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_OVERVIEW" Language="zh_Hans_CN">
+            <Text>概览</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS" Language="zh_Hans_CN">
+            <Text>排行榜</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_LEADERS" Language="zh_Hans_CN">
+            <Text>领袖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_CIVS" Language="zh_Hans_CN">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RECORDS" Language="zh_Hans_CN">
+            <Text>纪录</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ALL_AGES" Language="zh_Hans_CN">
+            <Text>所有时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_ALL" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_MINE" Language="zh_Hans_CN">
+            <Text>你的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WAR" Language="zh_Hans_CN">
+            <Text>战争与和平</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_FAITH" Language="zh_Hans_CN">
+            <Text>宗教</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WORLD" Language="zh_Hans_CN">
+            <Text>世界</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST" Language="zh_Hans_CN">
+            <Text>最新优先</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST" Language="zh_Hans_CN">
+            <Text>最早优先</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_MORE" Language="zh_Hans_CN">
+            <Text>显示更多</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TURN_N" Language="zh_Hans_CN">
+            <Text>第{1_Turn}回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TURNS" Language="zh_Hans_CN">
+            <Text>{1_Count}回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_PERCENT" Language="zh_Hans_CN">
+            <Text>{1_Value}%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE" Language="zh_Hans_CN">
+            <Text>独立势力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET" Language="zh_Hans_CN">
+            <Text>涉及尚未遇见文明而隐藏的事件: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_LEADERS" Language="zh_Hans_CN">
+            <Text>尚未遇见而隐藏的领袖: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE" Language="zh_Hans_CN">
+            <Text>编年史将从你的下一回合开始。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_HOF" Language="zh_Hans_CN">
+            <Text>尚无游戏记录。你玩的每一局战役都会添加到这里。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_FOUND" Language="zh_Hans_CN">
+            <Text>{1_Civ}建立了{2_Settlement}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CAPTURE" Language="zh_Hans_CN">
+            <Text>{1_Civ}从{3_Civ}手中夺取了{2_Settlement}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RAZED" Language="zh_Hans_CN">
+            <Text>{2_Civ}失去了{1_Settlement}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WONDER" Language="zh_Hans_CN">
+            <Text>{1_Civ}建成了{2_Wonder}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WAR" Language="zh_Hans_CN">
+            <Text>{1_Civ}与{2_Civ}之间爆发了战争。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_PEACE" Language="zh_Hans_CN">
+            <Text>{1_Civ}与{2_Civ}议和。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RELIGION" Language="zh_Hans_CN">
+            <Text>{1_Civ}创立了{2_Religion}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_TRIUMPH" Language="zh_Hans_CN">
+            <Text>{1_Civ}完成了伟业“{2_Triumph}”。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_ELIM" Language="zh_Hans_CN">
+            <Text>{1_Civ}已被消灭。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_AGE" Language="zh_Hans_CN">
+            <Text>新时代开始：{1_Age}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CIV" Language="zh_Hans_CN">
+            <Text>{1_Leader}现在领导{2_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_MET" Language="zh_Hans_CN">
+            <Text>首次遇到{1_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_VICTORY" Language="zh_Hans_CN">
+            <Text>{1_Civ}取得了胜利：{2_Victory}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_GENERIC" Language="zh_Hans_CN">
+            <Text>{1_Civ}：{2_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NARR_LEAD" Language="zh_Hans_CN">
+            <Text>{1_Leader}在这个时代领导了{2_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED" Language="zh_Hans_CN">
+            <Text>建立</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED" Language="zh_Hans_CN">
+            <Text>夺取</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_LOST" Language="zh_Hans_CN">
+            <Text>失去</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WONDERS" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WARS" Language="zh_Hans_CN">
+            <Text>战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_WONDERS" Language="zh_Hans_CN">
+            <Text>奇观：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_RELIGION" Language="zh_Hans_CN">
+            <Text>创立的宗教：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_FALLEN" Language="zh_Hans_CN">
+            <Text>被消灭的文明：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_TITLE" Language="zh_Hans_CN">
+            <Text>领袖及其领导的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN" Language="zh_Hans_CN">
+            <Text>已覆灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN" Language="zh_Hans_CN">
+            <Text>于第{1_Turn}回合被消灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_LEADER" Language="zh_Hans_CN">
+            <Text>领袖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION" Language="zh_Hans_CN">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS" Language="zh_Hans_CN">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION" Language="zh_Hans_CN">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="zh_Hans_CN">
+            <Text>称号</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="zh_Hans_CN">
+            <Text>结果</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS" Language="zh_Hans_CN">
+            <Text>回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED" Language="zh_Hans_CN">
+            <Text>游玩时间</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TREND" Language="zh_Hans_CN">
+            <Text>伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_FATE" Language="zh_Hans_CN">
+            <Text>结局</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>最多伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS" Language="zh_Hans_CN">
+            <Text>平均回合数</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_GAMES" Language="zh_Hans_CN">
+            <Text>游戏局数</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES" Language="zh_Hans_CN">
+            <Text>胜利次数</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE" Language="zh_Hans_CN">
+            <Text>胜率</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TURNS" Language="zh_Hans_CN">
+            <Text>已玩回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>完成的伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>最多定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE" Language="zh_Hans_CN">
+            <Text>各类型胜利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_VICTORIES" Language="zh_Hans_CN">
+            <Text>尚未取得胜利。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FINEST_GAME" Language="zh_Hans_CN">
+            <Text>你的最佳游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LATEST_GAME" Language="zh_Hans_CN">
+            <Text>最近的游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE" Language="zh_Hans_CN">
+            <Text>按结果排名（胜利优先），其次比较所有时代完成的伟业数，最后回合数少者优先。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="zh_Hans_CN">
+            <Text>隐藏短局游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="zh_Hans_CN">
+            <Text>显示所有游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="zh_Hans_CN">
+            <Text>胜利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="zh_Hans_CN">
+            <Text>胜利：{1_Victory}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="zh_Hans_CN">
+            <Text>征服</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="zh_Hans_CN">
+            <Text>失败</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_ENDED" Language="zh_Hans_CN">
+            <Text>已结束</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_IN_PROGRESS" Language="zh_Hans_CN">
+            <Text>进行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED" Language="zh_Hans_CN">
+            <Text>于第{1_Turn}回合被消灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED" Language="zh_Hans_CN">
+            <Text>幸存</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK" Language="zh_Hans_CN">
+            <Text>返回</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_GAME" Language="zh_Hans_CN">
+            <Text>从名人堂中移除</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_CONFIRM" Language="zh_Hans_CN">
+            <Text>再次点击以移除</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TREND_TITLE" Language="zh_Hans_CN">
+            <Text>整局游戏中的伟业与定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS" Language="zh_Hans_CN">
+            <Text>精彩时刻</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS" Language="zh_Hans_CN">
+            <Text>本局游戏没有记录精彩时刻。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RIVALS" Language="zh_Hans_CN">
+            <Text>对手</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_RIVALS" Language="zh_Hans_CN">
+            <Text>本局游戏没有记录对手。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CIVS_NOTE" Language="zh_Hans_CN">
+            <Text>你领导过的每个文明都会计入，无论你在哪个时代领导它。胜率与进度条仅统计已结束的游戏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_WON" Language="zh_Hans_CN">
+            <Text>胜利：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_NOT_WON" Language="zh_Hans_CN">
+            <Text>未获胜：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_FINISHED" Language="zh_Hans_CN">
+            <Text>没有已结束的游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS" Language="zh_Hans_CN">
+            <Text>尝试次数</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR" Language="zh_Hans_CN">
+            <Text>获得条件</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_GAVE" Language="zh_Hans_CN">
+            <Text>效果</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_UNFINISHED" Language="zh_Hans_CN">
+            <Text>进行中：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE" Language="zh_Hans_CN">
+            <Text>你玩过的每位领袖。胜率与进度条仅统计已结束的游戏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE" Language="zh_Hans_CN">
+            <Text>保持每项纪录的那局游戏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_NOTE" Language="zh_Hans_CN">
+            <Text>你最出色的几局，以及最近一局所处的位置。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>最多伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_WONDERS" Language="zh_Hans_CN">
+            <Text>最多奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>最大帝国</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED" Language="zh_Hans_CN">
+            <Text>夺取定居点最多</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="zh_Hans_CN">
+            <Text>最快胜利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="zh_Hans_CN">
+            <Text>最长游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="zh_Hans_CN">
+            <Text>游戏记录保存在这台电脑上。每个存档也会保留自己的记录。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="zh_Hans_CN">
+            <Text>本次会话无法从存储中读取以往的游戏。当前进行的游戏仍会显示，且每个存档在读取时都会恢复自己的记录。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="zh_Hans_CN">
+            <Text>奥古斯都</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="zh_Hans_CN">
+            <Text>居鲁士大帝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3" Language="zh_Hans_CN">
+            <Text>查理曼</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_4" Language="zh_Hans_CN">
+            <Text>汉谟拉比</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_5" Language="zh_Hans_CN">
+            <Text>拉美西斯二世</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_6" Language="zh_Hans_CN">
+            <Text>阿育王</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_7" Language="zh_Hans_CN">
+            <Text>哈特谢普苏特</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_8" Language="zh_Hans_CN">
+            <Text>查士丁尼</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_9" Language="zh_Hans_CN">
+            <Text>阿尔弗雷德大王</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_10" Language="zh_Hans_CN">
+            <Text>路易十六</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_11" Language="zh_Hans_CN">
+            <Text>诺顿皇帝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_12" Language="zh_Hans_CN">
+            <Text>仓促王埃塞尔雷德</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE" Language="zh_Hans_CN">
+            <Text>在记录开始前已被消灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_BEFORE" Language="zh_Hans_CN">
+            <Text>在记录开始前已被消灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL" Language="zh_Hans_CN">
+            <Text>自{1_Date}起记录。本时代更早的事件未被记录。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF" Language="zh_Hans_CN">
+            <Text>名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY" Language="zh_Hans_CN">
+            <Text>历史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECENT_GAMES" Language="zh_Hans_CN">
+            <Text>最近的游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_SCALED" Language="zh_Hans_CN">
+            <Text>换算人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_CIV" Language="zh_Hans_CN">
+            <Text>文明人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF" Language="zh_Hans_CN">
+            <Text>返回名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CRISIS" Language="zh_Hans_CN">
+            <Text>危机第{2_Stage}阶段：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED" Language="zh_Hans_CN">
+            <Text>时代危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TITLE" Language="zh_Hans_CN">
+            <Text>时间线</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_AGES" Language="zh_Hans_CN">
+            <Text>时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CRISES" Language="zh_Hans_CN">
+            <Text>危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MILESTONES" Language="zh_Hans_CN">
+            <Text>里程碑</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH" Language="zh_Hans_CN">
+            <Text>与{1_Civ}的战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED" Language="zh_Hans_CN">
+            <Text>人口达到{1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_STAGE" Language="zh_Hans_CN">
+            <Text>第{1_Stage}阶段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_DISASTER" Language="zh_Hans_CN">
+            <Text>{1_Name}袭击了{2_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED" Language="zh_Hans_CN">
+            <Text>自然灾害</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_DISASTERS" Language="zh_Hans_CN">
+            <Text>灾害</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION_LANE" Language="zh_Hans_CN">
+            <Text>迁徙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION" Language="zh_Hans_CN">
+            <Text>迁入 {1_In}，迁出 {2_Out}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ARRIVED" Language="zh_Hans_CN">
+            <Text>迁入</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_LEFT" Language="zh_Hans_CN">
+            <Text>迁出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TURN" Language="zh_Hans_CN">
+            <Text>{1_Turn}回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES" Language="zh_Hans_CN">
+            <Text>所有时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PLAY" Language="zh_Hans_CN">
+            <Text>播放</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PAUSE" Language="zh_Hans_CN">
+            <Text>暂停</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_GAME_OPTIONS" Language="zh_Hans_CN">
+            <Text>游戏选项</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_NOTE" Language="zh_Hans_CN">
+            <Text>移除游戏会从本机的名人堂中删除其记录，且无法撤销。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_SETTLEMENTS" Language="zh_Hans_CN">
+            <Text>定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_NTH_SETTLEMENT" Language="zh_Hans_CN">
+            <Text>第{1_N}个定居点</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_VICTORY" Language="zh_Hans_CN">
+            <Text>胜利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_ELIM" Language="zh_Hans_CN">
+            <Text>覆灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_AGE" Language="zh_Hans_CN">
+            <Text>新时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WONDER" Language="zh_Hans_CN">
+            <Text>奇观</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RELIGION" Language="zh_Hans_CN">
+            <Text>宗教</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CAPTURE" Language="zh_Hans_CN">
+            <Text>征服</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RAZED" Language="zh_Hans_CN">
+            <Text>夷平</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_TRIUMPH" Language="zh_Hans_CN">
+            <Text>伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WAR" Language="zh_Hans_CN">
+            <Text>战争</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_PEACE" Language="zh_Hans_CN">
+            <Text>和平</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CRISIS" Language="zh_Hans_CN">
+            <Text>危机</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CIV" Language="zh_Hans_CN">
+            <Text>新文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_DISASTER" Language="zh_Hans_CN">
+            <Text>灾害</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_FOUND" Language="zh_Hans_CN">
+            <Text>建立</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_MET" Language="zh_Hans_CN">
+            <Text>接触</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MAP_TITLE" Language="zh_Hans_CN">
+            <Text>领土</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CIVS" Language="zh_Hans_CN">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ONLY_MINE" Language="zh_Hans_CN">
+            <Text>仅我的</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_CIVS" Language="zh_Hans_CN">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR" Language="zh_Hans_CN">
+            <Text>战争：{1_Civ}对{2_Other}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS" Language="zh_Hans_CN">
+            <Text>征服</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="zh_Hans_CN">
+            <Text>胜利与覆灭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="zh_Hans_CN">
+            <Text>无法在此电脑上保留过去的游戏：由于游戏的存储错误，另一个模组的保存数据造成了阻碍。当前进行的游戏仍会显示，且每个存档在读取时都会恢复自己的记录。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="zh_Hans_CN">
+            <Text>最佳游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE" Language="zh_Hans_CN">
+            <Text>你最出色的游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST" Language="zh_Hans_CN">
+            <Text>前十名的其余游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_THIS_GAME" Language="zh_Hans_CN">
+            <Text>本局游戏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF" Language="zh_Hans_CN">
+            <Text>第{1_Rank}名，共{2_Total}局</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN" Language="zh_Hans_CN">
+            <Text>位列你的前十名。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="zh_Hans_CN">
+            <Text>{1_Count} 项伟业</Text>
+        </Replace>
     </LocalizedText>
 </Database>

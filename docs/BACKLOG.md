@@ -2,6 +2,31 @@
 
 Open items not yet addressed. Newest first.
 
+## History and Hall of Fame: checks still open after the merge
+
+**Status:** open (added with the History release, 2026-09-22). **[Medium]**
+
+**Watched in game (1.5.0):** capture over real turns (map frames, disasters, foundings,
+Triumphs, Emigration migration totals, rival tracks), icons resolved from the game's icon
+table, the archive written while over its byte cap (trimmed, the live game kept whole),
+persistence across restarts, one entry per campaign when a save is loaded twice, and the
+campaign carried across the Antiquity to Exploration transition. The worst case (twelve
+civilizations, 750 turns, every cap saturated) is `tests/history-stress.mjs`.
+
+**Not yet watched:**
+- A victory, and the end-of-game screen opening World Rankings on the Hall of Fame.
+- The ten translations on screen (text fit and wording in the Hall of Fame and timeline).
+- Clicking the timeline ruler to move the cursor, and the population readout hiding when
+  the pointer leaves the lane (the CDP harness cannot deliver real clicks).
+- Multiplayer: the analytics policy applied to the History tab and the timeline filter.
+
+**Known limit:** the game's `localStorage.getItem` returns the value of the alphabetically
+first key, whatever key is asked for. When another mod has stored a key that sorts ahead of
+the shared `modSettings` entry (for example one starting with `!`), the archive reads that
+instead, so it refuses to read or write (status `foreign`) and the Hall of Fame explains why.
+A workaround would need a storage key that sorts ahead of the others, which would break
+other mods the same way; not planned.
+
 ## Real translations for the 22 Top-25 / diplomacy localization keys
 
 **Status:** open (added alongside the pl_PL full-translation integration). **[Low]**

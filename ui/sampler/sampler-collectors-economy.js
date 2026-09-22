@@ -391,7 +391,7 @@ export function collectCities(ctx, id, p) {
  * @param {*} c City handle.
  * @returns {number} The size (0 when unreadable).
  */
-function readCitySize(c) {
+export function readCitySize(c) {
   try {
     if (typeof c?.population === "number" && isFinite(c.population)) return c.population;
     const u = typeof c?.urbanPopulation === "number" ? c.urbanPopulation : 0;
@@ -406,7 +406,7 @@ function readCitySize(c) {
  * Read current age-progress percent [0,100] from the AgeProgressManager (undefined when unavailable).
  * @returns {number | undefined} Progress percent, or undefined.
  */
-function readAgeProgressPct() {
+export function readAgeProgressPct() {
   try {
     const apm = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
     if (!apm || typeof apm.getCurrentAgeProgressionPoints !== "function") return undefined;

@@ -49,7 +49,7 @@ Every other locale uses a `LocalizedText` block with `Replace` + a `Language` at
 ## The tag-parity invariant
 
 **Every locale file must contain exactly the same set of tags as `en_us`** (currently
-907). The engine loads a separate DB per language, so a tag missing from `fr_fr` renders
+1093; `npm run test:i18n` enforces it). The engine loads a separate DB per language, so a tag missing from `fr_fr` renders
 as the raw `LOC_...` string for French players. Keep the sets identical.
 
 ## Placeholder text is expected
@@ -74,6 +74,14 @@ Keep the `{N_...}` tokens intact (and in a natural position for the language) wh
 `LOC_DEMOGRAPHICS_METRIC_<ID>` (uppercased id), with an optional fuller chart title at
 `LOC_DEMOGRAPHICS_METRIC_<ID>_TITLE`. The `label`/`title` strings in
 `ui/metrics/demographics-metrics*.js` are only dev fallbacks — translate the LOC key.
+
+**History and Hall of Fame** strings use the `LOC_DEMOGRAPHICS_HIST_` prefix and resolve
+through their own `t()` in `ui/history/core/history-text.js`. At the main menu only setup
+text is loaded, so a Hall of Fame record also stores the text of the game names it shows
+(settlements, wonders, religions, Triumphs), captured in game, and `t()` falls back to it.
+
+**Polish** keeps a different layout from the other locales: one `<Replace>` per line,
+tab-indented, with the translator's header comment at the top. Keep that shape when adding tags.
 
 ## Base-game strings are NOT here
 

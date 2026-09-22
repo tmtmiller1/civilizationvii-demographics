@@ -35,7 +35,8 @@
 
 - **Global Statistics:** per-turn line charts of yields, economy, resources, society, religion, land, and settlements, with every civilization on one plot and history carried across age changes.
 - **Geopolitics:** a diplomacy ring of the civilizations and city-states you have met, agreements over time, each crisis broken down stage by stage, soft-power comparisons, and a full military record with a timeline of every war.
-- **World Rankings:** civilization and settlement leaderboards, a sortable rank-by-yield table for each, and a Top 25 settlements board that can fly the camera to any city.
+- **History:** a chronicle of your campaign, told age by age (settlements founded and taken, wonders, wars and peace, religions, Triumphs, crises, disasters, new ages), an interactive timeline with a territory map that replays your expansion, and a lineage of every leader and the civilization they led in each age.
+- **World Rankings:** civilization and settlement leaderboards, a sortable rank-by-yield table for each, a Top 25 settlements board that can fly the camera to any city, and a **Hall of Fame** that ranks every campaign you have played, also open from the main menu.
 - **Real-world scale:** populations in the thousands to tens of millions by era, GDP in dollars, and territory in km².
 - **Your view, your way:** per-civ colors, time-range filters, hide and focus, civ-or-leader labels, colorblind mode, CSV export, and a Basic mode that shows only the core pages.
 - **Companion-ready:** the *Emigration* mod adds its own tab, and any mod can add metrics or pages through a small public API.
@@ -55,6 +56,13 @@ Built on the foundations of robk's InfoAddict (Civ V), Gedemon's CivGraphs (Civ 
   <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/16-civilization-rank-by-yield.jpg"><img src="docs/screenshots/16-civilization-rank-by-yield.jpg" alt="Civilization Rank by Yield: a sortable rank table with each column's leader highlighted"></a><br><sub>Civilization Rank by Yield: rates and yields, with Totals &amp; Tallies below</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/17-top-25-settlements.jpg"><img src="docs/screenshots/17-top-25-settlements.jpg" alt="Top 25 Settlements board with holy-city badges and map fly-to buttons"></a><br><sub>Top 25 Settlements: holy cities, world leaders, and map fly-to</sub></td></tr>
   <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/18-settlement-rank-by-yield.jpg"><img src="docs/screenshots/18-settlement-rank-by-yield.jpg" alt="Settlement Rank by Yield table"></a><br><sub>Settlement Rank by Yield, filterable to cities or towns</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/19-top-25-end-of-antiquity.jpg"><img src="docs/screenshots/19-top-25-end-of-antiquity.jpg" alt="Top 25 Settlements showing the final top ten of the Antiquity Age"></a><br><sub>End of Antiquity: the age's final top ten, kept after the age ends</sub></td></tr>
   <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/20-totals-and-tallies.jpg"><img src="docs/screenshots/20-totals-and-tallies.jpg" alt="Totals and Tallies: land, settlements, conquests, units and migration ranked by civilization"></a><br><sub>Totals &amp; Tallies, the second Civilization Rank by Yield table</sub></td><td width="50%"></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/21-history-chronicle.jpg"><img src="docs/screenshots/21-history-chronicle.jpg" alt="History: the Chronicle of a campaign, age by age"></a><br><sub>Chronicle: your campaign told age by age</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/22-history-timeline.jpg"><img src="docs/screenshots/22-history-timeline.jpg" alt="History: the Timeline with every civilization shown, and the territory map"></a><br><sub>Timeline: wars, crises, wonders, Triumphs, settlements, disasters and population, with the territory map</sub></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/23-history-timeline-playback.jpg"><img src="docs/screenshots/23-history-timeline-playback.jpg" alt="History: Timeline playback paused mid-game, with the map rewound to that turn"></a><br><sub>Play replays the game: the map and caption follow the cursor</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/24-history-lineage.jpg"><img src="docs/screenshots/24-history-lineage.jpg" alt="History: Lineage of every leader and the civilization they led in each age"></a><br><sub>Lineage: every leader and the civilizations they led</sub></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/27-hall-of-fame-best-games.jpg"><img src="docs/screenshots/27-hall-of-fame-best-games.jpg" alt="Hall of Fame: Best Games, a podium of the three best games, the rest of the top ten, and this game at its rank"></a><br><sub>Best Games: your finest playthroughs, and this game in context</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/33-hall-of-fame-best-games-main-menu.jpg"><img src="docs/screenshots/33-hall-of-fame-best-games-main-menu.jpg" alt="Hall of Fame: Best Games opened from the main menu, with the most recent game at its rank"></a><br><sub>Best Games from the main menu, with your most recent game</sub></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/25-hall-of-fame-game.jpg"><img src="docs/screenshots/25-hall-of-fame-game.jpg" alt="Hall of Fame: a game's page in game, with figures, map, rivals, timeline and highlights"></a><br><sub>A game's page in the Hall of Fame</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/32-hall-of-fame-game-main-menu.jpg"><img src="docs/screenshots/32-hall-of-fame-game-main-menu.jpg" alt="Hall of Fame: a game's page opened from the main menu"></a><br><sub>The same page from the main menu, no game loaded</sub></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/28-hall-of-fame-rankings.jpg"><img src="docs/screenshots/28-hall-of-fame-rankings.jpg" alt="Hall of Fame rankings with honorifics"></a><br><sub>Rankings, each game with its honorific</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/29-hall-of-fame-leaders.jpg"><img src="docs/screenshots/29-hall-of-fame-leaders.jpg" alt="Hall of Fame: leader cards"></a><br><sub>Leaders you have played</sub></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/30-hall-of-fame-civilizations.jpg"><img src="docs/screenshots/30-hall-of-fame-civilizations.jpg" alt="Hall of Fame: civilization cards"></a><br><sub>Civilizations you have played</sub></td><td width="50%" align="center" valign="top"><a href="docs/screenshots/31-hall-of-fame-records.jpg"><img src="docs/screenshots/31-hall-of-fame-records.jpg" alt="Hall of Fame records"></a><br><sub>Records: the game that holds each one</sub></td></tr>
+  <tr><td width="50%" align="center" valign="top"><a href="docs/screenshots/26-main-menu-hall-of-fame-button.jpg"><img src="docs/screenshots/26-main-menu-hall-of-fame-button.jpg" alt="The Hall of Fame button on the main menu"></a><br><sub>Hall of Fame on the main menu</sub></td></tr>
 </table>
 
 Every view of the dashboard, 64 screenshots in all, is attached to each [GitHub release](https://github.com/tmtmiller1/civilizationvii-demographics/releases/latest).
@@ -68,14 +76,15 @@ Every view of the dashboard, 64 screenshots in all, is attached to each [GitHub 
 1. [Layout](#1-layout)
 2. [Global Statistics](#2-global-statistics)
 3. [Geopolitics](#3-geopolitics)
-4. [World Rankings](#4-world-rankings)
-5. [Conflicts and crises](#5-conflicts-and-crises)
-6. [How the figures are calculated](#6-how-the-figures-are-calculated)
-7. [Behavior and persistence](#7-behavior-and-persistence)
-8. [Companion-mod integration](#8-companion-mod-integration)
-9. [Install and run](#9-install-and-run)
-10. [Usage](#10-usage)
-11. [Compatibility](#11-compatibility)
+4. [History](#4-history)
+5. [World Rankings](#5-world-rankings)
+6. [Conflicts and crises](#6-conflicts-and-crises)
+7. [How the figures are calculated](#7-how-the-figures-are-calculated)
+8. [Behavior and persistence](#8-behavior-and-persistence)
+9. [Companion-mod integration](#9-companion-mod-integration)
+10. [Install and run](#10-install-and-run)
+11. [Usage](#11-usage)
+12. [Compatibility](#12-compatibility)
 
 ---
 
@@ -83,7 +92,7 @@ Every view of the dashboard, 64 screenshots in all, is attached to each [GitHub 
 
 The dashboard has three rows of navigation:
 
-- **Top tabs** pick a hub: **Global Statistics**, **Geopolitics**, and **World Rankings**. When the *Emigration* companion mod is installed, an **Emigration** tab appears beside them.
+- **Top tabs** pick a hub: **Global Statistics**, **Geopolitics**, **History**, and **World Rankings**. When the *Emigration* companion mod is installed, an **Emigration** tab appears beside them.
 - **Page tabs** pick a page within the hub (for example *Yields Per Turn* or *Military Power*).
 - **Metric pills** pick the chart on that page.
 
@@ -107,22 +116,35 @@ Without *Emigration*, **Population** sits on the Society page. With it, Populati
 
 - **Global Relations:** a ring with your civilization and the civilizations you have met, switchable to **City States**. Edges show wars, alliances, open borders, denouncements, and attitudes; a second view, **Agreements**, draws the active agreements between civilizations. Colorblind mode switches to a high-contrast palette.
 - **Agreements:** Diplomatic Approval and Ongoing Deals over time.
-- **Crises:** **Crisis Impact** (per-stage cost tables, see §5) and **Crisis Impact Graphs** (each crisis statistic charted per civilization).
+- **Crises:** **Crisis Impact** (per-stage cost tables, see §6) and **Crisis Impact Graphs** (each crisis statistic charted per civilization).
 - **Soft Power:** Score, the **Power Race** (every civilization's score rank, turn by turn), three scatter plots (Power & Science, Wealth & Culture, Happiness & Influence), and an **Archetype** radar comparing science, military, economy, culture, people, and land.
-- **Military Power:** Military Power, Units Killed, Units Lost, Battles, Wars Declared, Wars Received, Settlements Conquered, Conquest %, the **War Timeline**, **War Impact** (see §5), and boards of units trained, kills, and losses by unit type.
+- **Military Power:** Military Power, Units Killed, Units Lost, Battles, Wars Declared, Wars Received, Settlements Conquered, Conquest %, the **War Timeline**, **War Impact** (see §6), and boards of units trained, kills, and losses by unit type.
 
-## 4. World Rankings
+## 4. History
 
-Four pages:
+Three pages, recorded from the moment Demographics is active in a game (the Timeline page also carries the civilizations filter and the territory map):
+
+- **Chronicle:** the campaign's history, grouped by age. Each age opens with a summary of your civilization's deeds (settlements founded, captured and lost, wonders, Triumphs, wars, the religion you founded, and civilizations destroyed), followed by every recorded event in order: settlements founded, taken or lost, wonders completed, wars and peace, religions founded, Triumphs earned, crisis stages, natural disasters that struck a civilization's land, first contacts, eliminations, new ages and victories. Pills filter by age and by kind of event, and the order can run newest or oldest first. Events involving civilizations you have not met are hidden and counted, following the analytics policy.
+- **Timeline:** the whole game on one scrolling chart. A banner for each age carries your civilization's emblem and the age's dates. Below it run lanes for your wars (in the enemy's color, with their emblem) and the age crises stage by stage, then one lane per kind of milestone (**Wonders**, **Triumphs**, **Religion**, **Conquests**, **Victory & falls**) drawn with the game's own icons, such as each wonder's art and each religion's symbol, then every settlement founded, natural disasters, migration in and out (with the *Emigration* mod), the population curve with its milestones, and a turn ruler. Pills show all ages or one, zoom runs from 1× to 8× with pan buttons, clicking the ruler moves the cursor, and **Play** sweeps through the game, naming each event as it passes. Everything on the chart has a tooltip, and hovering the population lane or the ruler reads out the turn and population under the mouse.
+- **Civilizations filter:** the row above the timeline picks whose story it shows. Every game opens on your own civilization; add any civilization you met, or **All**, to put their milestones, settlements, wars with each other, disasters on their land and population line on the same lanes.
+- **Territory map:** above the timeline, a hex map of the world laid out like the game's own minimap, one cell per tile: terrain by biome, each civilization's land tinted in its color, independent land in grey, settlements marked, and land you had not yet explored left blank. It follows the timeline's cursor, so playback replays both the expansion and your exploration. Civilizations you have not met stay off the map.
+- **Lineage:** one row per leader and one column per age, each cell the civilization that leader led in that age in the leader's color, with the turn a line ended.
+
+When Demographics is added to a game already in progress, the chronicle starts from that turn and the first age's summary says so.
+
+## 5. World Rankings
+
+Five pages:
 
 - **Civilization Ranking:** a podium of the three strongest civilizations, each with its capital and **View on map** / **Cinematic view** buttons for it, and the full list ordered by cumulative settlement score, with population and settlement counts.
 - **Civilization Rank by Yield:** every civilization's rank (or value, via **Rank** / **Value**) in each tracked figure, in two tables that share one sort: the rates and yields first, then **Totals & Tallies** (land, cities and towns, conquests, units, great works, migration). Click any column to sort both.
 - **Top 25 Settlements:** a podium and ranked list of the strongest settlements. Each row shows the settlement's wonders (hover one for the year it was completed), a **Holy City** badge with the religion's icon when it is a religion's holy city, and small icons under the rank for every output it leads the world in. **View on map** snaps the camera to the city and **Cinematic view** plays a smooth orbit of it; with the experimental flyby enabled in Options, a short keyframed flyby is also available. Once an age ends, a pill for it (for example **End of Antiquity**) shows that age's final top ten.
 - **Settlement Rank by Yield:** a sortable table of every settlement's population and yields, filterable to **All**, **Cities**, or **Towns**.
+- **Hall of Fame:** every campaign played on this computer, the current one included live. **Best Games** opens first: your totals, a podium of your three best games, the rest of your top ten, and the game you are playing at its rank between the games just above and below it (from the main menu, your most recent game), with victories by type. **Rankings** orders the games by result (victories first), then Triumphs earned across every age, then fewest turns, and gives each an honorific from Augustus Caesar down to Ethelred the Unready. **Leaders** and **Civilizations** give each one a win rate over finished games, drawn as a bar that is green for the games won and red for the rest, with both parts named, and the attempts, most Triumphs and average length beside it. **Records** names the game that holds each record (most Triumphs, most wonders, largest empire, most settlements taken, fastest victory, longest game). Any game opens a page with its lineage and figures, the territory map beside its rivals, the game's timeline (with playback), and its highlights, age by age, where each Triumph says what it was earned for and what it gave. Each page carries its name and a line saying what is on it. **Game options** at the foot of that page can remove the game from the Hall of Fame. Short unfinished games are hidden unless **Show all games** is picked. The **Hall of Fame** button on the main menu opens the same view with no game loaded.
 
-Across all four, places 1–3 carry a gold, silver, or bronze wash, your own civilization and settlements are outlined in gold, and in the two tables the cell of whoever leads each column is highlighted in gold (hover it for the category). Civilizations you have not met show as placeholders unless name revelation is enabled in Options.
+Across the first four, places 1–3 carry a gold, silver, or bronze wash, your own civilization and settlements are outlined in gold, and in the two tables the cell of whoever leads each column is highlighted in gold (hover it for the category). Civilizations you have not met show as placeholders unless name revelation is enabled in Options.
 
-## 5. Conflicts and crises
+## 6. Conflicts and crises
 
 The **War Timeline** is a Gantt chart of wars from diplomacy events (declarer, supporters, opposers, and a stable war ID), each with a generated name. **War Impact** picks one war and charts each combatant's trajectory through it: military strength, units lost, production directed to war, settlements and land lost or gained, settlements razed, population lost, and more. War cost is the observed change in each side's figures across the war, derived from the recorded samples (not invented).
 
@@ -130,9 +152,9 @@ The **War Timeline** is a Gantt chart of wars from diplomacy events (declarer, s
 
 ---
 
-## 6. How the figures are calculated
+## 7. How the figures are calculated
 
-Every number is **derived from what the mod can observe by sampling the game each turn**, not read from a hidden engine ledger. Each turn it records a snapshot of every met civilization's raw figures; the charts and tables compute everything from those snapshots. Two consequences follow: a figure can only be as fine-grained as the sampling (see §7), and "loss"-type figures are inferred from how a value moved over time rather than from an authoritative casualty log.
+Every number is **derived from what the mod can observe by sampling the game each turn**, not read from a hidden engine ledger. Each turn it records a snapshot of every met civilization's raw figures; the charts and tables compute everything from those snapshots. Two consequences follow: a figure can only be as fine-grained as the sampling (see §8), and "loss"-type figures are inferred from how a value moved over time rather than from an authoritative casualty log.
 
 ### Direct reads
 
@@ -163,22 +185,23 @@ War costs (the per-combatant tables) and crisis costs (the per-civ stage and cum
 - **Level** (current Military Power): the last sampled value, a standing figure rather than a flow.
 - **Casualties** (Military Strength Lost) prefer the engine's cumulative units-killed counter when present (true kills), falling back to the standing-army decline for older saves.
 
-A crisis's cumulative impact sums these across its stages, and a finished age's cumulative is **snapshotted when that age ends** so it survives later sample thinning (§5).
+A crisis's cumulative impact sums these across its stages, and a finished age's cumulative is **snapshotted when that age ends** so it survives later sample thinning (§6).
 
 ### Caveat: sampling resolution
 
-Because losses are summed from per-turn dips, coarse sampling (or the decimation of old samples that caps long games, §7) can **under-count** a loss, and on a heavily thinned window a loss figure drops to "-" rather than guess. Standing figures (current Military Power, counts) survive on a single sample. This is why the loss math reads raw, ignores rises, and why crisis cumulatives are snapshotted at their age boundary.
+Because losses are summed from per-turn dips, coarse sampling (or the decimation of old samples that caps long games, §8) can **under-count** a loss, and on a heavily thinned window a loss figure drops to "-" rather than guess. Standing figures (current Military Power, counts) survive on a single sample. This is why the loss math reads raw, ignores rises, and why crisis cumulatives are snapshotted at their age boundary.
 
-## 7. Behavior and persistence
+## 8. Behavior and persistence
 
-- Settings persist in `localStorage`. Recorded history persists per save game via the GameConfiguration store, carrying across quit/load and age transitions.
+- Settings persist in `localStorage`. Recorded history persists per save game via the GameConfiguration store, carrying across quit/load and age transitions. The chronicle is saved the same way, in the save file.
+- The Hall of Fame keeps one compact record per campaign in the shared `modSettings` entry of `localStorage`, beside the settings, so it can be read from the main menu. It writes only when that entry holds settings it recognizes and leaves every other mod's settings as they are. Each save also carries its own campaign's record, which is added back to the Hall of Fame whenever that save is played. Names are stored once for the whole archive rather than inside each game, so a game with its whole story is small and a full Hall of Fame keeps every game's timeline. Territory maps are the largest part, so they are kept for the most recently played games; past that, the older games give up their maps, then the other civilizations' timeline tracks, then their timelines, before any game is dropped; the game being played is always kept whole. Recording the same game again (a save from before Demographics was added, loaded twice) updates its one entry rather than adding another. When stored games cannot be read, a note under the Hall of Fame says so, and explains why when another mod's data is in the way (see [Compatibility](#12-compatibility)).
 - History sample caps are **automatic**: they scale with game speed and adapt to hardware (CPU cores / device memory / mobile) and game size (player count), shrinking retention on weak machines and many-civ games (floored so history is never starved). Chart rendering is additionally clamped to a per-series point budget scaled by the same capability factor, so a marathon-length line plots a bounded number of points after the visible-range filter.
 - **Complexity** (game Options → Mods → Demographics) sets how much of the dashboard is shown: **Basic** shows the core pages (Yields Per Turn, Economy & Resources, Society, Land & Settlements, Population, Global Relations, Military Power); **Standard** (default) and **Analyst** show every page, adding Religion, Agreements, Crises, and Soft Power.
 - Colorblind mode swaps chart and relationship colors to a colorblind-safe set.
 - **Spoiler guard** (on by default, Options → Mods → Demographics) hides the names, charts, and diplomacy and relations stats of civilizations you haven't met, so unmet civilizations render as placeholders and their lines show a gap. **History on first contact** chooses whether meeting a civilization reveals its full back-history or tracks it only from first contact. A banner below the views states the active analytics policy.
 - Multiplayer governance: an analytics policy stored in the shared `GameConfiguration` is enforced as a ceiling for every player that game — clients drop any civ the host's policy hides, and the banner notes when the host (rather than a local preference) is the binding constraint.
 
-## 8. Companion-mod integration
+## 9. Companion-mod integration
 
 Other mods can contribute to the dashboard through an optional, order-independent API on `globalThis.DemographicsMetricsAPI` (inert unless called, so the base mod is unchanged):
 
@@ -195,24 +218,25 @@ If late-game turns feel heavy with both mods active, **raise Emigration's *How o
 
 **Measuring the combined cost** (developer recipe, not gameplay): on a turn where both mods fire, the debug logs report Emigration's pass duration and Demographics' sample duration; opening the **Emigration** tab exercises the shared render core. Comparing those three tells you whether a turn spike is the Emigration pass, the Demographics sample, or the embedded page: the cross-mod bridge itself is a thin read-only layer over each mod's existing tallies.
 
-## 9. Install and run
+## 10. Install and run
 
 1. Subscribe, or place the `demographics` folder in the Mods directory:
    - Windows: `%localappdata%/Firaxis Games/Sid Meier's Civilization VII/Mods/`
    - macOS: `~/Library/Application Support/Civilization VII/Mods/`
 2. Enable Demographics in Additional Content.
 
-## 10. Usage
+## 11. Usage
 
-- Open from the Demographics button in the subsystem dock, the pause menu, or the end-of-game screen.
-- The top tabs pick a hub (Global Statistics, Geopolitics, World Rankings, plus **Emigration** when that companion mod is installed), the second row picks a page, and the pill row picks the chart.
+- Open from the Demographics button in the subsystem dock, the pause menu, or the end-of-game screen. From the end-of-game screen it opens on the Hall of Fame. The **Hall of Fame** button on the main menu shows past campaigns with no game loaded.
+- The top tabs pick a hub (Global Statistics, Geopolitics, History, World Rankings, plus **Emigration** when that companion mod is installed), the second row picks a page, and the pill row picks the chart.
 - The **Options** button (in the chart toolbar, and at the top right of Global Relations and World Rankings) opens the game's Options screen at **Mods → Demographics**.
 
-## 11. Compatibility
+## 12. Compatibility
 
 - Does not overwrite base-game files.
 - All engine reads are defensive: schema drift yields missing data, not crashes.
 - Persistence uses the GameConfiguration store (`Configuration.editGame()` / `getGame()`). If that API is unavailable, history is kept in memory for the session only.
+- **Stored games and other mods:** Civilization VII has a storage bug: when another mod has saved data under a name that sorts ahead of the shared mod-settings entry, the game returns that mod's data in its place. Demographics then leaves stored games alone, so no mod's settings are disturbed: the Hall of Fame shows the game being played and the games whose saves you load, and a note under it explains why. Every save keeps its own campaign's history either way.
 
 ## Credits & license
 
@@ -220,6 +244,6 @@ If late-game turns feel heavy with both mods active, **raise Emigration's *How o
 - Gedemon: CivGraphs (Civ VI).
 - Slothoth: Global Relations (Civ VII).
 - The Civilization modding community for documentation, samples, and testing.
-- Tower: Civilization VII rebuild.
+- Tower: Civilization VII rebuild; History and Hall of Fame carried over from Tower's History & Rankings mod.
 
 MIT. See [LICENSE](LICENSE).

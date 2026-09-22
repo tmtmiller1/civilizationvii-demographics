@@ -83,6 +83,28 @@ const allItems = [...modinfo.matchAll(/<Item(?:\s+locale="[^"]+")?>([^<]+\.js)<\
 const ghosts = allItems.filter((p) => !fs.existsSync(p));
 assert.equal(ghosts.length, 0, `modinfo references missing file(s): ${ghosts.join(", ")}`);
 
+// ── Shell group: everything the main-menu scripts reach must be declared there ─
+// fs:// only serves files the loaded group declares, so a module missing from the SHELL group fails
+// to load at the main menu even when the game group lists it (the Hall of Fame screen lives there).
+const shellGroup = (modinfo.match(/<ActionGroup id="demographics-shell"[\s\S]*?<\/ActionGroup>/) || [""])[0];
+assert.ok(shellGroup, "modinfo has no ActionGroup id=\"demographics-shell\"");
+const shellItems = (tag) => {
+  const sec = shellGroup.match(new RegExp(`<${tag}>[\\s\\S]*?</${tag}>`));
+  return sec ? [...sec[0].matchAll(/<Item(?:\s+locale="[^"]+")?>([^<]+)<\/Item>/g)].map((m) => m[1]) : [];
+};
+const shellDeclared = new Set([...shellItems("UIScripts"), ...shellItems("ImportFiles")].filter((x) => x.endsWith(".js")).map(VFS));
+const shellMissing = new Set();
+const shellFrontier = shellItems("UIScripts").map(VFS);
+const shellSeen = new Set(shellFrontier);
+while (shellFrontier.length) {
+  const n = shellFrontier.pop();
+  for (const t of graph.get(n) || []) {
+    if (!shellDeclared.has(t)) shellMissing.add(t);
+    if (!shellSeen.has(t)) { shellSeen.add(t); shellFrontier.push(t); }
+  }
+}
+assert.equal(shellMissing.size, 0, `shell group is missing module(s) the main menu imports: ${[...shellMissing].map(DISK).join(", ")}`);
+
 console.log(
   `modinfo harness passed (${declared.size} declared JS modules import-closed, ` +
     `${allItems.length} script Items all present)`

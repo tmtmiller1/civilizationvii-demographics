@@ -3,6 +3,29 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
+==== 2.7.0 | 2026-09-22 | src 68b1fe883ef0 | gen eb2892312b00 ====
+[b]Version 2.7.0 · 22 September 2026[/b]
+A History release. The former History & Rankings mod is now part of Demographics: a new [b]History[/b] tab tells the story of your campaign, and a [b]Hall of Fame[/b] under World Rankings, also reachable from the main menu, ranks every campaign you have played. All new text is localized across all 11 languages.
+
+[b]Added[/b]
+• History tab: Chronicle
+• History tab: Timeline
+• Civilization filter
+• Territory map
+• History tab: Lineage
+• Hall of Fame
+• Room for every game
+• Every Triumph explained
+• Leaders and Civilizations read clearly
+• Every Hall of Fame page is titled
+• Hall of Fame on the main menu
+• Results screen lands on the Hall of Fame
+
+[b]Known issues[/b]
+• Another mod's saved data can keep the Hall of Fame from storing past games
+
+Details in the [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/CHANGELOG.md]full changelog[/url].
+
 ==== 2.6.0 | 2026-09-22 | src cf192754452b | gen 6914fd4c7e4d ====
 [b]Version 2.6.0 · 22 September 2026[/b]
 A World Rankings release. Top 25 Settlements gains holy-city badges, world-leader icons, wonder completion dates, and an end-of-age board that keeps each finished age's top ten; all four World Rankings tabs now share one look, with podium-colored top rows and your own civilization or settlements outlined; category leaders are marked in the tables themselves; and Civilization Rank by Yield is split into two readable tables. Founding years and population trends now survive quitting the game. All new text is localized across all 11 languages.

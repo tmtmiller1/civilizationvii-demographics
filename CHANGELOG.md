@@ -5,7 +5,68 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
-## [Unreleased]
+## [2.7.0] - 2026-09-22
+
+A History release. The former History & Rankings mod is now part of Demographics: a new **History** tab tells the story
+of your campaign, and a **Hall of Fame** under World Rankings, also reachable from the main menu, ranks every campaign
+you have played. All new text is localized across all 11 languages.
+
+### Added
+- **History tab: Chronicle.** Your campaign's history, grouped by age. Each age opens with a summary of your
+  civilization's deeds (settlements founded, captured and lost, wonders, Triumphs, wars, the religion you founded,
+  civilizations destroyed), followed by every recorded event: settlements founded, taken or lost, wonders completed,
+  wars and peace, religions founded, Triumphs earned, crisis stages, natural disasters that strike a civilization's
+  land, first contacts, eliminations, new ages and victories. Filter by age or by kind of event, newest or oldest first.
+  Events about civilizations you have not met stay hidden, following the analytics policy.
+- **History tab: Timeline.** The whole game on one chart. A banner per age carries your civilization's emblem and the
+  age's dates. Below it run lanes for your wars (in the enemy's color, with their emblem), each age crisis stage by
+  stage, then one lane per kind of milestone (Wonders, Triumphs, Religion, Conquests, Victory & falls) drawn with the
+  game's own icons, such as each wonder's art and each religion's symbol. Then come every settlement you founded,
+  natural disasters, migration in and out (with the Emigration mod), your population curve with its milestones, and a
+  turn ruler. Pick all ages or one, zoom from 1× to 8×, pan, click the ruler to move the cursor, or press **Play** to
+  sweep through the game with each event named as it passes. Everything has a tooltip, and hovering the population lane
+  reads out the population at that turn.
+- **Civilization filter.** A **Civilizations** row above the timeline picks whose story it shows. Every game opens on
+  your own; add any civilization you met, or **All**, to see their milestones, settlements, wars with each other,
+  disasters on their land and population line on the same lanes.
+- **Territory map.** A hex map of the world above the timeline, laid out like the game's own minimap with one cell per
+  tile: terrain by biome, each civilization's land tinted in its color, settlements marked, and land you had not yet
+  explored left blank. It follows the timeline's cursor, so playback replays each empire's expansion and your
+  exploration. Civilizations you have not met stay off it.
+- **History tab: Lineage.** Every leader you have met, with the civilization they led in each age in their color, and
+  the turn a line ended.
+- **Hall of Fame.** A fifth World Rankings page listing every campaign played on this computer, the current one
+  included. It opens on **Best Games**: your totals, a podium of your three best games, the rest of your top ten, and
+  the game you are playing at its rank between its neighbours (from the main menu, your most recent game). Then
+  **Rankings** orders the games by result, then Triumphs across every age, then fewest turns, each with an honorific
+  from Augustus Caesar down to Ethelred the Unready, followed by leader and civilization tallies and records. Each game
+  opens a page with its leader, lineage and figures on one row, the territory map beside its rivals, its timeline with
+  playback, and its highlights across the page, age by age. Population shows as **Scaled Pop** (Demographics' real-world
+  figure) or **Civ Pop**. Any game can be removed under **Game options** at the foot of its page, and short unfinished
+  games are hidden unless you ask for them.
+- **Room for every game.** A Hall of Fame full of long games keeps every game's timeline: names are stored once for the
+  whole archive instead of inside each game, and positions are rounded, so a game with its whole story costs about a
+  third of what it did. Territory maps, being the largest part, are kept for the most recently played games; past that,
+  the older games give up their maps and then the other civilizations' timeline tracks, and only then is a game dropped.
+  The game being played is always kept whole. Recording the same game twice (a save from before Demographics was added,
+  loaded again) updates its one entry.
+- **Every Triumph explained.** In a game's highlights, each Triumph now says what it was earned for and what it gave, in
+  the game's own words. They are saved as the Triumph is earned, so they still read at the main menu and in ages the
+  game has moved on from.
+- **Leaders and Civilizations read clearly.** Each card gives its win rate over finished games as a bar, green for the
+  games won and red for the rest, with both parts named and given their share, and the attempts, most Triumphs and
+  average length beside it. A leader you have not finished a game with shows a grey, empty bar.
+- **Every Hall of Fame page is titled**, with a line saying what is on it, so a page opened from the main menu says what
+  it is.
+- **Hall of Fame on the main menu.** A **Hall of Fame** button on the main menu opens it with no game loaded.
+- **Results screen lands on the Hall of Fame.** The Demographics button on the end-of-game screen now opens World
+  Rankings on the Hall of Fame, so you see where the finished game ranks.
+
+### Known issues
+- **Another mod's saved data can keep the Hall of Fame from storing past games.** Because of a Civilization VII storage
+  bug, when another mod has saved data under a name that sorts ahead of the shared mod-settings entry, the game returns
+  that data in its place. Demographics then leaves stored games alone, so no mod's settings are disturbed: the Hall of
+  Fame shows the game being played and the games whose saves you load, and a note under it explains why.
 
 ## [2.6.0] - 2026-09-22
 

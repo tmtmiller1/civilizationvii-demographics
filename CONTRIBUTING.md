@@ -23,7 +23,7 @@ This must pass with **zero errors and zero warnings**. It runs:
 
 1. `tsc --noEmit` — JSDoc type checking (`checkJs`).
 2. `eslint ui` — style + size limits.
-3. the remediation test harness.
+3. every test harness in `tests/` (listed in `package.json`; `scripts/required-scripts-gate.mjs` fails the run if one goes missing), including the worst-case History load test `tests/history-stress.mjs`.
 
 ## Style limits (enforced by ESLint)
 
@@ -58,8 +58,23 @@ ui/
   storage/     history persistence (backend, load, schema, retention, cap)
   screen-demographics/
     screen/ charts/ views/ camera/ settlements/ styles/
-text/<locale>/ModText.xml     localized strings (10 locales)
+  history/     History tab and Hall of Fame
+    core/      logging, text (t() with saved-text fallback for the main menu), DOM helpers, game icons
+    capture/   per-turn world reading and diffing, crises, disasters, territory-map frames
+    store/     campaign document (GameConfiguration) and Hall of Fame archive (localStorage slice)
+    model/     timeline, territory map, narration, Hall of Fame rankings (pure, unit-tested)
+    views/     Chronicle, Timeline, Lineage, Hall of Fame pages, map canvas
+    screen/    main-menu Hall of Fame screen and button (shell scope)
+text/<locale>/ModText.xml     localized strings (11 locales)
 ```
+
+## Trying a change in game
+
+The game runs plain copies from its Mods folder, not the repo. `node scripts/deploy.mjs` replaces
+`Mods/demographics` with the files that ship, and `node scripts/deploy.mjs --check` reports a stale
+copy. Files under `ui/history/screen/` and the shell group of `demographics.modinfo` load at the
+main menu, where only setup text and no game data exist; `tests/modinfo.mjs` checks that nothing in
+that group imports game-only code.
 
 ## Releasing
 
