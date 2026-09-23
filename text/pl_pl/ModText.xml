@@ -11,7 +11,7 @@
 		<Text>Dane demograficzne</Text>
 	</Replace>
 	<Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="pl_PL">
-		<Text>Wykresy krok po kroku, rankingi cywilizacji, stosunki międzynarodowe, historia wojen oraz postępy w osiąganiu triumfu dla każdej napotkanej cywilizacji.</Text>
+		<Text>Wykresy krok po kroku, rankingi cywilizacji, stosunki międzynarodowe, historia wojen oraz postępy w osiąganiu triumfu dla każdej napotkanej cywilizacji. Zawiera opcjonalną naprawę pamięci dla błędu w Civilization VII; usuwa zapisane dane innego moda, uruchamia się tylko po naciśnięciu i najpierw informuje, co usuwa.</Text>
 	</Replace>
 	<Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="pl_PL">
 		<Text>Dane demograficzne</Text>
@@ -2639,6 +2639,7 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE" Language="pl_PL"><Text>Kolejność według wyniku (najpierw zwycięstwa), następnie liczby triumfów zdobytych we wszystkich epokach, a potem najmniejszej liczby tur.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="pl_PL"><Text>Ukryj krótkie gry</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="pl_PL"><Text>Pokaż wszystkie gry</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="pl_PL"><Text>Ukryte: {1_Count} {1_Count : plural 1?nieukończona gra; other?nieukończonych gier;} poniżej {2_Turns} tur</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="pl_PL"><Text>Zwycięstwo</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="pl_PL"><Text>Zwycięstwo: {1_Victory}</Text></Replace>
 <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="pl_PL">
@@ -2695,7 +2696,7 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="pl_PL"><Text>Najszybsze zwycięstwo</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="pl_PL"><Text>Najdłuższa gra</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="pl_PL"><Text>Gry są zapisywane na tym komputerze. Każdy plik zapisu przechowuje też własną historię.</Text></Replace>
-		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="pl_PL"><Text>W tej sesji nie udało się odczytać wcześniejszych gier z pamięci. Bieżące gry nadal się pojawiają, a każdy zapis gry po wczytaniu przywraca własną historię.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="pl_PL"><Text>W tej sesji nie udało się odczytać poprzednich gier z pamięci. Każda gra pozostaje zapisana we własnym zapisie.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="pl_PL"><Text>Oktawian August</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="pl_PL"><Text>Cyrus Wielki</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3" Language="pl_PL"><Text>Karol Wielki</Text></Replace>
@@ -2763,7 +2764,19 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR" Language="pl_PL"><Text>Wojna: {1_Civ} przeciw {2_Other}</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS" Language="pl_PL"><Text>Podboje</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="pl_PL"><Text>Zwycięstwo i upadki</Text></Replace>
-		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="pl_PL"><Text>Poprzednich gier nie można zachować na tym komputerze: przeszkadzają zapisane dane innego moda z powodu błędu zapisu w grze. Bieżące gry nadal się pojawiają, a każdy zapis gry po wczytaniu przywraca własną historię.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="pl_PL"><Text>Błąd w Civilization VII blokuje Galerię sław</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="pl_PL"><Text>Jest obejście. Kliknij tutaj, aby o nim przeczytać.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="pl_PL"><Text>Naprawa pamięci modów: najpierw przeczytaj</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="pl_PL"><Text>Dlaczego to potrzebne</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="pl_PL"><Text>Civilization VII 1.5.0 ma błąd: gdy mod prosi o własne zapisane dane, gra zwraca wpis, który jest pierwszy w kolejności alfabetycznej, niezależnie od tego, który mod pyta. Działają tylko dane tego jednego moda. To błąd, który musi naprawić Firaxis; do tego czasu ten przycisk jest jedynym obejściem.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="pl_PL"><Text>Co robi ten przycisk</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="pl_PL"><Text>Opróżnia wspólną pamięć i zostawia w niej jeden wpis: wspólny wpis ustawień, z którego korzysta większość modów z panelem opcji. Obejmuje to mod Demographics, jego ustawienia i informacje o poprzednich grach potrzebne tej funkcji. Gdy wspólny wpis ustawień jest jedynym, co zostało, to właśnie jego gra zwraca, więc korzystające z niego mody od tej chwili normalnie wczytują i zapisują ustawienia. Mod z osobnym własnym wpisem zostałby jednak przez to zepsuty: każdy osobny wpis jest usuwany, także ten, który był pierwszy w kolejności i jako jedyny naprawdę działał.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="pl_PL"><Text>Jeśli później inny mod ponownie zapisze własny wpis, lista przestaje się aktualizować, a ta naprawa jest proponowana ponownie.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="pl_PL"><Text>Napraw pamięć: usuń dane innego moda</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="pl_PL"><Text>Kliknij ponownie, aby usunąć zapisane dane tego moda i naprawić. Nie da się tego cofnąć.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="pl_PL"><Text>Anuluj</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="pl_PL"><Text>Pamięć naprawiona. Lista poprzednich gier w Galerii sław znów jest zapisywana na tym komputerze, a mody trzymające ustawienia we wspólnym wpisie od teraz poprawnie je zapisują i wczytują.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="pl_PL"><Text>Naprawa się nie powiodła. Każda gra pozostaje zapisana we własnym zapisie.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="pl_PL"><Text>Najlepsze gry</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE" Language="pl_PL"><Text>Twoje najlepsze rozgrywki</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST" Language="pl_PL"><Text>Reszta twojej pierwszej dziesiątki</Text></Replace>

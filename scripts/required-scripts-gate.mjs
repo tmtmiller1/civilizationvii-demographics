@@ -11,6 +11,7 @@ const required = [
   "release:gate",
   "test:required-scripts",
   "test:settings-clobber",
+  "test:storage-repair",
   "test:storage-schema",
   "test:storage-load-branches",
   "test:storage-backend-branches",
