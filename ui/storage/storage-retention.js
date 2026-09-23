@@ -56,6 +56,18 @@ export function writeStorePayload(store, payloadKey, history, derr) {
     derr("save: stringify threw:", e);
     return false;
   }
+  return writeSerializedPayload(store, payloadKey, serialized, derr);
+}
+
+/**
+ * Write an already-serialized payload to a store.
+ * @param {{ write: (key: string, value: string) => void }} store Persist store.
+ * @param {string} payloadKey Store payload key.
+ * @param {string} serialized Serialized payload envelope.
+ * @param {(...a: any[]) => void} derr Error logger.
+ * @returns {boolean} True on successful write.
+ */
+export function writeSerializedPayload(store, payloadKey, serialized, derr) {
   try {
     store.write(payloadKey, serialized);
     return true;
@@ -63,6 +75,36 @@ export function writeStorePayload(store, payloadKey, history, derr) {
     derr("save: store.write threw:", e);
     return false;
   }
+}
+
+/** Maximum cap-halving passes when a payload is over its soft byte budget. */
+const MAX_SHRINK_ATTEMPTS = 3;
+
+/**
+ * Serialize a history, halving its sample cap and re-running `tighten` while the payload is over
+ * the soft byte budget, at most MAX_SHRINK_ATTEMPTS times. `history.samples` is mutated; may throw
+ * from JSON.stringify like serializePayload.
+ * @param {{ samples: any[] }} history History object (mutated when shrunk).
+ * @param {{
+ *   cap: number,
+ *   softBytes: number,
+ *   tighten: (history: any, cap: number) => void
+ * }} options Effective sample cap (Infinity when unlimited), byte budget, tightening step.
+ * @returns {{ serialized: string, initialBytes: number, attempts: number }} Result.
+ */
+export function serializeWithinBudget(history, options) {
+  const { cap, softBytes, tighten } = options;
+  let serialized = serializePayload(history);
+  const initialBytes = serialized.length;
+  let effectiveCap = isFinite(cap) ? cap : history.samples.length;
+  let attempts = 0;
+  while (serialized.length > softBytes && attempts < MAX_SHRINK_ATTEMPTS) {
+    effectiveCap = Math.max(1, Math.floor(Math.min(effectiveCap, history.samples.length) / 2));
+    tighten(history, effectiveCap);
+    serialized = serializePayload(history);
+    attempts++;
+  }
+  return { serialized, initialBytes, attempts };
 }
 
 /**

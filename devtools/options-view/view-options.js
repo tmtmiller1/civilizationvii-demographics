@@ -2,11 +2,8 @@
 //
 // "Options" view: settings panel, history controls, session info.
 //
-// Checkbox pattern: lifted from vanilla panel-mini-map.js - see
-// createShowMinimapCheckbox / createLayerCheckbox for the canonical form.
 // fxs-checkbox takes a `selected` attribute (stringified bool) and emits
-// "component-value-changed" (ComponentValueChangeEventName, defined in
-// core/ui/component-support.js) with detail.value: boolean.
+// "component-value-changed" (ComponentValueChangeEventName) with detail.value: boolean.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -31,11 +28,11 @@ import {
 } from "/demographics/ui/core/demographics-tiers.js";
 import {
   appendStorageControlsPanel
-} from "/demographics/ui/screen-demographics/views/options/view-options-storage-controls.js";
+} from "./view-options-storage-controls.js";
 import {
   buildButtonRowPanel,
   buildSamplerRecoveryRowPanel
-} from "/demographics/ui/screen-demographics/views/options/view-options-actions.js";
+} from "./view-options-actions.js";
 
 /**
  * Persisted-setting accessor surface read off the render context.
@@ -182,7 +179,7 @@ function buildSubheading(text) {
 }
 
 /**
- * Localized label for an analytics-governance policy id (P0.1).
+ * Localized label for an analytics-governance policy id.
  * @param {string} policy A policy id.
  * @returns {string} The display label.
  */
@@ -194,10 +191,9 @@ function policyOptionLabel(policy) {
 }
 
 /**
- * Apply a chosen analytics policy (P0.1): persist the local preference, keep the
- * legacy `hideUnmetStats` / `showUnmetNames` keys in lockstep so every existing
- * consumer keeps working, push the host ceiling in multiplayer when hosting, and
- * reload so the banner + views reflect the new policy immediately.
+ * Apply a chosen analytics policy: persist the local preference, keep the
+ * `hideUnmetStats` / `showUnmetNames` keys in lockstep, push the host ceiling
+ * in multiplayer when hosting, and reload so the banner + views reflect it.
  * @param {OptionsCtx} ctx Render context.
  * @param {string} mode The chosen policy id.
  */
@@ -212,11 +208,9 @@ function applyAnalyticsPolicy(ctx, mode) {
 }
 
 /**
- * Build the analytics-visibility policy dropdown (combined design plan P0.1):
- * how much comparative data the screen exposes. In multiplayer a host's choice
- * also writes the GameConfiguration ceiling for all players (a hint row notes
- * this); a non-host only constrains their own view. Subsumes the legacy spoiler
- * toggle, which it keeps in sync.
+ * Build the analytics-visibility policy dropdown: how much comparative data the
+ * screen exposes. In multiplayer a host's choice also writes the GameConfiguration
+ * ceiling for all players; a non-host only constrains their own view.
  * @param {OptionsCtx} ctx Render context.
  * @returns {HTMLElement} The policy-control element (dropdown row + optional hint).
  */
@@ -246,7 +240,7 @@ function buildAnalyticsPolicyControl(ctx) {
 /**
  * Build the "on first contact" reveal-mode dropdown (a sub-row of the spoiler
  * toggle): reveal a civ's full back-history when met, or only track it forward
- * from first contact. Maps to the legacy `backfillMetHistory` boolean.
+ * from first contact. Maps to the `backfillMetHistory` boolean.
  * @param {OptionsCtx} ctx Render context.
  * @returns {HTMLElement} The dropdown-row element.
  */
@@ -269,17 +263,9 @@ function buildRevealModeControl(ctx) {
 /**
  * Append the toggle/option rows to `wrap`, grouped under section subheadings.
  *
- * NOTE: Toggles intentionally DO NOT call ctx.requestReload() (except colorblind,
- * which needs an immediate repaint). Reload clears + re-renders the host, which
- * would destroy the in-flight checkbox mid-event; other settings take effect on
- * the next open of History/Rankings.
- *
- * "Spoilers": one control hides ALL info (names + diplomacy/relations stats) for
- * civilizations the local player hasn't met. It writes the two legacy keys in
- * lockstep - `hideUnmetStats = value`, `showUnmetNames = !value` - so every
- * existing consumer of those keys keeps working without a schema migration. The
- * nested dropdown picks what happens once a civ IS met (full back-history vs
- * forward-only tracking).
+ * Toggles do not call ctx.requestReload() (except colorblind): a reload would
+ * destroy the in-flight checkbox mid-event, and other settings take effect on the
+ * next open. "Spoilers" writes `hideUnmetStats = value` and `showUnmetNames = !value`.
  * @param {HTMLElement} wrap The options container to append into.
  * @param {OptionsCtx} ctx Render context.
  */
@@ -316,12 +302,9 @@ function appendToggles(wrap, ctx) {
 }
 
 /**
- * Append the Top Cities camera section: the pseudo-cinematic toggle (on by
- * default; drives the "Cinematic view" button) and the experimental flyby
- * controls (toggle + length preset + subtle rotate). The flyby is on by
- * default and can be disabled here; the rotate/preset rows are visually
- * sub-rows of the flyby toggle. Settings live under the `topCities.*` namespace
- * inside the existing Demographics settings slice.
+ * Append the Top Cities camera section: the pseudo-cinematic toggle and the
+ * flyby controls (toggle + length preset + subtle rotate), both on by default.
+ * Settings live under the `topCities.*` namespace of the Demographics settings slice.
  * @param {HTMLElement} wrap The options container to append into.
  * @param {OptionsCtx} ctx Render context.
  */
@@ -437,12 +420,46 @@ function buildSessionInfo(ctx) {
   info.className = "demographics-session-info font-body text-xs";
   const samples = ctx.history?.samples?.length || 0;
   const schema = ctx.history?.version ?? "?";
-  const backend =
-    typeof GameTutorial !== "undefined" && typeof GameTutorial.setProperty === "function"
-      ? "GameTutorial"
-      : "in-memory";
-  info.textContent = t("LOC_DEMOGRAPHICS_OPT_SESSION_INFO", samples, schema, backend);
+  info.textContent = t("LOC_DEMOGRAPHICS_OPT_SESSION_INFO", samples, schema, historyBackendName());
+  const note = document.createElement("div");
+  note.className = "demographics-session-info__settings font-body text-xs";
+  note.textContent = t(settingsPersistenceTag(ctx));
+  info.appendChild(note);
   return info;
+}
+
+/**
+ * Where the per-game history is written, in the order pickPersistStore tries the backends.
+ * @returns {string} A backend name for the footer.
+ */
+function historyBackendName() {
+  if (typeof Configuration !== "undefined" && typeof Configuration.editGame === "function") {
+    return "GameConfiguration";
+  }
+  if (typeof GameTutorial !== "undefined" && typeof GameTutorial.setProperty === "function") {
+    return "GameTutorial";
+  }
+  return "in-memory";
+}
+
+/**
+ * The LOC tag describing whether settings changed this session are reaching storage. The settings
+ * module goes read-only for a session when the shared store returned another mod's data, could
+ * not be read, or did not read back what was written; until now that was only a console line.
+ * @param {OptionsCtx} ctx Render context.
+ * @returns {string} A LOC tag.
+ */
+function settingsPersistenceTag(ctx) {
+  let status = "ok";
+  try {
+    const fn = /** @type {*} */ (ctx.settings)?.persistenceStatus;
+    if (typeof fn === "function") status = fn.call(ctx.settings);
+  } catch (_) {
+    // A settings double without the accessor reports as saved.
+  }
+  if (status === "ok") return "LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED";
+  if (status === "unavailable") return "LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE";
+  return "LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED";
 }
 
 /**
@@ -463,7 +480,7 @@ export function render(host, ctx) {
   wrap.appendChild(buildHeading());
   appendInterfaceTier(wrap, ctx);
   appendToggles(wrap, ctx);
-  // UI complexity tiers (P1.5): progressive disclosure of advanced control groups.
+  // UI complexity tiers: progressive disclosure of advanced control groups.
   if (showCameraOptionsInTier()) appendCameraOptions(wrap, ctx);
   if (showStorageOptionsInTier()) appendStorageControls(wrap, ctx);
   wrap.appendChild(buildSamplerRecoveryRow(ctx));
@@ -472,7 +489,7 @@ export function render(host, ctx) {
 }
 
 /**
- * Localized label for a UI complexity tier id (P1.5).
+ * Localized label for a UI complexity tier id.
  * @param {string} tier A tier id.
  * @returns {string} The display label.
  */
@@ -483,7 +500,7 @@ function tierOptionLabel(tier) {
 }
 
 /**
- * Localized one-line description for a UI complexity tier id (P1.5).
+ * Localized one-line description for a UI complexity tier id.
  * @param {string} tier A tier id.
  * @returns {string} The description.
  */
@@ -495,7 +512,7 @@ function tierDescription(tier) {
 
 /**
  * Append the "Interface" section: the UI complexity tier dropdown plus a live
- * description of the chosen tier (P1.5). Changing it reloads so the disclosed
+ * description of the chosen tier. Changing it reloads so the disclosed
  * pages / tabs / controls update immediately.
  * @param {HTMLElement} wrap The options container to append into.
  * @param {OptionsCtx} ctx Render context.

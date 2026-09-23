@@ -1,12 +1,9 @@
 // settlements-adjacency.js
 //
 // Computes a placed building's / quarter's ADJACENCY yield bonus from the game's
-// static adjacency rules against the LIVE map — the engine exposes no per-placed-
-// building adjacency total (only a prospective placement sim), so this recomputes
-// it: for each of a building's Constructible_Adjacencies rules, count the
-// qualifying neighbor tiles and multiply by the rule's YieldChange (÷ TilesRequired).
-// A faithful best-effort over the common condition types; edge rules (appeal,
-// biome, trait-exclusions, TilesRequired>1 rounding) are approximated. Defensive.
+// static Constructible_Adjacencies rules against the LIVE map, since the engine
+// exposes no per-placed-building adjacency total. Common condition types are
+// faithful; edge rules (appeal, biome, trait-exclusions) are approximated.
 
 /** Engine globals via an any-cast (avoids ambient-declaration coupling for tsc). */
 const G = /** @type {*} */ (globalThis);

@@ -2,28 +2,11 @@
 //
 // Repairs the shared localStorage store when the game cannot read it.
 //
-// Civilization VII serves every localStorage read from the FIRST row of its store by key order
-// (the engine dispatches reads down an index query instead of the key query that sits next to it).
-// So whichever mod owns the first-sorting key is the only one whose settings load; every other mod
-// reads that mod's data instead of its own. When another mod's data sits in that slot, this mod
-// cannot read its settings or its Hall of Fame archive back, and it refuses to write - what it
-// reads is not its own value, so a write would copy a stranger's blob into the shared key.
-//
-// The repair is the one move that restores reads for EVERY settings-style mod at once: empty the
-// store, then write the shared `modSettings` key back as the only row, so the readable slot belongs
-// to the key all of those mods share. Watched in game 2026-09-22 (storage-repair-probe): clear()
-// and removeItem() both work, a rewritten `modSettings` reads back correctly and survives a
-// restart, and reads break again the moment any mod writes a key that sorts ahead of it.
-//
-// What it costs is real and irreversible: every other top-level key's bytes are deleted. Exactly
-// one of them was working - the key in the readable slot - and its owner loses data it was using.
-// Everything else (other own-key rows, and whatever slice the shared key held) was unreadable by its
-// owners already: each settings-style mod read row 1, bolted its slice onto THAT and wrote it back,
-// so the shared key only ever held the last writer's slice and nobody could read it. After the repair
-// those mods write their slices back into the shared key as they save, and reads are correct. The
-// store cannot be enumerated (`localStorage.key(i)` returns null for every index), so there is no
-// way to list what is there, delete one key blindly, or back the store up from inside the game.
-// That is why this only ever runs on an explicit request.
+// Civilization VII serves every localStorage read from the first row of its store by key order, so
+// only the mod owning the first-sorting key can read its settings. The repair empties the store and
+// writes the shared `modSettings` key back as the only row, so the readable slot belongs to the key
+// settings-style mods share. It deletes every other key's bytes and the store cannot be enumerated
+// or backed up from inside the game, so it only runs on an explicit request. See docs/civ7-storage-bug.md.
 //
 // This module deliberately imports nothing from the mod: the callers pass in the slices to write.
 

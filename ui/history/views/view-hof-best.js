@@ -1,16 +1,15 @@
 // view-hof-best.js
 //
-// The Hall of Fame's landing page: your best playthroughs, and the current game in context. A slim
-// strip of totals, a podium for the three best games, the rest of the top ten, and the game being
-// played (at the main menu, the latest game) placed at its rank between its neighbours, beside
-// victories by type. Ranking follows history-hof.js ranked(): victories first, then Triumphs across
-// every age, then fewest turns.
+// The Hall of Fame's landing page: a strip of totals, a podium for the three best games, the rest
+// of the top ten, and the current game placed at its rank between its neighbours, beside victories
+// by type. Ranking follows history-hof.js ranked().
 
 import { el } from "/demographics/ui/history/core/history-dom.js";
 import { t, num, typeName, victoryName } from "/demographics/ui/history/core/history-text.js";
-import { overview, standing, titleIndex } from "/demographics/ui/history/model/history-hof.js";
+import { overview, standing, statOf, titleIndex } from "/demographics/ui/history/model/history-hof.js";
 import {
-  emptyState, leaderIcon, outcomeMark, pageHead, section, statTile, table, victoryIcon, civProgression
+  emptyState, laurelMedal, leaderIcon, outcomeMark, pageHead, section, statTile, table, trophyIcon,
+  victoryIcon, civProgression
 } from "/demographics/ui/history/views/history-widgets.js";
 import { outcomeLabel, titleName } from "/demographics/ui/history/views/history-format.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
@@ -58,7 +57,7 @@ function totals(records) {
     statTile(num(o.victories), t("LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES")),
     statTile(t("LOC_DEMOGRAPHICS_HIST_PERCENT", rate), t("LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE")),
     statTile(num(o.turns), t("LOC_DEMOGRAPHICS_HIST_STAT_TURNS")),
-    statTile(num(o.triumphs), t("LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS"))
+    statTile(num(o.triumphs), t("LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS"), trophyIcon())
   ]);
 }
 
@@ -73,13 +72,17 @@ function totals(records) {
  */
 function podiumCard(rec, rank, best, currentId, ctx) {
   const card = el("div", { cls: "dgh-podium-card dgh-podium-card--" + rank + (rec.id === currentId ? " is-current" : "") }, [
-    el("div", { cls: "dgh-podium-rank", text: num(rank) }),
+    laurelMedal(rank, "dgh-podium-rank"),
     leaderIcon(rec.leader, "dgh-leader-icon dgh-podium-portrait"),
     el("div", { cls: "dgh-podium-honor", text: titleName(titleIndex(rec, best)) }),
     el("div", { cls: "dgh-podium-name", text: typeName(rec.leaderName, rec.leader) }),
     progression(rec, "dgh-progression--sm dgh-podium-civs"),
     el("div", { cls: "dgh-podium-result" }, [outcomeMark(rec.outcome), el("div", { text: outcomeLabel(rec) })]),
-    el("div", { cls: "dgh-podium-figures", text: t("LOC_DEMOGRAPHICS_HIST_N_TURNS", rec.turns) + "  ·  " + t("LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS", rec.stats.triumphs) }),
+    el("div", { cls: "dgh-podium-figures" }, [
+      el("div", { text: t("LOC_DEMOGRAPHICS_HIST_N_TURNS", rec.turns) + "  ·  " }),
+      trophyIcon("dgh-trophy-icon dgh-trophy-icon--sm"),
+      el("div", { text: t("LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS", statOf(rec, "triumphs")) })
+    ]),
     rec.id === currentId ? el("div", { cls: "dgh-podium-current", text: t(ctx.live ? "LOC_DEMOGRAPHICS_HIST_THIS_GAME" : "LOC_DEMOGRAPHICS_HIST_LATEST_GAME") }) : null
   ]);
   card.addEventListener("click", () => openGame(rec.id, ctx));
@@ -121,7 +124,7 @@ function rankTable(rows, best, currentId, ctx, narrow = false) {
     num(rank), titleName(titleIndex(rec, best)), leaderIcon(rec.leader, "dgh-leader-icon dgh-leader-icon--sm"),
     typeName(rec.leaderName, rec.leader), progression(rec, "dgh-progression--sm"),
     el("div", { cls: "dgh-result-row" }, [outcomeMark(rec.outcome), el("div", { cls: "dgh-result", text: outcomeLabel(rec) })]),
-    num(rec.turns), num(rec.stats.triumphs)
+    num(rec.turns), num(statOf(rec, "triumphs"))
   ].filter(keep));
   return table(cols, cells, {
     onRow: (i) => openGame(rows[i].rec.id, ctx),
@@ -180,7 +183,7 @@ function victoriesByType(records) {
  * @param {HofCtx} ctx Context.
  */
 export function renderBest(host, records, all, ctx) {
-  const best = Math.max(0, ...all.map((r) => r.stats.triumphs));
+  const best = Math.max(0, ...all.map((r) => statOf(r, "triumphs")));
   const st = standing(records, ctx.live?.id || "", TOP_N);
   const currentId = st.current?.rec.id || "";
   const rest = st.top.slice(3).map((rec, i) => ({ rec, rank: i + 4 }));

@@ -46,6 +46,7 @@ function groupByCiv(settlements, field, typesField) {
   /** @type {Map<string, CivColumn>} */
   const groups = new Map();
   for (const s of settlements) {
+    if (!s) continue;
     // City-states are excluded: this is a comparative civ-vs-civ board, so it
     // shows only major civilizations (matching Civ Ranking / Relations / Wars).
     if (s.owner && s.owner.isMajor === false) continue;
@@ -79,19 +80,19 @@ function aggregate(names) {
 function settlementRow(item) {
   const drill = Array.isArray(item.types) && item.types.length > 0;
   const wrap = U.box("border-bottom:1px solid rgba(0,0,0,0.18)");
-  const row = U.box("display:flex;align-items:center;gap:8px;padding:6px 12px;" + (drill ? "cursor:pointer" : ""));
+  const row = U.box("display:flex;align-items:center;gap:0.444rem;padding:0.333rem 0.667rem;" + (drill ? "cursor:pointer" : ""));
   // Drill-down settlements carry a leading "+" on the name so it's clear the card
   // opens to reveal that settlement's individual buildings.
-  const nameBox = U.box("flex:1 1 auto;color:" + U.INK + ";font-size:0.9rem;white-space:nowrap;" +
+  const nameBox = U.box("flex:1 1 auto;color:" + U.INK + ";font-size:var(--dg-fs-85);white-space:nowrap;" +
     "overflow:hidden;text-overflow:ellipsis", item.name, "font-body");
   if (drill) nameBox.insertBefore(U.expandBadge(), nameBox.firstChild);
   row.appendChild(nameBox);
-  row.appendChild(U.box("flex:0 0 auto;color:" + U.INK_MUTED + ";font-size:0.85rem", String(item.count), "font-body"));
+  row.appendChild(U.box("flex:0 0 auto;color:" + U.INK_MUTED + ";font-size:var(--dg-fs-85)", String(item.count), "font-body"));
   wrap.appendChild(row);
   if (drill) {
-    const sub = U.box("display:none;padding:2px 12px 8px 24px");
+    const sub = U.box("display:none;padding:0.111rem 0.667rem 0.444rem 1.333rem");
     for (const [name, n] of aggregate(item.types || [])) {
-      sub.appendChild(U.box("color:" + U.INK_DIM + ";font-size:0.82rem;padding:1px 0",
+      sub.appendChild(U.box("color:" + U.INK_DIM + ";font-size:var(--dg-fs-85);padding:0.056rem 0",
         n > 1 ? name + " ×" + n : name, "font-body"));
     }
     let open = false;
@@ -104,7 +105,7 @@ function settlementRow(item) {
 /** @param {CivColumn} civ @returns {HTMLElement} A civ column (header + settlement rows). */
 function civColumn(civ) {
   const col = U.box("flex:0 0 auto;min-width:12rem;max-width:20rem;display:flex;flex-direction:column;" +
-    "border:1px solid " + U.BORDER + ";border-radius:6px;overflow:hidden;background:" + U.PANEL);
+    "border:1px solid " + U.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + U.PANEL);
   col.appendChild(U.columnHeader(civ.name, civ.color, civ.total));
   civ.items.sort((a, b) => b.count - a.count);
   for (const it of civ.items) col.appendChild(settlementRow(it));

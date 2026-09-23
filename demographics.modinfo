@@ -10,7 +10,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.7.2</Version>
+        <Version>2.7.3</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -69,6 +69,7 @@
                     <Item>ui/history/store/history-campaign-store.js</Item>
                     <Item>ui/history/store/history-campaign.js</Item>
                     <Item>ui/core/civ-color-utils.js</Item>
+                    <Item>ui/core/demographics-font-ladder.js</Item>
                     <Item>ui/metrics/metrics-format.js</Item>
                     <Item>ui/history/capture/history-live.js</Item>
                     <Item>ui/history/views/history-app.js</Item>
@@ -101,6 +102,7 @@
                     <Item>ui/demographics-bootstrap.js</Item>
                     <Item>ui/demographics-endgame-entry.js</Item>
                     <Item>ui/screen-demographics/screen/screen-demographics.js</Item>
+                    <Item>ui/screen-demographics/screen/screen-lifecycle-support.js</Item>
                     <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/demographics-options.js</Item>
                 </UIScripts>
@@ -214,8 +216,8 @@
                     <Item>ui/screen-demographics/views/relations/relations-settings.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-ring-compute.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-ring-svg.js</Item>
-                    <Item>ui/screen-demographics/views/options/view-options.js</Item>
                     <Item>ui/core/civ-color-utils.js</Item>
+                    <Item>ui/core/demographics-font-ladder.js</Item>
                     <Item>ui/screen-demographics/charts/crises/chart-crisis-graphs.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line-axis.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line-config.js</Item>
@@ -261,8 +263,6 @@
                     <Item>ui/screen-demographics/views/history/history-tables-csv.js</Item>
                     <Item>ui/screen-demographics/views/history/view-history-chart-render.js</Item>
                     <Item>ui/screen-demographics/views/history/view-history-state.js</Item>
-                    <Item>ui/screen-demographics/views/options/view-options-actions.js</Item>
-                    <Item>ui/screen-demographics/views/options/view-options-storage-controls.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-node-info.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-ring-svg-backdrop.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-ring-svg-edges.js</Item>

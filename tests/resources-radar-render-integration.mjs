@@ -1,4 +1,5 @@
-// Covers: chart-resources.js, chart-triumphs-radar.js
+// Covers: chart-resources.js, chart-triumphs-radar.js, chart-quarters-board.js,
+// chart-settlement-boards.js (engine-table hardening).
 // Uses DOM stub + fake Chart constructor.
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
@@ -88,6 +89,43 @@ renderLegacyRadar(host2, {
   ageSource: "current"
 });
 assert.ok(host2.children.length > 0);
+
+// ── boards: non-iterable GameInfo tables ─────────────────────────────────
+// The GameInfo tables are read live; a table that is present but NOT iterable must be swallowed
+// inside the board's safe() (the iteration used to sit outside it), and the boards still render.
+const { renderQuartersBoard } = await import(
+  "/demographics/ui/screen-demographics/charts/boards/chart-quarters-board.js"
+);
+const { renderConstructiblesBoard } = await import(
+  "/demographics/ui/screen-demographics/charts/boards/chart-settlement-boards.js"
+);
+const city = {
+  name: "LOC_CITY_A",
+  isTown: false,
+  location: { x: 1, y: 1 },
+  Constructibles: { getIds: () => [{ id: 1 }] }
+};
+globalThis.Players = {
+  getAlive: () => [{ id: 1, isMajor: true, Cities: { getCities: () => [city, null] } }],
+  get: () => ({ id: 1, isMajor: true })
+};
+globalThis.GameInfo = {
+  TypeTags: 42,
+  UniqueQuarters: 7,
+  Constructibles: { lookup: () => ({ Name: "LOC_B", ConstructibleClass: "BUILDING" }) },
+  Leaders: { lookup: () => null },
+  Civilizations: { lookup: () => null }
+};
+globalThis.Constructibles = { getByComponentID: () => ({ type: "BUILDING_X", location: { x: 1, y: 1 } }) };
+const boardHost = document.createElement("div");
+renderQuartersBoard(boardHost, {});
+assert.ok(boardHost.children.length > 0, "quarters board renders with a non-iterable TypeTags table");
+const boardHost2 = document.createElement("div");
+renderConstructiblesBoard(boardHost2, { field: "buildings", typesField: "buildingTypes" });
+assert.ok(boardHost2.children.length > 0, "constructibles board renders");
+delete globalThis.Players;
+delete globalThis.GameInfo;
+delete globalThis.Constructibles;
 
 delete globalThis.document;
 delete globalThis.requestAnimationFrame;

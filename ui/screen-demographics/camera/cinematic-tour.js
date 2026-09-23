@@ -264,12 +264,9 @@ export function establishShot(city, rotate, role, caption) {
 }
 
 /**
- * Build the city-flavor caption descriptor for an establish shot , the line shown
- * over the wide city overview that the opening + finale shots previously left
- * blank. Returns RAW DATA only (no localization here, so this module needs no
- * imports); the overlay's captionText() resolves it. The opening leads with the
- * founding year (a sense of history); the finale (or an opening with no founding
- * year) closes on the settlement's world standing rank.
+ * Build the city-flavor caption descriptor for an establish shot, as raw data the overlay's
+ * captionText() resolves. The opening leads with the founding year; the finale (or an opening
+ * with no founding year) closes on the settlement's world standing rank.
  * @param {*} target Settlement record.
  * @param {string} role "open" | "finale".
  * @returns {{foundedYear: string}|{standingRank: number}|null} The descriptor.
@@ -309,12 +306,9 @@ export function obliqueShot(plot, angle, duration, caption) {
 }
 
 /**
- * Build a two-shot POI vignette: an approach fly-past, then an orbit that centers
- * on the POI. The approach carries a NEUTRAL city interstitial (`approachCap`, e.g.
- * "Aerial view of Rome") , never the POI name , so the fly-past, which sweeps past
- * the target onto whatever's beyond it, can't mislabel a neighbor. The POI's own
- * caption appears only on the orbit, once the camera is actually centered on it.
- * Every leg still says something.
+ * Build a two-shot POI vignette: an approach fly-past, then an orbit that centers on the POI.
+ * The approach carries a neutral city interstitial (`approachCap`), never the POI name, so the
+ * fly-past can't mislabel a neighbor; the POI's own caption appears only on the orbit.
  * @param {{loc: {x: number, y: number}, cap: *}} poi Point of interest.
  * @param {number} index The POI index.
  * @param {*} approachCap Neutral caption for the approach leg.

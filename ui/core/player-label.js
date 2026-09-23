@@ -1,11 +1,9 @@
 // player-label.js
 //
-// Single source of truth for the Civ/Leader name ORDER shown across every view
-// (line-chart legends, dropdowns, rankings, settlements, relations). A global
-// flag + persisted setting, modeled on chart-shared.js#xAxisMode: consumers call
-// orderedNames() to get [primary, secondary] and keep their own layout (inline
-// "primary (secondary)", two-line, or "primary, secondary"); the toggle only
-// changes which name leads, never a view's layout.
+// Single source of truth for the Civ/Leader name ORDER shown across every view.
+// A global flag + persisted setting: consumers call orderedNames() to get
+// [primary, secondary] and keep their own layout; the toggle only changes which
+// name leads.
 
 /** @typedef {"civLeader"|"leaderCiv"} NameOrder */
 

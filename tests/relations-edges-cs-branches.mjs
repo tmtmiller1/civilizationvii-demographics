@@ -338,6 +338,19 @@ function testEdgeBuilderDefensivePaths() {
   const attitudeEdges = buildCsAttitudeEdges([1, 2], [300, 301, 302], 2);
   assert.equal(attitudeEdges.length, 0, "invalid/missing attitude data should safely emit no edges");
 
+  // getPlayerEvents handing back a plain (non-iterable) object must not reach
+  // the for..of consumer; the reader coerces it to [].
+  globalThis.Game = {
+    Diplomacy: {
+      getPlayerEvents: () => ({ length: 1, 0: { actionType: 21, targetPlayer: 1 } })
+    }
+  };
+  assert.deepEqual(
+    buildCsAgreementEdges([1], [300], 2),
+    [],
+    "plain-object CS events should be treated as an empty list"
+  );
+
   globalThis.Players = prev.Players;
   globalThis.Game = prev.Game;
   globalThis.GameInfo = prev.GameInfo;

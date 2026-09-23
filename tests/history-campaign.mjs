@@ -3,6 +3,9 @@ import {
   newCampaign, isCampaign, ensureAge, upsertPlayer, appendEvents, trimEvents, appendSample,
   applyOutcome, triumphCounts, noteTriumphs, EVENTS_CAP, SERIES_CAP
 } from "/demographics/ui/history/store/history-campaign.js";
+import {
+  CAMPAIGN_KEY, CAMPAIGN_REJECTED_KEY, campaignRejectedKey, loadCampaign, saveCampaign
+} from "/demographics/ui/history/store/history-campaign-store.js";
 import { pstate, world } from "./_history-fixtures.mjs";
 
 const setup = { speed: "S", difficulty: "D", mapSize: "M", mapScript: "x.js", startAge: "AGE_ANTIQUITY" };
@@ -114,6 +117,90 @@ const fresh = () => newCampaign({ id: "g1", seed: 7, now: 1000, setup, local: 0 
   const c = fresh();
   applyOutcome(c, [{ t: 90, a: 1, k: "elim", p: 0 }], teamOf);
   assert.equal(c.outcome.status, "defeat");
+}
+
+// Store: a campaign from a newer mod version (or corrupt text) is parked under the rejected key,
+// a later save leaves it alone, and a re-upgrade restores it when the primary key is empty.
+{
+  const map = new Map();
+  const savedConfiguration = globalThis.Configuration;
+  const savedConsoleError = console.error;
+  const errors = [];
+  globalThis.Configuration = {
+    getGame: () => ({ getValue: (k) => (map.has(k) ? map.get(k) : null) }),
+    editGame: () => ({ setValue: (k, v) => map.set(k, v) })
+  };
+  console.error = (...a) => errors.push(a.join(" "));
+  const SLOT_V1 = campaignRejectedKey(1);
+  const SLOT_V2 = campaignRejectedKey(2);
+  const snapshot = () => JSON.stringify([...map.entries()].sort());
+  try {
+    // Clean first run: nothing is parked.
+    assert.equal(loadCampaign(), null);
+    assert.equal(map.size, 0, "an empty store parks nothing");
+
+    // (a) A newer-version document loads as absent, is parked in ITS version's slot, and the
+    // primary key is untouched.
+    const newer = JSON.stringify({ ...fresh(), v: 2 });
+    map.set(CAMPAIGN_KEY, newer);
+    assert.equal(loadCampaign(), null, "a newer schema version is not loaded");
+    assert.equal(map.get(CAMPAIGN_KEY), newer, "the load itself does not overwrite the primary key");
+    assert.equal(map.get(SLOT_V2), newer, "the original text is parked under the v2 slot");
+    assert.ok(!map.has(CAMPAIGN_REJECTED_KEY), "a versioned document does not use the unversioned slot");
+    assert.ok(errors.some((e) => /version 2 is not 1/.test(e) && /bytes=\d+/.test(e)), "reason and bytes are logged");
+
+    // (b) A save writes the primary key and leaves the parked document alone.
+    assert.ok(saveCampaign(fresh()));
+    assert.notEqual(map.get(CAMPAIGN_KEY), newer);
+    assert.equal(map.get(SLOT_V2), newer, "save does not touch the parked slot");
+
+    // (c) Primary empty + a parked v1 document: restored, written back, its slot cleared, the v2
+    // slot still intact (the round trip loses neither build's data).
+    const parked = JSON.stringify(fresh());
+    map.set(CAMPAIGN_KEY, "");
+    map.set(SLOT_V1, parked);
+    const restored = loadCampaign();
+    assert.ok(restored && restored.id === "g1", "the parked v1 document is restored");
+    assert.equal(map.get(CAMPAIGN_KEY), parked, "restored text is written back to the primary key");
+    assert.equal(map.get(SLOT_V1), "", "restore clears the v1 slot");
+    assert.equal(map.get(SLOT_V2), newer, "the v2 slot is untouched by the restore");
+
+    // (d) Garbage text parks in the unversioned slot; park runs BEFORE restore, so an unusable
+    // primary is parked even when a parked v1 document replaces it.
+    map.set(CAMPAIGN_KEY, "{not-json");
+    assert.equal(loadCampaign(), null);
+    assert.equal(map.get(CAMPAIGN_REJECTED_KEY), "{not-json", "garbage is parked");
+    map.set(CAMPAIGN_KEY, "");
+    assert.equal(loadCampaign(), null, "a parked document this version cannot use is not restored");
+    assert.equal(map.get(CAMPAIGN_REJECTED_KEY), "{not-json", "and it stays parked");
+    map.set(CAMPAIGN_KEY, newer);
+    map.set(SLOT_V1, parked);
+    assert.ok(loadCampaign()?.id === "g1", "restored over an unusable primary");
+    assert.equal(map.get(SLOT_V2), newer, "which was parked first");
+    assert.equal(map.get(CAMPAIGN_KEY), parked);
+
+    // mayWrite false (a non-host client in a networked game): no GameConfiguration write at all.
+    // A v2 primary is neither overwritten nor parked; a parked v1 document is returned in memory
+    // but not written back and its slot is not cleared.
+    map.clear();
+    map.set(CAMPAIGN_KEY, newer);
+    const noWrite = { mayWrite: () => false };
+    const beforeA = snapshot();
+    assert.equal(loadCampaign(noWrite), null);
+    assert.equal(snapshot(), beforeA, "read-only client: v2 primary untouched and not parked");
+    map.set(CAMPAIGN_KEY, "");
+    map.set(SLOT_V1, parked);
+    const beforeB = snapshot();
+    assert.ok(loadCampaign(noWrite)?.id === "g1", "read-only client still gets the parked document");
+    assert.equal(snapshot(), beforeB, "read-only client: nothing written back, slot not cleared");
+    assert.ok(loadCampaign({ mayWrite: () => { throw new Error("no network"); } })?.id === "g1");
+    assert.equal(snapshot(), beforeB, "a throwing predicate counts as may-not-write");
+    assert.ok(loadCampaign({ mayWrite: () => true })?.id === "g1");
+    assert.equal(map.get(CAMPAIGN_KEY), parked, "the host writes it back");
+  } finally {
+    globalThis.Configuration = savedConfiguration;
+    console.error = savedConsoleError;
+  }
 }
 
 console.log("history-campaign harness passed");

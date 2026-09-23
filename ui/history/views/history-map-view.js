@@ -1,11 +1,9 @@
 // history-map-view.js
 //
 // Paints the territory map (model/history-map.js) as a pointy-top hex field on a canvas, laid out as
-// the game's own minimap is (north at the top, odd rows shifted half a hex): terrain by biome, each
-// civilization's land tinted in its color over it, independent land in grey, unexplored cells
-// blank, settlements as ringed dots. The timeline drives it: show(at) paints the frame at a timeline position, so
-// playback replays the expansion. Every color is checked before it reaches the canvas (a malformed
-// color string can take down the renderer, which JS cannot catch).
+// the game's own minimap is. The timeline drives it: show(at) paints the frame at a timeline
+// position. Every color is checked before it reaches the canvas, since a malformed color string can
+// take down the renderer, which JS cannot catch.
 
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
 import { derr } from "/demographics/ui/history/core/history-log.js";
@@ -168,7 +166,7 @@ function paintSettlements(g, L, mv, f, colorOf) {
   g.lineWidth = 1.5;
   g.strokeStyle = "#1a140c";
   g.fillStyle = "#fff8e6";
-  for (const c of f.c) {
+  for (const c of f.c || []) {
     const i = Number(c[0]);
     if (!(i >= 0 && i < n) || !colorOf(Number(c[1]))) continue;
     const p = cellCenter(L, mv, i);
@@ -194,7 +192,7 @@ export function holders(mv, f) {
     h.cells++;
     by.set(o, h);
   }
-  for (const c of f.c) {
+  for (const c of f.c || []) {
     const h = by.get(Number(c[1]));
     if (h) h.towns++;
   }
@@ -202,7 +200,37 @@ export function holders(mv, f) {
 }
 
 /**
- * The map panel.
+ * Fill the legend for a frame: title, when, and who holds land (most first, ten at most).
+ * @param {HTMLElement} legend Legend (emptied).
+ * @param {MapView} mv Map.
+ * @param {MapView["frames"][number]} f Frame.
+ * @param {Cast} cast Cast.
+ * @param {{ageAt: (at:number) => string, whenAt: (at:number) => string}} labels Age and position labels.
+ */
+function fillLegend(legend, mv, f, cast, labels) {
+  clear(legend);
+  legend.appendChild(el("div", { cls: "dgh-map-title", text: t("LOC_DEMOGRAPHICS_HIST_MAP_TITLE") }));
+  legend.appendChild(el("div", { cls: "dgh-map-when", text: labels.whenAt(f.at) }));
+  const age = labels.ageAt(f.at);
+  for (const h of holders(mv, f).filter((x) => cast.known(x.pid) && cast.color(x.pid)).slice(0, 10)) {
+    const civ = cast.civType(h.pid, age);
+    const chip = el("div", { cls: "dgh-map-legend-item" + (h.pid === cast.local ? " is-mine" : "") }, [
+      el("div", { cls: "dgh-civ-dot", style: { backgroundColor: safeColor(cast.color(h.pid)) || "#85878c" } }),
+      civ ? civIcon(civ, "dgh-civ-icon dgh-map-legend-icon") : null,
+      el("div", { cls: "dgh-map-legend-name", text: cast.civName(h.pid, age) || cast.leaderName(h.pid) }),
+      h.towns ? el("div", { cls: "dgh-map-legend-towns" }, [
+        el("div", { cls: "dgh-map-house" }, [el("div", { cls: "dgh-tl-found-roof" })]),
+        el("div", { text: String(h.towns) })
+      ]) : null
+    ]);
+    legend.appendChild(chip);
+  }
+}
+
+/**
+ * The map panel. show() is called from the timeline's playback timer and its click handlers, so it
+ * never throws: a frame that cannot be painted or described is logged and the panel keeps its last
+ * good state.
  * @param {MapView} mv Map.
  * @param {Cast} cast Cast.
  * @param {(at:number) => string} ageAt Age type at a timeline position.
@@ -229,22 +257,10 @@ export function mapPanel(mv, cast, ageAt, whenAt = () => "") {
     } catch (e) {
       derr("map paint failed", e);
     }
-    clear(legend);
-    legend.appendChild(el("div", { cls: "dgh-map-title", text: t("LOC_DEMOGRAPHICS_HIST_MAP_TITLE") }));
-    legend.appendChild(el("div", { cls: "dgh-map-when", text: whenAt(f.at) }));
-    const age = ageAt(f.at);
-    for (const h of holders(mv, f).filter((x) => cast.known(x.pid) && cast.color(x.pid)).slice(0, 10)) {
-      const civ = cast.civType(h.pid, age);
-      const chip = el("div", { cls: "dgh-map-legend-item" + (h.pid === cast.local ? " is-mine" : "") }, [
-        el("div", { cls: "dgh-civ-dot", style: { backgroundColor: safeColor(cast.color(h.pid)) || "#85878c" } }),
-        civ ? civIcon(civ, "dgh-civ-icon dgh-map-legend-icon") : null,
-        el("div", { cls: "dgh-map-legend-name", text: cast.civName(h.pid, age) || cast.leaderName(h.pid) }),
-        h.towns ? el("div", { cls: "dgh-map-legend-towns" }, [
-          el("div", { cls: "dgh-map-house" }, [el("div", { cls: "dgh-tl-found-roof" })]),
-          el("div", { text: String(h.towns) })
-        ]) : null
-      ]);
-      legend.appendChild(chip);
+    try {
+      fillLegend(legend, mv, f, cast, { ageAt, whenAt });
+    } catch (e) {
+      derr("map legend failed", e);
     }
   };
   const box = el("div", { cls: "dgh-map" }, [el("div", { cls: "dgh-map-frame" }, [cv]), legend]);

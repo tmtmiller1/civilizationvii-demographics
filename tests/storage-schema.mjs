@@ -78,6 +78,15 @@ function testLoadEmptyRecoveryWritesEnvelope() {
   assert.equal(restored.version, 1, "recovery write should preserve history payload");
 }
 
+function testEmptyHistoryCarriesSeed() {
+  // The different-game guards compare this stamp against the live seed; a fresh
+  // history without it could never be told apart from another game's.
+  const empty = emptyHistory("seed-z", 1);
+  assert.equal(empty.seed, "seed-z", "emptyHistory should stamp the game seed");
+  assert.equal(empty.version, 1);
+  assert.ok(isValid(empty, 1), "an empty history should validate");
+}
+
 function testWriteStorePayloadWritesEnvelope() {
   const history = mkHistory();
   /** @type {string | null} */
@@ -102,6 +111,7 @@ function testWriteStorePayloadWritesEnvelope() {
 testLegacyPayloadStillLoads();
 testEnvelopePayloadLoads();
 testLoadEmptyRecoveryWritesEnvelope();
+testEmptyHistoryCarriesSeed();
 testWriteStorePayloadWritesEnvelope();
 
 console.log("storage-schema harness passed");

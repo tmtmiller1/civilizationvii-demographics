@@ -124,6 +124,10 @@ class FakeElement {
     return this.children.length > 0 ? this.children[0] : null;
   }
 
+  get lastChild() {
+    return this.children.length > 0 ? this.children[this.children.length - 1] : null;
+  }
+
   get childElementCount() {
     return this.children.length;
   }
@@ -138,6 +142,9 @@ class FakeElement {
 
   appendChild(node) {
     if (!node) return node;
+    // DOM pre-insert removes the node from its current parent first, so appending a node that is
+    // already in the tree MOVES it. Without this the stub silently duplicated re-appended nodes.
+    if (node.parentNode) node.parentNode.removeChild(node);
     node.parentNode = this;
     this.children.push(node);
     return node;
@@ -156,6 +163,8 @@ class FakeElement {
 
   insertBefore(newNode, refNode) {
     if (!refNode) return this.appendChild(newNode);
+    // Detach first (see appendChild), THEN locate the reference: removing the node can shift it.
+    if (newNode.parentNode) newNode.parentNode.removeChild(newNode);
     const i = this.children.indexOf(refNode);
     if (i < 0) return this.appendChild(newNode);
     newNode.parentNode = this;
@@ -174,6 +183,15 @@ class FakeElement {
   addEventListener(name, fn) {
     if (!this.listeners.has(name)) this.listeners.set(name, []);
     this.listeners.get(name).push(fn);
+  }
+
+  removeEventListener(name, fn) {
+    // Real DOM removes by identity; without this the stub silently kept every listener a reuse
+    // path meant to replace (and threw where the code called it).
+    const list = this.listeners.get(name);
+    if (!list) return;
+    const i = list.indexOf(fn);
+    if (i >= 0) list.splice(i, 1);
   }
 
   dispatch(name, ev = {}) {

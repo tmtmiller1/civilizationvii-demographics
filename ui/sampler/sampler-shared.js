@@ -2,18 +2,10 @@
 //
 // Leaf utilities shared by the sampler and every per-civ collector: the debug
 // flag and loggers, the defensive call wrapper, and the player-handle accessors.
-//
-// WHY THIS MODULE EXISTS. These helpers used to live in demographics-sampler.js.
-// sampler-collectors-core.js imported them from there, while the sampler imported
-// the collectors back — a mutual recursion the engine reported as "Circular import
-// detected" on every boot, once per collector. Benign so far, but an import cycle
-// that resolves today can become fatal when a new UIScript changes evaluation
-// order, and when it does it takes the whole panel down with no useful error.
-//
-// This module imports NOTHING from the sampler, so it can never take part in a
-// cycle. The kill switch stays in demographics-sampler.js (it owns the teardown
-// and the error budget) and is installed here via setSamplerErrorHandler(), so
-// safeCall's behaviour is unchanged.
+// This module imports NOTHING from the sampler, so it can never take part in an
+// import cycle (which can turn fatal when a UIScript changes evaluation order).
+// The kill switch stays in demographics-sampler.js and is installed here via
+// setSamplerErrorHandler().
 
 let debugEnabled = false;
 
@@ -63,9 +55,8 @@ let errorHandler = null;
 
 /**
  * Install the sampler's error-budget handler (its kill switch). Called once by
- * demographics-sampler.js at module load. Until it is installed, a thrown
- * accessor is swallowed and logged but not counted — the same outcome the old
- * code produced for any throw before the sampler module finished evaluating.
+ * demographics-sampler.js at module load; until then a thrown accessor is
+ * swallowed and logged but not counted.
  * @param {(label: string, e: *) => void} fn The handler.
  * @returns {void}
  */
@@ -135,10 +126,6 @@ export function safeNum(v) {
 }
 
 // ---- collector utilities -------------------------------------------------
-//
-// Moved here from sampler-collectors-core.js: the collectors needed them, and
-// core imports the collectors, so leaving them there kept core and every
-// collector mutually recursive.
 
 /** Collector debug flag, independent of the sampler's verbose flag. */
 const COLLECTOR_DBG = false;

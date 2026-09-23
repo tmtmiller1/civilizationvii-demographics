@@ -1,14 +1,9 @@
 // chart-conflicts-timeline-overlays.js
 //
 // HTML overlays for the Conflicts Gantt timeline: the absolutely-positioned
-// labels mounted ON TOP of the SVG (crisis pills, war-name boxes, x-ticks, axis
-// titles, the "Present" marker, age chips). Extracted from chart-conflicts-timeline.js
-// so that file keeps the SVG drawing + data prep while label rendering lives here ,
-// the same sibling pattern as chart-wars-gantt-bars / -domain / -interactions.
-//
-// mountGanttOverlays() is the single entry point; the per-overlay mounters below
-// are internal. % positions are pixel-derived (canvas scales the SVG + overlays
-// together) so they stay aligned at any size.
+// labels mounted on top of the SVG (crisis pills, war-name boxes, x-ticks, axis
+// titles, the "Present" marker, age chips). mountGanttOverlays() is the single
+// entry point; % positions are pixel-derived so they stay aligned at any size.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
@@ -27,11 +22,17 @@ import {
   CRISIS_STAGE_LABELS
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { CRISIS_LABEL_ROWS } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-domain.js";
 
 /**
  * Mount the crisis stage-onset HTML labels atop each overlay line: a two-line
  * pill (stage label in the stage color, crisis name below), staggered down so
  * adjacent onsets don't collide. Mirrors the historical charts' marker labels.
+ *
+ * The labels sit in the band the layout reserves for them at the top of the plot
+ * ({@link crisisBandHeight}), ABOVE the first war bar. They used to start just inside padT, on top
+ * of the first two bars, which only looked clear because the reference resolution's war names are
+ * short; at 1280x720 the names are relatively wider and ran straight under them.
  * @param {HTMLElement} wrap The chart canvas.
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The crisis onsets.
  * @param {{ L: *, dom: { xMin: number, xMax: number }, seed: string,
@@ -39,6 +40,11 @@ import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/cr
  */
 function mountCrisisLabels(wrap, onsets, ctx) {
   const { L, dom, seed, W, H } = ctx;
+  const band = L.crisisBand || 0;
+  // Stagger inside the band: its own height divided by the stagger depth, so the rows always fit
+  // the room reserved for them however much the type is boosted.
+  const step = band > 0 ? (band - 6) / CRISIS_LABEL_ROWS : 30;
+  const top0 = L.padT - band + 2;
   (onsets || []).forEach((o, i) => {
     if (o.turn < dom.xMin || o.turn > dom.xMax) return;
     const idx = Math.max(0, Math.min(3, o.stage - 1));
@@ -47,7 +53,7 @@ function mountCrisisLabels(wrap, onsets, ctx) {
     div.className = "demographics-wars-crisis-label";
     // Per-marker geometry stays dynamic; stagger each label down to reduce overlap.
     div.style.left = (x / W) * 100 + "%";
-    div.style.top = ((L.padT + 2 + (i % 3) * 30) / H) * 100 + "%";
+    div.style.top = ((top0 + (i % CRISIS_LABEL_ROWS) * step) / H) * 100 + "%";
     const stage = document.createElement("div");
     stage.className = "demographics-wars-crisis-label-stage";
     stage.style.color = safeTextColor(CRISIS_STAGE_COLORS[idx]);
@@ -62,10 +68,9 @@ function mountCrisisLabels(wrap, onsets, ctx) {
 }
 
 /**
- * Mount one war-name label: the FULL name in a neutral box (never truncated),
- * anchored at the bar's left edge - or, for a bar in the right third of the
- * chart, with its right edge at the bar end so a long name grows left and isn't
- * clipped by the canvas edge.
+ * Mount one war-name label: the full name in a neutral box, anchored at the
+ * bar's left edge, or right-anchored at the bar end for a bar in the right
+ * third of the chart so a long name isn't clipped.
  * @param {HTMLElement} wrap The chart canvas.
  * @param {*} rect The bar hit-test rect.
  * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>,
@@ -217,5 +222,31 @@ export function mountGanttOverlays(canvas, env) {
   const continentMap = buildContinentMap(samples);
   const nameOverride = buildWarNameOverrides(merged, turnYearMap, latestTurn, continentMap);
   mountConflictLabels(canvas, barRects, { nameOverride, turnYearMap, latestTurn, W, H });
+  clampEdgeLabels(canvas);
   return nameOverride;
+}
+
+/**
+ * Keep the line-anchored labels (crisis stages, age chips, current turn) inside the canvas. They
+ * are centred on their line, so one near the right edge overruns by half its width. The domain
+ * reserves tail room in TURNS (extendDomainFuture); when the timeline fills a narrow host that
+ * room can be fewer pixels than a label, so the label is re-anchored to end at its line instead.
+ * Measured after a frame: same-tick rects can be stale in GameFace. Rects are compared to each
+ * other in the same (visual) space, so no scale conversion is needed.
+ * @param {HTMLElement} canvas The inner chart canvas.
+ */
+function clampEdgeLabels(canvas) {
+  const run = () => {
+    if (canvas.isConnected === false) return;
+    const c = canvas.getBoundingClientRect();
+    if (!(c.width > 0)) return;
+    const sel = ".demographics-wars-crisis-label, .demographics-wars-age-label, .demographics-wars-now-label";
+    for (const el of canvas.querySelectorAll(sel)) {
+      const r = el.getBoundingClientRect();
+      if (r.right > c.right + 1) el.classList.add("is-clamp-right");
+      else if (r.left < c.left - 1) el.classList.add("is-clamp-left");
+    }
+  };
+  if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+  else setTimeout(run, 16);
 }

@@ -15,13 +15,27 @@ import { rankedRowClass } from "/demographics/ui/screen-demographics/views/settl
  *   topN: number,
  *   setSetting: (settings: *, key: string, value: *) => void,
  *   safePlaySound: (id: string) => void,
- *   rerenderContent: (st: *) => void,
  *   displayOf: (st: *, s: *) => *,
  *   buildOwnerCell: (owner: *) => HTMLElement,
  *   buildTypeBadge: (isTown: boolean) => HTMLElement,
  *   buildSectionTitle: (key: string) => HTMLElement,
  *   buildEmpty: () => HTMLElement
  * }} TableDeps
+ */
+
+/**
+ * Live handles to the panel's persistent chrome, so a filter/sort change can update it IN PLACE
+ * instead of rebuilding it. Rebuilding is what made the filigree and the column yield icons blink:
+ * a fresh element's `blp:` background resolves a frame or more after it is inserted, so identical
+ * chrome visibly flashed on every click. The chrome below is built ONCE per panel render and only
+ * ever has classes toggled on it; only the data rows are swapped.
+ * @typedef {{
+ *   chips: Map<string, HTMLElement>,
+ *   heads: Map<string, HTMLElement>,
+ *   table: HTMLElement,
+ *   rows: HTMLElement[],
+ *   refresh: () => void
+ * }} TableUi
  */
 
 /**
@@ -44,9 +58,8 @@ const FILTERS = [
 
 /**
  * The leading value of each output within a settlement pool (the rows the active
- * All/Cities/Towns filter admits, not just the 25 shown), keyed by output id.
- * An output nobody leads (every settlement equal, or no positive value) is left
- * out, so nothing is highlighted for it.
+ * filter admits, not just the 25 shown), keyed by output id. An output nobody
+ * leads (every settlement equal, or no positive value) is left out.
  * @param {*[]} pool The filtered settlements.
  * @returns {Record<string, number>} Output id → leading value.
  */
@@ -62,17 +75,17 @@ function columnLeaders(pool) {
 }
 
 /**
- * Build the All/Cities/Towns filter chip row.
+ * Build the All/Cities/Towns filter chip row. The chips are built once and registered in `ui`;
+ * their active state is a class toggle in {@link refreshTable}.
  * @param {*} st The render state.
  * @param {TableDeps} deps Rendering dependencies.
+ * @param {TableUi} ui The panel's chrome handles.
  * @returns {HTMLElement} The chip row.
  */
-function buildFilterRow(st, deps) {
+function buildFilterRow(st, deps, ui) {
   const row = div("demographics-settle-filters");
   for (const f of FILTERS) {
-    const chip = div(
-      "demographics-chart-time-filter-pill" + (st.filter === f.id ? " is-active" : "")
-    );
+    const chip = div("demographics-chart-time-filter-pill");
     chip.textContent = t(f.label);
     chip.addEventListener("click", () => {
       if (st.filter === f.id) return;
@@ -80,8 +93,9 @@ function buildFilterRow(st, deps) {
       // Session-only: the ranking always reopens on All (see view-settlements.js),
       // so the chosen filter is intentionally not persisted.
       deps.safePlaySound("data-audio-activate");
-      deps.rerenderContent(st);
+      ui.refresh();
     });
+    ui.chips.set(f.id, chip);
     row.appendChild(chip);
   }
   return row;
@@ -100,27 +114,26 @@ const FIXED_COLS = [
 ];
 
 /**
- * Build a sortable header cell.
+ * Build a sortable header cell. The cell (and the yield icon it carries) is built once and
+ * registered in `ui`; its sorted state is a class toggle in {@link refreshTable}.
  * @param {*} st The render state.
  * @param {string} key The sort key.
  * @param {HTMLElement} inner Header content.
  * @param {TableDeps} deps Rendering dependencies.
+ * @param {TableUi} ui The panel's chrome handles.
  * @returns {HTMLElement} The header cell.
  */
-function buildSortHeader(st, key, inner, deps) {
-  const cell = div(
-    "demographics-settle-th demographics-settle-col-" +
-      key +
-      (st.sortKey === key ? " is-sorted" : "")
-  );
+function buildSortHeader(st, key, inner, deps, ui) {
+  const cell = div("demographics-settle-th demographics-settle-col-" + key);
   cell.appendChild(inner);
   cell.addEventListener("click", () => {
     if (st.sortKey === key) return;
     st.sortKey = key;
     deps.setSetting(st.settings, "settlementsSortKey", key);
     deps.safePlaySound("data-audio-activate");
-    deps.rerenderContent(st);
+    ui.refresh();
   });
+  ui.heads.set(key, cell);
   return cell;
 }
 
@@ -128,9 +141,10 @@ function buildSortHeader(st, key, inner, deps) {
  * Build the table header row.
  * @param {*} st The render state.
  * @param {TableDeps} deps Rendering dependencies.
+ * @param {TableUi} ui The panel's chrome handles.
  * @returns {HTMLElement} The header row.
  */
-function buildHeaderRow(st, deps) {
+function buildHeaderRow(st, deps, ui) {
   const row = div("demographics-settle-row demographics-settle-header");
   for (const c of FIXED_COLS) {
     if (c.id === "composite") {
@@ -139,7 +153,8 @@ function buildHeaderRow(st, deps) {
           st,
           "composite",
           div("demographics-settle-th-label", t(c.label)),
-          deps
+          deps,
+          ui
         )
       );
     } else {
@@ -152,15 +167,14 @@ function buildHeaderRow(st, deps) {
     const inner = div("demographics-settle-th-inner");
     inner.appendChild(iconEl(col.icon, "demographics-settle-yield-icon"));
     inner.appendChild(div("demographics-settle-th-label", t(col.label)));
-    row.appendChild(buildSortHeader(st, col.id, inner, deps));
+    row.appendChild(buildSortHeader(st, col.id, inner, deps, ui));
   }
   return row;
 }
 
 /**
  * Build one output cell. The leading settlement's cell carries the gold leader
- * wash and a "World leader in <output>" tooltip: the table itself marks the
- * category leaders (the separate leader-card strip was removed).
+ * wash and a "World leader in <output>" tooltip.
  * @param {*} s The settlement.
  * @param {{ id: string, label: string }} col The output column.
  * @param {string} sortKey The active sort key.
@@ -212,31 +226,73 @@ function buildTableRow(s, rank, sortKey, leads, deps) {
 }
 
 /**
- * Render the detail table (filter + leaders strip + sortable rows).
+ * Toggle one class on an element without disturbing the rest of its class list (so a chrome
+ * element is never rebuilt just to change its state).
+ * @param {HTMLElement} el The element.
+ * @param {string} cls The class to toggle.
+ * @param {boolean} on Whether the class should be present.
+ */
+function setClass(el, cls, on) {
+  if (on) el.classList.add(cls);
+  else el.classList.remove(cls);
+}
+
+/**
+ * Re-apply the current filter + sort: update the persistent chrome's state classes in place and
+ * swap ONLY the data rows. The filter chips, the filigree section title and the header row (with
+ * its yield icons) are never rebuilt, so nothing re-resolves a `blp:` background and nothing
+ * blinks.
  * @param {*} st The render state.
  * @param {TableDeps} deps Rendering dependencies.
+ * @param {TableUi} ui The panel's chrome handles.
  */
-export function renderTablePanel(st, deps) {
-  st.content.appendChild(buildFilterRow(st, deps));
-  if (!st.board.settlements.length) {
-    st.content.appendChild(deps.buildEmpty());
-    return;
+function refreshTable(st, deps, ui) {
+  for (const [id, chip] of ui.chips) setClass(chip, "is-active", id === st.filter);
+  for (const [key, cell] of ui.heads) setClass(cell, "is-sorted", key === st.sortKey);
+  for (const row of ui.rows) {
+    if (row.parentNode === ui.table) ui.table.removeChild(row);
   }
-  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE"));
+  ui.rows.length = 0;
   const filter = FILTERS.find((f) => f.id === st.filter) || FILTERS[0];
   const pool = st.board.settlements.filter(filter.test);
   const leads = columnLeaders(pool);
-  const rows = pool
+  const ranked = pool
     .slice()
     .sort(
       (/** @type {*} */ a, /** @type {*} */ b) =>
         valueOf(b, st.sortKey) - valueOf(a, st.sortKey)
     )
     .slice(0, deps.topN);
-  const table = div("demographics-settle-table");
-  table.appendChild(buildHeaderRow(st, deps));
-  for (let i = 0; i < rows.length; i++) {
-    table.appendChild(buildTableRow(deps.displayOf(st, rows[i]), i + 1, st.sortKey, leads, deps));
+  for (let i = 0; i < ranked.length; i++) {
+    const row = buildTableRow(deps.displayOf(st, ranked[i]), i + 1, st.sortKey, leads, deps);
+    ui.rows.push(row);
+    ui.table.appendChild(row);
   }
-  st.content.appendChild(table);
+}
+
+/**
+ * Render the detail table (filter chips + sortable rows). The chrome is built once here; every
+ * later filter/sort click goes through {@link refreshTable} rather than a panel rebuild.
+ * @param {*} st The render state.
+ * @param {TableDeps} deps Rendering dependencies.
+ */
+export function renderTablePanel(st, deps) {
+  /** @type {TableUi} */
+  const ui = {
+    chips: new Map(),
+    heads: new Map(),
+    table: div("demographics-settle-table"),
+    rows: [],
+    refresh: () => {}
+  };
+  ui.refresh = () => refreshTable(st, deps, ui);
+  st.content.appendChild(buildFilterRow(st, deps, ui));
+  if (!st.board.settlements.length) {
+    st.content.appendChild(deps.buildEmpty());
+    return;
+  }
+  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE"));
+  ui.table.appendChild(buildHeaderRow(st, deps, ui));
+  st.content.appendChild(ui.table);
+  refreshTable(st, deps, ui);
 }

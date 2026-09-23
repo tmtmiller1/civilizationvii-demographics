@@ -1,12 +1,9 @@
 // chart-compare-svg.js
 //
-// SVG "compare the civs at a glance" charts, all with a shared click-to-hide
-// civ-filter legend (driven by the screen's hiddenCivs / onToggleCiv):
-//   • Fingerprint scatters — each civ a dot on two yield axes (Science×Military,
-//     Gold×Culture, Influence×Happiness), so the cloud shape reveals archetypes.
-//   • Archetype radar — six dimensions per civ, normalized to the field max.
-// Identity/color come from buildSeriesFromHistory (latest sample), so keys match
-// every other chart and the shared hidden-civ filter applies. Text in ink.
+// "Compare the civs at a glance" charts (Fingerprint scatters on two yield axes;
+// Archetype radar normalized to the field max), all with a shared click-to-hide
+// civ-filter legend. Identity/color come from buildSeriesFromHistory so keys
+// match every other chart.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
@@ -113,12 +110,9 @@ function mountCompareLegend(wrap, civs, hidden, onToggle) {
 
 // ── Scatter (Chart.js) ───────────────────────────────────────────────────────
 //
-// Rendered with Chart.js (type "scatter"), NOT hand-drawn SVG, so the axes,
-// fonts, gridlines, overlaid legend, and HTML tooltip are pixel-identical to the
-// "Yields per turn" line chart — same engine, same per-pixel sizing (SVG scaled a
-// 1000-wide viewBox up to the plot, magnifying every font; Chart.js renders at the
-// real canvas size like the line charts). Each civ is one single-point dataset so
-// the shared civ-filter legend + hidden-toggle apply exactly as on the line chart.
+// Rendered with Chart.js, not hand-drawn SVG, so axes, fonts, legend and
+// tooltip are pixel-identical to the line chart. Each civ is one single-point
+// dataset so the shared civ-filter legend + hidden-toggle apply as on the line chart.
 
 // Styling tokens copied from chart-line-config.js so the canvas reads identically
 // to the line charts (Chart.js needs literals, not CSS vars).
@@ -312,9 +306,8 @@ function scatterAxisSpec(o) {
 
 /**
  * Render a two-axis civ scatter (Chart.js) with the shared click-to-hide filter
- * legend: each civ a dot on (xMetric, yMetric), so the cloud shape reveals
- * strategic archetypes. Defaults to the Science-vs-Military "Fingerprint"; a spec
- * on `opts` (xMetric/yMetric/xTitle/yTitle) selects any pair.
+ * legend: each civ a dot on (xMetric, yMetric). Defaults to the
+ * Science-vs-Military "Fingerprint"; `opts` selects any pair.
  * @param {HTMLElement} host The chart host.
  * @param {*} opts Options (history, xMetric/yMetric/xTitle/yTitle, width/height,
  *   hiddenCivs, onToggleCiv, onSetAllHidden).

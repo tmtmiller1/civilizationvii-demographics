@@ -78,6 +78,48 @@ for (const tab of ["chronicle", "timeline", "lineage"]) {
 
 const findAll = (n, cls) => [...(n.className && String(n.className).split(/\s+/).includes(cls) ? [n] : []), ...(n.children || []).flatMap((c) => findAll(c, cls))];
 
+// Regression guard for the standalone Hall of Fame's section tabs flashing to "Best" on every
+// rerender (short-games filter, storage-repair buttons): a rerender is renderHallOfFame() on the
+// still-populated host and must put the SAME fxs-tab-bar back; a section change rebuilds it.
+{
+  viewState.hofTab = "games";
+  viewState.detail = null;
+  const host = document.createElement("div");
+  renderHallOfFame(host, { mode: "shell" });
+  const bar1 = findAll(host, "dgh-subtabs")[0];
+  assert.ok(bar1 && String(bar1.tagName).toLowerCase() === "fxs-tab-bar", "own screen: sections are a tab bar");
+  renderHallOfFame(host, { mode: "shell" }); // what the filter toggle's rerender() does
+  assert.equal(findAll(host, "dgh-subtabs")[0], bar1, "same section: the tab bar is the SAME element");
+  assert.equal(findAll(host, "dgh-subtabs").length, 1, "kept once, not duplicated");
+  viewState.hofTab = "civs";
+  renderHallOfFame(host, { mode: "shell" });
+  assert.notEqual(findAll(host, "dgh-subtabs")[0], bar1, "a section change rebuilds the bar");
+  const inGame = document.createElement("div");
+  viewState.hofTab = "games";
+  renderHallOfFame(inGame, { mode: "game" });
+  assert.equal(findAll(inGame, "dgh-subtabs").length, 0, "in game the sections are pills, untouched by this");
+}
+
+// Regression guard for the Chronicle's page tabs flashing to "Chronicle" on every pill click: a
+// pill re-render is `render(host)` on the still-populated host, and it must put the SAME
+// fxs-tab-bar back rather than build a new one (a fresh bar shows tab 0 for a frame). A page
+// change must still rebuild it.
+{
+  viewState.tab = "chronicle";
+  const host = document.createElement("div");
+  render(host, { history: {}, settings: {} });
+  const bar1 = findAll(host, "demographics-page-tabs")[0];
+  assert.ok(bar1, "the history app renders its page tab bar");
+  render(host); // what a Chronicle pill's rerender() does
+  assert.equal(findAll(host, "demographics-page-tabs")[0], bar1, "same page: the tab bar is the SAME element");
+  assert.equal(findAll(host, "demographics-page-tabs").length, 1, "kept once, not duplicated");
+  assert.equal(findAll(host, "dgh-app").length, 1, "one app root");
+  viewState.tab = "lineage";
+  render(host);
+  assert.notEqual(findAll(host, "demographics-page-tabs")[0], bar1, "a page change rebuilds the bar");
+  viewState.tab = "chronicle";
+}
+
 // Hall of Fame: every tab, in game (live campaign included) and at the main menu. Every page names
 // itself, so one opened on its own says what it is.
 const PAGE_TITLES = {
@@ -91,7 +133,9 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
     const host = document.createElement("div");
     renderHallOfFame(host, { mode });
     check(host, mode + ":" + hofTab);
-    assert.ok(findAll(host, "dgh-hof-filter").length, "short-games filter on " + hofTab + " (" + mode + ")");
+    // Nothing in this fixture is a short unfinished game, so the filter renders nothing at all:
+    // it is a control for a condition that is not present, and it used to occupy a row regardless.
+    assert.equal(findAll(host, "dgh-hof-filter").length, 0, "no short-games filter with nothing to hide on " + hofTab + " (" + mode + ")");
     const head = findAll(host, "dgh-page-head")[0];
     assert.ok(head, "page heading on " + hofTab);
     assert.ok(texts(head).includes(PAGE_TITLES[hofTab]), "page title on " + hofTab);
@@ -219,14 +263,56 @@ popLane.dispatch("mouseleave", { clientX: 600, clientY: 20 });
 assert.ok(!readout.classList.contains("is-hidden"), "crossing a child inside the lane keeps it");
 popLane.dispatch("mouseleave", { clientX: 1200, clientY: 20 });
 assert.ok(readout.classList.contains("is-hidden"), "leaving the lane hides it");
+// Regression guard for blinking timeline art: a redraw must REUSE the items that carry engine
+// art — milestone medallions, disaster gems and the age bands' civilization emblems. A freshly
+// inserted element paints without its `blp:` texture for a frame or more, so re-creating an
+// unchanged one makes it flash.
+const artItems = () => {
+  const out = new Map();
+  for (const cls of ["dgh-tl-medal", "dgh-tl-disaster", "dgh-tl-band"]) {
+    for (const n of findAll(tlRoot, cls)) out.set(cls + "|" + n.getAttribute("data-tooltip-content"), n);
+  }
+  return out;
+};
+const artCount = () => ["dgh-tl-medal", "dgh-tl-disaster", "dgh-tl-band"]
+  .reduce((n, cls) => n + findAll(tlRoot, cls).length, 0);
 const agePills = findAll(find(tlRoot, "dgh-tl-controls"), "dgh-pill");
 assert.equal(agePills.length, 3 + 4, "All + two ages, and four zoom levels");
+
+const beforeAge = artItems();
+assert.ok(beforeAge.size > 0, "the timeline draws art-bearing items");
 agePills[2].dispatch("click");
 assert.equal(viewState.tlAge, "AGE_EXPLORATION");
 assert.ok(find(tlRoot, "dgh-tl-lane--ages"), "redrawn for the age");
+// An age window genuinely changes WHICH items show; the ones that show in both must be the same
+// elements, and nothing may be duplicated or stranded.
+const afterAge = artItems();
+assert.equal(afterAge.size, artCount(), "no item is duplicated by the age change");
+let reusedAcrossAge = 0;
+for (const [k, node] of afterAge) {
+  if (!beforeAge.has(k)) continue;
+  assert.equal(node, beforeAge.get(k), "an item shown in both age windows is reused: " + k);
+  reusedAcrossAge++;
+}
+assert.ok(reusedAcrossAge > 0, "some items survive the age change and keep their elements");
+
+// Zoom changes only the canvas width and the ruler — every lane item is identical, so the redraw
+// must not touch a single one of them.
+const beforeZoom = artItems();
+const beforeZoomCount = artCount();
 findAll(find(tlRoot, "dgh-tl-controls"), "dgh-pill")[5].dispatch("click");
 assert.equal(viewState.tlZoom, 4);
 assert.equal(find(tlRoot, "dgh-tl-canvas").style.width, "400%");
+const afterZoom = artItems();
+assert.deepEqual([...afterZoom.keys()], [...beforeZoom.keys()], "zoom changes no lane item");
+assert.equal(artCount(), beforeZoomCount, "no item is lost or duplicated by a zoom");
+for (const [k, node] of afterZoom) {
+  assert.equal(node, beforeZoom.get(k), "zoom reuses every art-bearing item: " + k);
+}
+assert.ok(
+  findAll(tlRoot, "dgh-tl-medal").every((m) => /url\('(blp:|fs:)/.test(m.style.backgroundImage)),
+  "reused medallions keep their icons"
+);
 find(tlRoot, "dgh-tl-play").dispatch("click");
 assert.ok(find(tlRoot, "dgh-tl-cursor"), "playback places the cursor");
 assert.ok(texts(find(tlRoot, "dgh-tl-caption")).includes("LOC_DEMOGRAPHICS_HIST_TL_TURN"), "caption names the turn");
@@ -274,11 +360,57 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
     const h = document.createElement("div");
     renderHallOfFame(h, { mode: "shell" });
     assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN|1|20"), "hidden count shown on " + hofTab);
+    // One row: the section pills and the filter together, the filter inside it.
+    const row = findAll(h, "dgh-hof-navrow")[0];
+    assert.ok(row, "sections and filter share a row on " + hofTab);
+    assert.equal(findAll(row, "dgh-hof-filter").length, 1, "the filter is in that row on " + hofTab);
+    // One button, naming the state the player is not in.
+    const btns = findAll(h, "dgh-hof-filter-btn");
+    assert.equal(btns.length, 1, "one filter button on " + hofTab);
+    assert.equal(btns[0].textContent, "LOC_DEMOGRAPHICS_HIST_SHOW_SHORT", "it offers the other state on " + hofTab);
     const show = findAll(h, "dgh-pill").find((n) => n.textContent === "LOC_DEMOGRAPHICS_HIST_SHOW_SHORT");
     show.dispatch("click");
     assert.ok(!texts(h).includes("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN"), "note gone once shown on " + hofTab);
+    const h2 = document.createElement("div");
+    renderHallOfFame(h2, { mode: "shell" });
+    assert.equal(findAll(h2, "dgh-hof-filter-btn")[0].textContent, "LOC_DEMOGRAPHICS_HIST_HIDE_SHORT",
+      "and offers the way back on " + hofTab);
     viewState.showShort = false;
   }
+}
+
+// Settings that stopped persisting this session: the Hall of Fame storage note carries a line about it,
+// in both the healthy-archive and the blocked-archive layouts, and nothing while settings persist.
+{
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  const settings = (await import("/demographics/ui/core/demographics-settings.js")).default;
+  const savedStatus = settings.persistenceStatus;
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ x: { y: 1 } }) });
+  viewState.detail = null;
+  viewState.hofTab = "overview";
+  settings.persistenceStatus = () => "ok";
+  let h = document.createElement("div");
+  renderHallOfFame(h, { mode: "shell" });
+  assert.ok(!texts(h).includes("LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED"), "no settings line while settings persist");
+  settings.persistenceStatus = () => "unverified";
+  h = document.createElement("div");
+  renderHallOfFame(h, { mode: "shell" });
+  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED"), "read-only settings are named on the page");
+  assert.ok(findAll(h, "dgh-note--settings").length, "as a warning note");
+  settings.persistenceStatus = () => "unavailable";
+  h = document.createElement("div");
+  renderHallOfFame(h, { mode: "shell" });
+  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE"), "no storage at all has its own line");
+  // Blocked archive layout keeps the line too.
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage({ "!chronicle": JSON.stringify({ games: [1] }), modSettings: JSON.stringify({ x: 1 }) });
+  settings.persistenceStatus = () => "foreign";
+  h = document.createElement("div");
+  renderHallOfFame(h, { mode: "shell" });
+  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H"));
+  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED"), "settings line under the blocked banner");
+  settings.persistenceStatus = savedStatus;
 }
 
 // Another mod's data in the way (a key sorting ahead of modSettings is read in its place): the note says so.
@@ -333,6 +465,172 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
   assert.ok(after.includes("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK"), "the outcome is reported");
   assert.ok(!after.includes("LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H"), "the blocked banner is gone");
   assert.ok(!findAll(h, "dgh-options-toggle").length, "and so is the repair offer");
+}
+
+// A record that passes the storage gate but carries none of the optional parts (no figures, trend,
+// rivals, highlights, ages or setup) renders every page and its own page, each part reading as
+// "none"; a record a later version wrote is left out of every page and logs nothing.
+const bare = {
+  v: 1, id: "bare", created: 1, updated: 2, local: 0, leader: "LEADER_ZETA", leaderName: "", color: "#123",
+  civs: [{ age: "AGE_ANTIQUITY", civ: "CIV_ZETA", name: "", from: 1 }], turns: 50,
+  outcome: { status: "victory", victory: "VICTORY_X", name: "", winner: 0, turn: 50 }
+};
+{
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  const { hofRecords } = await import("/demographics/ui/history/views/view-hof.js");
+  store._resetForTests();
+  const future = { v: 2, id: "future", updated: 3, shape: "unknown" };
+  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { bare, future }, hidden: {} } }) });
+  viewState.detail = null;
+  viewState.showShort = false;
+  for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
+    viewState.hofTab = hofTab;
+    const h = document.createElement("div");
+    renderHallOfFame(h, { mode: "shell" });
+    check(h, "bare:" + hofTab);
+    assert.ok(texts(h).includes("Zeta"), "the game is on " + hofTab);
+  }
+  assert.deepEqual(hofRecords(null).map((r) => r.id), ["bare"], "the later version's record is not listed");
+  viewState.detail = "bare";
+  const h = document.createElement("div");
+  renderHallOfFame(h, { mode: "shell" });
+  check(h, "bare:detail");
+  const shown = texts(h);
+  for (const tag of ["LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF", "LOC_DEMOGRAPHICS_HIST_NO_RIVALS", "LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS"]) {
+    assert.ok(shown.includes(tag), "detail carries " + tag);
+  }
+  viewState.detail = null;
+}
+
+// A game page that fails halfway still has its Back button, and the panel says it could not render
+// instead of going blank; Back still works.
+{
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  store._resetForTests();
+  const broken = { ...bare, id: "broken", civs: [null] };
+  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { broken }, hidden: {} } }) });
+  viewState.detail = "broken";
+  const h = document.createElement("div");
+  renderHallOfFame(h, { mode: "shell" });
+  assert.equal(errors.length, 1, "logged once");
+  assert.ok(/hall of fame render failed/.test(errors[0]));
+  errors.length = 0;
+  const shown = texts(h);
+  assert.ok(shown.includes("LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF"), "the way out is there");
+  assert.ok(shown.includes("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED"), "and the failure is on screen");
+  find(h, "dgh-button--back").dispatch("click");
+  assert.equal(viewState.detail, null, "Back leaves the page");
+  errors.length = 0;
+  viewState.hofTab = "overview";
+}
+
+// The History tab says so too when a page throws, instead of staying blank.
+{
+  live.doc = { ...doc, events: null };
+  viewState.tab = "timeline";
+  const h = document.createElement("div");
+  render(h);
+  assert.equal(errors.length, 1);
+  assert.ok(/history render failed/.test(errors[0]));
+  errors.length = 0;
+  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED"));
+  live.doc = null;
+  viewState.tab = "chronicle";
+}
+
+// Playback: a throw inside a tick stops the timer and relabels the button, instead of throwing
+// again every 40 ms with the button still reading Pause.
+{
+  const { timelineGraphic } = await import("/demographics/ui/history/views/history-timeline-view.js");
+  const { buildTimeline } = await import("/demographics/ui/history/model/history-timeline.js");
+  const { castFromDoc } = await import("/demographics/ui/history/model/history-narrate.js");
+  const savedSI = globalThis.setInterval;
+  const savedCI = globalThis.clearInterval;
+  let tickFn = null;
+  const cleared = [];
+  globalThis.setInterval = (fn) => { tickFn = fn; return 7; };
+  globalThis.clearInterval = (id) => cleared.push(id);
+  let seeks = 0;
+  viewState.tlAge = "all";
+  viewState.tlCivs = null;
+  const root = timelineGraphic(buildTimeline(doc), castFromDoc(doc, "full"), { onSeek: () => { if (++seeks > 2) throw new Error("seek boom"); }, key: "tick" });
+  assert.deepEqual(errors, [], "the graphic drew");
+  find(root, "dgh-tl-play").dispatch("click");
+  assert.equal(typeof tickFn, "function", "playing");
+  assert.ok(texts(find(root, "dgh-tl-play")).includes("LOC_DEMOGRAPHICS_HIST_TL_PAUSE"));
+  assert.doesNotThrow(() => tickFn());
+  assert.deepEqual(cleared, [7], "the interval is cleared");
+  assert.equal(errors.length, 1);
+  assert.ok(/playback failed/.test(errors[0]));
+  errors.length = 0;
+  assert.ok(texts(find(root, "dgh-tl-play")).includes("LOC_DEMOGRAPHICS_HIST_TL_PLAY"), "the button reads Play again");
+  // The other handlers outside the render try/catch log instead of throwing too.
+  const lane = find(root, "dgh-tl-lane--pops");
+  lane.getBoundingClientRect = () => { throw new Error("rect boom"); };
+  assert.doesNotThrow(() => lane.dispatch("mousemove", { clientX: 5 }));
+  const ruler = find(root, "dgh-tl-lane--ruler");
+  ruler.getBoundingClientRect = () => { throw new Error("rect boom"); };
+  assert.doesNotThrow(() => ruler.dispatch("click", { clientX: 5 }));
+  assert.equal(errors.length, 2);
+  errors.length = 0;
+  globalThis.setInterval = savedSI;
+  globalThis.clearInterval = savedCI;
+}
+
+// A redraw that fails (a zoom or age pill, the civilization filter) leaves a message in place of
+// the graphic and never escapes the click handler.
+{
+  const { timelineGraphic } = await import("/demographics/ui/history/views/history-timeline-view.js");
+  const { buildTimeline } = await import("/demographics/ui/history/model/history-timeline.js");
+  const { castFromDoc } = await import("/demographics/ui/history/model/history-narrate.js");
+  const cast = castFromDoc(doc, "full");
+  let draws = 0;
+  const flaky = { ...cast, civName: (...a) => { if (draws > 0) throw new Error("name boom"); return cast.civName(...a); } };
+  const root = timelineGraphic(buildTimeline(doc), flaky, { key: "flaky" });
+  assert.deepEqual(errors, []);
+  draws++;
+  const pills = findAll(find(root, "dgh-tl-controls"), "dgh-pill");
+  assert.doesNotThrow(() => pills[pills.length - 1].dispatch("click"));
+  assert.equal(errors.length, 1);
+  assert.ok(/timeline draw failed/.test(errors[0]));
+  errors.length = 0;
+  assert.ok(texts(root).includes("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED"), "the failure is on screen");
+  viewState.tlZoom = 1;
+  viewState.tlAge = "all";
+}
+
+// The main-menu screen's Escape handling survives a missing InputActionStatuses global: a press
+// still steps back or closes, once, and never throws.
+{
+  const defs = {};
+  globalThis.Controls = { define: (id, def) => { defs[id] = def; } };
+  globalThis.engine = { on() {}, off() {} };
+  const { SCREEN_ID } = await import("/demographics/ui/history/screen/history-open.js");
+  await import("/demographics/ui/history/screen/screen-hall-of-fame.js");
+  assert.deepEqual(errors, [], "the screen registered");
+  const screen = new defs[SCREEN_ID].createInstance();
+  let closed = 0;
+  screen.close = () => closed++;
+  const ev = (status, name) => ({ detail: { status, name }, stopPropagation() {}, preventDefault() {} });
+  delete globalThis.InputActionStatuses;
+  viewState.detail = "past";
+  assert.doesNotThrow(() => screen._handleEngineInput(ev(2, "sys-menu")));
+  assert.equal(viewState.detail, null, "Escape still steps back without the enum");
+  screen._handleEngineInput(ev(2, "sys-menu"));
+  assert.equal(closed, 0, "the same press's next event is folded into the first");
+  screen._lastCancel = 0;
+  screen._handleEngineInput(ev(2, "sys-menu"));
+  assert.equal(closed, 1, "a later press closes");
+  globalThis.InputActionStatuses = { FINISH: 2 };
+  screen._handleEngineInput(ev(1, "sys-menu"));
+  assert.equal(closed, 1, "with the enum, a press that has not finished is ignored");
+  screen._handleEngineInput(ev(2, "keyboard-escape"));
+  assert.equal(closed, 1, "and a non-cancel key is ignored");
+  screen._handleEngineInput({ ...ev(2, "x"), isCancelInput: () => true });
+  assert.equal(closed, 2);
+  assert.doesNotThrow(() => screen._handleEngineInput(null));
+  assert.deepEqual(errors, []);
+  delete globalThis.InputActionStatuses;
 }
 
 console.log("history-render-integration harness passed");

@@ -13,7 +13,7 @@ import {
 import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 
-// Short contextual descriptions for the advanced History pages (P1.5), shown as
+// Short contextual descriptions for the advanced History pages, shown as
 // a caption under the page tab row so a newcomer knows what an advanced page is.
 /** @type {Record<string, string>} */
 const PAGE_DESCRIPTIONS = {
@@ -54,7 +54,7 @@ function subTabLabel(id) {
  * @returns {string|null} The panel's own tab label, or null.
  */
 function externalTabLabel(id) {
-  // Legacy single-tab panel: the id IS the panel id.
+  // Single-tab panel: the id IS the panel id.
   const direct = EXTERNAL_PANELS.find((x) => x.id === id);
   if (direct && !(Array.isArray(direct.tabs) && direct.tabs.length)) {
     return direct.tabLabel || direct.title || id;
@@ -76,52 +76,90 @@ function dlog(...a) {
 }
 
 /**
- * Build and append the page-level tab bar (the row of metric-group tabs).
+ * Build and append the page-level tab bar (the row of metric-group tabs). When `priorPageHost`
+ * is the row from the previous render of the SAME page set and active page, it is put back
+ * instead of rebuilt: a fresh `fxs-tab-bar` shows its first tab for a frame before honouring
+ * `selected-tab-index`, so rebuilding it on every pill/filter click made the row flash. Only the
+ * tab-selected listener is refreshed, because the render context is rebuilt per render.
  * @param {HTMLElement} host
  * @param {*} ctx
  * @param {string} activePage
  * @param {{id:string,label:string,tier?:string}[]} [pages] Hub-scoped page list (defaults to all
  * PAGES).
+ * @param {HTMLElement|null} [priorPageHost] The previous render's page-tab host, if any.
  */
-export function buildPageTabRow(host, ctx, activePage, pages) {
+export function buildPageTabRow(host, ctx, activePage, pages, priorPageHost) {
+  const row = pageRowSpec(ctx, activePage, pages);
+  const onSelected = (/** @type {*} */ event) => {
+    const id = /** @type {*} */ (event)?.detail?.selectedItem?.id;
+    onPageTabSelected(ctx, activePage, id);
+  };
+  if (reusePageRow(host, priorPageHost, row.sig, onSelected)) return;
+
   const pageHost = document.createElement("div");
   pageHost.className = "demographics-page-tab-host w-full";
+  /** @type {*} */ (pageHost).__pageSig = row.sig;
   host.appendChild(pageHost);
 
   const pageBar = document.createElement("fxs-tab-bar");
   pageBar.classList.add("demographics-page-tabs", "w-full", "font-title", "text-sm");
   pageBar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   pageBar.setAttribute("tab-item-class", "font-title text-base");
-  // UI complexity tiers (P1.5): only show pages the active tier discloses. Also drop any companion
-  // panel marked `topLevel` - it has its own top-level view tab, so it must not appear as a page
-  // here.
-  // `pages` is the hub-scoped list resolved upstream (falls back to all PAGES for legacy callers).
+  pageBar.setAttribute("tab-items", JSON.stringify(row.pageTabs));
+  pageBar.setAttribute("selected-tab-index", String(row.pageIdx));
+  /** @type {*} */ (pageBar).__onSelected = onSelected;
+  pageBar.addEventListener("tab-selected", onSelected);
+  pageHost.appendChild(pageBar);
+  appendPageDescription(pageHost, activePage);
+}
+
+/**
+ * What the page-tab row will show: the visible pages (only those the active UI tier discloses,
+ * minus any companion panel marked `topLevel`, which has its own view tab), the selected index,
+ * and a signature of everything the row's DOM depends on — two renders with equal signatures
+ * produce pixel-identical rows.
+ * @param {*} ctx
+ * @param {string} activePage
+ * @param {{id:string,label:string,tier?:string}[]} [pages] Hub-scoped page list (defaults to all
+ * PAGES).
+ * @returns {{ pageTabs: {id:string,label:string}[], pageIdx: number, sig: string }} The row spec.
+ */
+function pageRowSpec(ctx, activePage, pages) {
   const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
   const source = pages || PAGES;
   const visiblePages = source.filter(
     (p) => pageVisibleInTier(p) && !topLevelIds.has(p.id) && pageHasVisibleContent(p, ctx, activePage)
   );
   const pageTabs = visiblePages.map((p) => ({ id: p.id, label: p.label }));
-  pageBar.setAttribute("tab-items", JSON.stringify(pageTabs));
-  const pageIdx = Math.max(
-    0,
-    visiblePages.findIndex((p) => p.id === activePage)
-  );
-  pageBar.setAttribute("selected-tab-index", String(pageIdx));
-  pageBar.addEventListener("tab-selected", (event) => {
-    const id = /** @type {*} */ (event)?.detail?.selectedItem?.id;
-    onPageTabSelected(ctx, activePage, id);
-  });
-  pageHost.appendChild(pageBar);
-  appendPageDescription(pageHost, activePage);
+  const pageIdx = Math.max(0, visiblePages.findIndex((p) => p.id === activePage));
+  return { pageTabs, pageIdx, sig: JSON.stringify(pageTabs) + "#" + pageIdx + "#" + activePage };
 }
 
 /**
- * Whether a page should appear in the page-tab row: render-pages (custom bodies,
- * no `metrics` array) and the active page are always kept; a metric-page is kept
- * only when at least one of its metrics is currently visible (age + data gated).
- * This gives the empty-category auto-hide (e.g. a Construction page stays hidden
- * until something is built) while never stranding the user on their current page.
+ * Put the previous render's page-tab row back when it would be rebuilt identically, refreshing
+ * only its tab-selected listener (the render context is rebuilt per render, so the old closure
+ * would act on a stale one).
+ * @param {HTMLElement} host
+ * @param {HTMLElement|null|undefined} priorPageHost The previous render's page-tab host.
+ * @param {string} sig The signature of the row about to be built.
+ * @param {(event: *) => void} onSelected The listener for this render.
+ * @returns {boolean} True when the prior row was reused.
+ */
+function reusePageRow(host, priorPageHost, sig, onSelected) {
+  const prior = /** @type {*} */ (priorPageHost);
+  const bar = prior && prior.__pageSig === sig ? prior.querySelector("fxs-tab-bar") : null;
+  if (!bar) return false;
+  if (bar.__onSelected) bar.removeEventListener("tab-selected", bar.__onSelected);
+  bar.__onSelected = onSelected;
+  bar.addEventListener("tab-selected", onSelected);
+  host.appendChild(prior);
+  return true;
+}
+
+/**
+ * Whether a page should appear in the page-tab row: render-pages and the active
+ * page are always kept; a metric-page is kept only when at least one of its
+ * metrics is currently visible, so empty categories auto-hide.
  * @param {*} p The page definition.
  * @param {*} ctx The view context (carries `history`).
  * @param {string} activePage The active page id (never hidden).
@@ -135,7 +173,7 @@ function pageHasVisibleContent(p, ctx, activePage) {
 }
 
 /**
- * Append the advanced-page contextual description caption (P1.5), if any.
+ * Append the advanced-page contextual description caption, if any.
  * @param {HTMLElement} pageHost The page-tab host.
  * @param {string} activePage The active page id.
  */
@@ -229,10 +267,9 @@ export function metricHasData(metricId, history) {
 }
 
 /**
- * Age gate PLUS data-presence gate: drop metrics that no civ has ever recorded a
- * value for (e.g. Tourism before any is generated). Synthetic ids (custom
- * renderers with their own empty handling) and the currently-selected metric are
- * always kept, and everything is kept when history is unavailable.
+ * Age gate plus data-presence gate: drop metrics no civ has ever recorded a value
+ * for. Synthetic ids and the selected metric are always kept, and everything is
+ * kept when history is unavailable.
  * @param {string[]} metrics Candidate metric ids in display order.
  * @param {*} ctx The view context (carries `history`).
  * @param {string} [keepId] A metric id to always retain (the active selection).
@@ -249,10 +286,8 @@ export function visibleMetrics(metrics, ctx, keepId) {
 
 
 /**
- * Build and append the metric selector for `page` as a row of PILLS (the 3rd-level selector; the
- * page tab row above it stays as native tabs). One pill per visible metric; selecting one sets the
- * active
- * metric (persisted + re-rendered by the host).
+ * Build and append the metric selector for `page` as a row of pills (the 3rd-level selector).
+ * One pill per visible metric; selecting one sets the active metric (persisted + re-rendered).
  * @param {HTMLElement} host
  * @param {*} ctx
  * @param {{id:string,label:string,metrics?:string[]}} page
@@ -276,11 +311,8 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
     };
   });
 
-  // A top-level companion panel (e.g. Emigration) emits no page-tab row, so its section selector
-  // (Graphs / Network / Civilizations / …) is the row directly under the view-tab bar. Render it
-  // as native tabs there, section navigation, not the 3rd-level metric pills, so the in-section
-  // toggles
-  // (a group's member/view pill rows) read as a clear level below it.
+  // A top-level companion panel emits no page-tab row, so its section selector sits directly
+  // under the view-tab bar as native tabs; the in-section pill rows then read as a level below.
   if (isTopLevelPanelPage(page.id)) {
     buildSectionTabBar(host, ctx, items, activeMetric);
     return;
@@ -381,10 +413,8 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
   } else {
     title.textContent = activeMetric;
   }
-  // A metric's explanatory note rides as a title hover tooltip instead of a standalone on-page
-  // caption: the Crises page description (CHART_TITLE_TOOLTIPS), else a registered metric's own
-  // one-line `description` (e.g. the Emigration graphs). The strict id check avoids getMetric()'s
-  // METRICS[0] fallback for an unknown id.
+  // A metric's explanatory note rides as a title hover tooltip: CHART_TITLE_TOOLTIPS, else the
+  // metric's own `description`. The strict id check avoids getMetric()'s METRICS[0] fallback.
   if (CHART_TITLE_TOOLTIPS[activeMetric]) {
     title.title = t(CHART_TITLE_TOOLTIPS[activeMetric]);
   } else if (metricObj && metricObj.id === activeMetric && typeof metricObj.description === "string") {
@@ -396,9 +426,8 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
 
 /**
  * Append the optional subtitle line under the chart title: synthetic metrics carry their own
- * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key, or, for
- * companion-registered metrics that use raw strings, not LOC keys (e.g. the Emigration graphs), a
- * plain `subtitle` string on the metric descriptor.
+ * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key or a
+ * plain `subtitle` string on the descriptor.
  * @param {HTMLElement} host The title host.
  * @param {string} activeMetric The active metric id.
  * @param {*} synthMeta The synthetic-metric meta, when the metric is synthetic.

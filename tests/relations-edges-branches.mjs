@@ -258,6 +258,42 @@ function testDefensiveAndFallbackBranches() {
   const tagged = buildCivTaggedEdges([6, 7], undefined, true);
   assert.ok(Array.isArray(tagged), "tagged edge build should survive pair-level exceptions");
 
+  // getPlayerEvents handing back a plain (non-iterable) object must not reach
+  // the for..of consumers; the reader coerces it to [].
+  globalThis.Game = {
+    Diplomacy: {
+      getPlayerEvents: () => ({ length: 1, 0: { actionType: 10, targetPlayer: 2, initialPlayer: 1 } })
+    }
+  };
+  assert.deepEqual(
+    buildPoliticalEdges([1, 2], "denounced"),
+    [],
+    "plain-object events should be treated as an empty list"
+  );
+  assert.deepEqual(buildPoliticalEdges([1, 2], "openborders"), []);
+  assert.ok(Array.isArray(buildCivTaggedEdges([1, 2], 1, false)), "endeavor scan should survive plain-object events");
+
+  // Players.get throwing for one pid must skip that player, not abort the build.
+  globalThis.Players = {
+    get: (pid) => {
+      if (pid === 1) throw new Error("player handle boom");
+      return {
+        Diplomacy: {
+          hasAllied: () => true,
+          isAtWarWith: () => true,
+          getRelationshipEnum: () => undefined
+        },
+        Trade: {}
+      };
+    }
+  };
+  const throwingAlliance = buildPoliticalEdges([1, 2, 3], "alliance");
+  assert.equal(throwingAlliance.length, 1, "alliance build should skip the throwing player handle");
+  assert.equal(throwingAlliance[0].a, 2);
+  const throwingWar = buildPoliticalEdges([1, 2, 3], "war");
+  assert.equal(throwingWar.length, 1, "war build should skip the throwing player handle");
+  assert.equal(buildAttitudeEdges([1, 2, 3], 2).length, 1, "attitude build should skip the throwing player handle");
+
   globalThis.Players = prev.Players;
   globalThis.Game = prev.Game;
   globalThis.DiplomacyActionTypes = prev.DiplomacyActionTypes;

@@ -18,3 +18,5 @@ notes are archived outside the repo, not kept here.)
 - workshop-preview.png / workshop-preview.svg  -  Steam Workshop preview art.
 - new-graphs-since-steam-2.4.5.md  -  Summary of graphs added since the 2.4.5 Workshop release.
 - commit-ready-hardening-notes-2026-06-26.md  -  Hardening notes from the June 2026 pre-release review.
+- hardening-2026-09-22.md  -  The 2.7.3 hardening pass: audit classes, what changed, what was watched, release gates.
+- civ7-storage-bug.md  -  The game storage bug behind the Hall of Fame notice and what Repair mod storage does.

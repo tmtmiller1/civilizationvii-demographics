@@ -33,9 +33,12 @@ let _uniqueSet = null;
 /** @returns {Set<string>} The set of civ Unique building types. */
 function uniqueBuildingTypes() {
   if (_uniqueSet) return _uniqueSet;
-  _uniqueSet = new Set();
-  const tags = safe(() => G.GameInfo.TypeTags, null);
-  if (tags) for (const row of tags) if (row && row.Tag === "UNIQUE") _uniqueSet.add(row.Type);
+  const set = new Set();
+  // The table iteration stays inside safe(): a non-iterable table must not throw.
+  safe(() => {
+    for (const row of G.GameInfo.TypeTags) if (row && row.Tag === "UNIQUE") set.add(row.Type);
+  }, null);
+  _uniqueSet = set;
   return _uniqueSet;
 }
 
@@ -81,14 +84,16 @@ function tileYields(location, pid) {
 /** @param {*} type @returns {string} "Name — needs Partner" for a lone unique building. */
 function orphanNote(type) {
   const name = constructibleName(type);
-  const rows = safe(() => G.GameInfo.UniqueQuarters, null);
-  if (rows) {
-    for (const r of rows) {
-      if (r.BuildingType1 === type) return t("LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS", name, constructibleName(r.BuildingType2));
-      if (r.BuildingType2 === type) return t("LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS", name, constructibleName(r.BuildingType1));
+  // The table iteration stays inside safe(): a non-iterable table must not throw.
+  const partner = safe(() => {
+    for (const r of G.GameInfo.UniqueQuarters) {
+      if (r && r.BuildingType1 === type) return r.BuildingType2;
+      if (r && r.BuildingType2 === type) return r.BuildingType1;
     }
-  }
-  return name;
+    return null;
+  }, null);
+  if (partner == null) return name;
+  return t("LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS", name, constructibleName(partner));
 }
 
 /**
@@ -159,15 +164,15 @@ function yieldStr(yields) {
 function quarterRow(q) {
   const label = q.unique ? "★ " + q.unique : q.complete ? t("LOC_DEMOGRAPHICS_BOARD_QUARTER") : t("LOC_DEMOGRAPHICS_BOARD_DEVELOPING");
   const color = q.unique ? U.ACCENT : U.INK;
-  const line = U.box("padding:3px 0");
-  line.appendChild(U.box("color:" + color + ";font-size:0.85rem;font-weight:600", label, "font-body"));
-  line.appendChild(U.box("color:" + U.INK + ";font-size:0.82rem", q.buildings.join(" + ") || "—", "font-body"));
+  const line = U.box("padding:0.167rem 0");
+  line.appendChild(U.box("color:" + color + ";font-size:var(--dg-fs-85);font-weight:600", label, "font-body"));
+  line.appendChild(U.box("color:" + U.INK + ";font-size:var(--dg-fs-85)", q.buildings.join(" + ") || "—", "font-body"));
   if (q.yields.length) {
-    line.appendChild(U.box("color:" + U.INK_MUTED + ";font-size:0.78rem", yieldStr(q.yields), "font-body"));
+    line.appendChild(U.box("color:" + U.INK_MUTED + ";font-size:var(--dg-fs-78)", yieldStr(q.yields), "font-body"));
   }
   if (q.adjacency && q.adjacency.length) {
     const adj = t("LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST", yieldStr(q.adjacency));
-    line.appendChild(U.box("color:" + U.INK_DIM + ";font-size:0.76rem;font-style:italic", adj, "font-body"));
+    line.appendChild(U.box("color:" + U.INK_DIM + ";font-size:var(--dg-fs-78)", adj, "font-body"));
   }
   return line;
 }
@@ -175,9 +180,9 @@ function quarterRow(q) {
 /** @param {*} s A settlement item {name, quarters, orphans, uniques}. @returns {HTMLElement} The expandable row. */
 function settlementRow(s) {
   const wrap = U.box("border-bottom:1px solid rgba(0,0,0,0.18)");
-  const head = U.box("display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer");
+  const head = U.box("display:flex;align-items:center;gap:0.444rem;padding:0.333rem 0.667rem;cursor:pointer");
   // Leading "+" marks the row as click-to-expand (opens this settlement's quarters).
-  const nameBox = U.box("flex:1 1 auto;color:" + U.INK + ";font-size:0.9rem;white-space:nowrap;" +
+  const nameBox = U.box("flex:1 1 auto;color:" + U.INK + ";font-size:var(--dg-fs-85);white-space:nowrap;" +
     "overflow:hidden;text-overflow:ellipsis", s.name, "font-body");
   nameBox.insertBefore(U.expandBadge(), nameBox.firstChild);
   head.appendChild(nameBox);
@@ -189,12 +194,12 @@ function settlementRow(s) {
     : s.uniques
       ? s.quarters.length + "★"
       : String(s.quarters.length);
-  head.appendChild(U.box("flex:0 0 auto;color:" + U.INK_MUTED + ";font-size:0.85rem", badge, "font-body"));
+  head.appendChild(U.box("flex:0 0 auto;color:" + U.INK_MUTED + ";font-size:var(--dg-fs-85)", badge, "font-body"));
   wrap.appendChild(head);
-  const sub = U.box("display:none;padding:2px 12px 8px 20px");
+  const sub = U.box("display:none;padding:0.111rem 0.667rem 0.444rem 1.111rem");
   for (const q of s.quarters) sub.appendChild(quarterRow(q));
   for (const o of s.orphans) {
-    sub.appendChild(U.box("color:" + U.ACCENT + ";font-size:0.8rem;padding:2px 0", "⚠ " + t("LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN", o), "font-body"));
+    sub.appendChild(U.box("color:" + U.ACCENT + ";font-size:var(--dg-fs-78);padding:0.111rem 0", "⚠ " + t("LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN", o), "font-body"));
   }
   let open = false;
   head.addEventListener("click", () => { open = !open; sub.style.display = open ? "block" : "none"; });
@@ -205,7 +210,7 @@ function settlementRow(s) {
 /** @param {*} civ A civ column. @returns {HTMLElement} The column. */
 function civColumn(civ) {
   const col = U.box("flex:0 0 auto;min-width:15rem;max-width:24rem;display:flex;flex-direction:column;" +
-    "border:1px solid " + U.BORDER + ";border-radius:6px;overflow:hidden;background:" + U.PANEL);
+    "border:1px solid " + U.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + U.PANEL);
   col.appendChild(U.columnHeader(civ.name, civ.color, civ.total));
   civ.items.sort((/** @type {*} */ a, /** @type {*} */ b) => b.quarters.length - a.quarters.length);
   for (const s of civ.items) col.appendChild(settlementRow(s));
@@ -216,7 +221,7 @@ function civColumn(civ) {
 function groupByCiv(settlements) {
   const groups = new Map();
   for (const s of settlements) {
-    if (!s._city || (s.owner && s.owner.isMajor === false)) continue;
+    if (!s || !s._city || (s.owner && s.owner.isMajor === false)) continue;
     const key = ownerKey(s.owner);
     let g = groups.get(key);
     if (!g) groups.set(key, (g = { name: ownerLabel(s.owner), color: ownerColor(s.owner), items: [], total: 0 }));

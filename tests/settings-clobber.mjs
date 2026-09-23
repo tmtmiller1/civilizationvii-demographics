@@ -122,5 +122,102 @@ blob = JSON.parse(ls.getItem("modSettings"));
 assert.equal(blob.demographics.smoothChart, true, "a genuine settings root must still be writable");
 assert.deepEqual(blob[SIB], { enabled: true }, "sibling slice preserved");
 
+// ── Scenario 7: getItem throws while setItem works. That is NOT an empty store. ──────────────────
+ls = makeLocalStorage({ modSettings: JSON.stringify({ [SIB]: { enabled: true } }) });
+const throwing = Object.assign(Object.create(ls), {
+  getItem() {
+    throw new Error("getItem unavailable in this context");
+  }
+});
+globalThis.localStorage = throwing;
+settings = await loadSettings(7);
+settings.setSetting("smoothChart", true);
+assert.equal(ls.getItem("modSettings"), JSON.stringify({ [SIB]: { enabled: true } }), "a throwing read must not lead to a write");
+assert.equal(settings.persistenceStatus(), "read-failed", "the Options footer learns why");
+assert.equal(settings.getSetting("smoothChart", false), true, "memory still serves the value");
+
+// ── Scenario 8: empty reads from a store that holds rows: refused, not overwritten. ───────────────
+ls = makeLocalStorage({ modSettings: JSON.stringify({ [SIB]: { enabled: true } }) });
+globalThis.localStorage = Object.assign(Object.create(ls), { getItem: () => null });
+settings = await loadSettings(8);
+settings.setSetting("smoothChart", true);
+assert.equal(ls.getItem("modSettings"), JSON.stringify({ [SIB]: { enabled: true } }), "rows present + empty read = no write");
+assert.equal(settings.persistenceStatus(), "read-failed");
+
+// ── Scenario 9: the store answers correctly until our write lands, then the read-back returns
+//    another key's value (a first-sorting key appeared, or the first-key bug): one write, then the
+//    session goes read-only instead of copying the foreign value on every later toggle. ───────────
+{
+  const rows = new Map([["modSettings", JSON.stringify({ [SIB]: { enabled: true } })]]);
+  let writes = 0;
+  globalThis.localStorage = {
+    getItem: (k) => (writes > 0 ? FOREIGN : (rows.get(k) ?? null)),
+    setItem: (k, v) => {
+      writes += 1;
+      rows.set(k, String(v));
+    },
+    removeItem: (k) => void rows.delete(k),
+    key: () => null,
+    get length() {
+      return rows.size;
+    }
+  };
+  settings = await loadSettings(9);
+  settings.setSetting("smoothChart", true);
+  settings.setSetting("smoothChart", false);
+  settings.setSetting("smoothChart", true);
+  assert.equal(writes, 1, "exactly one write before the failed read-back turns persistence off");
+  assert.equal(settings.persistenceStatus(), "unverified");
+  const written = JSON.parse(rows.get("modSettings"));
+  assert.deepEqual(written[SIB], { enabled: true }, "the one write still carried the sibling slice");
+}
+
+// ── Scenario 10: a slice stamped by a NEWER build keeps its stamp. ────────────────────────────────
+ls = makeLocalStorage({ modSettings: JSON.stringify({ demographics: { __schema: 2, futureKey: "x", smoothChart: false } }) });
+globalThis.localStorage = ls;
+settings = await loadSettings(10);
+settings.setSetting("smoothChart", true);
+blob = JSON.parse(ls.getItem("modSettings"));
+assert.equal(blob.demographics.__schema, 2, "a newer schema stamp is never lowered");
+assert.equal(blob.demographics.futureKey, "x", "unknown keys from the newer build are preserved");
+assert.equal(blob.demographics.smoothChart, true);
+
+// ── Scenario 11: an array under our id is not a slice; it is ignored, not spread into keys. ───────
+ls = makeLocalStorage({ modSettings: JSON.stringify({ demographics: ["a", "b"], [SIB]: { enabled: true } }) });
+globalThis.localStorage = ls;
+settings = await loadSettings(11);
+assert.equal(settings.getSetting("0", "none"), "none", "array entries never become settings keys");
+assert.equal(settings.persistenceStatus(), "ok");
+
+// ── Scenario 12: another mod's key is the only row and the store ENUMERATES (a correct engine): the
+//    empty read is a genuinely absent key, so the first write goes through. ──────────────────────
+ls = makeLocalStorage({ "some-other-mod": JSON.stringify({ x: 1 }) });
+globalThis.localStorage = ls;
+settings = await loadSettings(12);
+settings.setSetting("smoothChart", true);
+assert.ok(ls.getItem("modSettings"), "a legitimately absent key on an enumerable store is created");
+assert.equal(ls.getItem("some-other-mod"), JSON.stringify({ x: 1 }), "the other row is untouched");
+assert.equal(settings.persistenceStatus(), "ok");
+
+// ── Scenario 13: same rows but key(i) is null (1.5.0 cannot enumerate) and the read is empty: that
+//    read cannot be trusted, so nothing is written. ─────────────────────────────────────────────
+ls = makeLocalStorage({ "some-other-mod": JSON.stringify({ x: 1 }) });
+globalThis.localStorage = Object.assign(Object.create(ls), { key: () => null, getItem: () => null });
+settings = await loadSettings(13);
+settings.setSetting("smoothChart", true);
+assert.equal(ls.getItem("modSettings"), null, "no write on an unenumerable populated store");
+assert.equal(settings.persistenceStatus(), "read-failed");
+
+// ── Scenario 14: an array under our id is not a settings slice; the root is refused (foreign) and
+//    left byte-identical rather than having the array spread into numeric keys. ──────────────────
+const ARRAY_ROOT = JSON.stringify({ demographics: ["a", "b"] });
+ls = makeLocalStorage({ modSettings: ARRAY_ROOT });
+globalThis.localStorage = ls;
+settings = await loadSettings(14);
+settings.setSetting("smoothChart", true);
+assert.equal(ls.getItem("modSettings"), ARRAY_ROOT, "an array slice is never spread or rewritten");
+assert.equal(settings.persistenceStatus(), "foreign");
+assert.equal(settings.getSetting("smoothChart", false), true, "memory still serves the value");
+
 delete globalThis.localStorage;
-console.log("settings-clobber harness passed (sibling slices preserved across flaky / unparseable / empty / foreign reads)");
+console.log("settings-clobber harness passed (sibling slices preserved across flaky / unparseable / empty / foreign / throwing reads; read-back verified; newer schema kept)");

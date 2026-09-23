@@ -3,7 +3,7 @@
 // Series -> Chart.js datasets for the line chart: apply the user settings that
 // transform the series list (showEliminatedCivs, smoothChart, global-metric
 // collapse, showUnmetNames masking), then build the styled dataset array
-// (muted / dimmed / focused + time-range filter). Extracted from chart-line.js.
+// (muted / dimmed / focused + time-range filter).
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
@@ -184,12 +184,9 @@ function collapseGlobalMetric(allSeries, metricMeta, metricId) {
 }
 
 /**
- * Apply the analytics-visibility POLICY: drop the series for any civ the effective policy
- * withholds, so the line graphs honor the same "Met civilizations only" / "Own civilization only"
- * setting the rest of the screen (and the Emigration tabs) mask by, never plotting a hidden civ's
- * trend at all, rather than just renaming it. The local player's own civ is never dropped. "All
- * civilizations"
- * keeps everyone (then applyUnmetNames handles any name masking).
+ * Apply the analytics-visibility policy: drop the series for any civ the effective policy
+ * withholds, so a hidden civ's trend is never plotted. The local player's own civ is never
+ * dropped; "All civilizations" keeps everyone (applyUnmetNames then masks names).
  * @param {ChartSeries[]} allSeries The series list.
  * @returns {ChartSeries[]} The filtered series list.
  */
@@ -236,9 +233,8 @@ function applyUnmetNames(allSeries) {
  * @returns {Record<string, *>[]} The Chart.js datasets.
  */
 function buildChartDatasets(allSeries, muted, focused, tr) {
-  // Hardware-adaptive render clamp (P1.6): bound plotted points per series after
-  // the visible-range filter, so weak machines / marathon saves don't draw
-  // thousands of points. Computed once per render pass.
+  // Hardware-adaptive render clamp: bound plotted points per series after the
+  // visible-range filter so marathon saves don't draw thousands of points.
   const pointBudget = renderPointBudget();
   return allSeries.map((s) => {
     const isMuted = muted.has(s.leaderType);

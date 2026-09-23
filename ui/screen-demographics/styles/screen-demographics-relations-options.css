@@ -4,7 +4,8 @@
 .demographics-relations-wrap {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     width: 100%;
     flex: 1 1 auto;
     min-height: 0;
@@ -19,8 +20,8 @@
    clashes with the body's top border on CS while sitting clean on civ. */
 .demographics-relations-viewer-host {
     position: absolute;
-    top: 9.5rem;
-    left: 1.5rem;
+    top: calc(9.5 * var(--dg-u));
+    left: calc(1.5 * var(--dg-u));
     display: flex;
     align-items: center;
     /* Never grow into the filter legend on the right (right:1.5rem + width:24rem = 25.5rem, plus
@@ -60,8 +61,8 @@
        a PRE-LAYOUT FALLBACK now: JS (anchorRelationsOverlays) measures the actual
        chrome height at runtime and overrides `top` in px, so the legend tracks the
        tab/toolbar height at any Interface Size instead of assuming it's ~9.5rem. */
-    top: 9.5rem;
-    right: 1.5rem;
+    top: calc(9.5 * var(--dg-u));
+    right: calc(1.5 * var(--dg-u));
     /* FIXED width (not max-width) so the box has the same horizontal
        footprint on the major-civs tab (11 entries) AND the city-states
        tab (8 entries). Earlier max-width let it shrink to the widest
@@ -70,14 +71,17 @@
        never grow past the panel edge — max-width overrides the fixed width
        once 24rem + the 1.5rem side gaps no longer fit. (GameFace supports
        calc() in max-width but not the min()/max()/clamp() value functions.) */
-    width: 24rem;
+    width: calc(24 * var(--dg-u));
     max-width: calc(100% - 3rem);
     /* No min-height floor: a fixed floor (was 14rem) could exceed the available
        body height at a large Interface Size / short window and push the legend's
        bottom off-screen — the same min-* > max-* trap that clipped the ring. JS
        caps the legend's height to the body (anchorRelationsOverlays); content sets
        the natural height otherwise. */
-    padding: 0.6rem 0.85rem;
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(0.85 * var(--dg-u));
+    padding-bottom: calc(0.6 * var(--dg-u));
+    padding-left: calc(0.85 * var(--dg-u));
     box-sizing: border-box;
     /* Scroll a too-tall legend (many Agreements pills at a large Interface Size)
        within its capped box instead of clipping it; the per-label ellipsis below
@@ -106,14 +110,20 @@
 .demographics-relations-caption {
     width: 100%;
     text-align: center;
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
     flex: 0 0 auto;
-    padding: 0.2rem 0.4rem;
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
 }
 .demographics-relations-clear-focus-btn {
-    margin-left: 0.35rem;
-    padding: 0.08rem 0.45rem;
+    margin-left: calc(0.35 * var(--dg-u));
+    padding-top: calc(0.08 * var(--dg-u));
+    padding-right: calc(0.45 * var(--dg-u));
+    padding-bottom: calc(0.08 * var(--dg-u));
+    padding-left: calc(0.45 * var(--dg-u));
     border: 1px solid rgba(201, 162, 76, 0.6);
     border-radius: 0.2rem;
     background: rgba(20, 16, 10, 0.75);
@@ -144,8 +154,14 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    padding: 0 0 0.35rem 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: calc(0.5 * var(--dg-u));
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: calc(0.35 * var(--dg-u));
+    padding-left: 0;
     border-bottom: 1px solid rgba(168, 132, 90, 0.45);
 }
 /* ── Sub-group chip row (Politics / Reputation / Agreements) ───────────────
@@ -163,14 +179,20 @@
     /* Match the settlements All/Cities/Towns control exactly (.demographics-settle-
        filters): same gap + same chip font-size/padding (rule below). */
     gap: 0.4rem 0.4rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
-    padding: 0.3rem 0 0.15rem;
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.15 * var(--dg-u));
+    padding-left: 0;
 }
 .demographics-relations-subgroup-row .demographics-chart-time-filter-pill {
     font-size: var(--dg-fs-105);
-    padding: 0.4rem 1rem;
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
 }
 .demographics-relations-filter-label {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     white-space: nowrap;
     /* Ellipsize an over-long localized label inside the fixed-width legend rather than overflowing
        the pill. Needs min-width:0 so the flex item is allowed to shrink below its content width. */
@@ -179,7 +201,7 @@
     text-overflow: ellipsis;
 }
 .demographics-relations-filter-pill.is-hidden .demographics-relations-filter-label {
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
 }
 /* Legend entries — NOT toggle buttons. Each entry shows a real sample line
    (color + texture matching what the ring draws) followed by the label,
@@ -191,11 +213,14 @@
     /* Stack vertically inside the overlay column — one entry per line. */
     display: flex;
     align-items: center;
-    padding: 0.18rem 0.35rem;
+    padding-top: calc(0.18 * var(--dg-u));
+    padding-right: calc(0.35 * var(--dg-u));
+    padding-bottom: calc(0.18 * var(--dg-u));
+    padding-left: calc(0.35 * var(--dg-u));
     border: none;
     background: transparent;
     cursor: pointer;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-95);
     white-space: nowrap;
     line-height: 1.3;
@@ -205,21 +230,21 @@
     width: 100%;
 }
 .demographics-relations-filter-pill:hover {
-    color: var(--ia-accent-gold, #f3c34c);
+    color: var(--dg-ia-accent-gold, #f3c34c);
 }
 .demographics-relations-filter-pill.is-active {
     /* No border — full opacity reads as "active". */
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
 }
 .demographics-relations-filter-pill.is-hidden {
     /* Dimmed; the sample SVG dims with it via opacity inheritance. */
     opacity: 0.35;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
 }
 /* "Pip" — filled disc when active, hollow when toggled off. */
 .demographics-relations-filter-pip {
-    width: 0.7rem;
-    height: 0.7rem;
+    width: calc(0.7 * var(--dg-u));
+    height: calc(0.7 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
     border: 1px solid currentColor;
@@ -230,8 +255,8 @@
 }
 .demographics-relations-filter-swatch {
     display: inline-block;
-    width: 0.8rem;
-    height: 0.25rem;
+    width: calc(0.8 * var(--dg-u));
+    height: calc(0.25 * var(--dg-u));
     border-radius: 0.1rem;
     flex-shrink: 0;
 }
@@ -400,7 +425,7 @@
 .demographics-relations-node-label {
     position: absolute;
     transform: translateX(-50%);
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-weight: 600;
     font-size: var(--dg-fs-95);
     line-height: 1.1;
@@ -416,42 +441,55 @@
 .demographics-options {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.6rem 0.2rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(0.2 * var(--dg-u));
+    padding-bottom: calc(0.6 * var(--dg-u));
+    padding-left: calc(0.2 * var(--dg-u));
     width: 100%;
 }
 .demographics-options-heading {
-    color: var(--ia-accent-gold);
-    margin-bottom: 0.3rem;
+    color: var(--dg-ia-accent-gold);
+    margin-bottom: calc(0.3 * var(--dg-u));
 }
 .demographics-option-row {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
 }
 /* A toggle nested visually beneath its parent toggle (e.g. the met-history
    reveal mode under "Hide unmet civ stats"). */
 .demographics-option-row-sub {
-    margin-left: 1.5rem;
+    margin-left: calc(1.5 * var(--dg-u));
 }
 .demographics-option-checkbox {
     margin: 0;
 }
 .demographics-option-label {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
 }
 /* .demographics-option-hint moved to screen-demographics-base.css (single
    source of truth — it was duplicated here and only won by load order). */
 .demographics-options-buttons {
     display: flex;
     flex-direction: row;
-    gap: 0.6rem;
-    margin-top: 0.5rem;
+    row-gap: calc(0.6 * var(--dg-u));
+    column-gap: calc(0.6 * var(--dg-u));
+    margin-top: calc(0.5 * var(--dg-u));
+}
+/* A destructive Options button (Clear history / Reset war history) after its first click: the
+   caption reads as the confirm question and the second click performs. Longhands only (GameFace
+   drops a shorthand that carries var()). */
+.demographics-option-button.is-armed {
+    background-color: rgba(217, 130, 107, 0.35);
+    border-color: rgba(217, 130, 107, 0.8);
 }
 .demographics-session-info {
-    margin-top: 0.6rem;
-    color: var(--ia-accent-gold-soft);
+    margin-top: calc(0.6 * var(--dg-u));
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
 }
 
@@ -484,7 +522,10 @@
     position: absolute;
     z-index: 30;
     pointer-events: none;
-    padding: 0.2rem 0.5rem;
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.5 * var(--dg-u));
     background: rgba(12, 9, 5, 0.95);
     border: 1px solid rgba(201, 162, 76, 0.7);
     border-radius: 0.25rem;
@@ -494,6 +535,6 @@
        edge-flip. The cursor gap AND the near-edge flip (down-right → up-left) are
        computed in JS (createEdgeTooltip.show) so the label stays on-panel at every
        resolution; no fixed directional transform here. */
-    max-width: 22rem;
+    max-width: calc(22 * var(--dg-u));
     word-break: break-word;
 }

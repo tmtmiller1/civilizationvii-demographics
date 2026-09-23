@@ -6,7 +6,9 @@ import assert from "node:assert/strict";
 // the Crises page renders a finished age from the snapshot. These are pure off-engine.
 import {
   buildAgeCrisisCols,
-  mergeAgeCols
+  mergeAgeCols,
+  mergeCost,
+  toTableCols
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
 import { _snapshotCrisisCost } from "/demographics/ui/sampler/sampler-age-boundary.js";
 
@@ -75,9 +77,26 @@ function testMergeAgeColsSumsAcrossAges() {
   assert.equal(col.entry.leaderType, "LEADER_HATSHEPSUT"); // identity from the first age set
 }
 
+function testPersistedSnapshotElementsAreUntrusted() {
+  // A persisted crisisSnapshots array is storage data: an element can be null / a scalar, and a
+  // column's cost can be missing. The ARRAY is type-checked upstream; the ELEMENTS must be too.
+  const dirty = [null, 7, "x", { pid: 7, cost: { popLost: 5 } }, { pid: 8, cost: null }];
+  const merged = mergeAgeCols([dirty, "not-an-array", null, [{ pid: 7, cost: { popLost: 1 } }]]);
+  assert.equal(merged.length, 2, "only object columns survive");
+  assert.equal(merged.find((c) => c.entry.pid === 7).cost.popLost, 6);
+  assert.deepEqual(merged.find((c) => c.entry.pid === 8).cost, {}, "null cost merges as nothing");
+  assert.equal(toTableCols(dirty).length, 2, "toTableCols drops null / scalar elements");
+  assert.equal(toTableCols(null).length, 0);
+  const acc = { popLost: 1 };
+  mergeCost(acc, null);
+  mergeCost(acc, 4);
+  assert.deepEqual(acc, { popLost: 1 }, "mergeCost no-ops on a non-object add");
+}
+
 testDenseSamplesYieldRealLosses();
 testDecimationBlanksTheLossLive();
 testSnapshotPersistsDenseTotals();
 testMergeAgeColsSumsAcrossAges();
+testPersistedSnapshotElementsAreUntrusted();
 
 console.log("crisis-cost-snapshot harness passed");
