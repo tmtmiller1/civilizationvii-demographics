@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ru_RU"><Text>Демография</Text></Replace>
-        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ru_RU"><Text>Исторические графики по ходам, всемирный справочник, кольца глобальных отношений, диаграмма Ганта конфликтов и встроенные индикаторы прогресса триумфов для каждой встреченной цивилизации.</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ru_RU"><Text>Исторические графики по ходам, всемирный справочник, кольца глобальных отношений, диаграмма Ганта конфликтов и встроенные индикаторы прогресса триумфов для каждой встреченной цивилизации. Включает необязательное восстановление хранилища для ошибки Civilization VII: оно удаляет сохранённые данные другого мода, запускается только по нажатию и заранее сообщает, что удаляет.</Text></Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ru_RU"><Text>Демография</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ru_RU"><Text>Демография</Text></Replace>
@@ -1992,6 +1992,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="ru_RU">
             <Text>Показать все игры</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="ru_RU">
+            <Text>Скрыто: {1_Count} {1_Count : plural 1?незавершённая игра; other?незавершённых игр;} короче {2_Turns} ходов</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ru_RU">
             <Text>Победа</Text>
         </Replace>
@@ -2095,7 +2098,7 @@
             <Text>Игры сохраняются на этом компьютере. Каждый файл сохранения также хранит собственную запись.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ru_RU">
-            <Text>В этом сеансе не удалось прочитать прошлые игры из хранилища. Текущие игры по-прежнему отображаются, а каждое сохранение восстанавливает свою запись при загрузке.</Text>
+            <Text>В этом сеансе не удалось прочитать прошлые игры из хранилища. Каждая игра по-прежнему хранится в своём сохранении.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="ru_RU">
             <Text>Октавиан Август</Text>
@@ -2298,8 +2301,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="ru_RU">
             <Text>Победа и падения</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="ru_RU">
-            <Text>Прошлые игры нельзя сохранить на этом компьютере: мешают сохранённые данные другого мода из-за ошибки хранения в игре. Текущие игры по-прежнему отображаются, а каждое сохранение восстанавливает свою запись при загрузке.</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="ru_RU">
+            <Text>Ошибка Civilization VII блокирует Зал славы</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="ru_RU">
+            <Text>Есть обходной путь. Нажмите здесь, чтобы прочитать о нём.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="ru_RU">
+            <Text>Восстановление хранилища модов: сначала прочитайте</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="ru_RU">
+            <Text>Зачем это нужно</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="ru_RU">
+            <Text>В Civilization VII 1.5.0 есть ошибка: когда мод запрашивает свои сохранённые данные, игра возвращает запись, которая идёт первой по алфавиту, какой бы мод ни спрашивал. Работают только данные этого одного мода. Это ошибка, которую должна исправить Firaxis; до тех пор эта кнопка единственный обходной путь.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="ru_RU">
+            <Text>Что делает эта кнопка</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="ru_RU">
+            <Text>Очищает общее хранилище и оставляет в нём одну запись: общую запись настроек, которой пользуется большинство модов с панелью настроек. Сюда входит мод Demographics, его настройки и сведения о прошлых играх, необходимые для этой функции. Когда общая запись настроек остаётся единственной, игра возвращает именно её, поэтому использующие её моды с этого момента нормально загружают и сохраняют настройки. Однако мод с отдельной собственной записью от этого сломается: все отдельные записи удаляются, включая ту, что шла первой и потому единственная действительно работала.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="ru_RU">
+            <Text>Если позже какой-нибудь мод снова запишет собственную запись, список перестанет обновляться, и это восстановление будет предложено снова.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="ru_RU">
+            <Text>Восстановить хранилище: удалить данные другого мода</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="ru_RU">
+            <Text>Нажмите ещё раз, чтобы удалить сохранённые данные этого мода и восстановить хранилище. Это нельзя отменить.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="ru_RU">
+            <Text>Отмена</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="ru_RU">
+            <Text>Хранилище восстановлено. Список прошлых игр Зала славы снова сохраняется на этом компьютере, а моды, которые держат настройки в общей записи, с этого момента правильно сохраняют и загружают их.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="ru_RU">
+            <Text>Восстановить не удалось. Каждая игра по-прежнему хранится в своём сохранении.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="ru_RU">
             <Text>Лучшие игры</Text>

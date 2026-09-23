@@ -5,7 +5,7 @@
             <Text>Démographie</Text>
         </Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="fr_FR">
-            <Text>Graphiques historiques par tour, annuaire mondial, anneaux de relations mondiales, diagramme de Gantt des conflits et barres de progression Triumphs natives pour chaque civilisation rencontrée.</Text>
+            <Text>Graphiques historiques par tour, annuaire mondial, anneaux de relations mondiales, diagramme de Gantt des conflits et barres de progression Triumphs natives pour chaque civilisation rencontrée. Comprend une réparation facultative du stockage pour un bug de Civilization VII ; elle supprime les données enregistrées d’un autre mod, ne s’exécute que si vous appuyez dessus et indique d’abord ce qu’elle supprime.</Text>
         </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="fr_FR">
             <Text>Démographie</Text>
@@ -2551,6 +2551,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="fr_FR">
             <Text>Afficher toutes les parties</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="fr_FR">
+            <Text>Masquées : {1_Count} {1_Count : plural 1?partie inachevée; other?parties inachevées;} de moins de {2_Turns} tours</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="fr_FR">
             <Text>Victoire</Text>
         </Replace>
@@ -2654,7 +2657,7 @@
             <Text>Les parties sont enregistrées sur cet ordinateur. Chaque sauvegarde conserve également son propre historique.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="fr_FR">
-            <Text>Les parties précédentes n'ont pas pu être lues depuis le stockage lors de cette session. Les parties jouées maintenant apparaissent toujours, et chaque sauvegarde restaure son propre historique lors de son chargement.</Text>
+            <Text>Les parties passées n’ont pas pu être lues depuis le stockage pendant cette session. Chaque partie reste stockée dans sa propre sauvegarde.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="fr_FR">
             <Text>César Auguste</Text>
@@ -2857,8 +2860,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="fr_FR">
             <Text>Victoire et chutes</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="fr_FR">
-            <Text>Les parties passées ne peuvent pas être conservées sur cet ordinateur : les données d’un autre mod font obstacle, à cause d’un bug de stockage du jeu. Les parties jouées maintenant apparaissent toujours, et chaque sauvegarde restaure son propre historique lors de son chargement.</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="fr_FR">
+            <Text>Un bug de Civilization VII bloque le Panthéon</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="fr_FR">
+            <Text>Une solution de contournement existe. Cliquez ici pour en savoir plus.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="fr_FR">
+            <Text>Réparer le stockage des mods : à lire d’abord</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="fr_FR">
+            <Text>Pourquoi c’est nécessaire</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="fr_FR">
+            <Text>Civilization VII 1.5.0 a un bug : quand un mod demande ses propres données enregistrées, le jeu renvoie l’entrée qui vient en premier par ordre alphabétique, quel que soit le mod. Seules les données de ce mod fonctionnent. C’est un bug que Firaxis doit corriger ; en attendant, ce bouton est la seule solution de contournement.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="fr_FR">
+            <Text>Ce que fait ce bouton</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="fr_FR">
+            <Text>Vide le stockage partagé et n’y laisse qu’une entrée : l’entrée de réglages partagée qu’utilisent la plupart des mods à panneau d’options. Cela comprend le mod Demographics, ses réglages et les informations sur les parties passées nécessaires à cette fonction. Une fois l’entrée de réglages partagée seule restante, c’est elle que le jeu renvoie, donc les mods qui l’utilisent chargent et enregistrent ensuite leurs réglages normalement. Un mod ayant sa propre entrée séparée serait en revanche cassé par cette opération : chaque entrée séparée est supprimée, y compris celle qui venait en premier et qui était donc la seule à fonctionner réellement.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="fr_FR">
+            <Text>Si un mod réécrit plus tard sa propre entrée, la liste cesse de se mettre à jour et cette réparation est de nouveau proposée.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="fr_FR">
+            <Text>Réparer le stockage : supprimer les données d’un autre mod</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="fr_FR">
+            <Text>Cliquez à nouveau pour supprimer les données enregistrées de ce mod et réparer. Cette action est irréversible.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="fr_FR">
+            <Text>Annuler</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="fr_FR">
+            <Text>Stockage réparé. La liste des parties passées du Panthéon est de nouveau enregistrée sur cet ordinateur, et les mods qui gardent leurs réglages dans l’entrée partagée les enregistrent et les chargent désormais correctement.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="fr_FR">
+            <Text>La réparation n’a pas fonctionné. Chaque partie reste stockée dans sa propre sauvegarde.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="fr_FR">
             <Text>Meilleures parties</Text>

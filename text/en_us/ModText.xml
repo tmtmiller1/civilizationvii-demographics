@@ -5,7 +5,7 @@
             <Text>Demographics</Text>
         </Row>
         <Row Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION">
-            <Text>Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for every met civilization.</Text>
+            <Text>Turn-by-turn graphs, civilization rankings, global relations, war history, and Triumph progress for every met civilization. Includes an optional storage repair for a Civilization VII bug; it deletes the saved data of one other mod, only runs when you press it, and says what it deletes first.</Text>
         </Row>
         <Row Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS">
             <Text>Demographics</Text>
@@ -2768,6 +2768,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT">
             <Text>Show all games</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN">
+            <Text>Hidden: {1_Count} unfinished {1_Count : plural 1?game; other?games;} under {2_Turns} turns</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY">
             <Text>Victory</Text>
         </Row>
@@ -2871,7 +2874,7 @@
             <Text>Games are saved on this computer. Each save file also keeps its own record.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE">
-            <Text>Past games could not be read from storage in this session. Games played now still appear, and each save restores its own record when you load it.</Text>
+            <Text>Past games could not be read from storage in this session. Every game is still stored in its own save.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1">
             <Text>Augustus Caesar</Text>
@@ -3074,8 +3077,44 @@
         <Row Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES">
             <Text>Victory &amp; falls</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED">
-            <Text>Past games cannot be kept on this computer: another mod's saved data is in the way, because of a game storage bug. Games played now still appear, and each save restores its own record when you load it.</Text>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H">
+            <Text>A Civilization VII bug is blocking the Hall of Fame</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX">
+            <Text>A workaround is available. Read about it by clicking here.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE">
+            <Text>Repair mod storage: read this first</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H">
+            <Text>Why this is needed</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY">
+            <Text>Civilization VII 1.5.0 has a bug: whenever a mod asks for its own saved data, the game returns whichever mod's entry sorts first. Only that one mod's data works. This is Firaxis's bug to fix; until then, this button is the only workaround.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H">
+            <Text>What this button does</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES">
+            <Text>Empties the shared storage and leaves one entry in it: the shared settings entry used by most mods with an options panel. This includes the Demographics mod, its settings and the past game information necessary for this feature. Once the shared settings entry is the only remaining item, it is what the game returns, so the mods that use it load and save their settings normally from then on. A mod with a separate entry of its own would, however, be broken by this: every separate entry is deleted, including the one that was sorting first and was therefore the only one actually working.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN">
+            <Text>If a mod writes its own entry again later, the list stops updating and this repair is offered again.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO">
+            <Text>Repair storage: delete another mod's saved data</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM">
+            <Text>Click again to delete that mod's saved data and repair. This cannot be undone.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL">
+            <Text>Cancel</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK">
+            <Text>Storage repaired. The Hall of Fame's list of past games is saved on this computer again, and mods that keep their settings in the shared entry save and load them properly from now on.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL">
+            <Text>The repair did not work. Every game is still stored in its own save.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST">
             <Text>Best Games</Text>

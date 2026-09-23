@@ -35,7 +35,7 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [*]Read-only presentation layer.
 [*]No base-game file replacement.
 [*]Per-save data storage; the Hall of Fame is kept on your computer.
-[*]Because of a game storage bug, another mod's saved data can keep the Hall of Fame from storing past games; the current game and any save you load still appear, and a note says why.
+[*]Civilization VII 1.5.0 has a bug in mod storage: whatever a mod asks for, the game returns the first mod's saved data, so only one mod's data works and shared settings never persist. It is Firaxis's to fix. When it blocks past games, a notice box on every Hall of Fame page names the bug and opens [b]Repair mod storage[/b], which restarts the storage with only the shared settings entry in it (the one most option panels use, so those mods load and save normally again; a mod with its own separate entry is not helped) and permanently deletes that one mod's saved data. It explains itself first and only runs when you press it, twice. Details: https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/docs/civ7-storage-bug.md
 [/list]
 [b]Installation:[/b]
 [list=1]

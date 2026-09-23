@@ -3,6 +3,14 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
+==== 2.7.1 | 2026-09-22 | src e747ae909ba4 | gen a4d2c142c8ac ====
+[b]Version 2.7.1 · 22 September 2026[/b]
+A workaround for the Civilization VII storage bug that blocks the Hall of Fame, and the short-games filter on every Hall of Fame page. All new text is localized across all 11 languages.
+
+[b]Added[/b]
+• [b]Repair mod storage.[/b] Civilization VII 1.5.0 has a bug in the storage mods use for their settings: whenever a mod asks for its own saved data, the game returns whichever mod's entry sorts first. Only that one mod's data works; the entry Demographics and most mod option panels share can never be read back, so those mods' settings reset every launch and the Hall of Fame cannot read or save its list of past games (every game is still stored in its own save). It is Firaxis's bug to fix, and a reproduction is written up for their support portal. Until then, when it is blocking the Hall of Fame, a notice box on every Hall of Fame page says so; clicking it opens a sheet that explains the bug and what the button does, then a two-click [b]Repair storage[/b] button with a Cancel. The repair empties the shared storage and leaves one entry in it, the shared settings entry used by most mods with an options panel, holding Demographics' settings and past game information; being the only entry, it is what the game returns, so the mods that use it load and save their settings normally from then on. It deletes every separate entry, including the one that was sorting first and was therefore the only one actually working. Saved games, the history inside them, the game's own settings and every mod's files are untouched. Nothing changes for anyone who never clicks it, and it is offered again if a mod writes its own entry later. The whole story is in docs/civ7-storage-bug.md.
+• [b]Hide short games / Show all games on every Hall of Fame page.[/b] The filter used to sit on Rankings only, so Best Games, Leaders, Civilizations and Records could look empty while unfinished games under 20 turns were hidden. It now sits under the section tabs on every page and says how many games it is hiding.
+
 ==== 2.7.0 | 2026-09-22 | src 68b1fe883ef0 | gen eb2892312b00 ====
 [b]Version 2.7.0 · 22 September 2026[/b]
 A History release. The former History & Rankings mod is now part of Demographics: a new [b]History[/b] tab tells the story of your campaign, and a [b]Hall of Fame[/b] under World Rankings, also reachable from the main menu, ranks every campaign you have played. All new text is localized across all 11 languages.

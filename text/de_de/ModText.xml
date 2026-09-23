@@ -5,7 +5,7 @@
             <Text>Demografie</Text>
         </Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="de_DE">
-            <Text>Historische Diagramme pro Runde, Weltfaktbuch, globale Beziehungsringe, Konflikt-Gantt und native Triumph-Fortschrittsbalken für jede getroffene Zivilisation.</Text>
+            <Text>Historische Diagramme pro Runde, Weltfaktbuch, globale Beziehungsringe, Konflikt-Gantt und native Triumph-Fortschrittsbalken für jede getroffene Zivilisation. Enthält eine optionale Speicherreparatur für einen Fehler in Civilization VII; sie löscht die gespeicherten Daten einer anderen Mod, läuft nur auf Knopfdruck und sagt vorher, was gelöscht wird.</Text>
         </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="de_DE">
             <Text>Demografie</Text>
@@ -2551,6 +2551,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="de_DE">
             <Text>Alle Partien anzeigen</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="de_DE">
+            <Text>Ausgeblendet: {1_Count} unfertige {1_Count : plural 1?Partie; other?Partien;} unter {2_Turns} Runden</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="de_DE">
             <Text>Sieg</Text>
         </Replace>
@@ -2654,7 +2657,7 @@
             <Text>Partien werden auf diesem Computer gespeichert. Jeder Spielstand bewahrt zusätzlich seine eigene Aufzeichnung.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="de_DE">
-            <Text>Frühere Partien konnten in dieser Sitzung nicht aus dem Speicher gelesen werden. Aktuell gespielte Partien erscheinen weiterhin, und jeder Spielstand stellt beim Laden seine eigene Aufzeichnung wieder her.</Text>
+            <Text>Frühere Spiele konnten in dieser Sitzung nicht aus dem Speicher gelesen werden. Jedes Spiel bleibt in seinem eigenen Spielstand gespeichert.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="de_DE">
             <Text>Augustus</Text>
@@ -2857,8 +2860,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="de_DE">
             <Text>Sieg &amp; Untergänge</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="de_DE">
-            <Text>Frühere Spiele können auf diesem Computer nicht gespeichert werden: Die gespeicherten Daten einer anderen Mod stehen wegen eines Speicherfehlers des Spiels im Weg. Aktuell gespielte Partien erscheinen weiterhin, und jeder Spielstand stellt beim Laden seine eigene Aufzeichnung wieder her.</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="de_DE">
+            <Text>Ein Fehler in Civilization VII blockiert die Ruhmeshalle</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="de_DE">
+            <Text>Eine Abhilfe ist verfügbar. Zum Nachlesen hier klicken.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="de_DE">
+            <Text>Mod-Speicher reparieren: zuerst lesen</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="de_DE">
+            <Text>Warum das nötig ist</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="de_DE">
+            <Text>Civilization VII 1.5.0 hat einen Fehler: Fragt eine Mod nach ihren eigenen gespeicherten Daten, liefert das Spiel den Eintrag, der alphabetisch zuerst kommt, egal von welcher Mod. Nur die Daten dieser einen Mod funktionieren. Das ist ein Fehler, den Firaxis beheben muss; bis dahin ist diese Schaltfläche die einzige Abhilfe.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="de_DE">
+            <Text>Was diese Schaltfläche tut</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="de_DE">
+            <Text>Leert den gemeinsamen Speicher und lässt einen Eintrag darin: den gemeinsamen Einstellungseintrag, den die meisten Mods mit Optionsmenü nutzen. Dazu gehört die Mod Demographics mit ihren Einstellungen und den für diese Funktion nötigen Informationen zu früheren Spielen. Sobald der gemeinsame Einstellungseintrag das Einzige ist, was übrig bleibt, liefert ihn das Spiel zurück, sodass die Mods, die ihn nutzen, ihre Einstellungen von da an normal laden und speichern. Eine Mod mit einem eigenen separaten Eintrag würde dadurch jedoch beschädigt: Jeder separate Eintrag wird gelöscht, auch derjenige, der alphabetisch zuerst kam und damit als Einziger tatsächlich funktioniert hat.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="de_DE">
+            <Text>Schreibt später wieder eine Mod ihren eigenen Eintrag, wird die Liste nicht mehr aktualisiert, und diese Reparatur wird erneut angeboten.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="de_DE">
+            <Text>Speicher reparieren: Daten einer anderen Mod löschen</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="de_DE">
+            <Text>Erneut klicken, um die gespeicherten Daten dieser Mod zu löschen und zu reparieren. Das lässt sich nicht rückgängig machen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="de_DE">
+            <Text>Abbrechen</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="de_DE">
+            <Text>Speicher repariert. Die Liste früherer Spiele der Ruhmeshalle wird auf diesem Computer wieder gespeichert, und Mods, die ihre Einstellungen im gemeinsamen Eintrag halten, speichern und laden sie von nun an richtig.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="de_DE">
+            <Text>Die Reparatur hat nicht funktioniert. Jedes Spiel bleibt in seinem eigenen Spielstand gespeichert.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="de_DE">
             <Text>Beste Partien</Text>
