@@ -120,12 +120,6 @@ export function renderGames(host, records, all, ctx) {
   clear(host);
   const best = Math.max(0, ...all.map((r) => r.stats.triumphs));
   const list = ranked(records);
-  const toggle = pillRow(
-    [{ key: "hide", label: t("LOC_DEMOGRAPHICS_HIST_HIDE_SHORT") }, { key: "show", label: t("LOC_DEMOGRAPHICS_HIST_SHOW_SHORT") }],
-    viewState.showShort ? "show" : "hide",
-    (k) => { viewState.showShort = k === "show"; ctx.rerender(); },
-    "filter"
-  );
   const cols = [
     { label: "#", cls: "dgh-col-xs" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_TITLE"), cls: "dgh-col-md" }, { label: "", cls: "dgh-col-icon" },
     { label: t("LOC_DEMOGRAPHICS_HIST_COL_LEADER"), cls: "dgh-col-md" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS"), cls: "dgh-col-grow" },
@@ -139,8 +133,7 @@ export function renderGames(host, records, all, ctx) {
     num(r.turns), num(r.stats.triumphs), dateLabel(r.updated), sparkline(r.spark.tri, readableColor(r.color, r.color2 || ""))
   ]);
   host.appendChild(el("div", { cls: "dgh-toolbar" }, [
-    pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS"), t("LOC_DEMOGRAPHICS_HIST_RANKING_RULE")),
-    toggle
+    pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS"), t("LOC_DEMOGRAPHICS_HIST_RANKING_RULE"))
   ]));
   host.appendChild(el("div", { cls: "dgh-scroll" }, [
     rows.length ? table(cols, rows, { onRow: (i) => openGame(list[i].id, ctx) }) : emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF"))

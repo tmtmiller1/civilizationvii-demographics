@@ -258,6 +258,29 @@ function normalizeSlice(slice) {
 }
 
 /**
+ * The slice as it should be stored: normalized, then stripped of every key that still equals the
+ * shipped default. Keys absent from DEFAULTS are genuine per-view state (active tab/metric/filters)
+ * and always persist. Folding DEFAULTS into the slice would freeze the then-current default into
+ * every store, so a later change to a default would never reach anyone who had touched settings;
+ * stripping default-equal keys also heals already-baked slices on their next write. Reads stay
+ * correct because getSettings()/getSetting() overlay DEFAULTS over the (partial) slice.
+ * @param {SettingsBucket} bucket Stored slice merged with whatever is being written.
+ * @returns {SettingsBucket} The slice to store, stamped with the schema version.
+ */
+function sliceToPersist(bucket) {
+  const merged = normalizeSlice(bucket);
+  /** @type {SettingsBucket} */
+  const slice = {};
+  for (const k of Object.keys(merged)) {
+    if (k === SCHEMA_KEY) continue;
+    const matchesDefault = k in DEFAULTS && JSON.stringify(merged[k]) === JSON.stringify(DEFAULTS[k]);
+    if (!matchesDefault) slice[k] = merged[k];
+  }
+  slice[SCHEMA_KEY] = SCHEMA_VERSION;
+  return slice;
+}
+
+/**
  * Run `fn`, returning its result; on any throw, log and return `fallback`.
  * @template T
  * @param {() => T} fn Function to invoke.
@@ -528,7 +551,8 @@ function purgeStrayTopLevelKeys() {
  *   getSettings(): SettingsBucket,
  *   getSetting(key: string, dflt?: *): *,
  *   setSetting(key: string, value: *): void,
- *   setSettings(entries: Record<string, *>): void
+ *   setSettings(entries: Record<string, *>): void,
+ *   sliceForStore(): {id: string, slice: SettingsBucket}
  * }}
  */
 export const DemographicsSettings = {
@@ -578,30 +602,21 @@ export const DemographicsSettings = {
       // safely round-tripped, so we can only ever add/update our OWN slice.
       const { root, safe } = readRootForWrite();
       if (safe) {
-        // Merge our stored slice with the new entries, then persist only REAL
-        // overrides: keys absent from DEFAULTS are genuine per-view state (active
-        // tab/metric/filters) and always persist; keys present in DEFAULTS persist
-        // only when they DIFFER from the shipped default. The old code folded
-        // DEFAULTS into the slice, freezing the then-current default into every
-        // save — so a later change to a default value would never reach anyone who
-        // had ever touched settings. Stripping default-equal keys also heals
-        // already-baked slices on their next write. Reads stay correct because
-        // getSettings()/getSetting() overlay DEFAULTS over the (now partial) slice.
-        const merged = normalizeSlice({ ...(root[MOD_ID] || {}), ...entries });
-        /** @type {SettingsBucket} */
-        const slice = {};
-        for (const k of Object.keys(merged)) {
-          if (k === SCHEMA_KEY) continue;
-          const matchesDefault =
-            k in DEFAULTS && JSON.stringify(merged[k]) === JSON.stringify(DEFAULTS[k]);
-          if (!matchesDefault) slice[k] = merged[k];
-        }
-        slice[SCHEMA_KEY] = SCHEMA_VERSION;
-        root[MOD_ID] = slice;
+        // Merge our stored slice with the new entries; sliceToPersist keeps only real overrides.
+        root[MOD_ID] = sliceToPersist({ ...(root[MOD_ID] || {}), ...entries });
         writeRoot(root);
       }
     }
     dlog("setSettings", Object.keys(entries).join(","));
+  },
+  /**
+   * This mod's slice as it would be stored, for a caller that is writing the shared root itself.
+   * The storage repair uses it: after the store is emptied, the session's settings are written back
+   * from the authoritative in-memory bucket rather than from the unreadable store.
+   * @returns {{id: string, slice: SettingsBucket}} Slice id and contents.
+   */
+  sliceForStore() {
+    return { id: MOD_ID, slice: sliceToPersist({ ...memoryBucket }) };
   }
 };
 

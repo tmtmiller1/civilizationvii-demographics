@@ -15,6 +15,8 @@
 
 import { dlog, derr, safe } from "/demographics/ui/history/core/history-log.js";
 import { emptySlice, fitSlice, isSlice, mergeSlices, upsert, hideGame, sliceTexts } from "/demographics/ui/history/store/history-archive.js";
+import { repairStore } from "/demographics/ui/core/demographics-storage-repair.js";
+import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 
 export const ROOT_KEY = "modSettings";
 export const SLICE_ID = "demographics-halloffame";
@@ -147,6 +149,36 @@ export function allRecords() {
  */
 export function archiveTexts() {
   return sliceTexts(loadArchive());
+}
+
+/**
+ * Empty the shared store and write it back holding this mod's slices, so the shared settings key
+ * owns the one readable row; other mods add their slices back to it as they save. Destroys every
+ * other key's stored bytes (one mod's working data, the rest already unreadable): only call it on an
+ * explicit request from the player, after telling them what is lost. The in-memory archive is the
+ * source for the rewrite, so the games this session knows about are kept.
+ *
+ * The repair holds until some mod writes a key that sorts ahead of `modSettings` - then reads break
+ * again and this can be run again.
+ * @returns {import("/demographics/ui/core/demographics-storage-repair.js").RepairResult} Outcome.
+ */
+export function repairStorage() {
+  loadArchive();
+  fitSlice(state.slice);
+  const settings = safe(() => DemographicsSettings.sliceForStore(), null);
+  /** @type {Record<string, object>} */
+  const slices = { [SLICE_ID]: state.slice };
+  if (settings && settings.id && settings.slice) slices[settings.id] = settings.slice;
+  const result = repairStore(slices);
+  if (result.ok) {
+    state.status = "ok";
+    dlog("storage repaired", result.rowsBefore, "->", result.rowsAfter);
+  } else {
+    // The store was emptied even when the write back failed, so nothing here is readable now.
+    state.status = result.error === "no-store" ? "unavailable" : "unverified";
+    derr("storage repair failed:", result.error);
+  }
+  return result;
 }
 
 /**

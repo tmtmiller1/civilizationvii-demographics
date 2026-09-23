@@ -5,6 +5,29 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.7.1] - 2026-09-22
+
+A workaround for the Civilization VII storage bug that blocks the Hall of Fame, and the short-games filter on every
+Hall of Fame page. All new text is localized across all 11 languages.
+
+### Added
+- **Repair mod storage.** Civilization VII 1.5.0 has a bug in the storage mods use for their settings: whenever a mod
+  asks for its own saved data, the game returns whichever mod's entry sorts first. Only that one mod's data works; the
+  entry Demographics and most mod option panels share can never be read back, so those mods' settings reset every
+  launch and the Hall of Fame cannot read or save its list of past games (every game is still stored in its own save).
+  It is Firaxis's bug to fix, and a reproduction is written up for their support portal. Until then, when it is blocking
+  the Hall of Fame, a notice box on every Hall of Fame page says so; clicking it opens a sheet that explains the bug and
+  what the button does, then a two-click **Repair storage** button with a Cancel. The repair empties the shared storage
+  and leaves one entry in it, the shared settings entry used by most mods with an options panel, holding Demographics'
+  settings and past game information; being the only entry, it is what the game returns, so the mods that use it load
+  and save their settings normally from then on. It deletes every separate entry, including the one that was sorting
+  first and was therefore the only one actually working. Saved games, the history inside them, the game's own settings
+  and every mod's files are untouched. Nothing changes for anyone who never clicks it, and it is offered again if a mod
+  writes its own entry later. The whole story is in `docs/civ7-storage-bug.md`.
+- **Hide short games / Show all games on every Hall of Fame page.** The filter used to sit on Rankings only, so Best
+  Games, Leaders, Civilizations and Records could look empty while unfinished games under 20 turns were hidden. It now
+  sits under the section tabs on every page and says how many games it is hiding.
+
 ## [2.7.0] - 2026-09-22
 
 A History release. The former History & Rankings mod is now part of Demographics: a new **History** tab tells the story

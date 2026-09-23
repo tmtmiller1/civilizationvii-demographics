@@ -91,6 +91,7 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
     const host = document.createElement("div");
     renderHallOfFame(host, { mode });
     check(host, mode + ":" + hofTab);
+    assert.ok(findAll(host, "dgh-hof-filter").length, "short-games filter on " + hofTab + " (" + mode + ")");
     const head = findAll(host, "dgh-page-head")[0];
     assert.ok(head, "page heading on " + hofTab);
     assert.ok(texts(head).includes(PAGE_TITLES[hofTab]), "page title on " + hofTab);
@@ -256,6 +257,30 @@ render(empty);
 assert.deepEqual(errors, []);
 assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
 
+// A short unfinished game is hidden by default, the filter row says how many, and "show all" reveals it on any page.
+{
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage();
+  const shortDoc = newCampaign({ id: "short-1", seed: 1, now: 1, setup: {}, local: 0 });
+  ensureAge(shortDoc, "AGE_ANTIQUITY", 1);
+  upsertPlayer(shortDoc, 0, idn("LEADER_X", "CIV_X"), { age: "AGE_ANTIQUITY", turn: 1 });
+  const short = buildRecord(shortDoc);
+  short.turns = 1;
+  store.saveRecord(short);
+  viewState.detail = null; viewState.showShort = false;
+  for (const hofTab of ["overview", "leaders", "records"]) {
+    viewState.hofTab = hofTab;
+    const h = document.createElement("div");
+    renderHallOfFame(h, { mode: "shell" });
+    assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN|1|20"), "hidden count shown on " + hofTab);
+    const show = findAll(h, "dgh-pill").find((n) => n.textContent === "LOC_DEMOGRAPHICS_HIST_SHOW_SHORT");
+    show.dispatch("click");
+    assert.ok(!texts(h).includes("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN"), "note gone once shown on " + hofTab);
+    viewState.showShort = false;
+  }
+}
+
 // Another mod's data in the way (a key sorting ahead of modSettings is read in its place): the note says so.
 {
   const store = await import("/demographics/ui/history/store/history-archive-store.js");
@@ -265,8 +290,49 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
   viewState.detail = null;
   viewState.hofTab = "overview";
   renderHallOfFame(h, { mode: "shell" });
-  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED"), "blocked note names the cause");
+  assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H"), "blocked banner names the bug");
+  assert.ok(findAll(h, "dgh-storage-banner").length, "it is a banner, not a footnote");
   assert.ok(!texts(h).includes("LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE"));
+
+  // ... and the way out is offered: a fold-out holding a two-click repair.
+  const toggle = findAll(h, "dgh-options-toggle")[0];
+  assert.ok(toggle, "the blocked note offers storage options");
+  const panel = findAll(h, "dgh-options-panel")[0];
+  assert.ok(String(panel.className).includes("is-hidden"), "the repair starts folded away");
+  toggle.dispatch("click");
+  assert.ok(!String(panel.className).includes("is-hidden"), "the toggle opens it");
+
+  // The panel spells out what the repair does, deletes and leaves alone before any button.
+  const panelText = texts(panel);
+  for (const tag of ["TITLE", "WHY_H", "WHY", "DOES_H", "DOES", "AGAIN"]) {
+    assert.ok(panelText.includes("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_" + tag), "panel carries " + tag);
+  }
+
+  // Cancel closes the fold-out without touching anything.
+  findAll(panel, "dgh-repair-cancel")[0].dispatch("click");
+  assert.equal(localStorage.length, 2, "cancel changes nothing");
+  assert.ok(String(findAll(h, "dgh-options-panel")[0].className).includes("is-hidden"), "cancel folds it away");
+  findAll(h, "dgh-options-toggle")[0].dispatch("click");
+  const panel2 = findAll(h, "dgh-options-panel")[0];
+
+  // One click only arms the button - the store must still be untouched.
+  const go = findAll(panel2, "dgh-repair-go")[0];
+  assert.ok(go, "repair button");
+  assert.equal(go.textContent, "LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO");
+  go.dispatch("click");
+  assert.equal(localStorage.length, 2, "arming changes nothing");
+  assert.ok(String(go.className).includes("is-armed"));
+  assert.equal(go.textContent, "LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM");
+
+  // The second click repairs, and the footer says so.
+  go.dispatch("click");
+  assert.deepEqual(Object.keys(localStorage.dump()), ["modSettings"], "the shared key is the only row left");
+  assert.ok(store.archiveStatus() === "ok");
+  assert.deepEqual(errors, []);
+  const after = texts(h);
+  assert.ok(after.includes("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK"), "the outcome is reported");
+  assert.ok(!after.includes("LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H"), "the blocked banner is gone");
+  assert.ok(!findAll(h, "dgh-options-toggle").length, "and so is the repair offer");
 }
 
 console.log("history-render-integration harness passed");
