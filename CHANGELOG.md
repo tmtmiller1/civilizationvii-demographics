@@ -16,6 +16,21 @@ top-three settlement cards was visible, tab labels wrapped onto two lines and th
 stylesheets found a class of styling this UI engine silently drops, which had been costing the screen its gold borders
 and all of its italic text.
 
+Alongside that is a consistency pass over how the screen reads. The Options button and the analytics-policy note
+share one header row on every tab instead of costing a row of their own on some pages. Every page now draws from one
+type scale, including the compact History boards that had been laid out in fixed pixels and ignored the Font Size
+setting. The Hall of Fame's short-games filter is a single button on the sections line rather than two buttons on a
+row of their own. Clicking a filter, a column header or a metric pill no longer throws away and rebuilds the parts of
+the page that did not change, so headings, flourishes, yield icons and leader portraits stop blinking, and the page
+tabs stop flicking back to their first entry.
+
+The cinematic tour got the same treatment: its info panel is back in its own frame at the bottom of the screen, and a
+flyby can no longer be clicked or hovered through to the game underneath. The sentence that panel writes about a
+settlement also reads correctly again for every wonder in the game. It names each one in prose, so each needs to be
+right about "the", and the list it checked against had fallen behind the game: wonders and natural wonders added since
+that text was written all collected a wrong article, and one was listed under a spelling the game does not use. All 48
+wonders and 19 natural wonders are now matched on their internal id rather than their name.
+
 The rest is hardening: every change closes a way the mod could lose data, blank a panel, or step on another mod, found
 by a code audit after the shared-storage bug in 2.7.1. Nothing there changes for a player whose game was already
 working; the notes say what each change protects.
