@@ -1,6 +1,6 @@
 // sampler-age-boundary.js
 //
-// Age-transition boundary recording extracted from demographics-sampler.js.
+// Age-transition boundary recording for the sampler.
 
 import { buildAgeCrisisCols } from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
 import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
@@ -53,10 +53,8 @@ export function _ageBoundaryAlreadyRecorded(history, age, turn) {
   const arr = history && history.ageBoundaries;
   if (!Array.isArray(arr)) return false;
   // Same age + same age-local turn = same transition event (multiple pids
-  // report it). We check `b.localTurn` (the age-local Game.turn) because
-  // `b.turn` was switched to a GLOBAL value for chart alignment - checking
-  // against that would always miss and we'd append a fresh boundary for every
-  // per-pid transition event.
+  // report it). Compare `b.localTurn`, not `b.turn` (a GLOBAL chart value),
+  // or every per-pid transition event would append a fresh boundary.
   return arr.some((b) => {
     if (!b || b.age !== age) return false;
     if (typeof b.localTurn === "number") return b.localTurn === turn;
@@ -131,11 +129,9 @@ export function _buildLegacySnapshot(h) {
 }
 
 /**
- * Snapshot the finished age's per-civ CUMULATIVE crisis cost while its samples are still dense.
- * The crisis "losses" figures (population/crop/production) are sums of per-turn declines, so they
- * need dense samples; once old samples are decimated to cap the save, recomputing them from the
- * thinned stream collapses those columns to "—". Capturing them here lets the Crises page render a
- * finished age's cumulative impact from the snapshot. No-op when the age had no crisis.
+ * Snapshot the finished age's per-civ CUMULATIVE crisis cost while its samples are still dense:
+ * the "losses" figures are sums of per-turn declines, which collapse once old samples are
+ * decimated to cap the save. No-op when the age had no crisis.
  * @param {*} h The persisted history blob (mutated).
  * @param {string} finishedAge The age that just ended.
  */
@@ -158,9 +154,8 @@ export function _snapshotCrisisCost(h, finishedAge) {
 export function recordAgeBoundary(newAge, turn, deps) {
   const h = deps.loadHistory();
   if (!newAge || _ageBoundaryAlreadyRecorded(h, newAge, turn)) return;
-  // Clear obsolete stored offset (no longer used - chart computes X at render
-  // time from age + localTurn). This also gets rid of garbage values like
-  // offset=235 baked into earlier corrupt saves.
+  // Drop the obsolete stored offset: the chart computes X at render time from
+  // age + localTurn.
   delete h.cumulativeTurnOffset;
   h.ageBoundaries.push({
     turn, // age-local Game.turn at transition
@@ -168,10 +163,8 @@ export function recordAgeBoundary(newAge, turn, deps) {
     age: newAge
   });
   deps.ilog("ageBoundary: recorded", newAge, "at localTurn=", turn);
-  // Snapshot per-civ TRIUMPH counts at this moment - values from the latest
-  // sample for each civ are the age-end totals. Stored under
-  // history.legacySnapshots[age] (the storage key is kept as `legacySnapshots`
-  // for back-compat; the contained data is the new triumph-count shape).
+  // Snapshot per-civ TRIUMPH counts at this moment (the latest sample's values
+  // are the age-end totals) under history.legacySnapshots[age].
   if (!h.legacySnapshots || typeof h.legacySnapshots !== "object") {
     h.legacySnapshots = {};
   }
@@ -192,9 +185,38 @@ export function recordAgeBoundary(newAge, turn, deps) {
   );
 }
 
-// Last "<age>|<turn>" age boundary handled, to debounce the per-civ event storm.
+// Last "<seed>|<age>|<turn>" age boundary handled, to debounce the per-civ event
+// storm. Module state outlives the game: the sampler's runtime reset clears it
+// (see resetAgeBoundaryDebounce) so a second transition into the same age in one
+// app session (a pre-transition autosave replayed, or a second game) still fires.
 /** @type {string | null} */
 let _lastHandledBoundary = null;
+
+/**
+ * Forget the last handled boundary. Called from the sampler's runtime reset on
+ * every (re)start so a debounce key from a previous load never swallows the
+ * next game's transition.
+ */
+export function resetAgeBoundaryDebounce() {
+  _lastHandledBoundary = null;
+}
+
+/**
+ * The current game's seed, so two games in one app session never share a
+ * debounce key even when the reset is missed. "" when unreadable.
+ * @returns {string} The seed, or "".
+ */
+function _readGameSeed() {
+  try {
+    if (typeof Configuration === "undefined" || typeof Configuration.getGame !== "function") return "";
+    const g = Configuration.getGame();
+    const s = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
+    return s === undefined || s === null ? "" : String(s);
+  } catch (_) {
+    // Configuration.getGame() can throw before the game is set up; fall back to no seed.
+    return "";
+  }
+}
 
 /**
  * PlayerAgeTransitionComplete handler: resets caches, records the age boundary
@@ -207,11 +229,10 @@ export function onPlayerAgeTransitionComplete(data, deps) {
   try {
     const newAge = _readNewAgeType(deps);
     const turn = deps.getCurrentTurn() ?? -1;
-    // Debounce: PlayerAgeTransitionComplete fires once per major civ (~12×), but
-    // the boundary record + re-sample only need to happen once per transition.
-    // Without this, the GameConfiguration history blob would be re-serialized and
-    // written a dozen times at the age boundary.
-    const boundaryKey = String(newAge) + "|" + String(turn);
+    // Debounce: PlayerAgeTransitionComplete fires once per major civ, but the
+    // boundary record only needs to happen once per transition. Keyed on the
+    // game seed too, so a different game's identical age|turn never collides.
+    const boundaryKey = _readGameSeed() + "|" + String(newAge) + "|" + String(turn);
     if (boundaryKey === _lastHandledBoundary) return;
     _lastHandledBoundary = boundaryKey;
     deps.ilog(
@@ -230,12 +251,10 @@ export function onPlayerAgeTransitionComplete(data, deps) {
       deps.tripIfTooMany("appendAgeBoundary", e);
     }
 
-    // Deliberately do NOT re-sample here. At PlayerAgeTransitionComplete the new
-    // age's economy has not spun up yet, so Stats.getNetYield(...) reads 0 - which
-    // produced a false GDP/yield DROP-to-zero on the first point of the new age.
-    // The normal PlayerTurnActivated sample for the new age's first turn captures
-    // that same turn WITH real yields AND the new civ identity, so skipping the
-    // premature re-sample loses nothing and removes the spurious spike/drop.
+    // Deliberately do NOT re-sample here: at PlayerAgeTransitionComplete the new
+    // age's economy has not spun up yet, so Stats.getNetYield(...) reads 0. The
+    // normal PlayerTurnActivated sample for the new age's first turn captures
+    // that turn with real yields and the new civ identity.
   } catch (e) {
     deps.tripIfTooMany("onPlayerAgeTransitionComplete", e);
   }

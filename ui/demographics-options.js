@@ -16,7 +16,7 @@ const COMPLEXITY_ITEMS = [
   { label: "LOC_DEMOGRAPHICS_TIER_ANALYST" }
 ];
 
-// Reveal mode (formerly the Spoilers dropdown): "full" reveals a civ's back-history on first
+// Reveal mode: "full" reveals a civ's back-history on first
 // contact, "forward" tracks only from the meeting. Persisted as the legacy `backfillMetHistory`
 // boolean. Each item carries the stored `value` for its index alongside its display `label`.
 const REVEAL_ITEMS = [

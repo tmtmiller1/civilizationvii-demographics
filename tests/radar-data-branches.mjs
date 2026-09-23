@@ -69,5 +69,19 @@ assert.ok(typeof scaleMax === "number" && scaleMax >= 1);
 const total = radarTriumphTotal(firstCiv);
 assert.ok(typeof total === "number" && total >= 0);
 
+// A persisted sample can hold a null player-state, and a state without leaderName: neither may
+// throw; the nameless one falls back to the generic player label.
+const dirty = {
+  samples: [
+    { turn: 1, players: { "1": null, "3": { metrics: { triumphs_economic: 1 } } } },
+    null,
+    history.samples[0]
+  ]
+};
+const dirtyCivs = loadRadarCivs({ history: dirty, hiddenCivs: new Set(), ageSource: "current" }, dirty.samples);
+assert.ok(dirtyCivs.has("3"), "nameless player-state still folds");
+assert.equal(typeof dirtyCivs.get("3").name, "string");
+assert.ok(dirtyCivs.has("1"), "the pid folds once a later non-null state appears");
+
 delete globalThis.GameContext;
 console.log("radar-data-branches harness passed");

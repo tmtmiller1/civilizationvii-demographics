@@ -34,7 +34,8 @@ function mockConfiguration(hostMode, multi = false) {
   globalThis.Configuration = {
     getGame: () => ({
       getValue: (k) => (k === "DemographicsAnalyticsPolicy_v1" ? hostMode : null),
-      isAnyMultiplayer: multi
+      isAnyMultiplayer: multi,
+      isNetworkMultiplayer: multi
     }),
     editGame: () => ({
       setValue: (k, v) => writes.push({ k, v })
@@ -67,8 +68,42 @@ function testPublishAndSetHostPolicy() {
   const writes = mockConfiguration(POLICY_OWN, true);
   globalThis.Network = { isConnectedToNetwork: () => true, isHost: () => true };
 
+  globalThis.GameContext = { localPlayerID: 3 };
   publishEffectivePolicy();
-  assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1"), "effective policy should publish");
+  assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1"), "host publishes the shared key");
+  assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1_P3"), "and its own seat key");
+
+  // A networked guest publishes only its own seat key, never the shared one.
+  writes.length = 0;
+  globalThis.Network = { isConnectedToNetwork: () => true, isHost: () => false };
+  publishEffectivePolicy();
+  assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1_P3"), "guest seat key");
+  assert.ok(!writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1"), "guest must not write the shared key");
+
+  // Hotseat: multiplayer on one machine, not networked, Network.isHost() false (watched): both keys.
+  writes.length = 0;
+  globalThis.Network = { isConnectedToNetwork: () => false, isHost: () => false };
+  globalThis.Configuration = {
+    getGame: () => ({ getValue: () => null, isAnyMultiplayer: true, isNetworkMultiplayer: false, isHotseat: true }),
+    editGame: () => ({ setValue: (k, v) => writes.push({ k, v }) })
+  };
+  publishEffectivePolicy();
+  assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1"), "hotseat writes the shared key");
+  assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1_P3"), "and the seat key");
+
+  // Not networked (single-player): both keys.
+  globalThis.Network = undefined;
+  const local = mockConfiguration(null, false);
+  publishEffectivePolicy();
+  assert.ok(local.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1"), "single-player writes the shared key");
+  assert.ok(local.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1_P3"), "and the seat key");
+  // Back to the networked host mock, recording into the original `writes` array.
+  globalThis.Network = { isConnectedToNetwork: () => true, isHost: () => true };
+  globalThis.Configuration = {
+    getGame: () => ({ getValue: (k) => (k === "DemographicsAnalyticsPolicy_v1" ? POLICY_OWN : null), isAnyMultiplayer: true, isNetworkMultiplayer: true }),
+    editGame: () => ({ setValue: (k, v) => writes.push({ k, v }) })
+  };
+  writes.length = 0;
 
   assert.equal(canSetHostPolicy(), true);
   assert.equal(setHostPolicy(POLICY_MET), true);

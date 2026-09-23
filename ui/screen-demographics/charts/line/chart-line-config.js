@@ -3,17 +3,14 @@
 // Chart.js config-object builders for the per-civ line chart: the top-level
 // config (data + plugins + options), the `options.plugins` block (legend /
 // tooltip / title), the `options.scales` block, and the legend `onClick`
-// handler. Extracted from chart-line.js. These are pure
-// shape-builders - they only assemble objects, never mount or invoke Chart.js.
-//
-// Font-family resolution is deferred to call time and guarded so this module
-// remains safe if Chart.js global wiring changes.
+// handler. Pure shape-builders: they only assemble objects, never mount Chart.js.
+// Font-family resolution is deferred to call time and guarded.
 
 import { makeTooltipExternal } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 // Axis labels/titles use the same color as the chart's HTML title
-// (--ia-text-secondary) so they match it (Chart.js canvas needs a literal).
+// (--dg-ia-text-secondary) so they match it (Chart.js canvas needs a literal).
 const AXIS_COLOR = "#e5d2ac";
 
 /**
@@ -37,10 +34,8 @@ const UNIT_LOC = {
   "gold / turn": "LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN",
   cities: "LOC_DEMOGRAPHICS_UNIT_CITIES",
   techs: "LOC_DEMOGRAPHICS_UNIT_TECHS",
-  // Reuse the base game's own (professionally localized) terms for game-specific
-  // concepts so the labels always match the in-game vocabulary. These are
-  // engine-owned base-game LOC tags, NOT defined in our ModText.xml — see
-  // BASE_GAME_LOC_KEYS in demographics-i18n.js.
+  // Base-game LOC tags (not in our ModText.xml; see BASE_GAME_LOC_KEYS in
+  // demographics-i18n.js) so labels match the in-game vocabulary.
   civics: "LOC_PEDIA_PAGEGROUP_CIVICS_NAME",
   "food / turn": "LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN",
   "production / turn": "LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN",
@@ -131,10 +126,8 @@ export function buildLineChartConfig(parts) {
   // datasets/scales and natively handle negative values (bars below the zero baseline) and grouping
   // (one clustered bar per civ at each turn). Datasets already set backgroundColor = civ colour.
   const type = metricMeta && metricMeta.chartType === "bar" ? "bar" : "line";
-  // A signed metric charted as bars (e.g. Net Migration) gets a SYMMETRIC, zero-centred y-axis so
-  // positive and negative read evenly above/below the baseline. Without it, Chart.js auto-ranges to
-  // [0, max], which on a near-zero / empty chart collapses to a degenerate "+0/+1" axis with no
-  // negative side. The half-range floors at 1 so even an empty chart shows -1 / 0 / +1.
+  // A signed metric charted as bars gets a symmetric, zero-centred y-axis (half-range
+  // floored at 1) so Chart.js does not auto-range to a degenerate [0, max] axis.
   const symBound = type === "bar" ? symmetricYBound(datasets) : null;
   return {
     type,
@@ -147,9 +140,7 @@ export function buildLineChartConfig(parts) {
       parsing: false,
       normalized: true,
       // Default "nearest" shows the single closest line; a metric can opt into "index" (via
-      // metricMeta.tooltipMode) so hovering a turn lists EVERY civ at that turn, the readable way
-      // to tell apart overlapping lines (e.g. Net Migration, where civ lines cluster near the
-      // baseline).
+      // metricMeta.tooltipMode) so hovering a turn lists every civ, which tells apart overlapping lines.
       interaction: {
         mode: (metricMeta && metricMeta.tooltipMode) || "nearest",
         intersect: false,
@@ -201,11 +192,9 @@ function buildChartPluginsOpts(formatters, metricMeta) {
     // portrait - the canvas-drawn Chart.js legend can't host one.
     legend: { display: false },
     tooltip: {
-      // Disable Chart.js's canvas-painted tooltip and use an HTML overlay
-      // styled with the engine's own `img-tooltip-border` + `img-tooltip-bg`
-      // classes - border-image from blp:base_tooltip-bg, the same dark
-      // gradient native tooltips use. Each row gets a small leader icon next
-      // to the civ label.
+      // Disable Chart.js's canvas-painted tooltip and use an HTML overlay styled
+      // with the engine's `img-tooltip-border` + `img-tooltip-bg` classes, with a
+      // small leader icon next to each civ label.
       enabled: false,
       external: makeTooltipExternal(fmtX, fmtY, metricMeta)
     },
@@ -249,20 +238,15 @@ function buildChartScalesOpts(metricMeta, formatters, symBound) {
       ticks: {
         color: AXIS_COLOR,
         font: { family: resolveChartFontFamily(), size: 17 },
-        // Blank fractional tick labels for `integerOnly` metrics (e.g. Crisis Stage) AND for
-        // diverging bar charts, so a near-zero Net Migration axis shows clean -1 / 0 / +1 instead
-        // of repeating "+0/+1" at every fractional gridline. Chart.js still draws the gridlines;
-        // only labels hide.
+        // Blank fractional tick labels for `integerOnly` metrics and diverging bar charts so a
+        // near-zero axis shows clean -1 / 0 / +1. Chart.js still draws the gridlines.
         callback: (/** @type {number} */ v) => {
           if (metricMeta && metricMeta.integerOnly && Math.round(v) !== v) return "";
           if (diverging && Math.round(v) !== v) return "";
           return fmtY(v);
         },
-        // Force integer step + zero decimals for integer-only metrics. The only
-        // one today is the small-range Crisis Stage ordinal (-1..4), so a flat
-        // stepSize is safe; if a large-range metric is ever flagged integerOnly,
-        // gate this on an expected-range check so it doesn't request a tick at
-        // every integer.
+        // Force integer step + zero decimals for integer-only metrics. Safe for the
+        // small-range Crisis Stage ordinal; a large-range metric would need a range gate.
         ...(metricMeta && metricMeta.integerOnly ? { stepSize: 1, precision: 0 } : {})
       },
       grid: { color: "rgba(133, 135, 140, 0.25)" },

@@ -2,17 +2,10 @@
 //
 // End-of-age settlement standings. Every sample overwrites the CURRENT age's
 // entry with the board's top settlements, so once an age ends its entry holds
-// the last standings recorded in that age - no age-transition hook needed (by
-// the time PlayerAgeTransitionComplete fires, towns have already reverted and
-// the live board describes the new age).
-//
-// Stored on the sampled history blob (`history.settleAges`), which is saved into
-// the game itself every turn, so it survives quit/load and the age transition
-// and resets with a new game. NOT the settings slice: localStorage does not
-// survive a game restart in Civ VII 1.5.0 (watched 2026-09-21: an archive written
-// there was gone on the next launch). Records are compact copies with the owner
-// identity frozen at recording time (a settlement can change hands later); the
-// met state is re-read at render so a civ met after the age ended is unmasked.
+// the last standings recorded in that age (no age-transition hook needed).
+// Stored on the sampled history blob (`history.settleAges`) so it survives
+// quit/load and the age transition; records freeze the owner identity at
+// recording time and re-read the met state at render.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -82,7 +75,10 @@ function compactSettlement(s) {
 export function recordSettlementAge(history, turn, year) {
   const age = currentAgeType();
   if (!history || typeof history !== "object" || !age) return false;
-  const top = buildSettlementBoard().settlements.slice(0, ARCHIVE_TOP);
+  // Lite board: the drill-down-only reads (building names, wonder in progress)
+  // are skipped since no archived field (compactSettlement) uses them, so the
+  // per-turn sampler cost is the scored board, not the full render-time one.
+  const top = buildSettlementBoard({ lite: true }).settlements.slice(0, ARCHIVE_TOP);
   if (!top.length) return false;
   if (!history.settleAges || typeof history.settleAges !== "object") history.settleAges = {};
   history.settleAges[age] = { turn, year: year || "", top: top.map(compactSettlement) };
@@ -106,22 +102,42 @@ function ageName(age) {
 
 /**
  * Rehydrate an archive record for the showcase builders: re-read the met state,
- * and mark it archived (no live handle, so no camera).
+ * mark it archived (no live handle, so no camera), and default every field the
+ * showcase dereferences so an incomplete record still renders.
  * @param {*} r The archive record.
  * @returns {*} The display settlement.
  */
 function rehydrate(r) {
   const owner = Object.assign({}, r.owner, { met: localHasMet(r.owner && r.owner.pid) });
-  return Object.assign({}, r, { owner, archived: true, location: null, explored: true, ranks: r.ranks || {} });
+  return Object.assign({}, r, {
+    owner,
+    archived: true,
+    location: null,
+    explored: true,
+    outputs: r.outputs && typeof r.outputs === "object" ? r.outputs : {},
+    ranks: r.ranks && typeof r.ranks === "object" ? r.ranks : {},
+    wonders: Array.isArray(r.wonders) ? r.wonders : []
+  });
 }
 
 /**
- * Whether an archive entry holds at least one recorded settlement.
+ * Whether an archive entry holds at least one recorded settlement (a null/junk
+ * entry in `top` does not count).
  * @param {*} e The archive entry.
  * @returns {boolean} True when it has standings.
  */
 function hasStandings(e) {
-  return !!e && Array.isArray(e.top) && e.top.length > 0;
+  return !!e && Array.isArray(e.top) && e.top.some((/** @type {*} */ r) => !!r && typeof r === "object");
+}
+
+/**
+ * The renderable records of an archive entry: null/junk entries dropped, the
+ * rest rehydrated.
+ * @param {*} e The archive entry (has standings).
+ * @returns {Array<*>} The display settlements.
+ */
+function entryTop(e) {
+  return e.top.filter((/** @type {*} */ r) => !!r && typeof r === "object").map(rehydrate);
 }
 
 /**
@@ -141,7 +157,7 @@ export function readAgeArchive(history) {
   for (const age of Object.keys(ages)) {
     const e = ages[age];
     if (age !== current && hasStandings(e)) {
-      out.push({ age, label: ageName(age), year: e.year || "", top: e.top.map(rehydrate) });
+      out.push({ age, label: ageName(age), year: e.year || "", top: entryTop(e) });
     }
   }
   return out;

@@ -1,16 +1,11 @@
 // demographics-csv.js
 //
-// Generic "Copy as CSV" plumbing shared by every data page in the mod (World
-// Rankings sub-tabs, Global Relations, and the History conflicts/crises/legacy
-// pages). The History per-turn sample dump keeps its own richer exporter in
-// views/history/history-csv.js; this module covers the table-shaped pages.
+// Generic "Copy as CSV" plumbing for the table-shaped data pages; the History
+// per-turn sample dump has its own exporter in views/history/history-csv.js.
 //
-// Coherent GameFace exposes no `URL.createObjectURL` / `<a download>`, so the
-// CSV is handed to the player via the engine clipboard
-// (UI.setClipboardText / UI.isClipboardAvailable ; cite: pause-menu-model.js),
-// with a UI.log fallback and a visible confirmation toast. The toast + button
-// styling reuse the existing .demographics-csv-toast / .demographics-chart-
-// toolbar-btn rules.
+// Coherent GameFace exposes no `URL.createObjectURL` / `<a download>`, so the CSV
+// goes to the engine clipboard (UI.setClipboardText) with a UI.log fallback and a
+// confirmation toast.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
@@ -38,11 +33,9 @@ function derr(...a) {
 export function csvCell(v) {
   if (v === null || v === undefined) return "";
   let s = String(v);
-  // Formula-injection guard: Excel/Sheets execute a cell starting with = + - @
-  // (or a leading tab/CR) as a formula, so a player-renamed civ/leader/town
-  // name like "=cmd|..." would run on open. Prefix a single quote to neutralize
-  // it — but skip plain numbers (incl. negatives / BCE years like "-3000") so
-  // numeric values keep their meaning.
+  // Formula-injection guard: spreadsheets execute a cell starting with = + - @
+  // (or tab/CR) as a formula, so prefix a single quote, except on plain numbers
+  // (incl. negatives / BCE years like "-3000").
   if (/^[=+\-@\t\r]/.test(s) && !/^[+-]?[0-9]/.test(s)) s = "'" + s;
   if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;

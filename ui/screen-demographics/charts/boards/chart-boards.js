@@ -162,16 +162,16 @@ function wonderWinners(firstTurns) {
 
 /** @param {{name:string, civ:string, color:string, turn:number|undefined}} r @returns {HTMLElement} */
 function wonderRaceRow(r) {
-  const line = U.box("display:flex;align-items:center;gap:10px;min-height:22px");
+  const line = U.box("display:flex;align-items:center;gap:0.556rem;min-height:1.222rem");
   line.setAttribute("data-tooltip-content", r.name + " — " + r.civ);
-  line.appendChild(U.box("flex:0 0 14rem;color:" + U.INK + ";font-size:0.92rem;text-align:right;" +
+  line.appendChild(U.box("flex:0 0 14rem;color:" + U.INK + ";font-size:var(--dg-fs-95);text-align:right;" +
     "white-space:nowrap;overflow:hidden;text-overflow:ellipsis", r.name, "font-body"));
-  const who = U.box("flex:1 1 auto;display:flex;align-items:center;gap:7px;min-width:0");
+  const who = U.box("flex:1 1 auto;display:flex;align-items:center;gap:0.389rem;min-width:0");
   who.appendChild(U.swatch(r.color, 11));
-  who.appendChild(U.box("color:" + U.INK + ";font-size:0.9rem;white-space:nowrap;overflow:hidden;" +
+  who.appendChild(U.box("color:" + U.INK + ";font-size:var(--dg-fs-85);white-space:nowrap;overflow:hidden;" +
     "text-overflow:ellipsis", r.civ, "font-body"));
   line.appendChild(who);
-  line.appendChild(U.box("flex:0 0 5rem;color:" + U.INK_MUTED + ";font-size:0.88rem",
+  line.appendChild(U.box("flex:0 0 5rem;color:" + U.INK_MUTED + ";font-size:var(--dg-fs-85)",
     r.turn != null ? t("LOC_DEMOGRAPHICS_WONDER_TURN", r.turn) : "—", "font-body"));
   return line;
 }
@@ -271,11 +271,11 @@ function wonderProgressRow(r) {
 function byTypeColumn(c) {
   const col = U.box(
     "flex:0 0 auto;min-width:14rem;max-width:19rem;display:flex;flex-direction:column;" +
-      "border:1px solid " + U.BORDER + ";border-radius:6px;overflow:hidden;background:" + U.PANEL
+      "border:1px solid " + U.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + U.PANEL
   );
   col.appendChild(U.columnHeader(c.name, c.color, c.total));
   const max = Math.max(1, ...c.items.map((i) => i.n));
-  const body = U.box("display:flex;flex-direction:column;gap:5px;padding:8px 10px");
+  const body = U.box("display:flex;flex-direction:column;gap:0.278rem;padding:0.444rem 0.556rem");
   for (const it of c.items) {
     body.appendChild(U.barRow({ label: it.name, value: it.n, max, color: c.color, right: String(it.n), labelWidth: "7rem" }));
   }
@@ -562,7 +562,7 @@ export function renderReligionPantheonYields(host, opts) {
 function pantheonYieldCard(r, max) {
   const card = U.box(
     "flex:0 0 auto;min-width:15rem;max-width:20rem;display:flex;flex-direction:column;" +
-      "border:1px solid " + U.BORDER + ";border-radius:6px;overflow:hidden;background:" + U.PANEL
+      "border:1px solid " + U.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + U.PANEL
   );
   const nonZero = YIELD_CATEGORIES.filter((c) => (r.yields[c.key] || 0) > 0);
   card.appendChild(U.columnHeader(r.label, U.readable(r.color), nonZero.length));
@@ -576,7 +576,7 @@ function pantheonYieldCard(r, max) {
   card.appendChild(wrap);
   if (r.conditional) {
     card.appendChild(U.box(
-      "padding:4px 12px 9px;color:" + U.INK_DIM + ";font-size:0.76rem;font-style:italic",
+      "padding:0.222rem 0.667rem 0.5rem;color:" + U.INK_DIM + ";font-size:var(--dg-fs-78)",
       t("LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL"), "font-body"
     ));
   }

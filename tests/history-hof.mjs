@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
-  visibleRecords, ranked, titleIndex, overview, leaderRows, civRows, recordHolders, SHORT_GAME_TURNS, TITLE_COUNT, standing
+  visibleRecords, ranked, titleIndex, overview, leaderRows, civRows, recordHolders, statOf, SHORT_GAME_TURNS, TITLE_COUNT,
+  standing
 } from "/demographics/ui/history/model/history-hof.js";
 
 /** A record with the fields the Hall of Fame reads. */
@@ -92,6 +93,20 @@ assert.equal(titleIndex(rec("x", { tri: 3 }), 0), TITLE_COUNT);
   assert.equal(byId.longest.game.id, "long");
   assert.equal(byId.wonders.value, 3);
   assert.equal(byId.triumphs, undefined);
+}
+
+// A record without figures (an archive from another version, or edited by hand) ranks, titles and
+// counts as zero instead of throwing.
+{
+  const bare = { ...rec("bare"), stats: undefined };
+  const list = [bare, rec("full", { tri: 5, wonders: 2 })];
+  assert.deepEqual(ranked(list).map((r) => r.id), ["full", "bare"]);
+  assert.equal(titleIndex(bare, 5), TITLE_COUNT);
+  assert.equal(overview(list).triumphs, 5);
+  assert.equal(leaderRows(list)[0].bestTriumphs, 5);
+  assert.equal(recordHolders(list).find((h) => h.id === "triumphs").game.id, "full");
+  assert.equal(statOf({ ...rec("odd"), stats: { triumphs: "3" } }, "triumphs"), 0, "a figure that is not a number reads as 0");
+  assert.equal(statOf(rec("x", { tri: 4 }), "triumphs"), 4);
 }
 
 console.log("history-hof harness passed");

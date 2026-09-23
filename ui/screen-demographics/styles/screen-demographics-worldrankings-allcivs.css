@@ -11,7 +11,12 @@
     /* Match the All Settlements table frame: transparent fill + divider border
        (not the old dark-fill / gold-border matrix look). */
     background: transparent;
-    border: 1px solid var(--ia-divider);
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-divider);
+    border-right-color: var(--dg-ia-divider);
+    border-bottom-color: var(--dg-ia-divider);
+    border-left-color: var(--dg-ia-divider);
     border-radius: 0.3rem;
 }
 
@@ -36,27 +41,35 @@
 .demographics-worldrankings-allcivs-col {
     display: flex;
     flex-direction: column;
-    flex: 1 0 9rem;
-    min-width: 9rem;
-    max-width: 22rem;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: calc(9 * var(--dg-u));
+    min-width: calc(9 * var(--dg-u));
+    max-width: calc(22 * var(--dg-u));
 }
 .demographics-worldrankings-allcivs-col-labels {
-    flex: 0 0 12rem;
-    min-width: 12rem;
-    max-width: 12rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(12 * var(--dg-u));
+    min-width: calc(12 * var(--dg-u));
+    max-width: calc(12 * var(--dg-u));
 }
 .demographics-worldrankings-allcivs-col-civ.is-local {
-    flex: 1 0 11rem;
-    min-width: 11rem;
-    max-width: 24rem;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: calc(11 * var(--dg-u));
+    min-width: calc(11 * var(--dg-u));
+    max-width: calc(24 * var(--dg-u));
 }
 /* Hidden (ghost) civ column: narrow strip, just shows the header so the
    user can click to un-hide. Width doesn't flex-grow so the remaining
    visible civ columns absorb the extra space. */
 .demographics-worldrankings-allcivs-col-civ.is-hidden {
-    flex: 0 0 5.5rem;
-    min-width: 5.5rem;
-    max-width: 5.5rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(5.5 * var(--dg-u));
+    min-width: calc(5.5 * var(--dg-u));
+    max-width: calc(5.5 * var(--dg-u));
     opacity: 0.55;
 }
 .demographics-worldrankings-allcivs-civ-header.is-ghost {
@@ -85,19 +98,19 @@
 }
 .demographics-worldrankings-allcivs-col-sticky-2 {
     position: sticky;
-    left: 10rem;
+    left: calc(10 * var(--dg-u));
     z-index: 2;
     background: rgba(28, 22, 14, 0.98);
     border-right: 2px solid rgba(243, 195, 76, 0.6);
 }
 
 .demographics-worldrankings-allcivs-corner {
-    height: 7.5rem;
+    height: calc(7.5 * var(--dg-u));
     border-bottom: 2px solid rgba(243, 195, 76, 0.5);
 }
 /* "Rank" header over the grid (the cells below each civ are world ranks). */
 .demographics-worldrankings-allcivs-corner-label {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 600;
@@ -107,19 +120,26 @@
 /* Civ column header: avatar + leader name + civ name. Fixed height so every
    civ column's header lines up regardless of whether "(formerly X)" wraps. */
 .demographics-worldrankings-allcivs-civ-header {
-    height: 7.5rem;
+    height: calc(7.5 * var(--dg-u));
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: flex-start;
-    gap: 0.2rem;
-    padding: 0.4rem 0.3rem;
+    row-gap: calc(0.2 * var(--dg-u));
+    column-gap: calc(0.2 * var(--dg-u));
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.3 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.3 * var(--dg-u));
     /* Card-like surface + civ-color top accent to match the Cities tab cards. */
     border-top: 3px solid rgba(243, 195, 76, 0.5);
     border-bottom: 2px solid rgba(243, 195, 76, 0.5);
     border-radius: 0.4rem 0.4rem 0 0;
     background: linear-gradient(to bottom, rgba(35, 37, 43, 0.85) 0%, rgba(18, 21, 31, 0.6) 100%);
-    margin: 0 0.12rem;
+    margin-top: 0;
+    margin-right: calc(0.12 * var(--dg-u));
+    margin-bottom: 0;
+    margin-left: calc(0.12 * var(--dg-u));
     text-align: center;
 }
 .demographics-worldrankings-allcivs-civ-header.is-local {
@@ -132,12 +152,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.05rem;
+    row-gap: calc(0.05 * var(--dg-u));
+    column-gap: calc(0.05 * var(--dg-u));
     min-width: 0;
     width: 100%;
 }
 .demographics-worldrankings-allcivs-civ-header-leader {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -146,7 +167,7 @@
     line-height: 1.15;
 }
 .demographics-worldrankings-allcivs-civ-header-civ {
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -175,7 +196,7 @@
     background-repeat: no-repeat;
 }
 .demographics-worldrankings-allcivs-avatar-placeholder {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-family: inherit;
     font-size: var(--dg-fs-120);
     font-weight: 600;
@@ -186,10 +207,13 @@
    floor; flex: 1 1 0 makes every label row share remaining vertical space
    EQUALLY so the column matches the value-column row heights exactly. */
 .demographics-worldrankings-allcivs-label-cell {
-    color: var(--ia-text-secondary);
-    min-height: 2.6rem;
+    color: var(--dg-ia-text-secondary);
+    min-height: calc(2.6 * var(--dg-u));
     flex: 1 1 0;
-    padding: 0.2rem 0.6rem;
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
     border-bottom: 1px solid rgba(201, 162, 76, 0.18);
     display: flex !important;
     flex-direction: row !important;
@@ -201,10 +225,10 @@
 }
 /* Leading metric glyph in each row heading (fixed size so the names line up). */
 .demographics-worldrankings-allcivs-metric-icon {
-    width: 1.3rem;
-    height: 1.3rem;
+    width: calc(1.3 * var(--dg-u));
+    height: calc(1.3 * var(--dg-u));
     flex-shrink: 0;
-    margin-right: 0.4rem;
+    margin-right: calc(0.4 * var(--dg-u));
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -224,8 +248,11 @@
 /* Value cell: value on top, rank on bottom. Same flex-grow as the label
    cells so rows line up and every row has identical height. */
 .demographics-worldrankings-allcivs-cell {
-    color: var(--ia-text-secondary);
-    padding: 0.15rem 0.3rem;
+    color: var(--dg-ia-text-secondary);
+    padding-top: calc(0.15 * var(--dg-u));
+    padding-right: calc(0.3 * var(--dg-u));
+    padding-bottom: calc(0.15 * var(--dg-u));
+    padding-left: calc(0.3 * var(--dg-u));
     border-bottom: 1px solid rgba(201, 162, 76, 0.15);
     font-variant-numeric: tabular-nums;
     display: flex !important;
@@ -235,14 +262,15 @@
     text-align: center;
 }
 .demographics-worldrankings-allcivs-value-cell {
-    min-height: 2.6rem;
+    min-height: calc(2.6 * var(--dg-u));
     flex: 1 1 0;
 }
 .demographics-worldrankings-allcivs-cell-value-wrap {
-    gap: 0.05rem;
+    row-gap: calc(0.05 * var(--dg-u));
+    column-gap: calc(0.05 * var(--dg-u));
 }
 .demographics-worldrankings-allcivs-cell-value {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     line-height: 1.15;
     font-weight: 600;
 }
@@ -257,16 +285,19 @@
     justify-content: center;
     flex-wrap: nowrap;
     white-space: nowrap;
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
     line-height: 1.1;
 }
 /* Yield icon as a fixed-size, non-shrinking flex item inside that row. */
 .demographics-worldrankings-allcivs-yield-icon {
-    width: 0.95rem;
-    height: 0.95rem;
+    width: calc(0.95 * var(--dg-u));
+    height: calc(0.95 * var(--dg-u));
     flex-shrink: 0;
-    margin: 0 0.12rem;
+    margin-top: 0;
+    margin-right: calc(0.12 * var(--dg-u));
+    margin-bottom: 0;
+    margin-left: calc(0.12 * var(--dg-u));
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -277,7 +308,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
 }
 
 /* Heavy divider every 4 rows for scan-ability. Applied to each cell in
@@ -361,24 +393,32 @@
 /* Rank column: compact and non-growing (data are short numbers). Its header
    ("Rank" / Polish "Pozycja") font-fit-shrinks to fit via the label rule above. */
 .demographics-civtable .demographics-settle-col-rank {
-    flex: 0 0 3.6rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(3.6 * var(--dg-u));
     min-width: 0;
 }
 .demographics-civtable .demographics-civtable-col-civ {
-    flex: 0 0 13rem;
-    min-width: 13rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(13 * var(--dg-u));
+    min-width: calc(13 * var(--dg-u));
 }
 .demographics-civtable .demographics-civtable-civ {
     flex-direction: row;
     justify-content: flex-start;
     text-align: left;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     overflow: hidden;
 }
 /* Toggle chip row sits left-aligned above the table. */
 .demographics-civtable-toggle {
     justify-content: flex-start;
-    margin: 0 0 0.4rem 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: calc(0.4 * var(--dg-u));
+    margin-left: 0;
 }
 /* Local player's row: the matrix marks the local COLUMN with a gold border; the
    sortable table marks the local ROW with the same gold outline every World

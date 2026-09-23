@@ -64,4 +64,30 @@ const cap = await import("/demographics/ui/history/capture/history-capture.js");
   assert.equal(cap.adoptViewpoint({ local: 0 }, -1, true).local, 0, "no local id: untouched");
 }
 
-console.log("history-capture-mp harness passed (5 cases)");
+// 6. stopCapture offs every listener startCapture registered and lets startCapture register again.
+{
+  const on = [];
+  const off = [];
+  globalThis.engine = { on: (n, fn) => on.push([n, fn]), off: (n, fn) => off.push([n, fn]) };
+  globalThis.Loading = { runWhenLoaded: () => {} };
+  cap._resetForTests();
+  cap.startCapture();
+  const n = on.length;
+  assert.ok(n >= 5, "startCapture registers the turn, victory, defeat, age-ended and disaster listeners");
+  cap.startCapture();
+  assert.equal(on.length, n, "startCapture is idempotent while started");
+  cap.stopCapture();
+  assert.equal(off.length, n, "stopCapture offs every registered listener");
+  assert.deepEqual(off, on, "the same handler references are offed");
+  cap.startCapture();
+  assert.equal(on.length, n * 2, "startCapture registers again after stopCapture");
+  globalThis.engine = {};
+  cap.stopCapture();
+  assert.equal(off.length, n, "no engine.off: listeners are forgotten without throwing");
+  cap.startCapture();
+  assert.equal(on.length, n * 2, "no engine.on: startCapture still runs without throwing");
+  delete globalThis.engine;
+  delete globalThis.Loading;
+}
+
+console.log("history-capture-mp harness passed (6 cases)");

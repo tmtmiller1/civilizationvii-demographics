@@ -3,10 +3,7 @@
 // Data layer for the Legacy Path radar: the axis catalog plus the civ-map
 // construction (a frozen per-age legacy snapshot, or the live current-age
 // running max with a `player.Legacies` pull) and the per-civ scale/total math.
-// DOM-free. The render + UI wiring lives in chart-triumphs-radar.js, which
-// imports `loadRadarCivs` / `radarScaleMax` / `radarTriumphTotal` / `LEGACY_AXES`
-// from here. Split out of chart-triumphs-radar.js to keep that module under the
-// code-line cap.
+// DOM-free; the render + UI wiring lives in chart-triumphs-radar.js.
 
 import {
   PALETTE,
@@ -21,14 +18,9 @@ import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
  * ).ChartOptions} ChartOptions
  */
 
-// Triumph radar - 6-axis polar chart, one polygon per civ. Reads
-// triumphs_cultural / _diplomatic / _economic / _scientific / _militaristic
-// / _expansionist counts (Test-of-Time Legacies system). For the CURRENT
-// age, values are also live-pulled from `player.Legacies.isTriggered` so
-// progress reflects the engine state right now, not just the latest sample.
-// Labels are stored as LOC keys and translated at render time (see
-// drawRadarSpokes), not baked at module load - so they reflect the active
-// language even if the module loaded before Locale was ready.
+// Triumph radar axes: the six triumphs_* counts (Test-of-Time Legacies), with
+// the CURRENT age also live-pulled from `player.Legacies.isTriggered`. Labels
+// are LOC keys translated at render time so they reflect the active language.
 export const LEGACY_AXES = [
   {
     id: "triumphs_militaristic",
@@ -97,7 +89,7 @@ function radarEmptyValues() {
  * @returns {string} The display name.
  */
 function radarCivName(src, pid) {
-  if (!src.leaderName) return tPlayerFallback(pid);
+  if (!src || !src.leaderName) return tPlayerFallback(pid);
   return inlineLabel(src.leaderName, src.civName);
 }
 
@@ -177,7 +169,9 @@ function loadRadarCivsCurrent(samples) {
  * @param {CivSample|*} ps One civ's sample.
  */
 function foldRadarSample(civs, pidOrder, pid, ps) {
-  const m = ps?.metrics || {};
+  // A persisted sample can hold a null player-state; there is nothing to fold.
+  if (!ps) return;
+  const m = ps.metrics || {};
   let civ = civs.get(pid);
   if (!civ) {
     const color =
@@ -318,7 +312,7 @@ function radarSourceCivs(opts, samples) {
 }
 
 /**
- * Remove policy-hidden civs in place (governance P0.1): unmet civs under the
+ * Remove policy-hidden civs in place (governance): unmet civs under the
  * spoiler guard, and every non-local civ under own-civ-only / disabled.
  * @param {Map<string, RadarCiv>} civs Radar civ map.
  * @param {Snapshot[]} samples Sample stream.

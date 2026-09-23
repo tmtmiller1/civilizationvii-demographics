@@ -2,15 +2,11 @@
 //
 // Per-turn history time-series storage for the Demographics screen.
 //
-// Backend: the GameConfiguration key-value store (Configuration.editGame()
-// .setValue / Configuration.getGame().getValue), which persists across quit/load
-// AND the age transition. History is stamped with the game seed and self-resets
-// on a new game. The old per-player Tutorial property bag is kept only as a
-// read-only fallback, so history written by older builds migrates forward on the
-// first load under this backend.
-//
-// A BeforeUnload flush writes the in-memory history before a UI reload (covers
-// quit-to-menu and in-session age boundaries); per-turn saves cover the rest.
+// Backend: the GameConfiguration key-value store, which persists across
+// quit/load and the age transition; history is stamped with the game seed and
+// self-resets on a new game, and the per-player Tutorial property bag is a
+// read-only fallback. A BeforeUnload flush writes the in-memory history before
+// a UI reload; per-turn saves cover the rest.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import {
@@ -18,6 +14,8 @@ import {
   decimationDisabled,
   detectGameSpeedType,
   HARD_MAX_SAMPLES,
+  PAYLOAD_HARD_BYTES,
+  PAYLOAD_SOFT_BYTES,
   resolveEffectiveCap
 } from "/demographics/ui/storage/storage-cap.js";
 import {
@@ -36,14 +34,13 @@ import {
   maybeDecimate,
   prepareHistoryForSave,
   serializePayload,
-  writeStorePayload
+  serializeWithinBudget,
+  writeSerializedPayload
 } from "/demographics/ui/storage/storage-retention.js";
 import { loadEmpty, loadParsed, readRaw } from "/demographics/ui/storage/storage-load.js";
 
-// The shared global {History} typedef merges with the DOM lib's `History`
-// interface (both are declared in global scope), which makes it unusable as a
-// structural annotation here. Alias the same shape under a local name. Field
-// shapes mirror the {History} interface in types/demographics.d.ts exactly.
+// The global {History} typedef merges with the DOM lib's `History` interface,
+// so the same shape is aliased under a local name (mirrors types/demographics.d.ts).
 /**
  * @typedef {object} StoredHistory
  * @property {number} version Persisted schema version.
@@ -97,10 +94,8 @@ const CATALOG_SCOPE = "demographics-history-v1";
 const PAYLOAD_KEY = "json";
 
 /**
- * Pick the persistence store: the GameConfiguration KV store as the PRIMARY
- * backend (durable across quit→load AND the age transition), with the old
- * Tutorial bag as a read-only fallback so history written by the previous
- * backend migrates forward on first load. Writes go to the config store only.
+ * Pick the persistence store: the GameConfiguration KV store as the primary
+ * backend, with the Tutorial bag as a read-only fallback. Writes go to the config store only.
  * @param {{ catalogScope: string, derr: (...a: any[]) => void }} options Resolver options.
  * @returns {PersistStore | null} The store, or null when no backend is available.
  */
@@ -120,10 +115,8 @@ function pickPersistStore(options) {
   };
 }
 /**
- * Default persistence mode. With the GameConfiguration backend, history carries
- * across quit/load and the age transition under the default. `legacy_tutorial_bag`
- * additionally registers the BeforeAgeTransition flush (a no-op fallback retained
- * for older setups); opt in via the `persistenceMode` setting.
+ * Default persistence mode. `legacy_tutorial_bag` additionally registers the
+ * BeforeAgeTransition flush; opt in via the `persistenceMode` setting.
  */
 const PERSISTENCE_MODE = "within_age";
 /**
@@ -184,8 +177,7 @@ function isPrematureBoundarySample(s, prev) {
 
 /**
  * Drop premature age-boundary samples in place (GDP/yield false drop-to-zero).
- * The sampler no longer creates these; this also repairs saves recorded before
- * that fix. Safe: the all-zero-yields-at-an-age-start signature is unique to it.
+ * Safe: the all-zero-yields-at-an-age-start signature is unique to it.
  * @param {*} history The loaded history (mutated).
  */
 function dropPrematureBoundarySamples(history) {
@@ -220,6 +212,10 @@ class StorageImpl {
     this._decimationNotified = false;
     /** @type {number} Turn at which decimation first kicked in (-1 if never). */
     this._decimationTurn = -1;
+    /** @type {number} Byte length of the last payload serialized (save) or read (load). */
+    this._lastPayloadBytes = 0;
+    /** @type {boolean} Whether the once-per-session soft byte-budget notice has fired. */
+    this._payloadSoftNotified = false;
     /** @type {(() => void) | null} BeforeUnload hook callback. */
     this._beforeUnloadHook = null;
     /** @type {(() => void) | null} BeforeAgeTransition hook callback. */
@@ -228,8 +224,8 @@ class StorageImpl {
 
   /**
    * Whether the in-memory mirror is stamped with a KNOWN seed that differs from
-   * the current game's — i.e. it belongs to a different game and must not be
-   * reconciled into this one. False when either seed is the "unknown" sentinel.
+   * the current game's, so it must not be reconciled into this one. False when
+   * either seed is the "unknown" sentinel.
    * @returns {boolean} True when _mem is for a different game.
    */
   _memIsForDifferentGame() {
@@ -248,11 +244,9 @@ class StorageImpl {
    */
   _preferMemWhenNewer(parsed, store) {
     const memSamples = this._mem?.samples?.length || 0;
-    // Never resurrect a DIFFERENT game's in-memory history: if _mem is stamped
-    // with a seed that doesn't match the current game, prefer the freshly-parsed
-    // (current-game) payload regardless of sample counts. Pairs with the seed
-    // guard in loadParsed (storage-load.js) so neither the store payload nor the
-    // _mem mirror can leak a prior game's data into a new one.
+    // Never resurrect a DIFFERENT game's in-memory history: prefer the
+    // freshly-parsed payload regardless of sample counts (pairs with the seed
+    // guard in storage-load.js loadParsed).
     if (this._memIsForDifferentGame()) return parsed;
     if (memSamples <= parsed.samples.length) return parsed;
     dlog(
@@ -306,10 +300,8 @@ class StorageImpl {
   }
 
   /**
-   * Install one-time flush hooks. `BeforeUnload` is always installed (covers
-   * in-session age boundaries and quit-to-menu). `BeforeAgeTransition` - the
-   * cross-age carry-forward attempt, which does not work in current builds - is
-   * installed only in `legacy_tutorial_bag` mode. Idempotent.
+   * Install one-time flush hooks. `BeforeUnload` is always installed;
+   * `BeforeAgeTransition` only in `legacy_tutorial_bag` mode. Idempotent.
    */
   _installEngineHooks() {
     if (this._hooksInstalled) return;
@@ -391,9 +383,9 @@ class StorageImpl {
 
   /**
    * Handle the empty-persistent-tier case: recover from `_mem` if it holds
-   * data (re-stamping it under the now-writable bag), else return an empty shell.
+   * data for THIS game, else restore a parked payload, else return an empty shell.
    * @param {PersistStore} store The (empty) store to recover into.
-   * @returns {StoredHistory} The recovered or freshly empty history.
+   * @returns {StoredHistory} The recovered, restored, or freshly empty history.
    */
   _loadEmpty(store) {
     return loadEmpty({
@@ -403,6 +395,8 @@ class StorageImpl {
       store,
       payloadKey: PAYLOAD_KEY,
       emptyHistory,
+      isValid,
+      normalize,
       dlog,
       derr
     });
@@ -421,6 +415,7 @@ class StorageImpl {
       seed: this._seed,
       version: VERSION,
       store,
+      payloadKey: PAYLOAD_KEY,
       emptyHistory,
       isValid,
       normalize,
@@ -451,6 +446,7 @@ class StorageImpl {
       const result = this._loadEmpty(store);
       return result;
     }
+    this._lastPayloadBytes = raw.length;
     const result = this._loadParsed(raw, store);
     dropPrematureBoundarySamples(result);
     return result;
@@ -489,13 +485,76 @@ class StorageImpl {
   }
 
   /**
-   * Serialize a history and write it to the store, swallowing errors.
+   * Serialize a history (tightening it while over the soft byte budget) and
+   * write it to the store, swallowing errors. An over-budget payload is still
+   * written: the current game is never dropped, only logged about.
    * @param {PersistStore} store The resolved store.
-   * @param {StoredHistory} history History to write.
+   * @param {StoredHistory} history History to write (samples mutated when shrunk).
    * @returns {boolean} True on a successful write.
    */
   _writeStorePayload(store, history) {
-    return writeStorePayload(store, PAYLOAD_KEY, history, derr);
+    const serialized = this._serializeWithinBudget(history);
+    if (serialized === null) return false;
+    return writeSerializedPayload(store, PAYLOAD_KEY, serialized, derr);
+  }
+
+  /**
+   * Serialize a history under the soft byte budget where possible, recording the
+   * final length and emitting the budget notices.
+   * @param {StoredHistory} history History to serialize (samples mutated when shrunk).
+   * @returns {string | null} The serialized payload, or null when stringify threw.
+   */
+  _serializeWithinBudget(history) {
+    let result;
+    try {
+      result = serializeWithinBudget(history, {
+        cap: resolveEffectiveCap(derr).cap,
+        softBytes: PAYLOAD_SOFT_BYTES,
+        tighten: (h, cap) => this._tightenToCap(h, cap)
+      });
+    } catch (e) {
+      derr("save: stringify threw:", e);
+      return null;
+    }
+    this._lastPayloadBytes = result.serialized.length;
+    this._notePayloadBytes(result.initialBytes, result.serialized.length, result.attempts);
+    return result.serialized;
+  }
+
+  /**
+   * Re-run the decimation/cap step against a tighter cap, for the byte budget.
+   * The user's "keep every sample" override is bypassed on purpose: the budget
+   * protects the save itself.
+   * @param {StoredHistory} h Target history (mutated).
+   * @param {number} cap The tightened sample cap.
+   */
+  _tightenToCap(h, cap) {
+    const eff = { cap, source: "bytes:" + cap };
+    this._maybeDecimate(h, eff, { decimationDisabled: () => false, splitDecimationBuckets });
+    if (h.samples.length > cap) h.samples = h.samples.slice(-cap);
+  }
+
+  /**
+   * Log the byte-budget state of a serialized payload: once per session when the
+   * soft budget was crossed, on every save while the hard budget is exceeded.
+   * @param {number} initialBytes Length before any tightening pass.
+   * @param {number} finalBytes Length actually written.
+   * @param {number} attempts Tightening passes run.
+   */
+  _notePayloadBytes(initialBytes, finalBytes, attempts) {
+    if (initialBytes > PAYLOAD_SOFT_BYTES && !this._payloadSoftNotified) {
+      this._payloadSoftNotified = true;
+      derr(
+        "save: payload " + initialBytes + " bytes exceeds the soft budget " + PAYLOAD_SOFT_BYTES +
+          "; tightened to " + finalBytes + " bytes in " + attempts + " pass(es)"
+      );
+    }
+    if (finalBytes > PAYLOAD_HARD_BYTES) {
+      derr(
+        "save: payload " + finalBytes + " bytes still exceeds the hard budget " + PAYLOAD_HARD_BYTES +
+          " after " + attempts + " pass(es); writing anyway"
+      );
+    }
   }
 
   /**
@@ -515,12 +574,15 @@ class StorageImpl {
    * threshold, preserving the latest age and any age-boundary turns.
    * @param {StoredHistory} h Target history (mutated).
    * @param {EffectiveCap} eff The active effective cap.
+   * @param {Parameters<typeof maybeDecimate>[2]} [deps] Decimation dependencies
+   *   (default: the user's decimation setting + the schema bucket split).
    */
-  _maybeDecimate(h, eff) {
-    const summary = maybeDecimate(h, eff, {
-      decimationDisabled: () => decimationDisabled(derr),
-      splitDecimationBuckets
-    });
+  _maybeDecimate(h, eff, deps) {
+    const summary = maybeDecimate(
+      h,
+      eff,
+      deps || { decimationDisabled: () => decimationDisabled(derr), splitDecimationBuckets }
+    );
     if (!summary.decimated) return;
     this._noteDecimation(h, eff, summary.keepEveryNth || 3);
     dlog(
@@ -537,9 +599,8 @@ class StorageImpl {
 
   /**
    * Fire the one-time, always-on downsampling notice (not gated by DBG) and
-   * record the turn it first triggered. No-op after the first call. Users with
-   * very long games should know late history is downsampled, not lost silently;
-   * the Options panel mirrors this via {@link StorageImpl#decimationStatus}.
+   * record the turn it first triggered; the Options panel mirrors this via
+   * {@link StorageImpl#decimationStatus}.
    * @param {StoredHistory} h The (already decimated) history.
    * @param {EffectiveCap} eff The active effective cap.
    * @param {number} keepEveryNth The keep-1-in-N decimation ratio.
@@ -568,11 +629,13 @@ class StorageImpl {
   *   firstTurn: number,
   *   cap: number,
   *   capSource: string,
-  *   disabled: boolean
+  *   disabled: boolean,
+  *   payloadBytes: number
   * }}
    *   `active` once downsampling has triggered; `firstTurn` is when; `cap` /
    *   `capSource` are the effective sample cap and where it came from;
-   *   `disabled` reflects the user's "keep every sample" override.
+   *   `disabled` reflects the user's "keep every sample" override;
+   *   `payloadBytes` is the length of the last payload serialized or read.
    */
   decimationStatus() {
     const eff = resolveEffectiveCap(derr);
@@ -581,16 +644,15 @@ class StorageImpl {
       firstTurn: this._decimationTurn,
       cap: eff.cap,
       capSource: eff.source,
-      disabled: decimationDisabled(derr)
+      disabled: decimationDisabled(derr),
+      payloadBytes: this._lastPayloadBytes
     };
   }
 
   /**
    * Append a snapshot to the history (dedupe, decimate) and return it. Persists
-   * by default; pass `{ persist: false }` to skip the write so the caller can
-   * batch further mutations (e.g. war tracking) into a single save per turn. In
-   * the deferred case the in-memory mirror is still updated, so `peek()` and a
-   * later `save()` see the appended sample.
+   * by default; `{ persist: false }` skips the write so the caller can batch
+   * further mutations into one save per turn (the in-memory mirror is still updated).
    * @param {Snapshot} snapshot Snapshot to append.
    * @param {{ persist?: boolean }} [opts] Append options.
    * @returns {StoredHistory} The updated history.
@@ -600,7 +662,7 @@ class StorageImpl {
 
     this._insertSnapshot(h, snapshot);
 
-    // Decimation (preserved from prior implementation).
+    // Decimation.
     const eff = resolveEffectiveCap(derr);
     this._maybeDecimate(h, eff);
 
@@ -618,9 +680,8 @@ class StorageImpl {
 
   /**
    * The in-memory history mirror (last loaded or saved), or null before the
-   * first load. Lets a caller that just triggered a save (the war tracker runs
-   * immediately after appendSample) reuse the fresh blob instead of re-reading
-   * and re-parsing the whole store.
+   * first load. Lets a caller that just triggered a save reuse the fresh blob
+   * instead of re-parsing the whole store.
    * @returns {StoredHistory|null} The in-memory mirror, or null.
    */
   peek() {

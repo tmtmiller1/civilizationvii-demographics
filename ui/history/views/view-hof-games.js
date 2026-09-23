@@ -8,7 +8,7 @@
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
 import { t, num, typeName, legacyWhyKey, legacyWhatKey } from "/demographics/ui/history/core/history-text.js";
 import { deleteRecord } from "/demographics/ui/history/store/history-archive-store.js";
-import { ranked, titleIndex } from "/demographics/ui/history/model/history-hof.js";
+import { ranked, statOf, titleIndex } from "/demographics/ui/history/model/history-hof.js";
 import { castFromRecord, eventText } from "/demographics/ui/history/model/history-narrate.js";
 import {
   civChip, civIcon, civProgression, emptyState, leaderIcon, outcomeMark, pageHead, pillRow, section, statTile, table,
@@ -54,8 +54,8 @@ function numberMode() {
  * @returns {string} Formatted population.
  */
 export function populationText(rec) {
-  const scaled = rec.stats.populationScaled;
-  return numberMode() === "scaled" && scaled ? formatBigNumber(scaled) : num(rec.stats.population);
+  const scaled = statOf(rec, "populationScaled");
+  return numberMode() === "scaled" && scaled ? formatBigNumber(scaled) : num(statOf(rec, "population"));
 }
 import { sparkline } from "/demographics/ui/history/views/history-chart.js";
 import { outcomeLabel, outcomeClass, setupLine, dateLabel, titleName } from "/demographics/ui/history/views/history-format.js";
@@ -118,7 +118,7 @@ function resultCell(r) {
  */
 export function renderGames(host, records, all, ctx) {
   clear(host);
-  const best = Math.max(0, ...all.map((r) => r.stats.triumphs));
+  const best = Math.max(0, ...all.map((r) => statOf(r, "triumphs")));
   const list = ranked(records);
   const cols = [
     { label: "#", cls: "dgh-col-xs" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_TITLE"), cls: "dgh-col-md" }, { label: "", cls: "dgh-col-icon" },
@@ -130,7 +130,7 @@ export function renderGames(host, records, all, ctx) {
   const rows = list.map((r, i) => [
     num(i + 1), titleName(titleIndex(r, best)), leaderIcon(r.leader, "dgh-leader-icon dgh-leader-icon--sm"),
     typeName(r.leaderName, r.leader), progressionOf(r, "dgh-progression--sm"), resultCell(r),
-    num(r.turns), num(r.stats.triumphs), dateLabel(r.updated), sparkline(r.spark.tri, readableColor(r.color, r.color2 || ""))
+    num(r.turns), num(statOf(r, "triumphs")), dateLabel(r.updated), sparkline(r.spark?.tri || [], readableColor(r.color, r.color2 || ""))
   ]);
   host.appendChild(el("div", { cls: "dgh-toolbar" }, [
     pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS"), t("LOC_DEMOGRAPHICS_HIST_RANKING_RULE"))
@@ -162,7 +162,7 @@ function rivalsTable(rec) {
     { label: t("LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION"), cls: "dgh-col-grow" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS"), cls: "dgh-col-num" },
     { label: t("LOC_DEMOGRAPHICS_HIST_COL_FATE"), cls: "dgh-col-lg" }
   ];
-  const list = rec.rivals.slice().sort((a, b) => b[7] - a[7]);
+  const list = (rec.rivals || []).slice().sort((a, b) => b[7] - a[7]);
   const rows = list.map((r) => [
     leaderIcon(r[1], "dgh-leader-icon dgh-leader-icon--sm"), typeName(r[2], r[1]), r[3] ? civChip(typeName(r[4], r[3]), cast.color(r[0]), r[3]) : "—",
     num(r[7]), fateText(r[6])
@@ -187,7 +187,7 @@ function detailHeader(rec, best) {
         outcomeMark(rec.outcome),
         el("div", { cls: "dgh-result dgh-result--" + outcomeClass(rec), text: outcomeLabel(rec) })
       ]),
-      el("div", { cls: "dgh-detail-line dgh-muted", text: setupLine(rec.setup) + "  ·  " + dateLabel(rec.updated) })
+      el("div", { cls: "dgh-detail-line dgh-muted", text: setupLine(rec.setup || {}) + "  ·  " + dateLabel(rec.updated) })
     ])
   ]);
 }
@@ -213,12 +213,12 @@ function detailTop(rec, best, ctx) {
  * @returns {HTMLElement} Tiles.
  */
 function detailTiles(rec) {
-  const s = rec.stats;
+  const s = (/** @type {keyof ArchiveRecord["stats"]} */ key) => num(statOf(rec, key));
   return el("div", { cls: "dgh-tiles" }, [
-    statTile(num(rec.turns), t("LOC_DEMOGRAPHICS_HIST_COL_TURNS")), statTile(num(s.triumphs), t("LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS")),
-    statTile(num(s.peakSettlements), t("LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS")), statTile(populationText(rec), t("LOC_DEMOGRAPHICS_HIST_COL_POPULATION")),
-    statTile(num(s.wonders), t("LOC_DEMOGRAPHICS_HIST_FACT_WONDERS")), statTile(num(s.captured), t("LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED")),
-    statTile(num(s.wars), t("LOC_DEMOGRAPHICS_HIST_FACT_WARS"))
+    statTile(num(rec.turns), t("LOC_DEMOGRAPHICS_HIST_COL_TURNS")), statTile(s("triumphs"), t("LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS")),
+    statTile(s("peakSettlements"), t("LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS")), statTile(populationText(rec), t("LOC_DEMOGRAPHICS_HIST_COL_POPULATION")),
+    statTile(s("wonders"), t("LOC_DEMOGRAPHICS_HIST_FACT_WONDERS")), statTile(s("captured"), t("LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED")),
+    statTile(s("wars"), t("LOC_DEMOGRAPHICS_HIST_FACT_WARS"))
   ]);
 }
 
@@ -231,7 +231,7 @@ function detailTiles(rec) {
 function timelineSection(rec) {
   const rivals = el("div", { cls: "dgh-rivals" }, [
     el("div", { cls: "dgh-map-title", text: t("LOC_DEMOGRAPHICS_HIST_RIVALS") }),
-    rec.rivals.length ? rivalsTable(rec) : emptyState(t("LOC_DEMOGRAPHICS_HIST_NO_RIVALS"))
+    rec.rivals?.length ? rivalsTable(rec) : emptyState(t("LOC_DEMOGRAPHICS_HIST_NO_RIVALS"))
   ]);
   const tl = unpackTimeline(rec.tl);
   if (!tl) return section("", [rivals]);
@@ -245,7 +245,7 @@ function timelineSection(rec) {
  * @returns {HTMLElement|null} The toggle.
  */
 function numberToggle(rec, ctx) {
-  if (!rec.stats.populationScaled) return null;
+  if (!statOf(rec, "populationScaled")) return null;
   const items = [
     { key: "scaled", label: t("LOC_DEMOGRAPHICS_HIST_POP_SCALED") },
     { key: "civ", label: t("LOC_DEMOGRAPHICS_HIST_POP_CIV") }
@@ -268,13 +268,15 @@ function numberToggle(rec, ctx) {
  */
 function highlightsSection(rec) {
   const title = t("LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS");
-  if (!rec.highlights.length) return section(title, [emptyState(t("LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS"))]);
+  const highlights = Array.isArray(rec.highlights) ? rec.highlights : [];
+  const ages = Array.isArray(rec.ages) ? rec.ages : [];
+  if (!highlights.length) return section(title, [emptyState(t("LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS"))]);
   const cast = castFromRecord(rec);
   /** @type {Array<HTMLElement>} */
   const body = [];
   let ageIdx = -1;
-  for (const e of rec.highlights) {
-    const age = rec.ages[e.a] || "";
+  for (const e of highlights) {
+    const age = ages[e.a] || "";
     if (e.a !== ageIdx) {
       ageIdx = e.a;
       const civ = cast.civType(rec.local, age);
@@ -374,7 +376,9 @@ function gameOptions(rec, ctx) {
 }
 
 /**
- * Detail page of one game.
+ * Detail page of one game. The Back button goes in first, before anything that reads the record: a
+ * page that fails halfway then still has its way out, instead of stranding the player on a blank
+ * page whose only exit is closing the screen.
  * @param {HTMLElement} host Container.
  * @param {ArchiveRecord} rec Record.
  * @param {ArchiveRecord[]} all Every record.
@@ -382,10 +386,10 @@ function gameOptions(rec, ctx) {
  */
 export function renderDetail(host, rec, all, ctx) {
   clear(host);
-  const best = Math.max(0, ...all.map((r) => r.stats.triumphs));
   const back = textButton("LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF", () => { viewState.detail = null; ctx.rerender(); }, "dgh-button--back");
   back.insertBefore(el("span", { cls: "dgh-back-arrow", text: "←" }), back.firstChild);
   host.appendChild(el("div", { cls: "dgh-toolbar" }, [back]));
+  const best = Math.max(0, ...all.map((r) => statOf(r, "triumphs")));
   host.appendChild(el("div", { cls: "dgh-scroll dgh-detail" }, [
     detailTop(rec, best, ctx),
     timelineSection(rec),

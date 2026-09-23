@@ -1,21 +1,14 @@
 // history-archive-store.js
 //
-// Keeps the cross-game archive in this mod's slice of the shared localStorage `modSettings` object,
-// the convention ModOptions-style mods use (one sub-object per mod). A second top-level key is
-// avoided on purpose: several popular mods clear localStorage whenever it holds more than one key.
-//
-// Coherent GameFace in Civilization VII 1.5.0 can return another key's value from getItem(). The
-// store therefore treats every read as untrusted:
-// - it writes only when the value read looks like a settings root (every top-level value is an
-//   object) and any slice already under our id is one this mod wrote;
-// - it never writes a value it did not read, so other mods' slices are carried over byte for byte;
-// - after writing it reads back and marks the session "unverified" when its games are not there.
-// The in-memory slice is authoritative for the session. Each save also carries its own campaign,
-// so a record the archive loses is restored the next time that save is played.
+// Keeps the cross-game archive in this mod's slice of the shared localStorage `modSettings` object
+// (one sub-object per mod); a second top-level key is avoided because several mods clear
+// localStorage whenever it holds more than one key. getItem() can return another key's value, so
+// every read is untrusted: the store writes only a value it read that looks like a settings root,
+// then reads back and marks the session "unverified" when its games are not there.
 
 import { dlog, derr, safe } from "/demographics/ui/history/core/history-log.js";
 import { emptySlice, fitSlice, isSlice, mergeSlices, upsert, hideGame, sliceTexts } from "/demographics/ui/history/store/history-archive.js";
-import { repairStore } from "/demographics/ui/core/demographics-storage-repair.js";
+import { repairStore, storeRows } from "/demographics/ui/core/demographics-storage-repair.js";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 
 export const ROOT_KEY = "modSettings";
@@ -37,17 +30,68 @@ export function looksLikeSettingsRoot(v) {
 }
 
 /**
+ * One raw read of the shared root.
+ * @returns {string|null|undefined} The value, null when empty, undefined when getItem threw.
+ */
+function readRaw() {
+  try {
+    const v = localStorage.getItem(ROOT_KEY);
+    return typeof v === "string" && v.length > 0 ? v : null;
+  } catch (_) {
+    // getItem can throw in some Coherent UI contexts; the caller must not treat that as empty.
+    return undefined;
+  }
+}
+
+/**
+ * Whether an empty read means the shared key is absent: true when the store is empty or its key
+ * list (key(i), which enumerates on a correct localStorage and is always null on 1.5.0) does not
+ * hold the key. On 1.5.0 getItem never returns empty for a populated store, so an empty read there
+ * is a transient failure.
+ * @returns {boolean} True when the key is genuinely absent.
+ */
+function emptyReadIsAbsentKey() {
+  const rows = storeRows();
+  if (rows <= 0) return true;
+  return safe(() => {
+    for (let i = 0; i < rows; i += 1) {
+      const k = localStorage.key(i);
+      if (k === ROOT_KEY || k === null || k === undefined) return false;
+    }
+    return true;
+  }, false);
+}
+
+/**
  * Read the shared root and classify it.
  * @returns {{root: Record<string, any>, status: ArchiveStatus}} The root (empty when unusable).
  */
 export function readRoot() {
   if (typeof localStorage === "undefined") return { root: {}, status: "unavailable" };
-  const raw = safe(() => localStorage.getItem(ROOT_KEY), null);
+  let raw = readRaw();
+  // Coherent returns a transient empty value now and then; a populated second read proves it.
+  if (raw === null) raw = readRaw();
+  // A read that threw is not an empty store: siblings may be there and unreadable.
+  if (raw === undefined) return { root: {}, status: "unavailable" };
+  // An empty read of a populated store is that same flaky read twice unless the key list says
+  // the shared key is genuinely absent; writing only our slice back would erase every other mod's
+  // settings.
+  if (!raw && !emptyReadIsAbsentKey()) return { root: {}, status: "unverified" };
   if (!raw) return { root: {}, status: "empty" };
+  return classifyRoot(raw);
+}
+
+/**
+ * Parse a raw shared root and decide whether this mod may write it back.
+ * @param {string} raw The raw value.
+ * @returns {{root: Record<string, any>, status: ArchiveStatus}} The root (empty when unusable).
+ */
+function classifyRoot(raw) {
   let parsed = null;
   try {
     parsed = JSON.parse(raw);
   } catch (_) {
+    // Not JSON: another mod's bytes, never overwritten.
     return { root: {}, status: "foreign" };
   }
   if (!looksLikeSettingsRoot(parsed)) return { root: {}, status: "foreign" };
@@ -153,13 +197,8 @@ export function archiveTexts() {
 
 /**
  * Empty the shared store and write it back holding this mod's slices, so the shared settings key
- * owns the one readable row; other mods add their slices back to it as they save. Destroys every
- * other key's stored bytes (one mod's working data, the rest already unreadable): only call it on an
- * explicit request from the player, after telling them what is lost. The in-memory archive is the
- * source for the rewrite, so the games this session knows about are kept.
- *
- * The repair holds until some mod writes a key that sorts ahead of `modSettings` - then reads break
- * again and this can be run again.
+ * owns the one readable row. Destroys every other key's stored bytes: only call it on an explicit
+ * request from the player. The in-memory archive is the source for the rewrite.
  * @returns {import("/demographics/ui/core/demographics-storage-repair.js").RepairResult} Outcome.
  */
 export function repairStorage() {
@@ -172,6 +211,8 @@ export function repairStorage() {
   const result = repairStore(slices);
   if (result.ok) {
     state.status = "ok";
+    // The settings module may have gone read-only on the same broken store; it can write again.
+    safe(() => DemographicsSettings.resetPersistenceStatus?.(), undefined);
     dlog("storage repaired", result.rowsBefore, "->", result.rowsAfter);
   } else {
     // The store was emptied even when the write back failed, so nothing here is readable now.

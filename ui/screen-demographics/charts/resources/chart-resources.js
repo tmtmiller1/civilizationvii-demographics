@@ -3,7 +3,7 @@
 // The resources stacked-area chart (one civ, resource-class bands stacked
 // over time): collectResourceCivOptions + renderResourcesStack and their
 // private layout / domain / drawing helpers. Reused by the triumph stack via
-// the bands / yAxisLabel options. Migrated verbatim from demographics-chart.js.
+// the bands / yAxisLabel options.
 
 import {
   dlog,
@@ -33,10 +33,8 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
  * ).ChartOptions} ChartOptions
  */
 
-// Resources stacked-area chart - LOCAL player only. For each turn, stack
-// the 5 resource-class counts (bonus, empire, city, factory, treasure) so
-// the user can see how their resource allocation strategy evolved over the
-// course of the game. Compares CATEGORIES, not civs.
+// Resources stacked-area chart: for each turn, stack the 5 resource-class
+// counts (bonus, empire, city, factory, treasure). Compares CATEGORIES, not civs.
 const RESOURCE_BANDS = [
   { id: "resources_bonus", label: t("LOC_DEMOGRAPHICS_RESOURCE_BONUS"), color: "#7fb3e6" },
   { id: "resources_empire", label: t("LOC_DEMOGRAPHICS_RESOURCE_EMPIRE"), color: "#e6a23c" },
@@ -74,7 +72,7 @@ export function collectResourceCivOptions(history) {
   for (const s of samps) {
     if (!s?.players) continue;
     for (const pid of Object.keys(s.players)) {
-      // Governance (P0.1): don't offer policy-hidden civs as a pickable target.
+      // Governance: don't offer policy-hidden civs as a pickable target.
       if (civDroppedByPolicy(samps, pid)) continue;
       foldResourceCivOption(seen, s.players[pid], pid);
     }

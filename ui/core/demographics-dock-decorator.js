@@ -1,19 +1,10 @@
 // demographics-dock-decorator.js
 //
 // Registers a button on the bottom subsystem dock via
-// Controls.decorate('panel-sub-system-dock', factory). The vanilla
-// panel's createButton (panel-sub-system-dock.js, around line 252)
-// attaches `.ssb__button-icon` plus any modifierClass we pass to an
-// inner <div>; we hook into that to paint our icon.
-//
-// Icon delivery is CSS-only: a selector of the form
-//     .ssb__button-icon.demographics { background-image: url(…); }
-// pointing at a file-shipped SVG via fs://game/demographics/…. Same
-// approach as vanilla (.tech, .civic) and the community precedents
-// (wonders-screen-continued, sloth-global-relations-panel).
-//
-// Coherent's CSS parser does not honor data: URIs in background-image
-// for fs://-loaded stylesheets, so the asset must be shipped as a file.
+// Controls.decorate('panel-sub-system-dock', factory). The vanilla panel's
+// createButton attaches `.ssb__button-icon` plus our modifierClass to an inner
+// <div>, and a CSS rule `.ssb__button-icon.demographics { background-image }`
+// paints a file-shipped SVG (Coherent ignores data: URIs in fs:// stylesheets).
 
 /**
  * The vanilla subsystem-dock panel handle passed to a decorator factory. Only
@@ -55,12 +46,9 @@ dlog("module evaluating");
 
 const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 
-// Flat tint applied to our dock icon so it reads as the same color as the
-// vanilla subsystem-dock icons (tech/civic/…), which are flat light-parchment
-// silhouettes. We MASK the SVG (silhouette only) and fill it with this color,
-// rather than painting the SVG's own gradient + gold outline , the latter made
-// our icon look gold-edged and out of place next to the others. (Same technique
-// the base theme uses for its mask icons, e.g. .checkmark-icon in default.css.)
+// Flat tint for the dock icon, matching the vanilla subsystem-dock icons (flat
+// light-parchment silhouettes): the SVG is masked and filled with this color
+// rather than painting its own gradient + gold outline.
 const ICON_TINT = "#ecdfbf";
 
 /**
@@ -128,11 +116,8 @@ export class DemographicsDockDecorator {
    */
   _addDockButton() {
     try {
-      // Idempotent: never add a second Demographics dock button. Guards against the dock
-      // re-attaching, or another mod re-initializing the dock (e.g. the map-cheat-panel mod
-      // monkey-patches panel-sub-system-dock's prototype onInitialize with a retry timer), which
-      // could otherwise fire this twice and duplicate our button. There is exactly one subsystem
-      // dock, so a document-wide check is correct.
+      // Idempotent: the dock re-attaching or another mod re-initializing it could fire
+      // this twice. There is exactly one subsystem dock, so a document-wide check is correct.
       if (typeof document !== "undefined" && document.querySelector(".demographics-dock-button")) {
         dlog("dock button already present; skipping duplicate");
         return;

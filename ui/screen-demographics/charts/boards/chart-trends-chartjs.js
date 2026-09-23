@@ -1,14 +1,8 @@
 // chart-trends-chartjs.js
 //
-// Chart.js versions of two trend charts, sharing the exact styling of the main
-// line chart (engine fonts, gridline/axis colors, the clickable civ legend, and
-// the HTML tooltip):
-//   • Power Race — a bump chart of each civ's RANK by Score over time, drawn on
-//     a reversed y-axis (1st at the top) so lead changes read as line crossings.
-//   • Population Share — a 100%-stacked area of each civ's share of world
-//     population, so snowballing reads as one band swallowing the rest.
-// Both reuse buildSeriesFromHistory for per-civ identity + deconflicted color,
-// then transform the sampled values into ranks / shares. Defensive throughout.
+// Chart.js trend charts sharing the main line chart's styling: Power Race (a bump chart of each
+// civ's rank by Score on a reversed y-axis) and the 100%-stacked share areas. Both reuse
+// buildSeriesFromHistory, then transform the sampled values into ranks / shares.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";

@@ -5,6 +5,209 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.7.3] - 2026-09-23
+
+Two passes in one release, and no new graphs.
+
+The screen now fits the resolution it is played at. Before this, the same layout occupied about 1% of the screen's
+height at 2880x1800 and about 2% at 1280x720, so on smaller displays the menus filled half the screen, only one of the
+top-three settlement cards was visible, tab labels wrapped onto two lines and the timeline ran off the right edge.
+2880x1800 renders exactly as it did; every other resolution now approximates that layout. Along the way a sweep of the
+stylesheets found a class of styling this UI engine silently drops, which had been costing the screen its gold borders
+and all of its italic text.
+
+The rest is hardening: every change closes a way the mod could lose data, blank a panel, or step on another mod, found
+by a code audit after the shared-storage bug in 2.7.1. Nothing there changes for a player whose game was already
+working; the notes say what each change protects.
+
+### Added
+- **Resolution scaling.** The whole screen is drawn as one uniformly scaled frame against a 2880x1800 reference, with
+  the scale bounded so text never drops below a readable size; text keeps its own, higher floor. Verified at 3840x2160,
+  2560x1440, 1920x1080, 1600x900, 1366x768 and 1280x720: all three podium cards visible, both tab bars on one line,
+  the ranked settlement list filling its column, and the war timeline fitting the plot with its end-of-age labels intact.
+- **One header row for status and settings.** The Options button and the analytics-policy note now sit together at the
+  top right, level with the title, on every tab. They used to cost a row of their own under the ranking and relations
+  sub-tabs and at the foot of the chart pages.
+
+### Fixed
+- **Every framed box drew a white hairline instead of a gold one.** Cards, tables, stat chips, podium cards and the
+  game pages all asked for the mod's copper, through the one-line `border-color` property. That property is a
+  shorthand — it writes four per-side values — and this UI engine silently drops a shorthand whose value uses a
+  variable, so all 41 of those borders fell back to the body-text grey. They are written as four per-side properties
+  now and draw the colour they always named. The stylesheet gate that was meant to catch exactly this did not list
+  `border-color` among the shorthands; it does now.
+- **Italic text was invisible everywhere it was used.** Thirteen stylesheet rules and three chart labels asked for
+  italics, which draw nothing on this engine while `getComputedStyle` still reports the style that was asked for, so
+  nothing warned. The affected text is now upright and visible: the "no settlements", "no wonders" and "no data"
+  placeholders, the civ-ranking score note, a settlement's founding year, the "(formerly ...)" line on a renamed
+  civilization's column, the parenthetical subtitle under a chart title, the war-tooltip and glossary notes, the
+  adjacency and conditional-yield lines on the Quarters and Pantheon boards, and the map overlay's type and flavour
+  lines. The stylesheet gate now fails on `font-style: italic` or `oblique`, in a sheet or in an inline style.
+- **Border and background styling that never rendered.** Thirty declarations across three stylesheets used a
+  variable inside a shorthand, which the game's UI engine silently drops: the time-range pills had no border or fill,
+  and the ranked settlement rows never showed their civilization colour stripe. The stylesheet gate now sweeps every
+  sheet for this, and for other constructs the engine drops (`clamp()`, `min()`, `max()`, `max-width: none`).
+- **The second-place card was missing its left edge.** Its border was a shade under one pixel wide, which rounds away
+  on whichever edge falls badly once the screen is scaled. It is a whole pixel, as the section cards already were.
+- **The short-games filter collided with the section tabs.** "Hide short games" sat at the right end of the tab row and
+  overlapped the bar's frame. It qualifies every section, so it now sits on the Hall of Fame's own title line.
+- **A stray info icon under the Civilization Rank by Yield tabs.** The page carried a one-line hint about clicking a
+  column to sort and using the Rank / Value toggle. Its text was styled italic, which this UI engine lays out at zero
+  height and does not draw, so all that reached the screen was the hint's info icon, hanging on its own between the tab
+  row and the buttons. The hint is gone; the toggle beneath it already says what it does.
+- **The page tabs jumped to their first entry on every click.** On Global Statistics, Migration and Geopolitics,
+  every metric pill and every filter — the year range, Civ / Leader, Wonders on/off — redrew the whole page, and the
+  row of page tabs was rebuilt with it. A freshly built tab row shows its first tab for a frame before it takes the
+  selection it was given, so "Yields per Turn" lit up and snapped back on each click, whatever page you were on. The
+  row is now kept across those redraws and rebuilt only when its tabs or selection actually change. The Campaign
+  History tab's own page row (Chronicle / Timeline / Lineage) did the same on every Chronicle pill, and the Hall of
+  Fame's section tabs on its own screen did it whenever the short-games filter was toggled; both are kept the same
+  way.
+- **Icons and flourishes blinked on every click that redrew a page.** Choosing a filter, switching Rank / Value,
+  sorting a column, picking an age, hiding a civilization or changing the timeline's zoom rebuilt the whole page, so
+  headings, flourishes, yield icons and leader portraits were thrown away and re-made even though nothing about them
+  had changed. Every one of those controls now keeps the parts that did not change and swaps only the parts that
+  did:
+  - **Settlement Rank by Yield** and **Civilization Rank by Yield** keep their chips, headings and column headers and
+    swap only the rows beneath them. Switching Rank / Value rewrites the figures in the cells the civilizations
+    already occupy, so the leader portraits stay put too.
+  - **Top 25 Settlements** keeps its age pills, both headings and the list header when you switch between the live
+    board and an end-of-age one.
+  - **Civilization Rank by Yield** at narrow window sizes, where it draws as a grid of civilization columns, now
+    rebuilds only the column you hid or restored. Hiding one civilization used to redraw every other civilization's
+    portrait and the whole metric column beside them.
+  - **Geopolitics** keeps every leader portrait on the relationship ring while you change the filters. The ring shows
+    the same civilizations whichever filters are on — only the lines between them change — so the portraits
+    no longer flicker each time you toggle one.
+  - **Campaign History's timeline** keeps its civilization filter and its legend while you change the age window or
+    the zoom, which change neither. Its milestone medallions, disaster markers and age-band emblems are kept too: a
+    zoom step moves nothing on the chart, only the width it is drawn across, and an age window keeps every event that
+    appears in both.
+- **The war timeline's crisis labels sat on the first war names.** The labels were drawn from the top of the plot,
+  over the first two bars, which reads clear only at 2880x1800, where the war names happen to end well to the left of
+  them. Text is held at a readable floor on smaller screens while the layout keeps shrinking, so at 1280x720 the first
+  two names ran straight under "Crisis Begins" and "Crisis Intensifies". The plot now reserves a band at the top for
+  the labels, sized to the type scale in use, and the bars start below it.
+- **The war timeline was clipped on the right at every resolution.** Its minimum density made a long game wider than
+  the plot without a way to scroll; it now fills the plot, keeps the deliberate tail room after the present turn, and
+  moves a label that would overrun the edge to the other side of its line.
+- **Line charts stopped short of the right edge on narrow plots.** The room reserved for the widest crisis label is
+  now capped at 12% of the data span, so the series reach the axis instead of leaving a quarter of the plot empty.
+- **War tooltip text collided at the Large font size.** The row-label and value columns are sized against the type
+  scale and widened; an ongoing war's duration no longer shows a negative turn count; and on scaled (smaller)
+  resolutions the tooltip is placed at the cursor instead of past the edge of the frame.
+- **War tooltip lost its lower rows on small screens.** A six-belligerent tooltip is taller than the whole timeline
+  area at 1280x720, and the timeline's scroll box cut off everything below "Prod. Directed to War". The tooltip now
+  sits on the screen frame, so it can use the full frame height, and scales itself down (to a floor) if even that is
+  too short.
+- **A wonder tooltip near the right of a chart was cut off by the panel edge.** Hovering a wonder marker there drew
+  its tooltip to the icon's right whatever room was left, so the description was clipped mid-word. The tooltip already
+  knew to flip to the icon's left when it would not fit, but it measured itself on the same frame it was revealed, and
+  this UI engine reports a freshly shown element as zero wide until the next one: with no width, the flip could never
+  trigger and the edge clamp did nothing. The tooltip now settles its position on the following frame, and remembers
+  the size it last measured so the next hover is placed correctly straight away.
+- **A wonder's description showed the game's own formatting codes.** Hovering a wonder marker on a graph printed the
+  raw text the game stores — `[B]`, `[icon:YIELD_GOLD]`, `[TIP:...]` and their closing tags — around the words,
+  because the mod asked the game for the text but never for its formatting. Wonder descriptions now render the
+  way they do everywhere else in the game, with bold text and real yield icons. The unique-quarter line in the
+  city cinematic had the same source and now reads as plain words.
+- **Wonders and natural wonders added since this text was last revised read correctly.** The cinematic's prose
+  names each wonder in a sentence, so each one needs to be right about "the": "the Hanging Gardens" but "Petra".
+  The exception list had been matching on the displayed name and had fallen behind the game, so the wonders and
+  natural wonders added since it was written all collected a wrong "the" - and one it did list was listed under a
+  spelling the game does not use, so "the Machu Pikchu" slipped through. Every wonder and natural wonder in the
+  game is now checked against its internal id instead of its name, which cannot drift with spelling or language:
+  Erdene Zuu, Himeji Castle, El Escorial, Machu Pikchu, Nan Madol, Mount Fuji, Torres del Paine, Thanh Hue and the
+  rest read as plain names, while the Byrsa, the Colosseum, the Grand Canyon and the Valley of Flowers keep their
+  article.
+- **Compact History pages ignored the Font Size setting.** The Wonders, Religion, Quarters and Buildings boards were
+  laid out in fixed pixels with their own literal font sizes; they now use the shared type scale like every other page.
+- **Shared settings storage can no longer be emptied by a failed read.** When the game's storage throws on a read, or
+  returns nothing from a store that holds other mods' entries, Demographics now refuses to write for the rest of the
+  session instead of writing back a store holding only its own entry. After every write it reads the store back and
+  stops writing if its own entry is not what comes back, so a foreign entry is never copied into the shared entry on
+  every option change. The Hall of Fame archive follows the same rules (it previously wrote on a single empty read,
+  every turn).
+- **The Hall of Fame page says when settings are not being saved.** Its storage note now also covers the mod's
+  settings: when settings changed in the session are kept in memory only, the note says so and why, with Repair
+  storage as the fix, instead of a console line nobody sees.
+- **Loading a save from a newer Demographics no longer destroys its data.** A history, campaign or settings entry
+  written by a newer build, or one that fails to parse, used to be replaced by an empty one on the next turn. The
+  unreadable value is now parked beside its key and restored when a build that can read it loads the save; a newer
+  settings schema keeps its version stamp.
+- **Chart history has a size budget.** The per-save history is thinned further when its serialised size passes 3 MB
+  and a warning is logged past 6 MB, so a long twelve-civilization game cannot grow the save without limit. The
+  in-memory history is also no longer written into a different game's empty save.
+- **Blank panels now say so.** A throw inside any view (Rankings, Relations, History, the Hall of Fame, every chart
+  re-render from a click, hover or resize) shows "Chart failed to render" in place instead of an empty panel, and the
+  Hall of Fame detail page keeps its Back button when the page fails. Records and samples with missing or null parts,
+  as an older build or another mod may leave them, no longer throw in any view.
+- **The unused in-screen Options view left the shipped mod.** Its player settings moved to the game's Options screen
+  in June; what remained on it (Clear history, Reset war history, a forced sample, storage tuning knobs, a session
+  readout) was development instrumentation no screen mounted, and not something a player should be able to do. It now
+  lives under `devtools/` with its own harness.
+- **Recording no longer stops for good after three scattered errors.** The sampler's kill switch counts consecutive failures, not the session total, so
+  three stale-handle errors over a long game no longer stop recording for good. A second transition into the same age
+  in one session (replaying an autosave, a second game) is no longer skipped. City founding stamps and capture
+  listeners are cleared on a new game or a UI reload. Chart.js instances are destroyed when the screen closes.
+- **Multiplayer: a guest can no longer change what the host's companion mods show.** Each seat publishes its effective analytics policy under its own key; the shared key is written only
+  by the host or in a single-machine game, so a guest can no longer change what the host's companion mods show.
+  Emigration 3.1.2 reads the per-seat key.
+- **The cinematic tour's info panel is back at the bottom of the screen, in its own frame.** The panel that
+  names the settlement and tells its story - the laurel and rank, the city's name and leader, the prose, the
+  population and wonder row, the flyby counter and the Back button - had come loose: it drew as a bare black band
+  across the top of the screen with no padding and no plate. Its size rules were written against a unit that is
+  published on the Demographics screen, and the panel is mounted over the map rather than inside that screen, so
+  every one of those rules was dropped: it lost the offset holding it to the bottom, both width bounds and all of
+  its padding. It is a compact, padded, bottom-centred plate again, and it now scales with the resolution like
+  every other surface.
+- **The cinematic tour cannot be clicked or hovered through.** For the length of a flyby the only things that
+  respond are Back and Escape. Previously the game's own interface stayed live behind the tour, so a leader
+  portrait opened diplomacy and a tile raised its tooltip over the shot.
+- **The cinematic tour ends cleanly when something else interrupts it.** An interface-mode change caused by
+  something else (End Turn, a diplomacy screen) ends the tour without reopening Demographics on top of it.
+- **Escape closes the Demographics screen**, as it already closed the Hall of Fame.
+- **Endgame button: a missing anchor row is named in UI.log.** When the end-of-game screen mounts without the row the button goes into, one error line in
+  UI.log names the missing selector instead of the button silently not appearing.
+- CSS custom properties are now prefixed `--dg-ia-` so another mod's `--ia-*` variables cannot recolor the screen.
+
+### Changed
+- **The three best games wear their medals.** Each podium place now shows the gold, silver or bronze laurel wreath the
+  in-game rankings use, with the place number inside it, and the card's whole frame carries that place's colour over
+  the fade it already had. Triumph counts are marked with the same laurel the World Rankings score line uses.
+- **The Hall of Fame's short-games filter is one button on the sections' line.** It was two buttons on a row of their
+  own: "Hide short games" and "Show all games", with the active one lit, which reads as two commands where there is
+  only one choice. There is now a single button naming the state you are not in, beside the count it hides, level with
+  the section tabs. It disappears entirely when no game would be filtered. The sections stay centred on the full width;
+  where there is not room for both on one line, at 1280x720, the filter drops to its own line rather than pushing them
+  off centre.
+- **The line-chart legend covered the data on short screens.** Below 1366x768 it lays out as a two-row strip along the
+  top of the plot instead of a column down its left side.
+- **Hall of Fame footer note removed.** "Games are saved on this computer" restated what the page already showed and
+  rendered at the smallest type size; the storage-problem note that carries a repair action is unchanged.
+- **The cinematic's info panel is very slightly more see-through**, so a little of the shot reads behind it.
+- **Podium headings carry one flourish instead of two.** The flourish above "The Greatest Settlements" / "Civilizations" is gone; the one below stays.
+- The type scale has one source in JavaScript and one declaration in CSS, and the test suite fails if they drift.
+
+### Known issues
+- **At 1280x720 some pages are still cramped: column headings and long leader names can be cut off.** The layout and the text have different lower bounds — the layout stops shrinking
+  before the text does — so on the smallest supported screen the boxes are too small for the words in them. Top 25
+  Settlements shows about two and a half podium cards, and Civilization Rank by Yield can cut its right-hand column at
+  the frame edge and shorten long leader names. Everything is reachable and readable; it is tighter than it should be.
+  Higher resolutions are unaffected. The fix is a design change to how the two bounds relate, and it is the next thing
+  on this mod's list.
+
+### Added (release gates, not shipped)
+- `test:storage-invariants`: no file may write a top-level storage key other than the shared one, reset it, or clear
+  the store outside the repair.
+- `test:core-imports`: every base-game module the mod imports must exist in the installed game.
+- `test:loc-keys`: every LOC key referenced in code must exist in the English text or the base-game registry.
+- `test:control-assets`: every HTML/CSS asset a screen registers must exist and be declared in the modinfo.
+- The stylesheet gate sweeps every sheet for constructs this UI engine silently drops: a variable inside a shorthand
+  (`border-color`, `border`, `background`, `padding`, `margin`), `font-style: italic`, `clamp()`, `min()`, `max()` and
+  `max-width: none`.
+- The modinfo test now fails on a runtime import cycle.
+
 ## [2.7.2] - 2026-09-22
 
 ### Changed

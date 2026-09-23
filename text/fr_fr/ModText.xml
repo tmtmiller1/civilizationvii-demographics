@@ -723,9 +723,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="fr_FR">
             <Text>Afficher toutes les civilisations masquées</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="fr_FR">
-            <Text>Cliquez sur une colonne pour trier les civilisations. Utilisez le sélecteur Rang / Valeur pour changer ce qu'affiche chaque case.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="fr_FR">
             <Text>Non rencontrée</Text>
         </Replace>
@@ -2653,9 +2650,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="fr_FR">
             <Text>Partie la plus longue</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="fr_FR">
-            <Text>Les parties sont enregistrées sur cet ordinateur. Chaque sauvegarde conserve également son propre historique.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="fr_FR">
             <Text>Les parties passées n’ont pas pu être lues depuis le stockage pendant cette session. Chaque partie reste stockée dans sa propre sauvegarde.</Text>
         </Replace>
@@ -2919,6 +2913,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="fr_FR">
             <Text>{1_Count} triomphes</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="fr_FR">
+            <Text>Les paramètres sont enregistrés sur cet ordinateur.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="fr_FR">
+            <Text>Les paramètres modifiés pendant cette session sont conservés jusqu’à la fermeture du jeu, mais n’ont pas pu être enregistrés : le stockage partagé des mods a renvoyé les données d’un autre mod, n’a pas pu être lu ou n’a pas relu ce qui a été écrit. « Réparer le stockage » sur la page du Temple de la renommée corrige cela.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="fr_FR">
+            <Text>Les paramètres ne peuvent pas être enregistrés pendant cette session : le stockage des mods n’est pas disponible.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="fr_FR">
+            <Text>Effacer toutes les guerres enregistrées ?</Text>
         </Replace>
     </LocalizedText>
 </Database>

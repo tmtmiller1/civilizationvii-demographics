@@ -76,7 +76,11 @@ const required = [
   "test:history-map",
   "test:history-icons",
   "test:history-stress",
-  "test:history-mapgrid"
+  "test:history-mapgrid",
+  "test:storage-invariants",
+  "test:core-imports",
+  "test:loc-keys",
+  "test:control-assets"
 ];
 
 for (const name of required) {
@@ -152,7 +156,11 @@ const verifyRequired = [
   "test:history-map",
   "test:history-icons",
   "test:history-stress",
-  "test:history-mapgrid"
+  "test:history-mapgrid",
+  "test:storage-invariants",
+  "test:core-imports",
+  "test:loc-keys",
+  "test:control-assets"
 ];
 for (const token of verifyRequired) {
   if (!verify.includes(token)) {
@@ -233,7 +241,11 @@ const testJsRequired = [
   "test:history-map",
   "test:history-icons",
   "test:history-stress",
-  "test:history-mapgrid"
+  "test:history-mapgrid",
+  "test:storage-invariants",
+  "test:core-imports",
+  "test:loc-keys",
+  "test:control-assets"
 ];
 for (const token of testJsRequired) {
   if (!testJs.includes(token)) {

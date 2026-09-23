@@ -148,12 +148,9 @@ function detectCityState(p) {
 }
 
 /**
- * Migrate legacy war records (aPid/bPid scalars) to sideA/sideB arrays and reconcile each side's
- * roster. Civ identity is pinned to the war's START age: a player's CIVILIZATION changes each age
- * (the leader is constant) while war history persists across ages, so naming a roster from the
- * player's CURRENT civ mislabels old wars (e.g. a Han-era war showing the player's Modern civ).
- * We re-derive each belligerent's civ from the recorded sample at the war's start chart-turn, which
- * also heals saves that an earlier build already stamped with a later-age civ.
+ * Migrate scalar-side war records (aPid/bPid) to sideA/sideB arrays and reconcile each side's
+ * roster. Civ identity is pinned to the war's start age: a player's civilization changes each
+ * age, so each belligerent's civ is re-derived from the sample at the war's start chart-turn.
  * @param {Snapshot} snapshot The current snapshot (transient fields + legacy backfill).
  * @param {WarRecord[]} wars The history.wars array (mutated in place).
  * @param {Snapshot[]} [samples] The recorded per-turn samples (for start-age civ lookup).
@@ -196,7 +193,7 @@ export function findStartSample(samples, target) {
   let best = null;
   let bestTurn = -Infinity;
   for (const s of samples) {
-    const ct = s.chartTurn;
+    const ct = s?.chartTurn;
     if (typeof ct === "number" && ct <= target && ct > bestTurn) {
       bestTurn = ct;
       best = s;
@@ -263,7 +260,7 @@ function refreshActiveEntry(e, snapshot) {
 }
 
 /**
- * Migrate one legacy war record from scalar sides to side arrays.
+ * Migrate one war record from scalar sides to side arrays.
  * @param {WarRecord} w A history war record.
  */
 function migrateWarRecord(w) {

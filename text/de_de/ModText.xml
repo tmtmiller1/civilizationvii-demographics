@@ -723,9 +723,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="de_DE">
             <Text>Alle ausgeblendeten Zivilisationen anzeigen</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="de_DE">
-            <Text>Klicke auf eine Spalte, um die Zivilisationen danach zu sortieren. Mit dem Umschalter Rang / Wert änderst du, was jede Zelle zeigt.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="de_DE">
             <Text>Nicht getroffen</Text>
         </Replace>
@@ -2653,9 +2650,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="de_DE">
             <Text>Längste Partie</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="de_DE">
-            <Text>Partien werden auf diesem Computer gespeichert. Jeder Spielstand bewahrt zusätzlich seine eigene Aufzeichnung.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="de_DE">
             <Text>Frühere Spiele konnten in dieser Sitzung nicht aus dem Speicher gelesen werden. Jedes Spiel bleibt in seinem eigenen Spielstand gespeichert.</Text>
         </Replace>
@@ -2919,6 +2913,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="de_DE">
             <Text>{1_Count} Triumphe</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="de_DE">
+            <Text>Einstellungen werden auf diesem Computer gespeichert.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="de_DE">
+            <Text>In dieser Sitzung geänderte Einstellungen bleiben bis zum Schließen des Spiels erhalten, konnten aber nicht gespeichert werden: Der gemeinsame Mod-Speicher lieferte die Daten einer anderen Mod, konnte nicht gelesen werden oder gab das Geschriebene nicht zurück. „Speicher reparieren“ auf der Ruhmeshallen-Seite behebt das.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="de_DE">
+            <Text>Einstellungen können in dieser Sitzung nicht gespeichert werden: Der Mod-Speicher ist nicht verfügbar.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="de_DE">
+            <Text>Alle aufgezeichneten Kriege löschen?</Text>
         </Replace>
     </LocalizedText>
 </Database>

@@ -218,7 +218,7 @@ export function appendSample(doc, world) {
 }
 
 /**
- * The kept samples of a cumulative series that may end early (the Emigration mod was removed).
+ * The kept samples of a cumulative series that may end early (its companion mod is gone).
  * @param {number[]} arr Cumulative values.
  * @param {number[]} idx Kept sample indices.
  * @returns {number[]} Kept values (a series that ended early stays shorter, aligned from the start).

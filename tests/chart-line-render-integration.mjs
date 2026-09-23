@@ -139,6 +139,12 @@ function testRenderChartIntegration() {
   // Re-render path should teardown prior chart and still succeed.
   const out2 = renderChart(host, { history, metric: "settlement_cap_pct", width: 860, height: 420 });
   assert.ok(out2 && out2.chart);
+
+  // The external tooltip handler can fire on a torn-down chart (canvas null): it returns early.
+  const external = out2.chart.config.options.plugins.tooltip.external;
+  assert.equal(typeof external, "function");
+  external({ chart: { canvas: null }, tooltip: { opacity: 1 } });
+  external({ chart: out2.chart, tooltip: null });
 }
 
 try {

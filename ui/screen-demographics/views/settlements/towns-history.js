@@ -1,18 +1,12 @@
 // towns-history.js
 //
-// A small, self-contained ROLLING WINDOW of the local player's town stats, used
-// by the Town Advisor for population-growth trends ("not just a single turn").
+// A small rolling window of the local player's town stats, used by the Town
+// Advisor for population-growth trends. It stays out of the main sample stream:
+// the buffer is one value inside the mod's settings slice (the shared `modSettings`
+// key), capped per town and namespaced by game seed so it self-resets on a new game.
 //
-// It deliberately stays OUT of the main sample stream + decimation path: the
-// buffer is persisted as one value inside the mod's existing settings slice
-// (DemographicsSettings → the single shared `modSettings` localStorage key, so we
-// never add a second top-level key, which other mods would treat as a signal to
-// wipe localStorage). The window is capped per town and namespaced by game seed,
-// so it self-resets on a new game and can never grow unbounded.
-//
-// recordLocalTownsNow() is called once per sample by the sampler (a cheap
-// locId+population read); getTownTrend() is read by towns-data.js at advisor
-// render time.
+// recordLocalTownsNow() is called once per sample by the sampler; getTownTrend()
+// is read by towns-data.js at advisor render time.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 
@@ -111,11 +105,9 @@ function loadBuffer(seed) {
 }
 
 /**
- * Compute the local player's town populations for this sample turn into the
- * rolling window. Idempotent per turn (a repeated turn overwrites, not appends),
- * caps each town's window, and prunes towns no longer present. Returns the
- * settings key + updated buffer for the caller to persist (batched into the
- * single per-turn settings write); null when there is nothing to record.
+ * Record the local player's town populations for this sample turn into the
+ * rolling window: idempotent per turn, caps each town's window, and prunes
+ * absent towns. Returns the settings key + updated buffer to persist, or null.
  * @param {number} turn The (monotonic) sample turn.
  * @returns {{key: string, value: *}|null} The settings entry to persist, or null.
  */

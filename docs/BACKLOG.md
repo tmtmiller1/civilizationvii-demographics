@@ -2,6 +2,80 @@
 
 Open items not yet addressed. Newest first.
 
+## 1280x720 still renders too large: the layout and the type scale have different floors
+
+**Status:** open, measured in game 2026-09-23 (1.5.0, save AugustusExp66, shots in the session scratchpad). **[High]**
+Reported by the player as "things are not rendering correctly at the lower resolution". Shipped in 2.7.3 as a
+declared known issue (changelog, README section 1, Workshop description): the scaling pass improves every resolution
+and 1280x720 is readable but tight. This item is the fix, and it is the next thing on the list.
+
+**What is on screen at 1280x720.** Top 25 Settlements shows two and a half podium cards and two and a half ranked
+rows, with "Founded ~1050 CE" wrapping inside a podium card. Civilization Rank by Yield falls to the matrix layout and
+its right-hand column is cut mid-glyph at the frame edge; several leader names ellipsise ("Harriet Tub...",
+"Friedrich, O..."), and the "(formerly Great Britain)" line runs into the row beneath it. None of this is a clipping
+bug in one view: it is the same cause in every view.
+
+**The cause, in numbers.** The engine's root font-size is a constant 16.2px at every resolution, so `rem` does not
+track resolution and the mod carries all of it in one `transform: scale()` on the frame
+(`ui/core/demographics-font-ladder.js`). That transform has a floor of `MIN_VISUAL_SCALE` 0.70. Text has a SEPARATE,
+higher floor, `MIN_TYPE_VISUAL` 0.82, applied as a boost of `0.82 / 0.70` = 1.171 on the type ladder. So at 720p:
+
+| | reference 2880x1800 | 1280x720 |
+|---|---|---|
+| Visual scale | 1.00 | 0.70 (proportional would be 0.40) |
+| Frame's own coordinate space | 2765 x 1692 px | 1755 x 967 px |
+| Type ladder multiplier | 1.000 | 1.171 |
+
+The frame's local space is 63% of the reference's width and 57% of its height while the text inside it is 117% of the
+reference size. Relative to its container, text is about 1.8x wider and 2.0x taller than it is at the reference. Every
+box sized in layout units - a podium card, a table row, a matrix column, a label gutter - is therefore roughly half
+the size the text it holds now needs. The density stylesheet's micro tier compacts some chrome but does not close a
+gap that large.
+
+This mismatch is also what put the war timeline's crisis labels on top of the first war names (fixed in 2.7.3 by
+reserving a band sized with `typeBoost()`), and it is why `.demographics-settle-mapbtns` measures past its row.
+Any further fix of this shape is a patch on the symptom.
+
+**Ways out, not yet chosen:**
+1. **One floor.** Set `MIN_VISUAL_SCALE` to `MIN_TYPE_VISUAL` (0.82) and drop the boost, so boxes and text agree
+   again. Text stays the size it is now; the frame's local space shrinks about 15%, so slightly less fits and what
+   does not fit scrolls instead of colliding. Smallest change; needs a sweep of everything that assumed a boost.
+2. **No type floor.** Let text scale with the layout at 0.70. Everything is consistent and more fits, but body text
+   lands near 10.7px on a 720p screen, which was measured and rejected as hard to read on 2026-09-23.
+3. **Reflow rather than scale.** Below a threshold, change the layout instead of shrinking it: fewer matrix columns
+   with horizontal paging, a single-column Settlements page, shorter column headings. Most work, best result, and the
+   only one that makes 1280x720 genuinely comfortable rather than merely uncollided.
+
+A decision is needed before any more per-view resolution fixes: 1 and 3 compose, 2 rules out the others.
+
+## Hardening pass 2.7.3: items that need the game or a second client
+
+**Status:** open (added with the hardening pass, 2026-09-23). See `docs/hardening-2026-09-22.md`.
+
+**Needs a hand on the keyboard (unwatched, harness-verified only):**
+- Escape closing the Demographics screen (`screen-lifecycle-support.js`); the smoke run dispatches a synthetic
+  `sys-menu` engine-input, not a real key.
+- The cinematic tour interrupted by End Turn or a diplomacy screen restoring the camera without reopening the
+  screen (`city-camera-controller.js`, reason "interrupt").
+- The end-of-game screen button after the next game patch (one UI.log line names the missing selector now).
+
+**Needs a two-client networked game (not implementable from one machine):** **[High]**
+- Every client writes the full sample history into GameConfiguration every turn
+  (`storage-backend.js` `getConfigStore`, `demographics-storage.js` `save`); the campaign write is host-gated since
+  2.7.2, the history payload is not. Test: two clients on a LAN, guest ends a turn, host reads
+  `Demographics__demographics-history-v1__json` and checks whether the last sample's `met` flags are the guest's
+  viewpoint. If they are, gate `save()` with the same `mayStoreCampaign` rule and let guests adopt the host copy on
+  load, as the campaign already does.
+- The `__rejected` parking keys and the per-seat policy keys have not been watched in a networked game.
+
+**Dead view:** **[Low]** `ui/screen-demographics/views/settlements/view-settlements-detail.js` is imported by a
+test only; no screen mounts it (the dossier was folded into the showcase rows). Delete it with its test and modinfo
+Item, or wire it back. (The in-screen Options view moved to `devtools/options-view/` on 2026-09-23.)
+
+**Hotseat viewpoint mixing:** **[Medium]** `met` flags come from whichever seat sampled last
+(`sampler-collectors-core.js` `collectMet`, comment there lists the two designs), and the archive record is built for
+the first seat of each turn. Seat 1 can see civs only seat 2 met; seat 2 has no Hall of Fame entry.
+
 ## History and Hall of Fame: checks still open after the merge
 
 **Status:** open (added with the History release, 2026-09-22). **[Medium]**

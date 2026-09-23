@@ -1,13 +1,14 @@
 // options-button.js
 //
 // The persistent "Options" button: opens the native game Options screen (Mods → Demographics),
-// the single home for Demographics settings. Rendered at the right of the top-level view-tab row so
-// it's
-// available on EVERY Demographics tab/page, styled like the chart-toolbar buttons it replaced.
+// the single home for Demographics settings. Rendered ONCE by screen-demographics.js in the frame
+// header (top-right, at title level, left of the close button) so it is on every tab without costing
+// a row; styled like the chart-toolbar buttons it replaced.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/core/demographics-a11y.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
+import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /**
  * Build the "Options" button. Clicking it opens the native Options screen (Mods → Demographics)
@@ -32,4 +33,26 @@ export function buildOptionsButton() {
       });
   });
   return btn;
+}
+
+/**
+ * Put the header Options button on the title's line: vertically centred on the MEASURED title, at
+ * the fixed right inset its stylesheet rule sets. Measured rather than a fixed top offset because
+ * the title (an engine fxs-header with filigree) has no stable height across scales. Rects are
+ * visual px while `top` is the frame's local px, hence the conversion. Safe to call repeatedly.
+ * @param {HTMLElement|null|undefined} frame The screen's `.demographics-frame`.
+ */
+export function alignOptionsHeaderButton(frame) {
+  try {
+    const btn = /** @type {HTMLElement|null} */ (frame && (frame.querySelector(".demographics-header-right") || frame.querySelector(".demographics-options-header-btn")));
+    const title = frame && frame.querySelector(".demographics-title");
+    if (!frame || !btn || !title) return;
+    const fr = frame.getBoundingClientRect();
+    const tr = title.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    if (!(tr.height > 0) || !(br.height > 0)) return;
+    btn.style.top = Math.round(toLocalPx((tr.top - fr.top) + tr.height / 2 - br.height / 2)) + "px";
+  } catch (_) {
+    // Alignment is cosmetic; the stylesheet's fallback top applies if measurement fails.
+  }
 }

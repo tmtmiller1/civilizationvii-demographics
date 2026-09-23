@@ -270,11 +270,9 @@ function buildEnabledFilterPill(f, activeFilter, onSelect) {
 }
 
 /**
- * Build the pill row of time-range filter buttons. Same single-div pattern that
- * works in view-relations.js - class + textContent + click handler. Persists
- * the active filter via `onSelect` (round-trips through settings). Every filter
- * in {@link TIME_FILTERS} is rendered; a def may opt out by setting `disabled`
- * (none do by default).
+ * Build the pill row of time-range filter buttons. Persists the active filter
+ * via `onSelect`. Every filter in {@link TIME_FILTERS} is rendered; a def may
+ * opt out by setting `disabled`.
  * @param {string} activeFilter Currently active filter id.
  * @param {(id: string) => void} onSelect Called with the chosen filter id.
  * @returns {HTMLElement} The filter-row element.

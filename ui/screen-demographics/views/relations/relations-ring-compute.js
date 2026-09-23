@@ -138,17 +138,9 @@ export function applyCsEdgeOverrides(edges) {
 
 /**
  * Force every civ edge's color to its filter's legend (pill) color, so the
- * filter-pill swatch is a faithful key for the lines on the ring.
- *
- * The diplomacy-event builders ("Research Agreements", "Other Endeavors") tagged
- * each edge with its own per-action color , so endeavor lines came out in nine
- * different hues and research's sabotage edge came out red, none matching the
- * single-color pill. That made it impossible to tell which line a filter owned
- * (a purple endeavor line looked like "Research"). Aligning color to the pill
- * makes toggling a filter visibly clear exactly the lines of that color. Dash
- * already derives from the shared LINE_DASH map by filterKey, so only color
- * needs aligning. A no-op for filters whose edge color already equals the pill
- * (attitudes, open borders, denounced, trade). Mutates edge objects.
+ * filter-pill swatch is a faithful key for the lines on the ring (the
+ * diplomacy-event builders tag edges with per-action colors). Dash already
+ * derives from LINE_DASH by filterKey. Mutates edge objects.
  * @param {*[]} edges Edges to mutate.
  */
 export function applyCivEdgeOverrides(edges) {

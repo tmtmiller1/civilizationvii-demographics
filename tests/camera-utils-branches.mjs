@@ -119,13 +119,13 @@ const ARTICLE_CASES = [
   ["Forbidden City", "", "the Forbidden City"],
   ["Great Bath", "", "the Great Bath"],
   ["Terracotta Army", "", "the Terracotta Army"],
-  ["Weiyang Palace", "", "the Weiyang Palace"],
+  ["Weiyang Palace", "", "Weiyang Palace"],        // toponym-prefixed, like Himeji Castle
   ["Taj Mahal", "", "the Taj Mahal"],
   ["Brandenburg Gate", "", "the Brandenburg Gate"],
-  ["Serpent Mound", "", "the Serpent Mound"],
+  ["Serpent Mound", "", "Serpent Mound"],          // proper name of the Ohio effigy mound
   ["Pyramid of the Sun", "", "the Pyramid of the Sun"],
   ["Great Stele", "", "the Great Stele"],
-  ["Monks Mound", "", "the Monks Mound"],
+  ["Monks Mound", "", "Monks Mound"],              // proper name of the Cahokia mound
   ["Great Sphinx", "", "the Great Sphinx"],
   ["Temple of Artemis", "", "the Temple of Artemis"],
   ["Colossus of Rhodes", "", "the Colossus of Rhodes"],
@@ -143,6 +143,63 @@ const ARTICLE_CASES = [
   ["Crystal Palace", "", "the Crystal Palace"],
   ["Grand Bazaar", "", "the Grand Bazaar"],
   ["Iron Pagoda", "", "the Iron Pagoda"],
+  // ── The installed game's full roster, by TYPE ID ────────────────────────────────────────────
+  // Read from GameInfo in a running Civilization VII 1.5.0 (48 wonders, 19 natural wonders) on
+  // 2026-09-23, so these are the ids and spellings the engine actually reports. This is the
+  // regression guard for the whole set: the previous name-only list silently missed
+  // "Machu Pikchu" (the game does not spell it "Machu Picchu") and rendered "the Machu Pikchu".
+  ["Machu Pikchu", "WONDER_MACHU_PIKCHU", "Machu Pikchu"],
+  ["Angkor Wat", "WONDER_ANGKOR_WAT", "Angkor Wat"],
+  ["Borobudur", "WONDER_BOROBUDUR", "Borobudur"],
+  ["Buseoksa", "WONDER_BUSEOKSA", "Buseoksa"],
+  ["Dur-Sharrukin", "WONDER_DUR_SHARRUKIN", "Dur-Sharrukin"],
+  ["El Escorial", "WONDER_EL_ESCORIAL", "El Escorial"],
+  ["Erdene Zuu", "WONDER_ERDENE_ZUU", "Erdene Zuu"],
+  ["Hale o Keawe", "WONDER_HALE_O_KEAWE", "Hale o Keawe"],
+  ["Havana Harbor", "WONDER_HAVANA_HARBOR", "Havana Harbor"],
+  ["Ha'amonga 'a Maui", "WONDER_HA_AMONGA_A_MAUI", "Ha'amonga 'a Maui"],
+  ["Himeji Castle", "WONDER_HIMEJI_CASTLE", "Himeji Castle"],
+  ["Mireuksa", "WONDER_MIREUKSA", "Mireuksa"],
+  ["Monks Mound", "WONDER_MONKS_MOUND", "Monks Mound"],
+  ["Nan Madol", "WONDER_NAN_MADOL", "Nan Madol"],
+  ["Reykjaholt", "WONDER_REYKHOLT", "Reykjaholt"],
+  ["Serpent Mound", "WONDER_SERPENT_MOUND", "Serpent Mound"],
+  ["Shwedagon Zedi Daw", "WONDER_SHWEDAGON_ZEDI_DAW", "Shwedagon Zedi Daw"],
+  ["Th\u00e0nh Hu\u1ebf", "WONDER_THANH_HUE", "Th\u00e0nh Hu\u1ebf"],
+  ["Wat Xieng Thong", "WONDER_WAT_XIENG_THONG", "Wat Xieng Thong"],
+  ["Weiyang Palace", "WONDER_WEIYANG_PALACE", "Weiyang Palace"],
+  // Wonders that correctly KEEP "the" - the article system must not over-correct.
+  ["Byrsa", "WONDER_BYRSA", "the Byrsa"],
+  ["Colosseum", "WONDER_COLOSSEUM", "the Colosseum"],
+  ["Forbidden City", "WONDER_FORBIDDEN_CITY", "the Forbidden City"],
+  ["Gate of All Nations", "WONDER_GATE_OF_ALL_NATIONS", "the Gate of All Nations"],
+  ["Hanging Gardens", "WONDER_HANGING_GARDENS", "the Hanging Gardens"],
+  ["House of Wisdom", "WONDER_HOUSE_OF_WISDOM", "the House of Wisdom"],
+  ["Mausoleum at Halicarnassus", "WONDER_MAUSOLEUM_AT_HALICARNASSUS", "the Mausoleum at Halicarnassus"],
+  ["Terracotta Army", "WONDER_TERRACOTTA_ARMY", "the Terracotta Army"],
+  ["Tomb of Askia", "WONDER_TOMB_OF_ASKIA", "the Tomb of Askia"],
+  ["White Tower", "WONDER_WHITE_TOWER", "the White Tower"],
+  // Natural wonders: toponyms reject "the"...
+  ["Gullfoss", "FEATURE_GULLFOSS", "Gullfoss"],
+  ["Hoerikwaggo", "FEATURE_HOERIKWAGGO", "Hoerikwaggo"],
+  ["Iguaz\u00fa Falls", "FEATURE_IGUAZU_FALLS", "Iguaz\u00fa Falls"],
+  ["Mount Kilimanjaro", "FEATURE_KILIMANJARO", "Mount Kilimanjaro"],
+  ["Machapuchare", "FEATURE_MACHAPUCHARE", "Machapuchare"],
+  ["Mapu 'a Vaea Blowholes", "FEATURE_MAPU_A_VAEA_BLOWHOLES", "Mapu 'a Vaea Blowholes"],
+  ["Mount Everest", "FEATURE_MOUNT_EVEREST", "Mount Everest"],
+  ["Mount Fuji", "FEATURE_MOUNT_FUJI", "Mount Fuji"],
+  ["Nachi Falls", "FEATURE_NACHI_FALLS", "Nachi Falls"],
+  ["Seongsan Ilchulbong", "FEATURE_SEONGSAN_ILCHULBONG", "Seongsan Ilchulbong"],
+  ["Thera", "FEATURE_THERA", "Thera"],
+  ["Torres del Paine", "FEATURE_TORRES_DEL_PAINE", "Torres del Paine"],
+  ["Uluru", "FEATURE_ULURU", "Uluru"],
+  ["Vihren", "FEATURE_VIHREN", "Vihren"],
+  ["Vinicunca", "FEATURE_VINICUNCA", "Vinicunca"],
+  // ...and the ones that keep it.
+  ["Bermuda Triangle", "FEATURE_BERMUDA_TRIANGLE", "the Bermuda Triangle"],
+  ["Grand Canyon", "FEATURE_GRAND_CANYON", "the Grand Canyon"],
+  ["Great Blue Hole", "FEATURE_GREAT_BLUE_HOLE", "the Great Blue Hole"],
+  ["Valley of Flowers", "FEATURE_VALLEY_OF_FLOWERS", "the Valley of Flowers"],
   // Toponym wonders (reject "the" via NO_ARTICLE_NAMES). 35-52
   ["Machu Picchu", "", "Machu Picchu"],
   ["Angkor Wat", "", "Angkor Wat"],
@@ -215,7 +272,7 @@ const ARTICLE_CASES = [
   ["PETRA", "", "PETRA"],                                  // exception match is case-insensitive
   ["MACHU PICCHU", "", "MACHU PICCHU"]
 ];
-assert.equal(ARTICLE_CASES.length, 100);
+assert.equal(ARTICLE_CASES.length, 149);
 for (const [name, typeId, expected] of ARTICLE_CASES) {
   assert.equal(
     articledName({ name, typeId }),

@@ -84,6 +84,13 @@ const built = buildCivProfiles(h2);
 assert.ok(built && typeof built === "object");
 assert.ok(Object.keys(built).length >= 2);
 
+// A repaired/foreign blob whose `samples` is not an array folds to no profiles
+// instead of throwing out of the view render.
+assert.deepEqual(buildCivProfiles({ samples: "junk" }), {}, "string samples → no profiles");
+assert.deepEqual(buildCivProfiles({ samples: { 0: { players: {} } } }), {}, "object samples → no profiles");
+assert.deepEqual(buildCivProfiles({ samples: null }), {}, "null samples → no profiles");
+assert.deepEqual(buildCivProfiles(undefined), {}, "no history → no profiles");
+
 // stripUnmetDiplomacy — all met so nothing stripped
 const met = Object.assign({}, built);
 Object.values(met).forEach((p) => { p.met = true; });

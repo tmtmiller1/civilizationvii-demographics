@@ -1,9 +1,8 @@
 // chart-religion-lines.js
 //
-// Plain-SVG multi-line time-series for religion: one polyline per religion over
-// the sampled chart-turns, colored by the religion's own (readability-raised)
-// color. Reads the per-turn `rel` map persisted on each sample (settlements `s`,
-// population `p`). Text stays in ink; colors carry identity. Defensive.
+// Plain-SVG multi-line time-series for religion: one polyline per religion, colored by the
+// religion's own (readability-raised) color, from the per-turn `rel` map persisted on each sample
+// (settlements `s`, population `p`).
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";

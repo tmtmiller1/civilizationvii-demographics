@@ -95,16 +95,25 @@ function startSampler() {
  */
 function startHistory() {
   import("/demographics/ui/history/capture/history-capture.js")
-    .then((mod) => mod.startCapture())
+    .then((mod) => {
+      mod.startCapture();
+      // Pair the capture's engine listeners with the UI teardown so a reload never leaves stale
+      // handlers registered; stopCapture is guarded and idempotent.
+      try {
+        if (typeof engine !== "undefined" && typeof engine.on === "function") {
+          engine.on("BeforeUnload", () => mod.stopCapture?.());
+        }
+      } catch (e) {
+        derr("history capture unload hook failed:", e);
+      }
+    })
     .catch((e) => {
       derr("history capture import REJECTED:", e);
     });
 }
 
-// HoF read-through experiment removed: every HallofFame.set* writer is
-// undefined in the UI sandbox, and getGames() returns [] mid-game
-// because the DB only commits on game-end. Full inventory of channels
-// tested is in ../../demographics-research/.
+// The engine HoF DB is not read here: every HallofFame.set* writer is undefined
+// in the UI sandbox, and getGames() returns [] mid-game (it commits on game-end).
 
 try {
   if (

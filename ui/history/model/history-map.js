@@ -1,6 +1,6 @@
 // history-map.js
 //
-// The territory map of a game (after History & Rankings 1.x's Historical Map): a low-detail hex
+// The territory map of a game: a low-detail hex
 // grid of the world with water, land and mountains, and frames of who owned each cell and where the
 // settlements stood. Pure: run-length encoding, frame thinning, placing frames on the timeline axis
 // and the compact archive form. Capture lives in capture/history-mapgrid.js, painting in

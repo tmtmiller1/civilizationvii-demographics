@@ -723,9 +723,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="es_ES">
             <Text>Mostrar todas las civilizaciones ocultas</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="es_ES">
-            <Text>Haz clic en una columna para ordenar las civilizaciones por ella. Usa el conmutador Rango / Valor para cambiar lo que muestra cada celda.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="es_ES">
             <Text>No encontrada</Text>
         </Replace>
@@ -2653,9 +2650,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="es_ES">
             <Text>Partida más larga</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="es_ES">
-            <Text>Las partidas se guardan en este equipo. Cada archivo de guardado conserva además su propio registro.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="es_ES">
             <Text>No se han podido leer las partidas anteriores del almacenamiento en esta sesión. Cada partida sigue guardada en su propio archivo.</Text>
         </Replace>
@@ -2919,6 +2913,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="es_ES">
             <Text>{1_Count} triunfos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="es_ES">
+            <Text>Los ajustes se guardan en este equipo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="es_ES">
+            <Text>Los ajustes cambiados en esta sesión se conservan hasta cerrar el juego, pero no se han podido guardar: el almacenamiento compartido de mods devolvió los datos de otro mod, no se pudo leer o no devolvió lo escrito. «Reparar almacenamiento» en la página del Salón de la Fama lo soluciona.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="es_ES">
+            <Text>Los ajustes no se pueden guardar en esta sesión: el almacenamiento de mods no está disponible.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="es_ES">
+            <Text>¿Borrar todas las guerras registradas?</Text>
         </Replace>
     </LocalizedText>
 </Database>

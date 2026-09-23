@@ -1,25 +1,10 @@
 // demographics-i18n.js
 //
-// Localization helper. Resolves a LOC_* tag to the active language's string via
-// the engine's Locale system, with a graceful fallback to the tag itself when
-// Locale is unavailable or the tag is missing. The mod's strings are defined in
-// text/<locale>/ModText.xml and loaded into the engine loc DB by demographics.modinfo.
-//
-// Works in any UI context: unlike CSS,
-// Locale.compose reads the global localization database, not a per-screen sheet.
-//
-// ADDING A STRING: every user-visible string is a `LOC_*` tag resolved through
-// t() — never hardcode display English in .js. Substitution args map positionally
-// to `{N_Name}` placeholders in the text, e.g.
-//   t("LOC_DEMOGRAPHICS_WONDER_TURN", 42)  with  <Text>Turn {1_Turn}</Text>
-// (For the *_FALLBACK identity tags, use tPlayerFallback/tCsFallback below instead
-// of a bare t() — see "Numbered identity fallbacks".)
-// A new tag must be added to text/en_us/ModText.xml AND all 10 locale files (the
-// engine loads a per-language DB, so a tag missing from a locale renders as the
-// raw `LOC_...` string in that language). Non-English locales may carry English
-// placeholder text pending translation — that is expected; tag-parity is the
-// invariant, translation is a later pass. See text/README.md for the full workflow.
-// For strings the BASE GAME already owns, see BASE_GAME_LOC_KEYS below.
+// Localization helper: resolves a LOC_* tag to the active language's string via
+// the engine's Locale system, falling back to the tag itself. Every user-visible
+// string is a `LOC_*` tag resolved through t(), with substitution args mapping
+// positionally to `{N_Name}` placeholders; a new tag must be added to every
+// locale file (see text/README.md). Base-game-owned strings: BASE_GAME_LOC_KEYS below.
 
 const DBG = false;
 /**
@@ -48,15 +33,72 @@ export function t(key, ...args) {
   return key;
 }
 
+// ── Game-authored text markup ────────────────────────────────────────────────
+//
+// Text the GAME owns (a wonder's Description, a unique quarter's flavour, a belief's effect)
+// carries its own markup: `[B]…[/B]`, `[icon:YIELD_GOLD]`, `[TIP:LOC_…]Improvement[/TIP]`.
+// `Locale.compose` returns that markup VERBATIM — it is the engine's `Locale.stylize` that turns
+// it into `<fxs-font-icon>` / `<fxs-tip>` elements. Composing game text into a sink that does not
+// stylize therefore shows the raw tokens on screen. Watched on 1.5.0, 2026-09-23:
+//   compose("LOC_IMPROVEMENT_FARM_DESCRIPTION")
+//     → "[TIP:…]Improvement[/TIP] that provides [icon:YIELD_FOOD] Food from the tile."
+//   stylize(same)
+//     → "<p cohinline><fxs-tip …></fxs-tip>&nbsp;that provides <fxs-font-icon …></fxs-font-icon>…"
+// Pick by SINK: innerHTML → stylizeLocaleTag; textContent / stored text → stripLocaleMarkup.
+
+/**
+ * Escape text for insertion into an innerHTML string.
+ * @param {string} s The text.
+ * @returns {string} The escaped text.
+ */
+function escapeMarkupHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Strip the game's own text markup to plain words, for a sink that takes textContent (or for text
+ * that gets stored). The bracketed tokens go; the words they wrap stay.
+ * @param {string} s A composed (localized) string.
+ * @returns {string} Plain text.
+ */
+export function stripLocaleMarkup(s) {
+  return String(s == null ? "" : s)
+    .replace(/\[[^\]]*\]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Resolve a game-authored tag to the engine's own markup HTML. ONLY for an innerHTML sink. Falls
+ * back to escaped plain text when `Locale.stylize` is missing or does not resolve the tag, so raw
+ * markup can never reach the screen either way.
+ * @param {string} tag The `LOC_*` tag.
+ * @returns {string} HTML (already escaped where it is not engine markup).
+ */
+export function stylizeLocaleTag(tag) {
+  try {
+    if (typeof Locale !== "undefined" && typeof Locale.stylize === "function") {
+      const html = Locale.stylize(tag);
+      if (html && String(html) !== String(tag)) return String(html);
+    }
+  } catch (_) {
+    // Locale.stylize can throw on a malformed/missing tag; fall through to plain text.
+    dlog("Locale.stylize threw for", tag);
+  }
+  return escapeMarkupHtml(stripLocaleMarkup(t(tag)));
+}
+
 // ── Numbered identity fallbacks ──────────────────────────────────────────────
 //
-// `t()` returns the raw tag when Locale is unavailable, throws, or the tag is
-// missing from the active language DB. That is the right default for most copy,
-// but NOT for the identity fallbacks below: a node/roster/legend rendering the
-// literal "LOC_DEMOGRAPHICS_PLAYER_FALLBACK" is a user-visible defect. These
-// helpers compose the localized template ("Player {1_Pid}") and, only if that
-// fails, degrade to a readable English "<prefix> <id>" — never the raw tag.
-// Always prefer these over a bare t() for the *_FALLBACK identity tags.
+// `t()` returns the raw tag when Locale is unavailable or the tag is missing,
+// which is a user-visible defect for identity fallbacks. These helpers compose
+// the localized template and otherwise degrade to a readable English
+// "<prefix> <id>", never the raw tag.
 
 /**
  * Resolve a LOC tag whose text is a numbered identity template (e.g. "Player {1_Pid}"),
@@ -96,20 +138,11 @@ export function tCsFallback(pid) {
 
 // ── Base-game LOC keys ───────────────────────────────────────────────────────
 //
-// Some strings the mod displays are OWNED BY THE BASE GAME: the engine ships
-// their `LOC_*` tag in its own localization DB (in every language it supports),
-// so the mod deliberately does NOT define them in text/<locale>/ModText.xml —
-// redefining them would fork base-game copy and drift on patches. Referencing
-// the engine's tag is correct and gets us free, first-party translations.
-//
-// The registry below is the single source of truth for "this LOC_ tag is
-// intentionally external, not a missing mod key." Use it three ways:
-//   • `tBaseGame(key, ...args)` — resolve a base-game tag AND self-document intent.
-//   • `isBaseGameLoc(key)` — audit tooling excludes these from "referenced but
-//     not defined in ModText.xml" reports (they are supposed to be absent there).
-//   • grep the constant to find/extend the list.
-// Some are built at runtime from a prefix (e.g. `"LOC_CIVILIZATION_" + stem +
-// "_ADJECTIVE"`), so `isBaseGameLoc` also matches the documented prefixes.
+// Some strings the mod displays are owned by the base game, whose localization
+// DB ships their `LOC_*` tag, so the mod does not redefine them in ModText.xml.
+// This registry is the single source of truth for "intentionally external":
+// `tBaseGame()` resolves one, `isBaseGameLoc()` lets audit tooling exclude them
+// (including tags built at runtime from a documented prefix).
 
 /** Exact base-game LOC tags the mod references (NOT defined in our ModText.xml). */
 export const BASE_GAME_LOC_KEYS = Object.freeze(new Set([
@@ -121,7 +154,15 @@ export const BASE_GAME_LOC_KEYS = Object.freeze(new Set([
   "LOC_RESOURCECLASS_FACTORY_NAME",
   "LOC_RESOURCECLASS_TREASURE_NAME",
   "LOC_UI_CONTENT_MGR_SUBTITLE",             // demographics-mod-options.js — Mods-page option group
-  "LOC_UI_CONTENT_MGR_SUBTITLE_DESCRIPTION"
+  "LOC_UI_CONTENT_MGR_SUBTITLE_DESCRIPTION",
+  "LOC_MAIN_MENU_ADDITIONAL_CONTENT",        // history-mainmenu.js — main-menu button captions the
+  "LOC_MAIN_MENU_OPTIONS",                   //   Hall of Fame entry is placed next to
+  "LOC_YIELD_CULTURE",                       // pantheon-effects.js — yield names in pantheon effect text
+  "LOC_YIELD_DIPLOMACY",
+  "LOC_YIELD_GOLD",
+  "LOC_YIELD_HAPPINESS",
+  "LOC_YIELD_PRODUCTION",
+  "LOC_YIELD_SCIENCE"
 ]));
 
 /**
@@ -130,7 +171,9 @@ export const BASE_GAME_LOC_KEYS = Object.freeze(new Set([
  * @type {readonly string[]}
  */
 export const BASE_GAME_LOC_PREFIXES = Object.freeze([
-  "LOC_CIVILIZATION_"  // civ names/adjectives, resolved from the engine civ DB
+  "LOC_CIVILIZATION_", // civ names/adjectives, resolved from the engine civ DB
+  "LOC_LEADER_",       // leader names, resolved from the engine leader DB
+  "LOC_AGE_"           // age names: `"LOC_" + ageType + "_NAME"` with ageType "AGE_*" (view-hof-games.js)
 ]);
 
 /**
@@ -148,8 +191,7 @@ export function isBaseGameLoc(key) {
 /**
  * Resolve a BASE-GAME LOC tag (see {@link BASE_GAME_LOC_KEYS}). Functionally
  * identical to {@link t}, but names the intent at the call site: this string is
- * localized by the engine, not by our ModText.xml. Prefer this over a bare `t()`
- * for engine-owned tags so the reference reads as deliberate, not an oversight.
+ * localized by the engine, not by our ModText.xml.
  * @param {string} key A base-game `LOC_*` tag.
  * @param {...*} args Optional `{N_Param}` substitution arguments.
  * @returns {string} The engine-localized string, or `key` if Locale is unavailable.

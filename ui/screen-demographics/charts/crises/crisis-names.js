@@ -1,9 +1,7 @@
 // crisis-names.js
 //
-// Seeded, historian-style crisis-event names. Extracted from chart-line.js so
-// the production chart module exports only runtime surfaces and the test
-// harness can hit this generator directly. All names are LOC keys composed via
-// the i18n helper.
+// Seeded, historian-style crisis-event names. All names are LOC keys composed
+// via the i18n helper.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
@@ -11,9 +9,8 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
  * Crisis-name LOC-key pools keyed by AgeCrisisEventType. Each entry is
  * `{ names, arcs }` of `LOC_DEMOGRAPHICS_CRISIS_*` tags (composed via {@link t}):
  * `names` is the single-pick pool; `arcs` are multi-stage progressions (one
- * beat per stage). Templates that once expanded via {color}/{place}/{regional}
- * are now pre-expanded into concrete, individually localized keys. Modern age
- * has no AgeCrisis pipeline, so only Antiquity/Exploration are represented.
+ * beat per stage). Modern age has no AgeCrisis pipeline, so only
+ * Antiquity/Exploration are represented.
  * @type {Record<string, { names: string[], arcs: string[][] }>}
  */
 const CRISIS_NAME_TEMPLATES = {
@@ -418,14 +415,14 @@ export function getGameSeed() {
 
 /**
  * Resolve the `{ names, arcs }` LOC-key entry for a crisis sample, tolerating
- * the legacy flat-array shape. Entries hold `LOC_DEMOGRAPHICS_CRISIS_*` tags.
+ * the flat-array shape. Entries hold `LOC_DEMOGRAPHICS_CRISIS_*` tags.
  * @param {Snapshot|*} sample The crisis sample.
  * @returns {{ names: string[], arcs: string[][] }} The resolved key pools.
  */
 function resolveCrisisEntry(sample) {
   const type = sample && sample.crisisEventType;
   const entry = crisisTemplateEntry(type, sample && sample.age);
-  // Backward-compat: tolerate the legacy flat-array shape.
+  // Tolerate the flat-array shape.
   const names = crisisEntryNames(entry);
   const arcs = crisisEntryArcs(entry);
   return { names, arcs };
@@ -470,9 +467,7 @@ function crisisEntryArcs(entry) {
 /**
  * Compose a seeded, historian-style crisis name for a sample + stage, resolving
  * the chosen `LOC_DEMOGRAPHICS_CRISIS_*` tag to the active language. The same
- * game (seed) always reads consistently. ({color}/{place}/{regional} variants
- * are now pre-expanded into concrete, individually localized keys, so no
- * post-compose substitution is needed.)
+ * game (seed) always reads consistently.
  * @param {Snapshot|*} sample The crisis sample (carries crisisEventType/age).
  * @param {number} stage The 1-based display stage.
  * @param {string} gameSeedStr The game's seed string.
@@ -483,10 +478,8 @@ export function flavorCrisisName(sample, stage, gameSeedStr) {
   const { names, arcs } = resolveCrisisEntry(sample);
   const seedKey = (type || (sample && sample.age) || "crisis") + "|" + gameSeedStr;
   const seed = hashString(seedKey);
-  // Arc vs single-name decision - seeded so each game commits to one mode for
-  // the run. ~35% chance of an arc when arcs exist; otherwise pick from the
-  // single-name pool. Single-name is the default so the marker reads as one
-  // stable event across all four stages most of the time.
+  // Arc vs single-name decision, seeded so each game commits to one mode: ~35%
+  // chance of an arc when arcs exist, else the single-name pool.
   const useArc = arcs.length > 0 && hashString(seedKey + "|arc-choice") % 100 < 35;
   if (useArc) {
     const arc = arcs[seed % arcs.length];

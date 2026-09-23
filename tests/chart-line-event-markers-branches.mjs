@@ -112,9 +112,20 @@ function testPluginsDrawPaths() {
   assert.ok(ctx.calls.includes("fillText"));
 }
 
+function testPluginsSkipMissingChartArea() {
+  // Chart.js can invoke afterDatasetsDraw before layout (chartArea undefined); no draw, no throw.
+  const ctx = fakeCtx();
+  const chart = { ctx, scales: { x: { min: 0, max: 20, getPixelForValue: (v) => v * 10 } } };
+  makeCrisisMarkerPlugin([{ turn: 5, stage: 1, label: "Stage I", color: "#f00" }]).afterDatasetsDraw(chart);
+  makeAgeMarkerPlugin([{ turn: 7, label: "Exploration", color: "#b78cff" }]).afterDatasetsDraw(chart);
+  makeRefugeeEventMarkerPlugin([{ turn: 8, label: "War", color: "#e06c5e" }]).afterDatasetsDraw(chart);
+  assert.equal(ctx.calls.length, 0, "no drawing without a chartArea");
+}
+
 try {
   testCollectionsAndSettings();
   testPluginsDrawPaths();
+  testPluginsSkipMissingChartArea();
   console.log("chart-line-event-markers-branches harness passed");
 } finally {
   globalThis.Chart = savedChart;

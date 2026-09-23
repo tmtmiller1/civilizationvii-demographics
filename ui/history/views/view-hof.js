@@ -8,7 +8,7 @@
 import { el, clear, onActivate } from "/demographics/ui/history/core/history-dom.js";
 import { t, addSavedTexts } from "/demographics/ui/history/core/history-text.js";
 import { allRecords, archiveStatus, archiveTexts, repairStorage } from "/demographics/ui/history/store/history-archive-store.js";
-import { buildRecord, emptySlice, upsert } from "/demographics/ui/history/store/history-archive.js";
+import { buildRecord, emptySlice, isRecord, upsert } from "/demographics/ui/history/store/history-archive.js";
 import { visibleRecords } from "/demographics/ui/history/model/history-hof.js";
 import { emptyState, pillRow, tabBar, textButton } from "/demographics/ui/history/views/history-widgets.js";
 import { SHORT_GAME_TURNS } from "/demographics/ui/history/model/history-hof.js";
@@ -16,6 +16,7 @@ import { renderBest } from "/demographics/ui/history/views/view-hof-best.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
 import { renderGames, renderDetail } from "/demographics/ui/history/views/view-hof-games.js";
 import { renderLeaders, renderCivs, renderRecords } from "/demographics/ui/history/views/view-hof-people.js";
+import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 
 export const HOF_TABS = [
   { id: "overview", label: "LOC_DEMOGRAPHICS_HIST_HOF_BEST" },
@@ -31,19 +32,55 @@ export const HOF_TABS = [
  * @property {() => void} rerender Redraw callback.
  * @property {boolean} [embedded] Inside the Demographics screen, below two tab rows: the sections are a pill
  *   row (Demographics' third navigation level) rather than a third tab bar.
+ * @property {HTMLElement|null} [priorSectionBar] The previous render's section tab bar (own screen only).
+ * @property {HTMLElement|null} [filterHost] The screen's title-line slot for the short-games filter
+ *   (own screen only). When present the filter is mounted there instead of on the section row.
  */
 
+/** A finite number, or 0. */
+const numOr0 = (/** @type {*} */ v) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
+/** A plain object, or an empty one. */
+const objOf = (/** @type {*} */ v) => /** @type {Record<string, any>} */ (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+/** An array, or an empty one. */
+const arrOf = (/** @type {*} */ v) => (Array.isArray(v) ? v : []);
+
 /**
- * Archive records plus the live campaign's current record.
+ * A copy of a record with every part the views read present. isRecord() checks only the fields the
+ * storage rules need, so each missing part gets its empty default here and reads as "none" instead
+ * of blanking the panel.
+ * @param {ArchiveRecord} r Record (passed isRecord).
+ * @returns {ArchiveRecord} Normalised copy.
+ */
+export function normalizeRecord(r) {
+  const stats = objOf(r.stats);
+  const spark = objOf(r.spark);
+  return /** @type {ArchiveRecord} */ ({
+    ...r,
+    stats: {
+      ...stats,
+      triumphs: numOr0(stats.triumphs), wonders: numOr0(stats.wonders),
+      peakSettlements: numOr0(stats.peakSettlements), captured: numOr0(stats.captured)
+    },
+    spark: { ...spark, tri: arrOf(spark.tri) },
+    rivals: arrOf(r.rivals),
+    highlights: arrOf(r.highlights),
+    ages: arrOf(r.ages),
+    setup: objOf(r.setup)
+  });
+}
+
+/**
+ * Archive records plus the live campaign's current record, normalised for the views. A record a
+ * later version of this mod wrote is left out: it is kept in storage but cannot be shown.
  * @param {CampaignDoc|null} live Live campaign.
  * @returns {ArchiveRecord[]} Records.
  */
 export function hofRecords(live) {
   const slice = emptySlice();
-  for (const r of allRecords()) upsert(slice, r);
+  for (const r of allRecords()) if (isRecord(r)) upsert(slice, r);
   const cur = live ? buildRecord(live) : null;
   if (cur) slice.games[cur.id] = cur;
-  return Object.values(slice.games);
+  return Object.values(slice.games).map(normalizeRecord);
 }
 
 /**
@@ -53,30 +90,107 @@ export function hofRecords(live) {
  */
 function sectionNav(ctx) {
   const pick = (/** @type {string} */ id) => { viewState.hofTab = id; ctx.rerender(); };
-  if (!ctx.embedded) return tabBar(HOF_TABS, viewState.hofTab, pick, "dgh-subtabs");
+  if (!ctx.embedded) {
+    // Put the previous render's bar back when the section did not change (see renderHallOfFame).
+    // Its listener closes over the same host and reads the section it was built for, which is
+    // still the current one, so it needs no rewiring. A section change builds a new bar.
+    const prior = /** @type {*} */ (ctx.priorSectionBar);
+    if (prior && prior.__forTab === viewState.hofTab) return prior;
+    const bar = tabBar(HOF_TABS, viewState.hofTab, pick, "dgh-subtabs");
+    /** @type {*} */ (bar).__forTab = viewState.hofTab;
+    return bar;
+  }
   return pillRow(HOF_TABS.map((x) => ({ key: x.id, label: t(x.label) })), viewState.hofTab, pick);
 }
 
 /**
- * The short-games filter, shown on every Hall of Fame page: unfinished games under SHORT_GAME_TURNS
- * are hidden by default as test loads, and this row says how many are hidden so an "empty" page
- * never hides that fact.
+ * How many records the short-games filter takes out, whichever way it is currently set. Counted
+ * against the filter rather than against what the page shows, so the control and its note read the
+ * same in both states and disappear together when there is nothing to hide.
  * @param {ArchiveRecord[]} all Every record.
- * @param {ArchiveRecord[]} shown The records the page is showing.
+ * @param {HofCtx} ctx Context.
+ * @returns {number} The count.
+ */
+function hiddenCount(all, ctx) {
+  return all.length - visibleRecords(all, { showShort: false, keep: ctx.live?.id }).length;
+}
+
+/**
+ * The section selector and the short-games filter as one row: the sections centred, the filter's
+ * note and button at the right. They were two stacked rows, which spent a second row of height on
+ * one button and put the controls far from the tabs they qualify.
+ * @param {ArchiveRecord[]} all Every record.
  * @param {HofCtx} ctx Context.
  * @returns {HTMLElement} The row.
  */
-function shortGamesFilter(all, shown, ctx) {
-  const hidden = all.length - shown.length;
-  const toggle = pillRow(
-    [{ key: "hide", label: t("LOC_DEMOGRAPHICS_HIST_HIDE_SHORT") }, { key: "show", label: t("LOC_DEMOGRAPHICS_HIST_SHOW_SHORT") }],
-    viewState.showShort ? "show" : "hide",
-    (k) => { viewState.showShort = k === "show"; ctx.rerender(); },
-    "filter"
-  );
-  const note = hidden > 0 && !viewState.showShort
-    ? el("div", { cls: "dgh-filter-note", text: t("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN", hidden, SHORT_GAME_TURNS) })
-    : null;
+function navRow(all, ctx) {
+  const nav = sectionNav(ctx);
+  const filter = shortGamesFilter(all, ctx);
+  if (!filter) return nav;
+  // On its own screen the filter belongs on the title line, which every section shares; it is
+  // mounted there by renderHof and the sections keep the whole row to themselves.
+  if (ctx.filterHost) {
+    ctx.filterHost.appendChild(filter);
+    return nav;
+  }
+  const row = el("div", { cls: "dgh-hof-navrow" }, [nav, filter]);
+  fitHofNavRow(row);
+  return row;
+}
+
+/**
+ * Decide, once the row is on screen, whether the filter can share the sections' line. The filter is
+ * positioned out of flow so the sections stay centred on the whole row; when the sections are wide
+ * enough to reach it (1280x720, where the type scale is boosted over the layout) the two would
+ * overlap, so the row stacks instead. Measured after a frame: same-tick rects can be stale in
+ * GameFace, the same reason the chart's edge clamp waits.
+ * @param {HTMLElement} row The nav row.
+ * @returns {void}
+ */
+function fitHofNavRow(row) {
+  const run = () => {
+    try {
+      if (row.isConnected === false) return;
+      const nav = row.querySelector(".dgh-pill-row") || row.querySelector(".dgh-tabs");
+      const filter = row.querySelector(".dgh-hof-filter");
+      if (!nav || !filter) return;
+      row.classList.remove("is-stacked");
+      const fr = filter.getBoundingClientRect();
+      // The pills' own right edge, not their container's: the container spans the row.
+      const last = nav.lastElementChild;
+      const nr = (last || nav).getBoundingClientRect();
+      if (!(fr.width > 0) || !(nr.width > 0)) return;
+      if (nr.right > fr.left - 8) row.classList.add("is-stacked");
+    } catch (_) {
+      // Fitting is cosmetic; the un-stacked layout stands if the measurement throws.
+    }
+  };
+  if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);
+  else setTimeout(run, 16);
+}
+
+/**
+ * The short-games filter, shown on every Hall of Fame page: unfinished games under SHORT_GAME_TURNS
+ * are hidden by default as test loads, and the note says how many are hidden so an "empty" page
+ * never hides that fact.
+ *
+ * ONE button, not a pair. "Hide short games" and "Show all games" were two pills with the active
+ * one lit, which reads as two commands where there is only one choice; the button now names the
+ * state the player is not in, so pressing it always does what it says. Nothing renders at all when
+ * no record would be filtered.
+ * @param {ArchiveRecord[]} all Every record.
+ * @param {HofCtx} ctx Context.
+ * @returns {HTMLElement|null} The filter, or null when there is nothing to hide.
+ */
+function shortGamesFilter(all, ctx) {
+  const hidden = hiddenCount(all, ctx);
+  if (hidden <= 0) return null;
+  const showing = viewState.showShort;
+  const toggle = el("div", { cls: "dgh-pill dgh-hof-filter-btn", text: t(showing ? "LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" : "LOC_DEMOGRAPHICS_HIST_SHOW_SHORT") });
+  onActivate(toggle, () => { viewState.showShort = !viewState.showShort; ctx.rerender(); });
+  const note = showing
+    ? null
+    : el("div", { cls: "dgh-filter-note", text: t("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN", hidden, SHORT_GAME_TURNS) });
   return el("div", { cls: "dgh-hof-filter" }, [note, toggle]);
 }
 
@@ -212,11 +326,42 @@ function blockedNote(status, done, ctx) {
 function storageNote(ctx) {
   const s = archiveStatus();
   const done = repairOutcomeNote();
+  const settingsLine = settingsNote();
   if (s === "ok" || s === "empty") {
-    const ok = el("div", { cls: "dgh-note", text: t("LOC_DEMOGRAPHICS_HIST_STORAGE_OK") });
-    return done ? el("div", { cls: "dgh-storage" }, [ok, done]) : ok;
+    // Nothing to say when storage is healthy. The old footer here ("Games are saved on this
+    // computer. Each save file also keeps its own record.") restated what the page already shows:
+    // the list itself when there are games, and LOC_DEMOGRAPHICS_HIST_EMPTY_HOF when there are
+    // none. Its one substantive claim — that a record also lives in each save — only matters when
+    // the archive cannot be read, and the UNREADABLE message below already carries it, next to the
+    // repair the player can act on.
+    const kids = [];
+    if (settingsLine) kids.push(settingsLine);
+    if (done) kids.push(done);
+    if (!kids.length) return null;
+    return kids.length > 1 ? el("div", { cls: "dgh-storage" }, kids) : kids[0];
   }
-  return blockedNote(s, done, ctx);
+  const blocked = blockedNote(s, done, ctx);
+  if (settingsLine) blocked.appendChild(settingsLine);
+  return blocked;
+}
+
+/**
+ * A line saying the mod's settings changed this session are not reaching storage, when that is so.
+ * The settings module goes read-only for a session when the shared store returned another mod's
+ * data, could not be read, or did not read back what was written; this is the one page players
+ * look at for storage trouble, and the repair below fixes it.
+ * @returns {HTMLElement|null} The note, or null while settings persist normally.
+ */
+function settingsNote() {
+  let status = "ok";
+  try {
+    if (typeof DemographicsSettings.persistenceStatus === "function") status = DemographicsSettings.persistenceStatus();
+  } catch (_) {
+    // A settings double without the accessor reports as saved.
+  }
+  if (status === "ok") return null;
+  const tag = status === "unavailable" ? "LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" : "LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED";
+  return el("div", { cls: "dgh-note dgh-note--warn dgh-note--settings", text: t(tag) });
 }
 
 /**
@@ -241,6 +386,9 @@ function renderSection(body, records, all, ctx) {
  */
 export function renderHof(host, ctx) {
   clear(host);
+  // The title-line slot lives outside this host, so it is emptied by hand: a game's page and an
+  // archive with nothing to filter both leave it blank.
+  if (ctx.filterHost) clear(ctx.filterHost);
   const all = hofRecords(ctx.live);
   addSavedTexts(archiveTexts());
   for (const r of all) addSavedTexts(r.texts);
@@ -251,8 +399,7 @@ export function renderHof(host, ctx) {
     return;
   }
   viewState.detail = null;
-  host.appendChild(sectionNav(ctx));
-  if (all.length) host.appendChild(shortGamesFilter(all, records, ctx));
+  host.appendChild(all.length ? navRow(all, ctx) : sectionNav(ctx));
   const body = el("div", { cls: "dgh-view-body" });
   host.appendChild(body);
   if (!all.length) body.appendChild(emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF")));

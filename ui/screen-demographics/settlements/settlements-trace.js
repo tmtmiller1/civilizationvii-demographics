@@ -1,28 +1,13 @@
 // settlements-trace.js
 //
 // Per-settlement history the Top Cities cards need but the per-CIV sample stream
-// doesn't carry: (1) FOUNDING turn/year per settlement, and (2) a rolling
-// population window per settlement for rising/falling trend.
-//
-// Both are keyed by stable plot location ("x,y") and stored on the sampled
-// history blob (`history.settleTrace`), which is saved into the game itself every
-// turn, so they survive quit/load and the age transition and reset with a new
-// game. They used to live in the mod's settings slice, but localStorage does not
-// survive a game restart in Civ VII 1.5.0 (watched 2026-09-21), so every launch
-// silently started the founding map and trend windows over. The pop window is
-// capped; the founding map is permanent (founding never changes) but bounded by
-// the settlements in the game.
-//
-// Founding has two sources, distinguished as exact vs approximate:
-//   - CityAddedToMap event  → EXACT founding turn (going forward). Held in memory
-//     until the next sample folds it into the history.
-//   - first sampler sighting → APPROXIMATE (settlement already existed / old save).
-//
-// recordSettlementTrace() is called once per sample by the sampler, on the same
-// history blob its single per-turn save commits; getFounded() and getCityTrend()
-// are read by settlements-data.js at render time from an in-memory copy of that
-// trace (loaded once per game from the saved history when the sampler has not
-// run yet this session).
+// doesn't carry: founding turn/year and a rolling population window per
+// settlement, keyed by plot location ("x,y") and stored on the sampled history
+// blob (`history.settleTrace`) so they survive quit/load and the age transition.
+// Founding is EXACT from the CityAddedToMap event (held in memory until the next
+// sample folds it in) or APPROXIMATE from the first sampler sighting.
+// recordSettlementTrace() runs once per sample; getFounded()/getCityTrend() read
+// an in-memory copy at render time.
 
 import { DemographicsStorage } from "/demographics/ui/storage/demographics-storage.js";
 
@@ -177,6 +162,9 @@ function onCityAdded(data) {
  */
 export function startFoundingTracker() {
   stopFoundingTracker();
+  // Module state outlives the game: a founding stamped in the previous game but
+  // never folded (no sample ran after it) must not land on this game's history.
+  pendingExact.clear();
   safe(() => {
     if (typeof engine === "undefined" || typeof engine.on !== "function") return;
     addedHandlerRef = (/** @type {*} */ d) => onCityAdded(d);
@@ -218,11 +206,9 @@ function readAllSettlements() {
 }
 
 /**
- * Fold this sample into the history's trace: each settlement's population goes
- * into its rolling window, exact foundings seen since the last sample are
- * stamped, and any settlement still unrecorded gets an APPROXIMATE founding (an
- * exact-but-yearless stamp gets this sample's year). The caller's single
- * per-turn save persists it.
+ * Fold this sample into the history's trace: population windows, pending exact
+ * foundings, and an APPROXIMATE founding for any settlement still unrecorded.
+ * The caller's single per-turn save persists it.
  * @param {*} history The sampled history blob (mutated: `settleTrace`).
  * @param {number} turn The (monotonic) sample turn.
  * @param {string} [year] The sample's game-year string.

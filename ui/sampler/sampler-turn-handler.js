@@ -5,7 +5,7 @@
 import { reportBalanceSignals } from "/demographics/ui/core/demographics-telemetry.js";
 
 /**
- * A monotonic millisecond clock for debug timing (Perf plan P2 #6); 0 if unavailable.
+ * A monotonic millisecond clock for debug timing; 0 if unavailable.
  * @returns {number} Milliseconds.
  */
 function nowMs() {
@@ -50,12 +50,12 @@ export function handlePlayerTurnActivated(deps) {
 
     const { localId, curTurn } = sampleCtx;
     deps.vlog("about to sample turn for localPlayer=", localId);
-    const t0 = nowMs(); // Perf plan P2 #6: time the per-turn sample (debug-only via vlog).
+    const t0 = nowMs(); // Time the per-turn sample (debug-only via vlog).
     const snap = deps.doSample();
     deps.vlog("sampled turn in", Math.round(nowMs() - t0), "ms");
     if (snap) {
       deps.noteSampleSucceeded(curTurn);
-      // Balance telemetry (P2.7): throttled runaway-leader alert (debug-gated).
+      // Balance telemetry: throttled runaway-leader alert (debug-gated).
       reportBalanceSignals(snap, curTurn);
     }
   } catch (e) {

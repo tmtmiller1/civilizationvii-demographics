@@ -7,30 +7,27 @@
 
 import Panel from "/core/ui/panel-support.js";
 import { derr, safe } from "/demographics/ui/history/core/history-log.js";
+import { publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
 import { SCREEN_ID } from "/demographics/ui/history/screen/history-open.js";
 import { renderHallOfFame } from "/demographics/ui/history/views/history-app.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
 
-/** The Demographics font ladder (rem at the default size), published as --dg-fs-<size x 100>. */
-export const FONT_LADDER = [0.65, 0.72, 0.85, 0.95, 1.05, 1.2, 1.4, 1.6, 1.85, 2.4];
-
 /**
- * Scale factor for the player's Font Size setting (0-4 => 16..24 px over an 18 px base).
- * @returns {number} Factor.
- */
-export function fontFactor() {
-  const step = Number(safe(() => Configuration.getUser().uiFontScale, 1));
-  const px = 16 + 2 * (Number.isFinite(step) ? Math.max(0, Math.min(4, step)) : 1);
-  return px / 18;
-}
-
-/**
- * Publish --dg-fs-* on an element.
+ * Publish the Demographics type scale on this screen's root, scaled by the player's Font Size
+ * setting. The ladder lives in demographics-font-ladder.js (shared with the in-game screen).
  * @param {HTMLElement} node Root element.
  */
 export function applyFontScale(node) {
-  const f = fontFactor();
-  for (const v of FONT_LADDER) node.style.setProperty("--dg-fs-" + Math.round(v * 100), (v * f).toFixed(4) + "rem");
+  publishFontLadder(node);
+}
+
+/**
+ * Whether an engine-input event is a Cancel (Escape, the controller's back button or the menu key).
+ * @param {any} ev The engine-input event.
+ * @returns {boolean} True for a Cancel.
+ */
+function isCancel(ev) {
+  return !!(ev?.isCancelInput?.() || ev?.detail?.name === "sys-menu");
 }
 
 class ScreenHistoryRankings extends Panel {
@@ -59,24 +56,43 @@ class ScreenHistoryRankings extends Panel {
     super.onDetach?.();
   }
 
+  /** When the last Cancel was handled, to fold one key press into one step (see _isFinalCancel). */
+  _lastCancel = 0;
+
   /**
-   * Close on Cancel / Escape, the way base-game screens do in 1.5.0 (a DOM listener on the root;
+   * Close on Cancel / Escape, the way base-game screens do (a DOM listener on the root;
    * no global input handler is installed, so map input is never affected).
    * @param {any} ev The engine-input event.
    */
   _handleEngineInput(ev) {
-    if (ev?.detail?.status !== InputActionStatuses.FINISH) return;
-    if (ev.isCancelInput?.() || ev.detail.name === "sys-menu") {
-      ev.stopPropagation();
-      ev.preventDefault();
-      // On a game's page, Cancel steps back to the Hall of Fame; from there it closes the screen.
-      if (viewState.detail) {
-        viewState.detail = null;
-        this._render();
-      } else {
-        this.close();
-      }
+    if (!this._isFinalCancel(ev)) return;
+    ev.stopPropagation?.();
+    ev.preventDefault?.();
+    // On a game's page, Cancel steps back to the Hall of Fame; from there it closes the screen.
+    if (viewState.detail) {
+      viewState.detail = null;
+      this._render();
+    } else {
+      this.close();
     }
+  }
+
+  /**
+   * Whether an engine-input event is the finishing Cancel / Escape press. If the InputActionStatuses
+   * global is missing the status filter is skipped and a press arrives as several events (start
+   * and finish), so those within a quarter second count once.
+   * @param {any} ev The engine-input event.
+   * @returns {boolean} True to act on it.
+   */
+  _isFinalCancel(ev) {
+    const finish = safe(() => InputActionStatuses.FINISH, undefined);
+    if (finish !== undefined && ev?.detail?.status !== finish) return false;
+    if (!isCancel(ev)) return false;
+    if (finish !== undefined) return true;
+    const now = Date.now();
+    const repeat = now - this._lastCancel < 250;
+    this._lastCancel = now;
+    return !repeat;
   }
 
   /**
@@ -107,14 +123,16 @@ class ScreenHistoryRankings extends Panel {
     const host = this.Root?.querySelector?.(".dgh-screen-host");
     if (!host) return;
     applyFontScale(this.Root);
-    renderHallOfFame(host, { mode: "shell" });
+    // The short-games filter goes on the screen's title line (see screen-hall-of-fame.html); the
+    // slot is missing on a partially built root, and the view falls back to its own row.
+    const filterHost = /** @type {HTMLElement|null} */ (this.Root?.querySelector?.(".dgh-title-slot") || null);
+    renderHallOfFame(host, { mode: "shell", filterHost });
   }
 }
 
-// initializeImmediately: in 1.5.0 Controls.define only records a definition; tags are wired up in
-// one pass at startup. This module is imported after engine.whenReady, which is after that pass,
-// so without the flag the screen element is created with no component and ContextManager.push
-// throws. Watched in game 2026-09-22.
+// initializeImmediately: Controls.define only records a definition and tags are wired up in one
+// pass at startup, which this module loads after; without the flag the screen element is created
+// with no component and ContextManager.push throws.
 try {
   Controls.define(SCREEN_ID, {
     initializeImmediately: true,

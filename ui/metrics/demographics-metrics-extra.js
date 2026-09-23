@@ -1,16 +1,11 @@
 // demographics-metrics-extra.js
 //
-// Extended metric registry: per-civ metrics added in the v2.5.0 expansion. Kept
-// out of demographics-metrics.js purely to respect the 500-line file cap as the
-// catalog grows; these entries obey the exact same MetricDef contract and are
-// spread into the canonical METRICS array by that module. Every accessor
-// tolerates undefined ctx fields and returns undefined (never throws).
+// Extended metric registry: extra per-civ metrics, spread into the canonical
+// METRICS array by demographics-metrics.js under the same MetricDef contract.
+// Every accessor tolerates undefined ctx fields and returns undefined (never throws).
 //
-// Localization works exactly as in demographics-metrics.js: the `label`/`title`
-// here are DEV-FACING FALLBACKS — the displayed name comes LOC-first from
-// `LOC_DEMOGRAPHICS_METRIC_<ID>`. Add that key (+ `_TOOLTIP`) to every locale when
-// you add a metric; rename via the LOC key, not the `label`. See that file's
-// header and text/README.md.
+// Localization works as in demographics-metrics.js: `label`/`title` are dev-facing
+// fallbacks; the displayed name comes from `LOC_DEMOGRAPHICS_METRIC_<ID>`.
 
 import { formatPercent } from "/demographics/ui/metrics/metrics-format.js";
 import { formatRoundedCount, safeNum } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
@@ -21,10 +16,8 @@ import { formatRoundedCount, safeNum } from "/demographics/ui/metrics/demographi
  * @typedef {Object<string, any>} MetricCtx
  */
 
-// Typed as MetricDef[] (the global catalog contract, which carries an index
-// signature) so spreading these into METRICS keeps property reads like
-// `.worldRankingsAllCivsHidden` valid; every entry here supplies `label`, so
-// unlike the hidden-triumph entries it satisfies MetricDef cleanly.
+// Typed as MetricDef[] (which carries an index signature) so spreading these
+// into METRICS keeps property reads like `.worldRankingsAllCivsHidden` valid.
 /** @type {MetricDef[]} */
 export const EXTRA_METRICS = [
   {

@@ -34,6 +34,63 @@ function findByClass(root, cls) {
   return null;
 }
 
+/** All portrait + label overlays under `root`, in tree order. */
+function allOverlays(root) {
+  const out = [];
+  const queue = [root];
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    const cls = typeof cur.className === "string" ? cur.className.split(/\s+/) : [];
+    if (cls.includes("demographics-relations-portrait") || cls.includes("demographics-relations-node-label")) {
+      out.push(cur);
+    }
+    queue.push(...(cur.children || []));
+  }
+  return out;
+}
+
+// Regression guard for the blinking ring portraits: the ring is rebuilt on every filter toggle,
+// but the NODE set is independent of the filters (computeCivRingData returns metIds untouched and
+// filters only the edges). Re-creating each leader portrait made it flash while its `fxs-icon`
+// art resolved again, so a shared cache must hand the SAME elements to the rebuilt ring.
+function testPortraitCacheReusesOverlays() {
+  const names = {
+    1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#223344" },
+    2: { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#445566" },
+    3: { isCityState: true, csName: "CS", csTypeIcon: "blp:bonus_scientific", csTypeColor: "#4ea6ec" }
+  };
+  const ids = [1, 2, 3];
+  const cache = new Map();
+  const edgesA = [{ a: 1, b: 2, filterKey: "alliance", color: "#4ea6ec", _typeLabel: "Alliance" }];
+  const edgesB = [{ a: 1, b: 3, filterKey: "trade", color: "#4dc6c6", directed: true, _typeLabel: "Trade" }];
+
+  const wrapA = buildRingSvg(ids, names, edgesA, 1, { viewerPid: 1, portraitCache: cache });
+  document.body.appendChild(wrapA);
+  wrapA.__placePortraits();
+  const before = allOverlays(wrapA);
+  assert.ok(before.length > 0, "the first ring places its overlays");
+  assert.ok(
+    before.some((el) => el.className.includes("demographics-relations-portrait")),
+    "…including leader portraits (the engine-art elements)"
+  );
+
+  // A filter toggle: same nodes, different edges, same cache.
+  const wrapB = buildRingSvg(ids, names, edgesB, 1, { viewerPid: 1, portraitCache: cache });
+  document.body.appendChild(wrapB);
+  wrapB.__placePortraits();
+  const after = allOverlays(wrapB);
+  assert.deepEqual(after, before, "the rebuilt ring reuses every overlay element (never re-created)");
+  assert.equal(allOverlays(wrapA).length, 0, "…and they moved to the new wrap, leaving no duplicates");
+
+  // Without a cache the overlays are rebuilt, as before — the cache is opt-in.
+  const wrapC = buildRingSvg(ids, names, edgesB, 1, { viewerPid: 1 });
+  document.body.appendChild(wrapC);
+  wrapC.__placePortraits();
+  const fresh = allOverlays(wrapC);
+  assert.equal(fresh.length, before.length, "same overlay count without a cache");
+  assert.ok(fresh.every((el) => !before.includes(el)), "…but all fresh elements");
+}
+
 function testBuildRingSvgEmpty() {
   const wrap = buildRingSvg([], {}, [], 1, {});
   assert.equal(wrap.className, "demographics-relations-ring-wrap");
@@ -209,12 +266,96 @@ function testBuildRingSvgHoverAndLayoutFallbacks() {
   globalThis.setTimeout = originalSetTimeout;
 }
 
+function testDetachedWrapHoverAndGuardedFrames() {
+  const names = {
+    1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#223344" },
+    2: { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#445566" }
+  };
+  const edges = [{ a: 1, b: 2, filterKey: "alliance", color: "#4ea6ec", _typeLabel: "Alliance" }];
+  // Synchronous rAF so the deferred paint runs inline (the previous test left it undefined).
+  globalThis.requestAnimationFrame = (fn) => fn();
+  const wrap = buildRingSvg([1, 2], names, edges, 1, { viewerPid: 1 });
+  const ringSvg = findByClass(wrap, "demographics-relations-ring-svg");
+  const tip = findByClass(wrap, "demographics-relations-edge-tip");
+  assert.ok(ringSvg && tip, "ring svg + edge tooltip should exist");
+
+  // Hover on a DETACHED wrap (a repaint replaced it while the cursor was still
+  // over it): the handlers must return early, never measure / restyle the orphan.
+  assert.equal(wrap.isConnected, false, "wrap starts detached");
+  const throwingRect = () => {
+    throw new Error("detached measure");
+  };
+  ringSvg.getBoundingClientRect = throwingRect;
+  wrap.getBoundingClientRect = throwingRect;
+  wrap.dispatch("mousemove", { clientX: 10, clientY: 10 });
+  wrap.dispatch("mouseleave", {});
+  assert.equal(tip.style.display, "none", "detached hover must not show the tooltip");
+
+  // Attached, but getBoundingClientRect throws (GameFace can throw on a node
+  // mid-teardown): mousemove must swallow it via the measurement guard.
+  document.body.appendChild(wrap);
+  wrap.dispatch("mousemove", { clientX: 10, clientY: 10 });
+  assert.equal(tip.style.display, "none", "throwing svg measurement must not show the tooltip");
+  // SVG measures, the tooltip anchor (wrap) throws: show() bails, hit or not.
+  ringSvg.getBoundingClientRect = () => ({ left: 0, top: 0, width: 240, height: 160, bottom: 160 });
+  wrap.dispatch("mousemove", { clientX: 120, clientY: 80 });
+  assert.equal(tip.style.display, "none", "throwing wrap measurement must not show the tooltip");
+  wrap.dispatch("mouseleave", {});
+
+  // placePortraits / paintOverlays run as rAF callbacks: a throw inside is
+  // logged through derr, never thrown into the frame dispatcher.
+  wrap.getBoundingClientRect = () => ({ left: 0, top: 0, width: 300, height: 200, bottom: 200 });
+  const errors = [];
+  const savedError = console.error;
+  const savedCreate = document.createElement;
+  console.error = (...a) => errors.push(a.map(String).join(" "));
+  document.createElement = (tag) => {
+    if (String(tag).toLowerCase() === "fxs-icon") throw new Error("portrait boom");
+    return savedCreate(tag);
+  };
+  try {
+    wrap.__placePortraits();
+  } finally {
+    document.createElement = savedCreate;
+    console.error = savedError;
+  }
+  assert.ok(
+    errors.some((s) => s.includes("paintOverlays:")),
+    "a throw inside the deferred overlay paint should be logged, not thrown"
+  );
+
+  // stripOldOverlays must cope with a GameFace-style array-like NodeList (no
+  // forEach) whose elements lack remove(): old overlays go via the parent.
+  wrap.__placePortraits();
+  const before = wrap.querySelectorAll(".demographics-relations-portrait").length;
+  assert.ok(before > 0, "overlays should paint once the DOM is sane again");
+  const realQsa = wrap.querySelectorAll;
+  wrap.querySelectorAll = (sel) => {
+    const list = realQsa.call(wrap, sel);
+    const arrayLike = { length: list.length };
+    for (let i = 0; i < list.length; i++) {
+      list[i].remove = undefined;
+      arrayLike[i] = list[i];
+    }
+    return arrayLike;
+  };
+  wrap.__placePortraits();
+  delete wrap.querySelectorAll;
+  assert.equal(
+    wrap.querySelectorAll(".demographics-relations-portrait").length,
+    before,
+    "old overlays should be stripped through parentNode (no pile-up) without NodeList.forEach / remove"
+  );
+}
+
 try {
   testBuildRingSvgEmpty();
   testBuildRingSvgInteractive();
+  testPortraitCacheReusesOverlays();
   testBuildRingSvgDenseNoCallback();
   testBuildRingSvgSingleNodeDetachedPlacement();
     testBuildRingSvgHoverAndLayoutFallbacks();
+  testDetachedWrapHoverAndGuardedFrames();
   console.log("relations-ring-svg-branches harness passed");
 } finally {
   globalThis.document = saved.document;

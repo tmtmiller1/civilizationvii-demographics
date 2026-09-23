@@ -1,11 +1,8 @@
 // chart-line-axis.js
 //
-// Age/time math and X/Y axis tick formatters for the per-civ line chart.
-// Extracted from chart-line.js. The age offset model lives
-// here so chart-line.js stays focused on series-building and render
-// orchestration; sample → chart-X conversion is exposed so sibling plugin
-// modules (wonder-markers, event-markers) can be passed `sampleX` as an
-// explicit dependency without re-importing the age helpers.
+// Age/time math and X/Y axis tick formatters for the per-civ line chart. The
+// sample → chart-X conversion (`sampleX`) is exposed so sibling plugin modules
+// can take it as an explicit dependency.
 
 import {
   addLiveTurnYear,
@@ -22,14 +19,10 @@ function derr(...a) {
   console.error("[Demographics.chart-line-axis]", ...a);
 }
 
-// Compute a sample's "global" X-axis position deterministically from
-// (age, localTurn) - no stored offset, no statefulness. Each age's samples land
-// right after the previous age's: the first age starts at X = localTurn, the
-// next at X = firstAgeMax + localTurn, and so on. Both the age ORDER and the
-// per-age spans are derived from the samples themselves on every render (the
-// order each age first appears in the chronological stream), so any number of
-// ages - including ones added by a future DLC or mod - plot correctly with no
-// hardcoded age list.
+// A sample's "global" X-axis position is computed deterministically from
+// (age, localTurn): each age's samples land right after the previous age's.
+// Age order and per-age spans are derived from the samples on every render, so
+// any number of ages plot correctly with no hardcoded age list.
 
 /**
  * Infer a sample's age type. Trusts explicit `s.age`; legacy samples without
@@ -41,12 +34,8 @@ function derr(...a) {
 function inferSampleAge(s, _ageBoundaries) {
   // Trust explicit `s.age` whenever present.
   if (s && typeof s.age === "string") return s.age;
-  // Legacy samples without `age` predate the age-tagging code, which
-  // means they MUST be antiquity (it was the only age that existed when
-  // those samples were written). Earlier we tried to bucket them via the
-  // ageBoundaries table, but boundary `.turn` is now stored as age-local
-  // (=1) which collapses every legacy sample into the latest age - the
-  // opposite of what we want. Just return antiquity unconditionally.
+  // Samples without `age` can only be antiquity; bucketing them via the
+  // ageBoundaries table would collapse them into the latest age.
   return "AGE_ANTIQUITY";
 }
 
@@ -59,10 +48,8 @@ function inferSampleAge(s, _ageBoundaries) {
  * @returns {number|null} The age-local turn, or `null`.
  */
 function inferLocalTurn(s, _age, _ageBoundaries) {
-  // Use explicit localTurn when present, otherwise fall back to the
-  // stored turn (which IS age-local for legacy samples, since they were
-  // never offset).
-  // Age-local turns are expected to be 1-based positive integers.
+  // Explicit localTurn when present, else the stored turn (age-local for
+  // legacy samples). Age-local turns are 1-based positive integers.
   if (s && typeof s.localTurn === "number" && isFinite(s.localTurn) && s.localTurn > 0) {
     return s.localTurn;
   }
@@ -73,8 +60,7 @@ function inferLocalTurn(s, _age, _ageBoundaries) {
 /**
  * Fold one sample into age-local max-turn tracking, recording each age's
  * first-appearance order so {@link computeAgeOffsets} can lay ages out
- * chronologically without a hardcoded age list. Any age type is accepted -
- * unknown/new ages are no longer dropped.
+ * chronologically without a hardcoded age list. Any age type is accepted.
  * @param {Map<string, number>} maxLocalByAge Per-age max local-turn map.
  * @param {string[]} order Ages in first-appearance order (appended in place).
  * @param {*} sample One sample.

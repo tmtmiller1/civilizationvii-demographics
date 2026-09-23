@@ -20,19 +20,54 @@
     --dgh-loss-text:     #e5887f;
     --dgh-empty:         rgba(255, 255, 255, 0.09);
     --dgh-card-bg:       rgba(20, 16, 10, 0.55);
-    --dgh-card-border:   rgba(168, 132, 90, 0.40);
     --dgh-row-alt:       rgba(255, 255, 255, 0.025);
     --dgh-row-hover:     rgba(243, 195, 76, 0.10);
-    --dgh-divider:       rgba(168, 132, 90, 0.30);
+    /* Border colours are OPAQUE hex, and every rule below sets the four `border-<side>-color`
+       longhands rather than `border-color`. `border-color` is a SHORTHAND, and GameFace drops
+       `var()` in shorthands, so `border-color: var(--x)` computed to `initial` — currentColor —
+       and every framed card, table and chip drew a light grey body-text hairline instead of the
+       copper declared here (watched 2026-09-23; the per-side `border-top-color: var(--dgh-copper)`
+       in the same rules resolved correctly all along). The hex is the copper pre-blended: alpha
+       was never the problem, but an opaque line is what the frame art wants. */
+    --dgh-card-border:   #a8845a;
+    --dgh-divider:       #7a6242;
 }
 
 /* ---------- main-menu Hall of Fame screen ---------- */
-/* Font ladder defaults (the screen republishes them scaled by the Font Size setting). Inside the
-   Demographics screen the same variables come from .demographics-screen. */
-.dgh-screen {
-    --dg-fs-65: 0.65rem; --dg-fs-72: 0.72rem; --dg-fs-85: 0.85rem; --dg-fs-95: 0.95rem;
-    --dg-fs-105: 1.05rem; --dg-fs-120: 1.2rem; --dg-fs-140: 1.4rem; --dg-fs-160: 1.6rem;
-    --dg-fs-185: 1.85rem; --dg-fs-240: 2.4rem;
+/* ── The type scale: ONE CSS declaration for both screens ────────────────────────────────────────
+   These are the DEFAULTS. Each screen republishes the same variables onto its own root as values
+   scaled by the player's Font Size setting (demographics-font-ladder.js), which the engine does not
+   apply to mod content; the defaults are what renders before that runs and off-engine.
+
+   This sheet is the only one BOTH screens load — the in-game modal loads it last in its styles[]
+   array, the main-menu Hall of Fame loads it alone — so the ladder is declared here once for both
+   roots rather than copied into the density sheet as well.
+
+   `--dg-fs-<size x 100>`; the named steps below are the World Rankings matrix / leader cards, whose
+   sizes are chosen per role. Must match demographics-font-ladder.js — tests/history-css.mjs asserts
+   the two agree, so they cannot drift. */
+.demographics-screen,
+.dgh-screen,
+/* The cinematic overlay is mounted on document.body, OUTSIDE both screens, so it inherits nothing
+   from them. Without this it resolves no `--dg-u` at all and every `calc(n * var(--dg-u))` in its
+   rules is invalid and dropped - which unpinned it from the bottom of the screen, removed its
+   width bounds and its padding, and dropped its border colour to the fallback. It is listed here
+   so it always has the reference-size defaults; mountOverlay() then republishes the scaled values
+   onto the element so it tracks resolution like the rest of the mod. */
+.demographics-map-overlay {
+    /* The box unit. Resolution-sensitive metrics are `calc(<number> * var(--dg-u))`; JS republishes
+       this scaled to the viewport (demographics-font-ladder.js). 1rem here = the reference size, so
+       an un-set var renders exactly as the old fixed-rem values did. */
+    --dg-u: 1rem;
+    /* Type-scaled unit, for widths that must contain text (see demographics-font-ladder.js). */
+    --dg-t: 1rem;
+    --dg-ui-scale: 1;
+    --dg-fs-65: 0.65rem; --dg-fs-72: 0.72rem; --dg-fs-78: 0.78rem; --dg-fs-85: 0.85rem;
+    --dg-fs-95: 0.95rem; --dg-fs-100: 1rem; --dg-fs-105: 1.05rem; --dg-fs-120: 1.2rem;
+    --dg-fs-140: 1.4rem; --dg-fs-160: 1.6rem; --dg-fs-185: 1.85rem; --dg-fs-240: 2.4rem;
+    --dg-fs-lead: 1.1rem; --dg-fs-civ: 0.95rem; --dg-fs-label: 1.05rem; --dg-fs-value: 1.15rem;
+    --dg-fs-rank: 0.9rem; --dg-fs-card-name: 0.9rem; --dg-fs-card-sub: 0.78rem;
+    --dg-fs-card-val: 1.15rem; --dg-fs-card-cat: 0.85rem;
 }
 .dgh-screen,
 .dgh-root {
@@ -55,7 +90,21 @@
 @media (max-height: 55.5555555556rem), (max-aspect-ratio: 3/2) {
     .dgh-frame { width: 98vw; height: 96vh; max-width: 98vw; max-height: 96vh; }
 }
+.dgh-titlerow { position: relative; width: 100%; }
 .dgh-title { margin-top: 0.5rem; margin-bottom: 0.4rem; }
+/* The short-games filter rides the screen's title line: it qualifies every section, and on the
+   section tab bar it overlapped the bar's own frame. Out of flow so the centred title keeps its
+   filigree, and inset from the frame edge by the same gutter the body uses. */
+.dgh-title-slot {
+    position: absolute;
+    right: calc(1.5 * var(--dg-u));
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
 .dgh-body { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; background-color: rgba(10, 12, 18, 0.72); }
 .dgh-screen-host { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 
@@ -71,23 +120,62 @@
 }
 .dgh-top-tabs { margin-bottom: 0.5rem; }
 .dgh-subtabs { margin-bottom: 0.4rem; }
-/* Short-games filter: one row under the section tabs, on every Hall of Fame page. */
+/* Section tabs and the short-games filter share one row on every Hall of Fame page. The sections
+   stay centred on the WHOLE row - the filter is taken out of flow so it cannot push them off
+   centre - and the filter sits at the right end. fitHofNavRow adds `is-stacked` when the pills
+   would reach the filter, which puts the filter back on a line of its own; at 1280x720 there is
+   not room for both, and centred sections matter more than saving the row. */
+.dgh-hof-navrow {
+    position: relative;
+    margin-bottom: calc(0.3 * var(--dg-u));
+}
+.dgh-hof-navrow > .dgh-pill-row,
+.dgh-hof-navrow > .dgh-tabs {
+    margin-bottom: 0;
+}
 .dgh-hof-filter {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     justify-content: flex-end;
     align-items: center;
-    margin: 0 0 0.3rem;
+    margin: 0;
+}
+/* In the title slot the filter is the slot's content, not an overlay on a row: the slot is itself
+   out of flow, so an absolute child would collapse it to nothing. */
+.dgh-title-slot .dgh-hof-filter { position: static; transform: none; }
+.dgh-hof-navrow.is-stacked .dgh-hof-filter {
+    position: static;
+    transform: none;
+    margin-top: calc(0.2 * var(--dg-u));
 }
 .dgh-filter-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); margin-right: 0.6rem; }
 .dgh-hof-filter .dgh-pill-row { flex-wrap: nowrap; margin: 0; }
+/* The filter's single button: the flat boxed filter look the pill rows use for the same job. */
+.dgh-hof-filter-btn {
+    flex: 0 0 auto;
+    margin: 0;
+    border-radius: 0.2rem;
+    padding-top: calc(0.16 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.16 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
+    font-size: var(--dg-fs-72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background-color: rgba(9, 12, 19, 0.5);
+}
 .dgh-view,
 .dgh-view-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 .dgh-scroll {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
-    padding-right: 0.6rem;
+    padding-right: calc(0.6 * var(--dg-u));
     display: flex;
     flex-direction: column;
 }
@@ -97,7 +185,10 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin: 0.2rem 0 0.4rem;
+    margin-top: calc(0.2 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.4 * var(--dg-u));
+    margin-left: 0;
 }
 .dgh-cols { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.35rem; }
 .dgh-col { flex: 1 1 22rem; margin: 0 0.35rem 0.7rem; min-width: 0; }
@@ -107,13 +198,19 @@
     background-color: var(--dgh-card-bg);
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-card-border);
+    border-top-color: var(--dgh-card-border);
+    border-right-color: var(--dgh-card-border);
+    border-bottom-color: var(--dgh-card-border);
+    border-left-color: var(--dgh-card-border);
     border-top-width: 0.18rem;
     border-top-style: solid;
     border-top-color: var(--dgh-copper);
     border-radius: 0.2rem;
-    padding: 0.6rem 0.85rem 0.75rem;
-    margin-bottom: 0.7rem;
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(0.85 * var(--dg-u));
+    padding-bottom: calc(0.75 * var(--dg-u));
+    padding-left: calc(0.85 * var(--dg-u));
+    margin-bottom: calc(0.7 * var(--dg-u));
 }
 .dgh-section-title {
     color: var(--dgh-text-title);
@@ -122,20 +219,23 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-bottom: 0.45rem;
+    margin-bottom: calc(0.45 * var(--dg-u));
 }
 .dgh-subtitle { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); margin-bottom: 0.4rem; }
 .dgh-lead { color: var(--dgh-text-title); font-size: var(--dg-fs-105); margin-bottom: 0.45rem; }
 .dgh-accent { color: var(--dgh-gold); }
 .dgh-muted { color: var(--dgh-text-muted); }
 .dgh-empty {
-    padding: 2rem 1rem;
+    padding-top: calc(2 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(2 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
     text-align: center;
     color: var(--dgh-text-muted);
     font-size: var(--dg-fs-105);
 }
 .dgh-note {
-    margin-top: 0.4rem;
+    margin-top: calc(0.4 * var(--dg-u));
     color: var(--dgh-text-muted);
     font-size: var(--dg-fs-72);
     text-align: center;
@@ -148,23 +248,35 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 0.2rem 0 0.35rem;
+    margin-top: calc(0.2 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.35 * var(--dg-u));
+    margin-left: 0;
 }
 .dgh-pill {
     white-space: nowrap;
     cursor: pointer;
-    padding: 0.3rem 1.05rem;
-    margin: 0.15rem 0.2rem;
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(1.05 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(1.05 * var(--dg-u));
+    margin-top: calc(0.15 * var(--dg-u));
+    margin-right: calc(0.2 * var(--dg-u));
+    margin-bottom: calc(0.15 * var(--dg-u));
+    margin-left: calc(0.2 * var(--dg-u));
     border-radius: 1rem;
-    border: 0.0555rem solid rgba(201, 162, 76, 0.4);
+    border: 1px solid rgba(201, 162, 76, 0.4);
     color: #bfae86;
     font-size: var(--dg-fs-95);
 }
-.dgh-pill:hover { color: var(--dgh-text-title); border-color: var(--dgh-gold-soft); }
+.dgh-pill:hover { color: var(--dgh-text-title); border-top-color: var(--dgh-gold-soft); border-right-color: var(--dgh-gold-soft); border-bottom-color: var(--dgh-gold-soft); border-left-color: var(--dgh-gold-soft); }
 .dgh-pill.is-active { color: #1c1408; background-color: var(--dgh-gold); font-weight: bold; }
 .dgh-pill-row--filter .dgh-pill {
     border-radius: 0.2rem;
-    padding: 0.16rem 0.55rem;
+    padding-top: calc(0.16 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.16 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
     font-size: var(--dg-fs-72);
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -177,11 +289,20 @@
 }
 .dgh-button {
     cursor: pointer;
-    padding: 0.3rem 0.9rem;
-    margin: 0.15rem 0.2rem;
-    border-width: 0.0555rem;
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(0.9 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(0.9 * var(--dg-u));
+    margin-top: calc(0.15 * var(--dg-u));
+    margin-right: calc(0.2 * var(--dg-u));
+    margin-bottom: calc(0.15 * var(--dg-u));
+    margin-left: calc(0.2 * var(--dg-u));
+    border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-gold-soft);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
     border-radius: 0.2rem;
     background-color: rgba(9, 12, 19, 0.6);
     color: var(--dgh-text-title);
@@ -196,9 +317,15 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.4rem 1.1rem 0.4rem 0.8rem;
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(1.1 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.8 * var(--dg-u));
     font-size: var(--dg-fs-105);
-    border-color: var(--dgh-gold-soft);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
     color: var(--dgh-gold);
 }
 .dgh-back-arrow { font-size: var(--dg-fs-140); margin-right: 0.5rem; line-height: 1; }
@@ -212,14 +339,17 @@
     width: 100%;
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-radius: 0.3rem;
 }
 .dgh-tr {
     display: flex;
     flex-direction: row;
     align-items: center;
-    min-height: 2.2rem;
+    min-height: calc(2.2 * var(--dg-u));
     border-bottom: 1px solid rgba(168, 132, 90, 0.12);
 }
 .dgh-tr:nth-child(odd) { background-color: var(--dgh-row-alt); }
@@ -229,14 +359,14 @@
     font-size: var(--dg-fs-72);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    min-height: 1.8rem;
+    min-height: calc(1.8 * var(--dg-u));
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: var(--dgh-divider);
 }
 .dgh-tr.is-clickable { cursor: pointer; }
 .dgh-tr.is-clickable:hover { background-color: var(--dgh-row-hover); }
-.dgh-tr.is-mine { outline: 0.0555rem solid rgba(243, 195, 76, 0.55); color: var(--dgh-text-title); }
+.dgh-tr.is-mine { outline: 1px solid rgba(243, 195, 76, 0.55); color: var(--dgh-text-title); }
 .dgh-td { padding: 0.2rem 0.45rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dgh-col-xs { flex: 0 0 2.2rem; text-align: right; }
 .dgh-col-icon { flex: 0 0 2.4rem; }
@@ -253,11 +383,11 @@
 .dgh-civ { display: flex; flex-direction: row; align-items: center; min-width: 0; margin-right: 0.8rem; }
 .dgh-civ-dot {
     flex: 0 0 auto;
-    width: 0.7rem;
-    height: 0.7rem;
+    width: calc(0.7 * var(--dg-u));
+    height: calc(0.7 * var(--dg-u));
     border-radius: 0.35rem;
-    margin-right: 0.4rem;
-    border: 0.0555rem solid rgba(0, 0, 0, 0.6);
+    margin-right: calc(0.4 * var(--dg-u));
+    border: 1px solid rgba(0, 0, 0, 0.6);
 }
 .dgh-civ-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dgh-leader-icon { width: 3rem; height: 3rem; flex: 0 0 auto; background-size: contain; background-repeat: no-repeat; background-position: center; }
@@ -274,12 +404,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 6.5rem;
-    padding: 0.3rem 0.6rem;
-    margin: 0.2rem;
+    min-width: calc(6.5 * var(--dg-u));
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
+    margin-top: calc(0.2 * var(--dg-u));
+    margin-right: calc(0.2 * var(--dg-u));
+    margin-bottom: calc(0.2 * var(--dg-u));
+    margin-left: calc(0.2 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-radius: 0.2rem;
     background-color: rgba(0, 0, 0, 0.25);
 }
@@ -294,17 +433,20 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.28rem 0.4rem;
+    padding-top: calc(0.28 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.28 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     border-bottom: 1px solid rgba(168, 132, 90, 0.10);
 }
 .dgh-event.is-mine { background-color: rgba(243, 195, 76, 0.06); }
 .dgh-event-date { flex: 0 0 7.5rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-85); }
 .dgh-event-dot {
     flex: 0 0 auto;
-    width: 0.6rem;
-    height: 0.6rem;
+    width: calc(0.6 * var(--dg-u));
+    height: calc(0.6 * var(--dg-u));
     border-radius: 0.3rem;
-    margin-right: 0.6rem;
+    margin-right: calc(0.6 * var(--dg-u));
 }
 .dgh-event-text { flex: 1 1 auto; min-width: 0; }
 .dgh-event--victory .dgh-event-text,
@@ -324,8 +466,11 @@
 .dgh-lin-cell {
     flex: 1 1 0;
     position: relative;
-    margin-left: 0.3rem;
-    padding: 0.35rem 0.6rem 0.35rem 0.9rem;
+    margin-left: calc(0.3 * var(--dg-u));
+    padding-top: calc(0.35 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.35 * var(--dg-u));
+    padding-left: calc(0.9 * var(--dg-u));
     border: 1px solid transparent;
     border-radius: 0.2rem;
     background-color: rgba(0, 0, 0, 0.25);
@@ -345,15 +490,25 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 8.5rem;
-    padding: 0.5rem 0.8rem;
-    margin: 0.25rem;
+    min-width: calc(8.5 * var(--dg-u));
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(0.8 * var(--dg-u));
+    padding-bottom: calc(0.5 * var(--dg-u));
+    padding-left: calc(0.8 * var(--dg-u));
+    margin-top: calc(0.25 * var(--dg-u));
+    margin-right: calc(0.25 * var(--dg-u));
+    margin-bottom: calc(0.25 * var(--dg-u));
+    margin-left: calc(0.25 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-radius: 0.25rem;
     background-color: rgba(0, 0, 0, 0.25);
 }
+.dgh-stat-head { display: flex; flex-direction: row; align-items: center; }
 .dgh-stat-value { color: var(--dgh-gold); font-size: var(--dg-fs-160); font-weight: bold; }
 .dgh-stat-label { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); text-transform: uppercase; letter-spacing: 0.06em; }
 .dgh-bar-row { display: flex; flex-direction: row; align-items: center; margin: 0.25rem 0; }
@@ -365,10 +520,16 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.4rem;
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-radius: 0.25rem;
     background-color: rgba(0, 0, 0, 0.2);
 }
@@ -379,12 +540,23 @@
 .dgh-game-card-line { font-size: var(--dg-fs-85); }
 .dgh-records { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.35rem; }
 .dgh-record {
-    flex: 0 1 36rem;
-    margin: 0.35rem;
-    padding: 0.5rem 0.6rem 0.6rem;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: calc(36 * var(--dg-u));
+    margin-top: calc(0.35 * var(--dg-u));
+    margin-right: calc(0.35 * var(--dg-u));
+    margin-bottom: calc(0.35 * var(--dg-u));
+    margin-left: calc(0.35 * var(--dg-u));
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.6 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-top-width: 0.14rem;
     border-top-style: solid;
     border-top-color: var(--dgh-copper);
@@ -408,7 +580,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.4rem;
+    margin-bottom: calc(0.4 * var(--dg-u));
 }
 .dgh-detail-top .dgh-detail-head { flex: 0 1 auto; margin-right: 1.5rem; }
 .dgh-detail-figures { display: flex; flex-direction: column; align-items: flex-end; flex: 1 1 auto; margin-bottom: 0.7rem; }
@@ -423,8 +595,11 @@
 .dgh-chart { display: flex; flex-direction: column; }
 .dgh-chart-plot {
     position: relative;
-    height: 17rem;
-    margin: 0.4rem 0.5rem 1.6rem 3.2rem;
+    height: calc(17 * var(--dg-u));
+    margin-top: calc(0.4 * var(--dg-u));
+    margin-right: calc(0.5 * var(--dg-u));
+    margin-bottom: calc(1.6 * var(--dg-u));
+    margin-left: calc(3.2 * var(--dg-u));
     border-left-width: 1px;
     border-left-style: solid;
     border-left-color: var(--dgh-divider);
@@ -438,17 +613,17 @@
 .dgh-chart-marker { stroke: rgba(229, 210, 172, 0.45); stroke-width: 2; stroke-dasharray: 8 6; }
 .dgh-chart-ytick {
     position: absolute;
-    left: -3.1rem;
-    width: 2.8rem;
+    left: calc(-3.1 * var(--dg-u));
+    width: calc(2.8 * var(--dg-u));
     text-align: right;
-    margin-bottom: -0.5rem;
+    margin-bottom: calc(-0.5 * var(--dg-u));
     color: var(--dgh-text-muted);
     font-size: var(--dg-fs-72);
 }
 .dgh-chart-mlabel {
     position: absolute;
-    bottom: -1.4rem;
-    margin-left: 0.3rem;
+    bottom: calc(-1.4 * var(--dg-u));
+    margin-left: calc(0.3 * var(--dg-u));
     color: var(--dgh-text-title-2);
     font-size: var(--dg-fs-72);
     white-space: nowrap;
@@ -466,9 +641,9 @@
 /* ---------- emblems, victory icons, result marks ---------- */
 .dgh-civ-icon {
     flex: 0 0 auto;
-    width: 1.4rem;
-    height: 1.4rem;
-    margin-right: 0.4rem;
+    width: calc(1.4 * var(--dg-u));
+    height: calc(1.4 * var(--dg-u));
+    margin-right: calc(0.4 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -479,24 +654,39 @@
    emblem fills the box. Every result marker takes the same 1.5rem slot so labels line up. */
 .dgh-victory-icon {
     flex: 0 0 auto;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-right: 0.45rem;
+    width: calc(1.5 * var(--dg-u));
+    height: calc(1.5 * var(--dg-u));
+    margin-right: calc(0.45 * var(--dg-u));
     background-size: 230%;
     background-repeat: no-repeat;
     background-position: center;
 }
+/* The Triumph trophy: the World Rankings score laurel. Same glow-around-a-small-emblem art as the
+   victory icons above, so it takes the same background-size lift. */
+.dgh-trophy-icon {
+    flex: 0 0 auto;
+    width: calc(1.6 * var(--dg-u));
+    height: calc(1.6 * var(--dg-u));
+    margin-right: calc(0.3 * var(--dg-u));
+    background-size: 210%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.dgh-trophy-icon--sm { width: calc(1.1 * var(--dg-u)); height: calc(1.1 * var(--dg-u)); margin-right: calc(0.2 * var(--dg-u)); }
 .dgh-mark { flex: 0 0 auto; }
 .dgh-mark--win, .dgh-mark--loss, .dgh-mark--ended, .dgh-mark--open {
-    width: 0.8rem;
-    height: 0.8rem;
+    width: calc(0.8 * var(--dg-u));
+    height: calc(0.8 * var(--dg-u));
     border-radius: 0.4rem;
-    margin: 0 0.8rem 0 0.35rem;
+    margin-top: 0;
+    margin-right: calc(0.8 * var(--dg-u));
+    margin-bottom: 0;
+    margin-left: calc(0.35 * var(--dg-u));
 }
 .dgh-mark--win { background-color: var(--dgh-win); }
 .dgh-mark--loss { background-color: var(--dgh-loss); }
 .dgh-mark--ended { background-color: var(--dgh-text-muted); }
-.dgh-mark--open { border-width: 0.12rem; border-style: solid; border-color: var(--dgh-text-muted); }
+.dgh-mark--open { border-width: 0.12rem; border-style: solid; border-top-color: var(--dgh-text-muted); border-right-color: var(--dgh-text-muted); border-bottom-color: var(--dgh-text-muted); border-left-color: var(--dgh-text-muted); }
 .dgh-result-row { display: flex; flex-direction: row; align-items: center; min-width: 0; }
 .dgh-lin-civrow { display: flex; flex-direction: row; align-items: center; }
 .dgh-toolbar .dgh-pill-row { flex-wrap: nowrap; }
@@ -509,8 +699,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 0.4rem;
-    padding: 0.5rem 0.7rem;
+    margin-top: calc(0.4 * var(--dg-u));
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(0.7 * var(--dg-u));
+    padding-bottom: calc(0.5 * var(--dg-u));
+    padding-left: calc(0.7 * var(--dg-u));
     background-color: var(--dgh-card-bg);
     border-width: 0.06rem;
     border-style: solid;
@@ -525,13 +718,19 @@
    sheet, not a settings row. Title in the warning color, three labelled paragraphs, a large button. */
 .dgh-storage { display: flex; flex-direction: column; align-items: center; }
 .dgh-storage-banner {
-    width: 62rem;
+    width: calc(62 * var(--dg-u));
     max-width: 92%;
-    margin-top: 0.6rem;
-    padding: 0.7rem 1.2rem 0.8rem;
+    margin-top: calc(0.6 * var(--dg-u));
+    padding-top: calc(0.7 * var(--dg-u));
+    padding-right: calc(1.2 * var(--dg-u));
+    padding-bottom: calc(0.8 * var(--dg-u));
+    padding-left: calc(1.2 * var(--dg-u));
     border-width: 0.12rem;
     border-style: solid;
-    border-color: var(--dgh-loss);
+    border-top-color: var(--dgh-loss);
+    border-right-color: var(--dgh-loss);
+    border-bottom-color: var(--dgh-loss);
+    border-left-color: var(--dgh-loss);
     border-radius: 0.2rem;
     background-color: rgba(60, 18, 14, 0.55);
     text-align: center;
@@ -542,14 +741,14 @@
     font-size: var(--dg-fs-120);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin-bottom: 0.3rem;
+    margin-bottom: calc(0.3 * var(--dg-u));
 }
 .dgh-storage-banner-p { color: var(--dgh-text-title); font-size: var(--dg-fs-95); line-height: 1.35; }
 .dgh-storage-banner--button { cursor: pointer; }
-.dgh-storage-banner--button:hover { border-color: var(--dgh-gold); background-color: rgba(70, 22, 16, 0.7); }
+.dgh-storage-banner--button:hover { border-top-color: var(--dgh-gold); border-right-color: var(--dgh-gold); border-bottom-color: var(--dgh-gold); border-left-color: var(--dgh-gold); background-color: rgba(70, 22, 16, 0.7); }
 .dgh-storage-banner--button.is-open { border-bottom-color: rgba(193, 77, 69, 0.35); }
 .dgh-storage-banner-cta {
-    margin-top: 0.35rem;
+    margin-top: calc(0.35 * var(--dg-u));
     color: var(--dgh-gold);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-95);
@@ -561,19 +760,31 @@
 .dgh-repair-toggle {
     opacity: 1;
     font-size: var(--dg-fs-95);
-    padding: 0.45rem 1.2rem;
-    border-color: var(--dgh-loss);
+    padding-top: calc(0.45 * var(--dg-u));
+    padding-right: calc(1.2 * var(--dg-u));
+    padding-bottom: calc(0.45 * var(--dg-u));
+    padding-left: calc(1.2 * var(--dg-u));
+    border-top-color: var(--dgh-loss);
+    border-right-color: var(--dgh-loss);
+    border-bottom-color: var(--dgh-loss);
+    border-left-color: var(--dgh-loss);
     color: var(--dgh-loss);
 }
 .dgh-repair-toggle.is-open { color: var(--dgh-text-title); }
 .dgh-repair {
     flex-direction: column;
     align-items: stretch;
-    width: 62rem;
+    width: calc(62 * var(--dg-u));
     max-width: 92%;
-    padding: 1rem 1.4rem 1.1rem;
+    padding-top: calc(1 * var(--dg-u));
+    padding-right: calc(1.4 * var(--dg-u));
+    padding-bottom: calc(1.1 * var(--dg-u));
+    padding-left: calc(1.4 * var(--dg-u));
     border-width: 0.12rem;
-    border-color: var(--dgh-loss);
+    border-top-color: var(--dgh-loss);
+    border-right-color: var(--dgh-loss);
+    border-bottom-color: var(--dgh-loss);
+    border-left-color: var(--dgh-loss);
     background-color: rgba(9, 12, 19, 0.92);
 }
 .dgh-repair-title {
@@ -583,7 +794,7 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     text-align: center;
-    margin-bottom: 0.6rem;
+    margin-bottom: calc(0.6 * var(--dg-u));
 }
 .dgh-repair-block { margin-top: 0.45rem; }
 .dgh-repair-h {
@@ -592,7 +803,7 @@
     font-size: var(--dg-fs-85);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 0.1rem;
+    margin-bottom: calc(0.1 * var(--dg-u));
 }
 .dgh-repair-p { color: var(--dgh-text-body); font-size: var(--dg-fs-95); line-height: 1.35; }
 .dgh-repair-again { color: var(--dgh-text-title); font-size: var(--dg-fs-95); font-weight: bold; margin-top: 0.7rem; }
@@ -601,13 +812,19 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-top: 0.9rem;
+    margin-top: calc(0.9 * var(--dg-u));
 }
 .dgh-repair-go {
     font-size: var(--dg-fs-105);
-    padding: 0.6rem 1.6rem;
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(1.6 * var(--dg-u));
+    padding-bottom: calc(0.6 * var(--dg-u));
+    padding-left: calc(1.6 * var(--dg-u));
     border-width: 0.1rem;
-    border-color: var(--dgh-loss);
+    border-top-color: var(--dgh-loss);
+    border-right-color: var(--dgh-loss);
+    border-bottom-color: var(--dgh-loss);
+    border-left-color: var(--dgh-loss);
     color: var(--dgh-loss);
 }
 .dgh-repair-go.is-armed { color: #1c1408; background-color: var(--dgh-loss); }
@@ -622,7 +839,7 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     flex: 0 0 auto;
-    margin-right: 0.35rem;
+    margin-right: calc(0.35 * var(--dg-u));
 }
 .dgh-hl-blurb-t { color: var(--dgh-text-muted); flex: 1 1 auto; min-width: 0; }
 
@@ -641,15 +858,26 @@
 /* ---------- leader and civilization cards ---------- */
 .dgh-cards { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.3rem; }
 .dgh-person-card {
-    flex: 0 1 29rem;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: calc(29 * var(--dg-u));
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 0.3rem;
-    padding: 0.5rem 0.7rem;
+    margin-top: calc(0.3 * var(--dg-u));
+    margin-right: calc(0.3 * var(--dg-u));
+    margin-bottom: calc(0.3 * var(--dg-u));
+    margin-left: calc(0.3 * var(--dg-u));
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(0.7 * var(--dg-u));
+    padding-bottom: calc(0.5 * var(--dg-u));
+    padding-left: calc(0.7 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-radius: 0.25rem;
     background-color: rgba(0, 0, 0, 0.22);
 }
@@ -660,7 +888,7 @@
     font-size: var(--dg-fs-120);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 0.3rem;
+    margin-bottom: calc(0.3 * var(--dg-u));
 }
 .dgh-person-head { display: flex; flex-direction: row; align-items: baseline; justify-content: space-between; }
 .dgh-person-head .dgh-person-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -680,8 +908,8 @@
 .dgh-record-bar {
     display: flex;
     flex-direction: row;
-    height: 0.55rem;
-    margin-bottom: 0.25rem;
+    height: calc(0.55 * var(--dg-u));
+    margin-bottom: calc(0.25 * var(--dg-u));
     border-radius: 0.28rem;
     background-color: var(--dgh-empty);
     overflow: hidden;
@@ -695,7 +923,7 @@
     flex-wrap: wrap;
     align-items: baseline;
     font-size: var(--dg-fs-72);
-    margin-bottom: 0.3rem;
+    margin-bottom: calc(0.3 * var(--dg-u));
 }
 .dgh-record-key--win { color: var(--dgh-win-text); }
 .dgh-record-key--loss { color: var(--dgh-loss-text); }
@@ -725,7 +953,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: calc(0.5 * var(--dg-u));
 }
 .dgh-tl-controls-right { display: flex; flex-direction: row; align-items: center; }
 .dgh-tl-controls .dgh-pill-row { margin-bottom: 0; flex-wrap: nowrap; }
@@ -735,7 +963,7 @@
 .dgh-tl-play-icon {
     width: 0;
     height: 0;
-    margin-right: 0.45rem;
+    margin-right: calc(0.45 * var(--dg-u));
     border-top-width: 0.38rem;
     border-bottom-width: 0.38rem;
     border-left-width: 0.62rem;
@@ -748,9 +976,9 @@
     border-left-color: var(--dgh-gold);
 }
 .dgh-tl-pause-icon {
-    width: 0.2rem;
-    height: 0.76rem;
-    margin-right: 0.55rem;
+    width: calc(0.2 * var(--dg-u));
+    height: calc(0.76 * var(--dg-u));
+    margin-right: calc(0.55 * var(--dg-u));
     background-color: var(--dgh-gold);
     box-shadow: 0.34rem 0 0 0 #f3c34c;
 }
@@ -758,7 +986,7 @@
 .dgh-tl-body {
     display: flex;
     flex-direction: row;
-    margin-top: 0.1rem;
+    margin-top: calc(0.1 * var(--dg-u));
     background-color: rgba(8, 6, 4, 0.45);
     border-top-width: 0.06rem;
     border-bottom-width: 0.06rem;
@@ -766,13 +994,16 @@
     border-bottom-style: solid;
     border-top-color: var(--dgh-card-border);
     border-bottom-color: var(--dgh-card-border);
-    padding: 0.2rem 0;
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: 0;
 }
 .dgh-tl-labels { flex: 0 0 8rem; display: flex; flex-direction: column; }
 .dgh-tl-label {
     display: flex;
     align-items: center;
-    padding-left: 0.5rem;
+    padding-left: calc(0.5 * var(--dg-u));
     color: var(--dgh-text-title-2);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-65);
@@ -792,7 +1023,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 0.06rem;
+    width: calc(0.06 * var(--dg-u));
     background-color: rgba(229, 210, 172, 0.11);
     pointer-events: none;
 }
@@ -804,7 +1035,7 @@
     flex-direction: row;
     align-items: center;
     overflow: hidden;
-    padding-left: 0.4rem;
+    padding-left: calc(0.4 * var(--dg-u));
     border-left-width: 0.16rem;
     border-left-style: solid;
     border-left-color: var(--dgh-gold-soft);
@@ -832,11 +1063,11 @@
     flex-direction: row;
     align-items: center;
     overflow: hidden;
-    min-width: 0.5rem;
+    min-width: calc(0.5 * var(--dg-u));
     border-radius: 0.7rem;
     border-width: 0.06rem;
     border-style: solid;
-    padding-left: 0.12rem;
+    padding-left: calc(0.12 * var(--dg-u));
     box-shadow: 0 0.1rem 0.25rem 0 rgba(0, 0, 0, 0.55);
 }
 .dgh-tl-war-icon { width: 1rem; height: 1rem; margin-right: 0.25rem; flex: 0 0 auto; }
@@ -848,7 +1079,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    min-width: 0.4rem;
+    min-width: calc(0.4 * var(--dg-u));
     border-right-width: 0.06rem;
     border-right-style: solid;
     border-right-color: rgba(0, 0, 0, 0.5);
@@ -864,13 +1095,16 @@
 /* milestones */
 .dgh-tl-stem { width: 0.08rem; margin-left: -0.04rem; background-color: rgba(229, 210, 172, 0.3); }
 .dgh-tl-medal {
-    width: 2.3rem;
-    height: 2.3rem;
-    margin-left: -1.15rem;
+    width: calc(2.3 * var(--dg-u));
+    height: calc(2.3 * var(--dg-u));
+    margin-left: calc(-1.15 * var(--dg-u));
     border-radius: 1.15rem;
     border-width: 0.12rem;
     border-style: solid;
-    border-color: var(--dgh-gold-soft);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
     background-color: #1a140c;
     background-size: cover;
     background-position: center;
@@ -881,13 +1115,16 @@
 
 /* disasters */
 .dgh-tl-disaster {
-    width: 1.8rem;
-    height: 1.8rem;
-    margin-left: -0.9rem;
+    width: calc(1.8 * var(--dg-u));
+    height: calc(1.8 * var(--dg-u));
+    margin-left: calc(-0.9 * var(--dg-u));
     border-radius: 0.9rem;
     border-width: 0.1rem;
     border-style: solid;
-    border-color: var(--dgh-gold-soft);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
     background-color: #2a2018;
     background-size: cover;
     background-position: center;
@@ -910,14 +1147,17 @@
 .dgh-tl-curve-area { fill: rgba(156, 207, 110, 0.22); stroke-width: 0; }
 .dgh-tl-curve-line { fill: none; stroke: #9ccf6e; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .dgh-tl-poptick {
-    width: 0.06rem;
+    width: calc(0.06 * var(--dg-u));
     background-color: rgba(156, 207, 110, 0.55);
 }
 .dgh-tl-poptick-label {
     position: absolute;
     top: 0;
-    left: 0.2rem;
-    padding: 0 0.2rem;
+    left: calc(0.2 * var(--dg-u));
+    padding-top: 0;
+    padding-right: calc(0.2 * var(--dg-u));
+    padding-bottom: 0;
+    padding-left: calc(0.2 * var(--dg-u));
     border-radius: 0.15rem;
     background-color: rgba(20, 30, 14, 0.8);
     color: #b8e890;
@@ -951,15 +1191,18 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 0.12rem;
-    margin-left: -0.06rem;
+    width: calc(0.12 * var(--dg-u));
+    margin-left: calc(-0.06 * var(--dg-u));
     background-color: var(--dgh-gold);
     box-shadow: 0 0 0.4rem 0.05rem rgba(243, 195, 76, 0.8);
     pointer-events: none;
 }
 .dgh-tl-caption {
-    min-height: 1.4rem;
-    margin: 0.35rem 0 0 8rem;
+    min-height: calc(1.4 * var(--dg-u));
+    margin-top: calc(0.35 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: calc(8 * var(--dg-u));
     color: var(--dgh-text-title);
     font-size: var(--dg-fs-85);
 }
@@ -970,10 +1213,10 @@
 
 /* settlements lane */
 .dgh-tl-found {
-    width: 0.62rem;
-    height: 0.5rem;
-    margin-left: -0.31rem;
-    margin-top: 0.22rem;
+    width: calc(0.62 * var(--dg-u));
+    height: calc(0.5 * var(--dg-u));
+    margin-left: calc(-0.31 * var(--dg-u));
+    margin-top: calc(0.22 * var(--dg-u));
     border-bottom-left-radius: 0.06rem;
     border-bottom-right-radius: 0.06rem;
     box-shadow: 0 0 0.2rem 0 rgba(0, 0, 0, 0.8);
@@ -981,8 +1224,8 @@
 }
 .dgh-tl-found-roof {
     position: absolute;
-    left: -0.06rem;
-    top: -0.3rem;
+    left: calc(-0.06 * var(--dg-u));
+    top: calc(-0.3 * var(--dg-u));
     width: 0;
     height: 0;
     border-left-width: 0.37rem;
@@ -1006,11 +1249,17 @@
 .dgh-map-side .dgh-td { padding: 0.08rem 0.4rem; font-size: var(--dg-fs-85); }
 .dgh-map-frame {
     flex: 0 0 auto;
-    padding: 0.3rem;
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(0.3 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(0.3 * var(--dg-u));
     background-color: #0b1624;
     border-width: 0.06rem;
     border-style: solid;
-    border-color: var(--dgh-card-border);
+    border-top-color: var(--dgh-card-border);
+    border-right-color: var(--dgh-card-border);
+    border-bottom-color: var(--dgh-card-border);
+    border-left-color: var(--dgh-card-border);
     box-shadow: 0 0.15rem 0.6rem 0 rgba(0, 0, 0, 0.7);
 }
 .dgh-map-canvas { display: block; }
@@ -1035,8 +1284,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 0.35rem 0 0.1rem;
-    padding-bottom: 0.1rem;
+    margin-top: calc(0.35 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.1 * var(--dg-u));
+    margin-left: 0;
+    padding-bottom: calc(0.1 * var(--dg-u));
     border-bottom-width: 0.06rem;
     border-bottom-style: solid;
     border-bottom-color: var(--dgh-divider);
@@ -1048,14 +1300,17 @@
     font-size: var(--dg-fs-105);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-right: 0.8rem;
+    margin-right: calc(0.8 * var(--dg-u));
 }
 .dgh-hl-age-civ { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); }
 .dgh-hl-row {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.12rem 0.5rem;
+    padding-top: calc(0.12 * var(--dg-u));
+    padding-right: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.12 * var(--dg-u));
+    padding-left: calc(0.5 * var(--dg-u));
     border-bottom-width: 0.06rem;
     border-bottom-style: solid;
     border-bottom-color: rgba(168, 132, 90, 0.1);
@@ -1063,9 +1318,14 @@
 .dgh-hl-row.is-mine { background-color: rgba(243, 195, 76, 0.05); }
 .dgh-hl-date { flex: 0 0 7.5rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-85); }
 .dgh-hl-kind {
-    flex: 0 0 7rem;
-    margin-right: 0.7rem;
-    padding: 0.08rem 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(7 * var(--dg-u));
+    margin-right: calc(0.7 * var(--dg-u));
+    padding-top: calc(0.08 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.08 * var(--dg-u));
+    padding-left: 0;
     border-radius: 0.6rem;
     text-align: center;
     font-size: var(--dg-fs-65);
@@ -1116,15 +1376,21 @@
 .dgh-tl-hover-line { position: absolute; top: 0; bottom: 0; left: -0.04rem; width: 0.08rem; background-color: rgba(255, 244, 214, 0.85); }
 .dgh-tl-hover-label {
     position: absolute;
-    top: 0.1rem;
-    left: 0.35rem;
-    padding: 0.05rem 0.4rem;
+    top: calc(0.1 * var(--dg-u));
+    left: calc(0.35 * var(--dg-u));
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     white-space: nowrap;
     border-radius: 0.15rem;
     background-color: rgba(14, 11, 7, 0.92);
     border-width: 0.06rem;
     border-style: solid;
-    border-color: var(--dgh-gold-soft);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
     color: var(--dgh-text-title);
     font-size: var(--dg-fs-72);
     z-index: 3;
@@ -1134,7 +1400,7 @@
 /* civilization filter */
 .dgh-tl-civs { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; margin-bottom: 0.3rem; }
 .dgh-tl-civs-label {
-    margin-right: 0.5rem;
+    margin-right: calc(0.5 * var(--dg-u));
     color: var(--dgh-text-title-2);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-65);
@@ -1146,8 +1412,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 0.1rem 0.25rem 0.1rem 0;
-    padding: 0.08rem 0.5rem 0.08rem 0.35rem;
+    margin-top: calc(0.1 * var(--dg-u));
+    margin-right: calc(0.25 * var(--dg-u));
+    margin-bottom: calc(0.1 * var(--dg-u));
+    margin-left: 0;
+    padding-top: calc(0.08 * var(--dg-u));
+    padding-right: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.08 * var(--dg-u));
+    padding-left: calc(0.35 * var(--dg-u));
     border-radius: 0.8rem;
     border-width: 0.06rem;
     border-style: solid;
@@ -1157,7 +1429,7 @@
     opacity: 0.6;
     cursor: pointer;
 }
-.dgh-tl-civ.is-active { opacity: 1; color: var(--dgh-text-title); border-color: var(--dgh-gold-soft); background-color: rgba(243, 195, 76, 0.1); }
+.dgh-tl-civ.is-active { opacity: 1; color: var(--dgh-text-title); border-top-color: var(--dgh-gold-soft); border-right-color: var(--dgh-gold-soft); border-bottom-color: var(--dgh-gold-soft); border-left-color: var(--dgh-gold-soft); background-color: rgba(243, 195, 76, 0.1); }
 .dgh-tl-civ.is-mine.is-active { color: var(--dgh-gold); }
 .dgh-tl-civ-icon { width: 1.1rem; height: 1.1rem; margin: 0 0.25rem 0 0.25rem; }
 .dgh-tl-war--rivals { opacity: 0.9; }
@@ -1176,15 +1448,29 @@
 .dgh-best .dgh-section { margin-bottom: 0.5rem; }
 .dgh-podium { display: flex; flex-direction: row; align-items: flex-end; justify-content: center; padding-top: 0.4rem; }
 .dgh-podium-card {
-    flex: 0 1 26rem;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: calc(26 * var(--dg-u));
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 0.6rem;
-    padding: 0.7rem 0.8rem 0.8rem;
-    border-width: 0.06rem;
+    margin-top: 0;
+    margin-right: calc(0.6 * var(--dg-u));
+    margin-bottom: 0;
+    margin-left: calc(0.6 * var(--dg-u));
+    padding-top: calc(0.7 * var(--dg-u));
+    padding-right: calc(0.8 * var(--dg-u));
+    padding-bottom: calc(0.8 * var(--dg-u));
+    padding-left: calc(0.8 * var(--dg-u));
+    /* 1px, not 0.06rem (0.97px): the frame is transform-scaled, and a sub-pixel border width
+       rounds away on whichever edge lands badly - the second-place card lost its LEFT hairline
+       while its other three edges drew. A whole pixel is what .dgh-section uses and it holds. */
+    border-width: 1px;
     border-style: solid;
-    border-color: var(--dgh-divider);
+    border-top-color: var(--dgh-divider);
+    border-right-color: var(--dgh-divider);
+    border-bottom-color: var(--dgh-divider);
+    border-left-color: var(--dgh-divider);
     border-top-width: 0.22rem;
     border-top-style: solid;
     border-radius: 0.3rem;
@@ -1192,12 +1478,64 @@
     cursor: pointer;
 }
 .dgh-podium-card:hover { background-color: var(--dgh-row-hover); }
-.dgh-podium-card--1 { flex-basis: 30rem; padding-top: 1.1rem; padding-bottom: 1.2rem; border-top-color: #f3c34c; background-image: linear-gradient(180deg, rgba(243, 195, 76, 0.16) 0%, rgba(0, 0, 0, 0.25) 60%); }
-.dgh-podium-card--2 { border-top-color: #c9ced8; background-image: linear-gradient(180deg, rgba(201, 206, 216, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%); }
-.dgh-podium-card--3 { border-top-color: #c98a55; background-image: linear-gradient(180deg, rgba(201, 138, 85, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%); }
-.dgh-podium-card.is-current { border-color: var(--dgh-gold); }
-.dgh-podium-rank { font-family: TitleFont, BodyFont, sans-serif; font-size: var(--dg-fs-140); color: var(--dgh-text-title); }
-.dgh-podium-card--1 .dgh-podium-rank { font-size: var(--dg-fs-185); color: var(--dgh-gold); }
+/* Each podium card wears its medal on all four edges - gold, silver, bronze - over the fade that
+   carries the same colour down from the top. The thicker top rule is the accent; the three
+   hairlines are the same hue so the card reads as its rank from any edge. */
+.dgh-podium-card--1 {
+    flex-basis: 30rem;
+    padding-top: 1.1rem;
+    padding-bottom: 1.2rem;
+    border-top-color: #f3c34c;
+    border-right-color: #f3c34c;
+    border-bottom-color: #f3c34c;
+    border-left-color: #f3c34c;
+    background-image: linear-gradient(180deg, rgba(243, 195, 76, 0.16) 0%, rgba(0, 0, 0, 0.25) 60%);
+}
+.dgh-podium-card--2 {
+    border-top-color: #c9ced8;
+    border-right-color: #c9ced8;
+    border-bottom-color: #c9ced8;
+    border-left-color: #c9ced8;
+    background-image: linear-gradient(180deg, rgba(201, 206, 216, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%);
+}
+.dgh-podium-card--3 {
+    border-top-color: #c98a55;
+    border-right-color: #c98a55;
+    border-bottom-color: #c98a55;
+    border-left-color: #c98a55;
+    background-image: linear-gradient(180deg, rgba(201, 138, 85, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%);
+}
+/* The current game is marked by its MOST RECENT GAME pill, not by recolouring the frame: the frame
+   is the rank's medal colour, and a gold override would erase the silver and bronze. (The old
+   whole-frame `border-color: var(--dgh-gold)` here never rendered anyway - it was a shorthand.) */
+/* The podium place is a laurel wreath with its number inside - the same medal the in-game
+   rankings podium wears. The wreath art is mostly transparent glow, so the box is generous and
+   the number is nudged into the wreath's open centre. */
+.dgh-medal {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: calc(4 * var(--dg-u));
+    height: calc(4 * var(--dg-u));
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.dgh-medal-num {
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-160);
+    font-weight: bold;
+    color: var(--dgh-text-title);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+    margin-top: calc(-0.12 * var(--dg-u));
+}
+.dgh-medal--1 .dgh-medal-num { color: #ffd863; }
+.dgh-medal--2 .dgh-medal-num { color: #e6e9ef; }
+.dgh-medal--3 .dgh-medal-num { color: #e0935c; }
+.dgh-podium-card--1 .dgh-podium-rank { width: calc(5 * var(--dg-u)); height: calc(5 * var(--dg-u)); }
+.dgh-podium-card--1 .dgh-medal-num { font-size: var(--dg-fs-185); }
 .dgh-podium-portrait { width: 5rem; height: 5rem; margin: 0.2rem 0; }
 .dgh-podium-card--1 .dgh-podium-portrait { width: 6.5rem; height: 6.5rem; }
 .dgh-podium-honor { color: var(--dgh-gold); font-size: var(--dg-fs-95); text-align: center; }
@@ -1212,10 +1550,20 @@
 .dgh-podium-civs { justify-content: center; margin: 0.2rem 0; }
 .dgh-podium-result { display: flex; flex-direction: row; align-items: center; color: var(--dgh-text-body); font-size: var(--dg-fs-85); }
 .dgh-podium-result .dgh-mark { margin-right: 0.35rem; }
-.dgh-podium-figures { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); margin-top: 0.15rem; }
+.dgh-podium-figures {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+    margin-top: 0.15rem;
+}
 .dgh-podium-current {
-    margin-top: 0.4rem;
-    padding: 0.05rem 0.6rem;
+    margin-top: calc(0.4 * var(--dg-u));
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
     border-radius: 0.6rem;
     background-color: var(--dgh-gold);
     color: #14100a;

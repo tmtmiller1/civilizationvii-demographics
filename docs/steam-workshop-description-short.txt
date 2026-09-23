@@ -1,6 +1,8 @@
 [h1]Demographics[/h1]
-[b]New: History and the Hall of Fame[/b]
-History & Rankings is now part of Demographics: a [b]History[/b] tab with a chronicle, an interactive timeline and territory map, and a lineage of leaders, plus a [b]Hall of Fame[/b] of every campaign you have played, also on the main menu. Works on Civilization VII 1.5.0. Special thanks to [b]Slothoth[/b] for the keys to data persistence across ages.
+[b]New in 2.7.3: the screen fits your resolution[/b]
+The dashboard is now drawn to the size of the display it is played on, so 1080p, 1440p and 4K get the layout 2880x1800 always had. The same sweep restored the screen's gold borders and every line of italic text, which the game's UI engine had been dropping. Plus a hardening pass over saved data and shared settings. For Civilization VII 1.5.0.
+[b]History and the Hall of Fame[/b]
+History & Rankings is part of Demographics: a [b]History[/b] tab with a chronicle, an interactive timeline and territory map, and a lineage of leaders, plus a [b]Hall of Fame[/b] of every campaign you have played, also on the main menu. Special thanks to [b]Slothoth[/b] for the keys to data persistence across ages.
 Demographics adds graphs, civilization rankings, global relations, war history, campaign history, and a Hall of Fame to Civilization VII. It records data for each civilization and presents it as charts, rankings, relationship views, and war history, so you can see how the world changes over the course of a game.
 It is intended to be the spiritual successor to robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and an extension of Slothoth's Global Relations for Civilization VII that adds additional diplomatic concerns and filtering.
 [b]The Mod Includes:[/b]

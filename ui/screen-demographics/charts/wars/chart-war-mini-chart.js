@@ -57,8 +57,7 @@ function drawGraphMarkers(svg, markers, b) {
         y2: MINI_H - PAD_B,
         stroke: m.color,
         "stroke-width": "1.4",
-        // No stroke-dasharray: Coherent ignores it (audited 2.0.5). Marker COLOR
-        // is the differentiator; solid to match the other chart markers.
+        // No stroke-dasharray: Coherent ignores it. Marker color is the differentiator.
         "stroke-opacity": "0.85"
       })
     );
@@ -98,18 +97,14 @@ export function buildMiniSvg(seriesList, b, markers) {
       })
     );
   }
-  // Axis tick labels + titles are NOT drawn in the SVG: this SVG is stretched
-  // non-uniformly (preserveAspectRatio="none") to fill the cell, which would
-  // distort any text. They're rendered as crisp HTML overlays in buildPlot()
-  // instead, matching the historical charts' typography exactly.
+  // Axis tick labels + titles are not drawn in the SVG, which is stretched non-uniformly
+  // (preserveAspectRatio="none") and would distort text; buildPlot() renders them as HTML overlays.
   return svg;
 }
 
 /**
- * One absolutely-positioned HTML axis-text overlay (a corner tick or the X
- * title), skipped when empty. Rendered as HTML - not SVG text - so it isn't
- * distorted by the plot SVG's non-uniform stretch and can carry the exact same
- * font/size/color as the historical Chart.js axes.
+ * One absolutely-positioned HTML axis-text overlay (a corner tick or the X title), skipped when
+ * empty. HTML rather than SVG text so the plot SVG's non-uniform stretch doesn't distort it.
  * @param {HTMLElement} plot The positioned plot container.
  * @param {string} text The label text ("" skips it).
  * @param {string} suffix The position-class suffix (e.g. "ytop", "xtitle").

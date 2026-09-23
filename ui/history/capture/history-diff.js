@@ -1,18 +1,9 @@
 // history-diff.js
 //
-// Pure: compare two HnrWorldStates and return the chronicle events that explain the change. No
-// engine access; engine-derived names are passed in through a Namer so this module is fully
-// testable in Node.
-//
-// Rules that keep the chronicle honest:
-// - The first state of a campaign is a baseline and produces no events.
-// - Across an age change only the age, civilization changes and eliminations are reported. The
-//   engine ends every war and rebuilds Triumph lists at the transition; diffing those would invent
-//   peace treaties and lost Triumphs that never happened.
-// - A wonder is reported the first time any civilization holds it, so a wonder that changes hands
-//   with its city is not announced twice.
-// - Settlements are keyed by map location, so a capture reads as a capture, not a raze plus a
-//   founding.
+// Pure: compare two HnrWorldStates and return the chronicle events that explain the change;
+// engine-derived names come in through a Namer. The first state is a baseline and produces no
+// events, and across an age change only the age, civilization changes and eliminations are
+// reported, since the engine ends every war and rebuilds Triumph lists at the transition.
 
 /**
  * Engine-name resolvers injected by the caller.

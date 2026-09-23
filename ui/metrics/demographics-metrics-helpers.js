@@ -41,14 +41,10 @@ export function resolveTurn(primary, fallback) {
   return 1;
 }
 
-// ── Population scaling — grounded in Civ VII's REAL per-era growth formula ──────────────────────────
-// Civ VII grows a settlement by charging food per size step: cost(x) = Flat + Scalar·x + Exponent·x²,
-// with DIFFERENT {Flat,Scalar,Exponent} per age (the game's own per-age system). The cumulative food a
-// settlement of size N has absorbed, W(N) = Σ cost(1..N), is its demographic "weight"; one global
-// constant POP_K turns that weight into people. This reproduces real history AND the live readouts
-// (an Exploration city of size ~21 → ~0.97M, matching the in-game figure), and — because the per-era
-// params already differ — is per-age by construction, with no turn-based multiplier that resets each
-// age. See reports/population-scaling-per-age-design.md.
+// ── Population scaling — grounded in Civ VII's per-era growth formula ──────────────────────────
+// Civ VII charges food per size step, cost(x) = Flat + Scalar·x + Exponent·x², with different params
+// per age. The cumulative food a settlement of size N has absorbed, W(N) = Σ cost(1..N), is its
+// demographic weight; POP_K turns it into people. See reports/population-scaling-per-age-design.md.
 //
 // Source: CivFanatics "More tables for the new growth formula" (v1.1.2 params).
 /** @type {Record<string, {flat:number,scalar:number,exp:number}>} */
@@ -65,20 +61,16 @@ const POP_K = 31;
 // "dynamic connection" between ages, done with the game's real per-era numbers.
 const BLEND_PCT = 25;
 
-// Modern-only megacity allowance. The growth curve alone tops out around ~17M (size 60); real 20th–21st
-// century megacities reach ~25–38M. A super-linear bump above MEGA_KNEE, ramped by age-progress so it
-// emerges gradually through the Modern age (never pops in at the boundary), lifts the largest cities
-// into that band. Tuned so size ~50 late-Modern ≈ 28M.
+// Modern-only megacity allowance: a super-linear bump above MEGA_KNEE, ramped by age-progress so it
+// emerges gradually through the Modern age, lifts the largest cities into the real ~25–38M band.
+// Tuned so size ~50 late-Modern ≈ 28M.
 const MEGA_KNEE = 35;
 const MEGA_STRENGTH = 5.0;
 const MEGA_POW = 1.3;
 
-// Per-era hard ceiling = the largest single city historically plausible for the age (Rome ~1.6M;
-// early-modern Beijing/Edo ~2.5M; modern Tokyo ~38M). The people figure SATURATES smoothly toward this
-// (see softCeil), which does double duty: (a) it is the megacity cap, and (b) it is an elegant safety
-// bound — if the engine ever hands us a wildly out-of-range size, the figure degrades gracefully to
-// "the largest city this age could hold" instead of resurrecting a multi-billion blow-up. Blended
-// across boundaries (geometric) like the growth params, so it too is continuous.
+// Per-era hard ceiling = the largest single city historically plausible for the age. The figure
+// saturates smoothly toward it (see softCeil), which is both the megacity cap and the safety bound
+// for an out-of-range size. Blended geometrically across boundaries like the growth params.
 /** @type {Record<string, number>} */
 const ERA_CEILING = {
   AGE_ANTIQUITY: 1.6e6,
@@ -88,14 +80,9 @@ const ERA_CEILING = {
 // Below CEIL_KNEE·ceiling the figure is untouched; above it, it bends smoothly (C¹) toward the ceiling.
 const CEIL_KNEE = 0.7;
 
-// "One more turn": the final (Modern) age has no successor, so when play continues past its natural end
-// the age-progress runs PAST 100%. We let the Modern ceiling expand with that overtime fraction, so
-// megacities keep scaling into a speculative future instead of slamming into the historical cap — the
-// cap softens/lifts exactly when the player chooses to keep playing. No effect at or below 100% (normal
-// play). The expansion is smoothstep-eased in over the first OVERTIME_EASE of overtime (so the ceiling
-// stays C¹ — no slope kink at the natural age end) and capped at OVERTIME_MAX, so even a pathological
-// engine progress reading can NEVER resurrect a multi-billion single-city figure (worst case
-// = base ceiling × OVERTIME_MAX, i.e. ~190M/city in Modern).
+// "One more turn": past the Modern age's natural end the age-progress runs past 100%, and the Modern
+// ceiling expands with that overtime fraction so megacities keep scaling. The expansion is
+// smoothstep-eased over the first OVERTIME_EASE (C¹) and capped at OVERTIME_MAX (~190M/city).
 const OVERTIME_CEILING_RATE = 1.0; // base ceilings per full extra age of overtime (pre-cap)
 const OVERTIME_EASE = 0.1; // smoothstep-ease the onset over the first 10% of overtime fraction (C¹)
 const OVERTIME_MAX = 5; // hard cap on the multiplier — bounds the absolute worst case
@@ -123,10 +110,8 @@ export function eraGrowthParams(ageType, ageProgressPct) {
   const idx = ERA_ORDER.indexOf(key);
   const prev = idx > 0 ? ERA_GROWTH_PARAMS[ERA_ORDER[idx - 1]] : cur;
   if (prev === cur) return cur;
-  // Default for UNREADABLE progress: 100 ("treat a known age as a fully-developed member of itself").
-  // Deliberate hot default — safe because the result is bounded by softCeil (no blow-up) and the real
-  // engine API (getCurrent/MaxAgeProgressionPoints) is well-guarded, so this only matters in a rare
-  // degenerate case. See reports/population-scaling-per-age-design.md (#4).
+  // Unreadable progress defaults to 100 (a known age is a fully-developed member of itself); safe
+  // because softCeil bounds the result.
   const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
   const s = smoothstep(p / BLEND_PCT);
   if (s <= 0) return prev; // exact at the boundary (bit-identical continuity)
@@ -162,10 +147,9 @@ export function growthEffort(n, params) {
  */
 
 /**
- * The metric `scale` for the civ population total. The empire figure is the SUM of its settlements'
- * scaled people (computed at sample time, see the sampler's `populationScaled`); summing per-settlement
- * is required because W is super-linear, so scaling the aggregate would over-count. Falls back to a
- * coarse aggregate estimate only for legacy samples that predate `populationScaled`.
+ * The metric `scale` for the civ population total: the sum of its settlements' scaled people (the
+ * sampler's `populationScaled`), since W is super-linear and scaling the aggregate would over-count.
+ * Falls back to a coarse aggregate estimate for samples without `populationScaled`.
  * @param {number} raw Raw per-civ population total (sum of settlement sizes).
  * @param {{ turn?: number } | null | undefined} scaleCtx Per-player scale context.
  * @param {PopScaleCtx | null | undefined} ctx Per-player accessor context.
@@ -176,8 +160,7 @@ export function scalePopulation(raw, scaleCtx, ctx) {
     ? ctx.populationScaled
     : undefined;
   if (typeof summed === "number") return summed;
-  // Legacy fallback: no per-settlement sum available. Approximate the empire as same-size settlements
-  // so we never resurrect the old 90000·raw^1.11 blow-up.
+  // Legacy fallback: no per-settlement sum available; approximate the empire as same-size settlements.
   return scalePopulationAt(raw, resolveTurn(ctx, scaleCtx), ctx);
 }
 
@@ -204,12 +187,9 @@ export function scalePopulationAt(raw, _turn, ctx) {
 // as population.
 const SOLDIERS_PER_UNIT = 1000;
 
-// The era multiplier on soldiers-per-unit (a Modern division dwarfs an ancient legion) is the same
-// 1.009^turn growth population USED to use — but unbounded it ran to 8,000× on a long Marathon game,
-// rendering casualties in the billions. Population dropped the exponential for a bounded age curve;
-// casualties keep the cheap exponential but CAP it at a full-game's worth of era growth
-// (1.009^~270 ≈ 11×), so the figure stays sane and is consistent across game length / speed instead of
-// ballooning with the raw turn count.
+// The era multiplier on soldiers-per-unit (a Modern division dwarfs an ancient legion) is 1.009^turn,
+// capped at a full game's worth of era growth (1.009^~270 ≈ 11×) so the figure stays consistent
+// across game length / speed instead of ballooning with the raw turn count.
 const CASUALTY_MAX_ERA_MULT = 11;
 
 /**
@@ -290,9 +270,7 @@ function overtimeCeilingFactor(ageType, ageProgressPct) {
 
 /**
  * Smoothly saturate `x` toward `ceiling`: identity below CEIL_KNEE·ceiling, then a C¹ exponential
- * approach that never exceeds the ceiling. Continuous value AND slope at the knee (slope 1 there), so
- * normal cities are untouched and only the extreme tail bends. This is the safety bound: any input,
- * however large, lands at or below the ceiling.
+ * approach that never exceeds the ceiling, so normal cities are untouched and only the tail bends.
  * @param {number} x The raw figure.
  * @param {number} ceiling The asymptotic maximum.
  * @returns {number} The saturated figure.
@@ -306,13 +284,9 @@ function softCeil(x, ceiling) {
 }
 
 /**
- * The world-estimate people count for a single settlement, from the game's real per-era growth curve:
- * `POP_K · W(size, eraGrowthParams(age, progress))`, with a Modern-only megacity bump and a smooth
- * saturation toward the era's historical max-city ceiling (which also safely bounds any out-of-range
- * input). Naturally per-age and continuous across age boundaries (see {@link eraGrowthParams}); no
- * turn-based multiplier. Examples (size → people): size 5 → ~17k/37k/48k, size 20 → ~0.50M/0.80M/0.98M
- * across Antiquity/Exploration/Modern; size ~50 late-Modern ≈ 28M. A size ~21 Exploration city →
- * ~0.97M (matches the live readout).
+ * The world-estimate people count for a single settlement: `POP_K · W(size, eraGrowthParams(age,
+ * progress))`, with a Modern-only megacity bump and a smooth saturation toward the era's max-city
+ * ceiling. Continuous across age boundaries (see {@link eraGrowthParams}); no turn-based multiplier.
  * @param {number} raw The settlement's size (raw population points).
  * @param {number} [_turn] Unused (kept for signature compatibility; scaling is age-based now).
  * @param {string | undefined} [ageType] Age type (e.g. AGE_MODERN).
@@ -325,17 +299,12 @@ export function scaleCityPopulationAt(raw, _turn, ageType, ageProgressPct) {
   const boosted = base * modernMegacityBoost(raw, ageType, ageProgressPct);
   const ceiling = eraCeiling(ageType, ageProgressPct) * overtimeCeilingFactor(ageType, ageProgressPct);
   return softCeil(boosted, ceiling);
-  // NOTE: per-settlement VARIATION (so two same-size settlements never read identically) is applied
-  // downstream by settlements-population-variance.js (applyPopulationVarianceAndEnsureUnique), which
-  // also guarantees unique, strictly-ordered estimates for the board. Keep variation out of here so
-  // it isn't double-applied. The Emigration mod mirrors this same principle for its own figures.
+  // Per-settlement variation is applied downstream by settlements-population-variance.js; keep it
+  // out of here so it isn't double-applied.
 }
 
-// GDP multiplies per-turn yield by the turn count to approximate a CUMULATIVE economy, but unbounded
-// that turn factor makes a mature empire read ~500× richer at turn 500 purely because time passed (and
-// worse on Marathon, where turns accrue faster than game-progress). Cap the factor at a full game's
-// worth of turns so a normal game is unchanged while overtime / slow speeds / very long games can't run
-// the figure away.
+// GDP multiplies per-turn yield by the turn count to approximate a cumulative economy; the factor is
+// capped at a full game's worth of turns so overtime / slow speeds can't run the figure away.
 const GDP_TURN_CAP = 300;
 
 /**
@@ -412,13 +381,9 @@ export function scaleLandArea(raw) {
 }
 
 /**
- * Heuristic score: tech + civic count + 2·settlements + gold/100. This is the
- * mod's authoritative score (see scoreAccessor): Civ7 has no cumulative civ
- * "score" - its scoring is per-age Legacy Points - so we synthesize a stable,
- * monotonic one. techsCount/civicsCount are made cumulative across ages by the
- * sampler (see sampler-collectors-economy.js#computeNodeBaselines), and
- * settlements/gold are inherently continuous, so this stays continuous across
- * age boundaries instead of collapsing when each age's fresh trees reset.
+ * Heuristic score: tech + civic count + 2·settlements + gold/100. Civ7 has no cumulative civ score
+ * (scoring is per-age Legacy Points), so this is the mod's authoritative one; techsCount/civicsCount
+ * are made cumulative across ages by the sampler, so it stays continuous across age boundaries.
  * @param {{ [key: string]: * }} ctx Per-player accessor context.
  * @returns {number} The heuristic score.
  */
@@ -431,12 +396,9 @@ export function scoreFallback(ctx) {
 }
 
 /**
- * Score accessor. Civ7 exposes no cumulative civilization score on the player
- * Stats handle (scoring is per-age Legacy Points via player.LegacyPaths), so
- * the heuristic in {@link scoreFallback} is authoritative. We still consult an
- * engine `getScore()` IF some build/mod adds one AND it is non-decreasing - a
- * per-age engine score would re-introduce the age-boundary cliff, so we reject
- * any value below the continuous heuristic and keep the heuristic instead.
+ * Score accessor: the heuristic in {@link scoreFallback} is authoritative. An engine `getScore()`
+ * is consulted only when present and not below the heuristic, since a per-age engine score would
+ * re-introduce the age-boundary cliff.
  * @param {{ [key: string]: * }} ctx Per-player accessor context.
  * @returns {number} The civilization score.
  */

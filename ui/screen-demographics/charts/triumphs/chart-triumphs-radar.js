@@ -2,8 +2,7 @@
 //
 // The Legacy Path radar render + UI wiring (6-axis polar chart, one polygon per
 // civ): renderLegacyRadar plus its grid, polygon-drawing, and legend helpers.
-// The data layer (axis catalog + civ-map construction) lives in
-// chart-triumphs-radar-data.js, which this module imports.
+// The data layer lives in chart-triumphs-radar-data.js.
 
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
@@ -179,10 +178,8 @@ function buildRadarPoly(c, geo, scaleMax) {
     const r = (v / scaleMax) * R;
     return { x: cx + Math.cos(a.angle) * r, y: cy + Math.sin(a.angle) * r, v };
   });
-  // Populated-only polygon: connect ONLY axes with value > 0 (3+), so the
-  // shaded area runs directly between populated vertices. For 1-2 populated
-  // axes, fall back to the inner pedestal on empty axes to form a small
-  // targeted diamond. 0 populated → no shape.
+  // Populated-only polygon: connect only axes with value > 0 (3+); for 1-2
+  // populated axes, empty axes fall back to the inner pedestal. 0 populated → no shape.
   const populated = points.map((pt, i) => ({ ...pt, i })).filter((pt) => pt.v > 0);
   /** @type {{ x: number, y: number, v: number }[]} */
   let polyPts;

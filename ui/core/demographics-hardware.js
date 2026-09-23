@@ -1,16 +1,10 @@
 // demographics-hardware.js
 //
-// Hardware-adaptive budgets (combined design plan P1.6).
-//
-// Sampling/retention presets already scale with game speed (storage-cap.js) and
-// old history is decimated. This module adds the not-yet-shipped half: a bounded
-// CAPABILITY factor (CPU cores / device memory / mobile experience) and a GAME-
-// SIZE factor (player count), used to (a) scale the adaptive retention cap and
-// (b) bound per-series render work to a point budget so a marathon-length line
-// doesn't plot thousands of points on a weak machine.
-//
-// Everything is read defensively (navigator / UI may be absent in this UI
-// context) and clamped, so a missing read just yields the neutral factor 1.
+// Hardware-adaptive budgets: a bounded CAPABILITY factor (CPU cores / device
+// memory / mobile experience) and a GAME-SIZE factor (player count) that scale
+// the adaptive retention cap and bound per-series render work to a point budget.
+// Everything is read defensively and clamped, so a missing read yields the
+// neutral factor 1.
 
 const DBG = false;
 

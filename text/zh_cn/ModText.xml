@@ -723,9 +723,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="zh_Hans_CN">
             <Text>显示所有已隐藏的文明</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="zh_Hans_CN">
-            <Text>点击某列即可按该指标排序文明。使用“排名／数值”切换每个单元格显示的内容。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="zh_Hans_CN">
             <Text>未遇</Text>
         </Replace>
@@ -2653,9 +2650,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="zh_Hans_CN">
             <Text>最长游戏</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="zh_Hans_CN">
-            <Text>游戏记录保存在这台电脑上。每个存档也会保留自己的记录。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="zh_Hans_CN">
             <Text>本次会话无法从存储中读取以往对局。每场对局仍然保存在各自的存档中。</Text>
         </Replace>
@@ -2919,6 +2913,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="zh_Hans_CN">
             <Text>{1_Count} 项伟业</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="zh_Hans_CN">
+            <Text>设置会保存在这台电脑上。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="zh_Hans_CN">
+            <Text>本次会话中更改的设置会保留到游戏关闭，但无法保存：模组共享存储返回了另一个模组的数据、无法读取，或读回的内容与写入不一致。名人堂页面上的“修复存储”可以解决此问题。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="zh_Hans_CN">
+            <Text>本次会话无法保存设置：模组存储不可用。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="zh_Hans_CN">
+            <Text>清除所有已记录的战争？</Text>
         </Replace>
     </LocalizedText>
 </Database>

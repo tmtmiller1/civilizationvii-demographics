@@ -2,16 +2,26 @@
 //
 // Pure: Hall of Fame figures computed from archive records. No engine access, no DOM.
 //
-// Ranking model (shown to the player on the Rankings tab):
-//   1. finished games before unfinished ones, victories before other results;
-//   2. then more Triumphs earned across every age (the game's own measure of achievement);
-//   3. then fewer turns.
-// The honorific is the rank of the game's Triumphs against your best game, on a 12-step ladder.
+// Ranking model: finished games before unfinished ones and victories before other results, then
+// more Triumphs, then fewer turns. The honorific is the rank of the game's Triumphs against your
+// best game, on a 12-step ladder.
 
 /** Unfinished games shorter than this are treated as test loads and hidden by default. */
 export const SHORT_GAME_TURNS = 20;
 /** Number of honorific titles (LOC_DEMOGRAPHICS_HIST_TITLE_1 is the highest). */
 export const TITLE_COUNT = 12;
+
+/**
+ * A headline figure of a record, 0 when the record carries no figures (an archive written by hand
+ * or by another version passes isRecord without them).
+ * @param {ArchiveRecord} r Record.
+ * @param {keyof ArchiveRecord["stats"]} key Figure.
+ * @returns {number} The figure.
+ */
+export function statOf(r, key) {
+  const v = r.stats ? r.stats[key] : 0;
+  return typeof v === "number" && Number.isFinite(v) ? v : 0;
+}
 
 /**
  * Records to show.
@@ -44,7 +54,7 @@ export function ranked(records) {
   return records.slice().sort(
     (a, b) =>
       outcomeWeight(a.outcome.status) - outcomeWeight(b.outcome.status) ||
-      b.stats.triumphs - a.stats.triumphs ||
+      statOf(b, "triumphs") - statOf(a, "triumphs") ||
       a.turns - b.turns ||
       b.updated - a.updated
   );
@@ -88,7 +98,7 @@ export function standing(records, currentId = "", topN = 10) {
  */
 export function titleIndex(rec, best) {
   if (best <= 0) return TITLE_COUNT;
-  const share = Math.max(0, Math.min(1, rec.stats.triumphs / best));
+  const share = Math.max(0, Math.min(1, statOf(rec, "triumphs") / best));
   return 1 + Math.round((1 - share) * (TITLE_COUNT - 1));
 }
 
@@ -134,7 +144,7 @@ export function overview(records) {
     victories: wins.length,
     finished: records.filter((r) => r.outcome.status !== "in_progress").length,
     turns: records.reduce((s, r) => s + r.turns, 0),
-    triumphs: records.reduce((s, r) => s + r.stats.triumphs, 0),
+    triumphs: records.reduce((s, r) => s + statOf(r, "triumphs"), 0),
     favoriteLeader: topKey(tally(records, (r) => r.leader)),
     victoriesByType: [...byType.entries()].sort((a, b) => b[1] - a[1]),
     latest: records.slice().sort((a, b) => b.updated - a.updated)[0] || null
@@ -173,7 +183,7 @@ function fold(rows, key, name, r) {
   else if (r.outcome.status === "defeat") row.losses++;
   else if (r.outcome.status === "ended") row.ended++;
   else row.open++;
-  row.bestTriumphs = Math.max(row.bestTriumphs, r.stats.triumphs);
+  row.bestTriumphs = Math.max(row.bestTriumphs, statOf(r, "triumphs"));
   row.turnSum += r.turns;
   row.avgTurns = Math.round(row.turnSum / row.games);
   rows.set(key, row);
@@ -240,10 +250,10 @@ function bestBy(records, val, lowest = false) {
 export function recordHolders(records) {
   /** @type {Array<[string, (r:ArchiveRecord) => number, ArchiveRecord[], boolean]>} */
   const specs = [
-    ["triumphs", (r) => r.stats.triumphs, records, false],
-    ["wonders", (r) => r.stats.wonders, records, false],
-    ["settlements", (r) => r.stats.peakSettlements, records, false],
-    ["captured", (r) => r.stats.captured, records, false],
+    ["triumphs", (r) => statOf(r, "triumphs"), records, false],
+    ["wonders", (r) => statOf(r, "wonders"), records, false],
+    ["settlements", (r) => statOf(r, "peakSettlements"), records, false],
+    ["captured", (r) => statOf(r, "captured"), records, false],
     ["fastest", (r) => r.turns, records.filter((r) => r.outcome.status === "victory"), true],
     ["longest", (r) => r.turns, records, false]
   ];

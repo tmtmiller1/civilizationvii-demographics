@@ -4,7 +4,8 @@ import {
   rle, unrle, thinFrames, addFrame, mapView, packMap, unpackMap, frameAt, DOC_FRAMES_CAP, RECORD_FRAMES_CAP,
   withinBytes, RECORD_MAP_BYTES, DOC_MAP_BYTES
 } from "/demographics/ui/history/model/history-map.js";
-import { holders, safeColor, hexLayout, displaySize, cellCenter, cellLayers } from "/demographics/ui/history/views/history-map-view.js";
+import { holders, safeColor, hexLayout, displaySize, cellCenter, cellLayers, mapPanel } from "/demographics/ui/history/views/history-map-view.js";
+import { createFakeDocument } from "./_dom-stub.mjs";
 import { gridWidth } from "/demographics/ui/history/capture/history-mapgrid.js";
 
 // Run-length round trip, negative owners included.
@@ -73,6 +74,30 @@ assert.equal(frameAt(mv, 500).at, 104);
 // Holders count land and settlements, most land first; independents are not a civilization.
 assert.deepEqual(holders({ w: 3, h: 2 }, { at: 0, o: "0x1.4x3.-2x2", c: [[0, 0], [1, 4], [2, 4]] }),
   [{ pid: 4, cells: 3, towns: 2 }, { pid: 0, cells: 1, towns: 1 }]);
+
+// A frame without a settlement list (an older archive) still counts holders.
+assert.deepEqual(holders({ w: 2, h: 1 }, { at: 0, o: "0x2" }), [{ pid: 0, cells: 2, towns: 0 }]);
+
+// The panel's show() runs from the timeline's timer and click handlers: a frame whose legend cannot
+// be built is logged, the panel stays, and the next frame is tried afresh.
+{
+  globalThis.document = createFakeDocument().document;
+  const logged = [];
+  const saved = console.error;
+  console.error = (...a) => logged.push(a.map(String).join(" "));
+  const cast = {
+    local: 0, known: () => true, color: () => "#ff0000", civName: () => "", leaderName: () => "",
+    civType: () => { throw new Error("legend boom"); }
+  };
+  const panel = mapPanel(mv, cast, () => "AGE_ANTIQUITY");
+  assert.ok(panel.el, "the panel is built although its legend failed");
+  const before = logged.filter((l) => l.includes("map legend failed")).length;
+  assert.equal(before, 1);
+  assert.doesNotThrow(() => panel.show(0));
+  assert.equal(logged.filter((l) => l.includes("map legend failed")).length, 2, "the next frame was tried and logged too");
+  console.error = saved;
+  delete globalThis.document;
+}
 
 // Only colors the canvas surely accepts.
 assert.equal(safeColor("#a1b2c3"), "#a1b2c3");

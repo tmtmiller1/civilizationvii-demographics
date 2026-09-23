@@ -282,7 +282,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="it_IT"><Text>Posizione {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="it_IT"><Text>Ripristina ({1_Count} nascoste)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="it_IT"><Text>Mostra tutte le civiltà nascoste</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="it_IT"><Text>Fai clic su una colonna per ordinare le civiltà. Usa il selettore Rango / Valore per cambiare ciò che mostra ogni cella.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="it_IT"><Text>Non incontrata</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="it_IT"><Text>(nascosta, clicca per mostrare)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="it_IT"><Text>Clicca per mostrare</Text></Replace>
@@ -2094,9 +2093,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="it_IT">
             <Text>Partita più lunga</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="it_IT">
-            <Text>Le partite sono salvate su questo computer. Ogni salvataggio conserva anche il proprio registro.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="it_IT">
             <Text>Le partite precedenti non sono state lette dall'archivio in questa sessione. Ogni partita resta salvata nel proprio salvataggio.</Text>
         </Replace>
@@ -2360,6 +2356,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="it_IT">
             <Text>{1_Count} trionfi</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="it_IT">
+            <Text>Le impostazioni vengono salvate su questo computer.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="it_IT">
+            <Text>Le impostazioni modificate in questa sessione restano fino alla chiusura del gioco, ma non è stato possibile salvarle: l'archivio condiviso delle mod ha restituito i dati di un'altra mod, non è stato possibile leggerlo o non ha riletto quanto scritto. «Ripara archivio» nella pagina della Hall of Fame risolve il problema.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="it_IT">
+            <Text>Le impostazioni non possono essere salvate in questa sessione: l'archivio delle mod non è disponibile.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="it_IT">
+            <Text>Eliminare tutte le guerre registrate?</Text>
         </Replace>
     </LocalizedText>
 </Database>

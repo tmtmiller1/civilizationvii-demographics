@@ -1,6 +1,7 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { div, iconEl, fmtPop } from "/demographics/ui/core/ui-helpers.js";
+import { publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /** @type {Record<number, string>} */
 export const OVERLAY_LAUREL = {
@@ -16,11 +17,8 @@ export const ORDINAL_WORDS = [
   "twenty-fourth", "twenty-fifth"
 ];
 
-// The cinematic can showcase settlements from the Top-25 ranking, so ranks 1..25
-// have dedicated per-rank localization tags
-// (LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1..25). This lets languages that need
-// grammatical inflection (e.g. Polish) supply a properly declined ordinal word
-// instead of the bare number.
+// Ranks 1..25 have dedicated per-rank localization tags (LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_N),
+// so languages that need grammatical inflection can supply a declined ordinal word.
 export const ORDINAL_TAG_MAX = 25;
 
 /** @type {Record<string, Record<string, string>>} */
@@ -64,48 +62,67 @@ export const QUARTER_ARTICLE = {
 };
 
 // ── English article system ──────────────────────────────────────────
-// English article choice for proper monument/place names is lexical, not
-// derivable from surface form ("the Parthenon" vs. "Petra" are both single
-// capitalized proper nouns). So we default every named entity to "the " — the
-// correct choice for the large majority of wonders, quarters and natural
-// wonders, and safe for unknown/DLC entities read from GameInfo at runtime —
-// and subtract "the" only for a curated set of toponyms.
-//
-// NO_ARTICLE_TYPES is checked first (stable ConstructibleType / UniqueQuarterType
-// ids). It is the authoritative override once you have verified ids; seed it from
-// an in-game GameInfo dump (see the dev snippet shipped alongside this change).
-// NO_ARTICLE_NAMES is the working fallback that matches on the normalized display
-// name, which is what actually reaches us for natural wonders and any entity
-// without a clean type id.
-//
-// To fix a mis-articled entity: add its type id to NO_ARTICLE_TYPES (preferred)
-// or its display name to NO_ARTICLE_NAMES. A not-yet-listed toponym merely gets a
-// wrong "the " — a one-line fix, never a crash.
+// English article choice for proper place names is lexical ("the Parthenon" vs. "Petra"), so
+// every named entity defaults to "the " and a curated set of toponyms subtracts it.
+// NO_ARTICLE_TYPES (stable type ids) is checked first; NO_ARTICLE_NAMES matches on the
+// normalized display name, which is what reaches us for natural wonders and entities without
+// a clean type id. To fix a mis-articled entity, add it to one of those sets.
 
 /** @type {Set<string>} */
 export const NO_ARTICLE_TYPES = new Set([
-  // Fill with verified ConstructibleType / UniqueQuarterType ids for toponyms.
-  // e.g. "BUILDING_MACHU_PICCHU", "BUILDING_PETRA", "FEATURE_ULURU".
+  // Verified against the installed game (Civilization VII 1.5.0 with all released packs): every
+  // WONDER_* / FEATURE_* below was read from GameInfo, so these ids are what the engine actually
+  // reports. Matching on the id rather than the display name is what keeps this correct when a
+  // name is spelled differently than expected - "Machu Pikchu", not "Machu Picchu", is the game's
+  // own spelling, and the name-only list missed it and produced "the Machu Pikchu".
+  //
+  // To refresh after a pack adds wonders: in a running game, list
+  // `GameInfo.Constructibles` where `ConstructibleClass === "WONDER"` and the null-class
+  // `GameInfo.Features`, then add any new toponym here. Anything absent merely gets "the".
+
+  // Wonders that are proper place-names (reject "the").
+  "WONDER_ANGKOR_WAT", "WONDER_BOROBUDUR", "WONDER_BUSEOKSA", "WONDER_DUR_SHARRUKIN",
+  "WONDER_EL_ESCORIAL", "WONDER_ERDENE_ZUU", "WONDER_HALE_O_KEAWE", "WONDER_HAVANA_HARBOR",
+  "WONDER_HA_AMONGA_A_MAUI", "WONDER_HIMEJI_CASTLE", "WONDER_MACHU_PIKCHU", "WONDER_MIREUKSA",
+  "WONDER_MONKS_MOUND", "WONDER_MUNDO_PERDIDO", "WONDER_NALANDA", "WONDER_NAN_MADOL",
+  "WONDER_NOTRE_DAME", "WONDER_PETRA", "WONDER_REYKHOLT", "WONDER_SERPENT_MOUND",
+  "WONDER_SHWEDAGON_ZEDI_DAW", "WONDER_THANH_HUE", "WONDER_WAT_XIENG_THONG",
+  "WONDER_WEIYANG_PALACE",
+
+  // Natural wonders that are proper place-names (reject "the"). The ones that keep "the" are
+  // deliberately absent: the Bermuda Triangle, the Grand Canyon, the Great Blue Hole, the
+  // Valley of Flowers.
+  "FEATURE_GULLFOSS", "FEATURE_HOERIKWAGGO", "FEATURE_IGUAZU_FALLS", "FEATURE_KILIMANJARO",
+  "FEATURE_MACHAPUCHARE", "FEATURE_MAPU_A_VAEA_BLOWHOLES", "FEATURE_MOUNT_EVEREST",
+  "FEATURE_MOUNT_FUJI", "FEATURE_NACHI_FALLS", "FEATURE_SEONGSAN_ILCHULBONG", "FEATURE_THERA",
+  "FEATURE_TORRES_DEL_PAINE", "FEATURE_ULURU", "FEATURE_VIHREN", "FEATURE_VINICUNCA"
 ]);
 
 /** @type {Set<string>} */
 export const NO_ARTICLE_NAMES = new Set([
+  // Fallback for entities that reach us without a clean type id. NO_ARTICLE_TYPES above is the
+  // authoritative list for anything the engine gives an id for; these are kept so a renamed or
+  // third-party entity still reads correctly, and include names from packs that may not be
+  // installed here.
   // Wonders that are proper place-names (reject "the").
-  "machu picchu", "angkor wat", "petra", "chichen itza", "nalanda",
+  "machu picchu", "machu pikchu", "angkor wat", "petra", "chichen itza", "nalanda",
   "mundo perdido", "hagia sophia", "mont saint michel", "notre dame",
   "borobudur", "sigiriya", "mesa verde", "great zimbabwe", "meidan emam",
-  "chand baori",
+  "chand baori", "buseoksa", "dur sharrukin", "el escorial", "erdene zuu",
+  "hale o keawe", "havana harbor", "haamonga a maui", "himeji castle",
+  "mireuksa", "monks mound", "nan madol", "reykjaholt", "serpent mound",
+  "shwedagon zedi daw", "thanh hue", "wat xieng thong", "weiyang palace",
   // Natural wonders that are proper place-names (reject "the").
   "uluru", "kilimanjaro", "mount kilimanjaro", "mount everest", "everest",
   "vesuvius", "mount vesuvius", "zhangye danxia", "ha long bay",
-  "lake victoria", "mount kailash"
+  "lake victoria", "mount kailash", "gullfoss", "hoerikwaggo", "iguazu falls",
+  "machapuchare", "mapu a vaea blowholes", "mount fuji", "nachi falls",
+  "seongsan ilchulbong", "thera", "torres del paine", "vihren", "vinicunca"
 ]);
 
 /**
- * Normalize a display name for article-exception matching: strip diacritics and
- * apostrophes, fold hyphens to spaces, collapse whitespace, lowercase. Keeps the
- * NO_ARTICLE_NAMES keys robust against accents ("Chichén Itzá") and punctuation
- * ("Mont-Saint-Michel").
+ * Normalize a display name for article-exception matching: strip diacritics and apostrophes,
+ * fold hyphens to spaces, collapse whitespace, lowercase.
  * @param {string} name The display name.
  * @returns {string} The normalized key.
  */
@@ -146,7 +163,7 @@ export function englishArticled(name, typeId) {
 /**
  * Apply a locale-appropriate article to a named entity (wonder, quarter, natural
  * wonder). English uses the default-"the" + toponym-exception system; other
- * locales preserve the prior per-quarter QUARTER_ARTICLE behavior.
+ * locales use the per-quarter QUARTER_ARTICLE table.
  * @param {{name: string, typeId?: string}} entity The entity descriptor.
  * @returns {string} The articled name.
  */
@@ -360,12 +377,9 @@ export function ordinalWord(rank) {
 }
 
 /**
- * Resolve the ordinal insert for a settlement's rank in the cinematic sentences.
- *
- * Prefers the per-rank localization tag (ranks 1..25) so translators can supply a
- * grammatically-inflected form. Falls back to the prior behavior when the tag is
- * unresolved or the rank is outside the Top-25: the English ordinal word for
- * English locales, or the bare number every other sentence frame is built around.
+ * Resolve the ordinal insert for a settlement's rank in the cinematic sentences: the per-rank
+ * localization tag (ranks 1..25) when it resolves, else the English ordinal word for English
+ * locales or the bare number otherwise.
  * @param {number} rank The 1-based rank.
  * @returns {string} The ordinal display text.
  */
@@ -536,6 +550,29 @@ export function mountOverlay(flowState, settlement, mode, options) {
   } catch (_) {
     // addEventListener may be absent in headless hosts.
   }
+  // Input shield: a transparent full-viewport layer under the card, so that for the duration of
+  // the flyby the only things reachable are Back (the card sits above this) and Escape. Without
+  // it the game's HUD stays live behind the cinematic - a leader portrait opens diplomacy, a tile
+  // hover raises its tooltip - because disabling WORLD input does not disable the HUD's own DOM.
+  const shield = div("demographics-map-shield");
+  try {
+    for (const type of ["mousedown", "mouseup", "click", "mousemove", "mouseover", "wheel", "contextmenu"]) {
+      shield.addEventListener(type, (e) => { e.stopPropagation(); e.preventDefault(); }, true);
+    }
+  } catch (_) {
+    // addEventListener may be absent in headless hosts; the shield still covers the HUD visually.
+  }
+  document.body.appendChild(shield);
+  if (flowState) flowState.shield = shield;
+
+  // The overlay lives on document.body, so it inherits none of the screen's size tokens. The
+  // stylesheet gives it the reference-size defaults; this publishes the resolution-scaled values
+  // onto the element itself, so the plate tracks the display like every other surface.
+  try {
+    publishFontLadder(overlay);
+  } catch (_) {
+    // A failed publish leaves the stylesheet defaults in place, which render at reference size.
+  }
   document.body.appendChild(overlay);
   if (flowState) flowState.overlay = overlay;
 }
@@ -545,6 +582,14 @@ export function mountOverlay(flowState, settlement, mode, options) {
  * @param {*} flowState The active flow state.
  */
 export function removeOverlay(flowState) {
+  try {
+    if (flowState.shield && flowState.shield.parentNode) {
+      flowState.shield.parentNode.removeChild(flowState.shield);
+    }
+    flowState.shield = null;
+  } catch (_) {
+    // A shield that cannot be removed must not stop the overlay teardown below.
+  }
   try {
     if (flowState.overlay && flowState.overlay.parentNode) {
       flowState.overlay.parentNode.removeChild(flowState.overlay);

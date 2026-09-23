@@ -282,7 +282,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="ko_KR"><Text>순위 {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="ko_KR"><Text>초기화 ({1_Count}개 숨김)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ko_KR"><Text>숨겨진 모든 문명을 표시합니다</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ko_KR"><Text>열을 클릭하면 해당 지표로 문명을 정렬합니다. 순위／값 전환으로 각 칸의 표시를 바꿉니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ko_KR"><Text>만나지 않음</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ko_KR"><Text>(숨김, 클릭하여 표시)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ko_KR"><Text>클릭하여 표시</Text></Replace>
@@ -2094,9 +2093,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="ko_KR">
             <Text>최장 게임</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="ko_KR">
-            <Text>게임은 이 컴퓨터에 저장됩니다. 각 저장 파일에도 자체 기록이 보관됩니다.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ko_KR">
             <Text>이번 세션에서는 저장 공간에서 지난 게임을 읽을 수 없었습니다. 모든 게임은 각자의 저장 파일에 그대로 저장되어 있습니다.</Text>
         </Replace>
@@ -2360,6 +2356,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="ko_KR">
             <Text>대성공 {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="ko_KR">
+            <Text>설정은 이 컴퓨터에 저장됩니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="ko_KR">
+            <Text>이번 세션에서 변경한 설정은 게임을 닫을 때까지 유지되지만 저장할 수 없었습니다. 모드 공유 저장 공간이 다른 모드의 데이터를 반환했거나, 읽을 수 없었거나, 기록한 내용을 다시 읽어 오지 못했습니다. 명예의 전당 페이지의 “저장 공간 복구”로 해결할 수 있습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="ko_KR">
+            <Text>이번 세션에서는 설정을 저장할 수 없습니다. 모드 저장 공간을 사용할 수 없습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="ko_KR">
+            <Text>기록된 모든 전쟁을 지울까요?</Text>
         </Replace>
     </LocalizedText>
 </Database>

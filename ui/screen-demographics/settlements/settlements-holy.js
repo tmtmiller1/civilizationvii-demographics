@@ -1,10 +1,8 @@
 // settlements-holy.js
 //
-// Holy-city badges for the settlement board. The engine exposes a religion's holy
-// city only by NAME (player.Religion.getHolyCityName(), the same read the base
-// religion screens use), so a settlement is marked holy only when its name is
-// unique on the board; an ambiguous duplicate name earns no badge rather than a
-// guessed one.
+// Holy-city badges for the settlement board. The engine exposes a religion's holy city only by
+// name (player.Religion.getHolyCityName()), so a settlement is marked holy only when its name is
+// unique on the board; an ambiguous duplicate name earns no badge.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 

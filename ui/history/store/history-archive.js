@@ -16,10 +16,8 @@ import { castFromDoc, eventVisible } from "/demographics/ui/history/model/histor
 export const ARCHIVE_SCHEMA = 1;
 export const RECORD_VERSION = 1;
 /**
- * Byte budget for the whole slice: room for roughly 30 long games with their timelines, or many
- * more short ones. Names are shared across the archive and positions are rounded, so a game with
- * its whole story costs about 15 KB. It shares one localStorage value with other mods' settings,
- * which they parse on load, so it stays well under a megabyte.
+ * Byte budget for the whole slice: roughly 30 long games with timelines (about 15 KB each). It
+ * shares one localStorage value with other mods' settings, so it stays well under a megabyte.
  */
 export const SLICE_BYTE_CAP = 512 * 1024;
 /** Most highlights kept per record. */
@@ -51,6 +49,17 @@ export function isRecord(r) {
     r && typeof r === "object" && r.v === RECORD_VERSION && typeof r.id === "string" &&
     typeof r.leader === "string" && r.outcome && typeof r.turns === "number" && Array.isArray(r.civs)
   );
+}
+
+/**
+ * Whether a value is a record written by a newer version of this mod. Such a record is carried
+ * through every load and save untouched (so going back to this version loses nothing) but is never
+ * shown, since its shape is unknown here.
+ * @param {*} r Candidate.
+ * @returns {boolean} True when it is a record from a later version.
+ */
+export function isNewerRecord(r) {
+  return !!(r && typeof r === "object" && typeof r.v === "number" && r.v > RECORD_VERSION && typeof r.id === "string");
 }
 
 /**
@@ -138,20 +147,40 @@ function countMine(doc, kind) {
  */
 export function localStats(doc) {
   const me = String(doc.local);
-  const ps = doc.series.by[me] || { set: [], pop: [], tri: [] };
-  const state = doc.last?.players[me] || null;
+  const ps = (doc.series.by || {})[me] || { set: [], pop: [], tri: [] };
+  const state = doc.last?.players?.[me] || null;
   const religion = doc.events.find((e) => e.k === "religion" && e.p === doc.local);
   const byMe = (/** @type {HnrEventKind} */ k) => doc.events.filter((e) => e.k === k && e.p === doc.local).length;
   return {
-    settlements: state ? Object.keys(state.cities).length : lastOf(ps.set),
+    settlements: settlementsHeld(state, ps),
     peakSettlements: Math.max(0, ...ps.set),
     ...localPopulation(state, ps),
-    wonders: Math.max(state ? state.wonders.length : 0, byMe("wonder")),
+    wonders: Math.max(wondersHeld(state), byMe("wonder")),
     triumphs: triumphCounts(doc)[me] || 0,
     captured: byMe("capture"),
     wars: countMine(doc, "war"),
     religion: religion?.n || ""
   };
+}
+
+/**
+ * Settlements the local player holds in the latest state, else the last sampled count.
+ * @param {HnrPlayerState|null} state Latest state, if any.
+ * @param {HnrPlayerSeries} ps The player's series.
+ * @returns {number} Count.
+ */
+function settlementsHeld(state, ps) {
+  return state ? Object.keys(state.cities || {}).length : lastOf(ps.set);
+}
+
+/**
+ * Wonders the local player holds in the latest state (0 without one, or for a state that carries
+ * no wonder list).
+ * @param {HnrPlayerState|null} state Latest state, if any.
+ * @returns {number} Count.
+ */
+function wondersHeld(state) {
+  return state && Array.isArray(state.wonders) ? state.wonders.length : 0;
 }
 
 /**
@@ -182,11 +211,13 @@ function lastOf(arr) {
  */
 export function rivalsOf(doc) {
   const tri = triumphCounts(doc);
-  const met = (/** @type {string} */ pid) => !doc.last || !!doc.last.players[pid]?.met || doc.players[pid]?.elim === -1;
+  const met = (/** @type {string} */ pid) =>
+    !doc.last || !!doc.last.players?.[pid]?.met || doc.players[pid]?.elim === -1;
   return Object.entries(doc.players)
     .filter(([pid]) => Number(pid) !== doc.local && met(pid))
     .map(([pid, p]) => {
-      const civ = p.civs[p.civs.length - 1] || { civ: "", name: "" };
+      const civs = p.civs || [];
+      const civ = civs[civs.length - 1] || { civ: "", name: "" };
       /** @type {HnrRival} */
       const r = [Number(pid), p.leader, p.leaderName, civ.civ, civ.name, p.color, p.elim, tri[pid] || 0, p.color2 || ""];
       return r;
@@ -201,7 +232,7 @@ export function rivalsOf(doc) {
 export function buildRecord(doc) {
   const me = doc.players[String(doc.local)];
   if (!me) return null;
-  const ps = doc.series.by[String(doc.local)] || { set: [], pop: [], tri: [] };
+  const ps = (doc.series.by || {})[String(doc.local)] || { set: [], pop: [], tri: [] };
   return {
     v: RECORD_VERSION,
     id: doc.id,
@@ -229,8 +260,6 @@ export function buildRecord(doc) {
 /**
  * The LOC tags of a record that may not resolve at the main menu, where only setup text is loaded:
  * names first seen in a game (settlements, wonders, Triumphs, religions) and the victory's name.
- * Leader, civilization, age and setup names are setup text and always resolve, so they are left out
- * to keep records small.
  * @param {ArchiveRecord} rec The record.
  * @returns {string[]} Unique tags.
  */
@@ -240,7 +269,7 @@ export function recordTags(rec) {
   const tl = rec.tl || {};
   const r = tl.r || {};
   const names = [...col(tl.m, 4), ...col(tl.z, 1), ...col(tl.f, 1), ...col(r.m, 4), ...col(r.f, 1)];
-  const all = [rec.outcome.name, rec.stats.religion, ...rec.highlights.map((e) => e.n || ""), ...names];
+  const all = [rec.outcome?.name, rec.stats?.religion, ...(rec.highlights || []).map((e) => e.n || ""), ...names];
   return [...new Set(all.filter((x) => typeof x === "string" && x.startsWith("LOC_")))];
 }
 
@@ -267,9 +296,10 @@ export function supersedes(a, b) {
 export function upsert(slice, rec) {
   if (slice.hidden[rec.id]) return false;
   const cur = slice.games[rec.id];
-  if (cur && isRecord(cur) && !supersedes(rec, cur)) return false;
-  // The names a game needs read the same in every game, so they are kept once for the whole
-  // archive instead of a copy inside each record: twenty games used to carry twenty copies.
+  // A record a later version wrote is kept as it is; this version cannot judge its progress.
+  if (cur && (isNewerRecord(cur) || (isRecord(cur) && !supersedes(rec, cur)))) return false;
+  // Names read the same in every game, so they are kept once for the whole archive
+  // instead of a copy inside each record.
   if (rec.texts) {
     slice.texts = { ...slice.texts, ...rec.texts };
     delete rec.texts;
@@ -279,7 +309,9 @@ export function upsert(slice, rec) {
 }
 
 /**
- * Merge every record of `from` into `into` using the progress rule; hidden ids are unioned.
+ * Merge every record of `from` into `into` using the progress rule; hidden ids are unioned. A record
+ * a later version of this mod wrote is carried over untouched; one from an earlier version, or
+ * anything malformed, is dropped.
  * @param {ArchiveSlice} into Target (mutated).
  * @param {ArchiveSlice} from Source.
  */
@@ -289,7 +321,10 @@ export function mergeSlices(into, from) {
     delete into.games[id];
   }
   into.texts = { ...into.texts, ...(from.texts || {}) };
-  for (const rec of Object.values(from.games)) if (isRecord(rec)) upsert(into, rec);
+  for (const [id, rec] of Object.entries(from.games)) {
+    if (isRecord(rec)) upsert(into, rec);
+    else if (isNewerRecord(rec) && !into.hidden[id]) into.games[id] = rec;
+  }
 }
 
 /**
@@ -304,12 +339,9 @@ export function hideGame(slice, id, now) {
 }
 
 /**
- * Make the slice fit its byte budget, losing as little as possible: first the territory maps, then
- * the other civilizations' timeline tracks, then whole timelines are dropped from the least recently
- * played games; only then are games removed (unfinished ones first, oldest first). The most recently
- * updated game (the one being played and just saved) is kept whole, and only trimmed if it alone
- * exceeds the budget. Sizes are measured once per record and kept as a running total, so this is one
- * linear pass even on a full archive.
+ * Make the slice fit its byte budget: drop territory maps, then other civs' timeline tracks, then
+ * whole timelines from the least recently played games, and only then remove games (unfinished
+ * first, oldest first). The most recently updated game is kept whole unless it alone exceeds the budget.
  * @param {ArchiveSlice} slice The slice (mutated).
  * @param {number} [cap] Byte budget.
  * @returns {string[]} Evicted ids.
@@ -355,6 +387,7 @@ function stripParts(byAge, total, cap) {
   for (const strip of strips) {
     for (const r of byAge) {
       if (total <= cap) return total;
+      if (isNewerRecord(r)) continue;
       const before = sizeOf(r);
       strip(r);
       total -= before - sizeOf(r);
@@ -364,7 +397,9 @@ function stripParts(byAge, total, cap) {
 }
 
 /**
- * Remove whole games, unfinished ones first and then the oldest, until the slice fits.
+ * Remove whole games, unfinished ones first and then the oldest, until the slice fits. Records a
+ * later version wrote are never removed (their weight is unknown here and they are not this
+ * version's to judge), so a slice full of them may stay over budget.
  * @param {ArchiveSlice} slice The slice (mutated).
  * @param {number} total Its current size.
  * @param {number} cap Byte budget.
@@ -374,8 +409,8 @@ function stripParts(byAge, total, cap) {
 function evictGames(slice, total, cap, keep) {
   /** @type {string[]} */
   const evicted = [];
-  const order = Object.values(slice.games).filter((r) => r.id !== keep).sort(
-    (a, b) => Number(a.outcome.status !== "in_progress") - Number(b.outcome.status !== "in_progress") || a.updated - b.updated
+  const order = Object.values(slice.games).filter((r) => r.id !== keep && !isNewerRecord(r)).sort(
+    (a, b) => Number(a.outcome?.status !== "in_progress") - Number(b.outcome?.status !== "in_progress") || a.updated - b.updated
   );
   const drop = () => {
     const victim = /** @type {ArchiveRecord} */ (order.shift());

@@ -1,17 +1,7 @@
 // view-worldrankings-allcivs.js
 //
-// "All Civilizations" view: a spreadsheet-style matrix built from flex
-// columns rather than an HTML <table>.
-//
-// Layout: each civ is a vertical column, each metric is a horizontal row.
-//   Column 1: metric labels                  (sticky-left)
-//   Column 2: local player's civ values      (sticky-left, gold border)
-//   Column 3+: every other met civ, sorted by leader name
-//
-// Vanilla Civ7 uses zero <table> elements (a grep across
-// Resources/Base/modules turns up no createElement("table") and no
-// `<table` literals). Coherent's GameFace renders tables unreliably,
-// hence flex.
+// "All Civilizations" view: a spreadsheet-style matrix (civs as columns, metrics as rows) built
+// from flex columns rather than an HTML <table>, which Coherent's GameFace renders unreliably.
 
 import {
   buildCivProfiles,
@@ -28,6 +18,7 @@ import {
 } from "/demographics/ui/core/demographics-governance.js";
 import {
   appendEmptyState,
+  appendRenderFailed,
   setMatrixNumberMode,
   matrixHasNumberModePairs
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
@@ -42,16 +33,12 @@ import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 const NUMBER_MODES = ["scaled", "civ"];
 
 // ── Responsive matrix/table layout gate ───────────────────────────────────────
-// The screen renders either the civs-as-rows SORTABLE TABLE (per player feedback
-// wanting sortable yield columns back) or the civs-as-columns MATRIX (the v2.3.2
-// rework that stays readable at 4K / large Interface Size). "auto" picks the table
-// only when there is width for readable per-metric column headers; otherwise the
-// matrix. A `worldRankingsAllCivsLayout` setting ("auto"|"table"|"matrix") pins it.
+// The screen renders either the civs-as-rows sortable table or the civs-as-columns matrix.
+// "auto" picks the table only when there is width for readable per-metric column headers; a
+// `worldRankingsAllCivsLayout` setting ("auto"|"table"|"matrix") pins it.
 const LAYOUT_MODES = ["auto", "table", "matrix"];
-// Readable floor per metric column, and the width the two sticky identity columns
-// (rank + civilization) consume — both in rem so the test folds in resolution AND
-// Interface Size (rem tracks the engine's scaled root font). Tune MIN_METRIC_COL_REM
-// in-engine at 4K × XL Interface Size; when unsure raise it (favours the matrix).
+// Readable floor per metric column, and the width the two sticky identity columns consume, both
+// in rem so the test folds in resolution and Interface Size. When unsure raise MIN_METRIC_COL_REM.
 const MIN_METRIC_COL_REM = 2.4;
 const FIXED_COLS_REM = 3.6 + 13;
 const VISIBLE_METRIC_COUNT = /** @type {*[]} */ (METRICS).filter(
@@ -198,37 +185,49 @@ function dlog(...a) {
  */
 
 /**
- * Render the All Civilizations matrix into `host`. Clears the host, folds the
- * history into per-civ profiles, applies the `showEliminatedCivs` /
- * `showUnmetNames` settings, then mounts the interactive strip.
+ * Render the All Civilizations view into `host`: clears the host, folds the history into
+ * per-civ profiles, applies the display settings, then mounts the table or matrix. Every
+ * sort/toggle re-render goes through here, so a throwing sub-renderer leaves a visible
+ * "render failed" notice instead of an empty host.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {WorldRankingsAllCivsCtx} ctx Render context (history + settings accessors).
  */
 export function render(host, ctx) {
   while (host.firstChild) host.removeChild(host.firstChild);
+  try {
+    renderBody(host, ctx);
+  } catch (e) {
+    appendRenderFailed(host, "render", e);
+  }
+}
 
+/**
+ * The unguarded render body (see `render`).
+ * @param {HTMLElement} host The cleared view host element.
+ * @param {WorldRankingsAllCivsCtx} ctx Render context.
+ */
+function renderBody(host, ctx) {
   const profiles = prepareProfiles(ctx);
   const allPids = Object.keys(profiles);
   if (allPids.length === 0) {
     appendEmptyState(host);
-    // afterRender runs on EVERY render (incl. the internal sort/toggle re-render
-    // below, which clears `host`), so an owner can re-attach chrome it placed in
-    // host — e.g. the Settlements Options toolbar, which a one-shot insert would
-    // lose on the first sort. See view-settlements rerenderContent.
+    // afterRender runs on every full render (which clears `host`), so an owner can re-attach
+    // chrome it placed in host (the Settlements Options toolbar).
     if (typeof ctx.afterRender === "function") ctx.afterRender(host);
     return;
   }
 
-  // Read "show unmet names" setting (Fix 4). When false, mask unmet civs.
+  // When false, mask unmet civs.
   const showUnmetNames = readBoolSetting(ctx, "showUnmetNames", false);
 
-  // Responsive branch: the sortable civs-as-rows table when there's width for it,
-  // else the matrix. Both own the same `() => render(host, ctx)` sort/toggle
-  // re-render, so afterRender fires on every re-render and the Settlements Options
-  // toolbar re-attaches.
+  // Responsive branch: the sortable civs-as-rows table when there's width for it, else the
+  // matrix. The table updates itself in place for sorts and the Rank/Value toggle; the matrix's
+  // Scaled/Civ toggle still comes back through `render` (it changes which metric rows exist).
   if (chooseLayout(host, ctx) === "table") {
     dlog("rendering all-civilizations sortable table; civs=", allPids.length);
-    renderCivTable(host, profiles, ctx, showUnmetNames, () => render(host, ctx));
+    // The table owns its own in-place updates for the Rank/Value toggle and the sort headers, so
+    // neither goes back through `render` (which would clear the host and re-create the chrome).
+    renderCivTable(host, profiles, ctx, showUnmetNames);
   } else {
     dlog("rendering all-civilizations matrix; civs=", allPids.length);
     renderMatrix(host, profiles, allPids, ctx, showUnmetNames);
@@ -246,17 +245,10 @@ export function render(host, ctx) {
  * @param {boolean} showUnmetNames Whether unmet identities are shown.
  */
 function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
-  // Metrics-as-ROWS matrix (each metric is a row, each civ a column):
-  //   Column 1: metric labels (sticky-left) — a WIDE horizontal column, so long
-  //             localized names read at full size and never clip/shrink, unlike
-  //             the civs-as-rows table where ~21 metric *columns* forced the
-  //             header font down to nothing at 4K / low UI scale.
-  //   Column 2: local player's civ values (sticky-left, gold border)
-  //   Column 3+: every other met civ, sorted by leader name (hidable "ghost"
-  //             columns pushed to the far right).
-  // Each cell is rank-forward (big world-rank number) with a small value line, so
-  // it shows rank AND value at once. The strip controller owns its own in-place
-  // re-render for the hide/show-civ toggles.
+  // Metrics-as-rows matrix: column 1 metric labels (sticky-left), column 2 the local player's
+  // values (sticky-left, gold border), then every other met civ with hidden "ghost" columns
+  // pushed to the far right. The strip controller owns its own in-place re-render for the
+  // hide/show-civ toggles.
   const localPid = pickLocalPid(profiles, allPids);
   const otherPids = sortOtherPids(profiles, allPids, localPid);
 
@@ -293,8 +285,8 @@ function prepareProfiles(ctx) {
   if (!readBoolSetting(ctx, "showEliminatedCivs", true)) {
     stripEliminatedCivs(profiles, ctx.history);
   }
-  // Governance (P0.1): own-civ-only / disabled drops every non-local civ; the
-  // unmet gate is now driven by the effective policy (so a host can force it).
+  // Own-civ-only / disabled drops every non-local civ; the unmet gate is driven by the effective
+  // policy (so a host can force it).
   if (policyOwnCivOnly()) {
     stripNonLocalCivs(profiles);
   } else if (policyHidesUnmet()) {

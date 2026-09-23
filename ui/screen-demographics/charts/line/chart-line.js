@@ -9,6 +9,7 @@
 // siblings.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import { getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
   buildTurnMaps,
@@ -98,22 +99,9 @@ const EXTRA_WIDE_Y_LEGEND = new Set([
   "emig_refugees"
 ]);
 
-// Line chart - Chart.js implementation.
-// Replaces the prior custom SVG renderer. Chart.js is loaded into Civ7's
-// runtime by the engine (used by <fxs-hof-chart>), so we can instantiate
-// directly. We get pixel-identical fonts, gridlines, axis labels, and
-// tooltips to the in-game graphs by reusing Chart.defaults the engine sets.
-//
-// Features preserved from the SVG version:
-//   - Per-civ lines with the civ's primary color
-//   - Muted civs (dimmed, not removed from the chart)
-//   - Focused civs (non-focused get lower alpha)
-//   - Time-range filter (filtered at data-build time)
-//   - Year-aware X axis ticks ("T-52 / 2725 BCE")
-//   - Y axis formatted per-metric (e.g. "$1.2B" for GDP, "Stage 1" for crisis)
-//   - Click legend entry → toggle civ; click line → toggle focus
-//   - Eliminated civs shown strikethrough in legend
-//   - Global metrics (crisis_stage / age_progress) collapse to one line
+// Line chart - Chart.js implementation. Chart.js is loaded into Civ7's runtime
+// by the engine (used by <fxs-hof-chart>), so we instantiate it directly and
+// reuse the Chart.defaults the engine sets for parity with the in-game graphs.
 
 /**
  * Destroy any prior Chart instance cached on the host before re-mounting.
@@ -132,12 +120,10 @@ export function teardownExistingChart(host) {
   host._demographicsChart = null;
 }
 
-// Apply the same Chart.defaults that the engine's fxs-hof-chart sets at
-// module load (see core/ui/components/fxs-hof-chart.js). The defaults
-// stick after first application, so duplicates are harmless; but if our
-// chart instantiates before hof-chart has ever loaded, the stock Chart.js
-// defaults (Arial, #666 text, etc.) leak through and our graphs look NOTHING
-// like the in-game ones. Setting them ourselves guarantees parity.
+// Apply the same four Chart.defaults that the engine's fxs-hof-chart sets at
+// module load (core/ui/components/fxs-hof-chart.js). If our chart instantiates
+// before hof-chart has loaded, the stock Chart.js defaults (Arial, #666 text)
+// would leak through; setting them ourselves guarantees parity.
 let _engineDefaultsApplied = false;
 /**
  * Apply the engine's `fxs-hof-chart` Chart.defaults (font, color) once, so our
@@ -159,8 +145,6 @@ export function applyEngineChartDefaults() {
       // resolvable in our scope.
       Chart.defaults.font.family =
         "BodyFont, BodyFont-SC, BodyFont-TC, BodyFont-JP, BodyFont-KR, TitilliumWeb, sans-serif";
-      Chart.defaults.font.weight = "normal";
-      Chart.defaults.font.style = "normal";
     }
     _engineDefaultsApplied = true;
   } catch (_) {
@@ -170,18 +154,19 @@ export function applyEngineChartDefaults() {
 
 /**
  * Resolve viewport dimensions. When the engine doesn't expose `window.inner*`,
- * fall back to the caller-measured host size (the real laid-out dimensions) rather
- * than a hardcoded 16:9 guess, so a non-16:9 / ultrawide display isn't mis-sized.
- * A final 1920×1080 default covers the case where neither is available.
+ * fall back to the caller-measured host size (so ultrawide displays aren't
+ * mis-sized), then to a 1920x1080 default.
  * @param {number} [fallbackW] Caller-measured host width.
  * @param {number} [fallbackH] Caller-measured host height.
  * @returns {{ vw: number, vh: number }} Viewport width and height.
  */
 function viewportSize(fallbackW, fallbackH) {
+  // window.inner* is the VISUAL viewport; the canvas lives in the frame's LOCAL space, which is
+  // 1/s larger when the frame is drawn through transform:scale(s).
   const vw =
-    typeof window !== "undefined" && window.innerWidth ? window.innerWidth : fallbackW || 1920;
+    typeof window !== "undefined" && window.innerWidth ? toLocalPx(window.innerWidth) : fallbackW || 1920;
   const vh =
-    typeof window !== "undefined" && window.innerHeight ? window.innerHeight : fallbackH || 1080;
+    typeof window !== "undefined" && window.innerHeight ? toLocalPx(window.innerHeight) : fallbackH || 1080;
   return { vw, vh };
 }
 
@@ -484,6 +469,12 @@ function buildChartPluginSet(opts, metricId, prep) {
 }
 
 /**
+ * Ceiling on the crisis-label right padding, as a fraction of the data span. Keeps a wide label on
+ * a narrow plot from swallowing the chart (see applyCrisisRightPadding).
+ */
+const MAX_CRISIS_PAD_FRACTION = 0.12;
+
+/**
  * Compute the min/max chart-X across all dataset points (the points are
  * `{x, y}` with parsing disabled), or `null` when there are none.
  * @param {Record<string, *>[]} datasets The chart datasets.
@@ -500,12 +491,10 @@ function dataXBounds(datasets) {
 }
 
 /**
- * Extend the x-axis max so the rightmost data column has exactly enough PIXEL
- * room on its right for the widest crisis-marker label to draw to the right of
- * its line. Run AFTER first layout (so the real plot width is known), then the
- * chart is updated once. A pixel-exact pad is necessary because metrics with
- * wide y-axis labels (e.g. GDP, Population) get a narrower plot area, so a fixed
- * fraction of the data span would not give those labels enough room.
+ * Extend the x-axis max so the rightmost data column has enough pixel room for
+ * the widest crisis-marker label. Runs AFTER first layout (so the real plot
+ * width is known) because wide y-axis labels narrow the plot area, so a fixed
+ * fraction of the data span would not be enough.
  * @param {*} chart The mounted Chart instance.
  * @param {Record<string, *>[]} crisisMarkers The crisis markers.
  * @param {Record<string, *>[]} datasets The chart datasets.
@@ -517,7 +506,15 @@ function applyCrisisRightPadding(chart, crisisMarkers, datasets) {
   const b = dataXBounds(datasets);
   if (!b || b.max <= b.min || plotW <= label) return;
   // Closed form: pad max so plotW * (max - dataMax) / (max - dataMin) == label.
-  chart.options.scales.x.max = (plotW * b.max - label * b.min) / (plotW - label);
+  const padded = (plotW * b.max - label * b.min) / (plotW - label);
+  // Cap the padding at a fraction of the data span. The closed form asks for whatever the widest
+  // label needs in PIXELS, which is fine on a wide plot but runaway on a narrow one: measured at
+  // 1280x720 the plot was 928px and the widest crisis pill 238px, pushing the axis max to 304 for
+  // data ending at 226 - the series stopped three quarters of the way across and the right quarter
+  // of the chart was empty. The label may now overhang slightly at small sizes, which is far less
+  // bad than losing a quarter of the plot.
+  const cap = b.max + (b.max - b.min) * MAX_CRISIS_PAD_FRACTION;
+  chart.options.scales.x.max = Math.min(padded, cap);
   chart.update("none");
 }
 
@@ -651,10 +648,9 @@ function mountPreparedLineChart(args) {
 }
 
 /**
- * Align the overlaid legend's left edge to the plot's measured inner-left (just
- * inside the Y axis), so it never overlaps the Y-axis tick labels regardless of
- * their width or the Interface Size. No-op (keeping the CSS rem-tier fallback) if
- * the plot area isn't available yet. A small gap keeps it off the axis line.
+ * Align the overlaid legend's left edge to the plot's measured inner-left so it
+ * never overlaps the Y-axis tick labels. No-op (keeping the CSS fallback) if
+ * the plot area isn't available yet.
  * @param {*} chart The mounted Chart.js instance.
  * @param {HTMLElement|null} legendEl The overlaid legend element.
  */
@@ -685,10 +681,8 @@ function buildLegendForMetric(datasets, opts, metricId) {
 
 /**
  * Build the relatively-positioned wrap + full-width canvas for the line chart.
- * The custom HTML legend (when provided) is OVERLAID in the plot's top-left
- * (where rising lines rarely reach) instead of taking a side column, so the
- * canvas fills the whole width. Marker/tooltip overlays anchor to the canvas at
- * the wrap's top-left.
+ * The custom HTML legend (when provided) is overlaid in the plot's top-left so
+ * the canvas fills the whole width; marker/tooltip overlays anchor to the wrap.
  * @param {number} renderW The total render width (px).
  * @param {number} renderH The render height (px).
  * @param {HTMLElement|null} [legendEl] The custom HTML legend, or null.

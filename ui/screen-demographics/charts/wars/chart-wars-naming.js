@@ -1,14 +1,9 @@
 // chart-wars-naming.js
 //
-// War-naming logic, extracted from chart-conflicts-timeline.js so the (large) gantt
-// DOM/render module isn't pulled in just to name a war. Pure logic: turns a
-// (merged) war set into display names - recurrence ordinals, geography-aware
-// regional/great/world labels, and duration flair - plus the small roster/year
-// helpers that naming and the gantt both share. No DOM here.
-//
-// Imported by chart-conflicts-timeline.js (rendering), chart-conflicts-graphs.js, and
-// history-toolbar.js (the War Graphs picker), so every surface shows the SAME
-// fancy name for a given war.
+// War-naming logic (no DOM): turns a merged war set into display names -
+// recurrence ordinals, geography-aware regional/great/world labels, and duration
+// flair - plus the roster/year helpers naming and the gantt share. Every surface
+// imports this so a given war shows the same name everywhere.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { dlog, buildStackTurnYears } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
@@ -90,13 +85,9 @@ const CIV_ADJECTIVE = {
   Turkey: "Turkish",
   Vietnam: "Vietnamese",
   Zulu: "Zulu",
-  // Verified against the game's own LOC_CIVILIZATION_*_NAME / _ADJECTIVE strings
-  // (all shipped civs audited 2026-09-16, Civilization VII 1.5.0). The keys above
-  // were written from guessed display names, so several never matched: the game
-  // ships "Babylon" not "Babylonia", "Great Britain" not "Britain", "Achaemenid
-  // Persia" not "Persia". These are only consulted when a war record has no
-  // civTypeString to resolve the engine adjective from (older saves); the engine
-  // string still wins whenever it is available.
+  // Keys match the game's LOC_CIVILIZATION_*_NAME display names ("Babylon",
+  // "Great Britain", "Achaemenid Persia"). Consulted only when a war record has
+  // no civTypeString; the engine adjective wins whenever it is available.
   Babylon: "Babylonian",
   Gauls: "Gallic",
   Gaul: "Gallic",
@@ -307,16 +298,15 @@ function buildContinentMap(samples) {
 }
 
 /**
- * Compute display names for a (merged) war set, keyed by warUniqueID, so every
- * surface - the timeline, the War Graphs picker, and the War Graphs header - can
- * show the SAME fancy name (recurrence ordinals + world-war numbering included).
- * Callers pass the SAME full merged set so the names agree.
+ * Compute display names for a merged war set, keyed by warUniqueID (recurrence
+ * ordinals + world-war numbering included). Callers pass the same full merged
+ * set so the names agree across surfaces.
  * @param {*[]} wars The merged wars.
  * @param {Snapshot[]} samples The sample stream.
  * @returns {Map<number, string>} warUniqueID → display name.
  */
 export function nameMergedWars(wars, samples) {
-  const latestTurn = samples && samples.length ? (samples[samples.length - 1].turn ?? 0) : 0;
+  const latestTurn = samples && samples.length ? (samples[samples.length - 1]?.turn ?? 0) : 0;
   const turnYearMap = buildStackTurnYears(samples);
   const continentMap = buildContinentMap(samples);
   const overrides = buildWarNameOverrides(wars, turnYearMap, latestTurn, continentMap);
@@ -394,10 +384,9 @@ function buildDurationFlairContext(sorted, latestTurn) {
 }
 
 /**
- * Build the epic-duration war label, named by the war's actual in-game year
- * span (the in-world timeline players recognize) rounded to a clean figure. The
- * iconic "Hundred Years' War" is kept for spans that round to ~100; otherwise an
- * accurate, varied "(N-Year War)" suffix so names don't all read the same.
+ * Build the epic-duration war label from the war's in-game year span rounded to
+ * a clean figure: "Hundred Years' War" for spans that round to ~100, otherwise
+ * an "(N-Year War)" suffix.
  * @param {string} base The base war label.
  * @param {*} w The war record.
  * @param {Map<number, string>} turnYearMap chart-turn → year map.
@@ -485,10 +474,9 @@ function composeWarLabel(w, pairCounts, worldWars, continentMap) {
 }
 
 /**
- * Emit a recurring-matchup ordinal label: looks up how many times `key` has
- * been seen, advances it, and composes `template` with the ordinal word + the
- * given adjective params. Shared by the bilateral and single-belligerent namers
- * so the same matchup gets "First…", "Second…" prefixes on reruns.
+ * Emit a recurring-matchup ordinal label: advances the count for `key` and
+ * composes `template` with the ordinal word + adjective params, so the same
+ * matchup gets "First…", "Second…" prefixes on reruns.
  * @param {Map<string, number>} pairCounts Recurring-matchup counts (mutated).
  * @param {string} key Stable matchup key.
  * @param {string} template WARNAME LOC key.

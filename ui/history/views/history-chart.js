@@ -1,8 +1,7 @@
 // history-chart.js
 //
 // Dependency-free line charts. The plot is an SVG stretched to its box (preserveAspectRatio="none");
-// all text (axis ticks, age markers, legend) is HTML laid over it by percentage so nothing is
-// distorted, the approach Demographics uses for its hand-drawn charts. Works at the main menu,
+// all text is HTML laid over it by percentage so nothing is distorted. Works at the main menu,
 // where Chart.js is not loaded.
 
 import { el } from "/demographics/ui/history/core/history-dom.js";

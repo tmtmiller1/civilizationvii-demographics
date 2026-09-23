@@ -36,10 +36,8 @@ const HAPPINESS_SCALE = 10; // net amenities/happiness output
 const GROWTH_SCALE = 0.5; // population growth per turn
 
 /**
- * A directional bias in [-1,1] from NATURALLY-CENTERED real signals: net happiness, the urban:rural
- * mix (denser cities lean higher), and the population growth trend. This is the "lean" of the
- * variation — grounded in game state, not invented — so a thriving city reads a touch larger than a
- * stagnant one of the same size.
+ * A directional bias in [-1,1] from naturally-centered real signals (net happiness, urban:rural
+ * mix, growth trend), so a thriving city reads a touch larger than a stagnant one of the same size.
  * @param {*} s Settlement record (population/urban/rural/outputs/trend).
  * @returns {number} Bias in [-1,1].
  */
@@ -57,10 +55,8 @@ function metricBias(s) {
 }
 
 /**
- * Deterministic ENTROPY seeded from the settlement's real metric state (food/production/gold/happiness,
- * urban/rural, founding turn) — NOT its name. Two cities differing in any of these get different
- * variation; a city's figure also shifts as its situation changes. The name/id is folded in last only
- * as a tie-breaker so identical-state cities still separate.
+ * Deterministic entropy seeded from the settlement's real metric state (yields, happiness,
+ * urban/rural, founding turn); the name/id is folded in last only as a tie-breaker.
  * @param {*} s Settlement record.
  * @param {string} idKey Stable id (tie-breaker).
  * @returns {number} Entropy in [-1,1].
@@ -82,20 +78,17 @@ function metricEntropy(s, idKey) {
 }
 
 /**
- * Deterministic per-settlement population variation around the scaled base, GROUNDED IN REAL GAME
- * METRICS (see {@link metricBias}, {@link metricEntropy}) rather than a bare name hash. The id only
- * contributes as a final tie-breaker. Magnitude stays a narrow ±1.5% (≥ ±2500 floor) so figures read
- * as a believable census, and downstream {@link claimUniquePopulation} still guarantees uniqueness.
+ * Deterministic per-settlement population variation around the scaled base, from real game metrics
+ * ({@link metricBias}, {@link metricEntropy}). Magnitude stays a narrow ±1.5% (≥ ±2500 floor);
+ * {@link claimUniquePopulation} then guarantees uniqueness.
  * @param {number} base Base scaled population.
  * @param {*} s Settlement record.
  * @returns {number} Varied estimate.
  */
 function variedPopulation(base, s) {
-  // `base` already includes the era ceiling (softCeil). The narrow variation here runs ON TOP, so the
-  // displayed figure may sit a hair above the ceiling — intentional: the era ceiling is a SOFT target
-  // (and explicitly expandable in "one more turn" overtime), not a hard display wall. A hard
-  // post-variation clamp is avoided on purpose — it would collapse near-ceiling cities to the same
-  // value and break the uniqueness guarantee. See design doc (#1).
+  // `base` already includes the soft era ceiling; the variation runs on top, so a figure may sit
+  // a hair above it. No post-variation clamp: it would collapse near-ceiling cities to the same
+  // value and break the uniqueness guarantee.
   const b = Math.max(1, Math.round(base));
   const range = Math.max(2500, Math.round(b * 0.015));
   const idKey = settlementVarianceKey(s);

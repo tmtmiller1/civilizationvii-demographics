@@ -170,7 +170,8 @@ export function mergeCivSample(profile, ps) {
 export function buildCivProfiles(history) {
   /** @type {Record<string, CivProfile>} */
   const profiles = {};
-  const samples = history?.samples || [];
+  // A repaired/foreign blob can carry a non-array `samples`; treat it as no history.
+  const samples = Array.isArray(history?.samples) ? history.samples : [];
   for (const s of samples) {
     if (!s?.players) continue;
     for (const pid of Object.keys(s.players)) {
@@ -266,12 +267,9 @@ const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
   .map((m) => m.id);
 
 /**
- * Spoiler guard (display-time): strip diplomacy-category metric values from the
- * profiles of civs the local player has not met (`met === false`), so the
- * worldrankings-allcivs renders the missing-value placeholder instead of leaking their
- * reputation / influence / deals. Both the displayed cells and the rank
- * computation read `latest`, so removing the value here covers both. Reversible
- * - only called when `hideUnmetStats` is on.
+ * Spoiler guard (display-time): strip diplomacy-category metric values from the profiles of
+ * civs the local player has not met (`met === false`). Both the displayed cells and the rank
+ * computation read `latest`, so removing the value here covers both.
  * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
  */
 export function stripUnmetDiplomacy(profiles) {
@@ -283,9 +281,8 @@ export function stripUnmetDiplomacy(profiles) {
 }
 
 /**
- * Governance (P0.1): drop every NON-local civ from the profile map in place,
- * for the own-civ-only / disabled analytics policy. When the local player can't
- * be resolved, leaves the map untouched (the render layer's banner still warns).
+ * Drop every non-local civ from the profile map in place, for the own-civ-only / disabled
+ * analytics policy. When the local player can't be resolved, leaves the map untouched.
  * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
  */
 export function stripNonLocalCivs(profiles) {

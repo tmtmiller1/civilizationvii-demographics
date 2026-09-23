@@ -1,15 +1,8 @@
 // board-ui.js
 //
-// Shared elegant DOM/SVG primitives for the plain-render "board" charts (Wonders,
-// by-type, Religion, Atlas, and the analytics charts). Design rules, from the
-// dataviz method:
-//   - Identity is carried by a colored SWATCH / accent / bar-fill — never by
-//     putting text on a colored background (which is unreadable on dark civ
-//     colors). All text wears ink tokens on the dark surface.
-//   - Civ colors are raised to a readable lightness for the dark surface via
-//     civ-color-utils (safeTextColor ∘ preferReadableColor).
-//   - Bars: recessive track, thin fill with a rounded data-end, value in muted
-//     ink beside it, a hover tooltip on every mark.
+// Shared DOM/SVG primitives for the plain-render "board" charts. Identity is carried by a colored
+// swatch / accent / bar-fill, never by text on a colored background; all text wears ink tokens on
+// the dark surface, and civ colors are raised to a readable lightness via civ-color-utils.
 
 import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 
@@ -59,10 +52,8 @@ export function box(style, text, cls) {
 }
 
 /**
- * A small circled "+" badge that flags a row as click-to-expand (drill-down), so
- * the extra detail reads as discoverable before it's clicked. Sits before the
- * row's label; sized in `em` so it tracks the row font-size and inherits the row
- * ink via `currentColor`.
+ * A small circled "+" badge that flags a row as click-to-expand. Sits before the row's label;
+ * sized in `em` so it tracks the row font-size and inherits the row ink via `currentColor`.
  * @returns {HTMLElement} The badge span (leading, decorative).
  */
 export function expandBadge() {
@@ -71,7 +62,7 @@ export function expandBadge() {
   s.setAttribute("aria-hidden", "true");
   s.setAttribute("style", "display:inline-flex;align-items:center;justify-content:center;"
     + "margin-right:0.35rem;width:1.05em;height:1.05em;border-radius:50%;"
-    + "border:0.0555rem solid currentColor;font-size:0.72em;font-weight:bold;"
+    + "border:1px solid currentColor;font-size:0.72em;font-weight:bold;"
     + "line-height:1;vertical-align:middle;opacity:0.85;");
   return s;
 }
@@ -83,9 +74,9 @@ export function expandBadge() {
  * @returns {HTMLElement} The swatch.
  */
 export function swatch(color, size) {
-  const s = size || 12;
+  const s = ((size || 12) / 18).toFixed(3) + "rem";
   return box(
-    "flex:0 0 auto;width:" + s + "px;height:" + s + "px;border-radius:3px;" +
+    "flex:0 0 auto;width:" + s + ";height:" + s + ";border-radius:0.167rem;" +
       "background:" + color + ";box-shadow:0 0 0 1px rgba(0,0,0,0.35)"
   );
 }
@@ -93,7 +84,7 @@ export function swatch(color, size) {
 /** @param {string} text @returns {HTMLElement} A section title in ink. */
 export function sectionTitle(text) {
   return box(
-    "padding:12px 8px 4px;color:" + INK + ";font-size:1.05rem;letter-spacing:0.04em;font-weight:700",
+    "padding:0.667rem 0.444rem 0.222rem;color:" + INK + ";font-size:var(--dg-fs-105);letter-spacing:0.04em;font-weight:700",
     text,
     "font-title"
   );
@@ -104,7 +95,7 @@ export function emptyState(host, text) {
   host.appendChild(
     box(
       "display:flex;align-items:center;justify-content:center;height:100%;min-height:8rem;" +
-        "color:" + INK_MUTED + ";font-size:1.1rem;text-align:center;padding:2rem",
+        "color:" + INK_MUTED + ";font-size:var(--dg-fs-105);text-align:center;padding:2rem",
       text,
       "font-body"
     )
@@ -121,19 +112,19 @@ export function emptyState(host, text) {
  */
 export function barRow(o) {
   const pct = Math.max(0, Math.min(100, Math.round((o.value / (o.max || 1)) * 100)));
-  const line = box("display:flex;align-items:center;gap:10px;min-height:22px");
+  const line = box("display:flex;align-items:center;gap:0.556rem;min-height:1.222rem");
   line.setAttribute("data-tooltip-content", o.label + " — " + o.right);
   line.appendChild(box(
-    "flex:0 0 " + (o.labelWidth || "10rem") + ";color:" + INK + ";font-size:0.92rem;text-align:right;" +
+    "flex:0 0 " + (o.labelWidth || "10rem") + ";color:" + INK + ";font-size:var(--dg-fs-95);text-align:right;" +
       "white-space:nowrap;overflow:hidden;text-overflow:ellipsis", o.label, "font-body"
   ));
-  const track = box("flex:1 1 auto;height:14px;background:" + TRACK + ";border-radius:7px;overflow:hidden");
+  const track = box("flex:1 1 auto;height:0.778rem;background:" + TRACK + ";border-radius:0.389rem;overflow:hidden");
   track.appendChild(box(
-    "height:100%;width:" + pct + "%;background:" + o.color + ";border-radius:7px;min-width:2px"
+    "height:100%;width:" + pct + "%;background:" + o.color + ";border-radius:0.389rem;min-width:0.111rem"
   ));
   line.appendChild(track);
   line.appendChild(box(
-    "flex:0 0 5.5rem;color:" + INK_MUTED + ";font-size:0.88rem;text-align:left", o.right, "font-body"
+    "flex:0 0 5.5rem;color:" + INK_MUTED + ";font-size:var(--dg-fs-85);text-align:left", o.right, "font-body"
   ));
   return line;
 }
@@ -143,7 +134,7 @@ export function barRow(o) {
  * @returns {HTMLElement} The stack.
  */
 export function stack() {
-  return box("display:flex;flex-direction:column;gap:5px;width:100%;padding:2px 8px 10px");
+  return box("display:flex;flex-direction:column;gap:0.278rem;width:100%;padding:0.111rem 0.444rem 0.556rem");
 }
 
 /**
@@ -156,14 +147,14 @@ export function stack() {
  */
 export function columnHeader(name, color, count) {
   const head = box(
-    "display:flex;align-items:center;gap:8px;padding:9px 11px;border-bottom:1px solid " + BORDER +
-      ";border-left:4px solid " + color + ";background:" + PANEL
+    "display:flex;align-items:center;gap:0.444rem;padding:0.5rem 0.611rem;border-bottom:1px solid " + BORDER +
+      ";border-left:0.222rem solid " + color + ";background:" + PANEL
   );
-  head.appendChild(box("color:" + INK + ";font-weight:700;font-size:0.95rem;flex:1 1 auto;" +
+  head.appendChild(box("color:" + INK + ";font-weight:700;font-size:var(--dg-fs-95);flex:1 1 auto;" +
     "white-space:nowrap;overflow:hidden;text-overflow:ellipsis", name, "font-title"));
   head.appendChild(box(
-    "flex:0 0 auto;color:" + INK_DIM + ";font-size:0.85rem;background:rgba(0,0,0,0.25);" +
-      "border-radius:9px;padding:1px 8px", String(count)
+    "flex:0 0 auto;color:" + INK_DIM + ";font-size:var(--dg-fs-85);background:rgba(0,0,0,0.25);" +
+      "border-radius:0.5rem;padding:0.056rem 0.444rem", String(count)
   ));
   return head;
 }
@@ -181,7 +172,7 @@ export function columnHeader(name, color, count) {
 export function boardColumn(name, color, count, items) {
   const col = box(
     "flex:0 0 auto;min-width:12rem;max-width:19rem;display:flex;flex-direction:column;" +
-      "border:1px solid " + BORDER + ";border-radius:6px;overflow:hidden;background:" + PANEL
+      "border:1px solid " + BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + PANEL
   );
   col.appendChild(columnHeader(name, color, count));
   for (const it of items) col.appendChild(boardColumnItem(it));
@@ -195,15 +186,15 @@ export function boardColumn(name, color, count, items) {
  * @returns {HTMLElement} The row.
  */
 function boardColumnItem(it) {
-  const base = "padding:6px 12px;border-bottom:1px solid rgba(0,0,0,0.18)";
+  const base = "padding:0.333rem 0.667rem;border-bottom:1px solid rgba(0,0,0,0.18)";
   if (typeof it === "string") {
-    return box(base + ";color:" + INK + ";font-size:0.9rem", it, "font-body");
+    return box(base + ";color:" + INK + ";font-size:var(--dg-fs-85)", it, "font-body");
   }
   const cell = box(base);
-  cell.appendChild(box("color:" + INK + ";font-size:0.9rem;font-weight:600", it.title, "font-body"));
+  cell.appendChild(box("color:" + INK + ";font-size:var(--dg-fs-85);font-weight:600", it.title, "font-body"));
   if (it.sub) {
     cell.appendChild(box(
-      "color:" + INK_MUTED + ";font-size:0.8rem;line-height:1.3;margin-top:2px", it.sub, "font-body"
+      "color:" + INK_MUTED + ";font-size:var(--dg-fs-78);line-height:1.3;margin-top:0.111rem", it.sub, "font-body"
     ));
   }
   return cell;
@@ -221,7 +212,7 @@ export function columnsRow(host, wrap) {
   const flow = wrap
     ? "flex-wrap:wrap;align-content:flex-start;overflow-y:auto;overflow-x:hidden"
     : "overflow:auto";
-  const row = box("display:flex;gap:14px;align-items:flex-start;height:100%;padding:8px;" + flow);
+  const row = box("display:flex;gap:0.778rem 0.778rem;align-items:flex-start;height:100%;padding:0.444rem;" + flow);
   host.appendChild(row);
   return row;
 }
@@ -274,11 +265,11 @@ export function svgRoot(host, w, h) {
  * @returns {HTMLElement} The legend.
  */
 export function legend(entries) {
-  const wrap = box("display:flex;flex-wrap:wrap;gap:12px 18px;padding:10px 8px");
+  const wrap = box("display:flex;flex-wrap:wrap;gap:0.667rem 1rem;padding:0.556rem 0.444rem");
   for (const e of entries) {
-    const item = box("display:flex;align-items:center;gap:7px");
+    const item = box("display:flex;align-items:center;gap:0.389rem");
     item.appendChild(swatch(e.color, 11));
-    item.appendChild(box("color:" + INK + ";font-size:0.9rem", e.name, "font-body"));
+    item.appendChild(box("color:" + INK + ";font-size:var(--dg-fs-85)", e.name, "font-body"));
     wrap.appendChild(item);
   }
   return wrap;
