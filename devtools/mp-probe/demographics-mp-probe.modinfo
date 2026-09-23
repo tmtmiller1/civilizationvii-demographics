@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="demographics-mp-probe" version="1" xmlns="ModInfo">
+    <Properties>
+        <Name>Demographics MP Probe (dev)</Name>
+        <Description>Throwaway dev probe. Hosts a hotseat game with two human seats from the main menu, presses Begin Game, ends turns for each seat and opens the Demographics History tab, logging [HS] lines to UI.log, so a multiplayer crash can be reproduced on one machine. Not for release.</Description>
+        <Authors>Tower</Authors>
+        <Package>DemographicsMPProbe</Package>
+        <PackageSortIndex>9999</PackageSortIndex>
+        <Version>0.0.1</Version>
+        <AffectsSavedGames>0</AffectsSavedGames>
+    </Properties>
+    <Dependencies>
+        <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
+    </Dependencies>
+    <ActionCriteria>
+        <Criteria id="always"><AlwaysMet></AlwaysMet></Criteria>
+    </ActionCriteria>
+    <ActionGroups>
+        <ActionGroup id="hs-shell" scope="shell" criteria="always">
+            <Properties><LoadOrder>9000</LoadOrder></Properties>
+            <Actions>
+                <UIScripts><Item>hs-shell.js</Item></UIScripts>
+            </Actions>
+        </ActionGroup>
+        <ActionGroup id="hs-game" scope="game" criteria="always">
+            <Properties><LoadOrder>9000</LoadOrder></Properties>
+            <Actions>
+                <UIScripts><Item>hs-game.js</Item></UIScripts>
+            </Actions>
+        </ActionGroup>
+    </ActionGroups>
+</Mod>

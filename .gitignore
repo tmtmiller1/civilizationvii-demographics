@@ -5,3 +5,4 @@ reports/
 .stryker-tmp/
 *.bak
 .DS_Store
+devtools/mp-probe/runs/
