@@ -12,6 +12,7 @@ const required = [
   "test:required-scripts",
   "test:settings-clobber",
   "test:storage-repair",
+  "test:history-capture-mp",
   "test:storage-schema",
   "test:storage-load-branches",
   "test:storage-backend-branches",
