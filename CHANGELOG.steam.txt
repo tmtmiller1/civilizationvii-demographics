@@ -3,10 +3,12 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
-==== 2.7.3 | 2026-09-23 | src ecd3ada7945f | gen f5f9813af306 ====
+==== 2.7.3 | 2026-09-23 | src 0ba1cfe5801c | gen c58fa21e0bfb ====
 [b]Version 2.7.3 · 23 September 2026[/b]
 Two passes in one release, and no new graphs.
 The screen now fits the resolution it is played at. Before this, the same layout occupied about 1% of the screen's height at 2880x1800 and about 2% at 1280x720, so on smaller displays the menus filled half the screen, only one of the top-three settlement cards was visible, tab labels wrapped onto two lines and the timeline ran off the right edge. 2880x1800 renders exactly as it did; every other resolution now approximates that layout. Along the way a sweep of the stylesheets found a class of styling this UI engine silently drops, which had been costing the screen its gold borders and all of its italic text.
+Alongside that is a consistency pass over how the screen reads. The Options button and the analytics-policy note share one header row on every tab instead of costing a row of their own on some pages. Every page now draws from one type scale, including the compact History boards that had been laid out in fixed pixels and ignored the Font Size setting. The Hall of Fame's short-games filter is a single button on the sections line rather than two buttons on a row of their own. Clicking a filter, a column header or a metric pill no longer throws away and rebuilds the parts of the page that did not change, so headings, flourishes, yield icons and leader portraits stop blinking, and the page tabs stop flicking back to their first entry.
+The cinematic tour got the same treatment: its info panel is back in its own frame at the bottom of the screen, and a flyby can no longer be clicked or hovered through to the game underneath. The sentence that panel writes about a settlement also reads correctly again for every wonder in the game. It names each one in prose, so each needs to be right about “the”, and the list it checked against had fallen behind the game: wonders and natural wonders added since that text was written all collected a wrong article, and one was listed under a spelling the game does not use. All 48 wonders and 19 natural wonders are now matched on their internal id rather than their name.
 The rest is hardening: every change closes a way the mod could lose data, blank a panel, or step on another mod, found by a code audit after the shared-storage bug in 2.7.1. Nothing there changes for a player whose game was already working; the notes say what each change protects.
 
 [b]Added[/b]
@@ -53,20 +55,12 @@ The rest is hardening: every change closes a way the mod could lose data, blank 
 • Hall of Fame footer note removed
 • The cinematic's info panel is very slightly more see-through
 • Podium headings carry one flourish instead of two
-• The type scale has one source in JavaScript and one declaration in CSS, and the test suite fails if they drift
 
 [b]Known issues[/b]
-• At 1280x720 some pages are still cramped: column headings and long leader names can be cut off
 
 [b]Added (release gates, not shipped)[/b]
-• test:storage-invariants: no file may write a top-level storage key other than the shared one, reset it, or clear the store outside the...
-• test:core-imports: every base-game module the mod imports must exist in the installed game
-• test:loc-keys: every LOC key referenced in code must exist in the English text or the base-game registry
-• test:control-assets: every HTML/CSS asset a screen registers must exist and be declared in the modinfo
-• The stylesheet gate sweeps every sheet for constructs this UI engine silently drops: a variable inside a shorthand (border-color, bord...
-• The modinfo test now fails on a runtime import cycle
 
-Details in the [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/CHANGELOG.md]full changelog[/url].
+More changes in the [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/CHANGELOG.md]full changelog[/url].
 
 ==== 2.7.2 | 2026-09-22 | src 510f82982783 | gen 4dbe5c713d66 ====
 [b]Version 2.7.2 · 22 September 2026[/b]
