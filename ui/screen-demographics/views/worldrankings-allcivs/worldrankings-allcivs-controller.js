@@ -2,9 +2,11 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 
 import {
+  appendRenderFailed,
   buildCivColumn,
   buildGhostCivColumn,
-  buildLabelColumn
+  buildLabelColumn,
+  syncLabelResetButton
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
 
 const DBG = false;
@@ -14,6 +16,14 @@ const DBG = false;
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-worldrankings-allcivs]", ...a);
+}
+
+/**
+ * Error logger (always emits).
+ * @param {...*} a Values to log.
+ */
+function derr(...a) {
+  console.error("[Demographics.view-worldrankings-allcivs]", ...a);
 }
 
 /** @typedef {import("./worldrankings-allcivs-profiles.js").CivProfile} CivProfile */
@@ -30,6 +40,12 @@ function dlog(...a) {
  * @property {AllCivsCtx} ctx Render context.
  * @property {boolean} showUnmetNames When false, unmet civs are masked.
  * @property {Set<string>} hiddenCivs The currently hidden pid set.
+ * @property {Map<string, HTMLElement>} cols Live per-pid column elements, so a hide/show toggle
+ *   rebuilds ONLY the column whose shape changed. Rebuilding the whole strip re-created every
+ *   other civ's leader portrait and the label column's metric icons, and each one blinked while
+ *   its `blp:` background resolved again.
+ * @property {HTMLElement|null} labelCol The label column (kept across toggles).
+ * @property {number} head Count of leading sticky columns (label + local) before the civ columns.
  */
 
 /**
@@ -91,17 +107,94 @@ export function toggleCiv(st, pid) {
   if (st.hiddenCivs.has(k)) st.hiddenCivs.delete(k);
   else st.hiddenCivs.add(k);
   saveHiddenCivs(st);
-  renderStrip(st);
+  updateStripColumns(st, [k]);
 }
 
 /**
- * Clear all hidden civs, persist, and re-render the strip.
+ * Clear all hidden civs, persist, and restore their columns.
  * @param {StripState} st The strip state.
  */
 export function resetHidden(st) {
+  // Only the columns that were hidden change shape (ghost → full); the rest are left alone.
+  const wasHidden = Array.from(st.hiddenCivs);
   st.hiddenCivs.clear();
   saveHiddenCivs(st);
-  renderStrip(st);
+  updateStripColumns(st, wasHidden);
+}
+
+/**
+ * The non-local pids in display order: visible civs first (in the sorted order), then the hidden
+ * ones as thin "ghost" columns at the far right.
+ * @param {StripState} st The strip state.
+ * @returns {string[]} The ordered pids.
+ */
+function orderedOtherPids(st) {
+  /** @type {string[]} */
+  const visible = [];
+  /** @type {string[]} */
+  const hidden = [];
+  for (const pid of st.otherPids) {
+    if (st.hiddenCivs.has(String(pid))) hidden.push(String(pid));
+    else visible.push(String(pid));
+  }
+  return visible.concat(hidden);
+}
+
+/**
+ * Rebuild ONLY the named columns (the ones whose full/ghost shape changed), move them to their
+ * new places, and update the label column's reset button. Every untouched column keeps its
+ * element — and therefore its already-resolved portrait — so nothing blinks. Falls back to a full
+ * strip render if anything throws, so a failed update cannot leave a half-built strip.
+ * @param {StripState} st The strip state.
+ * @param {string[]} pids The pids whose columns must be rebuilt.
+ */
+function updateStripColumns(st, pids) {
+  try {
+    const ordered = orderedOtherPids(st);
+    for (const pid of pids) rebuildOneColumn(st, String(pid), ordered);
+    reconcileStripOrder(st, ordered);
+    if (st.labelCol) {
+      syncLabelResetButton(st.labelCol, {
+        hiddenCount: st.hiddenCivs.size,
+        onReset: () => resetHidden(st)
+      });
+    }
+  } catch (e) {
+    derr("strip column update failed, falling back to a full render:", e);
+    renderStrip(st);
+  }
+}
+
+/**
+ * Replace one civ's column with a freshly built one at its new position.
+ * @param {StripState} st The strip state.
+ * @param {string} pid The pid to rebuild.
+ * @param {string[]} ordered The target pid order.
+ */
+function rebuildOneColumn(st, pid, ordered) {
+  const prior = st.cols.get(pid);
+  if (prior && prior.parentNode === st.strip) st.strip.removeChild(prior);
+  const col = buildOtherColumn(st, pid);
+  st.cols.set(pid, col);
+  const at = ordered.indexOf(pid);
+  const next = at >= 0 ? st.cols.get(ordered[at + 1]) : undefined;
+  if (next && next.parentNode === st.strip) st.strip.insertBefore(col, next);
+  else st.strip.appendChild(col);
+}
+
+/**
+ * Put every civ column in `ordered`'s order, moving only the ones that are out of place. Moving
+ * an element is not rebuilding it, so this cannot cause the blink a rebuild does.
+ * @param {StripState} st The strip state.
+ * @param {string[]} ordered The target pid order.
+ */
+function reconcileStripOrder(st, ordered) {
+  for (let i = 0; i < ordered.length; i++) {
+    const want = st.cols.get(ordered[i]);
+    if (!want) continue;
+    const at = st.strip.children[st.head + i];
+    if (at !== want) st.strip.insertBefore(want, at || null);
+  }
 }
 
 /**
@@ -147,36 +240,46 @@ export function appendStickyColumns(st) {
     onReset: () => resetHidden(st)
   });
   labelCol.classList.add("demographics-worldrankings-allcivs-col-sticky");
+  st.labelCol = labelCol;
   st.strip.appendChild(labelCol);
 
   // Column 2: local player (sticky-left, never hidable).
   const localCol = buildCivColumn(st.profiles[st.localPid], st.profiles, true, false);
   localCol.classList.add("demographics-worldrankings-allcivs-col-sticky-2");
   st.strip.appendChild(localCol);
+  st.head = st.strip.children.length;
 }
 
 /**
- * Re-render the full strip: label column, local column, then visible and
- * hidden (ghost) civ columns. Visible columns stay adjacent to the local
- * column to make comparisons easier; hidden ones are pushed to the far right.
+ * Re-render the full strip: label column, local column, then visible civ columns
+ * (adjacent to the local column) and hidden ghost columns at the far right. The
+ * header clicks and reset button re-render through here, so it is their throw
+ * boundary: a throwing column builder leaves the "render failed" notice.
  * @param {StripState} st The strip state.
  */
 export function renderStrip(st) {
   while (st.strip.firstChild) st.strip.removeChild(st.strip.firstChild);
+  try {
+    appendStripColumns(st);
+  } catch (e) {
+    appendRenderFailed(st.strip, "renderStrip", e);
+  }
+}
 
+/**
+ * Append every strip column to the (already cleared) strip (see `renderStrip`).
+ * @param {StripState} st The strip state.
+ */
+function appendStripColumns(st) {
+  st.cols.clear();
   appendStickyColumns(st);
 
   // Columns 3+: visible civs first (preserve sort), then any hidden
   // ones pushed to the far right as thin "ghost" columns.
-  const visiblePids = [];
-  const hiddenPids = [];
-  for (const pid of st.otherPids) {
-    if (st.hiddenCivs.has(String(pid))) hiddenPids.push(pid);
-    else visiblePids.push(pid);
-  }
-  const ordered = visiblePids.concat(hiddenPids);
-  for (const pid of ordered) {
-    st.strip.appendChild(buildOtherColumn(st, pid));
+  for (const pid of orderedOtherPids(st)) {
+    const col = buildOtherColumn(st, pid);
+    st.cols.set(pid, col);
+    st.strip.appendChild(col);
   }
 }
 
@@ -202,7 +305,10 @@ export function mountWorldRankingsAllCivsStrip(strip, profiles, pids, ctx, showU
     otherPids: pids.otherPids,
     ctx,
     showUnmetNames,
-    hiddenCivs: readHiddenCivs(ctx)
+    hiddenCivs: readHiddenCivs(ctx),
+    cols: new Map(),
+    labelCol: null,
+    head: 0
   };
   renderStrip(st);
   return { render: () => renderStrip(st) };

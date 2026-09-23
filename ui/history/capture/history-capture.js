@@ -2,11 +2,8 @@
 //
 // Game-scope capture loop. Once per local turn (and immediately on a victory, a defeat or the end of
 // an age) it reads the world, diffs it against the last state, appends the resulting chronicle
-// events and a trend sample to the CampaignDoc, saves the document into the save file and
-// refreshes this campaign's Hall of Fame record.
-//
-// State diffing (rather than trusting each engine event payload) means changes made during other
-// players' turns are still recorded, attributed to the turn they were first seen on.
+// events and a trend sample to the CampaignDoc, saves it into the save file and refreshes the Hall
+// of Fame record. State diffing means changes made during other players' turns are still recorded.
 
 import { dlog, derr, safe } from "/demographics/ui/history/core/history-log.js";
 import { readWorld, playerIdentity, everMajors, infoRow, turnDate, legacyBlurb } from "/demographics/ui/history/capture/history-world.js";
@@ -138,9 +135,8 @@ function campaignSeed() {
 
 /**
  * The campaign's id: the game's setup GUID and map seed, so starting the record again for the same
- * game (a save from before Demographics was added, loaded twice) lands on the same Hall of Fame entry
- * instead of a duplicate; the furthest-progressed copy wins, and a game the player removed stays
- * removed. Random only when the game offers neither.
+ * game lands on the same Hall of Fame entry instead of a duplicate. Random only when the game
+ * offers neither.
  * @param {number} seed Map seed.
  * @returns {string} Id.
  */
@@ -156,7 +152,11 @@ export function campaignId(seed) {
  */
 export function openCampaign() {
   const seed = campaignSeed();
-  const stored = loadCampaign();
+  // Parking an unusable stored campaign and restoring a parked one are writes to the shared game
+  // configuration; in a networked game only the host may make them (the 2.7.2 rule saveCampaign follows).
+  const stored = loadCampaign({
+    mayWrite: () => mayStoreCampaign({ network: isNetworkMultiplayer(), host: isHost() })
+  });
   if (stored && (!seed || !stored.seed || stored.seed === seed)) {
     return adoptViewpoint(stored, localId(), isNetworkMultiplayer());
   }
@@ -409,6 +409,20 @@ export function startCapture() {
   const kick = () => sampleNow("load");
   if (typeof Loading !== "undefined" && typeof Loading.runWhenLoaded === "function") Loading.runWhenLoaded(kick);
   else setTimeout(kick, 250);
+}
+
+/**
+ * Stop capturing: unregister every listener startCapture registered (engine.off may be absent,
+ * in which case they are only forgotten) and let startCapture run again. Nothing in the mod
+ * calls this yet; bootstrap has no unload hook, so it is exported for one to use.
+ */
+export function stopCapture() {
+  const off = safe(() => (typeof engine.off === "function" ? engine.off.bind(engine) : null), null);
+  for (const [name, fn] of state.listeners) {
+    if (off) safe(() => off(name, fn), undefined);
+  }
+  state.listeners = [];
+  state.started = false;
 }
 
 /**

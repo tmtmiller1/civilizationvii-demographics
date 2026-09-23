@@ -1,9 +1,8 @@
 // chart-line-series.js
 //
 // The history -> per-civ series pipeline for the line chart: fold each player's
-// samples into points + identity, resolve leader/civ display names, gate by the
-// unmet/back-fill spoiler modes, and emit one ChartSeries per civ. Pure data -
-// no Chart.js. Extracted from chart-line.js.
+// samples into points + identity, resolve display names, gate by the
+// unmet/back-fill spoiler modes, and emit one ChartSeries per civ. Pure data, no Chart.js.
 
 import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -156,10 +155,8 @@ function collectPidSet(samples) {
     return { t: x, v: value };
   }
 
-// Metrics that the game mechanically RESETS at an age boundary (Civ VII slashes urban/rural population
-// on age rollover; see age-transition-gameeffects.xml). Their raw series dips sharply at each boundary
-// and recovers over the new age — an artifact of the mechanic, not a real demographic collapse. For
-// these we bridge the dip on the DISPLAYED line so it reads continuously across the boundary.
+// Metrics the game mechanically RESETS at an age boundary (population is slashed on age rollover), so
+// their raw series dips at each boundary as an artifact. The dip is bridged on the DISPLAYED line.
 const AGE_RESET_BRIDGED_METRICS = new Set(["population"]);
 
 /**
@@ -191,20 +188,10 @@ function lastIndexAtOrBefore(points, x) {
 }
 
 /**
- * Add back the mechanic's reset as an OFFSET that tapers out by ACTUAL regrowth — NOT by lifting onto a
- * recovery line. The offset is the boundary drop (peak → FIRST post-boundary sample); it shrinks in
- * proportion to how far the running-max has climbed back toward the peak. Because it keys off the
- * running-max (never decreasing), a genuine post-boundary loss (war, razing) still appears as a real
- * drop on the shifted line instead of being masked — which a recovery-line fill could not distinguish.
- *
- * The trough is taken as the FIRST post-boundary sample, deliberately. The sampler records every turn
- * by default (`sampleEveryNTurns: 1`), so the one-turn mechanic reset lands in exactly one sample and
- * this is exact. Under SPARSE sampling the true bottom can fall between samples — we then UNDER-correct
- * (a small residual dip), which is the safe failure: a multi-sample "descent" look-back could instead
- * swallow a real loss a turn or two after the boundary and mask it. Fully separating a multi-sample
- * reset from a reset+loss is impossible from the (t,v) line alone; it would need the mechanic-
- * attributable drop recorded at sample time (the sampler knows the exact transition turn). See the
- * design doc / review-round3 (#3). Mutates; only raises.
+ * Add back the mechanic's reset as an OFFSET (peak → FIRST post-boundary sample) that shrinks in
+ * proportion to how far the running-max has climbed back toward the peak, so a genuine post-boundary
+ * loss still appears as a real drop. Taking the first post-boundary sample as the trough under-corrects
+ * under sparse sampling, which is the safe failure. Mutates; only raises.
  * @param {{t:number,v:number}[]} points Points (mutated). @param {number} i Pre-boundary peak index.
  * @param {number} segEnd Segment-end x. @param {number} vPre Pre-boundary value.
  */
@@ -238,9 +225,8 @@ function bridgeOneBoundary(points, bx, segEnd) {
 
 /**
  * Bridge the post-boundary dip in a reset-prone series by adding back the mechanic's instantaneous
- * reset as a regrowth-tapered offset (see {@link applyResetOffset}). This removes the artificial notch
- * while PRESERVING any genuine post-boundary loss (a war crash still shows as a drop on the shifted
- * line). Capped to the same age segment; only raises points; raw samples untouched.
+ * reset as a regrowth-tapered offset (see {@link applyResetOffset}), preserving any genuine loss.
+ * Capped to the same age segment; only raises points; raw samples untouched.
  * @param {{t:number,v:number}[]} points The series points.
  * @param {number[]} boundaryXs Age boundary x-positions (ascending).
  * @returns {{t:number,v:number}[]} The bridged points.
@@ -282,6 +268,8 @@ function foldPidSamples(samples, pid, metricId, opts) {
     metFlag: undefined
   };
   for (const s of samples) {
+    // A persisted stream can hold a null sample; skip it (collectPidSet does the same).
+    if (!s) continue;
     const ps = s.players && s.players[pid];
     if (!ps) continue;
     mergePidIdentity(fold, ps);
@@ -300,10 +288,9 @@ function foldPidSamples(samples, pid, metricId, opts) {
 }
 
 /**
- * Capture the first non-empty canonical "LEADER_*" string into the fold. Kept
- * separate from `mergePidIdentity` so that function stays under the complexity
- * cap. This string (distinct from the raw `leaderType` hash) resolves the
- * leader portrait <fxs-icon> in the tooltip.
+ * Capture the first non-empty canonical "LEADER_*" string into the fold. This
+ * string (distinct from the raw `leaderType` hash) resolves the leader portrait
+ * <fxs-icon> in the tooltip.
  * @param {PidFold} fold Accumulator (mutated).
  * @param {CivSample|*} ps One civ's sample.
  */
@@ -318,10 +305,8 @@ function mergeLeaderTypeString(fold, ps) {
 }
 
 /**
- * Merge the latest non-empty banner colors into the fold. Kept separate from
- * `mergePidIdentity` so that function stays under the complexity cap. The
- * LATEST color wins because civilization swaps at age transitions change banner
- * colors, and the line should reflect the current civ identity.
+ * Merge the latest non-empty banner colors into the fold. The LATEST color wins
+ * because civilization swaps at age transitions change banner colors.
  * @param {PidFold} fold Accumulator (mutated).
  * @param {CivSample|*} ps One civ's sample.
  */
@@ -433,20 +418,14 @@ function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
   const key = String(leaderType ?? "pid:" + pid);
   const leaderOnly = leaderOnlyLabel(leaderName, leaderType, pid);
   let allCivNames = collectCivHistory(samples, pid);
-  // Live fallback for snapshots that don't carry civName yet
-  // (older history rows pre-$hash fix). Pull directly via
-  // player.civilizationName so the chart label never says
-  // "Augustus" alone when we can resolve "Augustus (Rome)" now.
+  // Live fallback for snapshots that carry no civName: pull player.civilizationName
+  // so the label reads "Augustus (Rome)" rather than "Augustus" alone.
   if (allCivNames.length === 0) {
     allCivNames = liveCivNameFallback(pid);
   }
   const isEliminated = !!eliminatedMap[String(pid)] || !!eliminatedMap[Number(pid)];
-  // Prefer the civ's actual banner color so each line matches the in-game
-  // banner. When the primary is near-black (e.g. Alexander), fall back to the
-  // civ's secondary banner color so the line stays readable on the dark
-  // background. Fall back to the rotating palette only when the sampler didn't
-  // capture a color (older saves). Final near-black/dim lift happens in
-  // chart-line-datasets via safeTextColor.
+  // Prefer the civ's banner color (secondary when the primary is near-black);
+  // the rotating palette is only for samples with no captured color.
   const color = seriesColor(primaryColor, secondaryColor, idx);
   return {
     // End-of-line labels: "Leader (Civ)" or "Leader (Old → New)".
@@ -463,12 +442,9 @@ function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
 }
 
 /**
- * Resolve the two unmet-gating modes from settings.
- *  - `backfill`: gating on AND back-fill on → drop a civ only while currently
- *    unmet, otherwise show its full history.
- *  - `fromContactOnly`: gating on AND back-fill off → withhold per-sample points
- *    taken before first contact so the line begins at meeting.
- * Both false when the spoiler guard is off (everything shows).
+ * Resolve the two unmet-gating modes from settings: `backfill` drops a civ only
+ * while currently unmet, `fromContactOnly` withholds points taken before first
+ * contact. Both false when the spoiler guard is off.
  * @returns {{ backfill: boolean, fromContactOnly: boolean }} The gate modes.
  */
 function resolveUnmetGateModes() {
@@ -499,7 +475,7 @@ function buildSeriesFromHistory(history, metricId) {
   const { offsets: ageOffsets } = computeAgeOffsets(samples, ageBoundariesLocal);
 
   const { backfill, fromContactOnly } = resolveUnmetGateModes();
-  // Governance (P0.1): under own-civ-only / disabled, only the local player's
+  // Governance: under own-civ-only / disabled, only the local player's
   // own series may render at all.
   const ownOnly = policyOwnCivOnly();
   const pids = collectPidSet(samples);
@@ -512,10 +488,8 @@ function buildSeriesFromHistory(history, metricId) {
       ageBoundariesLocal,
       fromContactOnly
     });
-    // Back-fill mode: drop a civ only while it is still unmet (latest met flag
-    // === false); once met the whole line is revealed. From-contact mode keeps
-    // currently-unmet civs too - their points were already withheld in the fold,
-    // so they simply have no pre-contact data.
+    // Back-fill mode: drop a civ only while it is still unmet. From-contact mode
+    // keeps currently-unmet civs; their pre-contact points were withheld in the fold.
     if (backfill && fold.metFlag === false) return;
     if (fold.points.length >= 1) {
       series.push(buildSeriesEntry(samples, pid, idx, fold, eliminatedMap));
@@ -527,10 +501,8 @@ function buildSeriesFromHistory(history, metricId) {
 
 /**
  * Resolve every series' final display color in one global pass: lift each
- * chosen banner color for readability (near-black / dim-blue), then deconflict
- * the whole set so no two civs share a near-identical line color - reassigning
- * collisions to arbitrary, well-separated colors. Earlier series keep their
- * color, so banner identity is preserved wherever possible.
+ * banner color for readability, then deconflict the set so no two civs share a
+ * near-identical line color (earlier series keep their color).
  * @param {ChartSeries[]} series The built series (mutated in place).
  */
 function finalizeSeriesColors(series) {

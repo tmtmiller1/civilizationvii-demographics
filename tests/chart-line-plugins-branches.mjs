@@ -68,9 +68,23 @@ function testSignZonesAndCapLine() {
   assert.equal(ctx.calls.length, callsBefore, "non-cap metrics should not draw cap line");
 }
 
+function testMissingChartAreaIsSkipped() {
+  // Chart.js can invoke a plugin hook before layout (chartArea undefined); the hooks return early.
+  const ctx = fakeCtx();
+  const chart = {
+    ctx,
+    tooltip: { opacity: 1, dataPoints: [{ element: { x: 10 } }] },
+    scales: { x: {}, y: { min: 0, max: 200, getPixelForValue: (v) => v } }
+  };
+  makeHoverCrosshairPlugin().afterDatasetsDraw(chart);
+  makeCapLimitLinePlugin("settlement_cap_pct").afterDatasetsDraw(chart);
+  assert.equal(ctx.calls.length, 0, "no drawing without a chartArea");
+}
+
 try {
   testFocusAndHover();
   testSignZonesAndCapLine();
+  testMissingChartAreaIsSkipped();
   console.log("chart-line-plugins-branches harness passed");
 } finally {
   globalThis.Chart = savedChart;

@@ -1,8 +1,8 @@
 // screen-history-context.js
 //
 // Builds the render context handed to the Historical Data view: a snapshot of
-// the screen's current state plus the mutate-persist-rerender callbacks. Pulled
-// out of ScreenDemographics so the screen class owns lifecycle, not view wiring.
+// the screen's current state plus the mutate-persist-rerender callbacks, so the
+// screen class owns lifecycle, not view wiring.
 
 /**
  * The history view's mutation callbacks. Each updates a state field, persists

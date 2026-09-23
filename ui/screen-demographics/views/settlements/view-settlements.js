@@ -8,10 +8,8 @@
 //   table         - a dense, sortable settlements table with an All/Cities/Towns
 //                   filter and a "category leaders" strip.
 //
-// (The Town Advisor lives in its own top-level tab now; the data tables here are a
-// LIVE snapshot from settlements-data.js. "Settlement" is the primary unit: the
-// city<->town status flips across ages, so the combined list is the headline and
-// City/Town is just a filter on current status.)
+// The data tables are a live snapshot from settlements-data.js. "Settlement" is the
+// primary unit since city<->town status flips across ages; City/Town is a filter.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
@@ -29,12 +27,19 @@ import * as ViewWorldRankingsAllCivs from "/demographics/ui/screen-demographics/
 import { renderCivRankingPanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js";
 import { renderShowcasePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
 import { renderTablePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-table.js";
-import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 import { annotateWonderYears } from "/demographics/ui/screen-demographics/settlements/settlements-wonder-years.js";
 import { readAgeArchive } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
 import { renderHallOfFameTab } from "/demographics/ui/screen-demographics/views/settlements/settlements-halloffame.js";
 
 const TOP_N = 25;
+
+/**
+ * Error logger (always emits).
+ * @param {...*} a Values to log.
+ */
+function derr(...a) {
+  console.error("[Demographics.settlements]", ...a);
+}
 
 /**
  * Mutable render state for the Settlements view.
@@ -84,10 +89,9 @@ function setSetting(settings, key, value) {
 }
 
 /**
- * Whether a settlement's identity should be obscured: the "hide unmet players"
- * option (showUnmetNames === false, the default) is active AND the owner is a
- * civ the local player has not met. Defensive: only mask when `met === false`
- * (mirrors the worldrankings-allcivs), never on an unknown/undefined met state.
+ * Whether a settlement's identity should be obscured: "hide unmet players"
+ * (showUnmetNames === false, the default) is active AND the owner is unmet.
+ * Masks only when `met === false`, never on an unknown met state.
  * @param {SettleState} st The render state.
  * @param {*} s The settlement.
  * @returns {boolean} True when the settlement should be masked.
@@ -117,10 +121,9 @@ function maskOwner(owner) {
 }
 
 /**
- * A display clone of a settlement with its identity (name + owner) obscured,
- * keeping every quantitative field (score, yields, population, founded, trend,
- * wonders, ranks) intact. `masked` is stamped so builders can suppress the
- * "View on map" affordance (revealing an unmet city's location is a spoiler).
+ * A display clone of a settlement with its identity (name + owner) obscured and
+ * every quantitative field intact. `masked` is stamped so builders can suppress
+ * the "View on map" affordance.
  * @param {*} s The settlement.
  * @returns {*} The masked settlement.
  */
@@ -184,9 +187,7 @@ function cameraButton(active, labelKey, onClick, disabledTipKey) {
 
 /**
  * Whether the camera (fly-to / fly-by) is forbidden for a settlement: its owner
- * is a civ the local player has not met, OR the settlement's city center hasn't
- * been discovered yet (it's still in fog). Independent of the "hide unmet names"
- * option.
+ * is unmet, or its city center is still in fog. Independent of "hide unmet names".
  * @param {*} s The settlement.
  * @returns {boolean} True when the camera must stay disabled.
  */
@@ -284,10 +285,9 @@ function buildOwnerCell(owner) {
   const cell = div("demographics-settle-owner");
   cell.appendChild(buildOwnerAvatar(owner));
   const names = div("demographics-settle-owner-names");
-  // Civilization-primary, leader-secondary (player feedback: identify with the
-  // civ first). The prominent class ".-owner-leader" now intentionally carries
-  // the CIV name; the smaller ".-owner-civ" carries the leader. Only surface the
-  // secondary leader line when there is a distinct civ name above it.
+  // Civilization-primary, leader-secondary: ".-owner-leader" carries the civ
+  // name and ".-owner-civ" the leader. The leader line only shows when there is
+  // a distinct civ name above it.
   const primary = owner.civName || owner.leaderName || "—";
   names.appendChild(div("demographics-settle-owner-leader", primary));
   if (owner.civName && owner.leaderName) {
@@ -356,10 +356,12 @@ function buildLaurelMedal(place) {
  */
 function buildOutputStrip(s) {
   const strip = div("demographics-settle-outputs");
+  // An archived record from an older build may carry no outputs map.
+  const o = s.outputs || {};
   for (const col of SETTLEMENT_OUTPUTS) {
     const item = div("demographics-settle-output");
     item.appendChild(iconEl(col.icon, "demographics-settle-yield-icon"));
-    item.appendChild(div("demographics-settle-output-val", fmt(s.outputs[col.id])));
+    item.appendChild(div("demographics-settle-output-val", fmt(o[col.id])));
     strip.appendChild(item);
   }
   return strip;
@@ -390,7 +392,6 @@ function renderShowcase(st) {
   renderShowcasePanel(st, {
     topN: TOP_N,
     safePlaySound,
-    rerenderContent,
     displayOf,
     buildLaurelMedal,
     buildOwnerAvatar,
@@ -435,6 +436,10 @@ function renderCivRanking(st) {
  */
 function buildSectionTitle(key) {
   const wrap = div("demographics-settle-section-title");
+  // Both flourishes stay in the DOM: the ranking-list heading lays them out LEFT and RIGHT of the
+  // title (symmetric), while the podium column stacks them ABOVE and BELOW. The podium's top one is
+  // hidden in CSS (.demographics-settle-split-left ... :first-child) - it spent a row over both
+  // "Greatest" headings for no information.
   wrap.appendChild(iconEl("blp:header_filigree", "demographics-settle-section-fil"));
   wrap.appendChild(div("demographics-settle-section-title-text font-title", t(key)));
   wrap.appendChild(iconEl("blp:header_filigree", "demographics-settle-section-fil demographics-settle-section-fil-r"));
@@ -450,7 +455,6 @@ function renderTable(st) {
     topN: TOP_N,
     setSetting,
     safePlaySound,
-    rerenderContent,
     displayOf,
     buildOwnerCell,
     buildTypeBadge,
@@ -467,6 +471,14 @@ function renderTable(st) {
  */
 function buildEmpty() {
   return div("demographics-settle-empty", t("LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY"));
+}
+
+/**
+ * Build the "render failed" placeholder shown when a sub-view throws.
+ * @returns {HTMLElement} The placeholder.
+ */
+function buildRenderFailed() {
+  return div("demographics-settle-empty", t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED"));
 }
 
 /**
@@ -510,11 +522,26 @@ function buildSubTabs(st) {
 }
 
 /**
- * Clear and re-render the active sub-view into the content host.
+ * Clear and re-render the active sub-view into the content host. Every handler
+ * re-renders through this boundary, so a throwing sub-view leaves a visible
+ * "render failed" notice instead of a blank panel.
  * @param {SettleState} st The render state.
  */
 function rerenderContent(st) {
   while (st.content.firstChild) st.content.removeChild(st.content.firstChild);
+  try {
+    renderSubView(st);
+  } catch (e) {
+    derr("sub-view render threw (subTab=" + st.subTab + "):", e);
+    st.content.appendChild(buildRenderFailed());
+  }
+}
+
+/**
+ * Render the active sub-view into the (already cleared) content host.
+ * @param {SettleState} st The render state.
+ */
+function renderSubView(st) {
   if (st.subTab === "halloffame") return renderHallOfFameTab(st.content);
   // Civilizations = the per-civ All Civilizations matrix (built from sampled
   // history); the other two are the live settlement rankings. (The old per-city
@@ -522,10 +549,8 @@ function rerenderContent(st) {
   if (st.subTab === "civranking") {
     renderCivRanking(st);
   } else if (st.subTab === "civilizations") {
-    // The All-Civ view re-renders itself on every sort/toggle, clearing st.content
-    // (incl. any toolbar a one-shot insert would add). afterRender re-attaches the
-    // Options toolbar after each of its (re)renders; insertOptionsToolbar is
-    // idempotent so this never stacks duplicates.
+    // The All-Civ view clears st.content on a FULL render only; its sort and Rank/Value
+    // updates happen in place, so afterRender fires on entry rather than on every click.
     ViewWorldRankingsAllCivs.render(st.content, {
       history: st.history,
       settings: st.settings,
@@ -537,25 +562,24 @@ function rerenderContent(st) {
 }
 
 /**
- * Insert the Options button (a right-aligned `.demographics-chart-toolbar`, matching the
- * Historical Data tabs) directly BELOW the filter pill row, the `.demographics-settle-filters` row
- * used by both
- * the Table and the All-Civilizations sub-views. Falls back to the top of the content for sub-views
- * that render no pill row.
+ * Insert the Options button (a right-aligned `.demographics-chart-toolbar`) directly below the
+ * `.demographics-settle-filters` pill row, or at the top of the content when there is none.
  * @param {SettleState} st The render state.
  */
 function insertOptionsToolbar(st) {
-  // Idempotent: drop any existing toolbar first so repeat calls (e.g. the
-  // All-Civ view's afterRender on each internal sort/toggle) never stack copies.
-  const prior = st.content.querySelector(".demographics-chart-toolbar");
-  if (prior) prior.remove();
-  const bar = div("demographics-chart-toolbar");
-  bar.appendChild(buildOptionsButton());
-  const pills = st.content.querySelector(".demographics-settle-filters");
-  if (pills && pills.parentNode) {
-    pills.parentNode.insertBefore(bar, pills.nextSibling);
-  } else {
-    st.content.insertBefore(bar, st.content.firstChild);
+  try {
+    // Idempotent: drop any existing toolbar first so repeat calls (e.g. the
+    // All-Civ view's afterRender on each internal sort/toggle) never stack copies.
+    // The Options button lives in the frame header now (screen-demographics.js); this view no
+    // longer adds a toolbar row for it. Kept as a cleanup so no stale row from an older render
+    // survives a re-render.
+    const prior = st.content.querySelector(".demographics-chart-toolbar");
+    if (prior) prior.remove();
+  } catch (e) {
+    // querySelector/remove/insertBefore can throw on a detached host (see
+    // history-csv.js showCsvToast); the content renders without its Options
+    // button rather than blanking.
+    derr("insertOptionsToolbar threw:", e);
   }
 }
 

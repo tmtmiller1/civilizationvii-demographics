@@ -1,29 +1,15 @@
 // demographics-governance.js
 //
-// Multiplayer analytics-visibility governance (combined design plan P0.1).
-//
-// The analytics screen can reveal a lot about every civ. In multiplayer the
-// HOST should be able to cap how much comparative data the screen exposes to
-// everyone, regardless of each client's own preference. This module resolves a
-// single EFFECTIVE policy from two sources and is consulted at BOTH the
-// data-access layer (chart series builders drop civs that the policy hides) and
-// the render layer (the screen shows a policy banner so the constraint is
-// visible to all players).
+// Multiplayer analytics-visibility governance: resolves one EFFECTIVE policy from
+// the host ceiling (GameConfiguration) and the client's local preference, which
+// can only be more restrictive. Consulted by both the data-access layer and the
+// render layer; reads fail safe to the most restrictive policy available.
 //
 // Policy modes, least → most permissive:
 //   disabled       - no comparative analytics; only the local player's own civ.
-//   own-civ-only   - same visibility as disabled (own civ only), kept distinct
-//                    so a host can express intent ("analytics off" vs "own civ").
-//   met-civs-only  - the local player's own civ plus civs it has met (the legacy
-//                    spoiler-guard behaviour, and the default).
+//   own-civ-only   - same visibility as disabled, kept distinct to express intent.
+//   met-civs-only  - the local player's own civ plus civs it has met (the default).
 //   full           - every civ, met or not.
-//
-// Host authority travels over GameConfiguration (Configuration.editGame()/
-// getGame()), the same host-set, save- and age-persistent channel the
-// Emigration mod uses; the value is the host's CEILING. Each client's local
-// setting (analyticsPolicy) can only make its OWN view MORE restrictive, never
-// more permissive than the host ceiling. Reads fail safe (most restrictive
-// available) so a thrown engine call can never widen visibility.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 
@@ -50,10 +36,35 @@ export const POLICY_ORDER = [POLICY_DISABLED, POLICY_OWN, POLICY_MET, POLICY_FUL
 const HOST_POLICY_KEY = "DemographicsAnalyticsPolicy_v1";
 
 // GameConfiguration key holding the EFFECTIVE policy this client resolved (host ceiling ∧ local
-// preference). Published here so companion mods (Emigration) can read the live value reliably, the
-// Coherent UI localStorage they'd otherwise read is wiped between reads, so a direct read of our
-// settings slice returns stale/empty and the companion can't see the player's choice.
+// preference), published so companion mods can read the live value without touching our
+// localStorage settings slice.
 const EFFECTIVE_POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
+
+/**
+ * The per-player effective-policy key. GameConfiguration is one shared document in a networked
+ * game, so a single key would hold whichever client opened the screen last; each seat publishes
+ * under its own id and the companion reads its own seat first.
+ * @param {number} pid Local player id.
+ * @returns {string} The key.
+ */
+export function effectivePolicyKeyFor(pid) {
+  return EFFECTIVE_POLICY_KEY + "_P" + pid;
+}
+
+/**
+ * The local seat's player id, or -1 when it cannot be read.
+ * @returns {number} Player id.
+ */
+function localPid() {
+  try {
+    if (typeof GameContext === "undefined") return -1;
+    const pid = GameContext.localPlayerID;
+    return typeof pid === "number" && pid >= 0 ? pid : -1;
+  } catch (_) {
+    // GameContext is absent off-engine.
+    return -1;
+  }
+}
 
 /**
  * A known policy id, or null when the value is unrecognized.
@@ -65,18 +76,14 @@ function asPolicy(v) {
 }
 
 /**
- * The local player's own preference, defaulting from the legacy spoiler guard:
- * `hideUnmetStats` on → met-civs-only, off → full. A stored `analyticsPolicy`
- * (set via Options) takes precedence. Fails safe to met-civs-only.
+ * The local player's own preference, from the spoiler guard: `hideUnmetStats`
+ * on → met-civs-only, off → full. Fails safe to met-civs-only.
  * @returns {string} A policy id.
  */
 export function localPolicy() {
   try {
     // The Spoil Guard checkbox (`hideUnmetStats`, default ON) is the single local control: ON
-    // hides unmet civilizations (met-civs-only), OFF reveals all. The legacy `analyticsPolicy`
-    // override was
-    // dropped here — it had no UI, so a stale stored value silently disabled the checkbox (the bug
-    // where toggling Spoil Guard did nothing). Defaults to met-civs-only (hide) when unset.
+    // hides unmet civilizations (met-civs-only), OFF reveals all.
     const hideUnmet = DemographicsSettings.getSetting("hideUnmetStats", true) !== false;
     return hideUnmet ? POLICY_MET : POLICY_FULL;
   } catch (_) {
@@ -119,7 +126,15 @@ export function effectivePolicy() {
  */
 export function publishEffectivePolicy() {
   try {
-    Configuration?.editGame?.()?.setValue?.(EFFECTIVE_POLICY_KEY, effectivePolicy());
+    const policy = effectivePolicy();
+    const edit = Configuration?.editGame?.();
+    if (!edit || typeof edit.setValue !== "function") return;
+    const pid = localPid();
+    if (pid >= 0) edit.setValue(effectivePolicyKeyFor(pid), policy);
+    // The shared single key is written only where one client owns the document: single-player
+    // and hotseat (one machine), or the host of a networked game. A guest writing it would
+    // replace the host's value for every companion mod reading it.
+    if (!isNetworkedGame() || canSetHostPolicy()) edit.setValue(EFFECTIVE_POLICY_KEY, policy);
   } catch (_) {
     /* GameConfiguration unavailable → companion falls back to its own read */
   }
@@ -127,8 +142,8 @@ export function publishEffectivePolicy() {
 
 /**
  * Whether unmet civs are hidden under the effective policy (everything except
- * `full`). Drives the legacy {@link hideUnmetEnabled} seam so all existing
- * per-point / whole-civ met gating keeps working.
+ * `full`). Drives the {@link hideUnmetEnabled} seam behind per-point and
+ * whole-civ met gating.
  * @returns {boolean} True to hide unmet civs.
  */
 export function policyHidesUnmet() {
@@ -190,10 +205,9 @@ export function isMultiplayer() {
 }
 
 /**
- * Whether the local player may SET the host ceiling: always in single-player
- * (you are effectively host); in multiplayer only when actually hosting.
- * Best-effort - if host status can't be resolved in MP, returns false so a
- * non-host can't appear to set a policy that won't take.
+ * Whether the local player may set the host ceiling: always in single-player,
+ * in multiplayer only when hosting. Returns false when host status can't be
+ * resolved, so a non-host can't appear to set a policy that won't take.
  * @returns {boolean} True when the local player can write the host policy.
  */
 export function canSetHostPolicy() {
@@ -238,4 +252,36 @@ export function bannerInfo() {
   const host = hostPolicy();
   const hostEnforced = !!host && POLICY_RANK[host] <= POLICY_RANK[localPolicy()];
   return { show: policy !== POLICY_FULL, policy, hostEnforced, multiplayer: isMultiplayer() };
+}
+
+/**
+ * The networked flag from the game configuration, or null when it does not say.
+ * @param {*} g The game configuration handle.
+ * @returns {boolean|null} True/false when known, null when unknown.
+ */
+function configNetworked(g) {
+  if (!g) return null;
+  if (typeof g.isNetworkMultiplayer === "boolean") return g.isNetworkMultiplayer;
+  if (typeof g.isNetworkMultiplayer === "function") return !!g.isNetworkMultiplayer();
+  if (g.isHotseat === true) return false;
+  return null;
+}
+
+/**
+ * Whether this game runs over a network (internet, LAN, cloud). Hotseat is multiplayer but one
+ * machine owns the configuration, so it is not networked. Watched 2026-09-22: isAnyMultiplayer is
+ * true in hotseat while Network.isHost() is false, so the shared key was not written there.
+ * @returns {boolean} True for a networked game.
+ */
+export function isNetworkedGame() {
+  try {
+    const known = configNetworked(typeof Configuration !== "undefined" ? Configuration.getGame?.() : null);
+    if (known !== null) return known;
+    if (typeof Network !== "undefined" && typeof Network.isConnectedToNetwork === "function") {
+      return !!Network.isConnectedToNetwork();
+    }
+  } catch (_) {
+    // Configuration / Network may be absent off-engine.
+  }
+  return false;
 }

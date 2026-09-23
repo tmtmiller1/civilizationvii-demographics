@@ -1,25 +1,22 @@
 // history-timeline-view.js
 //
-// The interactive Timeline graphic of one game. A control row picks the window (the whole game or
-// one age) and the zoom, pans, and plays the game back. Under it, a fixed column of lane labels sits
-// beside a horizontally scrolling canvas that stacks the lanes of history-timeline-lanes.js over
-// faint turn guides. Playback sweeps a cursor across the window, veils what has not happened yet
-// and names the latest event under the cursor; clicking the ruler moves the cursor there.
-//
-// The graphic redraws itself in place when a control changes, so the page around it keeps its
-// scroll position. Everything is HTML placed by percentage with engine tooltips.
+// The interactive Timeline graphic of one game: a control row (window, zoom, pan, playback) over a
+// fixed column of lane labels beside a horizontally scrolling canvas of history-timeline-lanes.js
+// lanes. Playback sweeps a cursor that veils the future and names the latest event; the graphic
+// redraws in place so the page keeps its scroll position. Everything is HTML placed by percentage.
 
 import { el, clear, onActivate } from "/demographics/ui/history/core/history-dom.js";
+import { derr, safe } from "/demographics/ui/history/core/history-log.js";
 import { t, typeName } from "/demographics/ui/history/core/history-text.js";
 import { eventText } from "/demographics/ui/history/model/history-narrate.js";
-import { pillRow, civIcon } from "/demographics/ui/history/views/history-widgets.js";
+import { pillRow, civIcon, emptyState } from "/demographics/ui/history/views/history-widgets.js";
 import { mapPanel } from "/demographics/ui/history/views/history-map-view.js";
 import { KIND_ICONS, DISASTER_ICONS } from "/demographics/ui/history/core/history-icons.js";
 import { focusTimeline, timelineCivs } from "/demographics/ui/history/model/history-timeline.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
 import {
   xp, ageHeader, warLane, crisisLane, milestoneLanes, settlementLane, disasterLane, migrationLane, populationLane,
-  rulerLane, gridLines, shortPeople
+  rulerLane, gridLines, shortPeople, newItemCache, beginItemPass, endItemPass
 } from "/demographics/ui/history/views/history-timeline-lanes.js";
 
 export { stackRows, shortPeople } from "/demographics/ui/history/views/history-timeline-lanes.js";
@@ -47,6 +44,25 @@ const MARK_LEGEND = [
  * @typedef {{from:number, to:number}} Win
  * @typedef {{at:number, text:string}} Beat
  */
+
+/**
+ * A handler that logs a throw instead of letting it out. Event and timer callbacks run outside the
+ * page's render try/catch, so a throw there would leave the graphic half-updated with nothing
+ * logged, and a timer would throw again on every tick.
+ * @template {any[]} A
+ * @param {string} what What the handler does, for the log line.
+ * @param {(...args: A) => void} fn Handler.
+ * @returns {(...args: A) => void} The guarded handler.
+ */
+function guarded(what, fn) {
+  return (...args) => {
+    try {
+      fn(...args);
+    } catch (e) {
+      derr("timeline " + what + " failed", e);
+    }
+  };
+}
 
 /**
  * The window shown for the selected age ("all" is the whole game).
@@ -158,13 +174,17 @@ function turnLabel(tl, at) {
  * @param {Win} w Window.
  * @param {Cast} cast Cast.
  * @param {number} zoom Zoom.
+ * @param {import("./history-timeline-lanes.js").ItemCache} [cache] Item-reuse cache, handed to the
+ *   lanes whose items carry engine art (emblems, medallions, gems) so a redraw keeps those
+ *   elements instead of re-creating them and making each one blink.
  * @returns {import("./history-timeline-lanes.js").Lane[]} Lanes.
  */
-function lanesFor(tl, w, cast, zoom) {
+function lanesFor(tl, w, cast, zoom, cache) {
   return [
-    ageHeader(tl, w, cast), warLane(tl, w, cast), crisisLane(tl, w), ...milestoneLanes(tl, w, cast),
-    settlementLane(tl, w, cast), disasterLane(tl, w, cast), migrationLane(tl, w), populationLane(tl, w, cast),
-    rulerLane(tl, w, zoom)
+    ageHeader(tl, w, cast, cache), warLane(tl, w, cast, cache), crisisLane(tl, w, cache),
+    ...milestoneLanes(tl, w, cast, cache),
+    settlementLane(tl, w, cast), disasterLane(tl, w, cast, cache), migrationLane(tl, w),
+    populationLane(tl, w, cast), rulerLane(tl, w, zoom)
   ].filter((x) => !!x).map((x) => /** @type {import("./history-timeline-lanes.js").Lane} */ (x));
 }
 
@@ -227,13 +247,41 @@ export function timelineGraphic(tl, cast, opts = {}) {
     if (play.timer != null) clearInterval(play.timer);
     play.timer = null;
   };
+  // Every redraw path (age and zoom pills, the civilization filter) ends here, so a redraw that
+  // fails leaves a message in place of the graphic rather than a half-drawn one or nothing.
+  // The civilization filter (civ emblems) and the legend (icon swatches) depend only on WHICH
+  // civilizations are shown — never on the age window or the zoom. Rebuilding them on every age or
+  // zoom click re-created their engine art, and each icon blinked while it resolved again, so they
+  // are kept against the shown set and moved back into place instead of being remade.
+  /** @type {{ sig: string|null, civs: HTMLElement|null, legend: HTMLElement|null }} */
+  const chrome = { sig: null, civs: null, legend: null };
+  // One cache per timeline instance (never module-level: two timelines would fight over the same
+  // elements, and an element can only have one parent).
+  const items = newItemCache();
   const draw = () => {
     stop();
-    clear(root);
-    if (!tl.ages.some((a) => a.age === viewState.tlAge)) viewState.tlAge = "all";
-    const shown = shownCivs(opts.key || "", cast);
-    const fx = { redraw: draw, stop, onSeek: opts.onSeek || (() => {}) };
-    drawInto(root, focusTimeline(tl, cast.local, shown), cast, play, { ...fx, civs: civFilter(tl, cast, shown, opts.key || "", draw) });
+    try {
+      if (!tl.ages.some((a) => a.age === viewState.tlAge)) viewState.tlAge = "all";
+      const shown = shownCivs(opts.key || "", cast);
+      const focused = focusTimeline(tl, cast.local, shown);
+      const sig = Array.from(shown).sort((a, b) => a - b).join(",");
+      if (sig !== chrome.sig) {
+        chrome.sig = sig;
+        chrome.civs = civFilter(tl, cast, shown, opts.key || "", draw);
+        chrome.legend = legend(focused);
+      }
+      clearExcept(root, [chrome.civs, chrome.legend]);
+      const fx = { redraw: draw, stop, onSeek: opts.onSeek || (() => {}) };
+      drawInto(root, focused, cast, play, { ...fx, civs: chrome.civs, legend: chrome.legend, items });
+    } catch (e) {
+      derr("timeline draw failed", e);
+      // The kept chrome may be half-wired after a throw, and the item pass never finished; force a
+      // clean rebuild of both on the next draw.
+      chrome.sig = null;
+      items.items.clear();
+      clear(root);
+      root.appendChild(emptyState(t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED")));
+    }
   };
   draw();
   return root;
@@ -264,10 +312,10 @@ function civFilter(tl, cast, shown, key, redraw) {
   const age = tl.ages[tl.ages.length - 1]?.age || "";
   const civs = timelineCivs(tl, cast.local).filter((pid) => pid === cast.local || (cast.known(pid) && cast.color(pid)));
   if (civs.length < 2) return null;
-  const set = (/** @type {number[]} */ pids) => {
+  const set = guarded("civilization filter", (/** @type {number[]} */ pids) => {
     viewState.tlCivs = { key, pids };
     redraw();
-  };
+  });
   const quick = (/** @type {string} */ label, /** @type {number[]} */ pids, /** @type {boolean} */ on) => {
     const b = el("div", { cls: "dgh-pill dgh-tl-civ-quick" + (on ? " is-active" : ""), text: t(label) });
     onActivate(b, () => set(pids));
@@ -300,13 +348,17 @@ function civFilter(tl, cast, shown, key, redraw) {
  * @param {Timeline} tl Timeline.
  * @param {Cast} cast Cast.
  * @param {{timer: any, at: number}} play Playback state.
- * @param {{redraw: () => void, stop: () => void, onSeek: (at:number) => void, civs: HTMLElement|null}} fx Redraw,
+ * @param {{redraw: () => void, stop: () => void, onSeek: (at:number) => void,
+ *   civs: HTMLElement|null, legend?: HTMLElement|null,
+ *   items?: import("./history-timeline-lanes.js").ItemCache}} fx Redraw,
  *   stop, seek listener and the civilization filter row.
  */
 function drawInto(root, tl, cast, play, fx) {
   const zoom = ZOOMS.includes(viewState.tlZoom) ? viewState.tlZoom : 1;
   const w = windowFor(tl, viewState.tlAge);
-  const lanes = lanesFor(tl, w, cast, zoom);
+  beginItemPass(fx.items);
+  const lanes = lanesFor(tl, w, cast, zoom, fx.items);
+  endItemPass(fx.items);
   const labels = el("div", { cls: "dgh-tl-labels" }, lanes.map((l) =>
     el("div", { cls: "dgh-tl-label", text: l.label ? t(l.label) : "", style: { height: l.height + "rem" } })));
   const laneEls = lanes.map((l) => el("div", { cls: "dgh-tl-lane dgh-tl-lane--" + l.key, style: { height: l.height + "rem" } }, l.items));
@@ -319,9 +371,22 @@ function drawInto(root, tl, cast, play, fx) {
   if (fx.civs) root.appendChild(fx.civs);
   root.appendChild(el("div", { cls: "dgh-tl-body" }, [labels, viewport]));
   root.appendChild(caption);
-  root.appendChild(legend(tl));
+  // Kept from the previous draw when the shown civilizations did not change (see `chrome` in
+  // timelineGraphic); appending an element already in the tree MOVES it back into place.
+  root.appendChild(fx.legend || legend(tl));
   if (play.at >= w.from && play.at <= w.to) player.seek(play.at);
   else fx.onSeek(w.to - 0.5);
+}
+
+/**
+ * Remove every child of `node` except the ones being kept across this redraw.
+ * @param {HTMLElement} node The container.
+ * @param {Array<HTMLElement|null>} keep The children to leave in the tree.
+ */
+function clearExcept(node, keep) {
+  for (const child of Array.prototype.slice.call(node.children)) {
+    if (!keep.includes(child) && child.parentNode === node) node.removeChild(child);
+  }
 }
 
 /**
@@ -385,7 +450,7 @@ function hoverReadout(lane, w, textAt) {
   const label = el("div", { cls: "dgh-tl-hover-label" });
   const box = el("div", { cls: "dgh-tl-hover is-hidden" }, [line, label]);
   lane.appendChild(box);
-  lane.addEventListener("mousemove", (/** @type {any} */ ev) => {
+  lane.addEventListener("mousemove", guarded("readout", (/** @type {any} */ ev) => {
     const r = lane.getBoundingClientRect();
     if (!(r.width > 0) || typeof ev.clientX !== "number") return;
     const frac = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width));
@@ -394,7 +459,7 @@ function hoverReadout(lane, w, textAt) {
     if (frac > 0.75) label.classList.add("is-left");
     else label.classList.remove("is-left");
     box.classList.remove("is-hidden");
-  });
+  }));
   // GameFace also sends mouseleave when the pointer crosses the lane's own children, so hide only
   // once it is really outside the lane.
   lane.addEventListener("mouseleave", (/** @type {any} */ ev) => {
@@ -412,10 +477,10 @@ function hoverReadout(lane, w, textAt) {
  * @param {(frac:number) => void} fn Handler.
  */
 function onActivateAt(target, fn) {
-  target.addEventListener("click", (/** @type {any} */ ev) => {
+  target.addEventListener("click", guarded("seek", (/** @type {any} */ ev) => {
     const r = target.getBoundingClientRect();
     if (r.width > 0) fn(Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)));
-  });
+  }));
 }
 
 /**
@@ -453,11 +518,19 @@ function playback(tl, cast, w, play, ui) {
     follow(ui.viewport, ui.canvas, x);
     ui.onSeek(play.at);
   };
+  // A throw inside a tick stops playback first: the interval would otherwise throw again every
+  // PLAY_MS, and the play button would still read "Pause".
   const tick = () => {
-    if (!ui.canvas.isConnected) return ui.stop();
-    const next = play.at + (w.to - w.from) / PLAY_TICKS;
-    seek(next);
-    if (next >= w.to) { ui.stop(); onChange?.(); }
+    try {
+      if (!ui.canvas.isConnected) return ui.stop();
+      const next = play.at + (w.to - w.from) / PLAY_TICKS;
+      seek(next);
+      if (next >= w.to) { ui.stop(); onChange?.(); }
+    } catch (e) {
+      ui.stop();
+      derr("timeline playback failed", e);
+      safe(() => onChange?.(), undefined);
+    }
   };
   return {
     seek,
@@ -510,7 +583,7 @@ function controls(tl, player, viewport, fx) {
     playBtn.appendChild(el("div", { text: t(player.playing() ? "LOC_DEMOGRAPHICS_HIST_TL_PAUSE" : "LOC_DEMOGRAPHICS_HIST_TL_PLAY") }));
   };
   player.onEnd(label);
-  onActivate(playBtn, () => { player.toggle(); label(); });
+  onActivate(playBtn, guarded("play", () => { player.toggle(); label(); }));
   label();
   const panBtn = (/** @type {string} */ text, /** @type {number} */ dir) => {
     const b = el("div", { cls: "dgh-button dgh-tl-pan", text });
@@ -518,9 +591,9 @@ function controls(tl, player, viewport, fx) {
     return b;
   };
   return el("div", { cls: "dgh-tl-controls" }, [
-    pillRow(ages, viewState.tlAge, (k) => { viewState.tlAge = k; fx.redraw(); }),
+    pillRow(ages, viewState.tlAge, guarded("age window", (k) => { viewState.tlAge = k; fx.redraw(); })),
     el("div", { cls: "dgh-tl-controls-right" }, [
-      pillRow(zooms, String(viewState.tlZoom), (k) => { viewState.tlZoom = Number(k); fx.redraw(); }),
+      pillRow(zooms, String(viewState.tlZoom), guarded("zoom", (k) => { viewState.tlZoom = Number(k); fx.redraw(); })),
       panBtn("←", -1), panBtn("→", 1), playBtn
     ])
   ]);

@@ -105,7 +105,70 @@ while (shellFrontier.length) {
 }
 assert.equal(shellMissing.size, 0, `shell group is missing module(s) the main menu imports: ${[...shellMissing].map(DISK).join(", ")}`);
 
+// ── Runtime import cycles: none of size > 1 ───────────────────────────────
+// Only load-time edges count: static `import … from "…"`, bare `import "…"` and re-exports
+// (`export … from "…"`). Dynamic `import("…")` runs after the graph is linked and cannot cycle at
+// load, and JSDoc `import("…")` type refs were already stripped with the comments. A cycle here is
+// the "benign until a new UIScript reorders evaluation, then the whole panel dies" class (see the
+// emigration import-cycle note), so the audit's zero-cycle state is pinned. Tarjan's SCC; every
+// SCC with more than one member is a cycle. Self-imports are not a cycle by this rule.
+const staticGraph = new Map();
+for (const f of listJs("ui")) {
+  const code = stripComments(fs.readFileSync(f, "utf8"));
+  const deps = new Set();
+  for (const m of code.matchAll(/\b(?:import|export)\b[^;'"]*?\bfrom\s*"([^"]+)"/g)) {
+    if (m[1].startsWith(PREFIX)) deps.add(m[1]);
+  }
+  for (const m of code.matchAll(/\bimport\s*"([^"]+)"/g)) {
+    if (m[1].startsWith(PREFIX)) deps.add(m[1]);
+  }
+  staticGraph.set(VFS(f), [...deps]);
+}
+const sccs = [];
+{
+  let index = 0;
+  const idx = new Map();
+  const low = new Map();
+  const onStack = new Set();
+  const stack = [];
+  const visit = (v) => {
+    idx.set(v, index);
+    low.set(v, index);
+    index += 1;
+    stack.push(v);
+    onStack.add(v);
+    for (const w of staticGraph.get(v) || []) {
+      if (!idx.has(w)) {
+        visit(w);
+        low.set(v, Math.min(low.get(v), low.get(w)));
+      } else if (onStack.has(w)) {
+        low.set(v, Math.min(low.get(v), idx.get(w)));
+      }
+    }
+    if (low.get(v) === idx.get(v)) {
+      const comp = [];
+      let w;
+      do {
+        w = stack.pop();
+        onStack.delete(w);
+        comp.push(w);
+      } while (w !== v);
+      sccs.push(comp);
+    }
+  };
+  for (const v of staticGraph.keys()) if (!idx.has(v)) visit(v);
+}
+const cycles = sccs.filter((c) => c.length > 1);
+const staticEdges = [...staticGraph.values()].reduce((n, d) => n + d.length, 0);
+console.log(`modinfo: ${staticGraph.size} modules, ${staticEdges} static import edges, ${cycles.length} runtime import cycle(s)`);
+assert.equal(
+  cycles.length,
+  0,
+  `${cycles.length} runtime import cycle(s) in ui/ (static imports only):\n  ` +
+    cycles.map((c) => c.map(DISK).sort().join(" <-> ")).join("\n  ")
+);
+
 console.log(
   `modinfo harness passed (${declared.size} declared JS modules import-closed, ` +
-    `${allItems.length} script Items all present)`
+    `${allItems.length} script Items all present, 0 runtime import cycles)`
 );

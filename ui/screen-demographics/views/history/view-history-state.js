@@ -4,9 +4,8 @@
 
 import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 
-// Hub reorg: pages whose ids were retired/split. A persisted selection lands on the closest
-// surviving page when its hub is the one being shown (else the first-visible clamp below takes
-// over).
+// Retired/split page ids: a persisted selection lands on the closest surviving page when its hub
+// is the one being shown (else the first-visible clamp below takes over).
 /** @type {Record<string, string>} */
 const PAGE_ID_ALIASES = {
   knowledge: "power", science_culture: "power", age: "society",
@@ -16,9 +15,8 @@ const PAGE_ID_ALIASES = {
 
 /**
  * Resolve active page id within the given (hub-scoped) page list, defaulting to the first page
- * when invalid. Retired page ids are aliased first; then, under a UI complexity tier (P1.5), a page
- * hidden
- * by the active tier clamps to the first visible page so a downgrade never strands the view.
+ * when invalid. Retired page ids are aliased first; then a page hidden by the active UI
+ * complexity tier clamps to the first visible page so a downgrade never strands the view.
  * @param {*} ctx Render context.
  * @param {{ id: string, tier?: string }[]} pages Page list (already scoped to the active hub).
  * @returns {string} Valid, tier-visible page id.
@@ -54,10 +52,9 @@ export function resolveActiveMetricState(ctx, page, metricExists) {
 }
 
 /**
- * Resolve active time filter. Cross-age filters (all/age1/age2/age3) are enabled
- * now that history persists across ages (GameConfiguration backend), so they are
- * honored rather than coerced to "age". Default to "all" (full cross-age history);
- * fall back to "all" only when the persisted id is unknown/disabled.
+ * Resolve active time filter. Cross-age filters (all/age1/age2/age3) are honored
+ * since history persists across ages; defaults to "all", and falls back to "all"
+ * when the persisted id is unknown/disabled.
  * @param {*} ctx Render context.
  * @param {{ id: string, disabled?: boolean }[]} filters Time filter list.
  * @returns {string} Valid enabled filter id.

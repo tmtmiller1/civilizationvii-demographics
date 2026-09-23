@@ -9,23 +9,12 @@
 //   Body:         centered SVG ring with colored edges between nodes
 //   Caption:      one-line hint below the ring
 //
-// The ring renderer, edge builders, and filter-pill DOM live in sibling
-// modules:
-//   relations-ring-svg.js - buildRingSvg + SVG node/edge/portrait helpers
-//   relations-edges.js    - edge builders + diplomacy/CS-type resolution
-//   relations-filters.js  - makeFilterPillRow + pill/swatch helpers
-//   relations-shared.js   - logging, safeCall, color + dash helpers
-//
-// V7 diplomacy accessors in use:
-//   player.Diplomacy.hasMet(other)
-//   Players.getAliveIds() / Players.get(id) / player.isMajor
-//   GameContext.localPlayerID
-//
-// All of the above are demonstrated either in the sloth panel or in
-// vanilla diplomacy code under core/ui/utilities/ and
-// base-standard/ui/diplomacy*.
+// The ring renderer (relations-ring-svg.js), edge builders (relations-edges.js),
+// filter pills (relations-filters.js) and shared helpers (relations-shared.js)
+// live in sibling modules.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import {
   dlog,
   derr
@@ -65,7 +54,6 @@ import {
 import {
   buildViewerDropdownPanel
 } from "/demographics/ui/screen-demographics/views/relations/relations-viewer-controls.js";
-import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 
 /**
  * One relationship edge between two ring nodes. `a`/`b` are player ids; the
@@ -179,11 +167,8 @@ function buildScaffold(host) {
   const wrap = addChild(host, "demographics-relations-wrap");
   const topTabHost = addChild(wrap, "demographics-relations-toptab-host");
   const subTabHost = addChild(wrap, "demographics-relations-subtab-host");
-  // Options button in a right-aligned toolbar row directly BELOW the sub-tabs, same structure and
-  // position as the Historical Data tabs. (The absolutely-anchored viewer/legend offsets below are
-  // bumped to clear this extra row.)
-  const optBar = addChild(wrap, "demographics-chart-toolbar");
-  optBar.appendChild(buildOptionsButton());
+  // (The Options button lives in the frame header now - screen-demographics.js - so there is no
+  // toolbar row here; the viewer/legend overlays are anchored by measurement, not by this row.)
   // CS viewer dropdown host (only populated when topTab === "cs").
   const viewerHost = addChild(wrap, "demographics-relations-viewer-host");
   const body = addChild(wrap, "demographics-relations-body");
@@ -231,6 +216,11 @@ function addChild(parent, className) {
  *   Cached full edge set keyed by turn/viewer snapshot.
  * @property {() => void} repaint Repaint entry point.
  * @property {() => void} repaintRing Ring-body-only repaint (node-focus toggles).
+ * @property {Map<string, HTMLElement>} portraitCache Leader-portrait / node-label overlays, reused
+ *   across repaints. The ring is redrawn on every filter toggle, but the node set is independent
+ *   of the filters (only the EDGES are filtered), so re-creating the portraits meant every one of
+ *   them blinked while its `fxs-icon` art resolved again. Lives on the render state, which is also
+ *   what the overlays' click handlers close over, so the two can never disagree.
  */
 
 /**
@@ -384,6 +374,7 @@ function buildFocusedRingSvg(rs, ringIds, names, focusedEdges, opts) {
     {
       viewerPid: opts.viewerPid,
       selectedNodeIds: opts.selected,
+      portraitCache: rs.portraitCache,
       onNodeToggle: (pid) => {
         const cur = rs.readNodeSelection(rs.topTab);
         if (cur.has(pid)) cur.delete(pid);
@@ -442,6 +433,9 @@ function renderRingBody(rs) {
   // group (Politics / Reputation / Agreements) that are also toggled on.
   const effectiveSet = effectiveActiveSet(rs);
 
+  // The previous ring wrap is about to be removed; forget it so the resize hook
+  // never re-fits an orphan (mountRing re-tracks the new wrap below).
+  activeRingWrap = null;
   while (body.firstChild) body.removeChild(body.firstChild);
   while (caption.firstChild) caption.removeChild(caption.firstChild);
 
@@ -482,18 +476,54 @@ function renderRingBody(rs) {
   if (selected.size > 0) appendFocusClearButton(caption, rs);
 }
 
-// The most-recently mounted ring wrap + the live render state, plus a one-time
-// window-resize hook that re-fits the diagram AND re-anchors the absolutely-
-// positioned overlays. The ring's placement routine re-measures the on-screen
-// budget and re-caps the diagram every time it runs (see relations-ring-svg.js),
-// so a resolution / window / Interface-Size change after the screen is open
-// re-fits dynamically. A SINGLE module-level listener (rather than one per wrap)
-// avoids leaks across the frequent ring repaints; it no-ops once the wrap detaches.
+// The most-recently mounted ring wrap + live render state, plus a one-time
+// window-resize hook that re-fits the diagram and re-anchors the overlays. A
+// single module-level listener avoids leaks across ring repaints; it no-ops once
+// the wrap detaches.
 /** @type {HTMLElement|null} */
 let activeRingWrap = null;
 /** @type {RenderState|null} */
 let activeRelationsRs = null;
 let resizeReflowWired = false;
+
+/**
+ * Drop the module-level references to the last-rendered ring wrap and render
+ * state, so the window-resize hook stops re-fitting a detached scaffold.
+ */
+export function releaseRelationsView() {
+  activeRingWrap = null;
+  activeRelationsRs = null;
+}
+
+/**
+ * Whether the tracked ring wrap / scaffold body has been detached from the DOM
+ * (the screen closed or the host was rebuilt). Only an explicit `false` counts,
+ * so an engine without `isConnected` keeps the resize re-fit alive.
+ * @returns {boolean} True when the tracked view is no longer connected.
+ */
+function relationsViewDetached() {
+  const wrap = activeRingWrap;
+  if (wrap && wrap.isConnected === false) return true;
+  const body = activeRelationsRs && activeRelationsRs.sc && activeRelationsRs.sc.body;
+  return !!body && body.isConnected === false;
+}
+
+/**
+ * Measure an element's client rect, or null when it can't be measured
+ * (getBoundingClientRect can throw on a detached node in GameFace; mirrors the
+ * ring renderer's own measurement guard).
+ * @param {*} el The element to measure (nullable).
+ * @returns {DOMRect|null} The rect, or null when unavailable.
+ */
+function measureRect(el) {
+  if (!el || typeof el.getBoundingClientRect !== "function") return null;
+  try {
+    return el.getBoundingClientRect();
+  } catch (_) {
+    // A detached / torn-down node: treat as not laid out.
+    return null;
+  }
+}
 
 /**
  * Resolve the measured rects needed to anchor the Relations overlays, or null if
@@ -506,9 +536,9 @@ function relationsOverlayMetrics(rs) {
   if (!sc || !sc.body) return null;
   const body = sc.body;
   const wrap = body.parentElement;
-  if (!wrap || typeof body.getBoundingClientRect !== "function") return null;
-  const wrapRect = wrap.getBoundingClientRect();
-  const bodyRect = body.getBoundingClientRect();
+  if (!wrap) return null;
+  const wrapRect = measureRect(wrap);
+  const bodyRect = measureRect(body);
   if (!wrapRect || !bodyRect || bodyRect.height === 0) return null;
   return { sc, wrapRect, bodyRect };
 }
@@ -524,12 +554,9 @@ function setOverlayTop(el, topPx) {
 
 /**
  * Pin the absolutely-positioned Relations overlays (the filter legend and the CS
- * "viewer" dropdown) to the TOP of the ring body, MEASURED at runtime. They were
- * anchored at a hardcoded `top: 9.5rem` chosen to clear the tab + toolbar chrome,
- * but that chrome's height scales with Interface Size, so at larger sizes the
- * fixed offset stopped clearing it and the legend overlapped the tabs. Measuring
- * the body's real top keeps both overlays in the ring's empty top corners at any
- * size, and caps the legend's height to the body so it can never spill past it.
+ * "viewer" dropdown) to the top of the ring body, measured at runtime because the
+ * tab + toolbar chrome scales with Interface Size. Also caps the legend's height
+ * to the body so it cannot spill past it.
  * @param {RenderState} rs The render-loop state.
  */
 function anchorRelationsOverlays(rs) {
@@ -539,12 +566,13 @@ function anchorRelationsOverlays(rs) {
   // A small inset so the overlay sits just inside the panel corner, not straddling
   // the body's top border.
   const inset = 4;
-  const overlayTop = Math.max(0, Math.round(bodyRect.top - wrapRect.top)) + inset;
+  // Rects are VISUAL px; `top` is written in the frame's LOCAL px (see demographics-font-ladder.js).
+  const overlayTop = Math.max(0, Math.round(toLocalPx(bodyRect.top - wrapRect.top))) + inset;
   setOverlayTop(sc.filterHost, overlayTop);
   setOverlayTop(sc.viewerHost, overlayTop);
   // Cap the legend to the body height (it scrolls internally past that) so a tall
   // legend at a large Interface Size never extends below the ring panel.
-  const avail = Math.max(0, Math.round(bodyRect.height - inset * 2));
+  const avail = Math.max(0, Math.round(toLocalPx(bodyRect.height) - inset * 2));
   if (sc.filterHost && sc.filterHost.style && avail > 0) sc.filterHost.style.maxHeight = avail + "px";
 }
 
@@ -560,12 +588,22 @@ function ensureResizeReflow() {
   let scheduled = false;
   const run = () => {
     scheduled = false;
-    const wrap = activeRingWrap;
-    if (wrap && wrap.isConnected !== false) {
-      const place = /** @type {*} */ (wrap).__placePortraits;
-      if (typeof place === "function") place();
+    // The screen closed (or the host was rebuilt) since the last paint: drop the
+    // stale references and skip the re-fit entirely rather than measuring an
+    // orphaned scaffold on every resize for the rest of the session.
+    if (relationsViewDetached()) {
+      releaseRelationsView();
+      return;
     }
-    if (activeRelationsRs) anchorRelationsOverlays(activeRelationsRs);
+    try {
+      const wrap = activeRingWrap;
+      const place = wrap ? /** @type {*} */ (wrap).__placePortraits : null;
+      if (typeof place === "function") place();
+      if (activeRelationsRs) anchorRelationsOverlays(activeRelationsRs);
+    } catch (e) {
+      // rAF callback off the engine's resize event: log, never throw into it.
+      derr("resize reflow:", e);
+    }
   };
   window.addEventListener("resize", () => {
     if (scheduled) return;
@@ -587,8 +625,9 @@ function scheduleOverlayAnchor(rs) {
     typeof requestAnimationFrame === "function" ? requestAnimationFrame(fn) : setTimeout(fn, 16);
   const run = () => {
     const body = rs && rs.sc && rs.sc.body;
-    const r =
-      body && typeof body.getBoundingClientRect === "function" ? body.getBoundingClientRect() : null;
+    // A body that left the DOM (screen closed mid-retry) is never going to lay out.
+    if (body && body.isConnected === false) return;
+    const r = measureRect(body);
     if ((!r || r.height === 0) && ++tries <= MAX) {
       defer(run);
       return;
@@ -676,10 +715,7 @@ function buildTabBars(rs) {
  * @param {RenderState} rs The render-loop state.
  */
 function repaintView(rs) {
-  // Viewer dropdown (CS tab only). Element confirmed at
-  //   core/ui/options/options-helpers.js  (fxs-dropdown attributes)
-  //   core/ui/components/fxs-dropdown.js       ("dropdown-selection-change")
-  //   core/ui/options/screen-options.js  (handler pattern)
+  // Viewer dropdown (CS tab only); fxs-dropdown fires "dropdown-selection-change".
   buildViewerDropdownPanel(rs);
   // Politics / Reputation / Agreements sub-tab chips (which group is shown).
   buildSubGroupChips(rs);
@@ -704,19 +740,41 @@ function repaintView(rs) {
  */
 export function render(host, ctx) {
   while (host.firstChild) host.removeChild(host.firstChild);
+  try {
+    // The whole body (state prologue included) sits inside this one boundary so
+    // an engine-query throw in the prologue cannot blank the panel.
+    const rs = buildRenderState(host, ctx);
+    buildTabBars(rs);
+    // First paint runs UNguarded so a failure reaches this catch and shows the
+    // fallback; the rs.repaint wrappers guard the later handler-driven repaints.
+    repaintView(rs);
+    dlog("rendered relations; topTab=", rs.topTab, "met=", rs.metIds.length);
+  } catch (e) {
+    // Top-level guard: own-logic bugs SURFACE here (logged) without crashing
+    // the game UI. Inner per-helper swallows around own logic were removed so
+    // failures propagate to this single logged boundary.
+    derr("render:", e);
+    appendRenderFailed(host);
+  }
+}
 
-  // Drop in-memory filter/node-focus caches if this is a different game/save
-  // than the one they were populated for (no-op on same-game repaints), so we
-  // don't inherit the previous game's filters or stale node pids.
+/**
+ * Read the persisted tab/filter/viewer state, build the scaffold, and assemble
+ * the render-loop state for one {@link render}, inside render's try boundary.
+ * @param {HTMLElement} host The (already cleared) view host element.
+ * @param {RelationsCtx} ctx Render context (history + settings accessors).
+ * @returns {RenderState} The assembled render-loop state.
+ */
+function buildRenderState(host, ctx) {
+  // Drop in-memory filter/node-focus caches when the game/save changed, so a
+  // new game does not inherit the previous game's filters or stale node pids.
   resetRelationsCachesIfGameChanged();
 
   const settings = ctx.settings;
 
   // ---- initial tab state -------------------------------------------
-  // Always OPEN to the leftmost tab in each set: top tab → "civ" (Major
-  // Civilizations), sub-group → FILTER_GROUPS[0] (Politics & Relationships).
-  // The persisted values still update as the user switches within the session,
-  // but every fresh open starts at the leftmost, as requested.
+  // Every fresh open starts at the leftmost tab in each set (top tab "civ",
+  // sub-group FILTER_GROUPS[0]); persisted values still update within a session.
   const topTab = "civ";
   const localId = getLocalId();
   const namesBase = buildNameMap(ctx.history);
@@ -749,21 +807,47 @@ export function render(host, ctx) {
       civ: { key: "", edges: [] },
       cs: { key: "", edges: [] }
     },
-    repaint: () => repaintView(rs),
+    // Every click / toggle / dropdown handler repaints through these two, so a
+    // throw in a sub-renderer is logged here instead of escaping to the engine's
+    // event dispatcher.
+    repaint: () => guardedPaint("repaint", () => repaintView(rs)),
     // Ring-only repaint for node focus toggles: rebuilds just the ring body (not
     // the filter pills / viewer dropdown), so clicking an icon doesn't flicker
     // the whole panel.
-    repaintRing: () => renderRingBody(rs)
+    repaintRing: () => guardedPaint("repaintRing", () => renderRingBody(rs)),
+    portraitCache: new Map()
   };
+  return rs;
+}
 
+/**
+ * Run a repaint body behind a logged boundary (see the `repaint` / `repaintRing`
+ * fields on {@link RenderState}).
+ * @param {string} label Diagnostic label for the log line.
+ * @param {() => void} fn The repaint body.
+ */
+function guardedPaint(label, fn) {
   try {
-    buildTabBars(rs);
-    rs.repaint();
-    dlog("rendered relations; topTab=", rs.topTab, "met=", rs.metIds.length);
+    fn();
   } catch (e) {
-    // Top-level guard: own-logic bugs SURFACE here (logged) without crashing
-    // the game UI. Inner per-helper swallows around own logic were removed so
-    // failures propagate to this single logged boundary.
-    derr("render:", e);
+    derr(label + ":", e);
+  }
+}
+
+/**
+ * Append the standard "render failed, see UI.log" empty-state notice to the host
+ * (same class + text the chart views use), so a failed render leaves a visible
+ * message rather than a blank panel. Must never throw: it runs inside a catch.
+ * @param {HTMLElement} host The view host element.
+ */
+function appendRenderFailed(host) {
+  try {
+    const empty = document.createElement("div");
+    empty.className = "demographics-empty font-body text-base";
+    empty.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED");
+    host.appendChild(empty);
+  } catch (e) {
+    // The DOM itself is unusable here; the render error is already logged.
+    derr("render fallback:", e);
   }
 }

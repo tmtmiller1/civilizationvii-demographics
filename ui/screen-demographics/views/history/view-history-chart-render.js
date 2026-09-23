@@ -3,6 +3,7 @@
 // Chart host and render routing for the Historical Data view.
 
 import { EXTERNAL_PANELS, PANEL_SUBTAB_SEP } from "/demographics/ui/metrics/demographics-metrics.js";
+import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import { effectivePolicy } from "/demographics/ui/core/demographics-governance.js";
 
 /**
@@ -36,33 +37,27 @@ function safeCall(fn, derr, fb) {
 }
 
 /**
- * Compute chart dimensions from the measured host. When the host is laid out we
- * trust its real size (so the canvas matches the panel at ANY resolution /
- * Interface Size); a 16:9-ish default is used ONLY when the rect is still 0
- * (pre-layout). The generous clamp keeps a high-res / ultrawide display crisp
- * (the old 2800×1400 ceiling left the canvas under-resolved and dead space on
- * wide monitors) without ever sizing absurdly. The resize re-fit
- * ({@link ensureChartResizeReflow}) re-measures on any later change.
+ * Compute chart dimensions from the measured host, using its real size when laid
+ * out and a 16:9-ish default only while the rect is still 0. The generous clamp
+ * keeps ultrawide displays crisp; {@link ensureChartResizeReflow} re-measures later.
  * @param {HTMLElement} chartHost The chart host element.
  * @returns {{ width: number, height: number }} Dimensions.
  */
 function measureChartSize(chartHost) {
   const hostRect = chartHost.getBoundingClientRect?.();
-  const rawW = Math.round(hostRect?.width || 0);
-  const rawH = Math.round(hostRect?.height || 0);
+  // The frame may be drawn through transform:scale, so the rect is in VISUAL px while the canvas
+  // is sized in the frame's LOCAL px; convert or the chart renders s^2 too small.
+  const rawW = Math.round(toLocalPx(hostRect?.width || 0));
+  const rawH = Math.round(toLocalPx(hostRect?.height || 0));
   const width = rawW > 0 ? Math.max(480, Math.min(4096, rawW)) : 1600;
   const height = rawH > 0 ? Math.max(320, Math.min(2304, rawH)) : 600;
   return { width, height };
 }
 
-// Re-fit the active history chart on window resize / Interface-Size change. Every
-// chart bakes pixel dimensions measured once from its host (measureChartSize), so
-// without this they keep a stale size when the window resizes or the player
-// changes Interface Size while Demographics is open — the canvas/SVG then no
-// longer matches the reflowed host. Mirrors the relations ring's resize re-fit:
-// a SINGLE module-level listener re-runs the latest chart's render (every render
-// path clears its host first, so re-running is idempotent); it no-ops once the
-// host detaches.
+// Re-fit the active history chart on window resize / Interface-Size change, since
+// every chart bakes pixel dimensions measured once from its host. A single
+// module-level listener re-runs the latest chart's render (idempotent: every render
+// path clears its host first); it no-ops once the host detaches.
 /** @type {(() => void) | null} */
 let activeChartReflow = null;
 let chartResizeWired = false;
@@ -103,10 +98,9 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
   renderStandardChart(chartHost, ctx, activeMetric, turnRange, size);
 }
 
-// Last external-panel render, to skip redundant rebuilds (Perf plan P1 #5). Includes the effective
-// analytics-visibility policy so a Spoilers change re-renders the companion panel (e.g. the
-// Emigration tabs mask unmet civs by it) instead of leaving the stale, unmasked DOM in place on the
-// same turn.
+// Last external-panel render, to skip redundant rebuilds. Includes the effective
+// analytics-visibility policy so a Spoilers change re-renders the companion panel
+// instead of leaving stale, unmasked DOM in place on the same turn.
 /** @type {{ id: string|null, turn: number, host: HTMLElement|null, policy: string }} */
 let _extLast = { id: null, turn: -1, host: null, policy: "" };
 
@@ -151,9 +145,8 @@ function findPanelFor(activeMetric) {
   return null;
 }
 
-// Perf plan P1 #5: an external panel (e.g. Emigration's Migration page) only depends on its own
-// page/sub-tab being selected + the turn (and the analytics policy it masks by), NOT on unrelated
-// history-view state (time filters, other metrics). Skip the rebuild when nothing relevant changed.
+// An external panel only depends on its own page/sub-tab selection, the turn and the analytics
+// policy, not on unrelated history-view state; skip the rebuild when none of those changed.
 
 /**
  * Whether the external panel is already rendered into this host for the same id, turn, and policy
@@ -191,8 +184,7 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
     found.panel.render(chartHost, ctx, found.subId);
     _extLast = { id: activeMetric, turn, host: chartHost, policy };
   } catch (e) {
-    // The history ctx doesn't carry derr, so a companion-panel throw was previously swallowed with
-    // no trace; log it so a broken external panel is at least diagnosable.
+    // The history ctx doesn't carry derr; log so a broken external panel is diagnosable.
     if (ctx && typeof ctx.derr === "function") ctx.derr("external panel render:", e);
     else console.error("[Demographics] external panel render:", e);
   }
@@ -509,10 +501,9 @@ export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
       routeChartRender(chartHost, ctx, activeMetric, turnRange, { width, height });
     }, deps.derr);
 
-  // Re-fit THIS chart on resize / Interface-Size change. External panels skip
-  // redundant rebuilds keyed by turn (extUnchanged); a resize isn't a turn change,
-  // so clear that skip cache first to force them to re-measure too. Bail (and
-  // release the closure) once the host detaches.
+  // Re-fit this chart on resize / Interface-Size change. A resize isn't a turn
+  // change, so clear the external-panel skip cache first to force a re-measure.
+  // Bail (and release the closure) once the host detaches.
   activeChartReflow = () => {
     if (chartHost.isConnected === false) {
       activeChartReflow = null;

@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import {
   recordTags, buildRecord, upsert, emptySlice, hideGame, mergeSlices, fitSlice, supersedes, downsample, isSlice, pickHighlights,
-  sliceTexts, pruneTexts,
+  sliceTexts, pruneTexts, isNewerRecord, localStats, rivalsOf,
   HIGHLIGHTS_CAP
 } from "/demographics/ui/history/store/history-archive.js";
 import { newCampaign, ensureAge, appendEvents, appendSample, upsertPlayer } from "/demographics/ui/history/store/history-campaign.js";
-import { pstate, world } from "./_history-fixtures.mjs";
+import { pstate, world, buggyStorage } from "./_history-fixtures.mjs";
 
 const setup = { speed: "S", difficulty: "D", mapSize: "M", mapScript: "x.js", startAge: "AGE_ANTIQUITY" };
 
@@ -200,6 +200,58 @@ assert.deepEqual(downsample([0, 1, 2, 3, 4, 5, 6, 7, 8], 3), [0, 4, 8]);
   delete slice.games[b.id];
   pruneTexts(slice);
   assert.ok(!("LOC_TWO" in slice.texts), "names only that game used are dropped");
+}
+
+// A record a later version of this mod wrote (v above RECORD_VERSION) is carried through every
+// merge, fit and store round trip untouched, is never replaced by this version's copy of the same
+// game, and is never in the list the Hall of Fame shows. Older or malformed records are dropped.
+{
+  const future = { v: 2, id: "next", updated: 5, shape: "unknown", nested: { deep: [1, 2] } };
+  const stored = { ...emptySlice(), games: { next: future, old: { v: 0, id: "old" }, junk: { id: "junk" } } };
+  assert.ok(isNewerRecord(future) && !isNewerRecord(stored.games.old) && !isNewerRecord(stored.games.junk));
+  const mem = emptySlice();
+  upsert(mem, buildRecord(campaign("g1")));
+  mergeSlices(mem, JSON.parse(JSON.stringify(stored)));
+  assert.deepEqual(mem.games.next, future, "carried over as it is");
+  assert.equal(mem.games.old, undefined, "an older version's record is dropped");
+  assert.equal(mem.games.junk, undefined, "a malformed record is dropped");
+  assert.ok(!upsert(mem, buildRecord(campaign("next"))), "this version's copy of the game does not replace it");
+  assert.deepEqual(mem.games.next, future);
+  fitSlice(mem, 10);
+  assert.deepEqual(mem.games.next, future, "neither trimmed nor evicted under the byte budget");
+  const hidden = emptySlice();
+  hideGame(hidden, "next", 1);
+  mergeSlices(hidden, JSON.parse(JSON.stringify(stored)));
+  assert.equal(hidden.games.next, undefined, "a hidden game stays hidden whatever version wrote it");
+
+  // Through the real store: loaded, kept while this version saves a game, written back the same.
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": stored }) });
+  assert.ok(store.saveRecord(buildRecord(campaign("g2"))));
+  const back = JSON.parse(localStorage.dump().modSettings)["demographics-halloffame"];
+  assert.deepEqual(back.games.next, future, "written back as it was read");
+  assert.ok(back.games.g2 && !back.games.old && !back.games.junk);
+  assert.ok(store.allRecords().some((r) => r.id === "next"), "the store still holds it");
+  const { hofRecords } = await import("/demographics/ui/history/views/view-hof.js");
+  assert.deepEqual(hofRecords(null).map((r) => r.id), ["g2"], "but the Hall of Fame does not list it");
+  store._resetForTests();
+}
+
+// A campaign whose latest state or series is thinner than this version writes (no player list, no
+// city or wonder lists, no per-player series) still yields a record.
+{
+  const thin = campaign("thin");
+  thin.last = { turn: 30, age: "AGE_ANTIQUITY", date: "", players: { 0: { met: true } }, victories: [] };
+  thin.series.by = undefined;
+  const s = localStats(thin);
+  assert.deepEqual([s.settlements, s.peakSettlements, s.wonders, s.triumphs], [0, 0, 1, 1]);
+  thin.last = { turn: 30, age: "AGE_ANTIQUITY", date: "", victories: [] };
+  assert.deepEqual(rivalsOf(thin).map((r) => r[0]), [], "without a player list nobody counts as met");
+  thin.players["1"].civs = undefined;
+  thin.last = null;
+  assert.equal(rivalsOf(thin)[0][3], "", "a rival without civilization spans is nameless, not a throw");
+  assert.ok(buildRecord(thin));
 }
 
 console.log("history-archive harness passed");

@@ -14,15 +14,10 @@ import {
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 
 // ── Scaled / Civ number mode ──────────────────────────────────────────────────
-// Several metrics come in a matched pair: a scaled-"people" version (the visible
-// row) and a raw Civ-numbers twin (registered but hidden), e.g. Population
-// (population ↔ population_civ) and every Emigration flow (emig_out_cum ↔
-// emig_out_cum_pts). Rather than render both as duplicate rows, the All
-// Civilizations matrix shows ONE row per pair and a single Scaled/Civ toggle
-// swaps which side every paired row displays — the same toggle pattern the
-// history tab uses. The mode is a module-level flag set by the view before it
-// (re)builds the strip, so the label column and every civ column read the same
-// swapped metric list and stay aligned.
+// Several metrics come in a matched pair: a scaled-"people" version (the visible row) and a raw
+// Civ-numbers twin (registered but hidden). The matrix shows one row per pair and a Scaled/Civ
+// toggle swaps which side every paired row displays; the mode is a module-level flag set by the
+// view before it rebuilds, so the label column and every civ column stay aligned.
 const NUMBER_MODES = ["scaled", "civ"];
 let _numberMode = "scaled";
 
@@ -59,10 +54,8 @@ function addMemberPair(map, m) {
 }
 
 /**
- * Map every scaled metric id to its raw-Civ-numbers twin id. Seeded with the base
- * Population pair and extended from any registered 2D metric group that exposes
- * scaled/civ views (e.g. the Emigration Migration graphs), so companions get the
- * toggle for free.
+ * Map every scaled metric id to its raw-Civ-numbers twin id: the base Population pair plus any
+ * registered 2D metric group that exposes scaled/civ views, so companions get the toggle for free.
  * @returns {Map<string, string>} scaled id → civ id.
  */
 function scaledToCivPairs() {
@@ -187,10 +180,8 @@ function buildLeaderPortrait(leaderType) {
  * @param {boolean} maskAsUnmet When true, emit generic unmet placeholders.
  */
 export function buildCivHeaderText(text, profile, maskAsUnmet) {
-  // Civilization-primary, leader-secondary (player feedback). The prominent
-  // "-civ-header-leader" class now carries the CIV name and the smaller
-  // "-civ-header-civ" carries the leader beneath it; class names (and their
-  // density/font-size CSS) are kept unchanged, only the text is swapped.
+  // Civilization-primary, leader-secondary: the prominent "-civ-header-leader" class carries the
+  // civ name and the smaller "-civ-header-civ" carries the leader beneath it.
   const primary = document.createElement("div");
   primary.className = "demographics-worldrankings-allcivs-civ-header-leader font-title text-base";
   primary.textContent = maskAsUnmet
@@ -235,11 +226,9 @@ function appendCivNameRows(text, profile) {
 }
 
 /**
- * Build a civ-column header div (avatar + leader + civ + formerly suffix).
- * `maskAsUnmet` (Fix 4): when true, replace leader/civ names with generic
- * "Unmet Leader" / "Unmet Civilization" placeholders and suppress the
- * formerly suffix. Avatar falls back to its built-in placeholder (no
- * LeaderType lookup).
+ * Build a civ-column header div (avatar + leader + civ + formerly suffix). With `maskAsUnmet`,
+ * names become generic unmet placeholders, the formerly suffix is suppressed, and the avatar
+ * falls back to its built-in placeholder.
  * @param {CivProfile} profile Source civ profile.
  * @param {boolean} isLocal Whether this is the local player's column.
  * @param {boolean} maskAsUnmet When true, mask names as generic placeholders.
@@ -338,11 +327,9 @@ function buildValueLine(metric, profile) {
     line.textContent = "—";
     return line;
   }
-  // Flex row of explicit spans + a sized icon item. Coherent will NOT keep a
-  // background-image div inline among raw text nodes (it block-breaks, which made
-  // "(", icon and "value)" stack and blew up cell height), so each piece is a
-  // discrete flex child and the row is nowrap - see the matching CSS. The icon
-  // sits INSIDE the parens.
+  // Flex row of explicit spans + a sized icon item: Coherent block-breaks a background-image div
+  // among raw text nodes, so each piece is a discrete flex child and the row is nowrap. The icon
+  // sits inside the parens.
   const blp = METRIC_ICONS[metric.id];
   const open = document.createElement("span");
   open.textContent = blp ? "(" : "(" + formatted + ")";
@@ -404,6 +391,26 @@ export function buildLabelColumn(opts) {
 }
 
 /**
+ * Add, update or remove the label column's reset button in place. The label column carries the
+ * metric icons, so it must never be rebuilt just because the hidden-civ count changed — a fresh
+ * element's `blp:` background resolves a frame or more after insertion and visibly blinks.
+ * @param {HTMLElement} labelCol The label column.
+ * @param {LabelColumnOpts} opts Reset options.
+ */
+export function syncLabelResetButton(labelCol, opts) {
+  const header = /** @type {HTMLElement|null} */ (
+    labelCol.querySelector(".demographics-worldrankings-allcivs-corner")
+  );
+  if (!header) return;
+  const prior = /** @type {HTMLElement|null} */ (
+    header.querySelector(".demographics-worldrankings-allcivs-reset-btn")
+  );
+  if (prior) header.removeChild(prior);
+  const btn = buildLabelResetButton(opts);
+  if (btn) header.appendChild(btn);
+}
+
+/**
  * Build the label-column reset button when hidden civs exist.
  * @param {LabelColumnOpts|undefined} opts Reset options.
  * @returns {HTMLElement|null} Reset button, or null when not needed.
@@ -450,7 +457,7 @@ function appendMetricLabelRows(col) {
 
 /**
  * Mark a matrix cell as its metric's world leader: the same gold leader wash and
- * tooltip the table branch uses (the leader-card strip above was removed).
+ * tooltip the table branch uses.
  * @param {HTMLElement} cell The value cell.
  * @param {MetricDef} m The metric.
  */
@@ -488,28 +495,8 @@ export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
 }
 
 /**
- * Build the click-to-hide affordance hint shown above the matrix. Without it
- * the interaction is invisible to first-time users; a subtle italic one-liner
- * reads as guidance rather than chrome.
- * @returns {HTMLElement} The hint element.
- */
-export function buildHint() {
-  const hint = document.createElement("div");
-  hint.className = "demographics-worldrankings-allcivs-hint font-body text-xs";
-  const hintIcon = document.createElement("div");
-  hintIcon.className = "demographics-worldrankings-allcivs-hint-icon";
-  const hintText = document.createElement("span");
-  hintText.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT");
-  hint.appendChild(hintIcon);
-  hint.appendChild(hintText);
-  return hint;
-}
-
-/**
- * Slim "ghost" column shown for hidden civs - just a narrow header with the
- * leader name (or unmet placeholder), no metric cells. Lets the user see who's
- * hidden and click to bring them back. The visible civs flex to fill the
- * remaining space (per the CSS `.demographics-worldrankings-allcivs-col { flex: 1 0 9rem }`).
+ * Slim "ghost" column shown for hidden civs: a narrow header with the name (or unmet placeholder)
+ * and no metric cells, so the user can see who's hidden and click to bring them back.
  * @param {CivProfile} profile This civ's profile.
  * @param {boolean} maskAsUnmet When true, show the generic unmet placeholder.
  * @param {HeaderOpts} [_opts] Click affordance options (unused here).
@@ -553,4 +540,20 @@ export function appendEmptyState(host) {
   empty.className = "demographics-empty font-body text-base";
   empty.textContent = t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES");
   host.appendChild(empty);
+}
+
+/**
+ * Log a sub-renderer's throw and append the "render failed" notice to the host
+ * in place of the blank panel the throw would otherwise leave (the host was
+ * already cleared by the time a renderer runs).
+ * @param {HTMLElement} host The view host element.
+ * @param {string} what Which renderer threw (for the log line).
+ * @param {*} e The thrown error.
+ */
+export function appendRenderFailed(host, what, e) {
+  derr(what + " threw:", e);
+  const failed = document.createElement("div");
+  failed.className = "demographics-empty font-body text-base";
+  failed.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED");
+  host.appendChild(failed);
 }

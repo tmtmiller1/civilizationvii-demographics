@@ -1068,9 +1068,6 @@
 	<Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="pl_PL">
 		<Text>Pokaż wszystkie ukryte cywilizacje</Text>
 	</Replace>
-	<Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="pl_PL">
-		<Text>Kliknij kolumnę wskaźnika, aby posortować według niej cywilizacje. Użyj przełącznika „Pozycja / Wartość”, aby zmienić sposób wyświetlania danych.</Text>
-	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="pl_PL">
 		<Text>Nieznana</Text>
 	</Replace>
@@ -2695,7 +2692,6 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED" Language="pl_PL"><Text>Najwięcej zdobytych osiedli</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="pl_PL"><Text>Najszybsze zwycięstwo</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="pl_PL"><Text>Najdłuższa gra</Text></Replace>
-		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="pl_PL"><Text>Gry są zapisywane na tym komputerze. Każdy plik zapisu przechowuje też własną historię.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="pl_PL"><Text>W tej sesji nie udało się odczytać poprzednich gier z pamięci. Każda gra pozostaje zapisana we własnym zapisie.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="pl_PL"><Text>Oktawian August</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="pl_PL"><Text>Cyrus Wielki</Text></Replace>
@@ -2784,5 +2780,9 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF" Language="pl_PL"><Text>Miejsce {1_Rank} z {2_Total}</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN" Language="pl_PL"><Text>W twojej pierwszej dziesiątce.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="pl_PL"><Text>Triumfy: {1_Count}</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="pl_PL"><Text>Ustawienia są zapisywane na tym komputerze.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="pl_PL"><Text>Ustawienia zmienione w tej sesji zostaną zachowane do zamknięcia gry, ale nie udało się ich zapisać: współdzielony magazyn modów zwrócił dane innego moda, nie dało się go odczytać albo nie odczytał tego, co zapisano. „Napraw magazyn” na stronie Galerii sław rozwiązuje ten problem.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="pl_PL"><Text>W tej sesji nie można zapisać ustawień: magazyn modów jest niedostępny.</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="pl_PL"><Text>Usunąć wszystkie zapisane wojny?</Text></Replace>
 	</LocalizedText>
 </Database>

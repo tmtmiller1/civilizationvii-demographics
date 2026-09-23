@@ -1042,9 +1042,6 @@
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP">
             <Text>Show all hidden civilizations</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT">
-            <Text>Click a metric column to sort the civilizations by it. Use the Rank / Value toggle to switch what each cell shows.</Text>
-        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT">
             <Text>Unmet</Text>
         </Row>
@@ -2870,9 +2867,6 @@
         <Row Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST">
             <Text>Longest game</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK">
-            <Text>Games are saved on this computer. Each save file also keeps its own record.</Text>
-        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE">
             <Text>Past games could not be read from storage in this session. Every game is still stored in its own save.</Text>
         </Row>
@@ -3136,6 +3130,18 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS">
             <Text>{1_Count} Triumphs</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED">
+            <Text>Settings are saved on this computer.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED">
+            <Text>Settings changed in this session are kept until the game closes, but could not be saved: the shared mod storage returned another mod's data, could not be read, or did not read back what was written. Repair storage on the Hall of Fame page fixes this.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE">
+            <Text>Settings cannot be saved in this session: mod storage is not available.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED">
+            <Text>Clear all recorded wars?</Text>
         </Row>
     </EnglishText>
 </Database>

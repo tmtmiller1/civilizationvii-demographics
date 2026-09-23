@@ -47,7 +47,7 @@ export function castFromDoc(doc, visibility = "met") {
   const met = (/** @type {number} */ pid) =>
     pid === doc.local ||
     visibility === "full" ||
-    (visibility === "met" && !!doc.last?.players[String(pid)]?.met);
+    (visibility === "met" && !!doc.last?.players?.[String(pid)]?.met);
   return {
     local: doc.local,
     civName: (pid, age) => {
@@ -72,10 +72,11 @@ export function castFromDoc(doc, visibility = "met") {
  * @returns {Cast} The cast.
  */
 export function castFromRecord(rec) {
-  const rival = (/** @type {number} */ pid) => rec.rivals.find((r) => r[0] === pid);
+  const rivals = Array.isArray(rec.rivals) ? rec.rivals : [];
+  const rival = (/** @type {number} */ pid) => rivals.find((r) => r[0] === pid);
   const colors = gameColors([
     { pid: rec.local, primary: rec.color, secondary: rec.color2 },
-    ...rec.rivals.map((r) => ({ pid: r[0], primary: r[5], secondary: r[8] }))
+    ...rivals.map((r) => ({ pid: r[0], primary: r[5], secondary: r[8] }))
   ]);
   return {
     local: rec.local,

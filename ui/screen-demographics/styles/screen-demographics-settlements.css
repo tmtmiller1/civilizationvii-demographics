@@ -1,26 +1,5 @@
 /* ── WorldRankingsAllCivs (view-worldrankings-allcivs) ────────────────────────────────────────────── */
 
-/* Click-to-hide affordance hint above the matrix. */
-.demographics-worldrankings-allcivs-hint {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.3rem 0.6rem 0.45rem;
-    color: #e5d2ac;
-    opacity: 0.85;
-    font-style: italic;
-}
-.demographics-worldrankings-allcivs-hint-icon {
-    width: 1rem;
-    height: 1rem;
-    background-image: url("blp:icon_info");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    flex: 0 0 auto;
-    opacity: 0.85;
-}
-
 /* Toggleable (other-civ) column header — only these headers carry a click
    handler, so the pointer cursor is opt-in rather than on every header. */
 .demographics-worldrankings-allcivs-civ-header-clickable {
@@ -32,17 +11,21 @@
 /* "All On · All Off" bulk-toggle header row. */
 .demographics-relations-filter-ctrl-row {
     display: flex;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     align-items: center;
-    margin-bottom: 0.45rem;
-    padding-bottom: 0.4rem;
+    margin-bottom: calc(0.45 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
     border-bottom: 1px solid rgba(168, 132, 90, 0.25);
 }
 /* All / None / Reset as small gold chip buttons (clearly clickable). Concrete
    hexes (not var(--…, fallback), which Coherent renders unreadable here). */
 .demographics-relations-all-toggle {
     cursor: pointer;
-    padding: 0.1rem 0.55rem;
+    padding-top: calc(0.1 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.1 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
     border: 1px solid rgba(201, 162, 76, 0.6);
     border-radius: 0.2rem;
     background: rgba(60, 45, 20, 0.55);
@@ -74,19 +57,23 @@
     vertical-align: middle;
     /* width/height are set inline to the ring's measured scale (see
        buildFilterSwatch) so the swatch line matches the ring lines 1:1. */
-    margin-right: 0.6rem;
+    margin-right: calc(0.6 * var(--dg-u));
     flex-shrink: 0;
 }
 
 /* ── Settlements view ────────────────────────────────────────────────────────
    A live world leaderboard. Two sub-views (showcase / table). Per-owner civ
    colors are set inline (--owner / border-left-color); everything else is the
-   static chrome below, on the shared --ia-* palette. ─────────────────────────── */
+   static chrome below, on the shared --dg-ia-* palette. ─────────────────────────── */
 .demographics-settle-view {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    padding: 0.4rem 0.6rem 0;
+    row-gap: calc(0.6 * var(--dg-u));
+    column-gap: calc(0.6 * var(--dg-u));
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: 0;
+    padding-left: calc(0.6 * var(--dg-u));
     flex: 1 1 auto;
     min-height: 0;
     overflow: hidden;
@@ -95,24 +82,36 @@
 /* Showcase / Table sub-tab toggle. */
 .demographics-settle-subtabs {
     display: flex;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     align-self: center;
     flex: 0 0 auto;
 }
 .demographics-settle-subtab {
-    padding: 0.3rem 1.1rem;
-    border: 1px solid var(--ia-frame-border);
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(1.1 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(1.1 * var(--dg-u));
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.2rem;
-    background: var(--ia-frame-bg);
-    color: var(--ia-text-secondary);
+    background-color: var(--dg-ia-frame-bg);
+    color: var(--dg-ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-95);
     letter-spacing: 0.02rem;
     cursor: pointer;
 }
 .demographics-settle-subtab.is-active {
-    border-color: var(--ia-accent-gold-soft);
-    color: var(--ia-accent-gold);
+    border-top-color: var(--dg-ia-accent-gold-soft);
+    border-right-color: var(--dg-ia-accent-gold-soft);
+    border-bottom-color: var(--dg-ia-accent-gold-soft);
+    border-left-color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold);
     background: rgba(243, 195, 76, 0.1);
 }
 
@@ -127,28 +126,36 @@
 .demographics-settle-content {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    row-gap: calc(0.7 * var(--dg-u));
+    column-gap: calc(0.7 * var(--dg-u));
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
-    padding-bottom: 1rem;
+    padding-bottom: calc(1 * var(--dg-u));
 }
 
 .demographics-settle-empty {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.7;
     text-align: center;
-    padding: 2rem;
-    font-style: italic;
+    padding-top: calc(2 * var(--dg-u));
+    padding-right: calc(2 * var(--dg-u));
+    padding-bottom: calc(2 * var(--dg-u));
+    padding-left: calc(2 * var(--dg-u));
 }
 
 /* ── Shared owner avatar + name + type badge ───────────────────────────────── */
 .demographics-settle-avatar {
-    width: 3.6rem;
-    height: 3.6rem;
+    width: calc(3.6 * var(--dg-u));
+    height: calc(3.6 * var(--dg-u));
     border-radius: 50%;
-    border: 2px solid var(--ia-frame-border-hot);
-    background-color: var(--ia-bg-primary);
+    border-width: 2px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border-hot);
+    border-right-color: var(--dg-ia-frame-border-hot);
+    border-bottom-color: var(--dg-ia-frame-border-hot);
+    border-left-color: var(--dg-ia-frame-border-hot);
+    background-color: var(--dg-ia-bg-primary);
     flex-shrink: 0;
     overflow: hidden;
     display: flex;
@@ -169,7 +176,8 @@
 .demographics-settle-owner {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
     overflow: hidden;
 }
 .demographics-settle-owner-names {
@@ -181,14 +189,14 @@
    ".-owner-leader" class is the prominent line and now carries the CIV name, so
    it takes the accent color; ".-owner-civ" is the muted secondary leader line. */
 .demographics-settle-owner-leader {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-size: var(--dg-fs-85);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .demographics-settle-owner-civ {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-72);
     white-space: nowrap;
     overflow: hidden;
@@ -196,17 +204,28 @@
 }
 .demographics-settle-badge {
     display: inline-block;
-    padding: 0.05rem 0.4rem;
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     border-radius: 0.6rem;
     font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04rem;
     text-transform: uppercase;
-    border: 1px solid var(--ia-frame-border);
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
 }
 .demographics-settle-badge-city {
-    color: var(--ia-accent-gold);
-    border-color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold);
+    border-top-color: var(--dg-ia-accent-gold-soft);
+    border-right-color: var(--dg-ia-accent-gold-soft);
+    border-bottom-color: var(--dg-ia-accent-gold-soft);
+    border-left-color: var(--dg-ia-accent-gold-soft);
 }
 .demographics-settle-badge-town {
     color: #9fc3e8;
@@ -217,25 +236,27 @@
 .demographics-settle-outputs {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem 0.55rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.55 * var(--dg-u));
     justify-content: center;
-    margin-top: 0.4rem;
+    margin-top: calc(0.4 * var(--dg-u));
 }
 .demographics-settle-output {
     display: flex;
     align-items: center;
-    gap: 0.15rem;
+    row-gap: calc(0.15 * var(--dg-u));
+    column-gap: calc(0.15 * var(--dg-u));
 }
 .demographics-settle-yield-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: calc(1.5 * var(--dg-u));
+    height: calc(1.5 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     flex-shrink: 0;
 }
 .demographics-settle-output-val {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-95);
 }
 
@@ -245,30 +266,42 @@
     justify-content: center;
     align-items: flex-end;
     /* Gap wide enough that the scaled #1 card (below) can't overlap neighbors. */
-    gap: 1.4rem;
+    row-gap: calc(1.4 * var(--dg-u));
+    column-gap: calc(1.4 * var(--dg-u));
     /* Headroom so the scaled-up #1 card (transform: scale(1.07), origin bottom)
        can't grow up into the section title above it. */
-    margin-top: 2.2rem;
-    padding: 0 0.6rem;
+    margin-top: calc(2.2 * var(--dg-u));
+    padding-top: 0;
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: 0;
+    padding-left: calc(0.6 * var(--dg-u));
 }
 .demographics-settle-podium-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 18rem;
+    width: calc(18 * var(--dg-u));
     /* Three 18rem cards + gaps overflow a narrow frame (low resolution / tall
        aspect). min-width:0 lets the flex row shrink the cards to fit instead of
        spilling off-screen, keeping the podium centered and balanced. */
     min-width: 0;
-    padding: 1.1rem 1rem 1.2rem;
-    border: 2px solid var(--ia-frame-border);
+    padding-top: calc(1.1 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(1.2 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
+    border-width: 2px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-top-width: 4px;
     border-radius: 0.4rem;
     background: linear-gradient(to bottom, rgba(35, 37, 43, 0.95) 0%, rgba(18, 21, 31, 0.95) 100%);
 }
 .demographics-settle-rank-1 {
-    border-top-color: var(--ia-accent-gold);
-    margin-bottom: 1.5rem;
+    border-top-color: var(--dg-ia-accent-gold);
+    margin-bottom: calc(1.5 * var(--dg-u));
     transform: scale(1.07);
     transform-origin: bottom center;
 }
@@ -281,59 +314,60 @@
 /* Laurel-wreath medal: the engine's gold/silver/bronze victory laurels framing
    the place number. A per-place glow + colored numeral makes the metal tone pop. */
 .demographics-settle-medal {
-    width: 5rem;
-    height: 5rem;
+    width: calc(5 * var(--dg-u));
+    height: calc(5 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.35rem;
+    margin-bottom: calc(0.35 * var(--dg-u));
 }
 .demographics-settle-medal-num {
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-240);
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
     /* nudge the number into the wreath's open center */
-    margin-top: -0.15rem;
+    margin-top: calc(-0.15 * var(--dg-u));
 }
 .demographics-settle-medal-1 .demographics-settle-medal-num { color: #ffd863; }
 .demographics-settle-medal-2 .demographics-settle-medal-num { color: #e6e9ef; }
 .demographics-settle-medal-3 .demographics-settle-medal-num { color: #e0935c; }
 .demographics-settle-podium-card .demographics-settle-avatar {
-    width: 6rem;
-    height: 6rem;
+    width: calc(6 * var(--dg-u));
+    height: calc(6 * var(--dg-u));
 }
 .demographics-settle-podium-name {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-160);
-    margin-top: 0.4rem;
+    margin-top: calc(0.4 * var(--dg-u));
     text-align: center;
 }
 /* Middle line of the Settlement / Civilization / Leader podium hierarchy: the
    owning civ, more prominent than the leader line below it. */
 .demographics-settle-podium-civ {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-size: var(--dg-fs-120);
-    margin-top: 0.15rem;
+    margin-top: calc(0.15 * var(--dg-u));
 }
 .demographics-settle-podium-owner {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-105);
-    margin-bottom: 0.3rem;
+    margin-bottom: calc(0.3 * var(--dg-u));
 }
 .demographics-settle-podium-scorerow {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
 }
 .demographics-settle-podium-score {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-240);
@@ -342,39 +376,51 @@
 /* ── Showcase: ranked list (4..25) ─────────────────────────────────────────── */
 /* Explanatory note (e.g. how the civ-ranking "Score" differs from the game's). */
 .demographics-settle-note {
-    max-width: 60rem;
-    margin: -0.2rem auto 0.2rem;
-    padding: 0 0.6rem;
+    max-width: calc(60 * var(--dg-u));
+    margin-top: calc(-0.2 * var(--dg-u));
+    margin-right: auto;
+    margin-bottom: calc(0.2 * var(--dg-u));
+    margin-left: auto;
+    padding-top: 0;
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: 0;
+    padding-left: calc(0.6 * var(--dg-u));
     text-align: center;
-    font-style: italic;
     font-size: var(--dg-fs-95);
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     opacity: 0.9;
 }
 .demographics-settle-list {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
     /* Centered, focused column for the ranked showcase / civ-ranking lists (the
        worldrankings-allcivs + settlement table stay full-width). align-self centers a flex
        item on the cross axis — margin:auto does not in a column flex parent. */
     width: 100%;
-    max-width: 70rem;
+    max-width: calc(70 * var(--dg-u));
     align-self: center;
 }
 .demographics-settle-list-row {
     display: flex;
     align-items: center;
-    gap: 0.9rem;
-    padding: 0.75rem 1rem;
-    border-left: 3px solid var(--ia-frame-border);
+    row-gap: calc(0.9 * var(--dg-u));
+    column-gap: calc(0.9 * var(--dg-u));
+    padding-top: calc(0.75 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(0.75 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
+    border-left-width: 3px;
+    border-left-style: solid;
+    border-left-color: var(--dg-ia-frame-border);
     background: rgba(20, 16, 10, 0.35);
     border-radius: 0.2rem;
 }
 .demographics-settle-list-rank {
-    width: 2.8rem;
+    width: calc(2.8 * var(--dg-u));
     text-align: center;
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-weight: 700;
     font-size: var(--dg-fs-185);
     flex-shrink: 0;
@@ -384,16 +430,18 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
     overflow: hidden;
 }
 .demographics-settle-list-namerow {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
 }
 .demographics-settle-list-name {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-160);
     font-weight: 700;
     white-space: nowrap;
@@ -403,7 +451,7 @@
 /* Owning civilization under a ranked settlement's name (player feedback) —
    small and muted so the settlement name stays primary. */
 .demographics-settle-list-civ {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-72);
     opacity: 0.9;
     white-space: nowrap;
@@ -411,16 +459,16 @@
     text-overflow: ellipsis;
 }
 .demographics-settle-list-score {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-weight: 700;
     font-size: var(--dg-fs-185);
-    min-width: 4rem;
+    min-width: calc(4 * var(--dg-u));
     text-align: right;
     flex-shrink: 0;
 }
 .demographics-settle-bar {
     /* rem so the bar scales with Interface Size like the rem-sized text around it. */
-    height: 0.5rem;
+    height: calc(0.5 * var(--dg-u));
     border-radius: 0.25rem;
     background: rgba(255, 255, 255, 0.08);
     overflow: hidden;
@@ -428,16 +476,20 @@
 .demographics-settle-bar-fill {
     height: 100%;
     border-radius: 0.25rem;
-    background: var(--ia-accent-gold);
+    background-color: var(--dg-ia-accent-gold);
 }
 
 /* Showcase list header (column labels above the ranked list). */
 .demographics-settle-list-head {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0 0.6rem 0.2rem;
-    color: var(--ia-fxs-header);
+    row-gap: calc(0.6 * var(--dg-u));
+    column-gap: calc(0.6 * var(--dg-u));
+    padding-top: 0;
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
+    color: var(--dg-ia-fxs-header);
     font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04rem;
@@ -445,13 +497,14 @@
 }
 .demographics-settle-head-rank {
     font-size: var(--dg-fs-95);
-    /* Matches .demographics-settle-list-rankcol so "Rank" sits over the numbers. */
-    width: 3.6rem;
+    /* Matches .demographics-settle-list-rankcol so "Rank" sits over the numbers. Sized in the
+       TYPE unit: this box exists to hold the word, so it must not shrink faster than the word. */
+    width: calc(3.6 * var(--dg-t));
     text-align: center;
     flex-shrink: 0;
 }
 .demographics-settle-head-spacer {
-    width: 2.4rem;
+    width: calc(2.4 * var(--dg-u));
     flex-shrink: 0;
 }
 .demographics-settle-head-name {
@@ -460,7 +513,8 @@
 }
 .demographics-settle-head-score {
     font-size: var(--dg-fs-95);
-    width: 3rem;
+    /* TYPE unit: holds the word "Score". */
+    width: calc(3 * var(--dg-t));
     text-align: right;
     flex-shrink: 0;
 }
@@ -469,8 +523,12 @@
 .demographics-settle-top10 {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin: 0.25rem 0;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
+    margin-top: calc(0.25 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.25 * var(--dg-u));
+    margin-left: 0;
     color: #e0584c;
     font-size: var(--dg-fs-72);
     font-weight: 700;
@@ -488,31 +546,41 @@
 /* ── Detail table ──────────────────────────────────────────────────────────── */
 .demographics-settle-filters {
     display: flex;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     justify-content: center;
 }
 .demographics-settle-filters .demographics-chart-time-filter-pill {
     font-size: var(--dg-fs-105);
-    padding: 0.4rem 1rem;
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
 }
 /* Stylized section header with flanking filigree (Civ VII-menu flavor). */
 .demographics-settle-section-title {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.7rem;
-    margin: 1rem 0 0.5rem;
+    row-gap: calc(0.7 * var(--dg-u));
+    column-gap: calc(0.7 * var(--dg-u));
+    margin-top: calc(1 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.5 * var(--dg-u));
+    margin-left: 0;
 }
 .demographics-settle-section-title-text {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-size: var(--dg-fs-160);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07rem;
+    /* em, not rem: fixed rem tracking did not scale with the title and overflowed it by 65px at
+       720p. In em it stays proportional at every size. */
+    letter-spacing: 0.045em;
 }
 .demographics-settle-section-fil {
-    width: 5rem;
-    height: 1.4rem;
+    width: calc(5 * var(--dg-u));
+    height: calc(1.4 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -524,7 +592,12 @@
 .demographics-settle-table {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--ia-divider);
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-divider);
+    border-right-color: var(--dg-ia-divider);
+    border-bottom-color: var(--dg-ia-divider);
+    border-left-color: var(--dg-ia-divider);
     border-radius: 0.3rem;
     overflow: hidden;
     /* Fill the available width; flexible columns (below) distribute the extra
@@ -539,13 +612,23 @@
 }
 .demographics-settle-header {
     background: rgba(20, 16, 10, 0.6);
-    border-bottom: 2px solid var(--ia-divider);
-    padding: 0.45rem 0;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--dg-ia-divider);
+    padding-top: calc(0.45 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.45 * var(--dg-u));
+    padding-left: 0;
 }
 .demographics-settle-datarow {
-    border-left: 3px solid var(--ia-frame-border);
+    border-left-width: 3px;
+    border-left-style: solid;
+    border-left-color: var(--dg-ia-frame-border);
     border-bottom: 1px solid rgba(168, 132, 90, 0.15);
-    padding: 0.45rem 0;
+    padding-top: calc(0.45 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.45 * var(--dg-u));
+    padding-left: 0;
 }
 .demographics-settle-datarow:nth-child(even) {
     background: rgba(255, 255, 255, 0.025);
@@ -558,9 +641,12 @@
     flex: 1 1 0;
     min-width: 0;
     text-align: center;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-120);
-    padding: 0 0.3rem;
+    padding-top: 0;
+    padding-right: calc(0.3 * var(--dg-u));
+    padding-bottom: 0;
+    padding-left: calc(0.3 * var(--dg-u));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -568,7 +654,7 @@
 }
 .demographics-settle-th {
     cursor: pointer;
-    color: var(--ia-fxs-header);
+    color: var(--dg-ia-fxs-header);
     font-weight: 700;
 }
 /* Output header: icon stacked over its prose label ("Culture" + icon). */
@@ -576,11 +662,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.12rem;
+    row-gap: calc(0.12 * var(--dg-u));
+    column-gap: calc(0.12 * var(--dg-u));
 }
 .demographics-settle-th .demographics-settle-yield-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: calc(1.5 * var(--dg-u));
+    height: calc(1.5 * var(--dg-u));
 }
 .demographics-settle-th-label {
     font-size: var(--dg-fs-105);
@@ -591,25 +678,31 @@
     background: rgba(243, 195, 76, 0.12);
 }
 .demographics-settle-th.is-sorted {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
 }
 .demographics-settle-scorecell {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-weight: 700;
 }
 .demographics-settle-col-rank {
-    flex: 0 0 2.8rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(2.8 * var(--dg-u));
 }
 .demographics-settle-col-owner {
     /* Grow at the SAME rate (1) as the yield columns so the leading columns no
        longer hog the spare width — every column shares it evenly. The basis just
        covers the avatar + leader/civ names. */
-    flex: 1 1 7rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(7 * var(--dg-u));
     justify-content: flex-start;
     text-align: left;
 }
 .demographics-settle-col-name {
-    flex: 1 1 5rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(5 * var(--dg-u));
     justify-content: flex-start;
     text-align: left;
     white-space: nowrap;
@@ -618,10 +711,14 @@
     line-height: 2.3;
 }
 .demographics-settle-col-type {
-    flex: 0 0 4.8rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(4.8 * var(--dg-u));
 }
 .demographics-settle-col-composite {
-    flex: 0 0 4.2rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(4.2 * var(--dg-u));
 }
 
 /* ── Towns + Town Advisor tabs ───────────────────────────────────────
@@ -631,13 +728,20 @@
 .demographics-advisor {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    padding: 0.2rem 0.1rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.1 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.1 * var(--dg-u));
 }
 .demographics-towns-empty {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.8;
-    padding: 0.6rem 0.2rem;
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(0.2 * var(--dg-u));
+    padding-bottom: calc(0.6 * var(--dg-u));
+    padding-left: calc(0.2 * var(--dg-u));
 }
 
 /* Towns table: header row + one row per town. Columns flex-grow equally
@@ -645,7 +749,7 @@
 .demographics-towns-table {
     display: flex;
     flex-direction: column;
-    margin-top: 0.3rem;
+    margin-top: calc(0.3 * var(--dg-u));
 }
 .demographics-towns-row {
     display: flex;
@@ -654,13 +758,16 @@
     border-bottom: 1px solid rgba(201, 162, 76, 0.15);
 }
 .demographics-towns-row-head {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     border-bottom: 1px solid rgba(243, 195, 76, 0.45);
 }
 .demographics-towns-cell {
     flex: 1 1 0;
-    color: var(--ia-text-secondary);
-    padding: 0.2rem 0.35rem;
+    color: var(--dg-ia-text-secondary);
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.35 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.35 * var(--dg-u));
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
     overflow: hidden;
@@ -676,81 +783,98 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.5rem 0.5rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
-    margin-top: 0.3rem;
+    margin-top: calc(0.3 * var(--dg-u));
 }
 .demographics-advisor-card {
     /* Target ~16rem per card via flex-basis (so the wrap grid lays out the same
        as before), but min-width:0 lets a card shrink below that on a narrow
        frame instead of the hard 16rem floor pushing the wrapped row off-screen. */
-    flex: 1 1 16rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(16 * var(--dg-u));
     min-width: 0;
     border: 1px solid rgba(201, 162, 76, 0.25);
     border-radius: 0.25rem;
-    padding: 0.4rem 0.55rem;
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
     background: rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    row-gap: calc(0.25 * var(--dg-u));
+    column-gap: calc(0.25 * var(--dg-u));
 }
 .demographics-advisor-card-title {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     border-bottom: 1px solid rgba(201, 162, 76, 0.2);
-    padding-bottom: 0.2rem;
-    margin-bottom: 0.1rem;
+    padding-bottom: calc(0.2 * var(--dg-u));
+    margin-bottom: calc(0.1 * var(--dg-u));
 }
 .demographics-advisor-block {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    row-gap: calc(0.1 * var(--dg-u));
+    column-gap: calc(0.1 * var(--dg-u));
 }
 .demographics-advisor-line {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 0.5rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
 }
 .demographics-advisor-line-label {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.8;
 }
 .demographics-advisor-line-value {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-weight: 600;
     text-align: right;
 }
 /* Suggestion differs from the town's current focus / upgrade is advised. */
 .demographics-advisor-line-value.is-change {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
 }
 /* Suggestion matches what the town is already doing / keep-as-town. */
 .demographics-advisor-line-value.is-match {
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
 }
 .demographics-advisor-why {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.7;
 }
 
 /* Empire-context header above the advisor cards. */
 .demographics-advisor-empire {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     opacity: 0.9;
     text-align: center;
-    margin: 0.2rem 0 0.5rem;
+    margin-top: calc(0.2 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.5 * var(--dg-u));
+    margin-left: 0;
     letter-spacing: 0.01rem;
 }
 
 /* Multi-factor justification list inside a recommendation card. */
 .demographics-advisor-why-list {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.78;
-    margin: 0.25rem 0 0;
-    padding-left: 0.9rem;
+    margin-top: calc(0.25 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-left: calc(0.9 * var(--dg-u));
     list-style: disc;
 }
 .demographics-advisor-why-item {
-    margin: 0.1rem 0;
+    margin-top: calc(0.1 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.1 * var(--dg-u));
+    margin-left: 0;
     line-height: 1.3;
 }
 
@@ -767,11 +891,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.2rem 0.2rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
-    margin: 0.15rem 0;
+    margin-top: calc(0.15 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.15 * var(--dg-u));
+    margin-left: 0;
 }
 .demographics-settle-wonder-icon {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: calc(1.6 * var(--dg-u));
+    height: calc(1.6 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -783,23 +910,27 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.2rem 0.7rem;
-    margin: 0.1rem 0;
+    row-gap: calc(0.2 * var(--dg-u));
+    column-gap: calc(0.7 * var(--dg-u));
+    margin-top: calc(0.1 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.1 * var(--dg-u));
+    margin-left: 0;
     font-size: var(--dg-fs-105);
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
 }
 .demographics-settle-citypop {
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    row-gap: calc(0.2 * var(--dg-u));
+    column-gap: calc(0.2 * var(--dg-u));
 }
 .demographics-settle-citypop-val {
     font-size: var(--dg-fs-105);
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
 }
 .demographics-settle-founded {
     font-size: var(--dg-fs-105);
-    font-style: italic;
 }
 
 /* CSS-drawn population trend glyph (no unicode). */
@@ -820,61 +951,84 @@
     border-top: 0.375rem solid #e0584c;
 }
 .demographics-settle-trend-flat {
-    width: 0.44rem;
-    height: 0.125rem;
-    background: var(--ia-text-accent);
+    width: calc(0.44 * var(--dg-u));
+    height: calc(0.125 * var(--dg-u));
+    background-color: var(--dg-ia-text-accent);
 }
 
 /* ── City detail dossier ─────────────────────────────────────────────────────── */
 .demographics-settle-detail {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
-    padding: 0.2rem 0.4rem 1rem;
+    row-gap: calc(0.7 * var(--dg-u));
+    column-gap: calc(0.7 * var(--dg-u));
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(1 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
 }
 .demographics-settle-back {
     align-self: flex-start;
-    padding: 0.45rem 1.2rem;
-    border: 1px solid var(--ia-frame-border);
+    padding-top: calc(0.45 * var(--dg-u));
+    padding-right: calc(1.2 * var(--dg-u));
+    padding-bottom: calc(0.45 * var(--dg-u));
+    padding-left: calc(1.2 * var(--dg-u));
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.25rem;
-    background: var(--ia-frame-bg);
-    color: var(--ia-text-secondary);
+    background-color: var(--dg-ia-frame-bg);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-header {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0.7rem 0.9rem;
-    border: 2px solid var(--ia-frame-border);
+    row-gap: calc(0.8 * var(--dg-u));
+    column-gap: calc(0.8 * var(--dg-u));
+    padding-top: calc(0.7 * var(--dg-u));
+    padding-right: calc(0.9 * var(--dg-u));
+    padding-bottom: calc(0.7 * var(--dg-u));
+    padding-left: calc(0.9 * var(--dg-u));
+    border-width: 2px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.4rem;
     background: linear-gradient(to bottom, rgba(35, 37, 43, 0.95) 0%, rgba(18, 21, 31, 0.95) 100%);
 }
 .demographics-settle-detail-header .demographics-settle-avatar {
-    width: 3.6rem;
-    height: 3.6rem;
+    width: calc(3.6 * var(--dg-u));
+    height: calc(3.6 * var(--dg-u));
 }
 .demographics-settle-detail-htext {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    row-gap: calc(0.2 * var(--dg-u));
+    column-gap: calc(0.2 * var(--dg-u));
     overflow: hidden;
 }
 .demographics-settle-detail-name {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-185);
 }
 .demographics-settle-detail-sub {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-badges {
     display: flex;
-    gap: 0.4rem;
-    margin-top: 0.15rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
+    margin-top: calc(0.15 * var(--dg-u));
 }
 .demographics-settle-detail-rank {
     display: flex;
@@ -883,12 +1037,12 @@
     flex-shrink: 0;
 }
 .demographics-settle-detail-rank-num {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-weight: 700;
     font-size: var(--dg-fs-120);
 }
 .demographics-settle-detail-score {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-240);
@@ -901,50 +1055,69 @@
 .demographics-settle-statchip {
     display: flex;
     flex-direction: column;
-    padding: 0.35rem 0.7rem;
-    border: 1px solid var(--ia-frame-border);
+    padding-top: calc(0.35 * var(--dg-u));
+    padding-right: calc(0.7 * var(--dg-u));
+    padding-bottom: calc(0.35 * var(--dg-u));
+    padding-left: calc(0.7 * var(--dg-u));
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.25rem;
-    background: var(--ia-frame-bg);
-    min-width: 7rem;
+    background-color: var(--dg-ia-frame-bg);
+    min-width: calc(7 * var(--dg-u));
 }
 .demographics-settle-statchip-label {
-    color: var(--ia-fxs-header);
+    color: var(--dg-ia-fxs-header);
     font-size: var(--dg-fs-85);
     text-transform: uppercase;
     letter-spacing: 0.04rem;
 }
 .demographics-settle-statchip-value {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-120);
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
 }
 .demographics-settle-detail-yields {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    padding: 0.5rem 0.2rem;
-    border-top: 1px solid var(--ia-divider);
-    border-bottom: 1px solid var(--ia-divider);
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(1 * var(--dg-u));
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(0.2 * var(--dg-u));
+    padding-bottom: calc(0.5 * var(--dg-u));
+    padding-left: calc(0.2 * var(--dg-u));
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: var(--dg-ia-divider);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--dg-ia-divider);
 }
 .demographics-settle-detail-yield {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    row-gap: calc(0.25 * var(--dg-u));
+    column-gap: calc(0.25 * var(--dg-u));
 }
 .demographics-settle-detail-yield-val {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-wonders {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
 }
 .demographics-settle-detail-section-title {
-    color: var(--ia-fxs-header);
+    color: var(--dg-ia-fxs-header);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-105);
@@ -959,23 +1132,31 @@
 .demographics-settle-detail-wonder {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.6rem;
-    border: 1px solid var(--ia-frame-border);
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.25rem;
-    background: var(--ia-frame-bg);
+    background-color: var(--dg-ia-frame-bg);
 }
 .demographics-settle-detail-wonder .demographics-settle-wonder-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: calc(1.5 * var(--dg-u));
+    height: calc(1.5 * var(--dg-u));
 }
 .demographics-settle-detail-wonder-name {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-nowonders {
-    color: var(--ia-text-accent);
-    font-style: italic;
+    color: var(--dg-ia-text-accent);
     font-size: var(--dg-fs-95);
 }
 
@@ -985,19 +1166,26 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     align-self: flex-start;
-    padding: 0.45rem 1rem;
+    padding-top: calc(0.45 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(0.45 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
     border: 1px solid rgba(243, 195, 76, 0.6);
     border-radius: 0.35rem;
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.24) 0%, rgba(243, 195, 76, 0.07) 100%);
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-size: var(--dg-fs-95);
     font-weight: 700;
     letter-spacing: 0.02rem;
     cursor: pointer;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    margin: 0.15rem 0;
+    margin-top: calc(0.15 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.15 * var(--dg-u));
+    margin-left: 0;
 }
 .demographics-settle-mapbtn:hover {
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.4) 0%, rgba(243, 195, 76, 0.16) 100%);
@@ -1017,12 +1205,12 @@
 .demographics-settle-mapbtn.is-disabled:hover {
     border-color: rgba(243, 195, 76, 0.6);
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.24) 0%, rgba(243, 195, 76, 0.07) 100%);
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
 }
 /* CSS-drawn location pin (no unicode glyph). */
 .demographics-settle-mapbtn-pin {
-    width: 0.65rem;
-    height: 0.65rem;
+    width: calc(0.65 * var(--dg-u));
+    height: calc(0.65 * var(--dg-u));
     border-radius: 50% 50% 50% 0;
     background: #f3c34c;
     transform: rotate(-45deg);
@@ -1035,16 +1223,35 @@
 .demographics-settle-mapbtns {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem 0.3rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
+    gap: 0.3rem 0.3rem; /* two-value kept for consistency; see the row-gap note in the base sheet */
     align-items: center;
-    margin: 0.1rem 0;
+    margin-top: calc(0.1 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.1 * var(--dg-u));
+    margin-left: 0;
 }
 .demographics-settle-list-namerow .demographics-settle-mapbtns {
     margin-left: auto;
 }
 .demographics-settle-detail .demographics-settle-mapbtn {
-    padding: 0.55rem 1.2rem;
+    padding-top: calc(0.55 * var(--dg-u));
+    padding-right: calc(1.2 * var(--dg-u));
+    padding-bottom: calc(0.55 * var(--dg-u));
+    padding-left: calc(1.2 * var(--dg-u));
     font-size: var(--dg-fs-105);
+}
+
+/* Input shield for the cinematic: a transparent full-viewport layer that sits under the overlay
+   card and over the game's HUD, so a flyby cannot be clicked or hovered through. Removed with the
+   overlay on teardown. No background - it blocks input, it does not dim the shot. */
+.demographics-map-shield {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    pointer-events: auto;
 }
 
 /* ── Map flyout overlay (cinematic; lives on document.body over the map) ──────── */
@@ -1054,7 +1261,7 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 2.2rem;
+    bottom: calc(2.2 * var(--dg-u));
     top: auto;
     display: flex;
     justify-content: center;
@@ -1065,66 +1272,76 @@
     pointer-events: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
     /* Bottom-centered flyout over the map. 30rem is well under any supported
        Civ7 viewport width, so it never overflows; max-width keeps the plate from
        getting too wide on large displays. */
-    min-width: 30rem;
-    max-width: 44rem;
-    padding: 1.1rem 1.6rem;
-    border: 2px solid var(--ia-frame-border);
+    min-width: calc(30 * var(--dg-u));
+    max-width: calc(44 * var(--dg-u));
+    padding-top: calc(1.1 * var(--dg-u));
+    padding-right: calc(1.6 * var(--dg-u));
+    padding-bottom: calc(1.1 * var(--dg-u));
+    padding-left: calc(1.6 * var(--dg-u));
+    border-width: 2px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.45rem;
-    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.97) 0%, rgba(18, 21, 31, 0.97) 100%);
+    background: linear-gradient(to bottom, rgba(35, 37, 43, 0.94) 0%, rgba(18, 21, 31, 0.94) 100%);
     text-align: center;
 }
 .demographics-map-overlay-head {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
+    row-gap: calc(0.6 * var(--dg-u));
+    column-gap: calc(0.6 * var(--dg-u));
 }
 /* Top-3 laurel crest in the cinematic popup — same art as the rankings board,
    scaled down to fit the header next to the settlement name. */
 .demographics-map-overlay-medal {
-    width: 3.8rem;
-    height: 3.8rem;
+    width: calc(3.8 * var(--dg-u));
+    height: calc(3.8 * var(--dg-u));
     margin-bottom: 0;
     flex: 0 0 auto;
 }
 .demographics-map-overlay-medal .demographics-settle-medal-num {
     font-size: var(--dg-fs-160);
-    margin-top: -0.1rem;
+    margin-top: calc(-0.1 * var(--dg-u));
 }
 .demographics-map-overlay-rank {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-160);
 }
 .demographics-map-overlay-name {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-185);
 }
 .demographics-map-overlay-type {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-size: var(--dg-fs-105);
-    font-style: italic;
     opacity: 0.9;
 }
 .demographics-map-overlay-owner {
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
     font-size: var(--dg-fs-105);
 }
 /* Congratulatory block (acclaim + accomplishment lines). */
 .demographics-map-overlay-congrats {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
 }
 .demographics-map-overlay-congrats-line {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-map-overlay-meta {
@@ -1132,27 +1349,32 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.3rem 0.9rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.9 * var(--dg-u));
 }
 .demographics-map-overlay-pop {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    color: var(--ia-text-secondary);
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-map-overlay-back {
     align-self: center;
-    padding: 0.7rem 2rem;
+    padding-top: calc(0.7 * var(--dg-u));
+    padding-right: calc(2 * var(--dg-u));
+    padding-bottom: calc(0.7 * var(--dg-u));
+    padding-left: calc(2 * var(--dg-u));
     border: 2px solid rgba(243, 195, 76, 0.7);
     border-radius: 0.4rem;
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.28) 0%, rgba(243, 195, 76, 0.09) 100%);
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-120);
     letter-spacing: 0.02rem;
-    margin-top: 0.6rem;
+    margin-top: calc(0.6 * var(--dg-u));
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .demographics-map-overlay-back:hover {
@@ -1168,34 +1390,38 @@
 .demographics-map-overlay-acclaim {
     font-size: var(--dg-fs-120);
     line-height: 1.4;
-    color: var(--ia-text-secondary);
-    margin: 0 0 0.15rem;
+    color: var(--dg-ia-text-secondary);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: calc(0.15 * var(--dg-u));
+    margin-left: 0;
 }
 
 /* Transient flyby badge: "Flyby" + shot counter. */
 .demographics-map-overlay-flyby {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
 }
 .demographics-map-overlay-flyby-label {
     text-transform: uppercase;
     letter-spacing: 0.08rem;
     font-size: var(--dg-fs-85);
-    color: var(--ia-text-accent);
+    color: var(--dg-ia-text-accent);
 }
 .demographics-map-overlay-flyby-dots {
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-85);
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
 }
 /* "Now showing" wonder caption (name + build year) during the tour. */
 .demographics-map-overlay-caption {
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-120);
     font-weight: 700;
-    color: var(--ia-text-secondary);
-    min-height: 1.3rem;
+    color: var(--dg-ia-text-secondary);
+    min-height: calc(1.3 * var(--dg-u));
 }
 /* Secondary flavor sub-line beneath the caption: a quarter's description, the
    city's founding/standing line, etc. Lighter + italic so it reads as prose, not
@@ -1204,17 +1430,19 @@
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-95);
     font-weight: 400;
-    font-style: italic;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.82;
-    max-width: 30rem;
+    max-width: calc(30 * var(--dg-u));
     line-height: 1.3;
-    min-height: 1.1rem;
+    min-height: calc(1.1 * var(--dg-u));
 }
 
 /* Options sub-section heading (e.g. Top Cities camera). */
 .demographics-options-subheading {
-    margin: 0.9rem 0 0.3rem;
+    margin-top: calc(0.9 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.3 * var(--dg-u));
+    margin-left: 0;
     opacity: 0.85;
 }
 
@@ -1225,14 +1453,18 @@
 .demographics-settle-split {
     display: flex;
     flex-direction: row;
-    gap: 1.6rem;
+    row-gap: calc(1.6 * var(--dg-u));
+    column-gap: calc(1.6 * var(--dg-u));
     width: 100%;
     flex: 1 1 auto;
     min-height: 0;
     align-items: stretch;
     /* Inset from the window edges (extra on the left) so the podium sits in a bit
        from the frame rather than jammed against it. */
-    padding: 0 1rem 0 2.4rem;
+    padding-top: 0;
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: 0;
+    padding-left: calc(2.4 * var(--dg-u));
     box-sizing: border-box;
 }
 .demographics-settle-split-left {
@@ -1242,7 +1474,9 @@
        both columns stay usable. Basis widened to 36rem so multi-word civ/city
        names ("Great Britain", "Achaemenid Persia") fit the podium cards on one
        line at normal Interface Sizes; the shrink still protects narrow frames. */
-    flex: 0 1 36rem;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: calc(36 * var(--dg-u));
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -1250,8 +1484,10 @@
        podium below it scrolls (one scroll region, below the heading). */
     overflow: hidden;
     /* Vertical divider between the podium and the ranked list. */
-    border-right: 1px solid var(--ia-divider);
-    padding-right: 2rem;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: var(--dg-ia-divider);
+    padding-right: calc(2 * var(--dg-u));
 }
 /* Grand "Greatest" heading: stack the filigree flourish ABOVE and BELOW the title
    (like the loading screen's top/bottom ornaments) instead of flanking it — the
@@ -1259,11 +1495,12 @@
    read as a grand header. */
 .demographics-settle-split-left .demographics-settle-section-title {
     flex-direction: column;
-    gap: 0.35rem;
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
 }
 .demographics-settle-split-left .demographics-settle-section-fil {
-    width: 11rem;
-    height: 1.6rem;
+    width: calc(11 * var(--dg-u));
+    height: calc(1.6 * var(--dg-u));
 }
 .demographics-settle-split-left .demographics-settle-section-title-text {
     white-space: nowrap;
@@ -1272,6 +1509,18 @@
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+/* Podium column heading: drop the flourish ABOVE the title and keep the one below. The right-hand
+   list heading keeps both (they sit left and right of its title). */
+.demographics-settle-split-left .demographics-settle-section-title > .demographics-settle-section-fil:first-child {
+    display: none;
+}
+/* In the split layout the ranked list has the whole right column; the centred 70-unit cap that suits
+   the single-column views left ~a third of it empty at 2880x1800. Use the column. */
+.demographics-settle-split-right .demographics-settle-list {
+    /* 100%, not `none`: GameFace drops `max-width: none` (engine-closed.md), which left the
+       70-unit cap in force - measured 62% of the column at 1920x1080. */
+    max-width: 100%;
 }
 .demographics-settle-split-right {
     flex: 1 1 auto;
@@ -1309,8 +1558,9 @@
     /* Stack the three cards directly under the heading (top-aligned), not spread
        down the column. */
     justify-content: flex-start;
-    gap: 0.8rem;
-    margin-top: 0.6rem;
+    row-gap: calc(0.8 * var(--dg-u));
+    column-gap: calc(0.8 * var(--dg-u));
+    margin-top: calc(0.6 * var(--dg-u));
     padding: 0;
 }
 /* Compact HORIZONTAL podium card: [medal+avatar] · [name/owner/meta] · [score].
@@ -1321,8 +1571,12 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.1rem;
+    row-gap: calc(1 * var(--dg-u));
+    column-gap: calc(1 * var(--dg-u));
+    padding-top: calc(1 * var(--dg-u));
+    padding-right: calc(1.1 * var(--dg-u));
+    padding-bottom: calc(1 * var(--dg-u));
+    padding-left: calc(1.1 * var(--dg-u));
 }
 .demographics-settle-split-left .demographics-settle-rank-1 {
     transform: none;
@@ -1332,7 +1586,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     flex: 0 0 auto;
 }
 .demographics-settle-podium-body {
@@ -1340,7 +1595,8 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 0.1rem;
+    row-gap: calc(0.1 * var(--dg-u));
+    column-gap: calc(0.1 * var(--dg-u));
     flex: 1 1 auto;
     min-width: 0;
     text-align: left;
@@ -1350,14 +1606,15 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    gap: 0.2rem;
+    row-gap: calc(0.2 * var(--dg-u));
+    column-gap: calc(0.2 * var(--dg-u));
     flex: 0 0 auto;
 }
 /* Sizing for the horizontal podium cards — large enough to read as featured "top
    3" cards while still leaving the title clear above them. */
 .demographics-settle-split-left .demographics-settle-medal {
-    width: 4.4rem;
-    height: 4.4rem;
+    width: calc(4.4 * var(--dg-u));
+    height: calc(4.4 * var(--dg-u));
     margin-bottom: 0;
 }
 .demographics-settle-split-left .demographics-settle-medal-num {
@@ -1365,8 +1622,8 @@
     margin-top: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-card .demographics-settle-avatar {
-    width: 4.2rem;
-    height: 4.2rem;
+    width: calc(4.2 * var(--dg-u));
+    height: calc(4.2 * var(--dg-u));
 }
 .demographics-settle-split-left .demographics-settle-podium-name {
     font-size: var(--dg-fs-160);
@@ -1397,7 +1654,7 @@
 }
 .demographics-settle-split-left .demographics-settle-podium-owner {
     font-size: var(--dg-fs-105);
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     margin: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-score {
@@ -1405,7 +1662,7 @@
 }
 /* Keep both columns' content aligned at the top even when the left title wraps. */
 .demographics-settle-split .demographics-settle-section-title {
-    min-height: 3.4rem;
+    min-height: calc(3.4 * var(--dg-u));
     align-items: center;
 }
 
@@ -1443,7 +1700,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 3.6rem;
+    width: calc(3.6 * var(--dg-u));
     flex-shrink: 0;
 }
 .demographics-settle-list-rankcol .demographics-settle-list-rank {
@@ -1453,12 +1710,15 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 0.2rem;
+    margin-top: calc(0.2 * var(--dg-u));
 }
 .demographics-settle-lead-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: 0.05rem;
+    width: calc(1.5 * var(--dg-u));
+    height: calc(1.5 * var(--dg-u));
+    margin-top: calc(0.05 * var(--dg-u));
+    margin-right: calc(0.05 * var(--dg-u));
+    margin-bottom: calc(0.05 * var(--dg-u));
+    margin-left: calc(0.05 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -1472,9 +1732,9 @@
     border-color: rgba(200, 170, 225, 0.55);
 }
 .demographics-settle-holy-icon {
-    width: 1.1rem;
-    height: 1.1rem;
-    margin-right: 0.25rem;
+    width: calc(1.1 * var(--dg-u));
+    height: calc(1.1 * var(--dg-u));
+    margin-right: calc(0.25 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -1482,13 +1742,13 @@
 
 /* End-of-age board: the pill row above the showcase and its note. */
 .demographics-settle-age-pills {
-    margin-bottom: 0.4rem;
+    margin-bottom: calc(0.4 * var(--dg-u));
 }
 .demographics-settle-age-note {
     text-align: center;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-95);
-    margin-bottom: 0.5rem;
+    margin-bottom: calc(0.5 * var(--dg-u));
 }
 
 /* Category leaders are marked IN the tables (the separate leader-card strip was

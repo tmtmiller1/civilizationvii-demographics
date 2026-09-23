@@ -35,7 +35,7 @@ export function lineageOrder(doc, known) {
  * @returns {HTMLElement} Cell.
  */
 function cell(p, age, color) {
-  const span = p.civs.find((c) => c.age === age.age);
+  const span = (p.civs || []).find((c) => c.age === age.age);
   const fell = p.elim && p.elim >= age.start && p.elim <= age.end;
   if (!span) {
     const note = fell ? t("LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN") : p.elim === -1 ? t("LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE") : "";

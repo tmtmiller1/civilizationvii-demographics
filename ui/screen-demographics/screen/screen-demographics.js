@@ -1,18 +1,14 @@
 // screen-demographics.js
 //
-// The modal panel. A top-level fxs-tab-bar selects between three views:
-//   history    - Historical Data (default)  → view-history.js
-//   rankings   - World Rankings             → view-settlements.js
-//   relations  - Global Relations            → view-relations.js
-// Settings live in the native Options screen (Mods → Demographics; see demographics-options.js); a
-// toolbar button opens it.
-//
-// The Controls.define + fxs-tab-bar wiring follows vanilla
-// screen-great-works.js (for the tabs) and wonders-screen-continued's
-// wonders-screen.js (for the Controls.define call).
+// The modal panel: a top-level fxs-tab-bar selects between the hub views (view-history.js),
+// Campaign History and World Rankings. Settings live in the native Options screen
+// (Mods → Demographics; see demographics-options.js); a toolbar button opens it.
 
 import Panel from "/core/ui/panel-support.js";
 import { setNameOrder } from "/demographics/ui/core/player-label.js";
+import { applyVisualScale, publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
+import { alignOptionsHeaderButton, buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
+import { destroyChartsUnder, makeCancelInputListener, renderFailedFallback } from "/demographics/ui/screen-demographics/screen/screen-lifecycle-support.js";
 import * as ViewHistory from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen/screen-history-context.js";
 import { buildPolicyBanner } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
@@ -23,10 +19,8 @@ import {
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import { publishEffectivePolicy } from "/demographics/ui/core/demographics-governance.js";
 
-// The two heavy tabs (WorldRankingsAllCivs ~0.9k lines, Relations ~2.5k lines incl. the
-// network graph) are imported on first open instead of statically, so they are
-// never parsed for sessions that only use the default Historical Data view.
-// Specifier per lazy view id, resolved + cached by _renderLazyView.
+// The heavy views are imported on first open instead of statically, so they are never parsed
+// for sessions that only use the default view. Specifier per lazy view id, cached by _renderLazyView.
 /** @type {Record<string, string>} */
 const LAZY_VIEW_SPECIFIERS = {
   rankings: "/demographics/ui/screen-demographics/views/settlements/view-settlements.js",
@@ -40,10 +34,8 @@ const LAZY_VIEW_SPECIFIERS = {
 const LAZY_CHART_METRICS = new Set(["wars_gantt", "war_graphs"]);
 
 // ── Local typedefs ──────────────────────────────────────────────────
-// The settings/storage/sampler/chart modules are imported dynamically and
-// only ever called duck-typed, so their handles stay loose (the engine /
-// inter-module boundary). These aliases give the fields a name without
-// pinning a structural shape.
+// The settings/storage/sampler/chart modules are imported dynamically and called duck-typed,
+// so these aliases name the fields without pinning a structural shape.
 /**
  * @typedef {*} SettingsModule The demographics-settings surface
  *   (`getSetting`/`setSetting`).
@@ -79,8 +71,6 @@ function derr(...a) {
   console.error("[Demographics.screen]", ...a);
 }
 
-dlog("module evaluating");
-
 /** The view tabs, in display order. The first entry is the default view. */
 /** @type {ViewTab[]} */
 const VIEW_TABS = [
@@ -110,37 +100,15 @@ function safeCall(fn, fb) {
   }
 }
 
-// An 8-step type scale (rem) the World Rankings pages' CSS snaps to. Each is
-// published as `--dg-fs-<size×100>` scaled by the font-size setting. Keep in sync
-// with the `.demographics-screen` defaults in the density stylesheet.
-// The 1.4 step isn't used by Demographics' own CSS, but the Emigration companion
-// (whose content renders inside this screen's Migration page) references it, so we
-// publish it here too — the emig content inherits these vars from .demographics-screen.
-const FONT_SIZE_LADDER = [0.65, 0.72, 0.85, 0.95, 1.05, 1.2, 1.4, 1.6, 1.85, 2.4];
 
 /**
- * Read the player's in-game font-size setting (`uiFontScale`: 0 XSmall … 4 XLarge)
- * as a multiplier over the engine's 18px base (16/18 … 24/18), defensively.
- * @returns {{ idx: number|undefined, scale: number }} The raw index + multiplier.
- */
-function readUiFontScaleMultiplier() {
-  const PX = [16, 18, 20, 22, 24];
-  try {
-    const idx = typeof Configuration !== "undefined" ? Configuration.getUser?.()?.uiFontScale : undefined;
-    if (typeof idx === "number" && PX[idx]) return { idx, scale: PX[idx] / 18 };
-    return { idx, scale: 1 };
-  } catch (_) {
-    return { idx: undefined, scale: 1 };
-  }
-}
-
-/**
- * The Demographics modal: a top-level `fxs-tab-bar` that swaps between the
- * history, rankings, and relations views. Restores its
- * view/metric/filter state from persisted settings on attach and persists
- * each change back through the settings module.
+ * The Demographics modal: a top-level `fxs-tab-bar` that swaps between the views. Restores its
+ * view/metric/filter state from persisted settings on attach and persists each change back.
  */
 class ScreenDemographics extends Panel {
+  /** Engine-input listener (Escape / Cancel closes the screen); bound once so add/remove pair. */
+  _onInput = makeCancelInputListener(() => safeCall(() => this.close()));
+
   /** @type {string} The active top-level view id (one of {@link VIEW_TABS}). */
   activeView = "statistics";
   /** @type {string} The active history metric id. */
@@ -190,11 +158,8 @@ class ScreenDemographics extends Panel {
   onInitialize() {
     dlog("onInitialize");
     super.onInitialize?.();
-    // Audio cues - Enhancements.md #1.
-    // Panel base class plays data-audio-showing on attach and
-    // data-audio-hiding on close when these flags are true. The
-    // group-ref scopes lookups to the audio-screen-unlocks bank,
-    // which is tuned for stats / info viewing.
+    // Panel plays data-audio-showing on attach and data-audio-hiding on close when these flags
+    // are true; the group-ref scopes lookups to the audio-screen-unlocks bank.
     this.enableOpenSound = true;
     this.enableCloseSound = true;
     try {
@@ -214,24 +179,36 @@ class ScreenDemographics extends Panel {
   onAttach() {
     dlog("onAttach");
     super.onAttach();
-    // Resolution hardening is now pure CSS: screen-demographics-density.css scales fixed-size
-    // content fluidly with clamp() and steps the History chrome at @media (max-height) breakpoints,
-    // so there is no measurement/re-render to wire here. The charts redraw on their own resize
-    // listeners (see view-history-chart-render.js / view-relations.js).
     // Mirror the (possibly persisted) analytics policy to GameConfiguration up front, so the
     // companion Emigration tabs read the player's live choice instead of the wiped localStorage.
     safeCall(() => publishEffectivePolicy());
-    // Live-refresh hook: while this screen is open, a change to any Demographics option in the
-    // native Options screen calls this to re-publish the policy + re-render, so toggles (e.g. Spoil
-    // Guard) take effect immediately instead of needing a close/reopen. Cleared on detach.
+    // Live-refresh hook: an option change in the native Options screen while this screen is open
+    // re-publishes the policy and re-renders, so toggles take effect immediately. Cleared on detach.
     /** @type {*} */ (globalThis).DemographicsLiveRefresh =
       () => safeCall(() => this._liveRefresh());
     this._wireCloseButton();
-    // Bridge the in-game font-size setting to a CSS variable the mod's stylesheets
-    // multiply by. The engine applies that setting by REGENERATING its own text-*
-    // classes (not by changing the rem base), which the mod's fixed-rem content
-    // doesn't pick up — so without this the mod ignores small/medium/large/XL.
-    // Updated live while the screen is open; listener torn down in onDetach.
+    // One Options button for every tab, in the frame header at title level (left of the close
+    // button). It used to be rendered per view: alone on its own row under the ranking / relations
+    // sub-tabs, and inside the chart toolbar elsewhere.
+    // The header row: [policy banner, when constrained][Options]. One place, every tab, no rows spent.
+    safeCall(() => {
+      const frame = this.Root.querySelector(".demographics-frame");
+      if (frame && !frame.querySelector(".demographics-header-right")) {
+        const row = document.createElement("div");
+        row.className = "demographics-header-right";
+        const status = document.createElement("div");
+        status.className = "demographics-header-status";
+        row.appendChild(status);
+        const btn = buildOptionsButton();
+        btn.classList.add("demographics-options-header-btn");
+        row.appendChild(btn);
+        frame.appendChild(row);
+      }
+      alignOptionsHeaderButton(frame);
+    });
+    // Bridge the in-game font-size setting to CSS variables the mod's stylesheets use: the engine
+    // applies that setting by regenerating its own text-* classes (not the rem base), which the
+    // mod's fixed-rem content doesn't pick up. Updated live; listener torn down in onDetach.
     const onFontScale = () => safeCall(() => this._applyFontScale());
     this._onFontScaleChange = onFontScale;
     safeCall(() => this._applyFontScale());
@@ -240,50 +217,34 @@ class ScreenDemographics extends Panel {
         engine.on("UIFontScaleChanged", onFontScale);
       }
     });
+    // The scale also depends on viewport height (see demographics-font-ladder.js). A resolution
+    // change normally restarts the UI, so the attach-time publish covers it; this listener is for
+    // a live window resize, which changes the viewport without any engine event of its own.
+    safeCall(() => window.addEventListener("resize", onFontScale));
+    // Escape / Cancel closes the screen via a DOM listener on the root (as screen-hall-of-fame.js
+    // does); no global input handler, so map input is untouched.
+    safeCall(() => this.Root.addEventListener("engine-input", this._onInput));
     this._loadModulesThenRender();
   }
 
+
   /**
-   * Read the player's in-game font-size setting (`uiFontScale`: 0 XSmall … 4 XLarge)
-   * and publish it as the `--dg-font-scale` multiplier on the screen root, so the
-   * mod's font sizes track that setting the way the base game's `text-*` classes do.
-   * Multiplier = fontPx / 18 (the engine's `BASE_FONT_SIZE`), matching
-   * global-scaling.js's ladder 16/18/20/22/24 → 0.889/1/1.111/1.222/1.333.
+   * Publish the type scale onto the screen root, scaled by the player's Font Size setting, so the
+   * mod's font sizes track it the way the base game's `text-*` classes do. The ladder itself lives
+   * in demographics-font-ladder.js — the one source both screens and the CSS defaults agree with.
    */
   _applyFontScale() {
-    if (!this.Root || !this.Root.style || typeof this.Root.style.setProperty !== "function") return;
-    const { scale } = readUiFontScaleMultiplier();
-    // Coherent's CSS parser rejects `calc(length * var)` and two-arg `var(x, fb)`
-    // (the base game uses neither), so we can't scale in CSS. Instead publish each
-    // size as a FULLY-COMPUTED rem value and reference it with a plain longhand
-    // `font-size: var(--dg-fs-*)` (the same single-arg var form the mod uses for
-    // colors). rem still tracks the UI scale; this multiplies in the font-size
-    // setting. Bases here MUST match the `.demographics-screen` defaults in the CSS.
-    /** @type {Record<string, number>} */
-    const BASES = {
-      "--dg-fs-lead": 1.1,
-      "--dg-fs-civ": 0.95,
-      "--dg-fs-label": 1.05,
-      "--dg-fs-value": 1.15,
-      "--dg-fs-rank": 0.9,
-      // Category-leader cards (top of World Rankings; also the All Settlements panel).
-      // Kept in line with the table's scale so the strip doesn't read oversized.
-      "--dg-fs-card-name": 0.9,
-      "--dg-fs-card-sub": 0.78,
-      "--dg-fs-card-val": 1.15,
-      "--dg-fs-card-cat": 0.85
-    };
-    for (const name of Object.keys(BASES)) {
-      this.Root.style.setProperty(name, (BASES[name] * scale).toFixed(4) + "rem");
-    }
-    // Size-keyed ladder for every other World Rankings page (settlements table /
-    // showcase / civ-ranking, section headings). One var per distinct base size,
-    // named `--dg-fs-<size×100>`; the CSS references them and defines matching
-    // defaults, so an un-set var still renders at the original size.
-    for (const v of FONT_SIZE_LADDER) {
-      this.Root.style.setProperty("--dg-fs-" + Math.round(v * 100), (v * scale).toFixed(4) + "rem");
-    }
+    // Order matters: the visual scale first, so the frame is laid out at the reference size before
+    // anything inside it measures itself.
+    const frame = this.Root && this.Root.querySelector && this.Root.querySelector(".demographics-frame");
+    applyVisualScale(frame);
+    publishFontLadder(this.Root, true);
+    // The header button is placed against the title's measured centre, which moves with the scale.
+    const align = () => alignOptionsHeaderButton(frame);
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(align);
+    else align();
   }
+
 
   /**
    * Re-publish the effective analytics policy and re-render the active view. Invoked by the global
@@ -344,13 +305,9 @@ class ScreenDemographics extends Panel {
    * per-metric map.
    */
   _restoreState() {
-    // Always OPEN to Global Statistics → Yields Per Turn, regardless of the last
-    // session's location. (Within a session the user's navigation still persists
-    // and updates these settings; we just ignore the stored values on each open.)
-    // activeMetric "score" isn't on the Yields page, so it coerces to that page's
-    // first metric (Food/turn) via resolveActiveMetricState.
-    // EXCEPTION: a one-shot return-view override (e.g. the Top-Cities cinematic
-    // teardown asking to land back on World Rankings) is honored once, then cleared.
+    // Always open to Global Statistics → Yields Per Turn, ignoring the stored view on each open;
+    // activeMetric "score" isn't on the Yields page, so it coerces to that page's first metric.
+    // Exception: a one-shot return-view override (the Top-Cities cinematic teardown) is honored once.
     this.activeView = "statistics";
     this.activeMetric = "score";
     this.activePage = "yields";
@@ -374,10 +331,9 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Read and clear the one-shot "return view" override written by a sub-flow
-   * (e.g. the Top-Cities cinematic teardown) so the screen lands back where it
-   * launched exactly once, without permanently overriding the open-on-Statistics
-   * default. Never throws.
+   * Read and clear the one-shot "return view" override written by a sub-flow (e.g. the
+   * Top-Cities cinematic teardown), so the screen lands back where it launched exactly once.
+   * Never throws.
    * @returns {string|null} The override view id (e.g. "rankings"), or null.
    */
   _takePendingReturnView() {
@@ -394,16 +350,10 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Restore the per-metric time-filter map and resolve the active filter.
-   *
-   * Each metric remembers its own last-chosen filter, defaulting to "age"
-   * (Current Age) - except the wars Gantt, which defaults to "50" (a 50-year
-   * window) so users land on a useful slice instead of a centuries-wide pile.
-   * "all" (All Time) is the default window. The cross-age presets
-   * ("age1"/"age2"/"age3") are honored and persist like any other filter, now
-   * that history is retained across ages. The legacy scalar `activeTimeFilter`
-   * is kept as the fallback so existing user settings migrate cleanly;
-   * `resolveActiveFilterState` coerces any unknown id to "all" at render time.
+   * Restore the per-metric time-filter map and resolve the active filter. Each metric remembers
+   * its own last-chosen filter; the wars Gantt defaults to "50" so users land on a useful slice.
+   * The legacy scalar `activeTimeFilter` is the fallback; `resolveActiveFilterState` coerces any
+   * unknown id to "all" at render time.
    */
   _restoreTimeFilters() {
     const legacyFilter = this.settings.getSetting("activeTimeFilter", "all");
@@ -508,16 +458,14 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * The view tabs visible under the active UI complexity tier (P1.5), clamping
+   * The view tabs visible under the active UI complexity tier, clamping
    * the active view to a visible one (the Relations tab is hidden at Basic).
    * @returns {ViewTab[]} The visible tab descriptors.
    */
   _visibleViewTabs() {
     const base = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
-    // The Migration hub exists only to host the Emigration companion (its sole native page,
-    // Population, moves to the Society page when standalone — see placePopulationAnchor). So
-    // hide the tab entirely when Emigration isn't active, and when it IS, label it "Emigration"
-    // so the player can tell the companion mod loaded.
+    // The Migration hub exists only to host the Emigration companion, so hide the tab when
+    // Emigration isn't active and label it "Emigration" when it is.
     const hasEmigration = migrationHubHasCompanion();
     // Companion mods can also contribute a top-level view tab (e.g. the Historical Timeline, or a
     // legacy `topLevel` registerPanel such as an un-updated Emigration). Insert those right after
@@ -611,10 +559,9 @@ class ScreenDemographics extends Panel {
    * render errors are logged, not thrown.
    */
   renderActiveView() {
-    // The Historical Data view and companion top-level panels render the policy banner INSIDE the
-    // view (at the bottom); every other view (Rankings / Relations) shows it via the banner-host,
-    // which now sits BELOW the view host so it lands at the bottom too. Either way the banner-host
-    // is cleared so a stale banner never lingers across view switches.
+    // The Historical Data view and companion top-level panels render the policy banner inside the
+    // view; every other view shows it via the banner-host below the view host. Either way the
+    // banner-host is cleared so a stale banner never lingers across view switches.
     const usesHistoryRender = HUB_VIEWS.has(this.activeView)
       || this._topLevelPanelTabs().some((v) => v.id === this.activeView);
     safeCall(() => this._renderPolicyBanner(usesHistoryRender));
@@ -623,34 +570,41 @@ class ScreenDemographics extends Panel {
       derr("view-host missing");
       return;
     }
+    // The Historical Data view can put its page-tab row back instead of rebuilding it (a fresh
+    // fxs-tab-bar flashes its first tab), but it only gets the chance if the row is captured
+    // BEFORE this clear — the view sees an empty host otherwise.
+    this._priorPageTabHost = /** @type {HTMLElement|null} */ (
+      host.querySelector(".demographics-page-tab-host")
+    );
     while (host.firstChild) host.removeChild(host.firstChild);
 
     try {
       this._dispatchView(host);
     } catch (e) {
       derr("renderActiveView threw:", e);
+      // Leave the player a message rather than a blank tab (derr goes to UI.log only).
+      safeCall(() => host.appendChild(renderFailedFallback()));
     }
   }
 
   /**
-   * Render (or clear) the analytics-governance policy banner above the view host
-   * (combined design plan P0.1). Shown whenever the effective policy withholds
-   * data, so every player can see the comparative analytics are constrained -
-   * and whether the multiplayer host (not just their own preference) is the
-   * binding constraint. Re-evaluated on every view render.
+   * The banner is shown whenever the effective policy withholds data, so every player can see the
+   * comparative analytics are constrained and whether the multiplayer host is the binding constraint.
    */
   /**
-   * Render (or clear) the analytics-governance policy banner in the screen-level banner host.
-   * @param {boolean} [renderedInView] When true the active view renders the banner itself (below
-   *   its sub-tabs), so this only clears the host to avoid a duplicate.
+   * Render (or clear) the analytics-governance policy banner in the header status slot, left of
+   * the Options button. It used to sit in a bottom row (and the history views drew their own copy);
+   * the header is the one place it appears now, on every tab, so it costs no content rows.
+   * @param {boolean} [_renderedInView] Ignored; kept for the call site's shape.
    */
-  _renderPolicyBanner(renderedInView) {
-    const banhost = this.Root.querySelector(".demographics-policy-banner-host");
-    if (!banhost) return;
-    while (banhost.firstChild) banhost.removeChild(banhost.firstChild);
-    if (renderedInView) return;
+  _renderPolicyBanner(_renderedInView) {
+    const slot = this.Root.querySelector(".demographics-header-status");
+    if (!slot) return;
+    while (slot.firstChild) slot.removeChild(slot.firstChild);
     const banner = buildPolicyBanner();
-    if (banner) banhost.appendChild(banner);
+    if (banner) slot.appendChild(banner);
+    // The row's width changed; keep it on the title line.
+    alignOptionsHeaderButton(this.Root.querySelector(".demographics-frame"));
   }
 
   /**
@@ -674,10 +628,8 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Render a lazily-imported tab (WorldRankingsAllCivs / Relations), importing its module on
-   * first open and caching it. The host was already cleared by renderActiveView,
-   * so it stays empty for the (local, fast) import; the render is skipped if the
-   * user switched tabs before it resolved, and re-clears defensively first.
+   * Render a lazily-imported tab, importing its module on first open and caching it. The render
+   * is skipped if the user switched tabs before the import resolved, and re-clears the host first.
    * @param {HTMLElement} host The cleared view-host element.
    * @param {string} id The active view id ("worldrankings-allcivs" | "relations").
    */
@@ -701,19 +653,21 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Render the Historical Data view. Common metrics render synchronously from
-   * the statically-loaded chart barrel; the heavy Conflicts metrics first
-   * ensure their on-demand chart module is imported, then render once. The
-   * re-render is skipped if the user navigated away while the import was in
-   * flight.
+   * Render the Historical Data view. Common metrics render synchronously; the heavy Conflicts
+   * metrics first import their on-demand chart module, then render once unless the user
+   * navigated away in the meantime.
    * @param {HTMLElement} host The cleared view-host element.
-   * @param {{hub?:string, onlyPage?:string}} [opts] `hub` scopes the page row to one hub;
+   * @param {{hub?:string, onlyPage?:string, priorPageHost?:HTMLElement|null}} [opts]
+   *   `hub` scopes the page row to one hub;
    *   `onlyPage` pins a single companion page (no page-tab row). Omit both for the legacy
    *   all-pages view.
    */
   _renderHistoricalDataView(host, opts) {
     const onlyPage = opts && opts.onlyPage;
     const metric = this.activeMetric;
+    // Hand the pre-clear page-tab row down (see renderActiveView); consumed once per render.
+    const viewOpts = Object.assign({}, opts, { priorPageHost: this._priorPageTabHost || null });
+    this._priorPageTabHost = null;
     // The lazy-chart path applies to the hub views' heavy Wars/Crises metrics; a pinned companion
     // page renders synchronously.
     if (
@@ -727,12 +681,12 @@ class ScreenDemographics extends Panel {
         .then(() => {
           if (!HUB_VIEWS.has(this.activeView) || this.activeMetric !== metric) return;
           while (host.firstChild) host.removeChild(host.firstChild);
-          ViewHistory.render(host, buildHistoryContext(this), opts);
+          ViewHistory.render(host, buildHistoryContext(this), viewOpts);
         })
         .catch((/** @type {*} */ e) => derr("lazy chart load failed:", metric, e));
       return;
     }
-    ViewHistory.render(host, buildHistoryContext(this), opts);
+    ViewHistory.render(host, buildHistoryContext(this), viewOpts);
   }
 
   /**
@@ -768,13 +722,8 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Switch the active metric, persist it, reset the time filter to the
-   * metric's default, and re-render.
-   *
-   * Switching metric resets to a fixed default, NOT whatever filter the user
-   * last selected for it. Per-metric memory was confusing - users expect each
-   * graph to start from a known state. "all" (All Time) is that default, so
-   * every graph opens on its full cross-age history.
+   * Switch the active metric, persist it, reset the time filter to "all" (a fixed default rather
+   * than the per-metric memory, so each graph starts from a known state), and re-render.
    * @param {string} id The metric id to activate.
    */
   _setActiveMetric(id) {
@@ -843,11 +792,19 @@ class ScreenDemographics extends Panel {
           engine.off("UIFontScaleChanged", onFontScale);
         }
       });
+      safeCall(() => window.removeEventListener("resize", onFontScale));
       this._onFontScaleChange = null;
     }
     if (this.viewTabBar && this.viewTabBarListener) {
       safeCall(() => this.viewTabBar.removeEventListener("tab-selected", this.viewTabBarListener));
     }
+    safeCall(() => this.Root.removeEventListener("engine-input", this._onInput));
+    // Destroy every live Chart.js instance under the root: the views only tear a chart down when
+    // they re-render into the same host, so closing the screen otherwise leaks each open chart
+    // (its canvas, resize hooks and animation frame) until the next open.
+    safeCall(() => destroyChartsUnder(this.Root));
+    // The relations view keeps module-level references for its resize hook; drop them now.
+    safeCall(() => this._lazyViews?.relations?.releaseRelationsView?.());
     // Flush any buffered storage writes (perf-mode) so closing the
     // panel - or the player tabbing away - saves all in-flight samples.
     safeCall(() => {
@@ -857,11 +814,9 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Panel lifecycle: another context was pushed ON TOP of us (e.g. the native Options screen,
-   * opened from the Options button). Our window is `position:fixed; z-index:90` to float above
-   * queued dock popups, which would also float it above that pushed screen, so drop our stacking
-   * while we're not the focused context, letting the screen on top show and be usable. Restored in
-   * onReceiveFocus.
+   * Panel lifecycle: another context was pushed on top of us (e.g. the native Options screen). Our
+   * window floats at `z-index:90` above queued dock popups, which would also cover that pushed
+   * screen, so drop our stacking while unfocused. Restored in onReceiveFocus.
    */
   onLoseFocus() {
     this.Root.classList.add("demographics-screen-obscured");
@@ -876,19 +831,10 @@ class ScreenDemographics extends Panel {
     this.Root.classList.remove("demographics-screen-obscured");
     super.onReceiveFocus();
   }
-
-  /**
-   * Close the panel.
-   */
-  close() {
-    dlog("close()");
-    super.close?.();
-  }
 }
 
 try {
   if (typeof Controls !== "undefined" && typeof Controls.define === "function") {
-    dlog("about to call Controls.define('screen-demographics', ...)");
     Controls.define("screen-demographics", {
       createInstance: ScreenDemographics,
       description: "Demographics , multi-view stats panel.",
@@ -908,7 +854,6 @@ try {
       attributes: [],
       classNames: ["demographics-screen", "w-full", "h-full"]
     });
-    dlog("Controls.define returned");
   } else {
     derr("Controls.define unavailable");
   }

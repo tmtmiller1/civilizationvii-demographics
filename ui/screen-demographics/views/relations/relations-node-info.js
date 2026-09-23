@@ -51,7 +51,9 @@ function foldNameSample(map, pid, ps) {
 export function buildNameMap(history) {
   /** @type {Record<string, Record<string, *>>} */
   const map = {};
-  const samples = history?.samples || [];
+  // A non-array `samples` (a corrupt blob or another mod's saved data) must not
+  // reach the for..of below, which would throw on a non-iterable.
+  const samples = Array.isArray(history?.samples) ? history.samples : [];
   for (const s of samples) {
     if (!s?.players) continue;
     for (const pid of Object.keys(s.players)) {

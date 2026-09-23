@@ -3,13 +3,9 @@
 // DOM-free crisis cost-model computation shared by the Crises page render
 // (chart-crisis-stages.js) and the age-boundary snapshot (sampler-age-boundary.js).
 //
-// Why a snapshot exists: the per-civ "losses" figures (population / crop / production lost) are
-// sums of per-turn declines (sumDeclines in chart-conflicts-cost.js), so they need DENSE
-// turn-by-turn samples. As a game grows, old samples are decimated to cap the save , and once a
-// finished age's samples are thinned, those loss columns collapse to "—" while one-sample figures
-// (e.g. current Military Power) survive. Computing the totals at the age boundary, while the
-// finished age's samples are still dense, and persisting them lets the Crises page render a
-// finished age's cumulative impact from the snapshot instead of recomputing from thinned samples.
+// The per-civ "losses" figures are sums of per-turn declines, so they need dense samples; old
+// samples are decimated to cap the save, so the totals are computed at the age boundary while the
+// finished age's samples are still dense and persisted for the Crises page to render.
 
 import {
   COST_METRICS,
@@ -88,6 +84,8 @@ export function groupCrises(segments) {
  * @param {Record<string, number|null>} add One crisis's per-metric cost.
  */
 export function mergeCost(acc, add) {
+  // A persisted snapshot column can carry a null/non-object cost; nothing to merge.
+  if (!add || typeof add !== "object") return;
   for (const key of Object.keys(add)) {
     const v = add[key];
     if (typeof v !== "number" || !isFinite(v)) continue;
@@ -157,12 +155,22 @@ export function buildAgeCrisisCols(ageSamples) {
 }
 
 /**
+ * Whether a (possibly persisted) column is a usable object. Snapshot arrays come from storage, so
+ * an element can be null or a scalar; those are dropped rather than dereferenced.
+ * @param {*} c A column candidate.
+ * @returns {boolean} True for a non-null object.
+ */
+function isCol(c) {
+  return !!c && typeof c === "object";
+}
+
+/**
  * Convert stored/computed cost columns into the shape buildCostTable consumes.
  * @param {CrisisCol[]} cols The cumulative cost columns.
  * @returns {TableCol[]} The buildCostTable columns.
  */
 export function toTableCols(cols) {
-  return (cols || []).map((c) => ({
+  return (Array.isArray(cols) ? cols : []).filter(isCol).map((c) => ({
     entry: { pid: c.pid, leaderType: c.leaderType, color: c.color },
     cs: null,
     cost: c.cost
@@ -179,7 +187,7 @@ export function mergeAgeCols(colSets) {
   /** @type {Map<number, *>} */
   const byPid = new Map();
   for (const cols of colSets || []) {
-    for (const c of cols || []) {
+    for (const c of (Array.isArray(cols) ? cols : []).filter(isCol)) {
       let acc = byPid.get(c.pid);
       if (!acc) {
         acc = { pid: c.pid, leaderType: c.leaderType, color: c.color, cost: {} };

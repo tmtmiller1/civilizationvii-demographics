@@ -82,6 +82,20 @@ assert.ok(castFromDoc(doc, "own").known(0), "the local player is always known");
   assert.ok(rc.known(99));
 }
 
+// A campaign whose latest state has no player list, and a record without rivals: nobody is met
+// or named, and nothing throws.
+{
+  const noLast = castFromDoc({ ...doc, last: {} });
+  assert.ok(noLast.known(0) && !noLast.known(1), "only the local player is known");
+  assert.ok(!castFromDoc({ ...doc, last: { players: null } }).known(1));
+  const noRivals = castFromRecord({ local: 0, leader: "LEADER_A", leaderName: "LOC_LA", color: "#111", civs: doc.players[0].civs });
+  assert.equal(noRivals.civName(5, "AGE_ANTIQUITY"), "");
+  assert.equal(noRivals.leaderName(5), "");
+  assert.equal(noRivals.civType(5, "AGE_ANTIQUITY"), "");
+  assert.equal(noRivals.civName(0, "AGE_ANTIQUITY"), "ROME");
+  assert.ok(noRivals.color(0), "the local player still has a color");
+}
+
 // Saved text: a tag the current Locale cannot resolve reads from text saved with an archived record.
 {
   const { t, addSavedTexts } = await import("/demographics/ui/history/core/history-text.js");

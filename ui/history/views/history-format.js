@@ -51,12 +51,15 @@ export function mapName(script) {
 }
 
 /**
- * Setup summary ("Standard · Large · Continents Plus · Deity").
- * @param {HnrSetup} s Setup.
+ * Setup summary ("Standard · Large · Continents Plus · Deity"). A record without a setup (an older
+ * or hand-edited archive) gives an empty line.
+ * @param {Partial<HnrSetup>} [s] Setup.
  * @returns {string} Line.
  */
-export function setupLine(s) {
-  return [t(s.speed), t(s.mapSize), mapName(s.mapScript), t(s.difficulty)].filter((x) => !!x && !x.startsWith("LOC_")).join("  ·  ");
+export function setupLine(s = {}) {
+  const o = s || {};
+  return [t(o.speed || ""), t(o.mapSize || ""), mapName(o.mapScript || ""), t(o.difficulty || "")]
+    .filter((x) => !!x && !x.startsWith("LOC_")).join("  ·  ");
 }
 
 /**

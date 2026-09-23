@@ -64,6 +64,23 @@ export function historyVisibility() {
 }
 
 /**
+ * Log a failed render and put a "could not render" line in the host, so the player sees what
+ * happened instead of an empty panel. Anything already drawn (a page's Back button, say) stays.
+ * @param {HTMLElement} host Container.
+ * @param {string} what Which render failed, for the log line.
+ * @param {*} e The error.
+ */
+function renderFailed(host, what, e) {
+  derr(what, e);
+  try {
+    host.appendChild(emptyState(t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED")));
+  } catch (e2) {
+    // The host itself cannot take a child: the log line above is all that can be done.
+    derr(what + " (no fallback)", e2);
+  }
+}
+
+/**
  * Render the History tab. Signature matches screen-demographics' lazy views.
  * @param {HTMLElement} host The cleared view host.
  * @param {*} [_args] `{ history, settings }` from the screen (unused: the chronicle has its own store).
@@ -71,13 +88,23 @@ export function historyVisibility() {
 export function render(host, _args) {
   const rerender = () => render(host);
   try {
-    clear(host);
     if (!HISTORY_PAGES.some((p) => p.id === viewState.tab)) viewState.tab = "chronicle";
+    // Every Chronicle pill re-renders through here, and a NEW fxs-tab-bar shows its first tab for
+    // a frame before honouring selected-tab-index — so rebuilding the page tabs on each click
+    // flashed "Chronicle" and snapped back. Keep the bar when the page is unchanged: its listener
+    // closes over module state and this same host, so it stays correct. A page change rebuilds.
+    // No child combinator here: the `__forTab` stamp already limits this to a bar built below,
+    // and the test DOM stub's selector engine (like some GameFace paths) does not support `>`.
+    const prior = /** @type {*} */ (host.querySelector(".demographics-page-tabs"));
+    const keptBar = prior && prior.__forTab === viewState.tab ? prior : null;
+    clear(host);
     const root = el("div", { cls: "dgh-app" });
     host.appendChild(root);
-    root.appendChild(
-      tabBar(HISTORY_PAGES, viewState.tab, (id) => { viewState.tab = id; rerender(); }, "demographics-page-tabs")
+    const bar = keptBar || tabBar(
+      HISTORY_PAGES, viewState.tab, (id) => { viewState.tab = id; rerender(); }, "demographics-page-tabs"
     );
+    /** @type {*} */ (bar).__forTab = viewState.tab;
+    root.appendChild(bar);
     const body = el("div", { cls: "dgh-view dgh-view--" + viewState.tab });
     root.appendChild(body);
     const visibility = historyVisibility();
@@ -85,26 +112,35 @@ export function render(host, _args) {
     else if (viewState.tab === "timeline") renderTimelinePage(body, liveCampaign(), visibility);
     else renderChronicle(body, liveCampaign(), rerender, visibility);
   } catch (e) {
-    derr("history render failed", e);
+    renderFailed(host, "history render failed", e);
   }
 }
 
 /**
  * Render the Hall of Fame into a host.
  * @param {HTMLElement} host Container.
- * @param {{mode: "game"|"shell"}} opts In game the current campaign is included live.
+ * @param {{mode: "game"|"shell", filterHost?: HTMLElement|null}} opts In game the current campaign
+ *   is included live. `filterHost` is the screen's title-line slot for the short-games filter.
  */
 export function renderHallOfFame(host, opts) {
   const rerender = () => renderHallOfFame(host, opts);
   try {
+    // On its own screen the section selector is a real fxs-tab-bar, and every rerender (the
+    // short-games filter, the storage-repair buttons) came back through here and rebuilt it — a
+    // fresh bar shows its first section for a frame before honouring selected-tab-index. Capture
+    // it before the clear so sectionNav can put it back when the section is unchanged.
+    const priorSectionBar = /** @type {HTMLElement|null} */ (host.querySelector(".dgh-subtabs"));
     clear(host);
     const root = el("div", { cls: "dgh-app" });
     host.appendChild(root);
     const body = el("div", { cls: "dgh-view dgh-view--hof" });
     root.appendChild(body);
     const inGame = opts.mode === "game";
-    renderHof(body, { live: inGame ? liveCampaign() : null, rerender, embedded: inGame });
+    renderHof(body, {
+      live: inGame ? liveCampaign() : null, rerender, embedded: inGame, priorSectionBar,
+      filterHost: opts.filterHost || null
+    });
   } catch (e) {
-    derr("hall of fame render failed", e);
+    renderFailed(host, "hall of fame render failed", e);
   }
 }

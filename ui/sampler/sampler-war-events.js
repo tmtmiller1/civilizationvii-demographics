@@ -1,58 +1,13 @@
 // sampler-war-events.js
 //
-// Event-based war-loss tracker: true unit casualties + permanently razed
-// settlements. The per-turn sampler can only see standing state, so it misses
-// things that happen and reverse between samples and can't tell destruction from
-// transfer. We close both gaps with engine events.
-//
-// (1) UNIT CASUALTIES. The sampler only sees a player's STANDING army, so a unit
-// built and destroyed between two samples is invisible and net production masks
-// losses. We listen to `UnitKilledInCombat` and accumulate, per player, the
-// combat strength of each destroyed unit. The catch: when the event fires the
-// unit object is already gone (the base game's unit-flag manager resolves the
-// dead unit from its OWN cache, not Units.get - unit-flag-manager.js
-// onUnitRemovedFromMap). So we keep a live `owner:id -> { owner, strength }`
-// cache, refreshed every sample as the military-power collector already iterates
-// every unit (sampler-collectors.js _sumUnitStrengths), and resolve the dead
-// unit's strength from it at kill time.
-//
-// (3) PRODUCTION DIRECTED TO WAR. On CityProductionCompleted we classify the
-// finished item - military units (by FormationClass) and military/fortification
-// buildings (by GameInfo.TypeTags) - and add its production cost to the city
-// owner's cumulative `warProdCum`. The decode (ProductionKind + GameInfo lookup)
-// and classification were confirmed against a live build.
-//
-// (2) RAZED SETTLEMENTS. A captured city merely changes hands (recoverable); a
-// razed city is destroyed for good. We listen to `CityRazingStarted` and count,
-// per player, the settlements that are permanently destroyed - attributed to the
-// VICTIM (the civ that owned the city before it was captured), not the razer.
-// Razing only starts AFTER capture, so at event time the city is owned by the
-// conqueror; to recover the victim we cache each city's owner BY LOCATION every
-// sample (location is stable across capture/raze, unlike the ComponentID owner)
-// and snapshot the prior owner on `CityTransfered`.
-//
-// Both running per-player totals are sampled into each snapshot as cumulative,
-// monotonically non-decreasing metrics (`milLostCum`, `razedCum`). The war
-// tooltip reads each one's INCREASE over a participant's war window. milLostCum
-// falls back to the standing-army drawdown proxy for wars predating this
-// tracking; razedCum simply reads as "no data" (-) for those.
-//
-// Scope/limits (documented honestly):
-//   - Casualties: only combat deaths count (not disband/upgrade/attrition); a
-//     unit that lived and died within one turn is never cached, so it's missed
-//     (at most a one-turn window at the default cadence); strength is the unit
-//     type's base combat value, not HP at death.
-//   - Razing: counted at CityRazingStarted, so a raze that is later halted
-//     (CityRazingStopped, e.g. liberation) is still counted; a city razed
-//     directly from a non-major (independent power) is attributed to that
-//     non-major and so never appears in the major-vs-major tooltip.
-//   - War production: counts the produced item's EFFECTIVE cost in the building
-//     city (city.Production.getUnit/ConstructibleProductionCost - the same value
-//     the production chooser shows), so leader/civ/policy discounts are already
-//     applied. Gold/faith purchases fire CityMadePurchase, not this event, so
-//     they aren't counted (treasury, not production); overflow isn't split out.
-//     Whole-game cumulative; the tooltip shows only the increase per war window,
-//     so peacetime builds aren't attributed.
+// Event-based war-loss tracker: unit casualties (UnitKilledInCombat, strength
+// resolved from a per-sample cache because the unit object is gone when the
+// event fires), razed settlements (CityRazingStarted, charged to the pre-capture
+// owner cached by plot location), and production directed to war
+// (CityProductionCompleted, effective cost of military units/buildings). Each
+// per-player total is sampled into snapshots as a cumulative metric and the war
+// tooltip reads its increase over a war window. Only combat deaths count, a raze
+// later halted still counts, and gold/faith purchases are not counted.
 
 // Flip to true for local debugging (committed off, matching the rest of the mod).
 const DEMOGRAPHICS_DEBUG = false;
@@ -113,9 +68,7 @@ const razedByPid = new Map();
 
 /**
  * Net cities WON minus LOST through capture, keyed by pid: +1 to the captor and
- * -1 to the prior owner on every CityTransfered. Unlike the sampled settlement
- * COUNT, this never counts a city founded with a settler - only cities that
- * actually changed hands - which is what "cities gained/lost in the war" means.
+ * -1 to the prior owner on every CityTransfered, so founded cities never count.
  * Not monotonic (a recaptured city nets back out). Seeded from history.
  * @type {Map<number, number>}
  */
@@ -130,11 +83,9 @@ const warProdByPid = new Map();
 
 /**
  * Net territory (in km²) each player has WON minus LOST through city capture,
- * keyed by pid: a captured city's tiles are added to the captor and subtracted
- * from the prior owner on every CityTransfered. This is the ONLY territory that
- * actually changes hands in war - unlike the per-civ owned-tile total (the Land
- * Area line), which also moves with peaceful settling and border growth. Not
- * monotonic (a recaptured city nets back out). Seeded from history.
+ * keyed by pid: a captured city's tiles move from the prior owner to the captor
+ * on every CityTransfered, unlike the Land Area line which also moves with
+ * peaceful growth. Not monotonic (a recaptured city nets back out). Seeded from history.
  * @type {Map<number, number>}
  */
 const warLandByPid = new Map();
@@ -420,11 +371,8 @@ function onCityRazingStarted(data) {
 
 /**
  * Pick the ComponentID-like field that carries the killed unit out of a
- * UnitKilledInCombat payload. Verified in a live build: the payload is
- * `{ unitKilled, unitKiller }`, each a ComponentID (owner/id/type) - so the
- * victim is `data.unitKilled`. (UnitKilledInCombat does NOT follow the `data.unit`
- * convention used by UnitRemovedFromMap/UnitDamageChanged.) The remaining field
- * names + bare-ComponentID fallback are cheap insurance against build variation.
+ * UnitKilledInCombat payload (`{ unitKilled, unitKiller }`, each a ComponentID).
+ * The remaining field names + bare-ComponentID fallback are insurance against build variation.
  * @param {*} data The event payload.
  * @returns {*} The unit ComponentID-like object, or null.
  */
@@ -479,15 +427,10 @@ function onUnitKilledInCombat(data) {
 }
 
 /**
- * Reset every per-player cumulative war-event total (casualties, razed
- * settlements, war production) to match the latest persisted snapshot's
- * `milLostCum` / `razedCum` / `warProdCum`. Makes the persisted history
- * authoritative on every (re)load: it restores the counters after a full restart
- * (fresh JS process) AND clears stale totals when a new game starts in the same
- * process (module state persists, but an empty history correctly seeds everyone
- * to zero). Called once per startWarEventTracker, before the first sample. The
- * totals are otherwise retained across an in-session save/load so nothing is
- * lost mid-session.
+ * Reset every per-player cumulative war-event total to match the latest
+ * persisted snapshot, making the persisted history authoritative on every
+ * (re)load: counters survive a full restart and an empty history seeds everyone
+ * to zero when a new game starts in the same process. Called once per startWarEventTracker.
  * @param {Snapshot[] | undefined} samples The persisted sample stream.
  */
 export function seedWarEventsFromHistory(samples) {
@@ -644,11 +587,8 @@ function isMilitaryProduced(dec) {
 }
 
 /**
- * CityProductionCompleted handler: when a city finishes a military item (a
- * military-formation unit, or a building tagged MILITARY / FORTIFICATION), add
- * its production cost to that city owner's cumulative "production directed to
- * war" total. Verified against a live build (ProductionKind decode, GameInfo
- * lookup, formation/tag classification, and the cost accessor all confirmed).
+ * CityProductionCompleted handler: when a city finishes a military item, add
+ * its production cost to that city owner's cumulative "production directed to war" total.
  * @param {*} data The event payload.
  */
 /**
@@ -686,10 +626,8 @@ function onCityProductionCompleted(data) {
 }
 
 /**
- * Subscribe to the war-event sources: UnitKilledInCombat (casualties),
- * CityTransfered + CityRazingStarted (razed settlements), and
- * CityProductionCompleted (production directed to war). Idempotent: drops any
- * prior subscriptions first, mirroring the sampler's re-register-on-load pattern.
+ * Subscribe to the war-event sources (casualties, transfers/razes, war
+ * production). Idempotent: drops any prior subscriptions first.
  */
 export function startWarEventTracker() {
   stopWarEventTracker();
@@ -702,10 +640,9 @@ export function startWarEventTracker() {
 }
 
 /**
- * Publish the cumulative per-civ war tallies on a read-only global surface so OTHER mods (e.g.
- * Emigration's war-severity model + its Causes-tab reporting) can read them. Additive: merges onto
- * any existing globalThis.DemographicsData. The accessors read the live counters, so values stay
- * current.
+ * Publish the cumulative per-civ war tallies on a read-only global surface so other mods can read
+ * them. Additive: merges onto any existing globalThis.DemographicsData; the accessors read the
+ * live counters.
  */
 function exposeWarData() {
   try {

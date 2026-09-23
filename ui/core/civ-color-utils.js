@@ -1,32 +1,16 @@
 // civ-color-utils.js
 //
-// Shared color helpers for text rendered with civ-derived colors.
-//
-// Helpers keep civ-derived colors readable and distinct on the dark
-// Demographics surfaces:
-// - `preferReadableColor` picks the better of a civ's two banner colors,
-//   swapping in the secondary when the primary is a dark grey/black that would
-//   otherwise just become a dull grey (e.g. Alexander).
-// - `safeTextColor` raises a single color to a minimum lightness so it reads on
-//   the dark surface, preserving hue and saturation.
-// - `deconflictColors` runs a global pass over the whole set of line colors so
-//   no two civs share a near-identical color, falling back to arbitrary
-//   well-separated colors when banner colors collide or aren't usable.
-//
-// Readability is gauged by HSL lightness, not raw luminance: a saturated pure
-// red (luminance ~54) reads fine on a dark background, while a desaturated dark
-// grey of the same luminance does not. Lightness + saturation capture that.
+// Shared color helpers that keep civ-derived colors readable and distinct on the dark
+// Demographics surfaces. Readability is gauged by HSL lightness plus saturation, not raw
+// luminance: a saturated red reads fine on a dark background while a dark grey does not.
 
-// Minimum HSL lightness a line color needs to read on the dark chart surface.
-// A grey carries no hue to aid visibility, so it needs to be lighter than a
-// saturated color; the floor slides from GREY (desaturated) to SATURATED.
+// Minimum HSL lightness a line color needs to read on the dark chart surface; the floor
+// slides from GREY (desaturated, needs to be lighter) to SATURATED.
 const MIN_LIGHTNESS_GREY = 0.65;
 const MIN_LIGHTNESS_SATURATED = 0.5;
 
-// A primary banner color is worth replacing with the civ's secondary color when
-// it is both dark and nearly colorless - a dark grey/black whose only readable
-// form is a dull grey. Dark-but-saturated colors keep their hue when lifted, so
-// they are not treated as grey.
+// A primary banner color is replaced with the civ's secondary when it is both dark and nearly
+// colorless; dark-but-saturated colors keep their hue when lifted, so they are not grey.
 const DARK_GREY_MAX_LIGHTNESS = 0.42;
 const DARK_GREY_MAX_SATURATION = 0.3;
 
@@ -189,15 +173,9 @@ function formatColor(r, g, b, src, alpha) {
 }
 
 /**
- * Raise a civ color to the minimum readable lightness for the dark Demographics
- * surfaces, preserving its hue and saturation. Colors already light enough are
- * returned unchanged; a near-black grey becomes a light grey, a dark blue
- * becomes a clearly-visible blue, and so on.
- *
- * Pass-through behavior:
- * - Non-string / unparseable inputs are returned unchanged.
- * - Colors already at or above the lightness floor are returned unchanged.
- *
+ * Raise a civ color to the minimum readable lightness for the dark Demographics surfaces,
+ * preserving its hue and saturation. Non-string / unparseable inputs and colors already at
+ * or above the floor are returned unchanged.
  * @param {*} civColor Civ color string.
  * @returns {*} Lifted color, or original input.
  */
@@ -215,18 +193,9 @@ export function safeTextColor(civColor) {
 }
 
 /**
- * Choose the more readable of a civ's two banner colors for use as a line /
- * swatch color on the dark Demographics surfaces.
- *
- * The primary banner color is preferred (it's the color players associate with
- * the civ). Only when the primary is a dark grey/black - where lifting it would
- * produce a dull, identity-less grey - is the civ's secondary banner color used
- * instead, provided the secondary is itself a real (non-grey) color. Dark but
- * saturated primaries keep their hue when lifted and are left alone.
- *
- * The returned color is raw (not lifted); callers should still pass it through
- * {@link safeTextColor} so it reaches the readable lightness floor.
- *
+ * Choose the more readable of a civ's two banner colors for the dark Demographics surfaces:
+ * the primary, unless it is a dark grey/black and the secondary is a real (non-grey) color.
+ * The returned color is raw; callers still pass it through {@link safeTextColor}.
  * @param {*} primaryColor Civ primary banner color string.
  * @param {*} secondaryColor Civ secondary banner color string.
  * @returns {*} The chosen color (primary unless the secondary reads better).
@@ -284,10 +253,8 @@ export function colorDistance(colorA, colorB) {
 }
 
 /**
- * An arbitrary, deterministic, readable color for a given index. Successive
- * indices are spread by the golden angle so neighbours are maximally distinct.
- * Used as the last-resort line color when banner colors collide or can't be
- * used.
+ * An arbitrary, deterministic, readable color for a given index, spread by the golden angle so
+ * neighbours are maximally distinct. The last-resort line color when banner colors collide.
  * @param {number} index Sequence index (0, 1, 2, …).
  * @returns {string} Hex color.
  */
@@ -342,11 +309,9 @@ function pickArbitraryDistinct(accepted, startIdx) {
 }
 
 /**
- * Global pass over a set of desired line colors (in priority order) that keeps
- * every color visually distinct. Each color is kept when it is far enough from
- * all earlier-accepted colors; otherwise it is replaced with an arbitrary,
- * well-separated color (see {@link arbitraryColor}). Earlier entries win, so
- * higher-priority civs keep their true banner color and only collisions move.
+ * Global pass over a set of desired line colors (in priority order) that keeps every color
+ * visually distinct: a color too close to an earlier-accepted one is replaced with an
+ * arbitrary well-separated color (see {@link arbitraryColor}), so only collisions move.
  * @param {string[]} colors Desired display colors, in priority order.
  * @returns {string[]} Final colors, same length/order, all mutually distinct.
  */

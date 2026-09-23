@@ -1,9 +1,8 @@
 // relations-filters.js
 //
 // Filter-pill DOM for the Global Relations view: the toggleable pill row, the
-// per-pill swatch (which synthesizes dash patterns as solid sub-segments since
-// Coherent's SVG renderer rejects `stroke-dasharray`), and the "All On / All
-// Off" header. Split out of view-relations.js.
+// per-pill swatch (dash patterns synthesized as solid sub-segments since
+// Coherent rejects `stroke-dasharray`), and the "All On / All Off" header.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { getAttitudeColors } from "/demographics/ui/core/demographics-palette.js";
@@ -204,17 +203,13 @@ function buildAllToggleLink(labelLoc, onClick) {
 }
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-// Swatch width as a REM multiple (was a flat 116px). Expressed in rem so the
-// swatch grows with Interface Size like the label beside it, instead of staying a
-// fixed pixel width that looks undersized at large Interface Sizes. 7.25rem ≈ the
-// legacy 116px at the default 16px root, so default-size layouts are unchanged.
+// Swatch width in rem so the swatch grows with Interface Size like the label
+// beside it (7.25rem is 116px at the default 16px root).
 const SWATCH_W_REM = 7.25;
 const SWATCH_VB_H = 4; // swatch viewBox height in (ring) units
 
-// Pixels-per-rem at the current Interface Size, measured once via a probe (GameFace
-// has no reliable getComputedStyle; getBoundingClientRect is the codebase's standard
-// measurement). Cached for the session — Interface Size changes mid-session are rare
-// and the screen re-measures on its next open.
+// Pixels-per-rem at the current Interface Size, measured once via a probe
+// (GameFace has no reliable getComputedStyle) and cached for the session.
 let _remPxCache = 0;
 
 /**
@@ -242,12 +237,9 @@ function remPx() {
 
 /**
  * Build a filter pill's sample-line swatch: a small SVG that draws the filter's
- * actual line (same color, dash synthesis, and direction chevron the ring uses)
- * AT THE RING'S MEASURED px-per-unit, so dash lengths + stroke width match the
- * ring lines exactly. The on-screen WIDTH now scales with Interface Size (rem),
- * and the viewBox width is derived from that px width so the 1:1 viewBox→px scale
- * is preserved — the line still shows at ring scale (a portion of an edge, same
- * dash size), just in a swatch that's proportional to its label at any size.
+ * actual line at the ring's measured px-per-unit, so dash lengths + stroke width
+ * match the ring exactly. The width scales with Interface Size (rem) and the
+ * viewBox width is derived from it to keep the 1:1 viewBox→px scale.
  * @param {FilterDef} f The filter descriptor.
  * @returns {SVGElement} The swatch SVG.
  */
@@ -333,12 +325,8 @@ function buildFilterPill(f, activeSet, onToggle) {
     "active=" + active
   );
 
-  // Single-element pill: <div> with textContent. Nested children
-  // (pip <span/div> + label <span/div>) were rendering empty in
-  // Coherent for reasons we couldn't pin down. Putting the whole
-  // label - disc glyph + text - into the pill's textContent matches
-  // the pattern that works for worldrankings-allcivs headers and the new chart
-  // line labels.
+  // Single-element pill: <div> with textContent, since nested pip + label
+  // children render empty in Coherent.
   const pill = document.createElement("div");
   pill.className = "demographics-relations-filter-pill font-body text-sm";
   if (!active) pill.classList.add("is-hidden");
@@ -347,12 +335,8 @@ function buildFilterPill(f, activeSet, onToggle) {
     ? t("LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP", label)
     : t("LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP", label);
 
-  // ── Mini sample line: an inline element showing exactly what this
-  // filter's edges look like on the ring. The "swatch" is a tiny
-  // horizontal line drawn in the filter's color, with the SAME dash
-  // pattern (rendered as multiple solid sub-segments - Coherent's
-  // SVG renderer rejects stroke-dasharray). This is the actual
-  // legend mapping color+texture → filter type.
+  // ── Mini sample line showing exactly what this filter's edges look like on
+  // the ring (same color + dash pattern); the legend mapping color+texture → filter type.
   pill.appendChild(buildFilterSwatch(f));
   const lbl = document.createElement("span");
   lbl.textContent = label;
@@ -364,9 +348,8 @@ function buildFilterPill(f, activeSet, onToggle) {
 
 /**
  * Build the toggleable filter-pill row for the ACTIVE sub-group's filters (the
- * Politics / Reputation / Agreements grouping is now a sub-tab selector, so the
- * caller passes only the visible group's filters). The "All On / All Off" header
- * flips just those.
+ * caller passes only the visible group's filters). The "All On / All Off"
+ * header flips just those.
  * @param {FilterDef[]} filters Filter descriptors to render (one group's worth).
  * @param {Set<string>} activeSet The active filter-key set.
  * @param {(key: string) => void} onToggle Per-pill toggle callback.

@@ -60,7 +60,7 @@ function pushIfMetMajor(out, id, localPid, humanDiplo) {
  * @returns {number[]} Met major ids.
  */
 export function getMetMajorIds(localPid) {
-  // Governance (P0.1): own-civ-only / disabled restricts the relations network
+  // Governance: own-civ-only / disabled restricts the relations network
   // to the local player's own civ.
   if (safeCall("ownCivOnly", () => policyOwnCivOnly(), false)) {
     return typeof localPid === "number" ? [localPid] : [];
@@ -181,7 +181,7 @@ export function viewerHasMet(viewerPid, otherPid) {
  * @returns {boolean|undefined} Snapshot met state.
  */
 function latestSampleMet(history, pid) {
-  const samples = history?.samples || [];
+  const samples = Array.isArray(history?.samples) ? history.samples : [];
   for (let i = samples.length - 1; i >= 0; i--) {
     const ps = samples[i]?.players?.[pid];
     if (ps && typeof ps.met === "boolean") return ps.met;

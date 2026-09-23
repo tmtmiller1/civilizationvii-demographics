@@ -5,17 +5,6 @@
 // trade routes, pairwise attitudes, and the City-State suzerain / trade /
 // attitude builders. Also owns the diplomatic-query helpers, attitude/color
 // resolution, and the City-State type resolution those builders rely on.
-// Split out of view-relations.js.
-//
-// V7 diplomacy accessors in use:
-//   player.Diplomacy.isAtWarWith(other)
-//   player.Diplomacy.hasAllied(other)
-//   player.Diplomacy.getRelationshipEnum(other)
-//   DiplomacyPlayerRelationships.PLAYER_RELATIONSHIP_*
-//   csPlayer.Influence.getSuzerain()
-//   player.Trade.countPlayerTradeRoutesTo(otherId)
-//   DiplomacyActionTypes.DIPLOMACY_ACTION_OPEN_BORDERS
-//   Game.Diplomacy.getPlayerEvents(playerId)
 
 import {
   AGREEMENT_TYPES,
@@ -169,16 +158,21 @@ function categoryColor(key) {
  * @returns {*[]} The events array (empty on any error).
  */
 function getPlayerEvents(a) {
-  return (
-    safeCall("getPlayerEvents(" + a + ")", () => {
+  return safeCall(
+    "getPlayerEvents(" + a + ")",
+    () => {
       if (
         typeof Game === "undefined" ||
         !Game.Diplomacy ||
         typeof Game.Diplomacy.getPlayerEvents !== "function"
       )
         return [];
-      return Game.Diplomacy.getPlayerEvents(a) || [];
-    }) || []
+      // The engine can hand back a non-array (a plain object / null); the
+      // for..of consumers need a real array or they throw on a non-iterable.
+      const r = Game.Diplomacy.getPlayerEvents(a);
+      return Array.isArray(r) ? r : [];
+    },
+    []
   );
 }
 
@@ -208,7 +202,7 @@ function buildAllianceEdges(metIds) {
   const edges = [];
   for (let i = 0; i < metIds.length; i++) {
     const a = metIds[i];
-    const pa = Players.get(a);
+    const pa = safeCall("Players.get(" + a + ")", () => Players.get(a), null);
     if (!pa) continue;
     for (let j = i + 1; j < metIds.length; j++) {
       const b = metIds[j];
@@ -230,7 +224,7 @@ function buildWarEdges(metIds) {
   const edges = [];
   for (let i = 0; i < metIds.length; i++) {
     const a = metIds[i];
-    const pa = Players.get(a);
+    const pa = safeCall("Players.get(" + a + ")", () => Players.get(a), null);
     if (!pa) continue;
     for (let j = i + 1; j < metIds.length; j++) {
       const b = metIds[j];
@@ -345,11 +339,10 @@ function endeavorLabel(name) {
 }
 
 /**
- * Build every individual cooperative-agreement edge among the met-major ring.
- * Each diplomatic action type appears in BOTH participants' `getPlayerEvents()`
- * list, so we dedupe via a sorted pair + action-type key. Every edge is tagged
- * with its OWN per-action `filterKey` (from {@link AGREEMENT_TYPES}) so each deal
- * type is its own filter + uniquely-styled line.
+ * Build every individual cooperative-agreement edge among the met-major ring,
+ * deduped via a sorted pair + action-type key (each action appears in both
+ * participants' `getPlayerEvents()`). Each edge carries its own per-action
+ * `filterKey` from {@link AGREEMENT_TYPES}.
  * @param {number[]} metIds Met major ids.
  * @returns {Edge[]} The agreement edges.
  */
@@ -419,10 +412,8 @@ export function buildPoliticalEdges(metIds, filterKey) {
   if (filterKey === "alliance") return buildAllianceEdges(metIds);
   if (filterKey === "war") return buildWarEdges(metIds);
   if (filterKey === "denounced") {
-    // Denunciations are diplomatic actions, queried via getPlayerEvents the
-    // same way Open Borders is. Direction matters (A denounced B is not
-    // symmetric), but the ring treats edges as undirected pairs - we collapse
-    // with a sorted key to dedupe reciprocal denounces.
+    // Denunciations are directed diplomatic actions, but the ring treats edges
+    // as undirected pairs, so reciprocal denounces collapse via a sorted key.
     return buildActionTypeEdges(
       metIds,
       actionTypeByName("DIPLOMACY_ACTION_DENOUNCE"),
@@ -519,11 +510,9 @@ export function buildEconomicEdges(metIds, _filterKey, localPid) {
   return edges;
 }
 
-// Pairwise attitude edges among met majors.
-// For each pair (i, j) i<j we look at getRelationship from i's perspective
-// (sloth uses the same one-sided lookup; the relationship enum is symmetric
-// in practice). War / Alliance are surfaced explicitly so they color over
-// the bare enum.
+// Pairwise attitude edges among met majors: for each pair (i, j) i<j, the
+// relationship from i's perspective (the enum is symmetric in practice).
+// War / Alliance are surfaced explicitly so they color over the bare enum.
 
 /**
  * Resolve the attitude category key for a directed (a → b) relationship,
@@ -550,7 +539,7 @@ export function buildAttitudeEdges(metIds, _localPid) {
   if (typeof Players === "undefined" || typeof Players.get !== "function") return edges;
   for (let i = 0; i < metIds.length; i++) {
     const a = metIds[i];
-    const pa = Players.get(a);
+    const pa = safeCall("Players.get(" + a + ")", () => Players.get(a), null);
     if (!pa) continue;
     for (let j = i + 1; j < metIds.length; j++) {
       const b = metIds[j];

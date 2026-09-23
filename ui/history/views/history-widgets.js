@@ -5,7 +5,7 @@
 // portraits and empty states. Styling lives in styles/screen-demographics-history.css under the .dgh- prefix.
 
 import { el, onActivate } from "/demographics/ui/history/core/history-dom.js";
-import { t } from "/demographics/ui/history/core/history-text.js";
+import { num, t } from "/demographics/ui/history/core/history-text.js";
 
 /**
  * A native tab bar.
@@ -72,13 +72,16 @@ export function pageHead(title, note = "") {
 }
 
 /**
- * A big-number tile.
+ * A big-number tile, optionally with an icon beside the number.
  * @param {string} value Formatted value.
  * @param {string} label Localized label.
+ * @param {HTMLElement|null} [icon] Icon shown beside the number.
  * @returns {HTMLElement} The tile.
  */
-export function statTile(value, label) {
-  return el("div", { cls: "dgh-stat" }, [el("div", { cls: "dgh-stat-value", text: value }), el("div", { cls: "dgh-stat-label", text: label })]);
+export function statTile(value, label, icon = null) {
+  const v = el("div", { cls: "dgh-stat-value", text: value });
+  const head = icon ? el("div", { cls: "dgh-stat-head" }, [icon, v]) : v;
+  return el("div", { cls: "dgh-stat" }, [head, el("div", { cls: "dgh-stat-label", text: label })]);
 }
 
 /**
@@ -197,6 +200,42 @@ export function victoryIcon(victoryClass, cls = "dgh-victory-icon") {
   const file = VICTORY_ICON_FILES[victoryClass];
   if (!file) return el("div", { cls: "dgh-mark dgh-mark--win" });
   return el("div", { cls, style: { backgroundImage: "url('" + file + "')" } });
+}
+
+/**
+ * The podium laurels and the Triumph trophy, the same art the in-game rankings use (World Rankings
+ * scores it with popup_laurels; the Settlements civ podium wears the gold/silver/bronze wreaths).
+ * Referenced by FILE, not `blp:`, for the same reason the victory icons above are: the Hall of Fame
+ * also shows at the main menu, where the in-game icon sets are not loaded. All four live in the
+ * boot-shell texture bundle, which the shell does have.
+ */
+const LAUREL_FILES = /** @type {Record<number, string>} */ ({
+  1: "fs://game/popup_gold_laurels.png",
+  2: "fs://game/popup_silver_laurels.png",
+  3: "fs://game/popup_bronze_laurels.png"
+});
+const TROPHY_FILE = "fs://game/popup_laurels.png";
+
+/**
+ * A podium medal: the place number inside its gold, silver or bronze laurel wreath.
+ * @param {number} place 1-3.
+ * @param {string} [cls] Extra classes.
+ * @returns {HTMLElement} The medal.
+ */
+export function laurelMedal(place, cls = "") {
+  const file = LAUREL_FILES[place] || TROPHY_FILE;
+  return el("div", { cls: ("dgh-medal dgh-medal--" + place + " " + cls).trim(), style: { backgroundImage: "url('" + file + "')" } }, [
+    el("div", { cls: "dgh-medal-num", text: num(place) })
+  ]);
+}
+
+/**
+ * The Triumph trophy, for a count of Triumphs earned.
+ * @param {string} [cls] Extra classes.
+ * @returns {HTMLElement} The icon.
+ */
+export function trophyIcon(cls = "dgh-trophy-icon") {
+  return el("div", { cls, style: { backgroundImage: "url('" + TROPHY_FILE + "')" } });
 }
 
 /**

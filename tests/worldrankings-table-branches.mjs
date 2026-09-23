@@ -60,8 +60,7 @@ const profiles = {
 const host = document.createElement("div");
 host._rect.width = 1600; host._rect.height = 900;
 const settings = makeSettings();
-let renders = 0;
-renderCivTable(host, profiles, { settings }, true, () => { renders++; });
+renderCivTable(host, profiles, { settings }, true);
 
 const tables = qa(host, "demographics-civtable");
 assert.equal(tables.length, 2, "icon metrics and text-only metrics render as two tables");
@@ -119,29 +118,64 @@ assert.equal(leadCells.length, 1, "one metric with data → one leader cell");
 assert.equal(rows[0].querySelector(".is-leader"), leadCells[0], "the leader cell is in Han's row");
 assert.ok(leadCells[0].getAttribute("data-tooltip-content"), "leader cell names the category");
 
-// ── Group 2: clicking a metric header sorts + persists ────────────────────────
+// ── Group 2: a sort swaps the rows and LEAVES THE CHROME ALONE ────────────────
+// Regression guard for the blinking filigree / column icons: a sort used to re-render the whole
+// page, so every `blp:`-backed chrome element was destroyed and re-created (and flashed while its
+// background re-resolved). The chrome elements must be the SAME node objects after a sort.
 const header = tables[1].querySelector(".demographics-settle-header");
 const metricHeaders = qa(header, "demographics-civtable-metric");
 assert.ok(metricHeaders.length > 1, "multiple sortable metric columns");
-const before = renders;
-metricHeaders[metricHeaders.length - 1].dispatch("click"); // a text-table column: the one sort drives both tables
-assert.ok(renders > before, "sort click re-renders");
+const filigreeBefore = qa(host, "demographics-settle-section-fil");
+const headerIconsBefore = qa(tables[0], "demographics-settle-yield-icon");
+const headerRowBefore = tables[0].querySelector(".demographics-settle-header");
+assert.ok(filigreeBefore.length > 0 && headerIconsBefore.length > 0, "chrome carries blp-backed art");
+const sortedHeader = metricHeaders[metricHeaders.length - 1];
+sortedHeader.dispatch("click"); // a text-table column: the one sort drives both tables
 assert.ok(
   settings._calls.some(([k]) => k === "worldRankingsAllCivsSortKey"),
   "sort key is persisted"
 );
+assert.deepEqual(
+  qa(host, "demographics-settle-section-fil"),
+  filigreeBefore,
+  "the filigree flourishes are the same nodes after a sort (never rebuilt)"
+);
+assert.deepEqual(
+  qa(tables[0], "demographics-settle-yield-icon"),
+  headerIconsBefore,
+  "the column yield icons are the same nodes after a sort (never rebuilt)"
+);
+assert.equal(
+  tables[0].querySelector(".demographics-settle-header"),
+  headerRowBefore,
+  "the header row itself survives the sort"
+);
+assert.ok(sortedHeader.classList.contains("is-sorted"), "the clicked header takes the sorted state");
+assert.equal(
+  qa(tables[0], "demographics-settle-datarow").length,
+  3,
+  "the rows are swapped, not duplicated"
+);
 
-// ── Group 3: Rank/Value toggle persists the view mode ─────────────────────────
+// ── Group 3: Rank/Value rewrites the cells IN PLACE (rows are not rebuilt) ─────
+// The rows hold each civ's leader portrait, so a mode switch must not re-create them.
 const toggle = host.querySelector(".demographics-civtable-toggle");
 const chips = qa(toggle, "demographics-chart-time-filter-pill");
 assert.equal(chips.length, 2, "rank + value chips");
-const before2 = renders;
+assert.ok(chips[0].classList.contains("is-active"), "rank is the active chip by default");
+const rowsBefore = qa(tables[0], "demographics-settle-datarow");
 chips[1].dispatch("click"); // "value"
-assert.ok(renders > before2, "toggle re-renders");
 assert.ok(
   settings._calls.some(([k, v]) => k === "worldRankingsAllCivsViewMode" && v === "value"),
   "view mode is persisted"
 );
+assert.deepEqual(
+  qa(tables[0], "demographics-settle-datarow"),
+  rowsBefore,
+  "a Rank/Value switch reuses the row elements (portraits are never re-created)"
+);
+assert.ok(chips[1].classList.contains("is-active"), "the value chip takes the active state");
+assert.ok(!chips[0].classList.contains("is-active"), "and the rank chip drops it");
 
 // ── Group 4: unmet civ identity is masked when names are hidden ───────────────
 const maskedProfiles = {
@@ -150,7 +184,7 @@ const maskedProfiles = {
 };
 const mHost = document.createElement("div");
 mHost._rect.width = 1600; mHost._rect.height = 900;
-renderCivTable(mHost, maskedProfiles, { settings: makeSettings() }, false, () => {});
+renderCivTable(mHost, maskedProfiles, { settings: makeSettings() }, false);
 const masked = qa(mHost, "demographics-settle-datarow").some((r) => {
   const p = r.querySelector(".demographics-settle-owner-leader");
   return p && p.textContent === "DEMOGRAPHICS_UNMET_CIV";
@@ -164,8 +198,7 @@ renderCivTable(
   cHost,
   profiles,
   { settings: makeSettings({ worldRankingsAllCivsSortKey: "not_a_metric" }) },
-  true,
-  () => {}
+  true
 );
 assert.ok(
   cHost.querySelector(".demographics-civtable"),

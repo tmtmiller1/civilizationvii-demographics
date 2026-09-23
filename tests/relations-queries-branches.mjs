@@ -183,6 +183,10 @@ function testCityStateAndMetResolution() {
   assert.equal(resolveMet(1, 2, 1, history), true);
   assert.equal(resolveMet(2, 2, 1, history), true);
     assert.equal(resolveMet(1, 2, 1, undefined), undefined);
+  // Non-array `samples` (plain object / scalar) must fall through to "unknown"
+  // rather than being indexed as a list.
+  assert.equal(resolveMet(1, 2, 1, { samples: { length: 1, 0: { players: { "2": { met: true } } } } }), undefined);
+  assert.equal(resolveMet(1, 2, 1, { samples: "not-a-list" }), undefined);
 }
 
 function testReadGameTurn() {

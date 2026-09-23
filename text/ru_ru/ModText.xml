@@ -282,7 +282,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="ru_RU"><Text>Ранг {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="ru_RU"><Text>Сбросить ({1_Count} скрыто)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ru_RU"><Text>Показать все скрытые цивилизации</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ru_RU"><Text>Нажмите на столбец, чтобы отсортировать цивилизации по нему. Переключатель «Ранг / Значение» меняет содержимое ячеек.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ru_RU"><Text>Не встречена</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ru_RU"><Text>(скрыто, нажмите, чтобы показать)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ru_RU"><Text>Нажмите, чтобы показать</Text></Replace>
@@ -2094,9 +2093,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="ru_RU">
             <Text>Самая долгая игра</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="ru_RU">
-            <Text>Игры сохраняются на этом компьютере. Каждый файл сохранения также хранит собственную запись.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ru_RU">
             <Text>В этом сеансе не удалось прочитать прошлые игры из хранилища. Каждая игра по-прежнему хранится в своём сохранении.</Text>
         </Replace>
@@ -2360,6 +2356,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="ru_RU">
             <Text>Триумфы: {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="ru_RU">
+            <Text>Настройки сохраняются на этом компьютере.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="ru_RU">
+            <Text>Настройки, изменённые в этой сессии, сохраняются до закрытия игры, но записать их не удалось: общее хранилище модов вернуло данные другого мода, не читается или не вернуло записанное. «Восстановить хранилище» на странице Зала славы исправляет это.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="ru_RU">
+            <Text>В этой сессии настройки нельзя сохранить: хранилище модов недоступно.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="ru_RU">
+            <Text>Удалить все записанные войны?</Text>
         </Replace>
     </LocalizedText>
 </Database>

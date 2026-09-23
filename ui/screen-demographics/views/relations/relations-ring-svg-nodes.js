@@ -164,7 +164,7 @@ function appendCsTypeDisc(node, r, info) {
  * @returns {number} The node radius in viewBox units.
  */
 export function nodeRadius(isViewer, isCs, density) {
-  // CS bumped up so their type icon reads large; the colored ring is just a thin
+  // CS sized so their type icon reads large; the colored ring is just a thin
   // band on the icon's outer edge (see nodeStrokeWidth + the 0.92r icon inset).
   const baseR = isViewer ? 6.0 : isCs ? 5.2 : 5.0;
   return baseR * (isViewer ? Math.max(density, 0.65) : density);
@@ -179,8 +179,8 @@ export function nodeRadius(isViewer, isCs, density) {
  * @returns {number} Stroke width in SVG units.
  */
 function nodeStrokeWidth(isViewer, isCs, isSelected, density) {
-  // CS rings are a thin colored band on the OUTER edge of the (now larger) type
-  // icon; major nodes keep a slightly heavier ring.
+  // CS rings are a thin colored band on the OUTER edge of the type icon; major
+  // nodes keep a slightly heavier ring.
   const base = isCs ? 0.45 : 0.7;
   if (isViewer || isSelected) return base + 0.25;
   return base + Math.max(0, (1 - density) * 0.2);
@@ -263,10 +263,8 @@ function appendInitialLetter(node) {
 }
 
 /**
- * Queue the node's name as an HTML text label (placed in pixel space alongside
- * the portrait overlays). Rendered as plain text in the SAME font/weight/color as
- * the historical-data chart labels - just smaller - with no bounding box. (SVG
- * <text> can't share the HTML chart font, hence the overlay route.)
+ * Queue the node's name as an HTML text label placed in pixel space alongside
+ * the portrait overlays, since SVG <text> can't share the HTML chart font.
  * @param {*} node The node group (carries __label/data-dimmed).
  * @param {{x: number, y: number}} pos Node position (viewBox coords).
  * @param {number} r Node radius (viewBox coords).
@@ -298,8 +296,7 @@ function configureNodeElement(node, nodeData, geo, ctx) {
   const isViewer = id === ctx.viewerPid;
   const isCs = !!info.isCityState;
   // Stamp the pid onto the info so the portrait/icon overlay carries it (the
-  // overlay click handler is skipped without a numeric pid - this is why
-  // clicking a leader icon previously did nothing).
+  // overlay click handler is skipped without a numeric pid).
   if (info && typeof id === "number") info.pid = id;
   node.__info = info;
   node.__label = nodeDisplayName(info, id);
