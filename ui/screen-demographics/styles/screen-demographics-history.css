@@ -71,6 +71,16 @@
 }
 .dgh-top-tabs { margin-bottom: 0.5rem; }
 .dgh-subtabs { margin-bottom: 0.4rem; }
+/* Short-games filter: one row under the section tabs, on every Hall of Fame page. */
+.dgh-hof-filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 0 0.3rem;
+}
+.dgh-filter-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); margin-right: 0.6rem; }
+.dgh-hof-filter .dgh-pill-row { flex-wrap: nowrap; margin: 0; }
 .dgh-view,
 .dgh-view-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 .dgh-scroll {
@@ -509,6 +519,99 @@
 }
 .dgh-options-panel.is-hidden { display: none; }
 .dgh-options-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); margin-right: 0.8rem; max-width: 26rem; }
+
+/* ---------- storage repair (foot of the Hall of Fame, only when the store cannot be read) ----------
+   Deliberately loud: the panel deletes other mods' saved data for good, so it reads like a warning
+   sheet, not a settings row. Title in the warning color, three labelled paragraphs, a large button. */
+.dgh-storage { display: flex; flex-direction: column; align-items: center; }
+.dgh-storage-banner {
+    width: 62rem;
+    max-width: 92%;
+    margin-top: 0.6rem;
+    padding: 0.7rem 1.2rem 0.8rem;
+    border-width: 0.12rem;
+    border-style: solid;
+    border-color: var(--dgh-loss);
+    border-radius: 0.2rem;
+    background-color: rgba(60, 18, 14, 0.55);
+    text-align: center;
+}
+.dgh-storage-banner-h {
+    color: var(--dgh-loss-text);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-120);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+}
+.dgh-storage-banner-p { color: var(--dgh-text-title); font-size: var(--dg-fs-95); line-height: 1.35; }
+.dgh-storage-banner--button { cursor: pointer; }
+.dgh-storage-banner--button:hover { border-color: var(--dgh-gold); background-color: rgba(70, 22, 16, 0.7); }
+.dgh-storage-banner--button.is-open { border-bottom-color: rgba(193, 77, 69, 0.35); }
+.dgh-storage-banner-cta {
+    margin-top: 0.35rem;
+    color: var(--dgh-gold);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-95);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.dgh-storage-banner--button:hover .dgh-storage-banner-cta { color: var(--dgh-text-title); }
+.dgh-storage .dgh-options { align-items: center; }
+.dgh-repair-toggle {
+    opacity: 1;
+    font-size: var(--dg-fs-95);
+    padding: 0.45rem 1.2rem;
+    border-color: var(--dgh-loss);
+    color: var(--dgh-loss);
+}
+.dgh-repair-toggle.is-open { color: var(--dgh-text-title); }
+.dgh-repair {
+    flex-direction: column;
+    align-items: stretch;
+    width: 62rem;
+    max-width: 92%;
+    padding: 1rem 1.4rem 1.1rem;
+    border-width: 0.12rem;
+    border-color: var(--dgh-loss);
+    background-color: rgba(9, 12, 19, 0.92);
+}
+.dgh-repair-title {
+    color: var(--dgh-loss);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-120);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin-bottom: 0.6rem;
+}
+.dgh-repair-block { margin-top: 0.45rem; }
+.dgh-repair-h {
+    color: var(--dgh-gold);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-85);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.1rem;
+}
+.dgh-repair-p { color: var(--dgh-text-body); font-size: var(--dg-fs-95); line-height: 1.35; }
+.dgh-repair-again { color: var(--dgh-text-title); font-size: var(--dg-fs-95); font-weight: bold; margin-top: 0.7rem; }
+.dgh-repair-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.9rem;
+}
+.dgh-repair-go {
+    font-size: var(--dg-fs-105);
+    padding: 0.6rem 1.6rem;
+    border-width: 0.1rem;
+    border-color: var(--dgh-loss);
+    color: var(--dgh-loss);
+}
+.dgh-repair-go.is-armed { color: #1c1408; background-color: var(--dgh-loss); }
+.dgh-repair-cancel { font-size: var(--dg-fs-85); margin-left: 0.8rem; }
 
 /* What a Triumph asked for and what it gave, under its highlight. */
 .dgh-hl-body { flex: 1 1 auto; min-width: 0; }

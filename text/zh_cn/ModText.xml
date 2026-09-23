@@ -5,7 +5,7 @@
             <Text>人口统计</Text>
         </Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="zh_Hans_CN">
-            <Text>每回合历史图表、世界年鉴、全球关系环、冲突甘特图，以及每个已遇文明的原生成就进度条。</Text>
+            <Text>每回合历史图表、世界年鉴、全球关系环、冲突甘特图，以及每个已遇文明的原生成就进度条。 包含一项针对《文明VII》缺陷的可选存储修复；它会删除另一个模组保存的数据，只在你按下时运行，并会先说明删除的内容。</Text>
         </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="zh_Hans_CN">
             <Text>人口统计</Text>
@@ -2551,6 +2551,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="zh_Hans_CN">
             <Text>显示所有游戏</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="zh_Hans_CN">
+            <Text>已隐藏：{1_Count} 局不足 {2_Turns} 回合的未完成对局</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="zh_Hans_CN">
             <Text>胜利</Text>
         </Replace>
@@ -2654,7 +2657,7 @@
             <Text>游戏记录保存在这台电脑上。每个存档也会保留自己的记录。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="zh_Hans_CN">
-            <Text>本次会话无法从存储中读取以往的游戏。当前进行的游戏仍会显示，且每个存档在读取时都会恢复自己的记录。</Text>
+            <Text>本次会话无法从存储中读取以往对局。每场对局仍然保存在各自的存档中。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="zh_Hans_CN">
             <Text>奥古斯都</Text>
@@ -2857,8 +2860,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="zh_Hans_CN">
             <Text>胜利与覆灭</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="zh_Hans_CN">
-            <Text>无法在此电脑上保留过去的游戏：由于游戏的存储错误，另一个模组的保存数据造成了阻碍。当前进行的游戏仍会显示，且每个存档在读取时都会恢复自己的记录。</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="zh_Hans_CN">
+            <Text>《文明VII》的一个缺陷正在阻碍名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="zh_Hans_CN">
+            <Text>有一个变通办法。点击此处阅读说明。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="zh_Hans_CN">
+            <Text>修复模组存储：请先阅读</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="zh_Hans_CN">
+            <Text>为什么需要这样做</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="zh_Hans_CN">
+            <Text>《文明VII》1.5.0 存在一个缺陷：当一个模组请求自己的保存数据时，无论是哪个模组在请求，游戏返回的都是按名称排序最靠前的条目。只有那一个模组的数据能正常工作。这是需要 Firaxis 修复的缺陷；在此之前，此按钮是唯一的变通办法。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="zh_Hans_CN">
+            <Text>此按钮的作用</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="zh_Hans_CN">
+            <Text>清空共用存储，只留下一个条目：大多数带选项面板的模组使用的共用设置条目。其中包括 Demographics 模组、它的设置以及此功能所需的以往对局信息。一旦共用设置条目成为唯一剩下的内容，游戏返回的就是它，因此使用它的模组从此可以正常加载和保存设置。然而，使用独立自有条目的模组会因此损坏：所有独立条目都会被删除，包括原本排在最前、因而是唯一真正在正常工作的那一个。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="zh_Hans_CN">
+            <Text>如果以后有模组再次写入自己的条目，列表将停止更新，并会再次提供此修复。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="zh_Hans_CN">
+            <Text>修复存储：删除另一个模组的保存数据</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="zh_Hans_CN">
+            <Text>再次点击即删除该模组的保存数据并修复。此操作无法撤销。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="zh_Hans_CN">
+            <Text>取消</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="zh_Hans_CN">
+            <Text>存储已修复。名人堂的以往对局列表可以重新保存在这台电脑上，把设置保存在共用条目中的模组从现在起会正常保存和加载。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="zh_Hans_CN">
+            <Text>修复未成功。每场对局仍然保存在各自的存档中。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="zh_Hans_CN">
             <Text>最佳游戏</Text>

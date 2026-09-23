@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="ja_JP"><Text>人口統計</Text></Replace>
-        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ja_JP"><Text>ターンごとの歴史グラフ、ワールドファクトブック、グローバル関係リング、紛争ガントチャート、そして遭遇したすべての文明のトライアンフ進捗バーを表示します。</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="ja_JP"><Text>ターンごとの歴史グラフ、ワールドファクトブック、グローバル関係リング、紛争ガントチャート、そして遭遇したすべての文明のトライアンフ進捗バーを表示します。 Civilization VIIの不具合に対する任意の保存領域修復を含みます。別のMODの保存データを削除し、押したときにのみ実行され、何を削除するか事前に表示します。</Text></Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="ja_JP"><Text>人口統計</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="ja_JP"><Text>人口統計</Text></Replace>
@@ -1992,6 +1992,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="ja_JP">
             <Text>すべてのゲームを表示</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="ja_JP">
+            <Text>非表示：{2_Turns}ターン未満の未完了ゲーム {1_Count} 件</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ja_JP">
             <Text>勝利</Text>
         </Replace>
@@ -2095,7 +2098,7 @@
             <Text>ゲームはこのコンピューターに保存されます。各セーブデータにもそれぞれの記録が残ります。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ja_JP">
-            <Text>このセッションでは過去のゲームを読み込めませんでした。現在プレイ中のゲームは表示され、各セーブデータを読み込むとその記録が復元されます。</Text>
+            <Text>このセッションでは過去のゲームを保存領域から読み込めませんでした。各ゲームはそれぞれのセーブデータに保存されたままです。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="ja_JP">
             <Text>アウグストゥス</Text>
@@ -2298,8 +2301,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="ja_JP">
             <Text>勝利と滅亡</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="ja_JP">
-            <Text>このコンピューターには過去のゲームを保存できません。ゲームの保存の不具合により、別のMODの保存データが妨げになっています。現在プレイ中のゲームは表示され、各セーブデータを読み込むとその記録が復元されます。</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="ja_JP">
+            <Text>Civilization VIIの不具合が殿堂を妨げています</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="ja_JP">
+            <Text>回避策があります。ここをクリックして内容をご覧ください。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="ja_JP">
+            <Text>MODの保存領域の修復：まずお読みください</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="ja_JP">
+            <Text>なぜ必要なのか</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="ja_JP">
+            <Text>Civilization VII 1.5.0には不具合があります。MODが自分の保存データを要求すると、どのMODが要求しても、ゲームは名前順で最初の項目を返します。正しく機能するのはそのMODのデータだけです。これはFiraxisが修正すべき不具合で、修正されるまではこのボタンが唯一の回避策です。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="ja_JP">
+            <Text>このボタンが行うこと</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="ja_JP">
+            <Text>共有の保存領域を空にし、1つの項目だけを残します。オプション画面を持つほとんどのMODが使う共有の設定項目です。これにはDemographics MOD、その設定、そしてこの機能に必要な過去のゲーム情報が含まれます。共有の設定項目が唯一残った項目になると、ゲームはそれを返すので、それを使うMODは以後、設定を通常どおり読み書きできます。ただし独自の別項目を持つMODはこれによって壊れます。別項目はすべて削除され、名前順で最初にあった、つまり実際に唯一機能していた項目も含まれます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="ja_JP">
+            <Text>後で別のMODが自分の項目を再び書き込むと、一覧は更新されなくなり、この修復が再び提案されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="ja_JP">
+            <Text>保存領域を修復：別のMODの保存データを削除</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="ja_JP">
+            <Text>もう一度クリックすると、そのMODの保存データを削除して修復します。元に戻すことはできません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="ja_JP">
+            <Text>キャンセル</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="ja_JP">
+            <Text>保存領域を修復しました。殿堂の過去のゲーム一覧はこのコンピューターに再び保存され、共有項目に設定を保存するMODは以後正しく読み書きできます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="ja_JP">
+            <Text>修復できませんでした。各ゲームはそれぞれのセーブデータに保存されたままです。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="ja_JP">
             <Text>ベストゲーム</Text>

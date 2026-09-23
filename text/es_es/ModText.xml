@@ -5,7 +5,7 @@
             <Text>Demografía</Text>
         </Replace>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="es_ES">
-            <Text>Gráficas históricas por turno, anuario mundial, anillos de relaciones globales, diagrama de Gantt de conflictos y barras de progreso Triumphs nativas para cada civilización encontrada.</Text>
+            <Text>Gráficas históricas por turno, anuario mundial, anillos de relaciones globales, diagrama de Gantt de conflictos y barras de progreso Triumphs nativas para cada civilización encontrada. Incluye una reparación opcional del almacenamiento para un fallo de Civilization VII; borra los datos guardados de otro mod, solo se ejecuta cuando la pulsas y dice antes qué borra.</Text>
         </Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="es_ES">
             <Text>Demografía</Text>
@@ -2551,6 +2551,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="es_ES">
             <Text>Mostrar todas las partidas</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="es_ES">
+            <Text>Ocultas: {1_Count} {1_Count : plural 1?partida sin terminar; other?partidas sin terminar;} de menos de {2_Turns} turnos</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="es_ES">
             <Text>Victoria</Text>
         </Replace>
@@ -2654,7 +2657,7 @@
             <Text>Las partidas se guardan en este equipo. Cada archivo de guardado conserva además su propio registro.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="es_ES">
-            <Text>No se pudieron leer las partidas anteriores del almacenamiento en esta sesión. Las partidas que juegues ahora seguirán apareciendo, y cada partida guardada restaura su propio registro al cargarla.</Text>
+            <Text>No se han podido leer las partidas anteriores del almacenamiento en esta sesión. Cada partida sigue guardada en su propio archivo.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="es_ES">
             <Text>César Augusto</Text>
@@ -2857,8 +2860,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="es_ES">
             <Text>Victoria y caídas</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="es_ES">
-            <Text>Las partidas anteriores no se pueden guardar en este equipo: los datos guardados de otro mod lo impiden por un error de almacenamiento del juego. Las partidas que juegues ahora seguirán apareciendo, y cada partida guardada restaura su propio registro al cargarla.</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="es_ES">
+            <Text>Un fallo de Civilization VII está bloqueando el Salón de la Fama</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="es_ES">
+            <Text>Hay una solución provisional. Haz clic aquí para leer sobre ella.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="es_ES">
+            <Text>Reparar el almacenamiento de mods: lee esto primero</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="es_ES">
+            <Text>Por qué hace falta</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="es_ES">
+            <Text>Civilization VII 1.5.0 tiene un fallo: cuando un mod pide sus propios datos guardados, el juego devuelve la entrada del mod que va primero por orden alfabético, sea cual sea. Solo funcionan los datos de ese mod. Es un fallo que debe corregir Firaxis; hasta entonces, este botón es la única solución provisional.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="es_ES">
+            <Text>Qué hace este botón</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="es_ES">
+            <Text>Vacía el almacenamiento compartido y deja en él una sola entrada: la entrada de ajustes compartida que usan la mayoría de los mods con panel de opciones. Esto incluye el mod Demographics, sus ajustes y la información de partidas anteriores necesaria para esta función. Cuando la entrada de ajustes compartida es lo único que queda, es lo que el juego devuelve, así que los mods que la usan cargan y guardan sus ajustes con normalidad desde entonces. Sin embargo, un mod con una entrada propia y separada quedaría estropeado: todas las entradas separadas se borran, incluida la que iba primero y era, por tanto, la única que funcionaba de verdad.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="es_ES">
+            <Text>Si más adelante un mod vuelve a escribir su propia entrada, la lista deja de actualizarse y esta reparación se ofrece de nuevo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="es_ES">
+            <Text>Reparar almacenamiento: borrar los datos de otro mod</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="es_ES">
+            <Text>Pulsa de nuevo para borrar los datos guardados de ese mod y reparar. No se puede deshacer.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="es_ES">
+            <Text>Cancelar</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="es_ES">
+            <Text>Almacenamiento reparado. La lista de partidas anteriores del Salón de la Fama vuelve a guardarse en este ordenador, y los mods que guardan sus ajustes en la entrada compartida los guardan y cargan correctamente a partir de ahora.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="es_ES">
+            <Text>La reparación no ha funcionado. Cada partida sigue guardada en su propio archivo.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="es_ES">
             <Text>Mejores partidas</Text>

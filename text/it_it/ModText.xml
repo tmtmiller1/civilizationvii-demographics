@@ -2,7 +2,7 @@
 <Database>
     <LocalizedText>
         <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="it_IT"><Text>Demografia</Text></Replace>
-        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="it_IT"><Text>Grafici storici per turno, classifiche mondiali, anelli delle relazioni globali, diagramma di Gantt dei conflitti e barre di avanzamento dei Trionfi nativi per ogni civiltà incontrata.</Text></Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="it_IT"><Text>Grafici storici per turno, classifiche mondiali, anelli delle relazioni globali, diagramma di Gantt dei conflitti e barre di avanzamento dei Trionfi nativi per ogni civiltà incontrata. Include una riparazione facoltativa dell'archivio per un bug di Civilization VII; elimina i dati salvati di un'altra mod, si avvia solo quando la premi e dice prima cosa elimina.</Text></Replace>
         <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="it_IT"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="it_IT"><Text>Demografia</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="it_IT"><Text>Demografia</Text></Replace>
@@ -1992,6 +1992,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="it_IT">
             <Text>Mostra tutte le partite</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="it_IT">
+            <Text>Nascoste: {1_Count} {1_Count : plural 1?partita incompiuta; other?partite incompiute;} sotto i {2_Turns} turni</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="it_IT">
             <Text>Vittoria</Text>
         </Replace>
@@ -2095,7 +2098,7 @@
             <Text>Le partite sono salvate su questo computer. Ogni salvataggio conserva anche il proprio registro.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="it_IT">
-            <Text>Non è stato possibile leggere le partite precedenti dall'archivio in questa sessione. Le partite giocate ora vengono comunque mostrate, e ogni salvataggio ripristina il proprio registro quando lo carichi.</Text>
+            <Text>Le partite precedenti non sono state lette dall'archivio in questa sessione. Ogni partita resta salvata nel proprio salvataggio.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="it_IT">
             <Text>Cesare Augusto</Text>
@@ -2298,8 +2301,44 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="it_IT">
             <Text>Vittoria e cadute</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED" Language="it_IT">
-            <Text>Le partite passate non possono essere conservate su questo computer: i dati salvati di un’altra mod lo impediscono, a causa di un bug di archiviazione del gioco. Le partite giocate ora vengono comunque mostrate, e ogni salvataggio ripristina il proprio registro quando lo carichi.</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="it_IT">
+            <Text>Un bug di Civilization VII sta bloccando la Hall of Fame</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="it_IT">
+            <Text>È disponibile un rimedio. Clicca qui per saperne di più.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="it_IT">
+            <Text>Ripara l'archivio delle mod: leggi prima questo</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="it_IT">
+            <Text>Perché serve</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="it_IT">
+            <Text>Civilization VII 1.5.0 ha un bug: quando una mod chiede i propri dati salvati, il gioco restituisce la voce che viene prima in ordine alfabetico, di qualunque mod sia. Funzionano solo i dati di quella mod. È un bug che Firaxis deve correggere; fino ad allora questo pulsante è l'unico rimedio.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="it_IT">
+            <Text>Cosa fa questo pulsante</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="it_IT">
+            <Text>Svuota l'archivio condiviso e vi lascia una sola voce: la voce delle impostazioni condivisa usata dalla maggior parte delle mod con pannello opzioni. Questo include la mod Demographics, le sue impostazioni e le informazioni sulle partite precedenti necessarie a questa funzione. Quando la voce delle impostazioni condivisa è l'unica rimasta, è quella che il gioco restituisce, quindi le mod che la usano caricano e salvano le impostazioni normalmente da allora in poi. Una mod con una voce separata tutta sua verrebbe però danneggiata: ogni voce separata viene eliminata, compresa quella che veniva prima ed era quindi l'unica a funzionare davvero.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="it_IT">
+            <Text>Se in seguito una mod riscrive la propria voce, l'elenco smette di aggiornarsi e questa riparazione viene proposta di nuovo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="it_IT">
+            <Text>Ripara archivio: elimina i dati di un'altra mod</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="it_IT">
+            <Text>Clicca di nuovo per eliminare i dati salvati di quella mod e riparare. Non si può annullare.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="it_IT">
+            <Text>Annulla</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="it_IT">
+            <Text>Archivio riparato. L'elenco delle partite precedenti della Hall of Fame viene di nuovo salvato su questo computer e le mod che tengono le impostazioni nella voce condivisa da ora in poi le salvano e le caricano correttamente.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="it_IT">
+            <Text>La riparazione non ha funzionato. Ogni partita resta salvata nel proprio salvataggio.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="it_IT">
             <Text>Partite migliori</Text>
