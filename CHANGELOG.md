@@ -32,7 +32,7 @@ working; the notes say what each change protects.
 ### Fixed
 - **Every framed box drew a white hairline instead of a gold one.** Cards, tables, stat chips, podium cards and the
   game pages all asked for the mod's copper, through the one-line `border-color` property. That property is a
-  shorthand — it writes four per-side values — and this UI engine silently drops a shorthand whose value uses a
+  shorthand that writes four per-side values, and this UI engine silently drops a shorthand whose value uses a
   variable, so all 41 of those borders fell back to the body-text grey. They are written as four per-side properties
   now and draw the colour they always named. The stylesheet gate that was meant to catch exactly this did not list
   `border-color` among the shorthands; it does now.
@@ -56,7 +56,7 @@ working; the notes say what each change protects.
   height and does not draw, so all that reached the screen was the hint's info icon, hanging on its own between the tab
   row and the buttons. The hint is gone; the toggle beneath it already says what it does.
 - **The page tabs jumped to their first entry on every click.** On Global Statistics, Migration and Geopolitics,
-  every metric pill and every filter — the year range, Civ / Leader, Wonders on/off — redrew the whole page, and the
+  every metric pill and every filter (the year range, Civ / Leader, Wonders on/off) redrew the whole page, and the
   row of page tabs was rebuilt with it. A freshly built tab row shows its first tab for a frame before it takes the
   selection it was given, so "Yields per Turn" lit up and snapped back on each click, whatever page you were on. The
   row is now kept across those redraws and rebuilt only when its tabs or selection actually change. The Campaign
@@ -77,7 +77,7 @@ working; the notes say what each change protects.
     rebuilds only the column you hid or restored. Hiding one civilization used to redraw every other civilization's
     portrait and the whole metric column beside them.
   - **Geopolitics** keeps every leader portrait on the relationship ring while you change the filters. The ring shows
-    the same civilizations whichever filters are on — only the lines between them change — so the portraits
+    the same civilizations whichever filters are on, and only the lines between them change, so the portraits
     no longer flicker each time you toggle one.
   - **Campaign History's timeline** keeps its civilization filter and its legend while you change the age window or
     the zoom, which change neither. Its milestone medallions, disaster markers and age-band emblems are kept too: a
@@ -107,7 +107,7 @@ working; the notes say what each change protects.
   trigger and the edge clamp did nothing. The tooltip now settles its position on the following frame, and remembers
   the size it last measured so the next hover is placed correctly straight away.
 - **A wonder's description showed the game's own formatting codes.** Hovering a wonder marker on a graph printed the
-  raw text the game stores — `[B]`, `[icon:YIELD_GOLD]`, `[TIP:...]` and their closing tags — around the words,
+  raw text the game stores around the words: `[B]`, `[icon:YIELD_GOLD]`, `[TIP:...]` and their closing tags,
   because the mod asked the game for the text but never for its formatting. Wonder descriptions now render the
   way they do everywhere else in the game, with bold text and real yield icons. The unique-quarter line in the
   city cinematic had the same source and now reads as plain words.
@@ -190,8 +190,8 @@ working; the notes say what each change protects.
 - The type scale has one source in JavaScript and one declaration in CSS, and the test suite fails if they drift.
 
 ### Known issues
-- **At 1280x720 some pages are still cramped: column headings and long leader names can be cut off.** The layout and the text have different lower bounds — the layout stops shrinking
-  before the text does — so on the smallest supported screen the boxes are too small for the words in them. Top 25
+- **At 1280x720 some pages are still cramped: column headings and long leader names can be cut off.** The layout and the text have different lower bounds: the layout stops
+  shrinking before the text does, so on the smallest supported screen the boxes are too small for the words in them. Top 25
   Settlements shows about two and a half podium cards, and Civilization Rank by Yield can cut its right-hand column at
   the frame edge and shorten long leader names. Everything is reachable and readable; it is tighter than it should be.
   Higher resolutions are unaffected. The fix is a design change to how the two bounds relate, and it is the next thing
