@@ -3,7 +3,7 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
-==== 2.7.3 | 2026-09-23 | src 316e4d1bd459 | gen f5f9813af306 ====
+==== 2.7.3 | 2026-09-23 | src ecd3ada7945f | gen f5f9813af306 ====
 [b]Version 2.7.3 · 23 September 2026[/b]
 Two passes in one release, and no new graphs.
 The screen now fits the resolution it is played at. Before this, the same layout occupied about 1% of the screen's height at 2880x1800 and about 2% at 1280x720, so on smaller displays the menus filled half the screen, only one of the top-three settlement cards was visible, tab labels wrapped onto two lines and the timeline ran off the right edge. 2880x1800 renders exactly as it did; every other resolution now approximates that layout. Along the way a sweep of the stylesheets found a class of styling this UI engine silently drops, which had been costing the screen its gold borders and all of its italic text.
