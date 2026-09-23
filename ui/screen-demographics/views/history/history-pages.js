@@ -2,12 +2,8 @@
 //
 // The Historical Data page catalogue and the metric-renderability predicates.
 //
-// This is a LEAF module: it imports only the metric registry and the synthetic
-// metric table, and imports nothing from view-history.js. history-tabs.js used to
-// pull PAGES/metricExists back out of view-history.js, which made the two mutually
-// recursive ("Circular import detected" on every boot). Keeping the catalogue here
-// breaks that cycle. view-history.js re-exports both names, so existing importers
-// are unaffected.
+// This is a LEAF module: it imports nothing from view-history.js, which breaks
+// an import cycle with history-tabs.js. view-history.js re-exports both names.
 
 import { SYNTHETIC_METRICS } from "/demographics/ui/screen-demographics/views/history/history-synthetic-metrics.js";
 import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
@@ -15,8 +11,7 @@ import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
 /**
  * One Historical Data page. `metrics` pages list metric ids; a RENDER page instead
  * carries a `render` function, injected by view-history.js via setPageRenderer().
- * Companion mods also push pages here at runtime (see view-history.js), which is
- * why hub/tier/metrics are all optional.
+ * Companion mods also push pages here at runtime, so hub/tier/metrics are optional.
  * @typedef {Object} HistoryPage
  * @property {string} id Page id.
  * @property {string} label Localization tag for the tab label.
@@ -52,7 +47,7 @@ export const PAGES = [
   },
   {
     // Society & culture: social standing, culture-collection, the wonder group, and the
-    // Legacy Path triumph radar (legacy_radar, folded in from the former Age page).
+    // Legacy Path triumph radar (legacy_radar).
     id: "society",
     label: "LOC_DEMOGRAPHICS_PAGE_SOCIETY",
     hub: "statistics",
@@ -74,7 +69,7 @@ export const PAGES = [
   },
   {
     // Empire footprint: settlement counts/cap, land area, the size histogram, and the
-    // by-type construction boards (buildings/districts, folded from the former Construction page).
+    // by-type construction boards (buildings/districts).
     id: "settlements_land",
     label: "LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND",
     hub: "statistics",
@@ -86,7 +81,7 @@ export const PAGES = [
   // ── MIGRATION hub ───────────────────────────────────────────────────────
   {
     // Population is the Migration hub's headline + anchor. Standalone Demographics shows
-    // only this; the Emigration companion injects the rest of the hub after it (Phase 3).
+    // only this; a companion mod injects the rest of the hub after it.
     id: "population",
     label: "LOC_DEMOGRAPHICS_PAGE_POPULATION",
     hub: "migration",
@@ -96,8 +91,8 @@ export const PAGES = [
 
   // ── GEOPOLITICS hub ─────────────────────────────────────────────────────
   {
-    // "Global Relations": a RENDER page (the former top-level Relations view). First in the
-    // hub + the default page loaded when Geopolitics is selected.
+    // "Global Relations": a RENDER page. First in the hub + the default page loaded when
+    // Geopolitics is selected.
     id: "relations",
     label: "LOC_DEMOGRAPHICS_PAGE_RELATIONS",
     hub: "geopolitics",
@@ -134,7 +129,7 @@ export const PAGES = [
     label: "LOC_DEMOGRAPHICS_PAGE_MILITARY",
     hub: "geopolitics",
     tier: "basic",
-    // War Timeline (wars_gantt) + War Impact (war_graphs) folded in from the former Wars page.
+    // War Timeline (wars_gantt) + War Impact (war_graphs).
     metrics: ["milpower", "units_killed", "units_lost", "combats", "wars_declared", "wars_received",
       "settlements_conquered", "conquest_pct", "wars_gantt", "war_graphs",
       "units_trained_type", "units_killed_type", "units_lost_type"]

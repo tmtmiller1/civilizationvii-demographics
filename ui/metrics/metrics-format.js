@@ -1,14 +1,9 @@
 // metrics-format.js
 // Shared numeric formatters used by the metric registry and UI views.
 //
-// Numbers are formatted through the engine's Locale.toNumber so grouping and the
-// decimal mark follow the player's language (German "1.234,5", French "1 234,5",
-// etc.) — the same API the base game uses for scores/yields, which likewise
-// concatenates suffixes like "%"/"km²" after it (see utilities-city-yields.js).
-// When the engine Locale API is unavailable (Node tests, early load) every
-// formatter falls back to the manual English formatting it used before, so
-// behaviour is unchanged off-engine. The engine does not abbreviate magnitudes,
-// so the "K/M/B/T" tiers stay a mod convention; only the mantissa localizes.
+// Numbers are formatted through the engine's Locale.toNumber so grouping and the decimal mark
+// follow the player's language; when that API is unavailable (Node tests, early load) every
+// formatter falls back to manual English formatting. The "K/M/B/T" tiers are a mod convention.
 
 /**
  * Format a number through the engine's locale-aware `Locale.toNumber`, or return
@@ -31,10 +26,8 @@ function localeNumber(n, spec, fallback) {
 }
 
 /**
- * Resolve a `LOC_*` tag through the engine, or return `fallback` (the prior English
- * text) when the Locale API is unavailable or the tag is missing — mirrors
- * {@link localeNumber}'s graceful fallback so a localized suffix reads in the
- * player's language on-engine yet stays stable off-engine (Node tests).
+ * Resolve a `LOC_*` tag through the engine, or return `fallback` when the Locale API is
+ * unavailable or the tag is missing, mirroring {@link localeNumber}.
  * @param {string} key The `LOC_*` tag.
  * @param {string} fallback The off-engine result (must match the prior output).
  * @returns {string} The localized text, or `fallback`.

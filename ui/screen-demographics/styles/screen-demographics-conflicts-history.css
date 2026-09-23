@@ -46,7 +46,10 @@
     display: inline-block;
     overflow: visible;
     white-space: nowrap;
-    padding: 0.08rem 0.45rem;
+    padding-top: calc(0.08 * var(--dg-u));
+    padding-right: calc(0.45 * var(--dg-u));
+    padding-bottom: calc(0.08 * var(--dg-u));
+    padding-left: calc(0.45 * var(--dg-u));
     border-radius: 0.2rem;
     background: rgba(18, 15, 10, 0.86);
     border: 0.0625rem solid rgba(201, 162, 76, 0.4);
@@ -61,7 +64,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0.05rem 0.35rem;
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.35 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.35 * var(--dg-u));
     border-radius: 0.2rem;
     background: rgba(20, 16, 10, 0.85);
     white-space: nowrap;
@@ -83,7 +89,10 @@
 .demographics-wars-age-label {
     position: absolute;
     transform: translateX(-50%);
-    padding: 0.05rem 0.4rem;
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     border-radius: 0.2rem;
     background: rgba(20, 16, 10, 0.9);
     border-left: 0.18rem solid #b78cff;
@@ -93,10 +102,29 @@
     pointer-events: none;
 }
 /* "Present" marker label sitting atop the dashed yellow current-turn line. */
+/* Edge clamps applied by clampEdgeLabels after mount: a label that would overrun the canvas is
+   re-anchored to END (right edge) or START (left edge) at its line instead of being centred on it. */
+.demographics-wars-crisis-label.is-clamp-right,
+.demographics-wars-age-label.is-clamp-right {
+    transform: translateX(-100%);
+}
+.demographics-wars-crisis-label.is-clamp-left,
+.demographics-wars-age-label.is-clamp-left {
+    transform: translateX(0);
+}
+.demographics-wars-now-label.is-clamp-right {
+    transform: translate(-100%, -100%);
+}
+.demographics-wars-now-label.is-clamp-left {
+    transform: translate(0, -100%);
+}
 .demographics-wars-now-label {
     position: absolute;
     transform: translate(-50%, -100%);
-    padding: 0.02rem 0.3rem;
+    padding-top: calc(0.02 * var(--dg-u));
+    padding-right: calc(0.3 * var(--dg-u));
+    padding-bottom: calc(0.02 * var(--dg-u));
+    padding-left: calc(0.3 * var(--dg-u));
     border-radius: 0.2rem;
     background: rgba(38, 32, 6, 0.85);
     border: 0.0625rem solid rgba(255, 223, 59, 0.7);
@@ -134,16 +162,20 @@
 .demographics-wars-tooltip {
     position: absolute;
     z-index: 20;
-    min-width: 16rem;
+    min-width: calc(16 * var(--dg-u));
     /* Wide enough to lay every belligerent's column out in a row (merged
        multi-front wars can involve many civs). */
     max-width: 90vw;
     /* Uniformly enlarge the whole tooltip a touch for readability. Anchored at
        its top-left (the cursor anchor), so it grows down-right. Keep TOOLTIP_SCALE
-       in chart-conflicts-timeline.js in sync for the edge-flip math. */
+       in chart-wars-gantt-interactions.js in sync for the edge-flip math; that
+       code writes a smaller inline scale when the tooltip would not fit the frame. */
     transform: scale(1.12);
     transform-origin: top left;
-    padding: 0.85rem 1rem 1.05rem 1rem;
+    padding-top: calc(0.85 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(1.05 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
     border: 0;
     border-radius: 0;
     border-image-outset: 0.3333333333rem 0.8888888889rem 1.3333333333rem 0.8888888889rem;
@@ -160,7 +192,7 @@
 }
 .demographics-wars-tooltip-head {
     text-align: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: calc(0.25 * var(--dg-u));
 }
 .demographics-wars-tooltip-title {
     font-weight: 700;
@@ -172,16 +204,19 @@
 .demographics-wars-tooltip-subtitle {
     color: rgb(170, 152, 124);
     font-size: var(--dg-fs-72);
-    margin-top: 0.1rem;
+    margin-top: calc(0.1 * var(--dg-u));
 }
 .demographics-wars-tooltip-status {
     display: inline-block;
-    margin-top: 0.3rem;
+    margin-top: calc(0.3 * var(--dg-u));
     font-size: var(--dg-fs-65);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06rem;
-    padding: 0.1rem 0.55rem;
+    padding-top: calc(0.1 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.1 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
     border-radius: 0.7rem;
     white-space: nowrap;
 }
@@ -203,7 +238,10 @@
 .demographics-wars-tooltip-divider {
     height: 1px;
     background: rgba(204, 188, 163, 0.2);
-    margin: 0.45rem 0;
+    margin-top: calc(0.45 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.45 * var(--dg-u));
+    margin-left: 0;
 }
 /* Sign-key footer: a compact "+gain · −loss · — no data" legend. The signs reuse
    the leader-val color classes so they match the figures above exactly. */
@@ -220,13 +258,16 @@
     text-align: left;
 }
 .demographics-wars-tooltip-key-label {
-    color: var(--ia-text-secondary);
-    margin-right: 0.25rem;
+    color: var(--dg-ia-text-secondary);
+    margin-right: calc(0.25 * var(--dg-u));
 }
 .demographics-wars-tooltip-key-sep {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     opacity: 0.45;
-    margin: 0 0.15rem;
+    margin-top: 0;
+    margin-right: calc(0.15 * var(--dg-u));
+    margin-bottom: 0;
+    margin-left: calc(0.15 * var(--dg-u));
 }
 .demographics-wars-tooltip-section-label {
     font-weight: 600;
@@ -234,7 +275,10 @@
     text-transform: uppercase;
     letter-spacing: 0.07rem;
     font-size: var(--dg-fs-65);
-    margin: 0.1rem 0 0.25rem;
+    margin-top: calc(0.1 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.25 * var(--dg-u));
+    margin-left: 0;
     text-align: center;
 }
 /* Row-major cost table: a fixed prose-label column on the left + one value
@@ -243,7 +287,8 @@
 .demographics-wars-tooltip-table {
     display: flex;
     flex-direction: column;
-    gap: 0.16rem;
+    row-gap: calc(0.16 * var(--dg-u));
+    column-gap: calc(0.16 * var(--dg-u));
 }
 .demographics-wars-tooltip-trow {
     display: flex;
@@ -255,12 +300,17 @@
 }
 .demographics-wars-tooltip-trow.is-head {
     align-items: flex-end;
-    margin-bottom: 0.25rem;
+    margin-bottom: calc(0.25 * var(--dg-u));
 }
 /* Leftmost prose-label column - fixed width so every row's labels align and the
    value columns all start at the same x. */
 .demographics-wars-tooltip-tlabel {
-    flex: 0 0 9.5rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    /* TYPE unit, and wide enough for the longest label at the Large font setting: at 9.5 layout
+       units "Military Power (Current)" (~190px at Large) overran into the first value column
+       (watched 2026-09-23 at 2880x1800). Text-holding boxes track the type scale, not the layout. */
+    flex-basis: calc(12.5 * var(--dg-t));
     color: rgb(176, 162, 138);
     white-space: nowrap;
     text-align: left;
@@ -270,22 +320,29 @@
    column instead of shrinking them; fixed width also keeps columns aligned
    row-to-row. */
 .demographics-wars-tooltip-tcell {
-    flex: 0 0 6.5rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    /* TYPE unit; room for an icon plus a value like "-32 (≈57.8K)" without touching the next column. */
+    flex-basis: calc(8 * var(--dg-t));
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
 }
 /* Header cell: leader portrait stacked over the civ-color dot, centered. */
 .demographics-wars-tooltip-thead-cell {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.15rem;
+    row-gap: calc(0.15 * var(--dg-u));
+    column-gap: calc(0.15 * var(--dg-u));
 }
 /* Thin "vs" divider column between the two sides (in every row, for alignment). */
 .demographics-wars-tooltip-tvs {
-    flex: 0 0 1.4rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(1.4 * var(--dg-u));
     text-align: center;
     color: rgb(150, 134, 110);
     font-size: var(--dg-fs-72);
@@ -327,17 +384,22 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 0.05rem;
-    padding: 0.15rem 0;
+    row-gap: calc(0.05 * var(--dg-u));
+    column-gap: calc(0.05 * var(--dg-u));
+    padding-top: calc(0.15 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.15 * var(--dg-u));
+    padding-left: 0;
     font-variant-numeric: tabular-nums;
 }
 .demographics-wars-tooltip-cs-ally-name {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.25rem;
+    row-gap: calc(0.25 * var(--dg-u));
+    column-gap: calc(0.25 * var(--dg-u));
     max-width: 100%;
-    min-height: 1.05rem;
+    min-height: calc(1.05 * var(--dg-u));
     font-size: var(--dg-fs-72);
     color: rgb(214, 201, 173);
     white-space: nowrap;
@@ -355,22 +417,30 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 0.05rem;
-    padding: 0.15rem 0;
+    row-gap: calc(0.05 * var(--dg-u));
+    column-gap: calc(0.05 * var(--dg-u));
+    padding-top: calc(0.15 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.15 * var(--dg-u));
+    padding-left: 0;
 }
 .demographics-wars-tooltip-section-line {
-    padding-left: 0.75rem;
+    padding-left: calc(0.75 * var(--dg-u));
     color: rgb(192, 173, 143);
 }
 .demographics-wars-tooltip-combatant {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.16rem 0;
+    row-gap: calc(0.5 * var(--dg-u));
+    column-gap: calc(0.5 * var(--dg-u));
+    padding-top: calc(0.16 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.16 * var(--dg-u));
+    padding-left: 0;
 }
 .demographics-wars-tooltip-portrait {
-    width: 1.85rem;
-    height: 1.85rem;
+    width: calc(1.85 * var(--dg-u));
+    height: calc(1.85 * var(--dg-u));
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
@@ -395,14 +465,15 @@
 .demographics-wars-tooltip-combatant-civ {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     font-weight: 600;
     color: rgb(228, 215, 188);
     font-size: var(--dg-fs-85);
 }
 .demographics-wars-tooltip-dot {
-    width: 0.55rem;
-    height: 0.55rem;
+    width: calc(0.55 * var(--dg-u));
+    height: calc(0.55 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
     border: 1px solid rgba(0, 0, 0, 0.5);
@@ -412,8 +483,8 @@
     font-size: var(--dg-fs-72);
 }
 .demographics-wars-tooltip-cost {
-    margin-top: 0.55rem;
-    padding-top: 0.45rem;
+    margin-top: calc(0.55 * var(--dg-u));
+    padding-top: calc(0.45 * var(--dg-u));
     border-top: 1px solid rgba(204, 188, 163, 0.22);
 }
 .demographics-wars-tooltip-cost-header {
@@ -422,32 +493,31 @@
     text-transform: uppercase;
     letter-spacing: 0.06rem;
     font-size: var(--dg-fs-72);
-    margin-bottom: 0.35rem;
+    margin-bottom: calc(0.35 * var(--dg-u));
 }
 /* City State Allies block: one section per side, each a sub-header then a row
    per ally with its Military Power + Power Lost. */
 .demographics-wars-tooltip-cs-section {
-    margin-bottom: 0.45rem;
+    margin-bottom: calc(0.45 * var(--dg-u));
 }
 .demographics-wars-tooltip-cs-side {
     font-weight: 600;
     color: rgb(196, 182, 156);
     font-size: var(--dg-fs-72);
-    margin-bottom: 0.18rem;
+    margin-bottom: calc(0.18 * var(--dg-u));
 }
 .demographics-wars-tooltip-cs-none {
     color: rgb(150, 138, 118);
-    font-style: italic;
     font-size: var(--dg-fs-72);
-    margin-bottom: 0.2rem;
+    margin-bottom: calc(0.2 * var(--dg-u));
 }
 .demographics-wars-tooltip-cs-row {
     display: flex;
     flex-direction: row;
     align-items: center;
-    column-gap: 0.4rem;
+    column-gap: calc(0.4 * var(--dg-u));
     font-size: var(--dg-fs-85);
-    margin-bottom: 0.12rem;
+    margin-bottom: calc(0.12 * var(--dg-u));
 }
 .demographics-wars-tooltip-cs-name {
     flex: 1 1 auto;
@@ -461,17 +531,19 @@
 .demographics-wars-tooltip-cost-grid {
     display: flex;
     flex-direction: column;
-    row-gap: 0.22rem;
+    row-gap: calc(0.22 * var(--dg-u));
     font-size: var(--dg-fs-85);
 }
 .demographics-wars-tooltip-cost-row {
     display: flex;
     flex-direction: row;
     align-items: center;
-    column-gap: 0.4rem;
+    column-gap: calc(0.4 * var(--dg-u));
 }
 .demographics-wars-tooltip-cost-corner {
-    flex: 0 0 4.6rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(4.6 * var(--dg-u));
 }
 .demographics-wars-tooltip-cost-hdr {
     flex: 1 1 0;
@@ -479,11 +551,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.12rem;
+    row-gap: calc(0.12 * var(--dg-u));
+    column-gap: calc(0.12 * var(--dg-u));
 }
 .demographics-wars-tooltip-cost-icon {
-    width: 1.05rem;
-    height: 1.05rem;
+    width: calc(1.05 * var(--dg-u));
+    height: calc(1.05 * var(--dg-u));
     flex-shrink: 0;
     /* Base-game texture set inline via url("blp:NAME"). */
     background-size: contain;
@@ -494,16 +567,21 @@
 /* Conflicts "War Graphs" sub-tab: small-multiples of participant trajectories. */
 .demographics-war-graphs {
     width: 100%;
-    padding: 0.5rem 1rem 1.5rem 1rem;
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(1.5 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    row-gap: calc(0.6 * var(--dg-u));
+    column-gap: calc(0.6 * var(--dg-u));
 }
 .demographics-war-graphs-head {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    padding-bottom: 0.5rem;
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
+    padding-bottom: calc(0.5 * var(--dg-u));
     border-bottom: 0.0625rem solid rgba(150, 134, 110, 0.3);
 }
 .demographics-war-graphs-title {
@@ -522,9 +600,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
     white-space: nowrap;
-    margin: 0 0.9rem 0.2rem 0;
+    margin-top: 0;
+    margin-right: calc(0.9 * var(--dg-u));
+    margin-bottom: calc(0.2 * var(--dg-u));
+    margin-left: 0;
     cursor: pointer;
 }
 .demographics-war-graphs-legend-item.is-hidden {
@@ -532,11 +614,11 @@
 }
 /* All / None bulk-select controls sit between the war title and the legend. */
 .demographics-war-graphs-controls {
-    margin-bottom: 0.1rem;
+    margin-bottom: calc(0.1 * var(--dg-u));
 }
 .demographics-war-graphs-legend-dot {
-    width: 0.6rem;
-    height: 0.6rem;
+    width: calc(0.6 * var(--dg-u));
+    height: calc(0.6 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
 }
@@ -554,24 +636,33 @@
     flex-wrap: wrap;
 }
 .demographics-war-graph-cell {
-    flex: 1 1 42rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(42 * var(--dg-u));
     /* Cap the grow so a lone cell on an under-full last row (e.g. a 10th graph) stays ~one column
        wide instead of stretching edge-to-edge across the whole row. Full rows are unaffected: their
        cells want ~one basis width anyway, well under this cap. */
-    max-width: 50rem;
+    max-width: calc(50 * var(--dg-u));
     box-sizing: border-box;
-    margin: 0 0.9rem 0.9rem 0;
+    margin-top: 0;
+    margin-right: calc(0.9 * var(--dg-u));
+    margin-bottom: calc(0.9 * var(--dg-u));
+    margin-left: 0;
     background: rgba(0, 0, 0, 0.18);
     border: 0.0625rem solid rgba(150, 134, 110, 0.25);
     border-radius: 0.25rem;
-    padding: 0.55rem 0.65rem;
+    padding-top: calc(0.55 * var(--dg-u));
+    padding-right: calc(0.65 * var(--dg-u));
+    padding-bottom: calc(0.55 * var(--dg-u));
+    padding-left: calc(0.65 * var(--dg-u));
 }
 .demographics-war-graph-cell-head {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.35rem;
-    margin-bottom: 0.25rem;
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
+    margin-bottom: calc(0.25 * var(--dg-u));
     color: rgb(214, 197, 166);
     font-weight: 600;
     font-size: var(--dg-fs-95);
@@ -582,11 +673,17 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-bottom: 0.4rem;
+    margin-bottom: calc(0.4 * var(--dg-u));
 }
 .demographics-war-graph-filter-btn {
-    margin: 0 0.4rem 0.3rem 0;
-    padding: 0.12rem 0.6rem;
+    margin-top: 0;
+    margin-right: calc(0.4 * var(--dg-u));
+    margin-bottom: calc(0.3 * var(--dg-u));
+    margin-left: 0;
+    padding-top: calc(0.12 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.12 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
     border-radius: 0.85rem;
     border: 0.0625rem solid rgba(150, 134, 110, 0.4);
     background: rgba(0, 0, 0, 0.25);
@@ -609,21 +706,26 @@
     height: 100%;
     box-sizing: border-box;
     overflow: auto;
-    padding: 0.5rem 1rem 1.5rem 1rem;
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(1.5 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
     display: flex;
     flex-direction: column;
-    gap: 1.3rem;
+    row-gap: calc(1.3 * var(--dg-u));
+    column-gap: calc(1.3 * var(--dg-u));
 }
 /* One crisis (all its stages) per group; a gold divider separates each age's
    crisis so the Antiquity crisis reads distinctly from the Exploration one. */
 .demographics-crisis-group {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    row-gap: calc(1 * var(--dg-u));
+    column-gap: calc(1 * var(--dg-u));
 }
 .demographics-crisis-group + .demographics-crisis-group {
     border-top: 0.12rem solid rgba(201, 162, 76, 0.4);
-    padding-top: 1.2rem;
+    padding-top: calc(1.2 * var(--dg-u));
 }
 .demographics-crisis-group-header {
     color: #f3c34c;
@@ -638,8 +740,8 @@
    off with a gold top rule + extra spacing so it reads as the crisis total
    rather than another stage. */
 .demographics-crisis-cumulative {
-    margin-top: 0.6rem;
-    padding-top: 0.7rem;
+    margin-top: calc(0.6 * var(--dg-u));
+    padding-top: calc(0.7 * var(--dg-u));
     border-top: 0.0625rem solid rgba(201, 162, 76, 0.4);
 }
 .demographics-crisis-cumulative-caption {
@@ -649,15 +751,19 @@
     letter-spacing: 0.04em;
     font-size: var(--dg-fs-95);
     opacity: 0.9;
-    margin-bottom: 0.4rem;
+    margin-bottom: calc(0.4 * var(--dg-u));
 }
 .demographics-crisis-stage-bar {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0.7rem 1.1rem;
-    margin-bottom: 0.5rem;
+    row-gap: calc(0.8 * var(--dg-u));
+    column-gap: calc(0.8 * var(--dg-u));
+    padding-top: calc(0.7 * var(--dg-u));
+    padding-right: calc(1.1 * var(--dg-u));
+    padding-bottom: calc(0.7 * var(--dg-u));
+    padding-left: calc(1.1 * var(--dg-u));
+    margin-bottom: calc(0.5 * var(--dg-u));
     /* Severity color set inline per stage: a solid left cap (border-left) plus a
        background gradient that holds black behind the name (so it stays readable)
        then fades early into the stage's orange/red shade. */
@@ -692,7 +798,7 @@
     display: flex;
     flex-direction: row;
     overflow-x: auto;
-    padding-left: 0.35rem;
+    padding-left: calc(0.35 * var(--dg-u));
 }
 .demographics-crisis-stage-costs > .demographics-wars-tooltip-table {
     flex: 1 1 auto;
@@ -702,35 +808,39 @@
    of the shared cost table up (same exact format, just larger + easier to read,
    filling the page better). */
 .demographics-crisis-stage-costs .demographics-wars-tooltip-table {
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-trow {
     font-size: var(--dg-fs-105);
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-tlabel {
-    flex-basis: 13.5rem;
+    flex-basis: calc(13.5 * var(--dg-u));
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-tcell {
-    flex: 1 1 9rem;
-    min-width: 9rem;
-    gap: 0.4rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(9 * var(--dg-u));
+    min-width: calc(9 * var(--dg-u));
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
     justify-content: center;
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-tvs {
-    flex-basis: 2rem;
+    flex-basis: calc(2 * var(--dg-u));
     font-size: var(--dg-fs-95);
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-cost-icon {
-    width: 1.4rem;
-    height: 1.4rem;
+    width: calc(1.4 * var(--dg-u));
+    height: calc(1.4 * var(--dg-u));
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-portrait {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: calc(2.5 * var(--dg-u));
+    height: calc(2.5 * var(--dg-u));
 }
 .demographics-crisis-stage-costs .demographics-wars-tooltip-dot {
-    width: 0.72rem;
-    height: 0.72rem;
+    width: calc(0.72 * var(--dg-u));
+    height: calc(0.72 * var(--dg-u));
 }
 /* ── Crises "Graphs" sub-tab: reuses the war-graphs grid/cell styling; adds a
    full-height scroll container and an interactive (toggleable) shared legend. ── */
@@ -749,7 +859,7 @@
 .demographics-crisis-graphs-controls {
     flex-wrap: nowrap;
     align-items: center;
-    margin-bottom: 0.1rem;
+    margin-bottom: calc(0.1 * var(--dg-u));
 }
 /* Invisible filler cell: occupies a grid column so the last row's real graph
    keeps a single column's width instead of stretching across the row. */
@@ -764,7 +874,7 @@
 .demographics-war-graph-plot {
     position: relative;
     width: 100%;
-    height: 22rem;
+    height: calc(22 * var(--dg-u));
 }
 .demographics-war-graph-svg {
     width: 100%;
@@ -801,22 +911,22 @@
     pointer-events: none;
 }
 .demographics-war-graph-ovl-ytop {
-    top: 0.5rem;
+    top: calc(0.5 * var(--dg-u));
     left: 8%;
     font-size: var(--dg-fs-95);
 }
 .demographics-war-graph-ovl-ybottom {
-    bottom: 3.2rem;
+    bottom: calc(3.2 * var(--dg-u));
     left: 8%;
     font-size: var(--dg-fs-95);
 }
 .demographics-war-graph-ovl-xleft {
-    bottom: 1.4rem;
+    bottom: calc(1.4 * var(--dg-u));
     left: 8%;
     font-size: var(--dg-fs-95);
 }
 .demographics-war-graph-ovl-xright {
-    bottom: 1.4rem;
+    bottom: calc(1.4 * var(--dg-u));
     right: 2.5%;
     font-size: var(--dg-fs-95);
 }
@@ -834,7 +944,7 @@
     top: 0;
     bottom: 14%;
     left: 0;
-    width: 1.6rem;
+    width: calc(1.6 * var(--dg-u));
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -857,8 +967,11 @@
     z-index: 60;
     pointer-events: none;
     display: none;
-    min-width: 9rem;
-    padding: 0.4rem 0.55rem;
+    min-width: calc(9 * var(--dg-u));
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
     background: rgba(12, 10, 7, 0.96);
     border: 0.0625rem solid rgba(201, 162, 76, 0.55);
     border-radius: 0.25rem;
@@ -870,20 +983,22 @@
        an inline element, which silently collapsed the icon to zero before. */
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    color: var(--ia-accent-gold-soft, #d9c08a);
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
+    color: var(--dg-ia-accent-gold-soft, #d9c08a);
     font-weight: 600;
-    margin-bottom: 0.2rem;
+    margin-bottom: calc(0.2 * var(--dg-u));
 }
 .demographics-war-graph-hovertip-row {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
     white-space: nowrap;
 }
 .demographics-war-graph-hovertip-dot {
-    width: 0.55rem;
-    height: 0.55rem;
+    width: calc(0.55 * var(--dg-u));
+    height: calc(0.55 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
 }
@@ -894,15 +1009,20 @@
 .demographics-war-graph-nodata {
     color: rgb(140, 130, 112);
     font-size: var(--dg-fs-85);
-    font-style: italic;
-    padding: 1.5rem 0;
+    padding-top: calc(1.5 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(1.5 * var(--dg-u));
+    padding-left: 0;
     text-align: center;
 }
 .demographics-war-graphs-empty {
     color: rgb(170, 158, 136);
     font-size: var(--dg-fs-95);
     text-align: center;
-    padding: 2.5rem 1rem;
+    padding-top: calc(2.5 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(2.5 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
 }
 
 /* Conflicts "Guide" sub-tab: a scrollable reference for the war cost figures. */
@@ -911,10 +1031,14 @@
     height: 100%;
     box-sizing: border-box;
     overflow: auto;
-    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+    padding-top: calc(0.5 * var(--dg-u));
+    padding-right: calc(1.5 * var(--dg-u));
+    padding-bottom: calc(1.5 * var(--dg-u));
+    padding-left: calc(1.5 * var(--dg-u));
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    row-gap: calc(0.85 * var(--dg-u));
+    column-gap: calc(0.85 * var(--dg-u));
 }
 .demographics-wars-glossary-intro,
 .demographics-wars-glossary-note {
@@ -923,11 +1047,10 @@
     line-height: 1.5;
 }
 .demographics-wars-glossary-note {
-    margin-top: 0.4rem;
-    padding-top: 0.85rem;
+    margin-top: calc(0.4 * var(--dg-u));
+    padding-top: calc(0.85 * var(--dg-u));
     border-top: 0.0625rem solid rgba(150, 134, 110, 0.3);
     color: rgb(160, 148, 126);
-    font-style: italic;
 }
 /* Two-column row wrap (longhand flex + margins, the way Gameface supports it;
    `gap` drops on wrapped rows). Basis ~38rem -> two per row under the 92rem cap,
@@ -938,18 +1061,24 @@
     flex-wrap: wrap;
 }
 .demographics-wars-glossary-row {
-    flex: 1 1 44rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: calc(44 * var(--dg-u));
     box-sizing: border-box;
-    margin: 0 1.25rem 1.1rem 0;
+    margin-top: 0;
+    margin-right: calc(1.25 * var(--dg-u));
+    margin-bottom: calc(1.1 * var(--dg-u));
+    margin-left: 0;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    gap: 0.7rem;
+    row-gap: calc(0.7 * var(--dg-u));
+    column-gap: calc(0.7 * var(--dg-u));
 }
 .demographics-wars-glossary-row .demographics-wars-tooltip-cost-icon {
-    width: 1.8rem;
-    height: 1.8rem;
-    margin-top: 0.1rem;
+    width: calc(1.8 * var(--dg-u));
+    height: calc(1.8 * var(--dg-u));
+    margin-top: calc(0.1 * var(--dg-u));
 }
 .demographics-wars-glossary-text {
     flex: 1 1 auto;
@@ -959,7 +1088,7 @@
     color: rgb(228, 215, 188);
     font-weight: 600;
     font-size: var(--dg-fs-120);
-    margin-bottom: 0.2rem;
+    margin-bottom: calc(0.2 * var(--dg-u));
 }
 .demographics-wars-glossary-body {
     color: rgb(196, 182, 156);
@@ -974,7 +1103,9 @@
     white-space: nowrap;
 }
 .demographics-wars-tooltip-cost-side {
-    flex: 0 0 4.6rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(4.6 * var(--dg-u));
     color: rgb(214, 197, 166);
     font-weight: 600;
     white-space: nowrap;
@@ -1028,8 +1159,8 @@
     color: rgb(236, 224, 198);
     font-weight: 700;
     letter-spacing: 0.02rem;
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.35rem;
+    margin-bottom: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.35 * var(--dg-u));
     border-bottom: 1px solid rgba(204, 188, 163, 0.2);
 }
 
@@ -1039,9 +1170,12 @@
     display: none;
     z-index: 30;
     pointer-events: none;
-    padding: 0.65rem 0.85rem 0.7rem;
-    min-width: 14rem;
-    max-width: 24rem;
+    padding-top: calc(0.65 * var(--dg-u));
+    padding-right: calc(0.85 * var(--dg-u));
+    padding-bottom: calc(0.7 * var(--dg-u));
+    padding-left: calc(0.85 * var(--dg-u));
+    min-width: calc(14 * var(--dg-u));
+    max-width: calc(24 * var(--dg-u));
     font-size: var(--dg-fs-85);
     line-height: 1.4;
     white-space: normal;
@@ -1065,8 +1199,8 @@
     position: absolute;
     /* rem so the marker scales with Interface Size instead of staying a fixed
        pixel size that looks tiny next to rem-sized icons at large Interface Sizes. */
-    width: 1.75rem;
-    height: 1.75rem;
+    width: calc(1.75 * var(--dg-u));
+    height: calc(1.75 * var(--dg-u));
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -1105,10 +1239,10 @@
 .demographics-line-wonder-raze-badge {
     position: absolute;
     /* rem so the badge + its corner offset scale with the marker at any Interface Size. */
-    right: -0.25rem;
-    bottom: -0.25rem;
-    width: 1rem;
-    height: 1rem;
+    right: calc(-0.25 * var(--dg-u));
+    bottom: calc(-0.25 * var(--dg-u));
+    width: calc(1 * var(--dg-u));
+    height: calc(1 * var(--dg-u));
     background-image: url("blp:fi_plot_burning_64");
     background-size: contain;
     background-repeat: no-repeat;
@@ -1123,9 +1257,12 @@
 .demographics-line-chart-tooltip {
     position: absolute;
     pointer-events: none;
-    min-width: 14rem;
-    max-width: 22rem;
-    padding: 0.6rem 0.8rem 0.7rem;
+    min-width: calc(14 * var(--dg-u));
+    max-width: calc(22 * var(--dg-u));
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(0.8 * var(--dg-u));
+    padding-bottom: calc(0.7 * var(--dg-u));
+    padding-left: calc(0.8 * var(--dg-u));
     font-size: var(--dg-fs-85);
     line-height: 1.3;
     z-index: 50;
@@ -1142,24 +1279,29 @@
     color: rgb(236, 224, 198);
     font-size: var(--dg-fs-95);
     border-bottom: 1px solid rgba(204, 188, 163, 0.2);
-    padding-bottom: 0.3rem;
-    margin-bottom: 0.35rem;
+    padding-bottom: calc(0.3 * var(--dg-u));
+    margin-bottom: calc(0.35 * var(--dg-u));
 }
 .demographics-line-tip-row {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.12rem 0;
+    row-gap: calc(0.45 * var(--dg-u));
+    column-gap: calc(0.45 * var(--dg-u));
+    padding-top: calc(0.12 * var(--dg-u));
+    padding-right: 0;
+    padding-bottom: calc(0.12 * var(--dg-u));
+    padding-left: 0;
 }
 .demographics-line-tip-iconrow {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
     flex-shrink: 0;
 }
 .demographics-line-tip-portrait {
-    width: 1.4rem;
-    height: 1.4rem;
+    width: calc(1.4 * var(--dg-u));
+    height: calc(1.4 * var(--dg-u));
     border-radius: 50%;
     overflow: hidden;
     border: 1px solid rgba(210, 194, 165, 0.35);
@@ -1171,8 +1313,8 @@
     height: 100%;
 }
 .demographics-line-tip-dot {
-    width: 0.6rem;
-    height: 0.6rem;
+    width: calc(0.6 * var(--dg-u));
+    height: calc(0.6 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
 }
@@ -1187,7 +1329,7 @@
     font-family: monospace, ui-monospace;
     font-weight: 700;
     white-space: nowrap;
-    margin-left: 0.4rem;
+    margin-left: calc(0.4 * var(--dg-u));
 }
 
 /* Chart.js wrap. width/height (per-viewport render size) stay inline. Lays the
@@ -1211,8 +1353,12 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-    padding: 0.4rem 0.2rem 0.4rem 0.7rem;
+    row-gap: calc(0.1 * var(--dg-u));
+    column-gap: calc(0.1 * var(--dg-u));
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.2 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.7 * var(--dg-u));
     overflow-y: auto;
     overflow-x: hidden;
     font-family: TitilliumWeb, sans-serif;
@@ -1223,29 +1369,35 @@
    lines (which rarely climb into the top-left early on). */
 .demographics-line-legend-overlay {
     position: absolute;
-    top: 3rem;
-    left: 4.5rem;
+    top: calc(3 * var(--dg-u));
+    left: calc(4.5 * var(--dg-u));
     z-index: 5;
     /* wide-Y variant pushes further right - see .demographics-line-legend-overlay-wide */
     /* Sizes to content so full leader/civ names fit (no truncation). */
-    padding: 0.3rem 0.55rem;
+    padding-top: calc(0.3 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
     border-radius: 0.25rem;
     background: rgba(12, 10, 7, 0.55);
     border: 0.0625rem solid rgba(201, 162, 76, 0.3);
 }
 /* Metrics with wide numeric Y-axis labels: shift the legend right to clear them. */
 .demographics-line-legend-overlay.demographics-line-legend-overlay-wide {
-    left: 7.5rem;
+    left: calc(7.5 * var(--dg-u));
 }
 /* Signed, spelled-out people counts (migration metrics) are wider still: shift further right. */
 .demographics-line-legend-overlay.demographics-line-legend-overlay-extra-wide {
-    left: 9rem;
+    left: calc(9 * var(--dg-u));
 }
 /* "Legend" title above the entries. */
 .demographics-line-legend-title {
     font-weight: 700;
     color: rgb(228, 215, 188);
-    padding: 0.1rem 0.25rem 0.2rem;
+    padding-top: calc(0.1 * var(--dg-u));
+    padding-right: calc(0.25 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.25 * var(--dg-u));
     text-transform: uppercase;
     letter-spacing: 0.04rem;
     font-size: var(--dg-fs-72);
@@ -1254,11 +1406,18 @@
 .demographics-line-legend-controls {
     display: flex;
     flex-direction: row;
-    gap: 0.3rem;
-    padding: 0 0.25rem 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
+    padding-top: 0;
+    padding-right: calc(0.25 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
+    padding-left: calc(0.25 * var(--dg-u));
 }
 .demographics-line-legend-btn {
-    padding: 0.06rem 0.5rem;
+    padding-top: calc(0.06 * var(--dg-u));
+    padding-right: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.06 * var(--dg-u));
+    padding-left: calc(0.5 * var(--dg-u));
     border-radius: 0.85rem;
     border: 0.0625rem solid rgba(201, 162, 76, 0.45);
     background: rgba(0, 0, 0, 0.25);
@@ -1273,8 +1432,12 @@
 .demographics-line-legend-row {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.16rem 0.25rem;
+    row-gap: calc(0.45 * var(--dg-u));
+    column-gap: calc(0.45 * var(--dg-u));
+    padding-top: calc(0.16 * var(--dg-u));
+    padding-right: calc(0.25 * var(--dg-u));
+    padding-bottom: calc(0.16 * var(--dg-u));
+    padding-left: calc(0.25 * var(--dg-u));
     border-radius: 0.2rem;
     cursor: pointer;
 }
@@ -1294,7 +1457,7 @@
 }
 /* Focused civ: brighter, bolder name. */
 .demographics-line-legend-row.is-focused .demographics-line-legend-name {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-weight: 700;
 }
 /* Eliminated civ: dimmed name (no strike-through). */
@@ -1350,9 +1513,8 @@
 .demographics-history-subtitle {
     text-align: center;
     color: #c2c4cc;
-    font-style: italic;
-    margin-top: -0.15rem;
-    margin-bottom: 0.35rem;
+    margin-top: calc(-0.15 * var(--dg-u));
+    margin-bottom: calc(0.35 * var(--dg-u));
     letter-spacing: 0.04em;
 }
 
@@ -1360,7 +1522,10 @@
 .demographics-history-metric-info {
     position: relative;
     text-align: center;
-    margin: 0.1rem 0 0.25rem 0;
+    margin-top: calc(0.1 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.25 * var(--dg-u));
+    margin-left: 0;
 }
 
 /* Radar snapshot pill with no captured snapshot yet — greyed + not-allowed. */
@@ -1378,9 +1543,12 @@
    left/right anchor and width differ per tooltip (modifier classes below). */
 .demographics-history-tip {
     position: absolute;
-    top: 1.9rem;
+    top: calc(1.9 * var(--dg-u));
     max-width: 92vw;
-    padding: 1.1rem 1.3rem 1.1rem;
+    padding-top: calc(1.1 * var(--dg-u));
+    padding-right: calc(1.3 * var(--dg-u));
+    padding-bottom: calc(1.1 * var(--dg-u));
+    padding-left: calc(1.3 * var(--dg-u));
     font-size: var(--dg-fs-95);
     line-height: 1.5;
     text-align: left;
@@ -1395,11 +1563,11 @@
 }
 .demographics-history-tip-csv {
     right: 0;
-    width: 36rem;
+    width: calc(36 * var(--dg-u));
 }
 .demographics-history-tip-disabled-filter {
     left: 0;
-    width: 38rem;
+    width: calc(38 * var(--dg-u));
 }
 /* The tip is an absolutely-positioned child of the small filter pill. Engine
    tooltip classes (img-tooltip-*) re-enable pointer-events, which made this
@@ -1417,8 +1585,8 @@
     font-size: var(--dg-fs-105);
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    margin-bottom: 0.65rem;
-    padding-bottom: 0.4rem;
+    margin-bottom: calc(0.65 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
     border-bottom: 1px solid rgba(204, 188, 163, 0.2);
 }
 .demographics-history-tip-body {
@@ -1430,14 +1598,14 @@
 /* Each body line is its own block element (real line breaks; Coherent drops
    <br> and force-breaks inline <b>). */
 .demographics-history-tip-line {
-    margin-bottom: 0.15rem;
+    margin-bottom: calc(0.15 * var(--dg-u));
 }
 .demographics-history-tip-line:last-child {
     margin-bottom: 0;
 }
 /* The closing call-to-action line. */
 .demographics-history-tip-line-action {
-    margin-top: 0.5rem;
+    margin-top: calc(0.5 * var(--dg-u));
     color: rgb(243, 231, 196);
     font-weight: 600;
 }
@@ -1446,9 +1614,11 @@
    raised to 1 on hover via an inline style toggle. */
 .demographics-history-csv-info-icon {
     display: block;
-    flex: 0 0 1.3rem;
-    width: 1.3rem;
-    height: 1.3rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: calc(1.3 * var(--dg-u));
+    width: calc(1.3 * var(--dg-u));
+    height: calc(1.3 * var(--dg-u));
     background-image: url("blp:icon_info");
     background-size: contain;
     background-position: center;
@@ -1467,7 +1637,8 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.35rem;
+    row-gap: calc(0.35 * var(--dg-u));
+    column-gap: calc(0.35 * var(--dg-u));
     flex: 0 0 auto;
 }
 
@@ -1480,7 +1651,10 @@
     justify-content: flex-end;
     align-items: center;
     width: 100%;
-    margin: 0 0 0.4rem 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: calc(0.4 * var(--dg-u));
+    margin-left: 0;
 }
 
 /* CSV export toast. Success/failure border-color + color are dynamic and set
@@ -1488,11 +1662,14 @@
    the original `1px solid <tint>` border. */
 .demographics-csv-toast {
     position: fixed;
-    top: 6rem;
+    top: calc(6 * var(--dg-u));
     left: 50%;
     transform: translateX(-50%);
     z-index: 200;
-    padding: 0.6rem 1.1rem;
+    padding-top: calc(0.6 * var(--dg-u));
+    padding-right: calc(1.1 * var(--dg-u));
+    padding-bottom: calc(0.6 * var(--dg-u));
+    padding-left: calc(1.1 * var(--dg-u));
     border-radius: 0.25rem;
     border: 1px solid transparent;
     background: rgba(20, 16, 10, 0.92);

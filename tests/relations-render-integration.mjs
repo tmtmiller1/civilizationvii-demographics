@@ -18,10 +18,15 @@ const saved = {
 
 const { document } = createFakeDocument();
 globalThis.document = document;
+// The view wires ONE module-level window "resize" listener on its first ring
+// mount; record it so later tests can fire it against a detached scaffold.
+const resizeListeners = [];
 globalThis.window = {
   innerWidth: 1920,
   innerHeight: 1080,
-  addEventListener: () => {}
+  addEventListener: (name, fn) => {
+    if (name === "resize") resizeListeners.push(fn);
+  }
 };
 globalThis.requestAnimationFrame = (fn) => fn();
 globalThis.performance = { now: () => 1000 };
@@ -71,7 +76,7 @@ globalThis.Players = {
   get: (id) => makePlayer(Number(id))
 };
 
-const { render } = await import(
+const { render, releaseRelationsView } = await import(
   "/demographics/ui/screen-demographics/views/relations/view-relations.js"
 );
 const { makeNodeSelectionWriter } = await import(
@@ -309,12 +314,176 @@ function testTopTabPersistThrowStillRepaints() {
   assert.ok(body, "ring body should remain after top-tab persistence throw");
 }
 
+function twoPlayerCtx(settingsOverride) {
+  return {
+    history: {
+      samples: [
+        {
+          turn: 1,
+          players: {
+            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
+            "2": { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#446688", met: true }
+          }
+        }
+      ]
+    },
+    settings: settingsOverride || {
+      getSetting(_k, d) {
+        return d;
+      },
+      setSetting() {}
+    }
+  };
+}
+
+function captureConsoleError(fn) {
+  const errors = [];
+  const savedError = console.error;
+  console.error = (...a) => errors.push(a.map(String).join(" "));
+  try {
+    fn();
+  } finally {
+    console.error = savedError;
+  }
+  return errors;
+}
+
+function testResizeSkipsDetachedScaffold() {
+  assert.ok(resizeListeners.length > 0, "the view should have wired its one-time resize listener");
+  const fireResize = () => {
+    for (const fn of resizeListeners) fn();
+  };
+  globalThis.requestAnimationFrame = (fn) => fn();
+  // The observer-empty test above blanks GameContext; a ring needs a local player.
+  globalThis.GameContext = { localPlayerID: 1 };
+
+  const frame = document.createElement("div");
+  frame.className = "demographics-frame";
+  const host = document.createElement("div");
+  frame.appendChild(host);
+  render(host, twoPlayerCtx());
+
+  const ringWrap = findByClass(host, "demographics-relations-ring-wrap");
+  const body = findByClass(host, "demographics-relations-body");
+  assert.ok(ringWrap && body, "ring wrap + body should mount");
+  let placeCalls = 0;
+  ringWrap.__placePortraits = () => {
+    placeCalls += 1;
+  };
+
+  // Attached: a resize re-fits the live ring even when the body measurement throws
+  // (GameFace can throw from getBoundingClientRect mid-teardown).
+  body.getBoundingClientRect = () => {
+    throw new Error("measure boom");
+  };
+  const errors = captureConsoleError(fireResize);
+  assert.equal(placeCalls, 1, "resize should re-fit the attached ring");
+  assert.deepEqual(errors, [], "a throwing body measurement must be absorbed, not logged as a failure");
+
+  // Detached (the screen closed): the hook must skip the work AND drop its references.
+  Object.defineProperty(ringWrap, "isConnected", { value: false, configurable: true });
+  fireResize();
+  assert.equal(placeCalls, 1, "resize must skip a detached ring wrap");
+  Object.defineProperty(ringWrap, "isConnected", { value: true, configurable: true });
+  fireResize();
+  assert.equal(placeCalls, 1, "released references must not be revived by a later resize");
+
+  // The scaffold body detaching (host rebuilt) releases the same way.
+  render(host, twoPlayerCtx());
+  const ringWrap2 = findByClass(host, "demographics-relations-ring-wrap");
+  const body2 = findByClass(host, "demographics-relations-body");
+  let placeCalls2 = 0;
+  ringWrap2.__placePortraits = () => {
+    placeCalls2 += 1;
+  };
+  Object.defineProperty(body2, "isConnected", { value: false, configurable: true });
+  fireResize();
+  assert.equal(placeCalls2, 0, "resize must skip a scaffold whose body left the DOM");
+
+  // Explicit release (for a screen-level teardown) stops the re-fit outright.
+  render(host, twoPlayerCtx());
+  const ringWrap3 = findByClass(host, "demographics-relations-ring-wrap");
+  let placeCalls3 = 0;
+  ringWrap3.__placePortraits = () => {
+    placeCalls3 += 1;
+  };
+  fireResize();
+  assert.equal(placeCalls3, 1, "sanity: a live ring is re-fit before release");
+  releaseRelationsView();
+  fireResize();
+  assert.equal(placeCalls3, 1, "releaseRelationsView must stop the resize re-fit");
+}
+
+function testRepaintGuardsThrowingSubRenderer() {
+  globalThis.requestAnimationFrame = (fn) => fn();
+  globalThis.GameContext = { localPlayerID: 1 };
+  const frame = document.createElement("div");
+  frame.className = "demographics-frame";
+  const host = document.createElement("div");
+  frame.appendChild(host);
+  render(host, twoPlayerCtx());
+
+  const subgroupRow = findByClass(host, "demographics-relations-subgroup-row");
+  const portrait = findByClass(host, "demographics-relations-portrait");
+  assert.ok(subgroupRow && subgroupRow.children.length > 1, "subgroup chips should render");
+  assert.ok(portrait, "a portrait overlay should be placed for the node-toggle path");
+
+  // Make the ring's SVG construction throw, then drive both handler-side repaint
+  // entry points: a sub-group chip click (rs.repaint) and a portrait click
+  // (rs.repaintRing). Neither may escape; both must be logged.
+  const savedNS = document.createElementNS;
+  document.createElementNS = () => {
+    throw new Error("svg boom");
+  };
+  let errors;
+  try {
+    errors = captureConsoleError(() => {
+      subgroupRow.children[1].dispatch("click");
+      portrait.dispatch("click");
+    });
+  } finally {
+    document.createElementNS = savedNS;
+  }
+  assert.ok(errors.some((s) => s.includes("repaint:")), "repaint must log a throwing sub-renderer");
+  assert.ok(errors.some((s) => s.includes("repaintRing:")), "repaintRing must log a throwing sub-renderer");
+  assert.ok(findByClass(host, "demographics-relations-toptabs"), "the scaffold survives a failed repaint");
+}
+
+function testRenderPrologueThrowShowsFallback() {
+  const frame = document.createElement("div");
+  frame.className = "demographics-frame";
+  const host = document.createElement("div");
+  frame.appendChild(host);
+  const ctx = {
+    get history() {
+      throw new Error("history boom");
+    },
+    settings: {
+      getSetting(_k, d) {
+        return d;
+      },
+      setSetting() {}
+    }
+  };
+  const errors = captureConsoleError(() => render(host, ctx));
+  assert.ok(errors.some((s) => s.includes("render:")), "a prologue throw must reach the render boundary");
+  const empty = findByClass(host, "demographics-empty");
+  assert.ok(empty, "a failed render must leave a visible empty-state notice, not a blank panel");
+  assert.ok(
+    String(empty.textContent).includes("EMPTY_CHART_RENDER_FAILED"),
+    "the notice should reuse the shared render-failed text"
+  );
+}
+
 try {
   testRelationsRenderIntegration();
   testRelationsRenderObserverEmptyState();
   testTopTabPersistThrowStillRepaints();
     testRenderClearsHostAndHandlesTabBarBuildError();
     testResizeAndOverlayFallbackBranches();
+  testResizeSkipsDetachedScaffold();
+  testRepaintGuardsThrowingSubRenderer();
+  testRenderPrologueThrowShowsFallback();
   console.log("relations-render-integration harness passed");
 } finally {
   globalThis.document = saved.document;

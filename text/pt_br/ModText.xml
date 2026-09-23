@@ -282,7 +282,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="pt_BR"><Text>Classificação {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="pt_BR"><Text>Redefinir ({1_Count} ocultas)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="pt_BR"><Text>Mostrar todas as civilizações ocultas</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="pt_BR"><Text>Clique em uma coluna para ordenar as civilizações por ela. Use o alternador Classificação / Valor para mudar o que cada célula mostra.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="pt_BR"><Text>Desconhecida</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="pt_BR"><Text>(oculta, clique para mostrar)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="pt_BR"><Text>Clique para mostrar</Text></Replace>
@@ -2094,9 +2093,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="pt_BR">
             <Text>Partida mais longa</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="pt_BR">
-            <Text>As partidas ficam salvas neste computador. Cada jogo salvo também guarda o próprio registro.</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="pt_BR">
             <Text>As partidas anteriores não puderam ser lidas do armazenamento nesta sessão. Cada partida continua guardada no próprio jogo salvo.</Text>
         </Replace>
@@ -2360,6 +2356,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="pt_BR">
             <Text>{1_Count} triunfos</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="pt_BR">
+            <Text>As configurações são salvas neste computador.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="pt_BR">
+            <Text>As configurações alteradas nesta sessão são mantidas até o jogo fechar, mas não puderam ser salvas: o armazenamento compartilhado de mods devolveu os dados de outro mod, não pôde ser lido ou não leu de volta o que foi gravado. "Reparar armazenamento" na página do Hall da Fama resolve isso.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="pt_BR">
+            <Text>As configurações não podem ser salvas nesta sessão: o armazenamento de mods não está disponível.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="pt_BR">
+            <Text>Apagar todas as guerras registradas?</Text>
         </Replace>
     </LocalizedText>
 </Database>

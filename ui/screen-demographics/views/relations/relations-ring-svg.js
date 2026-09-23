@@ -1,20 +1,18 @@
 // relations-ring-svg.js
 //
-// SVG ring renderer for the Global Relations view: ring geometry, the edge
-// drawing (solid + hand-synthesized dashed lines, since Coherent ignores
-// `stroke-dasharray`), the node circles / CS discs / leader portraits, and the
-// deferred pixel-space portrait-overlay placement. Split out of
-// view-relations.js.
+// SVG ring renderer for the Global Relations view: ring geometry, edge drawing
+// (dashed lines are hand-synthesized because Coherent ignores
+// `stroke-dasharray`), node circles / CS discs / leader portraits, and the
+// deferred pixel-space portrait-overlay placement.
 //
-// Ring layout (evenly-spaced civs on a circle with an SVG <line>
-// between each pair) is adapted from Sloth's Global Relations Panel
-// (corpus mod 3506996826). See ui/global-relations-panel/
-// global-relations-panel.js, around line 496 for the angle math and
-// around line 123 for the per-pair line rendering.
+// Ring layout (evenly-spaced civs on a circle with an SVG <line> between each
+// pair) is adapted from Sloth's Global Relations Panel (corpus mod 3506996826).
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import {
   dlog,
+  derr,
   setRingPxPerUnit
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
@@ -89,9 +87,8 @@ function ringPositions(ids, rx, ry, cx, cy) {
 
 /**
  * Compute the ring's geometry (viewBox, center, radii, density, positions)
- * from the node count. Small rings are a clean circle; large rings (the CS
- * tab can pack 20+ nodes) elongate into a horizontal oval so each node keeps
- * legible arc-length.
+ * from the node count. Large rings (20+ nodes) elongate into a horizontal oval
+ * so each node keeps legible arc-length.
  * @param {number[]} ringIds Ring node ids.
  * @returns {RingGeometry} The computed geometry.
  */
@@ -105,17 +102,14 @@ function computeRingGeometry(ringIds) {
   // have headroom both above the top node AND below the bottom node.
   const viewBoxH = 100 + ovalT * 24; // 100..124
   const cx = viewBoxW / 2;
-  // Lift the ring slightly ABOVE the viewBox midpoint for the major-civ tab
-  // (N <= 12) so the diagram reads as centered on the window rather than sitting
-  // low in the body region below the tab/header chrome. Oval/CS rings (N > 12)
-  // already fill the canvas, so they stay centered. Negative = up.
+  // Lift small rings (N <= 12) slightly above the viewBox midpoint so the
+  // diagram reads as centered under the tab/header chrome. Negative = up.
   const cyBias = N <= 12 ? -4 : 0;
   const cy = viewBoxH / 2 + cyBias;
 
-  // Ring radius scales with node count so a few civs sit close to center
-  // (more space for labels) while many civs spread out to use the canvas.
-  // Keep sparse major-civ rings a bit flatter vertically so the top node
-  // clears the relations header/tab chrome.
+  // Ring radius scales with node count (few civs sit close to center, many
+  // spread out); sparse rings stay a bit flatter so the top node clears the
+  // header/tab chrome.
   const ry = N <= 2 ? 18 : N <= 6 ? 32 : N <= 12 ? 40 : 38;
   // rx grows past ry when ovalT > 0 - the wider viewBox is what gives
   // us room for a longer X axis.
@@ -139,50 +133,109 @@ function computeRingGeometry(ringIds) {
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
  * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
+ * @param {Map<string, HTMLElement>} [cache] Overlay reuse cache (see {@link portraitKey}).
+ * @returns {HTMLElement} The placed overlay element.
  */
-function appendPortraitDiv(wrap, p, layout, onNodeToggle) {
-  if (p.kind === "label") {
-    appendNodeLabelDiv(wrap, p, layout);
-    return;
+function appendPortraitDiv(wrap, p, layout, onNodeToggle, cache) {
+  const key = portraitKey(p);
+  let div = cache ? cache.get(key) : null;
+  if (!div) {
+    div = p.kind === "label" ? createNodeLabelDiv(p) : createPortraitDiv(p, onNodeToggle);
+    if (cache) cache.set(key, div);
   }
+  if (p.kind === "label") positionNodeLabel(div, p, layout);
+  else positionPortrait(div, p, layout);
+  // Only touch the tree when the overlay is not already parented here: a repaint of the same ring
+  // then moves nothing at all.
+  if (div.parentNode !== wrap) wrap.appendChild(div);
+  return div;
+}
+
+/**
+ * The stable identity of an overlay: the same node showing the same art. Position, size and the
+ * selected/dimmed state are deliberately NOT part of it — those are pushed onto a reused element
+ * rather than justifying a new one.
+ * @param {PortraitPlacement} p The queued placement.
+ * @returns {string} The cache key.
+ */
+function portraitKey(p) {
+  return [p.kind, p.pid, p.leaderType || "", p.iconUrl || "", p.color || "", p.text || ""].join("|");
+}
+
+/**
+ * Create one portrait/icon overlay element (art and click wiring only — no geometry).
+ * @param {PortraitPlacement} p The queued placement.
+ * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
+ * @returns {HTMLElement} The portrait element.
+ */
+function createPortraitDiv(p, onNodeToggle) {
+  const div = document.createElement("div");
+  div.className = "demographics-relations-portrait";
+  // The handler is wired ONCE and survives reuse: it reads the selection off the live render
+  // state at click time, and the cache shares that state's lifetime, so it can never go stale.
+  wirePortraitClick(div, p, onNodeToggle);
+  fillPortraitContent(div, p);
+  return div;
+}
+
+/**
+ * Push the current geometry and focus state onto a portrait overlay.
+ * @param {HTMLElement} div The portrait element.
+ * @param {PortraitPlacement} p The queued placement.
+ * @param {{contentLeft: number, contentTop: number, scale: number}} layout
+ *   Letterboxed content offset + viewBox→pixel scale.
+ */
+function positionPortrait(div, p, layout) {
   const px = layout.contentLeft + p.vbX * layout.scale;
   const py = layout.contentTop + p.vbY * layout.scale;
   const diameter = p.vbR * 2 * layout.scale;
-  const div = document.createElement("div");
-  div.className = "demographics-relations-portrait";
   // The leader portrait covers the node's SVG circle (whose stroke turns gold
   // when selected), so the focus state must live on the portrait frame itself.
-  if (p.selected) div.classList.add("is-selected");
-  if (p.dimmed) div.classList.add("is-dimmed");
+  setOverlayClass(div, "is-selected", !!p.selected);
+  setOverlayClass(div, "is-dimmed", !!p.dimmed);
   // Pixel-coord placement + size are dynamic (computed from the letterboxed
   // viewBox); position:absolute and pointer-events live in the class.
   div.style.left = px - diameter / 2 + "px";
   div.style.top = py - diameter / 2 + "px";
   div.style.width = diameter + "px";
   div.style.height = diameter + "px";
-  wirePortraitClick(div, p, onNodeToggle);
-  fillPortraitContent(div, p);
-  wrap.appendChild(div);
 }
 
 /**
- * Append a node name label as plain HTML text (no box), centered under the node.
+ * Create a node name label as plain HTML text (no box), centered under the node.
  * Uses the same UI font/weight/color as the historical-data chart labels via CSS.
- * @param {HTMLElement} wrap The ring wrap (overlay parent).
- * @param {PortraitPlacement} p The label placement (carries text + position).
+ * @param {PortraitPlacement} p The label placement (carries text).
+ * @returns {HTMLElement} The label element.
+ */
+function createNodeLabelDiv(p) {
+  const div = document.createElement("div");
+  div.className = "demographics-relations-node-label";
+  div.textContent = p.text || "";
+  return div;
+}
+
+/**
+ * Push the current geometry and dim state onto a node label.
+ * @param {HTMLElement} div The label element.
+ * @param {PortraitPlacement} p The label placement.
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
  */
-function appendNodeLabelDiv(wrap, p, layout) {
-  const px = layout.contentLeft + p.vbX * layout.scale;
-  const py = layout.contentTop + p.vbY * layout.scale;
-  const div = document.createElement("div");
-  div.className = "demographics-relations-node-label";
-  if (p.dimmed) div.classList.add("is-dimmed");
-  div.style.left = px + "px";
-  div.style.top = py + "px";
-  div.textContent = p.text || "";
-  wrap.appendChild(div);
+function positionNodeLabel(div, p, layout) {
+  setOverlayClass(div, "is-dimmed", !!p.dimmed);
+  div.style.left = layout.contentLeft + p.vbX * layout.scale + "px";
+  div.style.top = layout.contentTop + p.vbY * layout.scale + "px";
+}
+
+/**
+ * Toggle one class on an overlay without disturbing the rest of its class list.
+ * @param {HTMLElement} el The overlay element.
+ * @param {string} cls The class to toggle.
+ * @param {boolean} on Whether the class should be present.
+ */
+function setOverlayClass(el, cls, on) {
+  if (on) el.classList.add(cls);
+  else el.classList.remove(cls);
 }
 
 /**
@@ -214,10 +267,8 @@ function fillPortraitContent(div, p) {
     div.style.backgroundImage = "url('" + p.iconUrl + "')";
     return;
   }
-  // Leader = a gold-rimmed hexagon token tinted by the civ's color, echoing the
-  // diplomacy-ribbon hex leaders. Pure-CSS hexes (clip-path) so there's no
-  // texture/tint dependency; layered back→front: select glow, gold rim, color
-  // fill, then the leader portrait.
+  // Leader = a gold-rimmed hexagon token tinted by the civ's color (pure-CSS
+  // clip-path hexes), layered back-to-front: glow, rim, fill, portrait.
   div.classList.add("demographics-relations-portrait-hex");
   div.appendChild(hexLayer("demographics-relations-hex-glow"));
   div.appendChild(hexLayer("demographics-relations-hex-rim"));
@@ -243,14 +294,54 @@ function hexLayer(className) {
 }
 
 /**
- * Remove previously-placed portrait/label overlays so repaints don't pile up.
- * @param {HTMLElement} wrap The ring wrap.
+ * Measure an element's client rect, or null when it can't be measured.
+ * getBoundingClientRect can throw on a detached node in GameFace, so every
+ * measurement routes through here and never throws into the engine's dispatcher.
+ * @param {*} el The element to measure (nullable).
+ * @returns {DOMRect|null} The rect, or null when unavailable.
  */
-function stripOldOverlays(wrap) {
+function measuredRect(el) {
+  if (!el || typeof el.getBoundingClientRect !== "function") return null;
+  try {
+    return el.getBoundingClientRect();
+  } catch (_) {
+    // A detached / torn-down node: treat as not laid out.
+    return null;
+  }
+}
+
+/**
+ * Wrap a deferred (rAF / setTimeout) callback in a logged boundary so a throw
+ * inside it is reported instead of escaping into the engine's frame dispatcher.
+ * @param {string} label Diagnostic label for the log line.
+ * @param {() => void} fn The callback body.
+ * @returns {() => void} The guarded callback.
+ */
+function guardedFrame(label, fn) {
+  return () => {
+    try {
+      fn();
+    } catch (e) {
+      derr(label + ":", e);
+    }
+  };
+}
+
+/**
+ * Remove the portrait/label overlays this paint did NOT place, so repaints don't pile up while
+ * the reused ones stay untouched in the tree. (GameFace's NodeList / Element may lack `forEach` /
+ * `remove`, so iterate via Array.prototype and detach through the parent.)
+ * @param {HTMLElement} wrap The ring wrap.
+ * @param {Set<HTMLElement>} keep The overlays that belong to this paint.
+ */
+function stripStaleOverlays(wrap, keep) {
   const old = wrap.querySelectorAll(
     ".demographics-relations-portrait, .demographics-relations-node-label"
   );
-  old.forEach((el) => el.remove());
+  if (!old) return;
+  Array.prototype.forEach.call(old, (/** @type {*} */ el) => {
+    if (el && el.parentNode && !keep.has(el)) el.parentNode.removeChild(el);
+  });
 }
 
 /**
@@ -271,18 +362,14 @@ function ancestorByClass(el, cls) {
 
 /**
  * The on-screen bottom edge (px, viewport coords) the diagram must stay above:
- * the demographics frame's bottom, falling back to the viewport height. Measured
- * at runtime, so it tracks the actual resolution / Interface Size with no
- * hard-coded sizes.
+ * the demographics frame's bottom, falling back to the viewport height.
  * @param {Element} wrap The ring wrap.
  * @returns {number} The bottom limit in px, or 0 if it can't be determined.
  */
 function ringBottomLimit(wrap) {
   const frame = ancestorByClass(wrap.parentElement, "demographics-frame");
-  if (frame && typeof frame.getBoundingClientRect === "function") {
-    const r = frame.getBoundingClientRect();
-    if (r && r.height > 0) return r.bottom;
-  }
+  const r = measuredRect(frame);
+  if (r && r.height > 0) return r.bottom;
   if (typeof window !== "undefined" && window.innerHeight) return window.innerHeight;
   return 0;
 }
@@ -300,23 +387,16 @@ function ringBottomReserve(wrap) {
     relWrap && typeof relWrap.querySelector === "function"
       ? relWrap.querySelector(".demographics-relations-caption")
       : null;
-  const r = cap && typeof cap.getBoundingClientRect === "function" ? cap.getBoundingClientRect() : null;
+  const r = measuredRect(cap);
   return (r && r.height > 0 ? r.height : 0) + 4;
 }
 
 /**
- * Cap the diagram region's height to the space actually visible on-screen,
- * measured in pixels at runtime, so the ring's bottom node can never hang below
- * the frame off-screen — at ANY resolution or Interface Size.
- *
- * GameFace can resolve the relations flex height chain taller than the frame
- * (most visibly at larger Interface Sizes / shorter windows, and with the full-
- * size N=7..12 ring, where the bottom ~20% fell off-screen), letting the SVG box
- * extend past the frame's bottom edge. The SVG already scales to fit its box via
- * `preserveAspectRatio=meet`, so the fix is purely to bound the BOX: we measure
- * the body's top and the frame's bottom and set an explicit max-height on the
- * body (the wrap's flex parent — capping the body, not just the wrap, also pulls
- * the caption row back on-screen). No hard-coded sizes; re-runs on resize.
+ * Cap the diagram region's height to the space visible on-screen so the ring's
+ * bottom node never hangs below the frame. GameFace can resolve the relations
+ * flex height chain taller than the frame, so this measures the body's top and
+ * the frame's bottom and sets an explicit max-height on the body (the wrap's
+ * flex parent, which also pulls the caption row back on-screen).
  * @param {HTMLElement} wrap The ring wrap (its flex parent is the relations body).
  */
 function constrainRingHeight(wrap) {
@@ -326,35 +406,38 @@ function constrainRingHeight(wrap) {
   // Clear any prior cap first so we read the body's natural top (fixed by the
   // tab/toolbar chrome above it) and never compound caps across resize re-runs.
   body.style.maxHeight = "";
-  const rect = typeof body.getBoundingClientRect === "function" ? body.getBoundingClientRect() : null;
+  const rect = measuredRect(body);
   if (!rect || rect.width === 0 || rect.height === 0) return;
   const bottom = ringBottomLimit(wrap);
   if (!(bottom > 0)) return;
-  const avail = bottom - rect.top - ringBottomReserve(wrap);
+  // Everything measured here is VISUAL px; maxHeight is LOCAL px (frame may be transform-scaled).
+  const avail = toLocalPx(bottom - rect.top - ringBottomReserve(wrap));
   // Only cap when there's a sane positive budget that actually shrinks the box;
   // never set a tiny/negative height that would collapse the ring to nothing.
-  if (avail > 0 && avail < rect.height) body.style.maxHeight = avail + "px";
+  if (avail > 0 && avail < toLocalPx(rect.height)) body.style.maxHeight = avail + "px";
 }
 
 /**
  * Build the deferred-placement routine for portrait/icon overlays. The SVG's
- * viewBox is letterboxed via `xMidYMid meet`; whichever axis is tighter sets
- * `scale` and the other axis is centered. Re-defers a frame if layout isn't
- * ready yet.
+ * viewBox is letterboxed via `xMidYMid meet`, so the tighter axis sets `scale`
+ * and the other is centered; re-defers a frame if layout isn't ready yet.
  * @param {HTMLElement} wrap The ring wrap (overlay parent).
  * @param {Element} svg The SVG root.
  * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
  * @param {{w: number, h: number}} viewBox ViewBox width/height.
- * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
+ * @param {{ onNodeToggle?: (pid: number) => void, cache?: Map<string, HTMLElement> }} opts
+ *   Optional click handler, plus the overlay reuse cache shared across repaints so the leader
+ *   portraits (the ring's only engine-art elements) are never re-created by a filter change — a
+ *   fresh `fxs-icon` paints blank for a frame or more and visibly blinks.
  * @returns {() => void} The placement routine.
  */
-function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) {
-  // Bound the layout-wait re-defer. repaintRing wipes + rebuilds the ring on
-  // every node click, so an OLD ring's deferred placement can fire a frame later
-  // against a now-detached node whose rect stays 0×0 forever — previously that
-  // re-deferred UNBOUNDED, leaking one runaway rAF loop per orphaned ring. The
-  // retry cap is the hard backstop; the isConnected check below short-circuits
-  // sooner when the engine supports it (Coherent may not, hence both).
+function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
+  const onNodeToggle = opts?.onNodeToggle;
+  const cache = opts?.cache;
+  // Bound the layout-wait re-defer: repaintRing rebuilds the ring on every node
+  // click, so an old ring's deferred placement can fire against a detached node
+  // whose rect stays 0x0 forever. The retry cap is the hard backstop; the
+  // isConnected check short-circuits sooner when the engine supports it.
   let retries = 0;
   const MAX_LAYOUT_RETRIES = 120; // ~2s at 60fps; a ring unlaid by then is dead
   // Re-run next frame while layout isn't ready, up to the retry cap. The cap is
@@ -365,68 +448,70 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, onNodeToggle) 
     if (typeof requestAnimationFrame === "function") requestAnimationFrame(placePortraits);
     else setTimeout(placePortraits, 16);
   }
-  // getBoundingClientRect can throw on a detached node; treat that as not-ready.
-  function measuredRect() {
-    try {
-      return svg.getBoundingClientRect();
-    } catch (_) {
-      return null;
-    }
-  }
   /**
-   * Measure the (post-cap) SVG box and paint every queued overlay into it. Must run
-   * AFTER constrainRingHeight has reflowed, or the overlays letterbox into a stale
-   * (taller) box and the outer portraits fling off their nodes.
+   * Measure the (post-cap) SVG box and paint every queued overlay into it. Must
+   * run AFTER constrainRingHeight has reflowed, or the overlays letterbox into a
+   * stale box and the outer portraits fling off their nodes.
    */
-  function paintOverlays() {
+  function paintOverlaysNow() {
     if (wrap && wrap.isConnected === false) return;
-    const rect = measuredRect();
+    const rect = measuredRect(svg);
     if (!rect || rect.width === 0 || rect.height === 0) return;
     retries = 0;
-    stripOldOverlays(wrap);
-    const scale = Math.min(rect.width / viewBox.w, rect.height / viewBox.h);
+    // The SVG rect is VISUAL px; portraits are positioned in the wrap's LOCAL px.
+    const rw = toLocalPx(rect.width);
+    const rh = toLocalPx(rect.height);
+    const scale = Math.min(rw / viewBox.w, rh / viewBox.h);
     // Publish the ring's px-per-viewBox-unit so the legend can draw its sample
     // lines at the exact same scale (matched dash lengths + stroke width).
     setRingPxPerUnit(scale);
-    const contentLeft = (rect.width - viewBox.w * scale) / 2;
-    const contentTop = (rect.height - viewBox.h * scale) / 2;
+    const contentLeft = (rw - viewBox.w * scale) / 2;
+    const contentTop = (rh - viewBox.h * scale) / 2;
+    /** @type {Set<HTMLElement>} */
+    const placed = new Set();
     for (const p of portraitsToPlace) {
-      appendPortraitDiv(wrap, p, { contentLeft, contentTop, scale }, onNodeToggle);
+      placed.add(appendPortraitDiv(wrap, p, { contentLeft, contentTop, scale }, onNodeToggle, cache));
+    }
+    stripStaleOverlays(wrap, placed);
+    // Drop cache entries this ring no longer uses, so switching top tabs can't grow it forever.
+    if (cache) {
+      for (const [k, el] of cache) {
+        if (!placed.has(el)) cache.delete(k);
+      }
     }
     dlog("placed " + portraitsToPlace.length + " portraits @scale=" + scale.toFixed(2));
   }
+  const paintOverlays = guardedFrame("paintOverlays", paintOverlaysNow);
   /**
    * Position every queued overlay, deferring a frame if layout isn't ready.
+   * (Guarded below: the retry path re-enters this as a rAF / timeout callback.)
    */
-  function placePortraits() {
+  function placePortraitsNow() {
     if (portraitsToPlace.length === 0) return;
     // Liveness guard: a newer repaint detached this wrap → stop (don't paint into
     // or spin on an orphan). Only bails when isConnected is explicitly false, so
     // an engine without isConnected (undefined) falls through to the retry cap.
     if (wrap && wrap.isConnected === false) return;
-    const rect = measuredRect();
+    const rect = measuredRect(svg);
     if (!rect || rect.width === 0 || rect.height === 0) {
       scheduleRetry();
       return;
     }
-    // Cap the diagram to the on-screen budget so the SVG box can't overrun the
-    // frame. The cap reflows the SVG SMALLER; a same-tick getBoundingClientRect can
-    // still return the pre-cap (taller) size in Gameface, which would make the
-    // overlays' letterbox scale larger than the SVG's own and push the outer
-    // portraits off their nodes (proportional to distance from center). So paint on
-    // the NEXT frame, once the cap has actually reflowed.
+    // Cap the diagram to the on-screen budget, then paint on the NEXT frame: a
+    // same-tick getBoundingClientRect can still return the pre-cap (taller) size
+    // in Gameface and push the outer portraits off their nodes.
     if (wrap) constrainRingHeight(wrap);
     if (typeof requestAnimationFrame === "function") requestAnimationFrame(paintOverlays);
     else paintOverlays();
   }
+  const placePortraits = guardedFrame("placePortraits", placePortraitsNow);
   return placePortraits;
 }
 
 /**
  * Create the ring's root <svg>: a viewBox sized to the geometry with
  * 'xMidYMid meet' (uniform scale + letterbox, so shapes stay proportional
- * regardless of the element's pixel size). Extracted to keep `buildRingSvg`
- * under the line cap.
+ * regardless of the element's pixel size).
  * @param {number} viewBoxW ViewBox width.
  * @param {number} viewBoxH ViewBox height.
  * @returns {SVGElement} The configured SVG root (not yet mounted).
@@ -441,16 +526,17 @@ function createRingSvgRoot(viewBoxW, viewBoxH) {
 
 /**
  * Build the SVG ring with leader portraits and connector lines. `viewerPid` is
- * the civ whose perspective the ring is drawn FROM (the CS tab lets the user
- * pick a non-local major as the viewer); the viewer is styled like the local
+ * the civ whose perspective the ring is drawn from; it is styled like the local
  * player so it stays the prominent node.
  * @param {number[]} ringIds Node ids to lay out on the ring.
  * @param {Record<string, NodeInfo>} names Node display-info map.
  * @param {Edge[]} edges Edges to draw.
  * @param {number} localPid Local player id.
  * @param {{ viewerPid?: number, selectedNodeIds?: Set<number>,
- *   onNodeToggle?: (pid: number) => void }} [options]
- *   Viewer (defaults to `localPid`) + node-focus interaction config.
+ *   onNodeToggle?: (pid: number) => void,
+ *   portraitCache?: Map<string, HTMLElement> }} [options]
+ *   Viewer (defaults to `localPid`) + node-focus interaction config, plus an optional overlay
+ *   reuse cache shared across repaints (see {@link makePlacePortraits}).
  * @returns {HTMLElement} The ring wrap element.
  */
 export function buildRingSvg(ringIds, names, edges, localPid, options) {
@@ -494,7 +580,7 @@ export function buildRingSvg(ringIds, names, edges, localPid, options) {
     svg,
     portraitsToPlace,
     { w: viewBoxW, h: viewBoxH },
-    onNodeToggle
+    { onNodeToggle, cache: options?.portraitCache }
   );
   // Expose the placement so the caller can run it AFTER mounting the wrap (the
   // overlays need the laid-out wrap to measure). Running it synchronously
@@ -553,17 +639,15 @@ function createEdgeTooltip(wrap) {
   wrap.appendChild(tip);
   return {
     show(text, clientX, clientY) {
+      const r = measuredRect(wrap);
+      if (!r) return;
       tip.textContent = text;
       tip.style.display = "block";
-      const r = wrap.getBoundingClientRect();
-      // Cursor position within the wrap.
-      const x = clientX - r.left;
-      const y = clientY - r.top;
-      // Default offset down-right of the cursor (a readable gap so the pointer
-      // graphic never covers the label), but FLIP to up-left near the wrap's
-      // right / bottom edge so the tip never clips off-panel — at any resolution.
-      // (Mirrors the war-graph / Gantt tooltip edge-flip; previously a fixed CSS
-      // down-right transform meant edges near the panel's right/bottom clipped.)
+      // Cursor position within the wrap, in the wrap's LOCAL px (clientX and the rect are visual).
+      const x = toLocalPx(clientX - r.left);
+      const y = toLocalPx(clientY - r.top);
+      // Default offset down-right of the cursor, but FLIP to up-left near the
+      // wrap's right / bottom edge so the tip never clips off-panel.
       const GAP_X = 14;
       const GAP_Y = 8;
       const tw = tip.offsetWidth || 0;
@@ -596,7 +680,7 @@ const HOVER_DIST = 1.9;
  * @returns {{x: number, y: number}|null} ViewBox-space point, or null.
  */
 function clientToViewBox(svg, geo, cx, cy) {
-  const r = svg.getBoundingClientRect();
+  const r = measuredRect(svg);
   if (!r || r.width <= 0 || r.height <= 0) return null;
   const scale = Math.min(r.width / geo.viewBoxW, r.height / geo.viewBoxH);
   if (!(scale > 0)) return null;
@@ -660,7 +744,11 @@ function setupEdgeHover(wrap, svg, geo, records, tooltip) {
     }
     tooltip.hide();
   };
+  // Both handlers run from the engine's input dispatcher, so a detached wrap (a
+  // repaint replaced it while the cursor was still over it) must return early
+  // rather than measure / restyle an orphan, and nothing below may throw.
   wrap.addEventListener("mousemove", (/** @type {*} */ ev) => {
+    if (wrap.isConnected === false || !ev) return;
     const pt = clientToViewBox(svg, geo, ev.clientX, ev.clientY);
     const hit = pt ? nearestEdge(records, pt) : null;
     if (!hit) {
@@ -674,7 +762,10 @@ function setupEdgeHover(wrap, svg, geo, records, tooltip) {
     }
     tooltip.show(hit.label, ev.clientX, ev.clientY);
   });
-  wrap.addEventListener("mouseleave", clear);
+  wrap.addEventListener("mouseleave", () => {
+    if (wrap.isConnected === false) return;
+    clear();
+  });
 }
 
 /**

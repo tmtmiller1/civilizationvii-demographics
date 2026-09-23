@@ -1,10 +1,8 @@
 // chart-line-event-markers.js
 //
 // Crisis stage onset + age-boundary marker data builders and Chart.js plugins
-// used by chart-line.js. Extracted from chart-line.js.
-// Both marker families render as vertical lines + label pills over the plot
-// area, share the same x-scale clipping pattern, and consume the same age
-// offset table, so they ride together.
+// used by chart-line.js. Both marker families render as vertical lines + label
+// pills over the plot area and share the same clipping and age offset table.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
@@ -48,9 +46,8 @@ function resolveChartFontFamily(chart) {
  */
 
 // CRISIS_STAGE_LABELS (LOC tags) + CRISIS_STAGE_COLORS come from
-// crisis-stage-data.js so the line-chart markers, the Crises page, and the war
-// timeline share one source of truth. Labels are LOC tags translated at render
-// (in makeCrisisMarker), not baked at module load.
+// crisis-stage-data.js, shared with the Crises page and the war timeline.
+// Labels are translated at render (makeCrisisMarker), not at module load.
 
 /**
  * Shared crisis-marker context: age offsets/boundaries, the game seed, and the
@@ -124,11 +121,9 @@ function detectCrisisOnset(s, prevHolder, ctx) {
   const raw = readSampleCrisisStage(s);
   if (raw === undefined) return [];
   const prev = prevHolder.prev;
-  // raw is the DISPLAY value (engine+1 from the accessor): 0..4. A transition
-  // from a prior non-negative stage up to ≥1 is a stage onset. The `prev >= 0`
-  // guard intentionally does NOT mark a crisis already in progress at the FIRST
-  // recorded sample - we only mark onsets we actually observed in-history
-  // (normal play samples from turn 1, so real onsets are always captured).
+  // raw is the DISPLAY value (engine+1): 0..4. A rise from a prior non-negative
+  // stage to >= 1 is an onset; the `prev >= 0` guard skips a crisis already in
+  // progress at the first recorded sample, so only observed onsets are marked.
   /** @type {CrisisMarker[]} */
   const markers = [];
   if (raw > prev && raw >= 1 && prev >= 0) {
@@ -252,9 +247,8 @@ function measureCrisisPill(ctx2, mk, family) {
 
 /**
  * The widest crisis-marker label pill (in px) across all markers, measured with
- * the chart's own context + font. Used by the renderer to size exact right-edge
- * future padding so the label always has pixel room to draw right of its line,
- * regardless of how wide the y-axis labels (and thus the plot area) are.
+ * the chart's own context + font, so the renderer can pad the right edge enough
+ * for the label to draw right of its line.
  * @param {*} chart The Chart instance (provides ctx + font family).
  * @param {*[]} markers The crisis markers.
  * @returns {number} The widest pill width in px (0 when there are none).
@@ -381,7 +375,7 @@ export function makeCrisisMarkerPlugin(crisisMarkers) {
     afterDatasetsDraw(c) {
       if (!crisisMarkers || crisisMarkers.length === 0) return;
       const xScale = c.scales.x;
-      if (!xScale) return;
+      if (!xScale || !c.chartArea) return;
       const ctx2 = c.ctx;
       const { top, bottom, right } = c.chartArea;
       const family = resolveChartFontFamily(c);
@@ -406,7 +400,7 @@ export function makeAgeMarkerPlugin(ageMarkers) {
     afterDatasetsDraw(c) {
       if (!ageMarkers || ageMarkers.length === 0) return;
       const xScale = c.scales.x;
-      if (!xScale) return;
+      if (!xScale || !c.chartArea) return;
       const ctx2 = c.ctx;
       const { top, bottom, right } = c.chartArea;
       const family = resolveChartFontFamily(c);
@@ -450,9 +444,8 @@ function strokeAgeLine(ctx2, mk, x, top, bottom) {
 
 /**
  * Draw an age boundary's label pill (purple chrome), flipping left near the
- * right edge. Anchored to the BOTTOM of the plot so it can never collide with the
- * crisis labels (which stack from the top) - even when an age transition and a
- * crisis fall close together early in a new age.
+ * right edge. Anchored to the bottom of the plot so it never collides with the
+ * crisis labels, which stack from the top.
  * @param {*} ctx2 The 2D canvas context.
  * @param {AgeMarker} mk The age marker.
  * @param {number} x The marker pixel x.
@@ -478,11 +471,9 @@ function drawAgeLabel(ctx2, mk, x, area) {
 }
 
 // ── Refugees-chart event markers: war + disaster onsets ──────────────────────────────────────────
-// The Emigration refugees graph annotates WHEN displacement happened: war onsets (from the
-// Demographics war history) and notable disaster onsets (from the Emigration mod's exposed event
-// log). Both are placed on the continuous timeline by their recorded chart turn, else by matching
-// their game-year label to a sampled year (the same remap the conflicts Gantt uses), so cross-mod
-// turn clocks never have to agree.
+// War onsets (from the war history) and disaster onsets (from a companion's event log) are
+// placed on the timeline by recorded chart turn, else by matching their game-year label to a
+// sampled year, so cross-mod turn clocks never have to agree.
 
 const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red, war onsets
 const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber, disaster onsets
@@ -712,7 +703,7 @@ export function makeRefugeeEventMarkerPlugin(markers) {
     afterDatasetsDraw(c) {
       if (!markers || markers.length === 0) return;
       const xScale = c.scales.x;
-      if (!xScale) return;
+      if (!xScale || !c.chartArea) return;
       const ctx2 = c.ctx;
       const { top, bottom, right } = c.chartArea;
       const family = resolveChartFontFamily(c);

@@ -16,22 +16,32 @@
      default.css:10730 .text-accent-4        { color: #85878c }
      default.css:5382  .bg-primary           { background-color: #4c5366 }
      default.css:2368  .fxs-header           { color: #a8845a; gradient #fffdfa }
-   Replace bespoke gold (var(--ia-accent-gold)) with these where it makes semantic sense.
+   Replace bespoke gold (var(--dg-ia-accent-gold)) with these where it makes semantic sense.
    ════════════════════════════════════════════════════════════════════════ */
+/* Row-gap on a wrapping flex row (measured 2026-09-23, 1.5.0)
+   These rows carry a two-value `gap`. The original comment here said GameFace drops a single-value
+   row-gap when the row wraps. That was MEASURED FALSE on 1.5.0: a live geometry test (four 90px
+   boxes in a 200px wrapping flex row, gap set both ways, via setAttribute and via style.cssText,
+   in px and in rem) produced an identical 14px / 0.4rem vertical gap for `gap:X`, `gap:X X` and the
+   row-gap/column-gap longhands, against a 0px no-gap control. It may well have been true on an
+   earlier build; it is not true now. The two-value form is kept because it is explicit and costs
+   nothing - NOT because the single-value form is broken. Do not add new workarounds for this. */
 :root {
-    --ia-text-secondary:    #e5d2ac;   /* primary heading/title color  */
-    --ia-text-secondary-2:  #c0a875;   /* dimmer heading variant       */
-    --ia-text-accent:       #616266;   /* tertiary text                */
-    --ia-text-accent-2:     #c2c4cc;   /* body text                    */
-    --ia-text-accent-4:     #85878c;   /* muted gridlines / labels     */
-    --ia-fxs-header:        #a8845a;   /* section header copper        */
-    --ia-bg-primary:        #4c5366;   /* dark slate body bg           */
-    --ia-accent-gold:       #f3c34c;   /* civ-bright gold for emphasis */
-    --ia-accent-gold-soft:  #c9a24c;   /* gold border tone             */
-    --ia-frame-bg:          rgba(20, 16, 10, 0.55);
-    --ia-frame-border:      rgba(168, 132, 90, 0.40);
-    --ia-frame-border-hot:  rgba(229, 210, 172, 0.85);
-    --ia-divider:           rgba(168, 132, 90, 0.30);
+    --dg-ia-text-secondary:    #e5d2ac;   /* primary heading/title color  */
+    --dg-ia-text-secondary-2:  #c0a875;   /* dimmer heading variant       */
+    --dg-ia-text-accent:       #616266;   /* tertiary text                */
+    --dg-ia-text-accent-2:     #c2c4cc;   /* body text                    */
+    --dg-ia-text-accent-4:     #85878c;   /* muted gridlines / labels     */
+    --dg-ia-fxs-header:        #a8845a;   /* section header copper        */
+    --dg-ia-bg-primary:        #4c5366;   /* dark slate body bg           */
+    --dg-ia-accent-gold:       #f3c34c;   /* civ-bright gold for emphasis */
+    --dg-ia-accent-gold-soft:  #c9a24c;   /* gold border tone             */
+    --dg-ia-frame-bg:          rgba(20, 16, 10, 0.55);
+    /* Opaque, and always applied through the four `border-<side>-color` longhands: `border-color`
+       is a shorthand and GameFace drops `var()` in shorthands. See the note in the history sheet. */
+    --dg-ia-frame-border:      #a8845a;   /* card/frame hairline          */
+    --dg-ia-frame-border-hot:  #e5d2ac;   /* hover/selected frame         */
+    --dg-ia-divider:           #7a6242;   /* inner rules, tables, chips   */
 }
 
 /* Reusable "section card" — mirrors the look of an inner Victors panel:
@@ -39,17 +49,27 @@
    section's path. Apply via `class="demographics-section"` plus inline
    border-top-color for path-specific tints. */
 .demographics-section {
-    background: var(--ia-frame-bg);
-    border: 1px solid var(--ia-frame-border);
-    border-top: 0.18rem solid var(--ia-fxs-header);
+    background-color: var(--dg-ia-frame-bg);
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
+    border-top-width: 0.18rem;
+    border-top-style: solid;
+    border-top-color: var(--dg-ia-fxs-header);
     border-radius: 0.2rem;
-    padding: 0.55rem 0.8rem 0.7rem;
+    padding-top: calc(0.55 * var(--dg-u));
+    padding-right: calc(0.8 * var(--dg-u));
+    padding-bottom: calc(0.7 * var(--dg-u));
+    padding-left: calc(0.8 * var(--dg-u));
 }
 
 /* Reusable section/group heading typography — matches the Victors panel's
    uppercase font-title tracking-150 in text-gradient-secondary. */
 .demographics-section-title {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-105);
     font-weight: 800;
@@ -57,7 +77,7 @@
     letter-spacing: 0.1em;
 }
 .demographics-section-subtitle {
-    color: var(--ia-text-accent-2);
+    color: var(--dg-ia-text-accent-2);
     font-family: BodyFont, sans-serif;
     font-size: var(--dg-fs-85);
     line-height: 1.3;
@@ -81,6 +101,10 @@
     justify-content: center;
     z-index: 90;
     pointer-events: auto;
+    /* The frame is laid out LARGER than the viewport (1/s) and drawn scaled down by s
+       (demographics-font-ladder.js applyVisualScale). Its oversized layout box must not
+       scroll or bleed; the transform brings the visible result back inside the viewport. */
+    overflow: hidden;
 }
 
 /* While another context (e.g. the native Options screen) is pushed on top, drop our z-index so that
@@ -90,6 +114,8 @@
     z-index: auto;
 }
 
+/* Sizing is the PRE-JS fallback only: applyVisualScale sets inline width/height/transform on the
+   frame each attach and resize (inline wins), laying it out at (96/s)vw x (94/s)vh and scaling by s. */
 .demographics-frame {
     width: 96vw;
     height: 94vh;
@@ -105,9 +131,31 @@
     }
 }
 
+/* The header row: the analytics-policy banner (when constrained) and the Options button, ONCE in
+   the frame header, top-right at title level, just left of the close button - not per view. The
+   button used to sit alone on its own row under the ranking / relations sub-tabs and the banner in
+   a bottom row; both cost content rows on every tab. JS keeps the row on the title's measured
+   centre line (alignOptionsHeaderButton). */
+.demographics-header-right {
+    position: absolute;
+    top: calc(0.95 * var(--dg-u));
+    right: calc(3.4 * var(--dg-u));
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    column-gap: calc(0.6 * var(--dg-u));
+}
+.demographics-header-right .demographics-policy-banner {
+    padding-top: calc(0.12 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.12 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
+    font-size: var(--dg-fs-72);
+    white-space: nowrap;
+}
 .demographics-title {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: calc(0.5 * var(--dg-u));
+    margin-bottom: calc(0.5 * var(--dg-u));
 }
 
 .demographics-body {
@@ -125,8 +173,8 @@
    full width. flex+justify-center was collapsing the bar; use block + w-full
    on the bar itself (set in screen-demographics.js). */
 .demographics-tab-bar-host {
-    margin-top: 0.6rem;
-    margin-bottom: 0.6rem;
+    margin-top: calc(0.6 * var(--dg-u));
+    margin-bottom: calc(0.6 * var(--dg-u));
     width: 100%;
     display: block;
 }
@@ -153,14 +201,17 @@
 .demographics-chart-title {
     width: 100%;
     text-align: center;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-top: 0.4rem;
-    margin-bottom: 0.5rem;
-    padding: 0.1rem 0.4rem;
+    margin-top: calc(0.4 * var(--dg-u));
+    margin-bottom: calc(0.5 * var(--dg-u));
+    padding-top: calc(0.1 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.1 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     line-height: 1.2;
     flex: 0 0 auto;
 }
@@ -194,31 +245,43 @@
 .demographics-chart-line-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.1rem 0.35rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
+    padding-top: calc(0.1 * var(--dg-u));
+    padding-right: calc(0.35 * var(--dg-u));
+    padding-bottom: calc(0.1 * var(--dg-u));
+    padding-left: calc(0.35 * var(--dg-u));
     border-radius: 0.2rem;
-    background: var(--ia-frame-bg);
-    border: 1px solid var(--ia-frame-border);
+    background-color: var(--dg-ia-frame-bg);
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     white-space: nowrap;
     line-height: 1.1;
     font-size: var(--dg-fs-72);
     font-weight: 600;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     pointer-events: auto;
     user-select: none;
 }
 .demographics-chart-line-label:hover {
-    border-color: var(--ia-frame-border-hot);
+    border-top-color: var(--dg-ia-frame-border-hot);
+    border-right-color: var(--dg-ia-frame-border-hot);
+    border-bottom-color: var(--dg-ia-frame-border-hot);
+    border-left-color: var(--dg-ia-frame-border-hot);
     background: rgba(40, 30, 14, 0.85);
 }
 .demographics-chart-line-label.is-hidden {
     opacity: 0.55;
-    color: var(--ia-text-secondary-2);
+    color: var(--dg-ia-text-secondary-2);
     font-size: var(--dg-fs-72);
 }
 .demographics-chart-line-label.is-eliminated {
     opacity: 0.4;
-    color: var(--ia-text-accent-4);
+    color: var(--dg-ia-text-accent-4);
 }
 .demographics-chart-line-label.is-dimmed {
     opacity: 0.3;
@@ -235,8 +298,12 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.4rem;
-    padding: 0.05rem 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     width: 100%;
     flex: 0 0 auto;
 }
@@ -247,7 +314,7 @@
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
-    gap: 0.4rem 0.4rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
+    gap: 0.4rem 0.4rem; /* two-value kept: see the row-gap note at the top of this file */
     /* Default: keep the toolbar at the far right. When no time filter is present (e.g. the Crises
        page) the toolbar is the lone child, and Coherent doesn't reliably honor `margin-left:auto`
        for flex alignment — justify-content does. The `--centered` modifier overrides this to center. */
@@ -283,7 +350,7 @@
     align-items: center;
     justify-content: flex-start;
     flex-wrap: nowrap; /* in a column, keep the rows stacked (don't spill into extra columns) */
-    row-gap: 0.35rem;
+    row-gap: calc(0.35 * var(--dg-u));
 }
 /* First row: the pill row. For metric/radar pages that's the time-filter/snapshot pills; for a
    companion panel (Emigration) it's the panel's own controls (`.demographics-panel-controls`). */
@@ -303,15 +370,16 @@
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    row-gap: calc(0.3 * var(--dg-u));
+    column-gap: calc(0.3 * var(--dg-u));
 }
 /* Wars view: extra gap between the age-filter pill row and this toolbar. */
 .demographics-chart-toolbar-wars {
-    margin-top: 0.7rem;
+    margin-top: calc(0.7 * var(--dg-u));
 }
 .demographics-chart-toolbar-label {
-    color: var(--ia-accent-gold-soft);
-    margin-right: 0.2rem;
+    color: var(--dg-ia-accent-gold-soft);
+    margin-right: calc(0.2 * var(--dg-u));
 }
 /* Toolbar buttons styled with the engine's `hud_production_pill` BLP as a
    border-image, same chrome the native dedication-pills use. Drops the
@@ -319,8 +387,11 @@
    reads as native Civ7 UI. Cite: triumph-card.css:1-5 (.dedication-pill). */
 .demographics-chart-toolbar-btn {
     display: inline-block;
-    padding: 0.22rem 0.85rem;
-    color: var(--ia-text-secondary);
+    padding-top: calc(0.22 * var(--dg-u));
+    padding-right: calc(0.85 * var(--dg-u));
+    padding-bottom: calc(0.22 * var(--dg-u));
+    padding-left: calc(0.85 * var(--dg-u));
+    color: var(--dg-ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -339,7 +410,7 @@
     transition: color 0.12s, text-shadow 0.12s;
 }
 .demographics-chart-toolbar-btn:hover {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     /* Rollover glow via text-shadow only. A CSS `filter` (brightness/drop-shadow)
        here forces the border-image BLP to re-rasterize each frame in GameFace,
        which flickers — text-shadow gives the same glow without that repaint. */
@@ -356,7 +427,7 @@
 
 /* War label sitting on top of each Gantt bar. */
 .demographics-chart-war-label {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-size: var(--dg-fs-72);
     font-weight: 600;
     white-space: nowrap;
@@ -366,8 +437,8 @@
     user-select: none;
 }
 .demographics-chart-line-label-dot {
-    width: 0.55rem;
-    height: 0.55rem;
+    width: calc(0.55 * var(--dg-u));
+    height: calc(0.55 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
     border: 1px solid rgba(28, 20, 8, 0.7);
@@ -391,23 +462,23 @@
     user-select: none;
 }
 .demographics-chart-x-tick-year {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04em;
 }
 .demographics-chart-x-tick-turn {
-    color: var(--ia-text-accent-2);
+    color: var(--dg-ia-text-accent-2);
     font-size: var(--dg-fs-72);
     font-weight: 500;
-    margin-top: 0.05rem;
+    margin-top: calc(0.05 * var(--dg-u));
 }
 
 /* Axis titles — descriptive name for what the X / Y axis represents,
    shown in addition to the per-tick units already drawn at each gridline. */
 .demographics-chart-axis-title {
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-85);
     font-weight: 700;
@@ -429,18 +500,29 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 0.35rem 0.35rem; /* two-value: GameFace drops single-value row-gap on flex-wrap */
-    padding: 0.05rem 0.4rem;
+    gap: 0.35rem 0.35rem; /* two-value kept: see the row-gap note at the top of this file */
+    padding-top: calc(0.05 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.05 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     width: 100%;
     flex: 0 0 auto;
 }
 .demographics-chart-time-filter-pill {
     display: inline-block;
-    padding: 0.18rem 0.55rem;
-    border: 1px solid var(--ia-frame-border);
+    padding-top: calc(0.18 * var(--dg-u));
+    padding-right: calc(0.55 * var(--dg-u));
+    padding-bottom: calc(0.18 * var(--dg-u));
+    padding-left: calc(0.55 * var(--dg-u));
+    border-width: 1px;
+    border-style: solid;
+    border-top-color: var(--dg-ia-frame-border);
+    border-right-color: var(--dg-ia-frame-border);
+    border-bottom-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-ia-frame-border);
     border-radius: 0.2rem;
-    background: var(--ia-frame-bg);
-    color: var(--ia-text-secondary);
+    background-color: var(--dg-ia-frame-bg);
+    color: var(--dg-ia-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -451,12 +533,15 @@
     user-select: none;
 }
 .demographics-chart-time-filter-pill:hover {
-    border-color: var(--ia-frame-border-hot);
+    border-top-color: var(--dg-ia-frame-border-hot);
+    border-right-color: var(--dg-ia-frame-border-hot);
+    border-bottom-color: var(--dg-ia-frame-border-hot);
+    border-left-color: var(--dg-ia-frame-border-hot);
 }
 .demographics-chart-time-filter-pill.is-active {
     border-color: rgba(243, 195, 76, 0.95);
     background: rgba(60, 45, 20, 0.85);
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-weight: 600;
 }
 /* Disabled (cross-age) filter pill. Greyed via color / border alpha rather
@@ -477,46 +562,50 @@
     position: absolute;
     pointer-events: none;
     z-index: 50;
-    min-width: 12rem;
-    max-width: 24rem;
-    padding: 0.4rem 0.6rem;
+    min-width: calc(12 * var(--dg-u));
+    max-width: calc(24 * var(--dg-u));
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.6 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.6 * var(--dg-u));
     background: rgba(20, 16, 10, 0.95);
     border: 1px solid rgba(243, 195, 76, 0.8);
     border-radius: 0.25rem;
     font-size: var(--dg-fs-85);
     line-height: 1.25;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     box-shadow: 0 0.15rem 0.6rem rgba(0, 0, 0, 0.7);
 }
 .demographics-chart-hover-tooltip-header {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-weight: 700;
-    margin-bottom: 0.3rem;
-    padding-bottom: 0.2rem;
+    margin-bottom: calc(0.3 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
     border-bottom: 1px solid rgba(201, 162, 76, 0.3);
 }
 .demographics-chart-hover-tooltip-row {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.4rem;
+    row-gap: calc(0.4 * var(--dg-u));
+    column-gap: calc(0.4 * var(--dg-u));
 }
 .demographics-chart-hover-tooltip-swatch {
-    width: 0.6rem;
-    height: 0.6rem;
+    width: calc(0.6 * var(--dg-u));
+    height: calc(0.6 * var(--dg-u));
     border-radius: 50%;
     flex-shrink: 0;
     border: 1px solid rgba(28, 20, 8, 0.7);
 }
 .demographics-chart-hover-tooltip-name {
     flex: 1 1 auto;
-    color: var(--ia-text-secondary);
+    color: var(--dg-ia-text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .demographics-chart-hover-tooltip-value {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     font-variant-numeric: tabular-nums;
     margin-left: auto;
 }
@@ -534,17 +623,19 @@
 /* WorldRankingsAllCivs column header: "(formerly X, Y)" suffix below current civ name. */
 .demographics-worldrankings-allcivs-civ-header-formerly {
     color: rgba(243, 231, 196, 0.65);
-    font-style: italic;
-    margin-top: 0.1rem;
+    margin-top: calc(0.1 * var(--dg-u));
 }
 
 /* Reset button shown in the corner cell when civs are hidden. */
 .demographics-worldrankings-allcivs-reset-btn {
-    padding: 0.2rem 0.5rem;
+    padding-top: calc(0.2 * var(--dg-u));
+    padding-right: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.2 * var(--dg-u));
+    padding-left: calc(0.5 * var(--dg-u));
     border: 1px solid rgba(201, 162, 76, 0.6);
     border-radius: 0.2rem;
     background: rgba(40, 30, 14, 0.7);
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
@@ -557,9 +648,15 @@
 /* ── Per-metric chart caption (GDP formula explanation, etc.) ───────────── */
 .demographics-chart-caption {
     width: 100%;
-    max-width: 80rem;
-    margin: 0.4rem auto 0.2rem;
-    padding: 0.4rem 0.8rem;
+    max-width: calc(80 * var(--dg-u));
+    margin-top: calc(0.4 * var(--dg-u));
+    margin-right: auto;
+    margin-bottom: calc(0.2 * var(--dg-u));
+    margin-left: auto;
+    padding-top: calc(0.4 * var(--dg-u));
+    padding-right: calc(0.8 * var(--dg-u));
+    padding-bottom: calc(0.4 * var(--dg-u));
+    padding-left: calc(0.8 * var(--dg-u));
     color: rgba(243, 231, 196, 0.85);
     background: rgba(20, 16, 10, 0.55);
     border: 1px solid rgba(201, 162, 76, 0.35);
@@ -567,22 +664,28 @@
     line-height: 1.35;
     text-align: center;
 }
-.demographics-chart-caption b { color: var(--ia-accent-gold); }
+.demographics-chart-caption b { color: var(--dg-ia-accent-gold); }
 .demographics-chart-caption i { opacity: 0.75; }
 
 /* Compact single-line GDP affordance (replaces the multi-line caption block).
    Keeps the chart canvas tall while still surfacing the formula via tooltip. */
 .demographics-chart-caption-compact {
     width: 100%;
-    margin: 0.15rem 0 0 0;
-    padding: 0.1rem 0.4rem;
+    margin-top: calc(0.15 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: calc(0.1 * var(--dg-u));
+    padding-right: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.1 * var(--dg-u));
+    padding-left: calc(0.4 * var(--dg-u));
     color: rgba(243, 231, 196, 0.7);
     text-align: center;
     cursor: help;
     line-height: 1.2;
 }
 .demographics-chart-caption-compact:hover {
-    color: var(--ia-accent-gold);
+    color: var(--dg-ia-accent-gold);
 }
 
 /* Rich-content popover that appears when hovering the ⓘ caption trigger.
@@ -597,9 +700,12 @@
     left: 50%;
     transform: translateX(-50%) translateY(-0.4rem);
     z-index: 100;
-    min-width: 24rem;
-    max-width: 36rem;
-    padding: 0.85rem 1rem 0.95rem;
+    min-width: calc(24 * var(--dg-u));
+    max-width: calc(36 * var(--dg-u));
+    padding-top: calc(0.85 * var(--dg-u));
+    padding-right: calc(1 * var(--dg-u));
+    padding-bottom: calc(0.95 * var(--dg-u));
+    padding-left: calc(1 * var(--dg-u));
     line-height: 1.35;
     text-align: left;
     pointer-events: auto;
@@ -607,21 +713,24 @@
 .demographics-metric-info-title {
     color: rgb(236, 224, 198);
     font-weight: 700;
-    margin-bottom: 0.4rem;
-    padding-bottom: 0.3rem;
+    margin-bottom: calc(0.4 * var(--dg-u));
+    padding-bottom: calc(0.3 * var(--dg-u));
     border-bottom: 1px solid rgba(204, 188, 163, 0.2);
 }
 .demographics-metric-info-body p { margin: 0.3rem 0; }
 .demographics-metric-info-body ul {
-    margin: 0.2rem 0 0.4rem 1rem;
+    margin-top: calc(0.2 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.4 * var(--dg-u));
+    margin-left: calc(1 * var(--dg-u));
     padding: 0;
     list-style: disc;
 }
 .demographics-metric-info-body li { margin: 0.1rem 0; }
-.demographics-metric-info-body b { color: var(--ia-accent-gold); }
+.demographics-metric-info-body b { color: var(--dg-ia-accent-gold); }
 .demographics-metric-info-body i {
     color: rgba(243, 231, 196, 0.7);
-    font-style: italic;
+    font-style: normal;
 }
 
 /* ── Per-civ legend grid ────────────────────────────────────────────────── */
@@ -629,22 +738,24 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    gap: 0.8rem;
-    margin-top: 0.6rem;
+    row-gap: calc(0.8 * var(--dg-u));
+    column-gap: calc(0.8 * var(--dg-u));
+    margin-top: calc(0.6 * var(--dg-u));
 }
 
 .demographics-legend-host {
     flex: 0 0 auto;
-    min-width: 18rem;
+    min-width: calc(18 * var(--dg-u));
 }
 
 .demographics-legend {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.25rem;
+    row-gap: calc(0.25 * var(--dg-u));
+    column-gap: calc(0.25 * var(--dg-u));
     width: 100%;
-    max-width: 60rem;
+    max-width: calc(60 * var(--dg-u));
     margin: 0 auto;
 }
 
@@ -652,7 +763,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0.25rem 0.5rem;
+    padding-top: calc(0.25 * var(--dg-u));
+    padding-right: calc(0.5 * var(--dg-u));
+    padding-bottom: calc(0.25 * var(--dg-u));
+    padding-left: calc(0.5 * var(--dg-u));
     border: 1px solid rgba(201, 162, 76, 0.4);
     border-radius: 0.2rem;
     background: rgba(20, 16, 10, 0.55);
@@ -661,14 +775,14 @@
 }
 
 .demographics-legend-leader {
-    color: var(--ia-accent-gold);
-    margin-right: 0.6rem;
+    color: var(--dg-ia-accent-gold);
+    margin-right: calc(0.6 * var(--dg-u));
     flex: 1 1 auto;
 }
 .demographics-legend-civ {
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
-    margin-right: 0.4rem;
+    margin-right: calc(0.4 * var(--dg-u));
 }
 
 .demographics-legend-entry:hover {
@@ -681,10 +795,10 @@
 
 /* "Pip" visual — filled disc when visible, hollow when hidden. */
 .demographics-legend-pip {
-    width: 0.7rem;
-    height: 0.7rem;
+    width: calc(0.7 * var(--dg-u));
+    height: calc(0.7 * var(--dg-u));
     border-radius: 50%;
-    margin-right: 0.4rem;
+    margin-right: calc(0.4 * var(--dg-u));
     flex-shrink: 0;
     border: 1px solid currentColor;
     background: currentColor;
@@ -695,28 +809,28 @@
 }
 
 .demographics-legend-swatch {
-    width: 0.7rem;
-    height: 0.25rem;
-    margin-right: 0.4rem;
+    width: calc(0.7 * var(--dg-u));
+    height: calc(0.25 * var(--dg-u));
+    margin-right: calc(0.4 * var(--dg-u));
     border-radius: 0.1rem;
     flex-shrink: 0;
 }
 
 .demographics-legend-name {
-    color: var(--ia-accent-gold);
-    margin-right: 0.4rem;
+    color: var(--dg-ia-accent-gold);
+    margin-right: calc(0.4 * var(--dg-u));
 }
 
 .demographics-legend-value {
-    margin-left: 0.6rem;
-    color: var(--ia-text-secondary);
+    margin-left: calc(0.6 * var(--dg-u));
+    color: var(--dg-ia-text-secondary);
     font-variant-numeric: tabular-nums;
 }
 
 /* ── Top-level view tab bar and per-view containers ────────────────────── */
 .demographics-view-tab-host {
-    margin-top: 0.4rem;
-    margin-bottom: 0.4rem;
+    margin-top: calc(0.4 * var(--dg-u));
+    margin-bottom: calc(0.4 * var(--dg-u));
     width: 100%;
     display: block;
 }
@@ -746,8 +860,8 @@
 
 /* Page tab row (Economy / Power / Knowledge & Influence) under History */
 .demographics-page-tab-host {
-    margin-top: 0.3rem;
-    margin-bottom: 0.3rem;
+    margin-top: calc(0.3 * var(--dg-u));
+    margin-bottom: calc(0.3 * var(--dg-u));
     width: 100%;
 }
 .demographics-page-tab-host > fxs-tab-bar {
@@ -756,8 +870,11 @@
 
 .demographics-nyi,
 .demographics-empty {
-    margin: 2rem auto;
-    color: var(--ia-accent-gold-soft);
+    margin-top: calc(2 * var(--dg-u));
+    margin-right: auto;
+    margin-bottom: calc(2 * var(--dg-u));
+    margin-left: auto;
+    color: var(--dg-ia-accent-gold-soft);
     opacity: 0.85;
     text-align: center;
 }
@@ -772,13 +889,19 @@
     justify-content: center;
     width: 100%;
     /* Pin to the bottom of the (flex-column) view when there's slack; harmless (= 0) in block hosts. */
-    margin: auto 0 0.3rem 0;
+    margin-top: auto;
+    margin-right: 0;
+    margin-bottom: calc(0.3 * var(--dg-u));
+    margin-left: 0;
 }
 .demographics-policy-banner {
-    padding: 0.35rem 0.9rem;
+    padding-top: calc(0.35 * var(--dg-u));
+    padding-right: calc(0.9 * var(--dg-u));
+    padding-bottom: calc(0.35 * var(--dg-u));
+    padding-left: calc(0.9 * var(--dg-u));
     border-radius: 0.4rem;
     background-color: rgba(120, 28, 24, 0.4);
-    border: 0.0555rem solid #e0726a;
+    border: 1px solid #e0726a;
     color: #ec8e84;
     text-align: center;
 }
@@ -786,10 +909,13 @@
    (gold, to stay distinct from the red policy pill). Font size comes from the `text-sm` class so it
    matches the banner. */
 .demographics-timeline-note {
-    padding: 0.35rem 0.9rem;
+    padding-top: calc(0.35 * var(--dg-u));
+    padding-right: calc(0.9 * var(--dg-u));
+    padding-bottom: calc(0.35 * var(--dg-u));
+    padding-left: calc(0.9 * var(--dg-u));
     border-radius: 0.9rem;
     background-color: rgba(243, 195, 76, 0.12);
-    border: 0.0555rem solid rgba(243, 195, 76, 0.4);
+    border: 1px solid rgba(243, 195, 76, 0.4);
     color: #f3c34c;
     text-align: center;
 }
@@ -798,14 +924,20 @@
    won purely by load order; these are the values that were actually shipping. */
 .demographics-option-hint {
     color: rgba(243, 231, 196, 0.65);
-    margin: 0.15rem 0 0.4rem 0.4rem;
+    margin-top: calc(0.15 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.4 * var(--dg-u));
+    margin-left: calc(0.4 * var(--dg-u));
     line-height: 1.3;
 }
 
 /* Contextual description caption under an advanced History page tab row (P1.5). */
 .demographics-page-desc {
-    margin: 0.05rem 0 0.35rem 0;
+    margin-top: calc(0.05 * var(--dg-u));
+    margin-right: 0;
+    margin-bottom: calc(0.35 * var(--dg-u));
+    margin-left: 0;
     opacity: 0.7;
-    color: var(--ia-accent-gold-soft);
+    color: var(--dg-ia-accent-gold-soft);
 }
 

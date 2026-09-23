@@ -5,6 +5,7 @@ import DemographicsStorage from "/demographics/ui/storage/demographics-storage.j
 import {
   augmentWarsWithAllies,
   augmentWarsWithCityStates,
+  findStartSample,
   migrateWarRecords,
   pidInfo
 } from "/demographics/ui/sampler/sampler-wars-augment.js";
@@ -621,6 +622,10 @@ assert.equal(historicalWar.sideACivs[0].leader, "Leader Alpha");
 assert.equal(historicalWar.sideBCivs[0].civ, "Pinned Beta");
 assert.equal(historicalWar.sideBCivs[0].civTypeString, "CIVILIZATION_BETA_PINNED");
 assert.equal(historicalWar.sideBCivs[0].leader, "Leader Beta");
+
+// The persisted sample stream can hold a null element: findStartSample skips it.
+assert.equal(findStartSample([null, { chartTurn: 3 }, undefined, { chartTurn: 9 }], 5).chartTurn, 3);
+assert.equal(findStartSample([null], 5), null);
 
 if (originalGame === undefined) delete globalThis.Game;
 else globalThis.Game = originalGame;

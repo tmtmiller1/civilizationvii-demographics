@@ -3,9 +3,8 @@
 // Shared crisis-stage primitives: the per-stage severity colors + name LOC tags
 // (matching the historical line charts' crisis markers) and onset/segment
 // detection from the sampled `crisis_stage` step. Pure data/logic with no
-// chart-module dependencies, so both the Crises page (chart-crisis-stages.js)
-// and the war-timeline overlay (chart-conflicts-timeline.js) can import it freely
-// without creating an import cycle.
+// chart-module dependencies, so the Crises page and the war-timeline overlay
+// can both import it without an import cycle.
 
 // Severity color per stage (1..4), matching chart-line-event-markers.js so the
 // gantt overlay + Crises page read the same as the historical charts.
@@ -56,13 +55,10 @@ function maxStage(best, candidate) {
 export function crisisStageOnsets(samples) {
   /** @type {{ stage: number, turn: number, sample: Snapshot }[]} */
   const onsets = [];
-  // Each age has its OWN crisis. The stage doesn't reliably drop to 0 between ages
-  // in the sampled stream (it can linger high, or go undefined) - so on an age
-  // transition we both reset the running max AND DISARM detection until this age
-  // reports a pre-crisis (<=0) reading. That stops a value lingering from the
-  // previous age's crisis into the new age's first samples from being mistaken
-  // for a fresh onset (which would spawn a phantom crisis group). The very first
-  // age starts armed - it has no previous age to linger from.
+  // Each age has its own crisis, and the stage doesn't reliably drop to 0 between
+  // ages, so an age transition resets the running max AND disarms detection until
+  // this age reports a pre-crisis (<=0) reading; a lingering value is then never
+  // mistaken for a fresh onset. The very first age starts armed.
   const state = { last: 0, age: /** @type {*} */ (undefined), armed: true };
   for (const s of samples || []) onsetStep(s, state, onsets);
   return onsets;
@@ -114,8 +110,8 @@ function isNewOnset(state, raw, s) {
 }
 
 /**
- * Normalize a sample's age to a stable key, treating untagged legacy samples
- * (no `age`) as Antiquity , the only age that existed before age-tagging.
+ * Normalize a sample's age to a stable key, treating untagged samples (no `age`)
+ * as Antiquity.
  * @param {Snapshot|*} sample One sample.
  * @returns {string} The age key.
  */
@@ -124,10 +120,9 @@ export function sampleAgeKey(sample) {
 }
 
 /**
- * Map each age to the last (max) turn sampled in it. Used to cap a finished
- * age's crisis stages at that age's end instead of letting the final stage run
- * to the global latest turn , which, once a later age begins, lives in a RESET
- * age-local turn space and would invert the [start, end] window.
+ * Map each age to the last (max) turn sampled in it, used to cap a finished
+ * age's crisis stages at that age's end (a later age's turns live in a reset
+ * age-local turn space that would invert the [start, end] window).
  * @param {Snapshot[]} samples The sample stream.
  * @returns {Map<string, number>} Age key -> last sampled turn.
  */
@@ -163,9 +158,8 @@ function segmentEnd(onsets, i, latestTurn, ageLastTurn) {
 
 /**
  * Turn onsets into [start, end] stage segments. A stage runs until the next
- * onset in the SAME age; the last stage of an age's crisis ends at that age's
- * last sampled turn (via {@link ageLastTurns}), keeping each crisis bounded
- * within its age so its turn window survives later age transitions.
+ * onset in the same age; the last stage ends at that age's last sampled turn
+ * (via {@link ageLastTurns}), keeping each crisis bounded within its age.
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The onsets.
  * @param {number} latestTurn The latest sampled turn (fallback).
  * @param {Map<string, number>} [ageLastTurn] Per-age last turn (see ageLastTurns).

@@ -2,10 +2,8 @@
 //
 // Live snapshot of every settlement in the world for the Settlements view.
 // Unlike the rest of the mod (which renders sampled history), this reads the
-// CURRENT engine state at render time: a "top settlements right now" leaderboard.
-// A live read is what the feature wants - a settlement's city/town status flips
-// across ages, so ranking by current output keeps a former city (now a town)
-// wherever its real numbers land, and "settlement" stays the primary unit.
+// CURRENT engine state at render time, so a settlement ranks by its real
+// numbers whatever its city/town status is this age.
 //
 // Engine surface (all defensive; the inter-module boundary can throw mid
 // age-transition):
@@ -84,18 +82,10 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
 
 /**
  * The output columns shown/ranked for each settlement. `yt` is the YieldTypes
- * enum key (null for handle-read columns: population, wonders). `composite`
- * flags outputs folded into the overall score, and `weight` is their relative
- * contribution: economic yields weigh 1; WONDERS weigh 2 so wonder-rich
- * settlements get a bonus beyond the yields their wonders already emit (the
- * classic "most wonderful city" idea). Population is a size, happiness a state,
- * and influence an empire-pooled yield that settlements only sparsely emit
- * per-tile (via adjacency buildings), so all three are ranked as columns but
- * excluded from the composite (`composite:false`, `weight:0`) - counting
- * influence in the economic Score would skew it toward the handful of civs
- * with influence-generating buildings.
- * `icon` is the engine BLP icon path (verified present in yield-icons.xml /
- * the fonticon set) so the UI uses real game icons, never tofu glyphs.
+ * enum key (null for handle-read columns), `composite` flags outputs folded into
+ * the overall score and `weight` is their relative contribution (yields 1,
+ * wonders 2). Population, happiness and influence are ranked as columns but
+ * excluded from the composite because they are not per-settlement economic output.
  * @type {Array<{ id: string, yt: string|null, label: string, icon: string,
  *   composite: boolean, weight: number }>}
  */
@@ -256,10 +246,8 @@ function resolveOwner(pid, handle) {
     leaderType: canonicalLeaderType(leaderRow, rawLeader),
     primary,
     secondary,
-    // Background-safe accent color, identical to the history line-chart rule:
-    // prefer the secondary banner when the primary is a dark grey/black, then
-    // lift any still-dark color to a readable tone. Used for every colored
-    // accent so a black civ color never vanishes against the dark UI.
+    // Background-safe accent color (same rule as the history line chart) so a
+    // black civ color never vanishes against the dark UI.
     readable: readableAccent(primary, secondary),
     isMajor: major,
     met: localHasMet(pid)
@@ -420,20 +408,29 @@ function settlementKey(pid, city, idx) {
 }
 
 /**
+ * Board build options.
+ * @typedef {Object} BoardOptions
+ * @property {boolean} [lite] Skip the drill-down-only reads (building names,
+ *   wonder in progress) that no persisted/archived field uses. The sampler's
+ *   per-turn end-of-age archive builds the board this way; the render path never does.
+ */
+
+/**
  * Build one settlement record from a city handle (no composite/ranks yet).
  * @param {*} city The city/town handle.
  * @param {number} pid The owner id.
  * @param {SettlementOwner} owner The resolved owner identity.
  * @param {number} idx The index within the owner's list.
+ * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
  * @returns {Settlement|null} The record, or null when unreadable.
  */
-function buildSettlement(city, pid, owner, idx) {
+function buildSettlement(city, pid, owner, idx, lite) {
   if (!city) return null;
   // "LOC_CITY_NAME_UNSET" is a base-game LOC tag (see BASE_GAME_LOC_KEYS in demographics-i18n.js).
-  const name = compose(city.name) || compose("LOC_CITY_NAME_UNSET") || "—";
+  const name = compose(safeStr(() => city.name)) || compose("LOC_CITY_NAME_UNSET") || "—";
   const locId = plotKey(city);
   const population = readPopulation(city);
-  const buildingNames = readConstructibleNames(city, "BUILDING");
+  const buildingNames = lite ? [] : readConstructibleNames(city, "BUILDING");
   return {
     id: settlementKey(pid, city, idx),
     locId,
@@ -441,8 +438,8 @@ function buildSettlement(city, pid, owner, idx) {
     explored: readExplored(city),
     componentId: readComponentId(city),
     name,
-    isTown: !!city.isTown,
-    isCapital: !!safeBool(() => city.isCapital),
+    isTown: safeBool(() => city.isTown),
+    isCapital: safeBool(() => city.isCapital),
     population,
     urban: readSubPopulation(city, "urbanPopulation"),
     rural: readSubPopulation(city, "ruralPopulation"),
@@ -456,9 +453,9 @@ function buildSettlement(city, pid, owner, idx) {
     outputs: readOutputs(city),
     wonders: readWonderList(city),
     districts: countConstructibleClass(city, "DISTRICT"),
-    buildings: buildingNames.length,
+    buildings: lite ? countConstructibleClass(city, "BUILDING") : buildingNames.length,
     buildingTypes: buildingNames,
-    wonderInProgress: readWonderInProgress(city),
+    wonderInProgress: lite ? null : readWonderInProgress(city),
     _city: city,
     founded: getFounded(locId),
     trend: getCityTrend(locId),
@@ -483,11 +480,9 @@ function readLocation(city) {
 }
 
 /**
- * Whether the local player has discovered a settlement - i.e. its CITY CENTER
- * tile is revealed (not in fog). Once you've seen the center, you know where the
- * settlement is, so the map camera is allowed even if some outer tiles are still
- * undiscovered. Defaults to true (don't block) on any uncertainty so the camera
- * isn't grayed out spuriously.
+ * Whether the local player has discovered a settlement, i.e. its city-center
+ * tile is revealed (the camera gate). Defaults to true on any uncertainty so
+ * the camera isn't grayed out spuriously.
  * @param {*} city The city handle.
  * @returns {boolean} True when the city center is revealed.
  */
@@ -567,6 +562,21 @@ function safeBool(fn) {
     return !!fn();
   } catch (_) {
     return false;
+  }
+}
+
+/**
+ * String engine read, "" on throw/non-string (a city handle mid-transition can
+ * throw on any property).
+ * @param {() => *} fn Thunk.
+ * @returns {string} The string, or "".
+ */
+function safeStr(fn) {
+  try {
+    const v = fn();
+    return typeof v === "string" ? v : "";
+  } catch (_) {
+    return "";
   }
 }
 
@@ -669,13 +679,30 @@ function countConstructibleClass(city, className) {
 function readConstructibleNames(city, className) {
   const out = [];
   for (const cid of constructibleIds(city, className)) {
-    const c = constructibleById(cid);
-    const info = c && constructibleInfo(c.type);
-    if (!info) continue;
-    const name = (info.Name && compose(info.Name)) || info.ConstructibleType;
-    if (typeof name === "string" && name) out.push(name);
+    const name = constructibleName(cid);
+    if (name) out.push(name);
   }
   return out;
+}
+
+/**
+ * One placed constructible's localized display name, or "" when the handle or
+ * its table row is unreadable (a stale component id can make either lookup
+ * throw; guarded per entry like resolveWonder so one bad id skips one name).
+ * @param {*} cid The constructible component id.
+ * @returns {string} The name, or "".
+ */
+function constructibleName(cid) {
+  try {
+    const c = constructibleById(cid);
+    const info = c && constructibleInfo(c.type);
+    if (!info) return "";
+    const name = (info.Name && compose(info.Name)) || info.ConstructibleType;
+    return typeof name === "string" ? name : "";
+  } catch (_) {
+    // Constructibles.getByComponentID / GameInfo.Constructibles.lookup threw; skip this one.
+    return "";
+  }
 }
 
 /**
@@ -784,8 +811,9 @@ function alivePlayers() {
  * Append one player's settlement records to `list`.
  * @param {*} p The player handle.
  * @param {Settlement[]} list The accumulating list (mutated).
+ * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
  */
-function gatherPlayerSettlements(p, list) {
+function gatherPlayerSettlements(p, list, lite) {
   const pid = typeof p?.id === "number" ? p.id : undefined;
   if (typeof pid !== "number") return;
   // p.Cities.getCities() returns city HANDLES directly (not ComponentIDs), so
@@ -794,21 +822,22 @@ function gatherPlayerSettlements(p, list) {
   if (!cities.length) return;
   const owner = resolveOwner(pid, p);
   for (let i = 0; i < cities.length; i++) {
-    const rec = buildSettlement(cities[i], pid, owner, i);
+    const rec = buildSettlement(cities[i], pid, owner, i, lite);
     if (rec) list.push(rec);
   }
 }
 
 /**
  * Gather every settlement of every alive player as raw records (no scores yet).
+ * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
  * @returns {Settlement[]} The settlement records.
  */
-function gatherSettlements() {
+function gatherSettlements(lite) {
   /** @type {Settlement[]} */
   const list = [];
   const players = alivePlayers();
   if (!Array.isArray(players)) return list;
-  for (const p of players) if (p) gatherPlayerSettlements(p, list);
+  for (const p of players) if (p) gatherPlayerSettlements(p, list, lite);
   applyPopulationVarianceAndEnsureUnique(list);
   attachHolyCities(list);
   slog("gathered", list.length, "settlements");
@@ -834,13 +863,9 @@ function playerCities(p) {
 }
 
 /**
- * Compute each settlement's composite score (0-100): a WEIGHTED mean of its
+ * Compute each settlement's composite score (0-100): a weighted mean of its
  * composite outputs, each normalized to the strongest settlement in that output.
- * Economic yields weigh 1; wonders weigh 2, giving wonder-rich settlements a
- * bonus on top of the yields their wonders already contribute. Negative values
- * (e.g. unhappiness, though happiness is excluded) clamp to 0 so one weak output
- * can't sink the score unfairly. Population/happiness are excluded (a size and a
- * state) but are still ranked as columns.
+ * Negative values clamp to 0 so one weak output can't sink the score.
  * @param {Settlement[]} list The settlement records (mutated: `composite` set).
  */
 function computeComposite(list) {
@@ -922,10 +947,11 @@ export function valueOf(s, key) {
 
 /**
  * Gather, score, and rank every settlement in the world.
+ * @param {BoardOptions} [opts] Build options (`lite` for the sampler's archive).
  * @returns {SettlementBoard} The scored + ranked board.
  */
-export function buildSettlementBoard() {
-  const settlements = gatherSettlements();
+export function buildSettlementBoard(opts) {
+  const settlements = gatherSettlements(!!(opts && opts.lite));
   computeComposite(settlements);
   computeRanks(settlements);
   settlements.sort((a, b) => b.composite - a.composite);

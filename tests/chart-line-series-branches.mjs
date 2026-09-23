@@ -140,10 +140,24 @@ function testPopulationAgeResetBridge() {
   assert.ok(scoreDip && scoreDip.v < 5, "score (non-reset metric) must NOT be bridged");
 }
 
+function testNullSampleElementIsSkipped() {
+  // The samples ARRAY is type-checked; a persisted null ELEMENT must be skipped, not dereferenced.
+  policy("all-civs");
+  globalThis.GameContext = { localPlayerID: 1 };
+  makeSettings({ backfillMetHistory: false, hideUnmetStats: false });
+  const p = (v) => ({ "1": { met: true, metrics: { score: v }, leaderType: "LEADER_ME", leaderName: "Me" } });
+  const history = { samples: [{ turn: 1, players: p(1) }, null, { turn: 3, players: p(3) }] };
+  const out = buildSeriesFromHistory(history, "score");
+  const mine = out.series.find((s) => s.pid === 1);
+  assert.ok(mine, "series survives a null sample");
+  assert.equal(mine.points.length, 2, "the null sample contributes no point");
+}
+
 try {
   testBackfillAndNaming();
   testFromContactAndOwnOnlyPolicy();
   testPopulationAgeResetBridge();
+  testNullSampleElementIsSkipped();
   console.log("chart-line-series-branches harness passed");
 } finally {
   globalThis.Configuration = saved.Configuration;

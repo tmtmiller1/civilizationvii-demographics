@@ -1,17 +1,9 @@
 // worldrankings-allcivs-table.js
 //
-// "All Civilizations" sortable table. Civs are ROWS and every (non-hidden) metric
-// is a column, inside a horizontal scroller with the All Settlements table styling,
-// made wide. A Rank/Value toggle switches what each metric cell shows; clicking a
-// metric header sorts the civilizations by that metric. Rank + Civilization columns
-// are sticky-left so identity stays visible while scrolling the metrics.
-//
-// This module was removed in the v2.3.2 matrix rework and restored (player feedback
-// asking for sortable yield columns back). It is now the "table" branch of the
-// responsive hybrid in view-worldrankings-allcivs.js: chosen when there is enough
-// width for readable metric-column headers, with the matrix as the fail-safe
-// fallback at very high Interface Sizes. The civ identity column is
-// civilization-primary / leader-secondary, matching the rest of the Demographics UI.
+// "All Civilizations" sortable table: civs are rows and every non-hidden metric
+// is a column, with a Rank/Value toggle and click-to-sort metric headers. It is
+// the "table" branch of the responsive hybrid in view-worldrankings-allcivs.js,
+// chosen when there is enough width for readable metric-column headers.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
@@ -26,7 +18,6 @@ import {
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 import {
   METRIC_ICONS,
-  buildHint,
   formatMetricValue
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
 
@@ -196,25 +187,28 @@ function buildSectionTitle(key) {
 }
 
 /**
- * Build the Rank/Value toggle chip row.
- * @param {string} mode Current mode.
+ * Build the Rank/Value toggle chip row. The chips are built once and registered in `ui`; their
+ * active state is a class toggle in {@link applyCivTableState}, and the guard reads the LIVE mode
+ * off `ui.state` (a captured one would go stale the moment the chip outlives a re-render).
+ * @param {CivTableUi} ui The page's chrome handles.
  * @param {(mode: string) => void} onChange Change handler.
  * @returns {HTMLElement} The chip row.
  */
-function buildToggleRow(mode, onChange) {
+function buildToggleRow(ui, onChange) {
   const row = div("demographics-settle-filters demographics-civtable-toggle");
   const opts = [
     ["rank", "LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK"],
     ["value", "LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE"]
   ];
   for (const [key, loc] of opts) {
-    const chip = div("demographics-chart-time-filter-pill" + (mode === key ? " is-active" : ""));
+    const chip = div("demographics-chart-time-filter-pill");
     chip.textContent = t(loc);
     chip.addEventListener("click", () => {
-      if (mode === key) return;
+      if (ui.state.mode === key) return;
       safePlaySound("data-audio-activate");
       onChange(key);
     });
+    ui.chips.set(key, chip);
     row.appendChild(chip);
   }
   return row;
@@ -233,52 +227,49 @@ function fixedHeader(cls, label) {
 }
 
 /**
- * Build a sortable metric header cell (icon + label).
+ * Build a sortable metric header cell (icon + label). Built once and registered in `ui`; its
+ * sorted state is a class toggle in {@link applyCivTableState}.
  * @param {*} metric Metric def.
- * @param {string} sortKey Active sort key.
+ * @param {CivTableUi} ui The page's chrome handles.
  * @param {(key: string) => void} onSort Sort handler.
  * @returns {HTMLElement} The header cell.
  */
-function buildMetricHeader(metric, sortKey, onSort) {
+function buildMetricHeader(metric, ui, onSort) {
   const inner = div("demographics-settle-th-inner");
   const icon = METRIC_ICONS[metric.id];
   if (icon) inner.appendChild(iconEl(icon, "demographics-settle-yield-icon"));
   inner.appendChild(div("demographics-settle-th-label", localizedMetricName(metric)));
-  const cell = div(
-    "demographics-settle-th demographics-civtable-metric" +
-      (sortKey === metric.id ? " is-sorted" : "")
-  );
+  const cell = div("demographics-settle-th demographics-civtable-metric");
   cell.appendChild(inner);
   cell.addEventListener("click", () => {
-    if (sortKey === metric.id) return;
+    if (ui.state.sortKey === metric.id) return;
     safePlaySound("data-audio-activate");
     onSort(metric.id);
   });
+  ui.heads.set(metric.id, cell);
   return cell;
 }
 
 /**
  * Build the table header row.
  * @param {*[]} metrics Visible metrics.
- * @param {string} sortKey Active sort key.
+ * @param {CivTableUi} ui The page's chrome handles.
  * @param {(key: string) => void} onSort Sort handler.
  * @returns {HTMLElement} The header row.
  */
-function buildHeaderRow(metrics, sortKey, onSort) {
+function buildHeaderRow(metrics, ui, onSort) {
   const row = div("demographics-settle-row demographics-settle-header");
   row.appendChild(fixedHeader("demographics-settle-col-rank", t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK")));
   row.appendChild(
     fixedHeader("demographics-civtable-col-civ", t("LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV"))
   );
-  for (const m of metrics) row.appendChild(buildMetricHeader(m, sortKey, onSort));
+  for (const m of metrics) row.appendChild(buildMetricHeader(m, ui, onSort));
   return row;
 }
 
 /**
- * Build the civ identity avatar using the EXACT All Settlements owner-avatar
- * classes/colors (a civ-colored disc holding the LEADER portrait, or an
- * initial-letter placeholder), so this column renders identically to the All
- * Settlements owner column.
+ * Build the civ identity avatar with the All Settlements owner-avatar classes
+ * (a civ-colored disc holding the leader portrait, or an initial-letter placeholder).
  * @param {*} profile Civ profile.
  * @param {boolean} masked Whether to mask the identity (force the placeholder).
  * @returns {HTMLElement} The avatar element.
@@ -316,10 +307,8 @@ function civAvatarInitial(profile, masked) {
 
 /**
  * Build the civilization identity cell using the same DOM/classes as the All
- * Settlements owner column (`.demographics-settle-owner` → avatar + names).
- * Civilization-primary, leader-secondary (player feedback): the prominent
- * ".-owner-leader" class carries the CIV name and the smaller ".-owner-civ"
- * carries the leader beneath it, matching the All Settlements owner cell.
+ * Settlements owner column: the prominent ".-owner-leader" class carries the
+ * civ name and the smaller ".-owner-civ" carries the leader beneath it.
  * @param {*} profile Civ profile.
  * @param {boolean} masked Whether to mask the identity.
  * @returns {HTMLElement} The civ cell.
@@ -350,8 +339,7 @@ function buildCivCell(profile, masked) {
 
 /**
  * Build one metric cell. The cell of the civ leading that metric carries the gold
- * leader wash and a "World leader in <metric>" tooltip: the table itself marks the
- * category leaders (the separate leader-card strip was removed).
+ * leader wash and a "World leader in <metric>" tooltip.
  * @param {*} profile Civ profile.
  * @param {*} m Metric def.
  * @param {{ mode: string, sortKey: string, cache: Map<string, *> }} opts Row config.
@@ -374,89 +362,191 @@ function buildMetricCell(profile, m, opts) {
 }
 
 /**
- * Build one civilization data row.
+ * Build one civilization data row, returning the metric cells alongside it. Keeping the cells
+ * addressable is what lets a Rank/Value switch rewrite their text in place instead of rebuilding
+ * the row — the row holds the civ's leader portrait, which would otherwise re-resolve and blink.
+ * @param {string} pid The profile's map key.
  * @param {*} profile Civ profile.
  * @param {{ mode: string, sortKey: string, metrics: *[], cache: Map<string, *>,
  *   showUnmetNames: boolean, localPid: string }} opts Row config.
- * @returns {HTMLElement} The row.
+ * @returns {CivTableRow} The row record.
  */
-function buildDataRow(profile, opts) {
+function buildDataRow(pid, profile, opts) {
   const { sortKey, metrics, cache, showUnmetNames, localPid } = opts;
   const masked = isMasked(profile, showUnmetNames);
-  const row = div(dataRowClass(cache, sortKey, profile.pid, profile.pid === localPid));
+  const el = div(dataRowClass(cache, sortKey, profile.pid, profile.pid === localPid));
   if (profile.primaryColor && !masked) {
-    row.style.setProperty("border-left-color", profile.primaryColor);
+    el.style.setProperty("border-left-color", profile.primaryColor);
   }
-  row.appendChild(
+  el.appendChild(
     div("demographics-settle-td demographics-settle-col-rank", rankOf(cache, sortKey, profile.pid))
   );
-  row.appendChild(buildCivCell(profile, masked));
-  for (const m of metrics) row.appendChild(buildMetricCell(profile, m, opts));
-  return row;
+  el.appendChild(buildCivCell(profile, masked));
+  /** @type {HTMLElement[]} */
+  const cells = [];
+  for (const m of metrics) {
+    const cell = buildMetricCell(profile, m, opts);
+    cells.push(cell);
+    el.appendChild(cell);
+  }
+  return { pid, el, cells };
+}
+
+/** @typedef {{ pid: string, el: HTMLElement, cells: HTMLElement[] }} CivTableRow */
+
+/**
+ * One rendered civ table: its scroll frame's table element, the metrics it columns, and its
+ * current data rows. The header row (and the metric icons in it) lives in `table` and is never
+ * rebuilt — only `rows` is swapped.
+ * @typedef {{ table: HTMLElement, metrics: *[], rows: CivTableRow[] }} CivTableBlock
+ */
+
+/**
+ * Live handles to the page's persistent chrome. Rebuilding that chrome is what made the filigree
+ * section titles and the metric-column icons blink: a fresh element's `blp:` background resolves a
+ * frame or more after it is inserted, so identical chrome visibly flashed on every Rank/Value or
+ * sort click. Everything here is built ONCE per render and only ever has classes toggled on it.
+ * @typedef {{
+ *   chips: Map<string, HTMLElement>,
+ *   heads: Map<string, HTMLElement>,
+ *   blocks: CivTableBlock[],
+ *   state: { mode: string, sortKey: string },
+ *   profiles: Record<string, *>,
+ *   cache: Map<string, *>,
+ *   showUnmetNames: boolean,
+ *   localPid: string
+ * }} CivTableUi
+ */
+
+/**
+ * Toggle one class on an element without disturbing the rest of its class list (so a chrome
+ * element is never rebuilt just to change its state).
+ * @param {HTMLElement} el The element.
+ * @param {string} cls The class to toggle.
+ * @param {boolean} on Whether the class should be present.
+ */
+function setClass(el, cls, on) {
+  if (on) el.classList.add(cls);
+  else el.classList.remove(cls);
 }
 
 /**
- * Render the All Civilizations table into `host`.
+ * Push the live Rank/Value mode and sort key onto the existing DOM: chip + header state classes,
+ * and each metric cell's text and sorted class. Nothing is created or destroyed, so this alone
+ * serves a Rank/Value switch (which changes what every cell READS, not which rows exist).
+ * @param {CivTableUi} ui The page's chrome handles.
+ */
+function applyCivTableState(ui) {
+  for (const [key, chip] of ui.chips) setClass(chip, "is-active", key === ui.state.mode);
+  for (const [key, cell] of ui.heads) setClass(cell, "is-sorted", key === ui.state.sortKey);
+  for (const block of ui.blocks) {
+    for (const rec of block.rows) {
+      const profile = ui.profiles[rec.pid];
+      if (!profile) continue;
+      for (let i = 0; i < block.metrics.length; i++) {
+        const m = block.metrics[i];
+        const cell = rec.cells[i];
+        if (!cell) continue;
+        cell.textContent = cellText(profile, m, ui.state.mode, ui.cache);
+        setClass(cell, "is-sorted", m.id === ui.state.sortKey);
+      }
+    }
+  }
+}
+
+/**
+ * Swap every block's data rows into the current sort order. Only the rows are replaced — each
+ * block's header row, its icons, and the filigree titles around it stay in the DOM untouched.
+ * @param {CivTableUi} ui The page's chrome handles.
+ */
+function fillCivTableRows(ui) {
+  const pids = sortPids(ui.profiles, ui.state.sortKey);
+  for (const block of ui.blocks) {
+    for (const rec of block.rows) {
+      if (rec.el.parentNode === block.table) block.table.removeChild(rec.el);
+    }
+    block.rows.length = 0;
+    for (const pid of pids) {
+      const rec = buildDataRow(pid, ui.profiles[pid], {
+        mode: ui.state.mode,
+        sortKey: ui.state.sortKey,
+        metrics: block.metrics,
+        cache: ui.cache,
+        showUnmetNames: ui.showUnmetNames,
+        localPid: ui.localPid
+      });
+      block.rows.push(rec);
+      block.table.appendChild(rec.el);
+    }
+  }
+}
+
+/**
+ * Render the All Civilizations table into `host`. The chrome (toggle chips, filigree titles,
+ * header rows) is built once here; a later Rank/Value or sort click updates it in place through
+ * {@link applyCivTableState} / {@link fillCivTableRows} rather than re-rendering the page.
  * @param {HTMLElement} host View host (already cleared).
  * @param {Record<string, *>} profiles Civ profile map.
  * @param {*} ctx Render context (history + settings).
  * @param {boolean} showUnmetNames Whether unmet identities are shown.
- * @param {() => void} rerender Re-render callback (for toggle / sort changes).
  */
-export function renderCivTable(host, profiles, ctx, showUnmetNames, rerender) {
+export function renderCivTable(host, profiles, ctx, showUnmetNames) {
   const metrics = visibleMetrics();
-  const mode = readMode(ctx);
-  const sortKey = readSortKey(ctx, metrics);
-  const cache = buildRanksCache(profiles, metrics);
-  const localPid = pickLocalPid(profiles, Object.keys(profiles));
+  /** @type {CivTableUi} */
+  const ui = {
+    chips: new Map(),
+    heads: new Map(),
+    blocks: [],
+    state: { mode: readMode(ctx), sortKey: readSortKey(ctx, metrics) },
+    profiles,
+    cache: buildRanksCache(profiles, metrics),
+    showUnmetNames,
+    localPid: pickLocalPid(profiles, Object.keys(profiles))
+  };
 
-  host.appendChild(buildHint());
   host.appendChild(
-    buildToggleRow(mode, (/** @type {string} */ m) => {
+    buildToggleRow(ui, (/** @type {string} */ m) => {
       setSetting(ctx, "worldRankingsAllCivsViewMode", m);
-      rerender();
+      ui.state.mode = m;
+      // Rank/Value changes only what each cell reads — no reorder, no rebuild.
+      applyCivTableState(ui);
     })
   );
   const onSort = (/** @type {string} */ k) => {
     setSetting(ctx, "worldRankingsAllCivsSortKey", k);
-    rerender();
+    ui.state.sortKey = k;
+    fillCivTableRows(ui);
+    applyCivTableState(ui);
   };
-  const shared = { profiles, mode, sortKey, cache, showUnmetNames, localPid, onSort };
-  // Two stacked tables instead of one ~40-column sheet (too dense to read): the
-  // metrics that carry an icon (score, treasury, per-turn yields, GDP, population,
-  // wonders: mostly rates and yields) first, the text-only ones below under
-  // "Totals & Tallies" (land, settlements, conquests, units, migration: counts).
-  // One shared sort: clicking any header orders the civs the same way in both, so
-  // a civ's rows line up across the two.
+  // Two stacked tables instead of one ~40-column sheet: icon-bearing metrics
+  // (rates and yields) first, text-only counts below under "Totals & Tallies".
+  // One shared sort keeps a civ's rows lined up across the two.
   const iconMetrics = metrics.filter((m) => METRIC_ICONS[m.id]);
   const textMetrics = metrics.filter((m) => !METRIC_ICONS[m.id]);
   host.appendChild(buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS"));
-  host.appendChild(buildCivTableBlock(iconMetrics, shared));
+  host.appendChild(mountCivTableBlock(ui, iconMetrics, onSort));
   if (textMetrics.length) {
     host.appendChild(buildSectionTitle("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE"));
-    host.appendChild(buildCivTableBlock(textMetrics, shared));
+    host.appendChild(mountCivTableBlock(ui, textMetrics, onSort));
   }
+  fillCivTableRows(ui);
+  applyCivTableState(ui);
 }
 
 /**
- * Build one sortable civ table (header + a row per civ) for a subset of metrics,
- * wrapped in its scroll frame. Every table shares the sort, ranks cache and
- * local-player highlight.
+ * Build one sortable civ table (header row only) for a subset of metrics, wrapped in its scroll
+ * frame, and register it as a block so {@link fillCivTableRows} can fill and refill its rows.
+ * Every block shares the sort, the ranks cache and the local-player highlight.
+ * @param {CivTableUi} ui The page's chrome handles.
  * @param {*[]} metrics The metrics (columns) this table shows.
- * @param {{ profiles: Record<string, *>, mode: string, sortKey: string, cache: Map<string, *>,
- *   showUnmetNames: boolean, localPid: string, onSort: (key: string) => void }} shared Shared render state.
+ * @param {(key: string) => void} onSort Sort handler.
  * @returns {HTMLElement} The framed table.
  */
-function buildCivTableBlock(metrics, shared) {
-  const { profiles, mode, sortKey, cache, showUnmetNames, localPid, onSort } = shared;
+function mountCivTableBlock(ui, metrics, onSort) {
   const scroll = div("demographics-worldrankings-allcivs-matrix demographics-civtable-scroll");
   const table = div("demographics-settle-table demographics-civtable");
-  table.appendChild(buildHeaderRow(metrics, sortKey, onSort));
-  for (const pid of sortPids(profiles, sortKey)) {
-    table.appendChild(
-      buildDataRow(profiles[pid], { mode, sortKey, metrics, cache, showUnmetNames, localPid })
-    );
-  }
+  table.appendChild(buildHeaderRow(metrics, ui, onSort));
   scroll.appendChild(table);
+  ui.blocks.push({ table, metrics, rows: [] });
   return scroll;
 }

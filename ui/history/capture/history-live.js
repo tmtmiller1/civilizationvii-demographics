@@ -15,6 +15,7 @@ export const live = { doc: null };
  * @returns {CampaignDoc|null} The document.
  */
 export function liveCampaign() {
-  if (!live.doc) live.doc = safe(() => loadCampaign(), null);
+  // Read-only view: never park or restore from here (history-capture owns the writes).
+  if (!live.doc) live.doc = safe(() => loadCampaign({ mayWrite: () => false }), null);
   return live.doc;
 }

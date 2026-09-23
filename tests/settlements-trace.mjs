@@ -42,6 +42,12 @@ assert.deepEqual(T.getFounded("3,4"), { turn: 10, year: "1000 BCE", exact: true 
 assert.equal(history.settleTrace.founded["3,4"], undefined, "not written until the next sample");
 handlers.CityAddedToMap({ cityID: "a" }); // already founded → ignored
 handlers.CityAddedToMap({}); // unreadable payload → ignored
+
+// A new game restarts the tracker: a stamp still pending from the old game is dropped, not carried.
+T.startFoundingTracker();
+assert.equal(T.getFounded("3,4"), null, "pending exact stamps are cleared when the tracker restarts");
+handlers.CityAddedToMap({ cityID: "b" });
+assert.deepEqual(T.getFounded("3,4"), { turn: 10, year: "1000 BCE", exact: true }, "re-stamped after restart");
 alive = ["a", "b"];
 cities.a.population = 7;
 assert.equal(T.recordSettlementTrace(history, 101, "1180 BCE"), true);

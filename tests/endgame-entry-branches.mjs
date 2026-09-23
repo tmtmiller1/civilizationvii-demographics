@@ -9,10 +9,26 @@ import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
 
 const { document, FakeElement } = createFakeDocument();
+// Real elements report nodeType 1; the observer pre-filter keys on it.
+FakeElement.prototype.nodeType = 1;
 globalThis.document = document;
 globalThis.HTMLElement = FakeElement;
 globalThis.Locale = {
   compose: (k) => (k === "LOC_MOD_DEMOGRAPHICS_NAME" ? "Demographics" : String(k))
+};
+
+// Capture the deferred missing-hook report so it can be run on demand.
+const timers = [];
+const realSetTimeout = globalThis.setTimeout;
+globalThis.setTimeout = (fn, ms) => {
+  timers.push({ fn, ms });
+  return timers.length;
+};
+const errors = [];
+const realError = console.error;
+console.error = (...a) => errors.push(a.join(" "));
+const runTimers = () => {
+  for (const tm of timers.splice(0)) tm.fn();
 };
 
 let observerCb = null;
@@ -76,6 +92,24 @@ assert.equal(
   null,
   "no action row => no button, never stranded at the screen root"
 );
+// The mid-game tracker legitimately has no action row: no report is scheduled for it.
+assert.equal(timers.length, 0, "the mid-game victory tracker never reports a missing row");
+// The end-of-game screen always has the row; when it never mounts that is reported ONCE via
+// console.error (UI.log), naming the selector, so a base-game DOM change is visible instead of a
+// silently missing button.
+const ended = new FakeElement("endgame-screen");
+document.body.appendChild(ended);
+fire(ended);
+assert.equal(timers.length, 1, "a missed hook schedules one deferred report");
+runTimers();
+assert.equal(errors.length, 1, "reported once");
+assert.ok(errors[0].includes(".bottom-10.right-10"), "names the selector that failed");
+assert.ok(errors[0].includes("endgame-screen"), "names the screen");
+const ended2 = new FakeElement("endgame-screen");
+document.body.appendChild(ended2);
+fire(ended2);
+runTimers();
+assert.equal(errors.length, 1, "a second miss of the same hook is not reported again");
 
 // The row can mount after its screen; the button must still land inside it.
 const row = actionRow();
@@ -128,8 +162,54 @@ const pauseBtn = pause.querySelector("#demographics-pause-button");
 assert.ok(pauseBtn, "pause menu should get a button");
 assert.equal(pauseBtn.textContent, "Demographics");
 
+// The row mounting later must not leave a stale report behind: a screen whose row arrives within
+// the grace period reports nothing.
+const late = new FakeElement("endgame-screen");
+document.body.appendChild(late);
+fire(late);
+late.appendChild(actionRow());
+fire(late.children[0]);
+runTimers();
+assert.equal(errors.length, 1, "a row that mounts within the grace period cancels the report");
+
 // Unrelated nodes must be ignored without throwing.
 fire(new FakeElement("div"));
 fire({ nodeType: 3, textContent: "text" });
+
+// The observer pre-filter drops non-element nodes before any selector work: a text node is never
+// queried, even one that quacks like an element.
+let touched = 0;
+const textNode = new FakeElement("div");
+textNode.nodeType = 3;
+textNode.className = "bottom-10 right-10";
+textNode.querySelector = () => {
+  touched++;
+  return null;
+};
+fire(textNode);
+assert.equal(touched, 0, "text nodes (nodeType 3) are skipped before inspect");
+// A bare element (no id, class or children) is skipped too; one with a class is inspected.
+const bare = new FakeElement("div");
+bare.querySelector = () => {
+  touched++;
+  return null;
+};
+fire(bare);
+assert.equal(touched, 0, "an empty, unclassed element is skipped");
+bare.className = "something";
+fire(bare);
+assert.ok(touched > 0, "a classed element is inspected");
+
+// The pause menu mounting WITHOUT its button container is reported once as well.
+const menu = new FakeElement("screen-pause-menu");
+menu.className = "screen";
+document.body.appendChild(menu);
+fire(menu);
+runTimers();
+assert.equal(errors.length, 2, "missing pause container reported");
+assert.ok(errors[1].includes("#pause-menu-button-container"), "names the pause hook");
+
+globalThis.setTimeout = realSetTimeout;
+console.error = realError;
 
 console.log("endgame-entry harness passed");

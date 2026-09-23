@@ -1,26 +1,18 @@
 // pantheon-effects.js
 //
-// Best-effort inspection of a pantheon belief's game data, for the Antiquity
-// Religion board. Two products:
-//   1. effectText(def)  — a plain-text one-line summary of what the pantheon does
-//      (the belief's own localized Description, with icon/style markup stripped so
-//      it renders cleanly as textContent on the parchment board).
-//   2. estimateYields(def) — a ROUGH per-yield estimate of the flat bonuses the
-//      pantheon grants, bucketed into the six demographics yield categories.
+// Best-effort inspection of a pantheon belief's game data for the Antiquity
+// Religion board: effectText(def), the belief's localized Description with markup
+// stripped, and estimateYields(def), a rough per-yield estimate of its flat bonuses.
 //
-// The yield estimate is deliberately conservative and is NOT authoritative: the
-// game never exposes a pantheon's realized yield contribution. We walk the belief's
-// modifier chain (Beliefs → BeliefModifiers → Modifiers → DynamicModifiers /
-// ModifierArguments) and sum only FLAT yield-adjust amounts. Percentage effects and
-// per-unit ("per population", "per resource", …) scaling effects are excluded
-// because their real value depends on live game state we can't attribute here; when
-// such effects exist we flag `conditional` so the UI can say so.
+// The estimate walks the belief's modifier chain (Beliefs → BeliefModifiers →
+// Modifiers → DynamicModifiers / ModifierArguments) and sums only flat
+// yield-adjust amounts; percentage and per-unit effects are flagged `conditional`.
+
+import { stripLocaleMarkup } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
- * The six demographics yield categories, in the display order chosen so that
- * visually-similar hues never sit adjacent in the grouped bar chart (validated with
- * the dataviz palette checker against the dark board surface). Each maps to the
- * engine YIELD_* type(s) that feed it.
+ * The six demographics yield categories, ordered so visually-similar hues never
+ * sit adjacent in the grouped bar chart. Each maps to the engine YIELD_* type(s).
  * @type {{key:string, label:string, color:string, yields:string[]}[]}
  */
 export const YIELD_CATEGORIES = [
@@ -60,20 +52,6 @@ export function emptyYields() {
 }
 
 /**
- * Strip Civ localization markup (icon tokens like [icon:YIELD_GOLD], style tags like
- * [B]…[/B], and stray brackets) and collapse whitespace, so an effect Description
- * reads cleanly as plain textContent.
- * @param {string} s The composed (localized) string.
- * @returns {string} Plain text.
- */
-function stripMarkup(s) {
-  return String(s)
-    .replace(/\[[^\]]*\]/g, " ")   // [icon:…], [B], [/B], [LINK]…  → space
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/**
  * The plain-text effect summary for a belief def (its localized Description).
  * @param {*} def A GameInfo.Beliefs row.
  * @returns {string} The effect text, or "" when unavailable.
@@ -84,7 +62,7 @@ export function effectText(def) {
     if (!key || typeof Locale === "undefined" || typeof Locale.compose !== "function") return "";
     const composed = Locale.compose(key);
     if (!composed || composed === key) return "";
-    return stripMarkup(composed);
+    return stripLocaleMarkup(composed);
   } catch (_) {
     return "";
   }

@@ -1,18 +1,9 @@
 // demographics-contracts.js
 //
-// Engine contract guard layer. A single place that declares the
-// engine globals/APIs each feature depends on, checks them at runtime, and
-// answers "is this feature safe to run?" so callers can fail-safe downgrade
-// (turn the feature off) instead of throwing into a half-built UI.
-//
-// This complements - it does not replace - the per-call `typeof X !== "undefined"`
-// guards scattered through the camera/sampler code: those keep any single call
-// safe; this layer makes the decision explicit, centralized, logged, and
-// queryable up front so an entry point can decline cleanly rather than limp
-// through a chain of fallbacks.
-//
-// Nothing here touches the engine at import time - every check runs on demand,
-// after engine.whenReady, so importing this module is always safe.
+// Engine contract guard layer: declares the engine globals/APIs each feature
+// depends on and answers "is this feature safe to run?" so callers can turn a
+// feature off instead of throwing into a half-built UI. It complements the
+// per-call `typeof X` guards. Nothing here touches the engine at import time.
 
 /**
  * Required engine globals/APIs, grouped by the feature that needs them. Names

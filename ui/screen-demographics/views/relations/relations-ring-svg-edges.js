@@ -43,8 +43,7 @@ import {
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-// Line weight (viewBox units). Thinner than the old 0.6 so the ring reads as fine
-// connectors rather than crayon strokes.
+// Line weight (viewBox units): thin so the ring reads as fine connectors.
 const STROKE_W = "0.4";
 
 // Endpoint trim: lines stop at the node's CIRCLE (radius + small gap) instead of
@@ -52,13 +51,10 @@ const STROKE_W = "0.4";
 const ENDPOINT_GAP = 0.7; // viewBox units beyond the node radius
 const DEFAULT_NODE_R = 5; // fallback radius when a node's radius is unknown
 
-// Separating the lines of a pair. The PRIMARY separator is a PERPENDICULAR OFFSET
-// that slides each line sideways off the chord , this keeps the lines apart along
-// their ENTIRE length (a curve-only fan converges back together at the endpoints,
-// which is why two ties could still sit on top of each other near the nodes). A
-// gentle curve, varied in direction, is layered on top for readability + the
-// "bend both ways" look. Both quantities spread EVENLY across a bounded range so
-// any number of coexisting lines (2 or 13) stay distinct without blowing up.
+// Separating the lines of a pair: a perpendicular offset keeps them apart along
+// their entire length (a curve-only fan converges at the endpoints), and a gentle
+// curve varied in direction is layered on top. Both spread evenly across a
+// bounded range so any number of coexisting lines stay distinct.
 const PAIR_OFFSET = 4.4; // total perpendicular spread (viewBox units) across a pair
 const FAN_SPREAD = 0.16; // half-range of the (secondary) curve fan
 const LONE_CURVE = 0.12; // lone line: gentle bow magnitude
@@ -127,11 +123,9 @@ export function groupEdgesByPair(edges, positions) {
     const pa = positions.get(e.a);
     const pb = positions.get(e.b);
     if (!pa || !pb) continue;
-    // Key by GEOMETRIC endpoints, not pids. Two ties between the same two nodes
-    // resolve to the same two points, so they ALWAYS land in one group (and thus
-    // get separate lanes). Keying by pid let a string-vs-number pid , or any other
-    // representation mismatch between engine queries , split one visual pair into
-    // two single-edge groups, which then drew on the identical lone curve.
+    // Key by GEOMETRIC endpoints, not pids: two ties between the same two nodes
+    // always land in one group (a string-vs-number pid mismatch would otherwise
+    // split them into two lone curves drawn on top of each other).
     const key = geoPairKey(pa, pb);
     let group = edgeGroups.get(key);
     if (!group) {
@@ -305,8 +299,8 @@ function appendSolidCurve(svg, e, q, opacity) {
   svg.appendChild(path);
 }
 
-// Canonical dash + dot metrics (viewBox units). One clean dash pattern and one
-// clean dot spacing , the whole point of (2) is a tiny, reliable vocabulary.
+// Canonical dash + dot metrics (viewBox units): one clean dash pattern and one
+// clean dot spacing, a tiny reliable vocabulary.
 const DASH_ON = 2.0;
 const DASH_OFF = 1.8;
 const DOT_SPACING = 2.3;
@@ -379,7 +373,7 @@ function appendStyledCurve(svg, e, q, style, opacity) {
 
 // Chevron geometry: a ">" mark whose wings sweep back from the curve point,
 // opening away from the target so it reads as an arrow pointing at b.
-const CHEVRON_SIZE = 1.1; // viewBox units (slimmed to match the thinner lines)
+const CHEVRON_SIZE = 1.1; // viewBox units
 const CHEVRON_ANGLE = 0.62; // radians, wing half-spread
 const CHEVRON_S = [0.42, 0.62]; // parameters along the curve to place chevrons at
 
@@ -420,11 +414,8 @@ function appendChevrons(svg, e, q, opacity) {
 
 /**
  * Canonical orientation sign for an endpoint pair: +1 when a→b runs in the pair's
- * sorted (min→max) direction, −1 otherwise. Used so a pair's lane offset + curve
- * bow are computed on a CONSISTENT perpendicular regardless of each edge's own a→b
- * order. Without this, two ties built with opposite a/b order (e.g. an attitude
- * edge vs an event-scan edge) flip the perpendicular and their symmetric offsets
- * cancel , landing both lines in the same lane.
+ * sorted (min→max) direction, −1 otherwise, so a pair's lane offset + curve bow
+ * use a consistent perpendicular regardless of each edge's own a→b order.
  * @param {{x: number, y: number}} a Endpoint a.
  * @param {{x: number, y: number}} b Endpoint b.
  * @returns {number} +1 or −1.
@@ -454,9 +445,8 @@ function offsetChord(a, b, off) {
 
 /**
  * Render one edge of a pair-group: trim it to the two node circles, slide it
- * sideways by its perpendicular offset (so it never sits on top of a sibling),
- * bow it by its curve fraction, then draw it. Directed edges draw SOLID with
- * arrow chevrons; others draw solid / dashed / dotted per their style.
+ * sideways by its perpendicular offset, bow it by its curve fraction, then draw
+ * it (directed edges solid with chevrons; others per their style).
  * @param {Element} svg The SVG root.
  * @param {EdgeGeo} entry The grouped edge.
  * @param {{ frac: number, perpOff: number, opacity: number, radii: ?Map<number, number>,
@@ -541,10 +531,8 @@ export function appendEdgeGroup(svg, entries, selectedSet, radii, records) {
 }
 
 /**
- * Draw a single straight sample edge into an SVG, using the SAME color / style
- * synthesis / chevron code (and the same viewBox units) the ring uses , so a
- * legend swatch is literally a miniature of the line it labels. Straight (control
- * point at the midpoint) to stay readable in a short swatch.
+ * Draw a single straight sample edge into an SVG with the same style code and
+ * viewBox units the ring uses, so a legend swatch is a miniature of the line it labels.
  * @param {Element} svg Target SVG (its viewBox units must match the line units).
  * @param {{ color: string, dash?: string, directed?: boolean }} sample The style
  *   (`dash` is a style token: "" solid / "dashed" / "dotted").

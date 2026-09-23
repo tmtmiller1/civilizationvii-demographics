@@ -5,10 +5,8 @@
 
 /**
  * The persisted history blob as the sampler sees it: the shared DemoHistory
- * fields plus the sampler's own runtime extensions (wars, legacySnapshots,
- * the obsolete cumulativeTurnOffset). These extra fields live on the same blob
- * but are not in the shared typedef, so they are declared here as an
- * intersection with the shared DemoHistory.
+ * fields plus the sampler's own runtime extensions, declared as an intersection
+ * because they are not in the shared typedef.
  * @typedef {DemoHistory & WarHistoryExtras} WarHistory
  */
 

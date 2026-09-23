@@ -111,6 +111,23 @@ const capD = buildTimeline({ ...doc, events: flood }).disasters;
 assert.equal(capD.length, DISASTERS_CAP);
 assert.equal(capD[capD.length - 1].x, "X" + (DISASTERS_CAP + 4), "the most recent disasters are kept");
 
+// A campaign with samples but no per-player series, and events past its last recorded age (a save
+// whose ages were trimmed), still lay out: those lanes are empty and the event sits in the last age.
+{
+  const noBy = buildTimeline({ ...doc, series: { turns: [10, 50] } });
+  assert.deepEqual([noBy.pops, noBy.mig, Object.keys(noBy.rivals.curves)], [[], [], []]);
+  assert.deepEqual(noBy.curve.map((p) => p.v), [0, 0], "a flat curve, one point per sample");
+  assert.equal(noBy.total, 150);
+  const past = buildTimeline({ ...doc, events: [
+    { t: 20, a: 5, k: "war", p: 0, q: 1 }, { t: 30, a: 5, k: "crisis", p: -1, q: 1, n: "X" }, { t: 40, a: 5, k: "war", p: 2, q: 3 }
+  ] });
+  assert.deepEqual(past.wars.map((w) => [w.from, w.to]), [[120, 150]], "lands in the last age, and its war ends with it");
+  assert.deepEqual(past.crises.map((c) => [c.from, c.to]), [[130, 150]]);
+  assert.deepEqual(past.rivals.wars.map((w) => [w.from, w.to]), [[140, 150]]);
+  const noAges = buildTimeline({ ...doc, ages: [], events: [{ t: 3, a: 0, k: "war", p: 0, q: 1 }], series: { turns: [] } });
+  assert.deepEqual(noAges.wars.map((w) => [w.from, w.to]), [[0, 1]], "no ages at all: a unit axis");
+}
+
 // A spoiler filter removes events before layout.
 assert.equal(buildTimeline(doc, (e) => e.k !== "war").wars.length, 0);
 

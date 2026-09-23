@@ -1,14 +1,10 @@
 // chart-conflicts-cost.js
 //
-// The shared "war cost" unit for the Conflicts views: the COST_METRICS catalog
-// (the eight figures shown per combatant), the series-reduction + formatting
-// helpers that turn a participant's sampled metric series into a displayed
-// figure, and the cost-metric icon builder. Imported by the wars Gantt tooltip
-// (chart-conflicts-timeline.js) and the War Graphs sub-tab (chart-conflicts-graphs.js) so both
-// stay in lock-step.
-//
-// Each COST_METRICS entry's `id` IS the snapshot.metrics key it reads, so the
-// same catalog drives the tooltip figures and the graphs.
+// The shared "war cost" unit for the Conflicts views: the COST_METRICS catalog,
+// the series-reduction + formatting helpers that turn a participant's sampled
+// metric series into a displayed figure, and the cost-metric icon builder.
+// Each entry's `id` IS the snapshot.metrics key it reads, so the same catalog
+// drives the Gantt tooltip figures and the War Graphs sub-tab.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
@@ -16,10 +12,9 @@ import { findStartSample } from "/demographics/ui/sampler/sampler-wars-augment.j
 import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 
 /**
- * Scope the full multi-age sample stream to just the war's age, so per-turn windowing
- * (which uses AGE-LOCAL turn numbers that reset each age) can't pull in same-numbered turns
- * from other ages. The war's age is recovered from its global startChartTurn via the start
- * sample. Also returns that age's last sampled turn, for an ongoing war's end-turn fallback.
+ * Scope the full multi-age sample stream to just the war's age (recovered from its
+ * global startChartTurn), so age-local turn windowing can't pull in same-numbered
+ * turns from other ages. Also returns that age's last sampled turn.
  * @param {Snapshot[]} samples The full sample stream.
  * @param {*} war The war record (carries startChartTurn).
  * @returns {{scoped: Snapshot[], ageLastTurn: number}} Age-scoped samples + the age's last turn.
@@ -38,10 +33,8 @@ export function warAgeScope(samples, war) {
 
 /**
  * Descriptive display title per cost-metric id, shared by the tooltip and the
- * War Graphs tab so the two read identically. Ids missing here fall back to the
- * metric's short `label`. (milpowerLevel is deliberately absent so it falls back
- * to its label "Military Power (Current)"; the graph overrides it - see
- * {@link graphMetricTitle}.)
+ * War Graphs tab. Ids missing here (deliberately, milpowerLevel) fall back to
+ * the metric's short `label`; the graph overrides via {@link graphMetricTitle}.
  * @type {Record<string, string>}
  */
 const GRAPH_TITLE = {
@@ -124,12 +117,8 @@ function maxDrawdown(values) {
 
 /**
  * Cumulative decline of a series: the sum of every turn-over-turn drop, so
- * repeated losses across a war accumulate instead of collapsing to the single
- * largest dip ({@link maxDrawdown}). Rises are ignored, so production never
- * offsets a loss. With per-turn sampling this approximates the total military
- * power destroyed over the war. Two inherent limits: it cannot see a unit lost
- * and replaced within the same turn (between samples), and strength is the unit
- * type's base combat value, so unit damage short of destruction never registers.
+ * repeated losses accumulate instead of collapsing to the single largest dip
+ * ({@link maxDrawdown}). Rises are ignored, so growth never offsets a loss.
  * @param {number[]} values The series.
  * @returns {number} The summed magnitude of all declines (>= 0).
  */
@@ -164,17 +153,11 @@ function sumDeclines(values) {
  */
 
 /**
- * The metrics that make up a side's war cost, each mapped to the result field it
- * feeds, how its series reduces to a figure (`"drawdown"` peak→trough loss,
- * `"losses"` cumulative sum of every decline, `"net"` signed end−start change,
- * `"accrued"` increase of a cumulative loss counter over the window, or
- * `"spent"` same increase but shown as neutral spending rather than a loss), and
- * the base-game `blp:` texture shown above its localized `label` in the cost grid
- * (the proven `url("blp:NAME")` path our CSS already uses for engine textures).
- * Each entry also carries a `glossary` LOC key: the plain-language explanation
- * the Conflicts "Guide" sub-tab renders, kept on the metric itself so the
- * explanation can't drift from the calculation. The `id` is also the
- * snapshot.metrics key, so the War Graphs sub-tab plots the same series.
+ * The metrics that make up a side's war cost: the result field each feeds, how
+ * its series reduces to a figure (`"drawdown"` peak-to-trough loss, `"losses"`
+ * sum of every decline, `"net"` signed end-start change, `"accrued"` increase of
+ * a cumulative counter, `"spent"` the same shown as neutral spending), its `blp:`
+ * texture, and a `glossary` LOC key rendered by the Conflicts "Guide" sub-tab.
  * @type {{
  *   id: string,
  *   key: string,
@@ -187,10 +170,8 @@ function sumDeclines(values) {
  */
 export const COST_METRICS = [
   {
-    // Standing Military Power (combat strength of the army) - a LEVEL, not a
-    // loss. Reads the `milpower` series; the figure is its value at the end of
-    // the war window (current standing power). Matches the War Graphs
-    // "Military Power" line, and gives the tooltip a slot for every graphed metric.
+    // Standing Military Power - a LEVEL, not a loss: the `milpower` series'
+    // value at the end of the war window. Matches the War Graphs line.
     id: "milpowerLevel",
     key: "milPower",
     series: "milpower",
@@ -208,10 +189,8 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH"
   },
   {
-    // Units LOST (body count): the increase in the cumulative unitsLostCum counter (+1 per unit
-    // killed in combat) over the war window, the companion to the STRENGTH figure above. The
-    // tooltip appends a scaled "≈ soldiers killed" estimate (scaleCasualties) beside the raw unit
-    // count.
+    // Units LOST (body count): the increase in the cumulative unitsLostCum counter
+    // over the war window. The tooltip appends a scaled "soldiers killed" estimate.
     id: "unitsLostCum",
     key: "unitsLost",
     mode: "accrued",
@@ -220,12 +199,9 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST"
   },
   {
-    // Net cities won/lost by CAPTURE over the war (event-based cityWarNetCum:
-    // +1 to a captor, -1 to the prior owner per CityTransfered). Net so a city
-    // that changes hands several times settles to its real end state. Unlike the
-    // sampled settlement COUNT, this never counts a city founded with a settler -
-    // only settlements that actually changed hands. Event-based, so it reads "-"
-    // for wars predating the tracking.
+    // Net cities won/lost by CAPTURE over the war (event-based cityWarNetCum: +1
+    // to a captor, -1 to the prior owner). Net so a city that changes hands
+    // several times settles to its real end state; founding never counts.
     id: "cityWarNetCum",
     key: "settlementsChange",
     mode: "net",
@@ -234,12 +210,9 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS"
   },
   {
-    // Settlements PERMANENTLY destroyed (razed) out from under this civ -
-    // attributed to the pre-capture owner by the event-based war-loss tracker.
-    // Distinct from the (net) Settlements column, which counts captures that can
-    // be retaken; a razed city is gone for good. Cumulative event counter
-    // sampled into snapshots; the figure is its increase over the war window
-    // ("accrued"). No pre-tracking proxy exists, so older wars read as "-".
+    // Settlements PERMANENTLY razed out from under this civ (attributed to the
+    // pre-capture owner), distinct from captures that can be retaken. The figure
+    // is the cumulative counter's increase over the war window.
     id: "razedCum",
     key: "razed",
     mode: "accrued",
@@ -248,11 +221,9 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED"
   },
   {
-    // Territory (km²) actually taken in the war: the net of land that CHANGED
-    // HANDS through city capture (event-based `warLandCum`), +gained / -ceded.
-    // NOT the per-civ owned-tile total (the Land Area line), whose net swing also
-    // includes peaceful settling and border growth - the bug this replaced.
-    // Event-based, so wars predating the tracking read "-".
+    // Territory (km2) that CHANGED HANDS through city capture (event-based
+    // `warLandCum`), +gained / -ceded. Not the owned-tile total, whose swing
+    // also includes peaceful settling and border growth.
     id: "warLandCum",
     key: "landChange",
     mode: "net",
@@ -261,12 +232,9 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND"
   },
   {
-    // Gross population lost over the war: the sum of every per-turn decline,
-    // ignoring the rises. Reads RAW population (`populationRaw`, actual
-    // citizens) - NOT the line chart's scaled `population`, whose turn factor
-    // (1.009^turn) inflates the series and masks real drops from sumDeclines.
-    // (Settlements stays net by contrast: cities are discrete and reversible, so
-    // summing declines would wrongly re-count a city that changes hands.)
+    // Gross population lost over the war: the sum of every per-turn decline.
+    // Reads RAW population, not the line chart's scaled `population`, whose
+    // turn factor inflates the series and masks real drops.
     id: "populationRaw",
     key: "popLost",
     mode: "losses",
@@ -276,9 +244,7 @@ export const COST_METRICS = [
   },
   {
     // Crop yield (net food/turn) LOST: sum of every per-turn drop in the food
-    // rate, same disruption proxy as Production Lost - pillaged farms and
-    // occupied/lost cities knock food down; ordinary growth (the up-moves) is
-    // discarded so it can't mask the loss. A sum of rate drops, not a food total.
+    // rate (a disruption proxy, not a food total); growth can't mask the loss.
     id: "crops",
     key: "cropLost",
     mode: "losses",
@@ -287,13 +253,9 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST"
   },
   {
-    // Production LOST: the sum of every per-turn drop in production-per-turn, so
-    // wartime disruption (pillaged tiles, occupied/lost cities) registers while
-    // ordinary economic growth - the up-moves we discard - can't mask it. Same
-    // treatment as population. NOTE: this sums rate drops (a disruption proxy),
-    // not a production-quantity total. Replaced the old net PPT change, which
-    // mostly reflected background economic growth and read positive for both
-    // sides. (Production directed to war is tracked separately - see warProdCum.)
+    // Production LOST: the sum of every per-turn drop in production-per-turn (a
+    // disruption proxy, not a quantity total), so growth can't mask it.
+    // Production directed to war is tracked separately (warProdCum).
     id: "production",
     key: "prodLost",
     mode: "losses",
@@ -302,11 +264,9 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST"
   },
   {
-    // Production DIRECTED TO WAR: production this civ spent on military items
-    // (military-formation units + MILITARY/FORTIFICATION buildings) during the
-    // war, summed from the event-based tracker's cumulative `warProdCum`. Shown
-    // as neutral spending (mode "spent"), not a red loss - it's deliberate
-    // investment, not destruction, so it reads distinctly from "Production Lost".
+    // Production DIRECTED TO WAR: production spent on military units/buildings
+    // during the war (cumulative `warProdCum`). Shown as neutral spending (mode
+    // "spent"), not a red loss, since it is investment rather than destruction.
     id: "warProdCum",
     key: "warProd",
     mode: "spent",
@@ -356,9 +316,8 @@ function reduceCostSeries(series, mode) {
 
 /**
  * Increase of a cumulative (monotonic) event counter over the war window:
- * last − first. Returns null when the metric isn't present in at least two
- * window samples (e.g. a war that predates the counter), which the grid renders
- * as "-" rather than a misleading 0.
+ * last - first. Returns null (rendered "-") when the metric isn't present in
+ * at least two window samples.
  * @param {Snapshot[]} win The samples inside the participation window.
  * @param {Pid | string} pid The participant pid.
  * @param {string} metricId The cumulative metric id (e.g. "razedCum").
@@ -371,13 +330,10 @@ function accruedFigure(win, pid, metricId) {
 }
 
 /**
- * Military strength lost for one participant over its war window. Prefers the
- * TRUE casualty figure: the increase in the cumulative `milLostCum` counter
- * (combat strength of units actually killed, captured by the event-based
- * casualty tracker) across the window. Falls back to the standing-army decline
- * proxy ({@link sumDeclines} of milpower) for wars whose samples predate
- * casualty tracking, so older saves still show a figure. A monotonic counter
- * makes the increase non-negative; 0 with tracking present means no kills.
+ * Military strength lost for one participant over its war window: the increase
+ * in the cumulative `milLostCum` casualty counter, falling back to the
+ * standing-army decline proxy ({@link sumDeclines} of milpower) for samples
+ * without casualty tracking.
  * @param {Snapshot[]} win The samples inside the participation window.
  * @param {Pid | string} pid The participant pid.
  * @returns {number | null} Strength lost (>= 0), or null when no data.
@@ -390,9 +346,8 @@ function militaryLossFigure(win, pid) {
 
 /**
  * Reduce one cost metric to its figure for a participant over its war window,
- * dispatching on the metric's mode. `milpower` is special-cased (true casualties
- * with a proxy fallback); `accrued`/`spent` read a cumulative event counter's
- * increase; everything else flows through {@link reduceCostSeries}.
+ * dispatching on the metric's mode: `milpower` is special-cased, `accrued`/`spent`
+ * read a counter's increase, everything else flows through {@link reduceCostSeries}.
  * @param {Snapshot[]} win The samples inside the participation window.
  * @param {Pid | string} pid The participant pid.
  * @param {{ id: string, mode: string, series?: string }} m The cost-metric descriptor.

@@ -1,20 +1,11 @@
 // demographics-chart.js
 //
-// Barrel module + on-demand loader for the chart renderers. Re-exports the
-// SAME public API external importers (view-history.js, via the screen's
-// `chartMod`) already use, so callers are unchanged.
-//
-// The two heavy Conflicts charts (chart-conflicts-timeline ~1.1k lines, chart-conflicts-graphs
-// ~1.3k lines) are NOT statically imported here: importing this barrel would
-// otherwise parse them at screen-open even for the many sessions that never open
-// the Conflicts page. Instead they are loaded by ensureChartForMetric() when a
-// wars-page metric becomes active, then attached to the live `renderConflictsTimeline` /
-// `collectWarCivOptions` / `renderConflictsGraphs` bindings below. ES-module live
-// bindings are reflected through an importer's namespace, so the screen's held
-// `chartMod` reference sees them appear without re-importing. Until they load the
-// bindings are `undefined`; every caller already guards with
-// `typeof chartMod.X === "function"`, and the screen ensures the import resolves
-// BEFORE rendering a wars metric, so the guard is never observed as a gap.
+// Barrel module + on-demand loader for the chart renderers. The two heavy
+// Conflicts charts are not statically imported: ensureChartForMetric() loads
+// them when a wars-page metric becomes active and attaches them to the live
+// `export let` bindings below, which the screen's held `chartMod` namespace
+// reflects without re-importing. Until then those bindings are `undefined` and
+// every caller guards with `typeof chartMod.X === "function"`.
 //
 //   chart-line.js          - the main time-series line chart (renderChart)
 //   chart-triumphs-radar.js  - the Legacy Path radar (renderLegacyRadar)

@@ -1,16 +1,10 @@
 // chart-crisis-graphs.js
 //
-// The Crises "Graphs" sub-tab: every crisis statistic plotted per civ over the
-// WHOLE game (all ages), as a scrollable grid of small line charts ("small
-// multiples"), one per metric. Unlike the War Graphs tab (scoped to one war's
-// window + that war's belligerents), this shows ALL civilizations across ALL
-// samples, driven by the same crisis-cost metric set as the Crises table.
-//
-// A single shared legend (one swatch per civ) sits above the grid; toggling a
-// civ hides/shows its line in EVERY graph at once. Per-civ series, colors, and
-// X positions (laid out across age boundaries) come from buildSeriesFromHistory,
-// the same builder the main historical line chart uses - so identity, colors,
-// and the unmet-spoiler gate all match.
+// The Crises "Graphs" sub-tab: every crisis statistic plotted for ALL civs over
+// the whole game, as a scrollable grid of small line charts, one per metric.
+// A single shared legend toggles a civ in every graph at once; series, colors
+// and X positions come from buildSeriesFromHistory, the same builder the main
+// line chart uses, so identity and the unmet-spoiler gate match.
 
 import { buildSeriesFromHistory } from "/demographics/ui/screen-demographics/charts/line/chart-line-series.js";
 import {
@@ -98,10 +92,9 @@ function crisisAges(history) {
 }
 
 /**
- * The selectable crisis scopes for the toolbar dropdown: an "All Ages" combined
- * view followed by one entry per crisis-bearing age. Returns [] until a SECOND
- * crisis exists, so the dropdown only appears once (e.g.) the Exploration crisis
- * has begun - a single Antiquity crisis needs no selector.
+ * The selectable crisis scopes for the toolbar dropdown: "All Ages" followed by
+ * one entry per crisis-bearing age. Returns [] until a SECOND crisis exists, so
+ * a single crisis needs no selector.
  * @param {*} history The history blob.
  * @returns {{ id: string, label: string }[]} The scope options ([] when < 2 crises).
  */
@@ -116,10 +109,9 @@ export function collectCrisisScopes(history) {
 }
 
 /**
- * Resolve a stored scope id - which may be the "latest" sentinel (follow the
- * newest crisis), "all", a concrete age, or a stale age from an earlier game -
- * to a concrete render scope. Returns "all" whenever fewer than two crises
- * exist, so single-crisis games render exactly as before.
+ * Resolve a stored scope id ("latest", "all", a concrete age, or a stale age
+ * from an earlier game) to a concrete render scope. Returns "all" whenever
+ * fewer than two crises exist.
  * @param {*} history The history blob.
  * @param {*} scopeId The stored scope selection.
  * @returns {string} "all" or a concrete age type.
@@ -136,13 +128,9 @@ export function resolveCrisisScope(history, scopeId) {
 const hiddenKeys = new Set();
 
 /**
- * Cache of parsed series keyed by (history object identity → series key). A
- * legend toggle re-renders the whole grid via renderInto, which previously
- * re-walked the ENTIRE sample stream once PER metric (~7×) on every click even
- * though only the hiddenKeys VISIBILITY filter changed. Keying on the history
- * object means a toggle (same history) reuses the parsed raw series, while fresh
- * data (a new history object) misses and rebuilds. Raw series are never mutated
- * downstream (seriesFor/canonicalRoster clip+map into new arrays), so sharing
+ * Cache of parsed series keyed by history object identity, then series key, so
+ * a legend toggle (same history) reuses the raw series instead of re-walking the
+ * sample stream per metric. Raw series are never mutated downstream, so sharing
  * the cached arrays is safe.
  * @type {WeakMap<object, Map<string, any[]>>}
  */
@@ -261,13 +249,9 @@ function clipPoints(rawPoints, minX, maxX) {
 
 /**
  * Build the crisis-stage onset markers AND the shared x-domain in chart-X space.
- * Every onset's sample is mapped through the same age-offset layout the series
- * use, paired with its stage color + label. The shared x-domain is applied to
- * every graph so they share one time scale (markers line up across all graphs);
- * it starts a short lead before the FIRST crisis onset rather than at the game's
- * first turn, so the long pre-crisis stretch isn't shown.
- * When `scopeAge` is a concrete age (not "all"), only that age's onsets and
- * samples are considered, so the graphs zoom to that single crisis's window.
+ * Every graph gets the same x-domain so markers line up; it starts a short lead
+ * before the first onset so the long pre-crisis stretch isn't shown. A concrete
+ * `scopeAge` zooms to that single crisis's window.
  * @param {*} history The history blob.
  * @param {string} scopeAge "all" or the age type to isolate.
  * @returns {{ markers: { x: number, color: string, label: string }[],
@@ -495,10 +479,8 @@ function renderInto(host, opts) {
     appendEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY"));
     return;
   }
-  // Gate on a crisis actually having begun, exactly as the Crises "Stages" sub-tab does
-  // (chart-crisis-stages.js). A non-empty roster only means civs exist, without this the graphs
-  // would plot ordinary metric history before any crisis, reading as "crisis impact" that hasn't
-  // happened yet.
+  // Gate on a crisis actually having begun (as the "Stages" sub-tab does), or
+  // the graphs would plot ordinary metric history as "crisis impact".
   const samples = Array.isArray(history.samples) ? history.samples : [];
   if (!crisisStageOnsets(samples).length) {
     appendEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE"));

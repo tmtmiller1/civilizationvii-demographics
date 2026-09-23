@@ -14,11 +14,9 @@ const _filterSetCache = new Map();
 // In-memory node-focus selections keyed by top tab ("civ" / "cs").
 const _nodeSelectionCache = new Map();
 
-// Token of the game these caches belong to. The caches are module singletons,
-// so without this a second game in the same app session ("Play Another Game" /
-// loading a different save without a UI reload) would short-circuit on the
-// stale cache and show the PREVIOUS game's filters / node-focus instead of the
-// new save's persisted values.
+// Token of the game these caches belong to: the caches are module singletons,
+// so a second game in the same app session would otherwise see the previous
+// game's filters / node-focus.
 /** @type {string|null} */
 let _cacheGameToken = null;
 
@@ -41,11 +39,9 @@ function currentGameToken() {
 }
 
 /**
- * Clear the in-memory relations caches when the active game/save changes, so a
- * new game re-reads its OWN persisted filters and starts with a clean node-focus
- * selection. Only acts on a CONFIRMED change (both tokens known and different);
- * an unavailable token never wipes a populated same-session cache, and same-game
- * repaints are a no-op. Call once at the top of the relations view render.
+ * Clear the in-memory relations caches when the active game/save changes. Only
+ * acts on a CONFIRMED change (both tokens known and different), so an
+ * unavailable token never wipes a populated cache. Call once per render.
  */
 export function resetRelationsCachesIfGameChanged() {
   const token = currentGameToken();
@@ -141,8 +137,7 @@ export function readCsViewerPid(settings, localId, metIds) {
  */
 function filterKeyForState(topTab) {
   // Versioned keys: when the filter vocabulary changes, a fresh key resets everyone
-  // to all-on rather than leaving new pills stale-off. CS bumped to v3 when the CS
-  // agreement pills (befriend / suzerain directives) were added.
+  // to all-on rather than leaving new pills stale-off.
   return topTab === "civ" ? "relationsCivFilters2" : "relationsCsFilters3";
 }
 

@@ -13,9 +13,8 @@ import {
   yieldEnum
 } from "/demographics/ui/sampler/sampler-shared.js";
 
-// Re-exported for the modules that have always imported these from core. The
-// definitions now live in the leaf module so core can keep importing the
-// collectors without the two sides forming an import cycle.
+// Re-exported for the modules that import these from core; the definitions live in the leaf
+// module so core and the collectors don't form an import cycle.
 export { dlog, yieldEnum, netYield, _readFiniteProp };
 import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -48,10 +47,8 @@ import {
 import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collectors-summary.js";
 
 /**
- * The per-civ context object assembled by {@link buildPlayerCtx}. Engine-
- * sourced handles (`player`, `stats`) stay loose; the mod's own numeric and
- * string fields are typed. Extends {@link CivSample} so it can flow into the
- * snapshot pipeline.
+ * The per-civ context object assembled by {@link buildPlayerCtx}. Engine-sourced handles
+ * (`player`, `stats`) stay loose; the mod's own fields are typed.
  * @typedef {object} PlayerCtx
  * @property {Pid} id Player id this context describes.
  * @property {*} [player] Live player library handle, or undefined.
@@ -141,6 +138,8 @@ import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collecto
  * @param {*} p The sampled player handle.
  */
 function collectMet(ctx, id, p) {
+  // Known hotseat limitation: `met` is read from whichever seat is local when the sample runs,
+  // so the flag records that seat's contacts, not a fixed player's (per-seat map not implemented).
   try {
     const localId = getLocalPlayerID();
     if (typeof localId !== "number") return;

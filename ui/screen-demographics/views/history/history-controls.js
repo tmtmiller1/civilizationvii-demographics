@@ -9,7 +9,6 @@ import { warsCsv } from "/demographics/ui/screen-demographics/views/history/hist
 import { copyTableAsCsv } from "/demographics/ui/core/demographics-csv.js";
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
-import { buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 import { setNameOrder } from "/demographics/ui/core/player-label.js";
 
@@ -18,6 +17,14 @@ const DBG = false;
 /** @param {...*} a */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.history-controls]", ...a);
+}
+
+/**
+ * Error logger (always on) for failures the toolbar swallows to stay up.
+ * @param {...*} a Values to log.
+ */
+function derr(...a) {
+  console.error("[Demographics.history-controls]", ...a);
 }
 
 /**
@@ -77,9 +84,7 @@ function buildRadarSnapshotPill(opt, active, ctx) {
  * @param {*} ctx
  */
 function appendWarsControls(toolbar, ctx) {
-  const wopts = ctx.chartMod
-    .collectWarCivOptions(ctx.history)
-    .filter((/** @type {*} */ o) => !o.isCS);
+  const wopts = safeWarCivOptions(ctx).filter((/** @type {*} */ o) => o && !o.isCS);
   const allOpt = { pid: null, label: t("LOC_DEMOGRAPHICS_WARS_ALL_MAJORS"), isCS: false };
   const dropdownOpts = [allOpt].concat(wopts);
   toolbar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_LABEL_CIV")));
@@ -303,9 +308,7 @@ const REFUGEE_METRICS = new Set([
 
 /**
  * Append one event-marker filter toggle (e.g. Wars / Disasters), mirroring the Wonders toggle:
- * reads a boolean setting (default ON), dims when off, flips + re-renders on click. The refugee
- * chart already gates its war/disaster markers on these same settings, this just surfaces them at
- * the top.
+ * reads a boolean setting (default ON), dims when off, flips + re-renders on click.
  * @param {HTMLElement} toolbar The toolbar.
  * @param {*} ctx Render context.
  * @param {string} key Setting key (showWarMarkers / showDisasterMarkers).
@@ -392,8 +395,7 @@ function appendCsvControls(toolbar, host, ctx, activeMetric) {
  */
 function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
   // legacy_radar intentionally gets NO toolbar action here: its snapshot
-  // selector lives in the centered row (buildRadarSnapshotRow), and the Refresh
-  // button it used to carry was redundant (the snapshot reloads on selection).
+  // selector lives in the centered row (buildRadarSnapshotRow).
   if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
   // war_graphs: the "Pick war" dropdown moves to the LEFT bar (buildWarGraphsPicker), not the
   // toolbar.
@@ -403,9 +405,8 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
 
 /**
  * Append the Crisis Graphs age-scope selector. The chart module reports the
- * available scopes ("All Ages" + one per crisis-bearing age) and returns an
- * empty list until a second crisis exists, so the dropdown only appears once
- * (e.g.) the Exploration crisis has begun.
+ * available scopes and returns an empty list until a second crisis exists, so
+ * the dropdown only appears then.
  * @param {HTMLElement} toolbar The toolbar element.
  * @param {*} ctx Toolbar context.
  */
@@ -445,6 +446,42 @@ function buildCrisisScopeDropdown(opts, ctx) {
 }
 
 /**
+ * The wars civ-picker options. Toolbar construction runs outside the chart render's safeCall, so
+ * a throw inside the chart module degrades to an empty picker rather than killing the toolbar.
+ * @param {*} ctx Render context (carries chartMod + history).
+ * @returns {*[]} The options (empty on failure).
+ */
+function safeWarCivOptions(ctx) {
+  try {
+    const opts = ctx.chartMod.collectWarCivOptions(ctx.history);
+    return Array.isArray(opts) ? opts : [];
+  } catch (e) {
+    // Malformed persisted wars must not take the toolbar down with them.
+    derr("collectWarCivOptions failed:", e);
+    return [];
+  }
+}
+
+/**
+ * Merge + name the wars for the picker; a throw degrades to an empty picker (see
+ * safeWarCivOptions: this also runs outside the chart render's safeCall).
+ * @param {*[]} rawWars The persisted wars.
+ * @param {*[]} samples The persisted samples.
+ * @returns {{ wars: *[], names: Map<number, string> }} The merged wars and their display names.
+ */
+function safeMergedWarNames(rawWars, samples) {
+  try {
+    const latest = samples.length ? (samples[samples.length - 1]?.turn ?? 0) : 0;
+    const wars = mergeWars(rawWars, latest);
+    return { wars, names: nameMergedWars(wars, samples) };
+  } catch (e) {
+    // Malformed persisted wars must not take the left bar down with them.
+    derr("war picker merge/naming failed:", e);
+    return { wars: [], names: new Map() };
+  }
+}
+
+/**
  * Build the War Graphs "Pick war" selector as a LEFT bar (a dropdown of every war), so it sits on
  * the far left of the controls row while the filters stay centered and the toolbar stays right.
  * @param {*} ctx Render context (carries history, warGraphsWarId, setWarGraphsWarId).
@@ -456,9 +493,7 @@ export function buildWarGraphsPicker(ctx) {
   const h = ctx.history || {};
   const rawWars = Array.isArray(h.wars) ? h.wars : [];
   const samples = Array.isArray(h.samples) ? h.samples : [];
-  const latest = samples.length ? samples[samples.length - 1].turn : 0;
-  const wars = mergeWars(rawWars, latest);
-  const names = nameMergedWars(wars, samples);
+  const { wars, names } = safeMergedWarNames(rawWars, samples);
   const opts = wars
     .filter((w) => typeof w?.warUniqueID === "number")
     .map((w) => ({
@@ -547,7 +582,6 @@ export function buildToolbar(host, ctx, activeMetric) {
   if (!WONDERS_TOGGLE_HIDDEN_FOR.has(activeMetric)) appendWondersToggle(toolbar, ctx, activeMetric);
   if (REFUGEE_METRICS.has(activeMetric)) appendRefugeeMarkerToggles(toolbar, ctx);
   appendCsvControls(toolbar, host, ctx, activeMetric);
-  toolbar.appendChild(buildOptionsButton());
 
   if (toolbar.children.length) host.appendChild(toolbar);
 }

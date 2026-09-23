@@ -3,13 +3,8 @@
 // The Conflicts "War Graphs" sub-tab: pick a war from the toolbar dropdown and
 // see each participant civ's trajectory for every war-cost metric over that
 // war's window, as a scrollable grid of small line charts ("small multiples").
-//
-// Driven by COST_METRICS, so the eight graphs match the war tooltip's eight
-// figures and stay in sync. Each metric's per-turn series is read straight from
-// snapshot.metrics[<cost id>] (the cost `id` IS the sampled metric key), so this
-// needs no chart-registry plumbing and handles the injected cumulative counters
-// (razedCum, warProdCum) the same as the level metrics. The window is the same
-// turn range the tooltip uses ([startTurn, endTurn|latest]).
+// Driven by COST_METRICS (each `id` IS the snapshot.metrics key) over the same
+// turn window the war tooltip uses, so the graphs and the tooltip stay in sync.
 
 import {
   barLabels,
@@ -59,6 +54,30 @@ const Y_LABEL = {
   milpowerLevel: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH",
   unitsLostCum: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS"
 };
+
+/**
+ * Error logger for the click handlers that re-enter a render outside the initial render's guard.
+ * @param {...*} a Values to log.
+ */
+function derr(...a) {
+  console.error("[Demographics.chart-conflicts-graphs]", ...a);
+}
+
+/**
+ * Run a re-render from a click handler. The initial render runs inside the view's safeCall, but a
+ * click handler does not, so a throw here is logged rather than escaping the handler (the prior
+ * DOM stays in place).
+ * @param {string} what The re-render name (for the log line).
+ * @param {() => void} fn The re-render.
+ */
+function safeRerender(what, fn) {
+  try {
+    fn();
+  } catch (e) {
+    // Logged, not rethrown: the handler must not surface an uncaught error to the engine.
+    derr(what + " re-render failed:", e);
+  }
+}
 
 /**
  * Remove every child of `host`.
@@ -171,10 +190,9 @@ const CAS_MODES = [
 const casMode = /** @type {Record<string, string>} */ ({});
 
 /**
- * Build the casualties graph cell: head, a 2-way Units ↔ Scaled toggle, then a body that re-renders
- * in place. "Scaled" multiplies the loss line by the era's soldiers-per-unit factor
- * (scaleCasualties),
- * matching the war tooltip's scaled estimate and the population metric's units.
+ * Build the casualties graph cell: head, a 2-way Units / Scaled toggle, then a body
+ * that re-renders in place. "Scaled" multiplies the loss line by the era's
+ * soldiers-per-unit factor (scaleCasualties), matching the war tooltip's estimate.
  * @param {*} m The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
  * @returns {HTMLElement} The cell element.
@@ -211,7 +229,7 @@ function buildCasToggle(m, view, body) {
       casMode[m.id] = mode.id;
       for (const b of Array.from(row.children)) b.classList.remove("is-active");
       btn.classList.add("is-active");
-      renderCasualtyChart(m, view, body, mode.id);
+      safeRerender("renderCasualtyChart", () => renderCasualtyChart(m, view, body, mode.id));
     });
     row.appendChild(btn);
   }
@@ -347,7 +365,7 @@ function buildMilFilter(m, view, body) {
       milFilterMode[m.id] = mode.id;
       for (const b of Array.from(row.children)) b.classList.remove("is-active");
       btn.classList.add("is-active");
-      renderMilChart(m, view, body, mode.id);
+      safeRerender("renderMilChart", () => renderMilChart(m, view, body, mode.id));
     });
     row.appendChild(btn);
   }
@@ -382,9 +400,8 @@ function renderMilChart(m, view, body, mode) {
 
 /**
  * Build the "cities gained/lost" chart: one zero-centered bar per participant,
- * its height the net cities WON (above) or LOST (below) through capture during
- * the war - read from the event-based `cityWarNetCum` (so cities founded with a
- * settler are never counted). Returns null when no civ has capture data.
+ * its height the net cities won (above) or lost (below) through capture, read
+ * from `cityWarNetCum`. Returns null when no civ has capture data.
  * @param {{ pid: number, name: string, color: string }[]} participants The civs.
  * @param {Snapshot[]} win The windowed samples.
  * @param {string} metricId The cumulative metric key ("cityWarNetCum").
@@ -407,13 +424,10 @@ function buildSettlementsBars(participants, win, metricId) {
 }
 
 /**
- * Per-metric graph rendering, keyed by COST_METRICS id:
- *   - "bars": one zero-centered bar per civ (cities won/lost).
- *   - "loss": a cumulative-loss line plotted negative (descends from 0); `title`
- *     overrides the row label, `counter`/`fallback` use a loss counter else the
- *     metric's own per-turn declines.
- *   - "level"/(absent): a plain line of a level series - `series` overrides which
- *     snapshot.metrics key to read (else the metric's own id).
+ * Per-metric graph rendering, keyed by COST_METRICS id. "bars" is one
+ * zero-centered bar per civ; "loss" is a cumulative-loss line plotted negative
+ * (`counter`/`fallback` pick the source); "level" (or absent) is a plain line
+ * (`series` overrides the snapshot.metrics key). `title` overrides the row label.
  * @type {Record<string, {
  *   kind?: string,
  *   title?: string,
@@ -480,11 +494,9 @@ const GRAPH_ORDER = [
 const GRAPH_METRICS = GRAPH_ORDER.map((id) => GRAPH_BY_ID[id]).filter(Boolean);
 
 /**
- * Build the chart for one metric per {@link GRAPH_SPEC}: cities as zero-centered
- * bars, the loss metrics as negative cumulative-loss lines, everything else as a
- * plain level line. Returns null when there's no data. The `hover` field carries
- * the per-civ series + bounds so the cell can wire the crosshair tooltip (null
- * for the bar chart, which isn't a time series).
+ * Build the chart for one metric per {@link GRAPH_SPEC}. Returns null when
+ * there's no data. The `hover` field carries the per-civ series + bounds for the
+ * crosshair tooltip (null for the bar chart, which isn't a time series).
  * @param {*} m A COST_METRICS entry.
  * @param {{ pid: number, name: string, color: string }[]} participants The civs.
  * @param {Snapshot[]} win The windowed samples.
@@ -625,6 +637,17 @@ function appendEmpty(host, msg) {
 }
 
 /**
+ * The latest sampled turn (0 when there are no samples).
+ * @param {Snapshot[]} samples The (null-free) sample stream.
+ * @returns {number} The latest turn.
+ */
+function latestSampleTurn(samples) {
+  if (!samples.length) return 0;
+  const t = samples[samples.length - 1].turn;
+  return typeof t === "number" ? t : 0;
+}
+
+/**
  * Resolve the selected war and its participant/window data, or null when there
  * are no wars to show.
  * @param {*} history The history blob (carries `wars` + `samples`).
@@ -634,9 +657,10 @@ function appendEmpty(host, msg) {
  *   The view data, or null.
  */
 function buildWarView(history, selectedWarId) {
-  const rawWars = Array.isArray(history.wars) ? history.wars : [];
-  const samples = Array.isArray(history.samples) ? history.samples : [];
-  const latest = samples.length ? samples[samples.length - 1].turn : 0;
+  // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
+  const rawWars = Array.isArray(history.wars) ? history.wars.filter(Boolean) : [];
+  const samples = Array.isArray(history.samples) ? history.samples.filter(Boolean) : [];
+  const latest = latestSampleTurn(samples);
   // Collapse multi-front wars so the picker + graphs match the timeline.
   const wars = mergeWars(rawWars, latest);
   const war = wars.length ? resolveWar(wars, selectedWarId) : null;
@@ -672,7 +696,8 @@ export function renderConflictsGraphs(host, opts) {
   pruneHiddenWarCivs(view.participants);
   const panel = document.createElement("div");
   panel.className = "demographics-war-graphs";
-  panel.appendChild(buildHeader(view, () => renderConflictsGraphs(host, opts)));
+  const rerender = () => safeRerender("renderConflictsGraphs", () => renderConflictsGraphs(host, opts));
+  panel.appendChild(buildHeader(view, rerender));
   const grid = document.createElement("div");
   grid.className = "demographics-war-graphs-grid";
   for (const m of GRAPH_METRICS) grid.appendChild(buildMetricCell(m, view));

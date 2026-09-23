@@ -7,6 +7,7 @@ import {
   nearestTurn,
   tipVal
 } from "/demographics/ui/screen-demographics/charts/wars/chart-war-series.js";
+import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { buildCostIcon } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
@@ -166,15 +167,16 @@ function placeTip(tip, ev, cRect) {
   const tipH = tip.offsetHeight || 0;
   const viewW = (typeof window !== "undefined" && window.innerWidth) || cRect.right;
   const viewH = (typeof window !== "undefined" && window.innerHeight) || cRect.bottom;
-  const localX = ev.clientX - cRect.left;
-  const localY = ev.clientY - cRect.top;
-  // Default to the right of / below the cursor; flip when that would run past the
-  // viewport edge, so tooltips on right-side or lower-row graphs stay fully
-  // on-screen instead of clipping (horizontal flip was here; vertical added so
-  // hovers in the lower rows of the scrollable small-multiples grid don't clip
-  // off the bottom).
-  const flipLeft = ev.clientX + GAP + tipW > viewW;
-  const flipUp = ev.clientY + GAP + tipH > viewH;
+  // Work in the cell's LOCAL px throughout: clientX/Y and the rect are visual, while the tip's
+  // offsetWidth/Height and the style we write are local (the frame may be transform-scaled).
+  const localX = toLocalPx(ev.clientX - cRect.left);
+  const localY = toLocalPx(ev.clientY - cRect.top);
+  const roomRight = toLocalPx(viewW - cRect.left);
+  const roomDown = toLocalPx(viewH - cRect.top);
+  // Default to the right of / below the cursor; flip when that would run past
+  // the viewport edge so right-side and lower-row graphs stay on-screen.
+  const flipLeft = localX + GAP + tipW > roomRight;
+  const flipUp = localY + GAP + tipH > roomDown;
   const left = flipLeft ? localX - GAP - tipW : localX + GAP;
   const top = flipUp ? localY - GAP - tipH : localY + GAP;
   // Clamp the lower edge: near a cell's left/top corner (a small left-column cell

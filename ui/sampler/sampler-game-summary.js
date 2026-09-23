@@ -1,17 +1,11 @@
 // sampler-game-summary.js
 //
-// Defensive read-only adapter over the engine-native `Game.Summary` API (the
-// game's Hall-of-Fame graph data; schema in base-standard/config/hall-of-fame.xml).
-// Every export returns an EMPTY map on any absence or schema drift and never
-// throws — matching the mod's "schema drift yields missing data, not crashes"
-// contract. Consumers treat an empty/absent value as "no data yet", which the
-// tab auto-hide (history-tabs.js#metricHasData) then handles in the UI.
-//
-// Scope note: Player-scope datasets
-// (Gold, Science, GreatPeopleEarned, …) resolve one dataset per player; City-scope
-// datasets (Tourism, Population, …) resolve one per city and must be summed per
-// owning player. Delta datasets (GreatPeopleEarned) accumulate; level datasets
-// (Tourism) take the latest point up to the turn.
+// Defensive read-only adapter over the engine-native `Game.Summary` API (schema
+// in base-standard/config/hall-of-fame.xml). Every export returns an EMPTY map
+// on any absence or schema drift and never throws. Player-scope datasets resolve
+// one per player; City-scope datasets resolve one per city and are summed per
+// owning player; delta datasets accumulate while level datasets take the latest
+// point up to the turn.
 
 const DBG = false;
 /**

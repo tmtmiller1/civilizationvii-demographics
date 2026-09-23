@@ -282,7 +282,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="ja_JP"><Text>順位 {1_Rank}/{2_Total}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="ja_JP"><Text>リセット（{1_Count} 件非表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="ja_JP"><Text>非表示のすべての文明を表示します</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HINT" Language="ja_JP"><Text>列をクリックすると、その指標で文明を並べ替えます。ランク／値の切り替えで各セルの表示を変更できます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="ja_JP"><Text>未遭遇</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="ja_JP"><Text>（非表示、クリックで表示）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="ja_JP"><Text>クリックで表示</Text></Replace>
@@ -2094,9 +2093,6 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="ja_JP">
             <Text>最長のゲーム</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_OK" Language="ja_JP">
-            <Text>ゲームはこのコンピューターに保存されます。各セーブデータにもそれぞれの記録が残ります。</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="ja_JP">
             <Text>このセッションでは過去のゲームを保存領域から読み込めませんでした。各ゲームはそれぞれのセーブデータに保存されたままです。</Text>
         </Replace>
@@ -2360,6 +2356,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="ja_JP">
             <Text>成功 {1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="ja_JP">
+            <Text>設定はこのコンピューターに保存されます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="ja_JP">
+            <Text>このセッションで変更した設定はゲームを閉じるまで保持されますが、保存できませんでした。MOD共有の保存領域が別のMODのデータを返したか、読み取れないか、書き込んだ内容を読み戻せませんでした。殿堂ページの「保存領域を修復」で解決できます。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="ja_JP">
+            <Text>このセッションでは設定を保存できません。MODの保存領域を利用できません。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="ja_JP">
+            <Text>記録した戦争をすべて消去しますか？</Text>
         </Replace>
     </LocalizedText>
 </Database>

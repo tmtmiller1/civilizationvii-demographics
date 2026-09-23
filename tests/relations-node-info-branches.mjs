@@ -46,6 +46,16 @@ function testBuildNameMap() {
 
   const emptyMap = buildNameMap({ samples: [{}, { players: null }] });
   assert.deepEqual(emptyMap, {});
+
+  // A non-array `samples` (corrupt blob / another mod's saved data) must not
+  // reach the for..of and throw on a non-iterable.
+  assert.deepEqual(
+    buildNameMap({ samples: { length: 1, 0: { players: { "1": { leaderName: "X" } } } } }),
+    {},
+    "plain-object samples should be treated as empty, not iterated"
+  );
+  assert.deepEqual(buildNameMap({ samples: 7 }), {});
+  assert.deepEqual(buildNameMap({ samples: null }), {});
 }
 
 function testBuildCsNodeInfoMetAndUnmet() {

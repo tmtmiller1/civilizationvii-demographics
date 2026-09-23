@@ -1,16 +1,9 @@
 // demographics-telemetry.js
 //
-// Balance telemetry + alert thresholds (combined design plan P2.7).
-//
-// Beyond the per-sample DURATION timing already logged from the sampler, this
-// emits a BALANCE-health signal: a suspected runaway leader , one civ whose
-// score dominates the field (by share of total AND multiple of the median).
-// That's the demographics-side analogue of the emigration net-flow / refugee
-// concentration alerts, surfacing snowballing during playtests.
-//
-// Debug-gated (DBG flipped off for release) and throttled, so a shipped build is
-// silent and the log isn't spammed. Reads the snapshot the sampler just built;
-// never throws.
+// Balance telemetry + alert thresholds: emits a balance-health signal for a
+// suspected runaway leader (one civ whose score dominates by share of total AND
+// multiple of the median). Debug-gated and throttled; reads the snapshot the
+// sampler just built and never throws.
 
 const DBG = false;
 

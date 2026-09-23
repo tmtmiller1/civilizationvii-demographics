@@ -1,23 +1,10 @@
 // city-camera-controller.js
 //
-// The single owner of the Top Cities map-camera flow. Three modes, one flow:
-//   - instant   : snap the camera to the city (Camera.lookAtPlot).
-//   - cinematic : one smooth keyframe approach (calculateCameraFocusAndZoom
-//                 → addKeyframe), opt-in via topCities.cinematicEnabled.
-//   - flyby     : a short multi-keyframe sequence, on by default, gated by
-//                 topCities.flybyEnabled; falls back to cinematic on failure.
-//
-// Whatever the mode, the flow is the same: capture the camera, pop the Demographics
-// screen so the map is visible, frame the city, mount a slim overlay, then on exit
-// (Back / ESC / interrupt / relaunch / watchdog timeout) run ONE idempotent teardown
-// that restores the camera and reopens the screen at the Top Cities sub-view.
-//
-// A single active token guards every async continuation: each scheduled callback
-// re-checks token equality before touching the UI or camera, so a relaunch or an
-// interrupt mid-animation can never be clobbered by a stale continuation.
-//
-// Camera APIs mirror the base game's city-zoomer.js (saveCameraZoom /
-// calculateCameraFocusAndZoom / addKeyframe / restoreCameraZoom / clearAnimation).
+// The single owner of the Top Cities map-camera flow: instant (snap), cinematic (one keyframe
+// approach) or flyby (multi-keyframe tour, falls back to cinematic). Every mode captures the
+// camera, pops the Demographics screen, frames the city, mounts an overlay, and on exit runs one
+// idempotent teardown. A single active token guards every async continuation so a stale one
+// never clobbers a relaunch or interrupt.
 
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
@@ -220,11 +207,9 @@ function withDisplayQueue(fn) {
 }
 
 /**
- * Suspend the engine popup/notification queue while a cinematic owns the screen,
- * so civic-discovery (and similar) popups don't appear over , and trap the player
- * in , the flyby. Suspended popups queue and re-surface on teardown, exactly how
- * the base game's own cinematics defer them. We only claim the suspension when it
- * isn't already suspended, so teardown never resumes a suspension we didn't own.
+ * Suspend the engine popup/notification queue while a cinematic owns the screen, so popups
+ * don't appear over the flyby; they re-surface on teardown. Only claimed when not already
+ * suspended, so teardown never resumes a suspension we didn't own.
  * @param {*} flowState The active flow state (flagged so teardown resumes once).
  */
 function suspendPopups(flowState) {
@@ -439,8 +424,6 @@ function showUnitFlags() {
   fireWindowEvent("ui-show-unit-flags");
 }
 
-// nowMs() is imported from city-camera-controller-utils.js (above).
-
 /**
  * Bind interrupt sources for the active flow: ESC (immediate) and the engine's
  * interface-mode change (armed after a delay, so our own screen-pop doesn't
@@ -453,7 +436,12 @@ function bindInterrupts(token) {
     if (isEscape(e)) teardownActiveCinematic("escape");
   };
   s.onMode = () => {
-    if (s.armed && isToken(token)) teardownActiveCinematic("interrupt");
+    try {
+      if (s.armed && isToken(token)) teardownActiveCinematic("interrupt");
+    } catch (e) {
+      // An engine event handler must never throw into the engine's dispatch; log and carry on.
+      clog("onMode threw:", /** @type {*} */ (e)?.message);
+    }
   };
   // Engine world-input: a map click REPLAYS the cinematic; cancel/ESC exits.
   // World selection is already disabled, so this never selects a city.
@@ -556,16 +544,18 @@ export function teardownActiveCinematic(reason) {
   state = null; // claim ownership so re-entrant calls and stale continuations no-op
   s.phase = "restoring";
   clog("teardown:", reason);
-  restoreFromCinematic(s);
+  restoreFromCinematic(s, reason);
 }
 
 /**
  * Run the full teardown sequence for a flow: timers, interrupts, overlay, the
  * shot camera, fireworks, clutter layers, FoV, world input/banners/flags, the
- * saved camera (emergency keyframe on failure), and reopen the screen.
+ * saved camera (emergency keyframe on failure), and reopen the screen, except after an
+ * "interrupt" teardown.
  * @param {*} s The flow state.
+ * @param {string} reason The teardown reason.
  */
-function restoreFromCinematic(s) {
+function restoreFromCinematic(s, reason) {
   clearTimers(s);
   unbindInterrupts(s);
   removeOverlay(s);
@@ -580,7 +570,10 @@ function restoreFromCinematic(s) {
   if (!safeRestoreCamera(s.didSaveZoom)) {
     emergencyKeyframe();
   }
-  reopenScreen();
+  // "interrupt" means the interface mode changed under us (End Turn, a diplomacy screen, a unit
+  // selected); pushing the screen back on top would fight that action, so only the camera is
+  // restored. Every other reason reopens the screen.
+  if (reason !== "interrupt") reopenScreen();
 }
 
 /**

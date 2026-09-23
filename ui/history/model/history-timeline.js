@@ -2,11 +2,7 @@
 //
 // Pure: lay one campaign out on a single game-wide axis for the Timeline graphic. The game's turn
 // counter restarts every age, so a position is the turns of every earlier age plus the turn within
-// the current one. Lanes: ages, the local player's wars (declaration to peace, the enemy's
-// elimination, or the end of the age, since every war ends at an age transition), crisis stages,
-// milestones (wonders, Triumphs, religions, settlements taken and lost, eliminations, victory) and
-// population milestones on Demographics' scaled figures. pack()/unpack() store it compactly with an
-// archived game so the Hall of Fame can draw it at the main menu.
+// the current one. pack()/unpack() store it compactly with an archived game for the Hall of Fame.
 
 /** Scaled-population milestones, in people. */
 export const POP_MILESTONES = [100e3, 250e3, 500e3, 1e6, 2.5e6, 5e6, 10e6, 25e6, 50e6, 100e6, 250e6, 500e6, 1e9];
@@ -79,6 +75,28 @@ export function ageSpans(ages) {
 }
 
 /**
+ * The span of an age index, falling back to the last age (an event recorded past the ages the
+ * document knows) or a unit span for a document without ages.
+ * @param {{from:number, len:number}[]} spans Age spans.
+ * @param {number} a Age index.
+ * @returns {{from:number, len:number}} Span.
+ */
+function spanOf(spans, a) {
+  return spans[a] || spans[spans.length - 1] || { from: 0, len: 1 };
+}
+
+/**
+ * Axis position of the end of an age.
+ * @param {{from:number, len:number}[]} spans Age spans.
+ * @param {number} a Age index.
+ * @returns {number} Position.
+ */
+function ageEndOf(spans, a) {
+  const s = spanOf(spans, a);
+  return s.from + s.len;
+}
+
+/**
  * Axis position of a turn in an age.
  * @param {{from:number, len:number}[]} spans Age spans.
  * @param {HnrAge[]} ages Ages.
@@ -87,7 +105,7 @@ export function ageSpans(ages) {
  * @returns {number} Position.
  */
 export function positionOf(spans, ages, a, t) {
-  const s = spans[a] || spans[spans.length - 1] || { from: 0, len: 1 };
+  const s = spanOf(spans, a);
   const start = ages[a]?.start ?? 0;
   return s.from + Math.max(0, Math.min(s.len - 1, t - start));
 }
@@ -130,7 +148,7 @@ export function warIntervals(events, local, pos, spans) {
   const open = new Map();
   /** @type {Timeline["wars"]} */
   const out = [];
-  const ageEnd = (/** @type {number} */ a) => spans[a].from + spans[a].len;
+  const ageEnd = (/** @type {number} */ a) => ageEndOf(spans, a);
   const close = (/** @type {number} */ other, /** @type {number} */ to) => {
     const w = open.get(other);
     if (w) out.push({ from: w.from, to: Math.max(to, w.from + 1), other, d: w.d });
@@ -169,8 +187,7 @@ export function crisisIntervals(events, pos, spans) {
   const list = events.filter((e) => e.k === "crisis").slice(-CRISES_CAP);
   return list.map((e, i) => {
     const next = list[i + 1];
-    const ageEnd = spans[e.a].from + spans[e.a].len;
-    const to = next && next.a === e.a ? pos(next) : ageEnd;
+    const to = next && next.a === e.a ? pos(next) : ageEndOf(spans, e.a);
     return { from: pos(e), to: Math.max(to, pos(e) + 1), stage: Number(e.q) || 1, n: e.n || "" };
   });
 }
@@ -209,6 +226,33 @@ export function milestones(events, local, pos, iconOf = () => "") {
 }
 
 /**
+ * The sample turns of a campaign (empty for a document without them).
+ * @param {CampaignDoc} doc Campaign.
+ * @returns {number[]} Turns.
+ */
+function seriesTurns(doc) {
+  return doc.series.turns || [];
+}
+
+/**
+ * The local player's series, if the campaign has one.
+ * @param {CampaignDoc} doc Campaign.
+ * @returns {HnrPlayerSeries|undefined} Series.
+ */
+function localSeries(doc) {
+  return (doc.series.by || {})[String(doc.local)];
+}
+
+/**
+ * The local player's scaled population per sample (empty when never recorded).
+ * @param {CampaignDoc} doc Campaign.
+ * @returns {number[]} People per sample.
+ */
+function localPops(doc) {
+  return localSeries(doc)?.pops || [];
+}
+
+/**
  * Axis position of every trend sample. Samples carry turns that restart each age, so the age of a
  * sample advances whenever its turn goes back down.
  * @param {CampaignDoc} doc Campaign.
@@ -216,7 +260,7 @@ export function milestones(events, local, pos, iconOf = () => "") {
  * @returns {number[]} Position per sample.
  */
 export function samplePositions(doc, spans) {
-  const turns = doc.series.turns;
+  const turns = seriesTurns(doc);
   let a = 0;
   return turns.map((t, i) => {
     if (i > 0 && t < turns[i - 1]) a = Math.min(a + 1, spans.length - 1);
@@ -231,7 +275,7 @@ export function samplePositions(doc, spans) {
  * @returns {Timeline["curve"]} Curve.
  */
 export function popCurve(doc, spans) {
-  const pops = doc.series.by[String(doc.local)]?.pops || [];
+  const pops = localPops(doc);
   const at = samplePositions(doc, spans);
   const all = at.map((x, i) => ({ at: x, v: pops[i] || 0 }));
   if (all.length <= CURVE_POINTS) return all;
@@ -248,8 +292,8 @@ export function popCurve(doc, spans) {
  * @returns {Timeline["pops"]} Milestones.
  */
 export function popMilestones(doc, spans) {
-  const pops = doc.series.by[String(doc.local)]?.pops || [];
-  const turns = doc.series.turns;
+  const pops = localPops(doc);
+  const turns = seriesTurns(doc);
   /** @type {Timeline["pops"]} */
   const out = [];
   let a = 0;
@@ -308,7 +352,7 @@ export function disasterMarks(events, pos) {
  * @returns {Timeline["mig"]} Buckets that saw movement.
  */
 export function migrationBuckets(doc, spans, total) {
-  const ps = doc.series.by[String(doc.local)];
+  const ps = localSeries(doc);
   const mi = ps?.mi || [];
   const mo = ps?.mo || [];
   if (mi.length < 2) return [];
@@ -337,7 +381,7 @@ export function migrationBuckets(doc, spans, total) {
 export function rivalWars(events, local, pos, spans) {
   /** @type {RivalWarIo} */
   const io = { open: new Map(), out: [], pos };
-  const ageEnd = (/** @type {number} */ a) => spans[a].from + spans[a].len;
+  const ageEnd = (/** @type {number} */ a) => ageEndOf(spans, a);
   for (const e of events) {
     for (const [k, w] of io.open) if (e.a !== w.age) closeRivalWar(io, k, ageEnd(w.age));
     rivalWarStep(io, e, local);
@@ -451,10 +495,11 @@ function rivalMark(e, pos, iconOf) {
  * @returns {RivalTracks["curves"]} Curves by player id.
  */
 export function rivalCurves(doc, spans, known) {
+  const by = doc.series.by || {};
   const at = samplePositions(doc, spans);
   /** @type {RivalTracks["curves"]} */
   const out = {};
-  for (const [pid, ps] of Object.entries(doc.series.by)) {
+  for (const [pid, ps] of Object.entries(by)) {
     if (Number(pid) === doc.local || !known(Number(pid)) || !ps.pops?.some((v) => v > 0)) continue;
     const all = at.map((x, i) => ({ at: x, v: ps.pops?.[i] || 0 }));
     out[pid] = all.length <= RIVAL_CURVE_POINTS ? all : Array.from({ length: RIVAL_CURVE_POINTS }, (_, i) =>

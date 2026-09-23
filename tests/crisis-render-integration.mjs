@@ -76,6 +76,38 @@ assert.ok(host3.children.length > 0);
 const host4 = document.createElement("div");
 renderCrisisStages(host4, { history: makeHistory(false) });
 
+// renderCrisisStages with a persisted blob whose ELEMENTS are untrusted: a null / scalar snapshot
+// column, a column with a null cost, and a null trailing sample (last-sample turn read). The
+// snapshot is only read by the cross-age OVERALL block, so the stream carries a crisis in two
+// ages (the second age must report stage 0 first to re-arm onset detection).
+function stageSample(turn, age, stage) {
+  return {
+    turn, chartTurn: turn, gameYear: (4100 - turn * 100) + " BCE", age,
+    players: {
+      "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true,
+             metrics: { score: 10, crisis_stage: stage, crisis_stage_max: 3, populationRaw: 100 - turn } }
+    }
+  };
+}
+const dirtyHistory = {
+  samples: [
+    stageSample(1, "AGE_ANTIQUITY", 1),
+    stageSample(2, "AGE_EXPLORATION", 0),
+    stageSample(3, "AGE_EXPLORATION", 1),
+    null
+  ],
+  ageBoundaries: [{ age: "AGE_EXPLORATION" }],
+  crisisSnapshots: {
+    AGE_ANTIQUITY: [null, 9, { pid: 1, leaderType: "LEADER_ME", color: "#224466", cost: { popLost: 3 } }, { pid: 2, cost: null }],
+    AGE_EXPLORATION: "not-an-array"
+  }
+};
+const host5 = document.createElement("div");
+host5._rect.width = 1000; host5._rect.height = 700;
+renderCrisisStages(host5, { history: dirtyHistory });
+assert.ok(host5.children.length > 0, "dirty snapshot elements must not abort the Crises page");
+assert.ok(host5.querySelector(".demographics-crisis-overall"), "the cross-age overall block (the snapshot reader) rendered");
+
 delete globalThis.document;
 delete globalThis.requestAnimationFrame;
 delete globalThis.Locale;

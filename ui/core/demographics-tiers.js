@@ -1,21 +1,8 @@
 // demographics-tiers.js
 //
-// UI complexity tiers (combined design plan P1.5).
-//
-// The full feature set is dense. A single setting (`uiComplexity`) picks one of
-// three display profiles that progressively disclose features:
-//
-//   basic    - core stat pages only (Economy / Power / Knowledge); the advanced
-//              History pages (Age triumphs, Resources, Conflicts, Crises) and the
-//              Relations network tab are hidden, and Options shows only the
-//              essential controls.
-//   standard - (default) every page and tab; advanced storage / sampling tuning
-//              stays hidden so the common case isn't cluttered.
-//   analyst  - everything, including the storage cap / decimation / sample-rate
-//              power-user controls.
-//
-// Nothing is deleted , a higher tier reveals more. Reads fail safe to `standard`
-// so a thrown/absent setting never hides core functionality.
+// UI complexity tiers. A single setting (`uiComplexity`) picks basic (core pages only), standard
+// (default; every page, advanced tuning hidden) or analyst (everything, including the storage /
+// sampling power-user controls). Reads fail safe to `standard`.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 
@@ -29,8 +16,8 @@ export const TIER_ORDER = [TIER_BASIC, TIER_STANDARD, TIER_ANALYST];
 /** @type {Record<string, number>} */
 const TIER_RANK = { [TIER_BASIC]: 0, [TIER_STANDARD]: 1, [TIER_ANALYST]: 2 };
 
-// Hub reorg: BASIC-tier page visibility is now per-page (`page.tier === "basic"`), not a fixed set,
-// see pageVisibleInTier. Hub tabs are always visible.
+// BASIC-tier page visibility is per-page (`page.tier === "basic"`), see pageVisibleInTier. Hub tabs
+// are always visible.
 
 /**
  * The active complexity tier, defaulting to `standard`. Fails safe to standard.
@@ -55,7 +42,7 @@ export function tierAtLeast(tier) {
 }
 
 /**
- * Whether a page is visible under the active tier. Hub reorg: gating is per-page via `page.tier`
+ * Whether a page is visible under the active tier. Gating is per-page via `page.tier`
  * (default standard); the BASIC tier shows only pages declared `tier: "basic"`.
  * @param {{tier?:string}|string} page The page descriptor (or a bare id for legacy callers).
  * @returns {boolean} True when the page should be shown.

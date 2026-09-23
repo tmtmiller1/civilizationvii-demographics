@@ -2,14 +2,9 @@
 //
 // Merge concurrent, time-overlapping wars that share a belligerent into a single
 // multi-front war: connected components over (shared participant + overlap), with
-// the two sides assigned by 2-coloring the participants. A pure DISPLAY-time
-// transform over history.wars - the per-war tracking in sampler-wars.js is
-// untouched - so the timeline, the tooltip, and the War Graphs picker all
-// collapse the same fronts into one war when they call mergeWars().
-//
-// Non-bipartite tangles (a true free-for-all that can't be split into two clean
-// sides) are left UNMERGED rather than forced, so a merged war always has a
-// coherent A-vs-B structure.
+// the two sides assigned by 2-coloring the participants. A pure display-time
+// transform over history.wars. Non-bipartite tangles are left unmerged so a
+// merged war always has a coherent A-vs-B structure.
 
 /**
  * The numeric pids of a roster array.
@@ -283,14 +278,16 @@ function buildMergedWar(cw, coloring, latestTurn) {
  * @returns {*[]} The merged war list.
  */
 export function mergeWars(wars, latestTurn) {
-  if (!Array.isArray(wars) || wars.length < 2) return wars || [];
+  // history.wars is persisted; a null element must be dropped before the index-based merge.
+  const list = Array.isArray(wars) ? wars.filter(Boolean) : [];
+  if (list.length < 2) return list;
   const out = [];
-  for (const comp of warComponents(wars, latestTurn)) {
+  for (const comp of warComponents(list, latestTurn)) {
     if (comp.length === 1) {
-      out.push(wars[comp[0]]);
+      out.push(list[comp[0]]);
       continue;
     }
-    const cw = comp.map((i) => wars[i]);
+    const cw = comp.map((i) => list[i]);
     const coloring = colorComponent(cw);
     if (!coloring) {
       for (const w of cw) out.push(w); // non-bipartite: leave the fronts separate

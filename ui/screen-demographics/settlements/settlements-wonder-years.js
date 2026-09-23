@@ -1,11 +1,8 @@
 // settlements-wonder-years.js
 //
-// Wonder completion years, read from the sampled per-civ `wonderTypes` stream.
-// Only an OBSERVED completion earns a year: a wonder a civ already held on its
-// first sample predates the history (mod added mid-game, old save), and a wonder
-// that appears after another civ already held it changed hands by capture. Both
-// stay undated rather than showing a guessed build year. Wonders are unique, so
-// the year belongs to the wonder and survives a later capture of its city.
+// Wonder completion years, read from the sampled per-civ `wonderTypes` stream. Only an observed
+// completion earns a year: a wonder held on a civ's first sample or one that changed hands by
+// capture stays undated rather than showing a guessed build year.
 
 /**
  * Fold one sample into the running wonder-year state.

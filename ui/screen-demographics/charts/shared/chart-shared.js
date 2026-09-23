@@ -123,10 +123,8 @@ function collectCivHistory(samples, pid) {
   for (const s of samples) {
     const nm = sampleCivName(s, pid);
     if (!shouldAppendCivName(list, nm)) continue;
-    // Only append when the LATEST civ differs from the previous entry
-    // - otherwise we'd push "Rome" twice if it shows up in turns 1..80.
-    // We still want to detect non-adjacent recurrence (Rome → Han → Rome),
-    // so de-dup by sequence position, not set membership.
+    // De-dup by sequence position, not set membership, so a non-adjacent
+    // recurrence (Rome -> Han -> Rome) is still detected.
     list.push(nm);
   }
   return list;
@@ -154,14 +152,11 @@ function displayName(leaderOnly, civHistory) {
 export { collectCivHistory, displayName };
 
 /**
- * Whether the "hide unmet stats" spoiler guard is enabled (default on). When
- * on, every chart withholds data for civs the local player has not met -
- * seeing any of an unmet civ's history (score, economy, military, diplomacy)
- * is treated as a spoiler. Now derived from the EFFECTIVE analytics-governance
- * policy (combined design plan P0.1): every policy except `full` hides unmet
- * civs, and a multiplayer host can force this on regardless of the client's own
- * toggle. Read fresh each render so the Options control is fully reversible
- * without a reload. Fails spoiler-safe (on) if the policy read throws.
+ * Whether the "hide unmet stats" spoiler guard is enabled (default on): every
+ * chart then withholds data for civs the local player has not met. Derived from
+ * the EFFECTIVE governance policy (every policy except `full` hides unmet civs,
+ * and a multiplayer host can force it on), read fresh each render; fails
+ * spoiler-safe (on) if the policy read throws.
  * @returns {boolean} True to gate unmet civs.
  */
 function hideUnmetEnabled() {
@@ -173,12 +168,10 @@ function hideUnmetEnabled() {
 }
 
 /**
- * Whether a whole civ must be dropped from a CURRENT-STATE chart (radar,
- * resources, settlements) under the effective governance policy: hidden when
- * the policy is own-civ-only / disabled and the civ is not the local player, or
- * when unmet civs are hidden and this civ is currently unmet. Centralizes the
- * data-access enforcement so every current-state picker drops the same civs the
- * banner says are withheld. Fails safe (drop) on error.
+ * Whether a whole civ must be dropped from a CURRENT-STATE chart under the
+ * effective governance policy: when the policy is own-civ-only / disabled and
+ * the civ is not the local player, or when unmet civs are hidden and this civ is
+ * currently unmet. Fails safe (drop) on error.
  * @param {Snapshot[]|*} samples The sample stream.
  * @param {string|number} pid The civ player id.
  * @returns {boolean} True to drop the civ entirely.
@@ -194,11 +187,9 @@ function civDroppedByPolicy(samples, pid) {
 
 /**
  * Sub-option of the spoiler guard (only meaningful when {@link hideUnmetEnabled}
- * is on): how a civ's line chart behaves once the local player meets it.
- * When true (default), the civ's ENTIRE history is back-filled on meeting
- * (matching the radar / worldrankings-allcivs current-state views). When false, only data
- * from first contact forward is shown. Reads fresh each render so the toggle is
- * reversible without a reload. Defaults to back-fill on read error.
+ * is on): when true (default) a civ's ENTIRE history is back-filled once the
+ * local player meets it; when false only data from first contact forward is
+ * shown. Read fresh each render; defaults to back-fill on read error.
  * @returns {boolean} True to reveal full history once met.
  */
 function backfillMetHistoryEnabled() {
@@ -211,11 +202,9 @@ function backfillMetHistoryEnabled() {
 
 /**
  * Whether the local player has NOT met this civ as of the most recent sample
- * that carries a met flag. Used by current-state charts (legacy radar, triumph
- * progress, resource / triumph-stack pickers) to exclude whole civs, mirroring
- * the per-point gate the line chart applies to time series. The local player is
- * always met. An unknown met flag (never resolved) is treated as met (shown) -
- * matching the line chart, which only drops points where `met === false`.
+ * that carries a met flag. The local player is always met, and an unknown met
+ * flag is treated as met, matching the line chart, which only drops points
+ * where `met === false`.
  * @param {Snapshot[]|*} samples The sample stream.
  * @param {string|number} pid The civ player id.
  * @returns {boolean} True when the civ is currently unmet.
@@ -291,10 +280,9 @@ function resolveTurnRange(opts) {
 }
 
 /**
- * Add the live current-turn → year entry from the engine `Game`, defensively.
- * `Game.turn` is the AGE-LOCAL turn (resets per age), so callers whose map is
- * keyed by chart-X (age offset + local turn) must pass the current age's
- * `xOffset`; callers keyed by raw age-local turn pass 0 (the default).
+ * Add the live current-turn -> year entry from the engine `Game`, defensively.
+ * `Game.turn` is AGE-LOCAL, so callers whose map is keyed by chart-X must pass
+ * the current age's `xOffset`; raw age-local maps pass 0 (the default).
  * @param {Map<number, string>} turnYearMap chart-X → year map (mutated).
  * @param {number} [xOffset] The current age's chart-X offset (0 for raw-turn maps).
  */

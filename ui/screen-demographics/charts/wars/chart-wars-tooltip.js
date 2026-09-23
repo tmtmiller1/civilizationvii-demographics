@@ -1,10 +1,8 @@
 // chart-wars-tooltip.js
 //
-// The war-timeline hover tooltip CONTENT: the structured tooltip body, the
-// per-side cost columns, and the full city-state (suzerain) layout. Extracted
-// from chart-conflicts-timeline.js so the gantt module is just rendering + wiring; this
-// module owns what the tooltip shows. renderWarTooltip() fills the tooltip
-// element the gantt creates.
+// The war-timeline hover tooltip content: the structured tooltip body, the per-side cost
+// columns, and the city-state (suzerain) layout. renderWarTooltip() fills the tooltip element
+// the gantt creates.
 
 import {
   COST_METRICS,
@@ -32,6 +30,23 @@ import {
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
+ * Displayed duration in turns, in ONE turn space. `sTurn` is a global chart turn, but for an
+ * ongoing war `eTurn` is the AGE-LOCAL last turn (kept so because the cost windowing is age-local
+ * by design); subtracting them showed "-98 turns" for a war begun at T-164 in an age at local turn
+ * 66 (watched 2026-09-23). An ongoing war therefore measures to the global latest turn.
+ * @param {*} w The war record.
+ * @param {number} sTurn Global start turn.
+ * @param {number} eTurn End turn as used for cost windowing (age-local when ongoing).
+ * @param {number} latestTurn Global latest sampled turn.
+ * @returns {number} Turns elapsed.
+ */
+function warDurationTurns(w, sTurn, eTurn, latestTurn) {
+  if (typeof w.endTurn === "number") return w.endTurn - sTurn;
+  const end = typeof latestTurn === "number" && isFinite(latestTurn) ? latestTurn : eTurn;
+  return end - sTurn;
+}
+
+/**
  * Build the structured tooltip body for a war.
  * @param {*} w The war record.
  * @param {Object} ctx Shared Gantt context.
@@ -52,7 +67,7 @@ function buildWarTooltipBody(w, ctx) {
   const endYr =
     typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
   const yrs = warDurationYears(w, turnYearMap, latestTurn);
-  const turns = eTurn - sTurn;
+  const turns = warDurationTurns(w, sTurn, eTurn, latestTurn);
   const declared = warDeclaredBy(w);
   return {
     // Use the World War override when 4+ civs are involved; fall back to the
@@ -149,8 +164,7 @@ export function renderWarTooltip(tooltip, w, ctx) {
 
   appendCsAllies(tooltip, tip, samples, win);
 
-  // Sign key , explains the green/red/dash figure convention right where the
-  // figures are (replaces the old Guide tab's intro/legend note).
+  // Sign key: explains the green/red/dash figure convention right where the figures are.
   appendDivider(tooltip);
   tooltip.appendChild(buildTooltipKey());
 }
@@ -364,11 +378,9 @@ function buildSidesEl(tip, samples, win) {
 }
 
 /**
- * Build the city-states table shown below the majors. It mirrors the majors'
- * columns (side A's majors, a "vs", then side B's), and under each major column
- * stacks that major's suzerained city-states as rows - so every city-state sits
- * in the SAME column as its suzerain. Empty cells fill the shorter columns.
- * Returns null when neither side has city-state allies.
+ * Build the city-states table shown below the majors. It mirrors the majors' columns and under
+ * each stacks that major's suzerained city-states as rows, so every city-state sits in the same
+ * column as its suzerain. Returns null when neither side has city-state allies.
  * @param {*} tip The tooltip body (see {@link buildWarTooltipBody}).
  * @param {Snapshot[]} samples The sample stream (unused; kept for symmetry).
  * @param {Snapshot[]} win The war-window samples.

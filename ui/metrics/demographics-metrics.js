@@ -4,31 +4,16 @@
 //   { id, label, category, accessor(ctx)→number|undefined,
 //     scale?(raw, scaleCtx, ctx)→number, format(n)→string, tooltip? }
 //
-// LOCALIZATION — READ BEFORE ADDING/EDITING A METRIC. The `label`/`title` strings
-// below are DEV-FACING FALLBACKS, not what players see. Every metric's on-screen
-// name resolves LOC-first from `LOC_DEMOGRAPHICS_METRIC_<ID>` (uppercased id), with
-// an optional fuller chart title at `LOC_DEMOGRAPHICS_METRIC_<ID>_TITLE`, via
-// localizedMetricName() below / history-tabs.js. So:
-//   • Adding a metric → also add `LOC_DEMOGRAPHICS_METRIC_<ID>` (+ `_TOOLTIP`) to
-//     text/en_us/ModText.xml AND all 10 locales (see text/README.md). Without it the
-//     UI falls back to the raw English `label`, untranslated.
-//   • Renaming a metric → edit the LOC key's <Text>, NOT the `label` here (editing
-//     `label` alone changes nothing a player sees).
+// LOCALIZATION: `label`/`title` are dev-facing fallbacks. On-screen names resolve
+// from `LOC_DEMOGRAPHICS_METRIC_<ID>` (+ optional `_TITLE`, `_TOOLTIP`) via
+// localizedMetricName(); add those keys to every locale for a new metric.
 //
-// Accessors take a pre-resolved `ctx` built by the sampler (see
-// demographics-sampler.js#buildPlayerCtx). Every ctx field can be
-// undefined and the accessors have to tolerate that without throwing.
-// Return `undefined` and the sampler drops the metric for that player
-// on that turn; if a metric returns undefined for every player across
-// every recorded sample, the screen auto-hides its tab
-// (see screen-demographics.js).
+// Accessors take a pre-resolved `ctx` built by the sampler; every ctx field can
+// be undefined and accessors must tolerate that. Returning `undefined` drops the
+// metric for that player on that turn; a metric undefined everywhere auto-hides its tab.
 //
-// A few metrics apply a deterministic transform to make the raw game
-// number feel more real-world - GDP in dollars, population in millions,
-// land in km². These are purely cosmetic; they never affect game state.
-// Per-metric formulas are documented inline below.
-//
-// Every accessor is cited to vanilla Civ7 source in demographics-sampler.js.
+// Some metrics apply a cosmetic real-world transform (GDP in dollars, population
+// in millions, land in km²); these never affect game state.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { EXTRA_METRICS } from "/demographics/ui/metrics/demographics-metrics-extra.js";
@@ -142,12 +127,9 @@ export const METRICS = [
     title: "Civics Unlocked",
     category: "culture",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP",
-    // Turn-1 fix: when the Culture progression tree handle isn't yet
-    // populated, sampler stores ctx.civicsCount as undefined. Returning
-    // undefined here would cause the chart to skip the entire civ's
-    // series (chart.js requires isFinite). Default to 0 so the
-    // turn-1 sample plots at y=0 with a legend entry, rather than
-    // showing no line/label at all.
+    // ctx.civicsCount is undefined until the Culture progression tree handle
+    // is populated; default to 0 so the turn-1 sample plots with a legend
+    // entry instead of the chart skipping the civ's series.
     accessor: civicsAccessor,
     format: formatRoundedCount,
     unit: "civics"
@@ -275,10 +257,9 @@ export const METRICS = [
     unit: "people"
   },
   {
-    // Raw Civ population points, the SAME sampled total as `population`, but WITHOUT the
-    // people-scaling, so the Migration hub's "Civ numbers" view shows the exact Civ figures (and
-    // the Y axis rescales). The Population group pill maps Scaled → `population`, Civ → this. Title
-    // matches so the toggle only changes the curve/axis, not the heading.
+    // Raw Civ population points: the same sampled total as `population` without the
+    // people-scaling, for the Migration hub's "Civ numbers" toggle. Title matches so
+    // the toggle only changes the curve/axis, not the heading.
     id: "population_civ",
     label: "Population",
     title: "Population Over Time",
@@ -390,13 +371,8 @@ export const METRICS = [
   },
   // ── Civ7 Test of Time triumph counts ───────────────────────────────
   // Per-civ count of triggered triumphs, bucketed by Legacies.LegacySubtype.
-  // Sampler reads via Players.get(pid).Legacies.isTriggered(legacyType) for
-  // every row in GameInfo.Legacies. These six fields are persisted in
-  // every sample's metrics so the stacked-area "Triumphs Over Time" view
-  // and the radar can reconstruct history. They DON'T have their own
-  // line-chart tabs - a single-integer step counter over hundreds of
-  // turns is poor info density. The dedicated triumph views (Race,
-  // Completion, Stack) live as synthetic metrics in view-history.js.
+  // Persisted in every sample so the stacked-area and radar views can
+  // reconstruct history; they have no line-chart tabs of their own.
   {
     id: "triumphs_cultural",
     category: "age",
@@ -484,23 +460,13 @@ export const METRICS = [
     category: "age",
     global: true,
     worldRankingsAllCivsHidden: true,
-    // Discrete integer metric - Chart.js auto-generates fractional ticks
-    // (0, 0.5, 1, …) over our 0–4 range and the formatter rounds them,
-    // so labels appear 9 times instead of 5. This flag tells the chart
-    // to suppress non-integer tick labels.
+    // Discrete integer metric: suppress Chart.js's fractional tick labels
+    // over the 0-4 range.
     integerOnly: true,
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP",
-    // Game.CrisisManager.getCurrentCrisisStage(0) returns:
-    //   -1 = pre-crisis (no crisis triggered yet)
-    //    0 = first active stage ("Crisis Begins")
-    //    1 = second active stage ("Crisis Intensifies")
-    //    2 = third active stage ("Crisis Culminates")
-    //    3 = post-final stage ("Crisis Ends")
-    // Cite: model-government.js - `nextCrisisStage = max(0, crisisStage+1)`
-    // looks at the NEXT marker index, confirming engine values are 0-based.
-    // Display-side we want the user-facing label "Stage 1" when the engine
-    // says 0 (the first active stage). Shift every value up by 1 so the
-    // Y axis range becomes 0..4 and engine=-1 plots cleanly as Y=0.
+    // Game.CrisisManager.getCurrentCrisisStage(0) is 0-based (-1 = pre-crisis,
+    // 0..2 = active stages, 3 = "Crisis Ends"). Shift every value up by 1 so
+    // the Y axis spans 0..4 and the first active stage reads "Stage 1".
     accessor: crisisStageAccessor,
     format: formatCrisisStage,
     unit: "stage"
@@ -625,12 +591,8 @@ export function getMetric(id) {
 
 /**
  * The localized display name for a metric, resolved from its
- * `LOC_DEMOGRAPHICS_METRIC_<ID>` key — the same key the history tabs and chart
- * axis derive (see history-tabs.js `localizedMetricName`, chart-line-config.js
- * `yAxisTitle`). The metric table's English `label`/`title` are the fallback
- * used only when the key is unresolved (t() returns the key unchanged on a
- * miss). Use this anywhere a metric name is shown to the user so it translates
- * instead of rendering the raw English `label`.
+ * `LOC_DEMOGRAPHICS_METRIC_<ID>` key, with the English `label`/`title` as the
+ * fallback when the key is unresolved. Use this wherever a metric name is shown.
  * @param {*} metric A metric descriptor (needs `id`; `label`/`title` are fallback).
  * @returns {string} The localized metric name, or "" for a nullish metric.
  */
@@ -643,11 +605,9 @@ export function localizedMetricName(metric) {
 }
 
 // ── Companion-mod extension API (inert unless another mod calls it) ────────
-// Lets a separate mod (e.g. "emigration") contribute a metric that flows through
-// the normal sample → store → line-chart pipeline. Pushed metrics are picked up
-// live by the sampler (computeMetrics iterates METRICS each turn); page
-// placements are applied by view-history at render time. Nothing here runs unless
-// an external mod invokes the API, so the base mod's behavior is unchanged.
+// Lets a separate mod contribute a metric that flows through the normal sample →
+// store → line-chart pipeline: the sampler iterates METRICS each turn and
+// view-history applies page placements at render time.
 
 /**
  * Pending external page placements: {pageId, metricId}. view-history merges
@@ -692,13 +652,9 @@ export function registerMetricToPage(pageId, metricId, afterMetricId) {
 }
 
 /**
- * Pending external dashboard PANELS. Unlike registerMetricToPage (which adds a line-chart tab to
- * an existing page), a panel is a whole companion-owned page whose body the companion renders
- * itself , the screen just hands it a container. Consumed by view-history at render time. A panel
- * may declare `tabs` to contribute several native Demographics sub-tabs (one synthetic metric
- * each) instead of a single tab; `render` then receives the selected sub-tab id as its third
- * argument. A panel may set `topLevel: true` to be shown as its own top-level view tab (right of
- * Historical Data) instead of a page inside Historical Data.
+ * Pending external dashboard PANELS: whole companion-owned pages whose body the companion
+ * renders into a container the screen hands it. `tabs` contributes several sub-tabs (render
+ * receives the selected sub-tab id third); `topLevel: true` makes it a top-level view tab.
  * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function,
  *   topLevel?:boolean,
  *   tabs?:{id:string, label?:string, title?:string, hidePolicyBanner?:boolean}[]}[]}
@@ -713,35 +669,27 @@ export const EXTERNAL_PANELS = [];
 export const PANEL_SUBTAB_SEP = "::";
 
 /**
- * Register an external dashboard panel as its own page. `spec.render(container, ctx, subId)` is
- * invoked by the screen to fill the page body (the companion owns all of it). Ignored on a
- * duplicate id. A panel may declare `tabs: [{id, label, title}]` to contribute several native
- * Demographics sub-tabs (one synthetic metric each) instead of a single tab; `render` then
- * receives the selected sub-tab's `id` as its third argument. Without `tabs`, it's a single-tab
- * panel (legacy) and `subId` is undefined.
+ * Register an external dashboard panel as its own page; `spec.render(container, ctx, subId)`
+ * fills the page body. Ignored on a duplicate id. With `tabs: [{id, label, title}]` the panel
+ * gets several sub-tabs and `subId` is the selected one; without, `subId` is undefined.
  * @param {*} spec A panel spec ({id, pageLabel, tabLabel, title, render, tabs?}).
  * @returns {boolean} Whether it was added.
  */
 export function registerPanel(spec) {
   if (!spec || typeof spec.id !== "string" || typeof spec.render !== "function") return false;
   if (EXTERNAL_PANELS.some((p) => p.id === spec.id)) return false;
-  // Don't let a companion panel id shadow a built-in metric id (the render dispatch would then
-  // route that real metric's tab to the panel). Sub-tab ids are namespaced with "::", so they
-  // can't collide with a plain built-in id. NOTE: use a STRICT existence check here, not
-  // getMetric() - getMetric falls back to METRICS[0] for an unknown id (never returns falsy), so
-  // it would reject every panel.
+  // A panel id must not shadow a built-in metric id (render dispatch would route that
+  // metric's tab to the panel). Strict existence check: getMetric() falls back to
+  // METRICS[0] for unknown ids and would reject every panel.
   if (METRICS.some((m) => m.id === spec.id)) return false;
   EXTERNAL_PANELS.push(spec);
   return true;
 }
 
 /**
- * External metric GROUPS: a single tab (on a page) that presents related metrics behind toggles,
- * showing one full chart at a time, instead of N separate tabs. Two shapes are supported:
- *  • flat, `metricIds: string[]` (one metric toggle); or
- *  • 2D, `members: [{label, <viewId>: metricId, ...}]` + `views: [{id, label}]` (a metric toggle
- *    AND a view toggle; the shown metric is `members[metricSel][viewSel]`).
- * Consumed by view-history. Member metrics must be registered separately so they're sampled.
+ * External metric GROUPS: one tab presenting related metrics behind toggles. Shapes: flat
+ * `metricIds: string[]`, or 2D `members: [{label, <viewId>: metricId}]` + `views: [{id, label}]`
+ * (shown metric is `members[metricSel][viewSel]`). Member metrics must be registered separately.
  * @type {{pageId:string, id:string, label:string, first?:boolean, metricIds?:string[],
  *   views?:{id:string,label:string}[], members?:*[]}[]}
  */
@@ -764,20 +712,16 @@ export function registerMetricGroup(spec) {
 export const HUB_IDS = Object.freeze(["statistics", "migration", "geopolitics"]);
 
 /**
- * Pending hub-page contributions: whole companion-owned PAGES injected into a named hub at a
- * position. Each page is a PageDef ({id, label, tier?, render | metrics}); `after` is an anchor
- * page id within the hub (else appended). Consumed by view-history's mergeHubPages at render time.
- * This is the hub-targeted cousin of registerPanel (which makes a sibling top-level tab); a hub
- * page lives INSIDE a hub's page row.
+ * Pending hub-page contributions: companion-owned PageDefs ({id, label, tier?, render | metrics})
+ * injected into a named hub's page row after the anchor page id `after` (else appended).
+ * Consumed by view-history's mergeHubPages at render time.
  * @type {{hubId:string, page:*, after:(string|null)}[]}
  */
 export const EXTERNAL_HUB_PAGES = [];
 
 /**
- * True when a companion (the Emigration mod) has registered pages into the Migration hub.
- * Drives the host's Migration-hub visibility + Population placement: with no companion the
- * hub is hidden and Population moves to the Society page; with one, the hub shows (labelled
- * "Emigration") and the companion owns the Population anchor.
+ * True when a companion has registered pages into the Migration hub. Without one the hub is
+ * hidden and Population sits on the Society page; with one the hub shows and owns Population.
  * @returns {boolean} Whether the Migration hub has companion pages.
  */
 export function migrationHubHasCompanion() {
@@ -813,10 +757,8 @@ _api.registerPanel = registerPanel;
 _api.registerMetricGroup = registerMetricGroup;
 _api.registerHubPages = registerHubPages;
 _api.HUB_IDS = HUB_IDS;
-// This module is imported lazily (the sampler is dynamic-imported after
-// engine.whenReady), so a companion mod may have booted first and queued its
-// registrations on `pending`. Drain them now that the real API exists. This
-// makes the handshake order-independent: whoever loads second completes it.
+// This module loads lazily, so a companion may have booted first and queued its
+// registrations on `pending`; drain them so the handshake is order-independent.
 if (Array.isArray(_api.pending)) {
   for (const job of _api.pending.splice(0)) {
     try {

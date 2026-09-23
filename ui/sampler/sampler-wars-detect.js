@@ -45,8 +45,6 @@ function playerEvents(pid) {
 /**
  * Enumerate every active DECLARE_WAR event via getPlayerEvents(pid) for each
  * player and de-dupe on uniqueID. Returns null if the API is unavailable.
- * Citation: core/ui/utilities/diplomacy-utilities.js,
- * base-standard/ui/diplo-ribbon/model-diplo-ribbon.js.
  * @param {*[]} allPlayers The alive players list.
  * @returns {Map<*, ActiveWar> | null} Active wars keyed by uniqueID, or null.
  */

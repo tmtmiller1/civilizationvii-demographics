@@ -1,15 +1,8 @@
 // chart-line-tooltip.js
 //
-// HTML-overlay tooltip for the per-civ line chart: ensures the tooltip DOM
-// element, sorts data-points to match legend order, builds per-civ rows (leader
-// portrait + colored dot + name + value), positions the tip near the cursor,
-// and binds it all via the Chart.js `external` hook. Extracted from
-// chart-line.js.
-//
-// Rows are built as real DOM nodes (not an innerHTML string) so the leader
-// portrait can use a live <fxs-icon> element - the same element the WorldRankingsAllCivs
-// and wars tooltip use. UI.getIconURL is NOT available in this custom screen,
-// so the URL-background approach renders nothing here.
+// HTML-overlay tooltip for the per-civ line chart, bound via the Chart.js
+// `external` hook. Rows are built as real DOM nodes so the leader portrait can
+// use a live <fxs-icon> element (UI.getIconURL is not available in this screen).
 
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 
@@ -232,7 +225,9 @@ function positionChartTooltip(tip, chart, tooltip, wrap) {
 export function makeTooltipExternal(fmtX, fmtY, metricMeta) {
   return function (context) {
     const { chart, tooltip } = context;
-    const wrap = chart.canvas.parentNode;
+    // Chart.js can fire the external handler on a torn-down chart (canvas detached / null).
+    const wrap = chart && chart.canvas ? chart.canvas.parentNode : null;
+    if (!wrap || !tooltip) return;
     const tip = ensureChartTooltipEl(wrap);
     if (tooltip.opacity === 0) {
       tip.style.opacity = "0";

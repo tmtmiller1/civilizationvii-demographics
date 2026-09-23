@@ -1,12 +1,9 @@
 // chart-crisis-stages.js
 //
-// The Crises page: the current age's crisis broken into its stages
-// (Begins / Intensifies / Culminates / Ends), one colored bar per stage (the
-// same severity colors the historical line charts use for crisis markers), and
-// directly beneath each stage a PERMANENT cost section - the exact war-tooltip
-// table - listing every civ's losses accrued during that stage. War-only
-// columns ("Directed to War", "Settlements Razed") are omitted; crises have no
-// sides, so it's one column per civ with no "vs".
+// The Crises page: the current age's crisis broken into its stages (Begins /
+// Intensifies / Culminates / Ends), one colored bar per stage, and beneath each
+// stage a cost section (the war-tooltip table, minus the war-only columns)
+// listing every civ's losses accrued during that stage.
 
 import {
   historySamples,
@@ -172,11 +169,9 @@ function buildStageBlock(seg, ctx) {
 
 /**
  * Build the crisis-wide cumulative-impact block: a caption plus a cost table
- * spanning the entire crisis ([group.start, group.end] ; every stage summed).
- * Rendered once per crisis beneath its stage blocks, INDEPENDENT of whether an
- * "Ends" (stage 4) sample was ever captured , the engine often resolves a crisis
- * straight from "Culminates" without a stage-4 reading, so gating on stage 4
- * silently dropped the cumulative table.
+ * spanning the entire crisis ([group.start, group.end]). Rendered independent
+ * of whether an "Ends" (stage 4) sample was captured, since the engine often
+ * resolves a crisis straight from "Culminates".
  * @param {{ start: number, end: number, sample: Snapshot }} group The crisis run.
  * @param {{ samples: Snapshot[], crisisSnapshots?: Record<string, *[]> }} ctx Render context.
  * @returns {HTMLElement} The cumulative block.
@@ -215,10 +210,8 @@ function buildCrisisGroup(group, ctx) {
 
 /**
  * Build a per-group render context whose samples + year map are restricted to
- * the group's age. Crisis windows key off age-local `s.turn`, which resets each
- * age, so an unfiltered stream would let a later age's coincident turn numbers
- * leak into (or invert) this crisis's windows. Filtering to the age makes every
- * downstream turn lookup unambiguous.
+ * the group's age, so a later age's coincident age-local turn numbers can't
+ * leak into this crisis's windows.
  * @param {*} ctx Base render context (samples / seed / yearMap / mode).
  * @param {{ sample: Snapshot }} group The crisis group.
  * @returns {*} The same context with samples + yearMap scoped to the group's age.
@@ -238,6 +231,7 @@ function groupCtx(ctx, group) {
  */
 function ageOverallCols(age, ctx) {
   const snap = ctx.crisisSnapshots && ctx.crisisSnapshots[age];
+  // Persisted array: its elements are untrusted (null / scalar); mergeAgeCols drops those.
   if (Array.isArray(snap)) return snap;
   return buildAgeCrisisCols(ctx.samples.filter((s) => sampleAgeKey(s) === age));
 }
@@ -309,7 +303,7 @@ export function renderCrisisStages(host, opts) {
   while (host.firstChild) host.removeChild(host.firstChild);
   const history = (opts && opts.history) || {};
   const samples = historySamples(history);
-  const latestTurn = samples.length ? samples[samples.length - 1].turn ?? 0 : 0;
+  const latestTurn = samples.length ? (samples[samples.length - 1]?.turn ?? 0) : 0;
   const onsets = crisisStageOnsets(samples);
   if (!onsets.length) {
     appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE"));

@@ -36,11 +36,9 @@ export function logSampleTiming(ilog, t, counts) {
 }
 
 /**
- * Record auxiliary town history for one sample pass. The recorder only COMPUTES
- * its updated blob; this persists it in a single batched settings write, so the
- * shared `modSettings` store is parsed + stringified once per turn. (Settlement
- * founding/trend history is NOT here: it rides the saved history blob, see
- * finalizeSampleLifecycle's recordSettlementHistory.)
+ * Record auxiliary town history for one sample pass in a single batched settings write, so the
+ * shared `modSettings` store is parsed + stringified once per turn. Settlement founding/trend
+ * history rides the saved history blob instead (see finalizeSampleLifecycle).
  * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
  * @param {{
  *   recordLocalTownsNow: (chartTurn: number) => ({key: string, value: *}|null),
@@ -112,6 +110,7 @@ export function commitSample(storage, tripIfTooMany, history) {
  *     counts: {players:number,minors:number,samples:number}
  *   ) => void
  * }} deps Finalization dependencies.
+ * @returns {number} Stored sample count after the commit (0 when append or save failed).
  */
 export function finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, deps) {
   const tWork = deps.perfNow();
@@ -131,4 +130,5 @@ export function finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, deps
     { start: tStart, work: tWork, write: tWrite, end: deps.perfNow() },
     counts
   );
+  return storedSamples;
 }

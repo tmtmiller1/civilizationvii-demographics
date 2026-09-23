@@ -1,12 +1,10 @@
 // cinematic-tour-highlights.js
 //
-// City "what to feature" analysis for the Top-Cities cinematic tour: scans a
-// settlement for the points of interest worth filming - visitable wonders,
-// special / unique-quarter districts, and top-yield plots - and assembles the
-// POI list the tour's camera shots are built around. Extracted from
-// cinematic-tour.js so that file keeps the camera + playback mechanics while the
-// "what's interesting in this city" logic lives here. Pure analysis over engine
-// globals (no imports); cityHighlights() is the entry point, consumed by buildTour.
+// City "what to feature" analysis for the Top-Cities cinematic tour: scans a settlement for
+// visitable wonders, unique-quarter districts and top-yield plots, and assembles the POI list the
+// tour's camera shots are built around. cityHighlights() is the entry point, consumed by buildTour.
+
+import { stripLocaleMarkup } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Return purchased-plot indices for a city.
@@ -152,7 +150,9 @@ export function uniqueQuarterInfo(quarterType) {
       return {
         name: Locale.compose(row.Name),
         type: row.UniqueQuarterType,
-        description: row.Description ? Locale.compose(row.Description) : ""
+        // The overlay sets this with textContent, so the game's own markup has to come OUT
+        // rather than be stylized (stylize returns HTML, which textContent would show raw).
+        description: row.Description ? stripLocaleMarkup(Locale.compose(row.Description)) : ""
       };
     }
   } catch (_) {

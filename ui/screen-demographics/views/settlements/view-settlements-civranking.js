@@ -172,11 +172,9 @@ function buildCivMeta(c) {
 }
 
 /**
- * Build a civ podium card's body column, line for line the Top 25 podium card's
- * (settlement name / civ / leader / population / camera buttons), so the two
- * podiums read as one design at the same size: civ name, "Capital: <city>",
- * leader, population + settlement count, and the capital's map + cinematic
- * buttons (disabled for an unmet civ, as on Top 25).
+ * Build a civ podium card's body column, line for line the Top 25 podium
+ * card's: civ name, "Capital: <city>", leader, population + settlement count,
+ * and the capital's map + cinematic buttons (disabled for an unmet civ).
  * @param {*} c The (display) civ aggregate.
  * @param {*} st The render state.
  * @param {CivRankingDeps} deps Rendering dependencies.

@@ -55,10 +55,9 @@ export function buildSeries(p, win, metricId, fromMinors) {
 }
 
 /**
- * Build one participant's cumulative-LOSS series for a level metric, plotted
- * NEGATIVE: each point is the running sum of every per-turn decline so far,
- * negated, so the line starts at 0 and descends as the civ loses ground. Rises
- * are ignored (growth never offsets a loss), matching the tooltip's "lost".
+ * Build one participant's cumulative-loss series for a level metric, plotted
+ * negative: the running sum of every per-turn decline, negated. Rises are
+ * ignored (growth never offsets a loss), matching the tooltip's "lost".
  * @param {{ pid: number, name: string, color: string }} p The participant.
  * @param {Snapshot[]} win The windowed samples.
  * @param {string} metricId The level snapshot.metrics key.

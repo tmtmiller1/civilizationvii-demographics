@@ -1,15 +1,9 @@
 // demographics-palette.js
 //
-// Color palette for mod-owned chrome. Civ primary colors (returned by
-// UI.Player.getPrimaryColorValueAsString) are treated as identity
-// markers and never overridden; this module only owns colors we invent
-// ourselves - the rotating fallback when a civ has no primary, the
-// attitude swatches in the relations ring, and the fallback bars in
-// the conflicts gantt.
-//
-// The colorblind palette is Wong's eight-color CVD-safe set (Nature
-// Methods 8, 441, 2011), which remains distinguishable under
-// deuteranopia, protanopia, and tritanopia simulators.
+// Color palette for mod-owned chrome. Civ primary colors are identity markers
+// and never overridden; this module only owns invented colors (the rotating
+// fallback, attitude swatches, gantt fallback bars). The colorblind palette is
+// Wong's eight-color CVD-safe set (Nature Methods 8, 441, 2011).
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 
@@ -47,17 +41,9 @@ const PALETTE_COLORBLIND = [
   "#A88FB2"
 ];
 
-// Attitude swatches - each must remain visually distinct from the
-// per-filter colors shown in the same view (POLITICAL_FILTERS,
-// ECONOMIC_FILTERS, CS_POLITICAL_FILTERS in view-relations.js). Two
-// known collisions:
-//   denounced = #ff7f1a  → hostile cannot be orange.
-//   trade (was #3fbf3f)  → friendly stays green; trade moved to teal.
-// Vivid attitude scale: a saturated diverging ramp from war (red) through the
-// neutral stone to alliance (blue). The earlier pale pastels were too close in
-// chroma/value to tell apart on the deep ring field, so these push saturation
-// while keeping the semantics (war = red, friendly = green, alliance = blue, …)
-// and a readable warm→cool ordering across the seven steps.
+// Attitude swatches: a saturated diverging ramp from war (red) through the
+// neutral stone to alliance (blue), each visually distinct from the per-filter
+// colors shown in the same view (hostile cannot be orange, which is denounced).
 const ATTITUDE_STANDARD = {
   war: "#e8473b", // vivid red
   hostile: "#e87434", // orange-red (strong negative)
@@ -68,10 +54,8 @@ const ATTITUDE_STANDARD = {
   alliance: "#4ea6ec" // vivid blue (allied)
 };
 
-// CVD-safe attitude swatches: red→vermillion (the most universal "danger"
-// signal stays warm-red but in a vermillion hue), green→bluish-green, etc.
-// Preserves the warm vs. cool semantic split so a quick glance still reads
-// "at war = dangerous" and "alliance = positive".
+// CVD-safe attitude swatches: red→vermillion, green→bluish-green, etc.,
+// preserving the warm vs. cool semantic split.
 const ATTITUDE_COLORBLIND = {
   war: "#D55E00", // vermillion - still reads "warning"
   alliance: "#56B4E9", // sky blue - positive

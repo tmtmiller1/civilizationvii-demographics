@@ -2,9 +2,8 @@
 //
 // Small, self-contained Chart.js plugin factories used by chart-line.js:
 // focus-glow (focused line halo), hover-crosshair (gold dashed vertical at
-// tooltip x), cap-limit-line (red 100% rule on settlement_cap_pct). Extracted
-// from chart-line.js. None of these own any shared state -
-// each call returns a fresh plugin object.
+// tooltip x), cap-limit-line (red 100% rule on settlement_cap_pct). None of
+// these own any shared state - each call returns a fresh plugin object.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
@@ -109,7 +108,7 @@ export function makeHoverCrosshairPlugin() {
     afterDatasetsDraw(c) {
       const tt = c.tooltip;
       if (!tt || !tt.opacity || !tt.dataPoints || tt.dataPoints.length === 0) return;
-      if (!c.scales.x) return;
+      if (!c.scales.x || !c.chartArea) return;
       const hoverX = tt.dataPoints[0].element?.x;
       if (typeof hoverX !== "number") return;
       const ctx2 = c.ctx;
@@ -193,6 +192,7 @@ export function makeCapLimitLinePlugin(metricId) {
       const yScale = c.scales.y;
       if (!yScale) return;
       if (100 < yScale.min || 100 > yScale.max) return;
+      if (!c.chartArea) return;
       const y = yScale.getPixelForValue(100);
       const { left, right } = c.chartArea;
       const ctx2 = c.ctx;

@@ -1,11 +1,9 @@
 // chart-line-legend.js
 //
-// Custom HTML legend for the per-civ line chart. Rendered as a list beside the
-// chart canvas (the canvas-drawn Chart.js legend is disabled) so each civ entry
-// can carry a live <fxs-icon> leader portrait + colored dot - matching the
-// hover tooltip exactly. Clicking a row toggles that civ's VISIBILITY via
-// opts.onToggleVisibility (falling back to opts.onToggleCiv); the "All" / "None"
-// controls bulk-toggle every civ via opts.onSetAllHidden.
+// Custom HTML legend for the per-civ line chart (the canvas-drawn Chart.js
+// legend is disabled) so each civ entry can carry a live leader portrait +
+// colored dot. Clicking a row toggles that civ's VISIBILITY via
+// opts.onToggleVisibility; "All" / "None" bulk-toggle via opts.onSetAllHidden.
 
 import { buildLeaderIconGroup } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";

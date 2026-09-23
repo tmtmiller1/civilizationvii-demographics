@@ -1,16 +1,8 @@
 // demographics-audio.js
 //
-// Thin defensive wrapper around Audio.playSound for our custom <div>
-// click handlers - pills, chart labels, ring nodes - which don't get the
-// auto-emit behavior that fxs-* widgets pick up from data-audio-*-ref.
-//
-// The engine resolves a sound by looking up Component.audio[group][id]
-// and falling back to Component.audio["audio-base"][id]. Passing "none"
-// for either argument silences the call.
-//
-// Never throws. The audio subsystem isn't always present (observer mode,
-// headless contexts, save previews); a missing Audio object is normal
-// and silent.
+// Thin defensive wrapper around Audio.playSound for custom <div> click handlers, which don't get
+// the auto-emit behavior fxs-* widgets pick up from data-audio-*-ref. The engine resolves a sound
+// via Component.audio[group][id], falling back to "audio-base"; "none" silences the call.
 
 const DBG = false;
 /**

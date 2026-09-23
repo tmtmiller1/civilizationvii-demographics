@@ -199,6 +199,65 @@ function testBuildSettlementBoardLeadersPerOutput() {
   );
 }
 
+function testConstructibleNameLookupThrowSkipped() {
+  const city = makeCity(1, "Rome", { population: 10 });
+  city.Constructibles.getIdsOfClass = (cls) => (cls === "BUILDING" ? [1, 2, 3] : []);
+  setupPlayers([makeCiv(1, { cities: [city] })]);
+  globalThis.UI = { Player: { getPrimaryColorValueAsString: () => "#ffffff" } };
+  globalThis.GameInfo = {
+    Leaders: { lookup: () => ({ Name: "Leader" }) },
+    Civilizations: { lookup: () => ({ Name: "Civ" }) },
+    Constructibles: {
+      lookup: (type) => {
+        if (type === "bad") throw new Error("lookup boom");
+        return { Name: "LOC_B_" + type, ConstructibleType: "BUILDING_" + type };
+      }
+    }
+  };
+  // id 1: the handle lookup throws (stale component id); id 2: the table lookup throws.
+  globalThis.Constructibles = {
+    getByComponentID: (cid) => {
+      if (cid === 1) throw new Error("stale id");
+      return { type: cid === 2 ? "bad" : "ok" };
+    }
+  };
+  const board = buildSettlementBoard();
+  assert.equal(board.settlements.length, 1, "a throwing constructible lookup does not drop the settlement");
+  assert.deepEqual(
+    board.settlements[0].buildingTypes,
+    ["LOC_B_ok"],
+    "throwing handle/table lookups are skipped; the readable building is still named"
+  );
+  assert.equal(board.settlements[0].buildings, 1, "buildings counts the named ones");
+
+  // The lite board (sampler archive) never runs the name scan; the count comes from the class ids.
+  globalThis.Constructibles.getByComponentID = () => {
+    throw new Error("the lite board must not resolve building handles");
+  };
+  const lite = buildSettlementBoard({ lite: true });
+  assert.deepEqual(lite.settlements[0].buildingTypes, [], "lite board: no building names");
+  assert.equal(lite.settlements[0].buildings, 3, "lite board: buildings counts the class ids");
+  assert.equal(lite.settlements[0].wonderInProgress, null, "lite board: no wonder-in-progress read");
+  assert.equal(lite.settlements[0].name, "Rome", "lite board: every archived field is still read");
+  delete globalThis.Constructibles;
+}
+
+function testThrowingCityPropertiesFallBack() {
+  const city = makeCity(1, "Rome", { population: 10 });
+  Object.defineProperty(city, "name", { get() { throw new Error("name boom"); } });
+  Object.defineProperty(city, "isTown", { get() { throw new Error("town boom"); } });
+  setupPlayers([makeCiv(1, { cities: [city] })]);
+  globalThis.UI = { Player: { getPrimaryColorValueAsString: () => "#ffffff" } };
+  globalThis.GameInfo = {
+    Leaders: { lookup: () => ({ Name: "Leader" }) },
+    Civilizations: { lookup: () => ({ Name: "Civ" }) }
+  };
+  const board = buildSettlementBoard();
+  assert.equal(board.settlements.length, 1, "a city whose name/isTown getters throw is still boarded");
+  assert.equal(board.settlements[0].name, "LOC_CITY_NAME_UNSET", "a throwing name falls back to the unset tag");
+  assert.equal(board.settlements[0].isTown, false, "a throwing isTown reads as a city");
+}
+
 function testSettlementOutputsStructure() {
   // Verify SETTLEMENT_OUTPUTS has expected structure
   assert.ok(Array.isArray(SETTLEMENT_OUTPUTS), "SETTLEMENT_OUTPUTS is array");
@@ -234,6 +293,8 @@ testBuildSettlementBoardSingleCity();
 testBuildSettlementBoardMultipleCivs();
 testBuildSettlementBoardSortedByComposite();
 testBuildSettlementBoardLeadersPerOutput();
+testConstructibleNameLookupThrowSkipped();
+testThrowingCityPropertiesFallBack();
 testSettlementOutputsStructure();
 
 console.log("settlements-data harness passed");

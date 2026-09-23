@@ -125,9 +125,7 @@ function configApiAvailable() {
 /**
  * Resolve the GameConfiguration key-value store - the durable backend that
  * survives quit→load AND the age transition (unlike the Tutorial bag). Keys are
- * plain strings (GameConfiguration is not the shared localStorage surface, so no
- * hashing / single-key discipline is required); handles are fetched fresh per
- * call, mirroring the validated spike.
+ * plain strings; handles are fetched fresh per call.
  * @param {{
  *   catalogScope: string,
  *   derr?: (...a: any[]) => void

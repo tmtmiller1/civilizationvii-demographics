@@ -1,14 +1,8 @@
 // sampler-collectors-summary.js
 //
-// Per-civ collectors sourced from the engine-native Game.Summary adapter:
-// Tourism (city-scope culture-victory-points total) and Great People Earned
-// (player-scope cumulative). These read empty until the game generates the data
-// (Tourism needs tourism sources; Great People needs one earned), so the tab
-// auto-hide keeps them out of the selector until then.
-//
-// buildPlayerCtx runs once per player within a single turn's sample, so the
-// batch Summary reads are memoized per turn (one getDataSets pass per dataset per
-// turn) and each per-player call just looks up its id.
+// Per-civ collectors sourced from the engine-native Game.Summary adapter. These read empty until
+// the game generates the data, so the tab auto-hide keeps them out of the selector until then.
+// The batch Summary reads are memoized per turn; each per-player call just looks up its id.
 
 import { datasetByPlayer, summaryAvailable } from "/demographics/ui/sampler/sampler-game-summary.js";
 

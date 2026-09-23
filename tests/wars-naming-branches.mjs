@@ -215,6 +215,10 @@ const byId = nameMergedWars(wars, samples);
 assert.equal(typeof byId.get(11), "string");
 assert.equal(typeof byId.get(14), "string");
 assert.equal(nameMergedWars([], [{}, {}]).size, 0);
+// A persisted stream can end in a null sample: the latest-turn read must not dereference it.
+const nullTail = nameMergedWars(wars, samples.concat([null]));
+assert.equal(typeof nullTail.get(11), "string");
+assert.equal(nullTail.size, byId.size);
 
 assert.equal(warDurationYears(shortBilateral, turnYearMap, 400), 20);
 assert.equal(warDurationYears({ startTurn: 1, endTurn: 1 }, turnYearMap, 400), 1);

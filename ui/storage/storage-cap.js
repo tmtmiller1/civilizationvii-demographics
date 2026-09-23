@@ -8,6 +8,15 @@ import { retentionScale } from "/demographics/ui/core/demographics-hardware.js";
 /** Absolute ceiling on retained samples, regardless of user override. */
 export const HARD_MAX_SAMPLES = 50000;
 
+/**
+ * Serialized-payload byte budget. No engine limit on a GameConfiguration value is
+ * known; the soft budget triggers extra sample tightening before the write, the
+ * hard budget only escalates the log line (the current game is never dropped).
+ */
+export const PAYLOAD_SOFT_BYTES = 3 * 1024 * 1024;
+/** Serialized-payload size above which every save logs an error; see PAYLOAD_SOFT_BYTES. */
+export const PAYLOAD_HARD_BYTES = 6 * 1024 * 1024;
+
 /** Floor on the auto-derived cap so a weak-hardware scale never starves history. */
 const ADAPTIVE_MIN = 250;
 
@@ -104,9 +113,9 @@ function capFromString(override) {
 }
 
 /**
- * Resolve adaptive cap from game speed, then scale by the hardware-capability /
- * game-size factor (P1.6) so weak machines and many-civ games retain fewer
- * samples , floored at ADAPTIVE_MIN and capped at HARD_MAX_SAMPLES.
+ * Resolve adaptive cap from game speed, then scale by the hardware-capability / game-size factor
+ * so weak machines and many-civ games retain fewer samples, floored at ADAPTIVE_MIN and capped at
+ * HARD_MAX_SAMPLES.
  * @returns {{ cap: number, source: string }} Effective cap.
  */
 function adaptiveCap() {

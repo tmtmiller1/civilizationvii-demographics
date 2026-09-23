@@ -1,11 +1,8 @@
 // chart-wars-cost-table.js
 //
 // The shared row-major cost table (label column + one value column per entry, so
-// labels, stat icons, values, and portrait headers all line up by column).
-// Extracted from chart-conflicts-timeline.js so the Crises pages can build the same
-// table without importing the big gantt render module. Used by the war-timeline
-// tooltip (chart-conflicts-timeline) and the Crisis Stages cost sections
-// (chart-crisis-stages).
+// labels, stat icons, values, and portrait headers all line up by column). Used
+// by the war-timeline tooltip and the Crisis Stages cost sections.
 
 import {
   buildCostIcon,

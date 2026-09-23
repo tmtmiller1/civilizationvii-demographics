@@ -28,6 +28,41 @@ const ACTION_ROW = ".bottom-10.right-10";
 
 const RESULTS_BTN_ID = "demographics-endgame-button";
 const PAUSE_BTN_ID = "demographics-pause-button";
+// The pause menu (base-standard/ui/pause-menu/screen-pause-menu.js) and the button container
+// inside it that the pause button joins.
+const PAUSE_SCREEN = "screen-pause-menu";
+const PAUSE_CONTAINER = "#pause-menu-button-container";
+// How long a hook (action row / pause container) gets to mount after its screen before a miss is
+// reported as a base-game DOM change.
+const HOOK_GRACE_MS = 1000;
+/** Hook selectors already reported missing, so each is logged once per session, not per mount. */
+const reportedMissing = new Set();
+
+/**
+ * Report ONCE, via console.error (visible in UI.log), that a screen mounted but the DOM hook the
+ * button needs never appeared, naming the selector. Deferred, because a hook can mount a frame or
+ * two after its screen; a button or hook present by then cancels it.
+ * @param {HTMLElement} screen The observed screen.
+ * @param {string} selector The hook selector that was missing.
+ * @param {string} btnId The button id that should have landed.
+ */
+function reportMissingHookLater(screen, selector, btnId) {
+  if (reportedMissing.has(selector) || typeof setTimeout !== "function") return;
+  setTimeout(() => {
+    try {
+      if (reportedMissing.has(selector)) return;
+      if (screen.querySelector("#" + btnId) || screen.querySelector(selector)) return;
+      reportedMissing.add(selector);
+      console.error(
+        "[Demographics.endgame] " + String(screen.localName || "").toLowerCase() +
+        " mounted but " + selector + " was not found within " + HOOK_GRACE_MS +
+        " ms; the Demographics button was not added (base-game DOM change?)"
+      );
+    } catch (e) {
+      dlog("hook report threw:", /** @type {*} */ (e)?.message);
+    }
+  }, HOOK_GRACE_MS);
+}
 
 /**
  * Open the Demographics screen via the engine context manager, optionally
@@ -84,12 +119,17 @@ function makeButton(id, label, focusView) {
  */
 function injectResults(screen) {
   if (!screen || screen.querySelector("#" + RESULTS_BTN_ID)) return;
-  // Only ever place the button in the screen's own action row. Falling back to the
-  // screen root would strand a floating button in the top-left corner — the victory
-  // tracker is also reachable mid-game from the dock, where it has no action row at
-  // all. A miss here is not final: inspect() re-enters when the row itself mounts.
+  // Only ever place the button in the screen's own action row; falling back to
+  // the screen root would strand a floating button in the top-left corner. A
+  // miss here is not final: inspect() re-enters when the row itself mounts.
   const row = screen.querySelector(ACTION_ROW);
-  if (!row) return;
+  if (!row) {
+    // Only the end-of-game screen always has the row; the mid-game tracker legitimately lacks it.
+    if (String(screen.localName || "").toLowerCase() === "endgame-screen") {
+      reportMissingHookLater(screen, ACTION_ROW, RESULTS_BTN_ID);
+    }
+    return;
+  }
   // From the results screen, land on World Rankings — the leaderboard reads as a game recap.
   row.insertBefore(makeButton(RESULTS_BTN_ID, t("LOC_MOD_DEMOGRAPHICS_NAME"), "rankings"), row.firstChild);
 }
@@ -112,17 +152,31 @@ function injectPause(container) {
  */
 function findPauseContainer(node) {
   if (node.id === "pause-menu-button-container") return node;
-  const found = node.querySelector ? node.querySelector("#pause-menu-button-container") : null;
+  const found = node.querySelector ? node.querySelector(PAUSE_CONTAINER) : null;
   return found instanceof HTMLElement ? found : null;
 }
 
 /**
- * Whether an element is one of the end-of-game screens we attach to.
- *
- * NOTE: Coherent Gameface reports `localName`/`tagName` in UPPERCASE, unlike a
- * browser, so this MUST compare case-insensitively. A strict lowercase equality
- * check (`node.localName === "screen-victory-progress"`) silently never matches,
- * and the button never appears — with no error to show for it.
+ * Inject the pause button into the container a node brought in; when the node is (or contains)
+ * the pause menu itself and the container is missing, report the miss once.
+ * @param {HTMLElement} node The added node.
+ */
+function injectPauseFor(node) {
+  const pause = findPauseContainer(node);
+  if (pause) {
+    injectPause(pause);
+    return;
+  }
+  let menu = null;
+  if (String(node.localName || "").toLowerCase() === PAUSE_SCREEN) menu = node;
+  else if (node.querySelector) menu = node.querySelector(PAUSE_SCREEN);
+  if (menu instanceof HTMLElement) reportMissingHookLater(menu, PAUSE_CONTAINER, PAUSE_BTN_ID);
+}
+
+/**
+ * Whether an element is one of the end-of-game screens we attach to. Coherent
+ * Gameface reports `localName`/`tagName` in UPPERCASE, so this MUST compare
+ * case-insensitively or the button silently never appears.
  * @param {HTMLElement} node The node to test.
  * @returns {boolean} True when `node` is a results screen.
  */
@@ -167,14 +221,29 @@ function inspect(node) {
   try {
     const screen = resultScreenFor(node);
     if (screen) injectResults(screen);
-    const pause = findPauseContainer(node);
-    if (pause) injectPause(pause);
+    injectPauseFor(node);
   } catch (e) {
     dlog("inspect threw:", /** @type {*} */ (e)?.message);
   }
 }
 
-/** Install initial injection + a MutationObserver for later screen mounts. */
+/**
+ * Cheap pre-filter for the game-wide observer: only element nodes that carry an id, a class, or
+ * children can contain a hook, plus a results screen itself even when it mounts empty (so a row
+ * that never follows is still reported).
+ * @param {*} node The added node.
+ * @returns {boolean} True when the node deserves inspection.
+ */
+function worthInspecting(node) {
+  if (!node || node.nodeType !== 1) return false;
+  return !!(node.id || node.className || node.firstChild) || isResultScreen(node);
+}
+
+/**
+ * Install initial injection + a MutationObserver for later screen mounts. The observer is never
+ * disconnected: the pause container is re-created on every pause, and the results screens mount
+ * once per game end.
+ */
 function install() {
   try {
     const existing = document.querySelector(RESULT_SCREENS);
@@ -182,7 +251,9 @@ function install() {
     const pause = document.getElementById("pause-menu-button-container");
     if (pause) injectPause(pause);
     new MutationObserver((muts) => {
-      for (const mut of muts) for (const added of mut.addedNodes) inspect(added);
+      for (const mut of muts) {
+        for (const added of mut.addedNodes) if (worthInspecting(added)) inspect(added);
+      }
     }).observe(document.body, { childList: true, subtree: true });
     dlog("installed");
   } catch (e) {

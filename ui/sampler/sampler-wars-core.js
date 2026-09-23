@@ -268,12 +268,8 @@ function resolveWarHistory(history) {
 
 /**
  * Build connected components of currently-at-war pairs and reconcile against
- * open wars in history.wars.
- *
- * When the caller threads in the freshly-appended `history` (the per-turn sample
- * path), war records are mutated in place and the caller commits a single save
- * for the turn. Called without `history` (standalone), it reuses the in-memory
- * mirror (or loads) and saves itself.
+ * open wars in history.wars. With `history` passed, war records are mutated in
+ * place and the caller commits the save; without it, this loads and saves itself.
  * @param {Snapshot} snapshot The just-recorded snapshot.
  * @param {number} turn The current turn.
  * @param {WarHistory} [history] The in-progress history to mutate in place.

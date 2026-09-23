@@ -86,4 +86,64 @@ const rec = (id, turns = 40) => ({
   assert.equal(store.archiveStatus(), "unavailable");
 }
 
+// 8. getItem throws while setItem works: that is not an empty store, so nothing is written.
+{
+  store._resetForTests();
+  const base = buggyStorage({ modSettings: JSON.stringify({ "bz-map-trix": { x: 1 } }) });
+  globalThis.localStorage = Object.assign(Object.create(base), {
+    getItem() {
+      throw new Error("getItem unavailable");
+    }
+  });
+  assert.equal(store.saveRecord(rec("a")), false);
+  assert.equal(store.archiveStatus(), "unavailable");
+  assert.equal(base.dump().modSettings, JSON.stringify({ "bz-map-trix": { x: 1 } }), "siblings untouched");
+}
+
+// 9. Empty reads from a store that holds rows: refused rather than overwritten.
+{
+  store._resetForTests();
+  const base = buggyStorage({ modSettings: JSON.stringify({ "bz-map-trix": { x: 1 } }) });
+  globalThis.localStorage = Object.assign(Object.create(base), { getItem: () => null });
+  assert.equal(store.saveRecord(rec("a")), false);
+  assert.equal(store.archiveStatus(), "unverified");
+  assert.equal(base.dump().modSettings, JSON.stringify({ "bz-map-trix": { x: 1 } }), "siblings untouched");
+}
+
+// 10. One transient empty read followed by a populated one: the populated read wins.
+{
+  store._resetForTests();
+  const base = buggyStorage({ modSettings: JSON.stringify({ "bz-map-trix": { x: 1 } }) });
+  let calls = 0;
+  globalThis.localStorage = Object.assign(Object.create(base), {
+    getItem(k) {
+      calls += 1;
+      return calls === 1 ? null : base.getItem(k);
+    }
+  });
+  assert.ok(store.saveRecord(rec("a")));
+  const root = JSON.parse(base.dump().modSettings);
+  assert.deepEqual(root["bz-map-trix"], { x: 1 }, "sibling slice carried over after a flaky first read");
+  assert.ok(root["demographics-halloffame"].games.a);
+}
+
+// 11. Another mod's key is the only row and key(i) enumerates: the shared key is genuinely absent,
+//     so the archive creates it and leaves the other row alone.
+{
+  store._resetForTests();
+  const data = new Map([["some-other-mod", JSON.stringify({ x: 1 })]]);
+  globalThis.localStorage = {
+    getItem: (k) => data.get(k) ?? null,
+    setItem: (k, v) => void data.set(k, String(v)),
+    removeItem: (k) => void data.delete(k),
+    key: (i) => [...data.keys()][i] ?? null,
+    get length() {
+      return data.size;
+    }
+  };
+  assert.ok(store.saveRecord(rec("a")));
+  assert.deepEqual(Object.keys(JSON.parse(data.get("modSettings"))), ["demographics-halloffame"]);
+  assert.equal(data.get("some-other-mod"), JSON.stringify({ x: 1 }));
+}
+
 console.log("history-archive-store harness passed");

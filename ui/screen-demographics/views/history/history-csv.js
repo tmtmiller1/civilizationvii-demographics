@@ -1,16 +1,9 @@
 // history-csv.js
 //
-// CSV export for the "Historical Data" view. Dumps history.samples to a flat
-// CSV with one row per (turn, pid) and one column per metric. Coherent
-// GameFace doesn't expose `URL.createObjectURL` or `<a download>`, so we route
-// through the engine's `UI.setClipboardText`
-// (cite: base-standard/ui-next/screens/pause-menu/pause-menu-model.js,
-//  269 - the pause menu uses this for the map seed). When clipboard isn't
-// available, we fall back to writing the CSV to UI.log so it's still
-// recoverable.
-//
-// Either path now ends with a VISIBLE toast on the screen so the user sees
-// confirmation - the previous version succeeded silently and looked broken.
+// CSV export for the "Historical Data" view: one row per (turn, pid), one
+// column per metric. Coherent GameFace has no `URL.createObjectURL` or
+// `<a download>`, so the CSV goes to the clipboard via `UI.setClipboardText`,
+// with UI.log as a fallback. Either path ends with a visible toast.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
@@ -65,12 +58,9 @@ function showCsvToast(host, message, success) {
 }
 
 /**
- * Columns ordered SEMANTICALLY by category so related metrics sit next to each
- * other in a spreadsheet (was alphabetical - score next to settlements made no
- * sense). Identity first, then highest-level signal (score), economy, yields,
- * military, science/culture, infrastructure, triumphs, resources, age systems.
- * Anything uncategorised falls into a tail bucket so new metrics are never
- * silently dropped.
+ * Columns ordered by category so related metrics sit next to each other in a
+ * spreadsheet. Anything uncategorised falls into a tail bucket so new metrics
+ * are never silently dropped.
  * @type {Record<string, string[]>}
  */
 const CSV_CATEGORY_ORDER = {
@@ -157,11 +147,9 @@ function orderMetricColumns(metricKeys) {
 function csvCell(v) {
   if (v === null || v === undefined) return "";
   let s = String(v);
-  // Formula-injection guard: Excel/Sheets execute a cell starting with = + - @
-  // (or a leading tab/CR) as a formula, so a player-renamed civ/leader/town
-  // name like "=cmd|..." would run on open. Prefix a single quote to neutralize
-  // it — but skip plain numbers (incl. negatives / BCE years like "-3000") so
-  // numeric values keep their meaning.
+  // Formula-injection guard: spreadsheets execute a cell starting with = + - @
+  // (or a leading tab/CR) as a formula. Prefix a single quote, but skip plain
+  // numbers (incl. negatives / BCE years) so numeric values keep their meaning.
   if (/^[=+\-@\t\r]/.test(s) && !/^[+-]?[0-9]/.test(s)) s = "'" + s;
   if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
   return s;
@@ -182,10 +170,9 @@ function fmtNum(v) {
 }
 
 /**
- * The monotonic, cross-age-unique turn for a snapshot. `turn` is `localTurn`,
- * which RESETS to 1 at every age boundary, so it collides across ages; the CSV
- * must key/sort by `chartTurn` (continuous across ages) instead. Falls back to
- * `turn` only for ancient pre-chartTurn saves.
+ * The monotonic, cross-age-unique turn for a snapshot: `chartTurn` (continuous
+ * across ages), since `turn` resets at every age boundary. Falls back to `turn`
+ * for saves without chartTurn.
  * @param {Snapshot} s The sample row.
  * @returns {number} The monotonic turn used as the row key + sort key.
  */
@@ -195,10 +182,8 @@ function rowSortTurn(s) {
 }
 
 /**
- * Build & DEDUPLICATE CSV rows by (chartTurn, pid). The sampler can fire twice
- * per turn under certain engine event ordering; last-write-wins so the latest
- * snapshot for each (chartTurn, pid) is preserved. Keying by chartTurn (not the
- * age-local `turn`) keeps cross-age rows distinct so they are not dropped.
+ * Build & DEDUPLICATE CSV rows by (chartTurn, pid), last-write-wins, since the
+ * sampler can fire twice per turn. Keying by chartTurn keeps cross-age rows distinct.
  * @param {DemoHistory} history The persisted history blob.
  * @param {string[]} metricCols Ordered metric column ids.
  * @returns {Map<string, string[]>} Map of "chartTurn:pid" → cell array.
@@ -388,7 +373,7 @@ function writeCsvToClipboard(csv) {
       UI.setClipboardText(csv);
       clipboardOk = true;
     } else if (typeof UI !== "undefined" && typeof UI.setClipboardText === "function") {
-      // Older Civ7 builds didn't ship isClipboardAvailable() - try anyway.
+      // Builds without isClipboardAvailable() - try anyway.
       UI.setClipboardText(csv);
       clipboardOk = true;
     }
@@ -399,9 +384,8 @@ function writeCsvToClipboard(csv) {
 }
 
 /**
- * Export `history.samples` to a flat CSV (one row per turn/pid, one column per
- * metric) and hand it to the player via the clipboard, with a UI.log fallback
- * and a visible confirmation toast. No-op (with a toast) when there are no
+ * Export `history.samples` to a flat CSV via the clipboard, with a UI.log
+ * fallback and a confirmation toast. No-op (with a toast) when there are no
  * samples; refuses oversized exports that would crash the clipboard bridge.
  * @param {DemoHistory|undefined} history The persisted history blob.
  * @param {HTMLElement} [host] Host for the confirmation toast.
@@ -415,9 +399,7 @@ export function exportHistoryAsCsv(history, host) {
   const { csv, lines, headers } = buildCsvDocument(history);
 
   // ── Size guard ──────────────────────────────────────────────────────
-  // Above ~5 MB the clipboard write can fail silently and the log dump
-  // stalls the engine for several seconds. Above ~15 MB we've seen the
-  // Coherent IPC bridge actually drop the call. Tiered handling:
+  // Large payloads stall the log writer and can drop the Coherent IPC call.
   //   < 2 MB  → normal flow, clipboard + log
   //   2-8 MB  → clipboard yes, log summary only (no full dump)
   //   > 8 MB  → refuse, tell user to lower sample cap + retry
@@ -490,10 +472,7 @@ function buildCsvDocument(history) {
     return ta - tb || pa - pb;
   });
   // ── Metadata header ─────────────────────────────────────────────────
-  // `#`-prefixed lines - most importers honor them as comments (Excel
-  // skips-on-import; Sheets reads as text; Pandas via comment='#').
-  // Provenance + game context so an exported file remains analyzable
-  // months later without remembering the game state.
+  // `#`-prefixed provenance + game context lines; most importers honor them as comments.
   const lines = buildCsvMetaHeader(history, rowByKey, metricCols);
   lines.push(headers.join(","));
   for (const k of sortedKeys) lines.push(/** @type {string[]} */ (rowByKey.get(k)).join(","));

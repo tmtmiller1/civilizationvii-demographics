@@ -1,16 +1,10 @@
 // demographics-sampler.js
 //
-// Subscribes to PlayerTurnActivated and records a snapshot of safe
-// metrics for every alive major player. Hard-defensive: every accessor
-// is both try/catch-wrapped and typeof-checked, and the sampler
-// permanently unsubscribes after KILL_THRESHOLD consecutive throws to
-// isolate a degraded session from compounding errors.
-//
-// The engine.on/off subscription pattern is established in
-// base-standard/ui/quest-tracker/quest-list.js and
-// notification-train/model-notification-train.js (the data.player payload
-// field is documented at quest-list.js, around line 206).
-// Players.getAliveMajorIds() is from base-standard/maps/assign-starting-plots.js.
+// Subscribes to PlayerTurnActivated and records a snapshot of safe metrics for
+// every alive major player. Hard-defensive: every accessor is try/catch-wrapped
+// and typeof-checked, and the sampler permanently unsubscribes after
+// KILL_THRESHOLD consecutive throws (the count is zeroed whenever a sample is
+// appended AND saved) to isolate a degraded session from compounding errors.
 //
 // Accessor crib sheet (all under Resources/Base/modules):
 //   Stats.getNetYield(YieldTypes.YIELD_*)         - diplo-ribbon/model-diplo-ribbon.js
@@ -96,7 +90,10 @@ import {
   resetAgeCaches,
   setNodeBaselineByPid
 } from "/demographics/ui/sampler/sampler-collectors-core.js";
-import { onPlayerAgeTransitionComplete } from "/demographics/ui/sampler/sampler-age-boundary.js";
+import {
+  onPlayerAgeTransitionComplete,
+  resetAgeBoundaryDebounce
+} from "/demographics/ui/sampler/sampler-age-boundary.js";
 import { runWarTracker } from "/demographics/ui/sampler/sampler-wars-core.js";
 import { recordLocalTownsNow } from "/demographics/ui/screen-demographics/views/settlements/towns-history.js";
 import { recordSettlementAge } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
@@ -135,17 +132,14 @@ import { buildSamplerSnapshot } from "/demographics/ui/sampler/sampler-snapshot-
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").WarHistory} WarHistory
  */
 
-// How many turns between samples. Resolved from the user setting each call
-// so a runtime change in the Options panel takes effect on the next turn
-// without needing to restart the sampler.
-// Track the last turn we actually recorded a snapshot on so the throttle
-// stays correct across (a) save/load round-trips and (b) settings changes
-// - we don't want the user to switch from "every 5 turns" to "every 2"
-// and immediately get a duplicate sample on the same turn.
+// The last turn a snapshot was actually recorded on, so the sample-interval
+// throttle (read from the user setting each call) stays correct across
+// save/load round-trips and settings changes.
 let lastSampledTurn = -1;
 
 
 // ---- kill switch ---------------------------------------------------------
+// Throws since the last committed sample (see noteSampleCommitted).
 let errorCount = 0;
 const KILL_THRESHOLD = 3;
 let disabled = false;
@@ -203,8 +197,9 @@ function fullErrorStack(err) {
 }
 
 /**
- * Increment the error counter and, once it reaches {@link KILL_THRESHOLD},
- * permanently disable sampling and unsubscribe for this session.
+ * Increment the error counter and, once it reaches {@link KILL_THRESHOLD}
+ * without a committed sample in between, permanently disable sampling and
+ * unsubscribe for this session.
  * @param {string} label A label identifying where the error occurred.
  * @param {*} e The thrown error.
  */
@@ -230,6 +225,16 @@ function tripIfTooMany(label, e) {
       elog("DemographicsStorage.teardown threw during kill:", e3);
     }
   }
+}
+
+/**
+ * A sample was appended and saved: the accessor errors seen so far were not a
+ * degraded session, so the kill-switch count starts over. A tripped switch stays
+ * tripped (reenableSampler is the only way back).
+ */
+function noteSampleCommitted() {
+  if (disabled) return;
+  errorCount = 0;
 }
 
 // Hand the kill switch to the leaf module that owns safeCall. Registered at module
@@ -283,20 +288,10 @@ function doSample() {
   const ageType = getCurrentAgeType();
   seedNodeBaselinesForSample(ageType);
   const chartTurn = computeChartTurn(ageType, localTurn);
-  // Each sample is stamped with:
-  //   localTurn - Game.turn at sample time (age-local; resets per age)
-  //   age       - current age type
-  //   chartTurn - monotonic chart-X turn persisted for stability when older
-  //               samples are capped/decimated
-  //   turn      - same as localTurn (no precomputed offset). The chart
-  //               computes the GLOBAL X position at render time by
-  //               walking all samples to build per-age offsets:
-  //                 X(sample) = offsets[sample.age] + sample.localTurn
-  //               This is robust to any historical offset corruption -
-  //               we don't store stateful offsets that can drift.
-  // `turn` mirrors localTurn (no precomputed offset). The chart derives the
-  // GLOBAL X at render time: X(sample) = offsets[sample.age] + sample.localTurn,
-  // so no stateful per-age offset is stored (robust to historical drift).
+  // Each sample carries localTurn (age-local Game.turn), age, chartTurn (a
+  // monotonic chart-X turn that survives capping/decimation) and turn (mirrors
+  // localTurn; the chart derives the global X at render time as
+  // offsets[sample.age] + sample.localTurn, so no stateful offset is stored).
   // gameYear is the in-game date label for x-axis ticks (e.g. "T-52 / 2725 BCE").
   const gameYear = readGameYear(safeCall);
   /** @type {Snapshot} */
@@ -339,10 +334,9 @@ function doSample() {
 }
 
 /**
- * Fold this sample's per-settlement history onto the in-progress history blob
- * (committed by the same per-turn save): the founding/trend trace, keyed by the
- * monotonic chart turn so trend windows span age boundaries, then the current
- * age's top-settlement archive (which reads the freshly updated trace).
+ * Fold this sample's per-settlement history onto the in-progress history blob:
+ * the founding/trend trace (keyed by the monotonic chart turn so trend windows
+ * span age boundaries), then the current age's top-settlement archive.
  * @param {*} history The in-progress history blob (mutated).
  * @param {Snapshot} built The built snapshot.
  * @param {number} localTurn The age-local sample turn.
@@ -354,14 +348,15 @@ function recordSettlementHistory(history, built, localTurn) {
 }
 
 /**
- * Persist the snapshot, run the war tracker, and log sample timing.
+ * Persist the snapshot, run the war tracker, and log sample timing. A committed
+ * sample (append + save both succeeded) restarts the kill-switch count.
  * @param {Snapshot} snapshot The built snapshot.
  * @param {number} turn The sample turn.
  * @param {number} tStart The sample start time (perfNow).
  * @param {number} minorCount The number of sampled minors.
  */
 function finalizeSample(snapshot, turn, tStart, minorCount) {
-  finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, {
+  const stored = finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, {
     perfNow,
     persistSnapshot: (builtSnapshot) =>
       persistSnapshot(DemographicsStorage, tripIfTooMany, builtSnapshot),
@@ -370,6 +365,7 @@ function finalizeSample(snapshot, turn, tStart, minorCount) {
     commitSample: (history) => commitSample(DemographicsStorage, tripIfTooMany, history),
     logSampleTiming: (timings, counts) => logSampleTiming(ilog, timings, counts)
   });
+  if (stored > 0) noteSampleCommitted();
 }
 
 /**
@@ -417,6 +413,9 @@ function onPlayerTurnActivated(data) {
  * kickoff doesn't re-record an already-stored turn.
  */
 function resetSamplerState() {
+  // The age-boundary debounce is module state in sampler-age-boundary.js; a key
+  // left over from the previous load would swallow this game's transition.
+  resetAgeBoundaryDebounce();
   resetSamplerRuntimeState({
     storage: DemographicsStorage,
     setHandlerRef: (v) => {
@@ -448,10 +447,9 @@ function resetSamplerState() {
 }
 
 /**
- * The deferred resume sample. Important: this runs AFTER the save's
- * GameTutorial properties have been deserialized (see startSampler comment),
- * so DemographicsStorage.load() reads the real persisted history rather than
- * clobbering it with a fresh first sample.
+ * The deferred resume sample. Runs AFTER the save's GameTutorial properties have
+ * been deserialized, so DemographicsStorage.load() reads the real persisted
+ * history rather than clobbering it with a fresh first sample.
  */
 function runKickoff() {
   runResumeKickoff({
@@ -513,13 +511,10 @@ function registerSamplerHandlers() {
 }
 
 /**
- * Start (or restart) the per-turn sampler. Saved-game load re-runs bootstrap →
- * calls startSampler() again. The sampler MODULE is cached for the lifetime of
- * the Coherent JS process, so module-scope state persists into the new game.
- * That used to make us refuse to re-register, carry a stale handler ref, and
- * honor a kill switch from the previous game - silently stopping recording on
- * the new save. We tear down stale subscriptions, reset every cross-load piece
- * of state, and always re-register fresh.
+ * Start (or restart) the per-turn sampler. The sampler MODULE is cached for the
+ * lifetime of the Coherent JS process, so module-scope state persists into a
+ * newly loaded game; this tears down stale subscriptions, resets every
+ * cross-load piece of state, and always re-registers fresh.
  */
 export function startSampler() {
   _teardown();

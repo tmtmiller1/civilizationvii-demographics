@@ -3,8 +3,6 @@
 // Shared primitives for the Global Relations view modules: debug logging, the
 // defensive `safeCall` wrapper, color coercion helpers, and the per-filter
 // line-dash table consumed by both the ring renderer and the filter pills.
-// Split out of view-relations.js so relations-ring-svg.js / relations-edges.js
-// / relations-filters.js can import these without duplicating them.
 
 const DEMOGRAPHICS_DEBUG = false;
 
@@ -70,10 +68,8 @@ export function derr(...a) {
 export function hexToRgba(hex, alpha) {
   if (typeof hex !== "string") return "rgba(0,0,0," + alpha + ")";
   // Civ7's `UI.Player.getPrimaryColorValueAsString` can return 8-char hex
-  // ("#AARRGGBB" or "#RRGGBBAA"). The previous regex only matched 6 chars
-  // and FELL THROUGH returning the raw string, so SVG `fill="#FFFFFFFF"`
-  // rendered as opaque white - that's the "white circle" bug. Accept 6 or
-  // 8 char hex and always take the LAST 6 digits as RGB.
+  // ("#AARRGGBB" or "#RRGGBBAA"); accept 6 or 8 chars and always take the
+  // last 6 digits as RGB so an alpha-carrying value never renders opaque white.
   const m = hex.match(/^#?([0-9a-fA-F]{6,8})$/);
   if (!m) return "rgba(20, 16, 10, " + alpha + ")";
   const rgbHex = m[1].slice(-6);
@@ -120,19 +116,10 @@ export function safeCall(label, fn, fb) {
   }
 }
 
-// In-game YIELD/CATEGORY color language: each agreement is colored by what it's
-// ABOUT (food = green, science = blue, culture = purple, trade/gold = gold,
-// production = orange, military = red, diplomacy/influence = teal, happiness =
-// amber), using the game's recognizable yield palette. When several agreements
-// share a category (same color), the DASH STYLE separates them , e.g. both food
-// deals are green, but one is a long dash and the other a medium dash.
-// (SABOTAGE_RESEARCH is intentionally NOT here ; it isn't an agreement.)
-// In-game yield HUES, at full saturation. The earlier pale .text-yield-* pastels
-// all sat at the same low chroma / high value, so the eight categories were nearly
-// indistinguishable on the ring. These keep the game's recognizable yield-color
-// language (gold/blue/teal/purple/amber/green/orange/red) but push saturation +
-// contrast so each category reads as its own color; same-category agreements are
-// then told apart by DASH, not hue.
+// In-game yield/category hues at full saturation: each agreement is colored by
+// what it's about (food green, science blue, culture purple, gold gold, production
+// orange, military red, influence teal, happiness amber); same-category
+// agreements are told apart by dash, not hue. SABOTAGE_RESEARCH isn't an agreement.
 const CAT = {
   gold: "#f0c33c", // trade / gold (vivid gold)
   science: "#4ea6ec", // science (vivid blue)
@@ -171,11 +158,9 @@ export const AGREEMENT_TYPES = [
 ];
 
 /**
- * Cooperative agreement types specific to City-States (independents). Befriending
- * (GIVE_INFLUENCE_TOKEN , the influence-token project, confirmed by the base
- * befriend-independent screen) plus the suzerain benefit directives. Each is its
- * own filter + uniquely-styled line on the CS ring, mirroring AGREEMENT_TYPES for
- * majors. Trade is built separately (its own economic builder), as for majors.
+ * Cooperative agreement types specific to City-States: befriending
+ * (GIVE_INFLUENCE_TOKEN) plus the suzerain benefit directives, each its own
+ * filter + styled line, mirroring AGREEMENT_TYPES. Trade is built separately.
  * @type {{ key: string, action: string, color: string, dash: string }[]}
  */
 // All CS agreements are directed (major → CS), so they render as solid lines with
@@ -264,17 +249,13 @@ export function diplomacyActionLabel(actionName) {
   return titleCaseAction(actionName);
 }
 
-// Per-filter line STYLE token. The renderer supports exactly four visual
-// categories: solid (""), "dashed", "dotted", and , orthogonally , directed edges,
-// which draw as a solid line with animated arrow chevrons (set via `e.directed`,
-// not here). Coherent ignores SVG stroke-dasharray, so the renderer synthesizes
-// dashes/dots; keeping the token set tiny is what makes them render cleanly.
+// Per-filter line style token: solid (""), "dashed", "dotted"; directed edges
+// (via `e.directed`, not here) draw solid with animated arrow chevrons. Coherent
+// ignores SVG stroke-dasharray, so the renderer synthesizes dashes/dots.
 /** @type {Record<string, string>} */
 export const LINE_DASH = {
-  //   SOLID  = a STANDING RELATIONSHIP (attitude / suzerainty). Color = its warmth.
-  //   DASHED / DOTTED = an action/treaty tie laid over it; style separates same-
-  //                     color deals. DIRECTED ties (trade, denounce, CS deals) draw
-  //                     solid with flowing arrow chevrons instead (see e.directed).
+  // Solid = a standing relationship (color = warmth); dashed/dotted = an
+  // action/treaty tie laid over it, style separating same-color deals.
   // ── Standing relationships - solid: ──
   war: "",
   alliance: "",
@@ -320,7 +301,7 @@ function dashByFilter(edge) {
 
 /**
  * Resolve the line-STYLE token for an edge ("" solid / "dashed" / "dotted"),
- * honoring per-tab overrides, the legacy `dashed` flag, then `LINE_DASH`.
+ * honoring per-tab overrides, the `dashed` flag, then `LINE_DASH`.
  * @param {Edge} edge The edge to texture.
  * @returns {string} The style token (`""` = solid line).
  */
@@ -333,7 +314,7 @@ export function dasharrayFor(edge) {
   if (override !== undefined) return override;
   const byFilter = dashByFilter(edge);
   if (byFilter !== undefined) return byFilter;
-  // Legacy `e.dashed` flag (suzerain edges set it directly) - preserve.
+  // `e.dashed` flag (suzerain edges set it directly).
   if (edge.dashed) return "dashed";
   return "";
 }

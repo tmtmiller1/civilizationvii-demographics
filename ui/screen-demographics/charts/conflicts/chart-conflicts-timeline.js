@@ -3,8 +3,7 @@
 // The conflicts Gantt timeline (one bar per major-vs-major war):
 // collectWarCivOptions + renderConflictsTimeline and their private filtering,
 // layout, bar-drawing, war-naming, tooltip, and hover helpers (romanize,
-// parseYear, casualty estimate, etc). Migrated verbatim from
-// demographics-chart.js.
+// parseYear, casualty estimate, etc).
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -24,15 +23,13 @@ import {
 import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import {
   buildGanttLayout,
+  crisisBandHeight,
   computeGanttDomain,
   computeGanttWidth,
   filterGanttWars
 } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-domain.js";
 import { drawWarBars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-bars.js";
-import {
-  createGanttTooltip,
-  wireGanttHover
-} from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-interactions.js";
+import { createGanttTooltip, wireGanttHover } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-interactions.js";
 import { mountGanttOverlays } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-timeline-overlays.js";
 import {
   CRISIS_STAGE_COLORS,
@@ -78,6 +75,7 @@ export function collectWarCivOptions(history) {
   const wars = history && Array.isArray(history.wars) ? history.wars : [];
   const seen = new Map();
   for (const w of wars) {
+    if (!w) continue;
     const allRosters = /** @type {any[]} */ ([]).concat(w.sideACivs || [], w.sideBCivs || []);
     for (const r of allRosters) {
       if (!r || seen.has(r.pid)) continue;
@@ -166,10 +164,8 @@ function drawCurrentTurnLine(svg, L, dom, latestTurn) {
       y2: L.padT + L.innerH,
       stroke: "#ffdf3b",
       "stroke-width": "2"
-      // NOTE (audited 2.0.5): no stroke-dasharray — Coherent ignores it (see
-      // chart-resources.js drawStackAgeLines). Overlay markers are intentionally
-      // SOLID and distinguished by COLOR: current-turn yellow #ffdf3b here,
-      // crisis stage-colored, age purple #b78cff. Don't re-add dasharray.
+      // No stroke-dasharray: Coherent ignores it. Overlay markers are solid and
+      // distinguished by color (current-turn yellow, crisis stage-colored, age purple).
     })
   );
 }
@@ -196,8 +192,8 @@ function drawCrisisMarkers(svg, L, dom, onsets) {
         y2: L.padT + L.innerH,
         stroke: color,
         "stroke-width": "1.4",
-        // No stroke-dasharray: Coherent ignores it (audited 2.0.5). Stage COLOR
-        // is the differentiator; kept solid to match the other chart markers.
+        // No stroke-dasharray: Coherent ignores it. Stage color is the
+        // differentiator; kept solid to match the other chart markers.
         "stroke-opacity": "0.85"
       })
     );
@@ -236,7 +232,7 @@ export function renderConflictsTimeline(host, options) {
   // Natural pixel width from the turn span (>= viewport); the chart scrolls
   // horizontally when the timeline is longer than the viewport.
   const W = computeGanttWidth(viewportW, dom);
-  const L = buildGanttLayout(W, opts.height || 600, filtered, dom);
+  const L = buildGanttLayout(W, opts.height || 600, filtered, dom, ganttCrisisBand(samples, dom));
   const H = L.H;
   const env = buildGanttOverlayEnv(samples, latestTurn, W, H, dom);
 
@@ -255,6 +251,31 @@ export function renderConflictsTimeline(host, options) {
 }
 
 /**
+ * Room to reserve at the top of the plot for the crisis labels. The onsets have to be counted
+ * BEFORE the layout the band widens, and only the ones inside the window take room.
+ * @param {Snapshot[]} samples The sample stream.
+ * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @returns {number} Band height in chart pixels.
+ */
+function ganttCrisisBand(samples, dom) {
+  const inWindow = ganttCrisisOnsets(samples).filter((o) => o.turn >= dom.xMin && o.turn <= dom.xMax);
+  return crisisBandHeight(inWindow.length);
+}
+
+/**
+ * The crisis stage onsets on the continuous chart turn (matching the line charts). Read twice per
+ * render - once to size the crisis band, once by the overlay environment - so it lives here.
+ * @param {Snapshot[]} samples The sample stream.
+ * @returns {{ stage: number, turn: number, sample: Snapshot }[]} The onsets.
+ */
+function ganttCrisisOnsets(samples) {
+  return crisisStageOnsets(samples).map((o) => ({
+    ...o,
+    turn: typeof o.sample?.chartTurn === "number" ? o.sample.chartTurn : o.turn
+  }));
+}
+
+/**
  * Assemble the shared overlay environment: the year map plus the crisis-onset
  * and age markers (mapped onto the continuous chart turn), the game seed, and
  * the canvas geometry - the bundle every overlay mounter and the SVG builder read.
@@ -267,11 +288,7 @@ export function renderConflictsTimeline(host, options) {
  */
 function buildGanttOverlayEnv(samples, latestTurn, W, H, dom) {
   const turnYearMap = ganttTurnYearMap(samples);
-  // Crisis + age overlays on the continuous chart turn (matching the line charts).
-  const crisisOnsets = crisisStageOnsets(samples).map((o) => ({
-    ...o,
-    turn: typeof o.sample?.chartTurn === "number" ? o.sample.chartTurn : o.turn
-  }));
+  const crisisOnsets = ganttCrisisOnsets(samples);
   const ageMarkers = collectGanttAgeMarkers(samples);
   const crisisSeed = getGameSeed();
   return {
@@ -311,8 +328,8 @@ function latestChartTurn(samples) {
 }
 
 /**
- * game-year → chart-turn map (fallback for mapping legacy wars, recorded before
- * we stamped chartTurn, onto the continuous timeline via their year labels).
+ * game-year → chart-turn map (fallback for placing wars that carry no chartTurn
+ * onto the continuous timeline via their year labels).
  * @param {Snapshot[]} samples The sample stream.
  * @returns {Map<string, number>} game-year → chartTurn.
  */
@@ -418,8 +435,8 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
         y2: L.padT + L.innerH,
         stroke: "#b78cff",
         "stroke-width": "2",
-        // No stroke-dasharray: Coherent ignores it (audited 2.0.5). Age markers
-        // read by their purple COLOR; solid to match the other chart markers.
+        // No stroke-dasharray: Coherent ignores it. Age markers read by their
+        // purple color; solid to match the other chart markers.
         "stroke-opacity": "0.95"
       })
     );
@@ -435,9 +452,10 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
  *   The prepared data, or null when there is nothing to draw.
  */
 function prepareConflictsTimelineData(host, opts) {
+  // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
   /** @type {any[]} */
-  const rawWars = opts.history && Array.isArray(opts.history.wars) ? opts.history.wars : [];
-  const samples = historySamples(opts.history);
+  const rawWars = (opts.history && Array.isArray(opts.history.wars) ? opts.history.wars : []).filter(Boolean);
+  const samples = historySamples(opts.history).filter(Boolean);
   if (rawWars.length === 0) {
     appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS"));
     return null;
@@ -519,11 +537,9 @@ function mountGanttWrap(svg, env) {
   const { barRects, turnYearMap, latestTurn, samples, W, H } = env;
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap demographics-wars-wrap";
-  // Inner canvas: fills the viewport (width/height 100% in CSS) but is forced to
-  // at least the chart's NATURAL pixel extent via min-width/min-height, so it
-  // stretches to fill when the timeline is small and scrolls when it's large.
-  // The SVG (viewBox W x H, preserveAspectRatio none) and the %-positioned
-  // overlays both scale with the canvas, so they stay aligned either way.
+  // Inner canvas: fills the viewport but is forced to at least the chart's natural
+  // pixel extent via min-width/min-height, so it stretches when the timeline is
+  // small and scrolls when large; the SVG and %-positioned overlays scale with it.
   const canvas = document.createElement("div");
   canvas.className = "demographics-wars-canvas";
   canvas.style.minWidth = W + "px";
@@ -535,6 +551,8 @@ function mountGanttWrap(svg, env) {
 
   // Hover tooltip - custom callout replacing the unreliable `title` attribute.
   const tooltip = createGanttTooltip();
+  // Starts in the canvas; the first hover moves it onto the screen frame so it can outgrow the
+  // scrolling wrap (see ensureTooltipHost in chart-wars-gantt-interactions.js).
   canvas.appendChild(tooltip);
   const ctx = { nameOverride, turnYearMap, latestTurn, samples };
   wireGanttHover({ wrap, svg, tooltip, barRects, ctx, W, H });

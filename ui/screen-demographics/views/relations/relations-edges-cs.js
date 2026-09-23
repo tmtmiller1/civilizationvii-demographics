@@ -1,7 +1,6 @@
 // relations-edges-cs.js
 //
-// City-State edge and type helpers for the Global Relations ring. Split from
-// relations-edges.js so that module can focus on major-civ edge builders.
+// City-State edge and type helpers for the Global Relations ring.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { getAttitudeColors } from "/demographics/ui/core/demographics-palette.js";
@@ -382,16 +381,21 @@ export function buildCsTradeEdges(metIds, csIds, localPid) {
  * @returns {*[]} The events array (empty on any error).
  */
 function getPlayerEventsSafe(pid) {
-  return (
-    safeCall("getPlayerEvents(" + pid + ")", () => {
+  return safeCall(
+    "getPlayerEvents(" + pid + ")",
+    () => {
       if (
         typeof Game === "undefined" ||
         !Game.Diplomacy ||
         typeof Game.Diplomacy.getPlayerEvents !== "function"
       )
         return [];
-      return Game.Diplomacy.getPlayerEvents(pid) || [];
-    }) || []
+      // The engine can hand back a non-array (a plain object / null); the
+      // for..of consumer needs a real array or it throws on a non-iterable.
+      const r = Game.Diplomacy.getPlayerEvents(pid);
+      return Array.isArray(r) ? r : [];
+    },
+    []
   );
 }
 
@@ -456,9 +460,8 @@ function appendCsAgreementEdge(edges, ev, csId, ctx) {
 
 /**
  * Build City-State cooperative-agreement edges (major -> CS): befriending plus the
- * suzerain benefit directives. Mirrors the major-civ agreement scan but reads each
- * CS's own event list , the base befriend-independent screen reads
- * `getPlayerEvents(targetIndependent)` and matches `GIVE_INFLUENCE_TOKEN`.
+ * suzerain benefit directives, read from each CS's own event list (as the base
+ * befriend-independent screen does).
  * @param {number[]} metIds Met major ids.
  * @param {number[]} csIds City-state ids.
  * @param {number} [localPid] Local player id.
