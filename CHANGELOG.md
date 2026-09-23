@@ -7,7 +7,9 @@ section below by `release.sh`.
 
 ## [2.7.3] - 2026-09-23
 
-Two passes in one release, and no new graphs.
+A cleanup release, with no new graphs. Everything here is about how what is already in the mod looks, reads and
+holds up: fitting the resolution you play at, drawing the styling it always specified, reading consistently from
+page to page, getting its grammar right, and not losing your data.
 
 The screen now fits the resolution it is played at. Before this, the same layout occupied about 1% of the screen's
 height at 2880x1800 and about 2% at 1280x720, so on smaller displays the menus filled half the screen, only one of the
