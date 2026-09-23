@@ -5,6 +5,18 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.7.2] - 2026-09-22
+
+### Changed
+- **Networked multiplayer: only the host stores the campaign.** In an internet, LAN or cloud game the host owns the
+  shared game configuration, so only the host now writes the History campaign into it; guests keep the campaign in
+  memory (History and the Hall of Fame keep working live) and, on loading, take the host's stored copy with their own
+  civilization as the viewpoint. Samples are taken once per game turn, whichever seat starts it, so a hotseat game no
+  longer records every seat's turn separately. Single-player and hotseat are unchanged (both watched). This is the one
+  behaviour in the History capture that differed between single-player and a networked game, and the change is made in
+  response to a report of a crash in multiplayer that could not be reproduced in hotseat; it has not yet been watched in
+  a two-client networked game.
+
 ## [2.7.1] - 2026-09-22
 
 A workaround for the Civilization VII storage bug that blocks the Hall of Fame, and the short-games filter on every

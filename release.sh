@@ -105,7 +105,7 @@ rsync -a --exclude='CHANGELOG.steam.txt' --exclude='.git' --exclude='.gitignore'
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
     --exclude='*.d.ts' --exclude='text/data' --exclude='text/README.md' --exclude='tests' \
     --exclude='steam_workshop_id.txt' --exclude='CONTRIBUTING.md' \
-    --exclude='coverage' --exclude='.c8rc.json' \
+    --exclude='coverage' --exclude='.c8rc.json' --exclude='devtools' \
     --exclude='reports' --exclude='.stryker-tmp' --exclude='stryker*.json' \
     --exclude='scripts' --exclude='README.pdf' --exclude='ui/dev' \
     "$SRC_DIR"/ "$TARGET_DIR"/
