@@ -24,8 +24,11 @@ import { captureMap } from "/demographics/ui/history/capture/history-mapgrid.js"
 import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 
 /** @typedef {(...args: any[]) => void} Handler */
-/** @type {{started: boolean, listeners: Array<[string, Handler]>, errors: number}} */
-const state = { started: false, listeners: [], errors: 0 };
+/**
+ * @type {{started: boolean, listeners: Array<[string, Handler]>, errors: number, lastTurn: number,
+ *   lastAge: string}}
+ */
+const state = { started: false, listeners: [], errors: 0, lastTurn: -1, lastAge: "" };
 const MAX_ERRORS = 25;
 
 /** @type {import("./history-diff.js").Namer} */
@@ -44,6 +47,68 @@ const NAMER = {
  */
 function localId() {
   return Number(safe(() => GameContext.localPlayerID, -1));
+}
+
+/**
+ * Whether this is a networked multiplayer game (internet, LAN, wireless, cloud). Hotseat is
+ * multiplayer too but every seat is this machine, so it is not "networked" here.
+ * @returns {boolean} True in a networked game.
+ */
+export function isNetworkMultiplayer() {
+  return !!safe(() => Configuration.getGame().isNetworkMultiplayer, false);
+}
+
+/**
+ * Whether the local player hosts the game. Single-player and hotseat count as hosting.
+ * @returns {boolean} True when this client is the host.
+ */
+export function isHost() {
+  if (!isNetworkMultiplayer()) return true;
+  const byApi = safe(() => (typeof Network.isHost === "function" ? Network.isHost() : undefined), undefined);
+  if (typeof byApi === "boolean") return byApi;
+  const hostId = Number(safe(() => Network.getHostPlayerId(), -1));
+  return hostId >= 0 && hostId === localId();
+}
+
+/**
+ * Whether this client may store the campaign in the shared game configuration. In a networked
+ * game the host owns that object and is the only client that writes it; guests keep the campaign
+ * in memory (History and the Hall of Fame keep working live) and read the host's copy on load.
+ * @param {{network: boolean, host: boolean}} mp Multiplayer facts.
+ * @returns {boolean} True when the campaign may be written.
+ */
+export function mayStoreCampaign(mp) {
+  return !mp.network || mp.host;
+}
+
+/**
+ * Whether a "turn" sample should be taken: once per game turn, whichever seat's turn starts it
+ * (hotseat raises PlayerTurnActivated for every human seat in the same turn). Other reasons
+ * (load, victory, defeat, age end) always sample.
+ * @param {{lastTurn: number, lastAge: string}} st Capture state (mutated when the sample is taken).
+ * @param {number} turn Current turn.
+ * @param {string} age Current age type.
+ * @param {string} reason Why the sample was requested.
+ * @returns {boolean} True when the sample should be taken.
+ */
+export function shouldSampleTurn(st, turn, age, reason) {
+  if (reason === "turn" && st.lastTurn === turn && st.lastAge === age) return false;
+  st.lastTurn = turn;
+  st.lastAge = age;
+  return true;
+}
+
+/**
+ * Give a stored campaign this client's viewpoint. A guest in a networked game loads the host's
+ * copy, whose "local" player is the host; the guest's own civilization is what "mine" should mean.
+ * @param {CampaignDoc} doc The document (mutated).
+ * @param {number} local This client's player id.
+ * @param {boolean} network Whether this is a networked game.
+ * @returns {CampaignDoc} The same document.
+ */
+export function adoptViewpoint(doc, local, network) {
+  if (network && local >= 0 && doc.local !== local) doc.local = local;
+  return doc;
 }
 
 /**
@@ -92,7 +157,9 @@ export function campaignId(seed) {
 export function openCampaign() {
   const seed = campaignSeed();
   const stored = loadCampaign();
-  if (stored && (!seed || !stored.seed || stored.seed === seed)) return stored;
+  if (stored && (!seed || !stored.seed || stored.seed === seed)) {
+    return adoptViewpoint(stored, localId(), isNetworkMultiplayer());
+  }
   return newCampaign({ id: campaignId(seed), seed, now: Date.now(), setup: readSetup(), local: localId() });
 }
 
@@ -107,6 +174,7 @@ export function sampleNow(reason) {
     if (local < 0) return;
     const doc = (live.doc = live.doc || openCampaign());
     const world = readWorld(local);
+    if (!shouldSampleTurn(state, world.turn, world.age, reason)) return;
     const n = recordWorld(doc, local, world);
     safe(() => captureMap(doc, doc.ages.length - 1, world.turn, reason !== "turn"), false);
     persist(doc);
@@ -260,7 +328,7 @@ function markBaseline(doc, world) {
  * @param {CampaignDoc} doc The document.
  */
 function persist(doc) {
-  saveCampaign(doc);
+  if (mayStoreCampaign({ network: isNetworkMultiplayer(), host: isHost() })) saveCampaign(doc);
   const rec = buildRecord(doc);
   if (!rec) return;
   rec.texts = { ...savedTextsFor(rec), ...(doc.texts || {}) };
