@@ -844,7 +844,11 @@
 .dgh-hl-blurb-t { color: var(--dgh-text-muted); flex: 1 1 auto; min-width: 0; }
 
 /* ---------- page heading ---------- */
-.dgh-page-head { margin: 0 0 0.5rem; }
+/* Centered to match the rest of the mod's tab headings (.demographics-chart-title in
+   screen-demographics-base.css). width:100% so the Rankings tab's heading, which is the lone child
+   of a `justify-content: space-between` .dgh-toolbar, centers with the other four rather than
+   sitting flush left. */
+.dgh-page-head { margin: 0 0 0.5rem; width: 100%; text-align: center; }
 .dgh-page-title {
     color: var(--dgh-text-title);
     font-family: TitleFont, BodyFont, sans-serif;

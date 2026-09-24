@@ -261,6 +261,19 @@ function numberToggle(rec, ctx) {
 }
 
 /**
+ * The base-game LOC tag for an age's display name, built from the age stem (engine-owned; matches
+ * BASE_GAME_LOC_PREFIXES "LOC_AGE_" in demographics-i18n.js, and the same shape as the civ
+ * adjective tag in chart-wars-naming.js). Spelling the prefix out as a literal is what lets the
+ * loc-keys gate verify the build instead of counting it as an unverifiable `"LOC_" + x`.
+ * @param {string} ageType The age type ("AGE_ANTIQUITY"), or "" when the record has none.
+ * @returns {string} The tag, or "" for an empty age.
+ */
+function ageNameTag(ageType) {
+  const stem = String(ageType || "").replace(/^AGE_/, "");
+  return stem ? "LOC_AGE_" + stem + "_NAME" : "";
+}
+
+/**
  * The game's highlights across the page, grouped by age: date, a tag naming the kind of event, the
  * other civilization's emblem and the sentence.
  * @param {ArchiveRecord} rec Record.
@@ -282,7 +295,7 @@ function highlightsSection(rec) {
       const civ = cast.civType(rec.local, age);
       body.push(el("div", { cls: "dgh-hl-age" }, [
         civ ? civIcon(civ, "dgh-civ-icon dgh-hl-age-icon") : null,
-        el("div", { cls: "dgh-hl-age-name", text: typeName("LOC_" + age + "_NAME", age) }),
+        el("div", { cls: "dgh-hl-age-name", text: typeName(ageNameTag(age), age) }),
         el("div", { cls: "dgh-hl-age-civ", text: cast.civName(rec.local, age) })
       ]));
     }

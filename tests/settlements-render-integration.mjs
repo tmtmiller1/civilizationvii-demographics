@@ -1,5 +1,5 @@
 // Covers: view-settlements.js + view-settlements-civranking.js
-//         view-settlements-detail.js, view-settlements-showcase.js, view-settlements-table.js
+//         view-settlements-showcase.js, view-settlements-table.js
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
 

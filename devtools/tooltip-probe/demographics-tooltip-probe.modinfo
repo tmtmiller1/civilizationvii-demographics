@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="demographics-tooltip-probe" version="1" xmlns="ModInfo">
+    <Properties>
+        <Name>Demographics Tooltip Probe (dev)</Name>
+        <Description>Throwaway dev probe. Instruments the three stages of line-chart hover (native mousemove -&gt; Chart.js coordinate -&gt; rendered tooltip) and writes a verdict to UI.log naming the stage that froze. For the intermittent "tooltip numbers do not change while scrolling" report. Not for release.</Description>
+        <Authors>Tower</Authors>
+        <Package>DemographicsTooltipProbe</Package>
+        <PackageSortIndex>9999</PackageSortIndex>
+        <Version>0.0.1</Version>
+        <AffectsSavedGames>0</AffectsSavedGames>
+    </Properties>
+    <Dependencies>
+        <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
+    </Dependencies>
+    <ActionCriteria>
+        <Criteria id="always"><AlwaysMet></AlwaysMet></Criteria>
+    </ActionCriteria>
+    <ActionGroups>
+        <ActionGroup id="tp-game" scope="game" criteria="always">
+            <Properties><LoadOrder>9000</LoadOrder></Properties>
+            <Actions>
+                <UIScripts><Item>tp-game.js</Item></UIScripts>
+            </Actions>
+        </ActionGroup>
+    </ActionGroups>
+</Mod>

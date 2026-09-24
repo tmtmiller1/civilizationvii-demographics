@@ -103,6 +103,9 @@ const EXTRA_WIDE_Y_LEGEND = new Set([
 // by the engine (used by <fxs-hof-chart>), so we instantiate it directly and
 // reuse the Chart.defaults the engine sets for parity with the in-game graphs.
 
+/** Marks a Chart instance as created by this mod (see {@link reclaimOrphanedCharts}). */
+export const DG_OWNED = "$demographicsOwned";
+
 /**
  * Destroy any prior Chart instance cached on the host before re-mounting.
  * @param {HTMLElement|*} host The chart host element.
@@ -118,6 +121,39 @@ export function teardownExistingChart(host) {
     }
   }
   host._demographicsChart = null;
+}
+
+/**
+ * Destroy our Chart instances whose canvas has left the document, and return how many went.
+ *
+ * Why this exists: teardownExistingChart() only reaches a chart through the host element that
+ * still carries it, and destroyChartsUnder() only walks hosts still under the screen root. A view
+ * or page swap detaches the old host first, so the instance it held becomes unreachable by both —
+ * it is never destroyed and keeps its five canvas listeners and its full dataset for the life of
+ * the UI context. Measured on 1.5.0 (2026-09-24): every page-tab swap leaked 2 instances, a view
+ * swap orphaned the live one, and closing + reopening the screen reclaimed none (7/6 -> 14/13
+ * across six swaps). A canvas outside the document can never draw again, so a detached instance is
+ * always garbage; sweeping by ownership tag catches every leak path rather than one call site.
+ * @returns {number} How many orphaned instances were destroyed.
+ */
+export function reclaimOrphanedCharts() {
+  if (typeof Chart === "undefined" || !Chart.instances) return 0;
+  const inDoc = (/** @type {*} */ c) =>
+    typeof document !== "undefined" && document.body && c.canvas && document.body.contains(c.canvas);
+  let destroyed = 0;
+  // Snapshot the keys: Chart#destroy removes the instance from Chart.instances as we iterate.
+  for (const key of Object.keys(Chart.instances)) {
+    const c = Chart.instances[key];
+    if (!c || c[DG_OWNED] !== true || typeof c.destroy !== "function") continue;
+    if (inDoc(c)) continue;
+    try {
+      c.destroy();
+      destroyed += 1;
+    } catch (_) {
+      // An already-disposed instance can throw; it is going away either way.
+    }
+  }
+  return destroyed;
 }
 
 // Apply the same four Chart.defaults that the engine's fxs-hof-chart sets at
@@ -283,6 +319,10 @@ export function tryCreateChart(canvas, config, host) {
   try {
     const ctx2d = canvas.getContext("2d");
     const chart = new Chart(ctx2d, config);
+    // Ownership tag. Chart.js is the ENGINE's global (fxs-hof-chart uses it too), so
+    // `Chart.instances` holds base-game charts as well; reclaimOrphanedCharts() destroys only
+    // instances carrying this flag and never touches one of the game's own.
+    chart[DG_OWNED] = true;
     host._demographicsChart = chart;
     return chart;
   } catch (e) {
@@ -566,6 +606,9 @@ function prepareLineChartRender(host, options) {
     return null;
   }
   teardownExistingChart(host);
+  // Every line chart is mounted through here, so this is the one choke point that reclaims the
+  // instances a previous view/page swap orphaned — no matter which swap path detached their host.
+  reclaimOrphanedCharts();
   while (host.firstChild) host.removeChild(host.firstChild);
 
   const opts = options || {};
