@@ -5,7 +5,7 @@
 // class owns when each runs.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { teardownExistingChart } from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
+import { teardownExistingChart, reclaimOrphanedCharts } from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
 
 /**
  * Whether an `engine-input` event is the FINISH of a Cancel / Escape action (`isCancelInput()` or
@@ -64,7 +64,9 @@ export function destroyChartsUnder(root) {
     teardownExistingChart(host);
     destroyed++;
   }
-  return destroyed;
+  // Hosts already detached by an earlier view/page swap are not under `root` and so are invisible
+  // to the walk above — without this, closing the screen reclaimed none of them (watched 1.5.0).
+  return destroyed + reclaimOrphanedCharts();
 }
 
 /**
