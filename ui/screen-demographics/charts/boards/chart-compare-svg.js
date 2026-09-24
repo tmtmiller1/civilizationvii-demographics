@@ -15,6 +15,7 @@ import {
   applyEngineChartDefaults,
   buildChartCanvas,
   computeRenderSize,
+  reclaimOrphanedCharts,
   teardownExistingChart,
   tryCreateChart
 } from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
@@ -318,6 +319,8 @@ export function renderCivScatter(host, opts) {
   const { xMetric, yMetric, xTitle, yTitle } = scatterAxisSpec(o);
 
   teardownExistingChart(host);
+  // Reclaim instances a previous view/page swap orphaned (see reclaimOrphanedCharts).
+  reclaimOrphanedCharts();
   while (host.firstChild) host.removeChild(host.firstChild);
   if (typeof Chart === "undefined") {
     return U.emptyState(host, t("LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING"));

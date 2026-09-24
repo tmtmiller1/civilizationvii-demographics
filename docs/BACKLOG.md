@@ -68,13 +68,55 @@ A decision is needed before any more per-view resolution fixes: 1 and 3 compose,
   load, as the campaign already does.
 - The `__rejected` parking keys and the per-seat policy keys have not been watched in a networked game.
 
-**Dead view:** **[Low]** `ui/screen-demographics/views/settlements/view-settlements-detail.js` is imported by a
-test only; no screen mounts it (the dossier was folded into the showcase rows). Delete it with its test and modinfo
-Item, or wire it back. (The in-screen Options view moved to `devtools/options-view/` on 2026-09-23.)
+**Dead view:** RESOLVED 2026-09-24. `ui/screen-demographics/views/settlements/view-settlements-detail.js` was
+deleted with its test and its `package.json` / `required-scripts-gate.mjs` entries (286 lines). It was never in the
+modinfo, so the engine had never loaded it; `release.sh` rsyncs the whole tree, so it had been shipping as dead
+weight in the zip. `npm run verify` green before and after (94 harnesses, then 93 — the delta is the deleted test).
+(The in-screen Options view moved to `devtools/options-view/` on 2026-09-23.)
 
 **Hotseat viewpoint mixing:** **[Medium]** `met` flags come from whichever seat sampled last
 (`sampler-collectors-core.js` `collectMet`, comment there lists the two designs), and the archive record is built for
 the first seat of each turn. Seat 1 can see civs only seat 2 met; seat 2 has no Hall of Fame entry.
+
+## Code-size audit 2026-09-24: deduplication left undone
+
+**Status:** open, measured 2026-09-24, deferred by choice. **[Low]**
+
+Context: an audit of what could be removed from `ui/` (56,494 JS lines + 7,535 CSS) without changing behaviour or
+appearance. The dead view above was the only free win and is done. Two dedupe items were measured and deliberately
+skipped; a third (orphan LOC keys) was found on the way. Note that naive line-window clone detection badly overstates
+all of these — it matches runs that straddle rule and function boundaries. The numbers below come from parsing whole
+CSS rules and whole function bodies, which is the figure to trust.
+
+**CSS rules with identical declaration bodies:** **[Low]** 8 groups, 51 lines total, out of 745 rules. Skipped
+because it is not a mechanical no-op: 3 of the 8 are cross-file merges, and the modinfo declares 7 stylesheets in a
+fixed order, so moving a rule between them changes cascade order. Separately, the biggest apparent repetition — the
+four `border-*-color` longhands, seen 167 times — is not duplication to remove: GameFace drops the `border-color`
+shorthand, so the longhands are required, and each occurrence sits in a rule whose other declarations differ. 51
+lines is not worth cascade risk.
+
+**Duplicate helper functions:** **[Low]** 16 groups of byte-identical function bodies, 163 lines gross, roughly 110
+net once the import lines each call site needs back are subtracted. The large ones are `safe` (6 copies, 35 lines),
+`showCsvToast` (2, 21), `relationshipKeyMap` (2, 16), `gameSeed` (2, 12) and `buildYearToChartMap` (2, 10). These are
+genuine copy-paste and extraction is legitimate; it was skipped only as not worth the churn. The usual risk is
+already covered — `tests/modinfo.mjs` gates import closure, shell-group completeness and import cycles of size > 1.
+One thing to watch if this is ever done: `ui/screen-demographics/settlements/settlements-adjacency.js` currently has
+zero imports, so a shared helper would give it its first import edge.
+
+**Orphan LOC keys:** **[Medium]** 136 keys are defined in `text/en_us/ModText.xml` and reachable from nothing in the
+repo — not `ui/`, not `devtools/`, not the modinfo — and each is translated across all 11 locales. They are stale
+names from earlier refactors: `LOC_DEMOGRAPHICS_TAB_HISTORY`, `_TAB_RELATIONS`, `_TAB_SETTLEMENTS`, `_TAB_TOWNS` and
+`_TAB_ADVISOR` where the live tabs are `_TAB_STATISTICS` / `_MIGRATION` / `_GEOPOLITICS` / `_CAMPAIGN_HISTORY` /
+`_RANKINGS` / `_EMIGRATION`; the whole `_TOWNS_*` and `_ADVISOR_*` families; `_SUBTITLE`, `_FOOTNOTE`, `_CLOSE`,
+`_BODY`. Two things must be true before any sweep:
+
+- `LOC_OPTIONS_GROUP_DEMOGRAPHICS` is in that set but must NOT be deleted — the engine composes it (see
+  `ENGINE_COMPOSED` in `tests/loc-keys.mjs`). It is now pinned there, and the gate fails if it goes missing.
+- A further 42 of the flagged keys are live in `devtools/options-view/`, which is outside `ui/`. Any orphan check
+  has to scan `ui/` + `devtools/` + `demographics.modinfo`, or it will condemn those 42 wrongly.
+
+Once the 136 are gone, the reverse check in `tests/loc-keys.mjs` can be widened from the `ENGINE_COMPOSED` list to a
+full "every defined key is reachable" assertion with no allowlist. Today that assertion would fail on all 136.
 
 ## History and Hall of Fame: checks still open after the merge
 

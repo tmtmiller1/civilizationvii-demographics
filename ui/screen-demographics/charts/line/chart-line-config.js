@@ -141,6 +141,12 @@ export function buildLineChartConfig(parts) {
       normalized: true,
       // Default "nearest" shows the single closest line; a metric can opt into "index" (via
       // metricMeta.tooltipMode) so hovering a turn lists every civ, which tells apart overlapping lines.
+      // Measured on 1.5.0 (2026-09-24): with `axis: "x"` and `intersect: false`, "nearest" already
+      // returns EVERY dataset at the hovered turn (they are equidistant in x), so it is not the cause
+      // of a tooltip that fails to update. Do NOT "fix" that by switching the default to "index":
+      // chart-line-series.js `fromContactOnly` drops pre-contact points, so datasets have different
+      // -length x arrays, and "index" aligns by array position rather than turn — it would pair one
+      // civ's turn 21 with another's turn 60 in the same tooltip.
       interaction: {
         mode: (metricMeta && metricMeta.tooltipMode) || "nearest",
         intersect: false,
