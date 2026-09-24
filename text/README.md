@@ -76,9 +76,17 @@ Keep the `{N_...}` tokens intact (and in a natural position for the language) wh
 `ui/metrics/demographics-metrics*.js` are only dev fallbacks — translate the LOC key.
 
 **History and Hall of Fame** strings use the `LOC_DEMOGRAPHICS_HIST_` prefix and resolve
-through their own `t()` in `ui/history/core/history-text.js`. At the main menu only setup
-text is loaded, so a Hall of Fame record also stores the text of the game names it shows
-(settlements, wonders, religions, Triumphs), captured in game, and `t()` falls back to it.
+through `t()` in `ui/history/core/history-text.js`, which is a thin layer over the shared
+`t()` here in `ui/core/demographics-i18n.js` — composition and number formatting are not
+reimplemented there. What that layer adds is the main menu's fallback: at the main menu only
+setup text is loaded, so a Hall of Fame record also stores the text of the game names it
+shows (settlements, wonders, religions, Triumphs), captured in game, and `t()` falls back to
+it when the tag does not resolve.
+
+Because the Hall of Fame runs at the main menu, `ui/core/demographics-i18n.js` is declared in
+**both** ActionGroups in `demographics.modinfo` — the `demographics-shell` group as well as
+`demographics-game`. A module the main menu imports but the shell group does not declare fails
+`npm run test:modinfo` (it runs a shell-scope import closure), not just the running game.
 
 **Polish** keeps a different layout from the other locales: one `<Replace>` per line,
 tab-indented, with the translator's header comment at the top. Keep that shape when adding tags.

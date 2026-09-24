@@ -352,17 +352,20 @@ class ScreenDemographics extends Panel {
   /**
    * Restore the per-metric time-filter map and resolve the active filter. Each metric remembers
    * its own last-chosen filter; the wars Gantt defaults to "50" so users land on a useful slice.
-   * The legacy scalar `activeTimeFilter` is the fallback; `resolveActiveFilterState` coerces any
-   * unknown id to "all" at render time.
+   * `resolveActiveFilterState` coerces any unknown id to "all" at render time.
+   *
+   * The legacy scalar `activeTimeFilter` is a MIGRATION fallback only (settings predating the map
+   * carry just the scalar). Once a map exists, a never-filtered metric opens at "all" — the known
+   * state `_setActiveMetric` resets to. As a live fallback it leaked one metric's window onto every
+   * other: filters are in YEARS, so a "25" picked on Faith left late-game GDP at ~4 turns.
    */
   _restoreTimeFilters() {
-    const legacyFilter = this.settings.getSetting("activeTimeFilter", "all");
-    const storedMap = this.settings.getSetting("timeFiltersByMetric", null);
-    this.timeFiltersByMetric = storedMap && typeof storedMap === "object" ? storedMap : {};
-    if (!this.timeFiltersByMetric.wars_gantt) {
-      this.timeFiltersByMetric.wars_gantt = "50";
-    }
-    this.activeTimeFilter = this.timeFiltersByMetric[this.activeMetric] || legacyFilter;
+    const stored = this.settings.getSetting("timeFiltersByMetric", null);
+    const byMetric = stored && typeof stored === "object" ? stored : null;
+    this.timeFiltersByMetric = byMetric || {};
+    if (!this.timeFiltersByMetric.wars_gantt) this.timeFiltersByMetric.wars_gantt = "50";
+    this.activeTimeFilter = this.timeFiltersByMetric[this.activeMetric] ||
+      (byMetric ? "all" : this.settings.getSetting("activeTimeFilter", "all"));
   }
 
   /**

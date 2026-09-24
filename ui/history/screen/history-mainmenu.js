@@ -5,6 +5,7 @@
 // and guarded so it can never break the menu.
 
 import { dlog, derr } from "/demographics/ui/history/core/history-log.js";
+import { tBaseGame } from "/demographics/ui/core/demographics-i18n.js";
 import { t } from "/demographics/ui/history/core/history-text.js";
 import { openHallOfFame } from "/demographics/ui/history/screen/history-open.js";
 
@@ -17,7 +18,9 @@ const BUTTON_CLASS = "dgh-menu-button";
  * @returns {boolean} True on a match.
  */
 function captionIs(node, tag) {
-  const want = t(tag).toUpperCase();
+  // tBaseGame, not t: these captions are engine-owned (BASE_GAME_LOC_KEYS), so they are never in
+  // the archive's saved text and the call site should say the engine localizes them.
+  const want = tBaseGame(tag).toUpperCase();
   return !!want && String(node.getAttribute?.("caption") || "").toUpperCase() === want;
 }
 

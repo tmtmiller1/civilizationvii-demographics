@@ -11,6 +11,7 @@ import {
   applyEngineChartDefaults,
   buildChartCanvas,
   computeRenderSize,
+  reclaimOrphanedCharts,
   teardownExistingChart,
   tryCreateChart
 } from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
@@ -144,6 +145,8 @@ function legendOpts(opts) {
  */
 function prepare(host, options, metricId) {
   teardownExistingChart(host);
+  // Reclaim instances a previous view/page swap orphaned (see reclaimOrphanedCharts).
+  reclaimOrphanedCharts();
   while (host.firstChild) host.removeChild(host.firstChild);
   if (typeof Chart === "undefined") {
     emptyState(host, t("LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING"));

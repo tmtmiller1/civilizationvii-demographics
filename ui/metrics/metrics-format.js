@@ -14,7 +14,7 @@
  * @param {string} fallback The off-engine result (must match the prior output).
  * @returns {string} The locale-formatted number, or `fallback`.
  */
-function localeNumber(n, spec, fallback) {
+export function localeNumber(n, spec, fallback) {
   try {
     if (typeof Locale !== "undefined" && typeof Locale.toNumber === "function") {
       return spec ? Locale.toNumber(n, spec) : Locale.toNumber(n);

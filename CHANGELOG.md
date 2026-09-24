@@ -5,6 +5,46 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.7.4] - 2026-09-24
+
+A small follow-up to 2.7.3. Three things a player can see: the Hall of Fame no longer prints the game's internal
+names where a setup line should read in words, a time window chosen on one graph stops following you onto every
+other graph, and the Hall of Fame's section headings line up with the rest of the mod. Behind those, the Hall of
+Fame now draws its text through the same localization path as every other screen, and the graph screen stops
+holding on to charts it has finished with.
+
+### Fixed
+
+- **A game's setup line printed internal names.** In the Hall of Fame, opening a game showed
+  "GAMESPEED_STANDARD · DIFFICULTY_VICEROY" where it should read "Standard · Viceroy", and the map size and map
+  type were missing from that line entirely. The game reports these two ways depending on how it was set up, and
+  only one of them was being read; the other was printed raw, while anything that failed to resolve was dropped
+  rather than shown. Both shapes now read as words, so older records in an existing Hall of Fame are corrected too.
+- **A time window picked on one graph followed you to the others.** The windows are counted in years, so choosing
+  "25y" on one graph and later reopening the screen could leave an unrelated graph showing about four turns of a
+  late game. Each graph now opens on the window it was last given, or on All Time when it has never been given one.
+- **The graph screen never let go of a chart it had finished with.** Every switch between pages left two charts
+  behind, each still holding its data and its input handlers, and closing the screen reclaimed none of them. A long
+  session browsing graphs accumulated them for as long as the game ran.
+
+### Changed
+
+- **Hall of Fame section headings are centred**, matching how every other page in the mod titles itself.
+- **The Hall of Fame composes its text the same way the rest of the mod does.** It runs at the main menu, where it
+  had been reaching for its own copy of the mod's text helper because the shared one was not available there. It
+  now uses the shared one, keeping only the part it genuinely needs: the names it saved with each recorded game, so
+  a settlement, wonder, religion or Triumph still reads correctly at the main menu where the game has not loaded
+  its own text yet.
+
+### Internal
+
+- Removed a settlements detail view, and its test, that nothing loaded. It had not been registered with the game
+  since it was split up, so it was never running.
+- A new check keeps text that the game itself assembles from going missing. Those names appear nowhere in the mod's
+  own code, so removing one used to pass every other check and only show up in the running game.
+- A check on the chart teardown, covering the case that matters most: the game's own graphs share the same charting
+  library, and the cleanup must never reach one of those.
+
 ## [2.7.3] - 2026-09-23
 
 A cleanup release, with no new graphs. Everything here is about how what is already in the mod looks, reads and

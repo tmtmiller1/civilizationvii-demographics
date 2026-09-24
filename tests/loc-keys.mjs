@@ -14,10 +14,29 @@ import { isBaseGameLoc, BASE_GAME_LOC_KEYS, BASE_GAME_LOC_PREFIXES } from "/demo
 // "_" and are checked as PREFIXES: at least one defined (or registered base-game) key must start
 // with it. A bare `"LOC_" + x` build is too generic to check and is only counted. Runs under the
 // test loader because it imports the mod's own registry module.
+//
+// REVERSE direction, for keys the ENGINE composes and the mod therefore never names: those are
+// invisible to the scan above, so deleting one passes every other gate and shows up only in game
+// as a raw "LOC_..." heading. Each such key is declared in ENGINE_COMPOSED below with the engine
+// source that builds it, and this gate asserts it is still defined. See BACKLOG for the wider
+// sweep of keys that are defined but reachable from nothing (the orphan check this cannot yet be).
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const UI = path.join(ROOT, "ui");
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/");
+
+// Keys the engine builds from a value the mod supplies, so the tag never appears as a literal in
+// ui/ and the reference scan below cannot see it. Deleting one is silent everywhere except the
+// running game, which is why each is pinned here with the engine code that composes it.
+/** @type {{ key: string, why: string }[]} */
+const ENGINE_COMPOSED = [
+  {
+    key: "LOC_OPTIONS_GROUP_DEMOGRAPHICS",
+    why:
+      'Base/modules/core/ui/options/options-helpers.js GetGroupLocKey() returns `LOC_OPTIONS_GROUP_${group.toUpperCase()}`; ' +
+      'ui/demographics-options.js passes group MAIN_GROUP = "demographics". Heading of the mod\'s Options > Mods block.'
+  }
+];
 
 /** @param {string} dir @returns {string[]} */
 function listFiles(dir) {
@@ -77,5 +96,16 @@ assert.equal(
   0,
   `${missing.length} LOC reference(s) neither defined in text/en_us/ModText.xml nor registered as base-game in ` +
     `ui/core/demographics-i18n.js:\n  ${missing.join("\n  ")}`
+);
+
+// Reverse direction: engine-composed keys are named nowhere in ui/, so only this list protects them.
+const droppedEngineKeys = ENGINE_COMPOSED.filter((e) => !defined.has(e.key));
+console.log(`loc-keys: ${ENGINE_COMPOSED.length} engine-composed key(s) checked for definedness`);
+assert.equal(
+  droppedEngineKeys.length,
+  0,
+  `${droppedEngineKeys.length} engine-composed LOC key(s) missing from text/en_us/ModText.xml. The engine builds ` +
+    `these, so nothing in ui/ references them and no other gate sees the loss , in game the label renders as the ` +
+    `raw tag:\n  ${droppedEngineKeys.map((e) => `${e.key}\n      ${e.why}`).join("\n  ")}`
 );
 console.log("loc-keys harness passed");

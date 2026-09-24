@@ -1,10 +1,18 @@
 // history-text.js
 //
-// Localization helpers. Every user-visible string is a LOC tag resolved through t(); every number
-// goes through num(). Strings live in text/<locale>/ModText.xml. Engine tags (leader, civilization,
-// wonder, victory and age names) are composed the same way, so they appear in the player's language.
+// The main menu's saved-text fallback layer over the mod's shared localization helpers. Every
+// user-visible string is a LOC tag resolved through t(); every number goes through num(). Strings
+// live in text/<locale>/ModText.xml. Engine tags (leader, civilization, wonder, victory and age
+// names) are composed the same way, so they appear in the player's language.
+//
+// Composition and number formatting are NOT reimplemented here: t() delegates to the shared
+// resolver in ui/core/demographics-i18n.js and num() to localeNumber() in ui/metrics/metrics-format.js,
+// so Locale semantics live in one place for the whole mod. What this module owns is the piece the
+// shared helpers cannot provide — at the main menu the gameplay text DB is not loaded, so a tag
+// first seen in a game resolves from the text stored with the archived record (savedTexts below).
 
-import { safe } from "/demographics/ui/history/core/history-log.js";
+import { t as composeLoc } from "/demographics/ui/core/demographics-i18n.js";
+import { localeNumber } from "/demographics/ui/metrics/metrics-format.js";
 
 /**
  * Text saved with archived games for tags the main menu cannot resolve. The main menu loads only
@@ -41,7 +49,9 @@ function unresolved(s, key) {
 export function t(key, ...args) {
   if (!key) return "";
   if (typeof Locale === "undefined" || typeof Locale.compose !== "function") return savedTexts.get(key) || key;
-  const s = safe(() => Locale.compose(key, ...args), key);
+  // The shared resolver swallows a throw from Locale.compose and returns the key; `?? key` covers a
+  // compose that returns nothing, so an unresolved tag always reaches the savedTexts fallback below.
+  const s = composeLoc(key, ...args) ?? key;
   return args.length === 0 && unresolved(s, key) ? savedTexts.get(key) || s : s;
 }
 
@@ -63,11 +73,10 @@ export function tOr(key, fallback) {
  */
 export function num(n) {
   const v = Number.isFinite(n) ? n : 0;
-  if (typeof Locale !== "undefined" && typeof Locale.toNumber === "function") {
-    const s = safe(() => Locale.toNumber(v), "");
-    if (s) return String(s);
-  }
-  return String(Math.round(v));
+  // "" as the fallback so an unavailable, throwing or empty Locale.toNumber all fall through to the
+  // rounded form, which is what this module returned before the formatter was shared.
+  const s = localeNumber(v, "", "");
+  return s ? String(s) : String(Math.round(v));
 }
 
 /**
