@@ -37,7 +37,7 @@ function rec(id, o = {}) {
   assert.deepEqual(ranked(list).map((r) => r.id), ["win-many-fast", "win-many-slow", "win-few", "loss-many", "open"]);
 }
 
-// Standing: the best games, and the current game placed among them with its neighbours.
+// Standing: the best games, and the current game placed among them with its neighbors.
 {
   const list = Array.from({ length: 14 }, (_, i) => rec("g" + i, { status: "victory", tri: 40 - i, updated: i }));
   const st = standing(list, "g7", 10);

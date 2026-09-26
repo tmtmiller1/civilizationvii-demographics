@@ -222,7 +222,7 @@ export function scaleCasualtiesAt(raw, turn) {
  * age-progress so it emerges over the Modern age rather than popping in at the boundary. 1 (no-op) for
  * non-Modern ages, sizes at/below the knee, or the opening of the Modern age.
  * @param {number} n Settlement size.
- * @param {string | undefined} ageType Age type.
+ * @param {string | undefined} ageType
  * @param {number | undefined} ageProgressPct Age progress percent [0,100].
  * @returns {number} Multiplier (>= 1).
  */
@@ -236,7 +236,7 @@ function modernMegacityBoost(n, ageType, ageProgressPct) {
 
 /**
  * The per-era population ceiling, blended (geometric) across age boundaries like the growth params.
- * @param {string | undefined} ageType Age type.
+ * @param {string | undefined} ageType
  * @param {number | undefined} ageProgressPct Age progress percent [0,100].
  * @returns {number} The ceiling (people).
  */
@@ -256,7 +256,7 @@ function eraCeiling(ageType, ageProgressPct) {
 /**
  * The endgame ("one more turn") ceiling multiplier: 1 in normal play, growing linearly once the final
  * age's progress runs past 100%. Modern-only (only the last age has overtime).
- * @param {string | undefined} ageType Age type.
+ * @param {string | undefined} ageType
  * @param {number | undefined} ageProgressPct Age progress percent (may exceed 100 in overtime).
  * @returns {number} Multiplier (>= 1).
  */

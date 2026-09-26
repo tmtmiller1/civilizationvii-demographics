@@ -664,7 +664,7 @@ function exposeWarData() {
  * Subscribe one handler to an engine event, returning the bound ref (or null if
  * engine.on throws, e.g. the event name is unknown in this build).
  * @param {string} event The engine event name.
- * @param {(data: *) => void} handler The handler.
+ * @param {(data: *) => void} handler
  * @returns {((data: *) => void) | null} The bound ref, or null on failure.
  */
 function subscribe(event, handler) {

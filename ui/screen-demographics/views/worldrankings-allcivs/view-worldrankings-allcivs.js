@@ -237,7 +237,7 @@ function renderBody(host, ctx) {
 }
 
 /**
- * Render the civs-as-columns matrix branch (the wide, resolution-robust layout).
+ * Render the civs-as-columns matrix branch (the wide layout).
  * @param {HTMLElement} host The view host.
  * @param {Record<string, *>} profiles Civ profile map.
  * @param {string[]} allPids All profile pids.

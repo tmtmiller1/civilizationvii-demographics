@@ -26,7 +26,7 @@ export function campaignRejectedKey(version) {
 
 /**
  * Read one string value from the current game's configuration.
- * @param {string} key The key.
+ * @param {string} key
  * @returns {string} The value, or "" when absent or not a string.
  */
 function readValue(key) {
@@ -36,7 +36,7 @@ function readValue(key) {
 
 /**
  * Write one string value into the current game's configuration.
- * @param {string} key The key.
+ * @param {string} key
  * @param {string} value The value ("" clears it as far as this module is concerned).
  * @returns {boolean} True when the write call succeeded.
  */

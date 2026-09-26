@@ -21,7 +21,7 @@ export function outcomeLabel(rec) {
 
 /**
  * Short status class for styling rows. A game that ended without a winner is its own case: it is
- * not a defeat, and grey is kept for an empty figure.
+ * not a defeat, and gray is kept for an empty figure.
  * @param {ArchiveRecord} rec Record.
  * @returns {string} "win" | "loss" | "ended" | "open".
  */

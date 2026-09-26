@@ -22,8 +22,8 @@ export function pstate(over = {}) {
 
 /**
  * A world state.
- * @param {number} turn Turn.
- * @param {Record<string, HnrPlayerState>} players Players.
+ * @param {number} turn
+ * @param {Record<string, HnrPlayerState>} players
  * @param {Partial<HnrWorldState>} over Overrides.
  * @returns {HnrWorldState} State.
  */

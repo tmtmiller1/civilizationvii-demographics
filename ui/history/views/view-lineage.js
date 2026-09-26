@@ -30,7 +30,7 @@ export function lineageOrder(doc, known) {
 /**
  * One cell: the civilization held in an age, a "fallen" marker, or nothing.
  * @param {HnrPlayer} p Player.
- * @param {HnrAge} age Age.
+ * @param {HnrAge} age
  * @param {string} color Readable display color.
  * @returns {HTMLElement} Cell.
  */

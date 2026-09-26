@@ -409,14 +409,12 @@ export function exportHistoryAsCsv(history, host) {
     return;
   }
 
-  // Step 1: try clipboard. UI.isClipboardAvailable() is the canonical gate
-  // (cite: pause-menu-model.js).
+  // UI.isClipboardAvailable() is the canonical gate (cite: pause-menu-model.js).
   const clipboardOk = writeCsvToClipboard(csv);
 
-  // Step 2: dump to UI.log as a recoverable fallback.
+  // The log dump is the fallback when the clipboard write is refused.
   logCsvDump(csv, lines.length, sizeMB, clipboardOk);
 
-  // Step 3: visible toast confirmation.
   showCsvResultToast({
     host,
     csv,

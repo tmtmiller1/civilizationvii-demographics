@@ -135,7 +135,7 @@
    the frame header, top-right at title level, just left of the close button - not per view. The
    button used to sit alone on its own row under the ranking / relations sub-tabs and the banner in
    a bottom row; both cost content rows on every tab. JS keeps the row on the title's measured
-   centre line (alignOptionsHeaderButton). */
+   center line (alignOptionsHeaderButton). */
 .demographics-header-right {
     position: absolute;
     top: calc(0.95 * var(--dg-u));
@@ -544,7 +544,7 @@
     color: var(--dg-ia-accent-gold);
     font-weight: 600;
 }
-/* Disabled (cross-age) filter pill. Greyed via color / border alpha rather
+/* Disabled (cross-age) filter pill. Grayed via color / border alpha rather
    than opacity — opacity would compound onto the absolutely-positioned
    tooltip child and dim it to illegibility. pointer-events stays auto so the
    tooltip still shows on hover. */

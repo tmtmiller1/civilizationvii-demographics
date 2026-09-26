@@ -13,7 +13,7 @@
 //   1 NATIVE   a real mousemove reaches the DOM       -> clientX changes
 //   2 DERIVED  Chart.js converts it to a chart x      -> _eventHandler receives a changing x
 //   3 RENDER   the tooltip DOM is rewritten           -> the header/value text changes
-// The probe records all three and, when the cursor has clearly travelled but the rendered text has
+// The probe records all three and, when the cursor has clearly traveled but the rendered text has
 // not, prints ONE verdict line naming the first stage that stopped moving. That is the answer.
 //
 // Durability: the chart canvas is replaced on every re-render, so hooking one canvas is useless
@@ -22,7 +22,7 @@
 // mousemove on `document` in the capture phase, which no canvas swap can detach.
 //
 // Output goes to Logs/UI.log via console.error (console.log does NOT reach it), so a session can be
-// played normally and read back afterwards with:
+// played normally and read back afterward with:
 //   grep 'TOOLTIP-PROBE' ~/Library/Application\ Support/Civilization\ VII/Logs/UI.log
 
 const TAG = "[TOOLTIP-PROBE]";

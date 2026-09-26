@@ -68,7 +68,7 @@ export function newItemCache() {
 
 /**
  * Start a build pass: forget which items the previous pass used.
- * @param {ItemCache|undefined} cache The cache.
+ * @param {ItemCache|undefined} cache
  */
 export function beginItemPass(cache) {
   if (!cache) return;
@@ -79,7 +79,7 @@ export function beginItemPass(cache) {
 /**
  * Finish a build pass: drop every cached item this pass did not place, so the cache cannot grow
  * across age windows or civilization-filter changes.
- * @param {ItemCache|undefined} cache The cache.
+ * @param {ItemCache|undefined} cache
  */
 export function endItemPass(cache) {
   if (!cache) return;
@@ -92,7 +92,7 @@ export function endItemPass(cache) {
  * The cache slot for one item this pass. Two items that describe themselves identically (a genuine
  * duplicate event) get separate slots rather than fighting over one element, which would make one
  * of them vanish.
- * @param {ItemCache} cache The cache.
+ * @param {ItemCache} cache
  * @param {string} key The caller's key.
  * @returns {string} The unique slot key.
  */
@@ -182,7 +182,7 @@ export function shortPeople(v) {
  * The age header: one band per age with your civilization's emblem and name, the age and its dates.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (the bands carry civilization emblems).
  * @returns {Lane} Lane.
  */
@@ -209,7 +209,7 @@ export function ageHeader(tl, w, cast, cache) {
  * civilizations shaded from one's color to the other's, with both emblems.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (the pills carry civilization emblems).
  * @returns {Lane|null} Lane.
  */
@@ -230,7 +230,7 @@ export function warLane(tl, w, cast, cache) {
  * A war of yours.
  * @param {Timeline["wars"][number]} x War.
  * @param {{l:number, w:number, top:number, h:number}} box Placement.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {string} age Age type.
  * @param {ItemCache} [cache] Item-reuse cache.
  * @returns {HTMLElement} Pill.
@@ -251,7 +251,7 @@ function warPill(x, box, cast, age, cache) {
  * A war between two other civilizations.
  * @param {Timeline["wars"][number]} x War (`a` against `other`).
  * @param {{l:number, w:number, top:number, h:number}} box Placement.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {string} age Age type.
  * @param {ItemCache} [cache] Item-reuse cache.
  * @returns {HTMLElement} Pill.
@@ -277,7 +277,7 @@ function rivalWarPill(x, box, cast, age, cache) {
 
 /**
  * A civilization's name, or the independent peoples when it has none.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {number} pid Player.
  * @param {string} age Age type.
  * @returns {string} Name.
@@ -338,10 +338,10 @@ const MARK_GROUPS = [
 
 /**
  * Milestones as icon medallions, a lane per kind (Wonders, Triumphs, Faith, Conquests, then victory
- * and fallen civilizations). Within a lane, close neighbours alternate between two rows.
+ * and fallen civilizations). Within a lane, close neighbors alternate between two rows.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (each medallion is an icon disc).
  * @returns {Lane[]} Lanes (kinds with nothing in the window are left out).
  */
@@ -381,7 +381,7 @@ function markLane(g, marks, tl, w, ctx) {
 
 /**
  * Paint a game icon into a disc.
- * @param {HTMLElement} disc Disc.
+ * @param {HTMLElement} disc
  * @param {string} icon Texture path ("" leaves the disc's own fill).
  * @returns {HTMLElement} The disc.
  */
@@ -407,9 +407,9 @@ export function edgeClass(left) {
 
 /**
  * Mark another civilization's milestone (every ring is the same gold; its tooltip names the owner).
- * @param {HTMLElement} medal Medal.
+ * @param {HTMLElement} medal
  * @param {{k:string, p:number}} m Milestone.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @returns {HTMLElement} The medal.
  */
 function rivalRing(medal, m, cast) {
@@ -421,7 +421,7 @@ function rivalRing(medal, m, cast) {
  * Settlements you founded: a marker per founding, stacked so none overlap, numbered in the tooltip.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @returns {Lane|null} Lane.
  */
 export function settlementLane(tl, w, cast) {
@@ -453,7 +453,7 @@ export function settlementLane(tl, w, cast) {
  * line in each shown rival's color, all on one scale.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @returns {Lane|null} Lane.
  */
 export function populationLane(tl, w, cast) {
@@ -505,7 +505,7 @@ function curveSvg(mine, others, w, max) {
 const TICK_STEPS = [1, 2, 5, 10, 20, 25, 50, 100];
 
 /**
- * Tick spacing for a window seen at a zoom: at most sixteen labelled ticks across the visible width, with
+ * Tick spacing for a window seen at a zoom: at most sixteen labeled ticks across the visible width, with
  * unlabelled minor ticks between them.
  * @param {Win} w Window.
  * @param {number} zoom Canvas width in viewport widths.
@@ -519,11 +519,11 @@ export function tickSteps(w, zoom) {
 }
 
 /**
- * Every tick in the window: axis position, the age's own turn number, and whether it is labelled.
+ * Every tick in the window: axis position, the age's own turn number, and whether it is labeled.
  * Turns restart each age, so ticks count from each age's first turn.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {number} zoom Zoom.
+ * @param {number} zoom
  * @returns {{at:number, turn:number, major:boolean}[]} Ticks.
  */
 export function ticks(tl, w, zoom) {
@@ -542,10 +542,10 @@ export function ticks(tl, w, zoom) {
 }
 
 /**
- * The ruler: turn ticks (labelled every major step) and each age's opening date.
+ * The ruler: turn ticks (labeled every major step) and each age's opening date.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {number} zoom Zoom.
+ * @param {number} zoom
  * @returns {Lane} Lane.
  */
 export function rulerLane(tl, w, zoom) {
@@ -565,10 +565,10 @@ export function rulerLane(tl, w, zoom) {
 }
 
 /**
- * Faint vertical guides through every lane at the labelled ticks.
+ * Faint vertical guides through every lane at the labeled ticks.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {number} zoom Zoom.
+ * @param {number} zoom
  * @returns {HTMLElement[]} Lines.
  */
 export function gridLines(tl, w, zoom) {
@@ -595,7 +595,7 @@ export function disasterFamily(type) {
  * (your own lands full strength, others' dimmer).
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (each gem is an icon disc).
  * @returns {Lane|null} Lane.
  */

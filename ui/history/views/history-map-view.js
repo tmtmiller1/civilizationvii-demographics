@@ -204,7 +204,7 @@ export function holders(mv, f) {
  * @param {HTMLElement} legend Legend (emptied).
  * @param {MapView} mv Map.
  * @param {MapView["frames"][number]} f Frame.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {{ageAt: (at:number) => string, whenAt: (at:number) => string}} labels Age and position labels.
  */
 function fillLegend(legend, mv, f, cast, labels) {
@@ -232,7 +232,7 @@ function fillLegend(legend, mv, f, cast, labels) {
  * never throws: a frame that cannot be painted or described is logged and the panel keeps its last
  * good state.
  * @param {MapView} mv Map.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {(at:number) => string} ageAt Age type at a timeline position.
  * @param {(at:number) => string} [whenAt] Label of a timeline position ("Modern, T157").
  * @returns {{el: HTMLElement, show: (at:number) => void}} Panel and its painter.

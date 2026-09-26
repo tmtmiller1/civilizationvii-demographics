@@ -309,7 +309,7 @@ const REFUGEE_METRICS = new Set([
 /**
  * Append one event-marker filter toggle (e.g. Wars / Disasters), mirroring the Wonders toggle:
  * reads a boolean setting (default ON), dims when off, flips + re-renders on click.
- * @param {HTMLElement} toolbar The toolbar.
+ * @param {HTMLElement} toolbar
  * @param {*} ctx Render context.
  * @param {string} key Setting key (showWarMarkers / showDisasterMarkers).
  * @param {string} label Button label.
@@ -341,7 +341,7 @@ function appendMarkerToggle(toolbar, ctx, key, label) {
 
 /**
  * Append the Wars + Disasters event-marker filter toggles for the Refugees graphs.
- * @param {HTMLElement} toolbar The toolbar.
+ * @param {HTMLElement} toolbar
  * @param {*} ctx Render context.
  */
 function appendRefugeeMarkerToggles(toolbar, ctx) {
@@ -589,7 +589,7 @@ export function buildToolbar(host, ctx, activeMetric) {
 /**
  * Append the Civ/Leader name-order toggle. Persists `nameOrder`, updates the
  * global label order, and reloads so every view relabels consistently.
- * @param {HTMLElement} toolbar The toolbar.
+ * @param {HTMLElement} toolbar
  * @param {*} ctx Render context.
  */
 function appendNameOrderToggle(toolbar, ctx) {

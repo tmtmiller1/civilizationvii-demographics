@@ -28,7 +28,7 @@ function testPureBlackLiftsToReadableGrey() {
 
 function testNearBlackPreservesHue() {
   // Alexander-style near-black-with-a-tint: a very dark red must come back red,
-  // not grey, and must be bright enough to read.
+  // not gray, and must be bright enough to read.
   const out = safeTextColor("#1a0000");
   const n = out.replace("#", "");
   const r = parseInt(n.slice(0, 2), 16);
@@ -96,24 +96,24 @@ function testPreferReadableColorMissingInputs() {
 }
 
 function testDarkGreyAboveOldBandIsLifted() {
-  // Alexander regression: a dark grey bright enough to clear the old luminance
+  // Alexander regression: a dark gray bright enough to clear the old luminance
   // band (~#4a4a4a, luminance 74) must still be lifted to a clearly visible tone.
   const out = safeTextColor("#4a4a4a");
-  assert.notEqual(out.toLowerCase(), "#4a4a4a", "dark grey must not pass through unchanged");
-  assert.ok(luminanceOf(out) > 150, `dark grey should be lifted bright, got ${out}`);
+  assert.notEqual(out.toLowerCase(), "#4a4a4a", "dark gray must not pass through unchanged");
+  assert.ok(luminanceOf(out) > 150, `dark gray should be lifted bright, got ${out}`);
 }
 
 function testDarkGreyPrimarySwapsToSecondary() {
-  // A dark-grey primary that the old code left alone now defers to the secondary.
+  // A dark-gray primary that the old code left alone now defers to the secondary.
   assert.equal(
     preferReadableColor("#4a4a4a", "#c8a24c"),
     "#c8a24c",
-    "dark-grey primary should swap to the secondary banner color"
+    "dark-gray primary should swap to the secondary banner color"
   );
 }
 
 function testDarkButSaturatedPrimaryIsKept() {
-  // A dark navy is saturated, not a grey , keep its identity, don't swap.
+  // A dark navy is saturated, not a gray , keep its identity, don't swap.
   assert.equal(
     preferReadableColor("#1a3a6e", "#ffffff"),
     "#1a3a6e",

@@ -1,4 +1,4 @@
-// Multiplayer behaviour of the History capture. In a networked game the host owns the shared game
+// Multiplayer behavior of the History capture. In a networked game the host owns the shared game
 // configuration, so only the host stores the campaign there; guests keep it in memory and adopt
 // their own viewpoint on the host's stored copy. Every seat of a hotseat game and every single-player
 // game stores as before. Samples are taken once per game turn, whichever seat's turn starts it.
