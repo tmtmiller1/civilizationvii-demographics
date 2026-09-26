@@ -78,7 +78,7 @@ export function windowFor(tl, age) {
 /**
  * Every dated happening on the timeline, oldest first, for the playback caption.
  * @param {Timeline} tl Timeline.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @returns {Beat[]} Beats.
  */
 export function beats(tl, cast) {
@@ -111,9 +111,9 @@ function dated(d, s) {
 
 /**
  * The enemy's name for a war (independent peoples when unnamed).
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {number} pid Enemy.
- * @param {string} age Age.
+ * @param {string} age
  * @returns {string} Name.
  */
 function warName(cast, pid, age) {
@@ -122,7 +122,7 @@ function warName(cast, pid, age) {
 
 /**
  * A war's caption: yours against the enemy, or two other civilizations against each other.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {Timeline["wars"][number]} w War.
  * @param {string} age Age type.
  * @returns {string} Caption.
@@ -172,8 +172,8 @@ function turnLabel(tl, at) {
  * The lanes of the window, in drawing order.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
- * @param {Cast} cast Cast.
- * @param {number} zoom Zoom.
+ * @param {Cast} cast
+ * @param {number} zoom
  * @param {import("./history-timeline-lanes.js").ItemCache} [cache] Item-reuse cache, handed to the
  *   lanes whose items carry engine art (emblems, medallions, gems) so a redraw keeps those
  *   elements instead of re-creating them and making each one blink.
@@ -217,7 +217,7 @@ function legend(tl) {
  * optional companion (the rivals) to its right.
  * @param {Timeline} tl Timeline.
  * @param {import("../model/history-map.js").MapView|null} mv Territory map.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {HTMLElement|null} [side] Shown to the right of the map.
  * @param {string} [key] The game's id (the civilization filter is remembered per game).
  * @returns {HTMLElement[]} Map row and timeline.
@@ -234,7 +234,7 @@ export function timelineWithMap(tl, mv, cast, side = null, key = "") {
 /**
  * The interactive timeline of one game.
  * @param {Timeline} tl Timeline.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {{onSeek?: (at:number) => void, key?: string}} [opts] onSeek: told the position shown (the cursor,
  *   else the end of the window), so a companion such as the territory map can follow; key: the game's id.
  * @returns {HTMLElement} Graphic.
@@ -290,7 +290,7 @@ export function timelineGraphic(tl, cast, opts = {}) {
 /**
  * The civilizations picked for a game: the saved pick for this game, else just your own.
  * @param {string} key Game id.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @returns {Set<number>} Picked player ids.
  */
 function shownCivs(key, cast) {
@@ -302,7 +302,7 @@ function shownCivs(key, cast) {
  * The civilization filter: a chip per civilization the timeline can show (emblem, color, name), with
  * "Only mine" and "All" shortcuts. Independent of the territory map.
  * @param {Timeline} tl Timeline (unfiltered).
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {Set<number>} shown Picked civilizations.
  * @param {string} key Game id.
  * @param {() => void} redraw Redraw the timeline.
@@ -346,7 +346,7 @@ function civFilter(tl, cast, shown, key, redraw) {
  * Build the controls, labels, canvas and caption into the root.
  * @param {HTMLElement} root Root (emptied).
  * @param {Timeline} tl Timeline.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {{timer: any, at: number}} play Playback state.
  * @param {{redraw: () => void, stop: () => void, onSeek: (at:number) => void,
  *   civs: HTMLElement|null, legend?: HTMLElement|null,
@@ -390,13 +390,13 @@ function clearExcept(node, keep) {
 }
 
 /**
- * Mouse behaviour of the lanes: the ruler seeks on click, and the ruler and population lane show a
+ * Mouse behavior of the lanes: the ruler seeks on click, and the ruler and population lane show a
  * readout that follows the mouse.
  * @param {Timeline} tl Timeline.
  * @param {Win} w Window.
  * @param {{key:string, node:HTMLElement}[]} lanes Lane elements.
- * @param {Player} player Player.
- * @param {Cast} cast Cast.
+ * @param {Player} player
+ * @param {Cast} cast
  */
 function wireLanes(tl, w, lanes, player, cast) {
   const ruler = lanes.find((l) => l.key === "ruler")?.node;
@@ -411,7 +411,7 @@ function wireLanes(tl, w, lanes, player, cast) {
 /**
  * Population at a position: yours alone, or each shown civilization's when rivals are shown.
  * @param {Timeline} tl Timeline (focused).
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {number} at Position.
  * @returns {string} Text.
  */
@@ -441,7 +441,7 @@ export function valueAt(curve, at) {
 
 /**
  * A readout that follows the mouse across a lane: a hairline and a label naming what is under it.
- * @param {HTMLElement} lane Lane.
+ * @param {HTMLElement} lane
  * @param {Win} w Window.
  * @param {(at:number) => string} textAt Label for a position.
  */
@@ -494,7 +494,7 @@ function onActivateAt(target, fn) {
 /**
  * Playback: a cursor with a veil over the future and a caption naming the latest event.
  * @param {Timeline} tl Timeline.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {Win} w Window.
  * @param {{timer: any, at: number}} play Playback state (kept across redraws).
  * @param {{canvas: HTMLElement, viewport: HTMLElement, caption: HTMLElement, stop: () => void,
@@ -549,7 +549,7 @@ function playback(tl, cast, w, play, ui) {
 /**
  * Keep the cursor in view while it moves.
  * @param {HTMLElement} viewport Scroll box.
- * @param {HTMLElement} canvas Canvas.
+ * @param {HTMLElement} canvas
  * @param {number} x Cursor position in percent of the canvas.
  */
 function follow(viewport, canvas, x) {
@@ -562,7 +562,7 @@ function follow(viewport, canvas, x) {
 /**
  * The control row: age window, zoom, pan and play.
  * @param {Timeline} tl Timeline.
- * @param {Player} player Player.
+ * @param {Player} player
  * @param {HTMLElement} viewport Scroll box.
  * @param {{redraw: () => void, stop: () => void}} fx Redraw.
  * @returns {HTMLElement} Row.

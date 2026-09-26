@@ -65,6 +65,6 @@ up and ready for the 2K/Firaxis support portal. Until it is fixed, the repair is
 ## How to tell if you are affected
 
 Open the Hall of Fame (from the main menu or under World Rankings). A red notice box saying a Civilization VII bug is
-blocking the Hall of Fame means the game is returning another mod's entry. A grey note saying games are saved on this
+blocking the Hall of Fame means the game is returning another mod's entry. A gray note saying games are saved on this
 computer means the store reads correctly. Settings from
 other mods that never stick between launches are the same bug seen from the other side.

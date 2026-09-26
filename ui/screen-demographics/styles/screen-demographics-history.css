@@ -12,8 +12,8 @@
     --dgh-copper:        #a8845a;   /* .fxs-header */
     --dgh-gold:          #f3c34c;
     --dgh-gold-soft:     #c9a24c;
-    /* Results are three: won (green), finished without a victory (red), and nothing yet (grey).
-       Each colour has a stronger fill for bars and marks, and a lighter tint for text. */
+    /* Results are three: won (green), finished without a victory (red), and nothing yet (gray).
+       Each color has a stronger fill for bars and marks, and a lighter tint for text. */
     --dgh-win:           #4fa869;
     --dgh-win-text:      #86d29a;
     --dgh-loss:          #c14d45;
@@ -22,10 +22,10 @@
     --dgh-card-bg:       rgba(20, 16, 10, 0.55);
     --dgh-row-alt:       rgba(255, 255, 255, 0.025);
     --dgh-row-hover:     rgba(243, 195, 76, 0.10);
-    /* Border colours are OPAQUE hex, and every rule below sets the four `border-<side>-color`
+    /* Border colors are OPAQUE hex, and every rule below sets the four `border-<side>-color`
        longhands rather than `border-color`. `border-color` is a SHORTHAND, and GameFace drops
        `var()` in shorthands, so `border-color: var(--x)` computed to `initial` — currentColor —
-       and every framed card, table and chip drew a light grey body-text hairline instead of the
+       and every framed card, table and chip drew a light gray body-text hairline instead of the
        copper declared here (watched 2026-09-23; the per-side `border-top-color: var(--dgh-copper)`
        in the same rules resolved correctly all along). The hex is the copper pre-blended: alpha
        was never the problem, but an opaque line is what the frame art wants. */
@@ -51,7 +51,7 @@
 /* The cinematic overlay is mounted on document.body, OUTSIDE both screens, so it inherits nothing
    from them. Without this it resolves no `--dg-u` at all and every `calc(n * var(--dg-u))` in its
    rules is invalid and dropped - which unpinned it from the bottom of the screen, removed its
-   width bounds and its padding, and dropped its border colour to the fallback. It is listed here
+   width bounds and its padding, and dropped its border color to the fallback. It is listed here
    so it always has the reference-size defaults; mountOverlay() then republishes the scaled values
    onto the element so it tracks resolution like the rest of the mod. */
 .demographics-map-overlay {
@@ -93,7 +93,7 @@
 .dgh-titlerow { position: relative; width: 100%; }
 .dgh-title { margin-top: 0.5rem; margin-bottom: 0.4rem; }
 /* The short-games filter rides the screen's title line: it qualifies every section, and on the
-   section tab bar it overlapped the bar's own frame. Out of flow so the centred title keeps its
+   section tab bar it overlapped the bar's own frame. Out of flow so the centered title keeps its
    filigree, and inset from the frame edge by the same gutter the body uses. */
 .dgh-title-slot {
     position: absolute;
@@ -121,10 +121,10 @@
 .dgh-top-tabs { margin-bottom: 0.5rem; }
 .dgh-subtabs { margin-bottom: 0.4rem; }
 /* Section tabs and the short-games filter share one row on every Hall of Fame page. The sections
-   stay centred on the WHOLE row - the filter is taken out of flow so it cannot push them off
-   centre - and the filter sits at the right end. fitHofNavRow adds `is-stacked` when the pills
+   stay centered on the WHOLE row - the filter is taken out of flow so it cannot push them off
+   center - and the filter sits at the right end. fitHofNavRow adds `is-stacked` when the pills
    would reach the filter, which puts the filter back on a line of its own; at 1280x720 there is
-   not room for both, and centred sections matter more than saving the row. */
+   not room for both, and centered sections matter more than saving the row. */
 .dgh-hof-navrow {
     position: relative;
     margin-bottom: calc(0.3 * var(--dg-u));
@@ -715,7 +715,7 @@
 
 /* ---------- storage repair (foot of the Hall of Fame, only when the store cannot be read) ----------
    Deliberately loud: the panel deletes other mods' saved data for good, so it reads like a warning
-   sheet, not a settings row. Title in the warning color, three labelled paragraphs, a large button. */
+   sheet, not a settings row. Title in the warning color, three labeled paragraphs, a large button. */
 .dgh-storage { display: flex; flex-direction: column; align-items: center; }
 .dgh-storage-banner {
     width: calc(62 * var(--dg-u));
@@ -1483,7 +1483,7 @@
 }
 .dgh-podium-card:hover { background-color: var(--dgh-row-hover); }
 /* Each podium card wears its medal on all four edges - gold, silver, bronze - over the fade that
-   carries the same colour down from the top. The thicker top rule is the accent; the three
+   carries the same color down from the top. The thicker top rule is the accent; the three
    hairlines are the same hue so the card reads as its rank from any edge. */
 .dgh-podium-card--1 {
     flex-basis: 30rem;
@@ -1510,11 +1510,11 @@
     background-image: linear-gradient(180deg, rgba(201, 138, 85, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%);
 }
 /* The current game is marked by its MOST RECENT GAME pill, not by recolouring the frame: the frame
-   is the rank's medal colour, and a gold override would erase the silver and bronze. (The old
+   is the rank's medal color, and a gold override would erase the silver and bronze. (The old
    whole-frame `border-color: var(--dgh-gold)` here never rendered anyway - it was a shorthand.) */
 /* The podium place is a laurel wreath with its number inside - the same medal the in-game
    rankings podium wears. The wreath art is mostly transparent glow, so the box is generous and
-   the number is nudged into the wreath's open centre. */
+   the number is nudged into the wreath's open center. */
 .dgh-medal {
     flex: 0 0 auto;
     display: flex;

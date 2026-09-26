@@ -175,7 +175,7 @@ function testWonderTipRightEdgeFlip() {
     assert.ok(settledLeft + 300 <= 800, "and its right edge stays inside the wrap");
     assert.ok(parseFloat(tip.style.top) + 200 <= 500, "and its bottom edge stays inside the wrap");
 
-    // A frame queued before the tip was hidden must not move it afterwards.
+    // A frame queued before the tip was hidden must not move it afterward.
     marker.dispatch("mouseleave");
     assert.equal(tip.style.display, "none");
     tip.style.left = "-999px";

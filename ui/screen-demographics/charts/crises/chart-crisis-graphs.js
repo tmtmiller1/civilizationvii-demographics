@@ -180,7 +180,7 @@ function clearHost(host) {
 
 /**
  * Append a centered empty-state message.
- * @param {HTMLElement} host The host.
+ * @param {HTMLElement} host
  * @param {string} msg The message.
  */
 function appendEmpty(host, msg) {

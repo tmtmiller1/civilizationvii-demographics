@@ -161,7 +161,7 @@ function stopEvent(e) {
 
 /**
  * Build one camera action button (shared pin + label + active/disabled wiring).
- * A masked (unmet-owner) settlement renders greyed-out and inert with a tooltip
+ * A masked (unmet-owner) settlement renders grayed-out and inert with a tooltip
  * (moving the camera there would reveal an unmet city's location).
  * @param {boolean} active Whether the button is live.
  * @param {string} labelKey The label LOC key.
@@ -206,7 +206,7 @@ function cameraDisabledTip(s) {
 }
 
 /**
- * The "View on map" button - an instant snap to the city. Greyed-out
+ * The "View on map" button - an instant snap to the city. Grayed-out
  * for an unmet civ; null when there is no readable location to view.
  * @param {*} s The settlement.
  * @returns {HTMLElement|null} The button, or null.
@@ -219,7 +219,7 @@ function buildMapButton(s) {
 
 /**
  * The dedicated "Cinematic" button (default on; hidden when the cinematic option
- * is turned off). Greyed-out for an unmet civ. The wonders already carry their
+ * is turned off). Grayed-out for an unmet civ. The wonders already carry their
  * observed completion years (annotateWonderYears), so the tour can caption them.
  * @param {*} s The settlement.
  * @param {SettleState} st The render state.

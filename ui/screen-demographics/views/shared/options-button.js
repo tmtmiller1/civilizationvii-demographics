@@ -36,7 +36,7 @@ export function buildOptionsButton() {
 }
 
 /**
- * Put the header Options button on the title's line: vertically centred on the MEASURED title, at
+ * Put the header Options button on the title's line: vertically centered on the MEASURED title, at
  * the fixed right inset its stylesheet rule sets. Measured rather than a fixed top offset because
  * the title (an engine fxs-header with filigree) has no stable height across scales. Rects are
  * visual px while `top` is the frame's local px, hence the conversion. Safe to call repeatedly.

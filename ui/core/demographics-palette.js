@@ -48,7 +48,7 @@ const ATTITUDE_STANDARD = {
   war: "#e8473b", // vivid red
   hostile: "#e87434", // orange-red (strong negative)
   unfriendly: "#eaa93b", // amber (caution)
-  neutral: "#b9b1a0", // warm stone grey
+  neutral: "#b9b1a0", // warm stone gray
   friendly: "#a6d24a", // lime green (positive)
   helpful: "#4fc56e", // green (warm positive)
   alliance: "#4ea6ec" // vivid blue (allied)

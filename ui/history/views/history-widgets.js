@@ -92,7 +92,7 @@ export function statTile(value, label, icon = null) {
 
 /**
  * A flexbox table.
- * @param {Column[]} columns Columns.
+ * @param {Column[]} columns
  * @param {Array<Array<string|HTMLElement>>} rows Cells (text or elements).
  * @param {{onRow?: (i:number) => void, highlight?: (i:number) => boolean}} [opts] Row behavior.
  * @returns {HTMLElement} The table.
@@ -240,8 +240,8 @@ export function trophyIcon(cls = "dgh-trophy-icon") {
 
 /**
  * A small marker for a game's result: the victory's icon, a red disc for a defeat, a hollow ring
- * for a game in progress, a grey disc for a game that ended without a recorded winner.
- * @param {HnrOutcome} outcome The outcome.
+ * for a game in progress, a gray disc for a game that ended without a recorded winner.
+ * @param {HnrOutcome} outcome
  * @returns {HTMLElement} The marker.
  */
 export function outcomeMark(outcome) {

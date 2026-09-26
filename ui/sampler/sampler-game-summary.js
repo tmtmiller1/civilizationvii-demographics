@@ -96,7 +96,7 @@ export function datasetByPlayer(datasetId, turn, scope, delta) {
 
 /**
  * Fetch a dataset's sets defensively.
- * @param {string} datasetId The dataset id.
+ * @param {string} datasetId
  * @returns {any[]} The sets (empty on absence/throw).
  */
 function getDataSetsSafe(datasetId) {
@@ -126,7 +126,7 @@ function accumulateDataset(ds, objs, out, spec) {
 /**
  * Cumulative by-type counts per player from a getDataPoints datapoint id
  * (e.g. "UnitsTrainedByType", "BuildingsBuiltByType"). Player-scope only.
- * @param {string} datapointId The datapoint id.
+ * @param {string} datapointId
  * @returns {Map<number, Map<string, number>>} pid → (type → count), empty on miss.
  */
 export function byTypeCounts(datapointId) {

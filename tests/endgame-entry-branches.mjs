@@ -50,7 +50,7 @@ assert.ok(observerCb, "the entry module should install a MutationObserver");
 assert.equal(
   entry.isResultScreen(new FakeElement("screen-victory-progress")),
   true,
-  "must recognise an UPPERCASE localName (Gameface) — a strict lowercase compare here is the bug"
+  "must recognize an UPPERCASE localName (Gameface) — a strict lowercase compare here is the bug"
 );
 assert.equal(
   entry.isResultScreen(new FakeElement("endgame-screen")),

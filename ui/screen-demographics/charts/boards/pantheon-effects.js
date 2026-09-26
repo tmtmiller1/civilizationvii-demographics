@@ -86,7 +86,7 @@ function modifierIdsForBelief(beliefType) {
 
 /**
  * The engine EffectType for a modifier id (via Modifiers → DynamicModifiers).
- * @param {string} modifierId The modifier id.
+ * @param {string} modifierId
  * @returns {string} The effect type, or "" when unresolved.
  */
 function effectTypeFor(modifierId) {
@@ -102,7 +102,7 @@ function effectTypeFor(modifierId) {
 
 /**
  * A modifier's arguments as a Name→Value map.
- * @param {string} modifierId The modifier id.
+ * @param {string} modifierId
  * @returns {Record<string,string>} The argument map.
  */
 function argsFor(modifierId) {

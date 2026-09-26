@@ -35,7 +35,7 @@ export function t(key, ...args) {
 
 // ── Game-authored text markup ────────────────────────────────────────────────
 //
-// Text the GAME owns (a wonder's Description, a unique quarter's flavour, a belief's effect)
+// Text the GAME owns (a wonder's Description, a unique quarter's flavor, a belief's effect)
 // carries its own markup: `[B]…[/B]`, `[icon:YIELD_GOLD]`, `[TIP:LOC_…]Improvement[/TIP]`.
 // `Locale.compose` returns that markup VERBATIM — it is the engine's `Locale.stylize` that turns
 // it into `<fxs-font-icon>` / `<fxs-tip>` elements. Composing game text into a sink that does not

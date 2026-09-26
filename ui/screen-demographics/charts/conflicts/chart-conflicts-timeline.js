@@ -519,7 +519,7 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
  * @param {SVGElement} svg The chart SVG.
  * @param {Object} env Shared environment.
  * @param {*[]} env.merged The full merged war set (for naming).
- * @param {BarRect[]} env.barRects The bar rects.
+ * @param {BarRect[]} env.barRects
  * @param {{ t: number, x: number, year: string|null }[]} env.tickPositions Ticks.
  * @param {GanttLayout} env.L The layout.
  * @param {Map<number, string>} env.turnYearMap chart-turn → year map.

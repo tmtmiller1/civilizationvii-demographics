@@ -36,7 +36,7 @@ export function ageName(doc, age) {
 /**
  * Events passing the current filters, with visibility applied.
  * @param {CampaignDoc} doc Campaign.
- * @param {import("../model/history-narrate.js").Cast} cast Cast.
+ * @param {import("../model/history-narrate.js").Cast} cast
  * @returns {{shown: HnrEvent[], hidden: number}} Events and the count hidden as spoilers.
  */
 export function filteredEvents(doc, cast) {
@@ -51,7 +51,7 @@ export function filteredEvents(doc, cast) {
 /**
  * A single feed row.
  * @param {HnrEvent} e Event.
- * @param {import("../model/history-narrate.js").Cast} cast Cast.
+ * @param {import("../model/history-narrate.js").Cast} cast
  * @param {string} age Age type.
  * @returns {HTMLElement} The row.
  */
@@ -68,7 +68,7 @@ function eventRow(e, cast, age) {
  * The age summary card for the local player.
  * @param {CampaignDoc} doc Campaign.
  * @param {number} idx Age index.
- * @param {import("../model/history-narrate.js").Cast} cast Cast.
+ * @param {import("../model/history-narrate.js").Cast} cast
  * @returns {HTMLElement} The card.
  */
 export function ageCard(doc, idx, cast) {
@@ -133,7 +133,7 @@ function controls(doc, rerender) {
  * The grouped feed.
  * @param {CampaignDoc} doc Campaign.
  * @param {HnrEvent[]} events Visible events.
- * @param {import("../model/history-narrate.js").Cast} cast Cast.
+ * @param {import("../model/history-narrate.js").Cast} cast
  * @returns {HTMLElement[]} Age groups.
  */
 function feed(doc, events, cast) {

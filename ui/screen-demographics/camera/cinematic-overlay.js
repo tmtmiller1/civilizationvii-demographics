@@ -393,7 +393,7 @@ export function ordinalText(rank) {
 
 /**
  * Join names into locale-aware list text.
- * @param {string[]} names The names.
+ * @param {string[]} names
  * @returns {string} The joined list.
  */
 export function joinNames(names) {

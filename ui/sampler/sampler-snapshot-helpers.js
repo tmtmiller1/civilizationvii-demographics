@@ -92,7 +92,7 @@ export function buildSnapshotPlayer(playerCtx, metrics) {
 /**
  * The cumulative refugees a civ has produced, from the Emigration mod's EmigrationData
  * hook (if installed), else undefined.
- * @param {number} playerId Player id.
+ * @param {number} playerId
  * @returns {number|undefined} Cumulative refugees, or undefined.
  */
 function stampEmigrationRefugees(playerId) {
@@ -108,7 +108,7 @@ function stampEmigrationRefugees(playerId) {
 /**
  * Stamp event-derived war metrics onto a player's metric map.
  * @param {Record<string, number>} metrics Metric map to augment.
- * @param {number} playerId Player id.
+ * @param {number} playerId
  * @param {*} playerCtx Player context.
  */
 export function stampWarMetrics(metrics, playerId, playerCtx) {

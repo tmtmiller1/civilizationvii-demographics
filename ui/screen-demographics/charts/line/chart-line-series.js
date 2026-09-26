@@ -142,7 +142,7 @@ function collectPidSet(samples) {
    * Resolve one metric point from a sample/player row.
    * @param {*} sample One sample.
    * @param {*} playerSample One player's row from that sample.
-   * @param {string} metricId Metric id.
+   * @param {string} metricId
    * @param {Map<string, number>} ageOffsets Per-age offsets.
    * @param {AgeBoundary[]} ageBoundariesLocal Age boundaries.
    * @returns {{ t: number, v: number }|null} Point, or null when unavailable.

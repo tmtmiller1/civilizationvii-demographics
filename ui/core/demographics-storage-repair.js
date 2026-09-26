@@ -176,7 +176,7 @@ function verifyRoot(sliceIds) {
  * Empty the store and write the shared root back with only these slices in it, so the shared key
  * owns the one readable slot. Destroys every other key's data - callers must have consent.
  * @param {Record<string, object>} slices Slice id -> slice, written under {@link ROOT_KEY}.
- * @returns {RepairResult} What happened, from reading the store back afterwards.
+ * @returns {RepairResult} What happened, from reading the store back afterward.
  */
 export function repairStore(slices) {
   /** @type {RepairResult} */

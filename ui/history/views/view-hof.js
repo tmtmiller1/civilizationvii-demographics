@@ -49,7 +49,7 @@ const arrOf = (/** @type {*} */ v) => (Array.isArray(v) ? v : []);
  * storage rules need, so each missing part gets its empty default here and reads as "none" instead
  * of blanking the panel.
  * @param {ArchiveRecord} r Record (passed isRecord).
- * @returns {ArchiveRecord} Normalised copy.
+ * @returns {ArchiveRecord} Normalized copy.
  */
 export function normalizeRecord(r) {
   const stats = objOf(r.stats);
@@ -70,7 +70,7 @@ export function normalizeRecord(r) {
 }
 
 /**
- * Archive records plus the live campaign's current record, normalised for the views. A record a
+ * Archive records plus the live campaign's current record, normalized for the views. A record a
  * later version of this mod wrote is left out: it is kept in storage but cannot be shown.
  * @param {CampaignDoc|null} live Live campaign.
  * @returns {ArchiveRecord[]} Records.
@@ -116,7 +116,7 @@ function hiddenCount(all, ctx) {
 }
 
 /**
- * The section selector and the short-games filter as one row: the sections centred, the filter's
+ * The section selector and the short-games filter as one row: the sections centered, the filter's
  * note and button at the right. They were two stacked rows, which spent a second row of height on
  * one button and put the controls far from the tabs they qualify.
  * @param {ArchiveRecord[]} all Every record.
@@ -140,7 +140,7 @@ function navRow(all, ctx) {
 
 /**
  * Decide, once the row is on screen, whether the filter can share the sections' line. The filter is
- * positioned out of flow so the sections stay centred on the whole row; when the sections are wide
+ * positioned out of flow so the sections stay centered on the whole row; when the sections are wide
  * enough to reach it (1280x720, where the type scale is boosted over the layout) the two would
  * overlap, so the row stacks instead. Measured after a frame: same-tick rects can be stale in
  * GameFace, the same reason the chart's edge clamp waits.
@@ -221,7 +221,7 @@ function repairActions(ctx) {
 }
 
 /**
- * One labelled paragraph of the repair panel.
+ * One labeled paragraph of the repair panel.
  * @param {string} headTag LOC tag of the label.
  * @param {string} bodyTag LOC tag of the text.
  * @returns {HTMLElement} The block.

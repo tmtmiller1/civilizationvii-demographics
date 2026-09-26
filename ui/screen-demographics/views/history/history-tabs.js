@@ -235,7 +235,7 @@ export function visibleMetricsForAge(metrics) {
 /**
  * Whether any player in one sample has a finite value for `metricId`.
  * @param {*} sample One persisted sample ({ players: { pid: { metrics } } }).
- * @param {string} metricId The metric id.
+ * @param {string} metricId
  * @returns {boolean} True if a finite value is present.
  */
 function sampleHasMetric(sample, metricId) {

@@ -33,7 +33,7 @@ Hover has three stages, each with a different failure:
 2. **DERIVED** — Chart.js converts it to a chart x (`_eventHandler` receives a changing `x`)
 3. **RENDER** — the tooltip DOM is rewritten (header/value text changes)
 
-When the cursor has clearly travelled (>60px) but the rendered text has not, it prints one verdict
+When the cursor has clearly traveled (>60px) but the rendered text has not, it prints one verdict
 line naming the first stage that stopped. That names the bug outright.
 
 It hooks `Chart.prototype._eventHandler` once — covering every instance, present and future — and

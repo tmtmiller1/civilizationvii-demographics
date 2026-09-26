@@ -39,7 +39,7 @@ function recordParts(r) {
 
 /**
  * The win rate as a bar: green for the games won, red for the rest of the finished games. With
- * nothing finished the bar stays empty, so grey always means "no result yet".
+ * nothing finished the bar stays empty, so gray always means "no result yet".
  * @param {GroupRow} r Row.
  * @returns {HTMLElement} Bar.
  */
@@ -52,7 +52,7 @@ function recordBar(r) {
 
 /**
  * What the bar is made of, in words: "Victories: 2 (67%) · No victory: 1 (33%)", each part in its
- * own colour, with any unfinished games named after them.
+ * own color, with any unfinished games named after them.
  * @param {GroupRow} r Row.
  * @returns {HTMLElement} Legend.
  */
@@ -85,7 +85,7 @@ function groupCard(icon, name, r) {
       el("div", { cls: "dgh-person-head" }, [
         el("div", { cls: "dgh-person-name", text: name }),
         el("div", { cls: "dgh-person-rate" }, [
-          // Nothing finished yet: the rate is 0% in grey, beside an empty grey bar, until a game ends.
+          // Nothing finished yet: the rate is 0% in gray, beside an empty gray bar, until a game ends.
           el("div", { cls: "dgh-person-rate-n" + (r.finished ? "" : " is-none"), text: t("LOC_DEMOGRAPHICS_HIST_PERCENT", rate) }),
           el("div", { cls: "dgh-person-rate-l", text: t("LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE") })
         ])
@@ -104,7 +104,7 @@ function groupCard(icon, name, r) {
 /**
  * Leaders tab.
  * @param {HTMLElement} host Container.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  */
 export function renderLeaders(host, records) {
   clear(host);
@@ -118,7 +118,7 @@ export function renderLeaders(host, records) {
 /**
  * Civilizations tab.
  * @param {HTMLElement} host Container.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  */
 export function renderCivs(host, records) {
   clear(host);
@@ -132,7 +132,7 @@ export function renderCivs(host, records) {
 /**
  * Records tab.
  * @param {HTMLElement} host Container.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  * @param {HofCtx} ctx Context.
  */
 export function renderRecords(host, records, ctx) {

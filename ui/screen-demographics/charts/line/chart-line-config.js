@@ -114,7 +114,7 @@ function axisTitleOpts(text) {
 /**
  * Build the full Chart.js line-chart config (data + plugins + options).
  * @param {Object} parts Config inputs.
- * @param {Record<string, *>[]} parts.datasets The datasets.
+ * @param {Record<string, *>[]} parts.datasets
  * @param {Record<string, *>[]} parts.plugins The plugin instances.
  * @param {*} parts.metricMeta The metric metadata.
  * @param {AxisFormatters} parts.formatters The axis tick formatters.
@@ -124,9 +124,9 @@ export function buildLineChartConfig(parts) {
   const { datasets, plugins, metricMeta, formatters } = parts;
   // A metric may opt into a bar chart (`chartType:"bar"` on its spec), Chart.js bars share the same
   // datasets/scales and natively handle negative values (bars below the zero baseline) and grouping
-  // (one clustered bar per civ at each turn). Datasets already set backgroundColor = civ colour.
+  // (one clustered bar per civ at each turn). Datasets already set backgroundColor = civ color.
   const type = metricMeta && metricMeta.chartType === "bar" ? "bar" : "line";
-  // A signed metric charted as bars gets a symmetric, zero-centred y-axis (half-range
+  // A signed metric charted as bars gets a symmetric, zero-centered y-axis (half-range
   // floored at 1) so Chart.js does not auto-range to a degenerate [0, max] axis.
   const symBound = type === "bar" ? symmetricYBound(datasets) : null;
   return {
@@ -219,7 +219,7 @@ function buildChartPluginsOpts(formatters, metricMeta) {
  */
 function buildChartScalesOpts(metricMeta, formatters, symBound) {
   const { fmtX, fmtY } = formatters;
-  // A diverging bar chart pins the y-axis to [-symBound, +symBound] (0 centred); everything else
+  // A diverging bar chart pins the y-axis to [-symBound, +symBound] (0 centered); everything else
   // auto-ranges from zero.
   const diverging = typeof symBound === "number";
   const yBounds = diverging ? { min: -symBound, max: symBound } : { beginAtZero: true };

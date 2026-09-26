@@ -196,7 +196,7 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
   const shown = texts(host);
   assert.ok(shown.includes("Earn 12 Codices."), "what the Triumph was earned for");
   assert.ok(shown.includes("Grants a Golden Age."), "and what it gave");
-  assert.ok(shown.includes("LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR"), "each line is labelled");
+  assert.ok(shown.includes("LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR"), "each line is labeled");
 }
 
 viewState.detail = "past";
@@ -226,7 +226,7 @@ const tlRoot = find(detail, "dgh-tl");
 for (const lane of ["ages", "wars", "crises", "marks-wonders", "marks-triumphs", "marks-faith", "marks-conquests", "marks-fates", "founds", "disasters", "mig", "pops", "ruler"]) {
   assert.ok(find(tlRoot, "dgh-tl-lane--" + lane), "timeline lane " + lane);
 }
-assert.ok(findAll(tlRoot, "dgh-tl-tick--major").length >= 3, "labelled turn ticks");
+assert.ok(findAll(tlRoot, "dgh-tl-tick--major").length >= 3, "labeled turn ticks");
 assert.ok(findAll(tlRoot, "dgh-tl-grid").length >= 3, "turn guides through the lanes");
 assert.ok(findAll(tlRoot, "dgh-tl-medal").every((m) => /url\('(blp:|fs:)/.test(m.style.backgroundImage)), "milestones show game icons");
 assert.ok(findAll(tlRoot, "dgh-tl-disaster").every((m) => /url\('blp:/.test(m.style.backgroundImage)), "disasters show game icons");

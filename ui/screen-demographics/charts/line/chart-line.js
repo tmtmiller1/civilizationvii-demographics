@@ -400,7 +400,7 @@ function logChartMounted(args) {
  * Build all per-render chart data: series (with settings applied), datasets,
  * axis formatters, and the age-offset context for markers.
  * @param {ChartOptions} opts The render options.
- * @param {string} metricId The metric id.
+ * @param {string} metricId
  * @returns {ChartPrep} The prepared chart data.
  */
 function prepareChartData(opts, metricId) {
@@ -442,7 +442,7 @@ function prepareChartData(opts, metricId) {
  * Build the ordered Chart.js plugin set (focus glow, wonder markers, hover
  * crosshair, crisis markers, age markers, cap-limit line) for one render.
  * @param {ChartOptions} opts The render options.
- * @param {string} metricId The metric id.
+ * @param {string} metricId
  * @param {ChartPrep} prep The prepared chart data.
  * @returns {{ plugins: Record<string, *>[], crisisMarkers: Record<string, *>[] }}
  *   The ordered plugin instances plus the collected crisis markers.
@@ -536,7 +536,7 @@ function dataXBounds(datasets) {
  * width is known) because wide y-axis labels narrow the plot area, so a fixed
  * fraction of the data span would not be enough.
  * @param {*} chart The mounted Chart instance.
- * @param {Record<string, *>[]} crisisMarkers The crisis markers.
+ * @param {Record<string, *>[]} crisisMarkers
  * @param {Record<string, *>[]} datasets The chart datasets.
  */
 function applyCrisisRightPadding(chart, crisisMarkers, datasets) {

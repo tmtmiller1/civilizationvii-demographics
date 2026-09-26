@@ -98,7 +98,7 @@ export function castFromRecord(rec) {
 
 /**
  * Name of a party to an event, or the "independent people" fallback.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {number|undefined} pid Player id.
  * @param {string} age Age type.
  * @returns {string} Localized name.
@@ -130,7 +130,7 @@ const TEMPLATES = /** @type {Record<HnrEventKind, string>} */ ({
 /**
  * Template arguments for an event, in {1_..}{2_..}{3_..} order.
  * @param {HnrEvent} e Event.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {string} age Age type of the event.
  * @returns {string[]} Arguments.
  */
@@ -160,7 +160,7 @@ export function eventArgs(e, cast, age) {
 /**
  * The sentence for an event.
  * @param {HnrEvent} e Event.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {string} age Age type of the event.
  * @returns {string} Localized sentence.
  */
@@ -171,7 +171,7 @@ export function eventText(e, cast, age) {
 /**
  * Whether the local player may see an event (no spoilers about civilizations not yet met).
  * @param {HnrEvent} e Event.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @returns {boolean} True when visible.
  */
 export function eventVisible(e, cast) {
@@ -196,7 +196,7 @@ export function eventVisible(e, cast) {
 /**
  * Summarize the local player's age from its events.
  * @param {HnrEvent[]} events Events of one age.
- * @param {Cast} cast Cast.
+ * @param {Cast} cast
  * @param {string} age Age type.
  * @returns {AgeSummary} Summary.
  */

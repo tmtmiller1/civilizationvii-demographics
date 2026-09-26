@@ -453,7 +453,7 @@
 /* Matrix TEXT sizes. Each --dg-fs-* is a FULLY-COMPUTED rem value published by
    demographics-font-ladder.js onto the screen root: base rem x the in-game font-size setting. rem
    still tracks the UI scale, so referencing it here tracks BOTH the font-size setting and the UI
-   scale — the behaviour the base game gets from its regenerated text-* classes, which the engine
+   scale — the behavior the base game gets from its regenerated text-* classes, which the engine
    does NOT apply to fixed-rem content. We use a plain single-arg `var()` in a longhand property
    (NOT calc and NOT a two-arg var fallback — Coherent's parser rejects both).
 

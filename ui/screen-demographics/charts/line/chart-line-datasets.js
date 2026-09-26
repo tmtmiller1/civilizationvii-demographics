@@ -128,7 +128,7 @@ function applySmoothChart(allSeries) {
 
 /**
  * Resolve a metric's metadata, defensively.
- * @param {string} metricId Metric id.
+ * @param {string} metricId
  * @returns {*} The metric metadata, or `null`.
  */
 function resolveMetricMeta(metricId) {
@@ -145,7 +145,7 @@ function resolveMetricMeta(metricId) {
  * points under the metric's localized name.
  * @param {ChartSeries[]} allSeries The series list (non-empty).
  * @param {*} metricMeta The metric metadata.
- * @param {string} metricId Metric id.
+ * @param {string} metricId
  * @returns {ChartSeries} The donor line.
  */
 function globalDonorLine(allSeries, metricMeta, metricId) {
@@ -173,7 +173,7 @@ function globalDonorLine(allSeries, metricMeta, metricId) {
  * For a `global` metric, collapse all series into a single donor line.
  * @param {ChartSeries[]} allSeries The series list.
  * @param {*} metricMeta The metric metadata.
- * @param {string} metricId Metric id.
+ * @param {string} metricId
  * @returns {ChartSeries[]} The (possibly collapsed) series list.
  */
 function collapseGlobalMetric(allSeries, metricMeta, metricId) {
@@ -269,7 +269,7 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
       tension: 0,
       spanGaps: true,
       // Never fully remove a line - backgrounded civs are dimmed (above), so the
-      // legend's "None" greys lines out rather than making them disappear.
+      // legend's "None" grays lines out rather than making them disappear.
       hidden: false,
       leaderType: s.leaderType,
       leaderTypeString: s.leaderTypeString,

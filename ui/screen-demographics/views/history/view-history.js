@@ -670,7 +670,7 @@ function readTimelineNote(effective) {
 
 
 /**
- * Append the bottom-centre notes row: the analytics-governance policy banner and, on a companion
+ * Append the bottom-center notes row: the analytics-governance policy banner and, on a companion
  * panel (Emigration), the timeline-detail note, side by side in one centered row, matching fonts.
  * @param {HTMLElement} host The view host element.
  * @param {string} effective The metric/panel being rendered.

@@ -103,7 +103,7 @@
 }
 /* "Present" marker label sitting atop the dashed yellow current-turn line. */
 /* Edge clamps applied by clampEdgeLabels after mount: a label that would overrun the canvas is
-   re-anchored to END (right edge) or START (left edge) at its line instead of being centred on it. */
+   re-anchored to END (right edge) or START (left edge) at its line instead of being centered on it. */
 .demographics-wars-crisis-label.is-clamp-right,
 .demographics-wars-age-label.is-clamp-right {
     transform: translateX(-100%);
@@ -1528,7 +1528,7 @@
     margin-left: 0;
 }
 
-/* Radar snapshot pill with no captured snapshot yet — greyed + not-allowed. */
+/* Radar snapshot pill with no captured snapshot yet — grayed + not-allowed. */
 .demographics-history-pill-disabled {
     opacity: 0.4;
     cursor: not-allowed;

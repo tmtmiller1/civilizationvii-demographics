@@ -132,7 +132,7 @@ function buildRanksCache(profiles, metrics) {
 /**
  * Rank of a pid for a metric, as a display string ("—" when unranked).
  * @param {Map<string, *>} cache Ranks cache.
- * @param {string} metricId Metric id.
+ * @param {string} metricId
  * @param {string} pid Player id.
  * @returns {string} The rank text.
  */

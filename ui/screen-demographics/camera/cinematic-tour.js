@@ -507,7 +507,7 @@ function isTop3(target) {
  * Run tour shots sequentially.
  * @param {Array<*>} shots Shot sequence.
  * @param {number} token Active token.
- * @param {*} flowState Flow state.
+ * @param {*} flowState
  * @param {{delay: (ms: number) => Promise<void>,
  *   isToken: (token: number) => boolean,
  *   updateFlybyProgress: (state: *, i: number, n: number) => void,
@@ -539,7 +539,7 @@ async function runTour(shots, token, flowState, deps) {
  * Start a timeout watchdog for tour playback.
  * @param {Array<*>} shots Shot sequence.
  * @param {number} token Active token.
- * @param {*} flowState Flow state.
+ * @param {*} flowState
  * @param {(token: number) => boolean} isToken Token validator.
  * @param {(reason: string) => void} teardownActiveCinematic Teardown callback.
  */

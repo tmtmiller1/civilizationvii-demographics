@@ -2,7 +2,7 @@
 // only row, so the shared settings key owns the one row the game can read. It destroys other keys'
 // data, so every guard around it matters: it must refuse when there is nothing to write, report
 // honestly when the engine refuses a step, and never claim success it did not verify by reading the
-// store back. The engine behaviour modelled here (reads always return the first key by sort order,
+// store back. The engine behavior modeled here (reads always return the first key by sort order,
 // writes/removes/clear are correct) was watched in game on 2026-09-22.
 import assert from "node:assert/strict";
 import { buggyStorage } from "./_history-fixtures.mjs";
@@ -201,7 +201,7 @@ const rec = (id, turns = 40) => ({
   assert.deepEqual(Object.keys(localStorage.dump()), ["modSettings"]);
   assert.equal(store.allRecords().length, 1);
 
-  // And the store works normally afterwards: a second record persists through the ordinary path.
+  // And the store works normally afterward: a second record persists through the ordinary path.
   assert.equal(store.saveRecord(rec("b")), true);
   const after = JSON.parse(localStorage.dump().modSettings);
   assert.ok(after["demographics-halloffame"].games.b);

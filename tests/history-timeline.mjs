@@ -167,7 +167,7 @@ assert.equal(shortPeople(1e9), "1B");
 
 assert.equal(shortPeople(420), "420", "small counts stay whole");
 
-// Ruler ticks: about ten labelled ticks across the visible width; turns count from each age's start.
+// Ruler ticks: about ten labeled ticks across the visible width; turns count from each age's start.
 assert.deepEqual(tickSteps({ from: 0, to: 150 }, 1), { major: 10, minor: 2 });
 assert.deepEqual(tickSteps({ from: 0, to: 150 }, 8), { major: 2, minor: 1 });
 assert.deepEqual(tickSteps({ from: 0, to: 50 }, 1), { major: 5, minor: 1 });
@@ -175,7 +175,7 @@ assert.deepEqual(tickSteps({ from: 0, to: 600 }, 1), { major: 50, minor: 10 });
 const tk = ticks(tl, { from: 0, to: 150 }, 1);
 assert.ok(tk.every((k) => k.turn % 2 === 0), "every tick on the minor step");
 assert.deepEqual(tk.filter((k) => k.major).map((k) => k.turn),
-  [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50], "labelled ticks restart with the second age");
+  [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 10, 20, 30, 40, 50], "labeled ticks restart with the second age");
 assert.ok(!tk.some((k) => k.at === 0 || k.at === 100), "an age's opening carries the date tick instead");
 assert.deepEqual(ticks(tl, { from: 100, to: 150 }, 1).filter((k) => k.major).map((k) => k.turn), [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]);
 assert.deepEqual(ticks(tl, { from: 100, to: 150 }, 1).filter((k) => k.major).map((k) => k.at)[0], 104, "turn 5 of the age sits four after its start");

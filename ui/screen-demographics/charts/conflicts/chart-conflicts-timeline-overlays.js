@@ -102,7 +102,7 @@ function mountOneWarLabel(wrap, rect, env) {
 /**
  * Mount the per-bar war-name labels into the canvas.
  * @param {HTMLElement} wrap The chart canvas.
- * @param {*[]} barRects The bar rects.
+ * @param {*[]} barRects
  * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>,
  *   latestTurn: number, W: number, H: number }} env war naming, year map, latest
  *   turn and canvas dimensions (passed straight through to mountOneWarLabel).
@@ -228,7 +228,7 @@ export function mountGanttOverlays(canvas, env) {
 
 /**
  * Keep the line-anchored labels (crisis stages, age chips, current turn) inside the canvas. They
- * are centred on their line, so one near the right edge overruns by half its width. The domain
+ * are centered on their line, so one near the right edge overruns by half its width. The domain
  * reserves tail room in TURNS (extendDomainFuture); when the timeline fills a narrow host that
  * room can be fewer pixels than a label, so the label is re-anchored to end at its line instead.
  * Measured after a frame: same-tick rects can be stale in GameFace. Rects are compared to each

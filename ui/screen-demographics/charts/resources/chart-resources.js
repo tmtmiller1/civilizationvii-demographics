@@ -177,7 +177,7 @@ function stackTurnOf(s) {
 /**
  * Build one stack row from a metrics object, or `null` when no band is
  * positive.
- * @param {number|*} turn The turn.
+ * @param {number|*} turn
  * @param {Record<string, *>} m One civ's metrics.
  * @param {StackBand[]} bands The band set.
  * @returns {StackPoint|null} The row, or `null`.
@@ -317,7 +317,7 @@ function drawStackBands(svg, points, bands, L) {
 
 /**
  * Build the stack chart's band legend as a horizontal row shown ON TOP of the chart (matching the
- * other graphs), instead of a vertical list in the right margin. Each item is a colour dot + the
+ * other graphs), instead of a vertical list in the right margin. Each item is a color dot + the
  * band label and its latest value.
  * @param {StackBand[]} bands The band set.
  * @param {StackPoint[]} points The stack rows.

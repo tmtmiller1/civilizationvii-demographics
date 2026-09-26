@@ -2,15 +2,15 @@
 //
 // Shared color helpers that keep civ-derived colors readable and distinct on the dark
 // Demographics surfaces. Readability is gauged by HSL lightness plus saturation, not raw
-// luminance: a saturated red reads fine on a dark background while a dark grey does not.
+// luminance: a saturated red reads fine on a dark background while a dark gray does not.
 
 // Minimum HSL lightness a line color needs to read on the dark chart surface; the floor
-// slides from GREY (desaturated, needs to be lighter) to SATURATED.
+// slides from GRAY (desaturated, needs to be lighter) to SATURATED.
 const MIN_LIGHTNESS_GREY = 0.65;
 const MIN_LIGHTNESS_SATURATED = 0.5;
 
 // A primary banner color is replaced with the civ's secondary when it is both dark and nearly
-// colorless; dark-but-saturated colors keep their hue when lifted, so they are not grey.
+// colorless; dark-but-saturated colors keep their hue when lifted, so they are not gray.
 const DARK_GREY_MAX_LIGHTNESS = 0.42;
 const DARK_GREY_MAX_SATURATION = 0.3;
 
@@ -134,7 +134,7 @@ function hslBaseChannels(hp, c, x) {
 }
 
 /**
- * Minimum readable HSL lightness for a color of the given saturation. Greys
+ * Minimum readable HSL lightness for a color of the given saturation. Grays
  * need a higher floor than saturated colors.
  * @param {number} s Saturation [0,1].
  * @returns {number} Lightness floor [0,1].
@@ -146,7 +146,7 @@ function minLightnessFor(s) {
 
 /**
  * Whether a parsed color is a dark, nearly-colorless grey/black - the case
- * where lifting yields a dull grey, so the civ's secondary color is preferred.
+ * where lifting yields a dull gray, so the civ's secondary color is preferred.
  * @param {{ r: number, g: number, b: number }} c Parsed channels.
  * @returns {boolean} True for dark greys/blacks.
  */
@@ -194,7 +194,7 @@ export function safeTextColor(civColor) {
 
 /**
  * Choose the more readable of a civ's two banner colors for the dark Demographics surfaces:
- * the primary, unless it is a dark grey/black and the secondary is a real (non-grey) color.
+ * the primary, unless it is a dark grey/black and the secondary is a real (non-gray) color.
  * The returned color is raw; callers still pass it through {@link safeTextColor}.
  * @param {*} primaryColor Civ primary banner color string.
  * @param {*} secondaryColor Civ secondary banner color string.
@@ -209,15 +209,15 @@ export function preferReadableColor(primaryColor, secondaryColor) {
   if (!primary || !isDarkGrey(primary)) {
     return primaryColor;
   }
-  // Primary is a dark grey: prefer the secondary banner color when it carries a
-  // real hue (i.e. is not itself a dark grey).
+  // Primary is a dark gray: prefer the secondary banner color when it carries a
+  // real hue (i.e. is not itself a dark gray).
   if (typeof secondaryColor === "string" && secondaryColor.length > 0) {
     const secondary = parseColorChannels(secondaryColor);
     if (secondary && !isDarkGrey(secondary)) {
       return secondaryColor;
     }
   }
-  // No better option; safeTextColor will lift the dark grey to a light grey.
+  // No better option; safeTextColor will lift the dark gray to a light gray.
   return primaryColor;
 }
 
@@ -254,7 +254,7 @@ export function colorDistance(colorA, colorB) {
 
 /**
  * An arbitrary, deterministic, readable color for a given index, spread by the golden angle so
- * neighbours are maximally distinct. The last-resort line color when banner colors collide.
+ * neighbors are maximally distinct. The last-resort line color when banner colors collide.
  * @param {number} index Sequence index (0, 1, 2, …).
  * @returns {string} Hex color.
  */

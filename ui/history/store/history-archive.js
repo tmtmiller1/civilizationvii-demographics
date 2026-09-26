@@ -77,7 +77,7 @@ export function isSlice(s) {
 
 /**
  * The names a slice carries, with those of an older slice that kept them inside its records.
- * @param {ArchiveSlice} slice The slice.
+ * @param {ArchiveSlice} slice
  * @returns {Record<string, string>} Tag -> text.
  */
 export function sliceTexts(slice) {
@@ -133,7 +133,7 @@ export function pickHighlights(doc) {
 /**
  * Count the local player's events of a kind.
  * @param {CampaignDoc} doc The campaign.
- * @param {HnrEventKind} kind Kind.
+ * @param {HnrEventKind} kind
  * @returns {number} Count.
  */
 function countMine(doc, kind) {

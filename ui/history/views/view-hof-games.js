@@ -307,7 +307,7 @@ function highlightsSection(rec) {
 /**
  * One highlight.
  * @param {HnrEvent} e Event.
- * @param {import("../model/history-narrate.js").Cast} cast Cast.
+ * @param {import("../model/history-narrate.js").Cast} cast
  * @param {string} age Age type.
  * @param {number} local Local player id.
  * @returns {HTMLElement} Row.
