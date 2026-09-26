@@ -147,7 +147,7 @@ export function applyVisualScale(frame) {
   frame.style.height = h + "vh";
   frame.style.maxWidth = w + "vw";
   frame.style.maxHeight = h + "vh";
-  // Centre deterministically rather than relying on flex-overflow behaviour for an oversized child.
+  // Center deterministically rather than relying on flex-overflow behavior for an oversized child.
   frame.style.position = "absolute";
   frame.style.left = "50%";
   frame.style.top = "50%";

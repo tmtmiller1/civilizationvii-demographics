@@ -29,7 +29,7 @@ holding on to charts it has finished with.
 
 ### Changed
 
-- **Hall of Fame section headings are centred**, matching how every other page in the mod titles itself.
+- **Hall of Fame section headings are centered**, matching how every other page in the mod titles itself.
 - **The Hall of Fame composes its text the same way the rest of the mod does.** It runs at the main menu, where it
   had been reaching for its own copy of the mod's text helper because the shared one was not available there. It
   now uses the shared one, keeping only the part it genuinely needs: the names it saved with each recorded game, so
@@ -90,19 +90,19 @@ working; the notes say what each change protects.
 - **Every framed box drew a white hairline instead of a gold one.** Cards, tables, stat chips, podium cards and the
   game pages all asked for the mod's copper, through the one-line `border-color` property. That property is a
   shorthand that writes four per-side values, and this UI engine silently drops a shorthand whose value uses a
-  variable, so all 41 of those borders fell back to the body-text grey. They are written as four per-side properties
-  now and draw the colour they always named. The stylesheet gate that was meant to catch exactly this did not list
+  variable, so all 41 of those borders fell back to the body-text gray. They are written as four per-side properties
+  now and draw the color they always named. The stylesheet gate that was meant to catch exactly this did not list
   `border-color` among the shorthands; it does now.
 - **Italic text was invisible everywhere it was used.** Thirteen stylesheet rules and three chart labels asked for
   italics, which draw nothing on this engine while `getComputedStyle` still reports the style that was asked for, so
   nothing warned. The affected text is now upright and visible: the "no settlements", "no wonders" and "no data"
   placeholders, the civ-ranking score note, a settlement's founding year, the "(formerly ...)" line on a renamed
   civilization's column, the parenthetical subtitle under a chart title, the war-tooltip and glossary notes, the
-  adjacency and conditional-yield lines on the Quarters and Pantheon boards, and the map overlay's type and flavour
+  adjacency and conditional-yield lines on the Quarters and Pantheon boards, and the map overlay's type and flavor
   lines. The stylesheet gate now fails on `font-style: italic` or `oblique`, in a sheet or in an inline style.
 - **Border and background styling that never rendered.** Thirty declarations across three stylesheets used a
   variable inside a shorthand, which the game's UI engine silently drops: the time-range pills had no border or fill,
-  and the ranked settlement rows never showed their civilization colour stripe. The stylesheet gate now sweeps every
+  and the ranked settlement rows never showed their civilization color stripe. The stylesheet gate now sweeps every
   sheet for this, and for other constructs the engine drops (`clamp()`, `min()`, `max()`, `max-width: none`).
 - **The second-place card was missing its left edge.** Its border was a shade under one pixel wide, which rounds away
   on whichever edge falls badly once the screen is scaled. It is a whole pixel, as the section cards already were.
@@ -192,7 +192,7 @@ working; the notes say what each change protects.
   written by a newer build, or one that fails to parse, used to be replaced by an empty one on the next turn. The
   unreadable value is now parked beside its key and restored when a build that can read it loads the save; a newer
   settings schema keeps its version stamp.
-- **Chart history has a size budget.** The per-save history is thinned further when its serialised size passes 3 MB
+- **Chart history has a size budget.** The per-save history is thinned further when its serialized size passes 3 MB
   and a warning is logged past 6 MB, so a long twelve-civilization game cannot grow the save without limit. The
   in-memory history is also no longer written into a different game's empty save.
 - **Blank panels now say so.** A throw inside any view (Rankings, Relations, History, the Hall of Fame, every chart
@@ -216,7 +216,7 @@ working; the notes say what each change protects.
   across the top of the screen with no padding and no plate. Its size rules were written against a unit that is
   published on the Demographics screen, and the panel is mounted over the map rather than inside that screen, so
   every one of those rules was dropped: it lost the offset holding it to the bottom, both width bounds and all of
-  its padding. It is a compact, padded, bottom-centred plate again, and it now scales with the resolution like
+  its padding. It is a compact, padded, bottom-centered plate again, and it now scales with the resolution like
   every other surface.
 - **The cinematic tour cannot be clicked or hovered through.** For the length of a flyby the only things that
   respond are Back and Escape. Previously the game's own interface stayed live behind the tour, so a leader
@@ -230,14 +230,14 @@ working; the notes say what each change protects.
 
 ### Changed
 - **The three best games wear their medals.** Each podium place now shows the gold, silver or bronze laurel wreath the
-  in-game rankings use, with the place number inside it, and the card's whole frame carries that place's colour over
+  in-game rankings use, with the place number inside it, and the card's whole frame carries that place's color over
   the fade it already had. Triumph counts are marked with the same laurel the World Rankings score line uses.
 - **The Hall of Fame's short-games filter is one button on the sections' line.** It was two buttons on a row of their
   own: "Hide short games" and "Show all games", with the active one lit, which reads as two commands where there is
   only one choice. There is now a single button naming the state you are not in, beside the count it hides, level with
-  the section tabs. It disappears entirely when no game would be filtered. The sections stay centred on the full width;
+  the section tabs. It disappears entirely when no game would be filtered. The sections stay centered on the full width;
   where there is not room for both on one line, at 1280x720, the filter drops to its own line rather than pushing them
-  off centre.
+  off center.
 - **The line-chart legend covered the data on short screens.** Below 1366x768 it lays out as a two-row strip along the
   top of the plot instead of a column down its left side.
 - **Hall of Fame footer note removed.** "Games are saved on this computer" restated what the page already showed and
@@ -273,7 +273,7 @@ working; the notes say what each change protects.
   memory (History and the Hall of Fame keep working live) and, on loading, take the host's stored copy with their own
   civilization as the viewpoint. Samples are taken once per game turn, whichever seat starts it, so a hotseat game no
   longer records every seat's turn separately. Single-player and hotseat are unchanged (both watched). This is the one
-  behaviour in the History capture that differed between single-player and a networked game, and the change is made in
+  behavior in the History capture that differed between single-player and a networked game, and the change is made in
   response to a report of a crash in multiplayer that could not be reproduced in hotseat; it has not yet been watched in
   a two-client networked game.
 
@@ -332,7 +332,7 @@ you have played. All new text is localized across all 11 languages.
   the turn a line ended.
 - **Hall of Fame.** A fifth World Rankings page listing every campaign played on this computer, the current one
   included. It opens on **Best Games**: your totals, a podium of your three best games, the rest of your top ten, and
-  the game you are playing at its rank between its neighbours (from the main menu, your most recent game). Then
+  the game you are playing at its rank between its neighbors (from the main menu, your most recent game). Then
   **Rankings** orders the games by result, then Triumphs across every age, then fewest turns, each with an honorific
   from Augustus Caesar down to Ethelred the Unready, followed by leader and civilization tallies and records. Each game
   opens a page with its leader, lineage and figures on one row, the territory map beside its rivals, its timeline with
@@ -350,7 +350,7 @@ you have played. All new text is localized across all 11 languages.
   game has moved on from.
 - **Leaders and Civilizations read clearly.** Each card gives its win rate over finished games as a bar, green for the
   games won and red for the rest, with both parts named and given their share, and the attempts, most Triumphs and
-  average length beside it. A leader you have not finished a game with shows a grey, empty bar.
+  average length beside it. A leader you have not finished a game with shows a gray, empty bar.
 - **Every Hall of Fame page is titled**, with a line saying what is on it, so a page opened from the main menu says what
   it is.
 - **Hall of Fame on the main menu.** A **Hall of Fame** button on the main menu opens it with no game loaded.
@@ -438,7 +438,7 @@ actually worked, and stops the mod from writing unrelated data into the settings
   audited against the game's own name and adjective strings and the list corrected, which also fixes Great Britain,
   Achaemenid Persia, French Empire, Meiji Japan, Sengoku Japan, Hawai'i, Mongolia, Maya, Goryeo, Joseon and Nepal.
 - **The Demographics button now appears on the end-of-game screen.** It had never appeared since shipping in 2.5.0.
-  The check that recognised the screen compared the element's tag name in lowercase, but the game's UI layer reports
+  The check that recognized the screen compared the element's tag name in lowercase, but the game's UI layer reports
   tag names in uppercase, so the check never matched and the button was skipped with no error. The pause-menu button
   was unaffected. The button now also attaches to the separate results screen 1.5.0 introduced, and is placed in that
   screen's own button row rather than falling back to a corner of the display.
@@ -449,7 +449,7 @@ actually worked, and stops the mod from writing unrelated data into the settings
   session instead of saving that data back into it. Settings keep working normally while you play. Nothing is ever
   deleted or rewritten.
 - **Internal: the module graph is now acyclic.** The sampler's shared helpers and the Historical Data page catalogue
-  moved into dedicated modules, clearing the circular imports the game reported on every load. No behaviour changes.
+  moved into dedicated modules, clearing the circular imports the game reported on every load. No behavior changes.
 
 ## [2.5.1] - 2026-07-17
 
@@ -676,7 +676,7 @@ score-ordered columns, heading icons, and larger table text.
   scaled-"people" and a raw-Civ-numbers pair — Population, and (with the Emigration
   companion) the migration flows — now show a **single row** with a Scaled/Civ
   button that swaps the whole column in place, matching the toggle on the other
-  tabs, instead of two identically-labelled rows. Fixes the duplicate "Population"
+  tabs, instead of two identically-labeled rows. Fixes the duplicate "Population"
   row (base `population` vs `population_civ`) the transpose exposed.
 - **Civilizations are ordered as a leaderboard.** Beside the local player's pinned
   column, the other civilizations are now laid out left→right in descending
@@ -714,7 +714,7 @@ UI can be localized. Also fixes oversized World Rankings text at 4K.
   the Relations node-focus caption, the City-State ally fallback, and the
   "Player N" / "War #N" fallback labels — now resolve through translation tags,
   so they localize with the rest of the UI. The Relations focus caption also
-  drops an English-only plural suffix in favour of a count-based phrasing that
+  drops an English-only plural suffix in favor of a count-based phrasing that
   translates correctly in every language. This closes the gaps a translator
   would otherwise hit.
 - **War display names now fully localize.** The dynamic war names (recurrence
@@ -840,7 +840,7 @@ only and never touches gameplay.
 
 ## [2.0.8] - 2026-06-27
 
-A stability and quality-assurance release. No charts, metrics, or behaviour
+A stability and quality-assurance release. No charts, metrics, or behavior
 changed for the player. This hardens how the mod stores its history and adds a
 large automated test-coverage pass (around four dozen new regression harnesses)
 that exercises the error paths and edge cases of nearly every screen and

@@ -30,7 +30,7 @@ const H = 400;
 
 /**
  * Create an SVG element.
- * @param {string} tag Tag.
+ * @param {string} tag
  * @param {Record<string, string>} attrs Attributes.
  * @returns {Element} The element.
  */
@@ -66,7 +66,7 @@ export function points(ys, count, yMax) {
 
 /**
  * The plot SVG: grid, markers, lines.
- * @param {ChartSpec} spec Spec.
+ * @param {ChartSpec} spec
  * @param {number} yMax Axis maximum.
  * @returns {Element} The SVG.
  */
@@ -96,7 +96,7 @@ function plotSvg(spec, yMax) {
 
 /**
  * HTML overlays: y ticks and age marker labels.
- * @param {ChartSpec} spec Spec.
+ * @param {ChartSpec} spec
  * @param {number} yMax Axis maximum.
  * @returns {HTMLElement[]} Overlay elements.
  */
@@ -114,7 +114,7 @@ function overlays(spec, yMax) {
 
 /**
  * A multi-series line chart with legend.
- * @param {ChartSpec} spec Spec.
+ * @param {ChartSpec} spec
  * @returns {HTMLElement} The chart.
  */
 export function lineChart(spec) {

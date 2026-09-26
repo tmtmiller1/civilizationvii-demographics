@@ -82,7 +82,7 @@ the first seat of each turn. Seat 1 can see civs only seat 2 met; seat 2 has no 
 
 **Status:** open, measured 2026-09-24, deferred by choice. **[Low]**
 
-Context: an audit of what could be removed from `ui/` (56,494 JS lines + 7,535 CSS) without changing behaviour or
+Context: an audit of what could be removed from `ui/` (56,494 JS lines + 7,535 CSS) without changing behavior or
 appearance. The dead view above was the only free win and is done. Two dedupe items were measured and deliberately
 skipped; a third (orphan LOC keys) was found on the way. Note that naive line-window clone detection badly overstates
 all of these — it matches runs that straddle rule and function boundaries. The numbers below come from parsing whole
@@ -174,7 +174,7 @@ needed no change (already civilization-primary). Two follow-ups tracked below.
 - **`MIN_METRIC_COL_REM = 2.4` is an untuned guess.** The rem-width threshold in
   `view-worldrankings-allcivs.js` that switches Civ Rank by Yield between the sortable
   table and the matrix was set analytically, not measured in-engine. Validate at 4K ×
-  XL Interface Size and adjust (raising it favours the matrix, the safe side).
+  XL Interface Size and adjust (raising it favors the matrix, the safe side).
 - **Table branch intentionally omits matrix-only affordances.** Hiding/ghosting a civ
   column and the Scaled/Civ population number-mode toggle are matrix-only (they don't
   map to a rows table); their settings persist so switching back to the matrix restores

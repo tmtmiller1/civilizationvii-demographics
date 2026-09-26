@@ -236,7 +236,7 @@ export function buildLineChartFromSeries(seriesList, yLabelLoc, markers, xDomain
 
 /**
  * Build a zero-centered bar chart with one bar per civ (gains above the line,
- * losses below), scaled symmetrically to ±m so zero sits in the centre.
+ * losses below), scaled symmetrically to ±m so zero sits in the center.
  * @param {{ color: string, net: number }[]} civs Per-civ net values.
  * @param {number} m The symmetric y-extent (>= 1).
  * @returns {SVGElement} The chart SVG.

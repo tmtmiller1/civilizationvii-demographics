@@ -234,7 +234,7 @@ export function svgEl(name, attrs) {
 
 /**
  * An SVG text label in a text ink token.
- * @param {number} x X. @param {number} y Y. @param {string} text The text.
+ * @param {number} x @param {number} y @param {string} text
  * @param {{anchor?:string, fill?:string, size?:number}} [o] Options.
  * @returns {SVGElement} The text element.
  */
@@ -249,7 +249,7 @@ export function svgText(x, y, text, o) {
 
 /**
  * A full-size scaling SVG root appended to `host`.
- * @param {HTMLElement} host The host. @param {number} w ViewBox width. @param {number} h ViewBox height.
+ * @param {HTMLElement} host @param {number} w ViewBox width. @param {number} h ViewBox height.
  * @returns {SVGElement} The svg.
  */
 export function svgRoot(host, w, h) {

@@ -99,7 +99,7 @@ function ageEndOf(spans, a) {
 /**
  * Axis position of a turn in an age.
  * @param {{from:number, len:number}[]} spans Age spans.
- * @param {HnrAge[]} ages Ages.
+ * @param {HnrAge[]} ages
  * @param {number} a Age index.
  * @param {number} t Turn (restarts each age).
  * @returns {number} Position.
@@ -112,9 +112,9 @@ export function positionOf(spans, ages, a, t) {
 
 /**
  * Age bands, named and dated from each age's opening event.
- * @param {HnrAge[]} ages Ages.
+ * @param {HnrAge[]} ages
  * @param {{from:number, len:number}[]} spans Spans.
- * @param {HnrEvent[]} events Events.
+ * @param {HnrEvent[]} events
  * @returns {Timeline["ages"]} Bands.
  */
 function ageBands(ages, spans, events) {
@@ -137,7 +137,7 @@ function otherParty(e, local) {
 
 /**
  * The local player's wars as intervals on the axis.
- * @param {HnrEvent[]} events Events.
+ * @param {HnrEvent[]} events
  * @param {number} local Local player id.
  * @param {(e: HnrEvent) => number} pos Position of an event.
  * @param {{from:number, len:number}[]} spans Age spans (a war ends with its age).
@@ -177,7 +177,7 @@ function warStep(e, other, io) {
 
 /**
  * Crisis stages as intervals: each stage lasts until the next one or the end of its age.
- * @param {HnrEvent[]} events Events.
+ * @param {HnrEvent[]} events
  * @param {(e: HnrEvent) => number} pos Position of an event.
  * @param {{from:number, len:number}[]} spans Age spans.
  * @returns {Timeline["crises"]} Stages.
@@ -208,7 +208,7 @@ export function markKind(e, local) {
 
 /**
  * Milestones, capped by importance and returned in time order.
- * @param {HnrEvent[]} events Events.
+ * @param {HnrEvent[]} events
  * @param {number} local Local player id.
  * @param {(e: HnrEvent) => number} pos Position of an event.
  * @param {IconOf} [iconOf] Icon resolver.

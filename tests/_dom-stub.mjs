@@ -29,7 +29,7 @@ function nodeMatchesClass(node, className) {
 // Supports what the mod actually uses: tag names, #id, compound class selectors
 // (`.bottom-10.right-10`), and comma-separated lists. Tag matching is
 // case-INSENSITIVE, mirroring real querySelector, while `tagName`/`localName`
-// report UPPERCASE — the Coherent Gameface behaviour a strict lowercase
+// report UPPERCASE — the Coherent Gameface behavior a strict lowercase
 // comparison silently fails against.
 const SIMPLE_PART_RE = /([#.]?)([A-Za-z0-9_-]+)/g;
 

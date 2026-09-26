@@ -54,7 +54,7 @@ function ensureTooltipHost(state) {
 
 /**
  * Hit-test a point (in SVG coords) against the war bar rects.
- * @param {*} barRects The bar rects.
+ * @param {*} barRects
  * @param {number} svgX The SVG-space x.
  * @param {number} svgY The SVG-space y.
  * @returns {*} The war under the point, or null.
@@ -218,7 +218,7 @@ function ganttHoverMoveBody(ev, state) {
  * @param {HTMLElement} args.wrap The chart wrap.
  * @param {SVGElement} args.svg The chart SVG.
  * @param {HTMLElement} args.tooltip The tooltip element.
- * @param {*} args.barRects The bar rects.
+ * @param {*} args.barRects
  * @param {Object} args.ctx Shared Gantt context (for tooltip rendering).
  * @param {number} args.W Canvas width.
  * @param {number} args.H Canvas height.

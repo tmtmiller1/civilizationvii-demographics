@@ -181,8 +181,7 @@ function readSampleCrisisStage(s) {
  */
 function makeCrisisMarker(s, raw, ctx) {
   const { ageOffsets, boundaries, gameSeedStr, sampleX } = ctx;
-  // Clamp to a valid stage index even if `raw` is unexpectedly 0/negative
-  // (callers only pass raw >= 1 today, but keep the helper self-defensive).
+  // `raw` is a 1-based stage; clamp into the label/color array.
   const stageIdx = Math.max(0, Math.min(CRISIS_STAGE_LABELS.length - 1, raw - 1));
   const cx = sampleX(s, ageOffsets, boundaries);
   return {
@@ -270,7 +269,7 @@ export function maxCrisisPillWidth(chart, markers) {
  * pill size, left/right-flipped label box, and a vertical LANE so labels whose
  * pills would overlap horizontally stack instead of hiding one another.
  * @param {*} ctx2 The 2D canvas context.
- * @param {CrisisMarker[]} markers The markers.
+ * @param {CrisisMarker[]} markers
  * @param {*} xScale The Chart.js x scale.
  * @param {number} right Plot-area right edge.
  * @param {string} family Font family.

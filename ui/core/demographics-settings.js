@@ -420,7 +420,7 @@ function emptyReadIsAbsentKey() {
     for (let i = 0; i < rows; i += 1) {
       const k = localStorage.key(i);
       if (k === ROOT_KEY) return false;
-      if (k === null || k === undefined) return false; // cannot enumerate: 1.5.0 behaviour
+      if (k === null || k === undefined) return false; // cannot enumerate: 1.5.0 behavior
     }
     return true;
   }, false);

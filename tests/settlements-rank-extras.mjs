@@ -349,7 +349,7 @@ assert.equal(tLeads[0].textContent, "9");
 // ── Settlement Rank by Yield: a filter/sort click leaves the chrome alone ───────
 // Regression guard for the blinking filigree / column icons: these clicks used to rebuild the
 // whole panel, so every `blp:`-backed chrome element was destroyed and re-created (and flashed
-// while its background re-resolved). They must be the SAME node objects afterwards.
+// while its background re-resolved). They must be the SAME node objects afterward.
 const tTitleBefore = tSt.content.querySelector(".title");
 const tHeaderBefore = tSt.content.querySelector(".demographics-settle-header");
 const tIconsBefore = Array.from(tSt.content.querySelectorAll(".demographics-settle-yield-icon"));

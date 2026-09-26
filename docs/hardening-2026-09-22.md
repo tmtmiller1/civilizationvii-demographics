@@ -40,7 +40,7 @@ because they only ever run the mod's own code against the mod's own fixtures.
 - Downgrade protection. A history, campaign or settings value the current build cannot use (newer version, parse
   failure) is parked under `<key>__rejected` before the empty replacement is written, and restored on a later load by
   a build that can read it. Before, the next turn's save overwrote it for good.
-- Payload budget. The serialised history is decimated further above 3 MiB and logged on every save above 6 MiB; the
+- Payload budget. The serialized history is decimated further above 3 MiB and logged on every save above 6 MiB; the
   size is recorded on the storage instance and shown by the storage controls. No engine limit is known; this keeps
   the save from growing without bound in a long twelve-civilization game.
 - The in-memory mirror is no longer written into an empty store that belongs to a different game (the seed guard
@@ -125,8 +125,8 @@ is likewise imported by a test only (BACKLOG).
 
 ## Verdict on "never again"
 
-The storage bug was a contract with a shared resource that no test in the repo modelled. The four new gates model the
+The storage bug was a contract with a shared resource that no test in the repo modeled. The four new gates model the
 contracts the audit found (single shared key, base-game module paths, LOC keys, control assets, import cycles). The
-class that remains unmodelled is engine behaviour that differs from the documented API (the first-key read bug
-itself); for that the only defence is the read-back after every write and the refusal to write what was not read,
+class that remains unmodelled is engine behavior that differs from the documented API (the first-key read bug
+itself); for that the only defense is the read-back after every write and the refusal to write what was not read,
 which are now the rule in both writers.

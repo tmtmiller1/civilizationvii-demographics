@@ -47,7 +47,7 @@ function outcomeWeight(s) {
 
 /**
  * Games in ranking order.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  * @returns {ArchiveRecord[]} Ranked copy.
  */
 export function ranked(records) {
@@ -66,7 +66,7 @@ export function ranked(records) {
  * @property {ArchiveRecord[]} top The best games (up to `topN`).
  * @property {{rec: ArchiveRecord, rank: number, of: number, above: ArchiveRecord|null,
  *   below: ArchiveRecord|null}|null} current The current game (the one being played, else the latest),
- *   its 1-based rank, and its neighbours.
+ *   its 1-based rank, and its neighbors.
  */
 
 /**
@@ -105,7 +105,7 @@ export function titleIndex(rec, best) {
 /**
  * Count values by key.
  * @template T
- * @param {T[]} items Items.
+ * @param {T[]} items
  * @param {(item:T) => string} key Key function ("" skipped).
  * @returns {Map<string, number>} Counts.
  */
@@ -191,7 +191,7 @@ function fold(rows, key, name, r) {
 
 /**
  * Per-leader table, most played first.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  * @returns {GroupRow[]} Rows.
  */
 export function leaderRows(records) {
@@ -202,7 +202,7 @@ export function leaderRows(records) {
 
 /**
  * Per-civilization table (every civilization led in any age), most played first.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  * @returns {GroupRow[]} Rows.
  */
 export function civRows(records) {
@@ -244,7 +244,7 @@ function bestBy(records, val, lowest = false) {
 
 /**
  * Record holders across every game.
- * @param {ArchiveRecord[]} records Records.
+ * @param {ArchiveRecord[]} records
  * @returns {RecordHolder[]} Holders (records nobody has set are omitted).
  */
 export function recordHolders(records) {

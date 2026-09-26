@@ -10,7 +10,7 @@
 //
 // The list of shorthands matters as much as the list of files: `border-color` was absent from it
 // until 2026-09-23 and hid 41 more dropped declarations — every framed card, table and chip on the
-// Hall of Fame drew a grey currentColor hairline instead of copper. A property that writes several
+// Hall of Fame drew a gray currentColor hairline instead of copper. A property that writes several
 // longhands is a shorthand, whatever its name suggests.
 //
 // RECONSTRUCTION NOTE (2026-09-23): this file was truncated by a bad scripted write during the

@@ -138,7 +138,7 @@ assert.ok(wide.w <= 40 && wide.h < 21, "a very wide world is shown shorter, not 
   assert.equal(cellLayers(1, 6, color).tint, "#ff0000", "a holder tints its land");
   assert.notEqual(cellLayers(1, 6, color).base, cellLayers(1, 4, color).base, "the terrain still shows under the tint");
   assert.equal(cellLayers(2, 4, color).tint, null, "an unshown civilization leaves plain terrain");
-  assert.ok(cellLayers(-2, 4, color).tint, "independent land is tinted grey");
+  assert.ok(cellLayers(-2, 4, color).tint, "independent land is tinted gray");
   assert.equal(cellLayers(-1, 99, color).base, cellLayers(-1, 1, color).base, "unknown terrain classes draw as land");
 }
 

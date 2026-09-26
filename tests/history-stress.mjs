@@ -38,7 +38,7 @@ const LONG = "LOC_CITY_NAME_A_VERY_LONG_SETTLEMENT_NAME_FOR_THE_WORST_CASE_";
 
 /**
  * A maxed-out campaign.
- * @param {string} id Id.
+ * @param {string} id
  * @returns {CampaignDoc} Campaign.
  */
 function marathon(id) {

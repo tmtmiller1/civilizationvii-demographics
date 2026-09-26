@@ -85,7 +85,7 @@ export function thinFrames(frames, cap) {
 /**
  * Add a frame to a campaign's map, skipping one identical to the newest and thinning past the cap.
  * @param {HnrMapGrid} map The map (mutated).
- * @param {HnrMapFrame} frame The frame.
+ * @param {HnrMapFrame} frame
  * @returns {boolean} True when the frame was kept.
  */
 export function addFrame(map, frame) {

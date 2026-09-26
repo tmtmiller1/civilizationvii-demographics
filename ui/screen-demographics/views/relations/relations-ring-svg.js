@@ -56,7 +56,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // ADAPTED from sloth/global-relations-panel.js.
 
 /**
- * Lay out `ids` evenly on an ellipse centered at `(cx, cy)`. Backwards-
+ * Lay out `ids` evenly on an ellipse centered at `(cx, cy)`. Backward-
  * compatible: `ringPositions(ids, radius)` lays out a circle on a 100×100
  * viewBox; newer callers pass `rx, ry, cx, cy`.
  * @param {number[]} ids Node ids to position.
@@ -67,7 +67,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  * @returns {Map<number, {x: number, y: number}>} Node positions.
  */
 function ringPositions(ids, rx, ry, cx, cy) {
-  // Backwards-compatible: ringPositions(ids, radius) → circle on a 100×100
+  // Backward-compatible: ringPositions(ids, radius) → circle on a 100×100
   // viewBox. Newer callers pass rx, ry (different) plus cx, cy to lay
   // nodes out on an ellipse centered at (cx, cy).
   if (typeof ry !== "number") ry = rx;
@@ -814,7 +814,7 @@ function buildNodeRadii(geo, names, ringCtx) {
  * nodes are selected, the selected nodes plus their direct edge neighbors stay
  * bright and everything else fades back.
  * @param {Edge[]} edges All ring edges.
- * @param {Set<number>|undefined} selectedNodeIds The selected node ids.
+ * @param {Set<number>|undefined} selectedNodeIds
  * @returns {{ selected: Set<number>|null, nodes: Set<number>|null }} The active
  *   selection (null when none) and the bright set (selection + neighbors).
  */

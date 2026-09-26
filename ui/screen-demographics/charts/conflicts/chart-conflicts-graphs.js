@@ -523,7 +523,7 @@ function buildChart(m, participants, win) {
  * @param {*} spec Graph spec entry.
  * @param {{ pid: number, name: string, color: string }[]} participants Civs.
  * @param {Snapshot[]} win Windowed samples.
- * @param {string} metricId Metric id.
+ * @param {string} metricId
  * @returns {*[]} Series list.
  */
 function buildMetricSeries(spec, participants, win, metricId) {
@@ -626,7 +626,7 @@ function buildHeader(view, onChange) {
 
 /**
  * Append a centered empty-state message.
- * @param {HTMLElement} host The host.
+ * @param {HTMLElement} host
  * @param {string} msg The message.
  */
 function appendEmpty(host, msg) {

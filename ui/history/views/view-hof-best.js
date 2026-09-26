@@ -1,7 +1,7 @@
 // view-hof-best.js
 //
 // The Hall of Fame's landing page: a strip of totals, a podium for the three best games, the rest
-// of the top ten, and the current game placed at its rank between its neighbours, beside victories
+// of the top ten, and the current game placed at its rank between its neighbors, beside victories
 // by type. Ranking follows history-hof.js ranked().
 
 import { el } from "/demographics/ui/history/core/history-dom.js";

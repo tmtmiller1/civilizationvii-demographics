@@ -815,7 +815,7 @@
             <Text>How many of your settlements were permanently destroyed (razed). It is charged to you as the owner from before the city was captured, not to the conqueror who razed it. Unlike a capture, which can be reversed by retaking the city, a razed city is gone for good. Only recorded for wars fought after this tracking was added.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND">
-            <Text>Territory that actually changed hands in the war, in square kilometres (each map tile is about 7,000 km²). Counts only the land of settlements captured from or lost to the enemy; peaceful expansion and border growth are excluded. A positive number means you took ground; a negative number means you lost it.</Text>
+            <Text>Territory that actually changed hands in the war, in square kilometers (each map tile is about 7,000 km²). Counts only the land of settlements captured from or lost to the enemy; peaceful expansion and border growth are excluded. A positive number means you took ground; a negative number means you lost it.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP">
             <Text>Total population you lost, added up from every turn your population fell, turns where it grew are ignored, so normal growth can never mask wartime losses. Two limits: it cannot tell a war death from a famine in the same span, and population from a city you later recapture still counts as lost on the turn it first fell.</Text>

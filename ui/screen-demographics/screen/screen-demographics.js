@@ -239,7 +239,7 @@ class ScreenDemographics extends Panel {
     const frame = this.Root && this.Root.querySelector && this.Root.querySelector(".demographics-frame");
     applyVisualScale(frame);
     publishFontLadder(this.Root, true);
-    // The header button is placed against the title's measured centre, which moves with the scale.
+    // The header button is placed against the title's measured center, which moves with the scale.
     const align = () => alignOptionsHeaderButton(frame);
     if (typeof requestAnimationFrame === "function") requestAnimationFrame(align);
     else align();

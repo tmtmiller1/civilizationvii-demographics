@@ -23,7 +23,7 @@ Prereqs: Phases 1–3 (the pages exist and render in the hubs).
    Demographics time-filter row, which is the reference). Audit Statistics, Migration, Geopolitics pages.
 
 5. **Hide dead filters**: hide disabled cross-age time filters (Age I/II/III) and the disabled radar
-   snapshot ages (Antiquity/Exploration) — dead greyed controls read as broken. Files:
+   snapshot ages (Antiquity/Exploration) — dead grayed controls read as broken. Files:
    `views/history/history-time-filter.js`, `views/history/history-controls.js`.
 
 6. **Graph | Table where a table exists**: wire the toggle on Net Migration (ledger). Universal

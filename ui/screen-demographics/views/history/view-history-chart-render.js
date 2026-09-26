@@ -361,7 +361,7 @@ function tryRenderBoards(chartHost, ctx, activeMetric, size) {
 /**
  * Attempt the constructible-based boards: Quarters (districts_type), the per-settlement
  * Buildings board, and the Game.Summary by-type breakdowns.
- * @param {*} cm The chart module. @param {HTMLElement} chartHost The host.
+ * @param {*} cm The chart module. @param {HTMLElement} chartHost
  * @param {*} ctx Render context. @param {string} activeMetric Active metric id.
  * @returns {boolean} True if handled.
  */
