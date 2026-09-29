@@ -57,7 +57,7 @@ Civilization VII 1.5.0 has a bug in the storage mods use for their settings: whe
 [h2]Source and documentation[/h2]
 [list]
 [*][b]What's new:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/releases/latest]the latest release notes and a download[/url]
-[*][b]Full documentation:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.md]every page and figure, and how each is calculated[/url]
+[*][b]Full documentation:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.md]how the mod works[/url]
 [*][b]The same as a PDF:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.pdf]README.pdf, typeset with the screenshots[/url]
 [/list]
 [h2]For modders[/h2]
