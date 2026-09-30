@@ -2,10 +2,13 @@
 //
 // Small, self-contained Chart.js plugin factories used by chart-line.js:
 // focus-glow (focused line halo), hover-crosshair (gold dashed vertical at
-// tooltip x), cap-limit-line (red 100% rule on settlement_cap_pct). None of
-// these own any shared state - each call returns a fresh plugin object.
+// tooltip x), cap-limit-line (red 100% rule on settlement_cap_pct), and
+// pointer-scale (maps the cursor into the chart's own pixels under the
+// frame's transform scale). None of these own any shared state - each call
+// returns a fresh plugin object.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { appliedVisualScale } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /**
  * Resolve the chart font family with a safe fallback chain (mirrors the helper
@@ -92,6 +95,37 @@ function strokeGlowPath(ctx2, ds, elems) {
   }
   if (started) ctx2.stroke();
   ctx2.restore();
+}
+
+/**
+ * Build the pointer-scale Chart.js plugin. GameFace's MouseEvent has no offsetX, so Chart.js takes
+ * `clientX - rect.left`, which is in VISUAL px under the frame's `transform: scale(s)`, and divides
+ * it by the chart's LOCAL width. The hover then lands at s * x: it trails the cursor more the
+ * further right it goes and never reaches the last s-fraction of the plot (measured 2026-09-30 at
+ * s=0.8: the right edge mapped to 2119 of 2650 px, All Time topped out at turn 199 of 226).
+ * Rescale the event before Chart.js hit-tests it. `inChartArea` was computed from the unscaled
+ * point, so recompute it. Chart.js replays its last event on update; the marker keeps a replayed
+ * event from being divided twice.
+ * @returns {Record<string, *>} The Chart.js plugin object.
+ */
+export function makePointerScalePlugin() {
+  return {
+    id: "demographicsPointerScale",
+    /**
+     * @param {*} c The Chart instance.
+     * @param {*} args The beforeEvent args ({ event, replay, inChartArea }).
+     */
+    beforeEvent(c, args) {
+      const e = args && args.event;
+      if (!e || e._demographicsScaled) return;
+      e._demographicsScaled = true;
+      const s = appliedVisualScale();
+      if (!(s > 0) || s === 1) return;
+      if (typeof e.x === "number") e.x /= s;
+      if (typeof e.y === "number") e.y /= s;
+      if (typeof c.isPointInArea === "function") args.inChartArea = c.isPointInArea(e);
+    }
+  };
 }
 
 /**

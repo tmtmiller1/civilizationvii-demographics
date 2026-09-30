@@ -31,6 +31,7 @@ import {
   makeCapLimitLinePlugin,
   makeFocusGlowPlugin,
   makeHoverCrosshairPlugin,
+  makePointerScalePlugin,
   makeSignZonesPlugin
 } from "/demographics/ui/screen-demographics/charts/line/chart-line-plugins.js";
 import {
@@ -496,6 +497,7 @@ function buildChartPluginSet(opts, metricId, prep) {
   const refugeeMarkers = collectRefugeeEventMarkers(metricId, opts.history);
 
   const plugins = [
+    makePointerScalePlugin(),
     makeSignZonesPlugin(),
     makeFocusGlowPlugin(),
     wonderMarkersPlugin,
