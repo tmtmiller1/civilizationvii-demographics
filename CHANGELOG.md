@@ -5,6 +5,28 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.7.5] - 2026-09-30
+
+A one-fix release: the graph tooltip follows the mouse again at every resolution.
+
+### Fixed
+
+- **The graph tooltip fell behind the mouse, and the right end of a graph could not be read.** Hovering a line
+  graph showed the point under the cursor on the left side, but the tooltip slid further behind the cursor the
+  further right it went, and the last stretch of the graph could not be hovered at all. On a 1440p display an
+  All Time graph of 226 turns stopped at turn 199, and on the short windows from 50y up the last turn was out of
+  reach. Since 2.7.3 the screen is drawn at a scale that fits the resolution, and the graph was reading the mouse
+  in the scaled screen's pixels while measuring itself in its own. It now converts the mouse position first, so the
+  tooltip sits on the point under the cursor across the whole graph. At 2880x1800, where the scale is 1, nothing
+  changes. The 25y window rarely showed the problem only because it holds so few points that the nearest one was
+  still the right one.
+
+### Internal
+
+- A test for the conversion: a cursor at the right edge of a scaled graph lands on the graph's right edge, a point
+  just left of the plot counts as outside it, the same mouse event is never converted twice, and at scale 1 the
+  position passes through unchanged.
+
 ## [2.7.4] - 2026-09-24
 
 A small follow-up to 2.7.3. Three things a player can see: the Hall of Fame no longer prints the game's internal
