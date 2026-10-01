@@ -20,7 +20,7 @@ import {
   drawStackGrid,
   drawStackXTicks
 } from "/demographics/ui/screen-demographics/charts/shared/chart-stack-grid.js";
-import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import {
   buildGanttLayout,
   crisisBandHeight,
@@ -72,7 +72,7 @@ function compareWarCivOptions(a, b) {
  * @returns {{ pid: *, isCS: boolean, label: string }[]} The civ options.
  */
 export function collectWarCivOptions(history) {
-  const wars = history && Array.isArray(history.wars) ? history.wars : [];
+  const wars = policyVisibleWars(history && history.wars, historySamples(history));
   const seen = new Map();
   for (const w of wars) {
     if (!w) continue;
@@ -454,8 +454,9 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
 function prepareConflictsTimelineData(host, opts) {
   // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
   /** @type {any[]} */
-  const rawWars = (opts.history && Array.isArray(opts.history.wars) ? opts.history.wars : []).filter(Boolean);
   const samples = historySamples(opts.history).filter(Boolean);
+  // Spoiler guard first: a hidden civ must not reach the bars, the tooltips or the naming.
+  const rawWars = policyVisibleWars(opts.history && opts.history.wars, samples);
   if (rawWars.length === 0) {
     appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS"));
     return null;

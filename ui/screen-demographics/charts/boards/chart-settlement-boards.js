@@ -10,6 +10,7 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { inlineLabel } from "/demographics/ui/core/player-label.js";
 import { buildSettlementBoard } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
+import { liveCivDroppedByPolicy } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /** @param {*} owner @returns {string} A stable civ key. */
 function ownerKey(owner) {
@@ -36,6 +37,17 @@ function ownerColor(owner) {
  */
 
 /**
+ * Whether a settlement belongs on the board. City-states are excluded: this is a comparative
+ * civ-vs-civ board, so it shows only major civilizations (matching Civ Ranking / Relations /
+ * Wars). Civs the spoiler guard hides are excluded too.
+ * @param {*} s A settlement. @returns {boolean} True to list it.
+ */
+function onBoard(s) {
+  if (!s) return false;
+  return !(s.owner && (s.owner.isMajor === false || liveCivDroppedByPolicy(s.owner.pid)));
+}
+
+/**
  * Group all settlements by owner, tallying `field` and (optionally) capturing the
  * per-settlement type list from `typesField` for drill-down.
  * @param {*[]} settlements The world's settlements.
@@ -46,10 +58,7 @@ function groupByCiv(settlements, field, typesField) {
   /** @type {Map<string, CivColumn>} */
   const groups = new Map();
   for (const s of settlements) {
-    if (!s) continue;
-    // City-states are excluded: this is a comparative civ-vs-civ board, so it
-    // shows only major civilizations (matching Civ Ranking / Relations / Wars).
-    if (s.owner && s.owner.isMajor === false) continue;
+    if (!onBoard(s)) continue;
     const key = ownerKey(s.owner);
     let g = groups.get(key);
     if (!g) {

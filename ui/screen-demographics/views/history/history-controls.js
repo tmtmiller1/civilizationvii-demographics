@@ -7,7 +7,7 @@ import { safePlaySound, playActivate } from "/demographics/ui/core/demographics-
 import { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/history/history-csv.js";
 import { warsCsv } from "/demographics/ui/screen-demographics/views/history/history-tables-csv.js";
 import { copyTableAsCsv } from "/demographics/ui/core/demographics-csv.js";
-import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 import { setNameOrder } from "/demographics/ui/core/player-label.js";
@@ -472,7 +472,7 @@ function safeWarCivOptions(ctx) {
 function safeMergedWarNames(rawWars, samples) {
   try {
     const latest = samples.length ? (samples[samples.length - 1]?.turn ?? 0) : 0;
-    const wars = mergeWars(rawWars, latest);
+    const wars = mergeWars(policyVisibleWars(rawWars, samples), latest);
     return { wars, names: nameMergedWars(wars, samples) };
   } catch (e) {
     // Malformed persisted wars must not take the left bar down with them.

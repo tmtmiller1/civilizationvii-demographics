@@ -5,7 +5,7 @@
 // list (history.wars), which the sample matrix doesn't include. One row per
 // merged war with its span, status, and both rosters.
 
-import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 /**
@@ -46,7 +46,7 @@ export function warsCsv(history) {
   const h = history || {};
   const samples = Array.isArray(h.samples) ? h.samples : [];
   const latest = samples.length ? samples[samples.length - 1].turn || 0 : 0;
-  const wars = mergeWars(Array.isArray(h.wars) ? h.wars : [], latest);
+  const wars = mergeWars(policyVisibleWars(h.wars, samples), latest);
   const named = nameMergedWars(wars, samples);
   const names = pidNameMap(samples);
   const headers = ["war", "startTurn", "endTurn", "status", "sideA", "sideB"];

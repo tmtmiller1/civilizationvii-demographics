@@ -28,7 +28,7 @@ import {
   graphMetricTitle,
   warAgeScope
 } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
-import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
@@ -658,8 +658,8 @@ function latestSampleTurn(samples) {
  */
 function buildWarView(history, selectedWarId) {
   // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
-  const rawWars = Array.isArray(history.wars) ? history.wars.filter(Boolean) : [];
   const samples = Array.isArray(history.samples) ? history.samples.filter(Boolean) : [];
+  const rawWars = policyVisibleWars(history.wars, samples);
   const latest = latestSampleTurn(samples);
   // Collapse multi-front wars so the picker + graphs match the timeline.
   const wars = mergeWars(rawWars, latest);

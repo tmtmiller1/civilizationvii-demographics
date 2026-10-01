@@ -5,6 +5,34 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.7.6] - 2026-09-30
+
+A one-fix release: the spoiler guard now covers every board and table, not only the line graphs.
+
+### Fixed
+
+- **Spoiler guard: civilizations you have not met showed up on the Religion pantheons tab.** With the guard on (the
+  default), the line graphs already hid unmet civilizations, but the boards and tables on the other tabs read the
+  game directly and listed every civilization. They now follow the same rule, and a civilization you have not met
+  is left out of:
+  - Religion: the pantheons and the pantheon yields.
+  - Society: the Wonders board, and Wonder Races (completed wonders and wonders under construction).
+  - Land & Settlements: the Buildings and Quarters boards and the Most Urbanized ranking.
+  - Military Power: the kills, losses and units-trained by-type boards, the War Timeline, War Graphs, the war picker and
+    the civilization filter.
+  - Crises: the per-civilization cost tables.
+  - The war markers on the Emigration refugees graph.
+
+  A war between a civilization you know and one you have not met is left out. A war with several members keeps the
+  ones you know. With the guard off, everything shows as before. Religion standings and spread, and the settlement
+  size chart, count followers and settlements across the world without naming any civilization, so they are
+  unchanged.
+
+### Internal
+
+- A test that renders each of these boards with one met and one unmet civilization and checks that nothing names
+  the unmet one with the guard on, and that it comes back with the guard off.
+
 ## [2.7.5] - 2026-09-30
 
 A one-fix release: the graph tooltip follows the mouse again at every resolution.

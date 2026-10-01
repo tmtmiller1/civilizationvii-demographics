@@ -12,6 +12,7 @@ import { inlineLabel } from "/demographics/ui/core/player-label.js";
 import { buildSettlementBoard } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 import { quarterAdjacency } from "/demographics/ui/screen-demographics/settlements/settlements-adjacency.js";
 import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
+import { liveCivDroppedByPolicy } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /** Engine globals via an any-cast (avoids ambient-declaration coupling for tsc). */
 const G = /** @type {*} */ (globalThis);
@@ -222,6 +223,7 @@ function groupByCiv(settlements) {
   const groups = new Map();
   for (const s of settlements) {
     if (!s || !s._city || (s.owner && s.owner.isMajor === false)) continue;
+    if (s.owner && liveCivDroppedByPolicy(s.owner.pid)) continue;
     const key = ownerKey(s.owner);
     let g = groups.get(key);
     if (!g) groups.set(key, (g = { name: ownerLabel(s.owner), color: ownerColor(s.owner), items: [], total: 0 }));

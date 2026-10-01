@@ -8,7 +8,8 @@
 import {
   historySamples,
   appendEmptyNotice,
-  getXAxisMode
+  getXAxisMode,
+  civDroppedByPolicy
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { participantCost } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { buildCostTable } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost-table.js";
@@ -112,7 +113,9 @@ function liveCrisisCols(samples, start, end) {
 }
 
 /**
- * Wrap pre-built cost columns in a cost-table section element.
+ * Wrap pre-built cost columns in a cost-table section element. Every column path (live, age-end
+ * snapshot, cross-age overall) passes through here, so this is where the spoiler guard drops the
+ * columns of civs the policy hides.
  * @param {*[]} cols The table columns.
  * @param {Snapshot[]} samples The sample stream (portrait identity fallback).
  * @returns {HTMLElement} The cost section.
@@ -120,7 +123,8 @@ function liveCrisisCols(samples, start, end) {
 function costSection(cols, samples) {
   const costs = document.createElement("div");
   costs.className = "demographics-crisis-stage-costs";
-  costs.appendChild(buildCostTable(cols, CRISIS_METRICS, samples, -1));
+  const shown = cols.filter((c) => !civDroppedByPolicy(samples, c && c.entry ? c.entry.pid : undefined));
+  costs.appendChild(buildCostTable(shown, CRISIS_METRICS, samples, -1));
   return costs;
 }
 
