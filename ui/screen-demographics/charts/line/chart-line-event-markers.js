@@ -11,6 +11,7 @@ import {
   CRISIS_STAGE_COLORS,
   CRISIS_STAGE_LABELS
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
+import { policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 
 /**
  * Resolve the chart font family with a safe fallback chain.
@@ -544,9 +545,9 @@ function resolveEventX(chartVal, year, localVal, yearToChart) {
  * @param {{turn:number, label:string, year:string, color:string}[]} out Markers (appended).
  */
 function collectWarOnsetMarkers(history, yearToChart, out) {
-  const wars = history && Array.isArray(history.wars) ? history.wars : [];
-  for (const w of wars) {
-    if (!w) continue;
+  const samples = history && Array.isArray(history.samples) ? history.samples : [];
+  // A persisted war name can name an unmet civ; the spoiler guard drops or renames those wars.
+  for (const w of policyVisibleWars(history && history.wars, samples)) {
     const x = resolveEventX(w.startChartTurn, w.startYear, w.startTurn, yearToChart);
     if (x === null) continue;
     out.push({ turn: x, label: w.name || t("LOC_DEMOGRAPHICS_MARKER_WAR"), year: w.startYear || "", color: REFUGEE_WAR_COLOR });

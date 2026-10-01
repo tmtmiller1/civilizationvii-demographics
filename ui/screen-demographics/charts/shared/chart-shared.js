@@ -14,6 +14,7 @@ import {
   policyOwnCivOnly,
   isLocalCiv
 } from "/demographics/ui/core/demographics-governance.js";
+import { localHasMet } from "/demographics/ui/screen-demographics/settlements/settlements-met.js";
 
 /**
  * @typedef {import(
@@ -186,6 +187,22 @@ function civDroppedByPolicy(samples, pid) {
 }
 
 /**
+ * {@link civDroppedByPolicy} for boards that read LIVE game state (Players / the settlement
+ * board) instead of the history: the met state comes from diplomacy now, not the last sample.
+ * An unreadable met state keeps the civ, matching the history gate. Fails safe (drop) on error.
+ * @param {string|number} pid The civ player id.
+ * @returns {boolean} True to drop the civ entirely.
+ */
+function liveCivDroppedByPolicy(pid) {
+  try {
+    if (policyOwnCivOnly()) return !isLocalCiv(pid);
+    return policyHidesUnmet() && localHasMet(Number(pid)) === false;
+  } catch (_) {
+    return true;
+  }
+}
+
+/**
  * Sub-option of the spoiler guard (only meaningful when {@link hideUnmetEnabled}
  * is on): when true (default) a civ's ENTIRE history is back-filled once the
  * local player meets it; when false only data from first contact forward is
@@ -219,7 +236,7 @@ function isCivUnmet(samples, pid) {
   return false;
 }
 
-export { hideUnmetEnabled, backfillMetHistoryEnabled, isCivUnmet, civDroppedByPolicy };
+export { hideUnmetEnabled, backfillMetHistoryEnabled, isCivUnmet, civDroppedByPolicy, liveCivDroppedByPolicy };
 
 // X-axis time-unit mode shared across every history chart (line, stacks,
 // gantt). "both" = "T-N / Year", "turn" = "T-N", "year" = "Year". Toolbar

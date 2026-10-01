@@ -12,6 +12,10 @@ import { byTypeCounts } from "/demographics/ui/sampler/sampler-game-summary.js";
 import { buildSettlementBoard } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
 import {
+  civDroppedByPolicy,
+  liveCivDroppedByPolicy
+} from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
+import {
   YIELD_CATEGORIES,
   emptyYields,
   effectText,
@@ -67,6 +71,11 @@ function resolveTypeName(table, type) {
   return prettifyType(type);
 }
 
+/** @param {*} history @returns {*[]} The history's samples, or []. */
+function samplesOf(history) {
+  return history && Array.isArray(history.samples) ? history.samples : [];
+}
+
 // ── Wonders board + races ──────────────────────────────────────────────────
 
 /**
@@ -93,17 +102,22 @@ function foldWonderPlayer(ps, turn, out, pid) {
  */
 function wonderFirstTurns(history) {
   const out = new Map();
-  const samples = history && Array.isArray(history.samples) ? history.samples : [];
-  for (const s of samples) foldSample(s, out);
+  const samples = samplesOf(history);
+  for (const s of samples) foldSample(s, out, samples);
   return out;
 }
 
-/** @param {*} s A sample. @param {Map<string, Map<string, number>>} out The accumulator. */
-function foldSample(s, out) {
+/**
+ * @param {*} s A sample. @param {Map<string, Map<string, number>>} out The accumulator.
+ * @param {*[]} samples The whole stream, for the spoiler guard.
+ */
+function foldSample(s, out, samples) {
   const players = s && s.players;
   const turn = s && s.chartTurn;
   if (!players) return;
-  for (const pid in players) foldWonderPlayer(players[pid], turn, out, pid);
+  for (const pid in players) {
+    if (!civDroppedByPolicy(samples, pid)) foldWonderPlayer(players[pid], turn, out, pid);
+  }
 }
 
 /**
@@ -133,6 +147,7 @@ export function renderWondersBoard(host, opts) {
   const firstTurns = wonderFirstTurns(history);
   const cols = [];
   for (const pid in players) {
+    if (civDroppedByPolicy(samplesOf(history), pid)) continue;
     const ps = players[pid];
     const types = ps && Array.isArray(ps.wonderTypes) ? ps.wonderTypes : [];
     if (!types.length) continue;
@@ -233,6 +248,7 @@ function inProgressWonderRow(s) {
   const w = s.wonderInProgress;
   if (!w) return null;
   const o = s.owner || {};
+  if (o.pid != null && liveCivDroppedByPolicy(o.pid)) return null;
   const civ = o.leaderName ? inlineLabel(o.leaderName, o.civName) : o.civName || "—";
   return {
     name: w.name, civ, settlement: s.name,
@@ -301,6 +317,24 @@ function byTypeItems(byType, lookup) {
 }
 
 /**
+ * One column per civ the spoiler guard lets through that has at least one type.
+ * @param {Map<*, Map<string, number>>} counts pid → (type → count).
+ * @param {Record<string, any>} players The latest sample's players (labels/colors).
+ * @param {string} lookup The GameInfo table for name resolution.
+ * @returns {{name:string, color:string, total:number, items:{name:string, n:number}[]}[]} The columns.
+ */
+function byTypeColumns(counts, players, lookup) {
+  const cols = [];
+  for (const [pid, byType] of counts) {
+    if (liveCivDroppedByPolicy(pid)) continue;
+    const { total, items } = byTypeItems(byType, lookup);
+    if (!items.length) continue;
+    cols.push({ name: civLabel(players[pid], String(pid)), color: U.civColor(players[pid]), total, items });
+  }
+  return cols;
+}
+
+/**
  * Render a by-type breakdown: one civ-colored column per civ, a bar per type.
  * @param {HTMLElement} host The chart host.
  * @param {{history:*, datapointId:string, lookup:string}} opts Options.
@@ -309,13 +343,7 @@ export function renderByTypeBoard(host, opts) {
   host.innerHTML = "";
   const players = latestPlayers(opts && opts.history);
   const counts = byTypeCounts((opts && opts.datapointId) || "");
-  const lookup = (opts && opts.lookup) || "Units";
-  const cols = [];
-  for (const [pid, byType] of counts) {
-    const { total, items } = byTypeItems(byType, lookup);
-    if (!items.length) continue;
-    cols.push({ name: civLabel(players[pid], String(pid)), color: U.civColor(players[pid]), total, items });
-  }
+  const cols = byTypeColumns(counts, players, (opts && opts.lookup) || "Units");
   cols.sort((a, b) => b.total - a.total);
   if (!cols.length) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN"));
   const row = U.columnsRow(host);
@@ -504,7 +532,7 @@ function collectPantheonRows(history) {
     /** @type {PantheonRow[]} */
     const out = [];
     for (const p of Players.getAlive() || []) {
-      if (!p) continue;
+      if (!p || liveCivDroppedByPolicy(p.id)) continue;
       const row = pantheonRowFor(p, sample);
       if (row) out.push(row);
     }
@@ -660,6 +688,16 @@ function addUrbanRow(c, rows) {
   }
 }
 
+/**
+ * Whether a live player's cities may enter the Most-Urbanized ranking. City names identify their
+ * civ, so the ranking follows the spoiler guard; the size histogram stays world-wide because it
+ * counts settlements and names none.
+ * @param {*} p A live player. @returns {boolean} True when its cities are readable and shown.
+ */
+function rankableOwner(p) {
+  return !!p && !!p.Cities && typeof p.Cities.getCities === "function" && !liveCivDroppedByPolicy(p.id);
+}
+
 /** @returns {UrbanRow[]} Live urbanization rows. */
 function collectUrbanization() {
   /** @type {UrbanRow[]} */
@@ -667,7 +705,7 @@ function collectUrbanization() {
   try {
     if (typeof Players === "undefined") return rows;
     for (const p of Players.getAlive() || []) {
-      if (!p || !p.Cities || typeof p.Cities.getCities !== "function") continue;
+      if (!rankableOwner(p)) continue;
       for (const c of p.Cities.getCities() || []) addUrbanRow(c, rows);
     }
   } catch (_) {
