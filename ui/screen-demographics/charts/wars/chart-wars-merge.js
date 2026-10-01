@@ -5,6 +5,11 @@
 // the two sides assigned by 2-coloring the participants. A pure display-time
 // transform over history.wars. Non-bipartite tangles are left unmerged so a
 // merged war always has a coherent A-vs-B structure.
+//
+// policyVisibleWars() applies the spoiler guard to the persisted list; every
+// reader of history.wars runs it first, before merging or naming.
+
+import { civDroppedByPolicy } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /**
  * The numeric pids of a roster array.
@@ -296,4 +301,68 @@ export function mergeWars(wars, latestTurn) {
     out.push(buildMergedWar(cw, coloring, latestTurn));
   }
   return out;
+}
+
+/**
+ * Apply the spoiler guard to a persisted war list. A major civ the policy hides is removed from
+ * both rosters, and a war is dropped once a side that had a major civ has none left, so a war
+ * between a met civ and an unmet one disappears while a multi-civ war keeps its visible members.
+ * A war that lost a member also loses its persisted name and, when the declarer is hidden, its
+ * declarer: both can name the hidden civ. The display name is rebuilt from the remaining rosters.
+ * @param {*[]} wars The war list (from history.wars).
+ * @param {*[]} samples The sample stream (carries the met flags).
+ * @returns {*[]} The wars the local player may see, nulls dropped.
+ */
+export function policyVisibleWars(wars, samples) {
+  const hidden = (/** @type {*} */ pid) => pid != null && civDroppedByPolicy(samples, pid);
+  const out = [];
+  for (const w of Array.isArray(wars) ? wars : []) {
+    if (!w) continue;
+    const gated = gateWar(w, hidden);
+    if (gated) out.push(gated);
+  }
+  return out;
+}
+
+/**
+ * Whether a side had a major civ before the spoiler guard and has none after it.
+ * @param {*} before The side's roster as persisted. @param {*[]} after The gated roster.
+ * @returns {boolean} True when the side lost every major civ.
+ */
+function lostEveryMajor(before, after) {
+  const isMajor = (/** @type {*} */ e) => !!e && !e.isCS;
+  return (before || []).some(isMajor) && !after.some(isMajor);
+}
+
+/**
+ * One war after the spoiler guard: the war itself when nothing is hidden, a copy without the
+ * hidden majors, or null when a side is left with no major civ.
+ * @param {*} w A war record.
+ * @param {(pid: *) => boolean} hidden Whether a civ is hidden by the policy.
+ * @returns {*|null} The visible war, or null.
+ */
+function gateWar(w, hidden) {
+  const removed = new Set();
+  const keep = (/** @type {*} */ e) => {
+    if (!e || e.isCS || !hidden(e.pid)) return true;
+    removed.add(e.pid);
+    return false;
+  };
+  const a = (w.sideACivs || []).filter(keep);
+  const b = (w.sideBCivs || []).filter(keep);
+  // Legacy scalar-schema records name their two sides directly.
+  if (hidden(w.aPid) || hidden(w.bPid)) return null;
+  if (!removed.size) return w;
+  if (lostEveryMajor(w.sideACivs, a) || lostEveryMajor(w.sideBCivs, b)) return null;
+  const visible = (/** @type {*} */ list) => (Array.isArray(list) ? list.filter((p) => !removed.has(p)) : list);
+  return {
+    ...w,
+    sideACivs: a,
+    sideBCivs: b,
+    sideA: visible(w.sideA),
+    sideB: visible(w.sideB),
+    participants: visible(w.participants),
+    name: undefined,
+    declaredBy: w.declaredBy && removed.has(w.declaredBy.pid) ? null : w.declaredBy
+  };
 }
