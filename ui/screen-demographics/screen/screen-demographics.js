@@ -851,7 +851,8 @@ try {
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-conflicts-history.css",
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-settlements.css",
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-density.css",
-        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-history.css"
+        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-history.css",
+        "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-locale-fonts.css"
       ],
       content: ["fs://game/demographics/ui/screen-demographics/screen-demographics.html"],
       attributes: [],

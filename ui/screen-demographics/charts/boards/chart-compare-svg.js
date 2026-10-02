@@ -5,7 +5,7 @@
 // civ-filter legend. Identity/color come from buildSeriesFromHistory so keys
 // match every other chart.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { coerceKeySet } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
@@ -123,7 +123,7 @@ const AXIS_BORDER = "#85878C";
 
 /** @returns {string} The engine chart font family, with a safe fallback chain. */
 function fontFamily() {
-  return (typeof Chart !== "undefined" && Chart.defaults?.font?.family) || "BodyFont, sans-serif";
+  return (typeof Chart !== "undefined" && Chart.defaults?.font?.family) || localeFontFamily("body");
 }
 
 /** @param {number} v @returns {string} A number with grouped thousands (e.g. "1,234"). */

@@ -15,6 +15,111 @@ function dlog(...a) {
   if (DBG) console.warn("[Demographics.i18n]", ...a);
 }
 
+/** Display locales that need a CJK font, by their slot in the game's font lists below. */
+const CJK_FONT_SLOT = /** @type {Record<string, number>} */ ({ zh_Hans_CN: 1, zh_Hant_HK: 2, ja_JP: 3, ko_KR: 4 });
+/** Class set on <html> per CJK locale; screen-demographics-locale-fonts.css keys on it. */
+const CJK_FONT_CLASS = ["", "dg-lang-sc", "dg-lang-tc", "dg-lang-jp", "dg-lang-kr"];
+
+/** @returns {number} The active locale's slot in the font lists (0 = Latin and Cyrillic). */
+function cjkFontSlot() {
+  try {
+    return CJK_FONT_SLOT[String(Locale.getCurrentDisplayLocale())] || 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+/**
+ * The font list for the active locale, ordered the way the game orders its own (global-scaling.js
+ * getOrderedFontFamily): the locale's CJK face swaps into first place. BodyFont and TitleFont have
+ * no Hangul, kana or Han glyphs, and a canvas draws with the FIRST family only, so a chart that
+ * names BodyFont first shows missing-glyph boxes in Chinese, Japanese and Korean.
+ * @param {"body"|"title"} [kind] Body or title faces.
+ * @returns {string} A CSS font-family list.
+ */
+export function localeFontFamily(kind = "body") {
+  const base = kind === "title" ? "TitleFont" : "BodyFont";
+  const faces = [base, base + "-SC", base + "-TC", base + "-JP", base + "-KR"];
+  const slot = cjkFontSlot();
+  [faces[0], faces[slot]] = [faces[slot], faces[0]];
+  return faces.join(", ") + ", sans-serif";
+}
+
+/**
+ * Mark <html> with the CJK locale class so the mod's stylesheets switch to the locale's font list.
+ * Safe to call more than once and from either scope.
+ */
+export function applyLocaleFontClass() {
+  try {
+    const cls = CJK_FONT_CLASS[cjkFontSlot()];
+    if (cls && document.documentElement) document.documentElement.classList.add(cls);
+  } catch (_) {
+    // No document (tests) or no Locale yet: the stylesheets keep the Latin list.
+  }
+}
+
+/**
+ * A stored game year in the active language. Samples keep the year as the engine wrote it in the
+ * session that recorded them ("1380 BCE", "1060 CE"), and the engine formats only the current turn,
+ * so an English year is re-read here for display; anything else passes through unchanged. Stored
+ * values stay as recorded: the war code parses them.
+ * @param {*} year A stored year string.
+ * @returns {string} The year for display.
+ */
+export function localYear(year) {
+  const s = year == null ? "" : String(year);
+  const m = /^\s*(\d[\d,.]*)\s*(BCE|BC|CE|AD)\s*$/.exec(s);
+  if (!m) return s;
+  const key = m[2].startsWith("B") ? "LOC_DEMOGRAPHICS_YEAR_BCE" : "LOC_DEMOGRAPHICS_YEAR_CE";
+  const out = t(key, m[1]);
+  return out && out !== key ? out : s;
+}
+
+/** Per-age turn prefixes ("A12", "E1", "M40"); an unknown age falls back to the plain turn label. */
+const AGE_TURN_KEYS = /** @type {Record<string, string>} */ ({
+  AGE_ANTIQUITY: "LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY",
+  AGE_EXPLORATION: "LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION",
+  AGE_MODERN: "LOC_DEMOGRAPHICS_AGE_TURN_MODERN"
+});
+/** English forms of the turn labels, for when the text database has not loaded. */
+const TURN_FALLBACK = /** @type {Record<string, string>} */ ({
+  LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY: "A",
+  LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION: "E",
+  LOC_DEMOGRAPHICS_AGE_TURN_MODERN: "M",
+  LOC_DEMOGRAPHICS_TURN_DASH: "T-",
+  LOC_DEMOGRAPHICS_TURN_SHORT: "T"
+});
+
+/**
+ * Compose a turn-label tag, or its English form when the tag does not resolve.
+ * @param {string} key The tag.
+ * @param {number} turn The turn.
+ * @returns {string} The label.
+ */
+function composeTurn(key, turn) {
+  const s = t(key, turn);
+  return s && s !== key ? s : TURN_FALLBACK[key] + turn;
+}
+
+/**
+ * A short turn label: age-relative ("A12") when the age is known, else "T-12".
+ * @param {number} turn The turn.
+ * @param {string} [age] The age type (AGE_*).
+ * @returns {string} The label.
+ */
+export function turnLabel(turn, age) {
+  return composeTurn((age && AGE_TURN_KEYS[age]) || "LOC_DEMOGRAPHICS_TURN_DASH", turn);
+}
+
+/**
+ * A plain turn label for spans and axis ends ("T98").
+ * @param {number} turn The turn.
+ * @returns {string} The label.
+ */
+export function turnPlain(turn) {
+  return composeTurn("LOC_DEMOGRAPHICS_TURN_SHORT", turn);
+}
+
 /**
  * Resolve a localization tag to display text for the active language.
  * @param {string} key The `LOC_*` tag (e.g. `"LOC_DEMOGRAPHICS_BTN_COPY_CSV"`).

@@ -326,31 +326,25 @@ function buildCsvMetaHeader(history, rowByKey, metricCols) {
   // Lead the file with a UTF-8 BOM so Excel on Windows/macOS auto-detects
   // the encoding - without it, "Hawai'i" / "José" / "Sayyida" import as
   // mojibake. Standard byte sequence: U+FEFF (3 UTF-8 bytes).
-  lines.push("﻿# === Demographics CSV export ===");
+  lines.push("\ufeff# === " + t("LOC_DEMOGRAPHICS_CSV_META_TITLE") + " ===");
   lines.push("# Mod: Demographics v1.0.0");
-  lines.push("# Exported: " + metaTime);
-  lines.push("# Game speed: " + gameSpeed + " · Map: " + mapType + " · Current age: " + currentAge);
+  lines.push("# " + t("LOC_DEMOGRAPHICS_CSV_META_EXPORTED", metaTime));
+  lines.push("# " + t("LOC_DEMOGRAPHICS_CSV_META_CONTEXT", gameSpeed, mapType, currentAge));
   lines.push(
-    "# Coverage: turns " +
-      (firstSample?.turn || 0) +
-      "→" +
-      (lastSample?.turn || 0) +
-      " (" +
-      turnsCovered +
-      " turns)" +
-      " · " +
-      civCount +
-      " civilizations · " +
-      rowByKey.size +
-      " rows · " +
-      metricCols.length +
-      " metrics"
+    "# " +
+      t(
+        "LOC_DEMOGRAPHICS_CSV_META_COVERAGE",
+        firstSample?.turn || 0,
+        lastSample?.turn || 0,
+        turnsCovered,
+        civCount,
+        rowByKey.size,
+        metricCols.length
+      )
   );
-  lines.push("# Format: integers exact, floats <1000 → 2 dp, ≥1000 → integer");
-  lines.push("# Sorting: deduplicated by (turn, pid); sorted ascending");
-  lines.push(
-    "# Columns grouped by category: identity → score → economy → yields → military → knowledge → empire → triumphs → resources → age"
-  );
+  lines.push("# " + t("LOC_DEMOGRAPHICS_CSV_META_FORMAT"));
+  lines.push("# " + t("LOC_DEMOGRAPHICS_CSV_META_SORTING"));
+  lines.push("# " + t("LOC_DEMOGRAPHICS_CSV_META_COLUMNS"));
   lines.push("#");
   return lines;
 }

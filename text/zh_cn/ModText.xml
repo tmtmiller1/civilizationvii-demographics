@@ -35,19 +35,19 @@
             <Text>金库</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="zh_Hans_CN">
-            <Text>Gold (GPT)</Text>
+            <Text>金币 (GPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合净金币收入。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="zh_Hans_CN">
-            <Text>Settlements Over Time</Text>
+            <Text>定居点随时间变化</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="zh_Hans_CN">
-            <Text>Techs Count</Text>
+            <Text>科技数量</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="zh_Hans_CN">
-            <Text>Civics Count</Text>
+            <Text>市政数量</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="zh_Hans_CN">
             <Text>综合实力分数，与胜利界面一致。</Text>
@@ -62,34 +62,34 @@
             <Text>拥有的科技总数。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="zh_Hans_CN">
-            <Text>拥有的公民总数。</Text>
+            <Text>当前时代市政树中已完全解锁的市政节点数量。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="zh_Hans_CN">
             <Text>GDP</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="zh_Hans_CN">
-            <Text>伪真实国内生产总值。按各回合产出加权求和（生产力 1.0、金币 1.0、科学 1.2、文化 1.2、食物 0.5、影响力 1.5），乘以已经过的回合数并换算为美元。</Text>
+            <Text>根据每回合产出和已经过的回合数估算的经济产出。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="zh_Hans_CN">
-            <Text>Production (PPT)</Text>
+            <Text>生产力 (PPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合生产力，你的城市所建造的产出。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="zh_Hans_CN">
-            <Text>Science (SPT)</Text>
+            <Text>科学 (SPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合科学，推动科技研究。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="zh_Hans_CN">
-            <Text>Culture (CPT)</Text>
+            <Text>文化 (CPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合文化，推动公民进度。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="zh_Hans_CN">
-            <Text>Food (FPT)</Text>
+            <Text>食物 (FPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="zh_Hans_CN">
             <Text>所有定居点每回合的净食物产出。</Text>
@@ -98,7 +98,7 @@
             <Text>外交支持度</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="zh_Hans_CN">
-            <Text>国际声誉总和。对所有已遇主要文明的加权关系分数求和（结盟 +5、有益 +3、友好 +2、中立 0、不友好 -2、敌对 -3、交战 -5），再加上你担任宗主的城邦的衰减（0.3 倍）贡献。</Text>
+            <Text>你与所有已遇文明以及你担任宗主的城邦之间当前外交关系的概况。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="zh_Hans_CN">
             <Text>人口</Text>
@@ -107,10 +107,10 @@
             <Text>按比例换算的现实世界人口，由公民总数以指数方式推算得出。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="zh_Hans_CN">
-            <Text>Influence (IPT)</Text>
+            <Text>影响力 (IPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="zh_Hans_CN">
-            <Text>Happiness (HPT)</Text>
+            <Text>幸福度 (HPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="zh_Hans_CN">
             <Text>每回合净幸福度产出。</Text>
@@ -151,7 +151,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="zh_Hans_CN">
             <Text>经济</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="zh_Hans_CN"><Text>Soft Power</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="zh_Hans_CN"><Text>软实力</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="zh_Hans_CN">
             <Text>知识与影响力</Text>
@@ -166,10 +166,10 @@
             <Text>冲突</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="zh_Hans_CN">
-            <Text>战争</Text>
+            <Text>战争时间线</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="zh_Hans_CN">
-            <Text>Triumphs Radar</Text>
+            <Text>成就雷达图</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="zh_Hans_CN">
             <Text>竞速</Text>
@@ -199,10 +199,10 @@
             <Text>当前危机阶段（0 = 无，3 = 危机顶峰）。全局数值。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="zh_Hans_CN">
-            <Text>Resources Stacked by Type</Text>
+            <Text>资源（按类型堆叠）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="zh_Hans_CN">
-            <Text>Total Resources</Text>
+            <Text>资源总数</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="zh_Hans_CN">
             <Text>加成</Text>
@@ -283,7 +283,7 @@
             <Text>显示未遇文明和城邦的名称</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="zh_Hans_CN">
-            <Text>关闭时（默认），你尚未遇见的文明和城邦在图表、年鉴和全球关系环中显示为通用的“未遇”占位符。</Text>
+            <Text>关闭时，未遇的文明和城邦在图表、排名和全球关系中显示为通用占位符。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="zh_Hans_CN">
             <Text>玩家 {1_Pid}</Text>
@@ -353,6 +353,16 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="zh_Hans_CN"><Text>奇观</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="zh_Hans_CN"><Text>资源</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="zh_Hans_CN"><Text>阶段</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WORKS" Language="zh_Hans_CN"><Text>巨作</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOWNS" Language="zh_Hans_CN"><Text>城镇</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CAP" Language="zh_Hans_CN"><Text>上限</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SETTLEMENTS" Language="zh_Hans_CN"><Text>定居点</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOURISM" Language="zh_Hans_CN"><Text>观光值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_KILLS" Language="zh_Hans_CN"><Text>击杀</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_LOSSES" Language="zh_Hans_CN"><Text>损失</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FAITH" Language="zh_Hans_CN"><Text>信仰</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_BATTLES" Language="zh_Hans_CN"><Text>战斗</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WARS" Language="zh_Hans_CN"><Text>战争</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="zh_Hans_CN"><Text>剧透</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="zh_Hans_CN"><Text>显示</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="zh_Hans_CN"><Text>隐藏尚未遇到的文明的名称、图表以及外交和关系数据，让界面不会提前剧透任何文明。默认开启。</Text></Replace>
@@ -430,7 +440,7 @@
             <Text>尚无进度。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="zh_Hans_CN">
-            <Text>时光长河遗产 API 不可用。</Text>
+            <Text>成就数据不可用。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="zh_Hans_CN">
             <Text>尚无文明被采样。</Text>
@@ -532,13 +542,13 @@
             <Text>尚无采样，请先进行一回合。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="zh_Hans_CN">
-            <Text>CSV 过大（{1_SizeMB} MB）· 会导致剪贴板崩溃。请在选项中降低采样上限后重试。</Text>
+            <Text>CSV 过大（{1_SizeMB} MB）。请在选项中降低历史采样上限后重试。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="zh_Hans_CN">
             <Text>已复制 · {1_Rows} 行 × {2_Cols} 列{3_SizeTag} · 粘贴至 Excel / Sheets / .csv 文件</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="zh_Hans_CN">
-            <Text>剪贴板不可用 · 已将 CSV 写入 UI.log（见 logs 文件夹）</Text>
+            <Text>无法导出到剪贴板。CSV 已写入 UI.log。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="zh_Hans_CN">
             <Text>当前时代</Text>
@@ -598,7 +608,7 @@
             <Text>刷新</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="zh_Hans_CN">
-            <Text>从 VictoryManager.getVictoryProgress() 重新拉取遗产进度</Text>
+            <Text>刷新成就进度</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="zh_Hans_CN">
             <Text>所有主要文明</Text>
@@ -649,7 +659,7 @@
             <Text>复制为 CSV</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="zh_Hans_CN">
-            <Text>&lt;p style="margin:0;"&gt;将每个文明的每个采样回合复制到剪贴板。粘贴至 Excel、Sheets，或保存为 &lt;code&gt;.csv&lt;/code&gt;。文明&amp;nbsp;7 的 UI 沙盒没有文件写入 API，因此剪贴板是唯一的交接方式。&lt;/p&gt;</Text>
+            <Text>&lt;p style="margin:0;"&gt;将所有文明的全部采样回合以 CSV 格式复制到剪贴板。粘贴到 Excel、Sheets 或其他电子表格工具中即可保存或分析数据。&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="zh_Hans_CN">
             <Text>将所有采样历史以 CSV 形式复制到剪贴板，粘贴至 Excel、Google Sheets 或 .csv 文件</Text>
@@ -765,10 +775,10 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="zh_Hans_CN">
             <Text>显示已消亡的文明</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="zh_Hans_CN">
             <Text>战争标记</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="zh_Hans_CN">
             <Text>灾害标记</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="zh_Hans_CN">
@@ -904,13 +914,13 @@
             <Text>城邦</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="zh_Hans_CN">
-            <Text>Share Innovations</Text>
+            <Text>共享创新</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="zh_Hans_CN">
-            <Text>Pioneering</Text>
+            <Text>先驱</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="zh_Hans_CN">
-            <Text>Give Influence Token</Text>
+            <Text>结交独立势力</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="zh_Hans_CN">
             <Text>T-{1_Turn} 退出</Text>
@@ -2040,67 +2050,67 @@
         <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="zh_Hans_CN">
             <Text>此处的“得分”为文明的总产出，即其所有定居点的食物、生产力、金币、科技与文化之和，并非胜利画面中按不同方式计算的官方游戏得分。</Text>
         </Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="zh_CN">
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="zh_Hans_CN">
             <Text>分析可见性</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="zh_Hans_CN">
             <Text>作为主机，此限制适用于本局所有玩家的对比分析。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="zh_Hans_CN">
             <Text>主机设定本局分析的最大可见性；你可以进一步限制自己的视图。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="zh_Hans_CN">
             <Text>禁用（仅自己的文明）</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="zh_Hans_CN">
             <Text>仅自己的文明</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="zh_Hans_CN">
             <Text>仅已会面的文明</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="zh_Hans_CN">
             <Text>所有文明</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="zh_CN">
-            <Text>主机分析策略：{1}。对比数据对所有玩家受限。</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="zh_Hans_CN">
+            <Text>主机分析策略：{1_Policy}。对比数据对所有玩家受限。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="zh_CN">
-            <Text>分析策略：{1}。</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="zh_Hans_CN">
+            <Text>分析策略：{1_Policy}。</Text>
         </Replace>
-            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="zh_CN">
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="zh_Hans_CN">
             <Text>界面</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="zh_Hans_CN">
             <Text>复杂度</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="zh_Hans_CN">
             <Text>基础</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="zh_Hans_CN">
             <Text>标准</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="zh_Hans_CN">
             <Text>分析师</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="zh_Hans_CN">
             <Text>仅显示核心统计页面；高级图表、关系网络和调节控件均被隐藏。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="zh_Hans_CN">
             <Text>显示所有图表和标签页；高级存储与采样控件保持隐藏。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="zh_Hans_CN">
             <Text>全部内容，包括存储上限、抽稀和采样率控件。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="zh_Hans_CN">
             <Text>时代成就进度：各文明的遗产路径雷达图。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="zh_Hans_CN">
             <Text>按类别随时间变化的资源分配。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="zh_Hans_CN">
             <Text>战争时间线（甘特图）和各场战争的详细图表。</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="zh_CN">
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="zh_Hans_CN">
             <Text>危机阶段及其对各文明的代价。</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="zh_Hans_CN"><Text>难民</Text></Replace>
@@ -2112,9 +2122,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="zh_Hans_CN"><Text>社会</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="zh_Hans_CN"><Text>扩张</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="zh_Hans_CN"><Text>人口</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="zh_Hans_CN"><Text>Military Power</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="zh_Hans_CN"><Text>军事实力</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="zh_Hans_CN"><Text>战争</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="zh_Hans_CN"><Text>Global Relations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="zh_Hans_CN"><Text>全球关系</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="zh_Hans_CN"><Text>协议</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="zh_Hans_CN"><Text>国内生产总值（GDP）</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="zh_Hans_CN"><Text>每回合金币（GPT）</Text></Replace>
@@ -2172,130 +2182,130 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="zh_Hans_CN"><Text>未知</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="zh_Hans_CN"><Text>第{1_Ordinal}次{2_Adjective}战争</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="zh_Hans_CN"><Text>战争 #{1_Id}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="zh_CN"><Text>Scaled</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="zh_CN"><Text>Civ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="zh_CN"><Text>/turn</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="zh_Hans_CN"><Text>Great Works</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="zh_Hans_CN"><Text>Great works currently slotted across your buildings and wonders.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="zh_Hans_CN"><Text>Cities</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="zh_Hans_CN"><Text>Promoted settlements (cities), as opposed to towns.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="zh_Hans_CN"><Text>Towns</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="zh_Hans_CN"><Text>Un-promoted settlements (towns).</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="zh_Hans_CN"><Text>Cap Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="zh_Hans_CN"><Text>The maximum number of settlements you can hold before over-cap penalties.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="zh_Hans_CN"><Text>Settlements Conquered</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="zh_Hans_CN"><Text>Cumulative settlements this civ has taken by force.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="zh_Hans_CN"><Text>Conquest %</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="zh_Hans_CN"><Text>Share of a civ's settlements that were taken by force.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="zh_Hans_CN"><Text>Tourism</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="zh_Hans_CN"><Text>Tourism total (Culture Victory Points); accrues from wonders, unique improvements, suzerained city-states and celebrations.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="zh_Hans_CN"><Text>Great People</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="zh_Hans_CN"><Text>Cumulative Great People this civ has earned.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="zh_Hans_CN"><Text>Units Killed</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="zh_Hans_CN"><Text>Cumulative enemy units this civ has killed in combat.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="zh_Hans_CN"><Text>Units Lost</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="zh_Hans_CN"><Text>Cumulative units this civ has lost in combat.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="zh_Hans_CN"><Text>Civ → Leader</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="zh_Hans_CN"><Text>Leader → Civ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="zh_Hans_CN"><Text>Wonders Board</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="zh_Hans_CN"><Text>Wonders Built — by Civilization</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="zh_Hans_CN"><Text>Units Trained</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="zh_Hans_CN"><Text>Units Trained — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="zh_Hans_CN"><Text>Kills by Unit</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="zh_Hans_CN"><Text>Enemy Units Killed — by Your Unit Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="zh_Hans_CN"><Text>Losses by Unit</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="zh_Hans_CN"><Text>Units Lost — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="zh_Hans_CN"><Text>Buildings</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="zh_Hans_CN"><Text>Buildings Constructed — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="zh_Hans_CN"><Text>Quarters</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="zh_Hans_CN"><Text>Districts Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="zh_Hans_CN"><Text>缩放</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="zh_Hans_CN"><Text>文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="zh_Hans_CN"><Text>/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="zh_Hans_CN"><Text>巨作</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="zh_Hans_CN"><Text>当前陈列在你的建筑和奇观中的巨作。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="zh_Hans_CN"><Text>城市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="zh_Hans_CN"><Text>已升级为城市的定居点（不含城镇）。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="zh_Hans_CN"><Text>城镇</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="zh_Hans_CN"><Text>尚未升级的定居点（城镇）。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="zh_Hans_CN"><Text>上限随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="zh_Hans_CN"><Text>在受到超出上限惩罚之前，你最多可拥有的定居点数量。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="zh_Hans_CN"><Text>征服的定居点</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="zh_Hans_CN"><Text>该文明累计以武力夺取的定居点数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="zh_Hans_CN"><Text>征服占比 %</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="zh_Hans_CN"><Text>该文明的定居点中以武力夺取的比例。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="zh_Hans_CN"><Text>观光值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="zh_Hans_CN"><Text>观光值总计（文化胜利点数）；来自奇观、特色改良设施、你担任宗主的城邦以及庆典。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="zh_Hans_CN"><Text>伟人</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="zh_Hans_CN"><Text>该文明累计获得的伟人数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="zh_Hans_CN"><Text>击杀单位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="zh_Hans_CN"><Text>该文明在战斗中累计击杀的敌方单位数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="zh_Hans_CN"><Text>损失单位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="zh_Hans_CN"><Text>该文明在战斗中累计损失的单位数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="zh_Hans_CN"><Text>文明 → 领袖</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="zh_Hans_CN"><Text>领袖 → 文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="zh_Hans_CN"><Text>奇观一览</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="zh_Hans_CN"><Text>已建奇观 — 按文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="zh_Hans_CN"><Text>训练的单位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="zh_Hans_CN"><Text>训练的单位 — 按类型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="zh_Hans_CN"><Text>各单位击杀</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="zh_Hans_CN"><Text>击杀的敌方单位 — 按你的单位类型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="zh_Hans_CN"><Text>各单位损失</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="zh_Hans_CN"><Text>损失的单位 — 按类型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="zh_Hans_CN"><Text>建筑</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="zh_Hans_CN"><Text>已建建筑 — 按类型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="zh_Hans_CN"><Text>城区</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="zh_Hans_CN"><Text>已建区域 — 按类型</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_STANDINGS" Language="zh_Hans_CN"><Text>宗教</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE" Language="zh_Hans_CN"><Text>宗教排名 — 信仰的定居点</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="zh_Hans_CN"><Text>Construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="zh_Hans_CN"><Text>建设</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION" Language="zh_Hans_CN"><Text>宗教</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="zh_Hans_CN"><Text>Settlement Sizes</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="zh_Hans_CN"><Text>Settlement Size Distribution</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="zh_Hans_CN"><Text>定居点规模</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="zh_Hans_CN"><Text>定居点规模分布</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD" Language="zh_Hans_CN"><Text>宗教传播</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE" Language="zh_Hans_CN"><Text>宗教传播 — 信仰的定居点随时间变化</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_BY_POP" Language="zh_Hans_CN"><Text>按人口划分的宗教</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_BY_POP_TITLE" Language="zh_Hans_CN"><Text>按人口划分的宗教 — 信徒随时间变化</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="zh_Hans_CN"><Text>Wonder Races</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="zh_Hans_CN"><Text>Wonder Races — First to Build Each Wonder</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="zh_Hans_CN"><Text>Power Race</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="zh_Hans_CN"><Text>Power Race — Rank by Score Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="zh_Hans_CN"><Text>Population Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="zh_Hans_CN"><Text>Population Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="zh_Hans_CN"><Text>Land Area Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="zh_Hans_CN"><Text>Land Area Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="zh_Hans_CN"><Text>Power &amp; Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="zh_Hans_CN"><Text>Power &amp; Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="zh_Hans_CN"><Text>Archetype</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="zh_Hans_CN"><Text>Power Archetype — Every Civilization Compared</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="zh_Hans_CN"><Text>Faith</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="zh_Hans_CN"><Text>Total Faith accumulated by this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="zh_Hans_CN"><Text>Battles</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="zh_Hans_CN"><Text>Number of battles this civilization has fought.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="zh_Hans_CN"><Text>Wars Declared</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="zh_Hans_CN"><Text>Wars this civilization has declared on others.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="zh_Hans_CN"><Text>Wars Received</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="zh_Hans_CN"><Text>Wars others have declared on this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="zh_Hans_CN"><Text>Natural Wonders Discovered</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="zh_Hans_CN"><Text>Natural wonders this civilization has discovered.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="zh_Hans_CN"><Text>Rank</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="zh_Hans_CN"><Text>Share of World</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="zh_Hans_CN"><Text>Population Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="zh_Hans_CN"><Text>Yields Per Turn</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="zh_Hans_CN"><Text>Land &amp; Settlements</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="zh_Hans_CN"><Text>Economy &amp; Resources</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="zh_Hans_CN"><Text>Wealth &amp; Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="zh_Hans_CN"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="zh_Hans_CN"><Text>Happiness &amp; Influence</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="zh_Hans_CN"><Text>Happiness &amp; Influence</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="zh_Hans_CN"><Text>No wonders built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="zh_Hans_CN"><Text>No wonders built or under construction yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="zh_Hans_CN"><Text>No data recorded for this breakdown yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="zh_Hans_CN"><Text>奇观竞赛</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="zh_Hans_CN"><Text>奇观竞赛 — 每座奇观的首建者</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="zh_Hans_CN"><Text>实力竞赛</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="zh_Hans_CN"><Text>实力竞赛 — 分数排名随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="zh_Hans_CN"><Text>人口占比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="zh_Hans_CN"><Text>世界人口占比随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="zh_Hans_CN"><Text>陆地面积占比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="zh_Hans_CN"><Text>世界陆地面积占比随时间变化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="zh_Hans_CN"><Text>实力与科学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="zh_Hans_CN"><Text>实力与科学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="zh_Hans_CN"><Text>国力类型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="zh_Hans_CN"><Text>国力类型 — 所有文明对比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="zh_Hans_CN"><Text>信仰</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="zh_Hans_CN"><Text>该文明累计获得的信仰总量。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="zh_Hans_CN"><Text>战斗</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="zh_Hans_CN"><Text>该文明参与过的战斗次数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="zh_Hans_CN"><Text>主动宣战</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="zh_Hans_CN"><Text>该文明向其他文明宣战的次数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="zh_Hans_CN"><Text>被动宣战</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="zh_Hans_CN"><Text>其他文明向该文明宣战的次数。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="zh_Hans_CN"><Text>发现的自然奇观</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="zh_Hans_CN"><Text>该文明已发现的自然奇观。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="zh_Hans_CN"><Text>排名</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="zh_Hans_CN"><Text>世界占比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="zh_Hans_CN"><Text>人口占比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="zh_Hans_CN"><Text>每回合产出</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="zh_Hans_CN"><Text>领土与定居点</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="zh_Hans_CN"><Text>经济与资源</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="zh_Hans_CN"><Text>财富与文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="zh_Hans_CN"><Text>财富与文化 — 金币与文化产出对比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="zh_Hans_CN"><Text>幸福度与影响力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="zh_Hans_CN"><Text>幸福度与影响力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="zh_Hans_CN"><Text>尚未建成任何奇观。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="zh_Hans_CN"><Text>尚无已建成或在建的奇观。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="zh_Hans_CN"><Text>此分类尚无记录数据。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_RELIGION" Language="zh_Hans_CN"><Text>尚无宗教传播。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="zh_Hans_CN"><Text>No settlements to chart.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="zh_Hans_CN"><Text>No settlements yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="zh_Hans_CN"><Text>No buildings built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="zh_Hans_CN"><Text>No comparable data recorded yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="zh_Hans_CN"><Text>Under Construction</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="zh_Hans_CN"><Text>Completed</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="zh_Hans_CN"><Text>Settlement Sizes</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="zh_Hans_CN"><Text>Most Urbanized</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="zh_Hans_CN"><Text>没有可绘制的定居点。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="zh_Hans_CN"><Text>尚无定居点。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="zh_Hans_CN"><Text>尚未建造任何建筑。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="zh_Hans_CN"><Text>尚无可比较的记录数据。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="zh_Hans_CN"><Text>建造中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="zh_Hans_CN"><Text>已完成</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="zh_Hans_CN"><Text>定居点规模</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="zh_Hans_CN"><Text>城市化程度最高</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT" Language="zh_Hans_CN"><Text>{1_Turns}t</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="zh_Hans_CN"><Text>{1_Count} pop</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="zh_Hans_CN"><Text>{1_Pct}% urban</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="zh_Hans_CN"><Text>人口 {1_Count}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="zh_Hans_CN"><Text>城市化 {1_Pct}%</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK" Language="zh_Hans_CN"><Text>宗教 {1_Id}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="zh_Hans_CN"><Text>Player</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="zh_Hans_CN"><Text>Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="zh_Hans_CN"><Text>Military</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="zh_Hans_CN"><Text>Economy</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="zh_Hans_CN"><Text>Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="zh_Hans_CN"><Text>People</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="zh_Hans_CN"><Text>Land</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="zh_Hans_CN"><Text>Science / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="zh_Hans_CN"><Text>Military Power →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="zh_Hans_CN"><Text>Gold / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="zh_Hans_CN"><Text>Culture / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="zh_Hans_CN"><Text>Influence / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="zh_Hans_CN"><Text>Happiness / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="zh_Hans_CN"><Text>No quarters built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="zh_Hans_CN"><Text>Quarter</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="zh_Hans_CN"><Text>Developing</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="zh_Hans_CN"><Text>{1_Name} — needs {2_Partner}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="zh_Hans_CN"><Text>Unique: {1_Note}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="zh_Hans_CN"><Text>Adjacency (est.): {1_Yields}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="zh_Hans_CN"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="zh_Hans_CN"><Text>玩家</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="zh_Hans_CN"><Text>科学</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="zh_Hans_CN"><Text>军事</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="zh_Hans_CN"><Text>经济</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="zh_Hans_CN"><Text>文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="zh_Hans_CN"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="zh_Hans_CN"><Text>领土</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="zh_Hans_CN"><Text>科学/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="zh_Hans_CN"><Text>军事实力 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="zh_Hans_CN"><Text>金币/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="zh_Hans_CN"><Text>文化/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="zh_Hans_CN"><Text>影响力/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="zh_Hans_CN"><Text>幸福度/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="zh_Hans_CN"><Text>尚未建成任何城区。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="zh_Hans_CN"><Text>城区</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="zh_Hans_CN"><Text>发展中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="zh_Hans_CN"><Text>{1_Name} — 需要 {2_Partner}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="zh_Hans_CN"><Text>特色：{1_Note}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="zh_Hans_CN"><Text>相邻加成（估算）：{1_Yields}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="zh_Hans_CN"><Text>城邦 {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEON_YIELDS" Language="zh_Hans_CN"><Text>产出</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_TITLE" Language="zh_Hans_CN"><Text>万神殿产出 — 各文明的预估加成</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE" Language="zh_Hans_CN"><Text>根据各文明所选万神殿预估的固定产出加成。百分比及条件性（按人口、按资源，…）效果不计入。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS" Language="zh_Hans_CN"><Text>暂无可预估的固定万神殿产出加成。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL" Language="zh_Hans_CN"><Text>+ 条件性效果未计入</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="zh_Hans_CN"><Text>War</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="zh_Hans_CN"><Text>Disaster</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="zh_Hans_CN"><Text>{1_Age} Begins</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="zh_Hans_CN"><Text>Unknown</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="zh_Hans_CN"><Text>战争</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="zh_Hans_CN"><Text>灾害</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="zh_Hans_CN"><Text>{1_Age}开始</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="zh_Hans_CN"><Text>未知</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="zh_Hans_CN"><Text>尚未创建任何万神殿。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="zh_Hans_CN"><Text>信条</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="zh_Hans_CN"><Text>万神殿 — 所选信条及其效果</Text></Replace>
@@ -2559,6 +2569,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="zh_Hans_CN">
             <Text>征服</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_CULTURAL" Language="zh_Hans_CN">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_ECONOMIC" Language="zh_Hans_CN">
+            <Text>经济</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_MILITARY" Language="zh_Hans_CN">
+            <Text>军事</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_SCIENTIFIC" Language="zh_Hans_CN">
+            <Text>科学</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="zh_Hans_CN">
             <Text>失败</Text>
@@ -2926,5 +2948,39 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="zh_Hans_CN">
             <Text>清除所有已记录的战争？</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_TITLE" Language="zh_Hans_CN">
+            <Text>人口统计 CSV 导出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_PAGE" Language="zh_Hans_CN">
+            <Text>页面：{1_Title}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_EXPORTED" Language="zh_Hans_CN">
+            <Text>导出时间：{1_Time}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTEXT" Language="zh_Hans_CN">
+            <Text>游戏速度：{1_Speed} · 地图：{2_Map} · 当前时代：{3_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COVERAGE" Language="zh_Hans_CN">
+            <Text>覆盖范围：回合 {1_First}→{2_Last} · 涵盖回合数：{3_Turns} · 文明数：{4_Civs} · 行数：{5_Rows} · 指标数：{6_Metrics}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTENTS" Language="zh_Hans_CN">
+            <Text>内容：行数：{1_Rows} · 列数：{2_Columns}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_FORMAT" Language="zh_Hans_CN">
+            <Text>格式：整数为精确值；小于 1000 的小数保留 2 位，1000 及以上四舍五入为整数</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_SORTING" Language="zh_Hans_CN">
+            <Text>排序：每个回合的每位玩家各占一行（turn, pid），按升序排列</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COLUMNS" Language="zh_Hans_CN">
+            <Text>列按类别分组：身份 → 分数 → 经济 → 产出 → 军事 → 知识 → 帝国 → 成就 → 资源 → 时代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_BCE" Language="zh_Hans_CN"><Text>公元前{1_Year}年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_CE" Language="zh_Hans_CN"><Text>公元{1_Year}年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY" Language="zh_Hans_CN"><Text>古{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION" Language="zh_Hans_CN"><Text>探{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="zh_Hans_CN"><Text>近{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="zh_Hans_CN"><Text>T-{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="zh_Hans_CN"><Text>T{1_Turn}</Text></Replace>
     </LocalizedText>
 </Database>

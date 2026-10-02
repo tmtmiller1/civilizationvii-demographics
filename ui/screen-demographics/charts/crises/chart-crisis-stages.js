@@ -30,7 +30,7 @@ import {
   toTableCols,
   mergeAgeCols
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localYear, t, turnPlain } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Build a turn -> game-year lookup from the samples (for the year/both span modes).
@@ -57,10 +57,10 @@ function buildYearMap(samples) {
  * @returns {string} The formatted span.
  */
 function formatStageSpan(start, end, yearMap, mode) {
-  const turns = "T" + start + " – T" + end;
+  const turns = turnPlain(start) + " – " + turnPlain(end);
   if (mode === "turn") return turns;
-  const ys = yearMap.get(start);
-  const ye = yearMap.get(end);
+  const ys = localYear(yearMap.get(start));
+  const ye = localYear(yearMap.get(end));
   const years = ys && ye ? ys + " – " + ye : null;
   if (!years) return turns;
   if (mode === "year") return years;

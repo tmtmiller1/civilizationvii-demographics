@@ -9,6 +9,7 @@
 // a UI reload; per-turn saves cover the rest.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { localizeStoredNames } from "/demographics/ui/storage/storage-display-names.js";
 import {
   ADAPTIVE_DEFAULTS_BY_SPEED,
   decimationDisabled,
@@ -449,7 +450,7 @@ class StorageImpl {
     this._lastPayloadBytes = raw.length;
     const result = this._loadParsed(raw, store);
     dropPrematureBoundarySamples(result);
-    return result;
+    return localizeStoredNames(result);
   }
 
   /**

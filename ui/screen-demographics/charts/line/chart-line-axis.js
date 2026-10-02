@@ -9,6 +9,7 @@ import {
   getXAxisMode,
   nearestByTurn
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
+import { localYear, turnLabel } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Local error logger so axis-formatter callbacks surface bugs in UI.log
@@ -194,13 +195,6 @@ function currentAgeXOffset(samps, ageOffsets, boundaries) {
   return 0;
 }
 
-/** @type {Record<string, string>} */
-const AGE_PREFIX = {
-  AGE_ANTIQUITY: "A",
-  AGE_EXPLORATION: "E",
-  AGE_MODERN: "M"
-};
-
 /**
  * X-axis tick / Y-axis tick formatter pair.
  * @typedef {Object} AxisFormatters
@@ -248,9 +242,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
    */
   const ageTurnLabel = (t) => {
     const info = ageTurnFromX(t) || nearestByTurn(turnAgeMap, t);
-    if (!info) return "T-" + t;
-    const pfx = AGE_PREFIX[info.age] || info.age.replace(/^AGE_/, "")[0] || "T";
-    return pfx + info.localTurn;
+    return info ? turnLabel(info.localTurn, info.age) : turnLabel(t);
   };
   /**
    * Format a chart-X tick per the active axis mode.
@@ -259,7 +251,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
    */
   const fmtX = (v) => {
     const t = Math.round(v);
-    const y = nearestByTurn(turnYearMap, t);
+    const y = localYear(nearestByTurn(turnYearMap, t));
     const ageLbl = ageTurnLabel(t);
     const mode = getXAxisMode();
     if (mode === "turn") return ageLbl;
