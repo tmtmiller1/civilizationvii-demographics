@@ -4,7 +4,7 @@
 // Chart.js HTML-overlay marker plugin used by chart-line.js (its only caller).
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
-import { t, stylizeLocaleTag } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, localYear, stylizeLocaleTag, t } from "/demographics/ui/core/demographics-i18n.js";
 import { escapeHtml } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /**
@@ -397,7 +397,7 @@ function ensureWonderTip(state, wrap) {
 function showWonderTip(params) {
   const { state, wrap, ev, civLabel, iconLeft, iconTop, iconSize } = params;
   const tip = ensureWonderTip(state, wrap);
-  const yearStr = ev.year ? " · " + ev.year : "";
+  const yearStr = ev.year ? " · " + localYear(ev.year) : "";
   // Game-authored text: `wonderDescriptionHtml` is already the engine's own markup (icons, tips),
   // so it goes in unescaped; the escaped plain string is the fallback when stylize gave nothing.
   const descBody = ev.wonderDescriptionHtml || (ev.wonderDescription ? escapeHtml(ev.wonderDescription) : "");
@@ -426,7 +426,7 @@ function showWonderTip(params) {
         "</div>";
   tip.innerHTML =
     "" +
-    '<div style="font-family:TitilliumWeb, sans-serif;' +
+    '<div style="font-family:' + localeFontFamily("body") + ';' +
     "font-weight:700;color:rgb(236,224,198);font-size:0.92rem;" +
     "letter-spacing:0.02rem;margin-bottom:0.3rem;" +
     "border-bottom:1px solid rgba(204,188,163,0.2);" +

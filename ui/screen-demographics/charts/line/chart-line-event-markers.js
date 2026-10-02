@@ -4,14 +4,15 @@
 // used by chart-line.js. Both marker families render as vertical lines + label
 // pills over the plot area and share the same clipping and age offset table.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, localYear, t } from "/demographics/ui/core/demographics-i18n.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
   CRISIS_STAGE_COLORS,
   CRISIS_STAGE_LABELS
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
-import { policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 /**
  * Resolve the chart font family with a safe fallback chain.
@@ -22,7 +23,7 @@ function resolveChartFontFamily(chart) {
   return (
     chart?.options?.font?.family ||
     (typeof Chart !== "undefined" && Chart.defaults?.font?.family) ||
-    "BodyFont, sans-serif"
+    localeFontFamily("body")
   );
 }
 
@@ -236,7 +237,7 @@ export function collectAgeMarkers(history, ageOffsets) {
  *   pillH: number }} The pill metrics.
  */
 function measureCrisisPill(ctx2, mk, family) {
-  const stageText = mk.label + (mk.year ? " · " + mk.year : "");
+  const stageText = mk.label + (mk.year ? " · " + localYear(mk.year) : "");
   const nameText = mk.crisisName || "";
   ctx2.font = "17px " + family;
   const stageW = ctx2.measureText(stageText).width;
@@ -538,19 +539,57 @@ function resolveEventX(chartVal, year, localVal, yearToChart) {
 }
 
 /**
+ * The global start chart turn of a war. A merged war carries none of its own, so it is read from
+ * its first front: the front with the merged war's start turn and year whose civs it contains.
+ * @param {*} war A war from mergeWars().
+ * @param {*[]} fronts The wars mergeWars() was given.
+ * @returns {number|undefined} The start chart turn, when recorded.
+ */
+function warStartChartTurn(war, fronts) {
+  if (!war._merged) return war.startChartTurn;
+  const members = new Set(war.participants || []);
+  const roster = (/** @type {*} */ r) => (Array.isArray(r) ? r : []);
+  const first = fronts.find((f) => f.startTurn === war.startTurn && f.startYear === war.startYear &&
+    [...roster(f.sideACivs), ...roster(f.sideBCivs)].every((c) => members.has(c?.pid)));
+  return first ? first.startChartTurn : undefined;
+}
+
+/**
+ * The spoiler-guarded wars merged and named exactly as on the Wars page.
+ * @param {DemoHistory|*} history The history blob.
+ * @param {*[]} samples The sample stream.
+ * @returns {{ fronts: *[], wars: *[], names: Map<number, string> }} The unmerged fronts, the
+ *   merged wars, and warUniqueID → localized name (empty when merging failed).
+ */
+function namedWars(history, samples) {
+  const latest = samples.length ? samples[samples.length - 1]?.turn || 0 : 0;
+  // A persisted war can name an unmet civ; the spoiler guard drops those wars before naming.
+  const fronts = policyVisibleWars(history && history.wars, samples);
+  try {
+    const wars = mergeWars(fronts, latest);
+    return { fronts, wars, names: nameMergedWars(wars, samples) };
+  } catch (_) {
+    // A malformed persisted roster makes mergeWars throw; keep the unmerged onsets, unnamed.
+    return { fronts, wars: fronts, names: new Map() };
+  }
+}
+
+/**
  * Append a marker for each war's onset (its name + start year), positioned by its recorded start
- * chart turn, else its start-year label.
+ * chart turn, else its start-year label. The marker carries the Wars page's localized name; the
+ * persisted `name` is English and is never shown.
  * @param {DemoHistory|*} history The history blob.
  * @param {Map<string, number>} yearToChart game-year → chartTurn.
  * @param {{turn:number, label:string, year:string, color:string}[]} out Markers (appended).
  */
 function collectWarOnsetMarkers(history, yearToChart, out) {
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
-  // A persisted war name can name an unmet civ; the spoiler guard drops or renames those wars.
-  for (const w of policyVisibleWars(history && history.wars, samples)) {
-    const x = resolveEventX(w.startChartTurn, w.startYear, w.startTurn, yearToChart);
+  const { fronts, wars, names } = namedWars(history, samples);
+  for (const w of wars) {
+    const x = resolveEventX(warStartChartTurn(w, fronts), w.startYear, w.startTurn, yearToChart);
     if (x === null) continue;
-    out.push({ turn: x, label: w.name || t("LOC_DEMOGRAPHICS_MARKER_WAR"), year: w.startYear || "", color: REFUGEE_WAR_COLOR });
+    const label = names.get(w.warUniqueID) || t("LOC_DEMOGRAPHICS_MARKER_WAR");
+    out.push({ turn: x, label, year: w.startYear || "", color: REFUGEE_WAR_COLOR });
   }
 }
 
@@ -616,7 +655,7 @@ function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
   for (const mk of markers) {
     if (mk.turn < xScale.min || mk.turn > xScale.max) continue;
     const x = xScale.getPixelForValue(mk.turn);
-    const text = mk.label + (mk.year ? " · " + mk.year : "");
+    const text = mk.label + (mk.year ? " · " + localYear(mk.year) : "");
     ctx2.font = "15px " + family;
     const pillW = ctx2.measureText(text).width + 14;
     const dx = x + 4 + pillW > right ? -(pillW + 4) : 4;

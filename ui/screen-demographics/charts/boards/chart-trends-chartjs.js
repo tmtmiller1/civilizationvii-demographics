@@ -4,7 +4,7 @@
 // civ's rank by Score on a reversed y-axis) and the 100%-stacked share areas. Both reuse
 // buildSeriesFromHistory, then transform the sampled values into ranks / shares.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { coerceKeySet } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import {
@@ -27,7 +27,7 @@ const AXIS_BORDER = "#85878C";
 
 /** @returns {string} The engine chart font family, with a safe fallback chain. */
 function fontFamily() {
-  return (typeof Chart !== "undefined" && Chart.defaults?.font?.family) || "BodyFont, sans-serif";
+  return (typeof Chart !== "undefined" && Chart.defaults?.font?.family) || localeFontFamily("body");
 }
 
 /** @param {number} size @returns {Record<string, *>} A Chart.js font block. */

@@ -7,7 +7,7 @@
 // frame's transform scale). None of these own any shared state - each call
 // returns a fresh plugin object.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 import { appliedVisualScale } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /**
@@ -20,7 +20,7 @@ function resolveChartFontFamily(chart) {
   return (
     chart?.options?.font?.family ||
     (typeof Chart !== "undefined" && Chart.defaults?.font?.family) ||
-    "BodyFont, sans-serif"
+    localeFontFamily("body")
   );
 }
 

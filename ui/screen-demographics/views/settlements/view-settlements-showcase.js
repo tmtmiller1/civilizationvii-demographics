@@ -2,7 +2,7 @@
 //
 // Showcase (Top-25) rendering for the Settlements view.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localYear, t } from "/demographics/ui/core/demographics-i18n.js";
 import { div, fmt, fmtPop, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
 import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
@@ -48,7 +48,7 @@ import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlem
  */
 function wonderTooltip(w) {
   const name = t(w.nameKey || "");
-  return w.year ? name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", w.year) : name;
+  return w.year ? name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", localYear(w.year)) : name;
 }
 
 /**
@@ -80,7 +80,7 @@ function foundedText(s) {
     f.exact
       ? "LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED"
       : "LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX",
-    f.year
+    localYear(f.year)
   );
 }
 
@@ -386,7 +386,7 @@ function refreshShowcase(st, deps, ui) {
   if (pick && ui.split && ui.split.parentNode) {
     ui.note = div(
       "demographics-settle-age-note",
-      t("LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE", pick.year || pick.label)
+      t("LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE", pick.year ? localYear(pick.year) : pick.label)
     );
     ui.split.parentNode.insertBefore(ui.note, ui.split);
   }

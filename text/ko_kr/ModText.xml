@@ -12,11 +12,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="ko_KR"><Text>현재 게임의 기록 개요입니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="ko_KR"><Text>점수</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="ko_KR"><Text>국고</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ko_KR"><Text>Gold (GPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="ko_KR"><Text>금 (GPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="ko_KR"><Text>턴당 금 수입(순).</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ko_KR"><Text>Settlements Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ko_KR"><Text>Techs Count</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ko_KR"><Text>Civics Count</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="ko_KR"><Text>시간별 정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="ko_KR"><Text>기술 수</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="ko_KR"><Text>사회 제도 수</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="ko_KR"><Text>승리 화면에서 사용하는 것과 동일한 종합 국력 점수.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="ko_KR"><Text>현재 국고 잔액.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="ko_KR"><Text>보유한 도시와 마을의 총 개수.</Text></Replace>
@@ -24,20 +24,20 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="ko_KR"><Text>현재 시대 트리에서 완전히 잠금 해제된 사회 제도 노드의 수.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="ko_KR"><Text>GDP</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="ko_KR"><Text>턴당 산출량과 경과 턴 수를 바탕으로 한 경제 규모 비교 지표입니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ko_KR"><Text>Production (PPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="ko_KR"><Text>생산력 (PPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="ko_KR"><Text>턴당 생산력, 도시가 건설하는 것.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>Science (SPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="ko_KR"><Text>과학 (SPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 과학, 기술 연구를 촉진합니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ko_KR"><Text>Culture (CPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="ko_KR"><Text>문화 (CPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="ko_KR"><Text>턴당 문화, 사회 제도 진행을 촉진합니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ko_KR"><Text>Food (FPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="ko_KR"><Text>식량 (FPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="ko_KR"><Text>모든 정착지에 걸친 턴당 순 식량 산출량.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="ko_KR"><Text>외교 지지도</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="ko_KR"><Text>만난 문명들과의 외교 관계를 요약한 지표이며, 도시 국가의 영향은 더 작게 반영됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="ko_KR"><Text>인구</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="ko_KR"><Text>총 시민 수에서 지수적으로 도출된, 환산된 실제 세계 인구.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ko_KR"><Text>Influence (IPT)</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ko_KR"><Text>Happiness (HPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="ko_KR"><Text>영향력 (IPT)</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="ko_KR"><Text>행복도 (HPT)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="ko_KR"><Text>턴당 순 행복도 산출량.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="ko_KR"><Text>턴당 생성되는 순 외교 영향력.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="ko_KR"><Text>진행 중인 거래</Text></Replace>
@@ -51,13 +51,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="ko_KR"><Text>글로벌 관계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="ko_KR"><Text>옵션</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="ko_KR"><Text>경제</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ko_KR"><Text>Soft Power</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="ko_KR"><Text>소프트 파워</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="ko_KR"><Text>지식 &amp; 영향력</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="ko_KR"><Text>위업</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="ko_KR"><Text>자원</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="ko_KR"><Text>분쟁</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="ko_KR"><Text>전쟁</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ko_KR"><Text>Triumphs Radar</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="ko_KR"><Text>전쟁 타임라인</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="ko_KR"><Text>위업 레이더</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="ko_KR"><Text>경쟁</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="ko_KR"><Text>완료</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="ko_KR"><Text>시간에 따른 위업</Text></Replace>
@@ -67,8 +67,8 @@
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="ko_KR"><Text>현재 시대가 종료에 얼마나 가까운지. 모든 문명에 동일하게 적용됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="ko_KR"><Text>위기 단계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="ko_KR"><Text>현재 위기 단계(0 = 없음, 3 = 최고조 위기). 게임 전체에 적용되는 값.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ko_KR"><Text>Resources Stacked by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ko_KR"><Text>Total Resources</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="ko_KR"><Text>유형별 누적 자원</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="ko_KR"><Text>전체 자원</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="ko_KR"><Text>보너스</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="ko_KR"><Text>제국</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="ko_KR"><Text>도시</Text></Replace>
@@ -99,7 +99,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="ko_KR"><Text>만나지 않은 도시 국가</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="ko_KR"><Text>아직 이 도시 국가를 만나지 않았습니다. 실제 이름을 표시하려면 옵션에서 "만나지 않은 문명 및 도시 국가의 이름 표시"를 활성화하세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="ko_KR"><Text>만나지 않은 문명 및 도시 국가의 이름 표시</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ko_KR"><Text>꺼져 있을 때(기본값) 아직 만나지 않은 문명과 도시 국가는 차트, 정보 자료집, 글로벌 관계 링에서 일반적인 "만나지 않음" 자리 표시자로 표시됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="ko_KR"><Text>꺼져 있으면 아직 만나지 않은 문명과 도시 국가가 차트, 순위, 글로벌 관계에서 일반 자리 표시자로 표시됩니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="ko_KR"><Text>플레이어 {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="ko_KR"><Text>문명 진행도</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="ko_KR"><Text>아직 진행한 문명이 없습니다.</Text></Replace>
@@ -136,6 +136,16 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="ko_KR"><Text>불가사의</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="ko_KR"><Text>자원</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="ko_KR"><Text>단계</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WORKS" Language="ko_KR"><Text>걸작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOWNS" Language="ko_KR"><Text>마을</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CAP" Language="ko_KR"><Text>한도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SETTLEMENTS" Language="ko_KR"><Text>정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOURISM" Language="ko_KR"><Text>관광</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_KILLS" Language="ko_KR"><Text>처치</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_LOSSES" Language="ko_KR"><Text>손실</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FAITH" Language="ko_KR"><Text>신앙</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_BATTLES" Language="ko_KR"><Text>전투</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WARS" Language="ko_KR"><Text>전쟁</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="ko_KR"><Text>스포일러</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="ko_KR"><Text>표시</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="ko_KR"><Text>아직 만나지 않은 문명의 이름, 그래프, 외교 및 관계 통계를 숨겨 만나기 전에 화면이 문명을 미리 보여주지 않도록 합니다. 기본값은 켜짐.</Text></Replace>
@@ -319,7 +329,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="ko_KR"><Text>10턴마다</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="ko_KR"><Text>25턴마다 (그래프가 거칠어짐)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="ko_KR"><Text>샘플 빈도(성능):</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 스냅샷을 덜 자주 찍어 매 턴 작업량이 줄어듭니다(느린 기기와 긴 게임에 유리). 다음 턴부터 적용되며 기존 샘플은 유지됩니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="ko_KR"><Text>값이 높을수록 스냅샷을 덜 자주 찍어 매 턴 작업량이 줄어듭니다(느린 기기와 긴 게임에 유리). 다음 턴부터 적용되며 기존 샘플은 유지됩니다. Emigration 모드도 설치되어 있다면, 두 모드를 함께 쓸 때의 부담을 줄이기 위해 먼저 이 값을 낮추고, 그다음 Emigration의 턴 간격을 높이세요.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="ko_KR"><Text>샘플 축소를 끄고 상한 이후에도 모든 기록을 유지합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="ko_KR"><Text>기록된 모든 인구 통계 샘플을 지우시겠습니까?</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="ko_KR"><Text>기록된 모든 전쟁을 지우시겠습니까? 샘플 기록과 기타 데이터는 유지됩니다.</Text></Replace>
@@ -347,13 +357,13 @@
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="ko_KR"><Text>주요 문명</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="ko_KR"><Text>도시 국가</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="ko_KR">
-            <Text>Share Innovations</Text>
+            <Text>혁신 공유</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="ko_KR">
-            <Text>Pioneering</Text>
+            <Text>개척</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="ko_KR">
-            <Text>Give Influence Token</Text>
+            <Text>독립 세력과 우호 관계 맺기</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="ko_KR">
             <Text>T-{1_Turn} 이탈</Text>
@@ -1505,10 +1515,10 @@
             <Text>모든 문명</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="ko_KR">
-            <Text>호스트 분석 정책: {1}. 비교 데이터가 모든 플레이어에게 제한됩니다.</Text>
+            <Text>호스트 분석 정책: {1_Policy}. 비교 데이터가 모든 플레이어에게 제한됩니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="ko_KR">
-            <Text>분석 정책: {1}.</Text>
+            <Text>분석 정책: {1_Policy}.</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="ko_KR">
             <Text>인터페이스</Text>
@@ -1555,9 +1565,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="ko_KR"><Text>사회</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="ko_KR"><Text>확장</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="ko_KR"><Text>인구</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ko_KR"><Text>Military Power</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="ko_KR"><Text>군사력</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="ko_KR"><Text>전쟁</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ko_KR"><Text>Global Relations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="ko_KR"><Text>글로벌 관계</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="ko_KR"><Text>협정</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="ko_KR"><Text>국내총생산 (GDP)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="ko_KR"><Text>턴당 금 (GPT)</Text></Replace>
@@ -1615,130 +1625,130 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="ko_KR"><Text>알 수 없음</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="ko_KR"><Text>{1_Ordinal} {2_Adjective} 전쟁</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="ko_KR"><Text>전쟁 #{1_Id}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ko_KR"><Text>Scaled</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ko_KR"><Text>Civ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="ko_KR"><Text>/turn</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="ko_KR"><Text>Great Works</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="ko_KR"><Text>Great works currently slotted across your buildings and wonders.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="ko_KR"><Text>Cities</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="ko_KR"><Text>Promoted settlements (cities), as opposed to towns.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="ko_KR"><Text>Towns</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="ko_KR"><Text>Un-promoted settlements (towns).</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="ko_KR"><Text>Cap Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="ko_KR"><Text>The maximum number of settlements you can hold before over-cap penalties.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="ko_KR"><Text>Settlements Conquered</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="ko_KR"><Text>Cumulative settlements this civ has taken by force.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="ko_KR"><Text>Conquest %</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="ko_KR"><Text>Share of a civ's settlements that were taken by force.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="ko_KR"><Text>Tourism</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="ko_KR"><Text>Tourism total (Culture Victory Points); accrues from wonders, unique improvements, suzerained city-states and celebrations.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="ko_KR"><Text>Great People</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="ko_KR"><Text>Cumulative Great People this civ has earned.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="ko_KR"><Text>Units Killed</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="ko_KR"><Text>Cumulative enemy units this civ has killed in combat.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="ko_KR"><Text>Units Lost</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="ko_KR"><Text>Cumulative units this civ has lost in combat.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="ko_KR"><Text>Civ → Leader</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="ko_KR"><Text>Leader → Civ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="ko_KR"><Text>Wonders Board</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="ko_KR"><Text>Wonders Built — by Civilization</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="ko_KR"><Text>Units Trained</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="ko_KR"><Text>Units Trained — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="ko_KR"><Text>Kills by Unit</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="ko_KR"><Text>Enemy Units Killed — by Your Unit Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="ko_KR"><Text>Losses by Unit</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="ko_KR"><Text>Units Lost — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="ko_KR"><Text>Buildings</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="ko_KR"><Text>Buildings Constructed — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="ko_KR"><Text>Quarters</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="ko_KR"><Text>Districts Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="ko_KR"><Text>환산</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="ko_KR"><Text>게임 수치</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="ko_KR"><Text>/턴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="ko_KR"><Text>걸작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="ko_KR"><Text>현재 건물과 불가사의의 슬롯에 배치된 걸작.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="ko_KR"><Text>도시</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="ko_KR"><Text>마을과 달리 도시로 승격된 정착지.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="ko_KR"><Text>마을</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="ko_KR"><Text>도시로 승격되지 않은 정착지(마을).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="ko_KR"><Text>시간별 정착지 한도</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="ko_KR"><Text>한도 초과 페널티 없이 보유할 수 있는 최대 정착지 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="ko_KR"><Text>정복한 정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="ko_KR"><Text>이 문명이 무력으로 빼앗은 정착지의 누적 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="ko_KR"><Text>정복 비율 %</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="ko_KR"><Text>문명의 정착지 중 무력으로 빼앗은 정착지의 비율.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="ko_KR"><Text>관광</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="ko_KR"><Text>관광 총계(문화 승리 점수). 불가사의, 특유 시설, 종주국인 도시 국가, 기념 행사에서 쌓입니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="ko_KR"><Text>위인</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="ko_KR"><Text>이 문명이 영입한 위인의 누적 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="ko_KR"><Text>처치한 유닛</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="ko_KR"><Text>이 문명이 전투에서 처치한 적 유닛의 누적 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="ko_KR"><Text>잃은 유닛</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="ko_KR"><Text>이 문명이 전투에서 잃은 유닛의 누적 수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="ko_KR"><Text>문명 → 지도자</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="ko_KR"><Text>지도자 → 문명</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="ko_KR"><Text>불가사의 현황</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="ko_KR"><Text>건설한 불가사의 — 문명별</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="ko_KR"><Text>훈련한 유닛</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="ko_KR"><Text>훈련한 유닛 — 유형별</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="ko_KR"><Text>유닛별 처치</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="ko_KR"><Text>처치한 적 유닛 — 아군 유닛 유형별</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="ko_KR"><Text>유닛별 손실</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="ko_KR"><Text>잃은 유닛 — 유형별</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="ko_KR"><Text>건물</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="ko_KR"><Text>건설한 건물 — 유형별</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="ko_KR"><Text>구역</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="ko_KR"><Text>건설한 특수지구 — 유형별</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_STANDINGS" Language="ko_KR"><Text>종교</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE" Language="ko_KR"><Text>종교 순위 — 신봉하는 정착지</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="ko_KR"><Text>Construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="ko_KR"><Text>건설</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION" Language="ko_KR"><Text>종교</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="ko_KR"><Text>Settlement Sizes</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="ko_KR"><Text>Settlement Size Distribution</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="ko_KR"><Text>정착지 규모</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="ko_KR"><Text>정착지 규모 분포</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD" Language="ko_KR"><Text>종교 전파</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE" Language="ko_KR"><Text>종교 전파 — 시간에 따른 신봉 정착지</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_BY_POP" Language="ko_KR"><Text>인구별 종교</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_BY_POP_TITLE" Language="ko_KR"><Text>인구별 종교 — 시간에 따른 신자 수</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="ko_KR"><Text>Wonder Races</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="ko_KR"><Text>Wonder Races — First to Build Each Wonder</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="ko_KR"><Text>Power Race</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="ko_KR"><Text>Power Race — Rank by Score Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="ko_KR"><Text>Population Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="ko_KR"><Text>Population Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="ko_KR"><Text>Land Area Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="ko_KR"><Text>Land Area Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="ko_KR"><Text>Power &amp; Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="ko_KR"><Text>Power &amp; Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="ko_KR"><Text>Archetype</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="ko_KR"><Text>Power Archetype — Every Civilization Compared</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="ko_KR"><Text>Faith</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="ko_KR"><Text>Total Faith accumulated by this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="ko_KR"><Text>Battles</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="ko_KR"><Text>Number of battles this civilization has fought.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="ko_KR"><Text>Wars Declared</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="ko_KR"><Text>Wars this civilization has declared on others.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="ko_KR"><Text>Wars Received</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="ko_KR"><Text>Wars others have declared on this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="ko_KR"><Text>Natural Wonders Discovered</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="ko_KR"><Text>Natural wonders this civilization has discovered.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="ko_KR"><Text>Rank</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="ko_KR"><Text>Share of World</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="ko_KR"><Text>Population Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="ko_KR"><Text>Yields Per Turn</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="ko_KR"><Text>Land &amp; Settlements</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="ko_KR"><Text>Economy &amp; Resources</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="ko_KR"><Text>Wealth &amp; Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="ko_KR"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="ko_KR"><Text>Happiness &amp; Influence</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="ko_KR"><Text>Happiness &amp; Influence</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="ko_KR"><Text>No wonders built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="ko_KR"><Text>No wonders built or under construction yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="ko_KR"><Text>No data recorded for this breakdown yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="ko_KR"><Text>불가사의 경쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="ko_KR"><Text>불가사의 경쟁 — 불가사의별 최초 건설</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="ko_KR"><Text>국력 경쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="ko_KR"><Text>국력 경쟁 — 시간에 따른 점수 순위</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="ko_KR"><Text>인구 점유율</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="ko_KR"><Text>시간에 따른 세계 인구 점유율</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="ko_KR"><Text>영토 면적 점유율</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="ko_KR"><Text>시간에 따른 세계 영토 면적 점유율</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="ko_KR"><Text>국력과 과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="ko_KR"><Text>국력과 과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="ko_KR"><Text>국력 유형</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="ko_KR"><Text>국력 유형 — 모든 문명 비교</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="ko_KR"><Text>신앙</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="ko_KR"><Text>이 문명이 쌓은 총 신앙.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="ko_KR"><Text>전투</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="ko_KR"><Text>이 문명이 치른 전투 횟수.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="ko_KR"><Text>선포한 전쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="ko_KR"><Text>이 문명이 다른 문명에 선포한 전쟁.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="ko_KR"><Text>선포받은 전쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="ko_KR"><Text>다른 문명이 이 문명에 선포한 전쟁.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="ko_KR"><Text>발견한 자연경관</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="ko_KR"><Text>이 문명이 발견한 자연경관.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="ko_KR"><Text>순위</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="ko_KR"><Text>세계 점유율</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="ko_KR"><Text>인구 점유율</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="ko_KR"><Text>턴당 산출량</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="ko_KR"><Text>영토와 정착지</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="ko_KR"><Text>경제와 자원</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="ko_KR"><Text>부와 문화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="ko_KR"><Text>부와 문화 — 금 대 문화 산출량</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="ko_KR"><Text>행복도와 영향력</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="ko_KR"><Text>행복도와 영향력</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="ko_KR"><Text>아직 건설한 불가사의가 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="ko_KR"><Text>아직 건설했거나 건설 중인 불가사의가 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="ko_KR"><Text>이 세부 항목에 아직 기록된 데이터가 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_RELIGION" Language="ko_KR"><Text>아직 전파된 종교가 없습니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="ko_KR"><Text>No settlements to chart.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="ko_KR"><Text>No settlements yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="ko_KR"><Text>No buildings built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="ko_KR"><Text>No comparable data recorded yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="ko_KR"><Text>Under Construction</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="ko_KR"><Text>Completed</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="ko_KR"><Text>Settlement Sizes</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="ko_KR"><Text>Most Urbanized</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="ko_KR"><Text>차트에 표시할 정착지가 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="ko_KR"><Text>아직 정착지가 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="ko_KR"><Text>아직 건설한 건물이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="ko_KR"><Text>아직 비교할 데이터가 기록되지 않았습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="ko_KR"><Text>건설 중</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="ko_KR"><Text>완성</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="ko_KR"><Text>정착지 규모</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="ko_KR"><Text>도시화율 상위</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT" Language="ko_KR"><Text>{1_Turns}t</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="ko_KR"><Text>{1_Count} pop</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="ko_KR"><Text>{1_Pct}% urban</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="ko_KR"><Text>인구 {1_Count}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="ko_KR"><Text>도시화 {1_Pct}%</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK" Language="ko_KR"><Text>종교 {1_Id}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="ko_KR"><Text>Player</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="ko_KR"><Text>Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="ko_KR"><Text>Military</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="ko_KR"><Text>Economy</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="ko_KR"><Text>Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="ko_KR"><Text>People</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="ko_KR"><Text>Land</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="ko_KR"><Text>Science / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="ko_KR"><Text>Military Power →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="ko_KR"><Text>Gold / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="ko_KR"><Text>Culture / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="ko_KR"><Text>Influence / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="ko_KR"><Text>Happiness / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="ko_KR"><Text>No quarters built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="ko_KR"><Text>Quarter</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="ko_KR"><Text>Developing</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="ko_KR"><Text>{1_Name} — needs {2_Partner}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="ko_KR"><Text>Unique: {1_Note}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="ko_KR"><Text>Adjacency (est.): {1_Yields}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="ko_KR"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="ko_KR"><Text>플레이어</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="ko_KR"><Text>과학</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="ko_KR"><Text>군사</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="ko_KR"><Text>경제</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="ko_KR"><Text>문화</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="ko_KR"><Text>인구</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="ko_KR"><Text>영토</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="ko_KR"><Text>턴당 과학 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="ko_KR"><Text>군사력 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="ko_KR"><Text>턴당 금 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="ko_KR"><Text>턴당 문화 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="ko_KR"><Text>턴당 영향력 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="ko_KR"><Text>턴당 행복도 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="ko_KR"><Text>아직 건설한 구역이 없습니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="ko_KR"><Text>구역</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="ko_KR"><Text>조성 중</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="ko_KR"><Text>{1_Name} — {2_Partner} 필요</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="ko_KR"><Text>특유: {1_Note}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="ko_KR"><Text>인접 보너스(추정): {1_Yields}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="ko_KR"><Text>도시 국가 {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEON_YIELDS" Language="ko_KR"><Text>산출량</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_TITLE" Language="ko_KR"><Text>판테온 산출량 — 문명별 예상 보너스</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE" Language="ko_KR"><Text>각 문명이 선택한 판테온의 예상 고정 산출 보너스입니다. 백분율 및 조건부(인구당, 자원당, …) 효과는 집계되지 않습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS" Language="ko_KR"><Text>아직 추정할 고정 판테온 산출 보너스가 없습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL" Language="ko_KR"><Text>+ 조건부 효과는 집계되지 않음</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="ko_KR"><Text>War</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="ko_KR"><Text>Disaster</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="ko_KR"><Text>{1_Age} Begins</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="ko_KR"><Text>Unknown</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="ko_KR"><Text>전쟁</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="ko_KR"><Text>재해</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="ko_KR"><Text>{1_Age} 시작</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="ko_KR"><Text>알 수 없음</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="ko_KR"><Text>아직 판테온이 창시되지 않았습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="ko_KR"><Text>교리</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="ko_KR"><Text>판테온 — 선택한 교리와 그 효과</Text></Replace>
@@ -2002,6 +2012,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="ko_KR">
             <Text>정복</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_CULTURAL" Language="ko_KR">
+            <Text>문화</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_ECONOMIC" Language="ko_KR">
+            <Text>경제</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_MILITARY" Language="ko_KR">
+            <Text>군사</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_SCIENTIFIC" Language="ko_KR">
+            <Text>과학</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="ko_KR">
             <Text>패배</Text>
@@ -2369,5 +2391,39 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="ko_KR">
             <Text>기록된 모든 전쟁을 지울까요?</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_TITLE" Language="ko_KR">
+            <Text>인구 통계 CSV 내보내기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_PAGE" Language="ko_KR">
+            <Text>페이지: {1_Title}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_EXPORTED" Language="ko_KR">
+            <Text>내보낸 시각: {1_Time}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTEXT" Language="ko_KR">
+            <Text>게임 속도: {1_Speed} · 지도: {2_Map} · 현재 시대: {3_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COVERAGE" Language="ko_KR">
+            <Text>범위: {1_First}→{2_Last}턴 · 포함된 턴: {3_Turns} · 문명: {4_Civs} · 행: {5_Rows} · 지표: {6_Metrics}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTENTS" Language="ko_KR">
+            <Text>내용: 행: {1_Rows} · 열: {2_Columns}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_FORMAT" Language="ko_KR">
+            <Text>형식: 정수는 정확한 값, 소수는 1000 미만이면 소수점 둘째 자리까지, 1000 이상이면 정수로 반올림</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_SORTING" Language="ko_KR">
+            <Text>정렬: 턴과 플레이어(turn, pid)마다 한 행씩, 오름차순</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COLUMNS" Language="ko_KR">
+            <Text>열은 범주별로 묶여 있습니다: 기본 정보 → 점수 → 경제 → 산출량 → 군사 → 지식 → 제국 → 위업 → 자원 → 시대</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_BCE" Language="ko_KR"><Text>기원전 {1_Year}년</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_CE" Language="ko_KR"><Text>서기 {1_Year}년</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY" Language="ko_KR"><Text>고{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION" Language="ko_KR"><Text>대{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="ko_KR"><Text>근{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="ko_KR"><Text>{1_Turn}턴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="ko_KR"><Text>{1_Turn}턴</Text></Replace>
     </LocalizedText>
 </Database>

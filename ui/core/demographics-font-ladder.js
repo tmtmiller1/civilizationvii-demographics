@@ -29,6 +29,8 @@
 // At that height the scale is exactly 1 and every dimension is byte-identical to the old fixed-rem
 // values, so the reference experience is unchanged by design.
 
+import { applyLocaleFontClass } from "/demographics/ui/core/demographics-i18n.js";
+
 /** The viewport height (px) the UI is designed against; scale is exactly 1 here. */
 export const REFERENCE_VIEWPORT_H = 1800;
 
@@ -177,6 +179,8 @@ export function typeBoost() {
  * @returns {void}
  */
 export function publishFontLadder(node, named) {
+  // Font family follows the locale too: the stylesheets switch to the CJK list on this class.
+  applyLocaleFontClass();
   if (!node || !node.style || typeof node.style.setProperty !== "function") return;
   // The layout inside the frame is the REFERENCE layout: the visual transform (applyVisualScale)
   // carries all resolution adaptation, so the box unit and the type scale stay at exactly 1 here

@@ -509,7 +509,8 @@ function smallWarLabel({ n, adjA, adjB, pairCounts, w }) {
     const adj = adjA[0] || adjB[0] || unknown;
     return recurringOrdinalLabel(pairCounts, adj, "LOC_DEMOGRAPHICS_WARNAME_SINGLE", adj);
   }
-  return w.name; // no majors at all — persisted fallback (essentially never shown)
+  // No majors at all (essentially never shown). The persisted `name` is English, so not that.
+  return t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", w.warUniqueID);
 }
 
 /**

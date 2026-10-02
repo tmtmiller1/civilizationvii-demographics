@@ -559,6 +559,36 @@
         <Row Tag="LOC_DEMOGRAPHICS_UNIT_STAGE">
             <Text>stage</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_WORKS">
+            <Text>works</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_TOWNS">
+            <Text>towns</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_CAP">
+            <Text>cap</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_SETTLEMENTS">
+            <Text>settlements</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_TOURISM">
+            <Text>tourism</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_KILLS">
+            <Text>kills</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_LOSSES">
+            <Text>losses</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_FAITH">
+            <Text>faith</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_BATTLES">
+            <Text>battles</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_UNIT_WARS">
+            <Text>wars</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING">
             <Text>Spoilers</Text>
         </Row>
@@ -2147,10 +2177,10 @@
             <Text>All civilizations</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST">
-            <Text>Host analytics policy: {1}. Comparative data is limited for all players.</Text>
+            <Text>Host analytics policy: {1_Policy}. Comparative data is limited for all players.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL">
-            <Text>Analytics policy: {1}.</Text>
+            <Text>Analytics policy: {1_Policy}.</Text>
         </Row>
             <Row Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING">
             <Text>Interface</Text>
@@ -2777,6 +2807,18 @@
         <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION">
             <Text>Domination</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_CULTURAL">
+            <Text>Cultural</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_ECONOMIC">
+            <Text>Economic</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_MILITARY">
+            <Text>Military</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_SCIENTIFIC">
+            <Text>Scientific</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT">
             <Text>Defeat</Text>
         </Row>
@@ -3142,6 +3184,54 @@
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED">
             <Text>Clear all recorded wars?</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_TITLE">
+            <Text>Demographics CSV export</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_PAGE">
+            <Text>Page: {1_Title}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_EXPORTED">
+            <Text>Exported: {1_Time}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_CONTEXT">
+            <Text>Game speed: {1_Speed} · Map: {2_Map} · Current age: {3_Age}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_COVERAGE">
+            <Text>Coverage: turns {1_First}→{2_Last} · turns covered: {3_Turns} · civilizations: {4_Civs} · rows: {5_Rows} · metrics: {6_Metrics}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_CONTENTS">
+            <Text>Contents: rows: {1_Rows} · columns: {2_Columns}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_FORMAT">
+            <Text>Format: whole numbers exact; decimals under 1000 to 2 places, 1000 and over rounded to a whole number</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_SORTING">
+            <Text>Sorting: one row per turn and player (turn, pid), in ascending order</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_CSV_META_COLUMNS">
+            <Text>Columns grouped by category: identity → score → economy → yields → military → knowledge → empire → triumphs → resources → age</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_YEAR_BCE">
+            <Text>{1_Year} BCE</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_YEAR_CE">
+            <Text>{1_Year} CE</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY">
+            <Text>A{1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION">
+            <Text>E{1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN">
+            <Text>M{1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TURN_DASH">
+            <Text>T-{1_Turn}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_TURN_SHORT">
+            <Text>T{1_Turn}</Text>
         </Row>
     </EnglishText>
 </Database>

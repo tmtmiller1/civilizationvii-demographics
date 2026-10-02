@@ -7,7 +7,7 @@
 // Font-family resolution is deferred to call time and guarded.
 
 import { makeTooltipExternal } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 
 // Axis labels/titles use the same color as the chart's HTML title
 // (--dg-ia-text-secondary) so they match it (Chart.js canvas needs a literal).
@@ -20,7 +20,7 @@ const AXIS_COLOR = "#e5d2ac";
 function resolveChartFontFamily() {
   return (
     (typeof Chart !== "undefined" && Chart.defaults?.font?.family) ||
-    "BodyFont, sans-serif"
+    localeFontFamily("body")
   );
 }
 
@@ -51,6 +51,16 @@ const UNIT_LOC = {
   wonders: "LOC_DEMOGRAPHICS_UNIT_WONDERS",
   resources: "LOC_DEMOGRAPHICS_UNIT_RESOURCES",
   stage: "LOC_DEMOGRAPHICS_UNIT_STAGE",
+  works: "LOC_DEMOGRAPHICS_UNIT_WORKS",
+  towns: "LOC_DEMOGRAPHICS_UNIT_TOWNS",
+  cap: "LOC_DEMOGRAPHICS_UNIT_CAP",
+  settlements: "LOC_DEMOGRAPHICS_UNIT_SETTLEMENTS",
+  tourism: "LOC_DEMOGRAPHICS_UNIT_TOURISM",
+  kills: "LOC_DEMOGRAPHICS_UNIT_KILLS",
+  losses: "LOC_DEMOGRAPHICS_UNIT_LOSSES",
+  faith: "LOC_DEMOGRAPHICS_UNIT_FAITH",
+  battles: "LOC_DEMOGRAPHICS_UNIT_BATTLES",
+  wars: "LOC_DEMOGRAPHICS_UNIT_WARS",
   // Resource-class units reuse the base game's canonical class names
   // (base-game LOC tags; see BASE_GAME_LOC_KEYS in demographics-i18n.js).
   bonus: "LOC_RESOURCECLASS_BONUS_NAME",
