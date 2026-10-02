@@ -12,6 +12,8 @@ import {
   shouldShowWarMarkers
 } from "/demographics/ui/screen-demographics/charts/line/chart-line-event-markers.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { mergeWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 const savedChart = globalThis.Chart;
 const savedEmigrationData = globalThis.EmigrationData;
@@ -122,10 +124,51 @@ function testPluginsSkipMissingChartArea() {
   assert.equal(ctx.calls.length, 0, "no drawing without a chartArea");
 }
 
+function testWarMarkersUseTheWarsPageName() {
+  // The persisted war `name` is English; the marker must carry the same localized name the Wars
+  // page computes, and a merged war is one marker at its first front's chart turn.
+  DemographicsSettings.getSetting = (k, d) => {
+    if (k === "showWarMarkers") return true;
+    if (k === "showDisasterMarkers") return false;
+    return d;
+  };
+  const civ = (pid, name) => ({ pid, civ: name, leader: "L" + pid, isCS: false });
+  const samples = [
+    { chartTurn: 11, turn: 1, gameYear: "4000 BCE", players: { "1": {}, "2": {}, "3": {} } },
+    { chartTurn: 12, turn: 2, gameYear: "3900 BCE", players: { "1": {}, "2": {}, "3": {} } },
+    { chartTurn: 14, turn: 4, gameYear: "3700 BCE", players: { "1": {}, "2": {}, "3": {} } },
+    { chartTurn: 20, turn: 10, gameYear: "3100 BCE", players: { "1": {}, "2": {}, "3": {} } }
+  ];
+  const single = {
+    warUniqueID: 7, name: "1st Rome vs Han War", startTurn: 2, startChartTurn: 12, endTurn: 4,
+    startYear: "3900 BCE", sideA: [1], sideB: [2], sideACivs: [civ(1, "Rome")], sideBCivs: [civ(2, "Han")]
+  };
+  const one = collectRefugeeEventMarkers("emig_refugees", { samples, wars: [single] });
+  assert.equal(one.length, 1);
+  assert.notEqual(one[0].label, single.name, "the persisted English name is not shown");
+  assert.equal(one[0].label, nameMergedWars(mergeWars([single], 10), samples).get(7));
+  assert.equal(one[0].turn, 12);
+
+  const frontA = { ...single, warUniqueID: 8, startTurn: 2, startChartTurn: 12, endTurn: 10 };
+  const frontB = {
+    ...single, warUniqueID: 9, startTurn: 4, startChartTurn: 14, endTurn: 10, startYear: "3700 BCE",
+    sideB: [3], sideBCivs: [civ(3, "Egypt")]
+  };
+  const merged = mergeWars([frontA, frontB], 10);
+  const markers = collectRefugeeEventMarkers("emig_refugees", { samples, wars: [frontA, frontB] });
+  assert.equal(markers.length, merged.length, "one marker per war as the Wars page lists them");
+  if (merged.length === 1) {
+    assert.equal(markers[0].turn, 12, "a merged war sits on its first front's chart turn");
+    assert.equal(markers[0].label, nameMergedWars(merged, samples).get(merged[0].warUniqueID));
+  }
+
+}
+
 try {
   testCollectionsAndSettings();
   testPluginsDrawPaths();
   testPluginsSkipMissingChartArea();
+  testWarMarkersUseTheWarsPageName();
   console.log("chart-line-event-markers-branches harness passed");
 } finally {
   globalThis.Chart = savedChart;

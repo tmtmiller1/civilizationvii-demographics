@@ -1,6 +1,8 @@
 // chart-stack-grid.js
 // Shared grid, x-tick, and axis-title helpers for stack-style SVG charts.
 
+import { localYear, turnLabel } from "/demographics/ui/core/demographics-i18n.js";
+
 /**
  * Build a normalized stack-grid configuration object.
  * @param {Partial<StackGridConfig>} [overrides] Optional config overrides.
@@ -151,7 +153,7 @@ export function mountStackXTicks(wrap, ticks, opts) {
     if (opts.mode !== "turn" && tick.year) {
       const yr = document.createElement("div");
       yr.className = "demographics-chart-x-tick-year";
-      yr.textContent = tick.year;
+      yr.textContent = localYear(tick.year);
       div.appendChild(yr);
     }
 
@@ -217,6 +219,6 @@ export function mountStackAxisTitles(wrap, opts) {
 function appendTickTurn(div, turn, parenthesize) {
   const tn = document.createElement("div");
   tn.className = "demographics-chart-x-tick-turn";
-  tn.textContent = parenthesize ? `(T-${turn})` : `T-${turn}`;
+  tn.textContent = parenthesize ? "(" + turnLabel(turn) + ")" : turnLabel(turn);
   div.appendChild(tn);
 }

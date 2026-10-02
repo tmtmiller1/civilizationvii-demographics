@@ -3,7 +3,7 @@
 // Reusable mini-chart rendering primitives for war/crisis graph cells.
 
 import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { t, turnPlain } from "/demographics/ui/core/demographics-i18n.js";
 
 import { fmt, seriesBounds } from "/demographics/ui/screen-demographics/charts/wars/chart-war-series.js";
 
@@ -188,8 +188,8 @@ export function lineLabels(yLabel, b) {
     xLabel: t("LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN"),
     yTop: fmt(b.yMax),
     yBottom: fmt(b.yMin),
-    xLeft: "T" + b.xMin,
-    xRight: "T" + b.xMax
+    xLeft: turnPlain(b.xMin),
+    xRight: turnPlain(b.xMax)
   };
 }
 

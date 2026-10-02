@@ -126,12 +126,12 @@ function readGameContext() {
 function buildMetaHeader(title, rowCount, colCount) {
   const { gameSpeed, mapType, currentAge } = readGameContext();
   return [
-    "﻿# === Demographics CSV export ===",
-    "# Page: " + title,
+    "\ufeff# === " + t("LOC_DEMOGRAPHICS_CSV_META_TITLE") + " ===",
+    "# " + t("LOC_DEMOGRAPHICS_CSV_META_PAGE", title),
     "# Mod: Demographics v1.0.0",
-    "# Game speed: " + gameSpeed + " · Map: " + mapType + " · Current age: " + currentAge,
-    "# Contents: " + rowCount + " rows · " + colCount + " columns",
-    "# Format: integers exact, floats <1000 → 2 dp, ≥1000 → integer",
+    "# " + t("LOC_DEMOGRAPHICS_CSV_META_CONTEXT", gameSpeed, mapType, currentAge),
+    "# " + t("LOC_DEMOGRAPHICS_CSV_META_CONTENTS", rowCount, colCount),
+    "# " + t("LOC_DEMOGRAPHICS_CSV_META_FORMAT"),
     "#"
   ];
 }

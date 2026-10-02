@@ -5,6 +5,40 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.8.0] - 2026-10-01
+
+Every language reads in full, and Chinese, Japanese and Korean draw every character.
+
+### Fixed
+
+- **Missing-glyph boxes in Chinese, Japanese and Korean.** Chart titles, axis titles and tick labels, crisis and war
+  markers, time-filter pills, toolbar buttons, legends and tooltips named the game's Latin-only faces, which have no
+  Hangul, kana or Han characters, so those characters drew as boxes. Every font list now follows the language the way
+  the game orders its own, with the language's face first, on the charts' canvases and in every stylesheet.
+- **Raw tags in Simplified Chinese.** The analytics policy banner and the per-turn unit on chart axes showed their
+  LOC_ tags: those rows were filed under the wrong language code and never loaded in a Chinese session.
+- **Legends and dropdown filters kept the language a game was recorded in.** A game played in English and opened in
+  Korean read "Great Britain → Mongolia → 몽골 (Augustus)" and listed the same civilization twice. Civilization and
+  leader names, in the history, the war rosters and the war declarer, now read in the current language; independents
+  read as City-State.
+- **War markers on the Emigration refugees graph showed the war's recorded English name.** They now carry the same
+  name as the War Timeline, one marker per war.
+- **English left in charts and exports:** the unit words on chart axes (kills, losses, battles, works and others),
+  stored years such as 1380 BCE, the age-turn labels (A12, E40), the Hall of Fame's victories-by-type bars for older
+  games, and the header lines of both CSV exports now follow the language.
+
+### Changed
+
+- **About 125 labels that were English in every language are translated:** metric and page names, board titles,
+  empty-board messages, radar and scatter axis labels and their tooltips. Translations whose English had been
+  rewritten since they were made (War Timeline, the GDP and approval tooltips, the refresh tooltip, the poll hint and
+  others) were brought up to date.
+
+### Internal
+
+- Tests that fail on a script naming a game face directly, on a locale row filed under another language code, on the
+  generated locale stylesheet drifting from the others, and for the name, year and turn-label helpers.
+
 ## [2.7.6] - 2026-09-30
 
 A one-fix release: the spoiler guard now covers every board and table, not only the line graphs.

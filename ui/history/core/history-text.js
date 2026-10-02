@@ -112,13 +112,26 @@ const SHORT_VICTORY_NAMES = /** @type {Record<string, string>} */ ({
 });
 
 /**
+ * Victory types that older archived games carry with no game tag (records imported from History &
+ * Rankings). The engine has no row for these types, so their name comes from the mod.
+ */
+const UNTAGGED_VICTORY_NAMES = /** @type {Record<string, string>} */ ({
+  VICTORY_CULTURAL: "LOC_DEMOGRAPHICS_HIST_VICTORY_CULTURAL",
+  VICTORY_ECONOMIC: "LOC_DEMOGRAPHICS_HIST_VICTORY_ECONOMIC",
+  VICTORY_MILITARY: "LOC_DEMOGRAPHICS_HIST_VICTORY_MILITARY",
+  VICTORY_SCIENTIFIC: "LOC_DEMOGRAPHICS_HIST_VICTORY_SCIENTIFIC"
+});
+
+/**
  * A victory type's short name ("Scientific", "Domination").
  * @param {string} type Victory type.
  * @param {string} name The game's LOC tag for it.
  * @returns {string} Localized name.
  */
 export function victoryName(type, name) {
-  return SHORT_VICTORY_NAMES[type] ? t(SHORT_VICTORY_NAMES[type]) : typeName(name, type);
+  if (SHORT_VICTORY_NAMES[type]) return t(SHORT_VICTORY_NAMES[type]);
+  if (!name && UNTAGGED_VICTORY_NAMES[type]) return t(UNTAGGED_VICTORY_NAMES[type]);
+  return typeName(name, type);
 }
 
 /**

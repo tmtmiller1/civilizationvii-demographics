@@ -27,7 +27,7 @@ import {
   resolveCsType,
   csTypeMeta
 } from "/demographics/ui/screen-demographics/views/relations/relations-edges.js";
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localYear, t, turnLabel } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Displayed duration in turns, in ONE turn space. `sTurn` is a global chart turn, but for an
@@ -63,9 +63,9 @@ function buildWarTooltipBody(w, ctx) {
   const { scoped, ageLastTurn } = warAgeScope(samples, w);
   const sTurn = w.startTurn;
   const eTurn = typeof w.endTurn === "number" ? w.endTurn : ageLastTurn;
-  const startYr = w.startYear || "T-" + sTurn;
+  const startYr = w.startYear ? localYear(w.startYear) : turnLabel(sTurn);
   const endYr =
-    typeof w.endTurn === "number" ? w.endYear || "T-" + eTurn : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
+    typeof w.endTurn === "number" ? (w.endYear ? localYear(w.endYear) : turnLabel(eTurn)) : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
   const yrs = warDurationYears(w, turnYearMap, latestTurn);
   const turns = warDurationTurns(w, sTurn, eTurn, latestTurn);
   const declared = warDeclaredBy(w);

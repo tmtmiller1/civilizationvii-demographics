@@ -35,19 +35,19 @@
             <Text>Trésorerie</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="fr_FR">
-            <Text>Gold (GPT)</Text>
+            <Text>Or (OPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="fr_FR">
             <Text>Revenu d'or par tour (net).</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="fr_FR">
-            <Text>Settlements Over Time</Text>
+            <Text>Colonies au fil du temps</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="fr_FR">
-            <Text>Techs Count</Text>
+            <Text>Nombre de technologies</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="fr_FR">
-            <Text>Civics Count</Text>
+            <Text>Nombre de doctrines</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="fr_FR">
             <Text>Score de puissance composite, le même nombre que l'écran Victoire utilise.</Text>
@@ -68,7 +68,7 @@
             <Text>PIB</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="fr_FR">
-            <Text>Produit intérieur brut pseudo-réaliste. Somme pondérée des rendements par tour (Production 1.0, Or 1.0, Science 1.2, Culture 1.2, Vivres 0.5, Influence 1.5), multipliée par le nombre de tours écoulés et convertie en dollars.</Text>
+            <Text>Production économique estimée à partir des rendements par tour et du nombre de tours écoulés.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="fr_FR">
             <Text>Production (PPT)</Text>
@@ -89,7 +89,7 @@
             <Text>Culture par tour, fait progresser les civiques.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="fr_FR">
-            <Text>Food (FPT)</Text>
+            <Text>Nourriture (NPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="fr_FR">
             <Text>Production nette de vivres par tour sur l'ensemble des colonies.</Text>
@@ -98,7 +98,7 @@
             <Text>Approbation diplomatique</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="fr_FR">
-            <Text>Agrégat de réputation internationale. Somme des scores de relation pondérés sur toutes les civilisations majeures rencontrées (Alliée +5, Serviable +3, Amicale +2, Neutre 0, Inamicale -2, Hostile -3, En guerre -5), plus une contribution atténuée (0,3x) des cités-États dont vous êtes le suzerain.</Text>
+            <Text>Synthèse de votre position diplomatique actuelle auprès des civilisations rencontrées et des cités-États dont vous êtes suzerain.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="fr_FR">
             <Text>Population</Text>
@@ -110,7 +110,7 @@
             <Text>Influence (IPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="fr_FR">
-            <Text>Happiness (HPT)</Text>
+            <Text>Bonheur (BPT)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="fr_FR">
             <Text>Rendement net de bonheur par tour.</Text>
@@ -151,7 +151,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="fr_FR">
             <Text>Économie</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="fr_FR"><Text>Soft Power</Text>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="fr_FR"><Text>Rayonnement</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="fr_FR">
             <Text>Savoir &amp; Influence</Text>
@@ -166,10 +166,10 @@
             <Text>Conflits</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="fr_FR">
-            <Text>Guerres</Text>
+            <Text>Chronologie des guerres</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="fr_FR">
-            <Text>Triumphs Radar</Text>
+            <Text>Radar des triomphes</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="fr_FR">
             <Text>Course</Text>
@@ -199,10 +199,10 @@
             <Text>Stade de crise actuel (0 = aucune, 3 = crise maximale). Valeur à l'échelle de la partie.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="fr_FR">
-            <Text>Resources Stacked by Type</Text>
+            <Text>Ressources empilées par type</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="fr_FR">
-            <Text>Total Resources</Text>
+            <Text>Ressources totales</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="fr_FR">
             <Text>Bonus</Text>
@@ -283,7 +283,7 @@
             <Text>Afficher les noms des civilisations et cités-États non rencontrées</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="fr_FR">
-            <Text>Lorsque désactivé (par défaut), les civilisations et cités-États que vous n'avez pas encore rencontrées sont affichées comme des espaces réservés génériques « Non rencontrée » dans les graphiques, l'annuaire et les anneaux de relations mondiales.</Text>
+            <Text>Lorsque cette option est désactivée, les civilisations et cités-États non rencontrées apparaissent sous forme d'espaces réservés génériques dans les graphiques, les classements et les relations mondiales.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="fr_FR">
             <Text>Joueur {1_Pid}</Text>
@@ -353,6 +353,16 @@
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="fr_FR"><Text>merveilles</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="fr_FR"><Text>ressources</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="fr_FR"><Text>phase</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WORKS" Language="fr_FR"><Text>chefs-d'œuvre</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOWNS" Language="fr_FR"><Text>bourgs</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CAP" Language="fr_FR"><Text>limite</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SETTLEMENTS" Language="fr_FR"><Text>colonies</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOURISM" Language="fr_FR"><Text>tourisme</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_KILLS" Language="fr_FR"><Text>éliminations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_LOSSES" Language="fr_FR"><Text>pertes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FAITH" Language="fr_FR"><Text>foi</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_BATTLES" Language="fr_FR"><Text>batailles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WARS" Language="fr_FR"><Text>guerres</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="fr_FR"><Text>Spoilers</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="fr_FR"><Text>Affichage</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="fr_FR"><Text>Masque les noms, les graphiques et les statistiques de diplomatie et de relations des civilisations que vous n'avez pas encore rencontrées, afin que l'écran ne révèle jamais une civilisation à l'avance. Activé par défaut.</Text></Replace>
@@ -430,7 +440,7 @@
             <Text>Aucune progression pour l'instant.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="fr_FR">
-            <Text>API des héritages Test-of-Time indisponible.</Text>
+            <Text>Les données de triomphes sont indisponibles.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="fr_FR">
             <Text>Aucune civilisation échantillonnée pour l'instant.</Text>
@@ -532,13 +542,13 @@
             <Text>Aucun échantillon pour l'instant, jouez d'abord un tour.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="fr_FR">
-            <Text>CSV trop volumineux ({1_SizeMB} Mo) · ferait planter le presse-papiers. Réduisez le plafond d'échantillons dans les Options et réessayez.</Text>
+            <Text>CSV trop volumineux ({1_SizeMB} Mo). Réduisez le plafond d'échantillons d'historique dans les Options et réessayez.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="fr_FR">
             <Text>Copié · {1_Rows} lignes × {2_Cols} colonnes{3_SizeTag} · collez dans Excel / Sheets / un fichier .csv</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="fr_FR">
-            <Text>Presse-papiers indisponible · CSV écrit dans UI.log (voir le dossier des journaux)</Text>
+            <Text>Export vers le presse-papiers indisponible. CSV écrit dans UI.log.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="fr_FR">
             <Text>Ère actuelle</Text>
@@ -598,7 +608,7 @@
             <Text>Actualiser</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="fr_FR">
-            <Text>Récupérer à nouveau la progression des héritages depuis VictoryManager.getVictoryProgress()</Text>
+            <Text>Actualiser la progression des triomphes</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="fr_FR">
             <Text>Toutes les civilisations majeures</Text>
@@ -649,7 +659,7 @@
             <Text>Copier en CSV</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="fr_FR">
-            <Text>&lt;p style="margin:0;"&gt;Copie chaque tour échantillonné de chaque civilisation dans votre presse-papiers. Collez dans Excel, Sheets, ou enregistrez en &lt;code&gt;.csv&lt;/code&gt;. Le bac à sable de l'interface de Civ&amp;nbsp;7 n'a pas d'API d'écriture de fichiers, le presse-papiers est donc le seul moyen de transfert.&lt;/p&gt;</Text>
+            <Text>&lt;p style="margin:0;"&gt;Copie tous les tours échantillonnés de toutes les civilisations dans le presse-papiers au format CSV. Collez-les dans Excel, Sheets ou un autre tableur pour enregistrer ou analyser les données.&lt;/p&gt;</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="fr_FR">
             <Text>Copier tout l'historique échantillonné dans le presse-papiers en CSV, collez dans Excel, Google Sheets, ou un fichier .csv</Text>
@@ -904,13 +914,13 @@
             <Text>Cités-États</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="fr_FR">
-            <Text>Share Innovations</Text>
+            <Text>Partager des innovations</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="fr_FR">
-            <Text>Pioneering</Text>
+            <Text>Innovation</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="fr_FR">
-            <Text>Give Influence Token</Text>
+            <Text>Donner un jeton d'influence</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="fr_FR">
             <Text>retiré T-{1_Turn}</Text>
@@ -2062,10 +2072,10 @@
             <Text>Toutes les civilisations</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="fr_FR">
-            <Text>Politique d'analyse de l'hôte : {1}. Les données comparatives sont limitées pour tous les joueurs.</Text>
+            <Text>Politique d'analyse de l'hôte : {1_Policy}. Les données comparatives sont limitées pour tous les joueurs.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="fr_FR">
-            <Text>Politique d'analyse : {1}.</Text>
+            <Text>Politique d'analyse : {1_Policy}.</Text>
         </Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="fr_FR">
             <Text>Interface</Text>
@@ -2112,9 +2122,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="fr_FR"><Text>Société</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="fr_FR"><Text>Expansion</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="fr_FR"><Text>Population</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="fr_FR"><Text>Military Power</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="fr_FR"><Text>Puissance militaire</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="fr_FR"><Text>Guerres</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="fr_FR"><Text>Global Relations</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="fr_FR"><Text>Relations mondiales</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="fr_FR"><Text>Accords</Text></Replace>
             <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="fr_FR"><Text>Produit intérieur brut (PIB)</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="fr_FR"><Text>Or par tour (OPT)</Text></Replace>
@@ -2172,130 +2182,130 @@
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="fr_FR"><Text>Inconnue</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="fr_FR"><Text>{1_Ordinal} guerre {2_Adjective}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="fr_FR"><Text>Guerre n°{1_Id}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="fr_FR"><Text>Scaled</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="fr_FR"><Text>Civ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="fr_FR"><Text>/turn</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="fr_FR"><Text>Great Works</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="fr_FR"><Text>Great works currently slotted across your buildings and wonders.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="fr_FR"><Text>Cities</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="fr_FR"><Text>Promoted settlements (cities), as opposed to towns.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="fr_FR"><Text>Towns</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="fr_FR"><Text>Un-promoted settlements (towns).</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="fr_FR"><Text>Cap Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="fr_FR"><Text>The maximum number of settlements you can hold before over-cap penalties.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="fr_FR"><Text>Settlements Conquered</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="fr_FR"><Text>Cumulative settlements this civ has taken by force.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="fr_FR"><Text>Conquest %</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="fr_FR"><Text>Share of a civ's settlements that were taken by force.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="fr_FR"><Text>Tourism</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="fr_FR"><Text>Tourism total (Culture Victory Points); accrues from wonders, unique improvements, suzerained city-states and celebrations.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="fr_FR"><Text>Great People</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="fr_FR"><Text>Cumulative Great People this civ has earned.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="fr_FR"><Text>Units Killed</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="fr_FR"><Text>Cumulative enemy units this civ has killed in combat.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="fr_FR"><Text>Units Lost</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="fr_FR"><Text>Cumulative units this civ has lost in combat.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="fr_FR"><Text>Civ → Leader</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="fr_FR"><Text>Leader → Civ</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="fr_FR"><Text>Wonders Board</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="fr_FR"><Text>Wonders Built — by Civilization</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="fr_FR"><Text>Units Trained</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="fr_FR"><Text>Units Trained — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="fr_FR"><Text>Kills by Unit</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="fr_FR"><Text>Enemy Units Killed — by Your Unit Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="fr_FR"><Text>Losses by Unit</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="fr_FR"><Text>Units Lost — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="fr_FR"><Text>Buildings</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="fr_FR"><Text>Buildings Constructed — by Type</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="fr_FR"><Text>Quarters</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="fr_FR"><Text>Districts Constructed — by Type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="fr_FR"><Text>À l'échelle</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="fr_FR"><Text>Civ.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="fr_FR"><Text>/tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="fr_FR"><Text>Chefs-d'œuvre</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="fr_FR"><Text>Chefs-d'œuvre actuellement exposés dans vos bâtiments et merveilles.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="fr_FR"><Text>Villes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="fr_FR"><Text>Colonies devenues des villes, par opposition aux bourgs.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="fr_FR"><Text>Bourgs</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="fr_FR"><Text>Colonies qui ne sont pas devenues des villes (bourgs).</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="fr_FR"><Text>Limite au fil du temps</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="fr_FR"><Text>Nombre maximal de colonies que vous pouvez posséder avant de subir les pénalités de dépassement.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="fr_FR"><Text>Colonies conquises</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="fr_FR"><Text>Total cumulé des colonies prises par la force par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="fr_FR"><Text>% de conquête</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="fr_FR"><Text>Part des colonies d'une civilisation qui ont été prises par la force.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="fr_FR"><Text>Tourisme</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="fr_FR"><Text>Total de tourisme (points de victoire culturelle) ; provient des merveilles, des aménagements exclusifs, des cités-États dont vous êtes suzerain et des célébrations.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="fr_FR"><Text>Personnages illustres</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="fr_FR"><Text>Total cumulé des personnages illustres obtenus par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="fr_FR"><Text>Unités éliminées</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="fr_FR"><Text>Total cumulé des unités ennemies éliminées au combat par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="fr_FR"><Text>Unités perdues</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="fr_FR"><Text>Total cumulé des unités perdues au combat par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="fr_FR"><Text>Civilisation → Dirigeant</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="fr_FR"><Text>Dirigeant → Civilisation</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="fr_FR"><Text>Tableau des merveilles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="fr_FR"><Text>Merveilles construites — par civilisation</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="fr_FR"><Text>Unités formées</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="fr_FR"><Text>Unités formées — par type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="fr_FR"><Text>Éliminations par unité</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="fr_FR"><Text>Unités ennemies éliminées — par type de vos unités</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="fr_FR"><Text>Pertes par unité</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="fr_FR"><Text>Unités perdues — par type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="fr_FR"><Text>Bâtiments</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="fr_FR"><Text>Bâtiments construits — par type</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="fr_FR"><Text>Quartiers</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="fr_FR"><Text>Districts construits — par type</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_STANDINGS" Language="fr_FR"><Text>Religion</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE" Language="fr_FR"><Text>Classement des religions — Colonies adeptes</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="fr_FR"><Text>Construction</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION" Language="fr_FR"><Text>Religion</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="fr_FR"><Text>Settlement Sizes</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="fr_FR"><Text>Settlement Size Distribution</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="fr_FR"><Text>Taille des colonies</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="fr_FR"><Text>Répartition des colonies par taille</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD" Language="fr_FR"><Text>Propagation religieuse</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE" Language="fr_FR"><Text>Propagation religieuse — Colonies adeptes au fil du temps</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_BY_POP" Language="fr_FR"><Text>Religion par population</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_BY_POP_TITLE" Language="fr_FR"><Text>Religion par population — Fidèles au fil du temps</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="fr_FR"><Text>Wonder Races</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="fr_FR"><Text>Wonder Races — First to Build Each Wonder</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="fr_FR"><Text>Power Race</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="fr_FR"><Text>Power Race — Rank by Score Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="fr_FR"><Text>Population Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="fr_FR"><Text>Population Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="fr_FR"><Text>Land Area Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="fr_FR"><Text>Land Area Share of the World Over Time</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="fr_FR"><Text>Power &amp; Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="fr_FR"><Text>Power &amp; Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="fr_FR"><Text>Archetype</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="fr_FR"><Text>Power Archetype — Every Civilization Compared</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="fr_FR"><Text>Faith</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="fr_FR"><Text>Total Faith accumulated by this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="fr_FR"><Text>Battles</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="fr_FR"><Text>Number of battles this civilization has fought.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="fr_FR"><Text>Wars Declared</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="fr_FR"><Text>Wars this civilization has declared on others.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="fr_FR"><Text>Wars Received</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="fr_FR"><Text>Wars others have declared on this civilization.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="fr_FR"><Text>Natural Wonders Discovered</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="fr_FR"><Text>Natural wonders this civilization has discovered.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="fr_FR"><Text>Rank</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="fr_FR"><Text>Share of World</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="fr_FR"><Text>Population Share</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="fr_FR"><Text>Yields Per Turn</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="fr_FR"><Text>Land &amp; Settlements</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="fr_FR"><Text>Economy &amp; Resources</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="fr_FR"><Text>Wealth &amp; Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="fr_FR"><Text>Wealth &amp; Culture — Gold vs Culture Output</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="fr_FR"><Text>Happiness &amp; Influence</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="fr_FR"><Text>Happiness &amp; Influence</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="fr_FR"><Text>No wonders built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="fr_FR"><Text>No wonders built or under construction yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="fr_FR"><Text>No data recorded for this breakdown yet.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="fr_FR"><Text>Courses aux merveilles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="fr_FR"><Text>Courses aux merveilles — première civilisation à bâtir chaque merveille</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="fr_FR"><Text>Course à la puissance</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="fr_FR"><Text>Course à la puissance — rang selon le score au fil du temps</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="fr_FR"><Text>Part de la population</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="fr_FR"><Text>Part de la population mondiale au fil du temps</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="fr_FR"><Text>Part de la superficie</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="fr_FR"><Text>Part de la superficie mondiale au fil du temps</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="fr_FR"><Text>Puissance et science</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="fr_FR"><Text>Puissance et science</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="fr_FR"><Text>Archétype</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="fr_FR"><Text>Archétype de puissance — toutes les civilisations comparées</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="fr_FR"><Text>Foi</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="fr_FR"><Text>Total de foi accumulée par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="fr_FR"><Text>Batailles</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="fr_FR"><Text>Nombre de batailles livrées par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="fr_FR"><Text>Guerres déclarées</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="fr_FR"><Text>Guerres que cette civilisation a déclarées à d'autres.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="fr_FR"><Text>Guerres subies</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="fr_FR"><Text>Guerres que d'autres ont déclarées à cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="fr_FR"><Text>Merveilles naturelles découvertes</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="fr_FR"><Text>Merveilles naturelles découvertes par cette civilisation.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="fr_FR"><Text>Rang</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="fr_FR"><Text>Part mondiale</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="fr_FR"><Text>Part de la population</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="fr_FR"><Text>Rendements par tour</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="fr_FR"><Text>Territoire et colonies</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="fr_FR"><Text>Économie et ressources</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="fr_FR"><Text>Richesse et culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="fr_FR"><Text>Richesse et culture — production d'or contre production de culture</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="fr_FR"><Text>Bonheur et influence</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="fr_FR"><Text>Bonheur et influence</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="fr_FR"><Text>Aucune merveille construite pour l'instant.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="fr_FR"><Text>Aucune merveille construite ou en construction pour l'instant.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="fr_FR"><Text>Aucune donnée enregistrée pour cette répartition pour l'instant.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_RELIGION" Language="fr_FR"><Text>Aucune religion ne s'est encore propagée.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="fr_FR"><Text>No settlements to chart.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="fr_FR"><Text>No settlements yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="fr_FR"><Text>No buildings built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="fr_FR"><Text>No comparable data recorded yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="fr_FR"><Text>Under Construction</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="fr_FR"><Text>Completed</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="fr_FR"><Text>Settlement Sizes</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="fr_FR"><Text>Most Urbanized</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="fr_FR"><Text>Aucune colonie à représenter.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="fr_FR"><Text>Aucune colonie pour l'instant.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="fr_FR"><Text>Aucun bâtiment construit pour l'instant.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="fr_FR"><Text>Aucune donnée comparable enregistrée pour l'instant.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="fr_FR"><Text>En construction</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="fr_FR"><Text>Achevées</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="fr_FR"><Text>Taille des colonies</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="fr_FR"><Text>Les plus urbanisées</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT" Language="fr_FR"><Text>{1_Turns}t</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="fr_FR"><Text>{1_Count} pop</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="fr_FR"><Text>{1_Pct}% urban</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="fr_FR"><Text>{1_Count} hab.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="fr_FR"><Text>{1_Pct} % urbain</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK" Language="fr_FR"><Text>Religion {1_Id}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="fr_FR"><Text>Player</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="fr_FR"><Text>Joueur</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="fr_FR"><Text>Science</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="fr_FR"><Text>Military</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="fr_FR"><Text>Economy</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="fr_FR"><Text>Militaire</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="fr_FR"><Text>Économie</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="fr_FR"><Text>Culture</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="fr_FR"><Text>People</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="fr_FR"><Text>Land</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="fr_FR"><Text>Science / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="fr_FR"><Text>Military Power →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="fr_FR"><Text>Gold / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="fr_FR"><Text>Culture / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="fr_FR"><Text>Influence / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="fr_FR"><Text>Happiness / turn →</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="fr_FR"><Text>No quarters built yet.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="fr_FR"><Text>Quarter</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="fr_FR"><Text>Developing</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="fr_FR"><Text>{1_Name} — needs {2_Partner}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="fr_FR"><Text>Unique: {1_Note}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="fr_FR"><Text>Adjacency (est.): {1_Yields}</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="fr_FR"><Text>City-State {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="fr_FR"><Text>Peuple</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="fr_FR"><Text>Territoire</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="fr_FR"><Text>Science / tour →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="fr_FR"><Text>Puissance militaire →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="fr_FR"><Text>Or / tour →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="fr_FR"><Text>Culture / tour →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="fr_FR"><Text>Influence / tour →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="fr_FR"><Text>Bonheur / tour →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="fr_FR"><Text>Aucun quartier construit pour l'instant.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="fr_FR"><Text>Quartier</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="fr_FR"><Text>En développement</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="fr_FR"><Text>{1_Name} — nécessite {2_Partner}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="fr_FR"><Text>Exclusif : {1_Note}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="fr_FR"><Text>Adjacence (est.) : {1_Yields}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="fr_FR"><Text>Cité-État {1_Pid}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEON_YIELDS" Language="fr_FR"><Text>Rendements</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_TITLE" Language="fr_FR"><Text>Rendements de panthéon — Bonus estimés par civilisation</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE" Language="fr_FR"><Text>Bonus de rendement fixes estimés issus des panthéons choisis par chaque civilisation. Les effets en pourcentage et conditionnels (par population, par ressource, …) ne sont pas comptabilisés.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS" Language="fr_FR"><Text>Aucun bonus de rendement fixe de panthéon à estimer pour l'instant.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL" Language="fr_FR"><Text>+ effets conditionnels non comptabilisés</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="fr_FR"><Text>War</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="fr_FR"><Text>Disaster</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="fr_FR"><Text>{1_Age} Begins</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="fr_FR"><Text>Unknown</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="fr_FR"><Text>Guerre</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="fr_FR"><Text>Catastrophe</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="fr_FR"><Text>Début : {1_Age}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="fr_FR"><Text>Inconnue</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="fr_FR"><Text>Aucun panthéon n'a encore été fondé.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="fr_FR"><Text>Croyances</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="fr_FR"><Text>Panthéons — Croyances choisies et leurs effets</Text></Replace>
@@ -2559,6 +2569,18 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="fr_FR">
             <Text>Domination</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_CULTURAL" Language="fr_FR">
+            <Text>Culturelle</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_ECONOMIC" Language="fr_FR">
+            <Text>Économique</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_MILITARY" Language="fr_FR">
+            <Text>Militaire</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_SCIENTIFIC" Language="fr_FR">
+            <Text>Scientifique</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="fr_FR">
             <Text>Défaite</Text>
@@ -2926,5 +2948,39 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="fr_FR">
             <Text>Effacer toutes les guerres enregistrées ?</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_TITLE" Language="fr_FR">
+            <Text>Export CSV de Démographie</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_PAGE" Language="fr_FR">
+            <Text>Page : {1_Title}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_EXPORTED" Language="fr_FR">
+            <Text>Exporté : {1_Time}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTEXT" Language="fr_FR">
+            <Text>Vitesse de jeu : {1_Speed} · Carte : {2_Map} · Ère actuelle : {3_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COVERAGE" Language="fr_FR">
+            <Text>Couverture : tours {1_First}→{2_Last} · tours couverts : {3_Turns} · civilisations : {4_Civs} · lignes : {5_Rows} · indicateurs : {6_Metrics}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTENTS" Language="fr_FR">
+            <Text>Contenu : lignes : {1_Rows} · colonnes : {2_Columns}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_FORMAT" Language="fr_FR">
+            <Text>Format : nombres entiers exacts ; décimales sous 1000 à 2 chiffres après la virgule, à partir de 1000 arrondies à l'entier</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_SORTING" Language="fr_FR">
+            <Text>Tri : une ligne par tour et par joueur (turn, pid), par ordre croissant</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COLUMNS" Language="fr_FR">
+            <Text>Colonnes regroupées par catégorie : identité → score → économie → rendements → militaire → savoir → empire → triomphes → ressources → ère</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_BCE" Language="fr_FR"><Text>{1_Year} AEC</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_CE" Language="fr_FR"><Text>{1_Year} EC</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY" Language="fr_FR"><Text>A{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION" Language="fr_FR"><Text>E{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="fr_FR"><Text>M{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="fr_FR"><Text>T-{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="fr_FR"><Text>T{1_Turn}</Text></Replace>
     </LocalizedText>
 </Database>

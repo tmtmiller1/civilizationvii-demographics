@@ -1,4 +1,4 @@
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localYear, t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { div, iconEl, fmtPop } from "/demographics/ui/core/ui-helpers.js";
 import { publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
@@ -293,7 +293,7 @@ export function captionText(caption) {
   if (!caption) return "";
   if (caption.text) return caption.text;
   if (caption.foundedYear) {
-    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", caption.foundedYear);
+    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", localYear(caption.foundedYear));
   }
   if (typeof caption.standingRank === "number") {
     const ord = ordinalText(caption.standingRank);
@@ -306,7 +306,7 @@ export function captionText(caption) {
   if (!caption.nameKey) return "";
   const name = t(caption.nameKey);
   return caption.year
-    ? name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", caption.year)
+    ? name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", localYear(caption.year))
     : name;
 }
 
@@ -474,7 +474,7 @@ export function buildCongrats(settlement) {
     wrap.appendChild(
       div(
         "demographics-map-overlay-congrats-line",
-        t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", settlement.founded.year)
+        t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", localYear(settlement.founded.year))
       )
     );
   }

@@ -236,7 +236,7 @@ assert.equal(maskedHoly.querySelector(".demographics-settle-holy-icon"), null, "
 assert.equal(maskedHoly.getAttribute("data-tooltip-content"), undefined, "…or the religion name");
 assert.equal(rows[1].querySelector(".demographics-settle-badge-holy"), null);
 const wonderTip = rows[0].querySelector(".demographics-settle-wonder-icon").getAttribute("data-tooltip-content");
-assert.equal(wonderTip, "W_NEW · DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT|2500 BCE");
+assert.equal(wonderTip, "W_NEW · DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT|DEMOGRAPHICS_YEAR_BCE|2500");
 assert.equal(st.content.querySelector(".demographics-settle-age-pills"), null, "no archive → no pills");
 
 // With an archived age: pills appear; picking it swaps the board IN PLACE and adds the note.
@@ -282,7 +282,8 @@ renderShowcasePanel(st3, { ...deps, archive: archived, buildTrendGlyph: () => (t
 const archRows = st3.content.querySelectorAll(".demographics-settle-list-row");
 assert.equal(archRows.length, 1);
 assert.match(archRows[0].querySelector(".demographics-settle-list-name").textContent, /Ctesiphon/);
-assert.match(st3.content.querySelector(".demographics-settle-age-note").textContent, /400 CE/);
+// The stored English year is re-read through the year tag for display.
+assert.match(st3.content.querySelector(".demographics-settle-age-note").textContent, /DEMOGRAPHICS_YEAR_CE\|400/);
 // Podium + list both render the archived settlement; neither shows a live trend.
 assert.equal(trendCalls, 0, "an archived record has no trend glyph");
 

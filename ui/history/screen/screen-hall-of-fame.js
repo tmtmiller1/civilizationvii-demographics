@@ -138,7 +138,10 @@ try {
     initializeImmediately: true,
     createInstance: ScreenHistoryRankings,
     description: "Demographics Hall of Fame (main menu).",
-    styles: ["fs://game/demographics/ui/screen-demographics/styles/screen-demographics-history.css"],
+    styles: [
+      "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-history.css",
+      "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-locale-fonts.css"
+    ],
     content: ["fs://game/demographics/ui/history/screen/screen-hall-of-fame.html"],
     attributes: [],
     classNames: ["dgh-screen", "w-full", "h-full"]

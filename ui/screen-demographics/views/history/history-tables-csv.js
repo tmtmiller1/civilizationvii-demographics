@@ -7,6 +7,7 @@
 
 import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
+import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Build a pid → display-name map from the latest sample's players.
@@ -20,7 +21,7 @@ function pidNameMap(samples) {
   const players = last?.players || {};
   for (const pid of Object.keys(players)) {
     const p = players[pid] || {};
-    map.set(Number(pid), p.leaderName || p.civName || "Player " + pid);
+    map.set(Number(pid), p.leaderName || p.civName || tPlayerFallback(pid));
   }
   return map;
 }
@@ -33,7 +34,7 @@ function pidNameMap(samples) {
  */
 function sideNames(side, names) {
   return (Array.isArray(side) ? side : [])
-    .map((e) => names.get(Number(e?.pid)) || "Player " + e?.pid)
+    .map((e) => names.get(Number(e?.pid)) || tPlayerFallback(e?.pid))
     .join("; ");
 }
 
@@ -51,7 +52,7 @@ export function warsCsv(history) {
   const names = pidNameMap(samples);
   const headers = ["war", "startTurn", "endTurn", "status", "sideA", "sideB"];
   const rows = wars.map((w) => [
-    named.get(w.warUniqueID) || w.name || "War #" + w.warUniqueID,
+    named.get(w.warUniqueID) || t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", w.warUniqueID),
     typeof w.startTurn === "number" ? w.startTurn : "",
     typeof w.endTurn === "number" ? w.endTurn : "",
     typeof w.endTurn === "number" ? "ended" : "ongoing",

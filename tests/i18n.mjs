@@ -20,6 +20,12 @@ for (const f of ["en_us", ...FOLDERS]) {
   assert.equal(dupes.length, 0, `${f} defines ${dupes.length} tag(s) twice: ${dupes.slice(0, 4).join(", ")}`);
 }
 
+/** Folder → the engine Language attribute its rows must carry (demographics.modinfo locale="…"). */
+const LANGUAGE_OF = /** @type {Record<string, string>} */ ({
+  de_de: "de_DE", es_es: "es_ES", fr_fr: "fr_FR", it_it: "it_IT", ja_jp: "ja_JP", ko_kr: "ko_KR",
+  pl_pl: "pl_PL", pt_br: "pt_BR", ru_ru: "ru_RU", zh_cn: "zh_Hans_CN"
+});
+
 let checked = 0;
 for (const f of FOLDERS) {
   const xml = fs.readFileSync(`text/${f}/ModText.xml`, "utf8");
@@ -31,6 +37,11 @@ for (const f of FOLDERS) {
     `${f} is missing ${missing.length} key(s): ${missing.slice(0, 4).join(", ")}`
   );
   checked += SRC.length;
+  // Every row carries this folder's engine language. A row tagged with another code (zh_CN instead of
+  // zh_Hans_CN) loads under a locale no session uses, so the tag shows raw in game (watched 2026-10-01:
+  // the policy banner and the per-turn unit in Simplified Chinese).
+  const langs = new Set([...xml.matchAll(/Language="([^"]+)"/g)].map((m) => m[1]));
+  assert.deepEqual([...langs], [LANGUAGE_OF[f]], `${f}: rows tagged ${[...langs].join(", ")}`);
 }
 
 console.log(`i18n parity harness passed (${SRC.length} keys × ${FOLDERS.length} locales = ${checked})`);

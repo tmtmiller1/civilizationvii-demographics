@@ -209,7 +209,9 @@ assert.ok(overrides.get(longBilateral).includes("LOC_DEMOGRAPHICS_WARNAME_BILATE
 assert.ok(overrides.get(longBilateral).includes("LOC_DEMOGRAPHICS_WARNAME_CENTURIES"));
 assert.ok(overrides.get(regionalCoalition).includes("LOC_DEMOGRAPHICS_WARNAME_REGIONAL"));
 assert.ok(overrides.get(worldWar).includes("LOC_DEMOGRAPHICS_WARNAME_WORLD"));
-assert.ok(overrides.get(oddFallback).includes("Fallback Name"));
+// No majors at all: the localized "War #N" fallback, never the persisted English name.
+assert.ok(overrides.get(oddFallback).includes("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME(15)"));
+assert.ok(!overrides.get(oddFallback).includes("Fallback Name"));
 
 const byId = nameMergedWars(wars, samples);
 assert.equal(typeof byId.get(11), "string");
@@ -338,7 +340,7 @@ assert.ok(suffixOverrides.get(suffixWars[2]).includes("Zoran"));
 assert.ok(suffixOverrides.get(suffixWars[3]).includes("Medean"));
 assert.ok(suffixOverrides.get(suffixWars[4]).includes("Tivoloan"));
 assert.ok(suffixOverrides.get(suffixWars[5]).includes("Kordan"));
-assert.ok(suffixOverrides.get(suffixWars[6]).includes("Empty Name"));
+assert.ok(suffixOverrides.get(suffixWars[6]).includes("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME(25)"));
 
 const plainObjectWar = {
   warUniqueID: 27,

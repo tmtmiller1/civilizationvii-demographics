@@ -8,7 +8,7 @@
 // plugins, axis, config, and the HTML tooltip are their own chart-line-*
 // siblings.
 
-import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import { getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
@@ -177,11 +177,8 @@ export function applyEngineChartDefaults() {
     // dependency on Layout being in scope.
     if (Chart.defaults.font) {
       Chart.defaults.font.size = 16;
-      // BodyFont is Civ7's actual UI font; fall back through TitilliumWeb
-      // and sans-serif so we don't render in Times if BodyFont isn't
-      // resolvable in our scope.
-      Chart.defaults.font.family =
-        "BodyFont, BodyFont-SC, BodyFont-TC, BodyFont-JP, BodyFont-KR, TitilliumWeb, sans-serif";
+      // A canvas draws with the first family only, so the locale's CJK face must lead the list.
+      Chart.defaults.font.family = localeFontFamily("body");
     }
     _engineDefaultsApplied = true;
   } catch (_) {
