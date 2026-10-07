@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- NOTE (audited 2.0.5): the Mod element's version="1" is the ModInfo SCHEMA
-     version (constant since 1.3.0), NOT the release version. The release version
-     is <Properties><Version> below. Do not "sync" them — they are different things. -->
+<!-- The Mod element's version="1" is the ModInfo schema version (constant since 1.3.0),
+     not the release version, which is <Properties><Version> below. Don't "sync" them. -->
 <Mod id="demographics" version="1" xmlns="ModInfo">
     <Properties>
         <Name>LOC_MOD_DEMOGRAPHICS_NAME</Name>
@@ -40,6 +39,9 @@
                     <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>
                 </UpdateText>
                 <UIScripts>
+                    <!-- Tower Settings Keeper (same file as the standalone mod): one readable row for every mod's
+                         settings. No imports, listed first so the loader runs it before anything reads storage. -->
+                    <Item>ui/core/settings-keeper.js</Item>
                     <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
                     <Item>ui/demographics-options.js</Item>
@@ -105,6 +107,7 @@
             </Properties>
             <Actions>
                 <UIScripts>
+                    <Item>ui/core/settings-keeper.js</Item>
                     <Item>ui/demographics-bootstrap.js</Item>
                     <Item>ui/demographics-endgame-entry.js</Item>
                     <Item>ui/screen-demographics/screen/screen-demographics.js</Item>
