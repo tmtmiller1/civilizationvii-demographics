@@ -5,6 +5,26 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `release.sh`.
 
+## [2.8.1] - 2026-10-07
+
+Settings that survive a restart: the mod now carries the Tower Settings Keeper.
+
+### Fixed
+- Settings kept after a restart. Civilization VII reads back only the first entry in its mod storage, whichever one
+  a mod asks for, so options set in one session could come back as another mod's data or not at all, and a mod
+  saving its options could copy that data under its own name. Demographics now carries the Tower Settings Keeper
+  file, which keeps every mod's settings inside the one entry the game reads correctly and repairs a store another
+  mod has already put out of order, without deleting anything. Demographics' options now keep their values from one
+  launch to the next, and so do other mods' options that use the shared settings entry.
+- The file runs before any other script and changes nothing else in the mod. If several mods carry it, or the
+  standalone Tower Settings Keeper is installed too, one copy runs and the newest build wins. Nothing to set up:
+  existing settings carry over. Tower Settings Keeper:
+  [GitHub](https://github.com/tmtmiller1/civilizationvii_tower-settings-keeper), [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=3815023570).
+
+### Changed
+- English text: a wording pass over some titles and option descriptions ("Wonders Built by Civilization" for
+  "Wonders Built — by Civilization", and similar). No change in play.
+
 ## [2.8.0] - 2026-10-01
 
 Every language reads in full, and Chinese, Japanese and Korean draw every character.
