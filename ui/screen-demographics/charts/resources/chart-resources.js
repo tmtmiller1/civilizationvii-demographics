@@ -34,7 +34,7 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
  */
 
 // Resources stacked-area chart: for each turn, stack the 5 resource-class
-// counts (bonus, empire, city, factory, treasure). Compares CATEGORIES, not civs.
+// counts (bonus, empire, city, factory, treasure). Compares categories, not civs.
 const RESOURCE_BANDS = [
   { id: "resources_bonus", label: t("LOC_DEMOGRAPHICS_RESOURCE_BONUS"), color: "#7fb3e6" },
   { id: "resources_empire", label: t("LOC_DEMOGRAPHICS_RESOURCE_EMPIRE"), color: "#e6a23c" },
@@ -44,9 +44,9 @@ const RESOURCE_BANDS = [
 ];
 
 /**
- * Whether a metrics object carries any resource-class value.
+ * Whether a metrics object carries any numeric resource-class value.
  * @param {Record<string, *>} m One civ's metrics.
- * @returns {boolean} True when any resource metric is numeric.
+ * @returns {boolean}
  */
 function hasResourceMetric(m) {
   return (
@@ -57,13 +57,11 @@ function hasResourceMetric(m) {
   );
 }
 
-// Collect all civs that have at least one sample with any resource value,
-// so the resources stack viewer dropdown can list them by leader name.
 /**
  * List every civ that has at least one sample with a resource value, for the
  * resources-stack viewer dropdown.
  * @param {DemoHistory|*} history The history blob.
- * @returns {{ pid: string, label: string }[]} The civ options.
+ * @returns {{ pid: string, label: string }[]}
  */
 export function collectResourceCivOptions(history) {
   const samps = history && Array.isArray(history.samples) ? history.samples : [];
@@ -82,9 +80,9 @@ export function collectResourceCivOptions(history) {
 
 /**
  * Record a civ as a resource-stack option when it has a resource metric.
- * @param {Map<string, { pid: string, label: string }>} seen Options map (mutated).
+ * @param {Map<string, { pid: string, label: string }>} seen Mutated.
  * @param {CivSample|*} ps One civ's sample.
- * @param {string} pid Player id key.
+ * @param {string} pid
  */
 function foldResourceCivOption(seen, ps, pid) {
   const m = ps?.metrics;
@@ -122,8 +120,8 @@ function foldResourceCivOption(seen, ps, pid) {
 
 /**
  * Resolve the band set: `opts.bands` when non-empty, else the resource bands.
- * @param {StackOptions|*} opts The render options.
- * @returns {StackBand[]} The band set.
+ * @param {StackOptions|*} opts
+ * @returns {StackBand[]}
  */
 function resolveStackBands(opts) {
   return Array.isArray(opts.bands) && opts.bands.length > 0 ? opts.bands : RESOURCE_BANDS;
@@ -132,7 +130,7 @@ function resolveStackBands(opts) {
 /**
  * Resolve the target pid whose resources to chart: explicit `viewerPid`, else
  * the local player, else `null` (first civ per sample).
- * @param {ChartOptions|*} opts The render options.
+ * @param {ChartOptions|*} opts
  * @returns {string|null} The target pid key, or `null`.
  */
 function resolveStackTargetPid(opts) {
@@ -144,10 +142,10 @@ function resolveStackTargetPid(opts) {
 /**
  * Build the per-turn stack rows for the target civ across the bands. Rows with
  * no positive band value are skipped.
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @param {string|null} targetPid The target pid (or null → first civ per row).
- * @param {StackBand[]} bands The band set.
- * @returns {StackPoint[]} The stack rows.
+ * @param {StackBand[]} bands
+ * @returns {StackPoint[]}
  */
 function buildStackPoints(samples, targetPid, bands) {
   /** @type {StackPoint[]} */
@@ -165,8 +163,8 @@ function buildStackPoints(samples, targetPid, bands) {
 
 /**
  * The continuous (cross-age) x value for a sample: the global `chartTurn` when
- * present, else the raw turn. `snapshot.turn` is AGE-LOCAL (resets each age), so
- * using it would overlap ages on one axis - chartTurn keeps the timeline linear.
+ * present, else the raw turn. `snapshot.turn` is age-local (resets each age), so
+ * using it would overlap ages on one axis; chartTurn keeps the timeline linear.
  * @param {Snapshot|*} s One sample.
  * @returns {number} The continuous turn value.
  */
@@ -179,7 +177,7 @@ function stackTurnOf(s) {
  * positive.
  * @param {number|*} turn
  * @param {Record<string, *>} m One civ's metrics.
- * @param {StackBand[]} bands The band set.
+ * @param {StackBand[]} bands
  * @returns {StackPoint|null} The row, or `null`.
  */
 function buildStackRow(turn, m, bands) {
@@ -197,7 +195,7 @@ function buildStackRow(turn, m, bands) {
 /**
  * Clamp the stack rows to a time range in place, when one is set.
  * @param {StackPoint[]} points The stack rows (mutated).
- * @param {ChartOptions|*} opts The render options.
+ * @param {ChartOptions|*} opts
  */
 function clampStackPoints(points, opts) {
   const stackTr = resolveTurnRange(opts);
@@ -211,9 +209,9 @@ function clampStackPoints(points, opts) {
 
 /**
  * Compute the stack chart's x/y domain from the rows.
- * @param {StackPoint[]} points The stack rows.
- * @param {StackBand[]} bands The band set.
- * @returns {{ xMin: number, xMax: number, yMax: number }} The domain.
+ * @param {StackPoint[]} points
+ * @param {StackBand[]} bands
+ * @returns {{ xMin: number, xMax: number, yMax: number }}
  */
 function computeStackDomain(points, bands) {
   let xMin = Infinity,
@@ -233,9 +231,8 @@ function computeStackDomain(points, bands) {
 }
 
 /**
- * Sum a row's band values.
  * @param {Record<string, number>} values Per-band values.
- * @param {StackBand[]} bands The band set.
+ * @param {StackBand[]} bands
  * @returns {number} The stacked total.
  */
 function sumBands(values, bands) {
@@ -248,8 +245,8 @@ function sumBands(values, bands) {
  * Build the stack-chart layout (pads, plot size, x/y mappers).
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @param {{ xMin: number, xMax: number, yMax: number }} dom The domain.
- * @returns {StackLayout} The layout.
+ * @param {{ xMin: number, xMax: number, yMax: number }} dom
+ * @returns {StackLayout}
  */
 function buildStackLayout(W, H, dom) {
   const padL = 70,
@@ -274,14 +271,14 @@ function buildStackLayout(W, H, dom) {
 
 /**
  * Draw the stacked-area band polygons bottom-up.
- * @param {SVGElement} svg The chart SVG.
- * @param {StackPoint[]} points The stack rows.
- * @param {StackBand[]} bands The band set.
- * @param {StackLayout} L The layout.
+ * @param {SVGElement} svg
+ * @param {StackPoint[]} points
+ * @param {StackBand[]} bands
+ * @param {StackLayout} L
  */
 function drawStackBands(svg, points, bands, L) {
-  // For each band, build a polygon bounded above by (cum + band) and below by
-  // (cum), then bump cum.
+  // Each band is a polygon bounded above by (cum + band) and below by (cum);
+  // then cum moves up.
   const cum = new Array(points.length).fill(0);
   for (const band of bands) {
     const upper = [];
@@ -293,7 +290,7 @@ function drawStackBands(svg, points, bands, L) {
       cum[i] += v;
       upper.push({ x: L.xOf(p.turn), y: L.yOf(cum[i]) });
     }
-    // Build polygon: upper left→right, then lower right→left.
+    // upper edge left→right, then lower edge right→left
     const pts =
       upper.map((p) => p.x + "," + p.y).join(" ") +
       " " +
@@ -316,12 +313,12 @@ function drawStackBands(svg, points, bands, L) {
 }
 
 /**
- * Build the stack chart's band legend as a horizontal row shown ON TOP of the chart (matching the
+ * Build the stack chart's band legend as a horizontal row shown on top of the chart (matching the
  * other graphs), instead of a vertical list in the right margin. Each item is a color dot + the
  * band label and its latest value.
- * @param {StackBand[]} bands The band set.
- * @param {StackPoint[]} points The stack rows.
- * @returns {HTMLElement} The legend row.
+ * @param {StackBand[]} bands
+ * @param {StackPoint[]} points
+ * @returns {HTMLElement}
  */
 function buildStackLegendTop(bands, points) {
   const row = document.createElement("div");
@@ -367,7 +364,7 @@ function buildStackLegendTop(bands, points) {
  * into `host`. The `bands` / `yAxisLabel` options generalize it for arbitrary
  * stacked band sets (used by the now-removed triumph stack; kept generic).
  * @param {HTMLElement} host The view host element (cleared and repopulated).
- * @param {StackOptions} [options] Render options.
+ * @param {StackOptions} [options]
  * @returns {{ svg: SVGElement }|null} The mounted SVG handle, or `null`.
  */
 export function renderResourcesStack(host, options) {
@@ -395,8 +392,8 @@ export function renderResourcesStack(host, options) {
 
 /**
  * Prepare host/options/band setup for a stack render pass.
- * @param {HTMLElement} host The chart host.
- * @param {StackOptions|undefined} options Render options.
+ * @param {HTMLElement} host
+ * @param {StackOptions|undefined} options
  * @returns {{
  *   hostEl: HTMLElement,
  *   opts: StackOptions,
@@ -418,9 +415,9 @@ function prepareResourcesStackRender(host, options) {
 }
 
 /**
- * Guard that at least one history sample exists.
- * @param {HTMLElement} host The chart host.
- * @param {Snapshot[]} samples The sample stream.
+ * Renders the empty notice when there are no samples.
+ * @param {HTMLElement} host
+ * @param {Snapshot[]} samples
  * @returns {boolean} True when rendering can continue.
  */
 function guardSamplesPresent(host, samples) {
@@ -430,9 +427,9 @@ function guardSamplesPresent(host, samples) {
 }
 
 /**
- * Guard that at least one stack point exists after filtering.
- * @param {HTMLElement} host The chart host.
- * @param {StackPoint[]} points The filtered stack points.
+ * Renders the empty notice when filtering left no stack points.
+ * @param {HTMLElement} host
+ * @param {StackPoint[]} points
  * @returns {boolean} True when rendering can continue.
  */
 function guardPointsPresent(host, points) {
@@ -444,8 +441,8 @@ function guardPointsPresent(host, points) {
 /**
  * Build the chart wrap and mount the SVG + axis titles + x-tick labels +
  * band legend overlays.
- * @param {SVGElement} svg The chart SVG.
- * @param {StackOptions} opts The render options (for yAxisLabel).
+ * @param {SVGElement} svg
+ * @param {StackOptions} opts For yAxisLabel.
  * @param {{ tickPositions: { t: number, x: number, year: string|null, labelY: number }[] }} data
  *   The x-tick positions (the band legend now mounts on top of the chart, outside this wrap).
  * @param {{ L: StackLayout, W: number, H: number }} dims Layout + canvas size.
@@ -485,9 +482,9 @@ function mountStackWrap(svg, opts, data, dims) {
 
 /**
  * Build the stack chart SVG (background grid, X-ticks, band polygons).
- * @param {Snapshot[]} samples The sample stream.
- * @param {StackPoint[]} points The stack rows.
- * @param {StackBand[]} bands The band set.
+ * @param {Snapshot[]} samples
+ * @param {StackPoint[]} points
+ * @param {StackBand[]} bands
  * @param {{ L: StackLayout, dom: { xMin: number, xMax: number, yMax: number },
  *   W: number, H: number }} dims Layout, domain, and canvas size.
  * @returns {{ svg: SVGElement, tickPositions: { t: number, x: number,
@@ -521,7 +518,7 @@ function buildStackSvg(samples, points, bands, dims) {
 /**
  * A chartTurn-keyed turn → game-year map (the shared buildStackTurnYears keys by
  * the age-local turn, which doesn't match this chart's continuous x).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {Map<number, string>} chartTurn → game-year.
  */
 function buildStackTurnYearMap(samples) {
@@ -539,10 +536,10 @@ function buildStackTurnYearMap(samples) {
  * Draw a purple vertical divider at each age transition (where a sample's age
  * differs from the previous one), matching the historical line charts' age
  * markers. (Coherent ignores SVG stroke-dasharray, so the line is solid.)
- * @param {SVGElement} svg The chart SVG.
- * @param {Snapshot[]} samples The sample stream.
- * @param {StackLayout} L The layout.
- * @param {{ xMin: number, xMax: number, yMax: number }} dom The domain.
+ * @param {SVGElement} svg
+ * @param {Snapshot[]} samples
+ * @param {StackLayout} L
+ * @param {{ xMin: number, xMax: number, yMax: number }} dom
  */
 function drawStackAgeLines(svg, samples, L, dom) {
   let prevAge = null;

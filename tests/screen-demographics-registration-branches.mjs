@@ -33,7 +33,7 @@ instance.onLoseFocus();
 instance.onReceiveFocus();
 instance.close();
 
-// ── renderActiveView: a throwing view leaves a visible message, not a blank tab ──
+// renderActiveView: a throwing view leaves a visible message, not a blank tab
 const root = new FakeElement("div");
 root.removeEventListener = () => {};
 const viewHost = new FakeElement("div");
@@ -58,7 +58,7 @@ assert.equal(
 );
 assert.ok(viewHost.children[0].classList.contains("demographics-empty"));
 
-// ── onDetach destroys every live Chart.js instance under the root ──
+// onDetach destroys every live Chart.js instance under the root
 let destroyed = 0;
 const chartStub = () => ({ destroy: () => { destroyed++; } });
 const classedHost = new FakeElement("div");
@@ -82,7 +82,7 @@ assert.equal(unclassedHost._demographicsChart, null, "canvas-walk host handle cl
 instance.onDetach();
 assert.equal(destroyed, 2, "a second detach finds nothing to destroy");
 
-// ── Escape / Cancel engine-input closes the screen (UNWATCHED in game) ──
+// Escape / Cancel engine-input closes the screen (not checked in game)
 const savedStatuses = globalThis.InputActionStatuses;
 let closed = 0;
 instance.close = () => { closed++; };

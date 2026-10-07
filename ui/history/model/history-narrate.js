@@ -19,9 +19,9 @@ import { gameColors } from "/demographics/ui/history/views/history-colors.js";
 
 /**
  * The civilization span a player held in an age (or their latest before it).
- * @param {HnrCivSpan[]} civs Spans.
- * @param {string} age Age type.
- * @returns {HnrCivSpan|null} The span.
+ * @param {HnrCivSpan[]} civs
+ * @param {string} age
+ * @returns {HnrCivSpan|null}
  */
 export function spanFor(civs, age) {
   if (!civs || civs.length === 0) return null;
@@ -32,9 +32,9 @@ export function spanFor(civs, age) {
  * A cast built from a live campaign. Who counts as `known` follows the Demographics analytics
  * policy: "full" shows everyone, "own" only the local player, and "met" (the default) the local
  * player plus every civilization met so far.
- * @param {CampaignDoc} doc The campaign.
- * @param {"full"|"met"|"own"} [visibility] Visibility mode.
- * @returns {Cast} The cast.
+ * @param {CampaignDoc} doc
+ * @param {"full"|"met"|"own"} [visibility]
+ * @returns {Cast}
  */
 export function castFromDoc(doc, visibility = "met") {
   const pids = Object.keys(doc.players)
@@ -68,8 +68,8 @@ export function castFromDoc(doc, visibility = "met") {
 
 /**
  * A cast built from an archived record (rivals keep their final civilization only).
- * @param {ArchiveRecord} rec The record.
- * @returns {Cast} The cast.
+ * @param {ArchiveRecord} rec
+ * @returns {Cast}
  */
 export function castFromRecord(rec) {
   const rivals = Array.isArray(rec.rivals) ? rec.rivals : [];
@@ -99,9 +99,9 @@ export function castFromRecord(rec) {
 /**
  * Name of a party to an event, or the "independent people" fallback.
  * @param {Cast} cast
- * @param {number|undefined} pid Player id.
- * @param {string} age Age type.
- * @returns {string} Localized name.
+ * @param {number|undefined} pid
+ * @param {string} age
+ * @returns {string}
  */
 function party(cast, pid, age) {
   const n = pid != null && pid >= 0 ? cast.civName(pid, age) : "";
@@ -129,10 +129,10 @@ const TEMPLATES = /** @type {Record<HnrEventKind, string>} */ ({
 
 /**
  * Template arguments for an event, in {1_..}{2_..}{3_..} order.
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @param {Cast} cast
  * @param {string} age Age type of the event.
- * @returns {string[]} Arguments.
+ * @returns {string[]}
  */
 export function eventArgs(e, cast, age) {
   const P = party(cast, e.p, age);
@@ -159,10 +159,10 @@ export function eventArgs(e, cast, age) {
 
 /**
  * The sentence for an event.
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @param {Cast} cast
  * @param {string} age Age type of the event.
- * @returns {string} Localized sentence.
+ * @returns {string}
  */
 export function eventText(e, cast, age) {
   return t(TEMPLATES[e.k] || "LOC_DEMOGRAPHICS_HIST_EV_GENERIC", ...eventArgs(e, cast, age));
@@ -170,9 +170,9 @@ export function eventText(e, cast, age) {
 
 /**
  * Whether the local player may see an event (no spoilers about civilizations not yet met).
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @param {Cast} cast
- * @returns {boolean} True when visible.
+ * @returns {boolean}
  */
 export function eventVisible(e, cast) {
   if (e.k === "age" || e.k === "victory" || e.k === "crisis") return true;
@@ -197,8 +197,8 @@ export function eventVisible(e, cast) {
  * Summarize the local player's age from its events.
  * @param {HnrEvent[]} events Events of one age.
  * @param {Cast} cast
- * @param {string} age Age type.
- * @returns {AgeSummary} Summary.
+ * @param {string} age
+ * @returns {AgeSummary}
  */
 export function summarizeAge(events, cast, age) {
   const me = cast.local;

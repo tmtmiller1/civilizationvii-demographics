@@ -7,27 +7,25 @@ const DBG = false;
 const TAG = "[Demographics.history]";
 
 /**
- * Debug logger, a no-op unless DBG is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 export function dlog(...a) {
   if (DBG) console.warn(TAG, ...a);
 }
 
 /**
- * Error logger; always emits.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 export function derr(...a) {
   console.error(TAG, ...a);
 }
 
 /**
- * Run an engine touch and return its value, or the fallback when it throws.
+ * Run an engine touch and return its value, or the fallback when it throws or returns undefined.
  * @template T
- * @param {() => T} fn The call.
- * @param {T} fallback Returned when the call throws or returns undefined.
- * @returns {T} The call's value or the fallback.
+ * @param {() => T} fn
+ * @param {T} fallback
+ * @returns {T}
  */
 export function safe(fn, fallback) {
   try {

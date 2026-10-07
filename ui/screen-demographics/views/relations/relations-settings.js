@@ -54,7 +54,7 @@ export function resetRelationsCachesIfGameChanged() {
 
 /**
  * Read the persisted top tab ("civ"/"cs"), defaulting to "civ".
- * @param {*} settings Settings accessor.
+ * @param {*} settings
  * @returns {string} Validated top tab.
  */
 export function readTopTab(settings) {
@@ -70,8 +70,8 @@ export function readTopTab(settings) {
 
 /**
  * Read the persisted "show unmet names" toggle.
- * @param {*} settings Settings accessor.
- * @returns {boolean} Toggle value.
+ * @param {*} settings
+ * @returns {boolean}
  */
 export function readShowUnmetNames(settings) {
   try {
@@ -84,7 +84,7 @@ export function readShowUnmetNames(settings) {
 /**
  * Read the persisted active filter sub-group ("politics"/"reputation"/
  * "agreements"), defaulting to "politics".
- * @param {*} settings Settings accessor.
+ * @param {*} settings
  * @returns {string} Validated sub-group key.
  */
 export function readActiveSubGroup(settings) {
@@ -100,7 +100,7 @@ export function readActiveSubGroup(settings) {
 
 /**
  * Persist the active filter sub-group (best-effort).
- * @param {*} settings Settings accessor.
+ * @param {*} settings
  * @param {string} key The sub-group key.
  */
 export function writeActiveSubGroup(settings, key) {
@@ -113,10 +113,10 @@ export function writeActiveSubGroup(settings, key) {
 
 /**
  * Resolve the CS-tab viewer pid, falling back to local when needed.
- * @param {*} settings Settings accessor.
- * @param {number|undefined} localId Local player id.
- * @param {number[]} metIds Met major ids.
- * @returns {number|undefined} Viewer pid.
+ * @param {*} settings
+ * @param {number|undefined} localId
+ * @param {number[]} metIds
+ * @returns {number|undefined}
  */
 export function readCsViewerPid(settings, localId, metIds) {
   let csViewerPid = localId;
@@ -132,8 +132,8 @@ export function readCsViewerPid(settings, localId, metIds) {
 
 /**
  * Persisted-setting key for a top-tab filter set.
- * @param {string} topTab Either "civ" or "cs".
- * @returns {string} Settings key.
+ * @param {string} topTab
+ * @returns {string}
  */
 function filterKeyForState(topTab) {
   // Versioned keys: when the filter vocabulary changes, a fresh key resets everyone
@@ -143,7 +143,7 @@ function filterKeyForState(topTab) {
 
 /**
  * Default all-on filter key list for a top tab.
- * @param {string} topTab Either "civ" or "cs".
+ * @param {string} topTab
  * @returns {string[]} Default filter keys.
  */
 function defaultFiltersFor(topTab) {
@@ -152,8 +152,8 @@ function defaultFiltersFor(topTab) {
 
 /**
  * Build the cached filter-set reader.
- * @param {*} settings Settings accessor.
- * @returns {(top: string) => Set<string>} Reader.
+ * @param {*} settings
+ * @returns {(top: string) => Set<string>}
  */
 export function makeFilterSetReader(settings) {
   return (top) => {
@@ -175,8 +175,8 @@ export function makeFilterSetReader(settings) {
 
 /**
  * Build the filter-set writer (cache + best-effort persistence).
- * @param {*} settings Settings accessor.
- * @returns {(top: string, set: Set<string>) => void} Writer.
+ * @param {*} settings
+ * @returns {(top: string, set: Set<string>) => void}
  */
 export function makeFilterSetWriter(settings) {
   return (top, set) => {
@@ -192,7 +192,7 @@ export function makeFilterSetWriter(settings) {
 
 /**
  * Build the node-focus selection reader.
- * @returns {(top: string) => Set<number>} Reader.
+ * @returns {(top: string) => Set<number>}
  */
 export function makeNodeSelectionReader() {
   return (top) => {
@@ -203,7 +203,7 @@ export function makeNodeSelectionReader() {
 
 /**
  * Build the node-focus selection writer.
- * @returns {(top: string, set: Set<number>) => void} Writer.
+ * @returns {(top: string, set: Set<number>) => void}
  */
 export function makeNodeSelectionWriter() {
   return (top, set) => {

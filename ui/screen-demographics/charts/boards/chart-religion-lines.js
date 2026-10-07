@@ -16,8 +16,8 @@ const PAD_B = 34;
 
 /**
  * Resolve a religion $hash (string key) to a display name + readable color.
- * @param {string} hashKey The religion hash as a string.
- * @returns {{name:string, color:string}} The meta.
+ * @param {string} hashKey
+ * @returns {{name:string, color:string}}
  */
 function religionMeta(hashKey) {
   try {
@@ -39,7 +39,7 @@ function religionMeta(hashKey) {
  * Build per-religion point series + domain bounds from the history `rel` maps.
  * @param {*} history The persisted history blob.
  * @param {"s"|"p"} key The follower key (settlements or population).
- * @returns {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} Data.
+ * @returns {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}}
  */
 function collectSeries(history, key) {
   /** @type {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} */
@@ -51,8 +51,8 @@ function collectSeries(history, key) {
 
 /**
  * Fold one sample's `rel` map into the series accumulator, in place.
- * @param {*} s One sample.
- * @param {"s"|"p"} key The follower key.
+ * @param {*} s
+ * @param {"s"|"p"} key
  * @param {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} acc
  *   The accumulator (mutated).
  */
@@ -78,7 +78,7 @@ function foldRelSample(s, key, acc) {
 /**
  * Map a data point to SVG viewport coordinates.
  * @param {number} x Data x (chart turn).
- * @param {number} y Data y (value).
+ * @param {number} y
  * @param {{minX:number, maxX:number, maxY:number}} d Domain bounds.
  * @returns {{px:number, py:number}} Viewport coords.
  */
@@ -91,7 +91,7 @@ function project(x, y, d) {
 
 /**
  * Append the axis frame + min/max labels to the SVG.
- * @param {SVGElement} svg The SVG root.
+ * @param {SVGElement} svg
  * @param {{minX:number, maxX:number, maxY:number}} d Domain bounds.
  */
 function appendAxes(svg, d) {
@@ -106,8 +106,8 @@ function appendAxes(svg, d) {
 
 /**
  * Append one religion's polyline; return its legend meta.
- * @param {SVGElement} svg The SVG root.
- * @param {{hash:string, pts:{x:number, y:number}[]}} s The series.
+ * @param {SVGElement} svg
+ * @param {{hash:string, pts:{x:number, y:number}[]}} s
  * @param {{minX:number, maxX:number, maxY:number}} d Domain bounds.
  * @returns {{name:string, color:string}} Legend meta for the series.
  */
@@ -130,9 +130,9 @@ function appendSeries(svg, s, d) {
 
 /**
  * Render a religion time-series line chart into `host`.
- * @param {HTMLElement} host The chart host.
+ * @param {HTMLElement} host
  * @param {*} history The persisted history blob.
- * @param {"s"|"p"} key The follower key.
+ * @param {"s"|"p"} key
  */
 function renderReligionLines(host, history, key) {
   host.innerHTML = "";
@@ -147,8 +147,8 @@ function renderReligionLines(host, history, key) {
 
 /**
  * Render Religion Spread (settlements following) over time.
- * @param {HTMLElement} host The chart host.
- * @param {{history:*}} opts Render options.
+ * @param {HTMLElement} host
+ * @param {{history:*}} opts
  */
 export function renderReligionSpread(host, opts) {
   renderReligionLines(host, opts && opts.history, "s");
@@ -156,8 +156,8 @@ export function renderReligionSpread(host, opts) {
 
 /**
  * Render Religion by Population (population following) over time.
- * @param {HTMLElement} host The chart host.
- * @param {{history:*}} opts Render options.
+ * @param {HTMLElement} host
+ * @param {{history:*}} opts
  */
 export function renderReligionByPop(host, opts) {
   renderReligionLines(host, opts && opts.history, "p");

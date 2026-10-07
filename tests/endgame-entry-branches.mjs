@@ -1,9 +1,9 @@
 // Covers: demographics-endgame-entry.js
 //
 // Regression guard for a bug that shipped silently for two months: Coherent
-// Gameface reports `localName` in UPPERCASE, so the screen check
+// Gameface reports `localName` in uppercase, so the screen check
 // `node.localName === "screen-victory-progress"` was never true and the
-// end-of-game button simply never appeared — no error, no log line. The DOM stub
+// end-of-game button never appeared, with no error and no log line. The DOM stub
 // mirrors Gameface's casing so that class of bug fails here instead of in game.
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
@@ -43,14 +43,14 @@ globalThis.MutationObserver = class {
 const entry = await import("/demographics/ui/demographics-endgame-entry.js");
 assert.ok(observerCb, "the entry module should install a MutationObserver");
 
-// ── the regression itself ────────────────────────────────────────────────────
+// the regression itself
 // Pinned directly, because the injection paths below can reach a screen via
-// closest()/querySelector() — which ARE case-insensitive — and would therefore
+// closest()/querySelector(), which are case-insensitive, and would therefore
 // keep passing even with the original `node.localName === "..."` bug restored.
 assert.equal(
   entry.isResultScreen(new FakeElement("screen-victory-progress")),
   true,
-  "must recognize an UPPERCASE localName (Gameface) — a strict lowercase compare here is the bug"
+  "must recognize an UPPERCASE localName (Gameface); a strict lowercase compare here is the bug"
 );
 assert.equal(
   entry.isResultScreen(new FakeElement("endgame-screen")),
@@ -81,7 +81,7 @@ assert.equal(
   "stub must report localName in UPPERCASE like Gameface"
 );
 
-// ── results screen ───────────────────────────────────────────────────────────
+// results screen
 // The victory tracker is reachable mid-game from the dock and has no action row
 // there. Injecting anyway would strand a floating button in the corner.
 const tracker = new FakeElement("screen-victory-progress");
@@ -94,7 +94,7 @@ assert.equal(
 );
 // The mid-game tracker legitimately has no action row: no report is scheduled for it.
 assert.equal(timers.length, 0, "the mid-game victory tracker never reports a missing row");
-// The end-of-game screen always has the row; when it never mounts that is reported ONCE via
+// The end-of-game screen always has the row; when it never mounts that is reported once via
 // console.error (UI.log), naming the selector, so a base-game DOM change is visible instead of a
 // silently missing button.
 const ended = new FakeElement("endgame-screen");
@@ -153,7 +153,7 @@ assert.ok(
   "a results screen inside an added node should be found"
 );
 
-// ── pause menu ───────────────────────────────────────────────────────────────
+// pause menu
 const pause = new FakeElement("div");
 pause.id = "pause-menu-button-container";
 document.body.appendChild(pause);
@@ -200,7 +200,7 @@ bare.className = "something";
 fire(bare);
 assert.ok(touched > 0, "a classed element is inspected");
 
-// The pause menu mounting WITHOUT its button container is reported once as well.
+// The pause menu mounting without its button container is reported once as well.
 const menu = new FakeElement("screen-pause-menu");
 menu.className = "screen";
 document.body.appendChild(menu);

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-// Stored years and turn labels follow the active language (watched 2026-10-01: Japanese charts showed
+// Stored years and turn labels follow the active language (Japanese charts used to show
 // "1380 BCE" and "A50" from a game recorded in English).
 
 const saved = globalThis.Locale;

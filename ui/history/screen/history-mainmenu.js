@@ -13,9 +13,9 @@ const BUTTON_CLASS = "dgh-menu-button";
 
 /**
  * Whether a menu button's caption contains a word (captions are upper-case in every language).
- * @param {Element} node Button.
+ * @param {Element} node
  * @param {string} tag LOC tag of the base-game caption.
- * @returns {boolean} True on a match.
+ * @returns {boolean}
  */
 function captionIs(node, tag) {
   // tBaseGame, not t: these captions are engine-owned (BASE_GAME_LOC_KEYS), so they are never in
@@ -25,8 +25,7 @@ function captionIs(node, tag) {
 }
 
 /**
- * Build the button.
- * @returns {HTMLElement} The button.
+ * @returns {HTMLElement}
  */
 function makeButton() {
   const b = document.createElement("fxs-text-button");
@@ -58,7 +57,7 @@ export function insertButton(box) {
 }
 
 class HnrMenuDecorator {
-  /** @param {any} component The main-menu component. */
+  /** @param {any} component */
   constructor(component) {
     this._c = component;
   }

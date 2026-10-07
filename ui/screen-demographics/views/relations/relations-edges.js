@@ -46,12 +46,12 @@ export {
  * @property {string} key Per-action filter key (the edge's `filterKey`).
  */
 
-// ---- diplomatic queries ---------------------------------------------------
+// diplomatic queries
 
 /**
  * Whether `p1` has an alliance with player `p2id`, defensively.
- * @param {*} p1 Source player handle.
- * @param {number} p2id Target player id.
+ * @param {*} p1
+ * @param {number} p2id
  * @returns {boolean} True when an alliance is reported.
  */
 function hasAlliance(p1, p2id) {
@@ -69,8 +69,8 @@ function hasAlliance(p1, p2id) {
 
 /**
  * Whether `p1` is at war with player `p2id`, defensively.
- * @param {*} p1 Source player handle.
- * @param {number} p2id Target player id.
+ * @param {*} p1
+ * @param {number} p2id
  * @returns {boolean} True when at war.
  */
 function isAtWar(p1, p2id) {
@@ -88,8 +88,8 @@ function isAtWar(p1, p2id) {
 
 /**
  * Resolve the engine relationship enum from `p1` toward `p2id`, defensively.
- * @param {*} p1 Source player handle.
- * @param {number} p2id Target player id.
+ * @param {*} p1
+ * @param {number} p2id
  * @returns {*} The relationship enum value, or `undefined`.
  */
 function getRelationship(p1, p2id) {
@@ -102,7 +102,7 @@ function getRelationship(p1, p2id) {
 
 /**
  * Build a relationship-enum to attitude-key lookup map from engine constants.
- * @returns {Map<*, string>} Relationship enum map.
+ * @returns {Map<*, string>}
  */
 function relationshipKeyMap() {
   /** @type {Map<*, string>} */
@@ -121,7 +121,7 @@ function relationshipKeyMap() {
   return map;
 }
 
-// ---- color tables ---------------------------------------------------------
+// color tables
 
 // Attitude colors are fetched live from `getAttitudeColors()` so the
 // colorblind-mode toggle in Options swaps them without a mod reload. The keys
@@ -129,7 +129,7 @@ function relationshipKeyMap() {
 
 /**
  * Map an engine relationship enum to one of the seven attitude keys.
- * @param {*} rel The relationship enum value.
+ * @param {*} rel
  * @returns {string} The attitude key (defaults to "neutral").
  */
 function attitudeKeyFromEnum(rel) {
@@ -139,7 +139,7 @@ function attitudeKeyFromEnum(rel) {
 
 /**
  * Resolve the live palette color for an attitude key.
- * @param {string} key Attitude key.
+ * @param {string} key
  * @returns {string} The palette color (gray fallback).
  */
 function categoryColor(key) {
@@ -147,14 +147,14 @@ function categoryColor(key) {
   return colors[key] || "#bfbfbf";
 }
 
-// ---- per-subtab edge builders ---------------------------------------------
+// per-subtab edge builders
 // Each builder returns an array of edge objects:
 //   { a, b, color, label?, dashed?, width?, opacity? }
 // where a, b are pids and a <= b unless otherwise noted.
 
 /**
  * Read a player's diplomatic events list defensively.
- * @param {number} a Player id whose events to read.
+ * @param {number} a
  * @returns {*[]} The events array (empty on any error).
  */
 function getPlayerEvents(a) {
@@ -179,7 +179,7 @@ function getPlayerEvents(a) {
 /**
  * Resolve the "other" player id involved in a diplomacy event, relative to
  * the queried player `a`. Mirrors the original target/other/initial fallback.
- * @param {*} ev One diplomacy event.
+ * @param {*} ev
  * @param {number} a The player whose events list `ev` came from.
  * @returns {number|undefined} The other player id, or `undefined`.
  */
@@ -194,8 +194,8 @@ function resolveEventOther(ev, a) {
 
 /**
  * Build undirected alliance edges among the met-major ring.
- * @param {number[]} metIds Met major ids.
- * @returns {Edge[]} Alliance edges.
+ * @param {number[]} metIds
+ * @returns {Edge[]}
  */
 function buildAllianceEdges(metIds) {
   /** @type {Edge[]} */
@@ -216,8 +216,8 @@ function buildAllianceEdges(metIds) {
 
 /**
  * Build undirected at-war edges among the met-major ring.
- * @param {number[]} metIds Met major ids.
- * @returns {Edge[]} War edges.
+ * @param {number[]} metIds
+ * @returns {Edge[]}
  */
 function buildWarEdges(metIds) {
   /** @type {Edge[]} */
@@ -238,10 +238,10 @@ function buildWarEdges(metIds) {
 
 /**
  * Resolve one diplomacy event into an undirected action edge pair.
- * @param {*} ev Diplomacy event.
- * @param {number} sourcePid Event source pid.
- * @param {number|undefined} actionType Target action type.
- * @param {Set<number>} metSet Met-major pid set.
+ * @param {*} ev
+ * @param {number} sourcePid
+ * @param {number|undefined} actionType
+ * @param {Set<number>} metSet
  * @returns {{ a: number, b: number }|null} Pair, or null when non-matching.
  */
 function actionPairFromEvent(ev, sourcePid, actionType, metSet) {
@@ -256,8 +256,8 @@ function actionPairFromEvent(ev, sourcePid, actionType, metSet) {
  * Orient an edge so `a` is the initiating player when the event exposes one
  * (used for directed actions like denounce: denouncer → denounced).
  * @param {Edge} edge The edge (mutated).
- * @param {*} ev The diplomacy event.
- * @param {Set<number>} metSet Met-major pid set.
+ * @param {*} ev
+ * @param {Set<number>} metSet
  */
 function orientByInitiator(edge, ev, metSet) {
   const init = ev && typeof ev.initialPlayer === "number" ? ev.initialPlayer : undefined;
@@ -273,12 +273,12 @@ function orientByInitiator(edge, ev, metSet) {
  * Build edges for a single diplomatic action type queried via `getPlayerEvents`,
  * deduping reciprocal events with a sorted pair key. When `directed`, each edge
  * is oriented initiator → target and flagged so the renderer draws chevrons.
- * @param {number[]} metIds Met major ids.
+ * @param {number[]} metIds
  * @param {number|undefined} actionType The `DIPLOMACY_ACTION_*` int to match.
- * @param {string} color Edge color.
+ * @param {string} color
  * @param {string} filterKey Filter key to tag edges with.
- * @param {boolean} [directed] Whether to orient + flag edges as directional.
- * @returns {Edge[]} The matching edges.
+ * @param {boolean} [directed]
+ * @returns {Edge[]}
  */
 function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
   /** @type {Edge[]} */
@@ -309,7 +309,7 @@ function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
 /**
  * Pre-resolve an agreement-type list into engine int + color + per-action key
  * lookups, skipping entries with no runtime `DiplomacyActionTypes` int.
- * @param {{ key: string, action: string, color: string }[]} actionList Agreement entries.
+ * @param {{ key: string, action: string, color: string }[]} actionList
  * @returns {ActionLookup[]} Resolved lookups.
  */
 function resolveEndeavorLookups(actionList) {
@@ -343,8 +343,8 @@ function endeavorLabel(name) {
  * deduped via a sorted pair + action-type key (each action appears in both
  * participants' `getPlayerEvents()`). Each edge carries its own per-action
  * `filterKey` from {@link AGREEMENT_TYPES}.
- * @param {number[]} metIds Met major ids.
- * @returns {Edge[]} The agreement edges.
+ * @param {number[]} metIds
+ * @returns {Edge[]}
  */
 function buildAgreementEdges(metIds) {
   /** @type {Edge[]} */
@@ -369,10 +369,10 @@ function buildAgreementEdges(metIds) {
  * (deduped on sorted pair + action type) if it qualifies, tagged with the
  * matched action's own per-action filter key.
  * @param {Edge[]} edges Accumulator to push into.
- * @param {Set<string>} seen Dedupe key set (mutated).
- * @param {*} ev One diplomacy event.
+ * @param {Set<string>} seen
+ * @param {*} ev
  * @param {number} a The player whose events list `ev` came from.
- * @param {{ metIds: number[], lookups: ActionLookup[] }} ctx Shared match context.
+ * @param {{ metIds: number[], lookups: ActionLookup[] }} ctx
  */
 function pushOneEndeavorEdge(edges, seen, ev, a, ctx) {
   const { metIds, lookups } = ctx;
@@ -402,7 +402,7 @@ function actionTypeByName(name) {
 /**
  * Build the political-action edges for a single filter key (alliance, war,
  * denounced, research, endeavors, openborders) among the met-major ring.
- * @param {number[]} metIds Met major ids.
+ * @param {number[]} metIds
  * @param {string} filterKey The political filter key to build.
  * @returns {Edge[]} The edges for that filter (empty when unhandled).
  */
@@ -437,7 +437,7 @@ export function buildPoliticalEdges(metIds, filterKey) {
 
 /**
  * Resolve a player's `Trade` handle if it exposes `countPlayerTradeRoutesTo`.
- * @param {number} fromPid Source player id.
+ * @param {number} fromPid
  * @returns {*} The trade handle, or `null`.
  */
 function resolveTradeHandle(fromPid) {
@@ -450,7 +450,7 @@ function resolveTradeHandle(fromPid) {
 /**
  * Count trade routes from a trade handle to `toPid`, defensively.
  * @param {*} trade The source player's trade handle.
- * @param {number} toPid Destination player id.
+ * @param {number} toPid
  * @returns {number} The route count (`0` on any error).
  */
 function tradeRouteCount(trade, toPid) {
@@ -465,10 +465,10 @@ function tradeRouteCount(trade, toPid) {
 
 /**
  * Expand all positive trade-route edges for one source pid.
- * @param {Edge[]} edges Edge accumulator.
- * @param {*} trade Trade handle for source player.
- * @param {number} fromPid Source pid.
- * @param {number[]} pids Candidate destination pids.
+ * @param {Edge[]} edges
+ * @param {*} trade
+ * @param {number} fromPid
+ * @param {number[]} pids
  */
 function pushTradeEdgesForSource(edges, trade, fromPid, pids) {
   for (const toPid of pids) {
@@ -490,10 +490,10 @@ function pushTradeEdgesForSource(edges, trade, fromPid, pids) {
 /**
  * Build trade-route edges among the met-major ring (plus the local player),
  * one per directed pair with a route count > 0.
- * @param {number[]} metIds Met major ids.
+ * @param {number[]} metIds
  * @param {string} _filterKey Unused (kept for builder-signature parity).
  * @param {number} [localPid] Local player id to fold into the source set.
- * @returns {Edge[]} Trade edges.
+ * @returns {Edge[]}
  */
 export function buildEconomicEdges(metIds, _filterKey, localPid) {
   // Per-pair trade route count via player.Trade.countPlayerTradeRoutesTo(otherId).
@@ -517,9 +517,9 @@ export function buildEconomicEdges(metIds, _filterKey, localPid) {
 /**
  * Resolve the attitude category key for a directed (a → b) relationship,
  * surfacing war / alliance explicitly over the bare enum.
- * @param {*} pa Source player handle.
- * @param {number} b Target player id.
- * @returns {string} The attitude category key.
+ * @param {*} pa
+ * @param {number} b
+ * @returns {string}
  */
 function attitudeCatFor(pa, b) {
   if (isAtWar(pa, b)) return "war";
@@ -529,9 +529,9 @@ function attitudeCatFor(pa, b) {
 
 /**
  * Build pairwise attitude edges among met majors.
- * @param {number[]} metIds Met major ids.
+ * @param {number[]} metIds
  * @param {number} [_localPid] Unused (kept for builder-signature parity).
- * @returns {Edge[]} Attitude edges.
+ * @returns {Edge[]}
  */
 export function buildAttitudeEdges(metIds, _localPid) {
   /** @type {Edge[]} */
@@ -564,7 +564,7 @@ const POLITICAL_EVENT_FILTER_KEYS = ["openborders", "denounced"];
 
 /**
  * Resolve major-player and trade handles once for the civ-ring passes.
- * @param {number[]} metIds Met major ids.
+ * @param {number[]} metIds
  * @param {number|undefined} localPid Local player id to force-include.
  * @returns {CivPairContext} Resolved pairwise context.
  */
@@ -586,8 +586,8 @@ function resolveCivPairContext(metIds, localPid) {
 /**
  * Append directional trade edges for one unordered major-major pair.
  * @param {Edge[]} edges Accumulator to push into.
- * @param {number} a First player id.
- * @param {number} b Second player id.
+ * @param {number} a
+ * @param {number} b
  * @param {*} tradeA Trade handle for `a` (or null).
  * @param {*} tradeB Trade handle for `b` (or null).
  */
@@ -625,8 +625,8 @@ function appendPairTradeEdges(edges, a, b, tradeA, tradeB) {
 /**
  * Fused civ pair pass: one i<j loop computes attitude (optional) and trade.
  * @param {CivPairContext} ctx Pre-resolved pair context.
- * @param {boolean} includeAttitude Whether to emit attitude-family edges.
- * @returns {Edge[]} Pairwise edges.
+ * @param {boolean} includeAttitude
+ * @returns {Edge[]}
  */
 function buildPairwiseCivEdges(ctx, includeAttitude) {
   /** @type {Edge[]} */
@@ -656,9 +656,9 @@ function buildPairwiseCivEdges(ctx, includeAttitude) {
 /**
  * Build the full civ-ring edge set tagged by filter key so callers can cache
  * once and apply filter toggles without re-querying engine state.
- * @param {number[]} metIds Met major ids.
- * @param {number|undefined} localPid Local player id.
- * @param {boolean} includeAttitude Whether to include attitude-family edges.
+ * @param {number[]} metIds
+ * @param {number|undefined} localPid
+ * @param {boolean} includeAttitude
  * @returns {Edge[]} Full tagged edge set.
  */
 export function buildCivTaggedEdges(metIds, localPid, includeAttitude) {

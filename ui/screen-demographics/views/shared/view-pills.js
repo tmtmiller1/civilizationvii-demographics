@@ -5,20 +5,19 @@
 // metric/view group, etc.). One button per item; clicking a different one calls onPick(key).
 
 /**
- * The inline style for one selector button. Default = a rounded gold-FILLED pill (view choices,
- * e.g. the metric selector). `variant: "filter"` = the flat, square-cornered, gold-BOXED look the
- * time/age
- * filters use, for choices that FILTER/transform the data (e.g. Scaled vs Civ numbers).
- * @param {boolean} on Whether this button is the active one.
+ * The inline style for one selector button. Default is a rounded gold-filled pill (view choices,
+ * e.g. the metric selector). `variant: "filter"` is the flat, square-cornered, gold-boxed look the
+ * time/age filters use, for choices that filter or transform the data (Scaled vs Civ numbers).
+ * @param {boolean} on
  * @param {string} [variant] "filter" for the flat boxed filter look, else the rounded pill.
- * @returns {string} The cssText.
+ * @returns {string}
  */
 function buttonStyle(on, variant) {
   // Type sizes come from the `--dg-fs-*` ladder (published from the player's Font Size setting by
   // screen-demographics.js) rather than literal rem, so these pills track that setting and the
   // density stylesheet's compaction the same way the CSS-class pills do. `--dg-fs-78` / `--dg-fs-100`
   // are the ladder steps matching the sizes these pills already used, so the default look is
-  // unchanged. Single-arg var() only — Coherent's parser rejects the two-arg fallback form.
+  // unchanged. Single-arg var() only; Coherent's parser rejects the two-arg fallback form.
   if (variant === "filter") {
     return "cursor:pointer;padding:0.18rem 0.55rem;border-radius:0.2rem;font-size:var(--dg-fs-78);"
       + "text-transform:uppercase;letter-spacing:0.06em;border:1px solid rgba(201,162,76,0.4);"
@@ -38,14 +37,14 @@ function buttonStyle(on, variant) {
  * @param {*} activeKey The currently-selected key.
  * @param {(key:*)=>void} onPick Called with the chosen key when a different pill is clicked.
  * @param {string} [variant] "filter" → flat boxed filter buttons (vs the default rounded pills).
- * @returns {HTMLElement} The pill row element.
+ * @returns {HTMLElement}
  */
 export function pillRow(items, activeKey, onPick, variant) {
   const row = document.createElement("div");
   row.className = "demographics-pill-row";
-  // Two-value gap for consistency with the stylesheets. It is NOT a bug workaround: a live geometry
-  // test on 1.5.0 (2026-09-23) measured `gap:0.4rem` and `gap:0.4rem 0.4rem` as identical on a
-  // wrapping flex row, set through this very style.cssText path. See the row-gap note at the top of
+  // Two-value gap for consistency with the stylesheets. It is not a bug workaround: on 1.5.0
+  // `gap:0.4rem` and `gap:0.4rem 0.4rem` measure identical on a wrapping flex row set through
+  // this same style.cssText path. See the row-gap note at the top of
   // screen-demographics-base.css.
   row.style.cssText = "display:flex;gap:0.4rem 0.4rem;justify-content:center;margin:0.3rem 0;flex-wrap:wrap;";
   for (const it of items) {

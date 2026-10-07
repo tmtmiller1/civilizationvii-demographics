@@ -2,7 +2,7 @@
 //
 // Leaf utilities shared by the sampler and every per-civ collector: the debug
 // flag and loggers, the defensive call wrapper, and the player-handle accessors.
-// This module imports NOTHING from the sampler, so it can never take part in an
+// This module imports nothing from the sampler, so it can never take part in an
 // import cycle (which can turn fatal when a UIScript changes evaluation order).
 // The kill switch stays in demographics-sampler.js and is installed here via
 // setSamplerErrorHandler().
@@ -125,7 +125,7 @@ export function safeNum(v) {
   return typeof v === "number" && isFinite(v) ? v : undefined;
 }
 
-// ---- collector utilities -------------------------------------------------
+// collector utilities
 
 /** Collector debug flag, independent of the sampler's verbose flag. */
 const COLLECTOR_DBG = false;

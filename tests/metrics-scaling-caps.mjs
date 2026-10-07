@@ -6,7 +6,7 @@ const { scaleCasualtiesAt, scaleGDP } = await import(
   "/demographics/ui/metrics/demographics-metrics-helpers.js"
 );
 
-// ── #1 casualties era multiplier is capped ───────────────────────────────────
+// #1 casualties era multiplier is capped
 // Below the cap it is the unchanged raw × 1000 × 1.009^turn curve.
 const early = scaleCasualtiesAt(100, 50); // 1.009^50 ≈ 1.565 → well under the 11× cap
 assert.ok(Math.abs(early - 100 * 1000 * Math.pow(1.009, 50)) < 1e-6, "below cap: unchanged curve");
@@ -26,7 +26,7 @@ for (const t of [0, 100, 250, 500, 1000, 5000]) {
 }
 assert.equal(scaleCasualtiesAt(0, 100), 0, "non-positive raw → 0");
 
-// ── #2 GDP turn factor is capped ─────────────────────────────────────────────
+// #2 GDP turn factor is capped
 // Below the cap, GDP is the unchanged raw × turn × 1e6 (a normal game is untouched).
 assert.equal(scaleGDP(2, null, { turn: 100 }), 2 * 100 * 1_000_000, "below cap: unchanged");
 // A very long / slow game caps the turn factor at 300 instead of reading ~500× richer for free.

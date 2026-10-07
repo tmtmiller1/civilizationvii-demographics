@@ -8,10 +8,10 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { teardownExistingChart, reclaimOrphanedCharts } from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
 
 /**
- * Whether an `engine-input` event is the FINISH of a Cancel / Escape action (`isCancelInput()` or
+ * Whether an `engine-input` event is the finish of a Cancel / Escape action (`isCancelInput()` or
  * the `sys-menu` action), the way base-game screens test it. False, never a throw, when
  * the InputActionStatuses global is absent off-engine.
- * @param {*} ev The engine-input event.
+ * @param {*} ev
  * @returns {boolean} True when the screen should close.
  */
 export function isCancelEngineInput(ev) {
@@ -24,7 +24,7 @@ export function isCancelEngineInput(ev) {
  * Build the `engine-input` listener that closes the screen on Cancel / Escape: consumes the event
  * and calls `close`. Bind once per screen instance so the add/remove pair matches.
  * @param {() => void} close Closes the screen (already guarded by the caller).
- * @returns {(ev: *) => void} The listener.
+ * @returns {(ev: *) => void}
  */
 export function makeCancelInputListener(close) {
   return (ev) => {
@@ -65,14 +65,14 @@ export function destroyChartsUnder(root) {
     destroyed++;
   }
   // Hosts already detached by an earlier view/page swap are not under `root` and so are invisible
-  // to the walk above — without this, closing the screen reclaimed none of them (watched 1.5.0).
+  // to the walk above; without this, closing the screen reclaimed none of them.
   return destroyed + reclaimOrphanedCharts();
 }
 
 /**
  * The visible fallback for a view whose render threw: the chart-render-failed empty-state text,
  * so the player sees a message instead of a blank tab (the error itself goes to UI.log).
- * @returns {HTMLElement} The fallback element.
+ * @returns {HTMLElement}
  */
 export function renderFailedFallback() {
   const msg = document.createElement("div");

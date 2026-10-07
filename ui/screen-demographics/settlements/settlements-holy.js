@@ -14,8 +14,8 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 /**
  * Run `fn`, returning its result or `fb` on throw. Never throws.
  * @template T
- * @param {() => T} fn Thunk.
- * @param {T} fb Fallback.
+ * @param {() => T} fn
+ * @param {T} fb
  * @returns {T} Result or fallback.
  */
 function safe(fn, fb) {

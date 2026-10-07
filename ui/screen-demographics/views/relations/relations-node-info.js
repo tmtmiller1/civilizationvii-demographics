@@ -18,9 +18,9 @@ const UNMET_GRAY = "#7d7d7d";
 
 /**
  * Assign target[field] = value when value is a non-empty string.
- * @param {Record<string, *>} target Object to mutate.
- * @param {string} field Field name.
- * @param {*} value Candidate value.
+ * @param {Record<string, *>} target
+ * @param {string} field
+ * @param {*} value
  */
 function assignIfNonEmpty(target, field, value) {
   if (typeof value === "string" && value.length > 0) {
@@ -30,9 +30,9 @@ function assignIfNonEmpty(target, field, value) {
 
 /**
  * Fold one civ sample into the running name map.
- * @param {Record<string, Record<string, *>>} map Name map to mutate.
- * @param {string} pid Player id key.
- * @param {*} ps One civ sample.
+ * @param {Record<string, Record<string, *>>} map
+ * @param {string} pid
+ * @param {*} ps
  */
 function foldNameSample(map, pid, ps) {
   if (!map[pid]) map[pid] = {};
@@ -45,7 +45,7 @@ function foldNameSample(map, pid, ps) {
 
 /**
  * Build a pid -> node-info name map from persisted history.
- * @param {*} history The persisted history blob.
+ * @param {*} history
  * @returns {Record<string, Record<string, *>>} Name info keyed by player id.
  */
 export function buildNameMap(history) {
@@ -65,7 +65,7 @@ export function buildNameMap(history) {
 
 /**
  * Resolve a CS primary color via UI.Player accessor.
- * @param {number} pid City-state player id.
+ * @param {number} pid
  * @returns {string} The color string, or empty when unavailable.
  */
 function resolveCsPrimaryColor(pid) {
@@ -120,7 +120,7 @@ function csNameFromCivType(p) {
 
 /**
  * Resolve a city-state display name.
- * @param {number} pid City-state player id.
+ * @param {number} pid
  * @returns {string} The resolved display name.
  */
 function resolveCsName(pid) {
@@ -164,8 +164,8 @@ function unmetCsVisuals() {
 
 /**
  * Resolve CS visual fields for met/unmet state.
- * @param {number} id City-state player id.
- * @param {boolean} csIsMet Whether the viewer has met this CS.
+ * @param {number} id
+ * @param {boolean} csIsMet
  * @returns {{
  *   csType: string|null,
  *   typeMeta: { label: string, color: string, icon: string }|null,
@@ -207,12 +207,12 @@ function resolveCsVisuals(id, csIsMet) {
 
 /**
  * Resolve a single city-state node-info payload.
- * @param {number} id City-state player id.
- * @param {number} viewerPid The viewer player id.
+ * @param {number} id
+ * @param {number} viewerPid
  * @param {boolean} showUnmetNames When true, always show real names.
- * @param {number|undefined} localId Local player id.
- * @param {*} history The persisted history blob.
- * @returns {Record<string, *>} The CS node-info patch.
+ * @param {number|undefined} localId
+ * @param {*} history
+ * @returns {Record<string, *>}
  */
 export function buildCsNodeInfo(id, viewerPid, showUnmetNames, localId, history) {
   const metCs = resolveMet(viewerPid, id, localId, history);

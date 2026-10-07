@@ -42,7 +42,7 @@ function _cityWonderCount(c) {
 }
 
 /**
- * Capture the wonder COUNT.
+ * Capture the wonder count.
  * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
  * @param {Pid} id The player id.
  * @param {*} stats The player Stats handle.

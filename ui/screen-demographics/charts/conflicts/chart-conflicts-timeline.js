@@ -37,7 +37,7 @@ import {
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 import { getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 
-// Wars Gantt - one horizontal bar per war, stacked vertically by start turn.
+// Wars Gantt: one horizontal bar per war, stacked vertically by start turn.
 // X-axis = turn (with year ticks). Bars colored by the attacker's primary
 // color; named with the ordinal-style label the sampler generates.
 
@@ -46,8 +46,7 @@ import { getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/
 // Collect every civ pid that's appeared in any war (with display labels) so
 // the conflicts page filter dropdown can list them.
 /**
- * Build display label for one war roster participant.
- * @param {*} roster Roster entry.
+ * @param {*} roster One roster participant.
  * @returns {string} Display label.
  */
 function warCivLabel(roster) {
@@ -56,9 +55,9 @@ function warCivLabel(roster) {
 
 /**
  * Stable sort for war-civ option entries.
- * @param {{ isCS: boolean, label: string }} a Entry A.
- * @param {{ isCS: boolean, label: string }} b Entry B.
- * @returns {number} Sort order.
+ * @param {{ isCS: boolean, label: string }} a
+ * @param {{ isCS: boolean, label: string }} b
+ * @returns {number}
  */
 function compareWarCivOptions(a, b) {
   if (a.isCS !== b.isCS) return a.isCS ? 1 : -1;
@@ -69,7 +68,7 @@ function compareWarCivOptions(a, b) {
  * List every civ that has appeared in any war, sorted majors-first then by
  * label, for the conflicts-page filter dropdown.
  * @param {DemoHistory|*} history The history blob.
- * @returns {{ pid: *, isCS: boolean, label: string }[]} The civ options.
+ * @returns {{ pid: *, isCS: boolean, label: string }[]}
  */
 export function collectWarCivOptions(history) {
   const wars = policyVisibleWars(history && history.wars, historySamples(history));
@@ -106,9 +105,9 @@ export function collectWarCivOptions(history) {
 /**
  * Draw the Gantt background, year grid + ticks. Returns the tick positions for
  * HTML overlays.
- * @param {SVGElement} svg The chart SVG.
- * @param {GanttLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {SVGElement} svg
+ * @param {GanttLayout} L
+ * @param {{ xMin: number, xMax: number }} dom
  * @param {Map<number, string>} turnYearMap chart-turn → year map.
  * @returns {{ t: number, x: number, year: string|null }[]} The tick positions.
  */
@@ -148,9 +147,9 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
 /**
  * Draw the vertical "current turn" marker: a dashed yellow line across the plot
  * at the latest sampled turn (where the solid bars end and the future tails begin).
- * @param {SVGElement} svg The chart SVG.
- * @param {GanttLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {SVGElement} svg
+ * @param {GanttLayout} L
+ * @param {{ xMin: number, xMax: number }} dom
  * @param {number} latestTurn The latest sampled turn.
  */
 function drawCurrentTurnLine(svg, L, dom, latestTurn) {
@@ -172,12 +171,12 @@ function drawCurrentTurnLine(svg, L, dom, latestTurn) {
 
 /**
  * Draw the crisis stage-onset overlay lines: a dashed vertical line at each
- * onset turn, colored by stage - the same markers the historical line charts
+ * onset turn, colored by stage, the same markers the historical line charts
  * draw. (Labels are mounted as HTML overlays; see mountCrisisLabels.)
- * @param {SVGElement} svg The chart SVG.
- * @param {GanttLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
- * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The crisis onsets.
+ * @param {SVGElement} svg
+ * @param {GanttLayout} L
+ * @param {{ xMin: number, xMax: number }} dom
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets
  */
 function drawCrisisMarkers(svg, L, dom, onsets) {
   for (const o of onsets || []) {
@@ -215,7 +214,7 @@ function drawCrisisMarkers(svg, L, dom, onsets) {
  * Render the conflicts Gantt timeline (one bar per major-vs-major war) into
  * `host`, with per-civ stripes, in-bar labels, and a hover tooltip.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
- * @param {GanttOptions} [options] Render options.
+ * @param {GanttOptions} [options]
  * @returns {{ svg: SVGElement }|null} The mounted SVG handle, or `null`.
  */
 export function renderConflictsTimeline(host, options) {
@@ -252,9 +251,9 @@ export function renderConflictsTimeline(host, options) {
 
 /**
  * Room to reserve at the top of the plot for the crisis labels. The onsets have to be counted
- * BEFORE the layout the band widens, and only the ones inside the window take room.
- * @param {Snapshot[]} samples The sample stream.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * before the layout the band widens, and only the ones inside the window take room.
+ * @param {Snapshot[]} samples
+ * @param {{ xMin: number, xMax: number }} dom
  * @returns {number} Band height in chart pixels.
  */
 function ganttCrisisBand(samples, dom) {
@@ -264,9 +263,9 @@ function ganttCrisisBand(samples, dom) {
 
 /**
  * The crisis stage onsets on the continuous chart turn (matching the line charts). Read twice per
- * render - once to size the crisis band, once by the overlay environment - so it lives here.
- * @param {Snapshot[]} samples The sample stream.
- * @returns {{ stage: number, turn: number, sample: Snapshot }[]} The onsets.
+ * render (once to size the crisis band, once by the overlay environment), so it lives here.
+ * @param {Snapshot[]} samples
+ * @returns {{ stage: number, turn: number, sample: Snapshot }[]}
  */
 function ganttCrisisOnsets(samples) {
   return crisisStageOnsets(samples).map((o) => ({
@@ -278,12 +277,12 @@ function ganttCrisisOnsets(samples) {
 /**
  * Assemble the shared overlay environment: the year map plus the crisis-onset
  * and age markers (mapped onto the continuous chart turn), the game seed, and
- * the canvas geometry - the bundle every overlay mounter and the SVG builder read.
- * @param {Snapshot[]} samples The sample stream.
+ * the canvas geometry: the bundle every overlay mounter and the SVG builder read.
+ * @param {Snapshot[]} samples
  * @param {number} latestTurn The latest sampled (continuous) turn.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {{ xMin: number, xMax: number }} dom
  * @returns {*} The shared overlay environment.
  */
 function buildGanttOverlayEnv(samples, latestTurn, W, H, dom) {
@@ -313,13 +312,13 @@ function buildGanttOverlayEnv(samples, latestTurn, W, H, dom) {
  * Read + sort + filter the wars; render the appropriate empty notice and
  * return `null` when there's nothing to draw.
  * @param {HTMLElement} host The view host (for empty notices).
- * @param {GanttOptions} opts The render options.
+ * @param {GanttOptions} opts
  * @returns {GanttPrep|null} The prepared data, or `null`.
  */
 /**
  * Latest continuous (cross-age) chart turn from the samples.
- * @param {Snapshot[]} samples The sample stream.
- * @returns {number} The latest chart turn.
+ * @param {Snapshot[]} samples
+ * @returns {number}
  */
 function latestChartTurn(samples) {
   if (!samples.length) return 0;
@@ -330,7 +329,7 @@ function latestChartTurn(samples) {
 /**
  * game-year → chart-turn map (fallback for placing wars that carry no chartTurn
  * onto the continuous timeline via their year labels).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {Map<string, number>} game-year → chartTurn.
  */
 function buildYearToChartMap(samples) {
@@ -364,7 +363,7 @@ function pickGlobalTurn(chartVal, year, localVal, yearToChart) {
  * (cross-age) chart turn, so the whole Gantt pipeline plots on one timeline.
  * @param {*} w The war record.
  * @param {Map<string, number>} yearToChart game-year → chartTurn.
- * @returns {*} The remapped war copy.
+ * @returns {*}
  */
 function toGlobalTurns(w, yearToChart) {
   const start = pickGlobalTurn(w.startChartTurn, w.startYear, w.startTurn, yearToChart);
@@ -376,7 +375,7 @@ function toGlobalTurns(w, yearToChart) {
 /**
  * chart-turn → game-year map for the Gantt x-ticks (the shared buildStackTurnYears
  * keys by the age-local turn, which doesn't match the Gantt's continuous x).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {Map<number, string>} chartTurn → game-year.
  */
 function ganttTurnYearMap(samples) {
@@ -393,8 +392,8 @@ function ganttTurnYearMap(samples) {
 /**
  * Detect age-transition markers on the continuous chart turn (where a sample's
  * age differs from the previous one).
- * @param {Snapshot[]} samples The sample stream.
- * @returns {{ turn: number, label: string }[]} Age markers.
+ * @param {Snapshot[]} samples
+ * @returns {{ turn: number, label: string }[]}
  */
 function collectGanttAgeMarkers(samples) {
   /** @type {Record<string, string>} */
@@ -418,10 +417,10 @@ function collectGanttAgeMarkers(samples) {
 
 /**
  * Draw the age-transition vertical lines (purple long-dash, like the line charts).
- * @param {SVGElement} svg The chart SVG.
- * @param {GanttLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
- * @param {{ turn: number, label: string }[]} markers Age markers.
+ * @param {SVGElement} svg
+ * @param {GanttLayout} L
+ * @param {{ xMin: number, xMax: number }} dom
+ * @param {{ turn: number, label: string }[]} markers
  */
 function drawGanttAgeMarkers(svg, L, dom, markers) {
   for (const m of markers || []) {
@@ -446,7 +445,7 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
 /**
  * Load, remap-to-global-chartTurn, merge, sort, and filter the war set.
  * @param {HTMLElement} host The view host (for empty-state notices).
- * @param {*} opts Render options.
+ * @param {*} opts
  * @returns {{ wars: any[], merged: any[], filtered: any[], latestTurn: number,
  *   samples: Snapshot[], filterPid: number|null, showActiveOnly: boolean }|null}
  *   The prepared data, or null when there is nothing to draw.
@@ -471,7 +470,7 @@ function prepareConflictsTimelineData(host, opts) {
   // naming) sees one war per front-group.
   const merged = mergeWars(wars, latestTurn);
   merged.sort((a, b) => (a.startTurn || 0) - (b.startTurn || 0));
-  // Filter pipeline: city states are dropped - this is a major-civ engagement
+  // Filter pipeline: city states are dropped, since this is a major-civ engagement
   // timeline. Coalition wars between two majors still show, but only major
   // civs are rendered as bars.
   const filterPid = typeof opts.filterPid === "number" ? opts.filterPid : null;
@@ -487,8 +486,8 @@ function prepareConflictsTimelineData(host, opts) {
 /**
  * Build the Gantt SVG (background grid + ticks + war bars).
  * @param {*[]} filtered The filtered wars.
- * @param {GanttLayout} L The layout.
- * @param {{ xMin: number, xMax: number }} dom The x-domain.
+ * @param {GanttLayout} L
+ * @param {{ xMin: number, xMax: number }} dom
  * @param {{ min: number, max: number }|null} tr Time-range filter, or null.
  * @param {*} env Shared environment (turnYearMap, latestTurn, samples, W, H).
  * @returns {{ svg: SVGElement, barRects: BarRect[],
@@ -517,19 +516,19 @@ function buildGanttSvg(filtered, L, dom, tr, env) {
 /**
  * Build the Gantt wrap and mount all HTML overlays (x-ticks, axis titles,
  * war labels) plus the hover tooltip.
- * @param {SVGElement} svg The chart SVG.
+ * @param {SVGElement} svg
  * @param {Object} env Shared environment.
  * @param {*[]} env.merged The full merged war set (for naming).
  * @param {BarRect[]} env.barRects
- * @param {{ t: number, x: number, year: string|null }[]} env.tickPositions Ticks.
- * @param {GanttLayout} env.L The layout.
+ * @param {{ t: number, x: number, year: string|null }[]} env.tickPositions
+ * @param {GanttLayout} env.L
  * @param {Map<number, string>} env.turnYearMap chart-turn → year map.
  * @param {number} env.latestTurn The latest sampled turn.
- * @param {Snapshot[]} env.samples The sample stream.
+ * @param {Snapshot[]} env.samples
  * @param {number} env.W Canvas width.
  * @param {number} env.H Canvas height.
- * @param {{ xMin: number, xMax: number }} env.dom The x-domain.
- * @param {{ stage: number, turn: number, sample: Snapshot }[]} env.crisisOnsets Crisis onsets.
+ * @param {{ xMin: number, xMax: number }} env.dom
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} env.crisisOnsets
  * @param {{ turn: number, label: string }[]} env.ageMarkers Age-transition markers.
  * @param {string} env.crisisSeed The game seed (for crisis names).
  * @returns {HTMLElement} The chart wrap.
@@ -550,7 +549,7 @@ function mountGanttWrap(svg, env) {
 
   const nameOverride = mountGanttOverlays(canvas, env);
 
-  // Hover tooltip - custom callout replacing the unreliable `title` attribute.
+  // Hover tooltip: a custom callout replacing the unreliable `title` attribute.
   const tooltip = createGanttTooltip();
   // Starts in the canvas; the first hover moves it onto the screen frame so it can outgrow the
   // scrolling wrap (see ensureTooltipHost in chart-wars-gantt-interactions.js).

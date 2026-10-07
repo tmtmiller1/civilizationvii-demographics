@@ -152,7 +152,7 @@ function testDowngradeUpgradeRoundTrip() {
   assert.equal(store.read(REJECTED_V2), "", "the v2 slot is cleared after the restore");
 }
 
-// Park happens BEFORE restore, so a restorable slot never causes the unusable primary to be lost.
+// Park happens before restore, so a restorable slot never causes the unusable primary to be lost.
 function testUnusablePrimaryIsParkedEvenWhenRestoring() {
   const parked = serializePayload(mkHistory("seed-a"));
   const newer = JSON.stringify({ v: 2, data: { version: 3, seed: "seed-a", samples: [{ turn: 9 }] } });

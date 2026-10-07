@@ -110,7 +110,7 @@ function parkRejected(store, payloadKey, raw, rejection, derr) {
  */
 
 /**
- * Read the CURRENT version's parked slot when the running code can parse and
+ * Read the current version's parked slot when the running code can parse and
  * validate it and it belongs to this game. Never throws; does not write.
  * @param {RejectedOptions} options Rejected-payload options.
  * @returns {any | null} The restorable history, or null.
@@ -282,7 +282,7 @@ function parseStored(raw, isValid, version) {
 
 /**
  * Handle stored payload text the running code cannot use (a newer schema version, or corrupt
- * text). The unusable text is parked FIRST, under its own version's slot, so a re-upgrade can
+ * text). The unusable text is parked first, under its own version's slot, so a re-upgrade can
  * recover it; then, if the current version's slot holds a payload this code can use, that one
  * is restored over the primary key. Otherwise the primary key is left as it is (the next save
  * overwrites it) and the load falls back to the mirror or an empty history.
@@ -299,7 +299,7 @@ function rejectStored(options, rejection) {
 }
 
 /**
- * A usable payload of an OLDER schema version (one isValid accepts below the current) was
+ * A usable payload of an older schema version (one isValid accepts below the current) was
  * written by an older mod copy after a newer copy's data was parked. When the current
  * version's slot holds a payload this code can use, park the older primary under its own
  * slot and restore the parked one; otherwise keep the older primary.

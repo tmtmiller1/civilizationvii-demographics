@@ -78,7 +78,7 @@ function xAxis() {
 
 /**
  * A y-axis block matching the line chart, with per-chart bounds/behaviour.
- * @param {string} title The axis title.
+ * @param {string} title
  * @param {(v:number)=>string} tickCb The tick label formatter.
  * @param {Record<string, *>} bounds reverse/min/max/stacked/stepSize flags.
  * @returns {Record<string, *>} The y-axis options.
@@ -100,7 +100,7 @@ function yAxis(title, tickCb, bounds) {
  * the same HTML external tooltip the line chart uses.
  * @param {(v:number)=>string} fmtY The value formatter.
  * @param {Record<string, *>} metricMeta Minimal metric meta for the tooltip.
- * @returns {Record<string, *>} The plugins options.
+ * @returns {Record<string, *>}
  */
 function pluginsOpts(fmtY, metricMeta) {
   return {
@@ -114,7 +114,7 @@ function pluginsOpts(fmtY, metricMeta) {
 }
 
 /**
- * Options object shared shape for both charts.
+ * The `options` shape both charts share.
  * @param {Record<string, *>} plugins @param {Record<string, *>} scales
  * @returns {Record<string, *>} The Chart.js `options`.
  */
@@ -138,8 +138,8 @@ function legendOpts(opts) {
 
 /**
  * Shared render prologue: teardown, clear, Chart guard, defaults, options read.
- * @param {HTMLElement} host The chart host.
- * @param {*} options The render options.
+ * @param {HTMLElement} host
+ * @param {*} options
  * @param {string} metricId The source metric id to build series from.
  * @returns {{opts:*, W:number, H:number, hidden:Set<string>, series:*[]}|null} Prepared, or null.
  */
@@ -183,12 +183,12 @@ function baseDataset(s, data, hidden, extra) {
   };
 }
 
-// ── Power Race (rank bump chart) ─────────────────────────────────────────────
+// Power Race (rank bump chart)
 
 /**
  * Build per-turn ranks (1 = highest value) for every civ.
  * @param {*[]} series The per-civ series from buildSeriesFromHistory.
- * @returns {{ranks: Map<string, {x:number,y:number}[]>, maxRank:number}} Rank data.
+ * @returns {{ranks: Map<string, {x:number,y:number}[]>, maxRank:number}}
  */
 function buildRanks(series) {
   /** @type {Map<number, {key:string, v:number}[]>} */
@@ -217,7 +217,7 @@ function buildRanks(series) {
 
 /**
  * Render the Power Race bump chart (rank by Score over time).
- * @param {HTMLElement} host The chart host. @param {*} options Render options.
+ * @param {HTMLElement} host @param {*} options
  * @returns {void}
  */
 export function renderPowerRace(host, options) {
@@ -238,7 +238,7 @@ export function renderPowerRace(host, options) {
   mount(host, prep, datasets, { type: "line", data: { datasets }, options: { ...baseOptions(plugins, scales), parsing: false } });
 }
 
-// ── Population Share (100%-stacked area) ─────────────────────────────────────
+// Population Share (100%-stacked area)
 
 /** @param {*[]} series @returns {number[]} The sorted union of sampled turns. */
 function sortedTurns(series) {
@@ -284,7 +284,7 @@ function shareDataset(s, turns, totals, hidden) {
 
 /**
  * Render the Population Share 100%-stacked area.
- * @param {HTMLElement} host The chart host. @param {*} options Render options.
+ * @param {HTMLElement} host @param {*} options
  * @returns {void}
  */
 export function renderPopShareArea(host, options) {
@@ -306,7 +306,7 @@ export function renderPopShareArea(host, options) {
  * Render the Land Area Share 100%-stacked area (each civ's share of world owned
  * territory over time). Identical shape to the Population Share chart, sourced from
  * the `land` metric instead.
- * @param {HTMLElement} host The chart host. @param {*} options Render options.
+ * @param {HTMLElement} host @param {*} options
  * @returns {void}
  */
 export function renderLandShareArea(host, options) {

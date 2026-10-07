@@ -33,7 +33,7 @@ const { render: renderSettlements } = await import(
   "/demographics/ui/screen-demographics/views/settlements/view-settlements.js"
 );
 
-// Minimal ctx — settlementBoard will be empty (no engine Constructibles)
+// Minimal ctx: settlementBoard will be empty (no engine Constructibles)
 const ctx = {
   history: { samples: [] },
   settings: makeSettings(),
@@ -44,7 +44,7 @@ host._rect.width = 1200; host._rect.height = 900;
 renderSettlements(host, ctx);
 assert.ok(host.children.length > 0);
 
-// ── End-of-age archive: a record without outputs and a null entry render ──────
+// End-of-age archive: a record without outputs and a null entry render
 // The showcase output strip and leader icons dereference `outputs`; an archive
 // record written by an older build (or trimmed by a repair) may carry none.
 globalThis.Game = { age: "AGE_EXPLORATION", turn: 5 };
@@ -80,7 +80,7 @@ assert.equal(archiveHost.querySelector(".demographics-settle-empty"), null, "no 
 delete globalThis.Game;
 delete globalThis.GameInfo;
 
-// ── Throw boundary: a throwing sub-view leaves the render-failed notice ───────
+// Throw boundary: a throwing sub-view leaves the render-failed notice
 // rerenderContent clears the content host before rendering, so a sub-view throw
 // (here: readAgeArchive reading a history whose `settleAges` getter throws) used
 // to leave an empty panel. Every handler (tab bar, pills, chips, sort headers)

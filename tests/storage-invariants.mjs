@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 // Shared-storage invariants gate ("never again" for the localStorage bug class).
 //
-// Every ModOptions-based mod shares ONE localStorage root, the "modSettings" key, and the engine's
+// Every ModOptions-based mod shares one localStorage root, the "modSettings" key, and the engine's
 // options loader wipes the whole store when it sees a second top-level key or a non-JSON value.
 // Earlier demographics builds broke that contract three different ways (stray top-level keys, a
 // blind `{}` reset of the root, and write-without-read that dropped sibling mods' slices). This
@@ -19,7 +19,7 @@ import { fileURLToPath } from "node:url";
 //   (e) every write of ROOT_KEY is preceded, in the same function body, by a read of it
 //       (`getItem(ROOT_KEY` or a call to a read helper named readRoot / readRootForWrite).
 //
-// (e) is a best-effort TEXTUAL check with these documented limits:
+// (e) is a best-effort textual check with these documented limits:
 //   - the "enclosing function" is found by brace matching over a copy of the source with comments
 //     and string bodies blanked; unusual syntax (regex literals containing quotes or braces, JSX,
 //     `with`) can confuse it, in which case the gate reports the write as top-level and fails;

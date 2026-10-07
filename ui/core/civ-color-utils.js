@@ -5,7 +5,7 @@
 // luminance: a saturated red reads fine on a dark background while a dark gray does not.
 
 // Minimum HSL lightness a line color needs to read on the dark chart surface; the floor
-// slides from GRAY (desaturated, needs to be lighter) to SATURATED.
+// slides from gray (desaturated, needs to be lighter) to fully saturated.
 const MIN_LIGHTNESS_GREY = 0.65;
 const MIN_LIGHTNESS_SATURATED = 0.5;
 
@@ -29,9 +29,8 @@ const ARBITRARY_LIGHT = 0.58;
 
 /**
  * Parse a `#RRGGBB`/`#AARRGGBB` or `rgb()/rgba()` color string into channels.
- * @param {string} input Color string.
+ * @param {string} input
  * @returns {{ r: number, g: number, b: number, alpha: string, src: "hex"|"rgba" } | null}
- *   Parsed channels or null.
  */
 function parseColorChannels(input) {
   const hexMatch = input.match(/^#?([0-9a-fA-F]{6,8})$/);
@@ -60,10 +59,10 @@ function parseColorChannels(input) {
 
 /**
  * Format RGB channels as `#RRGGBB`.
- * @param {number} r Red channel.
- * @param {number} g Green channel.
- * @param {number} b Blue channel.
- * @returns {string} Hex color string.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {string}
  */
 function toHexColor(r, g, b) {
   /** @param {number} n */
@@ -73,9 +72,9 @@ function toHexColor(r, g, b) {
 
 /**
  * Convert RGB (0-255) to HSL.
- * @param {number} r Red channel.
- * @param {number} g Green channel.
- * @param {number} b Blue channel.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
  * @returns {{ h: number, s: number, l: number }} Hue [0,360), sat/light [0,1].
  */
 function rgbToHsl(r, g, b) {
@@ -102,7 +101,7 @@ function rgbToHsl(r, g, b) {
  * @param {number} h Hue in degrees [0,360).
  * @param {number} s Saturation [0,1].
  * @param {number} l Lightness [0,1].
- * @returns {{ r: number, g: number, b: number }} RGB channels.
+ * @returns {{ r: number, g: number, b: number }}
  */
 function hslToRgbChannels(h, s, l) {
   const c = (1 - Math.abs(2 * l - 1)) * s;
@@ -122,7 +121,7 @@ function hslToRgbChannels(h, s, l) {
  * @param {number} hp Hue partition (`h / 60`).
  * @param {number} c Chroma.
  * @param {number} x Secondary channel value.
- * @returns {{ r: number, g: number, b: number }} Base channels.
+ * @returns {{ r: number, g: number, b: number }}
  */
 function hslBaseChannels(hp, c, x) {
   if (hp < 1) return { r: c, g: x, b: 0 };
@@ -145,10 +144,10 @@ function minLightnessFor(s) {
 }
 
 /**
- * Whether a parsed color is a dark, nearly-colorless grey/black - the case
- * where lifting yields a dull gray, so the civ's secondary color is preferred.
- * @param {{ r: number, g: number, b: number }} c Parsed channels.
- * @returns {boolean} True for dark greys/blacks.
+ * Whether a parsed color is a dark, nearly-colorless grey/black. Lifting one of
+ * those only yields a dull gray, so the civ's secondary color is preferred.
+ * @param {{ r: number, g: number, b: number }} c
+ * @returns {boolean}
  */
 function isDarkGrey(c) {
   const { s, l } = rgbToHsl(c.r, c.g, c.b);
@@ -158,12 +157,12 @@ function isDarkGrey(c) {
 /**
  * Format RGB channels back into the same syntax the source color used,
  * preserving any rgba alpha suffix.
- * @param {number} r Red channel.
- * @param {number} g Green channel.
- * @param {number} b Blue channel.
- * @param {"hex"|"rgba"} src Source syntax.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @param {"hex"|"rgba"} src
  * @param {string} alpha Alpha suffix (e.g. ",0.5") or "".
- * @returns {string} Formatted color string.
+ * @returns {string}
  */
 function formatColor(r, g, b, src, alpha) {
   if (src === "rgba" && alpha) {
@@ -176,8 +175,8 @@ function formatColor(r, g, b, src, alpha) {
  * Raise a civ color to the minimum readable lightness for the dark Demographics surfaces,
  * preserving its hue and saturation. Non-string / unparseable inputs and colors already at
  * or above the floor are returned unchanged.
- * @param {*} civColor Civ color string.
- * @returns {*} Lifted color, or original input.
+ * @param {*} civColor
+ * @returns {*} Lifted color, or the original input.
  */
 export function safeTextColor(civColor) {
   if (typeof civColor !== "string") return civColor;
@@ -196,9 +195,9 @@ export function safeTextColor(civColor) {
  * Choose the more readable of a civ's two banner colors for the dark Demographics surfaces:
  * the primary, unless it is a dark grey/black and the secondary is a real (non-gray) color.
  * The returned color is raw; callers still pass it through {@link safeTextColor}.
- * @param {*} primaryColor Civ primary banner color string.
- * @param {*} secondaryColor Civ secondary banner color string.
- * @returns {*} The chosen color (primary unless the secondary reads better).
+ * @param {*} primaryColor
+ * @param {*} secondaryColor
+ * @returns {*}
  */
 export function preferReadableColor(primaryColor, secondaryColor) {
   if (typeof primaryColor !== "string" || primaryColor.length === 0) {
@@ -210,7 +209,7 @@ export function preferReadableColor(primaryColor, secondaryColor) {
     return primaryColor;
   }
   // Primary is a dark gray: prefer the secondary banner color when it carries a
-  // real hue (i.e. is not itself a dark gray).
+  // real hue (is not itself a dark gray).
   if (typeof secondaryColor === "string" && secondaryColor.length > 0) {
     const secondary = parseColorChannels(secondaryColor);
     if (secondary && !isDarkGrey(secondary)) {
@@ -222,11 +221,11 @@ export function preferReadableColor(primaryColor, secondaryColor) {
 }
 
 /**
- * Weighted RGB ("redmean") distance between two parsed colors - a cheap
+ * Weighted RGB ("redmean") distance between two parsed colors, a cheap
  * perceptual approximation good enough to flag "too similar" line colors.
- * @param {{ r: number, g: number, b: number }} a First color.
- * @param {{ r: number, g: number, b: number }} b Second color.
- * @returns {number} Distance (0 = identical, larger = more different).
+ * @param {{ r: number, g: number, b: number }} a
+ * @param {{ r: number, g: number, b: number }} b
+ * @returns {number} 0 = identical, larger = more different.
  */
 function channelDistance(a, b) {
   const rmean = (a.r + b.r) / 2;
@@ -241,8 +240,8 @@ function channelDistance(a, b) {
 /**
  * Perceptual distance between two color strings. Unparseable inputs are treated
  * as maximally distinct (Infinity) so they never trip the similarity check.
- * @param {*} colorA First color string.
- * @param {*} colorB Second color string.
+ * @param {*} colorA
+ * @param {*} colorB
  * @returns {number} Distance, or Infinity if either is unparseable.
  */
 export function colorDistance(colorA, colorB) {
@@ -255,7 +254,7 @@ export function colorDistance(colorA, colorB) {
 /**
  * An arbitrary, deterministic, readable color for a given index, spread by the golden angle so
  * neighbors are maximally distinct. The last-resort line color when banner colors collide.
- * @param {number} index Sequence index (0, 1, 2, …).
+ * @param {number} index
  * @returns {string} Hex color.
  */
 export function arbitraryColor(index) {
@@ -266,8 +265,8 @@ export function arbitraryColor(index) {
 
 /**
  * Minimum distance from a parsed color to any already-accepted color.
- * @param {{ r: number, g: number, b: number }} c Candidate color.
- * @param {Array<{ r: number, g: number, b: number }>} accepted Accepted colors.
+ * @param {{ r: number, g: number, b: number }} c
+ * @param {Array<{ r: number, g: number, b: number }>} accepted
  * @returns {number} Smallest distance (Infinity when none accepted yet).
  */
 function minDistanceTo(c, accepted) {
@@ -283,7 +282,7 @@ function minDistanceTo(c, accepted) {
  * Search the arbitrary palette for a color well-separated from all accepted
  * colors. Returns the first candidate that clears the threshold, or the
  * best-separated one found within the scan budget.
- * @param {Array<{ r: number, g: number, b: number }>} accepted Accepted colors.
+ * @param {Array<{ r: number, g: number, b: number }>} accepted
  * @param {number} startIdx First arbitrary index to try.
  * @returns {{ color: string, parsed: { r: number, g: number, b: number }, nextIdx: number }}
  *   The chosen color, its channels, and the next unused arbitrary index.

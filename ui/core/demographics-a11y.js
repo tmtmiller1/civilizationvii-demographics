@@ -1,26 +1,15 @@
 // demographics-a11y.js
-// Small accessibility helpers that make our custom `<div>` buttons reachable
-// by keyboard / gamepad in Civ7's UI sandbox.
 //
-// Civ7's first-party `<fxs-tab-bar>`, `<fxs-dropdown>`, and `<fxs-activatable>`
-// components already integrate with the engine's focus/nav system. Plain
-// `<div>` elements with onclick handlers do NOT (they're invisible to the
-// keyboard, gamepad, and Steam Deck D-pad)
-//
-// Calling `makeClickable(el, onClick)`:
-//   - sets `tabindex="0"` so the element joins the tab order
-//   - sets `role="button"` so screen readers / focus rings treat it correctly
-//   - binds the click handler
-//   - binds a `keydown` handler that fires the same callback on Enter / Space
-//
-// Doesn't fight Civ7's nav system; just upgrades plain divs to button-equivalents.
+// Makes the mod's plain `<div>` buttons reachable by keyboard and gamepad. The
+// first-party fxs-* components already sit in the engine's focus/nav system; a
+// bare div with an onclick does not, so it is invisible to the keyboard, gamepad
+// and Steam Deck D-pad.
 
 /**
- * Upgrade a plain `<div>` into a keyboard/gamepad-reachable button-equivalent:
- * adds it to the tab order, gives it `role="button"`, and fires `onClick` on
- * click and on Enter / Space. Does not fight Civ7's nav system.
- * @param {HTMLElement | null | undefined} el Element to make clickable.
- * @param {(ev?: Event) => void} onClick Activation handler.
+ * Upgrade a plain `<div>` into a button-equivalent: adds it to the tab order,
+ * gives it `role="button"`, and fires `onClick` on click and on Enter / Space.
+ * @param {HTMLElement | null | undefined} el
+ * @param {(ev?: Event) => void} onClick
  * @returns {HTMLElement | null | undefined} The same element, for chaining.
  */
 export function makeClickable(el, onClick) {

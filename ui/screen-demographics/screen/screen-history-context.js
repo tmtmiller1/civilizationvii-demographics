@@ -29,7 +29,7 @@
  * Build the context object passed to the history view, including all of its
  * state values and the callbacks that mutate-then-persist-then-rerender.
  * @param {*} screen The ScreenDemographics instance.
- * @returns {*} The history view render context.
+ * @returns {*}
  */
 export function buildHistoryContext(screen) {
   return {
@@ -54,8 +54,6 @@ export function buildHistoryContext(screen) {
 }
 
 /**
- * Build the history view's mutation callbacks. Each updates a state field,
- * persists it where applicable, and re-renders.
  * @param {*} screen The ScreenDemographics instance.
  * @returns {HistoryCallbacks} The callback bag merged into the history context.
  */

@@ -46,11 +46,11 @@ const { renderCrisisStages } = await import(
   "/demographics/ui/screen-demographics/charts/crises/chart-crisis-stages.js"
 );
 
-// collectCrisisScopes — single crisis → empty (only non-trivial when 2+ crises)
+// collectCrisisScopes: single crisis → empty (only non-trivial when 2+ crises)
 const scopes = collectCrisisScopes(makeHistory());
 assert.ok(Array.isArray(scopes));
 
-// resolveCrisisScope — no history → "all"
+// resolveCrisisScope: no history → "all"
 const resolved = resolveCrisisScope(makeHistory(), null);
 assert.ok(typeof resolved === "string");
 

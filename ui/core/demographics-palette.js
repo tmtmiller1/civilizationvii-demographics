@@ -23,7 +23,7 @@ const PALETTE_STANDARD = [
   "#c8d97c"
 ];
 
-// Wong palette - designed for CVD readability.
+// Wong palette, designed for CVD readability.
 const PALETTE_COLORBLIND = [
   "#E69F00", // orange
   "#56B4E9", // sky blue
@@ -57,13 +57,13 @@ const ATTITUDE_STANDARD = {
 // CVD-safe attitude swatches: red→vermillion, green→bluish-green, etc.,
 // preserving the warm vs. cool semantic split.
 const ATTITUDE_COLORBLIND = {
-  war: "#D55E00", // vermillion - still reads "warning"
-  alliance: "#56B4E9", // sky blue - positive
-  helpful: "#F0E442", // yellow - warm positive
-  friendly: "#009E73", // bluish green - positive
+  war: "#D55E00", // vermillion, still reads "warning"
+  alliance: "#56B4E9", // sky blue, positive
+  helpful: "#F0E442", // yellow, warm positive
+  friendly: "#009E73", // bluish green, positive
   neutral: "#999999", // gray
-  unfriendly: "#E69F00", // orange - caution
-  hostile: "#CC79A7" // reddish purple - strong negative
+  unfriendly: "#E69F00", // orange, caution
+  hostile: "#CC79A7" // reddish purple, strong negative
 };
 
 // Generic semantic helpers used elsewhere (conflicts gantt fallback bar
@@ -97,7 +97,7 @@ function isColorblindMode() {
 
 /**
  * The rotating per-civ line palette (Wong CVD-safe set in colorblind mode).
- * @returns {string[]} Hex color strings.
+ * @returns {string[]}
  */
 export function getPalette() {
   return isColorblindMode() ? PALETTE_COLORBLIND : PALETTE_STANDARD;

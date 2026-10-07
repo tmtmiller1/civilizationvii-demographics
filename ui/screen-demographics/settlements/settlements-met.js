@@ -6,7 +6,7 @@
 
 /**
  * Resolve local player id from GameContext.
- * @returns {number|undefined} Local player id.
+ * @returns {number|undefined}
  */
 function localPlayerId() {
   if (typeof GameContext === "undefined") return undefined;
@@ -15,8 +15,8 @@ function localPlayerId() {
 
 /**
  * Resolve local player's diplomacy handle.
- * @param {number} localId Local player id.
- * @returns {*|null} Diplomacy handle.
+ * @param {number} localId
+ * @returns {*|null}
  */
 function localDiplomacy(localId) {
   if (typeof Players === "undefined" || !Players.get) return null;
@@ -24,7 +24,7 @@ function localDiplomacy(localId) {
 }
 
 /**
- * Whether the LOCAL player has met `pid` (the local player is always met).
+ * Whether the local player has met `pid` (the local player is always met).
  * Returns undefined when diplomacy is unreadable so callers can decline to
  * mask on uncertainty (mirrors the worldrankings-allcivs's "only mask when met === false"
  * rule).

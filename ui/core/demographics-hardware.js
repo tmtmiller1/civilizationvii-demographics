@@ -1,7 +1,7 @@
 // demographics-hardware.js
 //
-// Hardware-adaptive budgets: a bounded CAPABILITY factor (CPU cores / device
-// memory / mobile experience) and a GAME-SIZE factor (player count) that scale
+// Hardware-adaptive budgets: a bounded capability factor (CPU cores / device
+// memory / mobile experience) and a game-size factor (player count) that scale
 // the adaptive retention cap and bound per-series render work to a point budget.
 // Everything is read defensively and clamped, so a missing read yields the
 // neutral factor 1.
@@ -9,22 +9,20 @@
 const DBG = false;
 
 /**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.hardware]", ...a);
 }
 
-/** Cached capability factor (hardware doesn't change within a session). @type {number|null} */
+/** Cached: hardware doesn't change within a session. @type {number|null} */
 let _capability = null;
 
 /**
- * Clamp `n` into [lo, hi].
- * @param {number} n Value.
- * @param {number} lo Lower bound.
- * @param {number} hi Upper bound.
- * @returns {number} The clamped value.
+ * @param {number} n
+ * @param {number} lo
+ * @param {number} hi
+ * @returns {number}
  */
 function clamp(n, lo, hi) {
   return Math.min(hi, Math.max(lo, n));
@@ -33,7 +31,7 @@ function clamp(n, lo, hi) {
 /**
  * The CPU-core contribution to the capability factor, from
  * `navigator.hardwareConcurrency` (neutral 1 when unavailable).
- * @returns {number} A multiplier around 1.
+ * @returns {number}
  */
 function coreFactor() {
   const nav = /** @type {*} */ (globalThis).navigator;
@@ -48,7 +46,7 @@ function coreFactor() {
 
 /**
  * Whether the active view experience is Mobile (best-effort; false off-engine).
- * @returns {boolean} True on a mobile experience.
+ * @returns {boolean}
  */
 function isMobileExperience() {
   try {
@@ -66,7 +64,7 @@ function isMobileExperience() {
 /**
  * The device-memory + mobile contribution to the capability factor (neutral 1
  * when unavailable).
- * @returns {number} A multiplier around 1.
+ * @returns {number}
  */
 function memoryAndFormFactor() {
   let f = 1;
@@ -82,7 +80,7 @@ function memoryAndFormFactor() {
 /**
  * A bounded hardware-capability factor in [0.4, 1.5]: <1 on weak machines
  * (few cores / little memory / mobile), >1 on strong ones. Memoized.
- * @returns {number} The capability factor.
+ * @returns {number}
  */
 export function capabilityFactor() {
   if (_capability != null) return _capability;
@@ -117,7 +115,7 @@ function majorPlayerCount() {
  * A bounded game-size factor in [0.7, 1]: smaller for many-civ games (whose
  * per-turn samples are larger), so the retention cap shrinks to bound total
  * stored bytes. Neutral (1) when the player count is unknown or small.
- * @returns {number} The size factor.
+ * @returns {number}
  */
 export function gameSizeFactor() {
   const players = majorPlayerCount();
@@ -129,7 +127,7 @@ export function gameSizeFactor() {
 /**
  * Combined retention scale = capability × game-size, in [0.4, 1.5]. Multiplies
  * the speed-derived adaptive sample cap (storage-cap.js).
- * @returns {number} The retention scale.
+ * @returns {number}
  */
 export function retentionScale() {
   return clamp(capabilityFactor() * gameSizeFactor(), 0.4, 1.5);
@@ -143,7 +141,7 @@ const BASE_RENDER_POINTS = 1400;
  * The per-series plotted-point budget for the current hardware, in [400, 3000].
  * The line chart downsamples a series to this many points (after the visible-
  * range filter) so render work is bounded on weak machines and marathon saves.
- * @returns {number} The point budget.
+ * @returns {number}
  */
 export function renderPointBudget() {
   return Math.round(clamp(BASE_RENDER_POINTS * capabilityFactor(), 400, 3000));
@@ -154,9 +152,9 @@ export function renderPointBudget() {
  * always retaining the last (so the line still reaches "now"). A no-op when
  * already within budget. Preserves order.
  * @template T
- * @param {T[]} points The point list.
- * @param {number} budget Max points to keep.
- * @returns {T[]} The (possibly) downsampled list.
+ * @param {T[]} points
+ * @param {number} budget
+ * @returns {T[]}
  */
 export function lodDownsample(points, budget) {
   if (!Array.isArray(points) || budget <= 0 || points.length <= budget) return points;

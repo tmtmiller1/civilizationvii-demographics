@@ -21,8 +21,8 @@ const CONTRACTS = {
 
 /**
  * Whether a dotted global path resolves to a defined, non-null value.
- * @param {string} path Dotted path against the global scope (e.g. "UI.Player").
- * @returns {boolean} True when every segment resolves and the leaf is defined.
+ * @param {string} path
+ * @returns {boolean}
  */
 function present(path) {
   try {
@@ -53,7 +53,7 @@ function present(path) {
 
 /**
  * Check every declared contract against the current engine surface.
- * @returns {ContractReport} The per-feature report.
+ * @returns {ContractReport}
  */
 export function verifyContracts() {
   /** @type {Record<string, FeatureStatus>} */
@@ -70,8 +70,8 @@ export function verifyContracts() {
 /**
  * Whether a feature is safe to run right now. An unknown feature name is treated
  * as available (this layer only gates features it explicitly declares).
- * @param {string} feature The feature key (e.g. "camera").
- * @returns {boolean} True when the feature's contract is satisfied.
+ * @param {string} feature
+ * @returns {boolean}
  */
 export function featureAvailable(feature) {
   const status = verifyContracts().byFeature[feature];
@@ -80,8 +80,8 @@ export function featureAvailable(feature) {
 
 /**
  * Verify contracts and log one console.error per degraded feature (silent when
- * all contracts pass). Called once at startup; returns the report.
- * @returns {ContractReport} The report.
+ * all contracts pass). Called once at startup.
+ * @returns {ContractReport}
  */
 export function logContractReport() {
   const report = verifyContracts();
@@ -93,7 +93,7 @@ export function logContractReport() {
     if (!status.ok) {
       console.error(
         "[Demographics.contracts] '" + feature +
-        "' degraded , disabled; missing: " + status.missing.join(", ")
+        "' degraded, disabled; missing: " + status.missing.join(", ")
       );
     }
   }

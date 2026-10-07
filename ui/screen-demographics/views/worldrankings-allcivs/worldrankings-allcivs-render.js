@@ -13,7 +13,7 @@ import {
   leadsMetric
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 
-// ── Scaled / Civ number mode ──────────────────────────────────────────────────
+// Scaled / Civ number mode
 // Several metrics come in a matched pair: a scaled-"people" version (the visible row) and a raw
 // Civ-numbers twin (registered but hidden). The matrix shows one row per pair and a Scaled/Civ
 // toggle swaps which side every paired row displays; the mode is a module-level flag set by the
@@ -23,7 +23,7 @@ let _numberMode = "scaled";
 
 /**
  * Set the active Scaled/Civ number mode for the matrix. Call before rebuilding.
- * @param {string} mode "scaled" or "civ".
+ * @param {string} mode
  */
 export function setMatrixNumberMode(mode) {
   _numberMode = NUMBER_MODES.includes(mode) ? mode : "scaled";
@@ -78,7 +78,7 @@ export function matrixHasNumberModePairs() {
  * The metrics shown in the All Civilizations views (non-hidden), in order. In
  * "civ" mode each scaled metric that has a Civ-numbers twin is swapped for that
  * twin, so the row shows Civ values/ranks under the same (shared) label.
- * @returns {*[]} The shown metric definitions.
+ * @returns {*[]}
  */
 function shownMetrics() {
   const base = /** @type {*[]} */ (METRICS).filter((m) => !m.worldRankingsAllCivsHidden);
@@ -110,7 +110,7 @@ function shownMetrics() {
 
 /**
  * Error logger (always emits).
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.view-worldrankings-allcivs]", ...a);
@@ -119,9 +119,9 @@ function derr(...a) {
 /**
  * Build the leader-avatar element: a real `<fxs-icon>` portrait when the
  * profile carries a `LEADER_*` type, otherwise an initial-letter placeholder.
- * @param {CivProfile} profile Source civ profile.
- * @param {number} sizeRem Avatar edge length, in rem.
- * @returns {HTMLElement} The avatar wrapper element.
+ * @param {CivProfile} profile
+ * @param {number} sizeRem
+ * @returns {HTMLElement}
  */
 export function buildLeaderAvatar(profile, sizeRem) {
   const wrap = document.createElement("div");
@@ -153,7 +153,7 @@ export function buildLeaderAvatar(profile, sizeRem) {
 
 /**
  * Check whether a leader type can resolve to a real portrait icon.
- * @param {*} leaderType Candidate leader type.
+ * @param {*} leaderType
  * @returns {leaderType is string} True when the type looks like `LEADER_*`.
  */
 function isLeaderPortraitType(leaderType) {
@@ -162,8 +162,8 @@ function isLeaderPortraitType(leaderType) {
 
 /**
  * Build one leader portrait icon element.
- * @param {string} leaderType Leader type string.
- * @returns {HTMLElement} Portrait element.
+ * @param {string} leaderType
+ * @returns {HTMLElement}
  */
 function buildLeaderPortrait(leaderType) {
   const portrait = document.createElement("fxs-icon");
@@ -176,7 +176,7 @@ function buildLeaderPortrait(leaderType) {
 /**
  * Append the leader / civ / "formerly" text rows to a civ-header text block.
  * @param {HTMLElement} text The header text container to append into.
- * @param {CivProfile} profile Source civ profile.
+ * @param {CivProfile} profile
  * @param {boolean} maskAsUnmet When true, emit generic unmet placeholders.
  */
 export function buildCivHeaderText(text, profile, maskAsUnmet) {
@@ -203,8 +203,8 @@ export function buildCivHeaderText(text, profile, maskAsUnmet) {
 /**
  * Append the secondary leader row + "formerly" civ-history row for a met civ
  * header (the civ name is the primary line above, added by buildCivHeaderText).
- * @param {HTMLElement} text Header text container.
- * @param {CivProfile} profile Source civ profile.
+ * @param {HTMLElement} text
+ * @param {CivProfile} profile
  */
 function appendCivNameRows(text, profile) {
   // Secondary line: the leader. Only when a distinct civ name sits above it, so a
@@ -229,11 +229,11 @@ function appendCivNameRows(text, profile) {
  * Build a civ-column header div (avatar + leader + civ + formerly suffix). With `maskAsUnmet`,
  * names become generic unmet placeholders, the formerly suffix is suppressed, and the avatar
  * falls back to its built-in placeholder.
- * @param {CivProfile} profile Source civ profile.
- * @param {boolean} isLocal Whether this is the local player's column.
+ * @param {CivProfile} profile
+ * @param {boolean} isLocal
  * @param {boolean} maskAsUnmet When true, mask names as generic placeholders.
  * @param {HeaderOpts} [_opts] Click affordance options (unused here).
- * @returns {HTMLElement} The civ-header element.
+ * @returns {HTMLElement}
  */
 export function buildCivHeader(profile, isLocal, maskAsUnmet, _opts) {
   const wrap = document.createElement("div");
@@ -316,8 +316,8 @@ export function formatMetricValue(metric, v) {
  * Build the small value line: "(<icon> value)" in the (former rank) small style.
  * A missing value shows a bare "—" (no parens/icon).
  * @param {MetricDef} metric The metric definition.
- * @param {CivProfile} profile Source civ profile.
- * @returns {HTMLElement} The value line.
+ * @param {CivProfile} profile
+ * @returns {HTMLElement}
  */
 function buildValueLine(metric, profile) {
   const line = document.createElement("div");
@@ -348,9 +348,9 @@ function buildValueLine(metric, profile) {
  * headline (the column context makes "rank" obvious - no "Rank" word, no /total
  * fraction) and the yield value is the small "(<icon> value)" line below.
  * @param {MetricDef} metric The metric definition for this row.
- * @param {CivProfile} profile Source civ profile.
- * @param {number|undefined} rank 1-based rank, or undefined.
- * @returns {HTMLElement} The cell element.
+ * @param {CivProfile} profile
+ * @param {number|undefined} rank
+ * @returns {HTMLElement}
  */
 export function buildValueCell(metric, profile, rank) {
   const cell = document.createElement("div");
@@ -368,8 +368,8 @@ export function buildValueCell(metric, profile, rank) {
 /**
  * Build the metric-label column (column 1), including the optional corner
  * "Reset (N hidden)" affordance.
- * @param {LabelColumnOpts} [opts] Reset affordance options.
- * @returns {HTMLElement} The label-column element.
+ * @param {LabelColumnOpts} [opts]
+ * @returns {HTMLElement}
  */
 export function buildLabelColumn(opts) {
   const col = document.createElement("div");
@@ -392,10 +392,10 @@ export function buildLabelColumn(opts) {
 
 /**
  * Add, update or remove the label column's reset button in place. The label column carries the
- * metric icons, so it must never be rebuilt just because the hidden-civ count changed — a fresh
+ * metric icons, so it must never be rebuilt just because the hidden-civ count changed; a fresh
  * element's `blp:` background resolves a frame or more after insertion and visibly blinks.
  * @param {HTMLElement} labelCol The label column.
- * @param {LabelColumnOpts} opts Reset options.
+ * @param {LabelColumnOpts} opts
  */
 export function syncLabelResetButton(labelCol, opts) {
   const header = /** @type {HTMLElement|null} */ (
@@ -412,7 +412,7 @@ export function syncLabelResetButton(labelCol, opts) {
 
 /**
  * Build the label-column reset button when hidden civs exist.
- * @param {LabelColumnOpts|undefined} opts Reset options.
+ * @param {LabelColumnOpts|undefined} opts
  * @returns {HTMLElement|null} Reset button, or null when not needed.
  */
 function buildLabelResetButton(opts) {
@@ -468,12 +468,12 @@ function markLeaderCell(cell, m) {
 
 /**
  * Build a civ column: header on top, one value+rank cell per metric below.
- * @param {CivProfile} profile This column's civ profile.
- * @param {Record<string, CivProfile>} profiles All profiles (for ranking).
- * @param {boolean} isLocal Whether this is the local player's column.
+ * @param {CivProfile} profile
+ * @param {Record<string, CivProfile>} profiles
+ * @param {boolean} isLocal
  * @param {boolean} maskAsUnmet When true, mask the header as unmet.
- * @param {HeaderOpts} [opts] Click affordance options.
- * @returns {HTMLElement} The civ-column element.
+ * @param {HeaderOpts} [opts]
+ * @returns {HTMLElement}
  */
 export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
   const col = document.createElement("div");
@@ -497,10 +497,10 @@ export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
 /**
  * Slim "ghost" column shown for hidden civs: a narrow header with the name (or unmet placeholder)
  * and no metric cells, so the user can see who's hidden and click to bring them back.
- * @param {CivProfile} profile This civ's profile.
+ * @param {CivProfile} profile
  * @param {boolean} maskAsUnmet When true, show the generic unmet placeholder.
  * @param {HeaderOpts} [_opts] Click affordance options (unused here).
- * @returns {HTMLElement} The ghost-column element.
+ * @returns {HTMLElement}
  */
 export function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
   const col = document.createElement("div");
@@ -547,7 +547,7 @@ export function appendEmptyState(host) {
  * in place of the blank panel the throw would otherwise leave (the host was
  * already cleared by the time a renderer runs).
  * @param {HTMLElement} host The view host element.
- * @param {string} what Which renderer threw (for the log line).
+ * @param {string} what
  * @param {*} e The thrown error.
  */
 export function appendRenderFailed(host, what, e) {

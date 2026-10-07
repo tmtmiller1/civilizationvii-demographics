@@ -30,9 +30,9 @@ function visibleMetrics() {
 
 /**
  * Read a persisted setting defensively.
- * @param {*} ctx Render context.
- * @param {string} key Setting key.
- * @param {*} fb Fallback.
+ * @param {*} ctx
+ * @param {string} key
+ * @param {*} fb
  * @returns {*} The stored value or fallback.
  */
 function getSetting(ctx, key, fb) {
@@ -46,9 +46,9 @@ function getSetting(ctx, key, fb) {
 
 /**
  * Write a persisted setting (best-effort).
- * @param {*} ctx Render context.
- * @param {string} key Setting key.
- * @param {*} value Value to store.
+ * @param {*} ctx
+ * @param {string} key
+ * @param {*} value
  */
 function setSetting(ctx, key, value) {
   try {
@@ -60,8 +60,8 @@ function setSetting(ctx, key, value) {
 
 /**
  * Resolve the active view mode ("rank"/"value").
- * @param {*} ctx Render context.
- * @returns {string} The mode.
+ * @param {*} ctx
+ * @returns {string}
  */
 function readMode(ctx) {
   const m = getSetting(ctx, "worldRankingsAllCivsViewMode", "rank");
@@ -70,9 +70,9 @@ function readMode(ctx) {
 
 /**
  * Resolve the active sort metric id, validated against the visible metrics.
- * @param {*} ctx Render context.
- * @param {*[]} metrics Visible metrics.
- * @returns {string} The sort key.
+ * @param {*} ctx
+ * @param {*[]} metrics
+ * @returns {string}
  */
 function readSortKey(ctx, metrics) {
   const k = getSetting(ctx, "worldRankingsAllCivsSortKey", "score");
@@ -81,8 +81,8 @@ function readSortKey(ctx, metrics) {
 
 /**
  * Whether to mask this civ's identity (unmet + names hidden).
- * @param {*} profile Civ profile.
- * @param {boolean} showUnmetNames Whether unmet names are shown.
+ * @param {*} profile
+ * @param {boolean} showUnmetNames
  * @returns {boolean} True when masked.
  */
 function isMasked(profile, showUnmetNames) {
@@ -91,8 +91,8 @@ function isMasked(profile, showUnmetNames) {
 
 /**
  * Latest finite metric value, or null.
- * @param {*} profile Civ profile.
- * @param {string} id Metric id.
+ * @param {*} profile
+ * @param {string} id
  * @returns {number|null} The value or null.
  */
 function metricValue(profile, id) {
@@ -102,8 +102,8 @@ function metricValue(profile, id) {
 
 /**
  * Sort pids by a metric value, descending; civs missing the value sort last.
- * @param {Record<string, *>} profiles Profile map.
- * @param {string} sortKey Metric id to sort by.
+ * @param {Record<string, *>} profiles
+ * @param {string} sortKey
  * @returns {string[]} Sorted pids.
  */
 function sortPids(profiles, sortKey) {
@@ -119,8 +119,8 @@ function sortPids(profiles, sortKey) {
 
 /**
  * Precompute per-metric ranks (pid -> rank).
- * @param {Record<string, *>} profiles Profile map.
- * @param {*[]} metrics Visible metrics.
+ * @param {Record<string, *>} profiles
+ * @param {*[]} metrics
  * @returns {Map<string, *>} metricId -> { ranks, total }.
  */
 function buildRanksCache(profiles, metrics) {
@@ -131,10 +131,10 @@ function buildRanksCache(profiles, metrics) {
 
 /**
  * Rank of a pid for a metric, as a display string ("—" when unranked).
- * @param {Map<string, *>} cache Ranks cache.
+ * @param {Map<string, *>} cache
  * @param {string} metricId
- * @param {string} pid Player id.
- * @returns {string} The rank text.
+ * @param {string} pid
+ * @returns {string}
  */
 function rankOf(cache, metricId, pid) {
   const r = cache.get(metricId)?.ranks.get(pid);
@@ -145,11 +145,11 @@ function rankOf(cache, metricId, pid) {
  * The data row's class list: the shared World Rankings row look, a gold / silver /
  * bronze wash for places 1-3 in the ACTIVE sort (ties share a place), and the
  * local player's gold outline.
- * @param {Map<string, *>} cache Ranks cache.
- * @param {string} sortKey Active sort key.
- * @param {string} pid Player id.
- * @param {boolean} isLocal Whether this is the local player's row.
- * @returns {string} The class list.
+ * @param {Map<string, *>} cache
+ * @param {string} sortKey
+ * @param {string} pid
+ * @param {boolean} isLocal
+ * @returns {string}
  */
 function dataRowClass(cache, sortKey, pid, isLocal) {
   let cls = "demographics-settle-row demographics-settle-datarow";
@@ -160,11 +160,11 @@ function dataRowClass(cache, sortKey, pid, isLocal) {
 
 /**
  * The metric cell's text for the current view mode.
- * @param {*} profile Civ profile.
- * @param {*} metric Metric def.
- * @param {string} mode View mode.
- * @param {Map<string, *>} cache Ranks cache.
- * @returns {string} The cell text.
+ * @param {*} profile
+ * @param {*} metric
+ * @param {string} mode
+ * @param {Map<string, *>} cache
+ * @returns {string}
  */
 function cellText(profile, metric, mode, cache) {
   if (mode === "rank") return rankOf(cache, metric.id, profile.pid);
@@ -173,8 +173,8 @@ function cellText(profile, metric, mode, cache) {
 
 /**
  * Build a filigree section title (matches the settlements section headers).
- * @param {string} key Localization key for the title.
- * @returns {HTMLElement} The section title.
+ * @param {string} key
+ * @returns {HTMLElement}
  */
 function buildSectionTitle(key) {
   const wrap = div("demographics-settle-section-title");
@@ -191,8 +191,8 @@ function buildSectionTitle(key) {
  * active state is a class toggle in {@link applyCivTableState}, and the guard reads the LIVE mode
  * off `ui.state` (a captured one would go stale the moment the chip outlives a re-render).
  * @param {CivTableUi} ui The page's chrome handles.
- * @param {(mode: string) => void} onChange Change handler.
- * @returns {HTMLElement} The chip row.
+ * @param {(mode: string) => void} onChange
+ * @returns {HTMLElement}
  */
 function buildToggleRow(ui, onChange) {
   const row = div("demographics-settle-filters demographics-civtable-toggle");
@@ -216,9 +216,9 @@ function buildToggleRow(ui, onChange) {
 
 /**
  * Build a non-sortable fixed header cell.
- * @param {string} cls Column class.
- * @param {string} label Header label.
- * @returns {HTMLElement} The header cell.
+ * @param {string} cls
+ * @param {string} label
+ * @returns {HTMLElement}
  */
 function fixedHeader(cls, label) {
   const cell = div("demographics-settle-th " + cls);
@@ -229,10 +229,10 @@ function fixedHeader(cls, label) {
 /**
  * Build a sortable metric header cell (icon + label). Built once and registered in `ui`; its
  * sorted state is a class toggle in {@link applyCivTableState}.
- * @param {*} metric Metric def.
+ * @param {*} metric
  * @param {CivTableUi} ui The page's chrome handles.
- * @param {(key: string) => void} onSort Sort handler.
- * @returns {HTMLElement} The header cell.
+ * @param {(key: string) => void} onSort
+ * @returns {HTMLElement}
  */
 function buildMetricHeader(metric, ui, onSort) {
   const inner = div("demographics-settle-th-inner");
@@ -252,10 +252,10 @@ function buildMetricHeader(metric, ui, onSort) {
 
 /**
  * Build the table header row.
- * @param {*[]} metrics Visible metrics.
+ * @param {*[]} metrics
  * @param {CivTableUi} ui The page's chrome handles.
- * @param {(key: string) => void} onSort Sort handler.
- * @returns {HTMLElement} The header row.
+ * @param {(key: string) => void} onSort
+ * @returns {HTMLElement}
  */
 function buildHeaderRow(metrics, ui, onSort) {
   const row = div("demographics-settle-row demographics-settle-header");
@@ -270,9 +270,9 @@ function buildHeaderRow(metrics, ui, onSort) {
 /**
  * Build the civ identity avatar with the All Settlements owner-avatar classes
  * (a civ-colored disc holding the leader portrait, or an initial-letter placeholder).
- * @param {*} profile Civ profile.
+ * @param {*} profile
  * @param {boolean} masked Whether to mask the identity (force the placeholder).
- * @returns {HTMLElement} The avatar element.
+ * @returns {HTMLElement}
  */
 function buildCivAvatar(profile, masked) {
   const wrap = div("demographics-settle-avatar");
@@ -293,9 +293,9 @@ function buildCivAvatar(profile, masked) {
 
 /**
  * Build the initial-letter avatar placeholder (matches the All Settlements one).
- * @param {*} profile Civ profile.
- * @param {boolean} masked Whether the identity is masked.
- * @returns {HTMLElement} The placeholder element.
+ * @param {*} profile
+ * @param {boolean} masked
+ * @returns {HTMLElement}
  */
 function civAvatarInitial(profile, masked) {
   const src = masked ? "?" : profile.civName || profile.leaderName || "?";
@@ -309,9 +309,9 @@ function civAvatarInitial(profile, masked) {
  * Build the civilization identity cell using the same DOM/classes as the All
  * Settlements owner column: the prominent ".-owner-leader" class carries the
  * civ name and the smaller ".-owner-civ" carries the leader beneath it.
- * @param {*} profile Civ profile.
- * @param {boolean} masked Whether to mask the identity.
- * @returns {HTMLElement} The civ cell.
+ * @param {*} profile
+ * @param {boolean} masked
+ * @returns {HTMLElement}
  */
 function buildCivCell(profile, masked) {
   const cell = div(
@@ -340,10 +340,10 @@ function buildCivCell(profile, masked) {
 /**
  * Build one metric cell. The cell of the civ leading that metric carries the gold
  * leader wash and a "World leader in <metric>" tooltip.
- * @param {*} profile Civ profile.
- * @param {*} m Metric def.
- * @param {{ mode: string, sortKey: string, cache: Map<string, *> }} opts Row config.
- * @returns {HTMLElement} The cell.
+ * @param {*} profile
+ * @param {*} m
+ * @param {{ mode: string, sortKey: string, cache: Map<string, *> }} opts
+ * @returns {HTMLElement}
  */
 function buildMetricCell(profile, m, opts) {
   const lead = leadsMetric(opts.cache.get(m.id), profile.pid);
@@ -364,12 +364,12 @@ function buildMetricCell(profile, m, opts) {
 /**
  * Build one civilization data row, returning the metric cells alongside it. Keeping the cells
  * addressable is what lets a Rank/Value switch rewrite their text in place instead of rebuilding
- * the row — the row holds the civ's leader portrait, which would otherwise re-resolve and blink.
+ * the row; the row holds the civ's leader portrait, which would otherwise re-resolve and blink.
  * @param {string} pid The profile's map key.
- * @param {*} profile Civ profile.
+ * @param {*} profile
  * @param {{ mode: string, sortKey: string, metrics: *[], cache: Map<string, *>,
  *   showUnmetNames: boolean, localPid: string }} opts Row config.
- * @returns {CivTableRow} The row record.
+ * @returns {CivTableRow}
  */
 function buildDataRow(pid, profile, opts) {
   const { sortKey, metrics, cache, showUnmetNames, localPid } = opts;
@@ -397,7 +397,7 @@ function buildDataRow(pid, profile, opts) {
 /**
  * One rendered civ table: its scroll frame's table element, the metrics it columns, and its
  * current data rows. The header row (and the metric icons in it) lives in `table` and is never
- * rebuilt — only `rows` is swapped.
+ * rebuilt; only `rows` is swapped.
  * @typedef {{ table: HTMLElement, metrics: *[], rows: CivTableRow[] }} CivTableBlock
  */
 
@@ -405,7 +405,7 @@ function buildDataRow(pid, profile, opts) {
  * Live handles to the page's persistent chrome. Rebuilding that chrome is what made the filigree
  * section titles and the metric-column icons blink: a fresh element's `blp:` background resolves a
  * frame or more after it is inserted, so identical chrome visibly flashed on every Rank/Value or
- * sort click. Everything here is built ONCE per render and only ever has classes toggled on it.
+ * sort click. Everything here is built once per render and only ever has classes toggled on it.
  * @typedef {{
  *   chips: Map<string, HTMLElement>,
  *   heads: Map<string, HTMLElement>,
@@ -423,7 +423,7 @@ function buildDataRow(pid, profile, opts) {
  * element is never rebuilt just to change its state).
  * @param {HTMLElement} el The element.
  * @param {string} cls The class to toggle.
- * @param {boolean} on Whether the class should be present.
+ * @param {boolean} on
  */
 function setClass(el, cls, on) {
   if (on) el.classList.add(cls);
@@ -455,7 +455,7 @@ function applyCivTableState(ui) {
 }
 
 /**
- * Swap every block's data rows into the current sort order. Only the rows are replaced — each
+ * Swap every block's data rows into the current sort order. Only the rows are replaced; each
  * block's header row, its icons, and the filigree titles around it stay in the DOM untouched.
  * @param {CivTableUi} ui The page's chrome handles.
  */
@@ -486,9 +486,9 @@ function fillCivTableRows(ui) {
  * header rows) is built once here; a later Rank/Value or sort click updates it in place through
  * {@link applyCivTableState} / {@link fillCivTableRows} rather than re-rendering the page.
  * @param {HTMLElement} host View host (already cleared).
- * @param {Record<string, *>} profiles Civ profile map.
+ * @param {Record<string, *>} profiles
  * @param {*} ctx Render context (history + settings).
- * @param {boolean} showUnmetNames Whether unmet identities are shown.
+ * @param {boolean} showUnmetNames
  */
 export function renderCivTable(host, profiles, ctx, showUnmetNames) {
   const metrics = visibleMetrics();
@@ -508,7 +508,7 @@ export function renderCivTable(host, profiles, ctx, showUnmetNames) {
     buildToggleRow(ui, (/** @type {string} */ m) => {
       setSetting(ctx, "worldRankingsAllCivsViewMode", m);
       ui.state.mode = m;
-      // Rank/Value changes only what each cell reads — no reorder, no rebuild.
+      // Rank/Value changes only what each cell reads: no reorder, no rebuild.
       applyCivTableState(ui);
     })
   );
@@ -539,8 +539,8 @@ export function renderCivTable(host, profiles, ctx, showUnmetNames) {
  * Every block shares the sort, the ranks cache and the local-player highlight.
  * @param {CivTableUi} ui The page's chrome handles.
  * @param {*[]} metrics The metrics (columns) this table shows.
- * @param {(key: string) => void} onSort Sort handler.
- * @returns {HTMLElement} The framed table.
+ * @param {(key: string) => void} onSort
+ * @returns {HTMLElement}
  */
 function mountCivTableBlock(ui, metrics, onSort) {
   const scroll = div("demographics-worldrankings-allcivs-matrix demographics-civtable-scroll");

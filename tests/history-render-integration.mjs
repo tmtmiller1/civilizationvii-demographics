@@ -80,7 +80,7 @@ const findAll = (n, cls) => [...(n.className && String(n.className).split(/\s+/)
 
 // Regression guard for the standalone Hall of Fame's section tabs flashing to "Best" on every
 // rerender (short-games filter, storage-repair buttons): a rerender is renderHallOfFame() on the
-// still-populated host and must put the SAME fxs-tab-bar back; a section change rebuilds it.
+// still-populated host and must put the same fxs-tab-bar back; a section change rebuilds it.
 {
   viewState.hofTab = "games";
   viewState.detail = null;
@@ -101,7 +101,7 @@ const findAll = (n, cls) => [...(n.className && String(n.className).split(/\s+/)
 }
 
 // Regression guard for the Chronicle's page tabs flashing to "Chronicle" on every pill click: a
-// pill re-render is `render(host)` on the still-populated host, and it must put the SAME
+// pill re-render is `render(host)` on the still-populated host, and it must put the same
 // fxs-tab-bar back rather than build a new one (a fresh bar shows tab 0 for a frame). A page
 // change must still rebuild it.
 {
@@ -263,8 +263,8 @@ popLane.dispatch("mouseleave", { clientX: 600, clientY: 20 });
 assert.ok(!readout.classList.contains("is-hidden"), "crossing a child inside the lane keeps it");
 popLane.dispatch("mouseleave", { clientX: 1200, clientY: 20 });
 assert.ok(readout.classList.contains("is-hidden"), "leaving the lane hides it");
-// Regression guard for blinking timeline art: a redraw must REUSE the items that carry engine
-// art — milestone medallions, disaster gems and the age bands' civilization emblems. A freshly
+// Regression guard for blinking timeline art: a redraw must reuse the items that carry engine
+// art: milestone medallions, disaster gems and the age bands' civilization emblems. A freshly
 // inserted element paints without its `blp:` texture for a frame or more, so re-creating an
 // unchanged one makes it flash.
 const artItems = () => {
@@ -284,7 +284,7 @@ assert.ok(beforeAge.size > 0, "the timeline draws art-bearing items");
 agePills[2].dispatch("click");
 assert.equal(viewState.tlAge, "AGE_EXPLORATION");
 assert.ok(find(tlRoot, "dgh-tl-lane--ages"), "redrawn for the age");
-// An age window genuinely changes WHICH items show; the ones that show in both must be the same
+// An age window changes which items show; the ones that show in both must be the same
 // elements, and nothing may be duplicated or stranded.
 const afterAge = artItems();
 assert.equal(afterAge.size, artCount(), "no item is duplicated by the age change");
@@ -296,7 +296,7 @@ for (const [k, node] of afterAge) {
 }
 assert.ok(reusedAcrossAge > 0, "some items survive the age change and keep their elements");
 
-// Zoom changes only the canvas width and the ruler — every lane item is identical, so the redraw
+// Zoom changes only the canvas width and the ruler; every lane item is identical, so the redraw
 // must not touch a single one of them.
 const beforeZoom = artItems();
 const beforeZoomCount = artCount();

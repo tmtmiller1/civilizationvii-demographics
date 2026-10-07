@@ -12,7 +12,7 @@ import {
 const DBG = false;
 /**
  * Debug logger, no-op unless `DBG` is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-worldrankings-allcivs]", ...a);
@@ -20,7 +20,7 @@ function dlog(...a) {
 
 /**
  * Error logger (always emits).
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.view-worldrankings-allcivs]", ...a);
@@ -41,7 +41,7 @@ function derr(...a) {
  * @property {boolean} showUnmetNames When false, unmet civs are masked.
  * @property {Set<string>} hiddenCivs The currently hidden pid set.
  * @property {Map<string, HTMLElement>} cols Live per-pid column elements, so a hide/show toggle
- *   rebuilds ONLY the column whose shape changed. Rebuilding the whole strip re-created every
+ *   rebuilds only the column whose shape changed. Rebuilding the whole strip re-created every
  *   other civ's leader portrait and the label column's metric icons, and each one blinked while
  *   its `blp:` background resolved again.
  * @property {HTMLElement|null} labelCol The label column (kept across toggles).
@@ -58,7 +58,7 @@ function derr(...a) {
  * Whether `pid` should be masked as unmet. Defensive: only mask when `met` is
  * EXPLICITLY false.
  * @param {StripState} st The strip state.
- * @param {string} pid Player id to test.
+ * @param {string} pid
  * @returns {boolean} True when the civ should be masked.
  */
 export function stripIsUnmet(st, pid) {
@@ -70,7 +70,7 @@ export function stripIsUnmet(st, pid) {
 
 /**
  * Read the persisted hidden-civ set, defensively, into a string `Set`.
- * @param {AllCivsCtx} ctx Render context.
+ * @param {AllCivsCtx} ctx
  * @returns {Set<string>} The persisted hidden pids (empty on any error).
  */
 export function readHiddenCivs(ctx) {
@@ -100,7 +100,7 @@ export function saveHiddenCivs(st) {
 /**
  * Toggle one civ's hidden state, persist, and re-render the strip.
  * @param {StripState} st The strip state.
- * @param {string} pid Player id to toggle.
+ * @param {string} pid
  */
 export function toggleCiv(st, pid) {
   const k = String(pid);
@@ -141,9 +141,9 @@ function orderedOtherPids(st) {
 }
 
 /**
- * Rebuild ONLY the named columns (the ones whose full/ghost shape changed), move them to their
+ * Rebuild only the named columns (the ones whose full/ghost shape changed), move them to their
  * new places, and update the label column's reset button. Every untouched column keeps its
- * element — and therefore its already-resolved portrait — so nothing blinks. Falls back to a full
+ * element, and therefore its already-resolved portrait, so nothing blinks. Falls back to a full
  * strip render if anything throws, so a failed update cannot leave a half-built strip.
  * @param {StripState} st The strip state.
  * @param {string[]} pids The pids whose columns must be rebuilt.
@@ -200,8 +200,8 @@ function reconcileStripOrder(st, ordered) {
 /**
  * Build one non-local civ column (ghost or full) and wire its header click.
  * @param {StripState} st The strip state.
- * @param {string} pid Player id for the column.
- * @returns {HTMLElement} The column element.
+ * @param {string} pid
+ * @returns {HTMLElement}
  */
 export function buildOtherColumn(st, pid) {
   const isHidden = st.hiddenCivs.has(String(pid));
@@ -289,12 +289,12 @@ function appendStripColumns(st) {
  * `modSettings.demographics.worldRankingsAllCivsHiddenCivs` as an array of pid strings;
  * the local player is never hidden.
  * @param {HTMLElement} strip The strip container to populate.
- * @param {Record<string, CivProfile>} profiles All civ profiles.
+ * @param {Record<string, CivProfile>} profiles
  * @param {{ localPid: string, otherPids: string[] }} pids The local-column pid
  *   and the sorted non-local pids.
- * @param {AllCivsCtx} ctx Render context.
+ * @param {AllCivsCtx} ctx
  * @param {boolean} showUnmetNames When false, unmet civs are masked.
- * @returns {StripController} The mounted strip controller.
+ * @returns {StripController}
  */
 export function mountWorldRankingsAllCivsStrip(strip, profiles, pids, ctx, showUnmetNames) {
   /** @type {StripState} */

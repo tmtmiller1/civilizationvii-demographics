@@ -110,7 +110,7 @@ function cityStateFilters() {
 
 /**
  * Resolve filter definitions for one top tab.
- * @param {string} topTab Either "civ" or "cs".
+ * @param {string} topTab
  * @returns {FilterDef[]} Ordered filter definitions.
  */
 export function filtersForView(topTab) {
@@ -119,9 +119,9 @@ export function filtersForView(topTab) {
 
 /**
  * Resolve visual overrides for one filter key in one top tab.
- * @param {string} key Filter key.
- * @param {string} topTab Either "civ" or "cs".
- * @returns {{ color?: string, dash?: string }|null} Override descriptor.
+ * @param {string} key
+ * @param {string} topTab
+ * @returns {{ color?: string, dash?: string }|null}
  */
 export function filterVisuals(key, topTab) {
   if (topTab === "cs" && CS_FILTER_OVERRIDES[key]) {
@@ -132,9 +132,9 @@ export function filterVisuals(key, topTab) {
 
 /**
  * Resolve the swatch color for a filter key in a top tab.
- * @param {string} key Filter key.
- * @param {string} topTab Either "civ" or "cs".
- * @returns {string} Filter swatch color.
+ * @param {string} key
+ * @param {string} topTab
+ * @returns {string}
  */
 export function pillColorFor(key, topTab) {
   const ov = filterVisuals(key, topTab);
@@ -172,8 +172,8 @@ function appendCtrlSep(row) {
 /**
  * Build the "All · None" header row: All/None flip every (visible-group) filter
  * on/off, each firing a single outer repaint.
- * @param {(turnOn: boolean) => void} onToggleAll Bulk-toggle callback.
- * @returns {HTMLElement} The control row element.
+ * @param {(turnOn: boolean) => void} onToggleAll
+ * @returns {HTMLElement}
  */
 function buildAllToggleRow(onToggleAll) {
   const ctrlRow = document.createElement("div");
@@ -186,9 +186,9 @@ function buildAllToggleRow(onToggleAll) {
 
 /**
  * Build one clickable all-toggle link span.
- * @param {string} labelLoc Localization key.
- * @param {() => void} onClick Click callback.
- * @returns {HTMLElement} Link span.
+ * @param {string} labelLoc
+ * @param {() => void} onClick
+ * @returns {HTMLElement}
  */
 function buildAllToggleLink(labelLoc, onClick) {
   const link = document.createElement("span");
@@ -241,7 +241,7 @@ function remPx() {
  * match the ring exactly. The width scales with Interface Size (rem) and the
  * viewBox width is derived from it to keep the 1:1 viewBox→px scale.
  * @param {FilterDef} f The filter descriptor.
- * @returns {SVGElement} The swatch SVG.
+ * @returns {SVGElement}
  */
 function buildFilterSwatch(f) {
   const pxu = getRingPxPerUnit() || 5; // fallback until the ring is first measured
@@ -274,19 +274,19 @@ function resolveSwatchDashPattern(f) {
 
 /**
  * Attach the de-bounced click / action-activate / mousedown handlers to a
- * filter pill. Coherent may dispatch BOTH `click` and `action-activate` for
+ * filter pill. Coherent may dispatch both `click` and `action-activate` for
  * one activation; a 50ms window guards against the double-toggle.
  * @param {HTMLElement} pill The pill element.
  * @param {FilterDef} f The filter descriptor.
  * @param {boolean} active The pill's active state at build time.
- * @param {(key: string) => void} onToggle Toggle callback.
+ * @param {(key: string) => void} onToggle
  */
 function wireFilterPill(pill, f, active, onToggle) {
   let lastFired = 0;
   /**
    * Build a de-bounced event handler for one event name.
    * @param {string} evName The event name (for logging).
-   * @returns {(ev: *) => void} The handler.
+   * @returns {(ev: *) => void}
    */
   const fire = (evName) => (ev) => {
     if (ev && typeof ev.stopPropagation === "function") ev.stopPropagation();
@@ -312,8 +312,8 @@ function wireFilterPill(pill, f, active, onToggle) {
  * Build a single filter pill (swatch + label) wired to `onToggle`.
  * @param {FilterDef} f The filter descriptor.
  * @param {Set<string>} activeSet The active filter-key set.
- * @param {(key: string) => void} onToggle Toggle callback.
- * @returns {HTMLElement} The pill element.
+ * @param {(key: string) => void} onToggle
+ * @returns {HTMLElement}
  */
 function buildFilterPill(f, activeSet, onToggle) {
   const active = activeSet.has(f.key);
@@ -335,8 +335,8 @@ function buildFilterPill(f, activeSet, onToggle) {
     ? t("LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP", label)
     : t("LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP", label);
 
-  // ── Mini sample line showing exactly what this filter's edges look like on
-  // the ring (same color + dash pattern); the legend mapping color+texture → filter type.
+  // Mini sample line showing what this filter's edges look like on the ring (same color + dash
+  // pattern); the legend mapping color+texture → filter type.
   pill.appendChild(buildFilterSwatch(f));
   const lbl = document.createElement("span");
   lbl.textContent = label;
@@ -347,14 +347,14 @@ function buildFilterPill(f, activeSet, onToggle) {
 }
 
 /**
- * Build the toggleable filter-pill row for the ACTIVE sub-group's filters (the
+ * Build the toggleable filter-pill row for the active sub-group's filters (the
  * caller passes only the visible group's filters). The "All On / All Off"
  * header flips just those.
  * @param {FilterDef[]} filters Filter descriptors to render (one group's worth).
  * @param {Set<string>} activeSet The active filter-key set.
- * @param {(key: string) => void} onToggle Per-pill toggle callback.
+ * @param {(key: string) => void} onToggle
  * @param {(turnOn: boolean) => void} [onToggleAll] Bulk-toggle callback (this group).
- * @returns {HTMLElement} The pill-row element.
+ * @returns {HTMLElement}
  */
 export function makeFilterPillRow(filters, activeSet, onToggle, onToggleAll) {
   const row = document.createElement("div");

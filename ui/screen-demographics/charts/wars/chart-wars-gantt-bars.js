@@ -1,16 +1,15 @@
 // chart-wars-gantt-bars.js
 //
-// War bar rendering helpers for wars Gantt chart.
+// War bar rendering helpers for the wars Gantt chart.
 
 import { getSemantic } from "/demographics/ui/core/demographics-palette.js";
 import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { majorsOnSide } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 /**
- * Look up latest sampled primary color for one player id.
- * @param {*[]} samples Sample stream.
- * @param {*} pid Player id.
- * @returns {string} Resolved color.
+ * @param {*[]} samples
+ * @param {*} pid
+ * @returns {string} The latest sampled primary color for the pid.
  */
 function currentPrimaryColor(samples, pid) {
   for (let i = samples.length - 1; i >= 0; i--) {
@@ -23,12 +22,11 @@ function currentPrimaryColor(samples, pid) {
 }
 
 /**
- * Resolve fill color for one stripe.
- * @param {*} stripe Stripe entry.
- * @param {number} idx Stripe index.
- * @param {*[]} samples Sample stream.
+ * @param {*} stripe
+ * @param {number} idx
+ * @param {*[]} samples
  * @param {*} sem Semantic palette.
- * @returns {string} Stripe color.
+ * @returns {string} The stripe's fill color.
  */
 function resolveStripeFill(stripe, idx, samples, sem) {
   return (
@@ -39,10 +37,9 @@ function resolveStripeFill(stripe, idx, samples, sem) {
 }
 
 /**
- * Resolve participant stripes for one war.
- * @param {*} war War record.
+ * @param {*} war
  * @param {*} sem Semantic palette.
- * @returns {*[]} Stripe list.
+ * @returns {*[]} The war's participant stripes.
  */
 function resolveWarStripes(war, sem) {
   const participants = /** @type {any[]} */ ([]).concat(
@@ -58,16 +55,16 @@ function resolveWarStripes(war, sem) {
 
 /**
  * Draw one bar's participant stripes.
- * @param {SVGElement} svg Chart svg.
- * @param {Object} args Stripe drawing args.
- * @param {*[]} args.stripes Stripe entries.
- * @param {*[]} args.samples Sample stream.
+ * @param {SVGElement} svg
+ * @param {Object} args
+ * @param {*[]} args.stripes
+ * @param {*[]} args.samples
  * @param {*} args.sem Semantic palette.
  * @param {number} args.x1 Left x.
  * @param {number} args.baseY Top y.
- * @param {number} args.barW Bar width.
- * @param {number} args.barH Bar height.
- * @param {boolean} args.isClosed Closed-war flag.
+ * @param {number} args.barW
+ * @param {number} args.barH
+ * @param {boolean} args.isClosed
  */
 function drawWarBarStripes(svg, args) {
   const { stripes, samples, sem, x1, baseY, barW, barH, isClosed } = args;
@@ -102,9 +99,9 @@ function drawWarBarStripes(svg, args) {
 }
 
 /**
- * Draw right-edge marker for one bar.
- * @param {SVGElement} svg Chart svg.
- * @param {{ isClosed:boolean, x2:number, baseY:number, barH:number, sem:* }} m Marker args.
+ * Draw the right-edge marker for one bar.
+ * @param {SVGElement} svg
+ * @param {{ isClosed:boolean, x2:number, baseY:number, barH:number, sem:* }} m
  */
 function drawWarBarEndMarker(svg, m) {
   const { isClosed, x2, baseY, barH, sem } = m;
@@ -136,9 +133,9 @@ function drawWarBarEndMarker(svg, m) {
 
 /**
  * Append one tail gradient definition.
- * @param {SVGElement} svg Chart svg.
- * @param {string} id Gradient id.
- * @param {string} color Stripe color.
+ * @param {SVGElement} svg
+ * @param {string} id
+ * @param {string} color
  */
 function appendTailGradient(svg, id, color) {
   const grad = svgEl("linearGradient", { id, x1: "0", y1: "0", x2: "1", y2: "0" });
@@ -148,11 +145,11 @@ function appendTailGradient(svg, id, color) {
 }
 
 /**
- * Draw ongoing-war tail.
- * @param {SVGElement} svg Chart svg.
+ * Draw an ongoing war's fading tail.
+ * @param {SVGElement} svg
  * @param {{
  *   stripes:*[], samples:*[], sem:*, xStart:number, xEnd:number, baseY:number, barH:number
- * }} args Tail args.
+ * }} args
  */
 function drawWarBarTail(svg, args) {
   const { stripes, samples, sem, xStart, xEnd, baseY, barH } = args;
@@ -188,8 +185,8 @@ function drawWarBarTail(svg, args) {
 }
 
 /**
- * Draw tail for ongoing wars or end marker for concluded wars.
- * @param {SVGElement} svg Chart svg.
+ * Draw the tail for an ongoing war or the end marker for a concluded one.
+ * @param {SVGElement} svg
  * @param {{
  *   isClosed:boolean,
  *   L: any,
@@ -202,7 +199,7 @@ function drawWarBarTail(svg, args) {
  *   baseY:number,
  *   barH:number,
  *   barW:number
- * }} args Tail/end args.
+ * }} args
  * @returns {number} Hover hit width.
  */
 function drawWarTailOrEnd(svg, args) {
@@ -218,16 +215,16 @@ function drawWarTailOrEnd(svg, args) {
 }
 
 /**
- * Draw one war bar and return hover rect.
- * @param {SVGElement} svg Chart svg.
- * @param {*} war War record.
+ * Draw one war bar and return its hover rect.
+ * @param {SVGElement} svg
+ * @param {*} war
  * @param {{ baseY:number, barH:number }} row Row geometry.
  * @param {{ L:any, dom:{xMin:number,xMax:number}, latestTurn:number, samples:*[] }}
  *   ctx Shared context.
  * @returns {{
  *   war:*, x:number, y:number, w:number, h:number,
  *   x2:number, isClosed:boolean, hitW:number
- * }} Rect.
+ * }}
  */
 function drawWarBar(svg, war, row, ctx) {
   const { baseY, barH } = row;
@@ -281,16 +278,16 @@ function drawWarBar(svg, war, row, ctx) {
 }
 
 /**
- * Draw all war bars and return hover hit rectangles.
- * @param {SVGElement} svg Chart svg.
- * @param {*[]} filtered Filtered wars.
+ * Draw every war bar and return the hover hit rectangles.
+ * @param {SVGElement} svg
+ * @param {*[]} filtered
  * @param {{
  *   L:any,
  *   dom:{xMin:number,xMax:number},
  *   tr:{min:number,max:number}|null,
  *   latestTurn:number,
  *   samples:*[]
- * }} ctx Render context.
+ * }} ctx
  * @returns {*[]} Bar rects.
  */
 export function drawWarBars(svg, filtered, ctx) {

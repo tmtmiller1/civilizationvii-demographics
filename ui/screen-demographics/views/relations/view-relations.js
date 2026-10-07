@@ -112,15 +112,15 @@ import {
  * @property {RelationsSettings} [settings] Persisted-setting accessor.
  */
 
-// ---- DOM builders ---------------------------------------------------------
+// DOM builders
 
 /**
  * Build an `fxs-tab-bar` element wired to `onSelect`.
- * @param {{ id: string, label: string }[]} tabs Tab descriptors.
- * @param {string} activeKey Currently-selected tab id.
- * @param {string} className Extra class name.
- * @param {(id: string) => void} onSelect Selection callback.
- * @returns {HTMLElement} The tab-bar element.
+ * @param {{ id: string, label: string }[]} tabs
+ * @param {string} activeKey
+ * @param {string} className
+ * @param {(id: string) => void} onSelect
+ * @returns {HTMLElement}
  */
 function makeTabBar(tabs, activeKey, className, onSelect) {
   const bar = document.createElement("fxs-tab-bar");
@@ -141,7 +141,7 @@ function makeTabBar(tabs, activeKey, className, onSelect) {
   return bar;
 }
 
-// ---- main render ----------------------------------------------------------
+// main render
 
 /**
  * The scaffold elements created once per render.
@@ -158,11 +158,11 @@ function makeTabBar(tabs, activeKey, className, onSelect) {
  * Build the vertical-stack scaffold (tab hosts, body, filter host, caption)
  * and mount it under `host`.
  * @param {HTMLElement} host The view host element.
- * @returns {RelationsScaffold} The scaffold elements.
+ * @returns {RelationsScaffold}
  */
 function buildScaffold(host) {
-  // Body is the ring's container. Repaints wipe ALL its children, so the filter
-  // legend must NOT live inside it - filterHost stays a sibling and the CSS
+  // Body is the ring's container. Repaints wipe all its children, so the filter
+  // legend can't live inside it: filterHost stays a sibling and the CSS
   // positions it absolutely over the body's top-right corner.
   const wrap = addChild(host, "demographics-relations-wrap");
   const topTabHost = addChild(wrap, "demographics-relations-toptab-host");
@@ -181,7 +181,7 @@ function buildScaffold(host) {
  * Create a `<div>` with a class, append it to `parent`, and return it.
  * @param {HTMLElement} parent The parent element.
  * @param {string} className The class string.
- * @returns {HTMLElement} The created child.
+ * @returns {HTMLElement}
  */
 function addChild(parent, className) {
   const el = document.createElement("div");
@@ -225,8 +225,8 @@ function addChild(parent, className) {
 
 /**
  * Keep only selected ids that still exist in the current ring.
- * @param {Set<number>} selected Selected ids (any source).
- * @param {number[]} ringIds Current ring ids.
+ * @param {Set<number>} selected
+ * @param {number[]} ringIds
  * @returns {Set<number>} Pruned selection.
  */
 function pruneSelectionToRing(selected, ringIds) {
@@ -240,8 +240,8 @@ function pruneSelectionToRing(selected, ringIds) {
 
 /**
  * Filter edges to those touching any selected node. Empty selection means all.
- * @param {Edge[]} edges Candidate edges.
- * @param {Set<number>} selected Selected node ids.
+ * @param {Edge[]} edges
+ * @param {Set<number>} selected
  * @returns {Edge[]} The filtered edge list.
  */
 function filterEdgesBySelectedNodes(edges, selected) {
@@ -253,7 +253,7 @@ function filterEdgesBySelectedNodes(edges, selected) {
  * The filter descriptors for the active sub-group (Politics / Reputation /
  * Agreements) on the current top tab.
  * @param {RenderState} rs The render-loop state.
- * @returns {FilterDef[]} Visible-group filter descriptors.
+ * @returns {FilterDef[]}
  */
 function visibleGroupDefs(rs) {
   return buildFilterDefs(rs.topTab).filter((f) => f.group === rs.activeSubGroup);
@@ -263,7 +263,7 @@ function visibleGroupDefs(rs) {
  * The active filter set restricted to the visible sub-group's keys, so the ring
  * shows only that group's toggled-on edges.
  * @param {RenderState} rs The render-loop state.
- * @returns {Set<string>} The group-scoped active set.
+ * @returns {Set<string>}
  */
 function effectiveActiveSet(rs) {
   const activeSet = rs.readFilterSet(rs.topTab);
@@ -340,7 +340,7 @@ function buildFilterRow(rs) {
 /**
  * Compute the ring node set, edges, names, and caption for the active view.
  * @param {RenderState} rs The render-loop state.
- * @param {Set<string>} activeSet Active filter keys.
+ * @param {Set<string>} activeSet
  * @returns {{ ringIds: number[], edges: Edge[],
  *   names: Record<string, NodeInfo>, capText: string,
  *   ringViewerPid: number|undefined }}
@@ -358,12 +358,12 @@ function computeRingData(rs, activeSet) {
  * the per-tab focus set and repaint. Extracted to keep `renderRingBody` under
  * the line cap.
  * @param {RenderState} rs The render-loop state.
- * @param {number[]} ringIds Node ids on the ring.
- * @param {Record<string, *>} names Node display-info map.
- * @param {*[]} focusedEdges Edges after focus filtering.
+ * @param {number[]} ringIds
+ * @param {Record<string, *>} names
+ * @param {*[]} focusedEdges
  * @param {{viewerPid: number | undefined, selected: Set<number>}} opts
  *   Ring viewer pid (defaults to local) + the active focus set.
- * @returns {HTMLElement} The ring wrap element.
+ * @returns {HTMLElement}
  */
 function buildFocusedRingSvg(rs, ringIds, names, focusedEdges, opts) {
   return buildRingSvg(
@@ -546,7 +546,7 @@ function relationsOverlayMetrics(rs) {
 /**
  * Set an overlay element's inline `top` in px (no-op when absent).
  * @param {HTMLElement|undefined} el The overlay element.
- * @param {number} topPx Top offset in px.
+ * @param {number} topPx
  */
 function setOverlayTop(el, topPx) {
   if (el && el.style) el.style.top = topPx + "px";
@@ -669,7 +669,7 @@ function appendObserverEmpty(body) {
  * to it. Empty selection ⇒ all edges.
  * @param {RenderState} rs The render-loop state.
  * @param {*[]} edges The computed edges.
- * @param {number[]} ringIds The ring node ids.
+ * @param {number[]} ringIds
  * @returns {{ selected: Set<number>, focusedEdges: *[] }} Selection + filtered edges.
  */
 function resolveFocus(rs, edges, ringIds) {
@@ -680,7 +680,7 @@ function resolveFocus(rs, edges, ringIds) {
 }
 
 /**
- * Build the top + sub tab bars ONCE per render. The bars are never torn down
+ * Build the top + sub tab bars once per render. The bars are never torn down
  * on filter clicks (rebuilding `fxs-tab-bar` mid-event swallowed pip clicks).
  * @param {RenderState} rs The render-loop state.
  */
@@ -763,7 +763,7 @@ export function render(host, ctx) {
  * the render-loop state for one {@link render}, inside render's try boundary.
  * @param {HTMLElement} host The (already cleared) view host element.
  * @param {RelationsCtx} ctx Render context (history + settings accessors).
- * @returns {RenderState} The assembled render-loop state.
+ * @returns {RenderState}
  */
 function buildRenderState(host, ctx) {
   // Drop in-memory filter/node-focus caches when the game/save changed, so a
@@ -772,7 +772,7 @@ function buildRenderState(host, ctx) {
 
   const settings = ctx.settings;
 
-  // ---- initial tab state -------------------------------------------
+  // initial tab state
   // Every fresh open starts at the leftmost tab in each set (top tab "civ",
   // sub-group FILTER_GROUPS[0]); persisted values still update within a session.
   const topTab = "civ";
@@ -823,7 +823,7 @@ function buildRenderState(host, ctx) {
 /**
  * Run a repaint body behind a logged boundary (see the `repaint` / `repaintRing`
  * fields on {@link RenderState}).
- * @param {string} label Diagnostic label for the log line.
+ * @param {string} label
  * @param {() => void} fn The repaint body.
  */
 function guardedPaint(label, fn) {

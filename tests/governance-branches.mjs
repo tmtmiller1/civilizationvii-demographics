@@ -80,7 +80,7 @@ function testPublishAndSetHostPolicy() {
   assert.ok(writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1_P3"), "guest seat key");
   assert.ok(!writes.some((w) => w.k === "DemographicsAnalyticsPolicyEffective_v1"), "guest must not write the shared key");
 
-  // Hotseat: multiplayer on one machine, not networked, Network.isHost() false (watched): both keys.
+  // Hotseat: multiplayer on one machine, not networked, Network.isHost() false: both keys.
   writes.length = 0;
   globalThis.Network = { isConnectedToNetwork: () => false, isHost: () => false };
   globalThis.Configuration = {

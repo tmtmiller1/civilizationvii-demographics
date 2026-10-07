@@ -14,9 +14,9 @@ import { gameCard } from "/demographics/ui/history/views/view-hof-games.js";
 
 /**
  * One figure on a card.
- * @param {string} value Formatted value.
+ * @param {string} value Already formatted.
  * @param {string} label LOC tag.
- * @returns {HTMLElement} Chip.
+ * @returns {HTMLElement}
  */
 function figure(value, label) {
   return el("div", { cls: "dgh-fact" }, [el("div", { cls: "dgh-fact-n", text: value }), el("div", { cls: "dgh-fact-l", text: t(label) })]);
@@ -24,8 +24,8 @@ function figure(value, label) {
 
 /**
  * The parts of the bar: the finished games, split into those won and those not. Games still being
- * played are left out — they have no result yet, so they cannot be won or lost.
- * @param {GroupRow} r Row.
+ * played are left out; they have no result yet, so they cannot be won or lost.
+ * @param {GroupRow} r
  * @returns {{key: string, n: number, label: string, pct: number}[]} Parts, empty ones left out.
  */
 function recordParts(r) {
@@ -40,8 +40,8 @@ function recordParts(r) {
 /**
  * The win rate as a bar: green for the games won, red for the rest of the finished games. With
  * nothing finished the bar stays empty, so gray always means "no result yet".
- * @param {GroupRow} r Row.
- * @returns {HTMLElement} Bar.
+ * @param {GroupRow} r
+ * @returns {HTMLElement}
  */
 function recordBar(r) {
   const total = Math.max(1, r.finished);
@@ -53,8 +53,8 @@ function recordBar(r) {
 /**
  * What the bar is made of, in words: "Victories: 2 (67%) · No victory: 1 (33%)", each part in its
  * own color, with any unfinished games named after them.
- * @param {GroupRow} r Row.
- * @returns {HTMLElement} Legend.
+ * @param {GroupRow} r
+ * @returns {HTMLElement}
  */
 function recordLegend(r) {
   /** @type {(HTMLElement|null)[]} */
@@ -74,8 +74,8 @@ function recordLegend(r) {
  * bar with both parts named and given their share, then the figures.
  * @param {HTMLElement} icon Portrait or emblem.
  * @param {string} name Localized name.
- * @param {GroupRow} r Row.
- * @returns {HTMLElement} Card.
+ * @param {GroupRow} r
+ * @returns {HTMLElement}
  */
 function groupCard(icon, name, r) {
   const rate = r.finished ? Math.round((100 * r.wins) / r.finished) : 0;
@@ -103,7 +103,7 @@ function groupCard(icon, name, r) {
 
 /**
  * Leaders tab.
- * @param {HTMLElement} host Container.
+ * @param {HTMLElement} host
  * @param {ArchiveRecord[]} records
  */
 export function renderLeaders(host, records) {
@@ -117,7 +117,7 @@ export function renderLeaders(host, records) {
 
 /**
  * Civilizations tab.
- * @param {HTMLElement} host Container.
+ * @param {HTMLElement} host
  * @param {ArchiveRecord[]} records
  */
 export function renderCivs(host, records) {
@@ -131,9 +131,9 @@ export function renderCivs(host, records) {
 
 /**
  * Records tab.
- * @param {HTMLElement} host Container.
+ * @param {HTMLElement} host
  * @param {ArchiveRecord[]} records
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  */
 export function renderRecords(host, records, ctx) {
   clear(host);

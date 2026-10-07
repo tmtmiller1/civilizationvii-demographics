@@ -2,7 +2,7 @@
 //
 // Per-settlement boards grouped by leader/civilization: one civ-colored column
 // per civ, each listing that civ's settlements with a count (Districts /
-// Buildings). Buildings rows DRILL DOWN — click a settlement to expand the exact
+// Buildings). Buildings rows drill down: click a settlement to expand the exact
 // building types it holds. Live snapshot from the settlement data layer; identity
 // is the civ-colored column accent, every value stays in ink (board-ui).
 
@@ -40,7 +40,8 @@ function ownerColor(owner) {
  * Whether a settlement belongs on the board. City-states are excluded: this is a comparative
  * civ-vs-civ board, so it shows only major civilizations (matching Civ Ranking / Relations /
  * Wars). Civs the spoiler guard hides are excluded too.
- * @param {*} s A settlement. @returns {boolean} True to list it.
+ * @param {*} s
+ * @returns {boolean}
  */
 function onBoard(s) {
   if (!s) return false;
@@ -50,9 +51,9 @@ function onBoard(s) {
 /**
  * Group all settlements by owner, tallying `field` and (optionally) capturing the
  * per-settlement type list from `typesField` for drill-down.
- * @param {*[]} settlements The world's settlements.
+ * @param {*[]} settlements
  * @param {string} field The count field. @param {string} [typesField] The type-list field.
- * @returns {CivColumn[]} Per-civ columns.
+ * @returns {CivColumn[]}
  */
 function groupByCiv(settlements, field, typesField) {
   /** @type {Map<string, CivColumn>} */
@@ -83,7 +84,7 @@ function aggregate(names) {
 /**
  * One settlement row: "Name" + count. When `types` is present, the row is
  * clickable and toggles an indented list of the settlement's building types.
- * @param {{name:string, count:number, types:string[]|null}} item The settlement.
+ * @param {{name:string, count:number, types:string[]|null}} item
  * @returns {HTMLElement} The row (wrapper).
  */
 function settlementRow(item) {
@@ -126,8 +127,8 @@ function civColumn(civ) {
  * Buildings): one civ-colored column, its settlements listed with their counts
  * (settlements by count desc, civs by total desc). When `opts.typesField` is set,
  * each settlement row expands to show its building types.
- * @param {HTMLElement} host The chart host.
- * @param {{field:string, typesField?:string, empty?:string}} opts Render options.
+ * @param {HTMLElement} host
+ * @param {{field:string, typesField?:string, empty?:string}} opts
  * @returns {void}
  */
 export function renderConstructiblesBoard(host, opts) {

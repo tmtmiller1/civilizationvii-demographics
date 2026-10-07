@@ -57,8 +57,8 @@ function metricBias(s) {
 /**
  * Deterministic entropy seeded from the settlement's real metric state (yields, happiness,
  * urban/rural, founding turn); the name/id is folded in last only as a tie-breaker.
- * @param {*} s Settlement record.
- * @param {string} idKey Stable id (tie-breaker).
+ * @param {*} s
+ * @param {string} idKey
  * @returns {number} Entropy in [-1,1].
  */
 function metricEntropy(s, idKey) {
@@ -81,9 +81,9 @@ function metricEntropy(s, idKey) {
  * Deterministic per-settlement population variation around the scaled base, from real game metrics
  * ({@link metricBias}, {@link metricEntropy}). Magnitude stays a narrow ±1.5% (≥ ±2500 floor);
  * {@link claimUniquePopulation} then guarantees uniqueness.
- * @param {number} base Base scaled population.
- * @param {*} s Settlement record.
- * @returns {number} Varied estimate.
+ * @param {number} base
+ * @param {*} s
+ * @returns {number}
  */
 function variedPopulation(base, s) {
   // `base` already includes the soft era ceiling; the variation runs on top, so a figure may sit
@@ -100,7 +100,7 @@ function variedPopulation(base, s) {
 }
 
 /**
- * @param {*} s Settlement-like record.
+ * @param {*} s
  * @returns {number} Rounded raw population, or 0 when unreadable.
  */
 function rawPopulationKey(s) {
@@ -110,8 +110,8 @@ function rawPopulationKey(s) {
 }
 
 /**
- * @param {Array<*>} list Settlement-like records.
- * @returns {Map<number, Array<*>>} Raw-population buckets.
+ * @param {Array<*>} list
+ * @returns {Map<number, Array<*>>}
  */
 function bucketByRawPopulation(list) {
   /** @type {Map<number, Array<*>>} */
@@ -127,7 +127,7 @@ function bucketByRawPopulation(list) {
 }
 
 /**
- * @param {*} s Settlement-like record.
+ * @param {*} s
  * @returns {string} Stable key.
  */
 function settlementVarianceKey(s) {
@@ -148,7 +148,7 @@ function buildBandCandidates(band) {
 }
 
 /**
- * @param {Array<{cand: number}>} candidates Sorted candidates.
+ * @param {Array<{cand: number}>} candidates
  * @param {number} minAllowed Minimum legal starting value.
  */
 function liftCandidatesToMin(candidates, minAllowed) {
@@ -159,8 +159,8 @@ function liftCandidatesToMin(candidates, minAllowed) {
 
 /**
  * @param {number} candidate Starting candidate value.
- * @param {Set<number>} used Already used estimates.
- * @returns {number} Claimed estimate.
+ * @param {Set<number>} used
+ * @returns {number}
  */
 function claimUniquePopulation(candidate, used) {
   let value = candidate;
@@ -170,8 +170,8 @@ function claimUniquePopulation(candidate, used) {
 }
 
 /**
- * @param {Array<{s: *, cand: number}>} candidates Sorted candidates.
- * @param {Set<number>} used Already used estimates.
+ * @param {Array<{s: *, cand: number}>} candidates
+ * @param {Set<number>} used
  * @param {number} previousBandMax Max claimed value from prior raw bands.
  * @returns {number} Updated maximum estimate after this band.
  */

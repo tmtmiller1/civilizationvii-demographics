@@ -21,9 +21,9 @@ import { escapeHtml } from "/demographics/ui/screen-demographics/charts/shared/c
  */
 
 /**
- * Read the `showWonderMarkers` setting; defaults OFF on the Crisis Stage
- * chart, ON elsewhere.
- * @param {string} metricId Active metric id.
+ * Read the `showWonderMarkers` setting; defaults off on the Crisis Stage
+ * chart, on elsewhere.
+ * @param {string} metricId
  * @returns {boolean} Whether wonder markers should be shown.
  */
 export function shouldShowWonders(metricId) {
@@ -40,9 +40,9 @@ export function shouldShowWonders(metricId) {
  * Detect wonder-built events by diffing each civ's `wonderTypes` list between
  * consecutive samples. Pre-existing wonders on a civ's first observed sample
  * are seeded (not emitted).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @param {AgeBoundary[]} boundaries Age boundary table.
+ * @param {AgeBoundary[]} boundaries
  * @param {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => (number|undefined)} sampleX
  *   Sample → chart-X position resolver (provided by chart-line.js).
  * @returns {Map<string, WonderEvent[]>} pid → detected wonder events.
@@ -59,7 +59,7 @@ export function collectWonderEvents(samples, ageOffsets, boundaries, sampleX) {
     for (const pid of Object.keys(s.players)) {
       const ps = s.players[pid];
       const types = Array.isArray(ps?.wonderTypes) ? ps.wonderTypes : null;
-      // "First sample for this civ" is whether we've ever sampled THIS CIV at
+      // "First sample for this civ" is whether we've ever sampled this civ at
       // all, not whether we've seen a wonderTypes array for them; otherwise a
       // civ's very first mid-run wonder would be treated as a seed and dropped.
       const isFirstSample = !sampledPids.has(pid);
@@ -138,14 +138,14 @@ function foldWonderTypes(params) {
 }
 
 /**
- * Detect wonder DESTRUCTIONS: a wonder is destroyed when its type is present at
- * some sample yet absent from the FINAL sample's global set, which excludes the
+ * Detect wonder destructions: a wonder is destroyed when its type is present at
+ * some sample yet absent from the final sample's global set, which excludes the
  * benign cases (damaged-then-repaired wonders return; captured wonders move to
  * the captor's list). Marked at the last turn seen standing and attributed to
  * the civ that last held it.
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @param {AgeBoundary[]} boundaries Age boundary table.
+ * @param {AgeBoundary[]} boundaries
  * @param {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => (number|undefined)} sampleX
  *   Sample → chart-X position resolver (provided by chart-line.js).
  * @returns {Map<string, WonderEvent[]>} pid → detected destruction events.
@@ -165,9 +165,9 @@ export function collectWonderDestructions(samples, ageOffsets, boundaries, sampl
 /**
  * Fold one sample's wonder presence into `lastSeen` (mutated) and return the set
  * of wonder types present anywhere in this sample.
- * @param {Snapshot} s The current sample.
+ * @param {Snapshot} s
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @param {AgeBoundary[]} boundaries Age boundary table.
+ * @param {AgeBoundary[]} boundaries
  * @param {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => (number|undefined)} sampleX
  *   Sample → chart-X position resolver.
  * @param {Map<string, { pid: string, turn: number|*, year: string }>} lastSeen
@@ -218,7 +218,7 @@ function emitWonderDestructions(lastSeen, presentInFinal) {
  * Merge per-pid destruction events into the build-event map (mutating it), so a
  * single resolve/render pass covers both marker kinds.
  * @param {Map<string, WonderEvent[]>} wonderEventsByPid pid → events (mutated).
- * @param {Map<string, WonderEvent[]>} destructionsByPid pid → destruction events.
+ * @param {Map<string, WonderEvent[]>} destructionsByPid
  */
 export function mergeWonderEvents(wonderEventsByPid, destructionsByPid) {
   for (const [pid, events] of destructionsByPid) {
@@ -230,7 +230,7 @@ export function mergeWonderEvents(wonderEventsByPid, destructionsByPid) {
 
 /**
  * Resolve the engine icon URL for a wonder event, mutating `ev.iconUrl`.
- * @param {WonderEvent} ev The event (mutated).
+ * @param {WonderEvent} ev Mutated.
  */
 function resolveWonderIcon(ev) {
   try {
@@ -243,9 +243,9 @@ function resolveWonderIcon(ev) {
 }
 
 /**
- * Compose a localization tag safely, returning raw tag on compose failure.
- * @param {string} tag Localization tag.
- * @returns {string} Composed string or original tag.
+ * Compose a localization tag, returning the raw tag on compose failure.
+ * @param {string} tag
+ * @returns {string}
  */
 function safeComposeLocaleTag(tag) {
   try {
@@ -257,11 +257,11 @@ function safeComposeLocaleTag(tag) {
 }
 
 /**
- * Whether a composed wonder description candidate is better than current best.
- * @param {string} composed Composed candidate.
- * @param {string} rawTag Raw localization tag.
- * @param {string} best Current best description.
- * @returns {boolean} True when candidate should replace best.
+ * Whether a composed wonder description candidate beats the current best.
+ * @param {string} composed
+ * @param {string} rawTag
+ * @param {string} best
+ * @returns {boolean}
  */
 function shouldUseWonderDescription(composed, rawTag, best) {
   if (!composed) return false;
@@ -284,14 +284,14 @@ function bestWonderDescription(info) {
     best = composed;
     bestTag = tag;
   }
-  // The TAG comes back too: the tooltip renders through innerHTML, so it wants the engine's
+  // The tag comes back too: the tooltip renders through innerHTML, so it wants the engine's
   // stylized markup, while the length test above needs the composed plain string.
   return { text: best, tag: bestTag };
 }
 
 /**
  * Resolve display name + flavor description for a wonder event, mutating it.
- * @param {WonderEvent} ev The event (mutated).
+ * @param {WonderEvent} ev Mutated.
  */
 function resolveWonderMeta(ev) {
   try {
@@ -346,7 +346,7 @@ export function resolveWonderEvents(wonderEventsByPid) {
     for (const ev of events) {
       if (!ev.wonderType) continue;
       resolveWonderIcon(ev);
-      // Only drop events where the engine returned NO icon URL at all.
+      // Only drop events where the engine returned no icon URL at all.
       if (!ev.iconUrl) continue;
       resolveWonderMeta(ev);
       kept.push(ev);
@@ -368,9 +368,9 @@ export function resolveWonderEvents(wonderEventsByPid) {
 
 /**
  * Ensure the singleton wonder hover-tooltip exists and is attached to `wrap`.
- * @param {WonderTipState} state The tip state wrapper (mutated).
- * @param {HTMLElement} wrap The chart wrap to mount the tip into.
- * @returns {HTMLElement} The tip element.
+ * @param {WonderTipState} state Mutated.
+ * @param {HTMLElement} wrap
+ * @returns {HTMLElement}
  */
 function ensureWonderTip(state, wrap) {
   if (state.wonderTip && state.wonderTip.isConnected) return state.wonderTip;
@@ -453,11 +453,11 @@ function showWonderTip(params) {
 /**
  * Place the tip against its icon now, then again on the next frame.
  * @param {WonderTipState} state The tip state wrapper (its re-place token is bumped).
- * @param {WonderIconAnchor} icon The anchor icon.
+ * @param {WonderIconAnchor} icon
  */
 function placeWonderTip(state, icon) {
   positionWonderTip(state, icon);
-  // That first placement can only ESTIMATE the tip's size (see resolveWonderTipSize). A wonder tip
+  // That first placement can only estimate the tip's size (see resolveWonderTipSize). A wonder tip
   // is placed once per hover and, unlike the cursor tooltip, never gets a second chance from a
   // mousemove, so re-place it once GameFace has laid the real box out. The token drops a queued
   // frame whose tip has since been hidden or handed to another marker.
@@ -474,16 +474,16 @@ function placeWonderTip(state, icon) {
 /**
  * Resolve the size to place the tip from: its own box once GameFace has laid it out, otherwise the
  * size measured on a previous show.
- * @param {HTMLElement} wonderTip The tip element.
+ * @param {HTMLElement} wonderTip
  * @param {{ w: number, h: number }|null|undefined} lastSize Size measured on a previous show.
  * @returns {{ tipW: number, tipH: number, measured: boolean }} The size and where it came from.
  */
 function resolveWonderTipSize(wonderTip, lastSize) {
-  // GameFace lays an element out a frame AFTER it is shown, so on the tick that reveals the tip
+  // GameFace lays an element out a frame after it is shown, so on the tick that reveals the tip
   // offsetWidth/Height still read 0. A zero width makes the right-edge flip unreachable and the
   // clamp a no-op, which left a tip near the right of the plot running off the frame and cut by
-  // the panel edge (reported 2026-09-23). Estimate from the previous show - the tip is a singleton
-  // with a capped max-width, so its size barely moves - and let placeWonderTip settle it.
+  // the panel edge. Estimate from the previous show (the tip is a singleton with a capped
+  // max-width, so its size barely moves) and let placeWonderTip settle it.
   const w = wonderTip.offsetWidth;
   const h = wonderTip.offsetHeight;
   if (w > 0 && h > 0) return { tipW: w, tipH: h, measured: true };
@@ -493,9 +493,9 @@ function resolveWonderTipSize(wonderTip, lastSize) {
 /**
  * Compute the tooltip's left/top placement relative to the icon, clamped
  * inside the chart wrap.
- * @param {HTMLElement} wonderTip The visible tip element.
- * @param {HTMLElement|*} wrap The chart wrap (for clamping).
- * @param {WonderIconAnchor} icon The anchor icon.
+ * @param {HTMLElement} wonderTip
+ * @param {HTMLElement|*} wrap For clamping.
+ * @param {WonderIconAnchor} icon
  * @param {{ w: number, h: number }|null|undefined} lastSize Size measured on a previous show.
  * @returns {{ left: number, top: number, tipW: number, tipH: number, measured: boolean }}
  *   The placement, the size it was computed from, and whether that size came off the element now.
@@ -503,20 +503,17 @@ function resolveWonderTipSize(wonderTip, lastSize) {
 function computeWonderTipPlacement(wonderTip, wrap, icon, lastSize) {
   const GAP_X = 18;
   const { tipW, tipH, measured } = resolveWonderTipSize(wonderTip, lastSize);
-  // Default: place above and to the right of the icon, so the cursor never
+  // Above and to the right of the icon by default, so the cursor never
   // overlaps the tip.
   let left = icon.left + icon.size + GAP_X;
   let top = icon.top - tipH / 2 + icon.size / 2;
-  // If not enough room to the right, try left side.
   if (wrap && left + tipW > wrap.clientWidth - 4) {
     left = icon.left - tipW - GAP_X;
   }
-  // Clamp horizontally to the wrap so the tip stays on-screen.
   if (wrap) {
     const maxLeft = wrap.clientWidth - tipW - 4;
     if (left > maxLeft) left = maxLeft;
     if (left < 4) left = 4;
-    // Clamp vertically as well.
     const maxTop = wrap.clientHeight - tipH - 4;
     if (top > maxTop) top = maxTop;
     if (top < 4) top = 4;
@@ -526,11 +523,11 @@ function computeWonderTipPlacement(wonderTip, wrap, icon, lastSize) {
 
 /**
  * Apply the connecting arrow's edge + color to a wonder tooltip.
- * @param {*} wonderTip The tip element (carries a custom `.arrow` child).
+ * @param {*} wonderTip Carries a custom `.arrow` child.
  * @param {number} left The tip's resolved left (px).
- * @param {number} iconLeft Icon left offset (px).
- * @param {number} tipW Measured tip width (px).
- * @param {number} tipH Measured tip height (px).
+ * @param {number} iconLeft px.
+ * @param {number} tipW px.
+ * @param {number} tipH px.
  */
 function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
   if (!wonderTip.arrow) {
@@ -540,15 +537,12 @@ function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
     wonderTip.arrow = arrow;
   }
   const arrow = wonderTip.arrow;
-  // Position arrow on the edge closest to the icon.
   if (left > iconLeft) {
-    // Tooltip is to the right of the icon.
     arrow.style.left = "-16px";
     arrow.style.top = tipH / 2 - 8 + "px";
     arrow.style.borderRightColor = "rgba(33, 35, 42, 0.97)";
     arrow.style.borderLeftColor = "transparent";
   } else {
-    // Tooltip is to the left of the icon.
     arrow.style.left = tipW - 0 + "px";
     arrow.style.top = tipH / 2 - 8 + "px";
     arrow.style.borderLeftColor = "rgba(33, 35, 42, 0.97)";
@@ -560,8 +554,8 @@ function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
 
 /**
  * Position the wonder tooltip near its icon and draw the connecting arrow.
- * @param {WonderTipState} state The tip state wrapper.
- * @param {WonderIconAnchor} icon The anchor icon.
+ * @param {WonderTipState} state
+ * @param {WonderIconAnchor} icon
  */
 function positionWonderTip(state, icon) {
   const wonderTip = state.wonderTip;
@@ -577,13 +571,12 @@ function positionWonderTip(state, icon) {
   if (measured) state.lastTipSize = { w: tipW, h: tipH };
   wonderTip.style.left = left + "px";
   wonderTip.style.top = top + "px";
-  // Add a small arrow to visually connect the tip to the icon.
   applyWonderTipArrow(wonderTip, left, icon.left, tipW, tipH);
 }
 
 /**
  * Hide the wonder hover-tooltip.
- * @param {WonderTipState} state The tip state wrapper.
+ * @param {WonderTipState} state
  */
 function hideWonderTip(state) {
   // Bump the token so a re-place frame queued by the show cannot move a tip that is now hidden.
@@ -596,9 +589,9 @@ const WONDER_ICON_SIZE = 28;
 /**
  * Find the data point on a dataset nearest to a wonder event's turn, within a
  * small tolerance.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {Record<string, *>} ds
  * @param {number|*} turn The event's chart-X turn.
- * @returns {{ x: number, y: number }|null} The matched point, or `null`.
+ * @returns {{ x: number, y: number }|null}
  */
 function findEventDataPoint(ds, turn) {
   let dp = ds.data.find((/** @type {*} */ p) => p && p.x === turn);
@@ -618,21 +611,21 @@ function findEventDataPoint(ds, turn) {
 
 /**
  * Create (and wire hover) a wonder marker element for an event.
- * @param {WonderTipState} tipState The wonder tooltip state.
- * @param {HTMLElement} wrap The chart wrap.
- * @param {WonderEvent} ev The event.
- * @param {string} civLabel The civ display label.
- * @returns {HTMLElement} The marker element.
+ * @param {WonderTipState} tipState
+ * @param {HTMLElement} wrap
+ * @param {WonderEvent} ev
+ * @param {string} civLabel
+ * @returns {HTMLElement}
  */
 function createWonderMarker(tipState, wrap, ev, civLabel) {
   const mk = document.createElement("div");
   mk.className = "demographics-wonder-marker demographics-line-wonder-marker";
-  // Only real per-wonder icons reach this code path - events without a
+  // Only real per-wonder icons reach this code path; events without a
   // specific icon are pre-filtered upstream, so no generic fallback is
   // stacked. Per-event icon URL stays inline (dynamic).
   if (ev.kind === "destroyed") {
     // A destroyed wonder reads as "lost": a faded copy of the wonder icon with
-    // a burning raze badge. The wonder image goes on a CHILD div so its
+    // a burning raze badge. The wonder image goes on a child div so its
     // fade/grayscale doesn't bleed onto the badge; the badge image is a constant in CSS.
     mk.classList.add("demographics-line-wonder-marker--destroyed");
     const icon = document.createElement("div");
@@ -645,7 +638,7 @@ function createWonderMarker(tipState, wrap, ev, civLabel) {
   } else {
     mk.style.backgroundImage = "url('" + ev.iconUrl + "')";
   }
-  // Custom hover tooltip - native `title` doesn't render in Coherent. Anchor
+  // Custom hover tooltip; native `title` doesn't render in Coherent. Anchor
   // the tip to the icon's position read at hover time (the marker may have
   // been repositioned since this listener was attached).
   mk.addEventListener("mouseenter", () => {
@@ -667,9 +660,9 @@ function createWonderMarker(tipState, wrap, ev, civLabel) {
  * Render/update markers for one dataset's wonder events, tracking rendered
  * keys for later garbage collection.
  * @param {Record<string, *>} ctx Shared marker pass context.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {Record<string, *>} ds
  * @param {WonderEvent[]} events The dataset civ's events.
- * @param {number} pid The civ pid.
+ * @param {number} pid
  */
 function renderDatasetWonderMarkers(ctx, ds, events, pid) {
   const { wrap, xScale, yScale, offX, offY, wonderMarkerEls, renderedKeys, tipState } = ctx;
@@ -691,7 +684,7 @@ function renderDatasetWonderMarkers(ctx, ds, events, pid) {
       ev,
       dsLabel: ds.label
     });
-    // Update position only - rewriting the entire style string would
+    // Update position only: rewriting the entire style string would
     // invalidate the browser's hover state and cause a blink.
     if (mk.style.left !== leftPx + "px") mk.style.left = leftPx + "px";
     if (mk.style.top !== topPx + "px") mk.style.top = topPx + "px";
@@ -730,7 +723,7 @@ function getOrCreateWonderMarker(params) {
 
 /**
  * Garbage-collect markers no longer rendered this pass.
- * @param {Map<string, HTMLElement>} wonderMarkerEls key → marker element.
+ * @param {Map<string, HTMLElement>} wonderMarkerEls
  * @param {Set<string>} renderedKeys Keys rendered this pass.
  */
 function gcWonderMarkers(wonderMarkerEls, renderedKeys) {
@@ -751,9 +744,9 @@ function gcWonderMarkers(wonderMarkerEls, renderedKeys) {
  * as absolutely-positioned divs over the chart wrap (canvas drawImage of BLP
  * sources is unreliable in Coherent); updates are differential to avoid hover flicker.
  * @param {Array<{ leaderType: *, pid?: number }>} allSeries The series list (for pid lookup).
- * @param {Map<string, WonderEvent[]>} wonderEventsByPid pid → events.
- * @param {Map<string, HTMLElement>} wonderMarkerEls key → marker element.
- * @param {WonderTipState} tipState The wonder tooltip state.
+ * @param {Map<string, WonderEvent[]>} wonderEventsByPid
+ * @param {Map<string, HTMLElement>} wonderMarkerEls
+ * @param {WonderTipState} tipState
  * @returns {Record<string, *>} The Chart.js plugin object.
  */
 export function makeWonderMarkersPlugin(
@@ -801,9 +794,9 @@ export function makeWonderMarkersPlugin(
 /**
  * Render wonder markers for a single dataset (resolving its pid + events).
  * @param {Record<string, *>} passCtx Shared marker pass context.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {Record<string, *>} ds
  * @param {Array<{ leaderType: *, pid?: number }>} allSeries The series list (for pid lookup).
- * @param {Map<string, WonderEvent[]>} wonderEventsByPid pid → events.
+ * @param {Map<string, WonderEvent[]>} wonderEventsByPid
  */
 function renderOneDatasetWonders(passCtx, ds, allSeries, wonderEventsByPid) {
   if (!ds || ds.hidden) return;

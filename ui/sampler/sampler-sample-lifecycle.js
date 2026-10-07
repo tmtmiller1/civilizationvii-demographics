@@ -57,7 +57,7 @@ export function recordAuxHistory(safeCall, aux, chartTurn) {
 }
 
 /**
- * Append one snapshot WITHOUT persisting and return the in-progress history, so
+ * Append one snapshot without persisting and return the in-progress history, so
  * the caller can batch war tracking into a single per-turn save (see
  * {@link commitSample}). Returns null on append failure.
  * @param {{ appendSample: (snapshot: any, opts?: any) => any }} storage History storage API.

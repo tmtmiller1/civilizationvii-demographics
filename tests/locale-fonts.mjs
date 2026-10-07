@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 // Locale font lists. BodyFont and TitleFont have no Hangul, kana or Han glyphs, and a canvas draws
 // with the first family only, so for Chinese, Japanese and Korean the locale's CJK face must lead
-// (watched 2026-10-01: Korean chart titles, axis titles and toolbar labels were missing-glyph boxes).
+// (Korean chart titles, axis titles and toolbar labels used to render as missing-glyph boxes).
 // The order mirrors the game's global-scaling.js getOrderedFontFamily.
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

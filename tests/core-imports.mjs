@@ -5,14 +5,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Engine-import existence gate: every `/core/...` or `/base-standard/...` module specifier that
-// ui/ imports must exist in the INSTALLED game's script tree, so a game patch that moves or
+// ui/ imports must exist in the installed game's script tree, so a game patch that moves or
 // renames an engine module (or a typo in a new import) is caught here instead of as a blank
 // screen at load. The mod's own `/demographics/...` imports are covered by tests/modinfo.mjs.
 //
 // The game location follows scripts/deploy.mjs: it works under the same per-user
 // "Library/Application Support" root that deploy.mjs targets for Mods; the Steam install sits
 // beside it. `CIV7_GAME_DIR` overrides the lookup (point it at the folder that holds Base/modules,
-// or at Base/modules itself). The mapping "/core/x.js" -> "<modules>/core/x.js" is verified by
+// or at Base/modules itself). The mapping "/core/x.js" -> "<modules>/core/x.js" is checked by
 // finding a known engine file (core/ui/panel-support.js) before anything else is judged.
 // When no install is found the gate prints a warning and exits 0, so CI without the game passes.
 
@@ -30,7 +30,7 @@ const candidates = [
   path.join(appSupport, "Steam/steamapps/common/Sid Meier's Civilization VII/CivilizationVII.app/Contents/Resources/Base/modules")
 ].filter(Boolean);
 
-/** @returns {string|null} The folder that "/core/..." resolves under, verified by the known file. */
+/** @returns {string|null} The folder that "/core/..." resolves under, checked by the known file. */
 function findModulesRoot() {
   for (const c of candidates) {
     for (const probe of [c, path.join(c, "Base/modules"), path.join(c, "CivilizationVII.app/Contents/Resources/Base/modules")]) {

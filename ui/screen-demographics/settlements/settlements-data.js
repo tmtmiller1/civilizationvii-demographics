@@ -2,13 +2,13 @@
 //
 // Live snapshot of every settlement in the world for the Settlements view.
 // Unlike the rest of the mod (which renders sampled history), this reads the
-// CURRENT engine state at render time, so a settlement ranks by its real
+// current engine state at render time, so a settlement ranks by its real
 // numbers whatever its city/town status is this age.
 //
 // Engine surface (all defensive; the inter-module boundary can throw mid
 // age-transition):
 //   Players.getAlive()                              - every alive player handle
-//   player.id / player.Cities.getCities()           - the player's settlement HANDLES
+//   player.id / player.Cities.getCities()           - the player's settlement handles
 //                                                     (getCities returns handles, not ids)
 //   city.name / city.isTown / city.population        - identity + size
 //   city.Yields.getNetYield(YieldTypes.YIELD_*)      - per-yield output
@@ -40,7 +40,7 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
  * @property {string} [readable] Background-safe accent color (history-chart rule).
  * @property {boolean} isMajor Whether the owner is a major civilization.
  * @property {boolean} [met]
- *   Whether the LOCAL player has met this owner (undefined when unreadable).
+ *   Whether the local player has met this owner (undefined when unreadable).
  */
 
 /**
@@ -106,7 +106,7 @@ export const SETTLEMENT_OUTPUTS = [
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG}.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function slog(...a) {
   if (DBG) console.warn("[Demographics.settlements]", ...a);
@@ -133,7 +133,7 @@ function yieldEnum(key) {
  * Localize a tag/string via Locale.compose, returning the input unchanged when
  * Locale is unavailable or throws.
  * @param {*} tag The tag or plain string.
- * @param {...*} args Optional `{N_Param}` substitution arguments.
+ * @param {...*} args
  * @returns {string} The composed string ("" for falsy input).
  */
 function compose(tag, ...args) {
@@ -180,7 +180,7 @@ function lookupRow(table, raw) {
 
 /**
  * Read one player's banner color via the named UI.Player accessor.
- * @param {number} pid The player id.
+ * @param {number} pid
  * @param {string} fn The accessor method name.
  * @returns {string|undefined} The color string, or undefined.
  */
@@ -216,8 +216,8 @@ function canonicalLeaderType(leaderRow, rawLeader) {
 /**
  * Read a raw type value off a handle, trying two property spellings.
  * @param {*} handle The player handle.
- * @param {string} keyA Primary property name.
- * @param {string} keyB Alternate property name.
+ * @param {string} keyA
+ * @param {string} keyB
  * @returns {*} The raw value, or undefined.
  */
 function rawType(handle, keyA, keyB) {
@@ -256,8 +256,8 @@ function resolveOwner(pid, handle) {
 
 /**
  * Resolve one constructible handle by component id.
- * @param {*} cid Constructible component id.
- * @returns {*|null} Constructible handle.
+ * @param {*} cid
+ * @returns {*|null}
  */
 function constructibleById(cid) {
   if (typeof Constructibles === "undefined") return null;
@@ -267,8 +267,8 @@ function constructibleById(cid) {
 
 /**
  * Resolve Constructibles table info for a constructible type.
- * @param {*} type Constructible type hash.
- * @returns {*|null} Constructibles table row.
+ * @param {*} type
+ * @returns {*|null}
  */
 function constructibleInfo(type) {
   const table = gameInfoTable("Constructibles");
@@ -279,8 +279,8 @@ function constructibleInfo(type) {
 /**
  * Background-safe accent for a civ: safeTextColor(preferReadableColor(primary,
  * secondary)). Falls back to the raw primary when the helpers can't resolve.
- * @param {string|undefined} primary Primary banner color.
- * @param {string|undefined} secondary Secondary banner color.
+ * @param {string|undefined} primary
+ * @param {string|undefined} secondary
  * @returns {string|undefined} The readable accent color.
  */
 function readableAccent(primary, secondary) {
@@ -316,7 +316,7 @@ function readYield(yields, ytKey) {
  * @param {{ id: string, yt: string|null }} col The output descriptor.
  * @param {*} city The city/town handle.
  * @param {*} yields The city.Yields handle.
- * @returns {number} The value.
+ * @returns {number}
  */
 function readOutput(col, city, yields) {
   if (col.id === "population") return readPopulation(city);
@@ -374,8 +374,8 @@ function readPopulation(city) {
 /**
  * Read a city's urban or rural sub-population defensively (0 when unreadable). Used as a real-signal
  * input for population-estimate variation (urban:rural ratio).
- * @param {*} city City handle.
- * @param {"urbanPopulation"|"ruralPopulation"} prop Which sub-population.
+ * @param {*} city
+ * @param {"urbanPopulation"|"ruralPopulation"} prop
  * @returns {number} The value (0 on miss/throw).
  */
 function readSubPopulation(city, prop) {
@@ -390,8 +390,8 @@ function readSubPopulation(city, prop) {
 /**
  * Stable key for a settlement: its plot ("pid:x,y", stable across capture), else
  * its index within the owner's list.
- * @param {number} pid The owner id.
- * @param {*} city The city handle.
+ * @param {number} pid
+ * @param {*} city
  * @param {number} idx The index fallback.
  * @returns {string} The stable key.
  */
@@ -418,7 +418,7 @@ function settlementKey(pid, city, idx) {
 /**
  * Build one settlement record from a city handle (no composite/ranks yet).
  * @param {*} city The city/town handle.
- * @param {number} pid The owner id.
+ * @param {number} pid
  * @param {SettlementOwner} owner The resolved owner identity.
  * @param {number} idx The index within the owner's list.
  * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
@@ -466,7 +466,7 @@ function buildSettlement(city, pid, owner, idx, lite) {
 
 /**
  * Read a settlement's plot location {x,y} for the map camera, or null.
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {{x: number, y: number}|null} The location, or null.
  */
 function readLocation(city) {
@@ -483,7 +483,7 @@ function readLocation(city) {
  * Whether the local player has discovered a settlement, i.e. its city-center
  * tile is revealed (the camera gate). Defaults to true on any uncertainty so
  * the camera isn't grayed out spuriously.
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {boolean} True when the city center is revealed.
  */
 function readExplored(city) {
@@ -500,8 +500,8 @@ function readExplored(city) {
 
 /**
  * Whether the reveal-state API can be queried for the given player.
- * @param {*} pid The local player id.
- * @returns {boolean} True when queryable.
+ * @param {*} pid
+ * @returns {boolean}
  */
 function canQueryReveal(pid) {
   return pid !== undefined && typeof GameplayMap !== "undefined" && !!GameplayMap.getRevealedState;
@@ -509,10 +509,10 @@ function canQueryReveal(pid) {
 
 /**
  * Whether a tile is revealed (not in fog) for the player.
- * @param {*} pid The local player id.
- * @param {number} x Plot x.
- * @param {number} y Plot y.
- * @returns {boolean} True when revealed.
+ * @param {*} pid
+ * @param {number} x
+ * @param {number} y
+ * @returns {boolean}
  */
 function tileRevealed(pid, x, y) {
   const hidden = typeof RevealedStates !== "undefined" ? RevealedStates.HIDDEN : 0;
@@ -523,7 +523,7 @@ function tileRevealed(pid, x, y) {
  * Read a settlement's ComponentID (`city.id`) - a serializable {owner,id,type}
  * struct used to re-resolve a live handle (`Cities.get`) and to target the
  * camera (`UI.Player.lookAtID`). Returns null when unreadable.
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {*} The ComponentID, or null.
  */
 function readComponentId(city) {
@@ -539,7 +539,7 @@ function readComponentId(city) {
 /**
  * Plain "x,y" plot key (matches the trace store's key; distinct from the
  * pid-prefixed settlementKey used for marker dedupe).
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {string|null} The key, or null.
  */
 function plotKey(city) {
@@ -554,7 +554,7 @@ function plotKey(city) {
 
 /**
  * Boolean engine read, false on throw.
- * @param {() => *} fn Thunk.
+ * @param {() => *} fn
  * @returns {boolean} The boolean, or false.
  */
 function safeBool(fn) {
@@ -568,7 +568,7 @@ function safeBool(fn) {
 /**
  * String engine read, "" on throw/non-string (a city handle mid-transition can
  * throw on any property).
- * @param {() => *} fn Thunk.
+ * @param {() => *} fn
  * @returns {string} The string, or "".
  */
 function safeStr(fn) {
@@ -591,7 +591,7 @@ function currentTurn() {
 
 /**
  * The current age type ("AGE_ANTIQUITY", ...), or undefined when unreadable.
- * @returns {string|undefined} The age type.
+ * @returns {string|undefined}
  */
 export function currentAgeType() {
   try {
@@ -628,7 +628,7 @@ function currentAgeProgressPct() {
 /**
  * Read a settlement's completed wonders as { type, icon, nameKey } for the card
  * icon row. Engine-owned, so these are confirmed (not inferred).
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {Array<{type: string, icon: string, nameKey: string,
  *   location: {x: number, y: number}|null}>} The wonders.
  */
@@ -652,7 +652,7 @@ function readWonderList(city) {
 /**
  * A settlement's placed constructible component ids of a class ([] when unreadable).
  * @param {*} city The city handle. @param {string} className The class.
- * @returns {*[]} The component ids.
+ * @returns {*[]}
  */
 function constructibleIds(city, className) {
   const con = city?.Constructibles;
@@ -663,7 +663,7 @@ function constructibleIds(city, className) {
 /**
  * Count a settlement's constructibles of a class (DISTRICT / BUILDING / WONDER).
  * @param {*} city The city handle. @param {string} className The class.
- * @returns {number} The count.
+ * @returns {number}
  */
 function countConstructibleClass(city, className) {
   return constructibleIds(city, className).length;
@@ -672,7 +672,7 @@ function countConstructibleClass(city, className) {
 /**
  * Read a settlement's constructibles of a class as localized display names (for
  * the drill-down; one entry per placed constructible, duplicates kept).
- * @param {*} city The city handle.
+ * @param {*} city
  * @param {string} className The constructible class ("BUILDING" | "DISTRICT").
  * @returns {string[]} The localized names.
  */
@@ -689,7 +689,7 @@ function readConstructibleNames(city, className) {
  * One placed constructible's localized display name, or "" when the handle or
  * its table row is unreadable (a stale component id can make either lookup
  * throw; guarded per entry like resolveWonder so one bad id skips one name).
- * @param {*} cid The constructible component id.
+ * @param {*} cid
  * @returns {string} The name, or "".
  */
 function constructibleName(cid) {
@@ -706,10 +706,10 @@ function constructibleName(cid) {
 }
 
 /**
- * The wonder a settlement is CURRENTLY building (from its BuildQueue), with
+ * The wonder a settlement is currently building (from its BuildQueue), with
  * progress, or null. Reads `city.BuildQueue.currentProductionTypeHash` and
  * `getPercentComplete` / `currentTurnsLeft` (base-game production API).
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {{type:string, name:string, percent:number|null, turnsLeft:number|null}|null}
  */
 function readWonderInProgress(city) {
@@ -740,7 +740,7 @@ function turnsVal(bq) {
 
 /**
  * Array engine read, [] on throw/non-array.
- * @param {() => *} fn Thunk.
+ * @param {() => *} fn
  * @returns {Array<*>} The array, or [].
  */
 function safeArr(fn) {
@@ -816,7 +816,7 @@ function alivePlayers() {
 function gatherPlayerSettlements(p, list, lite) {
   const pid = typeof p?.id === "number" ? p.id : undefined;
   if (typeof pid !== "number") return;
-  // p.Cities.getCities() returns city HANDLES directly (not ComponentIDs), so
+  // p.Cities.getCities() returns city handles directly (not ComponentIDs), so
   // each element is used as-is - no Cities.get() lookup.
   const cities = playerCities(p);
   if (!cities.length) return;
@@ -830,7 +830,7 @@ function gatherPlayerSettlements(p, list, lite) {
 /**
  * Gather every settlement of every alive player as raw records (no scores yet).
  * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
- * @returns {Settlement[]} The settlement records.
+ * @returns {Settlement[]}
  */
 function gatherSettlements(lite) {
   /** @type {Settlement[]} */
@@ -897,9 +897,9 @@ function maxByOutput(list, cols) {
  * One settlement's weighted, normalized composite score (0-100).
  * @param {Settlement} s The settlement.
  * @param {Array<{ id: string, weight: number }>} cols The composite columns.
- * @param {Record<string, number>} max Per-output max values.
- * @param {number} totalWeight Sum of column weights.
- * @returns {number} The composite score.
+ * @param {Record<string, number>} max
+ * @param {number} totalWeight
+ * @returns {number}
  */
 function compositeOf(s, cols, max, totalWeight) {
   let sum = 0;
@@ -928,7 +928,7 @@ function computeRanks(list) {
  * The sortable numeric value of a settlement for a given output/composite key.
  * @param {Settlement} s The settlement.
  * @param {string} key The output id, or "composite".
- * @returns {number} The value.
+ * @returns {number}
  */
 export function valueOf(s, key) {
   if (key === "composite") return s.composite;

@@ -25,7 +25,7 @@ import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.
 const VW = 1000;
 const VH = 560;
 
-// ── Shared compare data + filtering legend ───────────────────────────────────
+// Shared compare data + filtering legend
 
 /**
  * A civ's compare record.
@@ -41,7 +41,7 @@ const VH = 560;
  * keys/colors match every other chart and the shared hidden-civ filter applies.
  * @param {*} history The persisted history blob.
  * @param {string[]} metricIds The metrics whose latest values to read.
- * @returns {Map<string, CompareCiv>} key → civ.
+ * @returns {Map<string, CompareCiv>}
  */
 function loadCompareCivs(history, metricIds) {
   /** @type {Map<string, CompareCiv>} */
@@ -51,7 +51,7 @@ function loadCompareCivs(history, metricIds) {
     for (const s of series) {
       let civ = civs.get(s.leaderType);
       if (!civ) {
-        // s.name is the composed "Leader (Civ)" display name — it already honors
+        // s.name is the composed "Leader (Civ)" display name; it already honors
         // the global Civ/Leader order toggle (via displayName → orderedNames).
         civ = {
           key: s.leaderType, label: s.name, leaderTypeString: s.leaderTypeString,
@@ -70,7 +70,7 @@ function loadCompareCivs(history, metricIds) {
  * Build one clickable legend row (portrait + colored dot + name), `is-hidden`
  * when the civ is filtered off. Matches the line / Legacy Path radar legend.
  * @param {CompareCiv} civ @param {boolean} isHidden @param {((k:string)=>void)|null} onToggle
- * @returns {HTMLElement} The legend row.
+ * @returns {HTMLElement}
  */
 function compareLegendRow(civ, isHidden, onToggle) {
   const row = document.createElement("div");
@@ -109,7 +109,7 @@ function mountCompareLegend(wrap, civs, hidden, onToggle) {
   wrap.appendChild(legend);
 }
 
-// ── Scatter (Chart.js) ───────────────────────────────────────────────────────
+// Scatter (Chart.js)
 //
 // Rendered with Chart.js, not hand-drawn SVG, so axes, fonts, legend and
 // tooltip are pixel-identical to the line chart. Each civ is one single-point
@@ -146,7 +146,7 @@ function axisTitle(text) {
 /**
  * A linear metric axis (x or y) styled like the line chart: gold ticks + title,
  * faint gridlines, gray border, starting at 0, grouped-thousand tick labels.
- * @param {string} title The axis title.
+ * @param {string} title
  * @returns {Record<string, *>} The Chart.js axis options.
  */
 function metricAxis(title) {
@@ -164,9 +164,9 @@ function metricAxis(title) {
 }
 
 /**
- * The civs that have a finite value for BOTH axes (the plottable set).
+ * The civs that have a finite value on both axes (the plottable set).
  * @param {Map<string, CompareCiv>} civs @param {string} xMetric @param {string} yMetric
- * @returns {CompareCiv[]} The plottable civs.
+ * @returns {CompareCiv[]}
  */
 function scatterPlottable(civs, xMetric, yMetric) {
   return [...civs.values()].filter(
@@ -203,7 +203,7 @@ function scatterLegendOpts(opts) {
 
 /**
  * Append one labeled value line ("<axis title> …… <value>") to the tooltip, the
- * value in the civ color — mirrors the line-chart tooltip's per-row value cell.
+ * value in the civ color, mirroring the line-chart tooltip's per-row value cell.
  * @param {HTMLElement} tip @param {string} title @param {number} value @param {string} color
  */
 function appendScatterTipVal(tip, title, value, color) {
@@ -245,7 +245,7 @@ function fillScatterTip(tip, dp, xTitle, yTitle) {
 
 /**
  * Position the HTML tooltip next to the cursor (Chart.js caret), clamped inside
- * the wrap — the same placement the line chart's external tooltip uses.
+ * the wrap, the same placement the line chart's external tooltip uses.
  * @param {HTMLElement} tip @param {*} chart @param {*} tooltip @param {HTMLElement} wrap
  */
 function positionScatterTip(tip, chart, tooltip, wrap) {
@@ -309,7 +309,7 @@ function scatterAxisSpec(o) {
  * Render a two-axis civ scatter (Chart.js) with the shared click-to-hide filter
  * legend: each civ a dot on (xMetric, yMetric). Defaults to the
  * Science-vs-Military "Fingerprint"; `opts` selects any pair.
- * @param {HTMLElement} host The chart host.
+ * @param {HTMLElement} host
  * @param {*} opts Options (history, xMetric/yMetric/xTitle/yTitle, width/height,
  *   hiddenCivs, onToggleCiv, onSetAllHidden).
  * @returns {void}
@@ -346,13 +346,13 @@ export function renderCivScatter(host, opts) {
   const legend = buildLineLegend(datasets, scatterLegendOpts(o));
   const { wrap, canvas } = buildChartCanvas(renderW, renderH, legend);
   host.appendChild(wrap);
-  // type "line" (not "scatter") with per-dataset showLine:false — the LineController
+  // type "line" (not "scatter") with per-dataset showLine:false: the LineController
   // is the one the line/trend charts already use, so we don't depend on the engine's
   // Chart.js build having ScatterController registered. Renders points only.
   tryCreateChart(canvas, { type: "line", data: { datasets }, options }, host);
 }
 
-// ── Radar (Archetype) ────────────────────────────────────────────────────────
+// Radar (Archetype)
 
 /** Radar dimensions: metric id → axis label. */
 const RADAR_DIMS = [
@@ -423,7 +423,7 @@ function radarMaxes(civs) {
 /**
  * Render the Archetype radar with a per-civ filtering legend (click a civ to
  * hide/show its polygon), matching the Legacy Path radar.
- * @param {HTMLElement} host The chart host. @param {*} options Render options.
+ * @param {HTMLElement} host @param {*} options
  * @returns {void}
  */
 export function renderPowerRadar(host, options) {

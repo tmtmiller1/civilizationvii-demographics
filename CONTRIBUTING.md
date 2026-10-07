@@ -4,8 +4,10 @@ Thanks for your interest. Demographics is a read-only Civilization VII UI mod. T
 
 ## Typed JavaScript, no build step
 
-The mod is **typed JavaScript**, not TypeScript. Civ VII loads `.js` files directly into the Coherent GameFace engine at runtime — there is no transpile in the mod pipeline, and **what ships is exactly what you wrote** (no minification, no generated output). Types come from **JSDoc** annotations checked by `tsc --noEmit` (`checkJs`), so the `/** @param … */` blocks are the type system — keep them on exported functions and anywhere a type isn't obvious. Please don't
-add `.ts` files or a build step.
+The mod is typed JavaScript, not TypeScript. Civ VII loads `.js` files directly into the Coherent GameFace engine at
+runtime; there is no transpile step, and what ships is what you wrote (no minification, no generated output). Types
+come from JSDoc annotations checked by `tsc --noEmit` (`checkJs`), so the `/** @param … */` blocks are the type
+system. Keep them on exported functions and anywhere a type isn't obvious. Don't add `.ts` files or a build step.
 
 ## Setup
 
@@ -19,10 +21,10 @@ npm install
 npm run verify
 ```
 
-This must pass with **zero errors and zero warnings**. It runs:
+This must pass with zero errors and zero warnings. It runs:
 
-1. `tsc --noEmit` — JSDoc type checking (`checkJs`).
-2. `eslint ui` — style + size limits.
+1. `tsc --noEmit`: JSDoc type checking (`checkJs`).
+2. `eslint ui`: style and size limits.
 3. every test harness in `tests/` (listed in `package.json`; `scripts/required-scripts-gate.mjs` fails the run if one goes missing), including the worst-case History load test `tests/history-stress.mjs`.
 
 ## Style limits (enforced by ESLint)
@@ -38,14 +40,21 @@ When a function trips a limit, prefer extracting a small, named helper or a cont
 
 ## Conventions
 
-- **Defensive engine access.** The GameFace API surface can be absent or throw
-  (`Camera`, `UI.Player`, `Stats`, etc. may be undefined). Guard with
-  `typeof X !== "undefined"` / the local `safeCall` wrappers and degrade gracefully — never assume an engine global exists.
-- **Persistence.** History is stored in the GameConfiguration KV store
-  (`Configuration.editGame().setValue` / `getGame().getValue`), seed-stamped and self-resetting on a new game. Settings live in the **shared** `localStorage` `modSettings` key (only ever write the single `demographics` slice; never add a second top-level `localStorage` key as other mods wipe `localStorage` when they
-  see more than one).
-- **Localization.** User-facing strings are LOC keys resolved via `t()` — never hardcode display English in `.js`. Every new tag must be added to `en_us` **and all 10** locales under `text/<locale>/ModText.xml` to keep tag-parity (a tag missing from a locale renders as the raw `LOC_...` string there); non-English `<Text>` may be an English placeholder pending translation. Metric names resolve from `LOC_DEMOGRAPHICS_METRIC_<ID>`, not the `label` in the metric registry. Some tags are base-game-owned and intentionally absent (`BASE_GAME_LOC_KEYS` in `ui/core/demographics-i18n.js`). Full workflow: [`text/README.md`](text/README.md).
-- **Comments.** Explain *why* (engine quirks, workarounds), not *what*. Avoid internal ticket/process references in shipped code.
+- Engine access is defensive. The GameFace API surface can be absent or throw (`Camera`, `UI.Player`, `Stats` and
+  others may be undefined). Guard with `typeof X !== "undefined"` or the local `safeCall` wrappers and degrade; never
+  assume an engine global exists.
+- Persistence. History is stored in the GameConfiguration KV store (`Configuration.editGame().setValue` /
+  `getGame().getValue`), seed-stamped and self-resetting on a new game. Settings live in the shared `localStorage`
+  `modSettings` key: only ever write the single `demographics` slice, and never add a second top-level `localStorage`
+  key, as other mods wipe `localStorage` when they see more than one.
+- Localization. User-facing strings are LOC keys resolved via `t()`; never hardcode display English in `.js`. Every
+  new tag goes into `en_us` and all 10 other locales under `text/<locale>/ModText.xml` to keep tag parity (a tag
+  missing from a locale renders as the raw `LOC_...` string there); a non-English `<Text>` may be an English
+  placeholder pending translation. Metric names resolve from `LOC_DEMOGRAPHICS_METRIC_<ID>`, not the `label` in the
+  metric registry. Some tags are base-game-owned and absent on purpose (`BASE_GAME_LOC_KEYS` in
+  `ui/core/demographics-i18n.js`). Full workflow: [`text/README.md`](text/README.md).
+- Comments explain why (engine quirks, workarounds), not what. Keep internal ticket and process references out of
+  shipped code.
 
 ## Project layout
 
@@ -78,7 +87,8 @@ that group imports game-only code.
 
 ## Releasing
 
-`./release.sh` produces the upload zip. It mutes debug logging in the dist copy and **always ships readable JS — there is no minification path.** The shipped file layout matches the dev tree.
+`./release.sh` produces the upload zip. It mutes debug logging in the dist copy and ships readable JS; there is no
+minification path. The shipped file layout matches the dev tree.
 
 ## License
 

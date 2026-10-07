@@ -48,10 +48,10 @@ function notifyLiveRefresh() {
 }
 
 /**
- * Register a plain Demographics checkbox setting under Mods → Demographics.
- * @param {string} id The option id.
+ * A plain checkbox setting under Mods → Demographics.
+ * @param {string} id
  * @param {string} key The DemographicsSettings key.
- * @param {boolean} dflt Default value.
+ * @param {boolean} dflt
  * @param {{label:string, description?:string}} text LOC label key + optional tooltip key.
  */
 function registerCheckbox(id, key, dflt, text) {
@@ -71,10 +71,10 @@ function registerCheckbox(id, key, dflt, text) {
 }
 
 /**
- * Register a Demographics dropdown setting whose selected index maps to `items[index].value`.
- * @param {string} id The option id.
+ * A dropdown setting whose selected index maps to `items[index].value`.
+ * @param {string} id
  * @param {string} key The DemographicsSettings key.
- * @param {{value:*, label:string}[]} items Dropdown items (stored value + display label).
+ * @param {{value:*, label:string}[]} items Stored value + display label.
  * @param {*} dflt Default stored value.
  * @param {{label:string, description?:string}} text LOC label key + optional tooltip key.
  */

@@ -10,10 +10,10 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 /**
- * Draw the quiet backdrop into the ring SVG (call BEFORE edges/nodes so it sits
+ * Draw the quiet backdrop into the ring SVG (call before edges/nodes so it sits
  * behind them).
  * @param {Element} svg The SVG root.
- * @param {import("./relations-ring-svg.js").RingGeometry} geo Ring geometry.
+ * @param {import("./relations-ring-svg.js").RingGeometry} geo
  */
 export function appendRingBackdrop(svg, geo) {
   const { cx, cy, rx, ry } = geo;

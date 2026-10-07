@@ -2,9 +2,9 @@
 // while I scroll across the graph" report.
 //
 // Why a probe instead of a fix: the fault has never been reproduced from script. Every path that
-// can be driven programmatically is correct — the data (232 points), Chart.js hit-testing across
+// can be driven programmatically is correct: the data (232 points), Chart.js hit-testing across
 // x, and the DOM render all update per turn when driven through chart._eventHandler. The one step
-// that cannot be driven is a REAL mouse hover: GameFace's MouseEvent constructor ignores its init
+// that cannot be driven is a real mouse hover: GameFace's MouseEvent constructor ignores its init
 // dict (`new MouseEvent("mousemove",{clientX:500}).clientX === 0`) and CDP's Input.dispatchMouseEvent
 // is accepted but never delivered to the page. So the only way to see the broken step is to watch a
 // real hand on a real mouse.
@@ -14,14 +14,14 @@
 //   2 DERIVED  Chart.js converts it to a chart x      -> _eventHandler receives a changing x
 //   3 RENDER   the tooltip DOM is rewritten           -> the header/value text changes
 // The probe records all three and, when the cursor has clearly traveled but the rendered text has
-// not, prints ONE verdict line naming the first stage that stopped moving. That is the answer.
+// not, prints one verdict line naming the first stage that stopped moving. That is the answer.
 //
 // Durability: the chart canvas is replaced on every re-render, so hooking one canvas is useless
 // (an earlier attempt caught zero events for exactly that reason). This hooks
-// Chart.prototype._eventHandler once — every instance, present and future — and listens for
+// Chart.prototype._eventHandler once, for every instance present and future, and listens for
 // mousemove on `document` in the capture phase, which no canvas swap can detach.
 //
-// Output goes to Logs/UI.log via console.error (console.log does NOT reach it), so a session can be
+// Output goes to Logs/UI.log via console.error (console.log does not reach it), so a session can be
 // played normally and read back afterward with:
 //   grep 'TOOLTIP-PROBE' ~/Library/Application\ Support/Civilization\ VII/Logs/UI.log
 

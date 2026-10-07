@@ -17,17 +17,17 @@
  */
 
 /**
- * @param {HnrWorldState} s A state.
+ * @param {HnrWorldState} s
  * @returns {string[]} Player id keys.
  */
 const ids = (s) => Object.keys(s.players);
 
 /**
- * Build an event stamped with the new state's turn, age index and date.
- * @param {HnrWorldState} next The newer state.
- * @param {number} ageIdx Index of the current age.
+ * An event stamped with the new state's turn, age index and date.
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
  * @param {Omit<HnrEvent, "t"|"a"|"d">} fields The event body.
- * @returns {HnrEvent} The event.
+ * @returns {HnrEvent}
  */
 function stamp(next, ageIdx, fields) {
   /** @type {HnrEvent} */
@@ -38,8 +38,8 @@ function stamp(next, ageIdx, fields) {
 
 /**
  * Settlement ownership across all players: "x,y" -> { owner, name }.
- * @param {HnrWorldState} s The state.
- * @returns {Map<string, {owner:number, name:string}>} Ownership map.
+ * @param {HnrWorldState} s
+ * @returns {Map<string, {owner:number, name:string}>}
  */
 export function ownership(s) {
   const map = new Map();
@@ -53,10 +53,10 @@ export function ownership(s) {
 
 /**
  * Founding, capture and razing events.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @returns {HnrEvent[]}
  */
 export function diffCities(prev, next, ageIdx) {
   const before = ownership(prev);
@@ -76,11 +76,11 @@ export function diffCities(prev, next, ageIdx) {
 
 /**
  * First-completion wonder events.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @param {Namer} names Name resolvers.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @param {Namer} names
+ * @returns {HnrEvent[]}
  */
 export function diffWonders(prev, next, ageIdx, names) {
   const seen = new Set(ids(prev).flatMap((pid) => prev.players[pid].wonders || []));
@@ -98,11 +98,11 @@ export function diffWonders(prev, next, ageIdx, names) {
 
 /**
  * Newly earned Triumphs.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @param {Namer} names Name resolvers.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @param {Namer} names
+ * @returns {HnrEvent[]}
  */
 export function diffTriumphs(prev, next, ageIdx, names) {
   /** @type {HnrEvent[]} */
@@ -118,10 +118,10 @@ export function diffTriumphs(prev, next, ageIdx, names) {
 
 /**
  * Religions founded.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @returns {HnrEvent[]}
  */
 export function diffReligions(prev, next, ageIdx) {
   return ids(next)
@@ -131,8 +131,8 @@ export function diffReligions(prev, next, ageIdx) {
 
 /**
  * Unordered war pairs "a:b" (a < b) in a state.
- * @param {HnrWorldState} s The state.
- * @returns {Set<string>} Pairs.
+ * @param {HnrWorldState} s
+ * @returns {Set<string>}
  */
 export function warPairs(s) {
   const out = new Set();
@@ -148,10 +148,10 @@ export function warPairs(s) {
 
 /**
  * Wars that broke out and wars that ended in peace (not by elimination).
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @returns {HnrEvent[]}
  */
 export function diffWars(prev, next, ageIdx) {
   const before = warPairs(prev);
@@ -174,11 +174,11 @@ export function diffWars(prev, next, ageIdx) {
 
 /**
  * Eliminations and first contacts with the local player.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @param {number} local Local player id.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @param {number} local
+ * @returns {HnrEvent[]}
  */
 export function diffPeople(prev, next, ageIdx, local) {
   /** @type {HnrEvent[]} */
@@ -196,11 +196,11 @@ export function diffPeople(prev, next, ageIdx, local) {
 
 /**
  * Newly claimed victories.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
- * @param {number} ageIdx Age index.
- * @param {Namer} names Name resolvers.
- * @returns {HnrEvent[]} Events.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
+ * @param {number} ageIdx
+ * @param {Namer} names
+ * @returns {HnrEvent[]}
  */
 export function diffVictories(prev, next, ageIdx, names) {
   const had = new Set(prev.victories || []);
@@ -214,11 +214,11 @@ export function diffVictories(prev, next, ageIdx, names) {
 
 /**
  * Age change: the new age plus every living civilization's new identity.
- * @param {HnrWorldState} prev Older state.
- * @param {HnrWorldState} next Newer state.
+ * @param {HnrWorldState} prev
+ * @param {HnrWorldState} next
  * @param {number} ageIdx Index of the new age.
- * @param {Namer} names Name resolvers.
- * @returns {HnrEvent[]} Events.
+ * @param {Namer} names
+ * @returns {HnrEvent[]}
  */
 export function diffAge(prev, next, ageIdx, names) {
   /** @type {HnrEvent[]} */
@@ -236,8 +236,8 @@ export function diffAge(prev, next, ageIdx, names) {
 /**
  * Every event between two states.
  * @param {HnrWorldState|null} prev Older state, or null for the first sample.
- * @param {HnrWorldState} next Newer state.
- * @param {{ageIdx:number, local:number, names:Namer}} ctx Context.
+ * @param {HnrWorldState} next
+ * @param {{ageIdx:number, local:number, names:Namer}} ctx
  * @returns {HnrEvent[]} Events, in a stable order.
  */
 export function diffWorld(prev, next, ctx) {

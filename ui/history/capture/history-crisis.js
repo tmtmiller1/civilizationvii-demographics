@@ -6,9 +6,9 @@
 // a pre-crisis reading (0 or below), because the previous age's stage can linger into the next.
 
 /**
- * A fresh detection state.
- * @param {string} age Age type.
- * @returns {HnrCrisisState} State (the first age starts armed: nothing can linger into it).
+ * A fresh detection state. The first age starts armed: nothing can linger into it.
+ * @param {string} age
+ * @returns {HnrCrisisState}
  */
 export function newCrisisState(age) {
   return { age, last: 0, armed: true };
@@ -16,9 +16,9 @@ export function newCrisisState(age) {
 
 /**
  * Fold one reading into the state and return the onset it marks, if any.
- * @param {HnrCrisisState} st State (mutated).
- * @param {string} age Current age type.
- * @param {number|undefined} stage Current stage reading.
+ * @param {HnrCrisisState} st Mutated.
+ * @param {string} age
+ * @param {number|undefined} stage The current reading.
  * @returns {number} The new stage when this reading is an onset, else 0.
  */
 export function crisisStep(st, age, stage) {

@@ -2,8 +2,7 @@
 // configuration, so only the host stores the campaign there; guests keep it in memory and adopt
 // their own viewpoint on the host's stored copy. Every seat of a hotseat game and every single-player
 // game stores as before. Samples are taken once per game turn, whichever seat's turn starts it.
-// The networked case is NOT watched in a real two-client game (this machine has one Steam client);
-// hotseat and single-player were watched on 2026-09-22.
+// The networked case has not been checked in a real two-client game (one Steam client here).
 import assert from "node:assert/strict";
 
 globalThis.GameInfo = { Ages: { lookup: () => null } };
@@ -20,7 +19,7 @@ const cap = await import("/demographics/ui/history/capture/history-capture.js");
   assert.equal(cap.mayStoreCampaign({ network: true, host: false }), false, "network guest does not");
 }
 
-// 2. isNetworkMultiplayer reads the engine flag; hotseat reports false there (watched).
+// 2. isNetworkMultiplayer reads the engine flag; hotseat reports false there.
 {
   globalThis.Configuration = { getGame: () => ({ isHotseat: true, isAnyMultiplayer: true, isNetworkMultiplayer: false }) };
   assert.equal(cap.isNetworkMultiplayer(), false);

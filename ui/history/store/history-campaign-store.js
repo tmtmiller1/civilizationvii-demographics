@@ -18,7 +18,7 @@ export const CAMPAIGN_REJECTED_KEY = CAMPAIGN_KEY + "__rejected";
 /**
  * The parked slot for a given schema version.
  * @param {number|undefined} version The version read off the stored text, if any.
- * @returns {string} The slot key.
+ * @returns {string}
  */
 export function campaignRejectedKey(version) {
   return typeof version === "number" && isFinite(version) ? CAMPAIGN_REJECTED_KEY + "_v" + version : CAMPAIGN_REJECTED_KEY;
@@ -77,7 +77,7 @@ function parseCampaign(raw) {
 /**
  * Park stored text this version cannot keep under the primary key, in its version's slot. Skipped
  * (and said so) when this client may not write the campaign.
- * @param {string} raw The stored text.
+ * @param {string} raw
  * @param {StoredCampaign} primary What it parsed as.
  * @param {boolean} mayWrite Whether this client may write the campaign into the game.
  */
@@ -106,7 +106,7 @@ function readParkedCampaign() {
 /**
  * Put a parked campaign back under the primary key and clear its slot. When this client may not
  * write the campaign, the document is used in memory only and the slot is left as it is.
- * @param {{doc: CampaignDoc, raw: string}} parked The parked document.
+ * @param {{doc: CampaignDoc, raw: string}} parked
  * @param {boolean} mayWrite Whether this client may write the campaign into the game.
  */
 function restoreParkedCampaign(parked, mayWrite) {
@@ -122,8 +122,8 @@ function restoreParkedCampaign(parked, mayWrite) {
 /**
  * Whether the caller allows writes to the game configuration during a load. Defaults to true; a
  * predicate that throws counts as "no".
- * @param {{mayWrite?: () => boolean}} [opts] Load options.
- * @returns {boolean} True when park/restore may write.
+ * @param {{mayWrite?: () => boolean}} [opts]
+ * @returns {boolean}
  */
 function resolveMayWrite(opts) {
   if (!opts || typeof opts.mayWrite !== "function") return true;
@@ -133,12 +133,12 @@ function resolveMayWrite(opts) {
 /**
  * Read and validate the campaign stored in the current game. Stored text this version cannot use
  * is parked first, in its own version's slot, so a later save does not overwrite it; then a parked
- * campaign this version CAN use is restored when the primary key is empty, unusable, or holds an
+ * campaign this version can use is restored when the primary key is empty, unusable, or holds an
  * older schema. Both writes obey `mayWrite`: the caller passes the same host-only rule that gates
- * saveCampaign in a networked game (mayStoreCampaign in dgh-capture), and a client that may not
+ * saveCampaign in a networked game (mayStoreCampaign in history-capture.js), and a client that may not
  * write parks nothing and uses a parked document in memory only.
  * @param {{mayWrite?: () => boolean}} [opts] `mayWrite`: whether this client may write the campaign.
- * @returns {CampaignDoc|null} The document, or null when absent or unreadable.
+ * @returns {CampaignDoc|null} null when absent or unreadable.
  */
 export function loadCampaign(opts) {
   const raw = readValue(CAMPAIGN_KEY);
@@ -154,8 +154,8 @@ export function loadCampaign(opts) {
 
 /**
  * Write the campaign into the current game.
- * @param {CampaignDoc} doc The document.
- * @returns {boolean} True when the write call succeeded.
+ * @param {CampaignDoc} doc
+ * @returns {boolean}
  */
 export function saveCampaign(doc) {
   try {

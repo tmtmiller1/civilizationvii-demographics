@@ -19,9 +19,9 @@ export const CRISIS_STAGE_LABELS = [
 ];
 
 /**
- * Read the global crisis_stage DISPLAY value (0..4) off any one player in a
+ * Read the global crisis_stage display value (0..4) off any one player in a
  * sample (the sampler stamps it on every player's metrics).
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @returns {number|undefined} The display stage, or undefined.
  */
 function readSampleCrisisStage(s) {
@@ -35,10 +35,10 @@ function readSampleCrisisStage(s) {
 }
 
 /**
- * Return the higher valid crisis stage between the running max and candidate.
+ * The higher valid crisis stage of the running max and a candidate.
  * @param {number|undefined} best Running max stage.
- * @param {*} candidate Candidate stage value.
- * @returns {number|undefined} Updated max stage.
+ * @param {*} candidate
+ * @returns {number|undefined}
  */
 function maxStage(best, candidate) {
   if (typeof candidate !== "number" || !isFinite(candidate)) return best;
@@ -49,14 +49,14 @@ function maxStage(best, candidate) {
 /**
  * Walk the samples and record each crisis-stage onset: the turn the stage value
  * first rises to a new higher level (pre-crisis counts as 0).
- * @param {Snapshot[]} samples The sample stream.
- * @returns {{ stage: number, turn: number, sample: Snapshot }[]} The onsets.
+ * @param {Snapshot[]} samples
+ * @returns {{ stage: number, turn: number, sample: Snapshot }[]}
  */
 export function crisisStageOnsets(samples) {
   /** @type {{ stage: number, turn: number, sample: Snapshot }[]} */
   const onsets = [];
   // Each age has its own crisis, and the stage doesn't reliably drop to 0 between
-  // ages, so an age transition resets the running max AND disarms detection until
+  // ages, so an age transition resets the running max and disarms detection until
   // this age reports a pre-crisis (<=0) reading; a lingering value is then never
   // mistaken for a fresh onset. The very first age starts armed.
   const state = { last: 0, age: /** @type {*} */ (undefined), armed: true };
@@ -68,7 +68,7 @@ export function crisisStageOnsets(samples) {
  * Fold one sample into the onset accumulator: reset the running max at age
  * changes, disarm across real age transitions until a pre-crisis reading
  * confirms this age's baseline, then record each genuine new-high onset.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @param {{ last: number, age: *, armed: boolean }} state Detection state (mutated).
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets Accumulator.
  */
@@ -87,7 +87,7 @@ function onsetStep(s, state, onsets) {
 /**
  * Reset the running max at an age change and disarm detection across real
  * age-to-age transitions (the first age has nothing to linger from).
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @param {{ last: number, age: *, armed: boolean }} state Detection state (mutated).
  */
 function handleAgeChange(s, state) {
@@ -102,7 +102,7 @@ function handleAgeChange(s, state) {
  * the running max, at least stage 1, and turn-stamped.
  * @param {{ last: number, armed: boolean }} state Detection state.
  * @param {number} raw The sample's crisis stage.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @returns {boolean} True when a new onset should be recorded.
  */
 function isNewOnset(state, raw, s) {
@@ -112,8 +112,8 @@ function isNewOnset(state, raw, s) {
 /**
  * Normalize a sample's age to a stable key, treating untagged samples (no `age`)
  * as Antiquity.
- * @param {Snapshot|*} sample One sample.
- * @returns {string} The age key.
+ * @param {Snapshot|*} sample
+ * @returns {string}
  */
 export function sampleAgeKey(sample) {
   return sample && typeof sample.age === "string" ? sample.age : "AGE_ANTIQUITY";
@@ -123,7 +123,7 @@ export function sampleAgeKey(sample) {
  * Map each age to the last (max) turn sampled in it, used to cap a finished
  * age's crisis stages at that age's end (a later age's turns live in a reset
  * age-local turn space that would invert the [start, end] window).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {Map<string, number>} Age key -> last sampled turn.
  */
 export function ageLastTurns(samples) {
@@ -139,14 +139,14 @@ export function ageLastTurns(samples) {
 }
 
 /**
- * The end turn for onset `i`: the next SAME-AGE onset's turn, else this age's
+ * The end turn for onset `i`: the next same-age onset's turn, else this age's
  * last sampled turn (so a finished crisis stays bounded within its own age and
- * its window never inverts once a later age - with reset turns - begins).
- * @param {{ stage:number, turn:number, sample:Snapshot }[]} onsets The onsets.
- * @param {number} i The onset index.
+ * its window never inverts once a later age, with reset turns, begins).
+ * @param {{ stage:number, turn:number, sample:Snapshot }[]} onsets
+ * @param {number} i
  * @param {number} latestTurn Fallback latest turn.
  * @param {Map<string, number>} [ageLastTurn] Per-age last turn (see ageLastTurns).
- * @returns {number} The segment end turn.
+ * @returns {number}
  */
 function segmentEnd(onsets, i, latestTurn, ageLastTurn) {
   const age = sampleAgeKey(onsets[i].sample);
@@ -160,10 +160,10 @@ function segmentEnd(onsets, i, latestTurn, ageLastTurn) {
  * Turn onsets into [start, end] stage segments. A stage runs until the next
  * onset in the same age; the last stage ends at that age's last sampled turn
  * (via {@link ageLastTurns}), keeping each crisis bounded within its age.
- * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The onsets.
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets
  * @param {number} latestTurn The latest sampled turn (fallback).
  * @param {Map<string, number>} [ageLastTurn] Per-age last turn (see ageLastTurns).
- * @returns {{ stage: number, start: number, end: number, sample: Snapshot }[]} The segments.
+ * @returns {{ stage: number, start: number, end: number, sample: Snapshot }[]}
  */
 export function crisisStageSegments(onsets, latestTurn, ageLastTurn) {
   return onsets.map((o, i) => ({

@@ -4,10 +4,9 @@
 import { formatCount } from "/demographics/ui/metrics/metrics-format.js";
 
 /**
- * Create a div with a class and optional text content.
- * @param {string} cls Class name(s).
- * @param {string} [text] Optional text content.
- * @returns {HTMLElement} Created element.
+ * @param {string} cls
+ * @param {string} [text]
+ * @returns {HTMLElement}
  */
 export function div(cls, text) {
   const el = document.createElement("div");
@@ -17,10 +16,10 @@ export function div(cls, text) {
 }
 
 /**
- * Build an element with a BLP background image.
+ * An element with a BLP background image.
  * @param {string} iconPath The `blp:` icon path.
- * @param {string} cls Class name(s).
- * @returns {HTMLElement} Icon element.
+ * @param {string} cls
+ * @returns {HTMLElement}
  */
 export function iconEl(iconPath, cls) {
   const ic = div(cls);
@@ -29,18 +28,18 @@ export function iconEl(iconPath, cls) {
 }
 
 /**
- * Format a numeric value as rounded integer text.
- * @param {number} v Value to format.
- * @returns {string} Rounded value or em dash for non-finite input.
+ * Rounded integer text.
+ * @param {number} v
+ * @returns {string} An em dash for non-finite input.
  */
 export function fmt(v) {
   return typeof v === "number" && isFinite(v) ? String(Math.round(v)) : "—";
 }
 
 /**
- * Format a population estimate as an exact rounded integer with separators.
- * @param {number} v Value to format.
- * @returns {string} Exact population string.
+ * A population estimate as an exact rounded integer with separators.
+ * @param {number} v
+ * @returns {string}
  */
 export function fmtPop(v) {
   if (typeof v !== "number" || !isFinite(v) || v <= 0) return "—";

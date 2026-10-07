@@ -10,8 +10,7 @@ import { DemographicsSettings } from "/demographics/ui/core/demographics-setting
 
 const DBG = false;
 /**
- * Debug logger, no-op unless {@link DBG}.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.endgame]", ...a);
@@ -23,7 +22,7 @@ function dlog(...a) {
 // dock both open. Both render the same bottom-right action row.
 const RESULT_SCREENS = "screen-victory-progress, endgame-screen";
 // The bottom-right action row inside those screens (where "Continue"/"Exit to Main
-// Menu" sit). It can mount AFTER its screen does, so a miss is never treated as final.
+// Menu" sit). It can mount after its screen does, so a miss is never treated as final.
 const ACTION_ROW = ".bottom-10.right-10";
 
 const RESULTS_BTN_ID = "demographics-endgame-button";
@@ -39,10 +38,10 @@ const HOOK_GRACE_MS = 1000;
 const reportedMissing = new Set();
 
 /**
- * Report ONCE, via console.error (visible in UI.log), that a screen mounted but the DOM hook the
+ * Report once, via console.error (visible in UI.log), that a screen mounted but the DOM hook the
  * button needs never appeared, naming the selector. Deferred, because a hook can mount a frame or
  * two after its screen; a button or hook present by then cancels it.
- * @param {HTMLElement} screen The observed screen.
+ * @param {HTMLElement} screen
  * @param {string} selector The hook selector that was missing.
  * @param {string} btnId The button id that should have landed.
  */
@@ -94,11 +93,11 @@ function openScreen(focusView) {
 }
 
 /**
- * Build a native-styled button element wired to open the screen.
- * @param {string} id The element id.
- * @param {string} label The button text.
+ * A native-styled button element wired to open the screen.
+ * @param {string} id
+ * @param {string} label
  * @param {string} [focusView] A landing view id for the click.
- * @returns {HTMLElement} The button.
+ * @returns {HTMLElement}
  */
 function makeButton(id, label, focusView) {
   const b = document.createElement("div");
@@ -115,7 +114,7 @@ function makeButton(id, label, focusView) {
 
 /**
  * Inject the button into the results screen's action row, once.
- * @param {HTMLElement} screen The results screen element.
+ * @param {HTMLElement} screen
  */
 function injectResults(screen) {
   if (!screen || screen.querySelector("#" + RESULTS_BTN_ID)) return;
@@ -130,13 +129,13 @@ function injectResults(screen) {
     }
     return;
   }
-  // From the results screen, land on World Rankings — the leaderboard reads as a game recap.
+  // From the results screen, land on World Rankings: the leaderboard reads as a game recap.
   row.insertBefore(makeButton(RESULTS_BTN_ID, t("LOC_MOD_DEMOGRAPHICS_NAME"), "rankings"), row.firstChild);
 }
 
 /**
  * Inject the button into the pause-menu button container, once.
- * @param {HTMLElement} container The pause-menu button container.
+ * @param {HTMLElement} container
  */
 function injectPause(container) {
   if (!container || container.querySelector("#" + PAUSE_BTN_ID)) return;
@@ -146,9 +145,9 @@ function injectPause(container) {
 }
 
 /**
- * Resolve the pause-menu button container within a node, if present.
- * @param {HTMLElement} node The node to search.
- * @returns {HTMLElement|null} The container, or null.
+ * The pause-menu button container within a node, if present.
+ * @param {HTMLElement} node
+ * @returns {HTMLElement|null}
  */
 function findPauseContainer(node) {
   if (node.id === "pause-menu-button-container") return node;
@@ -159,7 +158,7 @@ function findPauseContainer(node) {
 /**
  * Inject the pause button into the container a node brought in; when the node is (or contains)
  * the pause menu itself and the container is missing, report the miss once.
- * @param {HTMLElement} node The added node.
+ * @param {HTMLElement} node
  */
 function injectPauseFor(node) {
   const pause = findPauseContainer(node);
@@ -175,10 +174,10 @@ function injectPauseFor(node) {
 
 /**
  * Whether an element is one of the end-of-game screens we attach to. Coherent
- * Gameface reports `localName`/`tagName` in UPPERCASE, so this MUST compare
+ * Gameface reports `localName`/`tagName` in upper case, so this has to compare
  * case-insensitively or the button silently never appears.
- * @param {HTMLElement} node The node to test.
- * @returns {boolean} True when `node` is a results screen.
+ * @param {HTMLElement} node
+ * @returns {boolean}
  */
 export function isResultScreen(node) {
   const ln = String(node.localName || "").toLowerCase();
@@ -187,8 +186,8 @@ export function isResultScreen(node) {
 
 /**
  * The action row a node either is or contains, if any.
- * @param {HTMLElement} node The node to search.
- * @returns {HTMLElement|null} The action row, or null.
+ * @param {HTMLElement} node
+ * @returns {HTMLElement|null}
  */
 function actionRowIn(node) {
   if (node.matches && node.matches(ACTION_ROW)) return node;
@@ -200,8 +199,8 @@ function actionRowIn(node) {
  * Resolve the results screen a mutation-added node implies: the node itself, a
  * results screen nested inside it, or the screen owning an action row it brought
  * in (the row can mount after its screen does).
- * @param {HTMLElement} node The added node.
- * @returns {HTMLElement|null} The screen to inject into, or null.
+ * @param {HTMLElement} node
+ * @returns {HTMLElement|null}
  */
 function resultScreenFor(node) {
   if (isResultScreen(node)) return node;
@@ -213,8 +212,7 @@ function resultScreenFor(node) {
 }
 
 /**
- * Inspect a mutation-added node for the results screen and pause menu.
- * @param {*} node The added node.
+ * @param {*} node A mutation-added node.
  */
 function inspect(node) {
   if (!(node instanceof HTMLElement)) return;
@@ -231,8 +229,8 @@ function inspect(node) {
  * Cheap pre-filter for the game-wide observer: only element nodes that carry an id, a class, or
  * children can contain a hook, plus a results screen itself even when it mounts empty (so a row
  * that never follows is still reported).
- * @param {*} node The added node.
- * @returns {boolean} True when the node deserves inspection.
+ * @param {*} node
+ * @returns {boolean}
  */
 function worthInspecting(node) {
   if (!node || node.nodeType !== 1) return false;

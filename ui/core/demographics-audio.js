@@ -6,17 +6,16 @@
 
 const DBG = false;
 /**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.audio]", ...a);
 }
 
 /**
- * Play an engine sound by id, defensively. Never throws - the audio subsystem
- * is absent in observer mode, headless contexts, and save previews, where a
- * missing `Audio` object is normal and silent.
+ * Play an engine sound by id. Never throws: the audio subsystem is absent in
+ * observer mode, headless contexts and save previews, and a missing `Audio`
+ * object there is normal.
  * @param {string} id Sound id (e.g. `"data-audio-activate"`); `"none"` silences.
  * @param {string} [group] Sound group; the engine falls back to `"audio-base"`.
  */
@@ -29,8 +28,7 @@ export function safePlaySound(id, group) {
       dlog("playSound", id, "group=", group);
     }
   } catch (_) {
-    // Audio (the Civ7 audio manager) is absent in
-    // observer/headless/save-preview contexts; sound is optional.
+    // sound is optional; see the note above
   }
 }
 

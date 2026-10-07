@@ -170,7 +170,7 @@ export function migrateWarRecords(snapshot, wars, samples) {
 }
 
 /**
- * The recorded players-by-pid map from the sample at (or just before) a war's start chart-turn ,
+ * The recorded players-by-pid map from the sample at (or just before) a war's start chart-turn:
  * the civ identities as they were when the war began. Null when start data isn't available.
  * @param {Snapshot[]|undefined} samples The recorded samples.
  * @param {WarRecord} war The war record.
@@ -246,7 +246,7 @@ function prepareWarSideRoster(civs, pids, opts) {
 
 /**
  * Refresh an active roster entry's transient fields (leader/color/isCS) from the live player, and
- * backfill its civ ONLY when missing. Civ identity is pinned by applyHistoricalCiv, not here.
+ * backfill its civ only when missing. Civ identity is pinned by applyHistoricalCiv, not here.
  * @param {WarParticipant} e The roster entry (mutated).
  * @param {Snapshot} snapshot The current snapshot.
  */

@@ -108,7 +108,7 @@ const withMap = Object.values(slice.games).filter((r) => r.map).length;
 const withRivals = Object.values(slice.games).filter((r) => r.tl?.r).length;
 // A Hall of Fame this full still tells each game's story: the maps and the other civilizations'
 // tracks give way first, and the games that keep whole timelines are the most recently played. Forty
-// of these games is the worst case — every one is a 500-turn game with every kind of event.
+// of these games is the worst case: every one is a 500-turn game with every kind of event.
 const byAge = Object.values(slice.games).sort((a, b) => b.updated - a.updated);
 const withTimeline = byAge.filter((r) => r.tl).length;
 assert.ok(withTimeline >= 12, "a full archive keeps timelines (" + withTimeline + " of " + kept + ")");

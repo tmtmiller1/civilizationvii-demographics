@@ -28,7 +28,7 @@ export function buildSamplerSnapshot(deps) {
     age: deps.ageType,
     gameYear: deps.gameYear,
     crisisEventType: deps.globalAge.crisisEventType,
-    // Scale metrics off the MONOTONIC chartTurn, not the age-local localTurn,
+    // Scale metrics off the monotonic chartTurn, not the age-local localTurn,
     // which resets at every age boundary and would collapse the era-scaled
     // metrics at each transition.
     players: deps.buildMajorPlayerSnapshots(deps.ids, deps.globalAge, deps.chartTurn, {

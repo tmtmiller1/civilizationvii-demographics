@@ -20,7 +20,7 @@ const PAGE_DESCRIPTIONS = {
   // Age + Resources page notes intentionally removed (per design): the radar / resource titles are
   // self-explanatory, so the standalone caption was redundant.
   wars: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS"
-  // crises: deliberately omitted, its description rides as a hover tooltip on the chart title
+  // crises: omitted on purpose, its description rides as a hover tooltip on the chart title
   // instead of a standalone on-page note (see CHART_TITLE_TOOLTIPS / buildChartTitle).
 };
 
@@ -50,7 +50,7 @@ function subTabLabel(id) {
 /**
  * The tab label for a companion external panel (whose id can't follow the
  * LOC_DEMOGRAPHICS_METRIC_<ID> convention) or one of its sub-tabs, or null when `id` isn't one.
- * @param {string} id Metric/panel/sub-tab id.
+ * @param {string} id
  * @returns {string|null} The panel's own tab label, or null.
  */
 function externalTabLabel(id) {
@@ -77,7 +77,7 @@ function dlog(...a) {
 
 /**
  * Build and append the page-level tab bar (the row of metric-group tabs). When `priorPageHost`
- * is the row from the previous render of the SAME page set and active page, it is put back
+ * is the row from the previous render of the same page set and active page, it is put back
  * instead of rebuilt: a fresh `fxs-tab-bar` shows its first tab for a frame before honouring
  * `selected-tab-index`, so rebuilding it on every pill/filter click made the row flash. Only the
  * tab-selected listener is refreshed, because the render context is rebuilt per render.
@@ -116,7 +116,7 @@ export function buildPageTabRow(host, ctx, activePage, pages, priorPageHost) {
 /**
  * What the page-tab row will show: the visible pages (only those the active UI tier discloses,
  * minus any companion panel marked `topLevel`, which has its own view tab), the selected index,
- * and a signature of everything the row's DOM depends on — two renders with equal signatures
+ * and a signature of everything the row's DOM depends on. Two renders with equal signatures
  * produce pixel-identical rows.
  * @param {*} ctx
  * @param {string} activePage
@@ -222,7 +222,7 @@ const AGE_GATED_METRICS = {
  */
 export function visibleMetricsForAge(metrics) {
   const age = getCurrentAgeType();
-  // Fail OPEN when the age can't be resolved (engine not ready): show everything rather than
+  // Fail open when the age can't be resolved (engine not ready): show everything rather than
   // stranding an age-gated page (e.g. Religion) empty during a momentary unknown-age window.
   if (!age) return metrics;
   return metrics.filter((mid) => {
@@ -251,7 +251,7 @@ function sampleHasMetric(sample, metricId) {
 
 /**
  * Whether any player has ever recorded a finite value for `metricId` across the
- * persisted samples. Fail-OPEN (returns true) when there is no history yet, so a
+ * persisted samples. Fail open (returns true) when there is no history yet, so a
  * fresh game never hides everything before the first sample lands.
  * @param {string} metricId The sampled metric id.
  * @param {*} history The persisted history blob (ctx.history), or nullish.
@@ -341,8 +341,8 @@ function isTopLevelPanelPage(pageId) {
  * Build the section selector for a top-level panel page as a native `fxs-tab-bar` (the second row
  * of tabs, under the view-tab bar) instead of a pill row. Selecting a tab sets the active
  * metric/section.
- * @param {HTMLElement} host The view host.
- * @param {*} ctx Render context.
+ * @param {HTMLElement} host
+ * @param {*} ctx
  * @param {{key:string,label:string}[]} items The section items (metric id + label).
  * @param {string} activeMetric The active section/metric id.
  */
@@ -370,7 +370,7 @@ function buildSectionTabBar(host, ctx, items, activeMetric) {
  * The localized display name for a metric, from the same `LOC_DEMOGRAPHICS_METRIC_<ID>`
  * key the metric tab uses. Falls back to the English descriptor only if the key
  * is unresolved (t() returns the key unchanged on a miss).
- * @param {string} id The metric id.
+ * @param {string} id
  * @param {*} metricObj The metric descriptor (for fallback text).
  * @returns {string} The localized name.
  */
@@ -382,12 +382,12 @@ function localizedMetricName(id, metricObj) {
 }
 
 /**
- * The chart TITLE for a real metric: an explicit `LOC_DEMOGRAPHICS_METRIC_<ID>_TITLE` override when
+ * The chart title for a real metric: an explicit `LOC_DEMOGRAPHICS_METRIC_<ID>_TITLE` override when
  * present (so the big title can read fuller than the short pill, e.g. pill "GDP" → title "Gross
  * Domestic Product (GDP)"), else the metric's display name (identical to the pill).
- * @param {string} id Metric id.
- * @param {*} metricObj Metric descriptor.
- * @returns {string} The chart title text.
+ * @param {string} id
+ * @param {*} metricObj
+ * @returns {string}
  */
 function metricChartTitle(id, metricObj) {
   const key = "LOC_DEMOGRAPHICS_METRIC_" + String(id).toUpperCase() + "_TITLE";
@@ -429,7 +429,7 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
  * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key or a
  * plain `subtitle` string on the descriptor.
  * @param {HTMLElement} host The title host.
- * @param {string} activeMetric The active metric id.
+ * @param {string} activeMetric
  * @param {*} synthMeta The synthetic-metric meta, when the metric is synthetic.
  * @param {*} [metricObj] The metric descriptor (for a raw `subtitle` fallback).
  */

@@ -37,7 +37,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // in Options takes effect on the very next paint without a mod reload.
 // Define PALETTE as a getter so existing `PALETTE[i]` indexing keeps working.
 // Typed `any` because the Proxy returns either a number (`.length`) or a color
-// string (numeric index) depending on the key - a dynamic shape callers index
+// string (numeric index) depending on the key, a dynamic shape callers index
 // freely.
 /** @type {*} */
 const PALETTE = new Proxy(/** @type {Record<string, string>} */ ({}), {
@@ -55,9 +55,9 @@ const PALETTE = new Proxy(/** @type {Record<string, string>} */ ({}), {
 
 /**
  * Create an SVG element with attributes set via `setAttribute`.
- * @param {string} tag SVG tag name.
- * @param {Record<string, *>} [attrs] Attribute map.
- * @returns {SVGElement} The created element.
+ * @param {string} tag
+ * @param {Record<string, *>} [attrs]
+ * @returns {SVGElement}
  */
 function svgEl(tag, attrs) {
   const el = document.createElementNS(SVG_NS, tag);
@@ -66,9 +66,8 @@ function svgEl(tag, attrs) {
 }
 
 /**
- * Read a history blob's `samples` array defensively.
- * @param {DemoHistory|*} history The history blob.
- * @returns {Snapshot[]} The samples, or an empty array.
+ * @param {DemoHistory|*} history
+ * @returns {Snapshot[]} The history's samples, or an empty array.
  */
 function historySamples(history) {
   return history && Array.isArray(history.samples) ? history.samples : [];
@@ -76,8 +75,8 @@ function historySamples(history) {
 
 /**
  * Append a standard empty-state / notice element to a host.
- * @param {HTMLElement} host The host element.
- * @param {string} text The notice text.
+ * @param {HTMLElement} host
+ * @param {string} text
  */
 function appendEmptyNotice(host, text) {
   const msg = document.createElement("div");
@@ -87,10 +86,9 @@ function appendEmptyNotice(host, text) {
 }
 
 /**
- * Read one sample's civ name for a pid.
- * @param {*} sample One history sample.
- * @param {string} pid Player id key.
- * @returns {string} Civ name, or empty string.
+ * @param {*} sample
+ * @param {string} pid
+ * @returns {string} The sample's civ name for the pid, or "".
  */
 function sampleCivName(sample, pid) {
   const player = sample && sample.players ? sample.players[pid] : null;
@@ -100,9 +98,9 @@ function sampleCivName(sample, pid) {
 
 /**
  * Whether a civ history list should append the candidate name.
- * @param {string[]} list Civ-name history list.
- * @param {string} name Candidate civ name.
- * @returns {boolean} True when candidate should be appended.
+ * @param {string[]} list
+ * @param {string} name
+ * @returns {boolean}
  */
 function shouldAppendCivName(list, name) {
   if (!name) return false;
@@ -110,13 +108,12 @@ function shouldAppendCivName(list, name) {
   return !list.includes(name);
 }
 
-// Walk samples for one pid and return an ORDERED list of unique civ names
-// in chronological order. Skips empty/missing civ names.
 /**
- * Collect a pid's distinct civ names in chronological first-seen order.
- * @param {Snapshot[]} samples The history sample stream.
- * @param {string} pid Player id key.
- * @returns {string[]} Distinct civ names, chronological.
+ * Collect a pid's distinct civ names in chronological first-seen order. Empty
+ * and missing names are skipped.
+ * @param {Snapshot[]} samples
+ * @param {string} pid
+ * @returns {string[]}
  */
 function collectCivHistory(samples, pid) {
   /** @type {string[]} */
@@ -131,17 +128,14 @@ function collectCivHistory(samples, pid) {
   return list;
 }
 
-// Compose the end-of-line / legend display name. Civilization-primary, leader
-// secondary (player feedback: identify with the civ first, then the leader).
-//   civHistory.length === 0 → just leader name (no civ to lead with).
-//   civHistory.length === 1 → "Civ (Leader)".
-//   civHistory.length >= 2  → "CivOld → CivNew (Leader)" using arrow separator.
 /**
  * Compose the end-of-line / legend display name from a leader name and the
- * civ-name history.
+ * civ-name history. Civ first, leader second (players identify with the civ
+ * first): no civ → just the leader name; one → "Civ (Leader)"; two or more →
+ * "CivOld → CivNew (Leader)".
  * @param {string} leaderOnly The bare leader name.
  * @param {string[]} civHistory Distinct civ names, chronological.
- * @returns {string} The composed display name.
+ * @returns {string}
  */
 function displayName(leaderOnly, civHistory) {
   if (!Array.isArray(civHistory) || civHistory.length === 0) return leaderOnly;
@@ -155,7 +149,7 @@ export { collectCivHistory, displayName };
 /**
  * Whether the "hide unmet stats" spoiler guard is enabled (default on): every
  * chart then withholds data for civs the local player has not met. Derived from
- * the EFFECTIVE governance policy (every policy except `full` hides unmet civs,
+ * the effective governance policy (every policy except `full` hides unmet civs,
  * and a multiplayer host can force it on), read fresh each render; fails
  * spoiler-safe (on) if the policy read throws.
  * @returns {boolean} True to gate unmet civs.
@@ -169,12 +163,12 @@ function hideUnmetEnabled() {
 }
 
 /**
- * Whether a whole civ must be dropped from a CURRENT-STATE chart under the
+ * Whether a whole civ must be dropped from a current-state chart under the
  * effective governance policy: when the policy is own-civ-only / disabled and
  * the civ is not the local player, or when unmet civs are hidden and this civ is
  * currently unmet. Fails safe (drop) on error.
- * @param {Snapshot[]|*} samples The sample stream.
- * @param {string|number} pid The civ player id.
+ * @param {Snapshot[]|*} samples
+ * @param {string|number} pid
  * @returns {boolean} True to drop the civ entirely.
  */
 function civDroppedByPolicy(samples, pid) {
@@ -187,10 +181,10 @@ function civDroppedByPolicy(samples, pid) {
 }
 
 /**
- * {@link civDroppedByPolicy} for boards that read LIVE game state (Players / the settlement
+ * {@link civDroppedByPolicy} for boards that read live game state (Players / the settlement
  * board) instead of the history: the met state comes from diplomacy now, not the last sample.
  * An unreadable met state keeps the civ, matching the history gate. Fails safe (drop) on error.
- * @param {string|number} pid The civ player id.
+ * @param {string|number} pid
  * @returns {boolean} True to drop the civ entirely.
  */
 function liveCivDroppedByPolicy(pid) {
@@ -204,7 +198,7 @@ function liveCivDroppedByPolicy(pid) {
 
 /**
  * Sub-option of the spoiler guard (only meaningful when {@link hideUnmetEnabled}
- * is on): when true (default) a civ's ENTIRE history is back-filled once the
+ * is on): when true (default) a civ's entire history is back-filled once the
  * local player meets it; when false only data from first contact forward is
  * shown. Read fresh each render; defaults to back-fill on read error.
  * @returns {boolean} True to reveal full history once met.
@@ -218,12 +212,12 @@ function backfillMetHistoryEnabled() {
 }
 
 /**
- * Whether the local player has NOT met this civ as of the most recent sample
+ * Whether the local player has not met this civ as of the most recent sample
  * that carries a met flag. The local player is always met, and an unknown met
  * flag is treated as met, matching the line chart, which only drops points
  * where `met === false`.
- * @param {Snapshot[]|*} samples The sample stream.
- * @param {string|number} pid The civ player id.
+ * @param {Snapshot[]|*} samples
+ * @param {string|number} pid
  * @returns {boolean} True when the civ is currently unmet.
  */
 function isCivUnmet(samples, pid) {
@@ -250,8 +244,7 @@ export function setXAxisMode(mode) {
   if (mode === "turn" || mode === "year" || mode === "both") _xAxisMode = mode;
 }
 /**
- * Read the shared X-axis time-unit mode.
- * @returns {string} The current mode (`"turn"`, `"year"`, or `"both"`).
+ * @returns {string} The shared X-axis time-unit mode (`"turn"`, `"year"`, or `"both"`).
  */
 export function getXAxisMode() {
   return _xAxisMode;
@@ -259,8 +252,8 @@ export function getXAxisMode() {
 
 /**
  * Coerce a `Set`/array option into a `Set<string>`.
- * @param {Set<*>|*[]|*} src Source set/array (or anything else → empty).
- * @returns {Set<string>} The stringified key set.
+ * @param {Set<*>|*[]|*} src Anything else → empty.
+ * @returns {Set<string>}
  */
 function coerceKeySet(src) {
   const arr = src instanceof Set ? Array.from(src) : Array.isArray(src) ? src : [];
@@ -268,8 +261,7 @@ function coerceKeySet(src) {
 }
 
 /**
- * Resolve the local player/observer id from the engine `GameContext`.
- * @returns {number|undefined} Local id, if numeric.
+ * @returns {number|undefined} The local player/observer id from the engine `GameContext`, if numeric.
  */
 function resolveLocalPid() {
   try {
@@ -285,8 +277,8 @@ function resolveLocalPid() {
 
 /**
  * Resolve the time-range filter from options, or `null`.
- * @param {ChartOptions} opts The render options.
- * @returns {{ min: number, max: number }|null} The filter, or `null`.
+ * @param {ChartOptions} opts
+ * @returns {{ min: number, max: number }|null}
  */
 function resolveTurnRange(opts) {
   return opts.turnRange &&
@@ -297,8 +289,8 @@ function resolveTurnRange(opts) {
 }
 
 /**
- * Add the live current-turn -> year entry from the engine `Game`, defensively.
- * `Game.turn` is AGE-LOCAL, so callers whose map is keyed by chart-X must pass
+ * Add the live current-turn -> year entry from the engine `Game`.
+ * `Game.turn` is age-local, so callers whose map is keyed by chart-X must pass
  * the current age's `xOffset`; raw age-local maps pass 0 (the default).
  * @param {Map<number, string>} turnYearMap chart-X → year map (mutated).
  * @param {number} [xOffset] The current age's chart-X offset (0 for raw-turn maps).
@@ -322,8 +314,8 @@ function addLiveTurnYear(turnYearMap, xOffset = 0) {
  * Find the map value whose key is nearest to `turn` (exact hit short-circuits).
  * @template V
  * @param {Map<number, V>} map A chart-X keyed map.
- * @param {number} turn The chart-X to match.
- * @returns {V|null} The nearest value, or `null` when the map is empty.
+ * @param {number} turn
+ * @returns {V|null} `null` when the map is empty.
  */
 function nearestByTurn(map, turn) {
   if (map.has(turn)) return /** @type {V} */ (map.get(turn));
@@ -342,7 +334,7 @@ function nearestByTurn(map, turn) {
 
 /**
  * Build the turn → year map for stack x-ticks (samples + live current turn).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {Map<number, string>} chart-turn → year map.
  */
 function buildStackTurnYears(samples) {
@@ -366,8 +358,8 @@ function buildStackTurnYears(samples) {
  * Compose a dropdown/option label from a civ sample ("Leader (Civ)" or
  * "Leader" or "Player <pid>").
  * @param {CivSample|*} ps One civ's sample.
- * @param {string} pid Player id key.
- * @returns {string} The option label.
+ * @param {string} pid
+ * @returns {string}
  */
 function civOptionLabel(ps, pid) {
   if (!ps.leaderName) return tPlayerFallback(pid);
@@ -375,9 +367,9 @@ function civOptionLabel(ps, pid) {
 }
 
 /**
- * Escape HTML-special characters for safe insertion into tooltip markup.
- * @param {*} s Source value (coerced to string).
- * @returns {string} The escaped string.
+ * Escape HTML-special characters for insertion into tooltip markup.
+ * @param {*} s Coerced to string.
+ * @returns {string}
  */
 function escapeHtml(s) {
   return String(s)

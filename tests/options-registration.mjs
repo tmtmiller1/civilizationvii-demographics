@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
 // The engine options API is stubbed (tests/loader.mjs → stubs/engine-options-stub.mjs); importing the
-// stub here gives us the SAME instance the mod registers against.
+// stub here gives us the same instance the mod registers against.
 import { __collectRegisteredOptions, CategoryType } from "./stubs/engine-options-stub.mjs";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 

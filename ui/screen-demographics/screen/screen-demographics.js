@@ -33,7 +33,6 @@ const LAZY_VIEW_SPECIFIERS = {
 // synchronously from the statically-loaded barrel.
 const LAZY_CHART_METRICS = new Set(["wars_gantt", "war_graphs"]);
 
-// ── Local typedefs ──────────────────────────────────────────────────
 // The settings/storage/sampler/chart modules are imported dynamically and called duck-typed,
 // so these aliases name the fields without pinning a structural shape.
 /**
@@ -87,9 +86,9 @@ const HUB_VIEWS = new Set(["statistics", "migration", "geopolitics"]);
 /**
  * Run `fn`, returning its result, or `fb` if it throws. Never throws.
  * @template T
- * @param {() => T} fn Thunk to invoke.
- * @param {T} [fb] Value returned if `fn` throws.
- * @returns {T | undefined} The result of `fn`, or `fb` on error.
+ * @param {() => T} fn
+ * @param {T} [fb] Returned if `fn` throws.
+ * @returns {T | undefined}
  */
 function safeCall(fn, fb) {
   try {
@@ -152,9 +151,7 @@ class ScreenDemographics extends Panel {
   /** @type {Record<string, string>} Per-metric remembered time filters. */
   timeFiltersByMetric = {};
 
-  /**
-   * Panel lifecycle: configure audio cues before attach.
-   */
+  /** Panel lifecycle: configure audio cues before attach. */
   onInitialize() {
     dlog("onInitialize");
     super.onInitialize?.();
@@ -231,7 +228,7 @@ class ScreenDemographics extends Panel {
   /**
    * Publish the type scale onto the screen root, scaled by the player's Font Size setting, so the
    * mod's font sizes track it the way the base game's `text-*` classes do. The ladder itself lives
-   * in demographics-font-ladder.js — the one source both screens and the CSS defaults agree with.
+   * in demographics-font-ladder.js, the one source both screens and the CSS defaults agree with.
    */
   _applyFontScale() {
     // Order matters: the visual scale first, so the frame is laid out at the reference size before
@@ -255,9 +252,7 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /**
-   * Wire the template's close button to {@link ScreenDemographics#close}.
-   */
+  /** Wire the template's close button to {@link ScreenDemographics#close}. */
   _wireCloseButton() {
     safeCall(() => {
       const closeBtn = this.Root.querySelector("[data-ia-close]");
@@ -354,10 +349,10 @@ class ScreenDemographics extends Panel {
    * its own last-chosen filter; the wars Gantt defaults to "50" so users land on a useful slice.
    * `resolveActiveFilterState` coerces any unknown id to "all" at render time.
    *
-   * The legacy scalar `activeTimeFilter` is a MIGRATION fallback only (settings predating the map
-   * carry just the scalar). Once a map exists, a never-filtered metric opens at "all" — the known
+   * The legacy scalar `activeTimeFilter` is a migration fallback only (settings predating the map
+   * carry just the scalar). Once a map exists, a never-filtered metric opens at "all", the known
    * state `_setActiveMetric` resets to. As a live fallback it leaked one metric's window onto every
-   * other: filters are in YEARS, so a "25" picked on Faith left late-game GDP at ~4 turns.
+   * other: filters are in years, so a "25" picked on Faith left late-game GDP at ~4 turns.
    */
   _restoreTimeFilters() {
     const stored = this.settings.getSetting("timeFiltersByMetric", null);
@@ -368,9 +363,7 @@ class ScreenDemographics extends Panel {
       (byMetric ? "all" : this.settings.getSetting("activeTimeFilter", "all"));
   }
 
-  /**
-   * Restore the resources / triumphs / radar-age viewer selections.
-   */
+  /** Restore the resources / triumphs / radar-age viewer selections. */
   _restoreViewerPids() {
     const rvp = this.settings.getSetting("resourcesViewerPid", null);
     this.resourcesViewerPid = typeof rvp === "number" ? rvp : null;
@@ -378,9 +371,7 @@ class ScreenDemographics extends Panel {
     this.crisisGraphsAge = this.settings.getSetting("crisisGraphsAge", "latest");
   }
 
-  /**
-   * Restore the wars-Gantt filter / city-state / active-only flags.
-   */
+  /** Restore the wars-Gantt filter / city-state / active-only flags. */
   _restoreConflictsState() {
     const wfp = this.settings.getSetting("warsFilterPid", null);
     this.warsFilterPid = typeof wfp === "number" ? wfp : null;
@@ -390,19 +381,15 @@ class ScreenDemographics extends Panel {
     this.warGraphsWarId = typeof wgw === "number" ? wgw : null;
   }
 
-  /**
-   * Restore the hidden-civ set, coercing legacy numeric entries to strings.
-   */
+  /** Restore the hidden-civ set, coercing legacy numeric entries to strings. */
   _restoreHiddenCivs() {
     const hidden = this.settings.getSetting("hiddenCivs", []);
     // Stored values are strings (we normalize to String for the Set
-    // key); older payloads may have numeric entries - coerce.
+    // key); older payloads may have numeric entries, so coerce.
     this.hiddenCivs = new Set((Array.isArray(hidden) ? hidden : []).map((v) => String(v)));
   }
 
-  /**
-   * Load the history blob from storage into {@link ScreenDemographics#history}.
-   */
+  /** Load the history blob from storage into {@link ScreenDemographics#history}. */
   _loadHistory() {
     if (this.storage && typeof this.storage.load === "function") {
       this.history = this.storage.load() || this.history;
@@ -486,7 +473,7 @@ class ScreenDemographics extends Panel {
       visibleTabs.push(v);
       if (v.id === "geopolitics") visibleTabs.push(...ext);
     }
-    // Safety: Geopolitics hidden (e.g. Basic tier) but companion tabs exist — still surface them.
+    // Geopolitics hidden (e.g. Basic tier) but companion tabs exist: still surface them.
     if (!hasGeopolitics && ext.length) visibleTabs.push(...ext);
     if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "statistics";
     return visibleTabs;
@@ -505,7 +492,7 @@ class ScreenDemographics extends Panel {
 
   /**
    * Apply nav-help class hints to the tab bar on non-mobile experiences.
-   * @param {HTMLElement} tabBar The tab-bar element to annotate.
+   * @param {HTMLElement} tabBar
    */
   _applyTabBarNavHints(tabBar) {
     try {
@@ -534,7 +521,7 @@ class ScreenDemographics extends Panel {
     if (!id || id === this.activeView) return;
     dlog("view-tab-selected:", id);
     this.activeView = id;
-    // Open the new hub on its FIRST page + first metric/member, not a stale prior selection, so
+    // Open the new hub on its first page + first metric/member, not a stale prior selection, so
     // e.g. Migration always lands on "Population & Migration" → Population. (Resets in-memory; the
     // resolver picks the first visible page/metric.)
     this.activePage = "";
@@ -575,7 +562,7 @@ class ScreenDemographics extends Panel {
     }
     // The Historical Data view can put its page-tab row back instead of rebuilding it (a fresh
     // fxs-tab-bar flashes its first tab), but it only gets the chance if the row is captured
-    // BEFORE this clear — the view sees an empty host otherwise.
+    // before this clear; the view sees an empty host otherwise.
     this._priorPageTabHost = /** @type {HTMLElement|null} */ (
       host.querySelector(".demographics-page-tab-host")
     );
@@ -591,12 +578,10 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * The banner is shown whenever the effective policy withholds data, so every player can see the
-   * comparative analytics are constrained and whether the multiplayer host is the binding constraint.
-   */
-  /**
    * Render (or clear) the analytics-governance policy banner in the header status slot, left of
-   * the Options button. It used to sit in a bottom row (and the history views drew their own copy);
+   * the Options button. It shows whenever the effective policy withholds data, so every player can
+   * see the comparative analytics are constrained and whether the multiplayer host is the binding
+   * constraint. It used to sit in a bottom row (and the history views drew their own copy);
    * the header is the one place it appears now, on every tab, so it costs no content rows.
    * @param {boolean} [_renderedInView] Ignored; kept for the call site's shape.
    */
@@ -695,8 +680,8 @@ class ScreenDemographics extends Panel {
   /**
    * Set a state field, persist the value under a settings key, and re-render.
    * @param {string} field The instance field name to assign.
-   * @param {string} settingKey The settings key to persist under.
-   * @param {*} value The new value.
+   * @param {string} settingKey
+   * @param {*} value
    */
   _setAndPersist(field, settingKey, value) {
     /** @type {*} */ (this)[field] = value;
@@ -706,7 +691,7 @@ class ScreenDemographics extends Panel {
 
   /**
    * Toggle a leader key in the focused-civs set and re-render.
-   * @param {string} leaderKey The leader key to toggle.
+   * @param {string} leaderKey
    */
   _toggleFocusCiv(leaderKey) {
     if (!leaderKey) return;
@@ -716,9 +701,7 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /**
-   * Clear all focused civs and re-render.
-   */
+  /** Clear all focused civs and re-render. */
   _clearFocus() {
     this.focusedCivs.clear();
     this.renderActiveView();
@@ -727,7 +710,7 @@ class ScreenDemographics extends Panel {
   /**
    * Switch the active metric, persist it, reset the time filter to "all" (a fixed default rather
    * than the per-metric memory, so each graph starts from a known state), and re-render.
-   * @param {string} id The metric id to activate.
+   * @param {string} id
    */
   _setActiveMetric(id) {
     this.activeMetric = id;
@@ -737,9 +720,9 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Set the active time filter, persisting BOTH the per-metric map and the
+   * Set the active time filter, persisting both the per-metric map and the
    * legacy scalar so older settings consumers keep working, then re-render.
-   * @param {string} id The time-filter id to activate.
+   * @param {string} id
    */
   _setActiveTimeFilter(id) {
     this.activeTimeFilter = id;
@@ -752,7 +735,7 @@ class ScreenDemographics extends Panel {
 
   /**
    * Toggle a leader key in the hidden-civs set, persist the set, and re-render.
-   * @param {string} leaderKey The leader key to toggle.
+   * @param {string} leaderKey
    */
   toggleCiv(leaderKey) {
     if (!leaderKey) return;
@@ -809,7 +792,7 @@ class ScreenDemographics extends Panel {
     // The relations view keeps module-level references for its resize hook; drop them now.
     safeCall(() => this._lazyViews?.relations?.releaseRelationsView?.());
     // Flush any buffered storage writes (perf-mode) so closing the
-    // panel - or the player tabbing away - saves all in-flight samples.
+    // panel (or the player tabbing away) saves all in-flight samples.
     safeCall(() => {
       if (this.storage && typeof this.storage.flush === "function") this.storage.flush();
     });
@@ -840,8 +823,8 @@ try {
   if (typeof Controls !== "undefined" && typeof Controls.define === "function") {
     Controls.define("screen-demographics", {
       createInstance: ScreenDemographics,
-      description: "Demographics , multi-view stats panel.",
-      // GameFace honors only the FIRST CSS @import, so load each split stylesheet
+      description: "Demographics: multi-view stats panel.",
+      // GameFace honors only the first CSS @import, so load each split stylesheet
       // here (cascade order preserved) instead of @import-chaining them through
       // screen-demographics.css.
       styles: [

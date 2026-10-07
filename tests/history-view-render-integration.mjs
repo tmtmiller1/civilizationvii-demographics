@@ -244,7 +244,7 @@ function testHistoryRenderIntegration() {
   assert.ok(findByClass(host, "demographics-chart-host"), "chart host should render for statistics");
 
   // Regression guard for the page-tab row flashing to its first tab on every pill/filter click:
-  // a re-render of the SAME page must put the previous `fxs-tab-bar` back rather than build a
+  // a re-render of the same page must put the previous `fxs-tab-bar` back rather than build a
   // new one (a fresh bar shows tab 0 for a frame before honouring selected-tab-index).
   const pageBar1 = findByClass(host, "demographics-page-tabs");
   const pageHost1 = findByClass(host, "demographics-page-tab-host");
@@ -253,9 +253,9 @@ function testHistoryRenderIntegration() {
   assert.equal(findByClass(host, "demographics-page-tabs"), pageBar1, "same page: the page tab bar is the SAME element");
   assert.equal(findByClass(host, "demographics-page-tab-host"), pageHost1, "…and so is its host");
   assert.equal(host.querySelectorAll ? host.querySelectorAll(".demographics-page-tab-host").length : 1, 1, "kept once, not duplicated");
-  // The REAL entry point: screen-demographics.js empties the host before the view runs and hands
+  // The real entry point: screen-demographics.js empties the host before the view runs and hands
   // the captured row in through opts. A reuse that only works on an un-cleared host would never
-  // engage in the game (watched over CDP 2026-09-23: the bar was still rebuilt), so cover that path.
+  // engage in the game (the bar was still rebuilt there), so cover that path.
   const capturedRow = findByClass(host, "demographics-page-tab-host");
   while (host.firstChild) host.removeChild(host.firstChild);
   render(host, makeCtx(), { hub: "statistics", priorPageHost: capturedRow });

@@ -1,5 +1,5 @@
 // Covers: chart-triumphs-radar-data.js
-// Pure data layer — no document/engine needed for exported utilities.
+// Pure data layer; no document/engine needed for exported utilities.
 import assert from "node:assert/strict";
 
 // GameContext stub for getLocalId inside palette helpers
@@ -16,7 +16,7 @@ assert.ok(Array.isArray(LEGACY_AXES));
 assert.equal(LEGACY_AXES.length, 6);
 assert.ok(LEGACY_AXES.every((a) => a.id && a.labelKey && typeof a.angle === "number"));
 
-// loadRadarCivs — live path: no Players/Legacies, falls back to sample data
+// loadRadarCivs, live path: no Players/Legacies, falls back to sample data
 const history = {
   samples: [
     {

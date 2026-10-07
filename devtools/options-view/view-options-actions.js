@@ -28,7 +28,7 @@ function refreshSampleNow(ctx) {
 /** Milliseconds an armed destructive button stays armed before it disarms itself. */
 const ARM_TIMEOUT_MS = 6000;
 /**
- * Milliseconds after arming during which a second activation is the SAME physical press: the
+ * Milliseconds after arming during which a second activation is the same physical press: the
  * engine's fxs-button fires both `click` and `action-activate` for one click, and the Options
  * view's makeButton listens to both.
  */

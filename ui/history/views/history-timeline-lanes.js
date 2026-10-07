@@ -29,10 +29,10 @@ const DISASTER_ROW = 1.95;
  */
 
 /**
- * Percent of the window for a position.
- * @param {Win} w Window.
- * @param {number} v Position.
- * @returns {number} 0..100 (unclamped).
+ * Percent of the window for a position, unclamped.
+ * @param {Win} w
+ * @param {number} v
+ * @returns {number}
  */
 export function xp(w, v) {
   return (100 * (v - w.from)) / Math.max(1, w.to - w.from);
@@ -40,10 +40,10 @@ export function xp(w, v) {
 
 /**
  * Whether an interval shows in the window.
- * @param {Win} w Window.
+ * @param {Win} w
  * @param {number} a Start.
  * @param {number} b End.
- * @returns {boolean} True when it overlaps.
+ * @returns {boolean}
  */
 function inWin(w, a, b) {
   return b > w.from && a < w.to;
@@ -51,16 +51,16 @@ function inWin(w, a, b) {
 
 /**
  * A cache of lane-item elements across redraws, so an item that survives a redraw keeps its
- * element — and therefore the engine art inside it. A newly inserted element paints without its
+ * element, and with it the engine art inside. A newly inserted element paints without its
  * `blp:` texture for a frame or more, so re-creating an unchanged medallion, emblem or disaster
- * gem makes it blink. Only items that CARRY such art opt in (by passing `reuse` to
+ * gem makes it blink. Only items that carry such art opt in (by passing `reuse` to
  * {@link place}); the rest still rebuild, which costs nothing visible.
  * @typedef {{ items: Map<string, HTMLElement>, used: Set<HTMLElement>, seen: Map<string, number> }} ItemCache
  */
 
 /**
- * Create an empty lane-item cache (one per timeline instance).
- * @returns {ItemCache} The cache.
+ * One per timeline instance.
+ * @returns {ItemCache}
  */
 export function newItemCache() {
   return { items: new Map(), used: new Set(), seen: new Map() };
@@ -106,14 +106,14 @@ function slotKey(cache, key) {
  * A positioned element with a tooltip. With `reuse`, an item that was placed in an earlier draw is
  * reused: its class list is reset to `cls` (so a stale edge/rival class from the previous window is
  * dropped and the decorators below re-add the current ones), its box is re-applied, and its
- * children — the engine art — are left exactly as they are.
- * @param {string} cls Classes.
+ * children (the engine art) are left exactly as they are.
+ * @param {string} cls
  * @param {{l:number, w?:number, top:number, h?:number}} box Left/width in %, top/height in rem.
- * @param {string} tip Tooltip text.
+ * @param {string} tip
  * @param {Array<HTMLElement|null>|(() => Array<HTMLElement|null>)} [kids] Children, or a builder
  *   that is only called when the element has to be created.
  * @param {{cache: ItemCache, key: string}} [reuse] Opt-in reuse slot.
- * @returns {HTMLElement} Element.
+ * @returns {HTMLElement}
  */
 function place(cls, box, tip, kids = [], reuse) {
   const base = "dgh-tl-item " + cls;
@@ -121,7 +121,7 @@ function place(cls, box, tip, kids = [], reuse) {
   const cached = reuse ? reuse.cache.items.get(key) : undefined;
   const e = cached || el("div", { cls: base }, typeof kids === "function" ? kids() : kids);
   // A reused element carries the previous pass's classes; reset to the base so edgeClass() and
-  // rivalRing() decide again from the CURRENT position.
+  // rivalRing() decide again from the current position.
   if (cached) e.className = base;
   applyBox(e, box);
   if (tip) e.setAttribute("data-tooltip-content", tip);
@@ -136,7 +136,7 @@ function place(cls, box, tip, kids = [], reuse) {
 /**
  * Write an item's box onto it. Width and height are cleared when the box has none, so a reused
  * element cannot keep a stale size from an earlier window.
- * @param {HTMLElement} e The item element.
+ * @param {HTMLElement} e
  * @param {{l:number, w?:number, top:number, h?:number}} box Left/width in %, top/height in rem.
  */
 function applyBox(e, box) {
@@ -168,8 +168,8 @@ export function stackRows(items, gap) {
 
 /**
  * Short people count ("2.5M", "10M", "1B").
- * @param {number} v People.
- * @returns {string} Label.
+ * @param {number} v
+ * @returns {string}
  */
 export function shortPeople(v) {
   if (v >= 1e9) return num(v / 1e9) + "B";
@@ -180,11 +180,11 @@ export function shortPeople(v) {
 
 /**
  * The age header: one band per age with your civilization's emblem and name, the age and its dates.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (the bands carry civilization emblems).
- * @returns {Lane} Lane.
+ * @returns {Lane}
  */
 export function ageHeader(tl, w, cast, cache) {
   const items = tl.ages.filter((a) => inWin(w, a.from, a.from + a.len)).map((a) => {
@@ -207,11 +207,11 @@ export function ageHeader(tl, w, cast, cache) {
 /**
  * Wars as pills: yours in the enemy's color with their emblem and name; a war between two other
  * civilizations shaded from one's color to the other's, with both emblems.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (the pills carry civilization emblems).
- * @returns {Lane|null} Lane.
+ * @returns {Lane|null}
  */
 export function warLane(tl, w, cast, cache) {
   const wars = tl.wars.filter((x) => inWin(w, x.from, x.to));
@@ -228,12 +228,12 @@ export function warLane(tl, w, cast, cache) {
 
 /**
  * A war of yours.
- * @param {Timeline["wars"][number]} x War.
- * @param {{l:number, w:number, top:number, h:number}} box Placement.
+ * @param {Timeline["wars"][number]} x
+ * @param {{l:number, w:number, top:number, h:number}} box
  * @param {Cast} cast
- * @param {string} age Age type.
- * @param {ItemCache} [cache] Item-reuse cache.
- * @returns {HTMLElement} Pill.
+ * @param {string} age
+ * @param {ItemCache} [cache]
+ * @returns {HTMLElement}
  */
 function warPill(x, box, cast, age, cache) {
   const name = partyName(cast, x.other, age);
@@ -250,11 +250,11 @@ function warPill(x, box, cast, age, cache) {
 /**
  * A war between two other civilizations.
  * @param {Timeline["wars"][number]} x War (`a` against `other`).
- * @param {{l:number, w:number, top:number, h:number}} box Placement.
+ * @param {{l:number, w:number, top:number, h:number}} box
  * @param {Cast} cast
- * @param {string} age Age type.
- * @param {ItemCache} [cache] Item-reuse cache.
- * @returns {HTMLElement} Pill.
+ * @param {string} age
+ * @param {ItemCache} [cache]
+ * @returns {HTMLElement}
  */
 function rivalWarPill(x, box, cast, age, cache) {
   const a = /** @type {number} */ (x.a);
@@ -278,9 +278,9 @@ function rivalWarPill(x, box, cast, age, cache) {
 /**
  * A civilization's name, or the independent peoples when it has none.
  * @param {Cast} cast
- * @param {number} pid Player.
- * @param {string} age Age type.
- * @returns {string} Name.
+ * @param {number} pid
+ * @param {string} age
+ * @returns {string}
  */
 function partyName(cast, pid, age) {
   return cast.civName(pid, age) || t("LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
@@ -288,10 +288,10 @@ function partyName(cast, pid, age) {
 
 /**
  * Crises: one bar per crisis carrying its name, divided into stages that darken from amber to crimson.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {ItemCache} [cache] Item-reuse cache (the crisis name label carries an icon).
- * @returns {Lane|null} Lane.
+ * @returns {Lane|null}
  */
 export function crisisLane(tl, w, cache) {
   const stages = tl.crises.filter((c) => inWin(w, c.from, c.to));
@@ -310,9 +310,9 @@ export function crisisLane(tl, w, cache) {
 /**
  * One crisis: its stage segments and its name.
  * @param {Timeline["crises"]} g Stages of one crisis.
- * @param {Win} w Window.
- * @param {ItemCache} [cache] Item-reuse cache.
- * @returns {HTMLElement[]} Elements.
+ * @param {Win} w
+ * @param {ItemCache} [cache]
+ * @returns {HTMLElement[]}
  */
 function crisisGroup(g, w, cache) {
   const name = t(g[0].n) || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED");
@@ -339,8 +339,8 @@ const MARK_GROUPS = [
 /**
  * Milestones as icon medallions, a lane per kind (Wonders, Triumphs, Faith, Conquests, then victory
  * and fallen civilizations). Within a lane, close neighbors alternate between two rows.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (each medallion is an icon disc).
  * @returns {Lane[]} Lanes (kinds with nothing in the window are left out).
@@ -354,12 +354,12 @@ export function milestoneLanes(tl, w, cast, cache) {
 
 /**
  * One kind's lane.
- * @param {{key:string, label:string}} g Group.
+ * @param {{key:string, label:string}} g
  * @param {Timeline["marks"]} marks Its milestones in the window.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {{cast: Cast, cache?: ItemCache}} ctx Cast + item-reuse cache.
- * @returns {Lane|null} Lane.
+ * @returns {Lane|null}
  */
 function markLane(g, marks, tl, w, ctx) {
   const { cast, cache } = ctx;
@@ -383,11 +383,11 @@ function markLane(g, marks, tl, w, ctx) {
  * Paint a game icon into a disc.
  * @param {HTMLElement} disc
  * @param {string} icon Texture path ("" leaves the disc's own fill).
- * @returns {HTMLElement} The disc.
+ * @returns {HTMLElement}
  */
 function iconDisc(disc, icon) {
   const url = icon ? "url('" + icon + "')" : "";
-  // Only write when it CHANGES: re-assigning the same `blp:` url on a reused disc can make the
+  // Only write when it changes: re-assigning the same `blp:` url on a reused disc can make the
   // engine resolve the texture again, which is the blink this cache exists to remove.
   if (url && disc.style.backgroundImage !== url) disc.style.backgroundImage = url;
   const edge = edgeClass(parseFloat(disc.style.left || "0"));
@@ -397,7 +397,7 @@ function iconDisc(disc, icon) {
 
 /**
  * The class that keeps a disc at either end of the chart inside it rather than half cut off.
- * @param {number} left Left position in percent.
+ * @param {number} left In percent.
  * @returns {string} Class, or "".
  */
 export function edgeClass(left) {
@@ -408,9 +408,9 @@ export function edgeClass(left) {
 /**
  * Mark another civilization's milestone (every ring is the same gold; its tooltip names the owner).
  * @param {HTMLElement} medal
- * @param {{k:string, p:number}} m Milestone.
+ * @param {{k:string, p:number}} m
  * @param {Cast} cast
- * @returns {HTMLElement} The medal.
+ * @returns {HTMLElement}
  */
 function rivalRing(medal, m, cast) {
   if (m.p !== cast.local && m.k !== "elim" && m.k !== "victory" && m.k !== "lost") medal.classList.add("is-rival");
@@ -419,10 +419,10 @@ function rivalRing(medal, m, cast) {
 
 /**
  * Settlements you founded: a marker per founding, stacked so none overlap, numbered in the tooltip.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
- * @returns {Lane|null} Lane.
+ * @returns {Lane|null}
  */
 export function settlementLane(tl, w, cast) {
   /** @type {Map<number, number>} */
@@ -451,10 +451,10 @@ export function settlementLane(tl, w, cast) {
 /**
  * Population (Demographics' scaled figures): your growth curve filled, with its milestones, and a
  * line in each shown rival's color, all on one scale.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
- * @returns {Lane|null} Lane.
+ * @returns {Lane|null}
  */
 export function populationLane(tl, w, cast) {
   const inW = (/** @type {{at:number, v:number}[]} */ pts) => pts.filter((p) => p.at >= w.from - 1 && p.at <= w.to + 1);
@@ -475,9 +475,9 @@ export function populationLane(tl, w, cast) {
  * The curves as one stretched SVG (lines only; labels stay in HTML).
  * @param {{at:number, v:number}[]} mine Your points in the window (filled).
  * @param {{pts:{at:number, v:number}[], color:string}[]} others Other civilizations' points (lines).
- * @param {Win} w Window.
+ * @param {Win} w
  * @param {number} max Top of the scale.
- * @returns {Element} SVG.
+ * @returns {Element}
  */
 function curveSvg(mine, others, w, max) {
   const svg = document.createElementNS(SVG_NS, "svg");
@@ -507,9 +507,9 @@ const TICK_STEPS = [1, 2, 5, 10, 20, 25, 50, 100];
 /**
  * Tick spacing for a window seen at a zoom: at most sixteen labeled ticks across the visible width, with
  * unlabelled minor ticks between them.
- * @param {Win} w Window.
+ * @param {Win} w
  * @param {number} zoom Canvas width in viewport widths.
- * @returns {{major:number, minor:number}} Steps in turns.
+ * @returns {{major:number, minor:number}} In turns.
  */
 export function tickSteps(w, zoom) {
   const visible = (w.to - w.from) / Math.max(1, zoom);
@@ -521,10 +521,10 @@ export function tickSteps(w, zoom) {
 /**
  * Every tick in the window: axis position, the age's own turn number, and whether it is labeled.
  * Turns restart each age, so ticks count from each age's first turn.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {number} zoom
- * @returns {{at:number, turn:number, major:boolean}[]} Ticks.
+ * @returns {{at:number, turn:number, major:boolean}[]}
  */
 export function ticks(tl, w, zoom) {
   const { major, minor } = tickSteps(w, zoom);
@@ -543,10 +543,10 @@ export function ticks(tl, w, zoom) {
 
 /**
  * The ruler: turn ticks (labeled every major step) and each age's opening date.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {number} zoom
- * @returns {Lane} Lane.
+ * @returns {Lane}
  */
 export function rulerLane(tl, w, zoom) {
   const ageOf = (/** @type {number} */ at) => tl.ages.find((a) => at >= a.from && at < a.from + a.len);
@@ -566,10 +566,10 @@ export function rulerLane(tl, w, zoom) {
 
 /**
  * Faint vertical guides through every lane at the labeled ticks.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {number} zoom
- * @returns {HTMLElement[]} Lines.
+ * @returns {HTMLElement[]}
  */
 export function gridLines(tl, w, zoom) {
   return ticks(tl, w, zoom).filter((k) => k.major).map((k) =>
@@ -579,7 +579,7 @@ export function gridLines(tl, w, zoom) {
 /**
  * The family of a disaster type, for its color: volcano, flood, storm or other.
  * @param {string} type RandomEventType.
- * @returns {string} Family.
+ * @returns {string}
  */
 export function disasterFamily(type) {
   const u = String(type || "").toUpperCase();
@@ -593,11 +593,11 @@ export function disasterFamily(type) {
 /**
  * Natural disasters: a gem per strike, colored by family, ringed in the struck civilization's color
  * (your own lands full strength, others' dimmer).
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
  * @param {ItemCache} [cache] Item-reuse cache (each gem is an icon disc).
- * @returns {Lane|null} Lane.
+ * @returns {Lane|null}
  */
 export function disasterLane(tl, w, cast, cache) {
   const list = tl.disasters.filter((d) => d.at >= w.from && d.at <= w.to);
@@ -618,9 +618,9 @@ export function disasterLane(tl, w, cast, cache) {
 
 /**
  * Migration (Emigration mod): arrivals rise above the center line, departures hang below it.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
- * @returns {Lane|null} Lane.
+ * @param {Timeline} tl
+ * @param {Win} w
+ * @returns {Lane|null}
  */
 export function migrationLane(tl, w) {
   const list = tl.mig.filter((m) => m.at >= w.from && m.at <= w.to);

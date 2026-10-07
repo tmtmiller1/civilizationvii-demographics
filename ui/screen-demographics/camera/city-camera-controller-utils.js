@@ -7,10 +7,10 @@ import { DemographicsSettings } from "/demographics/ui/core/demographics-setting
 
 /**
  * Clamp a number into [lo, hi]; returns `lo` for a non-finite input.
- * @param {number} v The value.
- * @param {number} lo Lower bound.
- * @param {number} hi Upper bound.
- * @returns {number} The clamped value.
+ * @param {number} v
+ * @param {number} lo
+ * @param {number} hi
+ * @returns {number}
  */
 export function clamp(v, lo, hi) {
   if (typeof v !== "number" || !isFinite(v)) return lo;
@@ -19,8 +19,8 @@ export function clamp(v, lo, hi) {
 
 /**
  * Read a topCities.* setting with a call-site default (the authoritative default).
- * @param {string} key The setting key.
- * @param {*} dflt The fallback.
+ * @param {string} key
+ * @param {*} dflt
  * @returns {*} The stored value or the default.
  */
 export function cfg(key, dflt) {
@@ -33,8 +33,8 @@ export function cfg(key, dflt) {
 
 /**
  * Promise that resolves after `ms`.
- * @param {number} ms Delay in milliseconds.
- * @returns {Promise<void>} The delay promise.
+ * @param {number} ms
+ * @returns {Promise<void>}
  */
 export function delay(ms) {
   return new Promise((resolve) => {
@@ -44,7 +44,7 @@ export function delay(ms) {
 
 /**
  * Whether a target is off-limits to the camera.
- * @param {*} target The settlement record.
+ * @param {*} target
  * @returns {boolean} True when the camera must not engage.
  */
 export function blockedTarget(target) {
@@ -65,8 +65,8 @@ export function cameraReady() {
 
 /**
  * Resolve a camera enum member (InterpolationFunc / KeyframeFlag), or undefined.
- * @param {string} ns The enum global name.
- * @param {string} member The member name.
+ * @param {string} ns The enum's global name.
+ * @param {string} member
  * @returns {*} The enum value, or undefined.
  */
 export function enumVal(ns, member) {
@@ -94,8 +94,8 @@ export function nowMs() {
 
 /**
  * Whether an event is an Escape keypress.
- * @param {*} e The keyboard event.
- * @returns {boolean} True for Escape.
+ * @param {*} e
+ * @returns {boolean}
  */
 export function isEscape(e) {
   return !!e && (e.key === "Escape" || e.keyCode === 27);
@@ -103,7 +103,7 @@ export function isEscape(e) {
 
 /**
  * Classify an engine-input event.
- * @param {*} d The engine-input detail.
+ * @param {*} d The event detail.
  * @returns {string} "exit" | "replay" | "".
  */
 export function classifyInput(d) {
@@ -115,20 +115,20 @@ export function classifyInput(d) {
 
 /**
  * Consume an engine-input event so nothing else reacts.
- * @param {*} e The event.
+ * @param {*} e
  */
 export function consumeEvent(e) {
   try {
     e.preventDefault();
     if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
   } catch (_) {
-    // ignore.
+    // ignore
   }
 }
 
 /**
  * Whether this input should be debounced.
- * @param {*} s The flow state.
+ * @param {*} s
  * @returns {boolean} True to ignore (debounced).
  */
 export function inputDebounced(s) {

@@ -39,8 +39,7 @@ const NAMER = {
 };
 
 /**
- * The local player id.
- * @returns {number} Id, or -1.
+ * @returns {number} The local player id, or -1.
  */
 function localId() {
   return Number(safe(() => GameContext.localPlayerID, -1));
@@ -49,7 +48,7 @@ function localId() {
 /**
  * Whether this is a networked multiplayer game (internet, LAN, wireless, cloud). Hotseat is
  * multiplayer too but every seat is this machine, so it is not "networked" here.
- * @returns {boolean} True in a networked game.
+ * @returns {boolean}
  */
 export function isNetworkMultiplayer() {
   return !!safe(() => Configuration.getGame().isNetworkMultiplayer, false);
@@ -57,7 +56,7 @@ export function isNetworkMultiplayer() {
 
 /**
  * Whether the local player hosts the game. Single-player and hotseat count as hosting.
- * @returns {boolean} True when this client is the host.
+ * @returns {boolean}
  */
 export function isHost() {
   if (!isNetworkMultiplayer()) return true;
@@ -71,8 +70,8 @@ export function isHost() {
  * Whether this client may store the campaign in the shared game configuration. In a networked
  * game the host owns that object and is the only client that writes it; guests keep the campaign
  * in memory (History and the Hall of Fame keep working live) and read the host's copy on load.
- * @param {{network: boolean, host: boolean}} mp Multiplayer facts.
- * @returns {boolean} True when the campaign may be written.
+ * @param {{network: boolean, host: boolean}} mp
+ * @returns {boolean}
  */
 export function mayStoreCampaign(mp) {
   return !mp.network || mp.host;
@@ -83,10 +82,10 @@ export function mayStoreCampaign(mp) {
  * (hotseat raises PlayerTurnActivated for every human seat in the same turn). Other reasons
  * (load, victory, defeat, age end) always sample.
  * @param {{lastTurn: number, lastAge: string}} st Capture state (mutated when the sample is taken).
- * @param {number} turn Current turn.
- * @param {string} age Current age type.
- * @param {string} reason Why the sample was requested.
- * @returns {boolean} True when the sample should be taken.
+ * @param {number} turn
+ * @param {string} age
+ * @param {string} reason
+ * @returns {boolean}
  */
 export function shouldSampleTurn(st, turn, age, reason) {
   if (reason === "turn" && st.lastTurn === turn && st.lastAge === age) return false;
@@ -98,9 +97,9 @@ export function shouldSampleTurn(st, turn, age, reason) {
 /**
  * Give a stored campaign this client's viewpoint. A guest in a networked game loads the host's
  * copy, whose "local" player is the host; the guest's own civilization is what "mine" should mean.
- * @param {CampaignDoc} doc The document (mutated).
+ * @param {CampaignDoc} doc Mutated.
  * @param {number} local This client's player id.
- * @param {boolean} network Whether this is a networked game.
+ * @param {boolean} network
  * @returns {CampaignDoc} The same document.
  */
 export function adoptViewpoint(doc, local, network) {
@@ -110,7 +109,7 @@ export function adoptViewpoint(doc, local, network) {
 
 /**
  * Setup facts for the archive, as LOC name tags.
- * @returns {HnrSetup} Setup.
+ * @returns {HnrSetup}
  */
 export function readSetup() {
   const cfg = safe(() => Configuration.getGame(), null);
@@ -138,7 +137,7 @@ function campaignSeed() {
  * game lands on the same Hall of Fame entry instead of a duplicate. Random only when the game
  * offers neither.
  * @param {number} seed Map seed.
- * @returns {string} Id.
+ * @returns {string}
  */
 export function campaignId(seed) {
   const guid = String(safe(() => Configuration.getGame().campaignSetupGUID, "") || "");
@@ -148,7 +147,7 @@ export function campaignId(seed) {
 
 /**
  * Load this game's campaign, or start a new one when there is none or it belongs to another map.
- * @returns {CampaignDoc} The document.
+ * @returns {CampaignDoc}
  */
 export function openCampaign() {
   const seed = campaignSeed();
@@ -187,9 +186,9 @@ export function sampleNow(reason) {
 
 /**
  * Fold one world reading into the campaign.
- * @param {CampaignDoc} doc The campaign (mutated).
- * @param {number} local Local player id.
- * @param {HnrWorldState} world The reading.
+ * @param {CampaignDoc} doc Mutated.
+ * @param {number} local
+ * @param {HnrWorldState} world
  * @returns {number} Number of new events.
  */
 export function recordWorld(doc, local, world) {
@@ -216,8 +215,8 @@ export function recordWorld(doc, local, world) {
 
 /**
  * Record every major's identity; a dead player gets no civilization span for the age.
- * @param {CampaignDoc} doc The campaign (mutated).
- * @param {HnrWorldState} world The reading.
+ * @param {CampaignDoc} doc Mutated.
+ * @param {HnrWorldState} world
  */
 function upsertAll(doc, world) {
   for (const p of everMajors()) {
@@ -230,10 +229,10 @@ function upsertAll(doc, world) {
 /**
  * A crisis stage onset for this reading, if any. The first reading of a campaign only sets the
  * baseline, so a game joined mid-crisis does not announce a stage that began earlier.
- * @param {CampaignDoc} doc The campaign (mutated: detection state).
- * @param {HnrWorldState} world The reading.
- * @param {number} ageIdx Age index.
- * @returns {HnrEvent|null} The event.
+ * @param {CampaignDoc} doc Mutated (detection state).
+ * @param {HnrWorldState} world
+ * @param {number} ageIdx
+ * @returns {HnrEvent|null}
  */
 function crisisEvent(doc, world, ageIdx) {
   const c = world.crisis;
@@ -270,9 +269,9 @@ function disasterOwner(loc) {
 
 /**
  * The chronicle event for a natural disaster, or null when it struck no major civilization's land.
- * @param {CampaignDoc} doc The campaign.
+ * @param {CampaignDoc} doc
  * @param {*} data RandomEventOccurred payload (eventType, location).
- * @returns {HnrEvent|null} The event.
+ * @returns {HnrEvent|null}
  */
 export function disasterEvent(doc, data) {
   const info = safe(() => GameInfo.RandomEvents.lookup(data.eventType), null);
@@ -297,7 +296,7 @@ function onDisaster(data) {
 
 /**
  * Remember the victory class of a decided game (it names the victory's icon at the main menu).
- * @param {CampaignDoc} doc The campaign (mutated).
+ * @param {CampaignDoc} doc Mutated.
  */
 function noteVictoryClass(doc) {
   if (doc.outcome.victory && !doc.outcome.cls) {
@@ -308,7 +307,7 @@ function noteVictoryClass(doc) {
 /**
  * First reading of a campaign: note where recording began and mark civilizations that were
  * already gone.
- * @param {CampaignDoc} doc The campaign (mutated).
+ * @param {CampaignDoc} doc Mutated.
  * @param {HnrWorldState} world The first reading.
  */
 function markBaseline(doc, world) {
@@ -325,7 +324,7 @@ function markBaseline(doc, world) {
 
 /**
  * Save the campaign and refresh its archive record.
- * @param {CampaignDoc} doc The document.
+ * @param {CampaignDoc} doc
  */
 function persist(doc) {
   if (mayStoreCampaign({ network: isNetworkMultiplayer(), host: isHost() })) saveCampaign(doc);
@@ -337,7 +336,7 @@ function persist(doc) {
 
 /**
  * The record's tags as they read in game now, so the main menu can show them.
- * @param {ArchiveRecord} rec The record.
+ * @param {ArchiveRecord} rec
  * @returns {Record<string, string>} Tag -> text (tags that do not resolve are left out).
  */
 export function savedTextsFor(rec) {
@@ -366,7 +365,7 @@ export function rememberTriumphWords(doc, events) {
 /**
  * Store one Triumph's words, if they are not stored already and the game can still read them.
  * @param {CampaignDoc} doc Campaign (mutated).
- * @param {string} type LegacyType.
+ * @param {string} type
  * @param {string} age Age the Triumph was earned in.
  */
 function rememberOneTriumph(doc, type, age) {
@@ -385,8 +384,8 @@ function rememberOneTriumph(doc, type, age) {
 
 /**
  * Register an engine listener and remember it for teardown.
- * @param {string} name Event name.
- * @param {Handler} fn Handler.
+ * @param {string} name
+ * @param {Handler} fn
  */
 function listen(name, fn) {
   safe(() => engine.on(name, fn), undefined);
@@ -413,8 +412,8 @@ export function startCapture() {
 
 /**
  * Stop capturing: unregister every listener startCapture registered (engine.off may be absent,
- * in which case they are only forgotten) and let startCapture run again. Nothing in the mod
- * calls this yet; bootstrap has no unload hook, so it is exported for one to use.
+ * in which case they are only forgotten) and let startCapture run again. Bootstrap calls it
+ * from its BeforeUnload hook.
  */
 export function stopCapture() {
   const off = safe(() => (typeof engine.off === "function" ? engine.off.bind(engine) : null), null);

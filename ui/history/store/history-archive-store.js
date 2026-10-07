@@ -21,8 +21,8 @@ const state = { slice: emptySlice(), status: "empty", loaded: false };
 
 /**
  * Whether a parsed value is shaped like the shared settings root.
- * @param {*} v Parsed value.
- * @returns {boolean} True when every top-level value is a plain object.
+ * @param {*} v
+ * @returns {boolean}
  */
 export function looksLikeSettingsRoot(v) {
   if (!v || typeof v !== "object" || Array.isArray(v)) return false;
@@ -48,7 +48,7 @@ function readRaw() {
  * list (key(i), which enumerates on a correct localStorage and is always null on 1.5.0) does not
  * hold the key. On 1.5.0 getItem never returns empty for a populated store, so an empty read there
  * is a transient failure.
- * @returns {boolean} True when the key is genuinely absent.
+ * @returns {boolean}
  */
 function emptyReadIsAbsentKey() {
   const rows = storeRows();
@@ -83,7 +83,7 @@ export function readRoot() {
 
 /**
  * Parse a raw shared root and decide whether this mod may write it back.
- * @param {string} raw The raw value.
+ * @param {string} raw
  * @returns {{root: Record<string, any>, status: ArchiveStatus}} The root (empty when unusable).
  */
 function classifyRoot(raw) {
@@ -116,7 +116,7 @@ export function loadArchive() {
 
 /**
  * Status of the archive this session, for the Hall of Fame footer.
- * @returns {ArchiveStatus} Status.
+ * @returns {ArchiveStatus}
  */
 export function archiveStatus() {
   return state.status;
@@ -124,7 +124,7 @@ export function archiveStatus() {
 
 /**
  * Persist the in-memory slice, if the shared root can be written safely.
- * @returns {boolean} True when written and read back.
+ * @returns {boolean}
  */
 export function persistArchive() {
   const { root, status } = readRoot();
@@ -146,7 +146,7 @@ export function persistArchive() {
 
 /**
  * Read back after a write and confirm our games are present.
- * @returns {boolean} True when verified.
+ * @returns {boolean}
  */
 function verifyWrite() {
   const { root, status } = readRoot();
@@ -160,7 +160,7 @@ function verifyWrite() {
 /**
  * Add or refresh one campaign's record and persist.
  * @param {ArchiveRecord} rec The record.
- * @returns {boolean} True when the stored archive now holds it.
+ * @returns {boolean} Whether the stored archive now holds it.
  */
 export function saveRecord(rec) {
   loadArchive();
@@ -170,8 +170,8 @@ export function saveRecord(rec) {
 
 /**
  * Remove a game from the Hall of Fame (remembered, so its save does not restore it).
- * @param {string} id Campaign id.
- * @returns {boolean} True when persisted.
+ * @param {string} id
+ * @returns {boolean}
  */
 export function deleteRecord(id) {
   loadArchive();
@@ -181,7 +181,7 @@ export function deleteRecord(id) {
 
 /**
  * Every visible record.
- * @returns {ArchiveRecord[]} Records.
+ * @returns {ArchiveRecord[]}
  */
 export function allRecords() {
   return Object.values(loadArchive().games);
@@ -199,7 +199,7 @@ export function archiveTexts() {
  * Empty the shared store and write it back holding this mod's slices, so the shared settings key
  * owns the one readable row. Destroys every other key's stored bytes: only call it on an explicit
  * request from the player. The in-memory archive is the source for the rewrite.
- * @returns {import("/demographics/ui/core/demographics-storage-repair.js").RepairResult} Outcome.
+ * @returns {import("/demographics/ui/core/demographics-storage-repair.js").RepairResult}
  */
 export function repairStorage() {
   loadArchive();

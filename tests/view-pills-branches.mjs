@@ -22,7 +22,7 @@ const row = pillRow(items, "b", (k) => { lastPick = k; });
 assert.ok(row);
 assert.ok(row.children.length === 3);
 
-// Active pill — pills use style.cssText not className for selected state
+// Active pill: pills use style.cssText not className for selected state
 assert.ok(row.children.length === 3);
 // The second pill (key "b") should have bold style (active)
 const bPill = row.children.find((c) => c.textContent === "Beta");
@@ -37,11 +37,11 @@ const filterRow = pillRow(items, "a", () => {}, "filter");
 assert.ok(filterRow);
 assert.ok(filterRow.className.includes("filter") || filterRow.children.length > 0);
 
-// Empty items — should not throw
+// Empty items: should not throw
 const emptyRow = pillRow([], "a", () => {});
 assert.ok(emptyRow);
 
-// Marker items — a "+" drill-down badge is appended after the label, and clicking still fires.
+// Marker items: a "+" drill-down badge is appended after the label, and clicking still fires.
 const markerRow = pillRow(
   [{ key: "plain", label: "Plain" }, { key: "drill", label: "Buildings", marker: "+" }],
   "plain",

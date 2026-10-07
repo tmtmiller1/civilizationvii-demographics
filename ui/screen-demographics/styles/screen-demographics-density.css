@@ -1,54 +1,51 @@
 /* screen-demographics-density.css
-   ────────────────────────────────────────────────────────────────────────────
-   Resolution adaptation. Loaded sixth of the seven sheets in the screen's styles[] array — after
+   Resolution adaptation. Loaded sixth of the seven sheets in the screen's styles[] array, after
    the base sheet and every view sheet, so these rules win the cascade over all of them. The history
    sheet loads after this one, but it only declares the shared scale defaults and `.dgh-*` rules, so
    nothing here is overridden by it.
 
-   THE PROBLEM THIS SOLVES (measured 2026-09-23, 1.5.0)
-   The engine's root font-size is a CONSTANT 16.2px — unchanged across render resolutions from
-   1280x720 to 3840x2160 AND across two different window sizes. So `rem` does not track resolution:
-   identical markup occupies ~1% of screen height at 1800p but ~2% at 720p, which is why the screen
-   read as oversized and scroll-heavy at low resolutions. The viewport measures 44.4rem tall at 720p
-   and 133.3rem at 2160p — a 3x range, NOT the "~60rem at every design resolution" this file used to
-   assume. Every constant below is derived from the measured range.
+   The problem this solves: the engine's root font-size is a constant 16.2px, unchanged across
+   render resolutions from 1280x720 to 3840x2160 and across window sizes. So `rem` does not track
+   resolution: identical markup occupies ~1% of screen height at 1800p but ~2% at 720p, which is why
+   the screen read as oversized and scroll-heavy at low resolutions. The viewport measures 44.4rem
+   tall at 720p and 133.3rem at 2160p, a 3x range, not the "~60rem at every design resolution" this
+   file used to assume. Every constant below is derived from that range.
 
    Two layers:
 
-     1. CONTINUOUS SCALE — `--dg-u`, one unit published by demographics-font-ladder.js as
+     1. Continuous scale: `--dg-u`, one unit published by demographics-font-ladder.js as
         (viewportHeight / 1800) rem, bounded to [0.8, 1.3]. Resolution-sensitive metrics are written
         `calc(<number> * var(--dg-u))`, so a value that read `3rem` is now `calc(3 * var(--dg-u))`
-        and is UNCHANGED at the 1800p reference. This replaces a clamp() layer that never worked:
-        GameFace silently drops clamp() (measured: `width: clamp(50px,20vw,120px)` computes to
-        `auto`), so those rules had no effect at any resolution. Do not reintroduce clamp(), min()
-        or max() — tests/history-css.mjs fails the build on them.
+        and is unchanged at the 1800p reference. This replaces a clamp() layer that never worked:
+        GameFace silently drops clamp() (`width: clamp(50px,20vw,120px)` computes to `auto`), so
+        those rules had no effect at any resolution. Do not reintroduce clamp(), min() or max();
+        tests/history-css.mjs fails the build on them.
 
-     2. STEPPED CHROME COMPACTION — @media (max-height: …rem). Below about 1440p the continuous
+     2. Stepped chrome compaction: @media (max-height: …rem). Below about 1440p the continuous
         type scale is pinned at its readability floor (0.7; scaling in proportion would demand 7.2px
         type at 720p) while the box scale keeps going to 0.5, and the remaining space is won back by
-        tightening chrome. Breakpoints are placed
-        against the real viewport heights, each common resolution landing in one tier:
+        tightening chrome. Breakpoints are placed against the real viewport heights, each common
+        resolution landing in one tier:
 
-          comfortable   > 61rem    visual scale is unfloored: the inner layout IS the reference
+          comfortable   > 61rem    visual scale is unfloored: the inner layout is the reference
           compact      ≤ 61rem     floor active (viewport < ~990px); layout is short of reference
           tight        ≤ 55rem     1600x900  (55.6 is just above; fires from ~890px down)
           micro        ≤ 50rem     1366x768  (47.4), 1280x720 (44.4)
 
-        Above 61rem the frame is drawn at exactly the reference proportions and needs NO
+        Above 61rem the frame is drawn at exactly the reference proportions and needs no
         compaction; these tiers exist only to close the gap the readability floor leaves.
 
         The old thresholds (53.9 / 43.9) came from the false 60rem premise: micro could never fire
         at any real resolution, and compact only below 873px.
 
-   @media with rem units IS supported and fires correctly (verified at a 44.4rem viewport).
-   `matchMedia` does NOT exist in GameFace, so breakpoints cannot be queried from JS.
-   Only spacing / font-size is touched — never the flex structure or what is shown.
-   ──────────────────────────────────────────────────────────────────────────── */
+   @media with rem units is supported and fires correctly. `matchMedia` does not exist in GameFace,
+   so breakpoints cannot be queried from JS. Only spacing / font-size is touched, never the flex
+   structure or what is shown. */
 
-/* ══ FLOOR-ACTIVE — viewport ≤ 78rem (1920x1200 down to 720p) ═══════════════════════════════
+/* Floor active: viewport ≤ 78rem (1920x1200 down to 720p)
    The visual scale is pinned at its 0.7 floor once the viewport is under 1260px (77.8rem), so from
-   here down the inner layout is SHORTER than the reference and the top-3 podium loses its third
-   card (watched: 2 of 3 at 1920x1080 and 1600x900 with the old 61rem threshold). The podium must
+   here down the inner layout is shorter than the reference and the top-3 podium loses its third
+   card (2 of 3 at 1920x1080 and 1600x900 with the old 61rem threshold). The podium must
    show all three at every resolution, so its compaction starts exactly where the floor does. */
 @media (max-height: 78rem) {
     .demographics-screen .demographics-settle-section-fil {
@@ -84,7 +81,7 @@
     }
 }
 
-/* ══ COMPACT — viewport ≤ 61rem: the visual-scale FLOOR is active from here down ═══
+/* Compact: viewport ≤ 61rem, the visual-scale floor is active from here down
    max-height in rem so the breakpoint tracks the engine's scaled root font: at
    the canonical resolutions the viewport is ~60rem tall (these rules never fire);
    on a sub-1080p laptop (or a larger Interface Size) it drops below 54rem and the
@@ -146,13 +143,13 @@
         margin-top: 0.3rem;
     }
     /* The metric captions row (per-metric short notes appended under the title)
-       is supplementary — tighten here, hidden at micro below. */
+       is supplementary: tighten here, hidden at micro below. */
     .demographics-screen .demographics-chart-caption-compact {
         margin-top: 0.1rem;
     }
 }
 
-/* ══ TIGHT — viewport ≤ 55rem (1600x900) ════════════════════════════════════
+/* Tight: viewport ≤ 55rem (1600x900)
    Cascades on top of the compact block above (both apply below 44rem; these win
    by source order), so only the extra tightening is listed. */
 @media (max-height: 55rem) {
@@ -203,8 +200,8 @@
     }
 }
 
-/* ══ MICRO — viewport ≤ 50rem (1366x768, 1280x720) ══════════════════════════
-   The smallest viewports players actually select. Cascades on top of COMPACT and TIGHT above, so
+/* Micro: viewport ≤ 50rem (1366x768, 1280x720)
+   The smallest viewports players actually select. Cascades on top of compact and tight above, so
    only the extra tightening is listed. This is the tier that has to do the most work: at 720p the
    continuous scale is pinned at its 0.8 floor, so chrome is the only remaining source of space.
    The two tab rows and the title are the largest fixed costs before any content is drawn. */
@@ -216,7 +213,7 @@
     .demographics-screen .demographics-body {
         padding-bottom: 0.3rem;
     }
-    /* Both tab rows: strip the vertical margins entirely — the bars carry their own visuals. */
+    /* Both tab rows: strip the vertical margins entirely; the bars carry their own visuals. */
     .demographics-screen .demographics-tab-bar-host,
     .demographics-screen .demographics-view-tab-host,
     .demographics-screen .demographics-page-tab-host {
@@ -259,10 +256,10 @@
         row-gap: calc(0.35 * var(--dg-u));
         column-gap: calc(0.35 * var(--dg-u));
     }
-    /* Tab labels wrap to two lines at this size, costing a full row in BOTH tab bars. Measured at
-       720p: the font rule below was already winning (0.6067rem), so size was NOT the problem. The
+    /* Tab labels wrap to two lines at this size, costing a full row in both tab bars. At 720p the
+       font rule below was already winning (0.6067rem), so size was not the problem. The
        causes were `white-space: normal` (wrapping allowed, so the label wraps instead of letting
-       the engine's font-fit-shrink shrink it) and the engine's `tracking-150` letter-spacing —
+       the engine's font-fit-shrink shrink it) and the engine's `tracking-150` letter-spacing:
        0.15em across a 26-character uppercase label like "CIVILIZATION RANK BY YIELD" is ~38px of
        pure tracking in a 186px box. Tightening tracking at this size is visually free and recovers
        more room than another font step would, without costing legibility. */
@@ -295,10 +292,10 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    /* Podium (the top-3 column on the ranking tabs) MUST show all three cards at every resolution.
+    /* Podium (the top-3 column on the ranking tabs) must show all three cards at every resolution.
        At the 0.7 visual floor the inner viewport is ~1029px against an 1800px reference, so the
        column loses ~280 local px; these cuts win them back: filigree flourishes, card padding, the
-       avatar, and the gap between cards. Measured at 720p: heading 129 + 3 x 222 local px needed. */
+       avatar, and the gap between cards. At 720p that is heading 129 + 3 x 222 local px needed. */
     .demographics-screen .demographics-settle-section-fil {
         display: none;
     }
@@ -326,7 +323,7 @@
         margin-bottom: 0;
     }
     /* Podium cards: at the 0.7 floor the left column is narrow enough that the two action buttons
-       WRAP into two rows, which is the height the third card needed (watched at 720p). Keep them on
+       wrap into two rows, which is the height the third card needed at 720p. Keep them on
        one row, compact, and let their labels ellipsize rather than wrap the row. */
     .demographics-screen .demographics-settle-split-left .demographics-settle-podium-card .demographics-settle-mapbtns {
         flex-wrap: nowrap;
@@ -376,7 +373,7 @@
         row-gap: calc(0.1 * var(--dg-u));
         /* Span from the JS-set `left` to a fixed right inset so the strip has a real width to wrap
            in. Without `right`, the box was content-sized and ran off the plot: 4 of 9 civs were
-           unreachable (watched at 720p). `width:auto` beats any inline width the chart sets. */
+           unreachable at 720p. `width:auto` beats any inline width the chart sets. */
         right: calc(1.2 * var(--dg-u));
         width: auto;
         max-width: 100%;
@@ -404,13 +401,12 @@
     }
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
-   NON-HISTORY VIEWS — CONTINUOUS sizing via --dg-u
+/* Non-history views: continuous sizing via --dg-u
    The stepped blocks above tune chrome. Every non-history view (Settlements /
-   World Rankings, Relations, Conflicts) also carries structural content — the
-   matrix header band, the avatars and sub-tabs, the cell type — which should
+   World Rankings, Relations, Conflicts) also carries structural content (the
+   matrix header band, the avatars and sub-tabs, the cell type) which should
    scale smoothly rather than jump at a threshold. Those are written
-   `calc(<number> * var(--dg-u))`, where the number IS the reference (1800p)
+   `calc(<number> * var(--dg-u))`, where the number is the reference (1800p)
    value, so nothing changes at the reference and everything eases with the
    viewport elsewhere.
 
@@ -419,10 +415,9 @@
    every resolution, and its K constants assumed a ~60rem viewport that does not
    occur. The readability floor that clamp's first argument used to provide now
    lives in the JS scale bounds (MIN_TYPE_SCALE / MIN_BOX_SCALE), applied once for the whole screen
-   instead of per declaration.
-   ════════════════════════════════════════════════════════════════════════════ */
+   instead of per declaration. */
 
-/* ── Shared section cards (used by every non-history view) ─────────────────── */
+/* Shared section cards (used by every non-history view) */
 .demographics-screen .demographics-section {
     padding-top: calc(0.55 * var(--dg-u));
     padding-right: calc(0.8 * var(--dg-u));
@@ -433,10 +428,10 @@
     font-size: var(--dg-fs-105);
 }
 
-/* ── World Rankings (all-civs matrix) ─────────────────────────────────────────
+/* World Rankings (all-civs matrix)
    The two header bands are a fixed 7.5rem tall and the leader/civ/value text is
    fixed; on a short viewport that header would eat the column. These scale the
-   band and text fluidly with available height — canonical at 1080p+ (the clamp
+   band and text fluidly with available height: canonical at 1080p+ (the clamp
    ceiling), easing toward a readable floor as the viewport shortens. The avatar
    is JS-sized to 3-4rem and stays, so the band still clears it. */
 .demographics-screen .demographics-worldrankings-allcivs-civ-header,
@@ -450,14 +445,14 @@
 .demographics-screen .demographics-worldrankings-allcivs-value-cell {
     min-height: calc(2.6 * var(--dg-u));
 }
-/* Matrix TEXT sizes. Each --dg-fs-* is a FULLY-COMPUTED rem value published by
+/* Matrix text sizes. Each --dg-fs-* is a fully computed rem value published by
    demographics-font-ladder.js onto the screen root: base rem x the in-game font-size setting. rem
-   still tracks the UI scale, so referencing it here tracks BOTH the font-size setting and the UI
-   scale — the behavior the base game gets from its regenerated text-* classes, which the engine
-   does NOT apply to fixed-rem content. We use a plain single-arg `var()` in a longhand property
-   (NOT calc and NOT a two-arg var fallback — Coherent's parser rejects both).
+   still tracks the UI scale, so referencing it here tracks both the font-size setting and the UI
+   scale, the behavior the base game gets from its regenerated text-* classes, which the engine
+   does not apply to fixed-rem content. A plain single-arg `var()` in a longhand property is used
+   (not calc and not a two-arg var fallback; Coherent's parser rejects both).
 
-   The DEFAULTS these fall back to are declared once, for both screens, in
+   The defaults these fall back to are declared once, for both screens, in
    screen-demographics-history.css; this sheet used to carry a second copy of the whole ladder. */
 .demographics-screen .demographics-worldrankings-allcivs-civ-header-leader {
     font-size: var(--dg-fs-lead);
@@ -475,7 +470,7 @@
     font-size: var(--dg-fs-rank);
 }
 
-/* ── Settlements (showcase / table leaderboard) ───────────────────────────── */
+/* Settlements (showcase / table leaderboard) */
 .demographics-screen .demographics-settle-view {
     row-gap: calc(0.6 * var(--dg-u));
     column-gap: calc(0.6 * var(--dg-u));
@@ -504,7 +499,7 @@
     font-size: var(--dg-fs-105);
 }
 
-/* ── Relations (filter chips / bulk toggles) ──────────────────────────────── */
+/* Relations (filter chips / bulk toggles) */
 .demographics-screen .demographics-relations-filter-ctrl-row {
     margin-bottom: calc(0.45 * var(--dg-u));
     padding-bottom: calc(0.4 * var(--dg-u));
@@ -517,7 +512,7 @@
     font-size: var(--dg-fs-72);
 }
 
-/* ── Conflicts (wars Gantt timeline labels) ───────────────────────────────────
+/* Conflicts (wars Gantt timeline labels)
    The timeline itself is a flex-grow chart (already sized by the History flex
    chain); only its absolutely-positioned overlay labels carry fixed type, scaled
    fluidly with available height so a dense timeline reads cleanly at any size. */

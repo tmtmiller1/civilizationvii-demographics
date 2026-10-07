@@ -1,10 +1,10 @@
-/* ── Wars Gantt (conflicts timeline) — static chrome migrated from
+/* Wars Gantt (conflicts timeline): static chrome migrated from
    chart-conflicts-timeline.js inline styles. Per-bar geometry, x-tick / axis-title
    positions, and the tooltip's hover visibility stay inline (dynamic);
-   everything below is the static layout/typography. ───────────────────────── */
+   everything below is the static layout/typography. */
 
-/* Gantt wrap — the absolutely-positioned overlay anchor. */
-/* The wars timeline is the scroll VIEWPORT: it fills the host and scrolls in
+/* Gantt wrap: the absolutely-positioned overlay anchor. */
+/* The wars timeline is the scroll viewport: it fills the host and scrolls in
    both axes when the inner canvas (the chart's natural pixel extent) is larger
    than it. */
 .demographics-wars-wrap {
@@ -36,12 +36,12 @@
     font-size: var(--dg-fs-85);
     line-height: 1;
 }
-/* Anchor the label's RIGHT edge at the bar end (bars near the chart's right
+/* Anchor the label's right edge at the bar end (bars near the chart's right
    edge), so a long name grows left instead of off the canvas. */
 .demographics-wars-label-anchor-right {
     transform: translate(-100%, -50%);
 }
-/* Neutral box behind the war name so it stays readable over ANY banner color. */
+/* Neutral box behind the war name so it stays readable over any banner color. */
 .demographics-wars-label-box {
     display: inline-block;
     overflow: visible;
@@ -153,7 +153,7 @@
 }
 
 /* Hover tooltip chrome. display (hidden/shown) + left/top stay inline. */
-/* War tooltip — dressed to match the game's native tooltips: the same
+/* War tooltip, dressed to match the game's native tooltips: the same
    `base_tooltip-bg` ornate border-image frame, the same dark gradient fill, and
    the native parchment/tan text palette (title rgb(204,188,163), body
    rgb(179,158,128)). Mirrors core/ui/themes/default `.img-tooltip-border` +
@@ -307,22 +307,22 @@
 .demographics-wars-tooltip-tlabel {
     flex-grow: 0;
     flex-shrink: 0;
-    /* TYPE unit, and wide enough for the longest label at the Large font setting: at 9.5 layout
+    /* Type unit, and wide enough for the longest label at the Large font setting: at 9.5 layout
        units "Military Power (Current)" (~190px at Large) overran into the first value column
-       (watched 2026-09-23 at 2880x1800). Text-holding boxes track the type scale, not the layout. */
+       at 2880x1800. Text-holding boxes track the type scale, not the layout. */
     flex-basis: calc(12.5 * var(--dg-t));
     color: rgb(176, 162, 138);
     white-space: nowrap;
     text-align: left;
 }
-/* One value column per leader: stat icon then number. A DEFINITE basis (not
+/* One value column per leader: stat icon then number. A definite basis (not
    flex:1 1 0) so the absolutely-positioned popup grows to encompass every
    column instead of shrinking them; fixed width also keeps columns aligned
    row-to-row. */
 .demographics-wars-tooltip-tcell {
     flex-grow: 0;
     flex-shrink: 0;
-    /* TYPE unit; room for an icon plus a value like "-32 (≈57.8K)" without touching the next column. */
+    /* Type unit; room for an icon plus a value like "-32 (≈57.8K)" without touching the next column. */
     flex-basis: calc(8 * var(--dg-t));
     display: flex;
     flex-direction: row;
@@ -378,7 +378,7 @@
 }
 /* City-state ally cell, in the CS table below the majors: stacked vertically -
    type icon + real name on top, then Military Power (Current) and (Lost). One
-   cell per ally, sitting in the SAME column as its suzerain, multiple allies
+   cell per ally, sitting in the same column as its suzerain, multiple allies
    stacking as rows down that column. */
 .demographics-wars-tooltip-cs-cell {
     flex-direction: column;
@@ -700,7 +700,7 @@
 .demographics-war-graph-mil-body {
     position: relative;
 }
-/* ── Crises page: one block per crisis stage (colored bar + cost section). ── */
+/* Crises page: one block per crisis stage (colored bar + cost section). */
 .demographics-crisis-stages {
     width: 100%;
     height: 100%;
@@ -804,7 +804,7 @@
     flex: 1 1 auto;
     width: 100%;
 }
-/* Crises page is a full-size PAGE table, not a hover tooltip: scale every part
+/* Crises page is a full-size page table, not a hover tooltip: scale every part
    of the shared cost table up (same exact format, just larger + easier to read,
    filling the page better). */
 .demographics-crisis-stage-costs .demographics-wars-tooltip-table {
@@ -842,8 +842,8 @@
     width: calc(0.72 * var(--dg-u));
     height: calc(0.72 * var(--dg-u));
 }
-/* ── Crises "Graphs" sub-tab: reuses the war-graphs grid/cell styling; adds a
-   full-height scroll container and an interactive (toggleable) shared legend. ── */
+/* Crises "Graphs" sub-tab: reuses the war-graphs grid/cell styling; adds a
+   full-height scroll container and an interactive (toggleable) shared legend. */
 .demographics-crisis-graphs {
     height: 100%;
     box-sizing: border-box;
@@ -979,7 +979,7 @@
     font-size: var(--dg-fs-85);
 }
 .demographics-war-graph-hovertip-head {
-    /* Flex so the cost-icon <span> is a flex item — width/height are ignored on
+    /* Flex so the cost-icon <span> is a flex item; width/height are ignored on
        an inline element, which silently collapsed the icon to zero before. */
     display: flex;
     align-items: center;
@@ -1128,14 +1128,14 @@
     color: rgb(138, 128, 110);
 }
 
-/* ── Line chart (main per-civ time-series) — static chrome migrated from
+/* Line chart (main per-civ time-series): static chrome migrated from
    chart-line.js inline styles. Dynamic values stay inline: marker positions
    (left/top), the per-event wonder icon background-image, the tooltip
    cursor-follow left/top + opacity toggle, the arrow's per-edge offsets and
    border colors, and the Chart.js wrap/canvas render dimensions. Everything
-   below is the static layout/typography. ─────────────────────────────────── */
+   below is the static layout/typography. */
 
-/* ── Shared custom-tooltip chrome ────────────────────────────────────────────
+/* Shared custom-tooltip chrome
    The ornate parchment frame + dark gradient + tan palette first designed for
    the wars tooltip (.demographics-wars-tooltip). Apply this class alongside a
    tooltip's own layout class to give every custom HTML tooltip in the mod the
@@ -1219,7 +1219,7 @@
     filter: none;
 }
 
-/* Faded/desaturated wonder icon for a destroyed wonder. Kept as a CHILD (not
+/* Faded/desaturated wonder icon for a destroyed wonder. Kept as a child (not
    the container background) so its dimming doesn't bleed onto the badge sibling
    - CSS opacity/filter applies to the whole subtree. */
 .demographics-line-wonder-destroyed-icon {
@@ -1470,12 +1470,12 @@
     display: block;
 }
 
-/* ── Resources stacked-area chart — static chrome migrated from
+/* Resources stacked-area chart: static chrome migrated from
    chart-resources.js inline styles. These classes sit alongside the shared
    demographics-chart-* classes (which carry typography) and add only the
    absolute-positioning + static transforms. Dynamic values stay inline:
    per-axis / per-tick / per-band left+top, and the per-category legend dot
-   background color. ──────────────────────────────────────────────────────── */
+   background color. */
 
 /* Axis titles. left/top are per-axis geometry, set inline. */
 .demographics-resources-axis-title {
@@ -1507,7 +1507,7 @@
     position: absolute;
 }
 
-/* ── History toolbar / time-filter (history-* views) ─────────────────────── */
+/* History toolbar / time-filter (history-* views) */
 
 /* Parenthetical metric subtitle below the chart title. */
 .demographics-history-subtitle {
@@ -1518,7 +1518,7 @@
     letter-spacing: 0.04em;
 }
 
-/* Metric "ⓘ" caption wrapper — sits between the title and the filter row. */
+/* Metric "ⓘ" caption wrapper; sits between the title and the filter row. */
 .demographics-history-metric-info {
     position: relative;
     text-align: center;
@@ -1528,13 +1528,13 @@
     margin-left: 0;
 }
 
-/* Radar snapshot pill with no captured snapshot yet — grayed + not-allowed. */
+/* Radar snapshot pill with no captured snapshot yet: grayed + not-allowed. */
 .demographics-history-pill-disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
 
-/* Wonders-marker toggle button in its OFF state — desaturated label color. */
+/* Wonders-marker toggle button in its off state: desaturated label color. */
 .demographics-history-wonders-off {
     color: #c0a875;
 }
@@ -1578,7 +1578,7 @@
     pointer-events: none;
 }
 
-/* Tooltip title bar (disabled-filter tooltip — built as real DOM). */
+/* Tooltip title bar (disabled-filter tooltip, built as real DOM). */
 .demographics-history-tip-title {
     color: rgb(236, 224, 198);
     font-weight: 700;

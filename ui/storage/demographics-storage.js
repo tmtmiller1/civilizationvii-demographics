@@ -85,10 +85,9 @@ function safeCall(fn, fallback) {
   }
 }
 
-// ── Schema ──────────────────────────────────────────────────────────
+// schema
 /** Persisted history schema version. */
 const VERSION = 1;
-// Catalog scope + object/key names. Stable across all ages.
 /** Hashing scope prefix; stable across all ages. */
 const CATALOG_SCOPE = "demographics-history-v1";
 /** Property-bag key under which the JSON payload is stored. */
@@ -132,9 +131,7 @@ function activePersistenceMode() {
   );
 }
 
-// ── History helpers ─────────────────────────────────────────────────
-
-// ── Storage singleton ───────────────────────────────────────────────
+// storage singleton
 /** Yield-derived metric ids used to detect a premature (economy-not-ready) sample. */
 const YIELD_METRIC_IDS = ["gdp", "gpt", "crops", "production", "science", "culture"];
 
@@ -163,9 +160,9 @@ function sumSampleYields(s) {
 }
 
 /**
- * Whether `s` is a premature age-boundary sample: the first sample of a NEW age
+ * Whether `s` is a premature age-boundary sample: the first sample of a new age
  * (age differs from `prev`) whose yields are all zero while `prev` (age-end) had
- * real yields - the artifact from sampling before the new age's economy spun up.
+ * real yields: the artifact from sampling before the new age's economy spun up.
  * @param {*} s The candidate sample.
  * @param {*} prev The preceding sample, or null.
  * @returns {boolean} True when `s` should be dropped.
@@ -224,7 +221,7 @@ class StorageImpl {
   }
 
   /**
-   * Whether the in-memory mirror is stamped with a KNOWN seed that differs from
+   * Whether the in-memory mirror is stamped with a known seed that differs from
    * the current game's, so it must not be reconciled into this one. False when
    * either seed is the "unknown" sentinel.
    * @returns {boolean} True when _mem is for a different game.
@@ -245,7 +242,7 @@ class StorageImpl {
    */
   _preferMemWhenNewer(parsed, store) {
     const memSamples = this._mem?.samples?.length || 0;
-    // Never resurrect a DIFFERENT game's in-memory history: prefer the
+    // Never resurrect a different game's in-memory history: prefer the
     // freshly-parsed payload regardless of sample counts (pairs with the seed
     // guard in storage-load.js loadParsed).
     if (this._memIsForDifferentGame()) return parsed;
@@ -255,7 +252,7 @@ class StorageImpl {
         parsed.samples.length +
         " < _mem=" +
         memSamples +
-        " , preferring _mem"
+        ", preferring _mem"
     );
     try {
       const mem = this._mem;
@@ -384,7 +381,7 @@ class StorageImpl {
 
   /**
    * Handle the empty-persistent-tier case: recover from `_mem` if it holds
-   * data for THIS game, else restore a parked payload, else return an empty shell.
+   * data for this game, else restore a parked payload, else return an empty shell.
    * @param {PersistStore} store The (empty) store to recover into.
    * @returns {StoredHistory} The recovered, restored, or freshly empty history.
    */
@@ -663,7 +660,6 @@ class StorageImpl {
 
     this._insertSnapshot(h, snapshot);
 
-    // Decimation.
     const eff = resolveEffectiveCap(derr);
     this._maybeDecimate(h, eff);
 

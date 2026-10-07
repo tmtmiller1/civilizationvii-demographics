@@ -29,7 +29,7 @@ function pidNameMap(samples) {
 /**
  * Join a war side's roster into a "; "-separated name list.
  * @param {*[]} side The side roster (entries with a `pid`).
- * @param {Map<number, string>} names pid → display name.
+ * @param {Map<number, string>} names
  * @returns {string} The joined roster.
  */
 function sideNames(side, names) {
@@ -40,8 +40,8 @@ function sideNames(side, names) {
 
 /**
  * Build {headers, rows} for the Conflicts page's war list.
- * @param {*} history The persisted history blob.
- * @returns {{ headers: string[], rows: Array<Array<string|number>> }} CSV data.
+ * @param {*} history
+ * @returns {{ headers: string[], rows: Array<Array<string|number>> }}
  */
 export function warsCsv(history) {
   const h = history || {};

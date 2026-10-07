@@ -27,9 +27,9 @@ import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlem
 
 /**
  * Live handles to the showcase's persistent chrome. The age pills, the two filigree section
- * titles and the ranked list's header are built ONCE; an age switch refills the podium and the
+ * titles and the ranked list's header are built once; an age switch refills the podium and the
  * list rows and nothing else. Rebuilding them is what made the flourishes and the laurel medals
- * blink — a fresh element's `blp:` background resolves a frame or more after it is inserted.
+ * blink: a fresh element's `blp:` background resolves a frame or more after it is inserted.
  * @typedef {{
  *   chips: Map<string, HTMLElement>,
  *   split: HTMLElement|null,
@@ -44,7 +44,7 @@ import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlem
 /**
  * The wonder icon's tooltip: its name, plus the completion year when one was observed.
  * @param {{ nameKey?: string, year?: string }} w The wonder.
- * @returns {string} The tooltip text.
+ * @returns {string}
  */
 function wonderTooltip(w) {
   const name = t(w.nameKey || "");
@@ -87,8 +87,8 @@ function foundedText(s) {
 /**
  * Build the city meta line.
  * @param {*} s The settlement.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The meta line.
+ * @param {ShowcaseDeps} deps
+ * @returns {HTMLElement}
  */
 function buildCityMeta(s, deps) {
   const meta = div("demographics-settle-citymeta");
@@ -106,7 +106,7 @@ function buildCityMeta(s, deps) {
 /**
  * Build a civ-colored composite score bar.
  * @param {*} s The settlement.
- * @returns {HTMLElement} The bar element.
+ * @returns {HTMLElement}
  */
 function buildScoreBar(s) {
   const bar = div("demographics-settle-bar");
@@ -121,9 +121,9 @@ function buildScoreBar(s) {
 /**
  * Build a podium card's body column (name / owner / meta + map & cinematic buttons).
  * @param {*} s The settlement.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The body element.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
+ * @returns {HTMLElement}
  */
 function buildPodiumBody(s, st, deps) {
   const body = div("demographics-settle-podium-body");
@@ -147,10 +147,10 @@ function buildPodiumBody(s, st, deps) {
 /**
  * Build one podium card for a top-3 settlement.
  * @param {*} s The settlement.
- * @param {number} place 1-based podium place.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The card element.
+ * @param {number} place
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
+ * @returns {HTMLElement}
  */
 function buildPodiumCard(s, place, st, deps) {
   s = deps.displayOf(st, s);
@@ -178,9 +178,9 @@ function buildPodiumCard(s, place, st, deps) {
  * Build the showcase row's name line: name, City/Town, Capital, Holy City, and
  * the camera buttons.
  * @param {*} s The settlement.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The name row.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
+ * @returns {HTMLElement}
  */
 function buildShowcaseNameRow(s, st, deps) {
   const nameRow = div("demographics-settle-list-namerow");
@@ -204,9 +204,9 @@ function buildShowcaseNameRow(s, st, deps) {
 /**
  * Build the showcase row's middle column.
  * @param {*} s The settlement.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The middle-column element.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
+ * @returns {HTMLElement}
  */
 function buildShowcaseMid(s, st, deps) {
   const mid = div("demographics-settle-list-mid");
@@ -268,7 +268,7 @@ function buildLeaderIcons(s) {
  * number with the world-leader icons beneath it.
  * @param {number} place The 1-based place.
  * @param {*} s The settlement or civ aggregate (reads `ranks` + `outputs`).
- * @returns {HTMLElement} The rank cell.
+ * @returns {HTMLElement}
  */
 export function buildRankCell(place, s) {
   const rank = div("demographics-settle-list-rankcol");
@@ -294,7 +294,7 @@ export function isOwnSettlement(s) {
  * @param {string} base The base class list.
  * @param {*} s The settlement.
  * @param {number} place The 1-based place in the list.
- * @returns {string} The class list.
+ * @returns {string}
  */
 export function rankedRowClass(base, s, place) {
   let cls = base;
@@ -306,9 +306,9 @@ export function rankedRowClass(base, s, place) {
 /**
  * Build one ranked-list row of the showcase.
  * @param {*} s The settlement.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The row element.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
+ * @returns {HTMLElement}
  */
 function buildShowcaseRow(s, st, deps) {
   s = deps.displayOf(st, s);
@@ -328,8 +328,8 @@ function buildShowcaseRow(s, st, deps) {
  * switch; only its cards are swapped.
  * @param {HTMLElement} podium The podium element to fill.
  * @param {*[]} top The composite-sorted top settlements.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
  * @param {boolean} [vertical] Stack gold→bronze top-to-bottom (left-column layout).
  */
 function fillPodium(podium, top, st, deps, vertical) {
@@ -345,8 +345,8 @@ function fillPodium(podium, top, st, deps, vertical) {
 
 /**
  * The archived ages the age pills offer.
- * @param {ShowcaseDeps} deps Rendering dependencies.
- * @returns {Array<{ age: string, label: string, year: string, top: Array<*> }>} The ages.
+ * @param {ShowcaseDeps} deps
+ * @returns {Array<{ age: string, label: string, year: string, top: Array<*> }>}
  */
 function showcaseAges(deps) {
   return Array.isArray(deps.archive) ? deps.archive : [];
@@ -355,8 +355,8 @@ function showcaseAges(deps) {
 /**
  * The settlements the showcase ranks: the live board, or the archived end-of-age board picked in
  * the age pills.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
  * @returns {Array<*>} The ranked settlements.
  */
 function showcaseSource(st, deps) {
@@ -367,8 +367,8 @@ function showcaseSource(st, deps) {
 /**
  * Re-apply the picked age: chip state, the archive note, and the podium + list contents. The
  * pills, both filigree section titles and the list header stay exactly where they are.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
  * @param {ShowcaseUi} ui The showcase's chrome handles.
  */
 function refreshShowcase(st, deps, ui) {
@@ -398,8 +398,8 @@ function refreshShowcase(st, deps, ui) {
 /**
  * Render the artistic Top-25 showcase. The chrome is built once here; an age pill click goes
  * through {@link refreshShowcase} rather than a panel rebuild.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
  */
 export function renderShowcasePanel(st, deps) {
   const ages = showcaseAges(deps);
@@ -430,9 +430,9 @@ export function renderShowcasePanel(st, deps) {
 /**
  * Build the podium/list scaffold once: the two filigree section titles, the (empty) podium host
  * and the ranked list with its column header. Everything here outlives an age switch.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {ShowcaseDeps} deps
  * @param {ShowcaseUi} ui The showcase's chrome handles.
- * @returns {HTMLElement} The split element.
+ * @returns {HTMLElement}
  */
 function buildShowcaseSplit(deps, ui) {
   // Two-column layout: the podium (left) beside the full ranked list (right) so
@@ -458,8 +458,8 @@ function buildShowcaseSplit(deps, ui) {
  * switch does not change) in the DOM.
  * @param {ShowcaseUi} ui The showcase's chrome handles.
  * @param {*[]} top The composite-sorted top settlements.
- * @param {*} st The render state.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {ShowcaseDeps} deps
  */
 function fillShowcaseList(ui, top, st, deps) {
   const list = /** @type {HTMLElement} */ (ui.list);
@@ -484,11 +484,11 @@ function fillShowcaseList(ui, top, st, deps) {
 /**
  * The "Now / End of <age>" pill row that switches the showcase between the live
  * board and an archived end-of-age board. Session-only, like the table filter.
- * @param {*} st The render state.
+ * @param {*} st
  * @param {Array<{ age: string, label: string }>} ages The archived ages, oldest first.
- * @param {ShowcaseDeps} deps Rendering dependencies.
+ * @param {ShowcaseDeps} deps
  * @param {ShowcaseUi} ui The showcase's chrome handles.
- * @returns {HTMLElement} The pill row.
+ * @returns {HTMLElement}
  */
 function buildAgePills(st, ages, deps, ui) {
   const row = div("demographics-settle-filters demographics-settle-age-pills");

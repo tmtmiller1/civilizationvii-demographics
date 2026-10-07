@@ -53,7 +53,7 @@ export function _ageBoundaryAlreadyRecorded(history, age, turn) {
   const arr = history && history.ageBoundaries;
   if (!Array.isArray(arr)) return false;
   // Same age + same age-local turn = same transition event (multiple pids
-  // report it). Compare `b.localTurn`, not `b.turn` (a GLOBAL chart value),
+  // report it). Compare `b.localTurn`, not `b.turn` (a global chart value),
   // or every per-pid transition event would append a fresh boundary.
   return arr.some((b) => {
     if (!b || b.age !== age) return false;
@@ -64,8 +64,8 @@ export function _ageBoundaryAlreadyRecorded(history, age, turn) {
 }
 
 /**
- * Identify the age that just FINISHED, given the new age starting at `turn`.
- * The boundary fires when `newAge` BEGINS; the finished age is the one just
+ * Identify the age that just finished, given the new age starting at `turn`.
+ * The boundary fires when `newAge` begins; the finished age is the one just
  * before this turn in the (sorted) boundary list.
  * @param {*} h The persisted history blob.
  * @param {string} newAge The new age type.
@@ -78,7 +78,7 @@ export function _resolveFinishedAge(h, newAge, turn) {
     .sort((/** @type {*} */ a, /** @type {*} */ b) => (a.turn || 0) - (b.turn || 0));
   const idx = sorted.findIndex((/** @type {*} */ b) => b.age === newAge && b.turn === turn);
   if (idx > 0) return sorted[idx - 1].age;
-  return "AGE_ANTIQUITY"; // first transition - finishing antiquity
+  return "AGE_ANTIQUITY"; // first transition, so antiquity just finished
 }
 
 /**
@@ -99,7 +99,7 @@ export function _legacyRecordForPlayer(ps) {
     leaderName: ps.leaderName,
     civName: ps.civName,
     leaderType: ps.leaderType,
-    // Stored so the legacy radar colors a civ the SAME in the frozen per-age
+    // Stored so the legacy radar colors a civ the same in the frozen per-age
     // view as in the live current-age view (radar falls back to a palette when
     // an older snapshot lacks this).
     primaryColor: ps.primaryColor
@@ -107,7 +107,7 @@ export function _legacyRecordForPlayer(ps) {
 }
 
 /**
- * Snapshot per-civ TRIUMPH counts from the most recent sample for each civ
+ * Snapshot per-civ triumph counts from the most recent sample for each civ
  * (the age-end totals), keyed by pid.
  * @param {*} h The persisted history blob.
  * @returns {Record<string, object>} The pid → triumph-snapshot map.
@@ -129,7 +129,7 @@ export function _buildLegacySnapshot(h) {
 }
 
 /**
- * Snapshot the finished age's per-civ CUMULATIVE crisis cost while its samples are still dense:
+ * Snapshot the finished age's per-civ cumulative crisis cost while its samples are still dense:
  * the "losses" figures are sums of per-turn declines, which collapse once old samples are
  * decimated to cap the save. No-op when the age had no crisis.
  * @param {*} h The persisted history blob (mutated).
@@ -163,7 +163,7 @@ export function recordAgeBoundary(newAge, turn, deps) {
     age: newAge
   });
   deps.ilog("ageBoundary: recorded", newAge, "at localTurn=", turn);
-  // Snapshot per-civ TRIUMPH counts at this moment (the latest sample's values
+  // Snapshot per-civ triumph counts at this moment (the latest sample's values
   // are the age-end totals) under history.legacySnapshots[age].
   if (!h.legacySnapshots || typeof h.legacySnapshots !== "object") {
     h.legacySnapshots = {};
@@ -251,7 +251,7 @@ export function onPlayerAgeTransitionComplete(data, deps) {
       deps.tripIfTooMany("appendAgeBoundary", e);
     }
 
-    // Deliberately do NOT re-sample here: at PlayerAgeTransitionComplete the new
+    // No re-sample here: at PlayerAgeTransitionComplete the new
     // age's economy has not spun up yet, so Stats.getNetYield(...) reads 0. The
     // normal PlayerTurnActivated sample for the new age's first turn captures
     // that turn with real yields and the new civ identity.

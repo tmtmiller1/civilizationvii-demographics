@@ -1,7 +1,7 @@
 // settlements-adjacency.js
 //
-// Computes a placed building's / quarter's ADJACENCY yield bonus from the game's
-// static Constructible_Adjacencies rules against the LIVE map, since the engine
+// Computes a placed building's / quarter's adjacency yield bonus from the game's
+// static Constructible_Adjacencies rules against the live map, since the engine
 // exposes no per-placed-building adjacency total. Common condition types are
 // faithful; edge rules (appeal, biome, trait-exclusions) are approximated.
 
@@ -17,7 +17,7 @@ function safe(fn, fb) {
   }
 }
 
-// ── Static-rule indices (built once) ─────────────────────────────────────────
+// Static-rule indices (built once)
 
 /** @type {Map<string, *[]>|null} ConstructibleType → its adjacency rule rows. */
 let _adjByType = null;
@@ -65,7 +65,7 @@ function buildIndices() {
   indexTags();
 }
 
-// ── Live neighbor classification ─────────────────────────────────────────────
+// Live neighbor classification
 
 /** @param {*} loc @returns {{x:number,y:number}[]} The plot's adjacent locations. */
 function neighbors(loc) {
@@ -193,7 +193,7 @@ function tileMatches(yc, loc, wild) {
     || matchResource(yc, loc) || matchConstructible(yc, loc, wild);
 }
 
-// ── Public: per-building / per-quarter adjacency ─────────────────────────────
+// Public: per-building / per-quarter adjacency
 
 /** @param {*} city @param {string} yieldChangeId @returns {boolean} Whether an activation-gated rule is unlocked. */
 function unlocked(city, yieldChangeId) {
@@ -230,7 +230,7 @@ function ruleAmount(city, rule, loc, nbrs) {
 
 /**
  * A building's adjacency yields at a location, as yieldType → amount.
- * @param {*} city The city handle. @param {string} type The building ConstructibleType.
+ * @param {*} city @param {string} type The building ConstructibleType.
  * @param {*} loc The building's tile. @param {{x:number,y:number}[]} nbrs Precomputed neighbors.
  * @returns {Record<string, number>} yieldType → amount.
  */
@@ -247,7 +247,7 @@ function buildingAdjacency(city, type, loc, nbrs) {
 
 /**
  * The cumulative adjacency of a quarter (sum over its buildings), as named yields.
- * @param {*} city The city handle. @param {*} loc The quarter tile.
+ * @param {*} city @param {*} loc The quarter tile.
  * @param {string[]} buildingTypes The ConstructibleTypes on the tile.
  * @returns {{name:string, amount:number}[]} Named non-zero adjacency yields (most first).
  */

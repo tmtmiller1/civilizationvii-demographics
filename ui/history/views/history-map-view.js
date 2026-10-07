@@ -32,8 +32,8 @@ const MAP_MAX_W_REM = 40;
 
 /**
  * A color the canvas accepts for sure, or null.
- * @param {string} c Candidate.
- * @returns {string|null} Color.
+ * @param {string} c
+ * @returns {string|null}
  */
 export function safeColor(c) {
   if (typeof c !== "string") return null;
@@ -44,7 +44,7 @@ export function safeColor(c) {
 
 /**
  * Hex geometry for a grid.
- * @param {{w:number, h:number}} m Grid size.
+ * @param {{w:number, h:number}} m
  * @returns {{s:number, rowH:number, cw:number, ch:number}} Side, row height, canvas size.
  */
 export function hexLayout(m) {
@@ -55,7 +55,7 @@ export function hexLayout(m) {
 
 /**
  * On-screen size of the map: MAP_REM tall, or MAP_MAX_W_REM wide when the world is wider than that.
- * @param {{cw:number, ch:number}} L Layout.
+ * @param {{cw:number, ch:number}} L
  * @returns {{w:number, h:number}} Size in rem.
  */
 export function displaySize(L) {
@@ -67,10 +67,10 @@ export function displaySize(L) {
 /**
  * Center of a cell on the canvas. Map rows count from the south edge, so the last row is drawn at
  * the top; odd rows are shifted half a hex, as on the game's minimap.
- * @param {{s:number, rowH:number}} L Layout.
- * @param {{w:number, h:number}} m Grid size.
- * @param {number} i Cell index.
- * @returns {{x:number, y:number}} Center.
+ * @param {{s:number, rowH:number}} L
+ * @param {{w:number, h:number}} m
+ * @param {number} i
+ * @returns {{x:number, y:number}}
  */
 export function cellCenter(L, m, i) {
   const col = i % m.w;
@@ -79,11 +79,10 @@ export function cellCenter(L, m, i) {
 }
 
 /**
- * Trace a hex.
- * @param {CanvasRenderingContext2D} g Context.
- * @param {number} x Center x.
- * @param {number} y Center y.
- * @param {number} s Side.
+ * @param {CanvasRenderingContext2D} g
+ * @param {number} x
+ * @param {number} y
+ * @param {number} s
  */
 function hex(g, x, y, s) {
   g.beginPath();
@@ -97,9 +96,9 @@ function hex(g, x, y, s) {
 
 /**
  * Paint one frame.
- * @param {HTMLCanvasElement} cv Canvas.
- * @param {MapView} mv Map.
- * @param {MapView["frames"][number]} f Frame.
+ * @param {HTMLCanvasElement} cv
+ * @param {MapView} mv
+ * @param {MapView["frames"][number]} f
  * @param {(pid:number) => string} colorOf Civilization color ("" for one not to show).
  */
 function paint(cv, mv, f, colorOf) {
@@ -113,10 +112,10 @@ function paint(cv, mv, f, colorOf) {
 
 /**
  * The layers of one cell: its terrain (blank when unexplored), and the tint of whoever holds it.
- * @param {number} owner Owner value.
- * @param {number} terrain Terrain class.
+ * @param {number} owner
+ * @param {number} terrain
  * @param {(pid:number) => string} colorOf Civilization color ("" for one not to show).
- * @returns {{base:string, tint:string|null}} Colors.
+ * @returns {{base:string, tint:string|null}}
  */
 export function cellLayers(owner, terrain, colorOf) {
   if (owner === UNEXPLORED) return { base: UNEXPLORED_COLOR, tint: null };
@@ -127,11 +126,11 @@ export function cellLayers(owner, terrain, colorOf) {
 
 /**
  * Paint every cell: terrain, then the holder's color over it.
- * @param {CanvasRenderingContext2D} g Context.
- * @param {{s:number, rowH:number}} L Layout.
- * @param {MapView} mv Map.
- * @param {MapView["frames"][number]} f Frame.
- * @param {(pid:number) => string} colorOf Civilization color.
+ * @param {CanvasRenderingContext2D} g
+ * @param {{s:number, rowH:number}} L
+ * @param {MapView} mv
+ * @param {MapView["frames"][number]} f
+ * @param {(pid:number) => string} colorOf
  */
 function paintCells(g, L, mv, f, colorOf) {
   const n = mv.w * mv.h;
@@ -154,11 +153,11 @@ function paintCells(g, L, mv, f, colorOf) {
 
 /**
  * Paint the settlements of shown civilizations as ringed dots.
- * @param {CanvasRenderingContext2D} g Context.
- * @param {{s:number, rowH:number}} L Layout.
- * @param {MapView} mv Map.
- * @param {MapView["frames"][number]} f Frame.
- * @param {(pid:number) => string} colorOf Civilization color.
+ * @param {CanvasRenderingContext2D} g
+ * @param {{s:number, rowH:number}} L
+ * @param {MapView} mv
+ * @param {MapView["frames"][number]} f
+ * @param {(pid:number) => string} colorOf
  */
 function paintSettlements(g, L, mv, f, colorOf) {
   const n = mv.w * mv.h;
@@ -179,8 +178,8 @@ function paintSettlements(g, L, mv, f, colorOf) {
 
 /**
  * Who holds land in a frame, most land first.
- * @param {MapView} mv Map.
- * @param {MapView["frames"][number]} f Frame.
+ * @param {MapView} mv
+ * @param {MapView["frames"][number]} f
  * @returns {{pid:number, cells:number, towns:number}[]} Holders.
  */
 export function holders(mv, f) {
@@ -201,9 +200,9 @@ export function holders(mv, f) {
 
 /**
  * Fill the legend for a frame: title, when, and who holds land (most first, ten at most).
- * @param {HTMLElement} legend Legend (emptied).
- * @param {MapView} mv Map.
- * @param {MapView["frames"][number]} f Frame.
+ * @param {HTMLElement} legend Emptied first.
+ * @param {MapView} mv
+ * @param {MapView["frames"][number]} f
  * @param {Cast} cast
  * @param {{ageAt: (at:number) => string, whenAt: (at:number) => string}} labels Age and position labels.
  */
@@ -231,7 +230,7 @@ function fillLegend(legend, mv, f, cast, labels) {
  * The map panel. show() is called from the timeline's playback timer and its click handlers, so it
  * never throws: a frame that cannot be painted or described is logged and the panel keeps its last
  * good state.
- * @param {MapView} mv Map.
+ * @param {MapView} mv
  * @param {Cast} cast
  * @param {(at:number) => string} ageAt Age type at a timeline position.
  * @param {(at:number) => string} [whenAt] Label of a timeline position ("Modern, T157").

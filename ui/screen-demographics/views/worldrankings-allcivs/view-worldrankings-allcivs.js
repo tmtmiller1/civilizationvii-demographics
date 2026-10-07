@@ -32,7 +32,7 @@ import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 
 const NUMBER_MODES = ["scaled", "civ"];
 
-// ── Responsive matrix/table layout gate ───────────────────────────────────────
+// responsive matrix/table layout gate
 // The screen renders either the civs-as-rows sortable table or the civs-as-columns matrix.
 // "auto" picks the table only when there is width for readable per-metric column headers; a
 // `worldRankingsAllCivsLayout` setting ("auto"|"table"|"matrix") pins it.
@@ -47,8 +47,8 @@ const VISIBLE_METRIC_COUNT = /** @type {*[]} */ (METRICS).filter(
 
 /**
  * Read the persisted layout override ("auto" | "table" | "matrix").
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @returns {string} The layout mode.
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @returns {string}
  */
 function readLayoutSetting(ctx) {
   let m;
@@ -92,8 +92,8 @@ function availableRemWidth(host) {
 /**
  * Decide the layout for this render: the pinned setting, else the width test.
  * @param {HTMLElement} host The (cleared) view host.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @returns {"table"|"matrix"} The chosen layout.
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @returns {"table"|"matrix"}
  */
 function chooseLayout(host, ctx) {
   const mode = readLayoutSetting(ctx);
@@ -105,7 +105,7 @@ function chooseLayout(host, ctx) {
 
 /**
  * Resolve the persisted Scaled/Civ number mode.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
+ * @param {WorldRankingsAllCivsCtx} ctx
  * @returns {string} "scaled" or "civ".
  */
 function readNumberMode(ctx) {
@@ -122,9 +122,9 @@ function readNumberMode(ctx) {
  * Build the Scaled / Civ toggle. Swaps every paired row (Population and the
  * Emigration flows) between scaled-"people" and raw Civ-numbers in place, so
  * there's one row per metric instead of a duplicate per unit.
- * @param {string} mode Active mode.
- * @param {(mode: string) => void} onPick Change handler.
- * @returns {HTMLElement} The toggle row.
+ * @param {string} mode
+ * @param {(mode: string) => void} onPick
+ * @returns {HTMLElement}
  */
 function buildNumberModeToggle(mode, onPick) {
   const items = [
@@ -137,9 +137,9 @@ function buildNumberModeToggle(mode, onPick) {
 /**
  * Apply the persisted Scaled/Civ mode and, when there are paired metrics, mount the
  * toggle into `host` (re-rendering the view on change).
- * @param {HTMLElement} host The view host.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @param {() => void} rerender Re-render callback.
+ * @param {HTMLElement} host
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @param {() => void} rerender
  */
 function mountNumberModeToggle(host, ctx, rerender) {
   const mode = readNumberMode(ctx);
@@ -162,7 +162,7 @@ function mountNumberModeToggle(host, ctx, rerender) {
 const DBG = false;
 /**
  * Debug logger, no-op unless `DBG` is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-worldrankings-allcivs]", ...a);
@@ -204,7 +204,7 @@ export function render(host, ctx) {
 /**
  * The unguarded render body (see `render`).
  * @param {HTMLElement} host The cleared view host element.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
+ * @param {WorldRankingsAllCivsCtx} ctx
  */
 function renderBody(host, ctx) {
   const profiles = prepareProfiles(ctx);
@@ -238,11 +238,11 @@ function renderBody(host, ctx) {
 
 /**
  * Render the civs-as-columns matrix branch (the wide layout).
- * @param {HTMLElement} host The view host.
- * @param {Record<string, *>} profiles Civ profile map.
- * @param {string[]} allPids All profile pids.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @param {boolean} showUnmetNames Whether unmet identities are shown.
+ * @param {HTMLElement} host
+ * @param {Record<string, *>} profiles
+ * @param {string[]} allPids
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @param {boolean} showUnmetNames
  */
 function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
   // Metrics-as-rows matrix: column 1 metric labels (sticky-left), column 2 the local player's
@@ -252,7 +252,7 @@ function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
   const localPid = pickLocalPid(profiles, allPids);
   const otherPids = sortOtherPids(profiles, allPids, localPid);
 
-  // Scaled / Civ toggle: applies the number mode BEFORE the strip is built (the
+  // Scaled / Civ toggle: applies the number mode before the strip is built (the
   // strip reads it when laying out its metric rows) and re-renders on change so the
   // paired rows (Population, Emigration flows) swap in place.
   mountNumberModeToggle(host, ctx, () => render(host, ctx));
@@ -261,11 +261,11 @@ function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
 
 /**
  * Build the matrix wrapper + strip and mount the interactive columns into `host`.
- * @param {HTMLElement} host The view host.
- * @param {Record<string, *>} profiles Civ profile map.
- * @param {{ localPid: string, otherPids: string[] }} pids Local + sorted-other pids.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @param {boolean} showUnmetNames Whether unmet identities are shown.
+ * @param {HTMLElement} host
+ * @param {Record<string, *>} profiles
+ * @param {{ localPid: string, otherPids: string[] }} pids
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @param {boolean} showUnmetNames
  */
 function mountMatrix(host, profiles, pids, ctx, showUnmetNames) {
   const matrix = div("demographics-worldrankings-allcivs-matrix");
@@ -277,8 +277,8 @@ function mountMatrix(host, profiles, pids, ctx, showUnmetNames) {
 
 /**
  * Build and post-process worldrankings-allcivs profiles from history/settings.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @returns {Record<string, *>} Profile map.
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @returns {Record<string, *>}
  */
 function prepareProfiles(ctx) {
   const profiles = buildCivProfiles(ctx.history);

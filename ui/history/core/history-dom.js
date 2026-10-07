@@ -13,11 +13,10 @@
  */
 
 /**
- * Create an element.
- * @param {string} tag Tag name.
- * @param {ElOptions} [opts] Options.
+ * @param {string} tag
+ * @param {ElOptions} [opts]
  * @param {Array<HTMLElement|null|undefined|false>} [children] Children to append (falsy entries skipped).
- * @returns {HTMLElement} The element.
+ * @returns {HTMLElement}
  */
 export function el(tag, opts = {}, children = []) {
   const e = document.createElement(tag);
@@ -29,9 +28,8 @@ export function el(tag, opts = {}, children = []) {
 }
 
 /**
- * Apply attributes and inline styles.
- * @param {HTMLElement} e Element.
- * @param {ElOptions} opts Options.
+ * @param {HTMLElement} e
+ * @param {ElOptions} opts
  */
 function applyAttrs(e, opts) {
   for (const [k, v] of Object.entries(opts.attrs || {})) e.setAttribute(k, v);
@@ -39,8 +37,7 @@ function applyAttrs(e, opts) {
 }
 
 /**
- * Remove every child of a node.
- * @param {HTMLElement} node The node to empty.
+ * @param {HTMLElement} node
  */
 export function clear(node) {
   while (node && node.firstChild) node.removeChild(node.firstChild);
@@ -50,8 +47,8 @@ export function clear(node) {
  * Attach a click handler to a plain element (pills, rows, cards). Mouse clicks and dispatched click
  * events both arrive as `click` in GameFace; fxs components use `action-activate` instead and are
  * wired where they are created.
- * @param {HTMLElement} node The element.
- * @param {() => void} fn The handler.
+ * @param {HTMLElement} node
+ * @param {() => void} fn
  */
 export function onActivate(node, fn) {
   node.addEventListener("click", () => fn());

@@ -13,7 +13,7 @@ import { num, t } from "/demographics/ui/history/core/history-text.js";
  * @param {string} selected Selected tab id.
  * @param {(id:string) => void} onSelect Called with the chosen id.
  * @param {string} [cls] Extra class.
- * @returns {HTMLElement} The fxs-tab-bar.
+ * @returns {HTMLElement}
  */
 export function tabBar(items, selected, onSelect, cls = "") {
   const bar = el("fxs-tab-bar", { cls: "dgh-tabs w-full font-title text-sm " + cls });
@@ -34,7 +34,7 @@ export function tabBar(items, selected, onSelect, cls = "") {
  * @param {string} active Active key.
  * @param {(key:string) => void} onPick Called with a different key.
  * @param {string} [variant] "filter" for the flat boxed style.
- * @returns {HTMLElement} The row.
+ * @returns {HTMLElement}
  */
 export function pillRow(items, active, onPick, variant = "") {
   const row = el("div", { cls: "dgh-pill-row" + (variant ? " dgh-pill-row--" + variant : "") });
@@ -51,7 +51,7 @@ export function pillRow(items, active, onPick, variant = "") {
  * @param {string} title Localized title ("" for none).
  * @param {Array<HTMLElement|null|false>} body Children.
  * @param {string} [cls] Extra class.
- * @returns {HTMLElement} The card.
+ * @returns {HTMLElement}
  */
 export function section(title, body, cls = "") {
   return el("div", { cls: "dgh-section " + cls }, [title ? el("div", { cls: "dgh-section-title", text: title }) : null, ...body]);
@@ -62,7 +62,7 @@ export function section(title, body, cls = "") {
  * one, so a page opened on its own (from the main menu) says what it is.
  * @param {string} title Localized title.
  * @param {string} [note] Localized one-line description.
- * @returns {HTMLElement} Heading.
+ * @returns {HTMLElement}
  */
 export function pageHead(title, note = "") {
   return el("div", { cls: "dgh-page-head" }, [
@@ -76,7 +76,7 @@ export function pageHead(title, note = "") {
  * @param {string} value Formatted value.
  * @param {string} label Localized label.
  * @param {HTMLElement|null} [icon] Icon shown beside the number.
- * @returns {HTMLElement} The tile.
+ * @returns {HTMLElement}
  */
 export function statTile(value, label, icon = null) {
   const v = el("div", { cls: "dgh-stat-value", text: value });
@@ -95,7 +95,7 @@ export function statTile(value, label, icon = null) {
  * @param {Column[]} columns
  * @param {Array<Array<string|HTMLElement>>} rows Cells (text or elements).
  * @param {{onRow?: (i:number) => void, highlight?: (i:number) => boolean}} [opts] Row behavior.
- * @returns {HTMLElement} The table.
+ * @returns {HTMLElement}
  */
 export function table(columns, rows, opts = {}) {
   const head = el("div", { cls: "dgh-tr dgh-thead" }, columns.map((c) => el("div", { cls: "dgh-td " + (c.cls || ""), text: c.label })));
@@ -109,10 +109,9 @@ export function table(columns, rows, opts = {}) {
 }
 
 /**
- * One table cell.
- * @param {string|HTMLElement} cell Content.
+ * @param {string|HTMLElement} cell
  * @param {string} cls Column class.
- * @returns {HTMLElement} The cell.
+ * @returns {HTMLElement}
  */
 function cellEl(cell, cls) {
   if (typeof cell === "string") return el("div", { cls: "dgh-td " + cls, text: cell });
@@ -123,9 +122,9 @@ function cellEl(cell, cls) {
  * A civilization (or leader) name with its color swatch, and the civilization's emblem when its
  * type is given.
  * @param {string} name Localized name.
- * @param {string} color CSS color.
+ * @param {string} color
  * @param {string} [civType] e.g. "CIVILIZATION_ROME".
- * @returns {HTMLElement} The chip.
+ * @returns {HTMLElement}
  */
 export function civChip(name, color, civType = "") {
   return el("div", { cls: "dgh-civ" }, [
@@ -140,7 +139,7 @@ export function civChip(name, color, civType = "") {
  * @param {HnrCivSpan[]} civs Spans, oldest first.
  * @param {(span: HnrCivSpan) => string} nameOf Localized name of a span.
  * @param {string} [cls] Extra class (size variant).
- * @returns {HTMLElement} The progression.
+ * @returns {HTMLElement}
  */
 export function civProgression(civs, nameOf, cls = "") {
   const row = el("div", { cls: "dgh-progression " + cls });
@@ -156,10 +155,10 @@ export function civProgression(civs, nameOf, cls = "") {
 
 /**
  * An engine-drawn icon.
- * @param {string} id Icon id (a leader, civilization or victory class type).
- * @param {string} cls Classes.
+ * @param {string} id A leader, civilization or victory class type.
+ * @param {string} cls
  * @param {string} [context] Icon context (e.g. "LEADER").
- * @returns {HTMLElement} The icon.
+ * @returns {HTMLElement}
  */
 function engineIcon(id, cls, context = "") {
   const icon = el("fxs-icon", { cls });
@@ -172,14 +171,14 @@ function engineIcon(id, cls, context = "") {
  * A civilization's emblem.
  * @param {string} civType e.g. "CIVILIZATION_ROME".
  * @param {string} [cls] Size class.
- * @returns {HTMLElement} The icon.
+ * @returns {HTMLElement}
  */
 export function civIcon(civType, cls = "dgh-civ-icon") {
   return engineIcon(civType, cls);
 }
 
 /**
- * Laurel images of the four legacy victory classes (the DEFAULT icons in base-standard's
+ * Laurel images of the four legacy victory classes (the default icons in base-standard's
  * victory-icons.xml). Referenced by file because that icon set is loaded in game only, and the
  * Hall of Fame also shows at the main menu.
  */
@@ -194,7 +193,7 @@ const VICTORY_ICON_FILES = /** @type {Record<string, string>} */ ({
  * The icon of a victory class, or a gold victory mark for classes without one (Domination, Score).
  * @param {string} victoryClass e.g. "VICTORY_CLASS_SCIENCE".
  * @param {string} [cls] Size class.
- * @returns {HTMLElement} The icon.
+ * @returns {HTMLElement}
  */
 export function victoryIcon(victoryClass, cls = "dgh-victory-icon") {
   const file = VICTORY_ICON_FILES[victoryClass];
@@ -205,7 +204,7 @@ export function victoryIcon(victoryClass, cls = "dgh-victory-icon") {
 /**
  * The podium laurels and the Triumph trophy, the same art the in-game rankings use (World Rankings
  * scores it with popup_laurels; the Settlements civ podium wears the gold/silver/bronze wreaths).
- * Referenced by FILE, not `blp:`, for the same reason the victory icons above are: the Hall of Fame
+ * Referenced by file, not `blp:`, for the same reason the victory icons above are: the Hall of Fame
  * also shows at the main menu, where the in-game icon sets are not loaded. All four live in the
  * boot-shell texture bundle, which the shell does have.
  */
@@ -220,7 +219,7 @@ const TROPHY_FILE = "fs://game/popup_laurels.png";
  * A podium medal: the place number inside its gold, silver or bronze laurel wreath.
  * @param {number} place 1-3.
  * @param {string} [cls] Extra classes.
- * @returns {HTMLElement} The medal.
+ * @returns {HTMLElement}
  */
 export function laurelMedal(place, cls = "") {
   const file = LAUREL_FILES[place] || TROPHY_FILE;
@@ -232,7 +231,7 @@ export function laurelMedal(place, cls = "") {
 /**
  * The Triumph trophy, for a count of Triumphs earned.
  * @param {string} [cls] Extra classes.
- * @returns {HTMLElement} The icon.
+ * @returns {HTMLElement}
  */
 export function trophyIcon(cls = "dgh-trophy-icon") {
   return el("div", { cls, style: { backgroundImage: "url('" + TROPHY_FILE + "')" } });
@@ -242,7 +241,7 @@ export function trophyIcon(cls = "dgh-trophy-icon") {
  * A small marker for a game's result: the victory's icon, a red disc for a defeat, a hollow ring
  * for a game in progress, a gray disc for a game that ended without a recorded winner.
  * @param {HnrOutcome} outcome
- * @returns {HTMLElement} The marker.
+ * @returns {HTMLElement}
  */
 export function outcomeMark(outcome) {
   if (outcome.status === "victory") return victoryIcon(outcome.cls || "", "dgh-victory-icon dgh-mark");
@@ -254,7 +253,7 @@ export function outcomeMark(outcome) {
  * A leader portrait drawn by the engine's icon component.
  * @param {string} leaderType e.g. "LEADER_AUGUSTUS".
  * @param {string} [cls] Size class.
- * @returns {HTMLElement} The icon.
+ * @returns {HTMLElement}
  */
 export function leaderIcon(leaderType, cls = "dgh-leader-icon") {
   return engineIcon(leaderType || "LEADER_UNKNOWN", cls, "LEADER");
@@ -263,7 +262,7 @@ export function leaderIcon(leaderType, cls = "dgh-leader-icon") {
 /**
  * A centered message for views with nothing to show.
  * @param {string} text Localized message.
- * @returns {HTMLElement} The element.
+ * @returns {HTMLElement}
  */
 export function emptyState(text) {
   return el("div", { cls: "dgh-empty", text });
@@ -272,9 +271,9 @@ export function emptyState(text) {
 /**
  * A text button styled like the engine's small buttons.
  * @param {string} label LOC tag or text.
- * @param {() => void} fn Handler.
+ * @param {() => void} fn
  * @param {string} [cls] Extra class.
- * @returns {HTMLElement} The button.
+ * @returns {HTMLElement}
  */
 export function textButton(label, fn, cls = "") {
   const b = el("div", { cls: "dgh-button " + cls, text: t(label) });

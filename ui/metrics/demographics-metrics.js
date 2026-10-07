@@ -4,7 +4,7 @@
 //   { id, label, category, accessor(ctx)→number|undefined,
 //     scale?(raw, scaleCtx, ctx)→number, format(n)→string, tooltip? }
 //
-// LOCALIZATION: `label`/`title` are dev-facing fallbacks. On-screen names resolve
+// Localization: `label`/`title` are dev-facing fallbacks. On-screen names resolve
 // from `LOC_DEMOGRAPHICS_METRIC_<ID>` (+ optional `_TITLE`, `_TOOLTIP`) via
 // localizedMetricName(); add those keys to every locale for a new metric.
 //
@@ -50,7 +50,7 @@ import {
  */
 
 export const METRICS = [
-  // ---- canonical / "raw" ---------------------------------------------
+  // canonical / "raw" metrics
   {
     id: "score",
     label: "Score",
@@ -135,7 +135,7 @@ export const METRICS = [
     unit: "civics"
   },
 
-  // ---- V5 pseudo-realistic -------------------------------------------
+  // V5 pseudo-realistic
   {
     // GDP = weighted-sum(yields) × turnsElapsed × 1e6 → $billions
     // Weights: gold=1.0, production=1.0, food=0.5, influence=1.5,
@@ -153,7 +153,7 @@ export const METRICS = [
     unit: "$"
   },
   {
-    // Crop yield = net FOOD per turn (display as +/-).
+    // Crop yield = net food per turn (display as +/-).
     id: "crops",
     label: "Crop Yield",
     title: "Crop Yield (food per turn)",
@@ -171,7 +171,7 @@ export const METRICS = [
     unitIcon: "blp:Yield_Food"
   },
   {
-    // Net PRODUCTION per turn (display as +/-).
+    // Net production per turn (display as +/-).
     // yield-icons.xml - blp:Yield_Production.
     id: "production",
     label: "PPT",
@@ -188,7 +188,7 @@ export const METRICS = [
     unitIcon: "blp:Yield_Production"
   },
   {
-    // Net SCIENCE per turn (display as +/-).
+    // Net science per turn (display as +/-).
     // yield-icons.xml - blp:Yield_Science.
     id: "science_yield",
     label: "Science",
@@ -205,7 +205,7 @@ export const METRICS = [
     unitIcon: "blp:Yield_Science"
   },
   {
-    // Net CULTURE per turn (display as +/-).
+    // Net culture per turn (display as +/-).
     // yield-icons.xml - blp:Yield_Culture.
     id: "culture_yield",
     label: "Culture",
@@ -225,7 +225,7 @@ export const METRICS = [
     // Diplomatic Approval - international reputation aggregate.
     // Sum of weighted relationship scores across all met major civs
     // (Allied +5, Helpful +3, Friendly +2, Neutral 0, Unfriendly -2,
-    // Hostile -3, At War -5) PLUS 0.3 × (suzerain bonus from city-states).
+    // Hostile -3, At War -5) plus 0.3 × (suzerain bonus from city-states).
     // Sampled in demographics-sampler.js → ctx.diplomaticApproval.
     id: "approval",
     label: "Diplomatic Approval",
@@ -265,7 +265,7 @@ export const METRICS = [
     title: "Population Over Time",
     category: "people",
     // The All Civilizations matrix already shows "Population" (the scaled `population`
-    // metric) and swaps to THIS raw-Civ twin via its Scaled/Civ toggle, so it must not
+    // metric) and swaps to this raw-Civ twin via its Scaled/Civ toggle, so it must not
     // also render as its own duplicate "Population" row there.
     worldRankingsAllCivsHidden: true,
     accessor: (/** @type {MetricCtx} */ ctx) => safeNum(ctx.totalPopulation),
@@ -273,7 +273,7 @@ export const METRICS = [
     unit: "points"
   },
 
-  // ---- V7-specific creative ------------------------------------------
+  // V7-specific creative
   {
     // Influence net per turn (= YIELD_DIPLOMACY).
     id: "influence",
@@ -369,7 +369,7 @@ export const METRICS = [
     format: formatRoundedCount,
     unit: "wonders"
   },
-  // ── Civ7 Test of Time triumph counts ───────────────────────────────
+  // Civ7 Test of Time triumph counts
   // Per-civ count of triggered triumphs, bucketed by Legacies.LegacySubtype.
   // Persisted in every sample so the stacked-area and radar views can
   // reconstruct history; they have no line-chart tabs of their own.
@@ -456,7 +456,7 @@ export const METRICS = [
   {
     id: "crisis_stage",
     label: "Crisis Stage",
-    title: "Crisis Stage , 1 = Begins · 2 = Intensifies · 3 = Culminates · 4 = Ends",
+    title: "Crisis Stage: 1 = Begins · 2 = Intensifies · 3 = Culminates · 4 = Ends",
     category: "age",
     global: true,
     worldRankingsAllCivsHidden: true,
@@ -471,7 +471,7 @@ export const METRICS = [
     format: formatCrisisStage,
     unit: "stage"
   },
-  // ── Resources page metrics ─────────────────────────────────────────
+  // Resources page metrics
   // citation: base-standard/ui/resource-allocation/model-resource-allocation.js
   {
     id: "resources_total",
@@ -604,7 +604,7 @@ export function localizedMetricName(metric) {
   return metric.label || metric.title || String(metric.id || "");
 }
 
-// ── Companion-mod extension API (inert unless another mod calls it) ────────
+// Companion-mod extension API (inert unless another mod calls it)
 // Lets a separate mod contribute a metric that flows through the normal sample →
 // store → line-chart pipeline: the sampler iterates METRICS each turn and
 // view-history applies page placements at render time.
@@ -652,7 +652,7 @@ export function registerMetricToPage(pageId, metricId, afterMetricId) {
 }
 
 /**
- * Pending external dashboard PANELS: whole companion-owned pages whose body the companion
+ * Pending external dashboard panels: whole companion-owned pages whose body the companion
  * renders into a container the screen hands it. `tabs` contributes several sub-tabs (render
  * receives the selected sub-tab id third); `topLevel: true` makes it a top-level view tab.
  * @type {{id:string, pageLabel?:string, tabLabel?:string, title?:string, render:Function,
@@ -687,7 +687,7 @@ export function registerPanel(spec) {
 }
 
 /**
- * External metric GROUPS: one tab presenting related metrics behind toggles. Shapes: flat
+ * External metric groups: one tab presenting related metrics behind toggles. Shapes: flat
  * `metricIds: string[]`, or 2D `members: [{label, <viewId>: metricId}]` + `views: [{id, label}]`
  * (shown metric is `members[metricSel][viewSel]`). Member metrics must be registered separately.
  * @type {{pageId:string, id:string, label:string, first?:boolean, metricIds?:string[],

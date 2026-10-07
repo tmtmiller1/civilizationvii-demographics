@@ -165,7 +165,7 @@ const fresh = () => newCampaign({ id: "g1", seed: 7, now: 1000, setup, local: 0 
     assert.equal(map.get(SLOT_V1), "", "restore clears the v1 slot");
     assert.equal(map.get(SLOT_V2), newer, "the v2 slot is untouched by the restore");
 
-    // (d) Garbage text parks in the unversioned slot; park runs BEFORE restore, so an unusable
+    // (d) Garbage text parks in the unversioned slot; park runs before restore, so an unusable
     // primary is parked even when a parked v1 document replaces it.
     map.set(CAMPAIGN_KEY, "{not-json");
     assert.equal(loadCampaign(), null);

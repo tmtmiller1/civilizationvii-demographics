@@ -420,9 +420,9 @@ export function readAgeProgressPct() {
 }
 
 /**
- * Compute the civ's scaled people total as the SUM of its settlements' per-city estimates (the same
+ * Compute the civ's scaled people total as the sum of its settlements' per-city estimates (the same
  * growth-formula curve the Settlements board uses), and stash the age context for the metric layer.
- * Summing per-settlement — never scaling the aggregate — is required because the curve is super-linear.
+ * Summing per-settlement (never scaling the aggregate) is required because the curve is super-linear.
  * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
  * @param {*} cityList The player's city list.
  */
@@ -482,7 +482,7 @@ function nodeBaselineFor(id) {
 
 /**
  * Compute each pid's cumulative tech/civic baseline from history: the highest stored count across
- * all samples from earlier ages (robust to old-sample decimation, since stored counts only grow
+ * all samples from earlier ages (unaffected by old-sample decimation, since stored counts only grow
  * within an age). Untagged samples are ignored so they are never mistaken for a prior age.
  * @param {*} samples The persisted sample stream (array; tolerates undefined).
  * @param {string | undefined} currentAge The age being sampled now.

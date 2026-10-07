@@ -70,7 +70,7 @@ import {
  * Resolve the engine's localized leader name for a leader type, or `null`
  * when GameInfo has no usable row.
  * @param {*} leaderType Engine LeaderType string or hash.
- * @returns {string|null} The localized name, or `null`.
+ * @returns {string|null}
  */
 function lookupLeaderName(leaderType) {
   try {
@@ -92,7 +92,7 @@ function lookupLeaderName(leaderType) {
  * Compose a leader Name tag, falling back to the raw tag if Locale is absent
  * or throws.
  * @param {string} name The leader Name tag.
- * @returns {string} The composed (or raw) name.
+ * @returns {string}
  */
 function composeLeaderName(name) {
   if (typeof Locale !== "undefined" && typeof Locale.compose === "function") {
@@ -110,7 +110,7 @@ function composeLeaderName(name) {
  * to `"Player <pid>"` for missing/numeric-hash types.
  * @param {*} leaderType Engine LeaderType string or hash.
  * @param {*} pid Player id (for the fallback label).
- * @returns {string} The display name.
+ * @returns {string}
  */
 function leaderDisplayName(leaderType, pid) {
   if (!leaderType) return tPlayerFallback(pid);
@@ -124,7 +124,7 @@ function leaderDisplayName(leaderType, pid) {
 
 /**
  * Collect every player-id key that appears in any sample.
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {string[]} Distinct pid keys.
  */
 function collectPidSet(samples) {
@@ -140,11 +140,11 @@ function collectPidSet(samples) {
 
   /**
    * Resolve one metric point from a sample/player row.
-   * @param {*} sample One sample.
+   * @param {*} sample
    * @param {*} playerSample One player's row from that sample.
    * @param {string} metricId
    * @param {Map<string, number>} ageOffsets Per-age offsets.
-   * @param {AgeBoundary[]} ageBoundariesLocal Age boundaries.
+   * @param {AgeBoundary[]} ageBoundariesLocal
    * @returns {{ t: number, v: number }|null} Point, or null when unavailable.
    */
   function metricPoint(sample, playerSample, metricId, ageOffsets, ageBoundariesLocal) {
@@ -155,8 +155,8 @@ function collectPidSet(samples) {
     return { t: x, v: value };
   }
 
-// Metrics the game mechanically RESETS at an age boundary (population is slashed on age rollover), so
-// their raw series dips at each boundary as an artifact. The dip is bridged on the DISPLAYED line.
+// Metrics the game resets at an age boundary (population is slashed on age rollover), so their raw
+// series dips at each boundary as an artifact. The dip is bridged on the displayed line only.
 const AGE_RESET_BRIDGED_METRICS = new Set(["population"]);
 
 /**
@@ -174,7 +174,7 @@ function ageBoundaryXs(ageOffsets) {
 
 /**
  * Index of the last point at or before x (−1 if none). Points are ascending by `t`. Inclusive because
- * a prior age's final sample sits exactly AT the boundary x (its max local turn equals the next age's
+ * a prior age's final sample sits exactly at the boundary x (its max local turn equals the next age's
  * cumulative offset), and that peak is the value we bridge from.
  * @param {{t:number}[]} points Points. @param {number} x Threshold. @returns {number} Index or −1.
  */
@@ -188,7 +188,7 @@ function lastIndexAtOrBefore(points, x) {
 }
 
 /**
- * Add back the mechanic's reset as an OFFSET (peak → FIRST post-boundary sample) that shrinks in
+ * Add back the mechanic's reset as an offset (peak → first post-boundary sample) that shrinks in
  * proportion to how far the running-max has climbed back toward the peak, so a genuine post-boundary
  * loss still appears as a real drop. Taking the first post-boundary sample as the trough under-corrects
  * under sparse sampling, which is the safe failure. Mutates; only raises.
@@ -242,9 +242,9 @@ function bridgeAgeResetDips(points, boundaryXs) {
 
 /**
  * Fold one pid's per-sample data into points + identity state.
- * @param {Snapshot[]} samples The sample stream.
- * @param {string} pid Player id key.
- * @param {string} metricId Metric id to extract.
+ * @param {Snapshot[]} samples
+ * @param {string} pid
+ * @param {string} metricId
  * @param {{ ageOffsets: Map<string, number>, ageBoundariesLocal: AgeBoundary[],
  *   fromContactOnly: boolean }} opts Age offsets/boundaries + contact-gating mode.
  *   `fromContactOnly`: when true, withhold points from samples taken before the
@@ -252,7 +252,7 @@ function bridgeAgeResetDips(points, boundaryXs) {
  *   contact; when false (back-fill mode), all points are kept and the caller
  *   gates the whole civ on its current met status instead.
  * @returns {PidFold} The accumulated fold for this pid. `metFlag` carries the
- *   civ's CURRENT met status (latest sample wins); the caller uses it to gate
+ *   civ's current met status (latest sample wins); the caller uses it to gate
  *   the whole civ.
  */
 function foldPidSamples(samples, pid, metricId, opts) {
@@ -291,7 +291,7 @@ function foldPidSamples(samples, pid, metricId, opts) {
  * Capture the first non-empty canonical "LEADER_*" string into the fold. This
  * string (distinct from the raw `leaderType` hash) resolves the leader portrait
  * <fxs-icon> in the tooltip.
- * @param {PidFold} fold Accumulator (mutated).
+ * @param {PidFold} fold Mutated.
  * @param {CivSample|*} ps One civ's sample.
  */
 function mergeLeaderTypeString(fold, ps) {
@@ -305,9 +305,9 @@ function mergeLeaderTypeString(fold, ps) {
 }
 
 /**
- * Merge the latest non-empty banner colors into the fold. The LATEST color wins
+ * Merge the latest non-empty banner colors into the fold. The latest color wins
  * because civilization swaps at age transitions change banner colors.
- * @param {PidFold} fold Accumulator (mutated).
+ * @param {PidFold} fold Mutated.
  * @param {CivSample|*} ps One civ's sample.
  */
 function mergeBannerColors(fold, ps) {
@@ -324,7 +324,7 @@ function mergeBannerColors(fold, ps) {
 /**
  * Merge one civ sample's identity fields into a pid fold: first non-null
  * leader type / leader name, latest non-empty banner colors, latest met flag.
- * @param {PidFold} fold Accumulator (mutated).
+ * @param {PidFold} fold Mutated.
  * @param {CivSample|*} ps One civ's sample.
  */
 function mergePidIdentity(fold, ps) {
@@ -342,7 +342,7 @@ function mergePidIdentity(fold, ps) {
 /**
  * Live fallback for the civ-name list when history rows carry no civName:
  * pull `player.civilizationName` directly from the engine.
- * @param {string} pid Player id key.
+ * @param {string} pid
  * @returns {string[]} A single-element civ-name list, or empty on failure.
  */
 function liveCivNameFallback(pid) {
@@ -362,19 +362,19 @@ function liveCivNameFallback(pid) {
 /**
  * Compose a localization tag via `Locale.compose`, or echo it when Locale is
  * unavailable.
- * @param {string} tag The localization tag (or literal).
- * @returns {string} The composed string, or `tag`.
+ * @param {string} tag
+ * @returns {string}
  */
 function composeLocale(tag) {
   return typeof Locale?.compose === "function" ? Locale.compose(tag) : tag;
 }
 
 /**
- * Resolve the leader-only display text for one series.
+ * The leader-only display text for one series.
  * @param {string|null} leaderName Folded leader name.
  * @param {*} leaderType Raw leader-type value.
- * @param {string} pid Player id key.
- * @returns {string} Leader display text.
+ * @param {string} pid
+ * @returns {string}
  */
 function leaderOnlyLabel(leaderName, leaderType, pid) {
   if (leaderName) return leaderName;
@@ -383,11 +383,11 @@ function leaderOnlyLabel(leaderName, leaderType, pid) {
 }
 
 /**
- * Resolve final series color from sampled banner colors.
- * @param {*} primaryColor Primary banner color.
- * @param {*} secondaryColor Secondary banner color.
+ * The final series color from the sampled banner colors.
+ * @param {*} primaryColor
+ * @param {*} secondaryColor
  * @param {number} idx Palette index.
- * @returns {string} Series color.
+ * @returns {string}
  */
 function seriesColor(primaryColor, secondaryColor, idx) {
   if (typeof primaryColor === "string" && primaryColor.length > 0) {
@@ -398,12 +398,12 @@ function seriesColor(primaryColor, secondaryColor, idx) {
 
 /**
  * Build one {@link ChartSeries} from a pid's folded state.
- * @param {Snapshot[]} samples The sample stream.
- * @param {string} pid Player id key.
+ * @param {Snapshot[]} samples
+ * @param {string} pid
  * @param {number} idx Index for palette fallback.
  * @param {PidFold} fold The pid's accumulated fold.
  * @param {Record<string, *>} eliminatedMap The history eliminated map.
- * @returns {ChartSeries} The built series.
+ * @returns {ChartSeries}
  */
 function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
   const {
@@ -445,7 +445,7 @@ function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
  * Resolve the two unmet-gating modes from settings: `backfill` drops a civ only
  * while currently unmet, `fromContactOnly` withholds points taken before first
  * contact. Both false when the spoiler guard is off.
- * @returns {{ backfill: boolean, fromContactOnly: boolean }} The gate modes.
+ * @returns {{ backfill: boolean, fromContactOnly: boolean }}
  */
 function resolveUnmetGateModes() {
   const gateUnmet = hideUnmetEnabled();
@@ -457,7 +457,7 @@ function resolveUnmetGateModes() {
  * Build per-civ series from a history blob for one metric id. Each civ's
  * X positions are derived from a freshly computed age-offset table.
  * @param {DemoHistory|*} history The persisted history blob.
- * @param {string} metricId Metric id to chart.
+ * @param {string} metricId
  * @returns {SeriesResult} The series list and sample count.
  */
 function buildSeriesFromHistory(history, metricId) {

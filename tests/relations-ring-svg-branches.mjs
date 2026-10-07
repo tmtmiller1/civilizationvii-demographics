@@ -50,9 +50,9 @@ function allOverlays(root) {
 }
 
 // Regression guard for the blinking ring portraits: the ring is rebuilt on every filter toggle,
-// but the NODE set is independent of the filters (computeCivRingData returns metIds untouched and
+// but the node set is independent of the filters (computeCivRingData returns metIds untouched and
 // filters only the edges). Re-creating each leader portrait made it flash while its `fxs-icon`
-// art resolved again, so a shared cache must hand the SAME elements to the rebuilt ring.
+// art resolved again, so a shared cache must hand the same elements to the rebuilt ring.
 function testPortraitCacheReusesOverlays() {
   const names = {
     1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#223344" },
@@ -82,7 +82,7 @@ function testPortraitCacheReusesOverlays() {
   assert.deepEqual(after, before, "the rebuilt ring reuses every overlay element (never re-created)");
   assert.equal(allOverlays(wrapA).length, 0, "…and they moved to the new wrap, leaving no duplicates");
 
-  // Without a cache the overlays are rebuilt, as before — the cache is opt-in.
+  // Without a cache the overlays are rebuilt, as before; the cache is opt-in.
   const wrapC = buildRingSvg(ids, names, edgesB, 1, { viewerPid: 1 });
   document.body.appendChild(wrapC);
   wrapC.__placePortraits();

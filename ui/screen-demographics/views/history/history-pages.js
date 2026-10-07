@@ -2,14 +2,14 @@
 //
 // The Historical Data page catalogue and the metric-renderability predicates.
 //
-// This is a LEAF module: it imports nothing from view-history.js, which breaks
+// This is a leaf module: it imports nothing from view-history.js, which breaks
 // an import cycle with history-tabs.js. view-history.js re-exports both names.
 
 import { SYNTHETIC_METRICS } from "/demographics/ui/screen-demographics/views/history/history-synthetic-metrics.js";
 import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
 
 /**
- * One Historical Data page. `metrics` pages list metric ids; a RENDER page instead
+ * One Historical Data page. `metrics` pages list metric ids; a render page instead
  * carries a `render` function, injected by view-history.js via setPageRenderer().
  * Companion mods also push pages here at runtime, so hub/tier/metrics are optional.
  * @typedef {Object} HistoryPage
@@ -19,12 +19,12 @@ import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
  * @property {string} [tier] Disclosure tier ("basic" | "standard" | ...).
  * @property {string[]} [metrics] Metric ids shown on the page.
  * @property {(host: HTMLElement, ctx: *) => void} [render] Custom renderer for a RENDER
- *   page. EXCLUSIVE with `metrics`.
+ *   page. Exclusive with `metrics`.
  */
 
 /** @type {HistoryPage[]} */
 export const PAGES = [
-  // ── GLOBAL STATISTICS hub ───────────────────────────────────────────────
+  // Global Statistics hub
   {
     // All per-turn output rates in one place (stock/flow split from Economy):
     // Food · Production · Gold · Science · Culture · Happiness · Influence.
@@ -78,7 +78,7 @@ export const PAGES = [
       "settlement_cap", "cities", "towns", "districts_type", "buildings_type"]
   },
 
-  // ── MIGRATION hub ───────────────────────────────────────────────────────
+  // Migration hub
   {
     // Population is the Migration hub's headline + anchor. Standalone Demographics shows
     // only this; a companion mod injects the rest of the hub after it.
@@ -89,7 +89,7 @@ export const PAGES = [
     metrics: ["population"]
   },
 
-  // ── GEOPOLITICS hub ─────────────────────────────────────────────────────
+  // Geopolitics hub
   {
     // "Global Relations": a RENDER page. First in the hub + the default page loaded when
     // Geopolitics is selected.
@@ -97,7 +97,7 @@ export const PAGES = [
     label: "LOC_DEMOGRAPHICS_PAGE_RELATIONS",
     hub: "geopolitics",
     tier: "basic"
-    // `render` is injected by view-history.js via setPageRenderer() below —
+    // `render` is injected by view-history.js via setPageRenderer() below;
     // binding it here would make this leaf import view-history.js and recreate
     // the very cycle this module exists to break.
   },
@@ -138,8 +138,8 @@ export const PAGES = [
 
 /**
  * Whether `id` names a synthetic metric routed to a custom renderer.
- * @param {string} id Metric id.
- * @returns {boolean} True if synthetic.
+ * @param {string} id
+ * @returns {boolean}
  */
 export function isSynthetic(id) {
   return Object.prototype.hasOwnProperty.call(SYNTHETIC_METRICS, id);
@@ -147,8 +147,8 @@ export function isSynthetic(id) {
 
 /**
  * Whether `id` is renderable - a synthetic metric or a real METRICS entry.
- * @param {string} id Metric id.
- * @returns {boolean} True if renderable.
+ * @param {string} id
+ * @returns {boolean}
  */
 export function metricExists(id) {
   if (isSynthetic(id)) return true;

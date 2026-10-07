@@ -29,8 +29,8 @@ export const HISTORY_PAGES = [
 
 /**
  * The Timeline page for the game being played.
- * @param {HTMLElement} body Container.
- * @param {CampaignDoc|null} doc Campaign.
+ * @param {HTMLElement} body
+ * @param {CampaignDoc|null} doc
  * @param {"full"|"met"|"own"} visibility Analytics visibility.
  */
 function renderTimelinePage(body, doc, visibility) {
@@ -50,7 +50,7 @@ const POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
  * The analytics policy as a visibility mode, read from the value the Demographics screen publishes
  * on open (a host ceiling in multiplayer, else the player's own choice). Unknown or unreadable
  * values fall back to "met", the default policy.
- * @returns {"full"|"met"|"own"} Visibility.
+ * @returns {"full"|"met"|"own"}
  */
 export function historyVisibility() {
   let v = "";
@@ -66,9 +66,9 @@ export function historyVisibility() {
 /**
  * Log a failed render and put a "could not render" line in the host, so the player sees what
  * happened instead of an empty panel. Anything already drawn (a page's Back button, say) stays.
- * @param {HTMLElement} host Container.
+ * @param {HTMLElement} host
  * @param {string} what Which render failed, for the log line.
- * @param {*} e The error.
+ * @param {*} e
  */
 function renderFailed(host, what, e) {
   derr(what, e);
@@ -89,8 +89,8 @@ export function render(host, _args) {
   const rerender = () => render(host);
   try {
     if (!HISTORY_PAGES.some((p) => p.id === viewState.tab)) viewState.tab = "chronicle";
-    // Every Chronicle pill re-renders through here, and a NEW fxs-tab-bar shows its first tab for
-    // a frame before honouring selected-tab-index — so rebuilding the page tabs on each click
+    // Every Chronicle pill re-renders through here, and a new fxs-tab-bar shows its first tab for
+    // a frame before honouring selected-tab-index, so rebuilding the page tabs on each click
     // flashed "Chronicle" and snapped back. Keep the bar when the page is unchanged: its listener
     // closes over module state and this same host, so it stays correct. A page change rebuilds.
     // No child combinator here: the `__forTab` stamp already limits this to a bar built below,
@@ -118,7 +118,7 @@ export function render(host, _args) {
 
 /**
  * Render the Hall of Fame into a host.
- * @param {HTMLElement} host Container.
+ * @param {HTMLElement} host
  * @param {{mode: "game"|"shell", filterHost?: HTMLElement|null}} opts In game the current campaign
  *   is included live. `filterHost` is the screen's title-line slot for the short-games filter.
  */
@@ -126,7 +126,7 @@ export function renderHallOfFame(host, opts) {
   const rerender = () => renderHallOfFame(host, opts);
   try {
     // On its own screen the section selector is a real fxs-tab-bar, and every rerender (the
-    // short-games filter, the storage-repair buttons) came back through here and rebuilt it — a
+    // short-games filter, the storage-repair buttons) came back through here and rebuilt it, and a
     // fresh bar shows its first section for a frame before honouring selected-tab-index. Capture
     // it before the clear so sectionNav can put it back when the section is unchanged.
     const priorSectionBar = /** @type {HTMLElement|null} */ (host.querySelector(".dgh-subtabs"));

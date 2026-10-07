@@ -82,7 +82,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  * CS name for city-states, falling back to "P<id>".
  * @param {NodeInfo} info The node's display info.
  * @param {number} id The node's player id.
- * @returns {string} The display name.
+ * @returns {string}
  */
 function nodeDisplayName(info, id) {
   if (info.isCityState) return info.csName || "CS-" + id;
@@ -97,7 +97,7 @@ function nodeDisplayName(info, id) {
  * Resolve a node's stroke + fill colors. For CSes the type color is preferred
  * over the (unreliable) CS primary; both are scrubbed (defense-in-depth).
  * @param {NodeInfo} info The node's display info.
- * @param {boolean} isCs Whether the node is a city-state.
+ * @param {boolean} isCs
  * @returns {{ stroke: string, fill: string }} The resolved colors.
  */
 function resolveNodeColors(info, isCs) {
@@ -113,13 +113,13 @@ function resolveNodeColors(info, isCs) {
 }
 
 /**
- * Queue a city-state TYPE icon overlay (background-image div placed in pixel
+ * Queue a city-state type icon overlay (background-image div placed in pixel
  * space later, like leader portraits). The SVG `<image href="blp:">` path renders
  * blank in Coherent, so CS icons ride the same HTML-overlay pipeline.
  * @param {NodeInfo} info The node's display info.
- * @param {{x: number, y: number}} pos Node position.
- * @param {number} r Node radius.
- * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
+ * @param {{x: number, y: number}} pos
+ * @param {number} r
+ * @param {PortraitPlacement[]} portraitsToPlace
  * @returns {PortraitPlacement|null} The queued placement, or null.
  */
 function queueCsIcon(info, pos, r, portraitsToPlace) {
@@ -141,7 +141,7 @@ function queueCsIcon(info, pos, r, portraitsToPlace) {
  * Append the inner CS type-color disc (the fallback when a CS has no type icon,
  * e.g. unmet city-states).
  * @param {Element} node The node group.
- * @param {number} r Node radius.
+ * @param {number} r
  * @param {NodeInfo} info The node's display info.
  */
 function appendCsTypeDisc(node, r, info) {
@@ -158,8 +158,8 @@ function appendCsTypeDisc(node, r, info) {
 /**
  * Node radius: density-scaled, with city-states the smallest and the viewer the
  * largest (matches the base game's relative node weighting).
- * @param {boolean} isViewer Whether the node is the viewer.
- * @param {boolean} isCs Whether the node is a city-state.
+ * @param {boolean} isViewer
+ * @param {boolean} isCs
  * @param {number} density The ring density factor.
  * @returns {number} The node radius in viewBox units.
  */
@@ -172,9 +172,9 @@ export function nodeRadius(isViewer, isCs, density) {
 
 /**
  * Resolve the ring-node stroke width from viewer, CS, selection, and density.
- * @param {boolean} isViewer Whether the node is the viewer.
- * @param {boolean} isCs Whether the node is a city-state.
- * @param {boolean} isSelected Whether the node is selected.
+ * @param {boolean} isViewer
+ * @param {boolean} isCs
+ * @param {boolean} isSelected
  * @param {number} density The ring density factor.
  * @returns {number} Stroke width in SVG units.
  */
@@ -189,7 +189,7 @@ function nodeStrokeWidth(isViewer, isCs, isSelected, density) {
 /**
  * Append the node's base circle, including the CS inset disc.
  * @param {Element} node The node group.
- * @returns {number} The node radius.
+ * @returns {number}
  */
 function appendNodeCircle(node) {
   const r = Number(node.getAttribute("data-r")) || 8;
@@ -217,10 +217,10 @@ function appendNodeCircle(node) {
 /**
  * Queue a leader portrait overlay for later pixel-space placement.
  * @param {NodeInfo} info The node's display info.
- * @param {{x: number, y: number}} pos Node position.
- * @param {number} r Node radius.
- * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
- * @param {boolean} isSelected Whether the node is selected.
+ * @param {{x: number, y: number}} pos
+ * @param {number} r
+ * @param {PortraitPlacement[]} portraitsToPlace
+ * @param {boolean} isSelected
  * @returns {PortraitPlacement|null} The queued placement, or null.
  */
 function queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected) {
@@ -266,9 +266,9 @@ function appendInitialLetter(node) {
  * Queue the node's name as an HTML text label placed in pixel space alongside
  * the portrait overlays, since SVG <text> can't share the HTML chart font.
  * @param {*} node The node group (carries __label/data-dimmed).
- * @param {{x: number, y: number}} pos Node position (viewBox coords).
- * @param {number} r Node radius (viewBox coords).
- * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
+ * @param {{x: number, y: number}} pos
+ * @param {number} r
+ * @param {PortraitPlacement[]} portraitsToPlace
  */
 function queueNodeLabel(node, pos, r, portraitsToPlace) {
   const text = String(/** @type {*} */ (node).__label || "");
@@ -289,7 +289,7 @@ function queueNodeLabel(node, pos, r, portraitsToPlace) {
  * @param {{ id: number, pos: {x: number, y: number}, info: NodeInfo }} nodeData Node specifics.
  * @param {{ positions: Map<number, {x: number, y: number}>, density: number,
  *   cx: number, cy: number, viewBoxH: number }} geo Ring geometry.
- * @param {RingRenderCtx} ctx Per-ring render context.
+ * @param {RingRenderCtx} ctx
  */
 function configureNodeElement(node, nodeData, geo, ctx) {
   const { id, pos, info } = nodeData;
@@ -345,8 +345,8 @@ function wireNodeClick(node, id, onNodeToggle) {
  * @param {number} id The node player id.
  * @param {{ positions: Map<number, {x: number, y: number}>, density: number,
  *   cx: number, cy: number, viewBoxH: number }} geo Ring geometry.
- * @param {Record<string, NodeInfo>} names Node display-info map.
- * @param {RingRenderCtx} ctx Per-ring render context.
+ * @param {Record<string, NodeInfo>} names
+ * @param {RingRenderCtx} ctx
  */
 export function appendRingNode(svg, id, geo, names, ctx) {
   const pos = geo.positions.get(id);

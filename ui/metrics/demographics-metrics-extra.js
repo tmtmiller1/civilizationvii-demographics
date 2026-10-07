@@ -211,7 +211,7 @@ export const EXTRA_METRICS = [
     unit: "battles"
   },
   {
-    // Wars declared BY this civ (cumulative). Game.Summary delta "WarsDeclared".
+    // Wars declared by this civ (cumulative). Game.Summary delta "WarsDeclared".
     id: "wars_declared",
     label: "Wars Declared",
     title: "Wars Declared",
@@ -227,7 +227,7 @@ export const EXTRA_METRICS = [
     unit: "wars"
   },
   {
-    // Wars declared AGAINST this civ (cumulative). Game.Summary delta "WarsReceived".
+    // Wars declared against this civ (cumulative). Game.Summary delta "WarsReceived".
     id: "wars_received",
     label: "Wars Received",
     title: "Wars Received",

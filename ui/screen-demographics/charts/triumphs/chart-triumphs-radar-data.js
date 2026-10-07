@@ -19,7 +19,7 @@ import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
  */
 
 // Triumph radar axes: the six triumphs_* counts (Test-of-Time Legacies), with
-// the CURRENT age also live-pulled from `player.Legacies.isTriggered`. Labels
+// the current age also live-pulled from `player.Legacies.isTriggered`. Labels
 // are LOC keys translated at render time so they reflect the active language.
 export const LEGACY_AXES = [
   {
@@ -72,8 +72,7 @@ const RADAR_SUBTYPE_TO_AXIS = {
  */
 
 /**
- * A fresh per-axis values map initialized to zero.
- * @returns {Record<string, number>} The zeroed values map.
+ * @returns {Record<string, number>} A fresh per-axis values map, all zero.
  */
 function radarEmptyValues() {
   /** @type {Record<string, number>} */
@@ -84,9 +83,9 @@ function radarEmptyValues() {
 
 /**
  * Compose a civ display name from leader/civ fields ("Leader (Civ)").
- * @param {*} src Source object carrying leaderName/civName.
- * @param {string} pid Player id key (for the fallback).
- * @returns {string} The display name.
+ * @param {*} src Carries leaderName/civName.
+ * @param {string} pid For the fallback.
+ * @returns {string}
  */
 function radarCivName(src, pid) {
   if (!src || !src.leaderName) return tPlayerFallback(pid);
@@ -95,8 +94,8 @@ function radarCivName(src, pid) {
 
 /**
  * Read a snapshot row's per-axis triumph counts into a fresh zeroed values map.
- * @param {Record<string, *>} row The snapshot row.
- * @returns {Record<string, number>} The per-axis values.
+ * @param {Record<string, *>} row
+ * @returns {Record<string, number>}
  */
 function radarValuesFromRow(row) {
   const values = radarEmptyValues();
@@ -109,7 +108,7 @@ function radarValuesFromRow(row) {
 /**
  * Build the civ map from a frozen per-age legacy snapshot.
  * @param {Record<string, *>} snap The snapshot (pid → row).
- * @returns {Map<string, RadarCiv>} The civ map.
+ * @returns {Map<string, RadarCiv>}
  */
 function loadRadarCivsFromSnapshot(snap) {
   /** @type {Map<string, RadarCiv>} */
@@ -118,7 +117,7 @@ function loadRadarCivsFromSnapshot(snap) {
   for (const pid of Object.keys(snap || {})) {
     const row = snap[pid];
     if (!row || typeof row !== "object") continue;
-    // Prefer the civ's stored banner color so a civ keeps the SAME color in the
+    // Prefer the civ's stored banner color so a civ keeps the same color in the
     // frozen per-age view as in the live current-age view; palette is a fallback
     // (older snapshots saved before primaryColor was stored).
     const color =
@@ -139,8 +138,8 @@ function loadRadarCivsFromSnapshot(snap) {
 /**
  * Build the civ map for the current age by folding sample max-values, then
  * overriding with a live `player.Legacies` pull.
- * @param {Snapshot[]} samples The sample stream.
- * @returns {Map<string, RadarCiv>} The civ map.
+ * @param {Snapshot[]} samples
+ * @returns {Map<string, RadarCiv>}
  */
 function loadRadarCivsCurrent(samples) {
   /** @type {Map<string, RadarCiv>} */
@@ -154,7 +153,7 @@ function loadRadarCivsCurrent(samples) {
       foldRadarSample(civs, pidOrder, pid, s.players[pid]);
     }
   });
-  // LIVE pull via player.Legacies (Test of Time): tally triggered triumphs by
+  // Live pull via player.Legacies (Test of Time): tally triggered triumphs by
   // LegacySubtype for each alive major; overrides sample values when higher.
   liveRadarPull(civs, pidOrder);
   return civs;
@@ -162,10 +161,10 @@ function loadRadarCivsCurrent(samples) {
 
 /**
  * Fold one civ's sample into the radar civ map (create-on-first-seen, then
- * take the per-axis max - triumph counts are non-decreasing per age).
- * @param {Map<string, RadarCiv>} civs The civ map (mutated).
+ * take the per-axis max; triumph counts are non-decreasing per age).
+ * @param {Map<string, RadarCiv>} civs Mutated.
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
- * @param {string} pid Player id key.
+ * @param {string} pid
  * @param {CivSample|*} ps One civ's sample.
  */
 function foldRadarSample(civs, pidOrder, pid, ps) {
@@ -188,14 +187,14 @@ function foldRadarSample(civs, pidOrder, pid, ps) {
     civs.set(pid, civ);
     pidOrder.push(pid);
   }
-  // Take the MAX - triumph counts are non-decreasing per age.
+  // take the max; triumph counts are non-decreasing per age
   mergeMaxAxes(civ.values, m);
 }
 
 /**
  * Merge per-axis values into a target, keeping the max of each finite value.
- * @param {Record<string, number>} target The values to update (mutated).
- * @param {Record<string, *>} src The source values (numeric or not).
+ * @param {Record<string, number>} target Mutated.
+ * @param {Record<string, *>} src Numeric or not.
  */
 function mergeMaxAxes(target, src) {
   for (const k of RADAR_AXIS_KEYS) {
@@ -209,7 +208,7 @@ function mergeMaxAxes(target, src) {
 /**
  * Tally one alive major's triggered triumphs by axis from `player.Legacies`.
  * @param {*} pl The player's Legacies accessor.
- * @returns {Record<string, number>} The per-axis triggered counts.
+ * @returns {Record<string, number>} Per-axis triggered counts.
  */
 function tallyLiveTriumphs(pl) {
   const counts = radarEmptyValues();
@@ -235,7 +234,7 @@ function tallyLiveTriumphs(pl) {
 /**
  * Override radar civ values with a live `player.Legacies` triumph pull for
  * every alive major (creating civ entries that lack samples).
- * @param {Map<string, RadarCiv>} civs The civ map (mutated).
+ * @param {Map<string, RadarCiv>} civs Mutated.
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  */
 function liveRadarPull(civs, pidOrder) {
@@ -267,14 +266,13 @@ function legaciesApiAvailable() {
 /**
  * Merge one alive major's live triumph counts into the radar civ map,
  * creating the civ entry when it has no samples yet.
- * @param {Map<string, RadarCiv>} civs The civ map (mutated).
+ * @param {Map<string, RadarCiv>} civs Mutated.
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  * @param {number} pid The major's pid.
  * @param {Record<string, number>} counts The per-axis triggered counts.
  */
 function mergeLiveMajorTriumphs(civs, pidOrder, pid, counts) {
-  // Ensure civ exists (alive majors may not have samples yet if the storage
-  // was reset).
+  // Alive majors may not have samples yet if the storage was reset.
   const pidStr = String(pid);
   let civ = civs.get(pidStr);
   if (!civ) {
@@ -293,9 +291,9 @@ function mergeLiveMajorTriumphs(civs, pidOrder, pid, counts) {
 
 /**
  * Resolve the baseline radar civ map from the selected age source.
- * @param {ChartOptions|*} opts Render options.
- * @param {Snapshot[]} samples Sample stream.
- * @returns {Map<string, RadarCiv>} Baseline civ map.
+ * @param {ChartOptions|*} opts
+ * @param {Snapshot[]} samples
+ * @returns {Map<string, RadarCiv>}
  */
 function radarSourceCivs(opts, samples) {
   const snapshots =
@@ -314,8 +312,8 @@ function radarSourceCivs(opts, samples) {
 /**
  * Remove policy-hidden civs in place (governance): unmet civs under the
  * spoiler guard, and every non-local civ under own-civ-only / disabled.
- * @param {Map<string, RadarCiv>} civs Radar civ map.
- * @param {Snapshot[]} samples Sample stream.
+ * @param {Map<string, RadarCiv>} civs
+ * @param {Snapshot[]} samples
  */
 function filterUnmetRadarCivs(civs, samples) {
   for (const pid of Array.from(civs.keys())) {
@@ -326,9 +324,9 @@ function filterUnmetRadarCivs(civs, samples) {
 /**
  * Resolve the radar civ map from the active source (frozen snapshot or live
  * current-age data).
- * @param {ChartOptions|*} opts The render options.
- * @param {Snapshot[]} samples The sample stream.
- * @returns {Map<string, RadarCiv>} The civ map.
+ * @param {ChartOptions|*} opts
+ * @param {Snapshot[]} samples
+ * @returns {Map<string, RadarCiv>}
  */
 export function loadRadarCivs(opts, samples) {
   const civs = radarSourceCivs(opts, samples);
@@ -339,9 +337,8 @@ export function loadRadarCivs(opts, samples) {
 }
 
 /**
- * The maximum triumph value across all civs/axes (>=1).
- * @param {Map<string, RadarCiv>} civs The civ map.
- * @returns {number} The scale maximum.
+ * @param {Map<string, RadarCiv>} civs
+ * @returns {number} The maximum triumph value across all civs/axes (>=1).
  */
 export function radarScaleMax(civs) {
   let scaleMax = 0;
@@ -354,9 +351,8 @@ export function radarScaleMax(civs) {
 }
 
 /**
- * Sum a civ's six triumph-axis values, rounded.
- * @param {RadarCiv} c The civ.
- * @returns {number} The rounded total.
+ * @param {RadarCiv} c
+ * @returns {number} The civ's six triumph-axis values summed, rounded.
  */
 export function radarTriumphTotal(c) {
   return Math.round(

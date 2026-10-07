@@ -17,9 +17,9 @@ import {
 
 /**
  * A game's civilizations, in order, with their emblems.
- * @param {ArchiveRecord} rec Record.
+ * @param {ArchiveRecord} rec
  * @param {string} [cls] Size variant.
- * @returns {HTMLElement} The progression.
+ * @returns {HTMLElement}
  */
 function progressionOf(rec, cls = "") {
   return civProgression(rec.civs, (c) => typeName(c.name, c.civ), cls);
@@ -36,7 +36,7 @@ const NUMBER_MODE_KEY = "worldRankingsAllCivsNumberMode";
 
 /**
  * The number mode: "scaled" (Demographics' real-world figures) or "civ" (the game's own counts).
- * @returns {string} Mode.
+ * @returns {string}
  */
 function numberMode() {
   try {
@@ -50,8 +50,8 @@ function numberMode() {
 /**
  * The population figure in the chosen mode. Games recorded before scaled population existed show
  * the civ count.
- * @param {ArchiveRecord} rec Record.
- * @returns {string} Formatted population.
+ * @param {ArchiveRecord} rec
+ * @returns {string}
  */
 export function populationText(rec) {
   const scaled = statOf(rec, "populationScaled");
@@ -64,9 +64,8 @@ import { viewState } from "/demographics/ui/history/views/history-state.js";
 /** @typedef {import("./view-hof.js").HofCtx} HofCtx */
 
 /**
- * Open a game's detail page.
- * @param {string} id Record id.
- * @param {HofCtx} ctx Context.
+ * @param {string} id
+ * @param {HofCtx} ctx
  */
 function openGame(id, ctx) {
   viewState.detail = id;
@@ -77,9 +76,9 @@ function openGame(id, ctx) {
 
 /**
  * A clickable summary card for one game.
- * @param {ArchiveRecord} rec Record.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} Card.
+ * @param {ArchiveRecord} rec
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 export function gameCard(rec, ctx) {
   const card = el("div", { cls: "dgh-game-card is-clickable" }, [
@@ -99,8 +98,8 @@ export function gameCard(rec, ctx) {
 
 /**
  * A result cell: the outcome marker and its label.
- * @param {ArchiveRecord} r Record.
- * @returns {HTMLElement} Cell content.
+ * @param {ArchiveRecord} r
+ * @returns {HTMLElement}
  */
 function resultCell(r) {
   return el("div", { cls: "dgh-result-row" }, [
@@ -111,10 +110,10 @@ function resultCell(r) {
 
 /**
  * Rankings table.
- * @param {HTMLElement} host Container.
- * @param {ArchiveRecord[]} records Visible records.
+ * @param {HTMLElement} host
+ * @param {ArchiveRecord[]} records
  * @param {ArchiveRecord[]} all Every record (for the honorific scale).
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  */
 export function renderGames(host, records, all, ctx) {
   clear(host);
@@ -142,8 +141,8 @@ export function renderGames(host, records, all, ctx) {
 
 /**
  * A rival's fate from its elimination turn (0 alive, -1 gone before recording began).
- * @param {number} elim Elimination turn.
- * @returns {string} Localized fate.
+ * @param {number} elim
+ * @returns {string}
  */
 function fateText(elim) {
   if (elim === -1) return t("LOC_DEMOGRAPHICS_HIST_FATE_BEFORE");
@@ -152,8 +151,8 @@ function fateText(elim) {
 
 /**
  * Rivals table for a game.
- * @param {ArchiveRecord} rec Record.
- * @returns {HTMLElement} Table.
+ * @param {ArchiveRecord} rec
+ * @returns {HTMLElement}
  */
 function rivalsTable(rec) {
   const cast = castFromRecord(rec);
@@ -172,9 +171,9 @@ function rivalsTable(rec) {
 
 /**
  * Header block of the detail page.
- * @param {ArchiveRecord} rec Record.
- * @param {number} best Best Triumph count across games.
- * @returns {HTMLElement} Header.
+ * @param {ArchiveRecord} rec
+ * @param {number} best Most Triumphs in any game.
+ * @returns {HTMLElement}
  */
 function detailHeader(rec, best) {
   return el("div", { cls: "dgh-detail-head" }, [
@@ -195,10 +194,10 @@ function detailHeader(rec, best) {
 /**
  * The header row: the leader and the game on the left, the Scaled / Civ toggle and the figures on
  * the right, on one line.
- * @param {ArchiveRecord} rec Record.
+ * @param {ArchiveRecord} rec
  * @param {number} best Most Triumphs in any game.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} Row.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function detailTop(rec, best, ctx) {
   return el("div", { cls: "dgh-detail-top" }, [
@@ -209,8 +208,8 @@ function detailTop(rec, best, ctx) {
 
 /**
  * Figures of one game.
- * @param {ArchiveRecord} rec Record.
- * @returns {HTMLElement} Tiles.
+ * @param {ArchiveRecord} rec
+ * @returns {HTMLElement}
  */
 function detailTiles(rec) {
   const s = (/** @type {keyof ArchiveRecord["stats"]} */ key) => num(statOf(rec, key));
@@ -225,8 +224,8 @@ function detailTiles(rec) {
 /**
  * The game's timeline, with the territory map and the rivals above it. A record without a timeline
  * shows the rivals alone.
- * @param {ArchiveRecord} rec Record.
- * @returns {HTMLElement} Section.
+ * @param {ArchiveRecord} rec
+ * @returns {HTMLElement}
  */
 function timelineSection(rec) {
   const rivals = el("div", { cls: "dgh-rivals" }, [
@@ -240,9 +239,9 @@ function timelineSection(rec) {
 
 /**
  * The Scaled / Civ toggle for the figures, shown when the game has scaled population.
- * @param {ArchiveRecord} rec Record.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement|null} The toggle.
+ * @param {ArchiveRecord} rec
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement|null}
  */
 function numberToggle(rec, ctx) {
   if (!statOf(rec, "populationScaled")) return null;
@@ -276,8 +275,8 @@ function ageNameTag(ageType) {
 /**
  * The game's highlights across the page, grouped by age: date, a tag naming the kind of event, the
  * other civilization's emblem and the sentence.
- * @param {ArchiveRecord} rec Record.
- * @returns {HTMLElement} Section.
+ * @param {ArchiveRecord} rec
+ * @returns {HTMLElement}
  */
 function highlightsSection(rec) {
   const title = t("LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS");
@@ -306,11 +305,11 @@ function highlightsSection(rec) {
 
 /**
  * One highlight.
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @param {import("../model/history-narrate.js").Cast} cast
- * @param {string} age Age type.
- * @param {number} local Local player id.
- * @returns {HTMLElement} Row.
+ * @param {string} age
+ * @param {number} local
+ * @returns {HTMLElement}
  */
 function highlightRow(e, cast, age, local) {
   const other = e.p === local ? e.q : e.p;
@@ -327,7 +326,7 @@ function highlightRow(e, cast, age, local) {
 /**
  * Under a Triumph, what it was earned for and what it gave, in the game's own words. Both were
  * saved with the archive when the game was played, so they read at the main menu too.
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @returns {HTMLElement|null} The lines, or null for anything but a Triumph.
  */
 function triumphBlurb(e) {
@@ -348,9 +347,9 @@ function triumphBlurb(e) {
 
 /**
  * The remove button: first click arms it, the second removes the game.
- * @param {ArchiveRecord} rec Record.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} Button.
+ * @param {ArchiveRecord} rec
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function removeButton(rec, ctx) {
   let armed = false;
@@ -371,9 +370,9 @@ function removeButton(rec, ctx) {
 /**
  * The game's options, folded away at the foot of the page so removing a game takes a deliberate
  * reach: the Options toggle opens a small panel holding the (two-click) remove button.
- * @param {ArchiveRecord} rec Record.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} The options block.
+ * @param {ArchiveRecord} rec
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function gameOptions(rec, ctx) {
   const panel = el("div", { cls: "dgh-options-panel is-hidden" }, [
@@ -392,10 +391,10 @@ function gameOptions(rec, ctx) {
  * Detail page of one game. The Back button goes in first, before anything that reads the record: a
  * page that fails halfway then still has its way out, instead of stranding the player on a blank
  * page whose only exit is closing the screen.
- * @param {HTMLElement} host Container.
- * @param {ArchiveRecord} rec Record.
+ * @param {HTMLElement} host
+ * @param {ArchiveRecord} rec
  * @param {ArchiveRecord[]} all Every record.
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  */
 export function renderDetail(host, rec, all, ctx) {
   clear(host);

@@ -52,19 +52,19 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  * @property {Map<number, {x: number, y: number}>} positions Node positions.
  */
 
-// ---- ring layout ----------------------------------------------------------
+// ring layout
 // ADAPTED from sloth/global-relations-panel.js.
 
 /**
  * Lay out `ids` evenly on an ellipse centered at `(cx, cy)`. Backward-
  * compatible: `ringPositions(ids, radius)` lays out a circle on a 100×100
  * viewBox; newer callers pass `rx, ry, cx, cy`.
- * @param {number[]} ids Node ids to position.
- * @param {number} rx Ellipse x-radius.
+ * @param {number[]} ids
+ * @param {number} rx
  * @param {number} [ry] Ellipse y-radius (defaults to `rx`).
  * @param {number} [cx] Center x (defaults to 50).
  * @param {number} [cy] Center y (defaults to 50).
- * @returns {Map<number, {x: number, y: number}>} Node positions.
+ * @returns {Map<number, {x: number, y: number}>}
  */
 function ringPositions(ids, rx, ry, cx, cy) {
   // Backward-compatible: ringPositions(ids, radius) → circle on a 100×100
@@ -89,8 +89,8 @@ function ringPositions(ids, rx, ry, cx, cy) {
  * Compute the ring's geometry (viewBox, center, radii, density, positions)
  * from the node count. Large rings (20+ nodes) elongate into a horizontal oval
  * so each node keeps legible arc-length.
- * @param {number[]} ringIds Ring node ids.
- * @returns {RingGeometry} The computed geometry.
+ * @param {number[]} ringIds
+ * @returns {RingGeometry}
  */
 function computeRingGeometry(ringIds) {
   // ovalT smoothly interpolates 0..1 across the N=12..N=24 range; the
@@ -132,9 +132,9 @@ function computeRingGeometry(ringIds) {
  * @param {PortraitPlacement} p The queued placement.
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
- * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
+ * @param {(pid: number) => void} [onNodeToggle]
  * @param {Map<string, HTMLElement>} [cache] Overlay reuse cache (see {@link portraitKey}).
- * @returns {HTMLElement} The placed overlay element.
+ * @returns {HTMLElement}
  */
 function appendPortraitDiv(wrap, p, layout, onNodeToggle, cache) {
   const key = portraitKey(p);
@@ -153,25 +153,25 @@ function appendPortraitDiv(wrap, p, layout, onNodeToggle, cache) {
 
 /**
  * The stable identity of an overlay: the same node showing the same art. Position, size and the
- * selected/dimmed state are deliberately NOT part of it — those are pushed onto a reused element
- * rather than justifying a new one.
+ * selected/dimmed state are not part of it; those are pushed onto a reused element rather than
+ * justifying a new one.
  * @param {PortraitPlacement} p The queued placement.
- * @returns {string} The cache key.
+ * @returns {string}
  */
 function portraitKey(p) {
   return [p.kind, p.pid, p.leaderType || "", p.iconUrl || "", p.color || "", p.text || ""].join("|");
 }
 
 /**
- * Create one portrait/icon overlay element (art and click wiring only — no geometry).
+ * Create one portrait/icon overlay element (art and click wiring only, no geometry).
  * @param {PortraitPlacement} p The queued placement.
- * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
- * @returns {HTMLElement} The portrait element.
+ * @param {(pid: number) => void} [onNodeToggle]
+ * @returns {HTMLElement}
  */
 function createPortraitDiv(p, onNodeToggle) {
   const div = document.createElement("div");
   div.className = "demographics-relations-portrait";
-  // The handler is wired ONCE and survives reuse: it reads the selection off the live render
+  // The handler is wired once and survives reuse: it reads the selection off the live render
   // state at click time, and the cache shares that state's lifetime, so it can never go stale.
   wirePortraitClick(div, p, onNodeToggle);
   fillPortraitContent(div, p);
@@ -205,7 +205,7 @@ function positionPortrait(div, p, layout) {
  * Create a node name label as plain HTML text (no box), centered under the node.
  * Uses the same UI font/weight/color as the historical-data chart labels via CSS.
  * @param {PortraitPlacement} p The label placement (carries text).
- * @returns {HTMLElement} The label element.
+ * @returns {HTMLElement}
  */
 function createNodeLabelDiv(p) {
   const div = document.createElement("div");
@@ -231,7 +231,7 @@ function positionNodeLabel(div, p, layout) {
  * Toggle one class on an overlay without disturbing the rest of its class list.
  * @param {HTMLElement} el The overlay element.
  * @param {string} cls The class to toggle.
- * @param {boolean} on Whether the class should be present.
+ * @param {boolean} on
  */
 function setOverlayClass(el, cls, on) {
   if (on) el.classList.add(cls);
@@ -242,7 +242,7 @@ function setOverlayClass(el, cls, on) {
  * Wire a portrait overlay's click-to-toggle-focus (no-op without a handler/pid).
  * @param {HTMLElement} div The portrait div.
  * @param {PortraitPlacement} p The placement (carries pid).
- * @param {(pid: number) => void} [onNodeToggle] Optional click handler.
+ * @param {(pid: number) => void} [onNodeToggle]
  */
 function wirePortraitClick(div, p, onNodeToggle) {
   if (typeof onNodeToggle !== "function" || typeof p.pid !== "number") return;
@@ -285,7 +285,7 @@ function fillPortraitContent(div, p) {
 /**
  * Build one absolutely-positioned hex-token layer div.
  * @param {string} className The layer class.
- * @returns {HTMLElement} The layer element.
+ * @returns {HTMLElement}
  */
 function hexLayer(className) {
   const el = document.createElement("div");
@@ -313,9 +313,9 @@ function measuredRect(el) {
 /**
  * Wrap a deferred (rAF / setTimeout) callback in a logged boundary so a throw
  * inside it is reported instead of escaping into the engine's frame dispatcher.
- * @param {string} label Diagnostic label for the log line.
+ * @param {string} label
  * @param {() => void} fn The callback body.
- * @returns {() => void} The guarded callback.
+ * @returns {() => void}
  */
 function guardedFrame(label, fn) {
   return () => {
@@ -328,7 +328,7 @@ function guardedFrame(label, fn) {
 }
 
 /**
- * Remove the portrait/label overlays this paint did NOT place, so repaints don't pile up while
+ * Remove the portrait/label overlays this paint did not place, so repaints don't pile up while
  * the reused ones stay untouched in the tree. (GameFace's NodeList / Element may lack `forEach` /
  * `remove`, so iterate via Array.prototype and detach through the parent.)
  * @param {HTMLElement} wrap The ring wrap.
@@ -348,7 +348,7 @@ function stripStaleOverlays(wrap, keep) {
  * Find the nearest ancestor carrying `cls` by walking up `parentElement`.
  * (GameFace's `Element.closest` is unreliable; an explicit walk is portable.)
  * @param {Element|null} el Starting element (inclusive).
- * @param {string} cls Class name to match.
+ * @param {string} cls
  * @returns {Element|null} The matching ancestor, or null.
  */
 function ancestorByClass(el, cls) {
@@ -410,7 +410,7 @@ function constrainRingHeight(wrap) {
   if (!rect || rect.width === 0 || rect.height === 0) return;
   const bottom = ringBottomLimit(wrap);
   if (!(bottom > 0)) return;
-  // Everything measured here is VISUAL px; maxHeight is LOCAL px (frame may be transform-scaled).
+  // Everything measured here is visual px; maxHeight is local px (frame may be transform-scaled).
   const avail = toLocalPx(bottom - rect.top - ringBottomReserve(wrap));
   // Only cap when there's a sane positive budget that actually shrinks the box;
   // never set a tiny/negative height that would collapse the ring to nothing.
@@ -423,13 +423,13 @@ function constrainRingHeight(wrap) {
  * and the other is centered; re-defers a frame if layout isn't ready yet.
  * @param {HTMLElement} wrap The ring wrap (overlay parent).
  * @param {Element} svg The SVG root.
- * @param {PortraitPlacement[]} portraitsToPlace Overlay queue.
- * @param {{w: number, h: number}} viewBox ViewBox width/height.
+ * @param {PortraitPlacement[]} portraitsToPlace
+ * @param {{w: number, h: number}} viewBox
  * @param {{ onNodeToggle?: (pid: number) => void, cache?: Map<string, HTMLElement> }} opts
  *   Optional click handler, plus the overlay reuse cache shared across repaints so the leader
- *   portraits (the ring's only engine-art elements) are never re-created by a filter change — a
+ *   portraits (the ring's only engine-art elements) are never re-created by a filter change; a
  *   fresh `fxs-icon` paints blank for a frame or more and visibly blinks.
- * @returns {() => void} The placement routine.
+ * @returns {() => void}
  */
 function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
   const onNodeToggle = opts?.onNodeToggle;
@@ -450,7 +450,7 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
   }
   /**
    * Measure the (post-cap) SVG box and paint every queued overlay into it. Must
-   * run AFTER constrainRingHeight has reflowed, or the overlays letterbox into a
+   * run after constrainRingHeight has reflowed, or the overlays letterbox into a
    * stale box and the outer portraits fling off their nodes.
    */
   function paintOverlaysNow() {
@@ -512,8 +512,8 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
  * Create the ring's root <svg>: a viewBox sized to the geometry with
  * 'xMidYMid meet' (uniform scale + letterbox, so shapes stay proportional
  * regardless of the element's pixel size).
- * @param {number} viewBoxW ViewBox width.
- * @param {number} viewBoxH ViewBox height.
+ * @param {number} viewBoxW
+ * @param {number} viewBoxH
  * @returns {SVGElement} The configured SVG root (not yet mounted).
  */
 function createRingSvgRoot(viewBoxW, viewBoxH) {
@@ -528,16 +528,16 @@ function createRingSvgRoot(viewBoxW, viewBoxH) {
  * Build the SVG ring with leader portraits and connector lines. `viewerPid` is
  * the civ whose perspective the ring is drawn from; it is styled like the local
  * player so it stays the prominent node.
- * @param {number[]} ringIds Node ids to lay out on the ring.
- * @param {Record<string, NodeInfo>} names Node display-info map.
- * @param {Edge[]} edges Edges to draw.
- * @param {number} localPid Local player id.
+ * @param {number[]} ringIds
+ * @param {Record<string, NodeInfo>} names
+ * @param {Edge[]} edges
+ * @param {number} localPid
  * @param {{ viewerPid?: number, selectedNodeIds?: Set<number>,
  *   onNodeToggle?: (pid: number) => void,
  *   portraitCache?: Map<string, HTMLElement> }} [options]
  *   Viewer (defaults to `localPid`) + node-focus interaction config, plus an optional overlay
  *   reuse cache shared across repaints (see {@link makePlacePortraits}).
- * @returns {HTMLElement} The ring wrap element.
+ * @returns {HTMLElement}
  */
 export function buildRingSvg(ringIds, names, edges, localPid, options) {
   const viewerPid = typeof options?.viewerPid === "number" ? options.viewerPid : localPid;
@@ -582,9 +582,9 @@ export function buildRingSvg(ringIds, names, edges, localPid, options) {
     { w: viewBoxW, h: viewBoxH },
     { onNodeToggle, cache: options?.portraitCache }
   );
-  // Expose the placement so the caller can run it AFTER mounting the wrap (the
+  // Expose the placement so the caller can run it after mounting the wrap (the
   // overlays need the laid-out wrap to measure). Running it synchronously
-  // post-mount paints them in the same frame as the SVG - no flicker on
+  // post-mount paints them in the same frame as the SVG, so no flicker on
   // re-render. placePortraits self-defers a frame only if layout isn't ready.
   /** @type {*} */ (wrap).__placePortraits = placePortraits;
 
@@ -595,9 +595,9 @@ export function buildRingSvg(ringIds, names, edges, localPid, options) {
  * Populate the ring (edges + nodes), collecting per-edge hover geometry, then wire
  * the HTML-wrap hover (Coherent doesn't deliver mouse events to SVG lines).
  * @param {Element} svg The SVG root.
- * @param {RingGeometry} geo The ring geometry.
- * @param {Record<string, NodeInfo>} names Node display-info map.
- * @param {Edge[]} edges Edges to draw.
+ * @param {RingGeometry} geo
+ * @param {Record<string, NodeInfo>} names
+ * @param {Edge[]} edges
  * @param {*} opts Render fields: viewerPid, selectedNodeIds, onNodeToggle,
  *   portraitsToPlace, and `wrap` (the HTML ring wrap that receives mouse events).
  */
@@ -630,7 +630,7 @@ function appendEmptyRing(wrap) {
  * ring wrap, shown/moved at the cursor while hovering a line. (A DOM tip is the
  * reliable route in Coherent; native SVG `<title>` tooltips are not honored.)
  * @param {HTMLElement} wrap The ring wrap (positioning context).
- * @returns {{ show: (text: string, x: number, y: number) => void, hide: () => void }} Controller.
+ * @returns {{ show: (text: string, x: number, y: number) => void, hide: () => void }}
  */
 function createEdgeTooltip(wrap) {
   const tip = document.createElement("div");
@@ -675,8 +675,8 @@ const HOVER_DIST = 1.9;
  * xMidYMid-meet letterboxing. Returns null when the SVG isn't laid out yet.
  * @param {Element} svg The ring SVG.
  * @param {RingGeometry} geo The ring geometry (viewBox dims).
- * @param {number} cx Client x.
- * @param {number} cy Client y.
+ * @param {number} cx
+ * @param {number} cy
  * @returns {{x: number, y: number}|null} ViewBox-space point, or null.
  */
 function clientToViewBox(svg, geo, cx, cy) {
@@ -708,7 +708,7 @@ function distToPts(pts, pt) {
 
 /**
  * The edge record nearest a point, within HOVER_DIST; null when none qualify.
- * @param {*[]} records Edge hover records.
+ * @param {*[]} records
  * @param {{x: number, y: number}} pt The query point (viewBox coords).
  * @returns {*} The nearest record, or null.
  */
@@ -731,8 +731,8 @@ function nearestEdge(records, pt) {
  * SVG hover entirely (Coherent doesn't deliver mouse events to SVG line elements).
  * @param {HTMLElement} wrap The ring wrap (HTML; receives the mouse events).
  * @param {Element} svg The ring SVG (for the coordinate mapping).
- * @param {RingGeometry} geo The ring geometry.
- * @param {*[]} records Per-edge hover records.
+ * @param {RingGeometry} geo
+ * @param {*[]} records
  * @param {{ show: (t: string, x: number, y: number) => void, hide: () => void }} tooltip Tip ctrl.
  */
 function setupEdgeHover(wrap, svg, geo, records, tooltip) {
@@ -772,10 +772,10 @@ function setupEdgeHover(wrap, svg, geo, records, tooltip) {
  * Draw the ring's edges (grouped by undirected pair into parallel offset lines)
  * then its nodes.
  * @param {Element} svg The SVG root.
- * @param {RingGeometry} geo The ring geometry.
- * @param {Record<string, NodeInfo>} names Node display-info map.
- * @param {Edge[]} edges Edges to draw.
- * @param {RingRenderCtx} ringCtx Per-ring render context.
+ * @param {RingGeometry} geo
+ * @param {Record<string, NodeInfo>} names
+ * @param {Edge[]} edges
+ * @param {RingRenderCtx} ringCtx
  */
 function populateRing(svg, geo, names, edges, ringCtx) {
   // Cinematic backdrop first so depth rings / radar sweep sit behind everything.
@@ -795,7 +795,7 @@ function populateRing(svg, geo, names, edges, ringCtx) {
  * Build a pid → node-radius (viewBox units) map so edges can terminate at each
  * node's circle rather than its center. Mirrors the node renderer's own sizing.
  * @param {RingGeometry} geo The ring geometry (supplies density).
- * @param {Record<string, NodeInfo>} names Node display-info map.
+ * @param {Record<string, NodeInfo>} names
  * @param {RingRenderCtx} ringCtx Per-ring render context (supplies viewerPid).
  * @returns {Map<number, number>} Node radii by pid.
  */
@@ -813,7 +813,7 @@ function buildNodeRadii(geo, names, ringCtx) {
  * Compute the focus sets that drive click-to-focus dimming. When one or more
  * nodes are selected, the selected nodes plus their direct edge neighbors stay
  * bright and everything else fades back.
- * @param {Edge[]} edges All ring edges.
+ * @param {Edge[]} edges
  * @param {Set<number>|undefined} selectedNodeIds
  * @returns {{ selected: Set<number>|null, nodes: Set<number>|null }} The active
  *   selection (null when none) and the bright set (selection + neighbors).

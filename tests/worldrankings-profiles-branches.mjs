@@ -1,5 +1,5 @@
 // Covers: worldrankings-allcivs-profiles.js, worldrankings-allcivs-controller.js
-// Pure data-manipulation — no document/engine needed.
+// Pure data manipulation; no document/engine needed.
 import assert from "node:assert/strict";
 
 globalThis.GameContext = { localPlayerID: 1 };
@@ -45,7 +45,7 @@ assert.equal(p3.civName, "Rome");
 assert.equal(p3.leaderName, "Caesar");
 assert.ok(p3.civNames.includes("Rome"));
 
-// computeRanks — takes Record<string, CivProfile>
+// computeRanks takes Record<string, CivProfile>
 const profiles = {
   "1": { pid: "1", latest: { score: 100 }, met: true, leaderKey: "L1" },
   "2": { pid: "2", latest: { score: 80 }, met: true, leaderKey: "L2" },
@@ -91,13 +91,13 @@ assert.deepEqual(buildCivProfiles({ samples: { 0: { players: {} } } }), {}, "obj
 assert.deepEqual(buildCivProfiles({ samples: null }), {}, "null samples → no profiles");
 assert.deepEqual(buildCivProfiles(undefined), {}, "no history → no profiles");
 
-// stripUnmetDiplomacy — all met so nothing stripped
+// stripUnmetDiplomacy: all met so nothing stripped
 const met = Object.assign({}, built);
 Object.values(met).forEach((p) => { p.met = true; });
 stripUnmetDiplomacy(met);
 assert.ok(Object.keys(met).length > 0);
 
-// stripNonLocalCivs — GameContext.localPlayerID = 1
+// stripNonLocalCivs: GameContext.localPlayerID = 1
 const nonLocalTarget = Object.assign({}, built);
 stripNonLocalCivs(nonLocalTarget);
 assert.ok(Object.keys(nonLocalTarget).length <= Object.keys(built).length);

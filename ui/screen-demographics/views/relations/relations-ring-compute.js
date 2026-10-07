@@ -33,7 +33,7 @@ const ATTITUDE_FILTER_KEYS = new Set([
 
 /**
  * Whether any attitude-family filter is active.
- * @param {Set<string>} activeSet Active filter keys.
+ * @param {Set<string>} activeSet
  * @returns {boolean} True when any attitude key is active.
  */
 function hasActiveAttitudeFilter(activeSet) {
@@ -46,9 +46,9 @@ function hasActiveAttitudeFilter(activeSet) {
 /**
  * Mask unmet major-civ labels with "Unmet Civilization" placeholders.
  * Mutates `names` in place.
- * @param {number} viewerPid Viewer player id.
- * @param {number[]} metIds Met major ids.
- * @param {Record<string, *>} names Node display-info map.
+ * @param {number} viewerPid
+ * @param {number[]} metIds
+ * @param {Record<string, *>} names
  * @param {{ showUnmetNames: boolean, localId: number|undefined,
  *   history: DemoHistory|undefined }} ctx Masking toggle + local id + history.
  */
@@ -69,9 +69,9 @@ function applyMetMaskForMajors(viewerPid, metIds, names, ctx) {
 
 /**
  * Build set of met city-state ids from resolved node data.
- * @param {number[]} csIds City-state ids.
- * @param {Record<string, *>} names Node display-info map.
- * @returns {Set<number>} Met CS set.
+ * @param {number[]} csIds
+ * @param {Record<string, *>} names
+ * @returns {Set<number>}
  */
 function buildCsMetSet(csIds, names) {
   const csMetSet = new Set();
@@ -83,11 +83,11 @@ function buildCsMetSet(csIds, names) {
 
 /**
  * Build the overlaid CS edge set anchored at one viewer civ.
- * @param {number} viewerPid Viewer player id.
- * @param {number[]} csIds City-state ids.
- * @param {boolean} includeAttitude Whether to include attitude-family edges.
- * @param {Set<number>} csMetSet Met CS id set.
- * @returns {*[]} Combined CS edges.
+ * @param {number} viewerPid
+ * @param {number[]} csIds
+ * @param {boolean} includeAttitude
+ * @param {Set<number>} csMetSet
+ * @returns {*[]}
  */
 export function buildCsEdges(viewerPid, csIds, includeAttitude, csMetSet) {
   const viewerMajors = [viewerPid];
@@ -109,8 +109,8 @@ export function buildCsEdges(viewerPid, csIds, includeAttitude, csMetSet) {
 
 /**
  * Build per-tab filter descriptors with resolved color + dash visuals.
- * @param {string} topTab Either "civ" or "cs".
- * @returns {*[]} Visual-resolved filter descriptors.
+ * @param {string} topTab
+ * @returns {*[]}
  */
 export function buildFilterDefs(topTab) {
   return filtersForView(topTab).map((filter) => {
@@ -125,7 +125,7 @@ export function buildFilterDefs(topTab) {
 
 /**
  * Apply top-tab visual overrides to CS edges. Mutates edge objects.
- * @param {*[]} edges Edges to mutate.
+ * @param {*[]} edges
  */
 export function applyCsEdgeOverrides(edges) {
   for (const edge of edges) {
@@ -141,7 +141,7 @@ export function applyCsEdgeOverrides(edges) {
  * filter-pill swatch is a faithful key for the lines on the ring (the
  * diplomacy-event builders tag edges with per-action colors). Dash already
  * derives from LINE_DASH by filterKey. Mutates edge objects.
- * @param {*[]} edges Edges to mutate.
+ * @param {*[]} edges
  */
 export function applyCivEdgeOverrides(edges) {
   for (const edge of edges) {
@@ -152,8 +152,8 @@ export function applyCivEdgeOverrides(edges) {
 
 /**
  * Filter edges by active filter keys.
- * @param {*[]} edges Full edge set.
- * @param {Set<string>} activeSet Active filter keys.
+ * @param {*[]} edges
+ * @param {Set<string>} activeSet
  * @returns {*[]} Filtered edge set.
  */
 function filterEdgesByActiveSet(edges, activeSet) {
@@ -162,9 +162,9 @@ function filterEdgesByActiveSet(edges, activeSet) {
 
 /**
  * Compute civ-tab ring data, including edge caching and active-filter pass.
- * @param {*} rs Render state object.
- * @param {Set<string>} activeSet Active filter keys.
- * @param {Record<string, *>} names Node display-info map.
+ * @param {*} rs
+ * @param {Set<string>} activeSet
+ * @param {Record<string, *>} names
  * @returns {{ ringIds: number[], edges: *[], names: Record<string, *>,
  *   capText: string, ringViewerPid: number|undefined }}
  *   Ring-data payload.
@@ -208,9 +208,9 @@ export function computeCivRingData(rs, activeSet, names) {
 
 /**
  * Compute city-state-tab ring data, including edge caching and filter pass.
- * @param {*} rs Render state object.
- * @param {Set<string>} activeSet Active filter keys.
- * @param {Record<string, *>} names Node display-info map.
+ * @param {*} rs
+ * @param {Set<string>} activeSet
+ * @param {Record<string, *>} names
  * @returns {{ ringIds: number[], edges: *[], names: Record<string, *>,
  *   capText: string, ringViewerPid: number|undefined }}
  *   Ring-data payload.

@@ -27,8 +27,8 @@ export const RECORD_MAP_BYTES = 14 * 1024;
 
 /**
  * Run-length encode a list of small integers ("v x count" runs joined by ".").
- * @param {number[]} arr Values.
- * @returns {string} Encoded.
+ * @param {number[]} arr
+ * @returns {string}
  */
 export function rle(arr) {
   if (!arr.length) return "";
@@ -49,10 +49,10 @@ export function rle(arr) {
 
 /**
  * Decode a run-length list to exactly `len` values (missing cells are `fill`).
- * @param {string} str Encoded.
- * @param {number} len Length.
+ * @param {string} str
+ * @param {number} len
  * @param {number} [fill] Value for cells the encoding does not cover.
- * @returns {number[]} Values.
+ * @returns {number[]}
  */
 export function unrle(str, len, fill = -1) {
   const out = new Array(Math.max(0, len)).fill(fill);
@@ -84,7 +84,7 @@ export function thinFrames(frames, cap) {
 
 /**
  * Add a frame to a campaign's map, skipping one identical to the newest and thinning past the cap.
- * @param {HnrMapGrid} map The map (mutated).
+ * @param {HnrMapGrid} map Mutated.
  * @param {HnrMapFrame} frame
  * @returns {boolean} True when the frame was kept.
  */
@@ -103,7 +103,7 @@ export function addFrame(map, frame) {
  * map compresses poorly, so the frame count, not only the cap, has to give.
  * @template T
  * @param {T[]} frames Frames, oldest first.
- * @param {number} budget Bytes.
+ * @param {number} budget In bytes.
  * @param {(f: T) => number} bytes Size of one frame.
  * @returns {T[]} Frames that fit (at least the newest).
  */
@@ -117,8 +117,8 @@ export function withinBytes(frames, budget, bytes) {
 
 /**
  * A campaign's map with its frames placed on the timeline axis.
- * @param {CampaignDoc} doc Campaign.
- * @returns {MapView|null} The map, or null when none was captured.
+ * @param {CampaignDoc} doc
+ * @returns {MapView|null} null when none was captured.
  */
 export function mapView(doc) {
   const m = doc.map;
@@ -134,7 +134,7 @@ export function mapView(doc) {
 
 /**
  * Compact archive form of a map.
- * @param {MapView|null} mv Map.
+ * @param {MapView|null} mv
  * @returns {*} Packed map, or undefined.
  */
 export function packMap(mv) {
@@ -147,7 +147,7 @@ export function packMap(mv) {
 /**
  * Unpack an archived map (tolerating a missing or partial one).
  * @param {*} p Packed map.
- * @returns {MapView|null} Map.
+ * @returns {MapView|null}
  */
 export function unpackMap(p) {
   if (!p || typeof p !== "object" || !(p.w > 0) || !(p.h > 0) || !Array.isArray(p.f) || !p.f.length) return null;
@@ -161,9 +161,9 @@ export function unpackMap(p) {
 
 /**
  * The frame to show at a timeline position: the newest at or before it, else the first.
- * @param {MapView} mv Map.
- * @param {number} at Position.
- * @returns {MapView["frames"][number]} Frame.
+ * @param {MapView} mv
+ * @param {number} at
+ * @returns {MapView["frames"][number]}
  */
 export function frameAt(mv, at) {
   let pick = mv.frames[0];

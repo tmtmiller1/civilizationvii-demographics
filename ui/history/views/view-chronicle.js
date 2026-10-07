@@ -24,9 +24,9 @@ export const FILTERS = /** @type {Record<string, HnrEventKind[]>} */ ({
 
 /**
  * Display name of an age, from the age event that opened it.
- * @param {CampaignDoc} doc Campaign.
- * @param {string} age Age type.
- * @returns {string} Localized name.
+ * @param {CampaignDoc} doc
+ * @param {string} age
+ * @returns {string}
  */
 export function ageName(doc, age) {
   const e = doc.events.find((x) => x.k === "age" && x.x === age);
@@ -35,7 +35,7 @@ export function ageName(doc, age) {
 
 /**
  * Events passing the current filters, with visibility applied.
- * @param {CampaignDoc} doc Campaign.
+ * @param {CampaignDoc} doc
  * @param {import("../model/history-narrate.js").Cast} cast
  * @returns {{shown: HnrEvent[], hidden: number}} Events and the count hidden as spoilers.
  */
@@ -50,10 +50,10 @@ export function filteredEvents(doc, cast) {
 
 /**
  * A single feed row.
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @param {import("../model/history-narrate.js").Cast} cast
- * @param {string} age Age type.
- * @returns {HTMLElement} The row.
+ * @param {string} age
+ * @returns {HTMLElement}
  */
 function eventRow(e, cast, age) {
   const mine = e.p === cast.local || e.q === cast.local;
@@ -66,10 +66,10 @@ function eventRow(e, cast, age) {
 
 /**
  * The age summary card for the local player.
- * @param {CampaignDoc} doc Campaign.
- * @param {number} idx Age index.
+ * @param {CampaignDoc} doc
+ * @param {number} idx
  * @param {import("../model/history-narrate.js").Cast} cast
- * @returns {HTMLElement} The card.
+ * @returns {HTMLElement}
  */
 export function ageCard(doc, idx, cast) {
   const age = doc.ages[idx].age;
@@ -91,8 +91,8 @@ export function ageCard(doc, idx, cast) {
 
 /**
  * Named detail lines for an age summary (wonders, religion, fallen civilizations).
- * @param {import("../model/history-narrate.js").AgeSummary} s Summary.
- * @returns {HTMLElement[]} Lines.
+ * @param {import("../model/history-narrate.js").AgeSummary} s
+ * @returns {HTMLElement[]}
  */
 function namedLines(s) {
   /** @type {Array<[string, string]>} */
@@ -108,9 +108,9 @@ function namedLines(s) {
 
 /**
  * The filter controls.
- * @param {CampaignDoc} doc Campaign.
- * @param {() => void} rerender Redraw callback.
- * @returns {HTMLElement[]} Control rows.
+ * @param {CampaignDoc} doc
+ * @param {() => void} rerender
+ * @returns {HTMLElement[]}
  */
 function controls(doc, rerender) {
   const set = (/** @type {Partial<import("./history-state.js").ViewState>} */ patch) => {
@@ -131,10 +131,10 @@ function controls(doc, rerender) {
 
 /**
  * The grouped feed.
- * @param {CampaignDoc} doc Campaign.
+ * @param {CampaignDoc} doc
  * @param {HnrEvent[]} events Visible events.
  * @param {import("../model/history-narrate.js").Cast} cast
- * @returns {HTMLElement[]} Age groups.
+ * @returns {HTMLElement[]}
  */
 function feed(doc, events, cast) {
   const order = doc.ages.map((_, i) => i);
@@ -155,10 +155,10 @@ function feed(doc, events, cast) {
 
 /**
  * Render the Chronicle.
- * @param {HTMLElement} host Container.
+ * @param {HTMLElement} host
  * @param {CampaignDoc|null} doc The live campaign.
- * @param {() => void} rerender Redraw callback.
- * @param {"full"|"met"|"own"} [visibility] Analytics visibility (see castFromDoc).
+ * @param {() => void} rerender
+ * @param {"full"|"met"|"own"} [visibility] See castFromDoc.
  */
 export function renderChronicle(host, doc, rerender, visibility = "met") {
   clear(host);

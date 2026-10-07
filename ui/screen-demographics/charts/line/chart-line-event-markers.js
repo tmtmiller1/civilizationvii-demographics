@@ -15,9 +15,8 @@ import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographi
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 /**
- * Resolve the chart font family with a safe fallback chain.
- * @param {*} chart The Chart instance.
- * @returns {string} The preferred font family.
+ * @param {*} chart
+ * @returns {string} The chart font family, with a safe fallback chain.
  */
 function resolveChartFontFamily(chart) {
   return (
@@ -65,10 +64,10 @@ function resolveChartFontFamily(chart) {
 /**
  * Walk the history for game-wide crisis stage onsets and build markers.
  * Suppressed on the crisis_stage chart itself.
- * @param {string} metricId Active metric id.
- * @param {DemoHistory|*} history The history blob.
+ * @param {string} metricId
+ * @param {DemoHistory|*} history
  * @param {CrisisCtx} crisisCtx Age offsets/boundaries + seed + sampleX resolver.
- * @returns {CrisisMarker[]} The crisis markers.
+ * @returns {CrisisMarker[]}
  */
 export function collectCrisisMarkers(metricId, history, crisisCtx) {
   /** @type {CrisisMarker[]} */
@@ -78,7 +77,7 @@ export function collectCrisisMarkers(metricId, history, crisisCtx) {
   }
   // `prev` carried across samples by reference via a 1-element holder so the
   // onset-detection logic lives in one small helper. Label de-overlap is done at
-  // DRAW time (pixel-aware lanes), so collection just gathers markers in order.
+  // draw time (pixel-aware lanes), so collection just gathers markers in order.
   const prevHolder = { prev: -2 }; // sentinel != -1 so first sample is "init"
   for (const s of history.samples) {
     const markers = detectCrisisOnset(s, prevHolder, crisisCtx);
@@ -88,7 +87,7 @@ export function collectCrisisMarkers(metricId, history, crisisCtx) {
 }
 
 /**
- * The Emigration refugees metrics (scaled people + raw Civ points). These show their OWN
+ * The Emigration refugees metrics (scaled people + raw Civ points). These show their own
  * cause-driven markers (war / disaster onsets) instead of the game-wide crisis-stage markers, so
  * crisis collection is suppressed for them.
  * @type {Set<string>}
@@ -99,10 +98,10 @@ const REFUGEE_METRIC_IDS = new Set([
 ]);
 
 /**
- * Decide whether crisis-marker collection should no-op.
- * @param {string} metricId Active metric id.
- * @param {DemoHistory|*} history The history blob.
- * @returns {boolean} True when collection should be skipped.
+ * Whether crisis-marker collection should no-op.
+ * @param {string} metricId
+ * @param {DemoHistory|*} history
+ * @returns {boolean}
  */
 function shouldSkipCrisisMarkers(metricId, history) {
   if (metricId === "crisis_stage") return true;
@@ -114,16 +113,16 @@ function shouldSkipCrisisMarkers(metricId, history) {
 /**
  * Detect a crisis stage onset on one sample, advancing the running `prev`
  * stage. Returns a marker on onset, else `null`.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @param {{ prev: number }} prevHolder Running previous-stage holder (mutated).
  * @param {CrisisCtx} ctx Age offsets/boundaries + seed + sampleX resolver.
- * @returns {CrisisMarker[]} The onset marker(s).
+ * @returns {CrisisMarker[]}
  */
 function detectCrisisOnset(s, prevHolder, ctx) {
   const raw = readSampleCrisisStage(s);
   if (raw === undefined) return [];
   const prev = prevHolder.prev;
-  // raw is the DISPLAY value (engine+1): 0..4. A rise from a prior non-negative
+  // raw is the display value (engine+1): 0..4. A rise from a prior non-negative
   // stage to >= 1 is an onset; the `prev >= 0` guard skips a crisis already in
   // progress at the first recorded sample, so only observed onsets are marked.
   /** @type {CrisisMarker[]} */
@@ -142,10 +141,9 @@ function detectCrisisOnset(s, prevHolder, ctx) {
 }
 
 /**
- * Read one player's crisis stage value from a sample.
  * @param {*} players Sample players map.
- * @param {string} pid Player id key.
- * @returns {number|undefined} Numeric crisis stage, when present.
+ * @param {string} pid
+ * @returns {number|undefined} The player's crisis stage, when present.
  */
 function playerCrisisStage(players, pid) {
   const value = players[pid]?.metrics?.crisis_stage;
@@ -156,11 +154,11 @@ function playerCrisisStage(players, pid) {
 /**
  * Read the global crisis_stage display value off any one player's metrics in a
  * sample.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @returns {number|undefined} The display stage, or `undefined`.
  */
 function readSampleCrisisStage(s) {
-  // crisis_stage is a global value stamped on EVERY player's metrics, but scan
+  // crisis_stage is a global value stamped on every player's metrics, but scan
   // every row and pick the highest numeric stage so a single stale lower value
   // does not suppress an observed onset marker.
   const players = s?.players;
@@ -179,7 +177,7 @@ function readSampleCrisisStage(s) {
  * @param {Snapshot} s The onset sample.
  * @param {number} raw The display stage value.
  * @param {CrisisCtx} ctx Age offsets/boundaries + seed + sampleX resolver.
- * @returns {CrisisMarker} The marker.
+ * @returns {CrisisMarker}
  */
 function makeCrisisMarker(s, raw, ctx) {
   const { ageOffsets, boundaries, gameSeedStr, sampleX } = ctx;
@@ -198,9 +196,9 @@ function makeCrisisMarker(s, raw, ctx) {
 
 /**
  * Build age-boundary markers from `history.ageBoundaries`.
- * @param {DemoHistory|*} history The history blob.
+ * @param {DemoHistory|*} history
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @returns {AgeMarker[]} The age markers.
+ * @returns {AgeMarker[]}
  */
 export function collectAgeMarkers(history, ageOffsets) {
   /** @type {AgeMarker[]} */
@@ -214,9 +212,9 @@ export function collectAgeMarkers(history, ageOffsets) {
   };
   for (const b of history.ageBoundaries) {
     if (!b || typeof b.age !== "string") continue;
-    // The boundary marker should sit at the LEFTMOST X of the new age. From
-    // the deterministic offset table that's simply the age's offset + 1 (the
-    // new age's first localTurn is 1).
+    // The boundary marker sits at the leftmost X of the new age. From the
+    // deterministic offset table that's the age's offset + 1 (the new age's
+    // first localTurn is 1).
     const baseOffset = ageOffsets.get(b.age);
     if (typeof baseOffset !== "number") continue;
     ageMarkers.push({
@@ -230,9 +228,9 @@ export function collectAgeMarkers(history, ageOffsets) {
 
 /**
  * Measure a crisis marker's label pill (text lines + box size).
- * @param {*} ctx2 The 2D canvas context.
- * @param {CrisisMarker} mk The marker.
- * @param {string} family Font family for label text.
+ * @param {*} ctx2
+ * @param {CrisisMarker} mk
+ * @param {string} family
  * @returns {{ stageText: string, nameText: string, pillW: number,
  *   pillH: number }} The pill metrics.
  */
@@ -251,7 +249,7 @@ function measureCrisisPill(ctx2, mk, family) {
  * the chart's own context + font, so the renderer can pad the right edge enough
  * for the label to draw right of its line.
  * @param {*} chart The Chart instance (provides ctx + font family).
- * @param {*[]} markers The crisis markers.
+ * @param {*[]} markers
  * @returns {number} The widest pill width in px (0 when there are none).
  */
 export function maxCrisisPillWidth(chart, markers) {
@@ -268,13 +266,13 @@ export function maxCrisisPillWidth(chart, markers) {
 
 /**
  * Build per-marker draw layouts: for each in-range marker resolve its pixel x,
- * pill size, left/right-flipped label box, and a vertical LANE so labels whose
+ * pill size, left/right-flipped label box, and a vertical lane so labels whose
  * pills would overlap horizontally stack instead of hiding one another.
- * @param {*} ctx2 The 2D canvas context.
+ * @param {*} ctx2
  * @param {CrisisMarker[]} markers
  * @param {*} xScale The Chart.js x scale.
  * @param {number} right Plot-area right edge.
- * @param {string} family Font family.
+ * @param {string} family
  * @returns {{ mk: CrisisMarker, x: number, dx: number, lane: number,
  *   pillW: number, pillH: number, stageText: string, nameText: string }[]}
  *   The layouts.
@@ -315,11 +313,11 @@ function assignCrisisLanes(items) {
 /**
  * Draw one crisis marker layout: its vertical line + the two-line label pill at
  * its assigned lane.
- * @param {*} ctx2 The 2D canvas context.
+ * @param {*} ctx2
  * @param {*} L The marker layout (from {@link layoutCrisisMarkers}).
  * @param {number} top Plot-area top.
  * @param {number} bottom Plot-area bottom.
- * @param {string} family Font family for label text.
+ * @param {string} family
  */
 function drawCrisisMarkerLayout(ctx2, L, top, bottom, family) {
   ctx2.save();
@@ -345,7 +343,7 @@ function drawCrisisMarkerLayout(ctx2, L, top, bottom, family) {
  * @param {*} ctx2 The 2D canvas context (already saved/translated by caller).
  * @param {*} L The per-marker layout (x/dx/lane/pill size/text/color).
  * @param {number} stackY The lane-stacked y offset.
- * @param {string} family The font family.
+ * @param {string} family
  */
 function drawCrisisLabel(ctx2, L, stackY, family) {
   ctx2.translate(L.x + L.dx, stackY);
@@ -419,8 +417,8 @@ export function makeAgeMarkerPlugin(ageMarkers) {
 
 /**
  * Stroke an age boundary's vertical long-dash line (caller has saved the ctx).
- * @param {*} ctx2 The 2D canvas context.
- * @param {AgeMarker} mk The age marker.
+ * @param {*} ctx2
+ * @param {AgeMarker} mk
  * @param {number} x The marker pixel x.
  * @param {number} top Chart-area top.
  * @param {number} bottom Chart-area bottom.
@@ -447,8 +445,8 @@ function strokeAgeLine(ctx2, mk, x, top, bottom) {
  * Draw an age boundary's label pill (purple chrome), flipping left near the
  * right edge. Anchored to the bottom of the plot so it never collides with the
  * crisis labels, which stack from the top.
- * @param {*} ctx2 The 2D canvas context.
- * @param {AgeMarker} mk The age marker.
+ * @param {*} ctx2
+ * @param {AgeMarker} mk
  * @param {number} x The marker pixel x.
  * @param {{ top: number, bottom: number, right: number, family: string }} area
  *   Chart-area top/bottom/right + font.
@@ -471,7 +469,7 @@ function drawAgeLabel(ctx2, mk, x, area) {
   ctx2.fillText(mk.label, 9, 17);
 }
 
-// ── Refugees-chart event markers: war + disaster onsets ──────────────────────────────────────────
+// Refugees-chart event markers: war + disaster onsets
 // War onsets (from the war history) and disaster onsets (from a companion's event log) are
 // placed on the timeline by recorded chart turn, else by matching their game-year label to a
 // sampled year, so cross-mod turn clocks never have to agree.
@@ -480,7 +478,7 @@ const REFUGEE_WAR_COLOR = "#e06c5e"; // warm red, war onsets
 const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber, disaster onsets
 
 /**
- * Read the `showWarMarkers` setting (default ON): the Options toggle for the Refugees chart's WAR
+ * Read the `showWarMarkers` setting (default on): the Options toggle for the Refugees chart's war
  * onset markers, mirroring the wonder-markers filter.
  * @returns {boolean} Whether to show the war onset markers.
  */
@@ -494,8 +492,8 @@ export function shouldShowWarMarkers() {
 }
 
 /**
- * Read the `showDisasterMarkers` setting (default ON): the Options toggle for the Refugees chart's
- * DISASTER onset markers (independent of the war-markers toggle).
+ * Read the `showDisasterMarkers` setting (default on): the Options toggle for the Refugees chart's
+ * disaster onset markers (independent of the war-markers toggle).
  * @returns {boolean} Whether to show the disaster onset markers.
  */
 export function shouldShowDisasterMarkers() {
@@ -509,7 +507,7 @@ export function shouldShowDisasterMarkers() {
 /**
  * Build a game-year → chart-X (chartTurn) map from the sample stream, so an event carrying only a
  * year label can be placed on the continuous timeline.
- * @param {Snapshot[]|*[]} samples The sample stream.
+ * @param {Snapshot[]|*[]} samples
  * @returns {Map<string, number>} game-year → chartTurn.
  */
 function buildYearToChartTurn(samples) {
@@ -556,8 +554,8 @@ function warStartChartTurn(war, fronts) {
 
 /**
  * The spoiler-guarded wars merged and named exactly as on the Wars page.
- * @param {DemoHistory|*} history The history blob.
- * @param {*[]} samples The sample stream.
+ * @param {DemoHistory|*} history
+ * @param {*[]} samples
  * @returns {{ fronts: *[], wars: *[], names: Map<number, string> }} The unmerged fronts, the
  *   merged wars, and warUniqueID → localized name (empty when merging failed).
  */
@@ -578,7 +576,7 @@ function namedWars(history, samples) {
  * Append a marker for each war's onset (its name + start year), positioned by its recorded start
  * chart turn, else its start-year label. The marker carries the Wars page's localized name; the
  * persisted `name` is English and is never shown.
- * @param {DemoHistory|*} history The history blob.
+ * @param {DemoHistory|*} history
  * @param {Map<string, number>} yearToChart game-year → chartTurn.
  * @param {{turn:number, label:string, year:string, color:string}[]} out Markers (appended).
  */
@@ -623,9 +621,9 @@ function collectDisasterMarkers(yearToChart, out) {
 /**
  * Collect war + disaster onset markers for the Emigration refugees chart. Empty for any non-refugee
  * metric (so the markers only annotate the graph whose subject they explain).
- * @param {string} metricId Active metric id.
- * @param {DemoHistory|*} history The history blob.
- * @returns {{turn:number, label:string, year:string, color:string}[]} The markers.
+ * @param {string} metricId
+ * @param {DemoHistory|*} history
+ * @returns {{turn:number, label:string, year:string, color:string}[]}
  */
 export function collectRefugeeEventMarkers(metricId, history) {
   if (!REFUGEE_METRIC_IDS.has(metricId)) return [];
@@ -633,7 +631,7 @@ export function collectRefugeeEventMarkers(metricId, history) {
   const yearToChart = buildYearToChartTurn(samples);
   /** @type {{turn:number, label:string, year:string, color:string}[]} */
   const markers = [];
-  // War and disaster onsets are INDEPENDENT user toggles (both default on), mirroring wonder
+  // War and disaster onsets are independent user toggles (both default on), mirroring wonder
   // markers.
   if (shouldShowWarMarkers()) collectWarOnsetMarkers(history, yearToChart, markers);
   if (shouldShowDisasterMarkers()) collectDisasterMarkers(yearToChart, markers);
@@ -642,13 +640,13 @@ export function collectRefugeeEventMarkers(metricId, history) {
 
 /**
  * Build per-marker draw layouts: pixel x, single-line pill size, left/right-flipped label box, and
- * a vertical LANE so labels whose pills would overlap stack instead of hiding one another.
- * @param {*} ctx2 The 2D canvas context.
- * @param {{turn:number,label:string,year:string,color:string}[]} markers The markers.
+ * a vertical lane so labels whose pills would overlap stack instead of hiding one another.
+ * @param {*} ctx2
+ * @param {{turn:number,label:string,year:string,color:string}[]} markers
  * @param {*} xScale The Chart.js x scale.
  * @param {number} right Plot-area right edge.
- * @param {string} family Font family.
- * @returns {*[]} The layouts.
+ * @param {string} family
+ * @returns {*[]}
  */
 function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
   const items = [];
@@ -685,11 +683,11 @@ function assignRefugeeLanes(items) {
 /**
  * Draw one refugee event marker: a dashed vertical line in its color + a single-line "name · year"
  * pill (dark background, colored left accent bar, cream text) at its assigned lane.
- * @param {*} ctx2 The 2D canvas context.
+ * @param {*} ctx2
  * @param {*} L The marker layout (from {@link layoutRefugeeMarkers}).
  * @param {number} top Plot-area top.
  * @param {number} bottom Plot-area bottom.
- * @param {string} family Font family for label text.
+ * @param {string} family
  */
 function drawRefugeeMarkerLayout(ctx2, L, top, bottom, family) {
   ctx2.save();
@@ -713,7 +711,7 @@ function drawRefugeeMarkerLayout(ctx2, L, top, bottom, family) {
  * @param {*} ctx2 The 2D canvas context (already saved by the caller).
  * @param {*} L The per-marker layout (x/dx/pill size/text/color).
  * @param {number} stackY The lane-stacked y offset.
- * @param {string} family The font family.
+ * @param {string} family
  */
 function drawRefugeeLabel(ctx2, L, stackY, family) {
   ctx2.translate(L.x + L.dx, stackY);

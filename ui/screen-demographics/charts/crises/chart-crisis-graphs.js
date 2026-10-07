@@ -1,6 +1,6 @@
 // chart-crisis-graphs.js
 //
-// The Crises "Graphs" sub-tab: every crisis statistic plotted for ALL civs over
+// The Crises "Graphs" sub-tab: every crisis statistic plotted for all civs over
 // the whole game, as a scrollable grid of small line charts, one per metric.
 // A single shared legend toggles a civ in every graph at once; series, colors
 // and X positions come from buildSeriesFromHistory, the same builder the main
@@ -30,7 +30,7 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Which snapshot.metrics series each crisis-cost metric is graphed from. Most
- * cost ids ARE the sampled key; the two military ids map to their level / running
+ * cost ids are the sampled key; the two military ids map to their level / running
  * loss counters.
  * @type {Record<string, string>}
  */
@@ -75,7 +75,7 @@ const AGE_SCOPE_LABEL = {
  * The distinct ages that have at least one crisis onset, in chronological
  * (first-seen) order, plus the most recent such age. Ages only ever advance, so
  * the last first-seen age is the newest crisis.
- * @param {*} history The history blob.
+ * @param {*} history
  * @returns {{ ages: string[], latest: (string|undefined) }} Crisis ages + newest.
  */
 function crisisAges(history) {
@@ -93,9 +93,9 @@ function crisisAges(history) {
 
 /**
  * The selectable crisis scopes for the toolbar dropdown: "All Ages" followed by
- * one entry per crisis-bearing age. Returns [] until a SECOND crisis exists, so
+ * one entry per crisis-bearing age. Returns [] until a second crisis exists, so
  * a single crisis needs no selector.
- * @param {*} history The history blob.
+ * @param {*} history
  * @returns {{ id: string, label: string }[]} The scope options ([] when < 2 crises).
  */
 export function collectCrisisScopes(history) {
@@ -112,7 +112,7 @@ export function collectCrisisScopes(history) {
  * Resolve a stored scope id ("latest", "all", a concrete age, or a stale age
  * from an earlier game) to a concrete render scope. Returns "all" whenever
  * fewer than two crises exist.
- * @param {*} history The history blob.
+ * @param {*} history
  * @param {*} scopeId The stored scope selection.
  * @returns {string} "all" or a concrete age type.
  */
@@ -138,7 +138,7 @@ const _rawSeriesCache = new WeakMap();
 
 /**
  * Parse (or reuse a cached) per-civ series for one metric out of `history`.
- * @param {*} history The history blob.
+ * @param {*} history
  * @param {string} seriesKey The metric series id.
  * @returns {any[]} The raw per-civ series array.
  */
@@ -172,7 +172,7 @@ function pruneHiddenKeys(roster) {
 
 /**
  * Remove every child of `host`.
- * @param {HTMLElement} host The element to clear.
+ * @param {HTMLElement} host
  */
 function clearHost(host) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -181,7 +181,7 @@ function clearHost(host) {
 /**
  * Append a centered empty-state message.
  * @param {HTMLElement} host
- * @param {string} msg The message.
+ * @param {string} msg
  */
 function appendEmpty(host, msg) {
   const el = document.createElement("div");
@@ -192,10 +192,10 @@ function appendEmpty(host, msg) {
 
 /**
  * The canonical civ roster: every civ that has military-power data, with its
- * stable key, display name, and deconflicted line color - the single source of
- * truth for the legend and for coloring every graph's lines consistently.
- * @param {*} history The history blob.
- * @returns {{ key: string, name: string, color: string }[]} The roster.
+ * stable key, display name, and deconflicted line color. The legend and every
+ * graph's line colors come from here, so they always agree.
+ * @param {*} history
+ * @returns {{ key: string, name: string, color: string }[]}
  */
 function canonicalRoster(history) {
   const raw = rawSeriesFor(history, "milpower");
@@ -210,11 +210,11 @@ const PRE_CRISIS_LEAD = 8;
  * the canonical roster, filtered to the civs not toggled off, and clipped to the
  * shared x-domain start (so the long pre-crisis run isn't plotted).
  * @param {{ series: string }} m The crisis graph metric.
- * @param {*} history The history blob.
+ * @param {*} history
  * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
  * @param {number|undefined} minX The earliest chart-X to keep (or undefined for all).
  * @param {number|undefined} maxX The latest chart-X to keep (or undefined for all).
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]} The series.
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]}
  */
 function seriesFor(m, history, rosterMap, minX, maxX) {
   const raw = rawSeriesFor(history, m.series);
@@ -248,11 +248,11 @@ function clipPoints(rawPoints, minX, maxX) {
 }
 
 /**
- * Build the crisis-stage onset markers AND the shared x-domain in chart-X space.
+ * Build the crisis-stage onset markers and the shared x-domain in chart-X space.
  * Every graph gets the same x-domain so markers line up; it starts a short lead
  * before the first onset so the long pre-crisis stretch isn't shown. A concrete
  * `scopeAge` zooms to that single crisis's window.
- * @param {*} history The history blob.
+ * @param {*} history
  * @param {string} scopeAge "all" or the age type to isolate.
  * @returns {{ markers: { x: number, color: string, label: string }[],
  *   xDomain: ({ xMin: number, xMax: number }|null) }}
@@ -275,9 +275,9 @@ function crisisAxis(history, scopeAge) {
 /**
  * The chart-X range to plot: the whole game for "all", or just the samples of
  * one age when scoped to a single crisis.
- * @param {Snapshot[]} samples The sample stream.
- * @param {Map<string, number>} offsets The age offsets.
- * @param {*[]} boundaries The age boundary table.
+ * @param {Snapshot[]} samples
+ * @param {Map<string, number>} offsets
+ * @param {*[]} boundaries
  * @param {string} scopeAge "all" or the age type to isolate.
  * @returns {{ lo: number, hi: number }} The chart-X range.
  */
@@ -291,7 +291,7 @@ function scopeXRange(samples, offsets, boundaries, scopeAge) {
 
 /**
  * The min/max chart-X across all samples.
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @param {Map<string, number>} offsets The age offsets.
  * @param {*[]} boundaries The age boundary table.
  * @returns {{ lo: number, hi: number }} The chart-X range (Infinity/-Infinity when empty).
@@ -311,9 +311,9 @@ function sampleXRange(samples, offsets, boundaries) {
 /**
  * Build the crisis-stage onset markers (chart-X, stage color, stage label) and
  * the earliest onset's chart-X.
- * @param {Snapshot[]} samples The sample stream.
- * @param {Map<string, number>} offsets The age offsets.
- * @param {*[]} boundaries The age boundary table.
+ * @param {Snapshot[]} samples
+ * @param {Map<string, number>} offsets
+ * @param {*[]} boundaries
  * @param {string} scopeAge "all", or an age type to keep only that crisis's onsets.
  * @returns {{ markers: { x: number, color: string, label: string }[],
  *   firstOnset: number }} The markers + first onset.
@@ -336,7 +336,7 @@ function buildCrisisMarkers(samples, offsets, boundaries, scopeAge) {
  * Build a metric cell head: the cost icon + the shared metric title (so titles
  * match the war graphs + the war-timeline tooltip).
  * @param {*} m The crisis graph metric.
- * @returns {HTMLElement} The head element.
+ * @returns {HTMLElement}
  */
 function buildCellHead(m) {
   const head = document.createElement("div");
@@ -351,10 +351,10 @@ function buildCellHead(m) {
 /**
  * Build one metric cell: head, then the line chart (or a no-data note).
  * @param {*} m The crisis graph metric.
- * @param {*} history The history blob.
+ * @param {*} history
  * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
  * @param {{ markers: *[], xDomain: * }} axis The shared markers + x-domain.
- * @returns {HTMLElement} The cell element.
+ * @returns {HTMLElement}
  */
 function buildCell(m, history, rosterMap, axis) {
   const cell = document.createElement("div");
@@ -384,7 +384,7 @@ function buildCell(m, history, rosterMap, axis) {
 /**
  * Build an invisible filler cell that occupies one grid column (same flex size
  * as a real cell) so a partial last row doesn't stretch its real graph.
- * @returns {HTMLElement} The filler cell.
+ * @returns {HTMLElement}
  */
 function buildFillerCell() {
   const cell = document.createElement("div");
@@ -397,7 +397,7 @@ function buildFillerCell() {
  * across every graph and re-renders.
  * @param {{ key: string, name: string, color: string }} civ The roster entry.
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement} The legend item.
+ * @returns {HTMLElement}
  */
 function buildLegendItem(civ, onChange) {
   const item = document.createElement("span");
@@ -418,9 +418,9 @@ function buildLegendItem(civ, onChange) {
 
 /**
  * Build the "All" / "None" bulk-select controls.
- * @param {{ key: string }[]} roster The civ roster.
+ * @param {{ key: string }[]} roster
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement} The controls row.
+ * @returns {HTMLElement}
  */
 function buildLegendControls(roster, onChange) {
   const row = document.createElement("div");
@@ -447,9 +447,9 @@ function buildLegendControls(roster, onChange) {
 /**
  * Build the shared header: a title, the All/None controls, and the single
  * interactive civ legend that governs every graph at once.
- * @param {{ key: string, name: string, color: string }[]} roster The civ roster.
+ * @param {{ key: string, name: string, color: string }[]} roster
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement} The header element.
+ * @returns {HTMLElement}
  */
 function buildHeader(roster, onChange) {
   const head = document.createElement("div");
@@ -468,8 +468,8 @@ function buildHeader(roster, onChange) {
 
 /**
  * Render (or re-render) the Crisis Graphs panel into `host`.
- * @param {HTMLElement} host The chart host.
- * @param {{ history?: *, crisisAge?: * }} opts Render options.
+ * @param {HTMLElement} host
+ * @param {{ history?: *, crisisAge?: * }} opts
  */
 function renderInto(host, opts) {
   clearHost(host);
@@ -497,9 +497,9 @@ function renderInto(host, opts) {
 }
 
 /**
- * Build the key->display map used by crisis graph cells.
- * @param {{ key: string, name: string, color: string }[]} roster Civ roster.
- * @returns {Map<string, { name: string, color: string }>} Roster map.
+ * The key -> display map the crisis graph cells read.
+ * @param {{ key: string, name: string, color: string }[]} roster
+ * @returns {Map<string, { name: string, color: string }>}
  */
 function buildCrisisRosterMap(roster) {
   return new Map(roster.map((c) => [c.key, { name: c.name, color: c.color }]));
@@ -507,10 +507,10 @@ function buildCrisisRosterMap(roster) {
 
 /**
  * Build the crisis graph panel shell (container + header).
- * @param {HTMLElement} host The chart host.
- * @param {{ history?: * }} opts Render options.
- * @param {{ key: string, name: string, color: string }[]} roster Civ roster.
- * @returns {HTMLElement} Panel element.
+ * @param {HTMLElement} host
+ * @param {{ history?: * }} opts
+ * @param {{ key: string, name: string, color: string }[]} roster
+ * @returns {HTMLElement}
  */
 function buildCrisisPanel(host, opts, roster) {
   const panel = document.createElement("div");
@@ -521,10 +521,10 @@ function buildCrisisPanel(host, opts, roster) {
 
 /**
  * Build the crisis graph grid and add filler cells for a stable 3-up layout.
- * @param {*} history The history blob.
- * @param {Map<string, { name: string, color: string }>} rosterMap Roster map.
+ * @param {*} history
+ * @param {Map<string, { name: string, color: string }>} rosterMap
  * @param {*} axis Shared axis domain.
- * @returns {HTMLElement} Grid element.
+ * @returns {HTMLElement}
  */
 function buildCrisisGrid(history, rosterMap, axis) {
   const grid = document.createElement("div");

@@ -1,22 +1,21 @@
 // GameFace (Civilization VII's UI engine) silently drops a declaration that uses var() inside a
 // shorthand property: `border: 1px solid var(--c)` renders no border at all. Longhands with a
-// single var() work. This gate keeps EVERY shipped stylesheet on longhands, and on flexbox
+// single var() work. This gate keeps every shipped stylesheet on longhands, and on flexbox
 // (GameFace has no CSS grid).
 //
-// Scope note: this gate used to read screen-demographics-history.css alone, which is why the base,
-// settlements and worldrankings sheets accumulated 30 dropped declarations — the settlements rows'
+// This gate used to read screen-demographics-history.css alone, which is why the base,
+// settlements and worldrankings sheets accumulated 30 dropped declarations: the settlements rows'
 // per-civ left stripe and the chart time-filter pills' border/background never rendered for anyone.
 // Those were converted to longhands; the gate now sweeps all of them so it cannot happen again.
 //
 // The list of shorthands matters as much as the list of files: `border-color` was absent from it
-// until 2026-09-23 and hid 41 more dropped declarations — every framed card, table and chip on the
+// until 2026-09-23 and hid 41 more dropped declarations; every framed card, table and chip on the
 // Hall of Fame drew a gray currentColor hairline instead of copper. A property that writes several
 // longhands is a shorthand, whatever its name suggests.
 //
-// RECONSTRUCTION NOTE (2026-09-23): this file was truncated by a bad scripted write during the
-// Hall of Fame polish pass and `git checkout` restored the pre-2.7.3 single-file version. The
-// sweep, the clamp gate and the ladder check below were rebuilt to the same contract; the prose of
-// the original comments is not recovered verbatim.
+// This file was rebuilt on 2026-09-23 after a bad scripted write truncated it and `git checkout`
+// restored the pre-2.7.3 single-file version. The sweep, the clamp gate and the ladder check below
+// follow the same contract as before.
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
@@ -46,7 +45,7 @@ const grid = [];
 const unprefixed = [];
 // GameFace drops clamp()/min()/max() outright: `width: clamp(50px,20vw,120px)` computes to `auto`,
 // so a whole layer of the density stylesheet silently did nothing. Scale with
-// `calc(<number> * var(--dg-u))`, which is measured to work, or with vh/vw plus min/max-height.
+// `calc(<number> * var(--dg-u))`, which works, or with vh/vw plus min/max-height.
 const valueFns = [];
 for (const file of FILES) {
   const raw = fs.readFileSync(file, "utf8");
@@ -68,9 +67,9 @@ assert.deepEqual(unprefixed, [], `unprefixed --ia-* custom properties: ${unprefi
 assert.deepEqual(valueFns, [],
   `clamp()/min()/max() are dropped by GameFace - use calc(<number> * var(--dg-u)): ${valueFns.join(" | ")}`);
 
-// The type ladder is declared twice — as CSS defaults in the history sheet, and as the numbers
+// The type ladder is declared twice: as CSS defaults in the history sheet, and as the numbers
 // demographics-font-ladder.js republishes scaled by the player's Font Size setting. They must agree,
-// or the pre-ladder render and the scaled render disagree. Both files are read as TEXT: this gate
+// or the pre-ladder render and the scaled render disagree. Both files are read as text: this gate
 // runs without the module loader, and the ladder module is written against the engine.
 const ladderJs = fs.readFileSync(LADDER_JS, "utf8");
 const historyCss = fs.readFileSync(path.join(STYLES_DIR, "screen-demographics-history.css"), "utf8");

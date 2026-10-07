@@ -30,7 +30,7 @@ export function gameColors(entries) {
 
 /**
  * A CSS color with an alpha channel ("rgb(1, 2, 3)" or "#rrggbb" in; "rgba(...)" out).
- * @param {string} color CSS color.
+ * @param {string} color
  * @param {number} alpha 0..1.
  * @returns {string} rgba() color (the input when it cannot be parsed).
  */

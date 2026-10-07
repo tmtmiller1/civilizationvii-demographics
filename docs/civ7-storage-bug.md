@@ -6,8 +6,8 @@ what it deletes, and what Firaxis needs to change so that none of this is necess
 ## The bug, in one paragraph
 
 Civilization VII gives UI mods a small key-value store (`localStorage`, kept in `LocalStorage.sqlite` in your game
-data folder). Writing to it works. Reading from it does not: **whatever key a mod asks for, the game returns the value
-of the first key in the store, sorted by name.** Every mod gets the same answer, and it is only the right answer for
+data folder). Writing to it works. Reading from it does not: whatever key a mod asks for, the game returns the value
+of the first key in the store, sorted by name. Every mod gets the same answer, and it is only the right answer for
 the one mod whose key happens to sort first. The store cannot be listed either (`localStorage.key(i)` is always null),
 so a mod cannot even see what is in there. This is in the game, not in any mod, and it is present in 1.5.0.
 
@@ -31,19 +31,19 @@ with Demographics' settings and past games in it. The shared entry is then the f
 returns it, which is the right answer for every mod that keeps its settings there. Other mods add their own sections
 back to it the next time they save a setting. From then on, settings persist and the Hall of Fame's list of past games is saved.
 
-Nothing is reserved for Demographics. It restarts the shared entry; it does not own it. Watched on 2026-09-22: after the
-repair and a cold relaunch, a third-party options panel read back every setting stored in the shared entry.
+Nothing is reserved for Demographics. It restarts the shared entry; it does not own it. After the repair and a cold
+relaunch on 2026-09-22, a third-party options panel read back every setting stored in the shared entry.
 
-A mod that keeps a **separate entry of its own** (its own key, not `modSettings`) is not helped: it could not read that
+A mod that keeps a separate entry of its own (its own key, not `modSettings`) is not helped: it could not read that
 entry before and still cannot, because the game still returns the first key, which is now the shared entry. If such a
 mod writes a key that sorts ahead of `modSettings`, the bug bites everyone again and the repair is offered again.
 
 ## What the repair deletes
 
 Everything that is not the shared entry is deleted, permanently. Because the store cannot be listed, the repair cannot
-back anything up first or delete selectively. Be clear about what that means:
+back anything up first or delete selectively. What that means:
 
-- **Exactly one mod loses data it was using**: the one whose entry sorted first, which is the only data the game was
+- Exactly one mod loses data it was using: the one whose entry sorted first, which is the only data the game was
   reading correctly. If that mod keeps its own game history or notes there, they are gone.
 - What other mods had written to the store is cleared too, but they could never read it back, so it was already lost
   to them. After the repair they start saving properly.

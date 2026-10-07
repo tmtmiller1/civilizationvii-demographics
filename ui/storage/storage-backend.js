@@ -20,7 +20,7 @@ function warnNoEngineHash(derr) {
   if (noHashWarned) return;
   noHashWarned = true;
   derr(
-    "Database.makeHash unavailable , history persistence DISABLED this session " +
+    "Database.makeHash unavailable; history persistence is disabled this session " +
       "(no fallback hash is used, to avoid silently desyncing from engine keys). " +
       "In-memory history still works until the UI reloads."
   );
@@ -123,8 +123,8 @@ function configApiAvailable() {
 }
 
 /**
- * Resolve the GameConfiguration key-value store - the durable backend that
- * survives quit→load AND the age transition (unlike the Tutorial bag). Keys are
+ * Resolve the GameConfiguration key-value store: the durable backend that
+ * survives quit→load and the age transition (unlike the Tutorial bag). Keys are
  * plain strings; handles are fetched fresh per call.
  * @param {{
  *   catalogScope: string,

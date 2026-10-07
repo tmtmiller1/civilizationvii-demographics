@@ -3,7 +3,7 @@
 // data, so every guard around it matters: it must refuse when there is nothing to write, report
 // honestly when the engine refuses a step, and never claim success it did not verify by reading the
 // store back. The engine behavior modeled here (reads always return the first key by sort order,
-// writes/removes/clear are correct) was watched in game on 2026-09-22.
+// writes/removes/clear are correct) is what the game does.
 import assert from "node:assert/strict";
 import { buggyStorage } from "./_history-fixtures.mjs";
 
@@ -27,7 +27,7 @@ const rec = (id, turns = 40) => ({
   stats: { triumphs: 0 }, rivals: [], highlights: [], spark: { tri: [], set: [] }
 });
 
-// ---------------------------------------------------------------- looksLikeSettingsRoot
+// looksLikeSettingsRoot
 
 // 1. Only an object whose every top-level value is an object can be the shared settings root.
 {
@@ -40,7 +40,7 @@ const rec = (id, turns = 40) => ({
   assert.equal(repair.looksLikeSettingsRoot({ a: [] }), false, "an array is not a slice");
 }
 
-// ---------------------------------------------------------------- diagnose
+// diagnose
 
 // 2. No localStorage at all in this context.
 {
@@ -69,7 +69,7 @@ const rec = (id, turns = 40) => ({
   assert.equal(repair.diagnose().state, "foreign");
 }
 
-// ---------------------------------------------------------------- repairStore
+// repairStore
 
 // 4. Happy path: every other row goes, ours is the only one left, and it reads back.
 {
@@ -183,7 +183,7 @@ const rec = (id, turns = 40) => ({
   assert.equal(r.error, "readback-unparseable");
 }
 
-// ---------------------------------------------------------------- repairStorage (archive store)
+// repairStorage (archive store)
 
 // 13. The archive the session knows about survives the repair, and the settings slice goes with it.
 {

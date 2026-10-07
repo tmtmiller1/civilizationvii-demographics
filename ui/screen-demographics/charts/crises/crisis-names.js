@@ -331,7 +331,7 @@ const CRISIS_FALLBACK_BY_AGE = {
       "LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING"
     ],
     // Escalating 4-beat progressions (one beat per stage) so a crisis with no
-    // probed event type can STILL get per-stage names, not only a single name.
+    // probed event type can still get per-stage names, not only a single name.
     arcs: [
       [
         "LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST",
@@ -373,7 +373,7 @@ const CRISIS_FALLBACK_BY_AGE = {
 
 /**
  * FNV-1a-ish 32-bit string hash, used to seed deterministic crisis-name picks.
- * @param {string} s Source string.
+ * @param {string} s
  * @returns {number} An unsigned 32-bit hash.
  */
 function hashString(s) {
@@ -388,8 +388,8 @@ function hashString(s) {
 /**
  * Pick an array element by seed modulo length.
  * @template T
- * @param {T[]} arr Source array.
- * @param {number} seed Seed value.
+ * @param {T[]} arr
+ * @param {number} seed
  * @returns {T} The selected element.
  */
 function pickSeeded(arr, seed) {
@@ -397,7 +397,7 @@ function pickSeeded(arr, seed) {
 }
 
 /**
- * Read the game's start seed from the engine `Configuration`, defensively.
+ * The game's start seed from the engine `Configuration`.
  * @returns {string} The seed string, or "" when unavailable.
  */
 export function getGameSeed() {
@@ -416,7 +416,7 @@ export function getGameSeed() {
 /**
  * Resolve the `{ names, arcs }` LOC-key entry for a crisis sample, tolerating
  * the flat-array shape. Entries hold `LOC_DEMOGRAPHICS_CRISIS_*` tags.
- * @param {Snapshot|*} sample The crisis sample.
+ * @param {Snapshot|*} sample
  * @returns {{ names: string[], arcs: string[][] }} The resolved key pools.
  */
 function resolveCrisisEntry(sample) {
@@ -429,7 +429,6 @@ function resolveCrisisEntry(sample) {
 }
 
 /**
- * Resolve the base template entry for a crisis sample.
  * @param {*} type Crisis event type.
  * @param {*} age Sample age tag.
  * @returns {*[]} | {{ names: string[], arcs: string[][] }} Template entry.
@@ -445,9 +444,8 @@ function crisisTemplateEntry(type, age) {
 }
 
 /**
- * Resolve names list from a crisis template entry.
  * @param {*[] | { names?: string[] }} entry Template entry.
- * @returns {string[]} Names list.
+ * @returns {string[]}
  */
 function crisisEntryNames(entry) {
   if (Array.isArray(entry)) return entry;
@@ -455,9 +453,8 @@ function crisisEntryNames(entry) {
 }
 
 /**
- * Resolve arcs list from a crisis template entry.
  * @param {*[] | { arcs?: string[][] }} entry Template entry.
- * @returns {string[][]} Arcs list.
+ * @returns {string[][]}
  */
 function crisisEntryArcs(entry) {
   if (Array.isArray(entry)) return [];
@@ -470,7 +467,7 @@ function crisisEntryArcs(entry) {
  * game (seed) always reads consistently.
  * @param {Snapshot|*} sample The crisis sample (carries crisisEventType/age).
  * @param {number} stage The 1-based display stage.
- * @param {string} gameSeedStr The game's seed string.
+ * @param {string} gameSeedStr
  * @returns {string} The composed, localized crisis name.
  */
 export function flavorCrisisName(sample, stage, gameSeedStr) {

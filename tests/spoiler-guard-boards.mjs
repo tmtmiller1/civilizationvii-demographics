@@ -2,7 +2,7 @@
 // (chart-boards.js, chart-settlement-boards.js, chart-quarters-board.js, chart-crisis-stages.js, the
 // conflicts timeline + graphs + civ dropdown). Three civs: the local player (0), a met civ (1) and an
 // unmet civ (2). With the guard on (the default) no text or tooltip may name the unmet civ or its
-// cities; with it off the unmet civ must come back, which proves each check can actually fail.
+// cities; with it off the unmet civ must come back, so each check is one that can fail.
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
 
@@ -229,7 +229,7 @@ assert.deepEqual(leaking, [], "spoiler guard ON, unmet civ shown on:\n  " + leak
 assert.ok(SURFACES.warTimeline().includes(NAMES[MET].color), "the local player's war with a met civ stays on the timeline");
 assert.ok(SURFACES.pantheons().includes(NAMES[MET].civ), "a met civ's pantheon is still listed");
 
-// Guard OFF: every surface must show the unmet civ again (proves each check above can fail).
+// Guard OFF: every surface must show the unmet civ again, so each check above is one that can fail.
 DemographicsSettings.setSetting("hideUnmetStats", false);
 const hidden = [];
 for (const [name, render] of Object.entries(SURFACES)) {
@@ -239,7 +239,7 @@ assert.deepEqual(hidden, [], "spoiler guard OFF, unmet civ still hidden on: " + 
 
 DemographicsSettings.setSetting("hideUnmetStats", true);
 
-// ── policyVisibleWars details ────────────────────────────────────────────────
+// policyVisibleWars details
 const { policyVisibleWars } = await import("/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js");
 const roster = (pid, isCS = false) => ({ pid, civ: NAMES[pid] ? NAMES[pid].civ : "CS", isCS });
 const samples = makeHistory().samples;

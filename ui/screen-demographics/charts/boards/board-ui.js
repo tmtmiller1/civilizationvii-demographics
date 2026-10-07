@@ -69,9 +69,9 @@ export function expandBadge() {
 
 /**
  * A small colored identity swatch.
- * @param {string} color The swatch color.
+ * @param {string} color
  * @param {number} [size] Pixel size (default 12).
- * @returns {HTMLElement} The swatch.
+ * @returns {HTMLElement}
  */
 export function swatch(color, size) {
   const s = ((size || 12) / 18).toFixed(3) + "rem";
@@ -103,12 +103,12 @@ export function emptyState(host, text) {
 }
 
 /**
- * An elegant horizontal bar row: right-aligned label (ink), a recessive track
+ * A horizontal bar row: right-aligned label (ink), a recessive track
  * with a thin rounded-end fill (identity color), and a muted value. A hover
  * tooltip carries the full label+value.
  * @param {{label:string, value:number, max:number, color:string, right:string,
  *   labelWidth?:string}} o Row options.
- * @returns {HTMLElement} The row.
+ * @returns {HTMLElement}
  */
 export function barRow(o) {
   const pct = Math.max(0, Math.min(100, Math.round((o.value / (o.max || 1)) * 100)));
@@ -131,19 +131,19 @@ export function barRow(o) {
 
 /**
  * A vertical stack container with padding, for a section's rows.
- * @returns {HTMLElement} The stack.
+ * @returns {HTMLElement}
  */
 export function stack() {
   return box("display:flex;flex-direction:column;gap:0.278rem;width:100%;padding:0.111rem 0.444rem 0.556rem");
 }
 
 /**
- * A civ-identity column header (accent swatch + name in ink + a count badge) —
- * NO text on a colored background.
- * @param {string} name The civ label.
+ * A civ-identity column header (accent swatch + name in ink + a count badge),
+ * no text on a colored background.
+ * @param {string} name
  * @param {string} color The readable civ color.
- * @param {number} count The item count badge.
- * @returns {HTMLElement} The header.
+ * @param {number} count
+ * @returns {HTMLElement}
  */
 export function columnHeader(name, color, count) {
   const head = box(
@@ -163,11 +163,11 @@ export function columnHeader(name, color, count) {
  * A board column: an identity header + a list of item rows (all ink text). An item
  * may be a plain string (one ink line) or a `{title, sub}` object, which renders the
  * title in ink over a muted-ink sub-line (used for a pantheon name + its effect).
- * @param {string} name The header label.
+ * @param {string} name
  * @param {string} color The readable identity color.
- * @param {number} count The count badge.
- * @param {(string | {title:string, sub?:string})[]} items The item labels/entries.
- * @returns {HTMLElement} The column.
+ * @param {number} count
+ * @param {(string | {title:string, sub?:string})[]} items
+ * @returns {HTMLElement}
  */
 export function boardColumn(name, color, count, items) {
   const col = box(
@@ -182,8 +182,8 @@ export function boardColumn(name, color, count, items) {
 /**
  * One board-column row: a plain string, or a `{title, sub}` pair (title in ink over a
  * muted sub-line).
- * @param {string | {title:string, sub?:string}} it The item.
- * @returns {HTMLElement} The row.
+ * @param {string | {title:string, sub?:string}} it
+ * @returns {HTMLElement}
  */
 function boardColumnItem(it) {
   const base = "padding:0.333rem 0.667rem;border-bottom:1px solid rgba(0,0,0,0.18)";
@@ -204,9 +204,9 @@ function boardColumnItem(it) {
  * A container for board columns. By default a single horizontal scrolling row;
  * pass `wrap` to reflow the columns into multiple rows so they all fit on screen
  * (the container then scrolls vertically instead of horizontally).
- * @param {HTMLElement} host The board host.
+ * @param {HTMLElement} host
  * @param {boolean} [wrap] When true, columns wrap onto multiple rows.
- * @returns {HTMLElement} The columns container.
+ * @returns {HTMLElement}
  */
 export function columnsRow(host, wrap) {
   const flow = wrap
@@ -221,10 +221,9 @@ export function columnsRow(host, wrap) {
 export const SVG_NS = "http://www.w3.org/2000/svg";
 
 /**
- * Create an SVG element with attributes.
  * @param {string} name The tag name.
- * @param {Record<string, string|number>} attrs Attributes.
- * @returns {SVGElement} The element.
+ * @param {Record<string, string|number>} attrs
+ * @returns {SVGElement}
  */
 export function svgEl(name, attrs) {
   const el = document.createElementNS(SVG_NS, name);
@@ -235,8 +234,8 @@ export function svgEl(name, attrs) {
 /**
  * An SVG text label in a text ink token.
  * @param {number} x @param {number} y @param {string} text
- * @param {{anchor?:string, fill?:string, size?:number}} [o] Options.
- * @returns {SVGElement} The text element.
+ * @param {{anchor?:string, fill?:string, size?:number}} [o]
+ * @returns {SVGElement}
  */
 export function svgText(x, y, text, o) {
   const t = svgEl("text", {
@@ -250,7 +249,7 @@ export function svgText(x, y, text, o) {
 /**
  * A full-size scaling SVG root appended to `host`.
  * @param {HTMLElement} host @param {number} w ViewBox width. @param {number} h ViewBox height.
- * @returns {SVGElement} The svg.
+ * @returns {SVGElement}
  */
 export function svgRoot(host, w, h) {
   const svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, width: "100%", height: "100%" });
@@ -261,8 +260,8 @@ export function svgRoot(host, w, h) {
 
 /**
  * A legend row (swatch + label per entry), text in ink.
- * @param {{name:string, color:string}[]} entries The legend entries.
- * @returns {HTMLElement} The legend.
+ * @param {{name:string, color:string}[]} entries
+ * @returns {HTMLElement}
  */
 export function legend(entries) {
   const wrap = box("display:flex;flex-wrap:wrap;gap:0.667rem 1rem;padding:0.556rem 0.444rem");

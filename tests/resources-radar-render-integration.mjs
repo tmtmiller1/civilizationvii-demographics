@@ -45,7 +45,7 @@ function makeHistory() {
   };
 }
 
-// ── chart-resources ──────────────────────────────────────────────────
+// chart-resources
 const { collectResourceCivOptions, renderResourcesStack } = await import(
   "/demographics/ui/screen-demographics/charts/resources/chart-resources.js"
 );
@@ -64,7 +64,7 @@ renderResourcesStack(host1, {
 });
 assert.ok(host1.children.length > 0);
 
-// ── chart-triumphs-radar ─────────────────────────────────────────────
+// chart-triumphs-radar
 const { renderLegacyRadar } = await import(
   "/demographics/ui/screen-demographics/charts/triumphs/chart-triumphs-radar.js"
 );
@@ -90,8 +90,8 @@ renderLegacyRadar(host2, {
 });
 assert.ok(host2.children.length > 0);
 
-// ── boards: non-iterable GameInfo tables ─────────────────────────────────
-// The GameInfo tables are read live; a table that is present but NOT iterable must be swallowed
+// boards: non-iterable GameInfo tables
+// The GameInfo tables are read live; a table that is present but not iterable must be swallowed
 // inside the board's safe() (the iteration used to sit outside it), and the boards still render.
 const { renderQuartersBoard } = await import(
   "/demographics/ui/screen-demographics/charts/boards/chart-quarters-board.js"

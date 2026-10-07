@@ -22,9 +22,9 @@ import { effectivePolicy } from "/demographics/ui/core/demographics-governance.j
 /**
  * Run fn, returning result or fallback on throw.
  * @template T
- * @param {() => T} fn Thunk to run.
- * @param {(...a: any[]) => void} derr Error logger.
- * @param {T} [fb] Fallback value.
+ * @param {() => T} fn
+ * @param {(...a: any[]) => void} derr
+ * @param {T} [fb]
  * @returns {T|undefined} Result or fallback.
  */
 function safeCall(fn, derr, fb) {
@@ -40,13 +40,13 @@ function safeCall(fn, derr, fb) {
  * Compute chart dimensions from the measured host, using its real size when laid
  * out and a 16:9-ish default only while the rect is still 0. The generous clamp
  * keeps ultrawide displays crisp; {@link ensureChartResizeReflow} re-measures later.
- * @param {HTMLElement} chartHost The chart host element.
- * @returns {{ width: number, height: number }} Dimensions.
+ * @param {HTMLElement} chartHost
+ * @returns {{ width: number, height: number }}
  */
 function measureChartSize(chartHost) {
   const hostRect = chartHost.getBoundingClientRect?.();
-  // The frame may be drawn through transform:scale, so the rect is in VISUAL px while the canvas
-  // is sized in the frame's LOCAL px; convert or the chart renders s^2 too small.
+  // The frame may be drawn through transform:scale, so the rect is in visual px while the canvas
+  // is sized in the frame's local px; convert or the chart renders s^2 too small.
   const rawW = Math.round(toLocalPx(hostRect?.width || 0));
   const rawH = Math.round(toLocalPx(hostRect?.height || 0));
   const width = rawW > 0 ? Math.max(480, Math.min(4096, rawW)) : 1600;
@@ -86,11 +86,11 @@ function ensureChartResizeReflow() {
 
 /**
  * Route rendering to synthetic or standard chart paths.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {TurnRange|null} turnRange Active turn window.
- * @param {{ width: number, height: number }} size Chart size.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @param {TurnRange|null} turnRange
+ * @param {{ width: number, height: number }} size
  */
 function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
   if (tryRenderExternalPanel(chartHost, ctx, activeMetric)) return;
@@ -106,7 +106,7 @@ let _extLast = { id: null, turn: -1, host: null, policy: "" };
 
 /**
  * The current game turn (for external-panel render-skip invalidation), or -1 off-engine.
- * @returns {number} The turn.
+ * @returns {number}
  */
 function currentTurn() {
   try {
@@ -151,10 +151,10 @@ function findPanelFor(activeMetric) {
 /**
  * Whether the external panel is already rendered into this host for the same id, turn, and policy
  * (so the rebuild can be skipped).
- * @param {string} activeMetric Active metric/panel/sub-tab id.
- * @param {number} turn Current game turn.
+ * @param {string} activeMetric
+ * @param {number} turn
  * @param {string} policy Effective analytics-visibility policy.
- * @param {HTMLElement} chartHost Chart host element.
+ * @param {HTMLElement} chartHost
  * @returns {boolean} True when the existing DOM can be kept.
  */
 function extUnchanged(activeMetric, turn, policy, chartHost) {
@@ -166,9 +166,9 @@ function extUnchanged(activeMetric, turn, policy, chartHost) {
  * Render a companion-registered external panel (registerPanel) by handing it the chart host. The
  * companion owns the entire body; a throw inside it must never break the screen. Re-renders on any
  * real change (page/sub-tab switch, new host, turn advance, analytics-policy change), else skips.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric/panel/sub-tab id.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
  * @returns {boolean} True if an external panel handled it.
  */
 function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
@@ -193,12 +193,12 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
 
 /**
  * Attempt synthetic metric rendering.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {TurnRange|null} turnRange Active turn window.
- * @param {{ width: number, height: number }} size Chart size.
- * @returns {boolean} True if handled.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @param {TurnRange|null} turnRange
+ * @param {{ width: number, height: number }} size
+ * @returns {boolean}
  */
 function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size) {
   const { width, height } = size;
@@ -306,11 +306,11 @@ const FILTERABLE_TRENDS = {
 /**
  * Attempt a filterable trend/compare chart (Power Race, Population Share, Power
  * Fingerprint): a Chart.js / SVG render wired to the shared civ-filter legend.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {{ width: number, height: number }} size Chart size.
- * @returns {boolean} True if handled.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @param {{ width: number, height: number }} size
+ * @returns {boolean}
  */
 function tryRenderTrend(chartHost, ctx, activeMetric, size) {
   const fnName = FILTERABLE_TRENDS[activeMetric];
@@ -330,11 +330,11 @@ function tryRenderTrend(chartHost, ctx, activeMetric, size) {
 /**
  * Attempt plain-DOM / SVG board synthetic rendering (Wonders, by-type, Religion,
  * Atlas), plus the Chart.js civ scatters (which need the canvas size).
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
  * @param {{ width: number, height: number }} [size] Chart size (for the scatters).
- * @returns {boolean} True if handled.
+ * @returns {boolean}
  */
 function tryRenderBoards(chartHost, ctx, activeMetric, size) {
   const cm = /** @type {*} */ (ctx.chartMod);
@@ -363,7 +363,7 @@ function tryRenderBoards(chartHost, ctx, activeMetric, size) {
  * Buildings board, and the Game.Summary by-type breakdowns.
  * @param {*} cm The chart module. @param {HTMLElement} chartHost
  * @param {*} ctx Render context. @param {string} activeMetric Active metric id.
- * @returns {boolean} True if handled.
+ * @returns {boolean}
  */
 function tryConstructibleBoards(cm, chartHost, ctx, activeMetric) {
   if (activeMetric === "districts_type" && typeof cm.renderQuartersBoard === "function") {
@@ -385,10 +385,10 @@ function tryConstructibleBoards(cm, chartHost, ctx, activeMetric) {
 
 /**
  * Attempt crisis synthetic rendering.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @returns {boolean} True if handled.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @returns {boolean}
  */
 function tryRenderCrisis(chartHost, ctx, activeMetric) {
   const chartMod = /** @type {*} */ (ctx.chartMod);
@@ -408,12 +408,12 @@ function tryRenderCrisis(chartHost, ctx, activeMetric) {
 
 /**
  * Attempt wars synthetic rendering.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {TurnRange|null} turnRange Active turn window.
- * @param {{ width: number, height: number }} size Chart size.
- * @returns {boolean} True if handled.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @param {TurnRange|null} turnRange
+ * @param {{ width: number, height: number }} size
+ * @returns {boolean}
  */
 function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
   const { width, height } = size;
@@ -442,11 +442,11 @@ function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
 
 /**
  * Render standard line-chart metric.
- * @param {HTMLElement} chartHost Chart host element.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {TurnRange|null} turnRange Active turn window.
- * @param {{ width: number, height: number }} size Chart size.
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @param {TurnRange|null} turnRange
+ * @param {{ width: number, height: number }} size
  */
 function renderStandardChart(chartHost, ctx, activeMetric, turnRange, size) {
   const { width, height } = size;
@@ -471,11 +471,11 @@ function renderStandardChart(chartHost, ctx, activeMetric, turnRange, size) {
 
 /**
  * Build and append the chart host, then render or show NYI placeholder.
- * @param {HTMLElement} host View host.
- * @param {*} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {TurnRange|null} turnRange Active turn window.
- * @param {ChartRenderDeps} deps Render dependencies.
+ * @param {HTMLElement} host
+ * @param {*} ctx
+ * @param {string} activeMetric
+ * @param {TurnRange|null} turnRange
+ * @param {ChartRenderDeps} deps
  */
 export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
   // Building a fresh host: drop any prior chart's reflow so a resize during the
@@ -514,7 +514,7 @@ export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
   };
   ensureChartResizeReflow();
 
-  // Measure after TWO frames so GameFace has finished laying out the flex column (controls row +
+  // Measure after two frames so GameFace has finished laying out the flex column (controls row +
   // chart host). One frame can read a not-yet-settled host and clamp the canvas to its small floor,
   // which renders a chart that stays small instead of filling the window.
   if (typeof requestAnimationFrame === "function") {

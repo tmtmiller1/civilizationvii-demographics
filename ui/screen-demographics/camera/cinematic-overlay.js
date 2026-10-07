@@ -61,7 +61,6 @@ export const QUARTER_ARTICLE = {
   }
 };
 
-// ── English article system ──────────────────────────────────────────
 // English article choice for proper place names is lexical ("the Parthenon" vs. "Petra"), so
 // every named entity defaults to "the " and a curated set of toponyms subtracts it.
 // NO_ARTICLE_TYPES (stable type ids) is checked first; NO_ARTICLE_NAMES matches on the
@@ -70,11 +69,10 @@ export const QUARTER_ARTICLE = {
 
 /** @type {Set<string>} */
 export const NO_ARTICLE_TYPES = new Set([
-  // Verified against the installed game (Civilization VII 1.5.0 with all released packs): every
-  // WONDER_* / FEATURE_* below was read from GameInfo, so these ids are what the engine actually
-  // reports. Matching on the id rather than the display name is what keeps this correct when a
-  // name is spelled differently than expected - "Machu Pikchu", not "Machu Picchu", is the game's
-  // own spelling, and the name-only list missed it and produced "the Machu Pikchu".
+  // Every WONDER_* / FEATURE_* below was read from GameInfo on Civilization VII 1.5.0 with all
+  // released packs. Matching on the id rather than the display name is what keeps this correct
+  // when a name is spelled differently than expected: "Machu Pikchu" is the game's own spelling,
+  // and the name-only list missed it and produced "the Machu Pikchu".
   //
   // To refresh after a pack adds wonders: in a running game, list
   // `GameInfo.Constructibles` where `ConstructibleClass === "WONDER"` and the null-class
@@ -90,7 +88,7 @@ export const NO_ARTICLE_TYPES = new Set([
   "WONDER_WEIYANG_PALACE",
 
   // Natural wonders that are proper place-names (reject "the"). The ones that keep "the" are
-  // deliberately absent: the Bermuda Triangle, the Grand Canyon, the Great Blue Hole, the
+  // absent on purpose: the Bermuda Triangle, the Grand Canyon, the Great Blue Hole, the
   // Valley of Flowers.
   "FEATURE_GULLFOSS", "FEATURE_HOERIKWAGGO", "FEATURE_IGUAZU_FALLS", "FEATURE_KILIMANJARO",
   "FEATURE_MACHAPUCHARE", "FEATURE_MAPU_A_VAEA_BLOWHOLES", "FEATURE_MOUNT_EVEREST",
@@ -123,8 +121,8 @@ export const NO_ARTICLE_NAMES = new Set([
 /**
  * Normalize a display name for article-exception matching: strip diacritics and apostrophes,
  * fold hyphens to spaces, collapse whitespace, lowercase.
- * @param {string} name The display name.
- * @returns {string} The normalized key.
+ * @param {string} name
+ * @returns {string}
  */
 export function normalizeArticleName(name) {
   return String(name || "")
@@ -140,18 +138,17 @@ export function normalizeArticleName(name) {
 /**
  * Whether a name already carries a leading English article, so we must not
  * prepend another (avoids "the the Forbidden City").
- * @param {string} name The display name.
- * @returns {boolean} True when already articled.
+ * @param {string} name
+ * @returns {boolean}
  */
 export function startsWithArticle(name) {
   return /^(the|an?)\s/i.test(String(name || ""));
 }
 
 /**
- * English article decision for a single named entity.
  * @param {string} name The composed display name.
  * @param {string} typeId The stable type id, or "".
- * @returns {string} The articled name.
+ * @returns {string}
  */
 export function englishArticled(name, typeId) {
   if (startsWithArticle(name)) return name;
@@ -164,8 +161,8 @@ export function englishArticled(name, typeId) {
  * Apply a locale-appropriate article to a named entity (wonder, quarter, natural
  * wonder). English uses the default-"the" + toponym-exception system; other
  * locales use the per-quarter QUARTER_ARTICLE table.
- * @param {{name: string, typeId?: string}} entity The entity descriptor.
- * @returns {string} The articled name.
+ * @param {{name: string, typeId?: string}} entity
+ * @returns {string}
  */
 export function articledName(entity) {
   const name = entity && entity.name ? String(entity.name) : "";
@@ -181,9 +178,8 @@ export function articledName(entity) {
 }
 
 /**
- * Build a laurel medal crest for top-3 ranks.
  * @param {number} place The 1-based rank.
- * @returns {HTMLElement} The medal element.
+ * @returns {HTMLElement}
  */
 export function buildOverlayMedal(place) {
   const medal = div(
@@ -197,9 +193,8 @@ export function buildOverlayMedal(place) {
 }
 
 /**
- * Resolve settlement owner display name for overlay header.
- * @param {*} settlement Settlement record.
- * @returns {string} Owner display name.
+ * @param {*} settlement
+ * @returns {string}
  */
 function overlayOwnerName(settlement) {
   if (!settlement || !settlement.owner) return "";
@@ -207,9 +202,8 @@ function overlayOwnerName(settlement) {
 }
 
 /**
- * Build the overlay's identity header.
- * @param {*} settlement The settlement record.
- * @returns {HTMLElement} The header element.
+ * @param {*} settlement
+ * @returns {HTMLElement}
  */
 export function buildOverlayHeader(settlement) {
   const head = div("demographics-map-overlay-head");
@@ -229,9 +223,8 @@ export function buildOverlayHeader(settlement) {
 }
 
 /**
- * Build the overlay's population and wonders line.
- * @param {*} settlement The settlement record.
- * @returns {HTMLElement} The meta element.
+ * @param {*} settlement
+ * @returns {HTMLElement}
  */
 function buildOverlayMeta(settlement) {
   const meta = div("demographics-map-overlay-meta");
@@ -256,9 +249,8 @@ function buildOverlayMeta(settlement) {
 }
 
 /**
- * Build the transient flyby progress badge.
- * @param {*} flowState The active flow state.
- * @returns {HTMLElement} The progress element.
+ * @param {*} flowState
+ * @returns {HTMLElement}
  */
 export function buildFlybyProgress(flowState) {
   const wrap = div("demographics-map-overlay-flyby");
@@ -275,19 +267,17 @@ export function buildFlybyProgress(flowState) {
 }
 
 /**
- * Update the flyby shot counter.
- * @param {*} flowState The active flow state.
+ * @param {*} flowState
  * @param {number} index Current shot (1-based).
- * @param {number} total Total shots.
+ * @param {number} total
  */
 export function updateFlybyProgress(flowState, index, total) {
   if (flowState && flowState.dots) flowState.dots.textContent = index + "/" + total;
 }
 
 /**
- * Build a POI caption label.
  * @param {*} caption The {nameKey, year} caption.
- * @returns {string} The caption text.
+ * @returns {string}
  */
 export function captionText(caption) {
   if (!caption) return "";
@@ -324,7 +314,6 @@ export function flavorText(caption) {
 }
 
 /**
- * Return the active language code.
  * @returns {string} The two-letter language code.
  */
 export function localeCode() {
@@ -340,8 +329,7 @@ export function localeCode() {
 }
 
 /**
- * Build a district name with locale-specific article where required.
- * @param {{name: string, quarterType?: string}} district The district record.
+ * @param {{name: string, quarterType?: string}} district
  * @returns {string} The articled district phrase.
  */
 export function districtPhrase(district) {
@@ -350,9 +338,9 @@ export function districtPhrase(district) {
 }
 
 /**
- * Return the localized highlight names for the overlay sentence.
- * @param {*} settlement The settlement record.
- * @returns {string[]} The names.
+ * Localized highlight names for the overlay sentence.
+ * @param {*} settlement
+ * @returns {string[]}
  */
 export function highlightNames(settlement) {
   const out = [];
@@ -368,9 +356,8 @@ export function highlightNames(settlement) {
 }
 
 /**
- * Return ordinal words for English ranks.
- * @param {number} rank The rank number.
- * @returns {string} The ordinal text.
+ * @param {number} rank
+ * @returns {string}
  */
 export function ordinalWord(rank) {
   return rank >= 1 && rank < ORDINAL_WORDS.length ? ORDINAL_WORDS[rank] : "#" + rank;
@@ -392,9 +379,8 @@ export function ordinalText(rank) {
 }
 
 /**
- * Join names into locale-aware list text.
  * @param {string[]} names
- * @returns {string} The joined list.
+ * @returns {string} Locale-aware list text.
  */
 export function joinNames(names) {
   const andText = t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND");
@@ -410,18 +396,16 @@ export function joinNames(names) {
 }
 
 /**
- * Return a compose result or fallback text.
- * @param {string} result The compose output.
- * @param {string} fallback The fallback text.
- * @returns {string} The resolved text.
+ * @param {string} result
+ * @param {string} fallback
+ * @returns {string}
  */
 export function composeOr(result, fallback) {
   return result && result.indexOf("LOC_") !== 0 ? result : fallback;
 }
 
 /**
- * Whether the current locale is English.
- * @returns {boolean} True for English locale.
+ * @returns {boolean}
  */
 export function isEnglishLocale() {
   try {
@@ -436,9 +420,8 @@ export function isEnglishLocale() {
 }
 
 /**
- * Build the main recognized sentence.
- * @param {*} settlement The settlement record.
- * @returns {string} The sentence.
+ * @param {*} settlement
+ * @returns {string}
  */
 export function recognizedSentence(settlement) {
   const rank =
@@ -461,9 +444,8 @@ export function recognizedSentence(settlement) {
 }
 
 /**
- * Build the overlay congratulations block.
- * @param {*} settlement The settlement record.
- * @returns {HTMLElement} The congratulation element.
+ * @param {*} settlement
+ * @returns {HTMLElement}
  */
 export function buildCongrats(settlement) {
   const wrap = div("demographics-map-overlay-congrats");
@@ -497,11 +479,10 @@ function appendFlybyCaption(card, flowState) {
 }
 
 /**
- * Build the full overlay card.
- * @param {*} settlement The settlement record.
+ * @param {*} settlement
  * @param {string} mode The camera mode.
- * @param {{flowState: *, onBack: () => void}} options Runtime options.
- * @returns {HTMLElement} The card element.
+ * @param {{flowState: *, onBack: () => void}} options
+ * @returns {HTMLElement}
  */
 export function buildOverlayCard(settlement, mode, options) {
   const card = div("demographics-map-overlay-card");
@@ -525,11 +506,10 @@ export function buildOverlayCard(settlement, mode, options) {
 }
 
 /**
- * Mount the cinematic overlay on document body.
- * @param {*} flowState The active flow state.
- * @param {*} settlement The settlement record.
+ * @param {*} flowState
+ * @param {*} settlement
  * @param {string} mode The camera mode.
- * @param {{onBack: () => void, nowMs: () => number}} options Runtime options.
+ * @param {{onBack: () => void, nowMs: () => number}} options
  */
 export function mountOverlay(flowState, settlement, mode, options) {
   const overlay = div("demographics-map-overlay");
@@ -552,8 +532,8 @@ export function mountOverlay(flowState, settlement, mode, options) {
   }
   // Input shield: a transparent full-viewport layer under the card, so that for the duration of
   // the flyby the only things reachable are Back (the card sits above this) and Escape. Without
-  // it the game's HUD stays live behind the cinematic - a leader portrait opens diplomacy, a tile
-  // hover raises its tooltip - because disabling WORLD input does not disable the HUD's own DOM.
+  // it the game's HUD stays live behind the cinematic (a leader portrait opens diplomacy, a tile
+  // hover raises its tooltip), because disabling world input does not disable the HUD's own DOM.
   const shield = div("demographics-map-shield");
   try {
     for (const type of ["mousedown", "mouseup", "click", "mousemove", "mouseover", "wheel", "contextmenu"]) {
@@ -571,15 +551,14 @@ export function mountOverlay(flowState, settlement, mode, options) {
   try {
     publishFontLadder(overlay);
   } catch (_) {
-    // A failed publish leaves the stylesheet defaults in place, which render at reference size.
+    // a failed publish leaves the stylesheet defaults in place, which render at reference size
   }
   document.body.appendChild(overlay);
   if (flowState) flowState.overlay = overlay;
 }
 
 /**
- * Remove the cinematic overlay from the document.
- * @param {*} flowState The active flow state.
+ * @param {*} flowState
  */
 export function removeOverlay(flowState) {
   try {
@@ -588,13 +567,13 @@ export function removeOverlay(flowState) {
     }
     flowState.shield = null;
   } catch (_) {
-    // A shield that cannot be removed must not stop the overlay teardown below.
+    // a shield that cannot be removed must not stop the overlay teardown below
   }
   try {
     if (flowState.overlay && flowState.overlay.parentNode) {
       flowState.overlay.parentNode.removeChild(flowState.overlay);
     }
   } catch (_) {
-    // node may already be detached.
+    // node may already be detached
   }
 }

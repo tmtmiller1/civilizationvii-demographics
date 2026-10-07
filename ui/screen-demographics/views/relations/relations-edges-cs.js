@@ -27,7 +27,7 @@ import {
 
 /**
  * Resolve the live palette color for an attitude key.
- * @param {string} key Attitude key.
+ * @param {string} key
  * @returns {string} The palette color (gray fallback).
  */
 function categoryColor(key) {
@@ -37,7 +37,7 @@ function categoryColor(key) {
 
 /**
  * Build a relationship-enum to attitude-key lookup map from engine constants.
- * @returns {Map<*, string>} Relationship enum map.
+ * @returns {Map<*, string>}
  */
 function relationshipKeyMap() {
   /** @type {Map<*, string>} */
@@ -58,8 +58,8 @@ function relationshipKeyMap() {
 
 /**
  * Map an engine relationship enum to one of the seven attitude keys.
- * @param {*} rel Relationship enum value.
- * @returns {string} The attitude key.
+ * @param {*} rel
+ * @returns {string}
  */
 function attitudeKeyFromEnum(rel) {
   const key = relationshipKeyMap().get(rel);
@@ -79,8 +79,8 @@ function canResolveCsBonusType() {
 
 /**
  * Whether `p1` is at war with player `p2id`, defensively.
- * @param {*} p1 Source player handle.
- * @param {number} p2id Target player id.
+ * @param {*} p1
+ * @param {number} p2id
  * @returns {boolean} True when at war.
  */
 function isAtWar(p1, p2id) {
@@ -98,8 +98,8 @@ function isAtWar(p1, p2id) {
 
 /**
  * Resolve the engine relationship enum from `p1` toward `p2id`.
- * @param {*} p1 Source player handle.
- * @param {number} p2id Target player id.
+ * @param {*} p1
+ * @param {number} p2id
  * @returns {*} Relationship enum or `undefined`.
  */
 function getRelationship(p1, p2id) {
@@ -112,7 +112,7 @@ function getRelationship(p1, p2id) {
 
 /**
  * Find the `GameInfo.CityStateBonuses` row whose `$hash` matches `bonusHash`.
- * @param {number} bonusHash Bonus-type hash to match.
+ * @param {number} bonusHash
  * @returns {*} Matching row, or `null`.
  */
 function findBonusRow(bonusHash) {
@@ -137,7 +137,7 @@ function findBonusRow(bonusHash) {
 
 /**
  * Pass 1: classify a CS by its assigned bonus.
- * @param {number} pid City-state player id.
+ * @param {number} pid
  * @returns {string|null} The `CityStateType` string.
  */
 function csTypeFromBonus(pid) {
@@ -161,7 +161,7 @@ function canResolveIndependentCsType() {
 
 /**
  * Find the `GameInfo.Independents` row matching a civ adjective.
- * @param {string} adj Player civilization adjective.
+ * @param {string} adj
  * @returns {*} Matching row, or `null`.
  */
 function findIndependentRow(adj) {
@@ -188,7 +188,7 @@ function findIndependentRow(adj) {
 
 /**
  * Pass 2: classify a CS from `GameInfo.Independents`.
- * @param {number} pid City-state player id.
+ * @param {number} pid
  * @returns {string|null} The `CityStateType` string.
  */
 function csTypeFromIndependents(pid) {
@@ -203,7 +203,7 @@ function csTypeFromIndependents(pid) {
 
 /**
  * Resolve a city-state type string (MILITARISTIC / CULTURAL / etc.).
- * @param {number} pid City-state player id.
+ * @param {number} pid
  * @returns {string|null} The `CityStateType` string.
  */
 export function resolveCsType(pid) {
@@ -215,7 +215,7 @@ export function resolveCsType(pid) {
 }
 
 /** @type {Record<string, { label: string, color: string, icon: string }>} */
-// City-state type colors use the SAME vivid game-yield palette as the agreement
+// City-state type colors use the same vivid game-yield palette as the agreement
 // chart (militaristic = military red, cultural = culture purple, economic = gold,
 // scientific = science blue, expansionist = production, diplomatic = influence).
 const CS_TYPE_META = {
@@ -253,7 +253,7 @@ const CS_TYPE_META = {
 
 /**
  * Look up display meta (label/color/icon) for a CS type string.
- * @param {*} typeStr `CityStateType` string.
+ * @param {*} typeStr
  * @returns {{ label: string, color: string, icon: string }|null} Meta or null.
  */
 export function csTypeMeta(typeStr) {
@@ -265,7 +265,7 @@ export function csTypeMeta(typeStr) {
 
 /**
  * Read a city-state's suzerain id defensively.
- * @param {*} cs City-state player handle.
+ * @param {*} cs
  * @returns {number} Suzeraign id, or `-1`.
  */
 function readSuzerain(cs) {
@@ -282,7 +282,7 @@ function readSuzerain(cs) {
 
 /**
  * Read a CS suzerain id via optional chaining, defaulting to `-1`.
- * @param {*} cs City-state player handle.
+ * @param {*} cs
  * @returns {number} Suzeraign id, or `-1`.
  */
 function readSuzerainLoose(cs) {
@@ -295,10 +295,10 @@ function readSuzerainLoose(cs) {
 
 /**
  * Build CS suzerain edges.
- * @param {number[]} metIds Met major ids.
- * @param {number[]} csIds City-state ids.
- * @param {number} [localPid] Local player id.
- * @returns {Edge[]} Suzerain edges.
+ * @param {number[]} metIds
+ * @param {number[]} csIds
+ * @param {number} [localPid]
+ * @returns {Edge[]}
  */
 export function buildCsSuzerainEdges(metIds, csIds, localPid) {
   /** @type {Edge[]} */
@@ -317,7 +317,7 @@ export function buildCsSuzerainEdges(metIds, csIds, localPid) {
 
 /**
  * Resolve a player's `Trade` handle if it exposes `countPlayerTradeRoutesTo`.
- * @param {number} fromPid Source player id.
+ * @param {number} fromPid
  * @returns {*} Trade handle or `null`.
  */
 function resolveTradeHandle(fromPid) {
@@ -329,9 +329,9 @@ function resolveTradeHandle(fromPid) {
 
 /**
  * Count trade routes from a trade handle to `toPid`, defensively.
- * @param {*} trade Trade handle.
- * @param {number} toPid Destination player id.
- * @returns {number} Route count.
+ * @param {*} trade
+ * @param {number} toPid
+ * @returns {number}
  */
 function tradeRouteCount(trade, toPid) {
   try {
@@ -343,10 +343,10 @@ function tradeRouteCount(trade, toPid) {
 
 /**
  * Build CS trade edges (major -> CS).
- * @param {number[]} metIds Met major ids.
- * @param {number[]} csIds City-state ids.
- * @param {number} [localPid] Local player id.
- * @returns {Edge[]} CS trade edges.
+ * @param {number[]} metIds
+ * @param {number[]} csIds
+ * @param {number} [localPid]
+ * @returns {Edge[]}
  */
 export function buildCsTradeEdges(metIds, csIds, localPid) {
   /** @type {Edge[]} */
@@ -377,7 +377,7 @@ export function buildCsTradeEdges(metIds, csIds, localPid) {
 
 /**
  * Read a player's diplomatic events list defensively.
- * @param {number} pid Player id whose events to read.
+ * @param {number} pid
  * @returns {*[]} The events array (empty on any error).
  */
 function getPlayerEventsSafe(pid) {
@@ -401,8 +401,8 @@ function getPlayerEventsSafe(pid) {
 
 /**
  * Resolve the "other" player id in a diplomacy event relative to `self`.
- * @param {*} ev Diplomacy event.
- * @param {number} self Player whose events list this came from.
+ * @param {*} ev
+ * @param {number} self
  * @returns {number|undefined} The other player id, or undefined.
  */
 function eventOther(ev, self) {
@@ -441,10 +441,10 @@ function resolveCsAgreementLookups() {
 /**
  * Match one CS diplomacy event against the agreement lookups and append a
  * major -> CS edge (deduped on major + CS + action) if it qualifies.
- * @param {Edge[]} edges Accumulator.
- * @param {*} ev One diplomacy event from the CS's event list.
- * @param {number} csId The city-state id.
- * @param {CsAgreementCtx} ctx Match context.
+ * @param {Edge[]} edges
+ * @param {*} ev
+ * @param {number} csId
+ * @param {CsAgreementCtx} ctx
  */
 function appendCsAgreementEdge(edges, ev, csId, ctx) {
   if (!ev || typeof ev.actionType !== "number") return;
@@ -462,10 +462,10 @@ function appendCsAgreementEdge(edges, ev, csId, ctx) {
  * Build City-State cooperative-agreement edges (major -> CS): befriending plus the
  * suzerain benefit directives, read from each CS's own event list (as the base
  * befriend-independent screen does).
- * @param {number[]} metIds Met major ids.
- * @param {number[]} csIds City-state ids.
- * @param {number} [localPid] Local player id.
- * @returns {Edge[]} CS agreement edges.
+ * @param {number[]} metIds
+ * @param {number[]} csIds
+ * @param {number} [localPid]
+ * @returns {Edge[]}
  */
 export function buildCsAgreementEdges(metIds, csIds, localPid) {
   /** @type {Edge[]} */
@@ -486,10 +486,10 @@ export function buildCsAgreementEdges(metIds, csIds, localPid) {
 
 /**
  * Resolve a CS attitude category from one major toward the CS.
- * @param {*} major Major player handle.
- * @param {number} majorPid Major player id.
- * @param {number} csId City-state id.
- * @param {number} suz Precomputed suzerain id (or `-1`).
+ * @param {*} major
+ * @param {number} majorPid
+ * @param {number} csId
+ * @param {number} suz
  * @returns {string|null} Attitude key or `null`.
  */
 function csAttitudeCatFor(major, majorPid, csId, suz) {
@@ -506,10 +506,10 @@ function csAttitudeCatFor(major, majorPid, csId, suz) {
 
 /**
  * Append attitude edges between majors and one CS.
- * @param {Edge[]} edges Accumulator.
- * @param {number[]} majors Major player ids.
- * @param {number} csId City-state id.
- * @param {number} suz Suzeraign id.
+ * @param {Edge[]} edges
+ * @param {number[]} majors
+ * @param {number} csId
+ * @param {number} suz
  * @returns {boolean} True when any edge was emitted.
  */
 function appendCsAttitudeForCs(edges, majors, csId, suz) {
@@ -527,10 +527,10 @@ function appendCsAttitudeForCs(edges, majors, csId, suz) {
 
 /**
  * Build CS attitude edges (major -> CS).
- * @param {number[]} metIds Met major ids.
- * @param {number[]} csIds City-state ids.
- * @param {number} [localPid] Local player id.
- * @returns {Edge[]} CS attitude edges.
+ * @param {number[]} metIds
+ * @param {number[]} csIds
+ * @param {number} [localPid]
+ * @returns {Edge[]}
  */
 export function buildCsAttitudeEdges(metIds, csIds, localPid) {
   /** @type {Edge[]} */
