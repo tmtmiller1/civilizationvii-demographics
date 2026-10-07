@@ -7,7 +7,7 @@
  * @param {number[]} ids Alive major player ids.
  * @param {*} globalAge Global age context.
  * @param {number} turn Monotonic chart turn used for era-scaling metrics
- *   (GDP/Population). NOT the age-local turn - using the latter would collapse
+ *   (GDP/Population). Not the age-local turn: using the latter would collapse
  *   the scaled series at every age boundary.
  * @param {{
  *   buildPlayerCtx: (pid:number) => any,

@@ -45,7 +45,7 @@ function mergeWarParticipants(list, live, turn) {
   for (const r of live) {
     const e = list.find((x) => x.pid === r.pid);
     if (e) {
-      // Do NOT overwrite e.civ / e.civTypeString: a player's civ changes each age, and these are
+      // Don't overwrite e.civ / e.civTypeString: a player's civ changes each age, and these are
       // pinned to the war's start age (re-derived in migrateWarRecords from the start sample).
       // Refreshing them from the live (current-age) roster is what mislabeled cross-age wars.
       e.leader = r.leader;
@@ -253,8 +253,8 @@ function ordinalSuffix(n) {
 
 /**
  * Resolve the history blob the war tracker mutates: the caller-threaded one (the
- * per-turn path), else the in-memory mirror, else a fresh load. Ensures
- * `h.wars` is an array.
+ * per-turn path), else the in-memory mirror, else a fresh load. Afterwards
+ * `h.wars` is always an array.
  * @param {WarHistory|null} history Caller-threaded history, if any.
  * @returns {WarHistory} The history to reconcile against.
  */

@@ -1,7 +1,7 @@
 /* demographics-migration-tooltips.css
  *
- * Styling for emigration/immigration tooltip source attribution display.
- * Integrates with the existing demographics-chart-tooltip style hierarchy.
+ * Source-attribution line in the migration tooltips, on top of the
+ * demographics-chart-tooltip styles.
  */
 
 /* Source attribution sub-label within a tooltip row */
@@ -22,17 +22,17 @@
   /* Inherits color from parent row */
 }
 
-/* Container for attribution text to ensure proper text wrapping */
+/* Attribution text container; wraps */
 .demographics-line-tip-row .demographics-line-tip-attribution {
   padding-left: 24px; /* Align with label text, offset from icon group */
 }
 
-/* Optional: Highlight migration metrics in the legend */
+/* Migration metrics in the legend */
 .demographics-line-legend-item[data-metric-id^="emig_"] {
   /* Subtle background to group migration metrics */
 }
 
-/* Optional: Visual indicator for metrics with source attribution */
+/* Marker for metrics with source attribution */
 .demographics-line-legend-item[data-has-attribution="true"]::before {
   content: "◆";
   display: inline-block;

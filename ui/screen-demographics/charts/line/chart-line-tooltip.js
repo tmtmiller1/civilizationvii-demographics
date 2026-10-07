@@ -8,8 +8,8 @@ import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 
 /**
  * Ensure the HTML-overlay line-chart tooltip element exists in `wrap`.
- * @param {HTMLElement} wrap The chart wrap.
- * @returns {HTMLElement} The tooltip element.
+ * @param {HTMLElement} wrap
+ * @returns {HTMLElement}
  */
 function ensureChartTooltipEl(wrap) {
   let tip = /** @type {HTMLElement|null} */ (wrap.querySelector(".demographics-chart-tooltip"));
@@ -25,8 +25,8 @@ function ensureChartTooltipEl(wrap) {
 /**
  * Sort tooltip data points to match the chart/legend dataset order.
  * @param {*} tooltip The Chart.js tooltip model.
- * @param {*} chart The Chart instance.
- * @returns {*[]} The ordered data-point array.
+ * @param {*} chart
+ * @returns {*[]}
  */
 function sortTooltipDataPoints(tooltip, chart) {
   /** @type {*[]} */
@@ -45,12 +45,12 @@ function sortTooltipDataPoints(tooltip, chart) {
 /**
  * Build the round leader-portrait element for a dataset: a live <fxs-icon> when
  * a LEADER_* type is known (same element the WorldRankingsAllCivs uses), else null.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {Record<string, *>} ds
  * @returns {HTMLElement|null} The portrait wrapper, or null when no leader icon.
  */
 function buildLeaderPortrait(ds) {
-  // Use the canonical LEADER_* string (leaderTypeString), NOT the dataset's
-  // `leaderType` series key - that key is the raw hash / "pid:<id>" and never
+  // Use the canonical LEADER_* string (leaderTypeString), not the dataset's
+  // `leaderType` series key: that key is the raw hash / "pid:<id>" and never
   // matches /^LEADER_/, so the portrait would always be skipped.
   const lt = ds.leaderTypeString;
   if (!(typeof lt === "string" && /^LEADER_/.test(lt))) return null;
@@ -67,9 +67,9 @@ function buildLeaderPortrait(ds) {
 /**
  * Build the icon group: the leader portrait (when available) next to the civ's
  * colored circle, mirroring the wars tooltip. The colored circle always shows.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {Record<string, *>} ds
  * @param {string} color The (lifted) row color.
- * @returns {HTMLElement} The icon-group element.
+ * @returns {HTMLElement}
  */
 export function buildLeaderIconGroup(ds, color) {
   const group = document.createElement("div");
@@ -87,15 +87,15 @@ export function buildLeaderIconGroup(ds, color) {
  * Append an optional source-attribution line to a tooltip row (for metrics that supply a
  * `tooltipAttribution` callback, e.g. the Emigration per-cause breakdown). No-op otherwise; a
  * callback throw is swallowed so a bad attribution can't break the tooltip.
- * @param {HTMLElement} row The tooltip row element.
- * @param {*} metricMeta Metric metadata (may carry tooltipAttribution).
- * @param {*} ds The Chart.js dataset.
+ * @param {HTMLElement} row
+ * @param {*} metricMeta May carry tooltipAttribution.
+ * @param {*} ds
  * @param {string} color The row's (lifted) text color.
  */
 function appendAttribution(row, metricMeta, ds, color) {
   if (!metricMeta || typeof metricMeta.tooltipAttribution !== "function") return;
   try {
-    // Use `!= null` (not `||`): the LOCAL player is pid 0, which `||` would wrongly treat as falsy
+    // Use `!= null` (not `||`): the local player is pid 0, which `||` would treat as falsy
     // and fall back to the civ name, breaking the attribution lookup for your own civ.
     const id = ds.pidForContext != null ? ds.pidForContext : ds.label;
     const att = metricMeta.tooltipAttribution({ id });
@@ -113,20 +113,19 @@ function appendAttribution(row, metricMeta, ds, color) {
     attEl.textContent = att;
     row.appendChild(attEl);
   } catch (_) {
-    // Silently ignore attribution errors
+    // ignore attribution errors
   }
 }
 
 /**
  * Build the horizontal top line of a tooltip row: leader icon + civ name + value.
- * @param {*} ds The Chart.js dataset.
+ * @param {*} ds
  * @param {*} dp One Chart.js tooltip data point.
- * @param {(v: number) => string} fmtY Y-value formatter.
+ * @param {(v: number) => string} fmtY
  * @param {string} color The row's (lifted) text color.
- * @returns {HTMLElement} The top-line element.
+ * @returns {HTMLElement}
  */
 function buildTooltipTopLine(ds, dp, fmtY, color) {
-  // Top line: icon + civ name + value, laid out horizontally.
   const top = document.createElement("div");
   top.style.display = "flex";
   top.style.alignItems = "center";
@@ -150,9 +149,9 @@ function buildTooltipTopLine(ds, dp, fmtY, color) {
  * Build one tooltip row: a vertical stack of the top line (icon + civ + value) and, below it, the
  * optional source-attribution line.
  * @param {*} dp One Chart.js tooltip data point.
- * @param {(v: number) => string} fmtY Y-value formatter.
- * @param {*} [metricMeta] Optional metric metadata with tooltipAttribution callback.
- * @returns {HTMLElement} The row element.
+ * @param {(v: number) => string} fmtY
+ * @param {*} [metricMeta] May carry a tooltipAttribution callback.
+ * @returns {HTMLElement}
  */
 function buildTooltipRow(dp, fmtY, metricMeta) {
   const ds = dp.dataset;
@@ -161,8 +160,8 @@ function buildTooltipRow(dp, fmtY, metricMeta) {
   // colored dot stay readable on the dark tooltip background.
   const color = safeTextColor(rawColor);
 
-  // Outer = vertical stack so the attribution sits on its OWN line below the civ row. (Relying on
-  // flex-wrap is fragile in the GameFace CSS engine; an explicit column container is robust.)
+  // Outer = vertical stack so the attribution sits on its own line below the civ row. (Relying on
+  // flex-wrap is fragile in the GameFace CSS engine; an explicit column container holds up.)
   const row = document.createElement("div");
   row.className = "demographics-line-tip-row";
   row.style.flexDirection = "column";
@@ -173,9 +172,8 @@ function buildTooltipRow(dp, fmtY, metricMeta) {
 }
 
 /**
- * Build the tooltip header (turn / year).
- * @param {string} titleText The header text.
- * @returns {HTMLElement} The header element.
+ * @param {string} titleText
+ * @returns {HTMLElement} The tooltip header (turn / year).
  */
 function buildTooltipHeader(titleText) {
   const head = document.createElement("div");
@@ -186,13 +184,13 @@ function buildTooltipHeader(titleText) {
 
 /**
  * Position the HTML tooltip near the cursor, clamped inside the wrap.
- * @param {HTMLElement} tip The tooltip element.
- * @param {*} chart The Chart instance.
+ * @param {HTMLElement} tip
+ * @param {*} chart
  * @param {*} tooltip The Chart.js tooltip model.
- * @param {HTMLElement} wrap The chart wrap.
+ * @param {HTMLElement} wrap
  */
 function positionChartTooltip(tip, chart, tooltip, wrap) {
-  // Position next to the cursor. Chart.js gives caretX/Y in canvas pixels -
+  // Position next to the cursor. Chart.js gives caretX/Y in canvas pixels,
   // relative to the parent wrap that contains both canvas+tooltip.
   const offsetLeft = chart.canvas.offsetLeft;
   const offsetTop = chart.canvas.offsetTop;
@@ -217,9 +215,9 @@ function positionChartTooltip(tip, chart, tooltip, wrap) {
 
 /**
  * Build the Chart.js `tooltip.external` handler bound to the axis formatters and metric metadata.
- * @param {(v: number) => string} fmtX X-value formatter.
- * @param {(v: number) => string} fmtY Y-value formatter.
- * @param {*} [metricMeta] Optional metric metadata.
+ * @param {(v: number) => string} fmtX
+ * @param {(v: number) => string} fmtY
+ * @param {*} [metricMeta]
  * @returns {(context: *) => void} The external tooltip handler.
  */
 export function makeTooltipExternal(fmtX, fmtY, metricMeta) {
@@ -233,8 +231,7 @@ export function makeTooltipExternal(fmtX, fmtY, metricMeta) {
       tip.style.opacity = "0";
       return;
     }
-    // Header: turn / year.
-    const titleText =
+      const titleText =
       tooltip.dataPoints && tooltip.dataPoints.length ? fmtX(tooltip.dataPoints[0].parsed.x) : "";
     // Body: one row per civ, with leader portrait + dot + name + value, sorted
     // to match chart/legend line order.

@@ -4,7 +4,7 @@ import fs from "node:fs";
 // Locale parity gate: every LOC key in en_us must exist in all ten non-English ModText.xml files,
 // so no string silently falls back to English (or shows a raw tag) for non-English players. The
 // demographics locale ModText is hand-maintained, so this guards against the drift that goes
-// uncaught otherwise — add a key to en_us and you must add it to every locale. Reads the key set
+// uncaught otherwise: add a key to en_us and you must add it to every locale. Reads the key set
 // straight from en_us so the gate needs no generated file.
 
 const enXml = fs.readFileSync("text/en_us/ModText.xml", "utf8");
@@ -38,8 +38,8 @@ for (const f of FOLDERS) {
   );
   checked += SRC.length;
   // Every row carries this folder's engine language. A row tagged with another code (zh_CN instead of
-  // zh_Hans_CN) loads under a locale no session uses, so the tag shows raw in game (watched 2026-10-01:
-  // the policy banner and the per-turn unit in Simplified Chinese).
+  // zh_Hans_CN) loads under a locale no session uses, so the tag shows raw in game (the policy banner and
+  // the per-turn unit did, in Simplified Chinese).
   const langs = new Set([...xml.matchAll(/Language="([^"]+)"/g)].map((m) => m[1]));
   assert.deepEqual([...langs], [LANGUAGE_OF[f]], `${f}: rows tagged ${[...langs].join(", ")}`);
 }

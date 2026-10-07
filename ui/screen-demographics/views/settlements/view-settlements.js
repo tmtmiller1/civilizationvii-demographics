@@ -35,7 +35,7 @@ const TOP_N = 25;
 
 /**
  * Error logger (always emits).
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.settlements]", ...a);
@@ -61,7 +61,7 @@ function derr(...a) {
 /**
  * Read a persisted setting, defensively.
  * @param {*} settings The settings surface.
- * @param {string} key The setting key.
+ * @param {string} key
  * @param {*} fallback The default.
  * @returns {*} The stored value or the default.
  */
@@ -77,8 +77,8 @@ function getSetting(settings, key, fallback) {
 /**
  * Persist a setting, defensively.
  * @param {*} settings The settings surface.
- * @param {string} key The setting key.
- * @param {*} value The value to store.
+ * @param {string} key
+ * @param {*} value
  */
 function setSetting(settings, key, value) {
   try {
@@ -92,7 +92,7 @@ function setSetting(settings, key, value) {
  * Whether a settlement's identity should be obscured: "hide unmet players"
  * (showUnmetNames === false, the default) is active AND the owner is unmet.
  * Masks only when `met === false`, never on an unknown met state.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  * @param {*} s The settlement.
  * @returns {boolean} True when the settlement should be masked.
  */
@@ -138,9 +138,9 @@ function maskSettlement(s) {
 /**
  * Resolve the display settlement for a render: the masked clone when the
  * "hide unmet players" option applies, otherwise the settlement unchanged.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  * @param {*} s The settlement.
- * @returns {*} The settlement to render.
+ * @returns {*}
  */
 function displayOf(st, s) {
   return isMasked(st, s) ? maskSettlement(s) : s;
@@ -163,11 +163,11 @@ function stopEvent(e) {
  * Build one camera action button (shared pin + label + active/disabled wiring).
  * A masked (unmet-owner) settlement renders grayed-out and inert with a tooltip
  * (moving the camera there would reveal an unmet city's location).
- * @param {boolean} active Whether the button is live.
+ * @param {boolean} active
  * @param {string} labelKey The label LOC key.
  * @param {() => void} onClick The activation handler.
  * @param {string} [disabledTipKey] Tooltip LOC key when disabled (defaults to the unmet reason).
- * @returns {HTMLElement} The button.
+ * @returns {HTMLElement}
  */
 function cameraButton(active, labelKey, onClick, disabledTipKey) {
   const btn = div("demographics-settle-mapbtn" + (active ? " demographics-settle-clickable" : " is-disabled"));
@@ -198,7 +198,7 @@ function cameraForbidden(s) {
 /**
  * The tooltip LOC key explaining WHY the camera is disabled for a settlement.
  * @param {*} s The settlement.
- * @returns {string} The tooltip LOC key.
+ * @returns {string}
  */
 function cameraDisabledTip(s) {
   if (s.owner && s.owner.met === false) return "LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP";
@@ -222,7 +222,7 @@ function buildMapButton(s) {
  * is turned off). Grayed-out for an unmet civ. The wonders already carry their
  * observed completion years (annotateWonderYears), so the tour can caption them.
  * @param {*} s The settlement.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  * @returns {HTMLElement|null} The button, or null.
  */
 function buildCinematicButton(s, st) {
@@ -237,7 +237,7 @@ function buildCinematicButton(s, st) {
  * neither button applies, and always for an archived end-of-age record (the
  * settlement may have been razed or changed hands since).
  * @param {*} s The settlement.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  * @returns {HTMLElement|null} The button row, or null.
  */
 function buildCameraButtons(s, st) {
@@ -254,7 +254,7 @@ function buildCameraButtons(s, st) {
  * Build the owner avatar: a civ-colored disc holding the leader portrait, or an
  * initial-letter placeholder when no LEADER_* type resolves.
  * @param {*} owner The settlement owner identity.
- * @returns {HTMLElement} The avatar element.
+ * @returns {HTMLElement}
  */
 function buildOwnerAvatar(owner) {
   const wrap = div("demographics-settle-avatar");
@@ -279,7 +279,7 @@ function buildOwnerAvatar(owner) {
 /**
  * Build the owner cell: avatar + leader/civ name.
  * @param {*} owner The settlement owner identity.
- * @returns {HTMLElement} The owner cell.
+ * @returns {HTMLElement}
  */
 function buildOwnerCell(owner) {
   const cell = div("demographics-settle-owner");
@@ -299,8 +299,8 @@ function buildOwnerCell(owner) {
 
 /**
  * Build the City/Town status badge.
- * @param {boolean} isTown Whether the settlement is currently a town.
- * @returns {HTMLElement} The badge element.
+ * @param {boolean} isTown
+ * @returns {HTMLElement}
  */
 function buildTypeBadge(isTown) {
   const key = isTown ? "LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" : "LOC_DEMOGRAPHICS_SETTLEMENTS_CITY";
@@ -311,12 +311,12 @@ function buildTypeBadge(isTown) {
   return badge;
 }
 
-// ── Showcase (artistic Top-25 overall) ──────────────────────────────────────
+// showcase (artistic Top-25 overall)
 
 /**
  * A CSS-drawn population-trend glyph (up/down/flat) - no unicode (avoids tofu).
  * @param {*} trend The settlement trend ({dir}) or null.
- * @returns {HTMLElement} The glyph element.
+ * @returns {HTMLElement}
  */
 function buildTrendGlyph(trend) {
   const dir = trend && typeof trend.dir === "number" ? trend.dir : 0;
@@ -339,8 +339,8 @@ const LAUREL_ICONS = {
 /**
  * Build a podium medal: the place number framed by a gold/silver/bronze
  * laurel-wreath (repurposing the engine's victory-popup laurels).
- * @param {number} place The 1-based podium place.
- * @returns {HTMLElement} The medal element.
+ * @param {number} place
+ * @returns {HTMLElement}
  */
 function buildLaurelMedal(place) {
   const medal = div("demographics-settle-medal demographics-settle-medal-" + place);
@@ -352,7 +352,7 @@ function buildLaurelMedal(place) {
 /**
  * Build a compact icon+value strip of every output for a settlement.
  * @param {*} s The settlement.
- * @returns {HTMLElement} The strip element.
+ * @returns {HTMLElement}
  */
 function buildOutputStrip(s) {
   const strip = div("demographics-settle-outputs");
@@ -371,7 +371,7 @@ function buildOutputStrip(s) {
 /**
  * Build the showcase list's column-label header row.
  * @param {string} [nameKey] LOC key for the name column (defaults to "Settlement").
- * @returns {HTMLElement} The header row.
+ * @returns {HTMLElement}
  */
 function buildListHeader(nameKey) {
   const head = div("demographics-settle-list-head");
@@ -386,7 +386,7 @@ function buildListHeader(nameKey) {
  * Render the artistic Top-25 showcase: the top-3 podium, then the full ranked
  * list (1-25, so the top 3 also appear in the graphed list), with a red "Top 10"
  * divider between ranks 10 and 11.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  */
 function renderShowcase(st) {
   renderShowcasePanel(st, {
@@ -406,12 +406,12 @@ function renderShowcase(st) {
   });
 }
 
-// ── Civilization ranking (showcase-style: cumulative score per civ) ──────────
+// civilization ranking (showcase-style: cumulative score per civ)
 
 /**
  * Render the Civilization Ranking sub-view: a podium + ranked list of major
  * civs by cumulative settlement score (mirrors the Top-25 settlements showcase).
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  */
 function renderCivRanking(st) {
   renderCivRankingPanel(st, {
@@ -426,13 +426,13 @@ function renderCivRanking(st) {
   });
 }
 
-// ── Detail table (filter + sortable + category leaders) ──────────────────────
+// detail table (filter + sortable + category leaders)
 
 /**
  * Build a stylized section title with flanking filigree (mimics the elaborate
  * Civ VII menu headers).
  * @param {string} key The title LOC key.
- * @returns {HTMLElement} The section-title element.
+ * @returns {HTMLElement}
  */
 function buildSectionTitle(key) {
   const wrap = div("demographics-settle-section-title");
@@ -448,7 +448,7 @@ function buildSectionTitle(key) {
 
 /**
  * Render the detail table (filter + leaders strip + sortable rows).
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  */
 function renderTable(st) {
   renderTablePanel(st, {
@@ -463,11 +463,11 @@ function renderTable(st) {
   });
 }
 
-// ── Shell ────────────────────────────────────────────────────────────────────
+// shell
 
 /**
  * Build the empty-state placeholder.
- * @returns {HTMLElement} The placeholder.
+ * @returns {HTMLElement}
  */
 function buildEmpty() {
   return div("demographics-settle-empty", t("LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY"));
@@ -475,7 +475,7 @@ function buildEmpty() {
 
 /**
  * Build the "render failed" placeholder shown when a sub-view throws.
- * @returns {HTMLElement} The placeholder.
+ * @returns {HTMLElement}
  */
 function buildRenderFailed() {
   return div("demographics-settle-empty", t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED"));
@@ -497,8 +497,8 @@ const SUBTABS = [
  * Build the sub-view selector as a native fxs-tab-bar - a 2nd-order major tab
  * bar styled like the Historical Data page tabs (rather than minor pills), so
  * Top 25 / All Settlements / Town Advisor read as co-equal major tabs.
- * @param {SettleState} st The render state.
- * @returns {HTMLElement} The tab-bar host.
+ * @param {SettleState} st
+ * @returns {HTMLElement}
  */
 function buildSubTabs(st) {
   const host = div("demographics-settle-tabhost demographics-page-tab-host w-full");
@@ -525,7 +525,7 @@ function buildSubTabs(st) {
  * Clear and re-render the active sub-view into the content host. Every handler
  * re-renders through this boundary, so a throwing sub-view leaves a visible
  * "render failed" notice instead of a blank panel.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  */
 function rerenderContent(st) {
   while (st.content.firstChild) st.content.removeChild(st.content.firstChild);
@@ -539,7 +539,7 @@ function rerenderContent(st) {
 
 /**
  * Render the active sub-view into the (already cleared) content host.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  */
 function renderSubView(st) {
   if (st.subTab === "halloffame") return renderHallOfFameTab(st.content);
@@ -564,7 +564,7 @@ function renderSubView(st) {
 /**
  * Insert the Options button (a right-aligned `.demographics-chart-toolbar`) directly below the
  * `.demographics-settle-filters` pill row, or at the top of the content when there is none.
- * @param {SettleState} st The render state.
+ * @param {SettleState} st
  */
 function insertOptionsToolbar(st) {
   try {

@@ -1,11 +1,11 @@
 // settlements-trace.js
 //
-// Per-settlement history the Top Cities cards need but the per-CIV sample stream
+// Per-settlement history the Top Cities cards need but the per-civ sample stream
 // doesn't carry: founding turn/year and a rolling population window per
 // settlement, keyed by plot location ("x,y") and stored on the sampled history
 // blob (`history.settleTrace`) so they survive quit/load and the age transition.
-// Founding is EXACT from the CityAddedToMap event (held in memory until the next
-// sample folds it in) or APPROXIMATE from the first sampler sighting.
+// Founding is exact from the CityAddedToMap event (held in memory until the next
+// sample folds it in) or approximate from the first sampler sighting.
 // recordSettlementTrace() runs once per sample; getFounded()/getCityTrend() read
 // an in-memory copy at render time.
 
@@ -17,8 +17,8 @@ const CAP = 12;
 /**
  * Run `fn`, returning its result or `fb` on throw. Never throws.
  * @template T
- * @param {() => T} fn Thunk.
- * @param {T} [fb] Fallback.
+ * @param {() => T} fn
+ * @param {T} [fb]
  * @returns {T|undefined} Result or fallback.
  */
 function safe(fn, fb) {
@@ -69,7 +69,7 @@ const pendingExact = new Map();
 
 /**
  * The value as a usable trace, or null.
- * @param {*} v Candidate trace.
+ * @param {*} v
  * @returns {Trace|null} The trace, or null.
  */
 function asTrace(v) {
@@ -80,7 +80,7 @@ function asTrace(v) {
 /**
  * The trace for the current game: the cached copy, else the one on the saved
  * history (read once), else an empty one.
- * @returns {Trace} The trace.
+ * @returns {Trace}
  */
 function currentTrace() {
   const seed = gameSeed();
@@ -93,7 +93,7 @@ function currentTrace() {
 
 /**
  * Plot key "x,y" for a city handle, or null.
- * @param {*} city The city handle.
+ * @param {*} city
  * @returns {string|null} The key, or null.
  */
 function locKey(city) {
@@ -104,15 +104,15 @@ function locKey(city) {
   return typeof k === "string" ? k : null;
 }
 
-// ── CityAddedToMap (exact founding) ──────────────────────────────────────────
+// CityAddedToMap (exact founding)
 
 /** @type {((data: *) => void) | null} */
 let addedHandlerRef = null;
 
 /**
  * Resolve a city id from a CityAddedToMap payload.
- * @param {*} data Event payload.
- * @returns {*} City id-like value.
+ * @param {*} data
+ * @returns {*}
  */
 function cityIdFromAddedEvent(data) {
   if (!data || typeof data !== "object") return null;
@@ -121,7 +121,7 @@ function cityIdFromAddedEvent(data) {
 
 /**
  * Resolve a city handle from a city id.
- * @param {*} cityId City id-like value.
+ * @param {*} cityId
  * @returns {*} City handle or null.
  */
 function cityFromId(cityId) {
@@ -132,7 +132,7 @@ function cityFromId(cityId) {
 
 /**
  * Hold an exact founding stamp for one location key until the next sample.
- * @param {string} loc Plot key.
+ * @param {string} loc
  */
 function noteExactFounding(loc) {
   if (pendingExact.has(loc) || currentTrace().founded[loc]) return;
@@ -142,7 +142,7 @@ function noteExactFounding(loc) {
 }
 
 /**
- * CityAddedToMap handler: stamp an EXACT founding turn/year for the new
+ * CityAddedToMap handler: stamp an exact founding turn/year for the new
  * settlement's plot (only if not already recorded).
  * @param {*} data The event payload (carries cityID).
  */
@@ -181,11 +181,11 @@ export function stopFoundingTracker() {
   addedHandlerRef = null;
 }
 
-// ── Per-sample recording ─────────────────────────────────────────────────────
+// per-sample recording
 
 /**
  * Light read of every alive player's settlements: { locId, pop } only.
- * @returns {Array<{locId: string, pop: number}>} The settlements.
+ * @returns {Array<{locId: string, pop: number}>}
  */
 function readAllSettlements() {
   const players = safe(() => (typeof Players !== "undefined" && Players.getAlive ? Players.getAlive() : null), null);
@@ -207,7 +207,7 @@ function readAllSettlements() {
 
 /**
  * Fold this sample into the history's trace: population windows, pending exact
- * foundings, and an APPROXIMATE founding for any settlement still unrecorded.
+ * foundings, and an approximate founding for any settlement still unrecorded.
  * The caller's single per-turn save persists it.
  * @param {*} history The sampled history blob (mutated: `settleTrace`).
  * @param {number} turn The (monotonic) sample turn.
@@ -247,7 +247,7 @@ function foldPop(blob, s, turn) {
  * Stamp an approximate founding when none exists, or backfill the year of an
  * exact founding recorded without one.
  * @param {*} blob The trace blob (mutated).
- * @param {string} locId The plot key.
+ * @param {string} locId
  * @param {number} turn The sample turn.
  * @param {string} [year] The sample's game-year string.
  */
@@ -257,11 +257,11 @@ function foldFounding(blob, locId, turn, year) {
   else if (!f.year && year) f.year = year;
 }
 
-// ── Readers (render time) ────────────────────────────────────────────────────
+// readers (render time)
 
 /**
  * The recorded founding for a settlement plot, or null.
- * @param {string|null|undefined} locId The plot key.
+ * @param {string|null|undefined} locId
  * @returns {{turn: number, year: string, exact: boolean}|null}
  */
 export function getFounded(locId) {
@@ -271,7 +271,7 @@ export function getFounded(locId) {
 
 /**
  * Convert growth rate into direction bucket.
- * @param {number} rate Growth per turn.
+ * @param {number} rate
  * @returns {number} 1 rising, -1 falling, 0 flat.
  */
 function trendDirection(rate) {
@@ -283,7 +283,7 @@ function trendDirection(rate) {
 /**
  * The population trend for a settlement plot from the rolling window, or null
  * when there is not enough history.
- * @param {string|null|undefined} locId The plot key.
+ * @param {string|null|undefined} locId
  * @returns {{popGrowthPerTurn: number, dir: number, samples: number}|null}
  */
 export function getCityTrend(locId) {

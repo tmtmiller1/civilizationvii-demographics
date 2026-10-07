@@ -1,5 +1,5 @@
-// Test double for the engine options modules — `/core/ui/options/model-options.js` and
-// `/core/ui/options/options-helpers.js` — wired in by tests/loader.mjs (both paths resolve here, so
+// Test double for the engine options modules (`/core/ui/options/model-options.js` and
+// `/core/ui/options/options-helpers.js`), wired in by tests/loader.mjs (both paths resolve here, so
 // it's one shared instance). Records `addOption`/`addInitCallback` calls so the options-registration
 // test can assert what the mod registers, without a live Civ runtime.
 

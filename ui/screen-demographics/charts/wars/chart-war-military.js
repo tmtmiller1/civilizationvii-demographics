@@ -15,11 +15,11 @@ export const MIL_GRAPH_IDS = new Set(["milpower", "milpowerLevel"]);
 
 /**
  * The per-line series for a military graph under a filter mode.
- * @param {{ war: *, win: Snapshot[] }} view The war view.
+ * @param {{ war: *, win: Snapshot[] }} view
  * @param {string} mode The filter mode id.
  * @param {boolean} isLoss Whether this is the "lost" graph (vs the level graph).
  * @param {{ pid: number, name: string, color: string }[]} belligerents Visible belligerent civs.
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]} The series.
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]}
  */
 export function milSeriesFor(view, mode, isLoss, belligerents) {
   if (mode === "cs") {
@@ -34,10 +34,10 @@ export function milSeriesFor(view, mode, isLoss, belligerents) {
 }
 
 /**
- * Whether a roster entry is a unique city-state participant row.
+ * Whether a roster entry is a city-state participant not yet seen.
  * @param {*} entry One roster entry.
- * @param {Set<number>} seen Seen pid set.
- * @returns {boolean} True when entry should be included.
+ * @param {Set<number>} seen
+ * @returns {boolean}
  */
 function includeCsParticipant(entry, seen) {
   if (!entry || !entry.isCS) return false;
@@ -46,10 +46,8 @@ function includeCsParticipant(entry, seen) {
 }
 
 /**
- * Push one city-state participant row.
  * @param {{ pid: number, name: string, color: string, fromMinors: boolean }[]} out
- *   Output list.
- * @param {Set<number>} seen Seen pid set.
+ * @param {Set<number>} seen
  * @param {*} entry One roster entry.
  */
 function pushCsParticipant(out, seen, entry) {
@@ -64,10 +62,10 @@ function pushCsParticipant(out, seen, entry) {
 
 /**
  * One member's military series: standing power (level) or cumulative power lost.
- * @param {{ pid: number, name: string, color: string, fromMinors?: boolean }} member The member.
- * @param {Snapshot[]} win The windowed samples.
- * @param {boolean} isLoss Whether to build the loss series.
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }} The series.
+ * @param {{ pid: number, name: string, color: string, fromMinors?: boolean }} member
+ * @param {Snapshot[]} win
+ * @param {boolean} isLoss
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }}
  */
 function memberSeries(member, win, isLoss) {
   return isLoss
@@ -77,8 +75,8 @@ function memberSeries(member, win, isLoss) {
 
 /**
  * The city-state ally participants of a war (deduped by pid).
- * @param {*} war The war record.
- * @returns {{ pid: number, name: string, color: string, fromMinors: boolean }[]} The CS rows.
+ * @param {*} war
+ * @returns {{ pid: number, name: string, color: string, fromMinors: boolean }[]}
  */
 function csParticipants(war) {
   const rosters = /** @type {any[]} */ ([]).concat(war.sideACivs || [], war.sideBCivs || []);
@@ -95,9 +93,9 @@ function csParticipants(war) {
 /**
  * Per-side cumulative allied series (majors + city-states summed), one line per
  * side that has any members with data.
- * @param {{ war: *, win: Snapshot[] }} view The war view.
+ * @param {{ war: *, win: Snapshot[] }} view
  * @param {boolean} isLoss Whether to sum losses (vs standing power).
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]} The side series.
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]}
  */
 function cumulativeSeries(view, isLoss) {
   return sideGroups(view.war)
@@ -108,7 +106,7 @@ function cumulativeSeries(view, isLoss) {
 /**
  * Resolve a war's two side groups (each: a label, color, and member list of
  * { pid, fromMinors }), dropping empty sides.
- * @param {*} war The war record.
+ * @param {*} war
  * @returns {{ label: string, color: string,
  *   members: { pid: number, fromMinors: boolean }[] }[]} The groups.
  */
@@ -147,10 +145,10 @@ function buildSideGroup(roster) {
  * Sum a side group's members into one series: per turn, the sum of standing
  * power (level) or of each member's loss-since-window-start (loss, negated).
  * @param {{ label: string, color: string,
- *   members: { pid: number, fromMinors: boolean }[] }} g The group.
- * @param {Snapshot[]} win The windowed samples.
- * @param {boolean} isLoss Whether to sum losses.
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }} The summed series.
+ *   members: { pid: number, fromMinors: boolean }[] }} g
+ * @param {Snapshot[]} win
+ * @param {boolean} isLoss
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }}
  */
 function sumGroupSeries(g, win, isLoss) {
   const base = isLoss ? groupLossBaselines(g, win) : new Map();
@@ -173,8 +171,8 @@ function sumGroupSeries(g, win, isLoss) {
 /**
  * One member's contribution to a side's cumulative series at a sample: its
  * standing power (level), or its loss accrued since the window baseline.
- * @param {*} s The snapshot.
- * @param {{ pid: number, fromMinors: boolean }} mbr The member.
+ * @param {*} s
+ * @param {{ pid: number, fromMinors: boolean }} mbr
  * @param {boolean} isLoss Whether to compute loss (vs level).
  * @param {Map<number, number>} base Per-member loss baselines (loss mode only).
  * @returns {number | null} The contribution, or null when no data.
@@ -190,8 +188,8 @@ function memberContribution(s, mbr, isLoss, base) {
 /**
  * Each member's first in-window cumulative-loss value (the baseline subtracted so
  * losses count only what accrued during the displayed window).
- * @param {{ members: { pid: number, fromMinors: boolean }[] }} g The group.
- * @param {Snapshot[]} win The windowed samples.
+ * @param {{ members: { pid: number, fromMinors: boolean }[] }} g
+ * @param {Snapshot[]} win
  * @returns {Map<number, number>} pid -> baseline milLostCum.
  */
 function groupLossBaselines(g, win) {

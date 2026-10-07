@@ -42,8 +42,8 @@ function testAgeLastTurns() {
 
 function testFinalAntiquitySegmentBoundedToItsAge() {
   // Antiquity crisis stages 2,3,4; the game has since advanced to Exploration,
-  // whose turns RESET (latest turn is now a small number). The final Antiquity
-  // segment must end at Antiquity's last turn (40), NOT the global latest (5) -
+  // whose turns reset (latest turn is now a small number). The final Antiquity
+  // segment must end at Antiquity's last turn (40), not the global latest (5),
   // otherwise its [start=30, end=5] window inverts and the section goes empty.
   const onsets = [
     { stage: 2, turn: 10, sample: { age: A } },
@@ -57,8 +57,8 @@ function testFinalAntiquitySegmentBoundedToItsAge() {
 }
 
 function testCrossAgeBoundaryUsesNextOnsetWithinAgeOnly() {
-  // Antiquity stage 3 is followed by an EXPLORATION stage-2 onset. The Antiquity
-  // segment must NOT borrow the Exploration onset's (reset) turn as its end; it
+  // Antiquity stage 3 is followed by an Exploration stage-2 onset. The Antiquity
+  // segment must not borrow the Exploration onset's (reset) turn as its end; it
   // ends at Antiquity's last turn. The Exploration segment runs to its own age end.
   const onsets = [
     { stage: 3, turn: 20, sample: { age: A } },
@@ -77,7 +77,7 @@ function testFallsBackToLatestWhenNoAgeMap() {
 }
 
 function testLingeringStageDoesNotSpawnPhantomCrisis() {
-  // Antiquity climbs 0->1->2->3; Exploration's first samples STILL read 3
+  // Antiquity climbs 0->1->2->3; Exploration's first samples still read 3
   // (lingering from the old age) before the engine resets to pre-crisis (0) and
   // a genuine Exploration crisis (1, 2) begins on its own reset turn numbers.
   const samples = [
@@ -85,7 +85,7 @@ function testLingeringStageDoesNotSpawnPhantomCrisis() {
     crisisSample(A, 2, 1),
     crisisSample(A, 3, 2),
     crisisSample(A, 4, 3),
-    crisisSample(E, 1, 3), // lingering , must NOT count as an onset
+    crisisSample(E, 1, 3), // lingering: must not count as an onset
     crisisSample(E, 2, 3),
     crisisSample(E, 3, 0), // pre-crisis confirmed -> armed
     crisisSample(E, 4, 1), // genuine Exploration onset

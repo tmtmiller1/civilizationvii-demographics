@@ -15,7 +15,7 @@ import { viewState } from "/demographics/ui/history/views/history-state.js";
 /**
  * Publish the Demographics type scale on this screen's root, scaled by the player's Font Size
  * setting. The ladder lives in demographics-font-ladder.js (shared with the in-game screen).
- * @param {HTMLElement} node Root element.
+ * @param {HTMLElement} node
  */
 export function applyFontScale(node) {
   publishFontLadder(node);
@@ -23,8 +23,8 @@ export function applyFontScale(node) {
 
 /**
  * Whether an engine-input event is a Cancel (Escape, the controller's back button or the menu key).
- * @param {any} ev The engine-input event.
- * @returns {boolean} True for a Cancel.
+ * @param {any} ev
+ * @returns {boolean}
  */
 function isCancel(ev) {
   return !!(ev?.isCancelInput?.() || ev?.detail?.name === "sys-menu");
@@ -62,7 +62,7 @@ class ScreenHistoryRankings extends Panel {
   /**
    * Close on Cancel / Escape, the way base-game screens do (a DOM listener on the root;
    * no global input handler is installed, so map input is never affected).
-   * @param {any} ev The engine-input event.
+   * @param {any} ev
    */
   _handleEngineInput(ev) {
     if (!this._isFinalCancel(ev)) return;
@@ -81,8 +81,8 @@ class ScreenHistoryRankings extends Panel {
    * Whether an engine-input event is the finishing Cancel / Escape press. If the InputActionStatuses
    * global is missing the status filter is skipped and a press arrives as several events (start
    * and finish), so those within a quarter second count once.
-   * @param {any} ev The engine-input event.
-   * @returns {boolean} True to act on it.
+   * @param {any} ev
+   * @returns {boolean}
    */
   _isFinalCancel(ev) {
     const finish = safe(() => InputActionStatuses.FINISH, undefined);

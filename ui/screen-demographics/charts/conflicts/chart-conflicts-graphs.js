@@ -3,7 +3,7 @@
 // The Conflicts "War Graphs" sub-tab: pick a war from the toolbar dropdown and
 // see each participant civ's trajectory for every war-cost metric over that
 // war's window, as a scrollable grid of small line charts ("small multiples").
-// Driven by COST_METRICS (each `id` IS the snapshot.metrics key) over the same
+// Driven by COST_METRICS (each `id` is the snapshot.metrics key) over the same
 // turn window the war tooltip uses, so the graphs and the tooltip stay in sync.
 
 import {
@@ -81,7 +81,7 @@ function safeRerender(what, fn) {
 
 /**
  * Remove every child of `host`.
- * @param {HTMLElement} host The element to clear.
+ * @param {HTMLElement} host
  */
 function clearHost(host) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -104,8 +104,8 @@ function resolveWar(wars, id) {
 /**
  * Whether a roster entry is a unique major participant row.
  * @param {*} entry One roster entry.
- * @param {Set<number>} seen Seen pid set.
- * @returns {boolean} True when entry should be included.
+ * @param {Set<number>} seen
+ * @returns {boolean}
  */
 function includeMajorParticipant(entry, seen) {
   if (!entry || entry.isCS) return false;
@@ -114,9 +114,8 @@ function includeMajorParticipant(entry, seen) {
 }
 
 /**
- * Push one roster entry into participant output.
- * @param {{ pid: number, name: string, color: string }[]} out Output list.
- * @param {Set<number>} seen Seen pid set.
+ * @param {{ pid: number, name: string, color: string }[]} out
+ * @param {Set<number>} seen
  * @param {*} entry One roster entry.
  */
 function pushMajorParticipant(out, seen, entry) {
@@ -130,8 +129,8 @@ function pushMajorParticipant(out, seen, entry) {
 
 /**
  * The war's major participants (both sides), de-duplicated by pid.
- * @param {*} war The war record.
- * @returns {{ pid: number, name: string, color: string }[]} Participant rows.
+ * @param {*} war
+ * @returns {{ pid: number, name: string, color: string }[]}
  */
 function warParticipants(war) {
   const rosters = /** @type {any[]} */ ([]).concat(war.sideACivs || [], war.sideBCivs || []);
@@ -146,9 +145,9 @@ function warParticipants(war) {
 }
 
 /**
- * Build a cell head (cost icon + metric title).
+ * A cell head: cost icon + metric title.
  * @param {*} m A COST_METRICS entry.
- * @returns {HTMLElement} The head element.
+ * @returns {HTMLElement}
  */
 function buildCellHead(m) {
   const head = document.createElement("div");
@@ -172,7 +171,7 @@ function buildCellHead(m) {
  * @param {*} m A COST_METRICS entry.
  * @param {{ war: *, participants: { pid: number, name: string,
  *   color: string }[], win: Snapshot[] }} view The war view.
- * @returns {HTMLElement} The cell element.
+ * @returns {HTMLElement}
  */
 function buildMetricCell(m, view) {
   if (MIL_GRAPH_IDS.has(m.id)) return buildMilitaryCell(m, view);
@@ -194,8 +193,8 @@ const casMode = /** @type {Record<string, string>} */ ({});
  * that re-renders in place. "Scaled" multiplies the loss line by the era's
  * soldiers-per-unit factor (scaleCasualties), matching the war tooltip's estimate.
  * @param {*} m The COST_METRICS entry.
- * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
- * @returns {HTMLElement} The cell element.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view
+ * @returns {HTMLElement}
  */
 function buildCasualtyCell(m, view) {
   const cell = document.createElement("div");
@@ -213,9 +212,9 @@ function buildCasualtyCell(m, view) {
  * Build the 2-way Units ↔ Scaled toggle pills for the casualties graph; clicking re-renders the
  * body.
  * @param {*} m The COST_METRICS entry.
- * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body The chart body to re-render.
- * @returns {HTMLElement} The toggle row.
+ * @returns {HTMLElement}
  */
 function buildCasToggle(m, view, body) {
   const row = document.createElement("div");
@@ -241,8 +240,8 @@ function buildCasToggle(m, view, body) {
  * every loss-line value by scaleCasualties at the war-end era (a constant, so the shape is
  * unchanged).
  * @param {*} m The COST_METRICS entry.
- * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
- * @param {HTMLElement} body The chart body container.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view
+ * @param {HTMLElement} body
  * @param {string} mode The active representation id ("units" | "scaled").
  */
 function renderCasualtyChart(m, view, body, mode) {
@@ -276,7 +275,7 @@ function renderCasualtyChart(m, view, body, mode) {
  * @param {*} m A COST_METRICS entry.
  * @param {{ pid: number, name: string, color: string }[]} participants The civs.
  * @param {Snapshot[]} win The windowed samples.
- * @returns {HTMLElement} The cell element.
+ * @returns {HTMLElement}
  */
 function buildPlainMetricCell(m, participants, win) {
   const cell = document.createElement("div");
@@ -309,8 +308,8 @@ const hiddenWarCivs = new Set();
 
 /**
  * Filter a participant list to those not hidden via the legend.
- * @param {{ pid: number }[]} participants The participants.
- * @returns {*[]} The visible participants.
+ * @param {{ pid: number }[]} participants
+ * @returns {*[]}
  */
 function visibleParticipants(participants) {
   return participants.filter((p) => !hiddenWarCivs.has(p.pid));
@@ -330,8 +329,8 @@ function pruneHiddenWarCivs(participants) {
  * Build a military graph cell: head, a 3-way filter row, then a chart body that
  * re-renders in place when the filter changes.
  * @param {*} m A COST_METRICS entry (milpower / milpowerLevel).
- * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
- * @returns {HTMLElement} The cell element.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view
+ * @returns {HTMLElement}
  */
 function buildMilitaryCell(m, view) {
   const cell = document.createElement("div");
@@ -349,9 +348,9 @@ function buildMilitaryCell(m, view) {
  * Build the 3-way filter pill row for a military graph; clicking re-renders the
  * chart body in place and remembers the choice.
  * @param {*} m The COST_METRICS entry.
- * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body The chart body to re-render.
- * @returns {HTMLElement} The filter row.
+ * @returns {HTMLElement}
  */
 function buildMilFilter(m, view, body) {
   const row = document.createElement("div");
@@ -375,8 +374,8 @@ function buildMilFilter(m, view, body) {
 /**
  * Render (or re-render) a military graph's chart body for the chosen filter mode.
  * @param {*} m The COST_METRICS entry.
- * @param {{ war: *, participants: *[], win: Snapshot[] }} view The war view.
- * @param {HTMLElement} body The chart body container.
+ * @param {{ war: *, participants: *[], win: Snapshot[] }} view
+ * @param {HTMLElement} body
  * @param {string} mode The active filter mode id.
  */
 function renderMilChart(m, view, body, mode) {
@@ -390,7 +389,7 @@ function renderMilChart(m, view, body, mode) {
   }
   body.appendChild(buildPlot(chart.svg, chart.labels));
   // buildLineChartFromSeries doesn't know the cost metric, so graft on the BLP
-  // here , otherwise the two military graphs' hover headers lack the cost icon
+  // here; otherwise the two military graphs' hover headers lack the cost icon
   // the other seven graphs show.
   if (chart.hover) {
     chart.hover.blp = m.blp;
@@ -520,11 +519,11 @@ function buildChart(m, participants, win) {
 
 /**
  * Resolve one metric's series list by graph spec kind.
- * @param {*} spec Graph spec entry.
- * @param {{ pid: number, name: string, color: string }[]} participants Civs.
+ * @param {*} spec A GRAPH_SPEC entry.
+ * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win Windowed samples.
  * @param {string} metricId
- * @returns {*[]} Series list.
+ * @returns {*[]}
  */
 function buildMetricSeries(spec, participants, win, metricId) {
   if (spec?.kind === "loss") {
@@ -539,8 +538,8 @@ function buildMetricSeries(spec, participants, win, metricId) {
 }
 
 /**
- * The chart title for a metric - the shared descriptive title (so it always
- * matches the war-timeline tooltip's prose labels).
+ * The chart title for a metric: the shared descriptive title, so it always
+ * matches the war-timeline tooltip's prose labels.
  * @param {*} m A COST_METRICS entry.
  * @returns {string} The localized title.
  */
@@ -553,7 +552,7 @@ function metricTitle(m) {
  * belligerent civ at once across all war graphs.
  * @param {{ pid: number }[]} participants The civs.
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement} The controls row.
+ * @returns {HTMLElement}
  */
 function buildLegendControls(participants, onChange) {
   const row = document.createElement("div");
@@ -582,7 +581,7 @@ function buildLegendControls(participants, onChange) {
  * lines across the per-civ graphs and re-renders.
  * @param {{ pid: number, name: string, color: string }} p The participant.
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement} The legend item.
+ * @returns {HTMLElement}
  */
 function buildLegendItem(p, onChange) {
   const item = document.createElement("span");
@@ -607,7 +606,7 @@ function buildLegendItem(p, onChange) {
  * @param {{ war: *, participants: { pid: number, name: string,
  *   color: string }[], warName?: string }} view The war view.
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement} The header element.
+ * @returns {HTMLElement}
  */
 function buildHeader(view, onChange) {
   const head = document.createElement("div");
@@ -627,7 +626,7 @@ function buildHeader(view, onChange) {
 /**
  * Append a centered empty-state message.
  * @param {HTMLElement} host
- * @param {string} msg The message.
+ * @param {string} msg
  */
 function appendEmpty(host, msg) {
   const el = document.createElement("div");
@@ -639,7 +638,7 @@ function appendEmpty(host, msg) {
 /**
  * The latest sampled turn (0 when there are no samples).
  * @param {Snapshot[]} samples The (null-free) sample stream.
- * @returns {number} The latest turn.
+ * @returns {number}
  */
 function latestSampleTurn(samples) {
   if (!samples.length) return 0;
@@ -681,7 +680,7 @@ function buildWarView(history, selectedWarId) {
 /**
  * Render the War Graphs sub-tab into `host`.
  * @param {HTMLElement} host The chart host (cleared and repopulated).
- * @param {{ history?: *, selectedWarId?: * }} [opts] Render options.
+ * @param {{ history?: *, selectedWarId?: * }} [opts]
  * @returns {null} Always null (no chart handle).
  */
 export function renderConflictsGraphs(host, opts) {

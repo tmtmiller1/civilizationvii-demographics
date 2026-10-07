@@ -14,8 +14,7 @@ import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js"
 const AXIS_COLOR = "#e5d2ac";
 
 /**
- * Resolve the chart font family with a safe fallback chain.
- * @returns {string} The preferred font family.
+ * @returns {string} The chart font family, with a safe fallback chain.
  */
 function resolveChartFontFamily() {
   return (
@@ -88,7 +87,7 @@ function localizedUnit(unit) {
 /**
  * The Y-axis title for a metric: its localized name plus the localized unit in
  * parentheses (e.g. "Military Power (strength)", "Crop Yield (food / turn)").
- * @param {*} metricMeta The metric metadata.
+ * @param {*} metricMeta
  * @returns {string} The Y-axis title.
  */
 function yAxisTitle(metricMeta) {
@@ -104,8 +103,8 @@ function yAxisTitle(metricMeta) {
 
 /**
  * A Chart.js scale `title` block matching the chart title's color.
- * @param {string} text The title text.
- * @returns {Record<string, *>} The title options.
+ * @param {string} text
+ * @returns {Record<string, *>}
  */
 function axisTitleOpts(text) {
   return {
@@ -126,8 +125,8 @@ function axisTitleOpts(text) {
  * @param {Object} parts Config inputs.
  * @param {Record<string, *>[]} parts.datasets
  * @param {Record<string, *>[]} parts.plugins The plugin instances.
- * @param {*} parts.metricMeta The metric metadata.
- * @param {AxisFormatters} parts.formatters The axis tick formatters.
+ * @param {*} parts.metricMeta
+ * @param {AxisFormatters} parts.formatters
  * @returns {Record<string, *>} The Chart.js config object.
  */
 export function buildLineChartConfig(parts) {
@@ -151,12 +150,12 @@ export function buildLineChartConfig(parts) {
       normalized: true,
       // Default "nearest" shows the single closest line; a metric can opt into "index" (via
       // metricMeta.tooltipMode) so hovering a turn lists every civ, which tells apart overlapping lines.
-      // Measured on 1.5.0 (2026-09-24): with `axis: "x"` and `intersect: false`, "nearest" already
-      // returns EVERY dataset at the hovered turn (they are equidistant in x), so it is not the cause
-      // of a tooltip that fails to update. Do NOT "fix" that by switching the default to "index":
-      // chart-line-series.js `fromContactOnly` drops pre-contact points, so datasets have different
-      // -length x arrays, and "index" aligns by array position rather than turn — it would pair one
-      // civ's turn 21 with another's turn 60 in the same tooltip.
+      // On 1.5.0, with `axis: "x"` and `intersect: false`, "nearest" already returns every dataset
+      // at the hovered turn (they are equidistant in x), so it is not the cause of a tooltip that
+      // fails to update. Don't "fix" that by switching the default to "index": chart-line-series.js
+      // `fromContactOnly` drops pre-contact points, so datasets have different-length x arrays, and
+      // "index" aligns by array position rather than turn. It would pair one civ's turn 21 with
+      // another's turn 60 in the same tooltip.
       interaction: {
         mode: (metricMeta && metricMeta.tooltipMode) || "nearest",
         intersect: false,
@@ -171,7 +170,7 @@ export function buildLineChartConfig(parts) {
 /**
  * The absolute y-value of a chart data point, or 0 when missing/non-finite.
  * @param {*} pt A {x, y} data point.
- * @returns {number} |y|, or 0.
+ * @returns {number}
  */
 function ptAbsY(pt) {
   return pt && typeof pt.y === "number" && isFinite(pt.y) ? Math.abs(pt.y) : 0;
@@ -180,8 +179,8 @@ function ptAbsY(pt) {
 /**
  * The symmetric y-axis half-range for a diverging bar chart: the largest absolute data value across
  * every dataset, floored at 1 (so an empty/all-zero chart still shows a -1 / 0 / +1 axis).
- * @param {Record<string, *>[]} datasets The chart datasets.
- * @returns {number} A positive half-range bound.
+ * @param {Record<string, *>[]} datasets
+ * @returns {number}
  */
 function symmetricYBound(datasets) {
   let m = 0;
@@ -196,8 +195,8 @@ function symmetricYBound(datasets) {
 
 /**
  * Build the Chart.js `options.plugins` block (legend / tooltip / title).
- * @param {AxisFormatters} formatters The axis tick formatters.
- * @param {*} [metricMeta] Optional metric metadata.
+ * @param {AxisFormatters} formatters
+ * @param {*} [metricMeta]
  * @returns {Record<string, *>} The plugins options block.
  */
 function buildChartPluginsOpts(formatters, metricMeta) {
@@ -205,7 +204,7 @@ function buildChartPluginsOpts(formatters, metricMeta) {
   return {
     // The civ legend is rendered as a custom HTML list beside the chart
     // (chart-line-legend.js) so each entry can carry a live <fxs-icon> leader
-    // portrait - the canvas-drawn Chart.js legend can't host one.
+    // portrait; the canvas-drawn Chart.js legend can't host one.
     legend: { display: false },
     tooltip: {
       // Disable Chart.js's canvas-painted tooltip and use an HTML overlay styled
@@ -222,8 +221,8 @@ function buildChartPluginsOpts(formatters, metricMeta) {
 
 /**
  * Build the Chart.js `options.scales` block (linear x + y axes).
- * @param {*} metricMeta The metric metadata.
- * @param {AxisFormatters} formatters The axis tick formatters.
+ * @param {*} metricMeta
+ * @param {AxisFormatters} formatters
  * @param {number|null} [symBound] Symmetric y half-range for a diverging bar chart (null = auto).
  * @returns {Record<string, *>} The scales options block.
  */

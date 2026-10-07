@@ -17,7 +17,7 @@ globalThis.localStorage = {
   removeItem: (k) => storage.delete(k)
 };
 
-// ── Wonder completion years: only an observed completion is dated ─────────────
+// Wonder completion years: only an observed completion is dated
 const { wonderCompletionYears, annotateWonderYears } = await import(
   "/demographics/ui/screen-demographics/settlements/settlements-wonder-years.js"
 );
@@ -42,7 +42,7 @@ assert.equal(annotated[0].wonders[0].year, "2500 BCE");
 assert.equal(annotated[0].wonders[1].year, undefined);
 annotateWonderYears(annotated, { samples: [] }); // no years → no-op
 
-// ── Holy cities: matched by unique name only ──────────────────────────────────
+// Holy cities: matched by unique name only
 const religion = (holyName, type) => ({
   getHolyCityName: () => holyName,
   getReligionType: () => type,
@@ -72,7 +72,7 @@ const noPlayers = [{ name: "Kyoto" }];
 attachHolyCities(noPlayers);
 assert.equal(noPlayers[0].holy, null, "no Players global → no badges, no throw");
 
-// ── End-of-age archive ─────────────────────────────────────────────────────────
+// End-of-age archive
 globalThis.Game = { age: "AGE_EXPLORATION", turn: 5 };
 GameInfo.Ages.lookup = (a) =>
   ({ AGE_ANTIQUITY: { Name: "LOC_AGE_ANTIQUITY_NAME" }, AGE_EXPLORATION: { AgeType: "AGE_EXPLORATION" } })[a] || null;
@@ -163,7 +163,7 @@ assert.deepEqual(
 delete globalThis.Constructibles;
 Players.getAlive = () => [];
 
-// ── Showcase: medal rows, own outline, world-leader icons, holy badge, pills ──
+// Showcase: medal rows, own outline, world-leader icons, holy badge, pills
 const { renderShowcasePanel, rankedRowClass, isOwnSettlement } = await import(
   "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js"
 );
@@ -239,10 +239,10 @@ const wonderTip = rows[0].querySelector(".demographics-settle-wonder-icon").getA
 assert.equal(wonderTip, "W_NEW · DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT|DEMOGRAPHICS_YEAR_BCE|2500");
 assert.equal(st.content.querySelector(".demographics-settle-age-pills"), null, "no archive → no pills");
 
-// With an archived age: pills appear; picking it swaps the board IN PLACE and adds the note.
+// With an archived age: pills appear; picking it swaps the board in place and adds the note.
 // Regression guard for the blinking flourishes / laurels: an age switch used to rebuild the whole
 // panel, so every `blp:`-backed chrome element was destroyed and re-created (and flashed while its
-// background re-resolved). The titles and the list header must be the SAME node objects after.
+// background re-resolved). The titles and the list header must be the same node objects after.
 const archived = [{ age: "AGE_ANTIQUITY", label: "Antiquity", year: "400 CE",
   top: [live("Ctesiphon", 3, 1, { archived: true })] }];
 const st2 = { board: { settlements: board }, content: el(), showcaseAge: "now" };
@@ -287,7 +287,7 @@ assert.match(st3.content.querySelector(".demographics-settle-age-note").textCont
 // Podium + list both render the archived settlement; neither shows a live trend.
 assert.equal(trendCalls, 0, "an archived record has no trend glyph");
 
-// ── Civilization Ranking: medal rows, own outline, civ-level world-leader icons ──
+// Civilization Ranking: medal rows, own outline, civ-level world-leader icons
 const { renderCivRankingPanel } = await import(
   "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js"
 );
@@ -330,7 +330,7 @@ assert.equal(civRows[0].querySelectorAll(".demographics-settle-lead-icon").lengt
 assert.equal(civRows[1].querySelectorAll(".demographics-settle-lead-icon").length, 1, "civ 2 leads output 1");
 assert.equal(civRows[2].querySelector(".demographics-settle-lead-icons"), null);
 
-// ── Settlement Rank by Yield: leaders marked in the table, no strip ──────────────
+// Settlement Rank by Yield: leaders marked in the table, no strip
 const { renderTablePanel } = await import(
   "/demographics/ui/screen-demographics/views/settlements/view-settlements-table.js"
 );
@@ -347,10 +347,10 @@ assert.equal(tLeads.length, 1, "column 0 has one leader; column 1 (all zero) has
 assert.ok(tLeads[0].className.includes("demographics-settle-col-" + c0));
 assert.equal(tLeads[0].textContent, "9");
 
-// ── Settlement Rank by Yield: a filter/sort click leaves the chrome alone ───────
+// Settlement Rank by Yield: a filter/sort click leaves the chrome alone
 // Regression guard for the blinking filigree / column icons: these clicks used to rebuild the
 // whole panel, so every `blp:`-backed chrome element was destroyed and re-created (and flashed
-// while its background re-resolved). They must be the SAME node objects afterward.
+// while its background re-resolved). They must be the same node objects afterward.
 const tTitleBefore = tSt.content.querySelector(".title");
 const tHeaderBefore = tSt.content.querySelector(".demographics-settle-header");
 const tIconsBefore = Array.from(tSt.content.querySelectorAll(".demographics-settle-yield-icon"));
@@ -396,7 +396,7 @@ assert.equal(
   "the rows are swapped, not duplicated"
 );
 
-// ── rankedRowClass / isOwnSettlement edges ──────────────────────────────────────
+// rankedRowClass / isOwnSettlement edges
 assert.equal(rankedRowClass("r", { owner: { pid: 9 } }, 0), "r");
 assert.equal(isOwnSettlement(null), false);
 delete globalThis.GameContext;

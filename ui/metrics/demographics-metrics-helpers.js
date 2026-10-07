@@ -41,7 +41,7 @@ export function resolveTurn(primary, fallback) {
   return 1;
 }
 
-// ── Population scaling — grounded in Civ VII's per-era growth formula ──────────────────────────
+// Population scaling, grounded in Civ VII's per-era growth formula.
 // Civ VII charges food per size step, cost(x) = Flat + Scalar·x + Exponent·x², with different params
 // per age. The cumulative food a settlement of size N has absorbed, W(N) = Σ cost(1..N), is its
 // demographic weight; POP_K turns it into people. See reports/population-scaling-per-age-design.md.
@@ -54,7 +54,7 @@ const ERA_GROWTH_PARAMS = {
   AGE_MODERN: { flat: 60, scalar: 60, exp: 6 }
 };
 const ERA_ORDER = ["AGE_ANTIQUITY", "AGE_EXPLORATION", "AGE_MODERN"];
-// People per food-unit — the single global scale anchor (top Exploration city, size ~20 → ~0.8M).
+// People per food-unit: the single global scale anchor (top Exploration city, size ~20 → ~0.8M).
 const POP_K = 31;
 // Over the first BLEND_PCT of a new age, blend the previous era's params → the current era's, so a
 // settlement whose size carries across an age boundary reads continuously (no jump). This is the
@@ -85,7 +85,7 @@ const CEIL_KNEE = 0.7;
 // smoothstep-eased over the first OVERTIME_EASE (C¹) and capped at OVERTIME_MAX (~190M/city).
 const OVERTIME_CEILING_RATE = 1.0; // base ceilings per full extra age of overtime (pre-cap)
 const OVERTIME_EASE = 0.1; // smoothstep-ease the onset over the first 10% of overtime fraction (C¹)
-const OVERTIME_MAX = 5; // hard cap on the multiplier — bounds the absolute worst case
+const OVERTIME_MAX = 5; // hard cap on the multiplier; bounds the absolute worst case
 
 /**
  * Smoothstep on [0,1].
@@ -193,7 +193,7 @@ const SOLDIERS_PER_UNIT = 1000;
 const CASUALTY_MAX_ERA_MULT = 11;
 
 /**
- * Scale a raw units-lost COUNT into a turn-aware "soldiers killed" figure, comparable to the scaled
+ * Scale a raw units-lost count into a turn-aware "soldiers killed" figure, comparable to the scaled
  * population metric.
  * @param {number} raw Raw units-lost count.
  * @param {{ turn?: number } | null | undefined} scaleCtx Per-player scale context.

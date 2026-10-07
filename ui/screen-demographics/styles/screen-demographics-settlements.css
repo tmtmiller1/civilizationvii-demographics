@@ -1,12 +1,12 @@
-/* ── WorldRankingsAllCivs (view-worldrankings-allcivs) ────────────────────────────────────────────── */
+/* WorldRankingsAllCivs (view-worldrankings-allcivs) */
 
-/* Toggleable (other-civ) column header — only these headers carry a click
+/* Toggleable (other-civ) column header: only these headers carry a click
    handler, so the pointer cursor is opt-in rather than on every header. */
 .demographics-worldrankings-allcivs-civ-header-clickable {
     cursor: pointer;
 }
 
-/* ── Relations filters (relations-filters) ───────────────────────────────── */
+/* Relations filters (relations-filters) */
 
 /* "All On · All Off" bulk-toggle header row. */
 .demographics-relations-filter-ctrl-row {
@@ -50,7 +50,7 @@
 /* Filter-pill mini sample-line swatch. Width derives from the SAMPLE_W
    constant and stays inline. */
 /* The swatch is now a small SVG that draws the filter's ACTUAL line (same color,
-   dash synthesis, chevron, and units the ring uses) — a true miniature of the
+   dash synthesis, chevron, and units the ring uses), a true miniature of the
    line it labels. Wide enough to show the dash rhythm at the ring's scale. */
 .demographics-relations-swatch {
     display: inline-block;
@@ -61,10 +61,10 @@
     flex-shrink: 0;
 }
 
-/* ── Settlements view ────────────────────────────────────────────────────────
+/* Settlements view
    A live world leaderboard. Two sub-views (showcase / table). Per-owner civ
    colors are set inline (--owner / border-left-color); everything else is the
-   static chrome below, on the shared --dg-ia-* palette. ─────────────────────────── */
+   static chrome below, on the shared --dg-ia-* palette. */
 .demographics-settle-view {
     display: flex;
     flex-direction: column;
@@ -144,7 +144,7 @@
     padding-left: calc(2 * var(--dg-u));
 }
 
-/* ── Shared owner avatar + name + type badge ───────────────────────────────── */
+/* Shared owner avatar + name + type badge */
 .demographics-settle-avatar {
     width: calc(3.6 * var(--dg-u));
     height: calc(3.6 * var(--dg-u));
@@ -260,7 +260,7 @@
     font-size: var(--dg-fs-95);
 }
 
-/* ── Showcase: podium (top 3) ──────────────────────────────────────────────── */
+/* Showcase: podium (top 3) */
 .demographics-settle-podium {
     display: flex;
     justify-content: center;
@@ -373,7 +373,7 @@
     font-size: var(--dg-fs-240);
 }
 
-/* ── Showcase: ranked list (4..25) ─────────────────────────────────────────── */
+/* Showcase: ranked list (4..25) */
 /* Explanatory note (e.g. how the civ-ranking "Score" differs from the game's). */
 .demographics-settle-note {
     max-width: calc(60 * var(--dg-u));
@@ -397,7 +397,7 @@
     column-gap: calc(0.3 * var(--dg-u));
     /* Centered, focused column for the ranked showcase / civ-ranking lists (the
        worldrankings-allcivs + settlement table stay full-width). align-self centers a flex
-       item on the cross axis — margin:auto does not in a column flex parent. */
+       item on the cross axis; margin:auto does not in a column flex parent. */
     width: 100%;
     max-width: calc(70 * var(--dg-u));
     align-self: center;
@@ -448,7 +448,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-/* Owning civilization under a ranked settlement's name (player feedback) —
+/* Owning civilization under a ranked settlement's name (player feedback),
    small and muted so the settlement name stays primary. */
 .demographics-settle-list-civ {
     color: var(--dg-ia-text-secondary);
@@ -513,7 +513,7 @@
 }
 .demographics-settle-head-score {
     font-size: var(--dg-fs-95);
-    /* TYPE unit: holds the word "Score". */
+    /* Type unit: holds the word "Score". */
     width: calc(3 * var(--dg-t));
     text-align: right;
     flex-shrink: 0;
@@ -543,7 +543,7 @@
     background: linear-gradient(to right, rgba(224, 88, 76, 0), #e0584c, rgba(224, 88, 76, 0));
 }
 
-/* ── Detail table ──────────────────────────────────────────────────────────── */
+/* Detail table */
 .demographics-settle-filters {
     display: flex;
     row-gap: calc(0.4 * var(--dg-u));
@@ -690,8 +690,8 @@
     flex-basis: calc(2.8 * var(--dg-u));
 }
 .demographics-settle-col-owner {
-    /* Grow at the SAME rate (1) as the yield columns so the leading columns no
-       longer hog the spare width — every column shares it evenly. The basis just
+    /* Grow at the same rate (1) as the yield columns so the leading columns no
+       longer hog the spare width; every column shares it evenly. The basis just
        covers the avatar + leader/civ names. */
     flex-grow: 1;
     flex-shrink: 1;
@@ -721,7 +721,7 @@
     flex-basis: calc(4.2 * var(--dg-u));
 }
 
-/* ── Towns + Town Advisor tabs ───────────────────────────────────────
+/* Towns + Town Advisor tabs
    Towns: a flex "table" (vanilla Civ7 avoids <table>) of the local
    player's own settlements. Advisor: per-town recommendation cards. */
 .demographics-towns,
@@ -878,7 +878,7 @@
     line-height: 1.3;
 }
 
-/* ── Top Cities cards: wonder row, trend glyph, meta, clickable ──────────────── */
+/* Top Cities cards: wonder row, trend glyph, meta, clickable */
 .demographics-settle-clickable {
     cursor: pointer;
 }
@@ -956,7 +956,7 @@
     background-color: var(--dg-ia-text-accent);
 }
 
-/* ── City detail dossier ─────────────────────────────────────────────────────── */
+/* City detail dossier */
 .demographics-settle-detail {
     display: flex;
     flex-direction: column;
@@ -1160,7 +1160,7 @@
     font-size: var(--dg-fs-95);
 }
 
-/* ── "View on map" button ────────────────────────────────────────────────────── */
+/* "View on map" button */
 /* Clearly a button: gold-tinted raised pill with a strong border + hover. */
 .demographics-settle-mapbtn {
     display: inline-flex;
@@ -1254,8 +1254,8 @@
     pointer-events: auto;
 }
 
-/* ── Map flyout overlay (cinematic; lives on document.body over the map) ──────── */
-/* Centered along the BOTTOM of the screen, compact (~1/3 smaller than the big
+/* Map flyout overlay (cinematic; lives on document.body over the map) */
+/* Centered along the bottom of the screen, compact (~1/3 smaller than the big
    top plate), so it celebrates the city without dominating the shot. */
 .demographics-map-overlay {
     position: fixed;
@@ -1300,7 +1300,7 @@
     row-gap: calc(0.6 * var(--dg-u));
     column-gap: calc(0.6 * var(--dg-u));
 }
-/* Top-3 laurel crest in the cinematic popup — same art as the rankings board,
+/* Top-3 laurel crest in the cinematic popup: same art as the rankings board,
    scaled down to fit the header next to the settlement name. */
 .demographics-map-overlay-medal {
     width: calc(3.8 * var(--dg-u));
@@ -1446,7 +1446,7 @@
     opacity: 0.85;
 }
 
-/* ── Two-column split (podium left, full ranked list right) ───────────────────
+/* Two-column split (podium left, full ranked list right)
    Used by Civilization Ranking + Top-25 Settlements so the wide window's space
    is used instead of stacking podium-over-list. The right list scrolls within
    the column; the podium stays put on the left. */
@@ -1480,7 +1480,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    /* The column itself does NOT scroll — its heading stays pinned and only the
+    /* The column itself does not scroll; its heading stays pinned and only the
        podium below it scrolls (one scroll region, below the heading). */
     overflow: hidden;
     /* Vertical divider between the podium and the ranked list. */
@@ -1489,8 +1489,8 @@
     border-right-color: var(--dg-ia-divider);
     padding-right: calc(2 * var(--dg-u));
 }
-/* Grand "Greatest" heading: stack the filigree flourish ABOVE and BELOW the title
-   (like the loading screen's top/bottom ornaments) instead of flanking it — the
+/* Grand "Greatest" heading: stack the filigree flourish above and below the title
+   (like the loading screen's top/bottom ornaments) instead of flanking it: the
    text gets its own line, so it can't wrap onto a card, and the framed flourishes
    read as a grand header. */
 .demographics-settle-split-left .demographics-settle-section-title {
@@ -1510,7 +1510,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-/* Podium column heading: drop the flourish ABOVE the title and keep the one below. The right-hand
+/* Podium column heading: drop the flourish above the title and keep the one below. The right-hand
    list heading keeps both (they sit left and right of its title). */
 .demographics-settle-split-left .demographics-settle-section-title > .demographics-settle-section-fil:first-child {
     display: none;
@@ -1528,7 +1528,7 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-    /* The column itself does NOT scroll — its heading stays pinned and only the
+    /* The column itself does not scroll; its heading stays pinned and only the
        ranked list below it scrolls (one scroll region, below the heading). */
     overflow: hidden;
 }
@@ -1538,13 +1538,13 @@
     min-height: 0;
     overflow-y: auto;
 }
-/* The title (and the civ note) must NOT be squeezed by the growing podium — when
+/* The title (and the civ note) must not be squeezed by the growing podium; when
    they were shrinkable, the wrapped title overflowed down onto the first card. */
 .demographics-settle-split .demographics-settle-section-title,
 .demographics-settle-split-left .demographics-settle-note {
     flex: 0 0 auto;
 }
-/* Podium stacks VERTICALLY in the left column. The builder emits gold → silver →
+/* Podium stacks vertically in the left column. The builder emits gold → silver →
    bronze for this layout; the horizontal podium's centered/elevated #1 styling is
    neutralized here. The three cards GROW equally to fill the column height (under
    the title) so the left reads as a full, balanced panel beside the right list. */
@@ -1563,7 +1563,7 @@
     margin-top: calc(0.6 * var(--dg-u));
     padding: 0;
 }
-/* Compact HORIZONTAL podium card: [medal+avatar] · [name/owner/meta] · [score].
+/* Compact horizontal podium card: [medal+avatar] · [name/owner/meta] · [score].
    Far shorter than the old vertical card, so the title can't collide with it. */
 .demographics-settle-split-left .demographics-settle-podium-card {
     width: 100%;
@@ -1610,7 +1610,7 @@
     column-gap: calc(0.2 * var(--dg-u));
     flex: 0 0 auto;
 }
-/* Sizing for the horizontal podium cards — large enough to read as featured "top
+/* Sizing for the horizontal podium cards: large enough to read as featured "top
    3" cards while still leaving the title clear above them. */
 .demographics-settle-split-left .demographics-settle-medal {
     width: calc(4.4 * var(--dg-u));
@@ -1630,7 +1630,7 @@
     margin: 0;
     text-align: left;
     /* Keep multi-word names ("Great Britain", "Achaemenid Persia", long city
-       names) on ONE line (player feedback) — the widened left column has room.
+       names) on one line (player feedback); the widened left column has room.
        Degrade to an ellipsis only when genuinely out of room (small frame / large
        Interface Size) rather than wrapping onto a second line. */
     white-space: nowrap;
@@ -1666,7 +1666,7 @@
     align-items: center;
 }
 
-/* ── Ranked-row accents (Top 25 list + table) ─────────────────────────────────
+/* Ranked-row accents (Top 25 list + table)
    Places 1-3 get a faint gold / silver / bronze wash so the list echoes the
    podium medals; the civ-colored left edge stays. The local player's own
    settlements get a gold outline on the other three sides, so they can be found

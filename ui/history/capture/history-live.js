@@ -12,7 +12,7 @@ export const live = { doc: null };
 
 /**
  * The live campaign for the in-game views (loaded from the save on demand).
- * @returns {CampaignDoc|null} The document.
+ * @returns {CampaignDoc|null}
  */
 export function liveCampaign() {
   // Read-only view: never park or restore from here (history-capture owns the writes).

@@ -2,9 +2,9 @@
 //
 // The game's own icons for the timeline. Everything here is a texture path ("blp:..." or
 // "fs://game/..."), used as a CSS background, because the icon table (UI.getIconURL) is loaded in
-// game only while the Hall of Fame also shows at the main menu; texture paths draw in both (watched
-// on 1.5.0). A wonder's or religion's own icon is therefore resolved in game when the record is
-// built and stored with it; everything else comes from the fixed table below.
+// game only while the Hall of Fame also shows at the main menu; texture paths draw in both. A
+// wonder's or religion's own icon is therefore resolved in game when the record is built and
+// stored with it; everything else comes from the fixed table below.
 
 import { safe } from "/demographics/ui/history/core/history-log.js";
 
@@ -33,7 +33,7 @@ export const DISASTER_ICONS = /** @type {Record<string, string>} */ ({
 
 /**
  * The icon of a mark: its own resolved icon when it has one, else its kind's.
- * @param {{k:string, i?:string}} m Mark.
+ * @param {{k:string, i?:string}} m
  * @returns {string} Texture path ("" when there is none).
  */
 export function markIcon(m) {

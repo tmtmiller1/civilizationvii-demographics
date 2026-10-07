@@ -23,9 +23,9 @@ export function getLocalId() {
 
 /**
  * Test whether `id` should be counted as a met major from `localPid`.
- * @param {number} id Candidate player id.
- * @param {number} localPid Local player id.
- * @param {*} humanDiplo Local player's diplomacy handle.
+ * @param {number} id
+ * @param {number} localPid
+ * @param {*} humanDiplo
  * @returns {boolean} True when `id` is local or a met major.
  */
 export function isMetMajor(id, localPid, humanDiplo) {
@@ -41,10 +41,10 @@ export function isMetMajor(id, localPid, humanDiplo) {
 
 /**
  * Append id to output when it qualifies as a met major.
- * @param {number[]} out Output pid list.
- * @param {number} id Candidate player id.
- * @param {number} localPid Local player id.
- * @param {*} humanDiplo Local diplomacy handle.
+ * @param {number[]} out
+ * @param {number} id
+ * @param {number} localPid
+ * @param {*} humanDiplo
  */
 function pushIfMetMajor(out, id, localPid, humanDiplo) {
   try {
@@ -56,8 +56,8 @@ function pushIfMetMajor(out, id, localPid, humanDiplo) {
 
 /**
  * Return the set of met major-player ids (including the local player).
- * @param {number} localPid Local player id.
- * @returns {number[]} Met major ids.
+ * @param {number} localPid
+ * @returns {number[]}
  */
 export function getMetMajorIds(localPid) {
   // Governance: own-civ-only / disabled restricts the relations network
@@ -88,7 +88,7 @@ export function getMetMajorIds(localPid) {
 
 /**
  * Collect alive player ids via `getAliveIds()` when available.
- * @returns {number[]} Alive ids.
+ * @returns {number[]}
  */
 function collectAliveIdsPrimary() {
   /** @type {number[]} */
@@ -106,7 +106,7 @@ function collectAliveIdsPrimary() {
 
 /**
  * Collect alive player ids via `getAlive()` iterator fallback.
- * @returns {number[]} Alive ids.
+ * @returns {number[]}
  */
 function collectAliveIdsFallback() {
   /** @type {number[]} */
@@ -127,7 +127,7 @@ function collectAliveIdsFallback() {
 
 /**
  * Return the set of alive city-state / minor / independent player ids.
- * @returns {number[]} City-state ids.
+ * @returns {number[]}
  */
 export function getCityStateIds() {
   return safeCall(
@@ -155,8 +155,8 @@ export function getCityStateIds() {
 
 /**
  * Whether the viewer player has met `otherPid`.
- * @param {*} viewerPid Viewer player id.
- * @param {*} otherPid Other player id.
+ * @param {*} viewerPid
+ * @param {*} otherPid
  * @returns {boolean|undefined} Met state, or undefined when unavailable.
  */
 export function viewerHasMet(viewerPid, otherPid) {
@@ -176,9 +176,9 @@ export function viewerHasMet(viewerPid, otherPid) {
 
 /**
  * Read the snapshot-recorded `met` field for `pid` from the latest sample.
- * @param {DemoHistory|undefined} history Persisted history blob.
- * @param {string|number} pid Player id to look up.
- * @returns {boolean|undefined} Snapshot met state.
+ * @param {DemoHistory|undefined} history
+ * @param {string|number} pid
+ * @returns {boolean|undefined}
  */
 function latestSampleMet(history, pid) {
   const samples = Array.isArray(history?.samples) ? history.samples : [];
@@ -191,11 +191,11 @@ function latestSampleMet(history, pid) {
 
 /**
  * Resolve whether `viewerPid` has met `pid`, with snapshot fallback.
- * @param {number} viewerPid Viewer player id.
- * @param {number} pid Other player id.
- * @param {number|undefined} localId Local player id.
- * @param {DemoHistory|undefined} history Persisted history blob.
- * @returns {boolean|undefined} Met state.
+ * @param {number} viewerPid
+ * @param {number} pid
+ * @param {number|undefined} localId
+ * @param {DemoHistory|undefined} history
+ * @returns {boolean|undefined}
  */
 export function resolveMet(viewerPid, pid, localId, history) {
   let met = viewerHasMet(viewerPid, pid);
@@ -208,7 +208,7 @@ export function resolveMet(viewerPid, pid, localId, history) {
 
 /**
  * Read current game turn defensively.
- * @returns {number|undefined} Current turn.
+ * @returns {number|undefined}
  */
 export function readGameTurn() {
   return safeCall("relations.Game.turn", () => {

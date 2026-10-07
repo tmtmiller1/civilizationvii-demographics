@@ -2,7 +2,7 @@
 //
 // Mod settings, namespaced under localStorage.modSettings.demographics. Only the
 // single shared "modSettings" top-level key is ever written: many popular mods
-// wipe ALL of localStorage when more than one top-level key exists, so a
+// wipe all of localStorage when more than one top-level key exists, so a
 // sibling key would erase every mod's settings. The in-memory bucket is
 // authoritative and persistence is best-effort (without localStorage the
 // session still works but settings don't survive a reload).
@@ -15,16 +15,15 @@
 /**
  * The known settings keys (mirroring {@link DEFAULTS}).
  * @typedef {Object} SettingsShape
- * @property {string} [activeMetric] Active metric id.
- * @property {string[]} [hiddenCivs] Hidden civ leaderType strings.
- * @property {boolean} [colorblindMode] CVD-safe palette toggle.
- * @property {string|number} [sampleCapOverride] History cap override.
- * @property {boolean} [disableDecimation] Skip per-Nth decimation pass.
- * @property {number} [sampleEveryNTurns] Turns between snapshot captures.
- * @property {boolean} [showWonderMarkers] Overlay wonder-count markers.
- * @property {boolean} [showWarMarkers] Overlay war onset markers on the Emigration refugees chart.
- * @property {boolean} [showDisasterMarkers] Overlay disaster onset markers on the Emigration
- * refugees chart.
+ * @property {string} [activeMetric]
+ * @property {string[]} [hiddenCivs] leaderType strings.
+ * @property {boolean} [colorblindMode]
+ * @property {string|number} [sampleCapOverride]
+ * @property {boolean} [disableDecimation]
+ * @property {number} [sampleEveryNTurns]
+ * @property {boolean} [showWonderMarkers]
+ * @property {boolean} [showWarMarkers] On the Emigration refugees chart.
+ * @property {boolean} [showDisasterMarkers] On the Emigration refugees chart.
  */
 
 /**
@@ -42,15 +41,13 @@
 
 const DBG = false;
 /**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.settings]", ...a);
 }
 /**
- * Error logger; always emits.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.settings]", ...a);
@@ -64,7 +61,7 @@ const ROOT_KEY = "modSettings";
 const SCHEMA_KEY = "__schema";
 const SCHEMA_VERSION = 1;
 
-// DEFAULTS is NOT an exhaustive schema: it seeds the in-memory bucket and backs
+// DEFAULTS is not an exhaustive schema: it seeds the in-memory bucket and backs
 // `getSettings()`, but the authoritative default is the call-site fallback in
 // `getSetting(key, dflt)`. Per-view state (active tab/page/metric, viewer pids,
 // time filters) is intentionally absent here.
@@ -72,52 +69,42 @@ const SCHEMA_VERSION = 1;
 const DEFAULTS = {
   activeMetric: "score",
   hiddenCivs: [], // array of leaderType strings
-  // ─── Accessibility ─────────────────────────────────────────────────
   colorblindMode: false, // swap mod-owned colors to a CVD-safe palette
-  // ─── Adaptive history storage cap ───
   // Max samples kept before decimating older history: "auto" = derive from
   // Game.gameSpeed; numeric value overrides; -1 = unlimited (never drops samples).
   sampleCapOverride: "auto",
   // When true, the per-Nth decimation pass is skipped entirely so every turn is
   // preserved; pairs with a generous (or unlimited) `sampleCapOverride`.
   disableDecimation: false,
-  // ─── Polling rate ──────────────────────────────────────────────────
   // Turns between snapshot captures; 1 = every turn. Higher values trade chart
   // resolution for a smaller storage footprint and less work each turn-end.
   sampleEveryNTurns: 1,
-  // ─── Wonder markers ─────────────────────────────────────────────────
   // Overlay a tiny wonder icon on each civ's line at every turn that
   // civ's wonders count incremented. Toggle from the Options tab.
   showWonderMarkers: true,
-  // ─── War / disaster markers (Emigration refugees chart) ─────────────
   // Overlay war onsets and disaster onsets on the Emigration refugees
   // graph's timeline. Two independent toggles, like wonder markers.
   showWarMarkers: true,
   showDisasterMarkers: true,
-  // ─── Spoiler guard ─────────────────────────────────────────────────
   // When true (default), diplomacy / influence / relations figures are
   // withheld for civilizations the local player has not met (the charts
   // show a gap, not a value). Turn off to record and show those too.
   hideUnmetStats: true,
-  // ─── Analytics-visibility governance ─────
   // The local player's analytics policy, one of "disabled", "own-civ-only",
   // "met-civs-only", "full". A multiplayer host can cap it via a GameConfiguration
   // ceiling (demographics-governance.js); the effective policy is the more restrictive.
   analyticsPolicy: "met-civs-only",
-  // ─── UI complexity tier ────────────────
   // Progressive-disclosure profile: "basic" (core stat pages only),
-  // "standard" (all pages/tabs; advanced tuning hidden ; default), or
+  // "standard" (all pages/tabs, advanced tuning hidden; the default), or
   // "analyst" (everything, including storage/sampling controls).
   uiComplexity: "standard",
-  // ─── Met-history reveal mode (sub-option of hideUnmetStats) ─────────
   // What the line chart shows for a civ after you meet it, when hideUnmetStats
   // is on: true reveals the civ's entire history once met; false reveals only
   // data from first contact forward. Ignored when hideUnmetStats is off.
   backfillMetHistory: true
 };
 
-// ─── Settings schema + load-time validation/migration ──────────────────────
-// SCHEMA declares the type (and clamp range) for each KNOWN setting so a
+// SCHEMA declares the type (and clamp range) for each known setting so a
 // malformed persisted value is repaired to its default on load. Keys absent
 // from SCHEMA (per-view state, forward-compat writes) pass through untouched.
 /** @type {Record<string, { type: string, min?: number, max?: number }>} */
@@ -139,9 +126,9 @@ const SCHEMA = {
 
 /**
  * Coerce a value to a clamped integer, or undefined when non-numeric.
- * @param {*} v The raw value.
- * @param {{ min?: number, max?: number }} spec The clamp spec.
- * @returns {number|undefined} The clamped int, or undefined when invalid.
+ * @param {*} v
+ * @param {{ min?: number, max?: number }} spec
+ * @returns {number|undefined}
  */
 function coerceInt(v, spec) {
   const n = typeof v === "number" ? v : Number(v);
@@ -154,8 +141,8 @@ function coerceInt(v, spec) {
 
 /**
  * Coerce the sample-cap override: "auto", or a finite number (-1 = unlimited).
- * @param {*} v The raw value.
- * @returns {string|number|undefined} The valid value, or undefined.
+ * @param {*} v
+ * @returns {string|number|undefined}
  */
 function coerceCapOverride(v) {
   if (v === "auto") return "auto";
@@ -176,8 +163,8 @@ const TYPE_VALIDATORS = {
  * Validate + repair a settings bucket in place against {@link SCHEMA}: every
  * known key is type-checked / clamped, and reset to its default when invalid.
  * Unknown keys are left untouched. Mutates and returns `bucket`.
- * @param {SettingsBucket} bucket The bucket to repair.
- * @returns {SettingsBucket} The repaired bucket.
+ * @param {SettingsBucket} bucket
+ * @returns {SettingsBucket}
  */
 function repairBucket(bucket) {
   for (const key of Object.keys(SCHEMA)) {
@@ -203,12 +190,12 @@ const MIGRATIONS = {};
 /**
  * Upgrade a persisted slice from its stamped schema version to the current one,
  * running each registered migration in order, then re-stamp the version.
- * @param {SettingsBucket} slice The persisted slice (mutated).
- * @returns {SettingsBucket} The migrated slice.
+ * @param {SettingsBucket} slice Mutated.
+ * @returns {SettingsBucket}
  */
 function migrateSlice(slice) {
   let from = typeof slice[SCHEMA_KEY] === "number" ? slice[SCHEMA_KEY] : 0;
-  // A slice stamped by a NEWER build is left as it is: its keys are read but the
+  // A slice stamped by a newer build is left as it is: its keys are read but the
   // stamp is not lowered, so the newer build does not re-run migrations.
   if (from > SCHEMA_VERSION) return slice;
   while (from < SCHEMA_VERSION) {
@@ -221,9 +208,9 @@ function migrateSlice(slice) {
 }
 
 /**
- * Normalize a persisted settings slice through migration + repair.
- * @param {SettingsBucket} slice The raw persisted slice.
- * @returns {SettingsBucket} The normalized slice.
+ * Migration, then repair.
+ * @param {SettingsBucket} slice
+ * @returns {SettingsBucket}
  */
 function normalizeSlice(slice) {
   const migrated = migrateSlice({ ...slice });
@@ -253,11 +240,11 @@ function sliceToPersist(bucket) {
 }
 
 /**
- * Run `fn`, returning its result; on any throw, log and return `fallback`.
+ * Run `fn`; on any throw, log and return `fallback`.
  * @template T
- * @param {() => T} fn Function to invoke.
- * @param {T} [fallback] Value to return if `fn` throws.
- * @returns {T} The result of `fn`, or `fallback` on error.
+ * @param {() => T} fn
+ * @param {T} [fallback]
+ * @returns {T}
  */
 function safeCall(fn, fallback) {
   try {
@@ -316,7 +303,7 @@ function readRoot() {
 
 /**
  * Persist the top-level `modSettings` blob. No-op when storage is unavailable.
- * @param {SettingsRoot} root The full root blob to serialize.
+ * @param {SettingsRoot} root
  */
 function writeRoot(root) {
   if (!hasLocalStorage()) return;
@@ -362,12 +349,12 @@ function verifyWrite() {
 /**
  * Whether a parsed value actually looks like the shared settings root: an object
  * whose every top-level value is itself an object (one slice per mod id).
- * Coherent's `localStorage.getItem()` returns the value of the FIRST key in the
+ * Coherent's `localStorage.getItem()` returns the value of the first key in the
  * store regardless of the key asked for, so a read of `modSettings` can hand back
  * another mod's (valid-JSON) blob; writing that back would copy it into the shared
  * key. Foreign blobs carry top-level scalars, so this is a cheap discriminator.
- * @param {*} parsed The parsed `modSettings` value.
- * @returns {boolean} True when it is shaped like a settings root.
+ * @param {*} parsed
+ * @returns {boolean}
  */
 function looksLikeSettingsRoot(parsed) {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
@@ -399,7 +386,7 @@ function readRawRoot() {
 
 /**
  * How many rows the store holds; the engine's count is accurate even when reads are not.
- * @returns {number} Row count, or -1 when unknown.
+ * @returns {number} -1 when unknown.
  */
 function storeRowCount() {
   const n = safeCall(() => localStorage.length, -1);
@@ -411,7 +398,7 @@ function storeRowCount() {
  * whose key(i) enumerates (a correct localStorage), the key list answers it. On 1.5.0 key(i) is
  * always null and getItem returns the first row's value whatever key is asked, so an empty read of
  * a populated store there can only be a transient failure: not trusted.
- * @returns {boolean} True when the empty read means the key is genuinely absent.
+ * @returns {boolean}
  */
 function emptyReadIsAbsentKey() {
   const rows = storeRowCount();
@@ -452,7 +439,7 @@ function disablePersistence(reason, status = "read-failed") {
   return { root: {}, safe: false };
 }
 /**
- * Read the shared `modSettings` blob in preparation for a WRITE, with a hard
+ * Read the shared `modSettings` blob in preparation for a write, with a hard
  * guarantee that we never destroy sibling mods' slices. Coherent can hand back
  * a transient empty read and another mod can leave non-JSON, so an empty first
  * read is re-read once, a present-but-unparseable value refuses the write, and
@@ -503,15 +490,15 @@ function readRawForWrite() {
 /**
  * Parse the raw shared root for a write; a value that is present but unusable disables persistence
  * for the session, because overwriting it would destroy other mods' settings.
- * @param {string} raw The raw value.
- * @returns {*|null} The parsed object, or null when persistence was refused.
+ * @param {string} raw
+ * @returns {*|null} null when persistence was refused.
  */
 function parseRootForWrite(raw) {
   let parsed = null;
   try {
     parsed = JSON.parse(raw);
   } catch (_e) {
-    // Siblings are present but unparseable — overwriting would destroy them.
+    // siblings are present but unparseable; overwriting would destroy them
     if (!_clobberGuardWarned) {
       _clobberGuardWarned = true;
       derr(
@@ -536,7 +523,7 @@ let _integrityWarned = false;
  * One-time heads-up if our persisted slice came back missing while other mods'
  * keys are present, malformed, or stamped with a different schema version.
  * Informational only: the in-memory bucket serves reads regardless.
- * @param {SettingsRoot} root The parsed modSettings root.
+ * @param {SettingsRoot} root
  */
 function checkSliceIntegrity(root) {
   if (_integrityWarned) return;
@@ -573,13 +560,13 @@ function checkSliceIntegrity(root) {
 }
 
 // The ModOptions ecosystem treats "more than one top-level localStorage key" as
-// corruption and WIPES the whole store, so any demographics-owned stray
+// corruption and wipes the whole store, so any demographics-owned stray
 // top-level key is purged on load (a restored save/backup could reintroduce one).
 const STRAY_KEY_RE = /^_*demographics[_-]/i;
 /**
  * Remove demographics-owned stray top-level localStorage keys (anything matching
- * {@link STRAY_KEY_RE} other than the shared `modSettings` root). Defensive: a
- * single bad key here breaks every ModOptions-based mod's load.
+ * {@link STRAY_KEY_RE} other than the shared `modSettings` root). A single bad
+ * key here breaks every ModOptions-based mod's load.
  * @returns {void}
  */
 function purgeStrayTopLevelKeys() {
@@ -598,7 +585,7 @@ function purgeStrayTopLevelKeys() {
   });
 }
 
-// Seed the memory bucket from localStorage ONCE at module load. After that,
+// Seed the memory bucket from localStorage once at module load. After that,
 // memoryBucket is the authoritative store: Coherent's localStorage does not
 // round-trip reliably in this UI context.
 /** @returns {void} */ (function _seedMemoryFromStorage() {
@@ -637,47 +624,44 @@ export const DemographicsSettings = {
    * @returns {SettingsBucket} A fresh merged copy.
    */
   getSettings() {
-    // Authoritative source = memoryBucket. localStorage merely tries to
-    // survive a session reload - it does NOT round-trip reliably.
+    // memoryBucket is authoritative; localStorage only tries to survive a reload
     return { ...DEFAULTS, ...memoryBucket };
   },
   /**
    * Read one setting by key, falling back to `dflt` then the baked default.
-   * @param {string} key Setting key.
-   * @param {*} [dflt] Caller-supplied fallback when the key is absent.
-   * @returns {*} The setting value.
+   * @param {string} key
+   * @param {*} [dflt]
+   * @returns {*}
    */
   getSetting(key, dflt) {
     const s = this.getSettings();
     return key in s ? s[key] : dflt !== undefined ? dflt : DEFAULTS[key];
   },
   /**
-   * Set one setting, updating the in-memory bucket and best-effort persisting.
-   * @param {string} key Setting key.
-   * @param {*} value New value.
+   * @param {string} key
+   * @param {*} value
    */
   setSetting(key, value) {
     this.setSettings({ [key]: value });
   },
   /**
-   * Set several settings in ONE shared-store read+write, so per-turn batch
+   * Set several settings in one shared-store read+write, so per-turn batch
    * writers parse + stringify the `modSettings` blob once per turn instead of
    * once per key. Behaves like {@link setSetting} otherwise.
-   * @param {Record<string, *>} entries Key→value map to apply.
+   * @param {Record<string, *>} entries
    */
   setSettings(entries) {
     if (!entries || typeof entries !== "object") return;
     Object.assign(memoryBucket, entries);
-    // Best-effort persistence so settings survive a fresh load. If
-    // Coherent wipes the key during this session, the in-memory bucket
-    // still serves correct reads.
+    // Persistence is best-effort; if Coherent wipes the key during this session
+    // the in-memory bucket still serves correct reads.
     if (hasLocalStorage()) {
-      // Read the FULL shared blob through the clobber guard: it preserves every
-      // sibling mod's slice and refuses to write when the current value can't be
-      // safely round-tripped, so we can only ever add/update our OWN slice.
+      // The clobber guard preserves every sibling mod's slice and refuses to write
+      // when the current value can't be safely round-tripped, so we only ever
+      // add/update our own slice.
       const { root, safe } = readRootForWrite();
       if (safe) {
-        // Merge our stored slice with the new entries; sliceToPersist keeps only real overrides.
+        // sliceToPersist keeps only real overrides
         const cur = root[MOD_ID];
         const base = cur && typeof cur === "object" && !Array.isArray(cur) ? cur : {};
         root[MOD_ID] = sliceToPersist({ ...base, ...entries });
@@ -690,7 +674,7 @@ export const DemographicsSettings = {
    * This mod's slice as it would be stored, for a caller that is writing the shared root itself.
    * The storage repair uses it: after the store is emptied, the session's settings are written back
    * from the authoritative in-memory bucket rather than from the unreadable store.
-   * @returns {{id: string, slice: SettingsBucket}} Slice id and contents.
+   * @returns {{id: string, slice: SettingsBucket}}
    */
   sliceForStore() {
     return { id: MOD_ID, slice: sliceToPersist({ ...memoryBucket }) };
@@ -698,7 +682,7 @@ export const DemographicsSettings = {
   /**
    * Whether settings changed this session are reaching storage, and why not when they are not.
    * "ok" until a write is refused or fails read-back; the Options footer shows the rest.
-   * @returns {PersistStatus} The status.
+   * @returns {PersistStatus}
    */
   persistenceStatus() {
     if (!hasLocalStorage()) return "unavailable";

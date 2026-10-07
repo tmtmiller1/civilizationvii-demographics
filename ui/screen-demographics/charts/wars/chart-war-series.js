@@ -4,8 +4,8 @@
 
 /**
  * Compact magnitude format (e.g. 12.3K, 1.2M) for axis labels.
- * @param {number} n The value.
- * @returns {string} The formatted value.
+ * @param {number} n
+ * @returns {string}
  */
 export function fmt(n) {
   const a = Math.abs(n);
@@ -15,9 +15,8 @@ export function fmt(n) {
 }
 
 /**
- * Coerce to a finite number or null.
- * @param {*} v The value.
- * @returns {number | null} The finite number, or null.
+ * @param {*} v
+ * @returns {number | null} `v` when it is a finite number, else null.
  */
 export function num(v) {
   return typeof v === "number" && isFinite(v) ? v : null;
@@ -26,9 +25,9 @@ export function num(v) {
 /**
  * Read one metric value at a sample for a pid, from either the `players` map
  * (majors) or the `minors` map (city-states).
- * @param {*} s The snapshot.
- * @param {number} pid The participant pid.
- * @param {string} metricId The metric key.
+ * @param {*} s
+ * @param {number} pid
+ * @param {string} metricId
  * @param {boolean} fromMinors Read from `minors` instead of `players`.
  * @returns {number | null} The finite value, or null.
  */
@@ -39,11 +38,11 @@ export function metricAt(s, pid, metricId, fromMinors) {
 
 /**
  * Build one participant's point series for a metric over the window.
- * @param {{ pid: number, name: string, color: string }} p The participant.
- * @param {Snapshot[]} win The windowed samples.
+ * @param {{ pid: number, name: string, color: string }} p
+ * @param {Snapshot[]} win
  * @param {string} metricId The snapshot.metrics key.
  * @param {boolean} [fromMinors] Read from the `minors` bag (city-states).
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }} Series.
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }}
  */
 export function buildSeries(p, win, metricId, fromMinors) {
   const points = [];
@@ -58,11 +57,11 @@ export function buildSeries(p, win, metricId, fromMinors) {
  * Build one participant's cumulative-loss series for a level metric, plotted
  * negative: the running sum of every per-turn decline, negated. Rises are
  * ignored (growth never offsets a loss), matching the tooltip's "lost".
- * @param {{ pid: number, name: string, color: string }} p The participant.
- * @param {Snapshot[]} win The windowed samples.
+ * @param {{ pid: number, name: string, color: string }} p
+ * @param {Snapshot[]} win
  * @param {string} metricId The level snapshot.metrics key.
  * @param {boolean} [fromMinors] Read from the `minors` bag (city-states).
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }} Loss series.
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }}
  */
 export function lossSeriesDeclines(p, win, metricId, fromMinors) {
   const points = [];
@@ -83,12 +82,12 @@ export function lossSeriesDeclines(p, win, metricId, fromMinors) {
  * (e.g. milLostCum), plotted negative as the increase since the window start.
  * Falls back to {@link lossSeriesDeclines} on `fallbackId` when the counter has
  * no in-window data (a war predating the counter).
- * @param {{ pid: number, name: string, color: string }} p The participant.
- * @param {Snapshot[]} win The windowed samples.
+ * @param {{ pid: number, name: string, color: string }} p
+ * @param {Snapshot[]} win
  * @param {string} counterId The cumulative loss-counter key.
  * @param {string} fallbackId The level metric to derive declines from instead.
  * @param {boolean} [fromMinors] Read from the `minors` bag (city-states).
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }} Loss series.
+ * @returns {{ name: string, color: string, points: { x: number, y: number }[] }}
  */
 export function lossSeriesCounter(p, win, counterId, fallbackId, fromMinors) {
   const raw = [];
@@ -107,7 +106,7 @@ export function lossSeriesCounter(p, win, counterId, fallbackId, fromMinors) {
 
 /**
  * Bounds across a set of series (x = turn, y = value).
- * @param {{ points: { x: number, y: number }[] }[]} seriesList The series.
+ * @param {{ points: { x: number, y: number }[] }[]} seriesList
  * @returns {{ xMin: number, xMax: number, yMin: number,
  *   yMax: number } | null} Bounds, or null when empty.
  */
@@ -129,7 +128,7 @@ export function seriesBounds(seriesList) {
 
 /**
  * Distinct, sorted turns present across a series list.
- * @param {{ points: { x: number }[] }[]} series The series.
+ * @param {{ points: { x: number }[] }[]} series
  * @returns {number[]} Sorted distinct turns.
  */
 export function collectTurns(series) {
@@ -140,9 +139,9 @@ export function collectTurns(series) {
 
 /**
  * The turn in `turns` closest to `t`.
- * @param {number[]} turns Sorted turns.
- * @param {number} t The target turn.
- * @returns {number} The nearest turn.
+ * @param {number[]} turns Sorted.
+ * @param {number} t
+ * @returns {number}
  */
 export function nearestTurn(turns, t) {
   let best = turns[0];
@@ -159,8 +158,8 @@ export function nearestTurn(turns, t) {
 
 /**
  * Format a hovered value (signed; 0 stays "0").
- * @param {number} y The value.
- * @returns {string} The formatted value.
+ * @param {number} y
+ * @returns {string}
  */
 export function tipVal(y) {
   if (y === 0) return "0";
@@ -171,8 +170,8 @@ export function tipVal(y) {
  * One participant's net change in a cumulative metric over the window
  * (last − first). Returns null when the metric isn't present in the window
  * (e.g. a war predating the counter); a single in-window point reads as 0.
- * @param {{ pid: number }} p The participant.
- * @param {Snapshot[]} win The windowed samples.
+ * @param {{ pid: number }} p
+ * @param {Snapshot[]} win
  * @param {string} metricId The cumulative snapshot.metrics key.
  * @returns {number | null} The net change, or null when no data.
  */

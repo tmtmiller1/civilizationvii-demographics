@@ -31,13 +31,13 @@ import {
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.history-time-filter]", ...a);
 }
 
-// ─── Time-range filter helpers ──────────────────────────────────────────────
+// time-range filter helpers
 // Each filter resolves to a {min, max} turn range that the chart clamps to.
 // "all" returns null (chart uses its natural full domain).
 
@@ -73,8 +73,8 @@ function parseGameYear(s) {
 
 /**
  * Build a turn → signed-year map from the history's samples.
- * @param {DemoHistory|undefined} history The persisted history blob.
- * @returns {Map<number, number>} Turn-to-year lookup.
+ * @param {DemoHistory|undefined} history
+ * @returns {Map<number, number>}
  */
 function buildTurnYearMap(history) {
   /** @type {Map<number, number>} */
@@ -91,9 +91,9 @@ function buildTurnYearMap(history) {
 
 /**
  * Convert one sample into a chart-space sample row.
- * @param {*} sample One history sample.
- * @param {Map<string, number>} offsets Per-age offsets.
- * @param {AgeBoundary[]} boundaries Age boundaries.
+ * @param {*} sample
+ * @param {Map<string, number>} offsets
+ * @param {AgeBoundary[]} boundaries
  * @returns {ChartSample|null} Chart sample row, or null.
  */
 function mapOneSampleToChart(sample, offsets, boundaries) {
@@ -111,8 +111,8 @@ function mapOneSampleToChart(sample, offsets, boundaries) {
 
 /**
  * Build chart-X mapped samples sorted by X position.
- * @param {DemoHistory|undefined} history The persisted history blob.
- * @returns {ChartSample[]} Chart-X mapped samples.
+ * @param {DemoHistory|undefined} history
+ * @returns {ChartSample[]}
  */
 function mapSamplesToChartX(history) {
   const samps = history && Array.isArray(history.samples) ? history.samples : [];
@@ -132,7 +132,7 @@ function mapSamplesToChartX(history) {
 /**
  * Resolve the start turn of the current age from the history's age boundaries,
  * or `firstTurn` when none are recorded.
- * @param {DemoHistory|undefined} history The persisted history blob.
+ * @param {DemoHistory|undefined} history
  * @param {number} firstTurn First sampled turn (fallback).
  * @returns {number} Start turn of the current age.
  */
@@ -147,11 +147,11 @@ function currentAgeStartTurn(history, firstTurn) {
 /**
  * Compute the turn window for a year-relative filter (25/50/100/...), clamped
  * so it never reaches back past the start of the current age.
- * @param {DemoHistory|undefined} history The persisted history blob.
- * @param {Snapshot[]} samps Sorted samples.
- * @param {number} span Year span requested.
- * @param {number} firstTurn First sampled turn.
- * @param {number} lastTurn Last sampled turn.
+ * @param {DemoHistory|undefined} history
+ * @param {Snapshot[]} samps
+ * @param {number} span
+ * @param {number} firstTurn
+ * @param {number} lastTurn
  * @returns {TurnRange|null} The window, or null when no year data exists.
  */
 function computeYearRelativeRange(history, samps, span, firstTurn, lastTurn) {
@@ -180,10 +180,10 @@ function computeYearRelativeRange(history, samps, span, firstTurn, lastTurn) {
 /**
  * Compute the turn window for a named age filter ("age", "age1"..."age3")
  * from the history's age boundaries.
- * @param {DemoHistory|undefined} history The persisted history blob.
+ * @param {DemoHistory|undefined} history
  * @param {string} filterId The age filter id.
- * @param {number} firstTurn First sampled turn.
- * @param {number} lastTurn Last sampled turn.
+ * @param {number} firstTurn
+ * @param {number} lastTurn
  * @returns {TurnRange|null} The window, or null for an unknown filter.
  */
 function computeAgeRange(history, filterId, firstTurn, lastTurn) {
@@ -200,7 +200,7 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
   }
   /**
    * Resolve the [start, end] window for the age at boundary index `idx`.
-   * @param {number} idx Zero-based age index.
+   * @param {number} idx
    * @returns {TurnRange|null} The age's window, or null when `idx` < 0.
    */
   function ageRange(idx) {
@@ -216,7 +216,7 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
   if (filterId === "age2") return ageRange(1);
   if (filterId === "age3") return ageRange(2);
   if (filterId === "age") {
-    // Current age: from the LAST recorded boundary turn → lastTurn.
+    // Current age: from the last recorded boundary turn → lastTurn.
     if (starts.length === 0) return { min: firstTurn, max: lastTurn };
     const last = starts[starts.length - 1];
     return { min: last.start, max: lastTurn };
@@ -227,7 +227,7 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
 /**
  * Resolve a filter id to an inclusive {min, max} turn range, or null for
  * "show everything".
- * @param {DemoHistory|undefined} history The persisted history blob.
+ * @param {DemoHistory|undefined} history
  * @param {string} filterId The active filter id.
  * @returns {TurnRange|null} The clamped window, or null for the full domain.
  */
@@ -249,9 +249,9 @@ export function computeTurnRange(history, filterId) {
  * Build an enabled filter pill wired to `onSelect`, marked active when its id
  * matches `activeFilter`.
  * @param {TimeFilterDef} f The filter definition.
- * @param {string} activeFilter Currently active filter id.
- * @param {(id: string) => void} [onSelect] Selection callback.
- * @returns {HTMLElement} The pill element.
+ * @param {string} activeFilter
+ * @param {(id: string) => void} [onSelect]
+ * @returns {HTMLElement}
  */
 function buildEnabledFilterPill(f, activeFilter, onSelect) {
   const pill = document.createElement("div");
@@ -273,9 +273,9 @@ function buildEnabledFilterPill(f, activeFilter, onSelect) {
  * Build the pill row of time-range filter buttons. Persists the active filter
  * via `onSelect`. Every filter in {@link TIME_FILTERS} is rendered; a def may
  * opt out by setting `disabled`.
- * @param {string} activeFilter Currently active filter id.
+ * @param {string} activeFilter
  * @param {(id: string) => void} onSelect Called with the chosen filter id.
- * @returns {HTMLElement} The filter-row element.
+ * @returns {HTMLElement}
  */
 export function buildTimeFilterRow(activeFilter, onSelect) {
   const row = document.createElement("div");

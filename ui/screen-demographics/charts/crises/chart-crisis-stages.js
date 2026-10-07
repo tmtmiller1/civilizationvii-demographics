@@ -34,7 +34,7 @@ import { localYear, t, turnPlain } from "/demographics/ui/core/demographics-i18n
 
 /**
  * Build a turn -> game-year lookup from the samples (for the year/both span modes).
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @returns {Map<number, string>} Turn -> game-year string.
  */
 function buildYearMap(samples) {
@@ -71,11 +71,11 @@ function formatStageSpan(start, end, yearMap, mode) {
  * Build one stage's colored header bar (crisis name + stage label + time span).
  * The bar's background fades from black (behind the name, so it stays readable)
  * into the stage's severity color (the same orange/red shades used elsewhere).
- * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg The segment.
+ * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg
  * @param {number} idx The clamped stage index (0..3).
  * @param {string} seed The game seed (for the flavor crisis name).
  * @param {string} spanText The pre-formatted time span.
- * @returns {HTMLElement} The bar element.
+ * @returns {HTMLElement}
  */
 function buildStageBar(seg, idx, seed, spanText) {
   const bar = document.createElement("div");
@@ -99,10 +99,10 @@ function buildStageBar(seg, idx, seed, spanText) {
 
 /**
  * Live per-civ cost-table columns over [start, end] (computed from the samples).
- * @param {Snapshot[]} samples The sample stream.
- * @param {number} start Window start turn.
- * @param {number} end Window end turn.
- * @returns {*[]} The table columns.
+ * @param {Snapshot[]} samples
+ * @param {number} start
+ * @param {number} end
+ * @returns {*[]}
  */
 function liveCrisisCols(samples, start, end) {
   return crisisParticipants(samples, start, end).map((p) => ({
@@ -116,9 +116,9 @@ function liveCrisisCols(samples, start, end) {
  * Wrap pre-built cost columns in a cost-table section element. Every column path (live, age-end
  * snapshot, cross-age overall) passes through here, so this is where the spoiler guard drops the
  * columns of civs the policy hides.
- * @param {*[]} cols The table columns.
+ * @param {*[]} cols
  * @param {Snapshot[]} samples The sample stream (portrait identity fallback).
- * @returns {HTMLElement} The cost section.
+ * @returns {HTMLElement}
  */
 function costSection(cols, samples) {
   const costs = document.createElement("div");
@@ -130,21 +130,21 @@ function costSection(cols, samples) {
 
 /**
  * Build a live per-civ cost-table section over [start, end].
- * @param {Snapshot[]} samples The sample stream.
- * @param {number} start Window start turn.
- * @param {number} end Window end turn.
- * @returns {HTMLElement} The cost section.
+ * @param {Snapshot[]} samples
+ * @param {number} start
+ * @param {number} end
+ * @returns {HTMLElement}
  */
 function buildCostSection(samples, start, end) {
   return costSection(liveCrisisCols(samples, start, end), samples);
 }
 
 /**
- * The cumulative cost columns for a crisis group, preferring the age-end SNAPSHOT (persisted while
- * the finished age's samples were still dense) over recomputing from now-decimated samples , which
+ * The cumulative cost columns for a crisis group, preferring the age-end snapshot (persisted while
+ * the finished age's samples were still dense) over recomputing from now-decimated samples, which
  * is what made the loss columns blank out from a later age.
  * @param {{ start:number, end:number, sample:Snapshot }} group The crisis run.
- * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
+ * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx
  * @returns {*[]} The cost-table columns.
  */
 function cumulativeCols(group, ctx) {
@@ -155,10 +155,10 @@ function cumulativeCols(group, ctx) {
 
 /**
  * Build one stage block: the colored bar plus that stage's own per-civ cost table.
- * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg The segment.
+ * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
  *   mode: string }} ctx Render context.
- * @returns {HTMLElement} The stage block.
+ * @returns {HTMLElement}
  */
 function buildStageBlock(seg, ctx) {
   const idx = Math.max(0, Math.min(3, seg.stage - 1));
@@ -177,8 +177,8 @@ function buildStageBlock(seg, ctx) {
  * of whether an "Ends" (stage 4) sample was captured, since the engine often
  * resolves a crisis straight from "Culminates".
  * @param {{ start: number, end: number, sample: Snapshot }} group The crisis run.
- * @param {{ samples: Snapshot[], crisisSnapshots?: Record<string, *[]> }} ctx Render context.
- * @returns {HTMLElement} The cumulative block.
+ * @param {{ samples: Snapshot[], crisisSnapshots?: Record<string, *[]> }} ctx
+ * @returns {HTMLElement}
  */
 function buildCumulativeBlock(group, ctx) {
   const block = document.createElement("div");
@@ -229,8 +229,8 @@ function groupCtx(ctx, group) {
 /**
  * One age's cumulative crisis cost columns (raw {pid,leaderType,color,cost}), preferring the
  * persisted age-end snapshot over recomputing from now-decimated samples.
- * @param {string} age The age key.
- * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
+ * @param {string} age
+ * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx
  * @returns {*[]} The age's cumulative cost columns.
  */
 function ageOverallCols(age, ctx) {
@@ -244,8 +244,8 @@ function ageOverallCols(age, ctx) {
  * Aggregate every participant's cost across all ages' crises into cost-table columns: each age's
  * cumulative (snapshot or live) merged by pid.
  * @param {{ sample: Snapshot }[]} groups The crisis groups.
- * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx Render context.
- * @returns {*[]} The overall table columns.
+ * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx
+ * @returns {*[]}
  */
 function aggregateOverallCols(groups, ctx) {
   const ages = [...new Set(groups.map((g) => sampleAgeKey(g.sample)))];
@@ -253,12 +253,12 @@ function aggregateOverallCols(groups, ctx) {
 }
 
 /**
- * Build the gated OVERALL cumulative block summing every age's crisis. Only
+ * Build the gated overall cumulative block summing every age's crisis. Only
  * meaningful once crises span more than one age, so the caller renders it solely
  * when a second age's crisis (e.g. Exploration) exists.
  * @param {{ sample: Snapshot }[]} groups The crisis groups.
  * @param {{ samples: Snapshot[] }} ctx Render context (full samples, for identity).
- * @returns {HTMLElement} The overall block.
+ * @returns {HTMLElement}
  */
 function buildOverallBlock(groups, ctx) {
   const block = document.createElement("div");
@@ -277,7 +277,7 @@ function buildOverallBlock(groups, ctx) {
  * at least two distinct ages (i.e. after the Exploration crisis occurs).
  * @param {HTMLElement} panel The page panel.
  * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
- * @param {{ samples: Snapshot[] }} ctx Render context.
+ * @param {{ samples: Snapshot[] }} ctx
  */
 function appendOverallBlock(panel, groups, ctx) {
   const ages = new Set(groups.map((g) => sampleAgeKey(g.sample)));
@@ -287,7 +287,7 @@ function appendOverallBlock(panel, groups, ctx) {
 
 /**
  * The persisted per-age crisis-cost snapshots from the history blob (empty when none).
- * @param {*} history The history blob.
+ * @param {*} history
  * @returns {Record<string, *[]>} Age key → cumulative cost columns.
  */
 function historyCrisisSnapshots(history) {
@@ -299,7 +299,7 @@ function historyCrisisSnapshots(history) {
  * visually), with one block per stage and a per-age cumulative on the final
  * stage, plus a single overall cumulative once crises span two or more ages.
  * @param {HTMLElement} host The chart host (cleared and repopulated).
- * @param {{ history?: * }} [opts] Render options.
+ * @param {{ history?: * }} [opts]
  * @returns {null} Always null (no chart handle).
  */
 export function renderCrisisStages(host, opts) {

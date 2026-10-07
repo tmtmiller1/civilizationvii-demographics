@@ -1,10 +1,10 @@
 // Covers: settlements-population-variance.js, settlements-data.js
-// Pure / data-layer — minimal stubs needed.
+// Pure data layer; minimal stubs needed.
 import assert from "node:assert/strict";
 
 globalThis.GameContext = { localPlayerID: 1 };
 
-// ── settlements-population-variance ──────────────────────────────────
+// settlements-population-variance
 const { applyPopulationVarianceAndEnsureUnique } = await import(
   "/demographics/ui/screen-demographics/settlements/settlements-population-variance.js"
 );
@@ -46,7 +46,7 @@ const pair2 = [ { ...thriving }, { ...struggling } ];
 applyPopulationVarianceAndEnsureUnique(pair2);
 assert.equal(pair2[0].populationEstimate, pair[0].populationEstimate, "variation must be deterministic");
 
-// ── settlements-data ─────────────────────────────────────────────────
+// settlements-data
 const { SETTLEMENT_OUTPUTS, valueOf, buildSettlementBoard } = await import(
   "/demographics/ui/screen-demographics/settlements/settlements-data.js"
 );
@@ -63,10 +63,10 @@ assert.ok(typeof valueOf(s, "composite") === "number");
 // Pass a specific output key with empty outputs → returns 0
 assert.equal(valueOf(s, firstOutput.id ?? firstOutput.key ?? "pop"), 0);
 
-// buildSettlementBoard needs engine globals; confirm it either returns a board or throws gracefully
+// buildSettlementBoard needs engine globals; it either returns a board or throws
 let board;
 try { board = buildSettlementBoard(); } catch (_) { board = null; }
-// Just confirm it doesn't crash the process — board may be null when engine absent
+// board may be null with no engine; the point is that it doesn't crash the process
 
 delete globalThis.GameContext;
 console.log("settlements-pure-branches harness passed");

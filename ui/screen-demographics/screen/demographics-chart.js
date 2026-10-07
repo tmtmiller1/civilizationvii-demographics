@@ -10,8 +10,8 @@
 //   chart-line.js          - the main time-series line chart (renderChart)
 //   chart-triumphs-radar.js  - the Legacy Path radar (renderLegacyRadar)
 //   chart-resources.js     - the resources stacked-area chart
-//   chart-conflicts-timeline.js    - the conflicts Gantt timeline (LAZY)
-//   chart-conflicts-graphs.js    - the per-war graphs (LAZY)
+//   chart-conflicts-timeline.js    - the conflicts Gantt timeline (lazy)
+//   chart-conflicts-graphs.js    - the per-war graphs (lazy)
 
 export {
   collectCivHistory,
@@ -59,7 +59,7 @@ export {
   resolveCrisisScope
 } from "/demographics/ui/screen-demographics/charts/crises/chart-crisis-graphs.js";
 
-// Heavy Conflicts charts - lazily imported (see header). Live `export let`
+// Heavy Conflicts charts, lazily imported (see header). Live `export let`
 // bindings start undefined and are filled in by ensureChartForMetric().
 /** @type {((host: HTMLElement, options: *) => void) | undefined} */
 export let renderConflictsTimeline;
@@ -79,7 +79,7 @@ let _warsChartsPromise = null;
  * this module's live bindings. Idempotent and single-flight: concurrent calls
  * share one import, and a second call after load resolves immediately. Metrics
  * outside the Conflicts page resolve without importing anything.
- * @param {string} metric The active metric id.
+ * @param {string} metric
  * @returns {Promise<void>} Resolves once the needed charts are available.
  */
 export function ensureChartForMetric(metric) {

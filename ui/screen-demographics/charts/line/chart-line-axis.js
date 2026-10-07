@@ -28,12 +28,11 @@ function derr(...a) {
 /**
  * Infer a sample's age type. Trusts explicit `s.age`; legacy samples without
  * it predate age-tagging and are treated as Antiquity.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @param {AgeBoundary[]} [_ageBoundaries] Unused (kept for call-site parity).
- * @returns {string} The age type string.
+ * @returns {string}
  */
 function inferSampleAge(s, _ageBoundaries) {
-  // Trust explicit `s.age` whenever present.
   if (s && typeof s.age === "string") return s.age;
   // Samples without `age` can only be antiquity; bucketing them via the
   // ageBoundaries table would collapse them into the latest age.
@@ -43,7 +42,7 @@ function inferSampleAge(s, _ageBoundaries) {
 /**
  * Infer a sample's age-local turn. Uses explicit `localTurn`, else the stored
  * `turn` (age-local for legacy samples), else `null`.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} s
  * @param {string} [_age] Unused (kept for call-site parity).
  * @param {AgeBoundary[]} [_ageBoundaries] Unused (kept for call-site parity).
  * @returns {number|null} The age-local turn, or `null`.
@@ -64,8 +63,8 @@ function inferLocalTurn(s, _age, _ageBoundaries) {
  * chronologically without a hardcoded age list. Any age type is accepted.
  * @param {Map<string, number>} maxLocalByAge Per-age max local-turn map.
  * @param {string[]} order Ages in first-appearance order (appended in place).
- * @param {*} sample One sample.
- * @param {AgeBoundary[]} ageBoundaries Age boundary table.
+ * @param {*} sample
+ * @param {AgeBoundary[]} ageBoundaries
  */
 function foldAgeLocalMax(maxLocalByAge, order, sample, ageBoundaries) {
   if (!sample || typeof sample !== "object") return;
@@ -83,8 +82,8 @@ function foldAgeLocalMax(maxLocalByAge, order, sample, ageBoundaries) {
 /**
  * Compute cumulative per-age X-axis offsets from the samples' max age-local
  * turns, so each age's first turn lands right after the prior age ends.
- * @param {Snapshot[]} samples The sample stream.
- * @param {AgeBoundary[]} ageBoundaries Age boundary table.
+ * @param {Snapshot[]} samples
+ * @param {AgeBoundary[]} ageBoundaries
  * @returns {{ offsets: Map<string, number>, maxLocalByAge: Map<string, number> }}
  *   The per-age cumulative offset map and the per-age max-local-turn map.
  */
@@ -97,7 +96,7 @@ export function computeAgeOffsets(samples, ageBoundaries) {
     foldAgeLocalMax(maxLocalByAge, order, s, ageBoundaries);
   }
   // `offsets` is built in first-appearance order, so its key iteration order is
-  // chronological - downstream consumers (e.g. ageTurnFromX) rely on that.
+  // chronological; downstream consumers such as ageTurnFromX rely on that.
   /** @type {Map<string, number>} */
   const offsets = new Map();
   let cum = 0;
@@ -111,9 +110,9 @@ export function computeAgeOffsets(samples, ageBoundaries) {
 /**
  * Compute a sample's deterministic chart-X position from its age offset plus
  * age-local turn, falling back to the raw stored `turn`.
- * @param {Snapshot|*} sample One sample.
+ * @param {Snapshot|*} sample
  * @param {Map<string, number>} offsets Per-age cumulative offsets.
- * @param {AgeBoundary[]} ageBoundaries Age boundary table.
+ * @param {AgeBoundary[]} ageBoundaries
  * @returns {number|undefined} The chart-X position, or `undefined`.
  */
 export function sampleX(sample, offsets, ageBoundaries) {
@@ -150,9 +149,9 @@ export function sampleX(sample, offsets, ageBoundaries) {
 /**
  * Build the chart-X → year and chart-X → age maps from the sample stream,
  * plus a live entry for the current engine turn.
- * @param {Snapshot[]} samps The sample stream.
+ * @param {Snapshot[]} samps
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @param {AgeBoundary[]} boundaries Age boundary table.
+ * @param {AgeBoundary[]} boundaries
  * @returns {TurnMaps} The year and age maps.
  */
 export function buildTurnMaps(samps, ageOffsets, boundaries) {
@@ -174,7 +173,7 @@ export function buildTurnMaps(samps, ageOffsets, boundaries) {
     }
   }
   // The live entry is keyed by chart-X like the samples, so offset Game.turn
-  // (which is age-local) by the CURRENT age's offset - otherwise, in a
+  // (which is age-local) by the current age's offset. Otherwise, in a
   // multi-age set, the current-turn year lands back in the Antiquity X-region.
   addLiveTurnYear(turnYearMap, currentAgeXOffset(samps, ageOffsets, boundaries));
   return { turnYearMap, turnAgeMap };
@@ -183,9 +182,9 @@ export function buildTurnMaps(samps, ageOffsets, boundaries) {
 /**
  * The chart-X offset of the current age (the latest sample's age), for placing
  * the live current-turn entry; 0 when there are no samples.
- * @param {Snapshot[]} samps The sample stream.
+ * @param {Snapshot[]} samps
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @param {AgeBoundary[]} boundaries Age boundary table.
+ * @param {AgeBoundary[]} boundaries
  * @returns {number} The current age's chart-X offset.
  */
 function currentAgeXOffset(samps, ageOffsets, boundaries) {
@@ -218,7 +217,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
    * Resolve a deterministic age/local-turn pair from chart-X using known
    * age-offset spans. Returns null when X falls outside known spans.
    * @param {number} x Chart-X value.
-   * @returns {TurnAgeInfo|null} Exact age-turn info, or null.
+   * @returns {TurnAgeInfo|null}
    */
   const ageTurnFromX = (x) => {
     if (!ageOffsets) return null;
@@ -238,7 +237,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
   /**
    * Format a chart-X as an age-relative turn label ("A12", "E1", "T-N").
    * @param {number} t The chart-X position.
-   * @returns {string} The label.
+   * @returns {string}
    */
   const ageTurnLabel = (t) => {
     const info = ageTurnFromX(t) || nearestByTurn(turnAgeMap, t);
@@ -247,7 +246,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
   /**
    * Format a chart-X tick per the active axis mode.
    * @param {number} v The chart-X value.
-   * @returns {string} The tick label.
+   * @returns {string}
    */
   const fmtX = (v) => {
     const t = Math.round(v);
@@ -260,8 +259,8 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
   };
   /**
    * Format a Y tick using the metric's formatter when available.
-   * @param {number} v The value.
-   * @returns {string} The formatted value.
+   * @param {number} v
+   * @returns {string}
    */
   const fmtY = (v) => {
     if (metricMeta && typeof metricMeta.format === "function") {

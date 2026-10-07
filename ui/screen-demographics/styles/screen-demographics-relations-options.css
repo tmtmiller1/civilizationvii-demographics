@@ -1,4 +1,4 @@
-/* ── Relations (two-level tabs: Civ/CS × Political/Economic/Attitude) ── */
+/* Relations (two-level tabs: Civ/CS × Political/Economic/Attitude) */
 /* Layout: stacked vertical so nothing falls off-screen.
    top-tab → inner-tab → filter pills → ring → caption. */
 .demographics-relations-wrap {
@@ -15,7 +15,7 @@
     width: 100%;
 }
 /* The CS tab's "Viewer:" dropdown row is anchored absolutely so it does
-   NOT push the body (and thus the graph border) down on the CS tab —
+   not push the body (and thus the graph border) down on the CS tab;
    otherwise the absolutely-positioned legend at top:7.5rem visually
    clashes with the body's top border on CS while sitting clean on civ. */
 .demographics-relations-viewer-host {
@@ -43,7 +43,7 @@
 .demographics-relations-viewer-host:empty {
     display: none;
 }
-/* OVERLAY the filter legend on the empty top-right of the relations panel
+/* Overlay the filter legend on the empty top-right of the relations panel
    so we don't waste a vertical row above the diagram. Position is anchored
    to `.demographics-relations-wrap` (set to position:relative below). The
    ring is centered + circular, so the corners are always unused space. */
@@ -52,9 +52,9 @@
 }
 .demographics-relations-filter-host {
     position: absolute;
-    /* Top offset clears BOTH the top-tab row AND the optional viewer-host
+    /* Top offset clears both the top-tab row and the optional viewer-host
        dropdown that the City-State tab renders ("Showing relations from:
-       <civ>"). Previously the legend hovered just below the tab bar — on
+       <civ>"). Previously the legend hovered just below the tab bar; on
        major civs that left a clean gap, but on CS the dropdown landed in
        that gap and the legend visually overlapped it. 7.5rem clears both
        on either tab so the two views are pixel-equivalent. This rem value is only
@@ -63,19 +63,19 @@
        tab/toolbar height at any Interface Size instead of assuming it's ~9.5rem. */
     top: calc(9.5 * var(--dg-u));
     right: calc(1.5 * var(--dg-u));
-    /* FIXED width (not max-width) so the box has the same horizontal
-       footprint on the major-civs tab (11 entries) AND the city-states
+    /* Fixed width (not max-width) so the box has the same horizontal
+       footprint on the major-civs tab (11 entries) and the city-states
        tab (8 entries). Earlier max-width let it shrink to the widest
        pill, making the CS legend visibly narrower than the civ legend.
        Cap it so on a narrow frame (low resolution / tall aspect) it can
-       never grow past the panel edge — max-width overrides the fixed width
+       never grow past the panel edge; max-width overrides the fixed width
        once 24rem + the 1.5rem side gaps no longer fit. (GameFace supports
        calc() in max-width but not the min()/max()/clamp() value functions.) */
     width: calc(24 * var(--dg-u));
     max-width: calc(100% - 3rem);
     /* No min-height floor: a fixed floor (was 14rem) could exceed the available
        body height at a large Interface Size / short window and push the legend's
-       bottom off-screen — the same min-* > max-* trap that clipped the ring. JS
+       bottom off-screen, the same min-* > max-* trap that clipped the ring. JS
        caps the legend's height to the body (anchorRelationsOverlays); content sets
        the natural height otherwise. */
     padding-top: calc(0.6 * var(--dg-u));
@@ -137,13 +137,13 @@
 
 /* Toggleable filter pill row across the top of each relations diagram.
    Coherent GameFace mis-renders flex-wrap with `gap` (row-gap is dropped,
-   items overlap vertically) AND mis-clips negative-margin row containers.
-   Use a plain block container with inline-block pills — natural line
+   items overlap vertically) and mis-clips negative-margin row containers.
+   Use a plain block container with inline-block pills: natural line
    wrapping handles multi-row layout, and `box-sizing: border-box` plus
    per-pill margin-right/bottom guarantees clean horizontal spacing without
    the first pill getting clipped against the left edge of the parent. */
 .demographics-relations-filter-row {
-    /* Vertical stack — one entry per row inside the overlay box. */
+    /* Vertical stack, one entry per row inside the overlay box. */
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -164,7 +164,7 @@
     padding-left: 0;
     border-bottom: 1px solid rgba(168, 132, 90, 0.45);
 }
-/* ── Sub-group chip row (Politics / Reputation / Agreements) ───────────────
+/* Sub-group chip row (Politics / Reputation / Agreements)
    A segmented selector under the Civ/CS tabs, mirroring the settlements
    All/Cities/Towns control (chips reuse .demographics-chart-time-filter-pill). */
 .demographics-relations-subtab-host {
@@ -203,14 +203,14 @@
 .demographics-relations-filter-pill.is-hidden .demographics-relations-filter-label {
     color: var(--dg-ia-accent-gold-soft);
 }
-/* Legend entries — NOT toggle buttons. Each entry shows a real sample line
+/* Legend entries, not toggle buttons. Each entry shows a real sample line
    (color + texture matching what the ring draws) followed by the label,
    so the legend itself answers "what does this color/style mean?" The
-   gold-box framing was misleading — looked like a generic UI toggle, not
+   gold-box framing was misleading: it looked like a generic UI toggle, not
    a legend. Now: bare entries, just sample + text. Click still toggles
    the filter; hover/inactive states are conveyed by opacity, not borders. */
 .demographics-relations-filter-pill {
-    /* Stack vertically inside the overlay column — one entry per line. */
+    /* Stack vertically inside the overlay column, one entry per line. */
     display: flex;
     align-items: center;
     padding-top: calc(0.18 * var(--dg-u));
@@ -233,7 +233,7 @@
     color: var(--dg-ia-accent-gold, #f3c34c);
 }
 .demographics-relations-filter-pill.is-active {
-    /* No border — full opacity reads as "active". */
+    /* No border; full opacity reads as "active". */
     color: var(--dg-ia-text-secondary);
 }
 .demographics-relations-filter-pill.is-hidden {
@@ -241,7 +241,7 @@
     opacity: 0.35;
     color: var(--dg-ia-text-secondary);
 }
-/* "Pip" — filled disc when active, hollow when toggled off. */
+/* "Pip": filled disc when active, hollow when toggled off. */
 .demographics-relations-filter-pip {
     width: calc(0.7 * var(--dg-u));
     height: calc(0.7 * var(--dg-u));
@@ -274,7 +274,7 @@
     font-family: inherit;
 }
 
-/* Ring container — takes most of the available space, centered. */
+/* Ring container: takes most of the available space, centered. */
 .demographics-relations-ring-wrap {
     position: relative;
     flex: 1 1 auto;
@@ -298,7 +298,7 @@
 .demographics-relations-ring-svg {
     width: 100%;
     height: 100%;
-    /* No min-height here: CSS min-height overrides max-height AND height, so a
+    /* No min-height here: CSS min-height overrides max-height and height, so a
        floor on the SVG forces it past a short container (high Interface Size /
        low vertical resolution) and the diagram overflows + clips. The SVG
        scales to fit its wrap (preserveAspectRatio meet); the wrap carries the
@@ -339,7 +339,7 @@
     z-index: 2;
 }
 /* Clicked / focused node: lift it slightly; the gold rim brightens + a warm
-   radial glow blooms behind it (see hex-glow below) — restrained, like the
+   radial glow blooms behind it (see hex-glow below), restrained, like the
    game's own selection highlight rather than a neon pulse. */
 .demographics-relations-portrait.is-selected {
     transform: scale(1.13);
@@ -350,7 +350,7 @@
     opacity: 0.2;
 }
 
-/* ── Leader hex token (gold-rimmed hexagon tinted by civ color) ─────────────
+/* Leader hex token (gold-rimmed hexagon tinted by civ color)
    Pure-CSS hexes via clip-path so there's no texture/tint dependency. Layered
    back→front: select glow, gold rim, color fill, leader portrait. */
 .demographics-relations-portrait-hex {
@@ -403,7 +403,7 @@
 .demographics-relations-portrait-hex:hover .demographics-relations-hex-rim {
     background: linear-gradient(150deg, #fff1c8 0%, #ffd76a 45%, #d8a64c 100%);
 }
-/* CS type-icon variant — static background-image chrome (the URL is set inline
+/* CS type-icon variant: static background-image chrome (the URL is set inline
    per-placement); inset slightly so the icon sits within the bronze frame. */
 .demographics-relations-portrait-cs {
     background-size: 76%;
@@ -419,7 +419,7 @@
     opacity: 0.85;
 }
 
-/* Ring node name labels: the SAME font/weight/color as the historical-data chart
+/* Ring node name labels: the same font/weight/color as the historical-data chart
    labels (.demographics-chart-line-label), just smaller and with no bounding box.
    A soft shadow keeps them legible over the ring. */
 .demographics-relations-node-label {
@@ -437,7 +437,7 @@
     opacity: 0.18;
 }
 
-/* ── Options ──────────────────────────────────────────────────────────── */
+/* Options */
 .demographics-options {
     display: flex;
     flex-direction: column;
@@ -472,7 +472,7 @@
     color: var(--dg-ia-text-secondary);
 }
 /* .demographics-option-hint moved to screen-demographics-base.css (single
-   source of truth — it was duplicated here and only won by load order). */
+   declaration; it was duplicated here and only won by load order). */
 .demographics-options-buttons {
     display: flex;
     flex-direction: row;
@@ -504,8 +504,8 @@
 }
 
 
-/* ── Edge hover: highlight the whole line + a tooltip naming it ───────────────
-   Coherent does NOT deliver mouse events to SVG elements, so hover is driven from
+/* Edge hover: highlight the whole line + a tooltip naming it
+   Coherent does not deliver mouse events to SVG elements, so hover is driven from
    the HTML ring wrap (mousemove → nearest-edge hit test in relations-ring-svg.js).
    The SVG is therefore pointer-events:none so the wrap reliably receives the
    events; the hit test toggles .is-hovered on the matched edge group, and this
@@ -532,7 +532,7 @@
     color: #f3e7c4;
     /* Cap the width and allow wrapping so a long localized relationship label can
        never overrun the ring panel even when anchored at the left edge after an
-       edge-flip. The cursor gap AND the near-edge flip (down-right → up-left) are
+       edge-flip. The cursor gap and the near-edge flip (down-right → up-left) are
        computed in JS (createEdgeTooltip.show) so the label stays on-panel at every
        resolution; no fixed directional transform here. */
     max-width: calc(22 * var(--dg-u));

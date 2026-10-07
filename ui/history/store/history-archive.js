@@ -1,7 +1,7 @@
 // history-archive.js
 //
 // Pure: turn a CampaignDoc into a compact ArchiveRecord (about 1-2 KB) and maintain the ArchiveSlice
-// that holds every record. No storage access; dgh-archive-store.js reads and writes the slice.
+// that holds every record. No storage access; history-archive-store.js reads and writes the slice.
 //
 // Merge rule: when two copies of the same campaign disagree, the one with more progress wins (more
 // ages, then more turns, then the later update). Reloading an older save of a campaign therefore
@@ -33,7 +33,7 @@ const HIGHLIGHT_WEIGHT = /** @type {Record<string, number>} */ ({
 
 /**
  * An empty slice.
- * @returns {ArchiveSlice} The slice.
+ * @returns {ArchiveSlice}
  */
 export function emptySlice() {
   return { __schema: ARCHIVE_SCHEMA, games: {}, hidden: {}, texts: {} };
@@ -41,8 +41,8 @@ export function emptySlice() {
 
 /**
  * Whether a value is a record this version can display.
- * @param {*} r Candidate.
- * @returns {boolean} True when usable.
+ * @param {*} r
+ * @returns {boolean}
  */
 export function isRecord(r) {
   return !!(
@@ -55,7 +55,7 @@ export function isRecord(r) {
  * Whether a value is a record written by a newer version of this mod. Such a record is carried
  * through every load and save untouched (so going back to this version loses nothing) but is never
  * shown, since its shape is unknown here.
- * @param {*} r Candidate.
+ * @param {*} r
  * @returns {boolean} True when it is a record from a later version.
  */
 export function isNewerRecord(r) {
@@ -65,8 +65,8 @@ export function isNewerRecord(r) {
 /**
  * Whether a value is an archive slice written by this mod. Used before every write so the mod never
  * replaces something it does not recognize.
- * @param {*} s Candidate.
- * @returns {boolean} True when it is a slice.
+ * @param {*} s
+ * @returns {boolean}
  */
 export function isSlice(s) {
   return !!(
@@ -88,9 +88,9 @@ export function sliceTexts(slice) {
 
 /**
  * Downsample a series to at most `n` points, always keeping the last.
- * @param {number[]} arr Values.
+ * @param {number[]} arr
  * @param {number} n Target size.
- * @returns {number[]} The sampled values.
+ * @returns {number[]}
  */
 export function downsample(arr, n) {
   if (arr.length <= n) return arr.slice();
@@ -101,7 +101,7 @@ export function downsample(arr, n) {
 
 /**
  * Turns played across every recorded age.
- * @param {CampaignDoc} doc The campaign.
+ * @param {CampaignDoc} doc
  * @returns {number} Turn count.
  */
 export function turnsPlayed(doc) {
@@ -114,7 +114,7 @@ export function turnsPlayed(doc) {
 
 /**
  * The most important events for the local player, oldest first.
- * @param {CampaignDoc} doc The campaign.
+ * @param {CampaignDoc} doc
  * @returns {HnrEvent[]} Up to HIGHLIGHTS_CAP events.
  */
 export function pickHighlights(doc) {
@@ -132,9 +132,9 @@ export function pickHighlights(doc) {
 
 /**
  * Count the local player's events of a kind.
- * @param {CampaignDoc} doc The campaign.
+ * @param {CampaignDoc} doc
  * @param {HnrEventKind} kind
- * @returns {number} Count.
+ * @returns {number}
  */
 function countMine(doc, kind) {
   return doc.events.filter((e) => e.k === kind && (e.p === doc.local || e.q === doc.local)).length;
@@ -142,8 +142,8 @@ function countMine(doc, kind) {
 
 /**
  * Headline figures for the local player.
- * @param {CampaignDoc} doc The campaign.
- * @returns {ArchiveRecord["stats"]} Stats.
+ * @param {CampaignDoc} doc
+ * @returns {ArchiveRecord["stats"]}
  */
 export function localStats(doc) {
   const me = String(doc.local);
@@ -165,9 +165,9 @@ export function localStats(doc) {
 
 /**
  * Settlements the local player holds in the latest state, else the last sampled count.
- * @param {HnrPlayerState|null} state Latest state, if any.
- * @param {HnrPlayerSeries} ps The player's series.
- * @returns {number} Count.
+ * @param {HnrPlayerState|null} state
+ * @param {HnrPlayerSeries} ps
+ * @returns {number}
  */
 function settlementsHeld(state, ps) {
   return state ? Object.keys(state.cities || {}).length : lastOf(ps.set);
@@ -176,8 +176,8 @@ function settlementsHeld(state, ps) {
 /**
  * Wonders the local player holds in the latest state (0 without one, or for a state that carries
  * no wonder list).
- * @param {HnrPlayerState|null} state Latest state, if any.
- * @returns {number} Count.
+ * @param {HnrPlayerState|null} state
+ * @returns {number}
  */
 function wondersHeld(state) {
   return state && Array.isArray(state.wonders) ? state.wonders.length : 0;
@@ -185,9 +185,9 @@ function wondersHeld(state) {
 
 /**
  * The local player's population, as a count and in Demographics' real-world scale.
- * @param {HnrPlayerState|null} state Latest state, if any.
- * @param {HnrPlayerSeries} ps The player's series.
- * @returns {{population:number, populationScaled:number}} Population.
+ * @param {HnrPlayerState|null} state
+ * @param {HnrPlayerSeries} ps
+ * @returns {{population:number, populationScaled:number}}
  */
 function localPopulation(state, ps) {
   if (state) return { population: state.population, populationScaled: state.popScaled || 0 };
@@ -196,8 +196,8 @@ function localPopulation(state, ps) {
 
 /**
  * Last element of a number array, or 0.
- * @param {number[]} arr Values.
- * @returns {number} Last value.
+ * @param {number[]} arr
+ * @returns {number}
  */
 function lastOf(arr) {
   return arr.length ? arr[arr.length - 1] || 0 : 0;
@@ -206,8 +206,8 @@ function lastOf(arr) {
 /**
  * Everyone else the player met, frozen with their final civilization. Civilizations never met are
  * left out, so the Hall of Fame does not reveal them for a game still being played.
- * @param {CampaignDoc} doc The campaign.
- * @returns {HnrRival[]} Rivals.
+ * @param {CampaignDoc} doc
+ * @returns {HnrRival[]}
  */
 export function rivalsOf(doc) {
   const tri = triumphCounts(doc);
@@ -226,8 +226,8 @@ export function rivalsOf(doc) {
 
 /**
  * Build the archive record for a campaign.
- * @param {CampaignDoc} doc The campaign.
- * @returns {ArchiveRecord|null} The record, or null when the local player is unknown.
+ * @param {CampaignDoc} doc
+ * @returns {ArchiveRecord|null} null when the local player is unknown.
  */
 export function buildRecord(doc) {
   const me = doc.players[String(doc.local)];
@@ -277,7 +277,7 @@ export function recordTags(rec) {
  * Whether record `a` shows at least as much progress as `b`.
  * @param {ArchiveRecord} a Candidate.
  * @param {ArchiveRecord} b Existing.
- * @returns {boolean} True when `a` should replace `b`.
+ * @returns {boolean}
  */
 export function supersedes(a, b) {
   if (a.outcome.status !== "in_progress" && b.outcome.status === "in_progress") return true;
@@ -289,7 +289,7 @@ export function supersedes(a, b) {
 
 /**
  * Insert or replace a record unless it is hidden or an existing copy shows more progress.
- * @param {ArchiveSlice} slice The slice (mutated).
+ * @param {ArchiveSlice} slice Mutated.
  * @param {ArchiveRecord} rec The record.
  * @returns {boolean} True when the slice changed.
  */
@@ -329,9 +329,9 @@ export function mergeSlices(into, from) {
 
 /**
  * Hide a game: remove its record and remember the id so a save loaded later does not bring it back.
- * @param {ArchiveSlice} slice The slice (mutated).
- * @param {string} id Campaign id.
- * @param {number} now Timestamp.
+ * @param {ArchiveSlice} slice Mutated.
+ * @param {string} id
+ * @param {number} now
  */
 export function hideGame(slice, id, now) {
   delete slice.games[id];
@@ -342,8 +342,8 @@ export function hideGame(slice, id, now) {
  * Make the slice fit its byte budget: drop territory maps, then other civs' timeline tracks, then
  * whole timelines from the least recently played games, and only then remove games (unfinished
  * first, oldest first). The most recently updated game is kept whole unless it alone exceeds the budget.
- * @param {ArchiveSlice} slice The slice (mutated).
- * @param {number} [cap] Byte budget.
+ * @param {ArchiveSlice} slice Mutated.
+ * @param {number} [cap]
  * @returns {string[]} Evicted ids.
  */
 export function fitSlice(slice, cap = SLICE_BYTE_CAP) {
@@ -360,7 +360,7 @@ export function fitSlice(slice, cap = SLICE_BYTE_CAP) {
 
 /**
  * Drop shared names no remaining game uses, so evicting a game gives its names back too.
- * @param {ArchiveSlice} slice The slice (mutated).
+ * @param {ArchiveSlice} slice Mutated.
  */
 export function pruneTexts(slice) {
   if (!slice.texts) return;
@@ -373,9 +373,9 @@ const sizeOf = (/** @type {*} */ x) => JSON.stringify(x).length;
 
 /**
  * Drop the bulky optional parts of records, in the order given, until the slice fits.
- * @param {ArchiveRecord[]} byAge Records to trim, least recently played first (mutated).
+ * @param {ArchiveRecord[]} byAge Least recently played first (mutated).
  * @param {number} total The slice's current size.
- * @param {number} cap Byte budget.
+ * @param {number} cap
  * @returns {number} The size after.
  */
 function stripParts(byAge, total, cap) {
@@ -400,9 +400,9 @@ function stripParts(byAge, total, cap) {
  * Remove whole games, unfinished ones first and then the oldest, until the slice fits. Records a
  * later version wrote are never removed (their weight is unknown here and they are not this
  * version's to judge), so a slice full of them may stay over budget.
- * @param {ArchiveSlice} slice The slice (mutated).
+ * @param {ArchiveSlice} slice Mutated.
  * @param {number} total Its current size.
- * @param {number} cap Byte budget.
+ * @param {number} cap
  * @param {string} keep Id of the game never removed (the one being played).
  * @returns {string[]} Evicted ids.
  */

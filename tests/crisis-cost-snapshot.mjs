@@ -54,8 +54,8 @@ function testDecimationBlanksTheLossLive() {
   const cols = buildAgeCrisisCols(sparse);
   const c = cols.find((x) => x.pid === 7);
   assert.ok(c, "player 7 still present (identity survives)");
-  // The loss can no longer be summed (< 2 points): the figure is blank , null/absent, which the
-  // cost table renders as "—". (mergeCost drops a null figure, so the key is simply absent.)
+  // The loss can no longer be summed (< 2 points): the figure is blank (null or absent), which the
+  // cost table renders as "—". (mergeCost drops a null figure, so the key is absent.)
   assert.ok(c.cost.popLost == null, "popLost is blank under decimation");
 }
 
@@ -79,7 +79,7 @@ function testMergeAgeColsSumsAcrossAges() {
 
 function testPersistedSnapshotElementsAreUntrusted() {
   // A persisted crisisSnapshots array is storage data: an element can be null / a scalar, and a
-  // column's cost can be missing. The ARRAY is type-checked upstream; the ELEMENTS must be too.
+  // column's cost can be missing. The array is type-checked upstream; the elements must be too.
   const dirty = [null, 7, "x", { pid: 7, cost: { popLost: 5 } }, { pid: 8, cost: null }];
   const merged = mergeAgeCols([dirty, "not-an-array", null, [{ pid: 7, cost: { popLost: 1 } }]]);
   assert.equal(merged.length, 2, "only object columns survive");

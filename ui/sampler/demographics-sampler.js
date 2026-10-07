@@ -4,7 +4,7 @@
 // every alive major player. Hard-defensive: every accessor is try/catch-wrapped
 // and typeof-checked, and the sampler permanently unsubscribes after
 // KILL_THRESHOLD consecutive throws (the count is zeroed whenever a sample is
-// appended AND saved) to isolate a degraded session from compounding errors.
+// appended and saved) to isolate a degraded session from compounding errors.
 //
 // Accessor crib sheet (all under Resources/Base/modules):
 //   Stats.getNetYield(YieldTypes.YIELD_*)         - diplo-ribbon/model-diplo-ribbon.js
@@ -138,7 +138,7 @@ import { buildSamplerSnapshot } from "/demographics/ui/sampler/sampler-snapshot-
 let lastSampledTurn = -1;
 
 
-// ---- kill switch ---------------------------------------------------------
+// kill switch
 // Throws since the last committed sample (see noteSampleCommitted).
 let errorCount = 0;
 const KILL_THRESHOLD = 3;
@@ -242,18 +242,8 @@ function noteSampleCommitted() {
 setSamplerErrorHandler(tripIfTooMany);
 
 
+// the sampler
 
-
-// ---- numeric helpers -----------------------------------------------------
-
-
-// ---- the sampler ---------------------------------------------------------
-
-/**
- * Take one snapshot: sample every alive major player, persist it, and update
- * the war tracker. Returns the snapshot, or null if skipped/too-few-players.
- * @returns {Snapshot | null} The recorded snapshot, or null.
- */
 /**
  * Seed the per-pid cumulative tech/civic baseline from prior ages so Techs,
  * Civics, and the score fallback stay continuous across the age boundary
@@ -447,7 +437,7 @@ function resetSamplerState() {
 }
 
 /**
- * The deferred resume sample. Runs AFTER the save's GameTutorial properties have
+ * The deferred resume sample. Runs after the save's GameTutorial properties have
  * been deserialized, so DemographicsStorage.load() reads the real persisted
  * history rather than clobbering it with a fresh first sample.
  */
@@ -511,7 +501,7 @@ function registerSamplerHandlers() {
 }
 
 /**
- * Start (or restart) the per-turn sampler. The sampler MODULE is cached for the
+ * Start (or restart) the per-turn sampler. The sampler module is cached for the
  * lifetime of the Coherent JS process, so module-scope state persists into a
  * newly loaded game; this tears down stale subscriptions, resets every
  * cross-load piece of state, and always re-registers fresh.
@@ -577,8 +567,6 @@ export function reenableSampler() {
   }
 }
 
-// On-demand sample so the modal can force a snapshot when it opens with
-// an empty history.
 /**
  * Force a snapshot on demand (e.g. when the modal opens with empty history).
  * @returns {Snapshot | null} The recorded snapshot, or null if disabled/failed.

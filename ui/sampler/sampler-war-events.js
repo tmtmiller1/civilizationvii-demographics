@@ -36,23 +36,23 @@ const unitStrengthCache = new Map();
 const casualtyByPid = new Map();
 
 /**
- * Cumulative COUNT of each player's units killed in combat, keyed by pid. The body-count
+ * Cumulative count of each player's units killed in combat, keyed by pid. The body-count
  * companion to
- * {@link casualtyByPid} (which sums combat STRENGTH); monotonic, seeded from persisted history.
+ * {@link casualtyByPid} (which sums combat strength); monotonic, seeded from persisted history.
  * @type {Map<number, number>}
  */
 const unitsLostByPid = new Map();
 
 /**
  * Last-sampled owner pid of the city at each map location ("x,y"), refreshed
- * every sample. Keyed by LOCATION (not ComponentID) because a city's
+ * every sample. Keyed by location (not ComponentID) because a city's
  * ComponentID owner changes on capture while its plot does not.
  * @type {Map<string, number>}
  */
 const cityOwnerByLoc = new Map();
 
 /**
- * The owner a city was captured FROM, keyed by location, recorded on
+ * The owner a city was captured from, keyed by location, recorded on
  * CityTransfered so a subsequent razing can be charged to the victim rather than
  * the conqueror who owns the city at raze time.
  * @type {Map<string, number>}
@@ -67,7 +67,7 @@ const capturedFromByLoc = new Map();
 const razedByPid = new Map();
 
 /**
- * Net cities WON minus LOST through capture, keyed by pid: +1 to the captor and
+ * Net cities won minus lost through capture, keyed by pid: +1 to the captor and
  * -1 to the prior owner on every CityTransfered, so founded cities never count.
  * Not monotonic (a recaptured city nets back out). Seeded from history.
  * @type {Map<number, number>}
@@ -82,7 +82,7 @@ const cityWarNetByPid = new Map();
 const warProdByPid = new Map();
 
 /**
- * Net territory (in km²) each player has WON minus LOST through city capture,
+ * Net territory (in km²) each player has won minus lost through city capture,
  * keyed by pid: a captured city's tiles move from the prior owner to the captor
  * on every CityTransfered, unlike the Land Area line which also moves with
  * peaceful growth. Not monotonic (a recaptured city nets back out). Seeded from history.
@@ -151,7 +151,7 @@ export function getCumulativeCasualty(pid) {
 }
 
 /**
- * The cumulative COUNT of a player's units killed in combat.
+ * The cumulative count of a player's units killed in combat.
  * @param {*} pid The player id.
  * @returns {number} The cumulative unit-loss count (0 if untracked).
  */
@@ -316,7 +316,7 @@ function applyCaptureTallies(pid, sign, land) {
 }
 
 /**
- * CityTransfered handler: remember who the city was captured FROM (the last
+ * CityTransfered handler: remember who the city was captured from (the last
  * sampled owner of its plot) so a later razing is charged to that victim, then
  * advance the plot's current owner to the new owner.
  * @param {*} data The event payload.
@@ -326,7 +326,7 @@ function onCityTransfered(data) {
     const ev = resolveEventCity(data);
     if (!ev) return;
     // The captured city's territory (km²) transfers from the prior owner to the
-    // captor - this is the land actually taken in the war.
+    // captor: this is the land actually taken in the war.
     const land = cityLandKm2(ev.cityID);
     const prior = cityOwnerByLoc.get(ev.key);
     if (typeof prior === "number") {
@@ -345,7 +345,7 @@ function onCityTransfered(data) {
 
 /**
  * CityRazingStarted handler: charge one permanently-razed settlement to the
- * victim - the civ the city was captured from, else its last-known owner.
+ * victim: the civ the city was captured from, else its last-known owner.
  * @param {*} data The event payload.
  */
 function onCityRazingStarted(data) {
@@ -412,7 +412,7 @@ function onUnitKilledInCombat(data) {
     const key = unitKey(victim.owner, victim.id);
     const cached = unitStrengthCache.get(key);
     if (!cached) {
-      // Unit never sampled (built and killed within one turn) - strength is
+      // Unit never sampled (built and killed within one turn); strength is
       // gone with the unit; can't be counted.
       clog("kill with no cached strength for", key);
       return;
@@ -587,11 +587,6 @@ function isMilitaryProduced(dec) {
 }
 
 /**
- * CityProductionCompleted handler: when a city finishes a military item, add
- * its production cost to that city owner's cumulative "production directed to war" total.
- * @param {*} data The event payload.
- */
-/**
  * Resolve a CityProductionCompleted payload to the military-production credit it
  * earns: { owner, cost, typeStr }, or null when the item isn't military / has no
  * resolvable cost / owner.
@@ -682,7 +677,7 @@ function subscribe(event, handler) {
 /**
  * Unsubscribe every war-loss event and drop the live per-sample caches (stale
  * across a load/age transition). The cumulative per-player totals are
- * deliberately retained so they persist across an in-session save/load cycle.
+ * kept so they persist across an in-session save/load cycle.
  */
 export function stopWarEventTracker() {
   killHandlerRef = unsubscribe("UnitKilledInCombat", killHandlerRef);

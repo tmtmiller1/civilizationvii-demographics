@@ -1,10 +1,10 @@
 // history-synthetic-metrics.js
 //
-// Registry of SYNTHETIC metrics: ids that route to a custom chart renderer
+// Registry of synthetic metrics: ids that route to a custom chart renderer
 // (radar, stacked area, wars/crises) instead of the line-chart pipeline. Kept
 // in its own module so view-history.js stays under the 500-line file cap.
 //
-// The object is intentionally MUTABLE and shared by reference: view-history's
+// The object is mutable on purpose and shared by reference: view-history's
 // mergeMetricGroups / companion-panel merge add entries to it at render time.
 // Importers must mutate this same object, never replace it.
 

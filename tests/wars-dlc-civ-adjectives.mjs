@@ -2,10 +2,10 @@
 //
 // War names resolve a civ's adjective from the engine string
 // (LOC_CIVILIZATION_<STEM>_ADJECTIVE) whenever the war record carries a
-// civTypeString. When it does not — older saves, or any name-only path — naming
+// civTypeString. When it does not (older saves, or any name-only path) naming
 // falls back to the bundled CIV_ADJECTIVE map and then to an English suffix
 // heuristic. The heuristic is wrong for most real civ names ("Gauls" -> "Gaulsan",
-// "Babylon" -> "Babylonan"), so every shipped civ needs an entry whose KEY is the
+// "Babylon" -> "Babylonan"), so every shipped civ needs an entry whose key is the
 // game's actual display name. Several original keys were written from guessed
 // names and never matched ("Babylonia" vs the shipped "Babylon", "Britain" vs
 // "Great Britain"), which is what this test exists to catch.
@@ -38,14 +38,14 @@ const { nameMergedWars } = await import(
   "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js"
 );
 
-const CONTROL = { pid: 99, civ: "Rome" }; // "Roman" — a known-good entry
+const CONTROL = { pid: 99, civ: "Rome" }; // "Roman", a known-good entry
 const SAMPLES = [
   { chartTurn: 10, turn: 10, players: {} },
   { chartTurn: 30, turn: 30, players: {} }
 ];
 
 /**
- * The adjective the namer produces for a civ given ONLY its display name.
+ * The adjective the namer produces for a civ given only its display name.
  * @param {string} displayName The game's LOC_CIVILIZATION_*_NAME text.
  * @returns {string|null} The adjective, or null when the name could not be parsed.
  */
@@ -65,7 +65,7 @@ function fallbackAdjective(displayName) {
   return m[1] === "Roman" ? m[2] : m[1];
 }
 
-// Control: prove the harness resolves a civ that has always been in the map.
+// Control: the harness resolves a civ that has always been in the map.
 assert.equal(fallbackAdjective("Egypt"), "Egyptian", "control civ must resolve from the map");
 
 // The 1.5.0 DLC civilizations.

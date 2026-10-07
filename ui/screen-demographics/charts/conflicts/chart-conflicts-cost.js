@@ -3,7 +3,7 @@
 // The shared "war cost" unit for the Conflicts views: the COST_METRICS catalog,
 // the series-reduction + formatting helpers that turn a participant's sampled
 // metric series into a displayed figure, and the cost-metric icon builder.
-// Each entry's `id` IS the snapshot.metrics key it reads, so the same catalog
+// Each entry's `id` is the snapshot.metrics key it reads, so the same catalog
 // drives the Gantt tooltip figures and the War Graphs sub-tab.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
@@ -16,7 +16,7 @@ import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises
  * global startChartTurn), so age-local turn windowing can't pull in same-numbered
  * turns from other ages. Also returns that age's last sampled turn.
  * @param {Snapshot[]} samples The full sample stream.
- * @param {*} war The war record (carries startChartTurn).
+ * @param {*} war Carries startChartTurn.
  * @returns {{scoped: Snapshot[], ageLastTurn: number}} Age-scoped samples + the age's last turn.
  */
 export function warAgeScope(samples, war) {
@@ -33,7 +33,7 @@ export function warAgeScope(samples, war) {
 
 /**
  * Descriptive display title per cost-metric id, shared by the tooltip and the
- * War Graphs tab. Ids missing here (deliberately, milpowerLevel) fall back to
+ * War Graphs tab. Ids missing here (milpowerLevel, on purpose) fall back to
  * the metric's short `label`; the graph overrides via {@link graphMetricTitle}.
  * @type {Record<string, string>}
  */
@@ -49,9 +49,9 @@ const GRAPH_TITLE = {
 };
 
 /**
- * The display title for a cost metric in the TOOLTIP (and the default elsewhere):
+ * The display title for a cost metric in the tooltip (and the default elsewhere):
  * the shared descriptive title, else the metric's short label.
- * @param {{ id: string, label: string }} m A COST_METRICS entry.
+ * @param {{ id: string, label: string }} m
  * @returns {string} The localized title.
  */
 export function costMetricTitle(m) {
@@ -59,7 +59,7 @@ export function costMetricTitle(m) {
 }
 
 /**
- * The display title for a metric on the WAR GRAPHS tab: same as the tooltip,
+ * The display title for a metric on the War Graphs tab: same as the tooltip,
  * except standing Military Power reads "(Over Time)" there (a trajectory) vs
  * "(Current)" in the tooltip (a single end-of-war value).
  * @param {{ id: string, label: string }} m A COST_METRICS entry.
@@ -72,7 +72,7 @@ export function graphMetricTitle(m) {
 
 /**
  * Format a positive magnitude with a K/M/B suffix.
- * @param {number} n The value.
+ * @param {number} n
  * @returns {string} The formatted value ("-" for non-finite/non-positive).
  */
 export function formatMagnitude(n) {
@@ -86,7 +86,7 @@ export function formatMagnitude(n) {
 /**
  * Build one participant's metric series across the samples in a window.
  * @param {Snapshot[]} windowSamples Samples inside the participant's active window.
- * @param {Pid | string} pid The participant pid.
+ * @param {Pid | string} pid
  * @param {string} metricId Metric key (e.g. "milpower").
  * @returns {number[]} The participant's values (samples lacking the value skipped).
  */
@@ -102,7 +102,7 @@ function participantMetricSeries(windowSamples, pid, metricId) {
 /**
  * Maximum drawdown of a series: the largest drop from a running peak. Returns 0
  * when the series only ever rises, so "losses" are never fabricated from growth.
- * @param {number[]} values The series.
+ * @param {number[]} values
  * @returns {number} The largest peak→trough decline.
  */
 function maxDrawdown(values) {
@@ -119,7 +119,7 @@ function maxDrawdown(values) {
  * Cumulative decline of a series: the sum of every turn-over-turn drop, so
  * repeated losses accumulate instead of collapsing to the single largest dip
  * ({@link maxDrawdown}). Rises are ignored, so growth never offsets a loss.
- * @param {number[]} values The series.
+ * @param {number[]} values
  * @returns {number} The summed magnitude of all declines (>= 0).
  */
 function sumDeclines(values) {
@@ -170,7 +170,7 @@ function sumDeclines(values) {
  */
 export const COST_METRICS = [
   {
-    // Standing Military Power - a LEVEL, not a loss: the `milpower` series'
+    // Standing Military Power, a level rather than a loss: the `milpower` series'
     // value at the end of the war window. Matches the War Graphs line.
     id: "milpowerLevel",
     key: "milPower",
@@ -189,7 +189,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH"
   },
   {
-    // Units LOST (body count): the increase in the cumulative unitsLostCum counter
+    // Units lost (body count): the increase in the cumulative unitsLostCum counter
     // over the war window. The tooltip appends a scaled "soldiers killed" estimate.
     id: "unitsLostCum",
     key: "unitsLost",
@@ -199,7 +199,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST"
   },
   {
-    // Net cities won/lost by CAPTURE over the war (event-based cityWarNetCum: +1
+    // Net cities won/lost by capture over the war (event-based cityWarNetCum: +1
     // to a captor, -1 to the prior owner). Net so a city that changes hands
     // several times settles to its real end state; founding never counts.
     id: "cityWarNetCum",
@@ -210,7 +210,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS"
   },
   {
-    // Settlements PERMANENTLY razed out from under this civ (attributed to the
+    // Settlements permanently razed out from under this civ (attributed to the
     // pre-capture owner), distinct from captures that can be retaken. The figure
     // is the cumulative counter's increase over the war window.
     id: "razedCum",
@@ -221,7 +221,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED"
   },
   {
-    // Territory (km2) that CHANGED HANDS through city capture (event-based
+    // Territory (km2) that changed hands through city capture (event-based
     // `warLandCum`), +gained / -ceded. Not the owned-tile total, whose swing
     // also includes peaceful settling and border growth.
     id: "warLandCum",
@@ -233,7 +233,7 @@ export const COST_METRICS = [
   },
   {
     // Gross population lost over the war: the sum of every per-turn decline.
-    // Reads RAW population, not the line chart's scaled `population`, whose
+    // Reads raw population, not the line chart's scaled `population`, whose
     // turn factor inflates the series and masks real drops.
     id: "populationRaw",
     key: "popLost",
@@ -243,7 +243,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP"
   },
   {
-    // Crop yield (net food/turn) LOST: sum of every per-turn drop in the food
+    // Crop yield (net food/turn) lost: sum of every per-turn drop in the food
     // rate (a disruption proxy, not a food total); growth can't mask the loss.
     id: "crops",
     key: "cropLost",
@@ -253,7 +253,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST"
   },
   {
-    // Production LOST: the sum of every per-turn drop in production-per-turn (a
+    // Production lost: the sum of every per-turn drop in production-per-turn (a
     // disruption proxy, not a quantity total), so growth can't mask it.
     // Production directed to war is tracked separately (warProdCum).
     id: "production",
@@ -264,7 +264,7 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST"
   },
   {
-    // Production DIRECTED TO WAR: production spent on military units/buildings
+    // Production directed to war: production spent on military units/buildings
     // during the war (cumulative `warProdCum`). Shown as neutral spending (mode
     // "spent"), not a red loss, since it is investment rather than destruction.
     id: "warProdCum",
@@ -275,8 +275,8 @@ export const COST_METRICS = [
     glossary: "LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD"
   },
   {
-    // Refugees produced during the war , population displaced by siege, pillage, or
-    // conquest , contributed per-civ by the Emigration mod (metrics.refugeesCum).
+    // Refugees produced during the war (population displaced by siege, pillage, or
+    // conquest), contributed per-civ by the Emigration mod (metrics.refugeesCum).
     // Accrued (cumulative); renders "— no data" when Emigration isn't installed.
     id: "refugeesCum",
     key: "refugees",
@@ -291,7 +291,7 @@ export const COST_METRICS = [
  * Build a cost-metric icon: a span whose background is a base-game texture via
  * the engine `url("blp:NAME")` scheme (the same our CSS uses elsewhere).
  * @param {string} blp A `blp:` texture name (e.g. "blp:Yield_Production").
- * @returns {HTMLElement} The icon element.
+ * @returns {HTMLElement}
  */
 export function buildCostIcon(blp) {
   const el = document.createElement("span");
@@ -319,7 +319,7 @@ function reduceCostSeries(series, mode) {
  * last - first. Returns null (rendered "-") when the metric isn't present in
  * at least two window samples.
  * @param {Snapshot[]} win The samples inside the participation window.
- * @param {Pid | string} pid The participant pid.
+ * @param {Pid | string} pid
  * @param {string} metricId The cumulative metric id (e.g. "razedCum").
  * @returns {number | null} The accrued increase (>= 0), or null when no data.
  */
@@ -335,7 +335,7 @@ function accruedFigure(win, pid, metricId) {
  * standing-army decline proxy ({@link sumDeclines} of milpower) for samples
  * without casualty tracking.
  * @param {Snapshot[]} win The samples inside the participation window.
- * @param {Pid | string} pid The participant pid.
+ * @param {Pid | string} pid
  * @returns {number | null} Strength lost (>= 0), or null when no data.
  */
 function militaryLossFigure(win, pid) {
@@ -349,7 +349,7 @@ function militaryLossFigure(win, pid) {
  * dispatching on the metric's mode: `milpower` is special-cased, `accrued`/`spent`
  * read a counter's increase, everything else flows through {@link reduceCostSeries}.
  * @param {Snapshot[]} win The samples inside the participation window.
- * @param {Pid | string} pid The participant pid.
+ * @param {Pid | string} pid
  * @param {{ id: string, mode: string, series?: string }} m The cost-metric descriptor.
  * @returns {number | null} The figure, or null when no data.
  */
@@ -369,8 +369,8 @@ function participantMetricFigure(win, pid, m) {
 
 /**
  * The last finite value of a series (its "level"), or null when empty.
- * @param {number[]} series The metric series.
- * @returns {number | null} The final value, or null.
+ * @param {number[]} series
+ * @returns {number | null}
  */
 function lastFinite(series) {
   return series.length ? series[series.length - 1] : null;
@@ -397,7 +397,7 @@ function minorMetricSeries(windowSamples, pid, metricId) {
  * One participant's standing Military Power at war's end (the "level" figure),
  * reading `players` for majors and the `minors` map for city-states.
  * @param {Snapshot[]} win The window samples.
- * @param {Pid | string} pid The participant pid.
+ * @param {Pid | string} pid
  * @param {boolean} isCS Whether the participant is a city-state.
  * @returns {number | null} The standing power, or null when no data.
  */
@@ -413,7 +413,7 @@ export function participantMilPower(win, pid, isCS) {
  * (`milLostCum` increase). Majors fall back to the standing-army decline proxy
  * for pre-tracking wars; city-states read the `minors` casualty series.
  * @param {Snapshot[]} win The window samples.
- * @param {Pid | string} pid The participant pid.
+ * @param {Pid | string} pid
  * @param {boolean} isCS Whether the participant is a city-state.
  * @returns {number | null} Strength lost (>= 0), or null when no data.
  */
@@ -426,9 +426,9 @@ export function participantMilPowerLost(win, pid, isCS) {
 /**
  * The samples falling inside a war's [start, end] turn window.
  * @param {Snapshot[]} samples The full sample stream.
- * @param {number} warStart The war's start turn.
+ * @param {number} warStart
  * @param {number} warEnd The war's end turn (or latest).
- * @returns {Snapshot[]} The in-window samples.
+ * @returns {Snapshot[]}
  */
 export function warWindow(samples, warStart, warEnd) {
   return (samples || []).filter(
@@ -439,9 +439,9 @@ export function warWindow(samples, warStart, warEnd) {
 /**
  * Compute one participant's per-metric war cost over its participation window
  * ([joinTurn, leaveTurn || war end]).
- * @param {Snapshot[]} samples The sample stream.
- * @param {*} participant The roster participant entry.
- * @param {number} warStart The war's start turn.
+ * @param {Snapshot[]} samples
+ * @param {*} participant The roster entry.
+ * @param {number} warStart
  * @param {number} warEnd The war's end turn (or latest).
  * @returns {Record<string, number | null>} Per-metric figure keyed by m.key.
  */
@@ -476,7 +476,7 @@ function scaledCasualtyFigure(win, rawUnits, warEnd) {
  * Format one cost figure by display mode. `"net"` is signed ("+N" gain / "−N"
  * loss / "0"); `"spent"` is neutral throughput (plain magnitude, no sign);
  * everything else is a loss ("−N" / "0"). null → "-".
- * @param {number|null} raw The raw figure.
+ * @param {number|null} raw
  * @param {string} mode The metric's mode (see COST_METRICS).
  * @returns {{ text: string, cls: string }} Display text + sign-class suffix.
  */
@@ -489,8 +489,8 @@ export function formatCostFigure(raw, mode) {
     return { text: "−" + formatMagnitude(Math.abs(r)), cls: "is-loss" };
   }
   if (mode === "spent" || mode === "level") {
-    // Neutral magnitude, no sign, not colored as a loss: "spent" is deliberate
-    // war investment; "level" is a standing value (current Military Power).
+    // Neutral magnitude, no sign, not colored as a loss: "spent" is war investment
+    // the player chose; "level" is a standing value (current Military Power).
     return r > 0 ? { text: formatMagnitude(r), cls: "is-spent" } : { text: "0", cls: "is-none" };
   }
   if (r <= 0) return { text: "0", cls: "is-none" };

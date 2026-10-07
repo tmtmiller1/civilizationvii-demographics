@@ -28,15 +28,13 @@
 
 const DBG = false;
 /**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.dock]", ...a);
 }
 /**
- * Error logger; always emits.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.dock]", ...a);
@@ -52,9 +50,9 @@ const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 const ICON_TINT = "#ecdfbf";
 
 /**
- * Inject the one-time `<style>` that paints our dock-button icon. The icon is a
- * MASK filled with {@link ICON_TINT} so it matches the flat tint of the other
- * dock icons. Idempotent: re-runs are a no-op once the style exists.
+ * Inject the one-time `<style>` that paints our dock-button icon: a mask filled
+ * with {@link ICON_TINT} so it matches the flat tint of the other dock icons.
+ * Re-runs are a no-op once the style exists.
  */
 function injectIconStyle() {
   if (document.getElementById("demographics-dock-icon-style")) return;
@@ -82,7 +80,7 @@ function injectIconStyle() {
  */
 export class DemographicsDockDecorator {
   /**
-   * @param {SubSystemDockPanel} val The panel handle supplied by the factory.
+   * @param {SubSystemDockPanel} val
    */
   constructor(val) {
     dlog("constructor called; panel keys:", val ? Object.keys(val).slice(0, 10) : "(no val)");
@@ -90,17 +88,10 @@ export class DemographicsDockDecorator {
     this._panel = val;
   }
 
-  /**
-   * Lifecycle hook fired before the panel attaches.
-   */
   beforeAttach() {
     dlog("beforeAttach");
   }
 
-  /**
-   * Lifecycle hook fired after the panel attaches: paints the icon style and
-   * registers our dock button.
-   */
   afterAttach() {
     dlog("afterAttach: about to call this._panel.addButton");
     try {
@@ -111,13 +102,10 @@ export class DemographicsDockDecorator {
     this._addDockButton();
   }
 
-  /**
-   * Add the Demographics button to the dock, defensively. Never throws.
-   */
   _addDockButton() {
     try {
-      // Idempotent: the dock re-attaching or another mod re-initializing it could fire
-      // this twice. There is exactly one subsystem dock, so a document-wide check is correct.
+      // The dock re-attaching or another mod re-initializing it could fire this twice.
+      // There is exactly one subsystem dock, so a document-wide check is correct.
       if (typeof document !== "undefined" && document.querySelector(".demographics-dock-button")) {
         dlog("dock button already present; skipping duplicate");
         return;
@@ -140,23 +128,14 @@ export class DemographicsDockDecorator {
     }
   }
 
-  /**
-   * Lifecycle hook fired before the panel detaches.
-   */
   beforeDetach() {
     dlog("beforeDetach");
   }
-  /**
-   * Lifecycle hook fired after the panel detaches.
-   */
   afterDetach() {
     dlog("afterDetach");
   }
 
-  /**
-   * Button activation handler: dynamic-imports the engine context manager and
-   * pushes the Demographics screen. Never throws.
-   */
+  // dynamic-imports the context manager so this module has no import-time engine dependency
   openScreen() {
     dlog("button activated; about to push screen-demographics");
     try {

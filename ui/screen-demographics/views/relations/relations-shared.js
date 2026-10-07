@@ -26,11 +26,11 @@ export const DBG = DEMOGRAPHICS_DEBUG;
 
 // The ring SVG's measured pixels-per-viewBox-unit, published by the ring renderer
 // after it measures its laid-out size and read by the legend so a swatch draws
-// its sample line at the EXACT same scale as the ring lines.
+// its sample line at the exact same scale as the ring lines.
 let _ringPxPerUnit = 0;
 /**
  * Publish the ring's measured pixels-per-viewBox-unit.
- * @param {number} v Pixels per viewBox unit.
+ * @param {number} v
  */
 export function setRingPxPerUnit(v) {
   if (typeof v === "number" && isFinite(v) && v > 0) _ringPxPerUnit = v;
@@ -44,14 +44,14 @@ export function getRingPxPerUnit() {
 }
 /**
  * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 export function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-relations]", ...a);
 }
 /**
  * Error logger (always emits).
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 export function derr(...a) {
   console.error("[Demographics.view-relations]", ...a);
@@ -61,8 +61,8 @@ export function derr(...a) {
  * Convert a `#RRGGBB` (or `0xRRGGBB`/`RRGGBB`/8-char) color string to `rgba()`
  * with the given alpha. Accepts 6- or 8-char hex (taking the last 6 digits as
  * RGB) to dodge the "white circle" bug where 8-char `#RRGGBBAA` fell through.
- * @param {*} hex Candidate color string.
- * @param {number} alpha Alpha channel (0..1).
+ * @param {*} hex
+ * @param {number} alpha
  * @returns {string} An `rgba(...)` string (a safe dark fallback if unparseable).
  */
 export function hexToRgba(hex, alpha) {
@@ -81,7 +81,7 @@ export function hexToRgba(hex, alpha) {
  * Normalize any Civ7 color string to a safe 6-char `#RRGGBB` hex, or `null`
  * when the value is useless (near-white, near-black, or unparseable). Used to
  * scrub `UI.Player.getPrimaryColorValueAsString` output before storing it.
- * @param {*} s Candidate color string.
+ * @param {*} s
  * @returns {string|null} The normalized `#RRGGBB`, or `null` if unusable.
  */
 export function normalizeCivColor(s) {
@@ -101,8 +101,8 @@ export function normalizeCivColor(s) {
 /**
  * Invoke `fn` and return its result, logging and returning `fb` on throw.
  * @template T
- * @param {string} label Diagnostic label for the call site.
- * @param {() => T} fn Thunk to evaluate.
+ * @param {string} label
+ * @param {() => T} fn
  * @param {T} [fb] Fallback returned on throw.
  * @returns {T} `fn()` result, or `fb`. (When `fb` is omitted, `T` includes
  *   `undefined` at the call site, matching the thunk's own return type.)
@@ -219,7 +219,7 @@ const DIPLOMACY_LABEL_TAGS = {
  * engine's own name (GameInfo.DiplomacyActions → Locale.compose) so it matches
  * the game and localizes for free; falls back to a title-cased enum name.
  * @param {string} actionName The DIPLOMACY_ACTION_* enum name.
- * @returns {string} The display label.
+ * @returns {string}
  */
 export function diplomacyActionLabel(actionName) {
   try {
@@ -256,14 +256,14 @@ export function diplomacyActionLabel(actionName) {
 export const LINE_DASH = {
   // Solid = a standing relationship (color = warmth); dashed/dotted = an
   // action/treaty tie laid over it, style separating same-color deals.
-  // ── Standing relationships - solid: ──
+  // standing relationships, solid:
   war: "",
   alliance: "",
   helpful: "",
   friendly: "",
   unfriendly: "",
   hostile: "",
-  // ── Overlays: ──
+  // overlays:
   openborders: "dashed",
   denounced: "dashed", // directed → solid + chevrons (token unused)
   trade: "dotted", // directed → solid + chevrons (token unused)
@@ -276,7 +276,7 @@ for (const _c of CS_AGREEMENT_TYPES) LINE_DASH[_c.key] = _c.dash;
 
 /**
  * Resolve an explicit per-edge dash override.
- * @param {Edge} edge Edge descriptor.
+ * @param {Edge} edge
  * @returns {string|undefined} Override value, or undefined when absent.
  */
 function dashOverride(edge) {
@@ -288,7 +288,7 @@ function dashOverride(edge) {
 
 /**
  * Resolve a dash pattern from filter key mapping.
- * @param {Edge} edge Edge descriptor.
+ * @param {Edge} edge
  * @returns {string|undefined} Pattern string, or undefined when unmapped.
  */
 function dashByFilter(edge) {

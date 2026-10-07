@@ -21,20 +21,12 @@ import {
  *   ChartSeries} ChartSeries
  */
 
-// Color helper used to apply dimmed alpha for muted/backgrounded civ lines.
 /**
- * Return `hex` with alpha `a` applied as an `rgba()` string.
- *
- * Supported inputs:
- * - #rgb
- * - #rrggbb
- * - rgb(r,g,b)
- * - rgba(r,g,b,a)
- *
- * Unparseable inputs fall back to translucent white.
- * @param {*} hex Source color.
+ * `hex` with alpha `a` applied, as an `rgba()` string. Accepts #rgb, #rrggbb, rgb() and
+ * rgba(); anything else falls back to translucent white. Used to dim muted/backgrounded lines.
+ * @param {*} hex
  * @param {number} a Alpha (0-1).
- * @returns {string} An `rgba()` color string.
+ * @returns {string}
  */
 function colorWithAlpha(hex, a) {
   if (typeof hex !== "string") return "rgba(255,255,255," + a + ")";
@@ -74,7 +66,7 @@ function colorWithAlpha(hex, a) {
 /**
  * Apply the `showEliminatedCivs` setting (default true): strip eliminated
  * series when the user disabled it.
- * @param {ChartSeries[]} allSeries The series list.
+ * @param {ChartSeries[]} allSeries
  * @returns {ChartSeries[]} The (possibly filtered) series list.
  */
 function applyShowEliminated(allSeries) {
@@ -92,7 +84,7 @@ function applyShowEliminated(allSeries) {
 /**
  * Apply the `smoothChart` setting: 3-turn centered moving average.
  * First/last points keep raw values; series with <3 points are untouched.
- * @param {ChartSeries[]} allSeries The series list.
+ * @param {ChartSeries[]} allSeries
  * @returns {ChartSeries[]} The transformed series list.
  */
 function applySmoothChart(allSeries) {
@@ -100,10 +92,10 @@ function applySmoothChart(allSeries) {
   try {
     smooth = !!DemographicsSettings.getSetting("smoothChart", false);
   } catch (_) {
-    /* setting unreadable - leave smoothing off */
+    /* setting unreadable; leave smoothing off */
   }
   if (!smooth) return allSeries;
-  // Own-logic smoothing math runs OUTSIDE the engine guard so a real bug here
+  // Own-logic smoothing math runs outside the engine guard so a real bug here
   // surfaces (propagating to the logged top-level render guard) rather than
   // being swallowed.
   return allSeries.map((s) => {
@@ -127,7 +119,6 @@ function applySmoothChart(allSeries) {
 }
 
 /**
- * Resolve a metric's metadata, defensively.
  * @param {string} metricId
  * @returns {*} The metric metadata, or `null`.
  */
@@ -143,10 +134,10 @@ function resolveMetricMeta(metricId) {
 /**
  * Build the single donor line that represents a `global` metric: the longest series'
  * points under the metric's localized name.
- * @param {ChartSeries[]} allSeries The series list (non-empty).
- * @param {*} metricMeta The metric metadata.
+ * @param {ChartSeries[]} allSeries Non-empty.
+ * @param {*} metricMeta
  * @param {string} metricId
- * @returns {ChartSeries} The donor line.
+ * @returns {ChartSeries}
  */
 function globalDonorLine(allSeries, metricMeta, metricId) {
   const donor =
@@ -171,8 +162,8 @@ function globalDonorLine(allSeries, metricMeta, metricId) {
 
 /**
  * For a `global` metric, collapse all series into a single donor line.
- * @param {ChartSeries[]} allSeries The series list.
- * @param {*} metricMeta The metric metadata.
+ * @param {ChartSeries[]} allSeries
+ * @param {*} metricMeta
  * @param {string} metricId
  * @returns {ChartSeries[]} The (possibly collapsed) series list.
  */
@@ -187,7 +178,7 @@ function collapseGlobalMetric(allSeries, metricMeta, metricId) {
  * Apply the analytics-visibility policy: drop the series for any civ the effective policy
  * withholds, so a hidden civ's trend is never plotted. The local player's own civ is never
  * dropped; "All civilizations" keeps everyone (applyUnmetNames then masks names).
- * @param {ChartSeries[]} allSeries The series list.
+ * @param {ChartSeries[]} allSeries
  * @returns {ChartSeries[]} The filtered series list.
  */
 function applyPolicyHide(allSeries) {
@@ -204,7 +195,7 @@ function applyPolicyHide(allSeries) {
 /**
  * Apply the `showUnmetNames` setting (default false): when disabled, mask each
  * non-local unmet civ's series name with a generic placeholder.
- * @param {ChartSeries[]} allSeries The series list.
+ * @param {ChartSeries[]} allSeries
  * @returns {ChartSeries[]} The transformed series list.
  */
 function applyUnmetNames(allSeries) {
@@ -226,9 +217,9 @@ function applyUnmetNames(allSeries) {
 /**
  * Build the Chart.js dataset array from the series list, applying muted /
  * dimmed / focused styling and the time-range filter.
- * @param {ChartSeries[]} allSeries The series list.
+ * @param {ChartSeries[]} allSeries
  * @param {Set<string>} muted Muted series keys (legend-toggled off, dimmed).
- * @param {Set<string>} focused Focused series keys.
+ * @param {Set<string>} focused
  * @param {{ min: number, max: number }|null} tr Time-range filter, or null.
  * @returns {Record<string, *>[]} The Chart.js datasets.
  */
@@ -241,8 +232,8 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
     const anyFocused = focused.size > 0;
     const isFocused = !isMuted && anyFocused && focused.has(s.leaderType);
     // A civ reads "backgrounded" (dimmed) when the user toggled it off in the
-    // legend (All/None or a row), OR when another civ is focused and this one
-    // isn't. Backgrounded lines STAY on the chart, dimmed - they don't vanish.
+    // legend (All/None or a row), or when another civ is focused and this one
+    // isn't. Backgrounded lines stay on the chart, dimmed; they don't vanish.
     const isDimmed = isMuted || (anyFocused && !focused.has(s.leaderType));
     const inRange = s.points.filter((p) => !tr || (p.t >= tr.min && p.t <= tr.max));
     const dataPoints = lodDownsample(inRange, pointBudget).map((p) => ({ x: p.t, y: p.v }));
@@ -252,9 +243,9 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
     const color = isDimmed ? colorWithAlpha(baseColor, 0.35) : baseColor;
     return {
       label: s.name,
-      // The civ's player id, so a metric's tooltipAttribution callback gets the PID (not the civ
-      // name), without it, attribution lookups keyed by pid (e.g. Emigration's net-migration "why"
-      // breakdown) silently resolve to 0 and show nothing.
+      // The civ's player id, so a metric's tooltipAttribution callback gets the pid (not the civ
+      // name). Without it, attribution lookups keyed by pid (e.g. Emigration's net-migration "why"
+      // breakdown) resolve to 0 and show nothing.
       pidForContext: s.pid,
       data: dataPoints,
       borderColor: color,
@@ -268,7 +259,7 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
       pointHoverRadius: 4,
       tension: 0,
       spanGaps: true,
-      // Never fully remove a line - backgrounded civs are dimmed (above), so the
+      // Never fully remove a line: backgrounded civs are dimmed (above), so the
       // legend's "None" grays lines out rather than making them disappear.
       hidden: false,
       leaderType: s.leaderType,

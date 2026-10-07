@@ -16,8 +16,8 @@ export const PAD_B = 28;
 
 /**
  * Build the polyline `points` string for one series under the given bounds.
- * @param {{ points: { x: number, y: number }[] }} s The series.
- * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b The bounds.
+ * @param {{ points: { x: number, y: number }[] }} s
+ * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b
  * @returns {string} The SVG points attribute.
  */
 function polyPoints(s, b) {
@@ -38,9 +38,9 @@ function polyPoints(s, b) {
  * Draw vertical crisis-stage marker lines (dashed, stage-colored) at each
  * marker's chart-X, mirroring the war-timeline overlay. Markers outside the
  * bounds are skipped.
- * @param {SVGElement} svg The chart SVG.
- * @param {{ x: number, color: string }[]} markers The crisis markers.
- * @param {{ xMin: number, xMax: number }} b The bounds.
+ * @param {SVGElement} svg
+ * @param {{ x: number, color: string }[]} markers
+ * @param {{ xMin: number, xMax: number }} b
  */
 function drawGraphMarkers(svg, markers, b) {
   const innerW = MINI_W - PAD_L - PAD_R;
@@ -67,9 +67,9 @@ function drawGraphMarkers(svg, markers, b) {
 /**
  * Build the mini line-chart SVG for one metric.
  * @param {{ color: string, points: { x: number, y: number }[] }[]} seriesList Per-civ series.
- * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b The bounds.
- * @param {{ x: number, color: string }[]} [markers] Optional crisis-stage markers.
- * @returns {SVGElement} The chart SVG.
+ * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b
+ * @param {{ x: number, color: string }[]} [markers] Crisis-stage markers.
+ * @returns {SVGElement}
  */
 export function buildMiniSvg(seriesList, b, markers) {
   const svg = svgEl("svg", {
@@ -106,7 +106,7 @@ export function buildMiniSvg(seriesList, b, markers) {
  * One absolutely-positioned HTML axis-text overlay (a corner tick or the X title), skipped when
  * empty. HTML rather than SVG text so the plot SVG's non-uniform stretch doesn't distort it.
  * @param {HTMLElement} plot The positioned plot container.
- * @param {string} text The label text ("" skips it).
+ * @param {string} text "" skips it.
  * @param {string} suffix The position-class suffix (e.g. "ytop", "xtitle").
  */
 function appendOverlay(plot, text, suffix) {
@@ -122,7 +122,7 @@ function appendOverlay(plot, text, suffix) {
  * that vertically centers a -90deg-rotated label (reliable in Gameface, unlike
  * absolute-positioned rotation).
  * @param {HTMLElement} plot The positioned plot container.
- * @param {string} text The Y-axis title ("" skips it).
+ * @param {string} text The Y-axis title; "" skips it.
  */
 function appendYTitle(plot, text) {
   if (!text) return;
@@ -137,10 +137,10 @@ function appendYTitle(plot, text) {
 /**
  * Wrap a chart SVG in a positioned plot container and overlay the HTML axis
  * text (corner ticks, X title, rotated Y title) around it.
- * @param {SVGElement} svg The chart SVG.
+ * @param {SVGElement} svg
  * @param {{ yLabel: string, xLabel: string, yTop: string, yBottom: string,
- *   xLeft: string, xRight: string }} labels The axis text.
- * @returns {HTMLElement} The plot container.
+ *   xLeft: string, xRight: string }} labels
+ * @returns {HTMLElement}
  */
 export function buildPlot(svg, labels) {
   const plot = document.createElement("div");
@@ -158,10 +158,10 @@ export function buildPlot(svg, labels) {
 /**
  * Axis-text overlay values for a zero-centered bar chart: the rotated Y title,
  * the +m / −m corner ticks, and no X axis (the bars aren't a time series).
- * @param {string} yLabel The Y-axis title.
+ * @param {string} yLabel
  * @param {number} m The symmetric y-extent.
  * @returns {{ yLabel: string, xLabel: string, yTop: string, yBottom: string,
- *   xLeft: string, xRight: string }} The overlay text.
+ *   xLeft: string, xRight: string }}
  */
 export function barLabels(yLabel, m) {
   return {
@@ -177,10 +177,10 @@ export function barLabels(yLabel, m) {
 /**
  * Axis-text overlay values for a line chart: the rotated Y title, the y max/min
  * corner ticks, the "Time (turns)" X title, and the T-min / T-max end ticks.
- * @param {string} yLabel The Y-axis title.
- * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b The bounds.
+ * @param {string} yLabel
+ * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b
  * @returns {{ yLabel: string, xLabel: string, yTop: string, yBottom: string,
- *   xLeft: string, xRight: string }} The overlay text.
+ *   xLeft: string, xRight: string }}
  */
 export function lineLabels(yLabel, b) {
   return {
@@ -195,10 +195,10 @@ export function lineLabels(yLabel, b) {
 
 /**
  * Widen the x-bounds so any marker sitting at (or past) an edge gets a little
- * breathing room - e.g. a crisis that begins right at the chart's start renders
+ * breathing room, so a crisis that begins right at the chart's start renders
  * a few turns in from the left edge instead of being clipped on the axis.
- * @param {{ xMin: number, xMax: number }} b The bounds (mutated).
- * @param {{ x: number }[]} markers The crisis markers.
+ * @param {{ xMin: number, xMax: number }} b Mutated.
+ * @param {{ x: number }[]} markers
  */
 function expandBoundsForMarkers(b, markers) {
   const pad = 3;
@@ -212,9 +212,9 @@ function expandBoundsForMarkers(b, markers) {
  * Build a line-chart handle (svg + hover + axis labels) from a prepared series
  * list. Returns null when empty.
  * @param {{ name: string, color: string, points: { x: number,
- *   y: number }[] }[]} seriesList The series.
+ *   y: number }[] }[]} seriesList
  * @param {string} yLabelLoc The Y-axis title LOC tag.
- * @param {{ x: number, color: string, label?: string }[]} [markers] Optional crisis-stage markers.
+ * @param {{ x: number, color: string, label?: string }[]} [markers] Crisis-stage markers.
  * @param {{ xMin: number, xMax: number }} [xDomain] A shared x-domain to use for the X axis
  *   (so a set of charts share one time scale); the Y axis still comes from the series.
  * @returns {{ svg: SVGElement, hover: *, labels: * } | null} The chart, or null.
@@ -239,7 +239,7 @@ export function buildLineChartFromSeries(seriesList, yLabelLoc, markers, xDomain
  * losses below), scaled symmetrically to ±m so zero sits in the center.
  * @param {{ color: string, net: number }[]} civs Per-civ net values.
  * @param {number} m The symmetric y-extent (>= 1).
- * @returns {SVGElement} The chart SVG.
+ * @returns {SVGElement}
  */
 export function buildCivBarSvg(civs, m) {
   const innerW = MINI_W - PAD_L - PAD_R;
@@ -278,6 +278,6 @@ export function buildCivBarSvg(civs, m) {
     })
   );
   // Tick/axis text is rendered as HTML overlays (buildPlot), not in this
-  // non-uniformly stretched SVG - see the note in buildMiniSvg.
+  // non-uniformly stretched SVG; see the note in buildMiniSvg.
   return svg;
 }

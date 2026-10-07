@@ -11,16 +11,14 @@
 const DEMOGRAPHICS_DEBUG = false;
 
 /**
- * Debug logger, no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.bootstrap]", ...a);
 }
 
 /**
- * Error logger; always emits (unlike {@link dlog}).
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.bootstrap]", ...a);
@@ -30,10 +28,9 @@ dlog("loaded; debug=", DEMOGRAPHICS_DEBUG);
 
 /**
  * Dynamic-import the engine contract guard and log a one-line status report.
- * Never rejects - a missing module is logged and swallowed so
- * the rest of bootstrap proceeds; individual features still self-gate via
- * `featureAvailable()`.
- * @returns {Promise<void>} Resolves once the import settles.
+ * Never rejects: a missing module is logged and swallowed so the rest of
+ * bootstrap proceeds; individual features still self-gate via `featureAvailable()`.
+ * @returns {Promise<void>}
  */
 function checkContracts() {
   return /** @type {Promise<*>} */ (import("/demographics/ui/core/demographics-contracts.js"))
@@ -47,9 +44,8 @@ function checkContracts() {
 
 /**
  * Dynamic-import the dock-button decorator for its registration side effect.
- * Never rejects. An import failure is logged and swallowed so the sampler
- * still loads.
- * @returns {Promise<*>} Resolves to the imported module, or `undefined` on failure.
+ * Never rejects, so the sampler still loads after an import failure.
+ * @returns {Promise<*>} The imported module, or `undefined` on failure.
  */
 function loadDecorator() {
   dlog("about to dynamic-import demographics-dock-decorator.js");
@@ -65,8 +61,8 @@ function loadDecorator() {
 
 /**
  * Dynamic-import the sampler module and invoke its `startSampler` export.
- * Never rejects - a missing export or thrown start is logged and swallowed.
- * @returns {Promise<void>} Resolves once the import settles.
+ * Never rejects: a missing export or thrown start is logged and swallowed.
+ * @returns {Promise<void>}
  */
 function startSampler() {
   dlog("about to dynamic-import demographics-sampler.js");

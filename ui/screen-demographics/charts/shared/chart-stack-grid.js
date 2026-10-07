@@ -4,9 +4,8 @@
 import { localYear, turnLabel } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
- * Build a normalized stack-grid configuration object.
- * @param {Partial<StackGridConfig>} [overrides] Optional config overrides.
- * @returns {StackGridConfig} The merged grid config.
+ * @param {Partial<StackGridConfig>} [overrides]
+ * @returns {StackGridConfig} The defaults merged with `overrides`.
  */
 export function buildStackGridConfig(overrides = {}) {
   return {
@@ -34,13 +33,13 @@ export function buildStackGridConfig(overrides = {}) {
 
 /**
  * Draw the plot background and optional y-grid lines + labels.
- * @param {SVGElement} svg Chart SVG element.
+ * @param {SVGElement} svg
  * @param {{ padL:number, padT:number, innerW:number, innerH:number,
- *   yOf:(v:number)=>number }} L Chart layout.
- * @param {number} yMax Maximum y-domain value.
- * @param {StackGridConfig} cfg Grid configuration.
+ *   yOf:(v:number)=>number }} L
+ * @param {number} yMax
+ * @param {StackGridConfig} cfg
  * @param {(tag:string, attrs:Record<string, string|number>) => SVGElement}
- *   svgEl SVG builder helper.
+ *   svgEl
  */
 export function drawStackGrid(svg, L, yMax, cfg, svgEl) {
   svg.appendChild(
@@ -85,7 +84,7 @@ export function drawStackGrid(svg, L, yMax, cfg, svgEl) {
 
 /**
  * Draw x-axis ticks and return HTML-overlay positions.
- * @param {SVGElement} svg Chart SVG element.
+ * @param {SVGElement} svg
  * @param {{ L: { padT:number, innerH:number, xOf:(t:number)=>number },
  *   dom: { xMin:number, xMax:number }, turnYearMap: Map<number, string> }} axis
  *   Chart layout, x-domain, and turn-to-year map.
@@ -138,10 +137,10 @@ export function drawStackXTicks(svg, axis, deps) {
 
 /**
  * Mount x-axis tick labels as HTML overlays.
- * @param {HTMLElement} wrap Chart wrap element.
- * @param {{ t:number, x:number, year:string|null, labelY:number }[]} ticks Tick positions.
+ * @param {HTMLElement} wrap
+ * @param {{ t:number, x:number, year:string|null, labelY:number }[]} ticks
  * @param {{ W:number, H:number, mode:"turn"|"year"|"both",
- *   className:string, turnParenWhenBoth?:boolean }} opts Render options.
+ *   className:string, turnParenWhenBoth?:boolean }} opts
  */
 export function mountStackXTicks(wrap, ticks, opts) {
   for (const tick of ticks) {
@@ -167,10 +166,10 @@ export function mountStackXTicks(wrap, ticks, opts) {
 
 /**
  * Mount chart axis-title overlays.
- * @param {HTMLElement} wrap Chart wrap element.
+ * @param {HTMLElement} wrap
  * @param {{ L:{padL:number,innerW:number,padT:number,innerH:number},
  *   W:number, H:number, xClassName:string, yClassName:string,
- *   xText:string, yText:string }} opts Axis render options.
+ *   xText:string, yText:string }} opts
  */
 export function mountStackAxisTitles(wrap, opts) {
   const xTitle = document.createElement("div");
@@ -212,8 +211,8 @@ export function mountStackAxisTitles(wrap, opts) {
 
 /**
  * Append a turn sub-label to an x-tick container.
- * @param {HTMLElement} div Tick container.
- * @param {number} turn Turn number.
+ * @param {HTMLElement} div
+ * @param {number} turn
  * @param {boolean} parenthesize Whether to use `(T-n)` format.
  */
 function appendTickTurn(div, turn, parenthesize) {

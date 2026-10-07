@@ -2,16 +2,15 @@
 //
 // Custom HTML legend for the per-civ line chart (the canvas-drawn Chart.js
 // legend is disabled) so each civ entry can carry a live leader portrait +
-// colored dot. Clicking a row toggles that civ's VISIBILITY via
+// colored dot. Clicking a row toggles that civ's visibility via
 // opts.onToggleVisibility; "All" / "None" bulk-toggle via opts.onSetAllHidden.
 
 import { buildLeaderIconGroup } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
- * Apply row-state classes based on dataset visibility/focus state.
- * @param {HTMLElement} row Legend row element.
- * @param {Record<string, *>} ds Dataset payload.
+ * @param {HTMLElement} row
+ * @param {Record<string, *>} ds
  */
 function applyLegendRowState(row, ds) {
   if (ds._muted || ds.hidden) row.classList.add("is-hidden");
@@ -20,10 +19,9 @@ function applyLegendRowState(row, ds) {
 }
 
 /**
- * Wire click handling for one legend row.
- * @param {HTMLElement} row Legend row element.
- * @param {Record<string, *>} ds Dataset payload.
- * @param {*} opts Render options.
+ * @param {HTMLElement} row
+ * @param {Record<string, *>} ds
+ * @param {*} opts
  */
 function wireLegendRowToggle(row, ds, opts) {
   const cb = opts && (opts.onToggleVisibility || opts.onToggleCiv);
@@ -37,7 +35,7 @@ function wireLegendRowToggle(row, ds, opts) {
  * state.
  * @param {Record<string, *>} ds The Chart.js dataset.
  * @param {*} opts The render options (carries onToggleCiv).
- * @returns {HTMLElement} The legend row element.
+ * @returns {HTMLElement}
  */
 function buildLegendRow(ds, opts) {
   const row = document.createElement("div");
@@ -54,15 +52,14 @@ function buildLegendRow(ds, opts) {
   row.appendChild(name);
 
   // Legend rows toggle muted visibility state, so they work with the All/None
-  // controls - after "None", clicking a row brings that civ back. (Line labels on
+  // controls: after "None", clicking a row brings that civ back. (Line labels on
   // the chart still toggle focus via onToggleCiv.)
   wireLegendRowToggle(row, ds, opts);
   return row;
 }
 
 /**
- * Build the legend's "Legend" title.
- * @returns {HTMLElement} The title element.
+ * @returns {HTMLElement} The legend's "Legend" title.
  */
 function buildLegendTitle() {
   const title = document.createElement("div");
@@ -73,12 +70,12 @@ function buildLegendTitle() {
 
 /**
  * Build the shared "All" / "None" bulk-select controls row (All shows every civ,
- * None hides them all). Exported so every chart's legend — line, radar, etc. —
+ * None hides them all). Exported so every chart's legend (line, radar, and so on)
  * renders the identical control block. No-op clicks when no callback is wired.
  * @param {string[]} keys The civ keys (leaderTypes) the buttons bulk-toggle.
  * @param {((hidden: boolean, keys: string[]) => void)|null|undefined} onSetAllHidden
  *   Bulk visibility callback: `(true, keys)` hides all, `(false, keys)` shows all.
- * @returns {HTMLElement} The controls row.
+ * @returns {HTMLElement}
  */
 export function buildLegendControls(keys, onSetAllHidden) {
   const row = document.createElement("div");
@@ -106,7 +103,7 @@ export function buildLegendControls(keys, onSetAllHidden) {
  * dot, and name.
  * @param {Record<string, *>[]} datasets The Chart.js datasets (chart order).
  * @param {*} opts The render options (carries onToggleCiv, onSetAllHidden).
- * @returns {HTMLElement} The legend container element.
+ * @returns {HTMLElement}
  */
 export function buildLineLegend(datasets, opts) {
   const legend = document.createElement("div");

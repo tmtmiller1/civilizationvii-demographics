@@ -6,7 +6,7 @@
 //      Fame page of World Rankings; log every console error in between
 //   5. [HS] DONE
 // Every step is wrapped, so a thrown JS error is logged instead of stopping the run; a native crash
-// simply ends the log, and the runner picks up the crash report.
+// just ends the log, and the runner picks up the crash report.
 
 const TAG = "[HS] ";
 function emit(m) { try { console.error(TAG + m); } catch (_) {} }

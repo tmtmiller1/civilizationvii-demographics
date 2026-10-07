@@ -98,8 +98,8 @@ function buildMetricInfoCaption(opts) {
 
 /**
  * Build the compact caption trigger.
- * @param {string} text Trigger text.
- * @returns {HTMLElement} Trigger element.
+ * @param {string} text
+ * @returns {HTMLElement}
  */
 function buildCaptionTrigger(text) {
   const trigger = document.createElement("div");
@@ -112,7 +112,7 @@ function buildCaptionTrigger(text) {
  * Build the metric caption popover body.
  * @param {{ triggerText: string, title: string, bodyHtml: string }} opts
  *   Caption text bundle.
- * @returns {HTMLElement} Popover element.
+ * @returns {HTMLElement}
  */
 function buildCaptionPopover(opts) {
   const popover = document.createElement("div");
@@ -134,8 +134,8 @@ function buildCaptionPopover(opts) {
 
 /**
  * Wire hover interactions for trigger and popover.
- * @param {HTMLElement} trigger Trigger element.
- * @param {HTMLElement} popover Popover element.
+ * @param {HTMLElement} trigger
+ * @param {HTMLElement} popover
  */
 function wireCaptionHover(trigger, popover) {
   /** @type {ReturnType<typeof setTimeout>|null} */

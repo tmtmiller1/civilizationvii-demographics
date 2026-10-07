@@ -22,8 +22,8 @@ import {
 
 /**
  * Format a settlement net for the bar tooltip ("+2" / "−1" / "0").
- * @param {number} n The net value.
- * @returns {string} The signed display.
+ * @param {number} n
+ * @returns {string}
  */
 function barVal(n) {
   if (n > 0) return "+" + n;
@@ -33,7 +33,7 @@ function barVal(n) {
 
 /**
  * Populate the bar tooltip with every civ's net settlements.
- * @param {HTMLElement} tip The tooltip element.
+ * @param {HTMLElement} tip
  * @param {{ name: string, color: string, net: number }[]} civs Per-civ nets.
  * @param {string} label The header text.
  * @param {string} [blp] The metric's guide cost-icon BLP.
@@ -63,9 +63,9 @@ function fillBarTip(tip, civs, label, blp) {
 /**
  * Build the hover tooltip header: the metric's guide cost-icon (when known) plus
  * "Turn N · <metric>".
- * @param {number} turn Hovered turn.
+ * @param {number} turn
  * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
- * @returns {HTMLElement} Header element.
+ * @returns {HTMLElement}
  */
 function buildHoverTipHeader(turn, head) {
   const el = document.createElement("div");
@@ -78,9 +78,9 @@ function buildHoverTipHeader(turn, head) {
 
 /**
  * Build one series/value row for the hover tooltip.
- * @param {{ name?: string, color: string }} series One series descriptor.
+ * @param {{ name?: string, color: string }} series
  * @param {number} value The series value at the hovered turn.
- * @returns {HTMLElement} Row element.
+ * @returns {HTMLElement}
  */
 function buildSeriesHoverRow(series, value) {
   const row = document.createElement("div");
@@ -99,8 +99,8 @@ function buildSeriesHoverRow(series, value) {
 
 /**
  * Append one row per series that has a point at the hovered turn.
- * @param {HTMLElement} tip The tooltip element.
- * @param {number} turn Hovered turn.
+ * @param {HTMLElement} tip
+ * @param {number} turn
  * @param {{ name?: string, color: string, points: { x: number,
  *   y: number }[] }[]} series The series.
  */
@@ -115,9 +115,9 @@ function appendSeriesHoverRows(tip, turn, series) {
 /**
  * Add a crisis-stage row to the hover tooltip when the hovered turn lands on a
  * crisis-stage onset.
- * @param {HTMLElement} tip The tooltip element.
- * @param {number} turn The hovered turn.
- * @param {{ x: number, color: string, label?: string }[]|undefined} markers The crisis markers.
+ * @param {HTMLElement} tip
+ * @param {number} turn
+ * @param {{ x: number, color: string, label?: string }[]|undefined} markers
  */
 function appendCrisisHoverRow(tip, turn, markers) {
   if (!markers || !markers.length) return;
@@ -138,8 +138,8 @@ function appendCrisisHoverRow(tip, turn, markers) {
 
 /**
  * Populate the hover tooltip with each civ's value at the hovered turn.
- * @param {HTMLElement} tip The tooltip element.
- * @param {number} turn The hovered turn.
+ * @param {HTMLElement} tip
+ * @param {number} turn
  * @param {{ name?: string, color: string, points: { x: number,
  *   y: number }[] }[]} series The series.
  * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
@@ -153,10 +153,10 @@ function fillHoverTip(tip, turn, series, head, markers) {
 }
 
 /**
- * Position the hover tooltip near the cursor, flipping it to the LEFT of the cursor when a
+ * Position the hover tooltip near the cursor, flipping it to the left of the cursor when a
  * right-side placement would overflow the viewport's right edge, so tooltips on right-side graphs
- * stay fully on-screen and readable instead of being clipped.
- * @param {HTMLElement} tip The tooltip element (already filled, so its width is meaningful).
+ * stay on-screen.
+ * @param {HTMLElement} tip Already filled, so its width is meaningful.
  * @param {*} ev The mouse event.
  * @param {DOMRect} cRect The cell's bounding rect (the positioned container the tip lives in).
  */
@@ -167,7 +167,7 @@ function placeTip(tip, ev, cRect) {
   const tipH = tip.offsetHeight || 0;
   const viewW = (typeof window !== "undefined" && window.innerWidth) || cRect.right;
   const viewH = (typeof window !== "undefined" && window.innerHeight) || cRect.bottom;
-  // Work in the cell's LOCAL px throughout: clientX/Y and the rect are visual, while the tip's
+  // Work in the cell's local px throughout: clientX/Y and the rect are visual, while the tip's
   // offsetWidth/Height and the style we write are local (the frame may be transform-scaled).
   const localX = toLocalPx(ev.clientX - cRect.left);
   const localY = toLocalPx(ev.clientY - cRect.top);
@@ -270,8 +270,7 @@ export function attachHover(cell, svg, hover) {
 }
 
 /**
- * The "no data recorded" placeholder element.
- * @returns {HTMLElement} The placeholder.
+ * @returns {HTMLElement} The "no data recorded" placeholder element.
  */
 export function buildNoData() {
   const none = document.createElement("div");

@@ -10,14 +10,14 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.history-csv]", ...a);
 }
 /**
  * Error logger for this module.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.history-csv]", ...a);
@@ -27,7 +27,7 @@ function derr(...a) {
  * Show a transient toast in `host`, auto-removing after 4s. Replaces any prior
  * toast first.
  * @param {HTMLElement} host The view host element.
- * @param {string} message Toast text.
+ * @param {string} message
  * @param {boolean} success Green (success) vs orange (failure) styling.
  */
 function showCsvToast(host, message, success) {
@@ -91,7 +91,7 @@ const CSV_CATEGORY_ORDER = {
 
 /**
  * Collect every metric id seen across all samples so the column set is stable.
- * @param {DemoHistory} history The persisted history blob.
+ * @param {DemoHistory} history
  * @returns {Set<string>} The set of metric ids.
  */
 function collectMetricKeys(history) {
@@ -142,7 +142,7 @@ function orderMetricColumns(metricKeys) {
  * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
  * when it contains a comma, quote, or newline.
  * @param {*} v The cell value.
- * @returns {string} The CSV-safe cell.
+ * @returns {string}
  */
 function csvCell(v) {
   if (v === null || v === undefined) return "";
@@ -182,10 +182,10 @@ function rowSortTurn(s) {
 }
 
 /**
- * Build & DEDUPLICATE CSV rows by (chartTurn, pid), last-write-wins, since the
+ * Build and deduplicate CSV rows by (chartTurn, pid), last-write-wins, since the
  * sampler can fire twice per turn. Keying by chartTurn keeps cross-age rows distinct.
- * @param {DemoHistory} history The persisted history blob.
- * @param {string[]} metricCols Ordered metric column ids.
+ * @param {DemoHistory} history
+ * @param {string[]} metricCols
  * @returns {Map<string, string[]>} Map of "chartTurn:pid" → cell array.
  */
 function buildCsvRowMap(history, metricCols) {
@@ -205,9 +205,9 @@ function buildCsvRowMap(history, metricCols) {
  * Build the ordered cell array for one (turn, pid) CSV row: the seven identity
  * columns followed by one formatted value per metric column.
  * @param {Snapshot} s The sample row.
- * @param {string} pid The player id key.
+ * @param {string} pid
  * @param {CivSample} ps The per-civ sample.
- * @param {string[]} metricCols Ordered metric column ids.
+ * @param {string[]} metricCols
  * @returns {string[]} The row's cell array.
  */
 function buildCsvRowCells(s, pid, ps, metricCols) {
@@ -230,7 +230,7 @@ function buildCsvRowCells(s, pid, ps, metricCols) {
 /**
  * Read the current game's speed / map / age for the CSV provenance header.
  * Each lookup is best-effort and defaults to "unknown".
- * @returns {{ gameSpeed: string, mapType: string, currentAge: string }} Context.
+ * @returns {{ gameSpeed: string, mapType: string, currentAge: string }}
  */
 function readCsvGameContext() {
   return {
@@ -306,9 +306,9 @@ function readCurrentAgeLabel() {
 /**
  * Build the `#`-prefixed metadata header lines (provenance + game context) that
  * lead the CSV. Most importers honor `#` lines as comments.
- * @param {DemoHistory} history The persisted history blob.
+ * @param {DemoHistory} history
  * @param {Map<string, string[]>} rowByKey Built row map (for counts).
- * @param {string[]} metricCols Ordered metric column ids.
+ * @param {string[]} metricCols
  * @returns {string[]} The metadata header lines (excluding the column header).
  */
 function buildCsvMetaHeader(history, rowByKey, metricCols) {
@@ -381,8 +381,8 @@ function writeCsvToClipboard(csv) {
  * Export `history.samples` to a flat CSV via the clipboard, with a UI.log
  * fallback and a confirmation toast. No-op (with a toast) when there are no
  * samples; refuses oversized exports that would crash the clipboard bridge.
- * @param {DemoHistory|undefined} history The persisted history blob.
- * @param {HTMLElement} [host] Host for the confirmation toast.
+ * @param {DemoHistory|undefined} history
+ * @param {HTMLElement} [host]
  */
 export function exportHistoryAsCsv(history, host) {
   if (!history || !Array.isArray(history.samples) || history.samples.length === 0) {
@@ -392,7 +392,7 @@ export function exportHistoryAsCsv(history, host) {
   }
   const { csv, lines, headers } = buildCsvDocument(history);
 
-  // ── Size guard ──────────────────────────────────────────────────────
+  // size guard
   // Large payloads stall the log writer and can drop the Coherent IPC call.
   //   < 2 MB  → normal flow, clipboard + log
   //   2-8 MB  → clipboard yes, log summary only (no full dump)
@@ -436,7 +436,7 @@ const CSV_HARD_LIMIT = 8 * 1024 * 1024;
 /**
  * Build the full CSV document for `history`: collect + order columns, build the
  * deduplicated rows, prepend the metadata header, and join into one string.
- * @param {DemoHistory} history The persisted history blob.
+ * @param {DemoHistory} history
  * @returns {{ csv: string, lines: string[], headers: string[] }} The CSV text,
  *   its line array, and the column-header array.
  */
@@ -463,7 +463,7 @@ function buildCsvDocument(history) {
     const [tb, pb] = b.split(":").map(Number);
     return ta - tb || pa - pb;
   });
-  // ── Metadata header ─────────────────────────────────────────────────
+  // metadata header
   // `#`-prefixed provenance + game context lines; most importers honor them as comments.
   const lines = buildCsvMetaHeader(history, rowByKey, metricCols);
   lines.push(headers.join(","));
@@ -474,8 +474,8 @@ function buildCsvDocument(history) {
 
 /**
  * Log and toast a refusal for a CSV that exceeds the hard size limit.
- * @param {HTMLElement|undefined} host Host for the toast.
- * @param {string} sizeMB Formatted CSV size in MB.
+ * @param {HTMLElement|undefined} host
+ * @param {string} sizeMB
  */
 function refuseOversizedCsv(host, sizeMB) {
   console.error(
@@ -493,9 +493,9 @@ function refuseOversizedCsv(host, sizeMB) {
  * Dump the CSV to UI.log as a recoverable fallback - full dump under the soft
  * limit, summary line above it (so the log writer isn't stalled).
  * @param {string} csv The full CSV text.
- * @param {number} lineCount Total CSV line count.
- * @param {string} sizeMB Formatted CSV size in MB.
- * @param {boolean} clipboardOk Whether the clipboard write succeeded.
+ * @param {number} lineCount
+ * @param {string} sizeMB
+ * @param {boolean} clipboardOk
  */
 function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
   if (csv.length <= CSV_SOFT_LIMIT) {
@@ -514,7 +514,7 @@ function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
         sizeMB +
         " MB · " +
         lineCount +
-        " rows) , skipping full log dump." +
+        " rows), skipping full log dump." +
         " Clipboard write was " +
         (clipboardOk ? "OK" : "FAILED") +
         "."

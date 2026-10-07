@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
-// Stored names follow the current language on load (watched 2026-10-01: a game played in English and
-// reopened in Korean showed "Great Britain → Mongolia → 몽골" in legends and dropdowns).
+// Stored names follow the current language on load (a game played in English and
+// reopened in Korean used to show "Great Britain → Mongolia → 몽골" in legends and dropdowns).
 
 const saved = { GameInfo: globalThis.GameInfo, Locale: globalThis.Locale };
 const TEXT = {

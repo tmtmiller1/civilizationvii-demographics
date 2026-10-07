@@ -42,12 +42,11 @@ import("/core/ui/lenses/lens-manager.js")
       (loaded && (loaded.default || loaded.LensManager || loaded)) || null;
   })
   .catch(() => {
-    // lens-manager unavailable in this context; overlays will not be hidden.
+    // lens-manager unavailable in this context; overlays will not be hidden
   });
 
 /**
- * Set camera vertical field of view.
- * @param {number} fov The field of view.
+ * @param {number} fov
  */
 export function setFoV(fov) {
   try {
@@ -55,13 +54,12 @@ export function setFoV(fov) {
       Camera.setVerticalFoV(fov);
     }
   } catch (_) {
-    // API may be unavailable.
+    // API may be unavailable
   }
 }
 
 /**
- * Read camera vertical FoV.
- * @returns {number} The active FoV.
+ * @returns {number} The active vertical FoV.
  */
 export function readFoV() {
   try {
@@ -75,8 +73,7 @@ export function readFoV() {
 }
 
 /**
- * Whether cinematic push-cameras are available.
- * @returns {boolean} True when push/pop cameras exist.
+ * @returns {boolean} True when the engine's push/pop cameras exist.
  */
 export function cameraSupportsTour() {
   return (
@@ -88,34 +85,32 @@ export function cameraSupportsTour() {
 }
 
 /**
- * Push a dynamic orbit shot.
- * @param {{x: number, y: number}} plot The plot.
+ * @param {{x: number, y: number}} plot
  * @param {*} params Camera params.
  */
 export function pushOrbit(plot, params) {
   try {
     Camera.pushDynamicCamera({ x: plot.x, y: plot.y }, params);
   } catch (_) {
-    // pushDynamicCamera can throw mid-transition.
+    // pushDynamicCamera can throw mid-transition
   }
 }
 
 /**
- * Push a flyover shot.
- * @param {{x: number, y: number}} plot The plot.
+ * @param {{x: number, y: number}} plot
  * @param {*} params Camera params.
  */
 export function pushFlyover(plot, params) {
   try {
     Camera.pushFlyoverCamera({ x: plot.x, y: plot.y }, params);
   } catch (_) {
-    // pushFlyoverCamera can throw mid-transition.
+    // pushFlyoverCamera can throw mid-transition
   }
 }
 
 /**
  * Pop one active shot camera if present.
- * @param {*} holder Flow state holder.
+ * @param {*} holder
  */
 export function popShotCamera(holder) {
   try {
@@ -124,14 +119,13 @@ export function popShotCamera(holder) {
       holder.pushedCamera = false;
     }
   } catch (_) {
-    // popCamera can throw if stack is unexpected.
+    // popCamera can throw if the stack is unexpected
   }
 }
 
 /**
- * Read whether a map clutter layer is enabled.
- * @param {string} name The layer name.
- * @returns {boolean} True when the layer is enabled.
+ * @param {string} name
+ * @returns {boolean} Whether the map clutter layer is enabled.
  */
 export function layerOn(name) {
   try {
@@ -158,7 +152,7 @@ export function hideClutterLayers() {
     try {
       lens_mgr.disableLayer(name);
     } catch (_) {
-      // Unknown layer should not abort the rest.
+      // an unknown layer should not abort the rest
     }
   }
   return hidden;
@@ -166,7 +160,7 @@ export function hideClutterLayers() {
 
 /**
  * Re-enable previously hidden map layers.
- * @param {string[]} names Layer names.
+ * @param {string[]} names
  */
 export function restoreClutterLayers(names) {
   if (!lens_mgr || typeof lens_mgr.enableLayer !== "function") return;
@@ -174,15 +168,14 @@ export function restoreClutterLayers(names) {
     try {
       lens_mgr.enableLayer(name);
     } catch (_) {
-      // Ignore single-layer restore failure.
+      // ignore a single-layer restore failure
     }
   }
 }
 
 /**
- * Merge dynamic-camera defaults with role params.
- * @param {*} base Base params.
- * @param {number} arc Orbit arc.
+ * @param {*} base
+ * @param {number} arc
  * @returns {*} Full dynamic-camera params.
  */
 export function orbitParams(base, arc) {
@@ -193,8 +186,7 @@ export function orbitParams(base, arc) {
 }
 
 /**
- * Merge flyover defaults with role params.
- * @param {*} base Base params.
+ * @param {*} base
  * @returns {*} Full flyover-camera params.
  */
 export function flyoverParams(base) {
@@ -214,9 +206,8 @@ export function flyoverParams(base) {
 }
 
 /**
- * Build a shot descriptor.
- * @param {string} kind Shot kind.
- * @param {{x: number, y: number}} plot Shot plot.
+ * @param {string} kind
+ * @param {{x: number, y: number}} plot
  * @param {*} params Camera params.
  * @param {*} [caption] Optional caption.
  * @param {number|null} [fov] Optional FoV override.
@@ -236,11 +227,11 @@ export function shot(kind, plot, params, caption, fov) {
 
 /**
  * Build the opening or finale establish shot.
- * @param {{x: number, y: number}} city The city plot.
+ * @param {{x: number, y: number}} city
  * @param {boolean} rotate Whether rotation is allowed.
  * @param {string} role "open" | "finale".
  * @param {*} [caption] Optional city-flavor caption for the wide establish view.
- * @returns {*} Shot descriptor.
+ * @returns {*}
  */
 export function establishShot(city, rotate, role, caption) {
   const base =
@@ -267,9 +258,9 @@ export function establishShot(city, rotate, role, caption) {
  * Build the city-flavor caption descriptor for an establish shot, as raw data the overlay's
  * captionText() resolves. The opening leads with the founding year; the finale (or an opening
  * with no founding year) closes on the settlement's world standing rank.
- * @param {*} target Settlement record.
+ * @param {*} target
  * @param {string} role "open" | "finale".
- * @returns {{foundedYear: string}|{standingRank: number}|null} The descriptor.
+ * @returns {{foundedYear: string}|{standingRank: number}|null}
  */
 export function cityEstablishCaption(target, role) {
   const founded = target.founded;
@@ -284,12 +275,11 @@ export function cityEstablishCaption(target, role) {
 }
 
 /**
- * Build an oblique flyover shot.
- * @param {{x: number, y: number}} plot The target plot.
- * @param {number} angle Primary angle.
- * @param {number} duration Shot duration in seconds.
+ * @param {{x: number, y: number}} plot
+ * @param {number} angle
+ * @param {number} duration Seconds. Shot duration in seconds.
  * @param {*} [caption] Optional caption.
- * @returns {*} Shot descriptor.
+ * @returns {*}
  */
 export function obliqueShot(plot, angle, duration, caption) {
   return shot(
@@ -310,7 +300,7 @@ export function obliqueShot(plot, angle, duration, caption) {
  * The approach carries a neutral city interstitial (`approachCap`), never the POI name, so the
  * fly-past can't mislabel a neighbor; the POI's own caption appears only on the orbit.
  * @param {{loc: {x: number, y: number}, cap: *}} poi Point of interest.
- * @param {number} index The POI index.
+ * @param {number} index
  * @param {*} approachCap Neutral caption for the approach leg.
  * @returns {Array<*>} Shots for this POI.
  */
@@ -335,10 +325,10 @@ export function poiVignette(poi, index, approachCap) {
 }
 
 /**
- * Try non-tour cinematic fallbacks in priority order.
- * @param {*} target Settlement record.
- * @param {*} flowState Active flow state.
- * @param {*} ctx Runtime dependencies.
+ * Non-tour cinematic fallbacks, tried in priority order.
+ * @param {*} target
+ * @param {*} flowState
+ * @param {*} ctx
  * @returns {boolean} True when a fallback path succeeded.
  */
 function applyFlybyFallback(target, flowState, ctx) {
@@ -354,9 +344,8 @@ function applyFlybyFallback(target, flowState, ctx) {
 }
 
 /**
- * Build the full cinematic tour shot sequence.
- * @param {*} target Settlement record.
- * @param {(key: string, dflt: *) => *} cfg Read settings function.
+ * @param {*} target
+ * @param {(key: string, dflt: *) => *} cfg
  * @returns {Array<*>} Shot sequence.
  */
 export function buildTour(target, cfg) {
@@ -384,10 +373,10 @@ export function buildTour(target, cfg) {
 }
 
 /**
- * Schedule transition from animating to inspecting.
- * @param {number} ms Delay milliseconds.
- * @param {number} token Active token.
- * @param {*} flowState Active state.
+ * Schedule the transition from animating to inspecting.
+ * @param {number} ms
+ * @param {number} token
+ * @param {*} flowState
  * @param {(token: number) => boolean} isToken Token validator.
  * @param {(state: *) => void} clearTimers Timer clearing callback.
  */
@@ -401,10 +390,10 @@ export function scheduleInspect(ms, token, flowState, isToken, clearTimers) {
 }
 
 /**
- * Run single-shot cinematic approach.
- * @param {{focus: {x: number, y: number}, zoom: number}} frame Camera frame.
- * @param {number} token Active token.
- * @param {*} flowState Active flow state.
+ * Single-shot cinematic approach.
+ * @param {{focus: {x: number, y: number}, zoom: number}} frame
+ * @param {number} token
+ * @param {*} flowState
  * @param {{cfg: (key: string, dflt: *) => *, clamp: (v: number,
  *   lo: number, hi: number) => number, addKf: (frame: *) => void,
  *   isToken: (token: number) => boolean,
@@ -420,9 +409,8 @@ export function animateSingle(frame, token, flowState, deps) {
 }
 
 /**
- * Return fireworks target plots.
- * @param {*} target Settlement record.
- * @returns {Array<{x: number, y: number}>} Firework plots.
+ * @param {*} target
+ * @returns {Array<{x: number, y: number}>}
  */
 export function fireworkPlots(target) {
   const plots = target.location ? [target.location] : [];
@@ -431,8 +419,7 @@ export function fireworkPlots(target) {
 }
 
 /**
- * Trigger one random firework burst.
- * @param {{x: number, y: number}} plot Plot location.
+ * @param {{x: number, y: number}} plot
  */
 export function fireOneFirework(plot) {
   try {
@@ -453,14 +440,14 @@ export function fireOneFirework(plot) {
       scale: 1
     });
   } catch (_) {
-    // A single failed burst should not break the sequence.
+    // a single failed burst should not break the sequence
   }
 }
 
 /**
- * Start staggered fireworks for duration.
- * @param {Array<{x: number, y: number}>} plots Target plots.
- * @param {number} durationMs Duration in milliseconds.
+ * Staggered fireworks over `durationMs`.
+ * @param {Array<{x: number, y: number}>} plots
+ * @param {number} durationMs
  * @returns {number[]} Pending timer ids.
  */
 export function startFireworks(plots, durationMs) {
@@ -481,21 +468,19 @@ export function startFireworks(plots, durationMs) {
 }
 
 /**
- * Cancel any pending firework timers.
- * @param {*} holder Flow state holder.
+ * @param {*} holder
  */
 export function removeFireworks(holder) {
   try {
     for (const timer of (holder && holder.fireworkTimers) || []) clearTimeout(timer);
   } catch (_) {
-    // clearTimeout rarely throws.
+    // clearTimeout rarely throws
   }
   if (holder) holder.fireworkTimers = [];
 }
 
 /**
- * Whether settlement is top-three ranked.
- * @param {*} target Settlement record.
+ * @param {*} target
  * @returns {boolean} True for rank <= 3.
  */
 function isTop3(target) {
@@ -504,9 +489,8 @@ function isTop3(target) {
 }
 
 /**
- * Run tour shots sequentially.
- * @param {Array<*>} shots Shot sequence.
- * @param {number} token Active token.
+ * @param {Array<*>} shots
+ * @param {number} token
  * @param {*} flowState
  * @param {{delay: (ms: number) => Promise<void>,
  *   isToken: (token: number) => boolean,
@@ -536,12 +520,12 @@ async function runTour(shots, token, flowState, deps) {
 }
 
 /**
- * Start a timeout watchdog for tour playback.
- * @param {Array<*>} shots Shot sequence.
- * @param {number} token Active token.
+ * Timeout watchdog for tour playback.
+ * @param {Array<*>} shots
+ * @param {number} token
  * @param {*} flowState
  * @param {(token: number) => boolean} isToken Token validator.
- * @param {(reason: string) => void} teardownActiveCinematic Teardown callback.
+ * @param {(reason: string) => void} teardownActiveCinematic
  */
 function startTourWatchdog(
   shots,
@@ -560,10 +544,10 @@ function startTourWatchdog(
 }
 
 /**
- * Run flyby sequence with full fallbacks.
- * @param {*} target Settlement record.
+ * The flyby sequence, with every fallback.
+ * @param {*} target
  * @param {{focus: {x: number, y: number}, zoom: number}|null} frame Fallback frame.
- * @param {number} token Active token.
+ * @param {number} token
  * @param {{flowState: *, cfg: (key: string, dflt: *) => *,
  *   clamp: (v: number, lo: number, hi: number) => number,
  *   addKf: (frame: *) => void, isToken: (token: number) => boolean,

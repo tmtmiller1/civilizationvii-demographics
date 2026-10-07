@@ -27,7 +27,7 @@ import { rankedRowClass } from "/demographics/ui/screen-demographics/views/settl
  * Live handles to the panel's persistent chrome, so a filter/sort change can update it IN PLACE
  * instead of rebuilding it. Rebuilding is what made the filigree and the column yield icons blink:
  * a fresh element's `blp:` background resolves a frame or more after it is inserted, so identical
- * chrome visibly flashed on every click. The chrome below is built ONCE per panel render and only
+ * chrome visibly flashed on every click. The chrome below is built once per panel render and only
  * ever has classes toggled on it; only the data rows are swapped.
  * @typedef {{
  *   chips: Map<string, HTMLElement>,
@@ -77,10 +77,10 @@ function columnLeaders(pool) {
 /**
  * Build the All/Cities/Towns filter chip row. The chips are built once and registered in `ui`;
  * their active state is a class toggle in {@link refreshTable}.
- * @param {*} st The render state.
- * @param {TableDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
- * @returns {HTMLElement} The chip row.
+ * @returns {HTMLElement}
  */
 function buildFilterRow(st, deps, ui) {
   const row = div("demographics-settle-filters");
@@ -116,12 +116,12 @@ const FIXED_COLS = [
 /**
  * Build a sortable header cell. The cell (and the yield icon it carries) is built once and
  * registered in `ui`; its sorted state is a class toggle in {@link refreshTable}.
- * @param {*} st The render state.
- * @param {string} key The sort key.
- * @param {HTMLElement} inner Header content.
- * @param {TableDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {string} key
+ * @param {HTMLElement} inner
+ * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
- * @returns {HTMLElement} The header cell.
+ * @returns {HTMLElement}
  */
 function buildSortHeader(st, key, inner, deps, ui) {
   const cell = div("demographics-settle-th demographics-settle-col-" + key);
@@ -139,10 +139,10 @@ function buildSortHeader(st, key, inner, deps, ui) {
 
 /**
  * Build the table header row.
- * @param {*} st The render state.
- * @param {TableDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
- * @returns {HTMLElement} The header row.
+ * @returns {HTMLElement}
  */
 function buildHeaderRow(st, deps, ui) {
   const row = div("demographics-settle-row demographics-settle-header");
@@ -177,9 +177,9 @@ function buildHeaderRow(st, deps, ui) {
  * wash and a "World leader in <output>" tooltip.
  * @param {*} s The settlement.
  * @param {{ id: string, label: string }} col The output column.
- * @param {string} sortKey The active sort key.
- * @param {Record<string, number>} leads Output id → leading value.
- * @returns {HTMLElement} The cell.
+ * @param {string} sortKey
+ * @param {Record<string, number>} leads
+ * @returns {HTMLElement}
  */
 function buildOutputCell(s, col, sortKey, leads) {
   const lead = col.id in leads && valueOf(s, col.id) === leads[col.id];
@@ -196,10 +196,10 @@ function buildOutputCell(s, col, sortKey, leads) {
  * Build one settlement data row for the table.
  * @param {*} s The settlement.
  * @param {number} rank The 1-based rank within the current sort.
- * @param {string} sortKey The active sort key.
- * @param {Record<string, number>} leads Output id → leading value (see columnLeaders).
- * @param {TableDeps} deps Rendering dependencies.
- * @returns {HTMLElement} The row.
+ * @param {string} sortKey
+ * @param {Record<string, number>} leads
+ * @param {TableDeps} deps
+ * @returns {HTMLElement}
  */
 function buildTableRow(s, rank, sortKey, leads, deps) {
   const row = div(rankedRowClass("demographics-settle-row demographics-settle-datarow", s, rank));
@@ -230,7 +230,7 @@ function buildTableRow(s, rank, sortKey, leads, deps) {
  * element is never rebuilt just to change its state).
  * @param {HTMLElement} el The element.
  * @param {string} cls The class to toggle.
- * @param {boolean} on Whether the class should be present.
+ * @param {boolean} on
  */
 function setClass(el, cls, on) {
   if (on) el.classList.add(cls);
@@ -239,11 +239,11 @@ function setClass(el, cls, on) {
 
 /**
  * Re-apply the current filter + sort: update the persistent chrome's state classes in place and
- * swap ONLY the data rows. The filter chips, the filigree section title and the header row (with
+ * swap only the data rows. The filter chips, the filigree section title and the header row (with
  * its yield icons) are never rebuilt, so nothing re-resolves a `blp:` background and nothing
  * blinks.
- * @param {*} st The render state.
- * @param {TableDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
  */
 function refreshTable(st, deps, ui) {
@@ -273,8 +273,8 @@ function refreshTable(st, deps, ui) {
 /**
  * Render the detail table (filter chips + sortable rows). The chrome is built once here; every
  * later filter/sort click goes through {@link refreshTable} rather than a panel rebuild.
- * @param {*} st The render state.
- * @param {TableDeps} deps Rendering dependencies.
+ * @param {*} st
+ * @param {TableDeps} deps
  */
 export function renderTablePanel(st, deps) {
   /** @type {TableUi} */

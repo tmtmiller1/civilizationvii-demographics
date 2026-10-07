@@ -39,7 +39,7 @@ export const MAP_EVERY = 3;
 /**
  * Cells across the grid for a world this many tiles wide.
  * @param {number} w World width in tiles.
- * @returns {number} Cells.
+ * @returns {number}
  */
 export function gridWidth(w) {
   return Math.min(w, Math.max(MIN_CELLS_W, Math.min(MAX_CELLS_W, Math.round(w / TILES_PER_CELL))));
@@ -47,7 +47,7 @@ export function gridWidth(w) {
 
 /**
  * The world's size and the grid it is sampled to.
- * @returns {{w:number, h:number, gw:number, gh:number}|null} Dimensions, or null without a map.
+ * @returns {{w:number, h:number, gw:number, gh:number}|null} null without a map.
  */
 function dims() {
   const w = Number(safe(() => GameplayMap.getGridWidth(), 0));
@@ -59,7 +59,7 @@ function dims() {
 
 /**
  * Sample the world onto the grid.
- * @param {{w:number, h:number, gw:number, gh:number}} d Dimensions.
+ * @param {{w:number, h:number, gw:number, gh:number}} d
  * @param {(x:number, y:number) => number} fn Value of a plot.
  * @returns {number[]} Values, row by row.
  */
@@ -77,9 +77,9 @@ function sample(d, fn) {
 /**
  * Terrain class of a plot (see TERRAIN): deep ocean or shallow coast and lakes, mountains, and the
  * land's biome.
- * @param {number} x Column.
- * @param {number} y Row.
- * @returns {number} Class.
+ * @param {number} x
+ * @param {number} y
+ * @returns {number}
  */
 export function terrainAt(x, y) {
   if (safe(() => GameplayMap.isWater(x, y), false)) {
@@ -94,10 +94,10 @@ export function terrainAt(x, y) {
 /**
  * Whether the local player has explored a plot. True when that cannot be read, so a map is never
  * hidden by an engine change.
- * @param {number} local Local player id.
- * @param {number} x Column.
- * @param {number} y Row.
- * @returns {boolean} Explored.
+ * @param {number} local
+ * @param {number} x
+ * @param {number} y
+ * @returns {boolean}
  */
 function explored(local, x, y) {
   const hidden = safe(() => RevealedStates.HIDDEN, undefined);
@@ -107,9 +107,9 @@ function explored(local, x, y) {
 
 /**
  * The settlements of the major civilizations as [cell, owner].
- * @param {{w:number, h:number, gw:number, gh:number}} d Dimensions.
+ * @param {{w:number, h:number, gw:number, gh:number}} d
  * @param {Set<number>} majors Major player ids.
- * @returns {number[][]} Settlements.
+ * @returns {number[][]}
  */
 function settlements(d, majors) {
   const out = [];
@@ -128,9 +128,9 @@ function settlements(d, majors) {
 
 /**
  * Take a map frame for the campaign when one is due.
- * @param {CampaignDoc} doc Campaign (mutated: its map).
- * @param {number} ageIdx Age index.
- * @param {number} turn Game turn.
+ * @param {CampaignDoc} doc Mutated (its map).
+ * @param {number} ageIdx
+ * @param {number} turn
  * @param {boolean} force Take one regardless of the spacing.
  * @returns {boolean} True when a frame was recorded.
  */

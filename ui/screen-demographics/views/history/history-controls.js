@@ -21,18 +21,18 @@ function dlog(...a) {
 
 /**
  * Error logger (always on) for failures the toolbar swallows to stay up.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.history-controls]", ...a);
 }
 
 /**
- * Build the radar SNAPSHOT selector as a centered filter row (matching the time-filter row on other
+ * Build the radar snapshot selector as a centered filter row (matching the time-filter row on other
  * graphs): a "Snapshot:" label + one pill per age snapshot. Replaces the old right-aligned toolbar
  * placement so the snapshot filters center like the year filters elsewhere.
  * @param {*} ctx Render context (carries activeRadarAge, history, setActiveRadarAge).
- * @returns {HTMLElement} The centered filter row.
+ * @returns {HTMLElement}
  */
 export function buildRadarSnapshotRow(ctx) {
   const row = document.createElement("div");
@@ -53,10 +53,10 @@ export function buildRadarSnapshotRow(ctx) {
 
 /**
  * Build one radar snapshot selector pill.
- * @param {{ id: string, label: string }} opt Snapshot option.
- * @param {string} active Active snapshot id.
- * @param {*} ctx Toolbar context.
- * @returns {HTMLElement} Pill element.
+ * @param {{ id: string, label: string }} opt
+ * @param {string} active
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 function buildRadarSnapshotPill(opt, active, ctx) {
   const haveSnap =
@@ -94,8 +94,8 @@ function appendWarsControls(toolbar, ctx) {
 
 /**
  * Build a standard toolbar label block.
- * @param {string} text Label text.
- * @returns {HTMLElement} Label element.
+ * @param {string} text
+ * @returns {HTMLElement}
  */
 function buildToolbarLabel(text) {
   const lbl = document.createElement("div");
@@ -106,8 +106,8 @@ function buildToolbarLabel(text) {
 
 /**
  * Whether a wars dropdown option matches the current filter pid.
- * @param {{ pid: number|null, label?: string }} option One dropdown option.
- * @param {*} warsFilterPid Current filter pid.
+ * @param {{ pid: number|null, label?: string }} option
+ * @param {*} warsFilterPid
  * @returns {boolean} True when this option is selected.
  */
 function warsOptionMatchesFilter(option, warsFilterPid) {
@@ -117,9 +117,9 @@ function warsOptionMatchesFilter(option, warsFilterPid) {
 
 /**
  * Build the wars civ-filter dropdown.
- * @param {Array<{ pid: number|null, label: string }>} dropdownOpts Civ options.
- * @param {*} ctx Toolbar context.
- * @returns {HTMLElement} Dropdown element.
+ * @param {Array<{ pid: number|null, label: string }>} dropdownOpts
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 function buildWarsCivDropdown(dropdownOpts, ctx) {
   const dd = document.createElement("fxs-dropdown");
@@ -139,8 +139,8 @@ function buildWarsCivDropdown(dropdownOpts, ctx) {
 
 /**
  * Build the wars active/all toggle pill.
- * @param {*} ctx Toolbar context.
- * @returns {HTMLElement} Pill element.
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 function buildWarsActiveOnlyPill(ctx) {
   const activePill = document.createElement("div");
@@ -206,9 +206,9 @@ function appendClearFocus(toolbar, ctx) {
 
 /**
  * Apply one step of x-axis mode rotation and request a chart reload.
- * @param {*} ctx Toolbar context.
- * @param {string[]} modes Ordered mode cycle.
- * @param {string} mode Current mode.
+ * @param {*} ctx
+ * @param {string[]} modes
+ * @param {string} mode
  */
 function rotateTimeMode(ctx, modes, mode) {
   const next = modes[(modes.indexOf(mode) + 1) % modes.length];
@@ -310,9 +310,9 @@ const REFUGEE_METRICS = new Set([
  * Append one event-marker filter toggle (e.g. Wars / Disasters), mirroring the Wonders toggle:
  * reads a boolean setting (default ON), dims when off, flips + re-renders on click.
  * @param {HTMLElement} toolbar
- * @param {*} ctx Render context.
+ * @param {*} ctx
  * @param {string} key Setting key (showWarMarkers / showDisasterMarkers).
- * @param {string} label Button label.
+ * @param {string} label
  */
 function appendMarkerToggle(toolbar, ctx, key, label) {
   let on = true;
@@ -342,7 +342,7 @@ function appendMarkerToggle(toolbar, ctx, key, label) {
 /**
  * Append the Wars + Disasters event-marker filter toggles for the Refugees graphs.
  * @param {HTMLElement} toolbar
- * @param {*} ctx Render context.
+ * @param {*} ctx
  */
 function appendRefugeeMarkerToggles(toolbar, ctx) {
   appendMarkerToggle(toolbar, ctx, "showWarMarkers", t("LOC_DEMOGRAPHICS_BTN_WAR_MARKERS"));
@@ -357,7 +357,7 @@ const WARS_PAGES = new Set(["wars_gantt", "war_graphs"]);
  * Conflicts pages, otherwise the full per-turn sample matrix (which underlies
  * every metric / resources / crisis chart).
  * @param {*} ctx Toolbar context (carries history).
- * @param {HTMLElement} host Host for the confirmation toast.
+ * @param {HTMLElement} host
  * @param {string} activeMetric The active page's metric id.
  */
 function runCsvExport(ctx, host, activeMetric) {
@@ -397,7 +397,7 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
   // legacy_radar intentionally gets NO toolbar action here: its snapshot
   // selector lives in the centered row (buildRadarSnapshotRow).
   if (activeMetric === "wars_gantt") appendWarsControlsIfReady(toolbar, ctx);
-  // war_graphs: the "Pick war" dropdown moves to the LEFT bar (buildWarGraphsPicker), not the
+  // war_graphs: the "Pick war" dropdown moves to the left bar (buildWarGraphsPicker), not the
   // toolbar.
   else if (activeMetric === "crisis_graphs") appendCrisisGraphsControls(toolbar, ctx);
   else if (activeMetric === "resources_stack") appendResourcesViewerIfReady(toolbar, ctx);
@@ -408,7 +408,7 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
  * available scopes and returns an empty list until a second crisis exists, so
  * the dropdown only appears then.
  * @param {HTMLElement} toolbar The toolbar element.
- * @param {*} ctx Toolbar context.
+ * @param {*} ctx
  */
 function appendCrisisGraphsControls(toolbar, ctx) {
   const chartMod = ctx.chartMod;
@@ -421,9 +421,9 @@ function appendCrisisGraphsControls(toolbar, ctx) {
 
 /**
  * Build the Crisis Graphs scope dropdown.
- * @param {Array<{ id: string, label: string }>} opts Scope options.
- * @param {*} ctx Toolbar context.
- * @returns {HTMLElement} Dropdown element.
+ * @param {Array<{ id: string, label: string }>} opts
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 function buildCrisisScopeDropdown(opts, ctx) {
   const dd = document.createElement("fxs-dropdown");
@@ -482,10 +482,10 @@ function safeMergedWarNames(rawWars, samples) {
 }
 
 /**
- * Build the War Graphs "Pick war" selector as a LEFT bar (a dropdown of every war), so it sits on
+ * Build the War Graphs "Pick war" selector as a left bar (a dropdown of every war), so it sits on
  * the far left of the controls row while the filters stay centered and the toolbar stays right.
  * @param {*} ctx Render context (carries history, warGraphsWarId, setWarGraphsWarId).
- * @returns {HTMLElement} The left-bar element.
+ * @returns {HTMLElement}
  */
 export function buildWarGraphsPicker(ctx) {
   const bar = document.createElement("div");
@@ -508,9 +508,9 @@ export function buildWarGraphsPicker(ctx) {
 
 /**
  * Build the war-graphs war picker dropdown.
- * @param {Array<{ id: number, label: string }>} opts War options.
- * @param {*} ctx Toolbar context.
- * @returns {HTMLElement} Dropdown element.
+ * @param {Array<{ id: number, label: string }>} opts
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 function buildWarGraphsDropdown(opts, ctx) {
   const dd = document.createElement("fxs-dropdown");
@@ -550,7 +550,7 @@ function appendResourcesViewerIfReady(toolbar, ctx) {
 }
 
 // Time-units (turn/year) toggle is meaningless on views with no time axis:
-// crisis graphs and the radar SNAPSHOT.
+// crisis graphs and the radar snapshot.
 const TIME_TOGGLE_HIDDEN_FOR = new Set(["crisis_graphs", "legacy_radar"]);
 // Wonder markers only draw on the standard per-civ line charts; hide the toggle
 // on every synthetic view (radar, resources stack, the wars pages, crises) where
@@ -590,7 +590,7 @@ export function buildToolbar(host, ctx, activeMetric) {
  * Append the Civ/Leader name-order toggle. Persists `nameOrder`, updates the
  * global label order, and reloads so every view relabels consistently.
  * @param {HTMLElement} toolbar
- * @param {*} ctx Render context.
+ * @param {*} ctx
  */
 function appendNameOrderToggle(toolbar, ctx) {
   const order = ctx?.settings?.getSetting?.("nameOrder", "civLeader") || "civLeader";
@@ -613,8 +613,8 @@ function appendNameOrderToggle(toolbar, ctx) {
  * Scaled/Game(Civ) population toggle for the Population chart, mirroring the World
  * Rankings number-mode switch (shares its labels). Persists `populationNumberMode`
  * and reloads the view. Never throws.
- * @param {*} ctx Render context.
- * @returns {HTMLElement} The toggle pill row.
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 export function buildPopulationModeToggle(ctx) {
   const mode = ctx?.settings?.getSetting?.("populationNumberMode", "scaled") || "scaled";

@@ -29,7 +29,7 @@ export const HOF_TABS = [
 /**
  * @typedef {Object} HofCtx
  * @property {CampaignDoc|null} live The campaign being played, if any.
- * @property {() => void} rerender Redraw callback.
+ * @property {() => void} rerender
  * @property {boolean} [embedded] Inside the Demographics screen, below two tab rows: the sections are a pill
  *   row (Demographics' third navigation level) rather than a third tab bar.
  * @property {HTMLElement|null} [priorSectionBar] The previous render's section tab bar (own screen only).
@@ -48,8 +48,8 @@ const arrOf = (/** @type {*} */ v) => (Array.isArray(v) ? v : []);
  * A copy of a record with every part the views read present. isRecord() checks only the fields the
  * storage rules need, so each missing part gets its empty default here and reads as "none" instead
  * of blanking the panel.
- * @param {ArchiveRecord} r Record (passed isRecord).
- * @returns {ArchiveRecord} Normalized copy.
+ * @param {ArchiveRecord} r Has passed isRecord.
+ * @returns {ArchiveRecord} A normalized copy.
  */
 export function normalizeRecord(r) {
   const stats = objOf(r.stats);
@@ -72,8 +72,8 @@ export function normalizeRecord(r) {
 /**
  * Archive records plus the live campaign's current record, normalized for the views. A record a
  * later version of this mod wrote is left out: it is kept in storage but cannot be shown.
- * @param {CampaignDoc|null} live Live campaign.
- * @returns {ArchiveRecord[]} Records.
+ * @param {CampaignDoc|null} live
+ * @returns {ArchiveRecord[]}
  */
 export function hofRecords(live) {
   const slice = emptySlice();
@@ -85,8 +85,8 @@ export function hofRecords(live) {
 
 /**
  * The Hall of Fame section selector: a tab bar on its own screen, a pill row inside Demographics.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} The selector.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function sectionNav(ctx) {
   const pick = (/** @type {string} */ id) => { viewState.hofTab = id; ctx.rerender(); };
@@ -108,8 +108,8 @@ function sectionNav(ctx) {
  * against the filter rather than against what the page shows, so the control and its note read the
  * same in both states and disappear together when there is nothing to hide.
  * @param {ArchiveRecord[]} all Every record.
- * @param {HofCtx} ctx Context.
- * @returns {number} The count.
+ * @param {HofCtx} ctx
+ * @returns {number}
  */
 function hiddenCount(all, ctx) {
   return all.length - visibleRecords(all, { showShort: false, keep: ctx.live?.id }).length;
@@ -117,11 +117,11 @@ function hiddenCount(all, ctx) {
 
 /**
  * The section selector and the short-games filter as one row: the sections centered, the filter's
- * note and button at the right. They were two stacked rows, which spent a second row of height on
- * one button and put the controls far from the tabs they qualify.
+ * note and button at the right. Two stacked rows spent a row of height on one button and put the
+ * controls far from the tabs they qualify.
  * @param {ArchiveRecord[]} all Every record.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} The row.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function navRow(all, ctx) {
   const nav = sectionNav(ctx);
@@ -144,7 +144,7 @@ function navRow(all, ctx) {
  * enough to reach it (1280x720, where the type scale is boosted over the layout) the two would
  * overlap, so the row stacks instead. Measured after a frame: same-tick rects can be stale in
  * GameFace, the same reason the chart's edge clamp waits.
- * @param {HTMLElement} row The nav row.
+ * @param {HTMLElement} row
  * @returns {void}
  */
 function fitHofNavRow(row) {
@@ -174,12 +174,11 @@ function fitHofNavRow(row) {
  * are hidden by default as test loads, and the note says how many are hidden so an "empty" page
  * never hides that fact.
  *
- * ONE button, not a pair. "Hide short games" and "Show all games" were two pills with the active
- * one lit, which reads as two commands where there is only one choice; the button now names the
- * state the player is not in, so pressing it always does what it says. Nothing renders at all when
- * no record would be filtered.
+ * One button, not a pair: two pills with the active one lit read as two commands where there is
+ * only one choice, so the button names the state the player is not in and pressing it always does
+ * what it says. Nothing renders at all when no record would be filtered.
  * @param {ArchiveRecord[]} all Every record.
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  * @returns {HTMLElement|null} The filter, or null when there is nothing to hide.
  */
 function shortGamesFilter(all, ctx) {
@@ -201,8 +200,8 @@ let lastRepair = /** @type {import("/demographics/ui/core/demographics-storage-r
  * The repair button: the first click arms it and the second empties the shared store and writes this
  * mod's data back (other mods re-add theirs as they save). Two clicks, in a panel that spells out
  * what is deleted, because what it deletes is gone for good. Cancel disarms it.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} The action row.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function repairActions(ctx) {
   let armed = false;
@@ -222,9 +221,9 @@ function repairActions(ctx) {
 
 /**
  * One labeled paragraph of the repair panel.
- * @param {string} headTag LOC tag of the label.
- * @param {string} bodyTag LOC tag of the text.
- * @returns {HTMLElement} The block.
+ * @param {string} headTag
+ * @param {string} bodyTag
+ * @returns {HTMLElement}
  */
 function repairPara(headTag, bodyTag) {
   return el("div", { cls: "dgh-repair-block" }, [
@@ -236,8 +235,8 @@ function repairPara(headTag, bodyTag) {
 /**
  * The repair sheet: a title, why it is needed, what the button does, and the two-click button.
  * Starts folded; {@link wireToggle} opens it.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} The sheet.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function repairPanel(ctx) {
   return el("div", { cls: "dgh-options-panel dgh-repair is-hidden" }, [
@@ -251,8 +250,8 @@ function repairPanel(ctx) {
 
 /**
  * Make an element open and close the repair sheet.
- * @param {HTMLElement} trigger The element to click.
- * @param {HTMLElement} panel The sheet.
+ * @param {HTMLElement} trigger
+ * @param {HTMLElement} panel
  */
 function wireToggle(trigger, panel) {
   trigger.classList.add("dgh-options-toggle");
@@ -266,7 +265,7 @@ function wireToggle(trigger, panel) {
 /**
  * The blocked banner, which is itself the button that opens the repair sheet: the headline names
  * the game bug and the second line says a workaround is one click away.
- * @returns {HTMLElement} The banner.
+ * @returns {HTMLElement}
  */
 function blockedBanner() {
   return el("div", { cls: "dgh-storage-banner dgh-storage-banner--button" }, [
@@ -288,12 +287,12 @@ function repairOutcomeNote() {
 }
 
 /**
- * The footer when the archive could NOT be read: what is wrong, what the last repair did, and -
- * when a repair could help - the way out.
- * @param {string} status Archive status.
+ * The footer when the archive could not be read: what is wrong, what the last repair did, and,
+ * when a repair could help, the way out.
+ * @param {string} status
  * @param {HTMLElement|null} done Outcome of the last repair, if any.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} Note.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function blockedNote(status, done, ctx) {
   // "foreign": the game handed back another mod's saved data instead of the shared settings (a game
@@ -318,22 +317,19 @@ function blockedNote(status, done, ctx) {
 }
 
 /**
- * Footer describing whether the archive could be read this session, and - when it could not - the
+ * Footer describing whether the archive could be read this session, and, when it could not, the
  * way out.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement|null} Note.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement|null}
  */
 function storageNote(ctx) {
   const s = archiveStatus();
   const done = repairOutcomeNote();
   const settingsLine = settingsNote();
   if (s === "ok" || s === "empty") {
-    // Nothing to say when storage is healthy. The old footer here ("Games are saved on this
-    // computer. Each save file also keeps its own record.") restated what the page already shows:
-    // the list itself when there are games, and LOC_DEMOGRAPHICS_HIST_EMPTY_HOF when there are
-    // none. Its one substantive claim — that a record also lives in each save — only matters when
-    // the archive cannot be read, and the UNREADABLE message below already carries it, next to the
-    // repair the player can act on.
+    // Nothing to say when storage is healthy. That a record also lives in each save only matters
+    // when the archive cannot be read, and the unreadable message below already says so, next to
+    // the repair the player can act on.
     const kids = [];
     if (settingsLine) kids.push(settingsLine);
     if (done) kids.push(done);
@@ -366,10 +362,10 @@ function settingsNote() {
 
 /**
  * Render the selected Hall of Fame section.
- * @param {HTMLElement} body Container.
- * @param {ArchiveRecord[]} records Visible records.
+ * @param {HTMLElement} body
+ * @param {ArchiveRecord[]} records
  * @param {ArchiveRecord[]} all Every record.
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  */
 function renderSection(body, records, all, ctx) {
   if (viewState.hofTab === "games") renderGames(body, records, all, ctx);
@@ -381,8 +377,8 @@ function renderSection(body, records, all, ctx) {
 
 /**
  * Render the Hall of Fame.
- * @param {HTMLElement} host Container.
- * @param {HofCtx} ctx Context.
+ * @param {HTMLElement} host
+ * @param {HofCtx} ctx
  */
 export function renderHof(host, ctx) {
   clear(host);

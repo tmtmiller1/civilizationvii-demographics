@@ -1,8 +1,8 @@
 // demographics-telemetry.js
 //
 // Balance telemetry + alert thresholds: emits a balance-health signal for a
-// suspected runaway leader (one civ whose score dominates by share of total AND
-// multiple of the median). Debug-gated and throttled; reads the snapshot the
+// suspected runaway leader (one civ whose score dominates by share of total and
+// by multiple of the median). Debug-gated and throttled; reads the snapshot the
 // sampler just built and never throws.
 
 const DBG = false;
@@ -18,8 +18,7 @@ const MIN_CIVS = 3;
 let _lastReportTurn = -999;
 
 /**
- * Emit a balance message (console-only, debug-gated).
- * @param {string} msg The message.
+ * @param {string} msg
  */
 function blog(msg) {
   if (!DBG) return;
@@ -33,7 +32,7 @@ function blog(msg) {
 /**
  * Collect each major player's `score` metric from a snapshot.
  * @param {*} snapshot The sampler snapshot ({ players: { pid: { metrics } } }).
- * @returns {{pid:string, score:number}[]} Per-civ scores (score >= 0).
+ * @returns {{pid:string, score:number}[]}
  */
 function scoresFromSnapshot(snapshot) {
   const players = snapshot && snapshot.players ? snapshot.players : null;
@@ -50,8 +49,8 @@ function scoresFromSnapshot(snapshot) {
 
 /**
  * The median of a numeric list (0 for empty).
- * @param {number[]} nums The values.
- * @returns {number} The median.
+ * @param {number[]} nums
+ * @returns {number}
  */
 function median(nums) {
   if (!nums.length) return 0;
@@ -63,7 +62,7 @@ function median(nums) {
 /**
  * Emit a suspected-runaway-leader alert when one civ's score dominates by both
  * share-of-total and multiple-of-median. Debug-gated + throttled; never throws.
- * @param {*} snapshot The sampler snapshot just built.
+ * @param {*} snapshot
  * @param {number} turn The (chart) turn the snapshot was taken on.
  */
 export function reportBalanceSignals(snapshot, turn) {

@@ -30,11 +30,11 @@ import { CRISIS_LABEL_ROWS } from "/demographics/ui/screen-demographics/charts/w
  * adjacent onsets don't collide. Mirrors the historical charts' marker labels.
  *
  * The labels sit in the band the layout reserves for them at the top of the plot
- * ({@link crisisBandHeight}), ABOVE the first war bar. They used to start just inside padT, on top
+ * ({@link crisisBandHeight}), above the first war bar. They used to start just inside padT, on top
  * of the first two bars, which only looked clear because the reference resolution's war names are
  * short; at 1280x720 the names are relatively wider and ran straight under them.
- * @param {HTMLElement} wrap The chart canvas.
- * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets The crisis onsets.
+ * @param {HTMLElement} wrap
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets
  * @param {{ L: *, dom: { xMin: number, xMax: number }, seed: string,
  *   W: number, H: number }} ctx Layout, x-domain, seed and canvas dimensions.
  */
@@ -71,7 +71,7 @@ function mountCrisisLabels(wrap, onsets, ctx) {
  * Mount one war-name label: the full name in a neutral box, anchored at the
  * bar's left edge, or right-anchored at the bar end for a bar in the right
  * third of the chart so a long name isn't clipped.
- * @param {HTMLElement} wrap The chart canvas.
+ * @param {HTMLElement} wrap
  * @param {*} rect The bar hit-test rect.
  * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>,
  *   latestTurn: number, W: number, H: number }} env Shared inputs.
@@ -101,7 +101,7 @@ function mountOneWarLabel(wrap, rect, env) {
 
 /**
  * Mount the per-bar war-name labels into the canvas.
- * @param {HTMLElement} wrap The chart canvas.
+ * @param {HTMLElement} wrap
  * @param {*[]} barRects
  * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>,
  *   latestTurn: number, W: number, H: number }} env war naming, year map, latest
@@ -113,9 +113,9 @@ function mountConflictLabels(wrap, barRects, env) {
 
 /**
  * Mount the Gantt X-tick HTML labels (year and/or turn per axis mode).
- * @param {HTMLElement} wrap The chart wrap.
- * @param {{ t: number, x: number, year: string|null }[]} tickPositions Ticks.
- * @param {*} L The layout.
+ * @param {HTMLElement} wrap
+ * @param {{ t: number, x: number, year: string|null }[]} tickPositions
+ * @param {*} L
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
  */
@@ -135,9 +135,8 @@ function mountGanttXTicks(wrap, tickPositions, L, W, H) {
 }
 
 /**
- * Mount the Gantt axis titles.
- * @param {HTMLElement} wrap The chart wrap.
- * @param {*} L The layout.
+ * @param {HTMLElement} wrap
+ * @param {*} L
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
  */
@@ -158,8 +157,8 @@ function mountGanttAxisTitles(wrap, L, W, H) {
 /**
  * Mount the "Present" label atop the current-turn (yellow) line, when that turn
  * is in range.
- * @param {HTMLElement} wrap The chart canvas.
- * @param {*} L The layout.
+ * @param {HTMLElement} wrap
+ * @param {*} L
  * @param {number} latestTurn The latest sampled turn.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
@@ -179,10 +178,10 @@ function mountCurrentTurnLabel(wrap, L, latestTurn, W, H) {
 
 /**
  * Mount the age-transition HTML labels (purple chip) at the bottom of each age
- * line - mirroring the line charts, kept low so they never clash with the crisis
+ * line, mirroring the line charts. Kept low so they never clash with the crisis
  * labels stacked from the top.
- * @param {HTMLElement} wrap The chart wrap.
- * @param {{ turn: number, label: string }[]} markers Age markers.
+ * @param {HTMLElement} wrap
+ * @param {{ turn: number, label: string }[]} markers
  * @param {{ L: *, dom: { xMin: number, xMax: number }, W: number,
  *   H: number }} ctx Layout, x-domain and canvas dimensions.
  */
@@ -203,7 +202,7 @@ function mountGanttAgeLabels(wrap, markers, ctx) {
 /**
  * Mount the chart's HTML overlays onto the canvas: x-ticks, axis titles, the
  * current-turn label, crisis + age markers, and the per-bar war-name labels.
- * @param {HTMLElement} canvas The inner chart canvas.
+ * @param {HTMLElement} canvas
  * @param {*} env The shared environment (see mountGanttWrap in chart-conflicts-timeline.js).
  * @returns {Map<*, string>} The war → display-name map (reused by the hover ctx).
  */
@@ -216,8 +215,8 @@ export function mountGanttOverlays(canvas, env) {
   mountCrisisLabels(canvas, crisisOnsets, { L, dom, seed: crisisSeed, W, H });
   mountGanttAgeLabels(canvas, ageMarkers, { L, dom, W, H });
 
-  // Name over the FULL merged set (not just the filtered subset) so the names -
-  // including recurrence ordinals + world-war numbering - match the War Graphs
+  // Name over the full merged set (not just the filtered subset) so the names,
+  // including recurrence ordinals + world-war numbering, match the War Graphs
   // picker and header, which name the same full set.
   const continentMap = buildContinentMap(samples);
   const nameOverride = buildWarNameOverrides(merged, turnYearMap, latestTurn, continentMap);
@@ -229,11 +228,11 @@ export function mountGanttOverlays(canvas, env) {
 /**
  * Keep the line-anchored labels (crisis stages, age chips, current turn) inside the canvas. They
  * are centered on their line, so one near the right edge overruns by half its width. The domain
- * reserves tail room in TURNS (extendDomainFuture); when the timeline fills a narrow host that
+ * reserves tail room in turns (extendDomainFuture); when the timeline fills a narrow host that
  * room can be fewer pixels than a label, so the label is re-anchored to end at its line instead.
  * Measured after a frame: same-tick rects can be stale in GameFace. Rects are compared to each
  * other in the same (visual) space, so no scale conversion is needed.
- * @param {HTMLElement} canvas The inner chart canvas.
+ * @param {HTMLElement} canvas
  */
 function clampEdgeLabels(canvas) {
   const run = () => {

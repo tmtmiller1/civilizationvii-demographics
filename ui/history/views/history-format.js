@@ -7,8 +7,8 @@ import { t, typeName, prettyType, victoryName } from "/demographics/ui/history/c
 
 /**
  * The game's result in words.
- * @param {ArchiveRecord} rec Record.
- * @returns {string} Localized result.
+ * @param {ArchiveRecord} rec
+ * @returns {string}
  */
 export function outcomeLabel(rec) {
   const o = rec.outcome;
@@ -22,7 +22,7 @@ export function outcomeLabel(rec) {
 /**
  * Short status class for styling rows. A game that ended without a winner is its own case: it is
  * not a defeat, and gray is kept for an empty figure.
- * @param {ArchiveRecord} rec Record.
+ * @param {ArchiveRecord} rec
  * @returns {string} "win" | "loss" | "ended" | "open".
  */
 export function outcomeClass(rec) {
@@ -33,8 +33,8 @@ export function outcomeClass(rec) {
 
 /**
  * The civilizations led, in order ("Rome → Normans → Prussia").
- * @param {ArchiveRecord} rec Record.
- * @returns {string} Line.
+ * @param {ArchiveRecord} rec
+ * @returns {string}
  */
 export function civLine(rec) {
   return rec.civs.map((c) => typeName(c.name, c.civ)).join("  →  ");
@@ -51,11 +51,11 @@ export function mapName(script) {
 }
 
 /**
- * Readable text for one setup field. The engine hands these back in TWO shapes and both are in the
+ * Readable text for one setup field. The engine hands these back in two shapes and both are in the
  * archive: a LOC tag ("LOC_GAMESPEED_STANDARD_NAME") and a bare engine type ("GAMESPEED_STANDARD"),
  * depending on how that game was configured. Composing only the first left the second on screen as
  * a raw "GAMESPEED_STANDARD", and dropping anything still tag-shaped hid the first whenever the tag
- * did not resolve — so a resolved tag wins, and anything else is reduced to its words.
+ * did not resolve. So a resolved tag wins, and anything else is reduced to its words.
  * @param {string} [v] Stored setup value, either shape.
  * @returns {string} Readable name, or "" when the record has no value.
  */
@@ -70,8 +70,8 @@ function setupName(v) {
 /**
  * Setup summary ("Standard · Large · Continents Plus · Deity"). A record without a setup (an older
  * or hand-edited archive) gives an empty line.
- * @param {Partial<HnrSetup>} [s] Setup.
- * @returns {string} Line.
+ * @param {Partial<HnrSetup>} [s]
+ * @returns {string}
  */
 export function setupLine(s = {}) {
   const o = s || {};
@@ -82,7 +82,7 @@ export function setupLine(s = {}) {
 /**
  * Calendar date of a timestamp as YYYY-MM-DD.
  * @param {number} ms Milliseconds since the epoch.
- * @returns {string} Date.
+ * @returns {string}
  */
 export function dateLabel(ms) {
   if (!ms) return "";
@@ -94,7 +94,7 @@ export function dateLabel(ms) {
 /**
  * The honorific title for a ladder index.
  * @param {number} idx 1..12.
- * @returns {string} Localized title.
+ * @returns {string}
  */
 export function titleName(idx) {
   return t("LOC_DEMOGRAPHICS_HIST_TITLE_" + idx);

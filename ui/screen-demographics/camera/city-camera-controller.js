@@ -63,14 +63,14 @@ function clog(...a) {
 
 /**
  * Whether `token` is still the active flow's token.
- * @param {number} token The token to check.
- * @returns {boolean} True when current.
+ * @param {number} token
+ * @returns {boolean}
  */
 function isToken(token) {
   return !!state && state.token === token;
 }
 
-// ── Camera primitives (all defensive; the engine surface can be absent) ───────
+// Camera primitives. All of them guard, because the engine surface can be absent.
 
 /**
  * Save the current camera zoom (records `didSaveZoom` for guarded restore).
@@ -82,13 +82,13 @@ function saveCamera() {
       if (state) state.didSaveZoom = true;
     }
   } catch (_) {
-    // Camera.saveCameraZoom can be absent/throw; restore simply becomes a no-op.
+    // Camera.saveCameraZoom can be absent/throw; restore then becomes a no-op.
   }
 }
 
 /**
  * Snap the camera to a plot (instant mode).
- * @param {{x: number, y: number}} loc The plot location.
+ * @param {{x: number, y: number}} loc
  */
 function lookAtInstant(loc) {
   try {
@@ -179,7 +179,7 @@ function calcFocus(plots) {
   return null;
 }
 
-// ── Screen open/close (dynamic import, as the dock decorator does) ─────────────
+// Screen open/close (dynamic import, as the dock decorator does)
 
 /**
  * Resolve the engine context manager and invoke `fn` with it.
@@ -220,7 +220,7 @@ function suspendPopups(flowState) {
         if (flowState) flowState.popupsSuspended = true;
       }
     } catch (_) {
-      // suspend can throw mid-transition; non-fatal (popups simply aren't deferred).
+      // suspend can throw mid-transition; non-fatal (popups just aren't deferred).
     }
   });
 }
@@ -245,9 +245,7 @@ function resumePopups(flowState) {
   });
 }
 
-/**
- * Pop the Demographics screen so the map is visible.
- */
+/** Pop the Demographics screen so the map is visible. */
 function popScreen() {
   withContextManager((cm) => {
     try {
@@ -281,7 +279,7 @@ function reopenScreen() {
   });
 }
 
-// ── Framing ────────────────────────────────────────────────────────────────────
+// Framing
 
 /**
  * Re-resolve a live city's purchased plots from its ComponentID (handles go
@@ -304,7 +302,7 @@ function livePlots(componentId) {
  * Resolve a smooth-camera frame for a settlement: prefer the engine plot-fit,
  * else fall back to the focus plot at a fixed zoom. Returns null when neither a
  * plot-fit nor a focus plot is available (caller then tries lookAtID).
- * @param {*} target The settlement record.
+ * @param {*} target
  * @returns {{focus: {x: number, y: number}, zoom: number, usedFallback: boolean}|null}
  */
 function resolveCityFrame(target) {
@@ -323,7 +321,7 @@ function resolveCityFrame(target) {
   return null;
 }
 
-// ── Overlay ───────────────────────────────────────────────────────────────────
+// Overlay
 
 /**
  * Update the "now showing" caption (wonder name + build year), shown while the
@@ -338,7 +336,7 @@ function updateNowShowing(caption) {
 
 /**
  * Replay the cinematic for the same city in place (the map-click affordance).
- * Reuses the saved camera/FoV/layers/world-input baseline - only the tour and
+ * Reuses the saved camera/FoV/layers/world-input baseline; only the tour and
  * its overlay restart, with no screen flicker. Exit is via the Back button / ESC.
  */
 function replayCinematic() {
@@ -358,7 +356,7 @@ function replayCinematic() {
   runFlyby(s.target, null, s.token);
 }
 
-// ── World input + interrupts ──────────────────────────────────────────────────
+// World input and interrupts
 
 /**
  * Disable engine world input (selection/diplomacy) during the cinematic via the
@@ -372,20 +370,18 @@ function disableWorldInput() {
   }
 }
 
-/**
- * Re-enable engine world input.
- */
+/** Re-enable engine world input. */
 function enableWorldInput() {
   try {
     window.dispatchEvent(new CustomEvent("ui-enable-world-input"));
   } catch (_) {
-    // ignore.
+    // ignore
   }
 }
 
 /**
  * Dispatch a bare window CustomEvent (defensive).
- * @param {string} name The event name.
+ * @param {string} name
  */
 function fireWindowEvent(name) {
   try {
@@ -403,9 +399,7 @@ function hideCityBanners() {
   fireWindowEvent("ui-hide-city-banners");
 }
 
-/**
- * Re-show the in-game city banners.
- */
+/** Re-show the in-game city banners. */
 function showCityBanners() {
   fireWindowEvent("ui-show-city-banners");
 }
@@ -417,9 +411,7 @@ function hideUnitFlags() {
   fireWindowEvent("ui-hide-unit-flags");
 }
 
-/**
- * Re-show the unit flags/icons.
- */
+/** Re-show the unit flags/icons. */
 function showUnitFlags() {
   fireWindowEvent("ui-show-unit-flags");
 }
@@ -428,7 +420,7 @@ function showUnitFlags() {
  * Bind interrupt sources for the active flow: ESC (immediate) and the engine's
  * interface-mode change (armed after a delay, so our own screen-pop doesn't
  * self-trigger). The Back button and relaunch are wired elsewhere.
- * @param {number} token The flow token.
+ * @param {number} token
  */
 function bindInterrupts(token) {
   const s = state;
@@ -443,7 +435,7 @@ function bindInterrupts(token) {
       clog("onMode threw:", /** @type {*} */ (e)?.message);
     }
   };
-  // Engine world-input: a map click REPLAYS the cinematic; cancel/ESC exits.
+  // Engine world-input: a map click replays the cinematic; cancel/ESC exits.
   // World selection is already disabled, so this never selects a city.
   s.onInput = (/** @type {*} */ e) => handleCinematicInput(s, token, e);
   try {
@@ -467,8 +459,8 @@ function bindInterrupts(token) {
 /**
  * Handle an engine-input event during the cinematic: debounced, armed-gated; a
  * click replays, cancel exits. Consumes the event so nothing else reacts.
- * @param {*} s The flow state.
- * @param {number} token The flow token.
+ * @param {*} s
+ * @param {number} token
  * @param {*} e The engine-input event.
  */
 function handleCinematicInput(s, token, e) {
@@ -486,7 +478,7 @@ function handleCinematicInput(s, token, e) {
 
 /**
  * Whether replay input should be ignored because it likely came from overlay UI.
- * @param {*} s Flow state.
+ * @param {*} s
  * @param {string} kind Classified input kind.
  * @returns {boolean} True when replay should be ignored.
  */
@@ -498,35 +490,35 @@ function ignoreUiReplay(s, kind) {
 
 /**
  * Detach the active flow's interrupt listeners.
- * @param {*} s The flow state.
+ * @param {*} s
  */
 function unbindInterrupts(s) {
   try {
     if (s.onKey) window.removeEventListener("keydown", s.onKey, true);
     if (s.onInput) window.removeEventListener("engine-input", s.onInput, true);
   } catch (_) {
-    // ignore detach errors.
+    // ignore detach errors
   }
   try {
     if (s.onMode && typeof engine !== "undefined" && typeof engine.off === "function") {
       engine.off("InterfaceModeChanged", s.onMode);
     }
   } catch (_) {
-    // ignore detach errors.
+    // ignore detach errors
   }
 }
 
-// ── Teardown (single, idempotent) ──────────────────────────────────────────────
+// Teardown (single, idempotent)
 
 /**
  * Clear any pending timers on the flow state.
- * @param {*} s The flow state.
+ * @param {*} s
  */
 function clearTimers(s) {
   try {
     if (s.watchdog) clearTimeout(s.watchdog);
   } catch (_) {
-    // clearTimeout rarely throws; ignore.
+    // clearTimeout rarely throws; ignore
   }
   s.watchdog = null;
 }
@@ -552,7 +544,7 @@ export function teardownActiveCinematic(reason) {
  * shot camera, fireworks, clutter layers, FoV, world input/banners/flags, the
  * saved camera (emergency keyframe on failure), and reopen the screen, except after an
  * "interrupt" teardown.
- * @param {*} s The flow state.
+ * @param {*} s
  * @param {string} reason The teardown reason.
  */
 function restoreFromCinematic(s, reason) {
@@ -584,13 +576,13 @@ export function isCinematicActive() {
   return !!state && state.phase !== "restoring";
 }
 
-// ── Animation ───────────────────────────────────────────────────────────────────
+// Animation
 
 /**
  * Cinematic wrapper: run the single-shot cinematic approach through
  * `cinematic-tour.js` using controller-owned state and utilities.
- * @param {{focus: {x: number, y: number}, zoom: number}} frame The resolved frame.
- * @param {number} token The flow token.
+ * @param {{focus: {x: number, y: number}, zoom: number}} frame
+ * @param {number} token
  */
 function runPseudoCinematic(frame, token) {
   if (!state) return;
@@ -605,9 +597,9 @@ function runPseudoCinematic(frame, token) {
 
 /**
  * Flyby wrapper: run the flyby/tour through `cinematic-tour.js`.
- * @param {*} target The settlement record.
+ * @param {*} target
  * @param {{focus: {x: number, y: number}, zoom: number}|null} frame The fallback frame.
- * @param {number} token The flow token.
+ * @param {number} token
  */
 function runFlyby(target, frame, token) {
   if (!state) return;
@@ -629,8 +621,8 @@ function runFlyby(target, frame, token) {
 
 /**
  * Mount the cinematic overlay for the active flow.
- * @param {*} target The settlement record.
- * @param {string} mode The active mode.
+ * @param {*} target
+ * @param {string} mode
  */
 function mountCurrentOverlay(target, mode) {
   if (!state) return;
@@ -642,13 +634,13 @@ function mountCurrentOverlay(target, mode) {
   });
 }
 
-// ── Launch ──────────────────────────────────────────────────────────────────────
+// Launch
 
 /**
  * Begin a flow: validate, capture the camera, pop the screen, mount the overlay,
  * and bind interrupts. Returns the resolved frame, or null when the target has
  * no usable location (caller handles the lookAtID fallback / abort).
- * @param {*} target The settlement record.
+ * @param {*} target
  * @param {string} mode The flow mode ("instant" | "cinematic" | "flyby").
  * @returns {{focus: {x: number, y: number}, zoom: number}|null|undefined}
  *   The frame for animated modes, null to signal "no frame", or undefined when
@@ -675,10 +667,10 @@ function beginFlow(target, mode) {
 }
 
 /**
- * "View on map" - simply close the Demographics screen and fly the camera to the
- * city, leaving the player on the map with full control. No overlay, no return
+ * "View on map": close the Demographics screen and fly the camera to the city,
+ * leaving the player on the map with full control. No overlay, no return
  * window, no camera save/restore (the player just stays where they were flown).
- * @param {*} target The settlement record.
+ * @param {*} target
  * @returns {boolean} True when launched.
  */
 export function startInstant(target) {
@@ -695,9 +687,9 @@ export function startInstant(target) {
 }
 
 /**
- * Cinematic - animate a smooth single-shot approach. Falls back to lookAtID, then
+ * Cinematic: animate a smooth single-shot approach. Falls back to lookAtID, then
  * to instant, when no keyframe frame can be resolved.
- * @param {*} target The settlement record.
+ * @param {*} target
  * @returns {boolean} True when launched.
  */
 export function startPseudoCinematic(target) {
@@ -723,10 +715,10 @@ export function startPseudoCinematic(target) {
 }
 
 /**
- * Flyby - run the cinematic grand tour. `animateFlyby` runs the push-camera
+ * Flyby: run the cinematic grand tour. `animateFlyby` runs the push-camera
  * tour when available and otherwise degrades (single approach → lookAtID →
  * instant → abort) on its own.
- * @param {*} target The settlement record.
+ * @param {*} target
  * @returns {boolean} True when launched.
  */
 export function startFlyby(target) {
@@ -738,7 +730,7 @@ export function startFlyby(target) {
 
 /**
  * lookAtInstant variant that reports success (for fallback chaining).
- * @param {{x: number, y: number}} loc The plot location.
+ * @param {{x: number, y: number}} loc
  * @returns {boolean} Always true once the call is attempted.
  */
 function lookAtInstantReturn(loc) {
@@ -750,7 +742,7 @@ function lookAtInstantReturn(loc) {
  * The dedicated "Cinematic" action: run the grand flyby tour (default), or the
  * simpler pseudo-cinematic single approach when the flyby is disabled. This is
  * the second button next to "View on map"; both default on.
- * @param {*} target The settlement record.
+ * @param {*} target
  * @returns {boolean} True when a flow launched.
  */
 export function launchCinematic(target) {

@@ -112,7 +112,7 @@ function testPopulationAgeResetBridge() {
   assert.equal(bridged.points.find((pt) => pt.t === 3).v, 1_000_000, "peak untouched");
   assert.equal(bridged.points.find((pt) => pt.t === 6).v, 1_200_000, "recovery point untouched");
 
-  // A genuine post-boundary COLLAPSE (war crash mid-segment) is NOT masked: the offset bridge removes
+  // A genuine post-boundary collapse (war crash mid-segment) is not masked: the offset bridge removes
   // the mechanic notch but a real crash still reads as a drop below the pre-boundary level.
   const warHist = {
     ageBoundaries: [{ age: "AGE_EXPLORATION" }],

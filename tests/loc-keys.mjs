@@ -105,7 +105,7 @@ assert.equal(
   droppedEngineKeys.length,
   0,
   `${droppedEngineKeys.length} engine-composed LOC key(s) missing from text/en_us/ModText.xml. The engine builds ` +
-    `these, so nothing in ui/ references them and no other gate sees the loss , in game the label renders as the ` +
+    `these, so nothing in ui/ references them and no other gate sees the loss; in game the label renders as the ` +
     `raw tag:\n  ${droppedEngineKeys.map((e) => `${e.key}\n      ${e.why}`).join("\n  ")}`
 );
 console.log("loc-keys harness passed");

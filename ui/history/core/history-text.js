@@ -5,10 +5,10 @@
 // live in text/<locale>/ModText.xml. Engine tags (leader, civilization, wonder, victory and age
 // names) are composed the same way, so they appear in the player's language.
 //
-// Composition and number formatting are NOT reimplemented here: t() delegates to the shared
+// Composition and number formatting are not reimplemented here: t() delegates to the shared
 // resolver in ui/core/demographics-i18n.js and num() to localeNumber() in ui/metrics/metrics-format.js,
 // so Locale semantics live in one place for the whole mod. What this module owns is the piece the
-// shared helpers cannot provide — at the main menu the gameplay text DB is not loaded, so a tag
+// shared helpers cannot provide: at the main menu the gameplay text DB is not loaded, so a tag
 // first seen in a game resolves from the text stored with the archived record (savedTexts below).
 
 import { t as composeLoc } from "/demographics/ui/core/demographics-i18n.js";
@@ -33,8 +33,8 @@ export function addSavedTexts(texts) {
 /**
  * Whether composed text is an unresolved tag.
  * @param {string} s Composed text.
- * @param {string} key The tag.
- * @returns {boolean} True when unresolved.
+ * @param {string} key
+ * @returns {boolean}
  */
 function unresolved(s, key) {
   return !s || s === key || s.startsWith("LOC_");
@@ -57,7 +57,7 @@ export function t(key, ...args) {
 
 /**
  * Like t(), but never shows a raw tag: an unresolved tag becomes the fallback text.
- * @param {string} key The tag.
+ * @param {string} key
  * @param {string} fallback Readable text to show when the tag does not resolve.
  * @returns {string} Localized text or the fallback.
  */
@@ -68,8 +68,8 @@ export function tOr(key, fallback) {
 
 /**
  * Format a number for the player's language.
- * @param {number} n The value.
- * @returns {string} Locale-formatted number.
+ * @param {number} n
+ * @returns {string}
  */
 export function num(n) {
   const v = Number.isFinite(n) ? n : 0;
@@ -81,7 +81,7 @@ export function num(n) {
 
 /**
  * Readable fallback for an engine type string: "CIVILIZATION_FRENCH_EMPIRE" -> "French Empire".
- * @param {string} type The engine type.
+ * @param {string} type
  * @returns {string} Title-cased words without the type prefix.
  */
 export function prettyType(type) {
@@ -98,7 +98,7 @@ export function prettyType(type) {
 /**
  * Localized display name for an engine type, via its stored LOC tag when present.
  * @param {string|undefined} tag The LOC tag captured with the type (may be empty).
- * @param {string} type The engine type string.
+ * @param {string} type
  * @returns {string} The name in the player's language, or a readable fallback.
  */
 export function typeName(tag, type) {
@@ -126,7 +126,7 @@ const UNTAGGED_VICTORY_NAMES = /** @type {Record<string, string>} */ ({
  * A victory type's short name ("Scientific", "Domination").
  * @param {string} type Victory type.
  * @param {string} name The game's LOC tag for it.
- * @returns {string} Localized name.
+ * @returns {string}
  */
 export function victoryName(type, name) {
   if (SHORT_VICTORY_NAMES[type]) return t(SHORT_VICTORY_NAMES[type]);
@@ -138,7 +138,7 @@ export function victoryName(type, name) {
  * Keys for what a Triumph asked for and what it gave. Saved with the archive when a game is played
  * (the engine's tables are not loaded at the main menu) and read back through t().
  * @param {string} type LegacyType.
- * @returns {string} Key.
+ * @returns {string}
  */
 export function legacyWhyKey(type) {
   return "DGH_LEGACY_WHY_" + type;
@@ -146,7 +146,7 @@ export function legacyWhyKey(type) {
 
 /**
  * @param {string} type LegacyType.
- * @returns {string} Key.
+ * @returns {string}
  */
 export function legacyWhatKey(type) {
   return "DGH_LEGACY_WHAT_" + type;
@@ -157,7 +157,7 @@ export function legacyWhatKey(type) {
  * [TIP:...]...[/TIP] wrappers and [icon:...] glyphs, none of which a plain panel renders, so the
  * wrappers are unwrapped and the rest is dropped.
  * @param {string} s Game text.
- * @returns {string} Readable text.
+ * @returns {string}
  */
 export function plainText(s) {
   return String(s || "")

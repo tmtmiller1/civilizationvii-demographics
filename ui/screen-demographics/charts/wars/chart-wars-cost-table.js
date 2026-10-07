@@ -18,9 +18,9 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
  * war tooltip and the crisis-stages cost sections.
  * @param {*[]} cols The columns (major / combined-CS / individual-CS).
  * @param {*[]} metrics The COST_METRICS subset to show, in order.
- * @param {Snapshot[]} samples The sample stream (for portrait identity).
+ * @param {Snapshot[]} samples For portrait identity.
  * @param {number} vsAt Column index a "vs" divider precedes (-1 for none).
- * @returns {HTMLElement} The table element.
+ * @returns {HTMLElement}
  */
 export function buildCostTable(cols, metrics, samples, vsAt) {
   const table = document.createElement("div");
@@ -33,9 +33,9 @@ export function buildCostTable(cols, metrics, samples, vsAt) {
 /**
  * Resolve a participant's leader-icon type + primary color from the latest
  * sample that carries the pid.
- * @param {Pid|string} pid The participant pid.
- * @param {Snapshot[]} samples The sample stream.
- * @returns {{ leaderType: string|null, color: string|null }} Identity bits.
+ * @param {Pid|string} pid
+ * @param {Snapshot[]} samples
+ * @returns {{ leaderType: string|null, color: string|null }}
  */
 function participantIdentity(pid, samples) {
   for (let i = samples.length - 1; i >= 0; i--) {
@@ -54,8 +54,8 @@ function participantIdentity(pid, samples) {
 /**
  * Build a round leader-portrait element: a real <fxs-icon> when a LEADER_* type
  * is known (the element the WorldRankingsAllCivs uses), else a neutral placeholder circle.
- * @param {string|null} leaderType The LEADER_* type string.
- * @returns {HTMLElement} The portrait wrapper.
+ * @param {string|null} leaderType
+ * @returns {HTMLElement}
  */
 function buildCombatantPortrait(leaderType) {
   const wrap = document.createElement("div");
@@ -73,13 +73,13 @@ function buildCombatantPortrait(leaderType) {
 /**
  * Build one leader's header cell: the leader portrait above a civ-color dot.
  * @param {*} entry The roster participant entry.
- * @param {Snapshot[]} samples The sample stream (for icon/color).
- * @returns {HTMLElement} The header cell.
+ * @param {Snapshot[]} samples For icon/color.
+ * @returns {HTMLElement}
  */
 function buildLeaderHeadCell(entry, samples) {
   const id = participantIdentity(entry.pid, samples);
   // The roster entry carries the civ color; the LEADER_* type is in the samples
-  // (pidInfo stores civTypeString) - newer wars also stamp entry.leaderType.
+  // (pidInfo stores civTypeString); newer wars also stamp entry.leaderType.
   const leaderType = entry.leaderType || id.leaderType;
   const color = entry.color || id.color;
   const cell = document.createElement("div");
@@ -100,7 +100,7 @@ function buildLeaderHeadCell(entry, samples) {
  * @param {*} m The cost-metric descriptor.
  * @param {*} cost The participant's per-metric figures (keyed by m.key).
  * @param {{ power: number, lost: number }|null} csTotals The side's CS totals, or null.
- * @returns {HTMLElement} The value cell.
+ * @returns {HTMLElement}
  */
 function buildValueCell(m, cost, csTotals) {
   const fig = formatCostFigure(cost[m.key], m.mode);
@@ -128,8 +128,8 @@ function scaledCasualtySuffix(m, cost) {
 
 /**
  * Build a fixed-width label cell (the leftmost prose-label column).
- * @param {string} text The label text ("" for the header spacer).
- * @returns {HTMLElement} The label cell.
+ * @param {string} text "" for the header spacer.
+ * @returns {HTMLElement}
  */
 export function buildLabelCell(text) {
   const cell = document.createElement("div");
@@ -141,8 +141,8 @@ export function buildLabelCell(text) {
 /**
  * Build the thin "vs" divider cell between the two sides (text in the head row,
  * an empty spacer in metric rows so columns stay aligned).
- * @param {string} text The cell text ("" for spacer rows).
- * @returns {HTMLElement} The vs cell.
+ * @param {string} text "" for spacer rows.
+ * @returns {HTMLElement}
  */
 export function buildVsCell(text) {
   const cell = document.createElement("div");
@@ -155,9 +155,9 @@ export function buildVsCell(text) {
  * Build the header row: an empty label spacer, then a portrait/dot cell per
  * leader (with the vs divider inserted between the two sides).
  * @param {*[]} cols The leader columns.
- * @param {Snapshot[]} samples The sample stream.
+ * @param {Snapshot[]} samples
  * @param {number} vsAt The column index the vs divider precedes (-1 for none).
- * @returns {HTMLElement} The header row.
+ * @returns {HTMLElement}
  */
 function buildTableHeadRow(cols, samples, vsAt) {
   const row = document.createElement("div");
@@ -172,9 +172,9 @@ function buildTableHeadRow(cols, samples, vsAt) {
 
 /**
  * Build a column's header cell (a major leader's portrait + color dot).
- * @param {*} c The column.
- * @param {Snapshot[]} samples The sample stream (for leader identity).
- * @returns {HTMLElement} The header cell.
+ * @param {*} c
+ * @param {Snapshot[]} samples For leader identity.
+ * @returns {HTMLElement}
  */
 function headCellFor(c, samples) {
   return buildLeaderHeadCell(c.entry, samples);
@@ -186,7 +186,7 @@ function headCellFor(c, samples) {
  * @param {*} m The cost-metric descriptor.
  * @param {*[]} cols The leader columns.
  * @param {number} vsAt The column index the vs divider precedes (-1 for none).
- * @returns {HTMLElement} The metric row.
+ * @returns {HTMLElement}
  */
 function buildTableMetricRow(m, cols, vsAt) {
   const row = document.createElement("div");

@@ -41,7 +41,7 @@ import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
 /**
  * Invoke `fn` and return its result, or `fb` if it throws.
  * @template T
- * @param {() => T} fn Thunk to evaluate.
+ * @param {() => T} fn
  * @param {T} [fb] Fallback returned on throw.
  * @returns {T|undefined} `fn()` result, or `fb`.
  */
@@ -73,7 +73,7 @@ function getLocalId() {
 
 /**
  * Create a fresh, empty `CivProfile` for a player id.
- * @param {string} pid Player id (string key).
+ * @param {string} pid
  * @param {CivSample} ps The first per-civ sample seen for this pid.
  * @returns {CivProfile} A blank profile seeded with the stable leader key.
  */
@@ -95,8 +95,8 @@ export function makeBlankProfile(pid, ps) {
 /**
  * Fold one per-civ sample's numeric metrics into a profile's `latest` map,
  * keeping every finite value.
- * @param {CivProfile} profile Profile to mutate.
- * @param {Record<string, *>} metrics Per-metric values from the sample.
+ * @param {CivProfile} profile
+ * @param {Record<string, *>} metrics
  */
 export function mergeProfileMetrics(profile, metrics) {
   for (const k of Object.keys(metrics)) {
@@ -108,7 +108,7 @@ export function mergeProfileMetrics(profile, metrics) {
 /**
  * Return `v` when it is a non-empty string, otherwise `undefined`. Mirrors the
  * `typeof x === "string" && x.length > 0` guard used across the sample fold.
- * @param {*} v Candidate value.
+ * @param {*} v
  * @returns {string|undefined} The string if non-empty, else `undefined`.
  */
 export function nonEmptyString(v) {
@@ -118,8 +118,8 @@ export function nonEmptyString(v) {
 /**
  * Fold one sample's leader-name and civ-name identity fields into a profile,
  * tracking distinct civ names in first-seen order.
- * @param {CivProfile} profile Profile to mutate.
- * @param {CivSample} ps One civ's sample.
+ * @param {CivProfile} profile
+ * @param {CivSample} ps
  */
 export function mergeCivNames(profile, ps) {
   const leaderName = nonEmptyString(ps?.leaderName);
@@ -134,8 +134,8 @@ export function mergeCivNames(profile, ps) {
 
 /**
  * Fold one sample's engine type strings and civ colors into a profile.
- * @param {CivProfile} profile Profile to mutate.
- * @param {CivSample} ps One civ's sample.
+ * @param {CivProfile} profile
+ * @param {CivSample} ps
  */
 export function mergeCivTypesAndColors(profile, ps) {
   const leaderTypeString = nonEmptyString(ps?.leaderTypeString);
@@ -151,8 +151,8 @@ export function mergeCivTypesAndColors(profile, ps) {
 /**
  * Fold one per-civ sample over an existing profile, overwriting each identity
  * field only when the newer sample carries a non-empty value.
- * @param {CivProfile} profile Profile to mutate.
- * @param {CivSample} ps One civ's sample.
+ * @param {CivProfile} profile
+ * @param {CivSample} ps
  */
 export function mergeCivSample(profile, ps) {
   mergeCivNames(profile, ps);
@@ -164,7 +164,7 @@ export function mergeCivSample(profile, ps) {
 /**
  * Build a `{ pid -> profile }` map by folding every newer non-empty field over
  * the older one across the full history.
- * @param {DemoHistory|undefined} history The persisted history blob.
+ * @param {DemoHistory|undefined} history
  * @returns {Record<string, CivProfile>} Profiles keyed by player id.
  */
 export function buildCivProfiles(history) {
@@ -186,8 +186,8 @@ export function buildCivProfiles(history) {
 /**
  * Compute a `Map<pid, rank>` over all civs that have a numeric value for
  * `metricId`. Ranks are 1-based and ties share a rank.
- * @param {Record<string, CivProfile>} profiles All civ profiles.
- * @param {string} metricId Metric id to rank by.
+ * @param {Record<string, CivProfile>} profiles
+ * @param {string} metricId
  * @returns {RankResult} The rank map and the count of ranked civs.
  */
 export function computeRanks(profiles, metricId) {
@@ -217,7 +217,7 @@ export function computeRanks(profiles, metricId) {
  * least one ranked civ is behind. A metric where every civ is equal (all zero
  * net migration, say) has no leader, so nothing is highlighted for it.
  * @param {{ ranks: Map<string, number>, total: number }|undefined} info The metric's ranks.
- * @param {string} pid Player id.
+ * @param {string} pid
  * @returns {boolean} True when the civ leads the metric.
  */
 export function leadsMetric(info, pid) {
@@ -230,8 +230,8 @@ export function leadsMetric(info, pid) {
 /**
  * Read a boolean persisted setting defensively, returning `fallback` on any
  * error.
- * @param {WorldRankingsAllCivsCtx} ctx Render context.
- * @param {string} key Setting key.
+ * @param {WorldRankingsAllCivsCtx} ctx
+ * @param {string} key
  * @param {boolean} fallback Value used when reading throws or is unavailable.
  * @returns {boolean} The coerced setting value.
  */
@@ -246,8 +246,8 @@ export function readBoolSetting(ctx, key, fallback) {
 /**
  * Strip eliminated civs from the profile map in place. The eliminated map
  * comes from `history.eliminated`, populated by the sampler at civ death.
- * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
- * @param {DemoHistory|undefined} history Source history blob.
+ * @param {Record<string, CivProfile>} profiles
+ * @param {DemoHistory|undefined} history
  */
 export function stripEliminatedCivs(profiles, history) {
   const elim =
@@ -270,7 +270,7 @@ const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
  * Spoiler guard (display-time): strip diplomacy-category metric values from the profiles of
  * civs the local player has not met (`met === false`). Both the displayed cells and the rank
  * computation read `latest`, so removing the value here covers both.
- * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
+ * @param {Record<string, CivProfile>} profiles
  */
 export function stripUnmetDiplomacy(profiles) {
   for (const pid of Object.keys(profiles)) {
@@ -283,7 +283,7 @@ export function stripUnmetDiplomacy(profiles) {
 /**
  * Drop every non-local civ from the profile map in place, for the own-civ-only / disabled
  * analytics policy. When the local player can't be resolved, leaves the map untouched.
- * @param {Record<string, CivProfile>} profiles Profiles to filter (mutated).
+ * @param {Record<string, CivProfile>} profiles
  */
 export function stripNonLocalCivs(profiles) {
   const localId = getLocalId();
@@ -297,9 +297,9 @@ export function stripNonLocalCivs(profiles) {
 /**
  * Pick the local player's pid: the resolved engine id when it has a profile,
  * otherwise the first available pid.
- * @param {Record<string, CivProfile>} profiles All profiles.
- * @param {string[]} allPids All profile pids.
- * @returns {string} The local-column pid.
+ * @param {Record<string, CivProfile>} profiles
+ * @param {string[]} allPids
+ * @returns {string}
  */
 export function pickLocalPid(profiles, allPids) {
   const localId = getLocalId();
@@ -312,8 +312,8 @@ export function pickLocalPid(profiles, allPids) {
  * Order the non-local pids by civilization score, highest first (a left→right
  * leaderboard beside the local player's pinned column). Leader name (locale-aware)
  * breaks ties and orders any civ missing a score, which sorts last.
- * @param {Record<string, CivProfile>} profiles All profiles.
- * @param {string[]} allPids All profile pids.
+ * @param {Record<string, CivProfile>} profiles
+ * @param {string[]} allPids
  * @param {string} localPid The local-column pid to exclude.
  * @returns {string[]} The sorted non-local pids.
  */

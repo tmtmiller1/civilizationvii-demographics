@@ -1,6 +1,6 @@
 // settlements-age-archive.js
 //
-// End-of-age settlement standings. Every sample overwrites the CURRENT age's
+// End-of-age settlement standings. Every sample overwrites the current age's
 // entry with the board's top settlements, so once an age ends its entry holds
 // the last standings recorded in that age (no age-transition hook needed).
 // Stored on the sampled history blob (`history.settleAges`) so it survives
@@ -43,7 +43,7 @@ function compactOwner(o) {
 /**
  * A compact, serializable copy of one ranked settlement.
  * @param {*} s The live settlement record.
- * @returns {*} The archive record.
+ * @returns {*}
  */
 function compactSettlement(s) {
   return {
@@ -88,7 +88,7 @@ export function recordSettlementAge(history, turn, year) {
 /**
  * The display name of an age type ("Antiquity Age"), or the raw type.
  * @param {string} age The age type.
- * @returns {string} The display name.
+ * @returns {string}
  */
 function ageName(age) {
   try {
@@ -105,7 +105,7 @@ function ageName(age) {
  * mark it archived (no live handle, so no camera), and default every field the
  * showcase dereferences so an incomplete record still renders.
  * @param {*} r The archive record.
- * @returns {*} The display settlement.
+ * @returns {*}
  */
 function rehydrate(r) {
   const owner = Object.assign({}, r.owner, { met: localHasMet(r.owner && r.owner.pid) });
@@ -134,17 +134,17 @@ function hasStandings(e) {
  * The renderable records of an archive entry: null/junk entries dropped, the
  * rest rehydrated.
  * @param {*} e The archive entry (has standings).
- * @returns {Array<*>} The display settlements.
+ * @returns {Array<*>}
  */
 function entryTop(e) {
   return e.top.filter((/** @type {*} */ r) => !!r && typeof r === "object").map(rehydrate);
 }
 
 /**
- * Every FINISHED age's archived standings, oldest first (the current age is
+ * Every finished age's archived standings, oldest first (the current age is
  * excluded: its entry is still live, not final).
  * @param {*} history The sampled history blob.
- * @returns {Array<{ age: string, label: string, year: string, top: Array<*> }>} The archived ages.
+ * @returns {Array<{ age: string, label: string, year: string, top: Array<*> }>}
  */
 export function readAgeArchive(history) {
   const ages = history && history.settleAges;

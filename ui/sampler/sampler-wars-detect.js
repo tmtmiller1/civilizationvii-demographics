@@ -78,7 +78,7 @@ export function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
   for (const w of wars) {
     if (typeof w.endTurn === "number") continue;
     if (typeof w.warUniqueID !== "number") {
-      // Pre-API legacy record with no uniqueID - close it on first pass after
+      // Pre-API legacy record with no uniqueID; close it on first pass after
       // migration so it doesn't linger forever.
       w.endTurn = turn;
       w.endYear = gameYear;

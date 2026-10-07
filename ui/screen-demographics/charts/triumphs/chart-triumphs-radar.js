@@ -45,9 +45,9 @@ import {
 /**
  * Draw the inner pedestal ring + concentric count rings (with labels) and the
  * axis spokes + labels into the SVG.
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarGeometry} geo The radar geometry.
- * @param {number} scaleMax The scale maximum.
+ * @param {SVGElement} svg
+ * @param {RadarGeometry} geo
+ * @param {number} scaleMax
  */
 function drawRadarGrid(svg, geo, scaleMax) {
   const { cx, cy, innerR } = geo;
@@ -62,7 +62,7 @@ function drawRadarGrid(svg, geo, scaleMax) {
       "stroke-width": "1.6"
     })
   );
-  // Concentric guide rings - one per integer count up to scaleMax; thinner
+  // Concentric guide rings, one per integer count up to scaleMax; thinner
   // stroke once past ~12 rings so the chart stays legible.
   const maxRings = Math.max(1, Math.ceil(scaleMax));
   const ringStrokeW = maxRings <= 12 ? 1 : maxRings <= 20 ? 0.8 : 0.6;
@@ -74,11 +74,11 @@ function drawRadarGrid(svg, geo, scaleMax) {
 
 /**
  * Draw one concentric count ring + its numeric label (top spoke).
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarGeometry} geo The radar geometry.
+ * @param {SVGElement} svg
+ * @param {RadarGeometry} geo
  * @param {number} i The ring index (1-based count).
- * @param {number} maxRings The total ring count.
- * @param {number} ringStrokeW The ring stroke width.
+ * @param {number} maxRings
+ * @param {number} ringStrokeW
  */
 function drawRadarRing(svg, geo, i, maxRings, ringStrokeW) {
   const { cx, cy, R } = geo;
@@ -114,8 +114,8 @@ function drawRadarRing(svg, geo, i, maxRings, ringStrokeW) {
 
 /**
  * Draw the axis spokes (center → rim) and the axis labels.
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarGeometry} geo The radar geometry.
+ * @param {SVGElement} svg
+ * @param {RadarGeometry} geo
  */
 function drawRadarSpokes(svg, geo) {
   const { cx, cy, R } = geo;
@@ -130,7 +130,7 @@ function drawRadarSpokes(svg, geo) {
         "stroke-width": "1"
       })
     );
-    // Anchor side labels INWARD (right-side axis → "end", left-side → "start") so a
+    // Anchor side labels inward (right-side axis → "end", left-side → "start") so a
     // long localized path name grows toward the center instead of off the meet-fit
     // viewBox's left/right edge and getting clipped; top/bottom stay centered.
     const cosA = Math.cos(a.angle);
@@ -165,10 +165,10 @@ function drawRadarSpokes(svg, geo) {
 /**
  * Build the drawable polygon for one civ (per-axis vertices + the populated-
  * only polygon path + its shoelace area).
- * @param {RadarCiv} c The civ.
- * @param {RadarGeometry} geo The radar geometry.
- * @param {number} scaleMax The scale maximum.
- * @returns {RadarPoly} The built polygon.
+ * @param {RadarCiv} c
+ * @param {RadarGeometry} geo
+ * @param {number} scaleMax
+ * @returns {RadarPoly}
  */
 function buildRadarPoly(c, geo, scaleMax) {
   const { cx, cy, R, innerR } = geo;
@@ -194,7 +194,7 @@ function buildRadarPoly(c, geo, scaleMax) {
   } else {
     polyPts = populated;
   }
-  // Shoelace area on the drawn polygon - larger shapes sort behind smaller.
+  // Shoelace area on the drawn polygon; larger shapes sort behind smaller.
   let area = 0;
   if (polyPts.length >= 3) {
     for (let i = 0; i < polyPts.length; i++) {
@@ -208,13 +208,13 @@ function buildRadarPoly(c, geo, scaleMax) {
 
 /**
  * Draw all four civ-polygon passes (fills, spokes, outlines, vertex dots).
- * @param {SVGElement} svg The radar SVG.
+ * @param {SVGElement} svg
  * @param {RadarPoly[]} polys The polygons (already sorted back-to-front).
- * @param {RadarGeometry} geo The radar geometry.
+ * @param {RadarGeometry} geo
  */
 function drawRadarPolys(svg, polys, geo) {
-  // Pass 1 - translucent fills; Pass 2 - spokes; Pass 3 - outlines; Pass 4 -
-  // vertex dots. Each pass runs over every poly so later passes sit on top.
+  // Fills, then spokes, then outlines, then vertex dots. Each pass runs over
+  // every poly so later passes sit on top.
   for (const p of polys) drawRadarPolyFill(svg, p);
   for (const p of polys) drawRadarPolySpokes(svg, p, geo);
   for (const p of polys) drawRadarPolyOutline(svg, p);
@@ -223,8 +223,8 @@ function drawRadarPolys(svg, polys, geo) {
 
 /**
  * Draw one polygon's translucent fill (skipped for < 3 vertices).
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarPoly} p The polygon.
+ * @param {SVGElement} svg
+ * @param {RadarPoly} p
  */
 function drawRadarPolyFill(svg, p) {
   if (!p.polyPts || p.polyPts.length < 3) return;
@@ -236,9 +236,9 @@ function drawRadarPolyFill(svg, p) {
 
 /**
  * Draw one polygon's spokes (center → each populated vertex).
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarPoly} p The polygon.
- * @param {RadarGeometry} geo The radar geometry.
+ * @param {SVGElement} svg
+ * @param {RadarPoly} p
+ * @param {RadarGeometry} geo
  */
 function drawRadarPolySpokes(svg, p, geo) {
   LEGACY_AXES.forEach((a, idx) => {
@@ -259,8 +259,8 @@ function drawRadarPolySpokes(svg, p, geo) {
 
 /**
  * Draw one polygon's outline (skipped for < 2 vertices).
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarPoly} p The polygon.
+ * @param {SVGElement} svg
+ * @param {RadarPoly} p
  */
 function drawRadarPolyOutline(svg, p) {
   if (!p.polyPts || p.polyPts.length < 2) return;
@@ -279,8 +279,8 @@ function drawRadarPolyOutline(svg, p) {
 
 /**
  * Draw one polygon's vertex dots on populated axes.
- * @param {SVGElement} svg The radar SVG.
- * @param {RadarPoly} p The polygon.
+ * @param {SVGElement} svg
+ * @param {RadarPoly} p
  */
 function drawRadarPolyDots(svg, p) {
   LEGACY_AXES.forEach((a, idx) => {
@@ -302,10 +302,10 @@ function drawRadarPolyDots(svg, p) {
  * Build one radar legend row, styled exactly like the line-chart legend rows
  * (colored dot + civ name), with the radar's per-civ total triumph count appended.
  * Clicking toggles the civ via `onToggle`.
- * @param {RadarCiv} c The civ.
- * @param {boolean} isHidden Whether the civ is hidden.
- * @param {((leaderType: string) => void)|null} onToggle Toggle callback.
- * @returns {HTMLElement} The legend row element.
+ * @param {RadarCiv} c
+ * @param {boolean} isHidden
+ * @param {((leaderType: string) => void)|null} onToggle
+ * @returns {HTMLElement}
  */
 function buildRadarLegendRow(c, isHidden, onToggle) {
   const row = document.createElement("div");
@@ -371,7 +371,7 @@ export function renderLegacyRadar(host, options) {
     H
   });
 
-  // HTML wrap so we can put a side legend with click-to-toggle.
+  // HTML wrap, so a click-to-toggle legend can sit beside the SVG.
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap";
   wrap.appendChild(svg);
@@ -384,8 +384,8 @@ export function renderLegacyRadar(host, options) {
 
 /**
  * Prepare host + options for a radar render pass.
- * @param {HTMLElement} host The view host element.
- * @param {ChartOptions|undefined} options Render options.
+ * @param {HTMLElement} host
+ * @param {ChartOptions|undefined} options
  * @returns {{
  *   hostEl: HTMLElement,
  *   opts: ChartOptions,
@@ -416,7 +416,7 @@ function prepareRadarRender(host, options) {
  *   W: number,
  *   H: number
  * }} params Radar build inputs.
- * @returns {{ svg: SVGElement, visibleCount: number }} The SVG + visible count.
+ * @returns {{ svg: SVGElement, visibleCount: number }}
  */
 function buildRadarSvg(params) {
   const { civs, hidden, geo, scaleMax, W, H } = params;
@@ -448,7 +448,7 @@ function buildRadarSvg(params) {
 /**
  * Mount the radar legend into the wrap, a `.demographics-line-legend` overlay
  * box (top-left of the plot) with a "Legend" title, the shared All/None bulk
- * controls, and one clickable row per civ — matching the line/other charts' legend.
+ * controls, and one clickable row per civ, matching the line/other charts' legend.
  * @param {{
  *   wrap: HTMLElement,
  *   civs: Map<string, RadarCiv>,

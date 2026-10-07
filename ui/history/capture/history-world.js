@@ -2,7 +2,7 @@
 //
 // Reads the live game into a plain HnrWorldState: every major player's settlements, wonders,
 // Triumphs, religion, wars and population, plus claimed victories. This is the only capture module
-// that touches the engine; dgh-diff.js compares two states without it. Every engine call is wrapped
+// that touches the engine; history-diff.js compares two states without it. Every engine call is wrapped
 // in safe() because handles go stale mid age-transition and some calls throw for dead players.
 
 import { safe } from "/demographics/ui/history/core/history-log.js";
@@ -12,7 +12,7 @@ import { probeCrisisEventType } from "/demographics/ui/sampler/sampler-age-conte
 
 /**
  * The age crisis: its event type and current stage, read the way the Demographics sampler does.
- * @returns {{type:string, stage:number}} Crisis (stage -1 when unreadable).
+ * @returns {{type:string, stage:number}} stage is -1 when unreadable.
  */
 export function readCrisis() {
   const stage = Number(safe(() => Game.CrisisManager.getCurrentCrisisStage(0), -1));
@@ -22,9 +22,9 @@ export function readCrisis() {
 
 /**
  * GameInfo row for an engine hash or type string, or null.
- * @param {string} table GameInfo table name.
+ * @param {string} table
  * @param {*} key Hash or type string.
- * @returns {*} The row or null.
+ * @returns {*}
  */
 export function infoRow(table, key) {
   if (key == null || typeof GameInfo === "undefined") return null;
@@ -32,16 +32,16 @@ export function infoRow(table, key) {
 }
 
 /**
- * The current age type string ("AGE_ANTIQUITY").
- * @returns {string} Age type, or "" when unknown.
+ * The current age type string ("AGE_ANTIQUITY"), or "" when unknown.
+ * @returns {string}
  */
 export function currentAge() {
   return safe(() => infoRow("Ages", Game.age)?.AgeType, "") || "";
 }
 
 /**
- * The current turn's date label ("2725 BCE").
- * @returns {string} Date label, or "".
+ * The current turn's date label ("2725 BCE"), or "".
+ * @returns {string}
  */
 export function turnDate() {
   return String(safe(() => Game.getTurnDate(), "") || "");
@@ -49,7 +49,7 @@ export function turnDate() {
 
 /**
  * Every major player that has ever been alive this game.
- * @returns {PlayerLibrary[]} Player handles.
+ * @returns {PlayerLibrary[]}
  */
 export function everMajors() {
   const list = safe(() => (Players.getEverAlive ? Players.getEverAlive() : Players.getAlive()), []) || [];
@@ -58,9 +58,9 @@ export function everMajors() {
 
 /**
  * Leader and civilization identity for one player, as type strings plus LOC name tags.
- * @param {PlayerLibrary} p The player.
+ * @param {PlayerLibrary} p
  * @returns {{leader:string, leaderName:string, civ:string, civName:string, color:string, color2:string,
- *   human:boolean}} Identity.
+ *   human:boolean}}
  */
 export function playerIdentity(p) {
   const leaderRow = infoRow("Leaders", p.leaderType);
@@ -77,8 +77,8 @@ export function playerIdentity(p) {
 
 /**
  * A player's primary and secondary banner colors.
- * @param {PlayerLibrary} p The player.
- * @returns {{color:string, color2:string}} CSS colors ("" when unknown).
+ * @param {PlayerLibrary} p
+ * @returns {{color:string, color2:string}} "" when unknown.
  */
 function playerColors(p) {
   return {
@@ -89,7 +89,7 @@ function playerColors(p) {
 
 /**
  * The player's settlements keyed by map location.
- * @param {PlayerLibrary} p The player.
+ * @param {PlayerLibrary} p
  * @returns {Record<string, string>} "x,y" -> settlement name (LOC tag or text).
  */
 export function readCities(p) {
@@ -108,9 +108,9 @@ export function readCities(p) {
  * The player's population in Demographics' real-world scale: the sum over its settlements of the
  * same per-settlement growth curve the Population chart and the Settlements board use (summed per
  * settlement because the curve is super-linear).
- * @param {PlayerLibrary} p The player.
- * @param {{age:string, agePct:number|undefined}} ctx Age and age progress.
- * @returns {number} Scaled people.
+ * @param {PlayerLibrary} p
+ * @param {{age:string, agePct:number|undefined}} ctx
+ * @returns {number}
  */
 export function readScaledPopulation(p, ctx) {
   const list = safe(() => p.Cities?.getCities?.(), []) || [];
@@ -121,8 +121,8 @@ export function readScaledPopulation(p, ctx) {
 
 /**
  * Completed wonders owned by the player, as ConstructibleType strings.
- * @param {PlayerLibrary} p The player.
- * @returns {string[]} Wonder types, sorted.
+ * @param {PlayerLibrary} p
+ * @returns {string[]} Sorted.
  */
 export function readWonders(p) {
   const comps = safe(() => p.Constructibles?.getWonders?.(p.id), []) || [];
@@ -144,8 +144,7 @@ export function readWonders(p) {
 let _legacyCache = null;
 
 /**
- * Triumph rows for the given age.
- * @param {string} age Age type.
+ * @param {string} age
  * @returns {any[]} GameInfo.Legacies rows for that age.
  */
 function legacyRows(age) {
@@ -158,9 +157,9 @@ function legacyRows(age) {
 
 /**
  * Triumphs this player has earned in the current age.
- * @param {PlayerLibrary} p The player.
- * @param {string} age Current age type.
- * @returns {string[]} LegacyType strings, sorted.
+ * @param {PlayerLibrary} p
+ * @param {string} age
+ * @returns {string[]} Sorted.
  */
 export function readTriumphs(p, age) {
   const leg = safe(() => p.Legacies, null);
@@ -173,8 +172,8 @@ export function readTriumphs(p, age) {
 
 /**
  * What a Triumph was earned for, and what it did, as the game words it.
- * @param {string} type LegacyType.
- * @param {string} age Age type.
+ * @param {string} type
+ * @param {string} age
  * @returns {{why: string, what: string}} LOC tags ("" when the game has none).
  */
 export function legacyBlurb(type, age) {
@@ -185,7 +184,7 @@ export function legacyBlurb(type, age) {
 
 /**
  * The display name of the religion this player founded, or "".
- * @param {PlayerLibrary} p The player.
+ * @param {PlayerLibrary} p
  * @returns {string} Custom name, LOC tag, or "".
  */
 export function readReligion(p) {
@@ -198,9 +197,9 @@ export function readReligion(p) {
 }
 
 /**
- * The engine type of the religion a player founded ("RELIGION_BUDDHISM"), for its icon.
- * @param {PlayerLibrary} p The player.
- * @returns {string} Type, or "".
+ * The engine type of the religion a player founded ("RELIGION_BUDDHISM"), for its icon, or "".
+ * @param {PlayerLibrary} p
+ * @returns {string}
  */
 export function readReligionType(p) {
   const type = safe(() => p.Religion?.getReligionType?.(), null);
@@ -211,9 +210,9 @@ export function readReligionType(p) {
 /**
  * Major players this player is at war with. Independents are excluded on purpose: the engine
  * reports every Independent Power as "at war" at all times.
- * @param {PlayerLibrary} p The player.
+ * @param {PlayerLibrary} p
  * @param {number[]} majorIds Ids of living majors.
- * @returns {number[]} Sorted ids.
+ * @returns {number[]} Sorted.
  */
 export function readWars(p, majorIds) {
   const dip = safe(() => p.Diplomacy, null);
@@ -223,7 +222,7 @@ export function readWars(p, majorIds) {
 
 /**
  * Claimed victories as "team:VICTORY_TYPE" strings.
- * @returns {string[]} Sorted list.
+ * @returns {string[]} Sorted.
  */
 export function readVictories() {
   const list = safe(() => Game.VictoryManager.getVictories(), []) || [];
@@ -234,9 +233,9 @@ export function readVictories() {
 
 /**
  * Read one player's state.
- * @param {PlayerLibrary} p The player.
- * @param {{age:string, agePct:number|undefined, local:any, majorIds:number[]}} ctx Shared read context.
- * @returns {HnrPlayerState} The state.
+ * @param {PlayerLibrary} p
+ * @param {{age:string, agePct:number|undefined, local:any, majorIds:number[]}} ctx
+ * @returns {HnrPlayerState}
  */
 export function readPlayer(p, ctx) {
   const alive = !!safe(() => p.isAlive, false);
@@ -261,7 +260,7 @@ export function readPlayer(p, ctx) {
 /**
  * The Emigration mod's cumulative cross-civilization migration for a player (moves between the
  * player's own settlements left out), or undefined when that mod is not running.
- * @param {number} pid Player id.
+ * @param {number} pid
  * @returns {{i:number, o:number}|undefined} People in and out.
  */
 export function readMigration(pid) {
@@ -276,8 +275,8 @@ export function readMigration(pid) {
 
 /**
  * Read the whole world.
- * @param {number} localId The local player id.
- * @returns {HnrWorldState} The state.
+ * @param {number} localId
+ * @returns {HnrWorldState}
  */
 export function readWorld(localId) {
   const majors = everMajors();

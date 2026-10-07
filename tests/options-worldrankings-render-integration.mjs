@@ -25,7 +25,7 @@ function makeSettings() {
   };
 }
 
-// ── view-worldrankings ───────────────────────────────────────────────
+// view-worldrankings
 const { render: renderRankings } = await import(
   "/demographics/ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js"
 );
@@ -34,7 +34,7 @@ const { buildCivColumn, buildLabelColumn, buildGhostCivColumn, formatMetricValue
   "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js"
 );
 
-// formatMetricValue — use a concrete metric id (score) that exists in METRICS
+// formatMetricValue: use a concrete metric id (score) that exists in METRICS
 assert.ok(typeof formatMetricValue("score", 100) === "string");
 assert.ok(typeof formatMetricValue("score", 0) === "string");
 assert.ok(typeof METRIC_ICONS === "object");
@@ -64,7 +64,7 @@ rankHost._rect.width = 1200; rankHost._rect.height = 900;
 renderRankings(rankHost, rankCtx);
 assert.ok(rankHost.children.length > 0);
 
-// ── responsive layout gate: table vs matrix ──────────────────────────
+// responsive layout gate: table vs matrix
 // The worldRankingsAllCivsLayout setting pins the branch; "auto" measures the
 // host's available rem-width (the stub returns _rect.width, and a 10rem probe
 // returns 160, so availableRem === width/16).
@@ -99,7 +99,7 @@ assert.ok(
 const localRow = renderWith(1600, "table").querySelector(".is-local");
 assert.ok(localRow, "the local player's row is highlighted in the table");
 
-// ── throw boundary: a throwing sub-renderer leaves the render-failed notice ──
+// throw boundary: a throwing sub-renderer leaves the render-failed notice
 // `history.samples` throwing stands in for any renderer throw below `render`;
 // the host is cleared first, so without the boundary the panel would be blank.
 // The sort/toggle rerender closures all call `render`, so they share it.
@@ -152,7 +152,7 @@ assert.equal(strip.querySelectorAll(".demographics-empty").length, 1, "each re-r
 assert.equal(logged, 3, "each strip throw is logged");
 console.error = origError;
 
-// ── Hiding one civ rebuilds ONLY that column ──────────────────────────────────
+// Hiding one civ rebuilds only that column
 // Regression guard for the blinking portraits / metric icons: a hide/show toggle used to clear the
 // whole strip, so every other civ's leader portrait and the label column's icons were destroyed
 // and re-created (and flashed while their `blp:` backgrounds re-resolved).

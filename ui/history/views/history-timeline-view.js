@@ -50,8 +50,8 @@ const MARK_LEGEND = [
  * page's render try/catch, so a throw there would leave the graphic half-updated with nothing
  * logged, and a timer would throw again on every tick.
  * @template {any[]} A
- * @param {string} what What the handler does, for the log line.
- * @param {(...args: A) => void} fn Handler.
+ * @param {string} what For the log line.
+ * @param {(...args: A) => void} fn
  * @returns {(...args: A) => void} The guarded handler.
  */
 function guarded(what, fn) {
@@ -66,9 +66,9 @@ function guarded(what, fn) {
 
 /**
  * The window shown for the selected age ("all" is the whole game).
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @param {string} age Selected age type or "all".
- * @returns {Win} Window.
+ * @returns {Win}
  */
 export function windowFor(tl, age) {
   const a = tl.ages.find((x) => x.age === age);
@@ -77,9 +77,9 @@ export function windowFor(tl, age) {
 
 /**
  * Every dated happening on the timeline, oldest first, for the playback caption.
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @param {Cast} cast
- * @returns {Beat[]} Beats.
+ * @returns {Beat[]}
  */
 export function beats(tl, cast) {
   const ageAt = (/** @type {number} */ at) => tl.ages.find((a) => at >= a.from && at < a.from + a.len)?.age || "";
@@ -101,9 +101,9 @@ export function beats(tl, cast) {
 
 /**
  * "date: text", or the text alone without a date.
- * @param {string} d Date.
- * @param {string} s Text.
- * @returns {string} Line.
+ * @param {string} d
+ * @param {string} s
+ * @returns {string}
  */
 function dated(d, s) {
   return (d ? d + ": " : "") + s;
@@ -112,9 +112,9 @@ function dated(d, s) {
 /**
  * The enemy's name for a war (independent peoples when unnamed).
  * @param {Cast} cast
- * @param {number} pid Enemy.
+ * @param {number} pid
  * @param {string} age
- * @returns {string} Name.
+ * @returns {string}
  */
 function warName(cast, pid, age) {
   return cast.civName(pid, age) || t("LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
@@ -123,9 +123,9 @@ function warName(cast, pid, age) {
 /**
  * A war's caption: yours against the enemy, or two other civilizations against each other.
  * @param {Cast} cast
- * @param {Timeline["wars"][number]} w War.
- * @param {string} age Age type.
- * @returns {string} Caption.
+ * @param {Timeline["wars"][number]} w
+ * @param {string} age
+ * @returns {string}
  */
 function warText(cast, w, age) {
   if (w.a != null && w.a !== cast.local) return t("LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR", warName(cast, w.a, age), warName(cast, w.other, age));
@@ -134,8 +134,8 @@ function warText(cast, w, age) {
 
 /**
  * A crisis stage's caption.
- * @param {Timeline["crises"][number]} c Stage.
- * @returns {string} Caption.
+ * @param {Timeline["crises"][number]} c
+ * @returns {string}
  */
 function crisisText(c) {
   return (t(c.n) || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED")) + ", " + t("LOC_DEMOGRAPHICS_HIST_TL_STAGE", c.stage);
@@ -143,9 +143,9 @@ function crisisText(c) {
 
 /**
  * The latest beat at or before a position.
- * @param {Beat[]} list Beats, oldest first.
- * @param {number} at Position.
- * @returns {Beat|null} Beat.
+ * @param {Beat[]} list Oldest first.
+ * @param {number} at
+ * @returns {Beat|null}
  */
 export function beatAt(list, at) {
   let found = null;
@@ -158,9 +158,9 @@ export function beatAt(list, at) {
 
 /**
  * The game turn and age at an axis position ("Antiquity, turn 42").
- * @param {Timeline} tl Timeline.
- * @param {number} at Position.
- * @returns {string} Label.
+ * @param {Timeline} tl
+ * @param {number} at
+ * @returns {string}
  */
 function turnLabel(tl, at) {
   const a = tl.ages.find((x) => at >= x.from && at < x.from + x.len) || tl.ages[tl.ages.length - 1];
@@ -170,8 +170,8 @@ function turnLabel(tl, at) {
 
 /**
  * The lanes of the window, in drawing order.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
+ * @param {Timeline} tl
+ * @param {Win} w
  * @param {Cast} cast
  * @param {number} zoom
  * @param {import("./history-timeline-lanes.js").ItemCache} [cache] Item-reuse cache, handed to the
@@ -190,8 +190,8 @@ function lanesFor(tl, w, cast, zoom, cache) {
 
 /**
  * The legend of what this timeline shows.
- * @param {Timeline} tl Timeline.
- * @returns {HTMLElement} Legend.
+ * @param {Timeline} tl
+ * @returns {HTMLElement}
  */
 function legend(tl) {
   const present = new Set(tl.marks.map((m) => m.k));
@@ -215,7 +215,7 @@ function legend(tl) {
 /**
  * The territory map (when the game has one) above the timeline, following its cursor, with an
  * optional companion (the rivals) to its right.
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @param {import("../model/history-map.js").MapView|null} mv Territory map.
  * @param {Cast} cast
  * @param {HTMLElement|null} [side] Shown to the right of the map.
@@ -233,11 +233,11 @@ export function timelineWithMap(tl, mv, cast, side = null, key = "") {
 
 /**
  * The interactive timeline of one game.
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @param {Cast} cast
  * @param {{onSeek?: (at:number) => void, key?: string}} [opts] onSeek: told the position shown (the cursor,
  *   else the end of the window), so a companion such as the territory map can follow; key: the game's id.
- * @returns {HTMLElement} Graphic.
+ * @returns {HTMLElement}
  */
 export function timelineGraphic(tl, cast, opts = {}) {
   const root = el("div", { cls: "dgh-tl" });
@@ -249,8 +249,8 @@ export function timelineGraphic(tl, cast, opts = {}) {
   };
   // Every redraw path (age and zoom pills, the civilization filter) ends here, so a redraw that
   // fails leaves a message in place of the graphic rather than a half-drawn one or nothing.
-  // The civilization filter (civ emblems) and the legend (icon swatches) depend only on WHICH
-  // civilizations are shown — never on the age window or the zoom. Rebuilding them on every age or
+  // The civilization filter (civ emblems) and the legend (icon swatches) depend only on which
+  // civilizations are shown, not on the age window or the zoom. Rebuilding them on every age or
   // zoom click re-created their engine art, and each icon blinked while it resolved again, so they
   // are kept against the shown set and moved back into place instead of being remade.
   /** @type {{ sig: string|null, civs: HTMLElement|null, legend: HTMLElement|null }} */
@@ -291,7 +291,7 @@ export function timelineGraphic(tl, cast, opts = {}) {
  * The civilizations picked for a game: the saved pick for this game, else just your own.
  * @param {string} key Game id.
  * @param {Cast} cast
- * @returns {Set<number>} Picked player ids.
+ * @returns {Set<number>}
  */
 function shownCivs(key, cast) {
   const pick = viewState.tlCivs;
@@ -305,8 +305,8 @@ function shownCivs(key, cast) {
  * @param {Cast} cast
  * @param {Set<number>} shown Picked civilizations.
  * @param {string} key Game id.
- * @param {() => void} redraw Redraw the timeline.
- * @returns {HTMLElement|null} The row, or null when only you appear.
+ * @param {() => void} redraw
+ * @returns {HTMLElement|null} null when only you appear.
  */
 function civFilter(tl, cast, shown, key, redraw) {
   const age = tl.ages[tl.ages.length - 1]?.age || "";
@@ -344,8 +344,8 @@ function civFilter(tl, cast, shown, key, redraw) {
 
 /**
  * Build the controls, labels, canvas and caption into the root.
- * @param {HTMLElement} root Root (emptied).
- * @param {Timeline} tl Timeline.
+ * @param {HTMLElement} root Emptied first.
+ * @param {Timeline} tl
  * @param {Cast} cast
  * @param {{timer: any, at: number}} play Playback state.
  * @param {{redraw: () => void, stop: () => void, onSeek: (at:number) => void,
@@ -372,7 +372,7 @@ function drawInto(root, tl, cast, play, fx) {
   root.appendChild(el("div", { cls: "dgh-tl-body" }, [labels, viewport]));
   root.appendChild(caption);
   // Kept from the previous draw when the shown civilizations did not change (see `chrome` in
-  // timelineGraphic); appending an element already in the tree MOVES it back into place.
+  // timelineGraphic); appending an element already in the tree moves it back into place.
   root.appendChild(fx.legend || legend(tl));
   if (play.at >= w.from && play.at <= w.to) player.seek(play.at);
   else fx.onSeek(w.to - 0.5);
@@ -380,8 +380,8 @@ function drawInto(root, tl, cast, play, fx) {
 
 /**
  * Remove every child of `node` except the ones being kept across this redraw.
- * @param {HTMLElement} node The container.
- * @param {Array<HTMLElement|null>} keep The children to leave in the tree.
+ * @param {HTMLElement} node
+ * @param {Array<HTMLElement|null>} keep
  */
 function clearExcept(node, keep) {
   for (const child of Array.prototype.slice.call(node.children)) {
@@ -392,9 +392,9 @@ function clearExcept(node, keep) {
 /**
  * Mouse behavior of the lanes: the ruler seeks on click, and the ruler and population lane show a
  * readout that follows the mouse.
- * @param {Timeline} tl Timeline.
- * @param {Win} w Window.
- * @param {{key:string, node:HTMLElement}[]} lanes Lane elements.
+ * @param {Timeline} tl
+ * @param {Win} w
+ * @param {{key:string, node:HTMLElement}[]} lanes
  * @param {Player} player
  * @param {Cast} cast
  */
@@ -412,8 +412,8 @@ function wireLanes(tl, w, lanes, player, cast) {
  * Population at a position: yours alone, or each shown civilization's when rivals are shown.
  * @param {Timeline} tl Timeline (focused).
  * @param {Cast} cast
- * @param {number} at Position.
- * @returns {string} Text.
+ * @param {number} at
+ * @returns {string}
  */
 function populationsAt(tl, cast, at) {
   const lines = tl.lines || [];
@@ -425,9 +425,9 @@ function populationsAt(tl, cast, at) {
 
 /**
  * The value of a curve at a position, interpolated between its points (0 before the first).
- * @param {{at:number, v:number}[]} curve Points, oldest first.
- * @param {number} at Position.
- * @returns {number} Value.
+ * @param {{at:number, v:number}[]} curve Oldest first.
+ * @param {number} at
+ * @returns {number}
  */
 export function valueAt(curve, at) {
   if (!curve.length || at < curve[0].at) return 0;
@@ -442,7 +442,7 @@ export function valueAt(curve, at) {
 /**
  * A readout that follows the mouse across a lane: a hairline and a label naming what is under it.
  * @param {HTMLElement} lane
- * @param {Win} w Window.
+ * @param {Win} w
  * @param {(at:number) => string} textAt Label for a position.
  */
 function hoverReadout(lane, w, textAt) {
@@ -473,8 +473,8 @@ function hoverReadout(lane, w, textAt) {
 
 /**
  * Call back with the horizontal fraction (0..1) of a click inside an element.
- * @param {Element} target Element.
- * @param {(frac:number) => void} fn Handler.
+ * @param {Element} target
+ * @param {(frac:number) => void} fn
  */
 function onActivateAt(target, fn) {
   target.addEventListener("click", guarded("seek", (/** @type {any} */ ev) => {
@@ -493,13 +493,13 @@ function onActivateAt(target, fn) {
 
 /**
  * Playback: a cursor with a veil over the future and a caption naming the latest event.
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @param {Cast} cast
- * @param {Win} w Window.
+ * @param {Win} w
  * @param {{timer: any, at: number}} play Playback state (kept across redraws).
  * @param {{canvas: HTMLElement, viewport: HTMLElement, caption: HTMLElement, stop: () => void,
- *   onSeek: (at:number) => void}} ui Parts.
- * @returns {Player} Player.
+ *   onSeek: (at:number) => void}} ui
+ * @returns {Player}
  */
 function playback(tl, cast, w, play, ui) {
   const list = beats(tl, cast);
@@ -561,11 +561,11 @@ function follow(viewport, canvas, x) {
 
 /**
  * The control row: age window, zoom, pan and play.
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @param {Player} player
  * @param {HTMLElement} viewport Scroll box.
- * @param {{redraw: () => void, stop: () => void}} fx Redraw.
- * @returns {HTMLElement} Row.
+ * @param {{redraw: () => void, stop: () => void}} fx
+ * @returns {HTMLElement}
  */
 function controls(tl, player, viewport, fx) {
   const ages = [

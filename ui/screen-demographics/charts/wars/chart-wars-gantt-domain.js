@@ -1,14 +1,14 @@
 // chart-wars-gantt-domain.js
 //
-// Domain and layout helpers for wars Gantt timeline.
+// Domain and layout helpers for the wars Gantt timeline.
 
 import { majorsOnSide } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { typeBoost } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /**
  * Whether a war pits at least one major civ on each side.
- * @param {*} war War record.
- * @returns {boolean} True for major-vs-major wars.
+ * @param {*} war
+ * @returns {boolean}
  */
 function isMajorVsMajor(war) {
   return majorsOnSide(war.sideACivs).length > 0 && majorsOnSide(war.sideBCivs).length > 0;
@@ -16,8 +16,8 @@ function isMajorVsMajor(war) {
 
 /**
  * The major-civ pids participating in one war.
- * @param {*} war War record.
- * @returns {number[]} Major participant pids.
+ * @param {*} war
+ * @returns {number[]}
  */
 function majorPidsForWar(war) {
   return /** @type {number[]} */ ([])
@@ -32,10 +32,10 @@ function majorPidsForWar(war) {
 
 /**
  * Filter wars to major-vs-major engagements matching active filters.
- * @param {*[]} wars War list.
+ * @param {*[]} wars
  * @param {boolean} showActiveOnly Hide concluded wars when true.
- * @param {number|null} filterPid Optional civ filter pid.
- * @returns {*[]} Filtered wars.
+ * @param {number|null} filterPid
+ * @returns {*[]}
  */
 export function filterGanttWars(wars, showActiveOnly, filterPid) {
   return wars.filter((war) => {
@@ -50,9 +50,9 @@ export function filterGanttWars(wars, showActiveOnly, filterPid) {
 
 /**
  * Compute min start / max end turn across in-range wars.
- * @param {*[]} filtered Filtered wars.
- * @param {{ min: number, max: number }|null} turnRange Time-range filter.
- * @param {number} latestTurn Latest sampled turn.
+ * @param {*[]} filtered
+ * @param {{ min: number, max: number }|null} turnRange
+ * @param {number} latestTurn
  * @returns {{ xMin: number, xMax: number }} Raw span.
  */
 function ganttWarSpan(filtered, turnRange, latestTurn) {
@@ -69,11 +69,11 @@ function ganttWarSpan(filtered, turnRange, latestTurn) {
 }
 
 /**
- * Extend right edge to include current turn and future tail room for ongoing wars.
- * @param {*[]} filtered Filtered wars.
- * @param {number} xMin Domain left edge.
- * @param {number} xMax Domain right edge.
- * @param {number} latestTurn Latest sampled turn.
+ * Extend the right edge to include the current turn and future tail room for ongoing wars.
+ * @param {*[]} filtered
+ * @param {number} xMin
+ * @param {number} xMax
+ * @param {number} latestTurn
  * @returns {number} Extended right edge.
  */
 function extendDomainFuture(filtered, xMin, xMax, latestTurn) {
@@ -90,11 +90,11 @@ function extendDomainFuture(filtered, xMin, xMax, latestTurn) {
 
 /**
  * Compute Gantt x-domain [xMin, xMax].
- * @param {*[]} filtered Filtered wars.
- * @param {{ min: number, max: number }|null} turnRange Optional turn-range filter.
- * @param {number} latestTurn Latest sampled turn.
- * @param {*[]} samples Sample stream fallback.
- * @returns {{ xMin: number, xMax: number }} Domain.
+ * @param {*[]} filtered
+ * @param {{ min: number, max: number }|null} turnRange
+ * @param {number} latestTurn
+ * @param {*[]} samples Fallback when there are no wars.
+ * @returns {{ xMin: number, xMax: number }}
  */
 export function computeGanttDomain(filtered, turnRange, latestTurn, samples) {
   const span = ganttWarSpan(filtered, turnRange, latestTurn);
@@ -117,12 +117,12 @@ export function computeGanttDomain(filtered, turnRange, latestTurn, samples) {
  * Legibility floor for the timeline's horizontal density. The Gantt fills its host and only grows
  * wider than it when the turn span would otherwise compress below this many px per turn.
  *
- * This was 14, which made a 226-turn game 3284px wide: wider than the host at EVERY resolution
+ * This was 14, which made a 226-turn game 3284px wide: wider than the host at every resolution
  * (the reference's host is ~2500px), and the host does not scroll horizontally, so the last wars,
- * the final crisis label and the age marker were clipped off the right edge unreachably (watched
- * 2026-09-23 at 720p: 826 visual px past the frame; also clipped at 2880x1800). At 4 px/turn a
- * war bar is still a clear stripe and its label sits over it; anything denser than that is a long
- * game where scrolling is the right answer.
+ * the final crisis label and the age marker were clipped off the right edge with no way to reach
+ * them (826 visual px past the frame at 720p; also clipped at 2880x1800). At 4 px/turn a war bar
+ * is still a clear stripe and its label sits over it; anything denser than that is a long game
+ * where scrolling is the right answer.
  */
 const GANTT_MIN_PX_PER_TURN = 4;
 const GANTT_PAD_LR = 120;
@@ -145,9 +145,8 @@ export const CRISIS_LABEL_ROWS = 3;
  * They used to be drawn over the first bars, which reads fine at the reference, where the war-name
  * labels are short enough to end well left of the first crisis. It does not hold anywhere else:
  * text is boosted relative to the layout below MIN_TYPE_VISUAL, so at 1280x720 the first two war
- * names run right under "CRISIS BEGINS" and "CRISIS INTENSIFIES" (watched 2026-09-23). Reserving a
- * band puts the bars below the labels at every resolution instead of relying on the names being
- * short.
+ * names run right under "CRISIS BEGINS" and "CRISIS INTENSIFIES". Reserving a band puts the bars
+ * below the labels at every resolution instead of relying on the names being short.
  * @param {number} onsets How many crisis onsets are in the window.
  * @param {number} [boost] Type boost (1 at the reference); read from the ladder when omitted.
  * @returns {number} Band height in chart pixels (0 when there are no onsets).
@@ -160,10 +159,10 @@ export function crisisBandHeight(onsets, boost) {
 }
 
 /**
- * Compute natural pixel width for the Gantt canvas.
+ * The Gantt canvas's natural pixel width.
  * @param {number} viewportW Host viewport width.
- * @param {{ xMin: number, xMax: number }} dom Domain.
- * @returns {number} Canvas width.
+ * @param {{ xMin: number, xMax: number }} dom
+ * @returns {number}
  */
 export function computeGanttWidth(viewportW, dom) {
   const span = Math.max(1, dom.xMax - dom.xMin);
@@ -174,16 +173,15 @@ export function computeGanttWidth(viewportW, dom) {
 
 /**
  * Belligerent major count for one war.
- * @param {*} war War record.
- * @returns {number} Stripe count.
+ * @param {*} war
+ * @returns {number}
  */
 function warStripeCount(war) {
   return Math.max(2, majorsOnSide(war.sideACivs).length + majorsOnSide(war.sideBCivs).length);
 }
 
 /**
- * Bar height for one war.
- * @param {*} war War record.
+ * @param {*} war
  * @returns {number} Height in px.
  */
 function barHeightFor(war) {
@@ -194,11 +192,11 @@ function barHeightFor(war) {
 }
 
 /**
- * Build layout metrics and mappers for Gantt rendering.
+ * Layout metrics and mappers for Gantt rendering.
  * @param {number} width Canvas width.
  * @param {number} minHeight Minimum caller height.
  * @param {*[]} wars Filtered wars.
- * @param {{ xMin: number, xMax: number }} dom Domain.
+ * @param {{ xMin: number, xMax: number }} dom
  * @param {number} [crisisBand] Room to leave above the first bar for the crisis labels
  *   ({@link crisisBandHeight}); 0 or omitted when the window holds no crisis onset.
  * @returns {{
@@ -212,7 +210,7 @@ function barHeightFor(war) {
  *   rowHeights: number[],
  *   barH: number,
  *   xOf: (t:number) => number
- * }} Layout.
+ * }}
  */
 export function buildGanttLayout(width, minHeight, wars, dom, crisisBand) {
   const padL = 60;

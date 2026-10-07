@@ -71,7 +71,7 @@ function normalizeWarRecord(uid, header) {
   const sideASet = buildWarSide(initialPid, supporters);
   const sideBSet = buildWarSide(targetPid, opposers);
   // Engine sometimes returns the initiator listed in supporters and vice
-  // versa - strip cross-membership.
+  // versa; strip cross-membership.
   for (const id of sideASet) sideBSet.delete(id);
   return {
     uniqueID: uid,

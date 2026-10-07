@@ -7,8 +7,8 @@ import { dlog } from "/demographics/ui/screen-demographics/views/relations/relat
 
 /**
  * Resolve selected viewer index from dropdown event payload.
- * @param {*} event Dropdown event payload.
- * @param {number} itemCount Dropdown item count.
+ * @param {*} event
+ * @param {number} itemCount
  * @returns {number|null} Selected index, or null when invalid.
  */
 function viewerSelectionIndex(event, itemCount) {
@@ -20,8 +20,8 @@ function viewerSelectionIndex(event, itemCount) {
 
 /**
  * Persist selected CS viewer pid to settings (best effort).
- * @param {*} rs Render state.
- * @param {number} pid Viewer pid.
+ * @param {*} rs
+ * @param {number} pid
  */
 function persistViewerPid(rs, pid) {
   try {
@@ -33,9 +33,9 @@ function persistViewerPid(rs, pid) {
 
 /**
  * Handle CS viewer dropdown selection changes.
- * @param {*} rs Render state.
- * @param {{ pid: number }[]} items Dropdown items.
- * @param {*} event Dropdown event payload.
+ * @param {*} rs
+ * @param {{ pid: number }[]} items
+ * @param {*} event
  */
 function onViewerSelectionChange(rs, items, event) {
   const idx = viewerSelectionIndex(event, items.length);

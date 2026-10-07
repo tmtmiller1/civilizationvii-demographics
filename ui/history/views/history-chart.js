@@ -29,10 +29,9 @@ const H = 400;
  */
 
 /**
- * Create an SVG element.
  * @param {string} tag
- * @param {Record<string, string>} attrs Attributes.
- * @returns {Element} The element.
+ * @param {Record<string, string>} attrs
+ * @returns {Element}
  */
 function svg(tag, attrs) {
   const e = document.createElementNS(SVG_NS, tag);
@@ -42,8 +41,8 @@ function svg(tag, attrs) {
 
 /**
  * A "nice" upper bound for the y axis (1, 2, 5 x 10^n).
- * @param {number} max Largest value.
- * @returns {number} Axis maximum.
+ * @param {number} max
+ * @returns {number}
  */
 export function niceMax(max) {
   if (!(max > 0)) return 1;
@@ -54,7 +53,7 @@ export function niceMax(max) {
 
 /**
  * Polyline points for one series.
- * @param {number[]} ys Values.
+ * @param {number[]} ys
  * @param {number} count X positions.
  * @param {number} yMax Axis maximum.
  * @returns {string} "x,y x,y ..." in viewBox units.
@@ -68,7 +67,7 @@ export function points(ys, count, yMax) {
  * The plot SVG: grid, markers, lines.
  * @param {ChartSpec} spec
  * @param {number} yMax Axis maximum.
- * @returns {Element} The SVG.
+ * @returns {Element}
  */
 function plotSvg(spec, yMax) {
   const root = svg("svg", { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: "none", class: "dgh-chart-svg" });
@@ -115,7 +114,7 @@ function overlays(spec, yMax) {
 /**
  * A multi-series line chart with legend.
  * @param {ChartSpec} spec
- * @returns {HTMLElement} The chart.
+ * @returns {HTMLElement}
  */
 export function lineChart(spec) {
   const max = Math.max(0, ...spec.series.flatMap((s) => s.ys));
@@ -130,9 +129,9 @@ export function lineChart(spec) {
 
 /**
  * A small inline trend line.
- * @param {number[]} ys Values.
- * @param {string} color CSS color.
- * @returns {HTMLElement} The sparkline.
+ * @param {number[]} ys
+ * @param {string} color
+ * @returns {HTMLElement}
  */
 export function sparkline(ys, color) {
   const box = el("div", { cls: "dgh-spark" });

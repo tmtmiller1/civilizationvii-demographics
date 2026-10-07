@@ -1,7 +1,7 @@
 // sampler-game-summary.js
 //
 // Defensive read-only adapter over the engine-native `Game.Summary` API (schema
-// in base-standard/config/hall-of-fame.xml). Every export returns an EMPTY map
+// in base-standard/config/hall-of-fame.xml). Every export returns an empty map
 // on any absence or schema drift and never throws. Player-scope datasets resolve
 // one per player; City-scope datasets resolve one per city and are summed per
 // owning player; delta datasets accumulate while level datasets take the latest
@@ -48,8 +48,8 @@ function objectMap() {
 }
 
 /**
- * Reduce one dataset's `values` up to `turn`: the SUM of points (delta series)
- * or the LATEST point's value (level series).
+ * Reduce one dataset's `values` up to `turn`: the sum of points (delta series)
+ * or the latest point's value (level series).
  * @param {{x:number, y:number}[]} values The dataset points.
  * @param {number} turn Ignore points with x > turn.
  * @param {boolean} delta Sum points when true; take the latest when false.

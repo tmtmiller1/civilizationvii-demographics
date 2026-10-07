@@ -20,7 +20,7 @@ import {
 /** A raw cumulative cost column: { pid, leaderType?, color?, cost }. @typedef {*} CrisisCol */
 /** A buildCostTable column: { entry, cs:null, cost }. @typedef {*} TableCol */
 
-// Cost metrics shown per crisis: every war-cost figure EXCEPT production directed to war and
+// Cost metrics shown per crisis: every war-cost figure except production directed to war and
 // settlements razed (both war-specific). Shared so the render and the snapshot agree.
 export const CRISIS_METRICS = COST_METRICS.filter((m) => m.id !== "warProdCum" && m.id !== "razedCum");
 
@@ -32,10 +32,10 @@ for (const m of CRISIS_METRICS) COST_KEY_MODE[m.key] = m.mode;
 /**
  * Every major civ present in the samples within [start, end] (one cost column each), first-seen
  * order. Iterating `s.players` yields majors only (city-states live in `s.minors`).
- * @param {Snapshot[]} samples The sample stream.
- * @param {number} start The window start turn.
- * @param {number} end The window end turn.
- * @returns {{ pid: number }[]} The participant column entries.
+ * @param {Snapshot[]} samples
+ * @param {number} start
+ * @param {number} end
+ * @returns {{ pid: number }[]}
  */
 export function crisisParticipants(samples, start, end) {
   const seen = new Set();
@@ -56,7 +56,7 @@ export function crisisParticipants(samples, start, end) {
 /**
  * Split flat stage segments into per-crisis runs. A new crisis begins at each stage-1 onset or
  * whenever the age changes, so each age's crisis gets its own group.
- * @param {{ stage:number, start:number, end:number, sample:Snapshot }[]} segments The segments.
+ * @param {{ stage:number, start:number, end:number, sample:Snapshot }[]} segments
  * @returns {*[]} The crisis groups ({ segments, start, end, sample, age }).
  */
 export function groupCrises(segments) {
@@ -97,9 +97,9 @@ export function mergeCost(acc, add) {
 /**
  * Resolve a participant's leader-type + primary color from the latest sample carrying the pid, so a
  * snapshot column can render its portrait/dot without the (later-decimated) live samples.
- * @param {Pid|string|number} pid The participant pid.
- * @param {Snapshot[]} samples The sample stream.
- * @returns {{ leaderType: (string|undefined), color: (string|undefined) }} Identity bits.
+ * @param {Pid|string|number} pid
+ * @param {Snapshot[]} samples
+ * @returns {{ leaderType: (string|undefined), color: (string|undefined) }}
  */
 export function participantIdentity(pid, samples) {
   for (let i = samples.length - 1; i >= 0; i--) {
@@ -118,7 +118,7 @@ export function participantIdentity(pid, samples) {
 /**
  * The crisis groups within one age's samples (start/end windows).
  * @param {Snapshot[]} ageSamples Samples already filtered to one age.
- * @returns {{ start:number, end:number, sample:Snapshot }[]} The crisis groups.
+ * @returns {{ start:number, end:number, sample:Snapshot }[]}
  */
 function ageCrisisGroups(ageSamples) {
   const onsets = crisisStageOnsets(ageSamples);
@@ -129,7 +129,7 @@ function ageCrisisGroups(ageSamples) {
 }
 
 /**
- * Build the per-civ CUMULATIVE crisis cost columns for one age (every stage summed), each column
+ * Build the per-civ cumulative crisis cost columns for one age (every stage summed), each column
  * carrying the civ's identity so it renders from a snapshot without live samples. Empty when the
  * age had no crisis.
  * @param {Snapshot[]} ageSamples Samples filtered to one age (must be dense for accurate losses).
@@ -157,8 +157,8 @@ export function buildAgeCrisisCols(ageSamples) {
 /**
  * Whether a (possibly persisted) column is a usable object. Snapshot arrays come from storage, so
  * an element can be null or a scalar; those are dropped rather than dereferenced.
- * @param {*} c A column candidate.
- * @returns {boolean} True for a non-null object.
+ * @param {*} c
+ * @returns {boolean}
  */
 function isCol(c) {
   return !!c && typeof c === "object";
@@ -166,8 +166,8 @@ function isCol(c) {
 
 /**
  * Convert stored/computed cost columns into the shape buildCostTable consumes.
- * @param {CrisisCol[]} cols The cumulative cost columns.
- * @returns {TableCol[]} The buildCostTable columns.
+ * @param {CrisisCol[]} cols
+ * @returns {TableCol[]}
  */
 export function toTableCols(cols) {
   return (Array.isArray(cols) ? cols : []).filter(isCol).map((c) => ({

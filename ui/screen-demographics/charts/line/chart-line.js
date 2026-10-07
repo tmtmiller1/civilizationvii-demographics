@@ -86,7 +86,7 @@ const WIDE_Y_LEGEND = new Set([
 ]);
 
 /**
- * Metrics with EXTRA-wide Y-axis tick labels (signed, spelled-out people counts like
+ * Metrics with extra-wide Y-axis tick labels (signed, spelled-out people counts like
  * "+240 million" / "-12 thousand"), which need the overlaid legend nudged further right than the
  * regular wide tier. Externally registered by the Emigration mod.
  * @type {Set<string>}
@@ -100,7 +100,7 @@ const EXTRA_WIDE_Y_LEGEND = new Set([
   "emig_refugees"
 ]);
 
-// Line chart - Chart.js implementation. Chart.js is loaded into Civ7's runtime
+// Line chart, Chart.js implementation. Chart.js is loaded into Civ7's runtime
 // by the engine (used by <fxs-hof-chart>), so we instantiate it directly and
 // reuse the Chart.defaults the engine sets for parity with the in-game graphs.
 
@@ -109,7 +109,7 @@ export const DG_OWNED = "$demographicsOwned";
 
 /**
  * Destroy any prior Chart instance cached on the host before re-mounting.
- * @param {HTMLElement|*} host The chart host element.
+ * @param {HTMLElement|*} host
  */
 export function teardownExistingChart(host) {
   if (!host) return;
@@ -129,12 +129,12 @@ export function teardownExistingChart(host) {
  *
  * Why this exists: teardownExistingChart() only reaches a chart through the host element that
  * still carries it, and destroyChartsUnder() only walks hosts still under the screen root. A view
- * or page swap detaches the old host first, so the instance it held becomes unreachable by both —
+ * or page swap detaches the old host first, so the instance it held becomes unreachable by both:
  * it is never destroyed and keeps its five canvas listeners and its full dataset for the life of
- * the UI context. Measured on 1.5.0 (2026-09-24): every page-tab swap leaked 2 instances, a view
- * swap orphaned the live one, and closing + reopening the screen reclaimed none (7/6 -> 14/13
- * across six swaps). A canvas outside the document can never draw again, so a detached instance is
- * always garbage; sweeping by ownership tag catches every leak path rather than one call site.
+ * the UI context. On 1.5.0 every page-tab swap leaked 2 instances, a view swap orphaned the live
+ * one, and closing + reopening the screen reclaimed none (7/6 -> 14/13 across six swaps). A canvas
+ * outside the document can never draw again, so a detached instance is always garbage; sweeping by
+ * ownership tag catches every leak path rather than one call site.
  * @returns {number} How many orphaned instances were destroyed.
  */
 export function reclaimOrphanedCharts() {
@@ -192,10 +192,10 @@ export function applyEngineChartDefaults() {
  * mis-sized), then to a 1920x1080 default.
  * @param {number} [fallbackW] Caller-measured host width.
  * @param {number} [fallbackH] Caller-measured host height.
- * @returns {{ vw: number, vh: number }} Viewport width and height.
+ * @returns {{ vw: number, vh: number }}
  */
 function viewportSize(fallbackW, fallbackH) {
-  // window.inner* is the VISUAL viewport; the canvas lives in the frame's LOCAL space, which is
+  // window.inner* is the visual viewport; the canvas lives in the frame's local space, which is
   // 1/s larger when the frame is drawn through transform:scale(s).
   const vw =
     typeof window !== "undefined" && window.innerWidth ? toLocalPx(window.innerWidth) : fallbackW || 1920;
@@ -205,10 +205,10 @@ function viewportSize(fallbackW, fallbackH) {
 }
 
 /**
- * Clamp one render dimension to caller hints when the hint is meaningful.
- * @param {number} render Current computed render size.
- * @param {*} hint Caller size hint.
- * @returns {number} Clamped render size.
+ * Clamp one render dimension to the caller's hint when the hint is meaningful.
+ * @param {number} render
+ * @param {*} hint
+ * @returns {number}
  */
 function clampRenderByHint(render, hint) {
   if (typeof hint !== "number") return render;
@@ -219,7 +219,7 @@ function clampRenderByHint(render, hint) {
 /**
  * Compute the viewport-relative canvas render size, clamping to the caller's
  * width/height hints when they're meaningfully large.
- * @param {ChartOptions} opts The render options.
+ * @param {ChartOptions} opts
  * @param {number} W Caller width floor.
  * @param {number} H Caller height floor.
  * @returns {{ renderW: number, renderH: number }} The render dimensions.
@@ -230,8 +230,8 @@ export function computeRenderSize(opts, W, H) {
     const { vw, vh } = viewportSize(W, H);
     renderW = Math.max(960, Math.round(vw * 0.92));
     renderH = Math.max(420, Math.round(vh * 0.62));
-    // Honor the caller's W/H as an upper bound (caller measured chartHost
-    // - on a tall/wide layout it's the most accurate value we have).
+    // Honor the caller's W/H as an upper bound (the caller measured chartHost;
+    // on a tall/wide layout it's the most accurate value we have).
     renderW = clampRenderByHint(renderW, opts.width);
     renderH = clampRenderByHint(renderH, opts.height);
   } catch (_) {
@@ -242,18 +242,14 @@ export function computeRenderSize(opts, W, H) {
 }
 
 /**
- * Fold one point's x value into current min/max bounds.
- * @param {{ min: number, max: number }} bounds Mutable bounds.
- * @param {*} point Chart point candidate.
+ * @param {{ min: number, max: number }} bounds Mutated.
+ * @param {*} point
  */
 function foldXBounds(bounds, point) {
   if (typeof point?.x !== "number") return;
   if (point.x < bounds.min) bounds.min = point.x;
   if (point.x > bounds.max) bounds.max = point.x;
 }
-
-// Wonder-marker detection, tooltip, and Chart.js plugin extracted to
-// chart-line-wonder-markers.js.
 
 /**
  * @typedef {import(
@@ -271,7 +267,7 @@ function foldXBounds(bounds, point) {
  * fallback message on failure.
  * @param {Object} parts Mount inputs.
  * @param {*} parts.host The chart host (carries the engine `_demographicsChart`).
- * @param {*} parts.canvas The canvas element.
+ * @param {*} parts.canvas
  * @param {Record<string, *>} parts.config The Chart.js config.
  * @param {Record<string, *>[]} parts.datasets The datasets (for logging).
  * @param {string} parts.metricId The metric id (for logging).
@@ -296,8 +292,8 @@ function mountLineChart(parts) {
 
 /**
  * Append a standard empty-state message to the chart host.
- * @param {*} host The chart host.
- * @param {string} locKey Localization key.
+ * @param {*} host
+ * @param {string} locKey
  */
 function appendChartEmptyMessage(host, locKey) {
   const msg = document.createElement("div");
@@ -308,16 +304,16 @@ function appendChartEmptyMessage(host, locKey) {
 
 /**
  * Instantiate a Chart.js chart, wiring the host handle on success.
- * @param {*} canvas The chart canvas.
- * @param {Record<string, *>} config Chart.js config.
- * @param {*} host The chart host.
- * @returns {*|null} Chart instance, or null on failure.
+ * @param {*} canvas
+ * @param {Record<string, *>} config
+ * @param {*} host
+ * @returns {*|null} The Chart instance, or null on failure.
  */
 export function tryCreateChart(canvas, config, host) {
   try {
     const ctx2d = canvas.getContext("2d");
     const chart = new Chart(ctx2d, config);
-    // Ownership tag. Chart.js is the ENGINE's global (fxs-hof-chart uses it too), so
+    // Ownership tag. Chart.js is the engine's global (fxs-hof-chart uses it too), so
     // `Chart.instances` holds base-game charts as well; reclaimOrphanedCharts() destroys only
     // instances carrying this flag and never touches one of the game's own.
     chart[DG_OWNED] = true;
@@ -397,7 +393,7 @@ function logChartMounted(args) {
 /**
  * Build all per-render chart data: series (with settings applied), datasets,
  * axis formatters, and the age-offset context for markers.
- * @param {ChartOptions} opts The render options.
+ * @param {ChartOptions} opts
  * @param {string} metricId
  * @returns {ChartPrep} The prepared chart data.
  */
@@ -423,7 +419,6 @@ function prepareChartData(opts, metricId) {
 
   const tr = resolveTurnRange(opts);
 
-  // Year + age aware x-axis labels.
   const samps = opts.history && Array.isArray(opts.history.samples) ? opts.history.samples : [];
   const boundaries =
     opts.history && Array.isArray(opts.history.ageBoundaries) ? opts.history.ageBoundaries : [];
@@ -439,7 +434,7 @@ function prepareChartData(opts, metricId) {
 /**
  * Build the ordered Chart.js plugin set (focus glow, wonder markers, hover
  * crosshair, crisis markers, age markers, cap-limit line) for one render.
- * @param {ChartOptions} opts The render options.
+ * @param {ChartOptions} opts
  * @param {string} metricId
  * @param {ChartPrep} prep The prepared chart data.
  * @returns {{ plugins: Record<string, *>[], crisisMarkers: Record<string, *>[] }}
@@ -447,14 +442,14 @@ function prepareChartData(opts, metricId) {
  */
 function buildChartPluginSet(opts, metricId, prep) {
   const { allSeries, ageOffsets, boundaries } = prep;
-  // Wonder-built event markers - detect, resolve icons/names, then mount as an
+  // Wonder-built event markers: detect, resolve icons/names, then mount as an
   // HTML overlay plugin (differential updates avoid hover flicker).
   const wonderSamples =
     opts.history && Array.isArray(opts.history.samples) ? opts.history.samples : [];
   const wonderEventsByPid = shouldShowWonders(metricId)
     ? collectWonderEvents(wonderSamples, ageOffsets, boundaries, sampleX)
     : new Map();
-  // Wonder DESTRUCTIONS (a wonder permanently gone from every civ's list, i.e.
+  // Wonder destructions (a wonder permanently gone from every civ's list, i.e.
   // its city was razed) are detected by the inverse diff and merged in as
   // "destroyed"-kind events on the last holder's line.
   if (shouldShowWonders(metricId)) {
@@ -472,7 +467,7 @@ function buildChartPluginSet(opts, metricId, prep) {
     "total wonder events"
   );
   const wonderMarkerEls = new Map(); // key: "pid:turn" -> div element
-  // Singleton custom hover tooltip - Coherent ignores native `title`.
+  // Singleton custom hover tooltip; Coherent ignores native `title`.
   /** @type {WonderTipState} */
   const wonderTipState = { wonderTip: null };
   const wonderMarkersPlugin = makeWonderMarkersPlugin(
@@ -516,8 +511,8 @@ const MAX_CRISIS_PAD_FRACTION = 0.12;
 /**
  * Compute the min/max chart-X across all dataset points (the points are
  * `{x, y}` with parsing disabled), or `null` when there are none.
- * @param {Record<string, *>[]} datasets The chart datasets.
- * @returns {{ min: number, max: number }|null} The x bounds, or `null`.
+ * @param {Record<string, *>[]} datasets
+ * @returns {{ min: number, max: number }|null}
  */
 function dataXBounds(datasets) {
   const bounds = { min: Infinity, max: -Infinity };
@@ -531,12 +526,12 @@ function dataXBounds(datasets) {
 
 /**
  * Extend the x-axis max so the rightmost data column has enough pixel room for
- * the widest crisis-marker label. Runs AFTER first layout (so the real plot
+ * the widest crisis-marker label. Runs after first layout (so the real plot
  * width is known) because wide y-axis labels narrow the plot area, so a fixed
  * fraction of the data span would not be enough.
  * @param {*} chart The mounted Chart instance.
  * @param {Record<string, *>[]} crisisMarkers
- * @param {Record<string, *>[]} datasets The chart datasets.
+ * @param {Record<string, *>[]} datasets
  */
 function applyCrisisRightPadding(chart, crisisMarkers, datasets) {
   if (!crisisMarkers.length || !chart.chartArea || !chart.options.scales) return;
@@ -547,9 +542,9 @@ function applyCrisisRightPadding(chart, crisisMarkers, datasets) {
   // Closed form: pad max so plotW * (max - dataMax) / (max - dataMin) == label.
   const padded = (plotW * b.max - label * b.min) / (plotW - label);
   // Cap the padding at a fraction of the data span. The closed form asks for whatever the widest
-  // label needs in PIXELS, which is fine on a wide plot but runaway on a narrow one: measured at
-  // 1280x720 the plot was 928px and the widest crisis pill 238px, pushing the axis max to 304 for
-  // data ending at 226 - the series stopped three quarters of the way across and the right quarter
+  // label needs in pixels, which is fine on a wide plot but runaway on a narrow one: at 1280x720
+  // the plot was 928px and the widest crisis pill 238px, pushing the axis max to 304 for data
+  // ending at 226, so the series stopped three quarters of the way across and the right quarter
   // of the chart was empty. The label may now overhang slightly at small sizes, which is far less
   // bad than losing a quarter of the plot.
   const cap = b.max + (b.max - b.min) * MAX_CRISIS_PAD_FRACTION;
@@ -563,7 +558,7 @@ function applyCrisisRightPadding(chart, crisisMarkers, datasets) {
  * smoothChart / showUnmetNames / time-range options, then mounts the canvas
  * with marker, glow, crosshair, and tooltip plugins.
  * @param {HTMLElement} host The chart host element (cleared and repopulated).
- * @param {ChartOptions} [options] Render options.
+ * @param {ChartOptions} [options]
  * @returns {{ canvas: HTMLElement, chart: *, series: ChartSeries[] }|null}
  *   Handles to the canvas/chart/series, or `null` on failure.
  */
@@ -594,8 +589,8 @@ export function renderChart(host, options) {
 
 /**
  * Prepare host/options and apply shared pre-render chart setup.
- * @param {HTMLElement} host The chart host.
- * @param {ChartOptions|undefined} options Render options.
+ * @param {HTMLElement} host
+ * @param {ChartOptions|undefined} options
  * @returns {{ hostEl: HTMLElement, opts: ChartOptions, W: number, H: number,
  *   metricId: string }|null} Prepared setup.
  */
@@ -606,7 +601,7 @@ function prepareLineChartRender(host, options) {
   }
   teardownExistingChart(host);
   // Every line chart is mounted through here, so this is the one choke point that reclaims the
-  // instances a previous view/page swap orphaned — no matter which swap path detached their host.
+  // instances a previous view/page swap orphaned, no matter which swap path detached their host.
   reclaimOrphanedCharts();
   while (host.firstChild) host.removeChild(host.firstChild);
 
@@ -682,7 +677,7 @@ function mountPreparedLineChart(args) {
   // future padding sized to the widest crisis label so it draws right of its
   // line on every metric, including wide-y-axis ones.
   applyCrisisRightPadding(chart, crisisMarkers, datasets);
-  // Align the overlaid legend to the plot's MEASURED inner-left so it clears the
+  // Align the overlaid legend to the plot's measured inner-left so it clears the
   // Y-axis tick labels at any Interface Size, instead of relying on fixed rem
   // offsets (the -wide tiers) that under-cleared the axis when its labels grow.
   alignLegendToPlot(chart, legendEl);
@@ -693,8 +688,8 @@ function mountPreparedLineChart(args) {
  * Align the overlaid legend's left edge to the plot's measured inner-left so it
  * never overlaps the Y-axis tick labels. No-op (keeping the CSS fallback) if
  * the plot area isn't available yet.
- * @param {*} chart The mounted Chart.js instance.
- * @param {HTMLElement|null} legendEl The overlaid legend element.
+ * @param {*} chart
+ * @param {HTMLElement|null} legendEl
  */
 function alignLegendToPlot(chart, legendEl) {
   if (!legendEl || !chart || !chart.chartArea) return;
@@ -705,10 +700,10 @@ function alignLegendToPlot(chart, legendEl) {
 /**
  * Build the per-civ legend for a metric, nudging it right (wide-Y variant) when
  * the metric's Y-axis labels are wide. Returns null when there are no datasets.
- * @param {*[]} datasets The chart datasets.
- * @param {*} opts The render options.
- * @param {string} metricId The active metric id.
- * @returns {HTMLElement|null} The legend element, or null.
+ * @param {*[]} datasets
+ * @param {*} opts
+ * @param {string} metricId
+ * @returns {HTMLElement|null}
  */
 function buildLegendForMetric(datasets, opts, metricId) {
   if (!datasets.length) return null;
@@ -725,15 +720,15 @@ function buildLegendForMetric(datasets, opts, metricId) {
  * Build the relatively-positioned wrap + full-width canvas for the line chart.
  * The custom HTML legend (when provided) is overlaid in the plot's top-left so
  * the canvas fills the whole width; marker/tooltip overlays anchor to the wrap.
- * @param {number} renderW The total render width (px).
- * @param {number} renderH The render height (px).
- * @param {HTMLElement|null} [legendEl] The custom HTML legend, or null.
- * @returns {{ wrap: HTMLElement, canvas: HTMLElement }} The wrap and canvas.
+ * @param {number} renderW px.
+ * @param {number} renderH px.
+ * @param {HTMLElement|null} [legendEl]
+ * @returns {{ wrap: HTMLElement, canvas: HTMLElement }}
  */
 export function buildChartCanvas(renderW, renderH, legendEl) {
   const wrap = document.createElement("div");
   wrap.className = "demographics-chartjs-wrap demographics-line-chartjs-wrap";
-  // Render dimensions are dynamic (computed per viewport) - keep inline.
+  // Render dimensions are dynamic (computed per viewport), so they stay inline.
   wrap.style.width = renderW + "px";
   wrap.style.height = renderH + "px";
 
@@ -741,7 +736,7 @@ export function buildChartCanvas(renderW, renderH, legendEl) {
   canvas.className = "demographics-line-chartjs-canvas";
   canvas.width = renderW;
   canvas.height = renderH;
-  // Canvas CSS size mirrors the dynamic render dimensions - keep inline.
+  // Canvas CSS size mirrors the dynamic render dimensions, so it stays inline.
   canvas.style.width = renderW + "px";
   canvas.style.height = renderH + "px";
   wrap.appendChild(canvas);

@@ -4,17 +4,15 @@
 // focus-glow (focused line halo), hover-crosshair (gold dashed vertical at
 // tooltip x), cap-limit-line (red 100% rule on settlement_cap_pct), and
 // pointer-scale (maps the cursor into the chart's own pixels under the
-// frame's transform scale). None of these own any shared state - each call
+// frame's transform scale). None of these own any shared state; each call
 // returns a fresh plugin object.
 
 import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 import { appliedVisualScale } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /**
- * Resolve the chart font family with a safe fallback chain (mirrors the helper
- * in the sibling chart-line-* modules).
- * @param {*} chart The Chart instance.
- * @returns {string} The preferred font family.
+ * @param {*} chart
+ * @returns {string} The chart font family, with a safe fallback chain.
  */
 function resolveChartFontFamily(chart) {
   return (
@@ -51,7 +49,7 @@ export function makeFocusGlowPlugin() {
  * Return a focused, visible dataset's point elements (>=2), or `null` when the
  * dataset shouldn't glow.
  * @param {*} c The Chart instance.
- * @param {Record<string, *>} ds The dataset.
+ * @param {Record<string, *>} ds
  * @param {number} i The dataset index.
  * @returns {{ x: number, y: number, skip?: boolean }[]|null} The point
  *   elements, or `null`.
@@ -67,8 +65,8 @@ function focusedGlowElems(c, ds, i) {
 
 /**
  * Stroke one focused line's translucent glow path.
- * @param {*} ctx2 The 2D canvas context.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {*} ctx2
+ * @param {Record<string, *>} ds
  * @param {{ x: number, y: number, skip?: boolean }[]} elems The dataset's
  *   point elements.
  */
@@ -99,10 +97,10 @@ function strokeGlowPath(ctx2, ds, elems) {
 
 /**
  * Build the pointer-scale Chart.js plugin. GameFace's MouseEvent has no offsetX, so Chart.js takes
- * `clientX - rect.left`, which is in VISUAL px under the frame's `transform: scale(s)`, and divides
- * it by the chart's LOCAL width. The hover then lands at s * x: it trails the cursor more the
- * further right it goes and never reaches the last s-fraction of the plot (measured 2026-09-30 at
- * s=0.8: the right edge mapped to 2119 of 2650 px, All Time topped out at turn 199 of 226).
+ * `clientX - rect.left`, which is in visual px under the frame's `transform: scale(s)`, and divides
+ * it by the chart's local width. The hover then lands at s * x: it trails the cursor more the
+ * further right it goes and never reaches the last s-fraction of the plot (at s=0.8 the right edge
+ * mapped to 2119 of 2650 px, and All Time topped out at turn 199 of 226).
  * Rescale the event before Chart.js hit-tests it. `inChartArea` was computed from the unscaled
  * point, so recompute it. Chart.js replays its last event on update; the marker keeps a replayed
  * event from being divided twice.
@@ -212,7 +210,7 @@ export function makeSignZonesPlugin() {
 /**
  * Build the cap-limit-line Chart.js plugin: a red rule at y=100 on the
  * Settlement Cap Utilization chart. No-op on other metrics.
- * @param {string} metricId Active metric id.
+ * @param {string} metricId
  * @returns {Record<string, *>} The Chart.js plugin object.
  */
 export function makeCapLimitLinePlugin(metricId) {
@@ -246,8 +244,8 @@ export function makeCapLimitLinePlugin(metricId) {
 
 /**
  * Draw the y=100 cap-line label at the right edge.
- * @param {*} chart The Chart instance.
- * @param {*} ctx2 The 2D canvas context.
+ * @param {*} chart
+ * @param {*} ctx2
  * @param {{ left: number, right: number, y: number }} pos Line geometry.
  */
 function drawCapLimitLabel(chart, ctx2, pos) {

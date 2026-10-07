@@ -1,11 +1,11 @@
 // chart-quarters-board.js
 //
 // The Quarters board: per leader/civilization, per settlement, the settlement's
-// QUARTERS (urban tiles) — the buildings occupying each, the tile's yields
+// quarters (urban tiles): the buildings occupying each, the tile's yields
 // (which already include adjacency; the engine exposes no isolated per-quarter
 // adjacency total), Unique Quarters labeled by name, and a warning when a civ
-// Unique Building is placed but NOT yet combined into its Unique Quarter.
-// Live snapshot read from each settlement's city handle. Defensive throughout.
+// Unique Building is placed but not yet combined into its Unique Quarter.
+// Live snapshot read from each settlement's city handle; every engine read is guarded.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { inlineLabel } from "/demographics/ui/core/player-label.js";
@@ -26,7 +26,7 @@ function safe(fn, fb) {
   }
 }
 
-// ── Engine reads ─────────────────────────────────────────────────────────────
+// Engine reads
 
 /** @type {Set<string>|null} Cached BUILDING types tagged UNIQUE (civ unique buildings). */
 let _uniqueSet = null;
@@ -113,7 +113,7 @@ function foldConstructible(id, tiles) {
 /**
  * A settlement's quarters (building groups per tile) + any lone unique buildings.
  * @param {*} city The city handle. @param {number} pid The owner id.
- * @returns {{quarters:*[], orphans:string[]}} The quarter data.
+ * @returns {{quarters:*[], orphans:string[]}}
  */
 function readCityQuarters(city, pid) {
   const ids = safe(() => city.Constructibles.getIds(), null);
@@ -138,7 +138,7 @@ function readCityQuarters(city, pid) {
   return { quarters, orphans };
 }
 
-// ── Rendering ────────────────────────────────────────────────────────────────
+// Rendering
 
 /** @param {*} owner @returns {string} A stable civ key. */
 function ownerKey(owner) {
@@ -238,7 +238,7 @@ function groupByCiv(settlements) {
 /**
  * Render the Quarters board: per civ, its settlements, each expandable to its
  * quarters (buildings + yields), Unique Quarters flagged, lone unique buildings warned.
- * @param {HTMLElement} host The chart host. @param {*} _opts Unused.
+ * @param {HTMLElement} host @param {*} _opts
  * @returns {void}
  */
 export function renderQuartersBoard(host, _opts) {

@@ -132,7 +132,7 @@ import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collecto
 
 
 /**
- * Capture whether the LOCAL player has met `id` at sample time.
+ * Capture whether the local player has met `id` at sample time.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id being sampled.
  * @param {*} p The sampled player handle.
@@ -167,7 +167,7 @@ function readHasMet(localP, id) {
 }
 
 /**
- * Read the RAW leaderType / civilizationType off the player handle.
+ * Read the raw leaderType / civilizationType off the player handle.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {*} p The sampled player handle.
  * @returns {{ rawLeader: *, rawCiv: * }} The raw values for downstream lookup.
@@ -521,7 +521,7 @@ function collectPowerAndCivics(ctx, id, p) {
 }
 
 /**
- * Build a LIGHTWEIGHT context for a minor player.
+ * Build a lightweight context for a minor player.
  * @param {Pid} id The minor player id.
  * @returns {PlayerCtx} The trimmed per-civ context.
  */

@@ -7,9 +7,8 @@
 import { stripLocaleMarkup } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
- * Return purchased-plot indices for a city.
- * @param {*} componentId City component id.
- * @returns {number[]} Plot indices.
+ * @param {*} componentId
+ * @returns {number[]}
  */
 export function cityPurchasedIndices(componentId) {
   try {
@@ -27,9 +26,8 @@ export function cityPurchasedIndices(componentId) {
 }
 
 /**
- * Resolve map location from plot index.
- * @param {number} index Plot index.
- * @returns {{x: number, y: number}|null} Plot location.
+ * @param {number} index
+ * @returns {{x: number, y: number}|null}
  */
 export function indexToLoc(index) {
   try {
@@ -44,9 +42,8 @@ export function indexToLoc(index) {
 }
 
 /**
- * Return purchased plots as [{idx,x,y}] for a city.
- * @param {*} componentId City component id.
- * @returns {Array<{idx: number, x: number, y: number}>} Purchased plots.
+ * @param {*} componentId
+ * @returns {Array<{idx: number, x: number, y: number}>}
  */
 export function livePurchased(componentId) {
   /** @type {Array<{idx: number, x: number, y: number}>} */
@@ -59,10 +56,9 @@ export function livePurchased(componentId) {
 }
 
 /**
- * Whether a plot is a natural wonder.
- * @param {number} x Plot x.
- * @param {number} y Plot y.
- * @returns {boolean} True for natural wonder.
+ * @param {number} x
+ * @param {number} y
+ * @returns {boolean}
  */
 function isNatWonder(x, y) {
   try {
@@ -77,10 +73,9 @@ function isNatWonder(x, y) {
 }
 
 /**
- * Sum plot yields for an owner.
- * @param {number} idx Plot index.
+ * @param {number} idx
  * @param {number} pid Owner player id.
- * @returns {number} Total yield.
+ * @returns {number}
  */
 function plotYieldSum(idx, pid) {
   try {
@@ -101,8 +96,7 @@ function plotYieldSum(idx, pid) {
 }
 
 /**
- * Return highest-yield plot from a list.
- * @param {Array<{idx: number, x: number, y: number}>} plots Purchased plots.
+ * @param {Array<{idx: number, x: number, y: number}>} plots
  * @param {number} pid Owner player id.
  * @returns {{x: number, y: number}|null} Highest-yield plot.
  */
@@ -120,8 +114,7 @@ export function topYieldPlot(plots, pid) {
 }
 
 /**
- * Return district at location.
- * @param {{x: number, y: number}} plot Plot location.
+ * @param {{x: number, y: number}} plot
  * @returns {*} District object or null.
  */
 export function districtAtPlot(plot) {
@@ -137,8 +130,8 @@ export function districtAtPlot(plot) {
 /**
  * Return unique-quarter display info, including the engine's own localized
  * description (the "what goes on here" flavor) when present.
- * @param {*} quarterType Unique quarter type.
- * @returns {{name: string, type: string, description: string}|null} Quarter info.
+ * @param {*} quarterType
+ * @returns {{name: string, type: string, description: string}|null}
  */
 export function uniqueQuarterInfo(quarterType) {
   try {
@@ -150,20 +143,19 @@ export function uniqueQuarterInfo(quarterType) {
       return {
         name: Locale.compose(row.Name),
         type: row.UniqueQuarterType,
-        // The overlay sets this with textContent, so the game's own markup has to come OUT
+        // The overlay sets this with textContent, so the game's own markup has to come out
         // rather than be stylized (stylize returns HTML, which textContent would show raw).
         description: row.Description ? stripLocaleMarkup(Locale.compose(row.Description)) : ""
       };
     }
   } catch (_) {
-    // lookup/compose can throw.
+    // lookup/compose can throw
   }
   return null;
 }
 
 /**
- * Resolve unique-quarter districts for a target city.
- * @param {*} target Settlement record.
+ * @param {*} target
  * @returns {Array<{name: string, location: {x: number, y: number},
  *   quarterType: string, description: string}>} District entries.
  */
@@ -197,9 +189,8 @@ export function resolveSpecialDistricts(target) {
 }
 
 /**
- * Return wonder records that include map location.
- * @param {*} target Settlement record.
- * @returns {Array<*>} Visitable wonder records.
+ * @param {*} target
+ * @returns {Array<*>} Wonder records that carry a map location.
  */
 export function visitableWonders(target) {
   const out = [];
@@ -212,9 +203,8 @@ export function visitableWonders(target) {
 }
 
 /**
- * Append wonder POIs into a city highlight list.
  * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
- * @param {*} target Settlement record.
+ * @param {*} target
  */
 function pushWonderPois(pois, target) {
   for (const wonder of visitableWonders(target)) {
@@ -226,9 +216,8 @@ function pushWonderPois(pois, target) {
 }
 
 /**
- * Append district POIs into a city highlight list.
  * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
- * @param {*} target Settlement record.
+ * @param {*} target
  */
 function pushDistrictPois(pois, target) {
   for (const district of Array.isArray(target.districts) ? target.districts : []) {
@@ -243,7 +232,7 @@ function pushDistrictPois(pois, target) {
 /**
  * Append natural-wonder and rich-plot POIs.
  * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
- * @param {*} target Settlement record.
+ * @param {*} target
  */
 function pushTerrainPois(pois, target) {
   const plots = livePurchased(target.componentId);
@@ -264,8 +253,7 @@ function pushTerrainPois(pois, target) {
 }
 
 /**
- * Build POIs for city highlights.
- * @param {*} target Settlement record.
+ * @param {*} target
  * @returns {Array<{loc: {x: number, y: number}, cap: *}>} Points of interest.
  */
 export function cityHighlights(target) {

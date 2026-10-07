@@ -70,9 +70,9 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
  * @property {string} [tier] Min UI-complexity tier ("basic" | "standard" | "analyst");
  *   default standard.
  * @property {string[]} [metrics] Metric ids in display order (a line/synthetic page).
- *   EXCLUSIVE with `render`.
+ *   Exclusive with `render`.
  * @property {(host: HTMLElement, ctx: *) => void} [render] Custom view as a page (e.g.
- *   Relations). EXCLUSIVE with `metrics`.
+ *   Relations). Exclusive with `metrics`.
  */
 
 /**
@@ -153,14 +153,14 @@ export { exportHistoryAsCsv } from "/demographics/ui/screen-demographics/views/h
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-history]", ...a);
 }
 /**
  * Error logger for this view.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.view-history]", ...a);
@@ -214,7 +214,7 @@ setPageRenderer("relations", renderRelationsPage);
  * Resolve a synthetic metric's display meta, localizing its title/subtitle
  * (stored as `LOC_*` keys) at render time. The non-displayed `label` field is
  * passed through unchanged.
- * @param {string} id Synthetic metric id.
+ * @param {string} id
  * @returns {SyntheticMeta|null} The localized meta, or null when not synthetic.
  */
 function resolveSyntheticMeta(id) {
@@ -228,7 +228,7 @@ function resolveSyntheticMeta(id) {
 
 /**
  * Remove every child of `host`.
- * @param {HTMLElement} host Element to empty.
+ * @param {HTMLElement} host
  */
 function clearHost(host) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -237,9 +237,9 @@ function clearHost(host) {
 /**
  * Build and append the chart host, then route chart rendering.
  * @param {HTMLElement} host The view host element.
- * @param {HistoryCtx} ctx Render context.
- * @param {string} activeMetric Active metric id.
- * @param {TurnRange|null} turnRange Active turn window.
+ * @param {HistoryCtx} ctx
+ * @param {string} activeMetric
+ * @param {TurnRange|null} turnRange
  */
 function buildChartHost(host, ctx, activeMetric, turnRange) {
   buildChartHostPanel(host, ctx, activeMetric, turnRange, {
@@ -354,7 +354,7 @@ function groupMemberIds(/** @type {*} */ g) {
 }
 
 /**
- * Fold companion metric GROUPS into PAGES: register a synthetic-meta label for each group id,
+ * Fold companion metric groups into PAGES: register a synthetic-meta label for each group id,
  * drop the group's member metrics from their page's tab row (shown via the in-tab toggle
  * instead), and place the group id as a tab (at the front when `first`). Idempotent.
  */
@@ -376,8 +376,8 @@ function mergeMetricGroups() {
  * If `activeMetric` is a metric group, append its toggle(s) to `host` and return the metric id to
  * actually chart; otherwise return `activeMetric` unchanged. Supports 2D (members × views, two
  * toggles) and flat (metricIds, one toggle) groups.
- * @param {HTMLElement} host View host.
- * @param {*} ctx Render context.
+ * @param {HTMLElement} host
+ * @param {*} ctx
  * @param {string} activeMetric Active metric/group id.
  * @returns {string} The effective metric id to render.
  */
@@ -396,7 +396,7 @@ function resolveGroupMember(host, ctx, activeMetric) {
  * persisted per-group selection.
  * @param {*} group The metric group.
  * @param {*} sel The group's persisted selection.
- * @returns {string} The active view id.
+ * @returns {string}
  */
 function groupViewId(group, sel) {
   const b = group.viewBinding;
@@ -405,7 +405,7 @@ function groupViewId(group, sel) {
 }
 
 /**
- * Commit a view change: write through the group's `viewBinding` (if any) AND persist it locally, so
+ * Commit a view change: write through the group's `viewBinding` (if any) and persist it locally, so
  * the choice sticks whether or not an external owner backs it.
  * @param {*} group The metric group.
  * @param {number} mIdx The active member index.
@@ -462,14 +462,14 @@ function resolveFlatGroup(
 }
 
 /**
- * Companion-mod PANELS (registerPanel) fold into PAGES via mergeExternalPanels below: each
+ * Companion-mod panels (registerPanel) fold into PAGES via mergeExternalPanels below: each
  * becomes its own page whose synthetic metric routes to the companion's render callback.
  */
 /**
  * The metric ids a panel contributes: one synthetic per declared sub-tab (so each shows as a native
  * Demographics sub-tab), else a single id for the whole panel (legacy single-tab panels).
  * @param {*} panel The external panel spec.
- * @returns {string[]} The metric ids.
+ * @returns {string[]}
  */
 function panelMetricIds(panel) {
   return Array.isArray(panel.tabs) && panel.tabs.length
@@ -524,7 +524,7 @@ function mergeExternalPanels() {
  * Whether `id` is a companion-registered external panel (a whole-page custom render), for which the
  * time-range filter and CSV toolbar don't apply.
  * @param {string} id The metric/panel id.
- * @returns {boolean} True if external.
+ * @returns {boolean}
  */
 function isExternalPanel(id) {
   return typeof id === "string"
@@ -535,8 +535,8 @@ function isExternalPanel(id) {
  * The active metric for `page`, coerced to one the tab row will actually show. Age gating and the
  * empty-data auto-hide both drop metrics from the row, so coercing to the data-aware visible set
  * keeps the row and chart in agreement.
- * @param {*} ctx Render context.
- * @param {{id:string, metrics?:string[]}} page The active page.
+ * @param {*} ctx
+ * @param {{id:string, metrics?:string[]}} page
  * @returns {string} The visible active metric id.
  */
 function resolveVisibleActiveMetric(ctx, page) {
@@ -550,9 +550,9 @@ function resolveVisibleActiveMetric(ctx, page) {
  * metric placements. With `opts.onlyPage` (a companion `topLevel` panel's own view tab) pin to that
  * page and emit no page-tab row; otherwise exclude `topLevel` panels and build the normal row.
  * @param {HTMLElement} host The view host element.
- * @param {*} ctx Render context.
- * @param {{onlyPage?:string, hub?:string}|undefined} opts Render options.
- * @returns {string} The active page id.
+ * @param {*} ctx
+ * @param {{onlyPage?:string, hub?:string}|undefined} opts
+ * @returns {string}
   * @param {HTMLElement|null} [priorPageHost] The previous render's page-tab host, kept when unchanged.
  */
 function resolvePageAndTabRow(host, ctx, opts, priorPageHost) {
@@ -593,8 +593,8 @@ function appendExternalPanelControls(row, ctx) {
  * Build the combined controls row: the time-range filter pills and the chart toolbar. Either
  * side is omitted when not applicable (filter hidden for snapshot metrics; toolbar skipped for
  * external panels).
- * @param {HTMLElement} host View host.
- * @param {*} ctx Render context.
+ * @param {HTMLElement} host
+ * @param {*} ctx
  * @param {string} effective The metric being charted.
  * @param {string} activeFilter The active time-range filter id.
  */
@@ -628,7 +628,7 @@ function buildControlsRow(host, ctx, effective, activeFilter) {
  * "Pick war" dropdown (pinned far left), or the Population Scaled/Game toggle.
  * No-op for every other metric.
  * @param {HTMLElement} row The controls row.
- * @param {*} ctx Render context.
+ * @param {*} ctx
  * @param {string} effective The charted metric id.
  */
 function appendMetricSpecificControl(row, ctx, effective) {
@@ -640,7 +640,7 @@ function appendMetricSpecificControl(row, ctx, effective) {
  * The metric id actually charted for the Population page: swaps the scaled
  * `population` for its raw-Civ twin `population_civ` when the toggle is in "civ"
  * mode. Every other id passes through unchanged.
- * @param {*} ctx Render context.
+ * @param {*} ctx
  * @param {string} id The effective (display) metric id.
  * @returns {string} The metric id to chart.
  */
@@ -697,9 +697,9 @@ function appendBottomNotes(host, effective) {
 /**
  * Render a custom (non-metric) page body, e.g. the Relations diplomacy view hosted as a Geopolitics
  * page. The page-tab row was already built by the caller.
- * @param {HTMLElement} host The view host.
- * @param {PageDef} page The active page.
- * @param {*} ctx Render context.
+ * @param {HTMLElement} host
+ * @param {PageDef} page
+ * @param {*} ctx
  * @returns {boolean} True when `page` is a render page and was handled.
  */
 function renderCustomPageBody(host, page, ctx) {
@@ -714,15 +714,15 @@ function renderCustomPageBody(host, page, ctx) {
 /**
  * Render a metric page: metric tab row, group-member resolution, chart title/captions,
  * controls row, chart host, and bottom notes, the standard Historical-Data flow.
- * @param {HTMLElement} host The view host.
- * @param {*} ctx Render context.
+ * @param {HTMLElement} host
+ * @param {*} ctx
  * @param {PageDef} page The active (metric) page.
  */
 function renderMetricFlow(host, ctx, page) {
   const activeMetric = resolveVisibleActiveMetric(ctx, page);
   buildMetricTabRow(host, ctx, page, activeMetric);
-  // A metric GROUP tab keeps itself selected above, but renders a member toggle + the
-  // SELECTED member's chart below. `effective` is the metric actually charted (the group
+  // A metric group tab keeps itself selected above, but renders a member toggle + the
+  // selected member's chart below. `effective` is the metric actually charted (the group
   // member, or activeMetric).
   const effective = resolveGroupMember(host, ctx, activeMetric);
   const metricObj = (() => {
@@ -743,7 +743,7 @@ function renderMetricFlow(host, ctx, page) {
   const turnRange = computeTurnRange(ctx.history, activeFilter);
   buildControlsRow(host, ctx, effective, activeFilter);
   // The Population page keeps its heading/tab as "population" but charts the raw-Civ twin when the
-  // Scaled/Game toggle is in "civ" mode, so only the curve/axis change — not the title.
+  // Scaled/Game toggle is in "civ" mode, so only the curve/axis change, not the title.
   buildChartHost(host, ctx, populationChartId(ctx, effective), turnRange);
   appendBottomNotes(host, effective);
 }
@@ -760,11 +760,11 @@ function renderMetricFlow(host, ctx, page) {
  *   / Migration / Geopolitics).
  */
 export function render(host, ctx, opts) {
-  // Every pill and filter on these pages re-renders through here (ctx.requestReload), and a NEW
-  // `fxs-tab-bar` initialises on its first tab before it takes `selected-tab-index` — so
+  // Every pill and filter on these pages re-renders through here (ctx.requestReload), and a new
+  // `fxs-tab-bar` initialises on its first tab before it takes `selected-tab-index`, so
   // rebuilding the page-tab row on each click flashed "Yields per Turn" and snapped back
-  // (watched over CDP, 2026-09-23: the page bar's element identity changed on every pill click
-  // while the view bar's did not). Hand the prior row to the builder so it can be kept.
+  // (the page bar's element identity changed on every pill click while the view bar's did
+  // not). Hand the prior row to the builder so it can be kept.
   // The screen clears the host before calling here, so it captures the row first and passes it
   // in `opts.priorPageHost`; the querySelector fallback serves callers that render directly.
   const priorPageHost = /** @type {HTMLElement|null} */ (
@@ -772,10 +772,10 @@ export function render(host, ctx, opts) {
   );
   clearHost(host);
 
-  // ── Page tab row ────────────────────────────────────────────────────
+  // page tab row
   const activePage = resolvePageAndTabRow(host, ctx, opts, priorPageHost);
 
-  // ── Metric tab row (for the active page) ───────────────────────────
+  // metric tab row for the active page
   const page = PAGES.find((p) => p.id === activePage) || PAGES[0];
   // A RENDER page (e.g. Relations) draws its own body and has no metric/chart pipeline.
   if (renderCustomPageBody(host, page, ctx)) return;

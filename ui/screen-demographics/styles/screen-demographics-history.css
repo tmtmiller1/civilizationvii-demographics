@@ -22,33 +22,33 @@
     --dgh-card-bg:       rgba(20, 16, 10, 0.55);
     --dgh-row-alt:       rgba(255, 255, 255, 0.025);
     --dgh-row-hover:     rgba(243, 195, 76, 0.10);
-    /* Border colors are OPAQUE hex, and every rule below sets the four `border-<side>-color`
-       longhands rather than `border-color`. `border-color` is a SHORTHAND, and GameFace drops
-       `var()` in shorthands, so `border-color: var(--x)` computed to `initial` — currentColor —
+    /* Border colors are opaque hex, and every rule below sets the four `border-<side>-color`
+       longhands rather than `border-color`. `border-color` is a shorthand, and GameFace drops
+       `var()` in shorthands, so `border-color: var(--x)` computed to `initial` (currentColor)
        and every framed card, table and chip drew a light gray body-text hairline instead of the
-       copper declared here (watched 2026-09-23; the per-side `border-top-color: var(--dgh-copper)`
-       in the same rules resolved correctly all along). The hex is the copper pre-blended: alpha
+       copper declared here (the per-side `border-top-color: var(--dgh-copper)` in the same rules
+       resolved correctly all along). The hex is the copper pre-blended: alpha
        was never the problem, but an opaque line is what the frame art wants. */
     --dgh-card-border:   #a8845a;
     --dgh-divider:       #7a6242;
 }
 
-/* ---------- main-menu Hall of Fame screen ---------- */
-/* ── The type scale: ONE CSS declaration for both screens ────────────────────────────────────────
-   These are the DEFAULTS. Each screen republishes the same variables onto its own root as values
+/* main-menu Hall of Fame screen */
+/* The type scale: one CSS declaration for both screens
+   These are the defaults. Each screen republishes the same variables onto its own root as values
    scaled by the player's Font Size setting (demographics-font-ladder.js), which the engine does not
    apply to mod content; the defaults are what renders before that runs and off-engine.
 
-   This sheet is the only one BOTH screens load — the in-game modal loads it last in its styles[]
-   array, the main-menu Hall of Fame loads it alone — so the ladder is declared here once for both
+   This sheet is the only one both screens load (the in-game modal loads it last in its styles[]
+   array, the main-menu Hall of Fame loads it alone), so the ladder is declared here once for both
    roots rather than copied into the density sheet as well.
 
    `--dg-fs-<size x 100>`; the named steps below are the World Rankings matrix / leader cards, whose
-   sizes are chosen per role. Must match demographics-font-ladder.js — tests/history-css.mjs asserts
+   sizes are chosen per role. Must match demographics-font-ladder.js; tests/history-css.mjs asserts
    the two agree, so they cannot drift. */
 .demographics-screen,
 .dgh-screen,
-/* The cinematic overlay is mounted on document.body, OUTSIDE both screens, so it inherits nothing
+/* The cinematic overlay is mounted on document.body, outside both screens, so it inherits nothing
    from them. Without this it resolves no `--dg-u` at all and every `calc(n * var(--dg-u))` in its
    rules is invalid and dropped - which unpinned it from the bottom of the screen, removed its
    width bounds and its padding, and dropped its border color to the fallback. It is listed here
@@ -108,7 +108,7 @@
 .dgh-body { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; background-color: rgba(10, 12, 18, 0.72); }
 .dgh-screen-host { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 
-/* ---------- app layout ---------- */
+/* app layout */
 .dgh-app {
     flex: 1 1 auto;
     min-height: 0;
@@ -193,7 +193,7 @@
 .dgh-cols { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.35rem; }
 .dgh-col { flex: 1 1 22rem; margin: 0 0.35rem 0.7rem; min-width: 0; }
 
-/* ---------- cards ---------- */
+/* cards */
 .dgh-section {
     background-color: var(--dgh-card-bg);
     border-width: 1px;
@@ -242,7 +242,7 @@
 }
 .dgh-note--warn { color: var(--dgh-loss); }
 
-/* ---------- pills and buttons ---------- */
+/* pills and buttons */
 .dgh-pill-row {
     display: flex;
     flex-direction: row;
@@ -332,7 +332,7 @@
 .dgh-button--danger.is-armed { color: #1c1408; background-color: var(--dgh-loss); }
 .dgh-more { align-self: center; margin: 0.6rem 0; }
 
-/* ---------- tables ---------- */
+/* tables */
 .dgh-table {
     display: flex;
     flex-direction: column;
@@ -379,7 +379,7 @@
 .dgh-col-spark { flex: 0 0 7rem; }
 .dgh-col-grow { flex: 1 1 10rem; }
 
-/* ---------- identity ---------- */
+/* identity */
 .dgh-civ { display: flex; flex-direction: row; align-items: center; min-width: 0; margin-right: 0.8rem; }
 .dgh-civ-dot {
     flex: 0 0 auto;
@@ -397,7 +397,7 @@
 .dgh-recent .dgh-game-card { flex: 0 1 36rem; margin: 0.3rem; }
 .dgh-leader-icon--xl { width: 6.5rem; height: 6.5rem; }
 
-/* ---------- chronicle ---------- */
+/* chronicle */
 .dgh-age-group { margin-bottom: 0.4rem; }
 .dgh-facts { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0.1rem -0.2rem 0.3rem; }
 .dgh-fact {
@@ -456,7 +456,7 @@
 .dgh-event--elim .dgh-event-text,
 .dgh-event--razed .dgh-event-text { color: var(--dgh-loss); }
 
-/* ---------- lineage ---------- */
+/* lineage */
 .dgh-lineage { display: flex; flex-direction: column; }
 .dgh-lin-row { display: flex; flex-direction: row; align-items: stretch; margin-bottom: 0.3rem; }
 .dgh-lin-row.is-mine .dgh-lin-name { color: var(--dgh-gold); }
@@ -484,7 +484,7 @@
 .dgh-lin-civ { color: var(--dgh-text-title); font-size: var(--dg-fs-105); }
 .dgh-lin-fell { color: var(--dgh-loss); font-size: var(--dg-fs-72); }
 
-/* ---------- stats, bars, cards ---------- */
+/* stats, bars, cards */
 .dgh-tiles { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; }
 .dgh-stat {
     display: flex;
@@ -572,7 +572,7 @@
 .dgh-result--ended { color: var(--dgh-text-muted); }
 .dgh-result--open { color: var(--dgh-text-muted); }
 
-/* ---------- detail ---------- */
+/* detail */
 .dgh-detail-head { display: flex; flex-direction: row; align-items: center; margin-bottom: 0.7rem; }
 .dgh-detail-top {
     display: flex;
@@ -591,7 +591,7 @@
 .dgh-detail-honor { color: var(--dgh-gold); font-size: var(--dg-fs-105); margin-bottom: 0.2rem; }
 .dgh-detail-line { font-size: var(--dg-fs-95); }
 
-/* ---------- charts ---------- */
+/* charts */
 .dgh-chart { display: flex; flex-direction: column; }
 .dgh-chart-plot {
     position: relative;
@@ -638,7 +638,7 @@
     .dgh-lin-leader { flex-basis: 11rem; }
 }
 
-/* ---------- emblems, victory icons, result marks ---------- */
+/* emblems, victory icons, result marks */
 .dgh-civ-icon {
     flex: 0 0 auto;
     width: calc(1.4 * var(--dg-u));
@@ -691,7 +691,7 @@
 .dgh-lin-civrow { display: flex; flex-direction: row; align-items: center; }
 .dgh-toolbar .dgh-pill-row { flex-wrap: nowrap; }
 
-/* ---------- game options (foot of a game's detail page) ---------- */
+/* game options (foot of a game's detail page) */
 .dgh-options { display: flex; flex-direction: column; align-items: flex-end; margin: 0.8rem 0 0.4rem; }
 .dgh-options-toggle { opacity: 0.75; }
 .dgh-options-toggle.is-open { opacity: 1; }
@@ -713,8 +713,8 @@
 .dgh-options-panel.is-hidden { display: none; }
 .dgh-options-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); margin-right: 0.8rem; max-width: 26rem; }
 
-/* ---------- storage repair (foot of the Hall of Fame, only when the store cannot be read) ----------
-   Deliberately loud: the panel deletes other mods' saved data for good, so it reads like a warning
+/* storage repair (foot of the Hall of Fame, only when the store cannot be read)
+   Loud on purpose: the panel deletes other mods' saved data for good, so it reads like a warning
    sheet, not a settings row. Title in the warning color, three labeled paragraphs, a large button. */
 .dgh-storage { display: flex; flex-direction: column; align-items: center; }
 .dgh-storage-banner {
@@ -843,7 +843,7 @@
 }
 .dgh-hl-blurb-t { color: var(--dgh-text-muted); flex: 1 1 auto; min-width: 0; }
 
-/* ---------- page heading ---------- */
+/* page heading */
 /* Centered to match the rest of the mod's tab headings (.demographics-chart-title in
    screen-demographics-base.css). width:100% so the Rankings tab's heading, which is the lone child
    of a `justify-content: space-between` .dgh-toolbar, centers with the other four rather than
@@ -859,7 +859,7 @@
 .dgh-page-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-85); margin-top: 0.1rem; }
 .dgh-toolbar .dgh-page-head { margin-bottom: 0.2rem; }
 
-/* ---------- leader and civilization cards ---------- */
+/* leader and civilization cards */
 .dgh-cards { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.3rem; }
 .dgh-person-card {
     flex-grow: 0;
@@ -935,7 +935,7 @@
 .dgh-record-sep { color: var(--dgh-text-muted); margin: 0 0.3rem; }
 .dgh-person-body .dgh-fact { min-width: 5.5rem; padding: 0.2rem 0.4rem; }
 
-/* ---------- civilization progression (emblem + name per age) ---------- */
+/* civilization progression (emblem + name per age) */
 .dgh-progression { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; min-width: 0; }
 .dgh-progression-step { display: flex; flex-direction: row; align-items: center; }
 .dgh-progression-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.3rem; }
@@ -947,7 +947,7 @@
 .dgh-progression--lg .dgh-progression-icon { width: 2.2rem; height: 2.2rem; margin-right: 0.4rem; }
 .dgh-td .dgh-progression { flex-wrap: nowrap; overflow: hidden; }
 
-/* ---------- timeline ---------- */
+/* timeline */
 /* Controls on top; under them a fixed label column beside a horizontally scrolling canvas whose
    lanes are absolutely placed by percentage. Every var() sits in a longhand property. */
 .dgh-tl { display: flex; flex-direction: column; }
@@ -1244,7 +1244,7 @@
     border-bottom-color: #f6e8c8;
 }
 
-/* ---------- territory map (above the timeline) ---------- */
+/* territory map (above the timeline) */
 .dgh-map { display: flex; flex-direction: row; align-items: flex-start; flex: 0 0 auto; }
 .dgh-map-row { display: flex; flex-direction: row; align-items: flex-start; margin-bottom: 0.5rem; }
 .dgh-map-side { flex: 1 1 auto; min-width: 0; margin-left: 1.2rem; }
@@ -1282,7 +1282,7 @@
 .dgh-map-legend-item.is-mine { color: var(--dgh-gold); font-weight: bold; }
 .dgh-map-legend-icon { width: 1.15rem; height: 1.15rem; margin: 0 0.3rem 0 0.3rem; }
 
-/* ---------- highlights (full width, by age) ---------- */
+/* highlights (full width, by age) */
 .dgh-hl { display: flex; flex-direction: column; }
 .dgh-hl-age {
     display: flex;
@@ -1357,7 +1357,7 @@
 .dgh-hl-row .dgh-event-text { font-size: var(--dg-fs-85); }
 .dgh-hl-turn { flex: 0 0 auto; margin-left: 0.8rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-72); }
 
-/* ---------- compact game detail page ---------- */
+/* compact game detail page */
 .dgh-detail .dgh-section { padding: 0.4rem 0.7rem 0.5rem; margin-bottom: 0.5rem; }
 .dgh-detail .dgh-section-title { margin-bottom: 0.3rem; font-size: var(--dg-fs-95); }
 .dgh-detail .dgh-detail-head { margin-bottom: 0.3rem; }
@@ -1446,7 +1446,7 @@
 .dgh-tl-medal.dgh-tl-edge-l,
 .dgh-tl-disaster.dgh-tl-edge-l { margin-left: 0; }
 
-/* ---------- Hall of Fame landing: best games and the current game in context ---------- */
+/* Hall of Fame landing: best games and the current game in context */
 .dgh-tiles--slim .dgh-stat { min-width: 7rem; padding: 0.25rem 0.6rem; margin: 0.15rem; }
 .dgh-tiles--slim .dgh-stat-value { font-size: var(--dg-fs-120); }
 .dgh-best .dgh-section { margin-bottom: 0.5rem; }

@@ -8,7 +8,7 @@ const { document } = createFakeDocument();
 globalThis.document = document;
 globalThis.Locale = { compose: (k) => String(k), getCurrentLocale: () => "en_US" };
 
-// ── city-camera-controller-utils ────────────────────────────────────
+// city-camera-controller-utils
 const {
   clamp, enumVal, nowMs, isEscape, classifyInput, consumeEvent,
   blockedTarget, inputDebounced
@@ -52,7 +52,7 @@ const s = {};
 assert.equal(inputDebounced(s), false); // first call sets timestamp
 assert.equal(inputDebounced(s), true);  // within 500ms window
 
-// ── cinematic-overlay ────────────────────────────────────────────────
+// cinematic-overlay
 const {
   ORDINAL_WORDS, ORDINAL_TAG_MAX, ordinalWord, ordinalText, joinNames, composeOr, isEnglishLocale,
   captionText, flavorText, localeCode, districtPhrase, highlightNames,
@@ -103,7 +103,7 @@ assert.equal(districtPhrase({ name: "Unknown", quarterType: "QUARTER_NONE" }), "
 assert.deepEqual(highlightNames({ wonders: [{ nameKey: "LOC_W" }], districts: [{ name: "Acropolis", quarterType: "QUARTER_ACROPOLIS" }] }),
   ["the LOC_W", "the Acropolis"]);
 
-// ── English articling: 100 examples ──────────────────────────────────
+// English articling: 100 examples
 // Every row is [displayName, typeId, expected], exercised through the real
 // entry point articledName(). Grouped by category; each expected value is the
 // grammatically correct English rendering.
@@ -143,9 +143,9 @@ const ARTICLE_CASES = [
   ["Crystal Palace", "", "the Crystal Palace"],
   ["Grand Bazaar", "", "the Grand Bazaar"],
   ["Iron Pagoda", "", "the Iron Pagoda"],
-  // ── The installed game's full roster, by TYPE ID ────────────────────────────────────────────
+  // The installed game's full roster, by type id
   // Read from GameInfo in a running Civilization VII 1.5.0 (48 wonders, 19 natural wonders) on
-  // 2026-09-23, so these are the ids and spellings the engine actually reports. This is the
+  // 2026-09-23, so these are the ids and spellings the engine reports. This is the
   // regression guard for the whole set: the previous name-only list silently missed
   // "Machu Pikchu" (the game does not spell it "Machu Picchu") and rendered "the Machu Pikchu".
   ["Machu Pikchu", "WONDER_MACHU_PIKCHU", "Machu Pikchu"],
@@ -219,7 +219,7 @@ const ARTICLE_CASES = [
   ["Great Zimbabwe", "", "Great Zimbabwe"],
   ["Meidan Emam", "", "Meidan Emam"],
   ["Chand Baori", "", "Chand Baori"],
-  // Unique quarters — all default to "the", tabled or not. 53-72
+  // Unique quarters: all default to "the", tabled or not. 53-72
   ["Acropolis", "QUARTER_ACROPOLIS", "the Acropolis"],
   ["Forum", "QUARTER_FORUM", "the Forum"],
   ["Matha", "QUARTER_MATHA", "the Matha"],
@@ -240,7 +240,7 @@ const ARTICLE_CASES = [
   ["Trade Hub", "QUARTER_TRADE", "the Trade Hub"],                     // un-tabled / DLC
   ["Harbor Quarter", "QUARTER_HARBOR", "the Harbor Quarter"],          // un-tabled / DLC
   ["Innovation Quarter", "QUARTER_FUTURE", "the Innovation Quarter"],  // un-tabled / DLC
-  // Natural wonders — toponyms reject "the". 73-83
+  // Natural wonders: toponyms reject "the". 73-83
   ["Uluru", "", "Uluru"],
   ["Kilimanjaro", "", "Kilimanjaro"],
   ["Mount Kilimanjaro", "", "Mount Kilimanjaro"],
@@ -302,7 +302,7 @@ assert.equal(
   "the Parthenon, Machu Picchu, LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND the Acropolis"
 );
 
-// ── cinematic-tour pure exports ──────────────────────────────────────
+// cinematic-tour pure exports
 const {
   FIREWORK_VFX, orbitParams, flyoverParams
 } = await import(

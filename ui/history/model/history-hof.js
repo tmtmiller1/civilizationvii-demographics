@@ -14,9 +14,9 @@ export const TITLE_COUNT = 12;
 /**
  * A headline figure of a record, 0 when the record carries no figures (an archive written by hand
  * or by another version passes isRecord without them).
- * @param {ArchiveRecord} r Record.
- * @param {keyof ArchiveRecord["stats"]} key Figure.
- * @returns {number} The figure.
+ * @param {ArchiveRecord} r
+ * @param {keyof ArchiveRecord["stats"]} key
+ * @returns {number}
  */
 export function statOf(r, key) {
   const v = r.stats ? r.stats[key] : 0;
@@ -25,7 +25,7 @@ export function statOf(r, key) {
 
 /**
  * Records to show.
- * @param {ArchiveRecord[]} records All records.
+ * @param {ArchiveRecord[]} records
  * @param {{showShort?: boolean, keep?: string}} [opts] Show short unfinished games too; always keep
  *   one id (the game being played).
  * @returns {ArchiveRecord[]} Visible records, newest first.
@@ -38,8 +38,8 @@ export function visibleRecords(records, opts = {}) {
 
 /**
  * Sort weight of an outcome (lower first).
- * @param {HnrStatus} s Status.
- * @returns {number} Weight.
+ * @param {HnrStatus} s
+ * @returns {number}
  */
 function outcomeWeight(s) {
   return s === "victory" ? 0 : s === "defeat" || s === "ended" ? 1 : 2;
@@ -48,7 +48,7 @@ function outcomeWeight(s) {
 /**
  * Games in ranking order.
  * @param {ArchiveRecord[]} records
- * @returns {ArchiveRecord[]} Ranked copy.
+ * @returns {ArchiveRecord[]} A ranked copy.
  */
 export function ranked(records) {
   return records.slice().sort(
@@ -74,7 +74,7 @@ export function ranked(records) {
  * @param {ArchiveRecord[]} records Visible games.
  * @param {string} [currentId] The game being played; when absent, the most recently updated game.
  * @param {number} [topN] How many of the best to list.
- * @returns {Standing} Standing.
+ * @returns {Standing}
  */
 export function standing(records, currentId = "", topN = 10) {
   const order = ranked(records);
@@ -92,7 +92,7 @@ export function standing(records, currentId = "", topN = 10) {
 
 /**
  * Honorific index (1 = best) for a game, against the best game's Triumphs.
- * @param {ArchiveRecord} rec The game.
+ * @param {ArchiveRecord} rec
  * @param {number} best Highest Triumph count among all games.
  * @returns {number} 1..TITLE_COUNT.
  */
@@ -107,7 +107,7 @@ export function titleIndex(rec, best) {
  * @template T
  * @param {T[]} items
  * @param {(item:T) => string} key Key function ("" skipped).
- * @returns {Map<string, number>} Counts.
+ * @returns {Map<string, number>}
  */
 function tally(items, key) {
   const m = new Map();
@@ -120,7 +120,7 @@ function tally(items, key) {
 
 /**
  * Key with the highest count (ties: first seen).
- * @param {Map<string, number>} m Counts.
+ * @param {Map<string, number>} m
  * @returns {string} Key, or "".
  */
 function topKey(m) {
@@ -132,9 +132,9 @@ function topKey(m) {
 
 /**
  * Overview figures.
- * @param {ArchiveRecord[]} records Visible records.
+ * @param {ArchiveRecord[]} records
  * @returns {{games:number, victories:number, finished:number, turns:number, triumphs:number,
- *   favoriteLeader:string, victoriesByType:Array<[string, number]>, latest: ArchiveRecord|null}} Overview.
+ *   favoriteLeader:string, victoriesByType:Array<[string, number]>, latest: ArchiveRecord|null}}
  */
 export function overview(records) {
   const wins = records.filter((r) => r.outcome.status === "victory");
@@ -168,9 +168,9 @@ export function overview(records) {
 /**
  * Fold one record into a group row.
  * @param {Map<string, GroupRow & {turnSum:number}>} rows Accumulator.
- * @param {string} key Group key.
+ * @param {string} key
  * @param {string} name LOC tag.
- * @param {ArchiveRecord} r Record.
+ * @param {ArchiveRecord} r
  */
 function fold(rows, key, name, r) {
   const blank = {
@@ -192,7 +192,7 @@ function fold(rows, key, name, r) {
 /**
  * Per-leader table, most played first.
  * @param {ArchiveRecord[]} records
- * @returns {GroupRow[]} Rows.
+ * @returns {GroupRow[]}
  */
 export function leaderRows(records) {
   const rows = new Map();
@@ -203,7 +203,7 @@ export function leaderRows(records) {
 /**
  * Per-civilization table (every civilization led in any age), most played first.
  * @param {ArchiveRecord[]} records
- * @returns {GroupRow[]} Rows.
+ * @returns {GroupRow[]}
  */
 export function civRows(records) {
   const rows = new Map();
@@ -227,8 +227,8 @@ export function civRows(records) {
 
 /**
  * Best game by a figure.
- * @param {ArchiveRecord[]} records Candidates.
- * @param {(r:ArchiveRecord) => number} val Figure.
+ * @param {ArchiveRecord[]} records
+ * @param {(r:ArchiveRecord) => number} val
  * @param {boolean} [lowest] Pick the lowest instead of the highest.
  * @returns {ArchiveRecord|null} The game, or null when every figure is 0.
  */

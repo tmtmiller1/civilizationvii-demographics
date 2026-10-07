@@ -18,8 +18,8 @@ const CAP = 12;
 /**
  * Run `fn`, returning its result or `fb` on throw. Never throws.
  * @template T
- * @param {() => T} fn Thunk.
- * @param {T} [fb] Fallback.
+ * @param {() => T} fn
+ * @param {T} [fb]
  * @returns {T|undefined} Result or fallback.
  */
 function safe(fn, fb) {
@@ -95,7 +95,7 @@ function readLightTowns() {
 
 /**
  * Load the buffer, resetting it when the game seed changed (new game).
- * @param {string} seed Current game seed.
+ * @param {string} seed
  * @returns {{seed: string, byLoc: Record<string, Array<{t: number, pop: number}>>}}
  */
 function loadBuffer(seed) {

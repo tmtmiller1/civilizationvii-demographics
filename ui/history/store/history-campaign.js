@@ -2,7 +2,7 @@
 //
 // Pure operations on the per-save CampaignDoc: create, normalize a loaded blob, track ages and the
 // player roster (with each player's civilization per age), append chronicle events and trend
-// samples under fixed caps, and record the outcome. dgh-capture.js feeds it; the views read it.
+// samples under fixed caps, and record the outcome. history-capture.js feeds it; the views read it.
 
 export const CAMPAIGN_VERSION = 1;
 /** Maximum chronicle events kept per campaign. */
@@ -19,8 +19,8 @@ export const DROP_ORDER = ["met", "found", "peace", "war", "razed", "capture", "
 
 /**
  * A fresh document.
- * @param {{id:string, seed:number, now:number, setup:HnrSetup, local:number}} init Identity.
- * @returns {CampaignDoc} The document.
+ * @param {{id:string, seed:number, now:number, setup:HnrSetup, local:number}} init
+ * @returns {CampaignDoc}
  */
 export function newCampaign(init) {
   return {
@@ -43,7 +43,7 @@ export function newCampaign(init) {
 /**
  * Whether a parsed blob is a usable CampaignDoc.
  * @param {*} d Parsed JSON.
- * @returns {boolean} True when the required fields are present with the right types.
+ * @returns {boolean}
  */
 export function isCampaign(d) {
   return !!(
@@ -62,10 +62,10 @@ export function isCampaign(d) {
 
 /**
  * Index of the age in the document, appending it when new.
- * @param {CampaignDoc} doc The document.
- * @param {string} age Age type.
- * @param {number} turn Current turn.
- * @returns {number} The age index.
+ * @param {CampaignDoc} doc
+ * @param {string} age
+ * @param {number} turn
+ * @returns {number}
  */
 export function ensureAge(doc, age, turn) {
   let idx = doc.ages.findIndex((a) => a.age === age);
@@ -85,9 +85,9 @@ export function ensureAge(doc, age, turn) {
 
 /**
  * Record or update a player, appending a civilization span for each new age or civilization.
- * @param {CampaignDoc} doc The document.
- * @param {number} pid Player id.
- * @param {Identity} id Identity.
+ * @param {CampaignDoc} doc
+ * @param {number} pid
+ * @param {Identity} id
  * @param {{age:string, turn:number}} at Where in the game this was read.
  */
 export function upsertPlayer(doc, pid, id, at) {
@@ -107,7 +107,7 @@ export function upsertPlayer(doc, pid, id, at) {
 
 /**
  * Remove events until the chronicle fits EVENTS_CAP, oldest of the least important kind first.
- * @param {HnrEvent[]} events The chronicle (mutated).
+ * @param {HnrEvent[]} events Mutated.
  */
 export function trimEvents(events) {
   for (const kind of DROP_ORDER) {
@@ -125,8 +125,8 @@ export function trimEvents(events) {
 
 /**
  * Append events, mark eliminations on the roster, then enforce the cap.
- * @param {CampaignDoc} doc The document.
- * @param {HnrEvent[]} events New events.
+ * @param {CampaignDoc} doc
+ * @param {HnrEvent[]} events
  */
 export function appendEvents(doc, events) {
   for (const e of events) {
@@ -138,7 +138,7 @@ export function appendEvents(doc, events) {
 
 /**
  * Triumphs earned so far by each player, counted from the chronicle.
- * @param {CampaignDoc} doc The document.
+ * @param {CampaignDoc} doc
  * @returns {Record<string, number>} Player id -> count.
  */
 export function triumphCounts(doc) {
@@ -159,9 +159,9 @@ export function triumphCounts(doc) {
  * Remember how many Triumphs each player holds in the current age. The engine's list is the
  * truth (it includes Triumphs earned before this mod was installed); it only ever grows within
  * an age and is rebuilt at the next age, so the per-age maximum is kept.
- * @param {CampaignDoc} doc The document (mutated).
- * @param {number} ageIdx Current age index.
- * @param {HnrWorldState} world The current state.
+ * @param {CampaignDoc} doc Mutated.
+ * @param {number} ageIdx
+ * @param {HnrWorldState} world
  */
 export function noteTriumphs(doc, ageIdx, world) {
   /** @type {Record<string, Record<string, number>>} */
@@ -176,7 +176,7 @@ export function noteTriumphs(doc, ageIdx, world) {
 
 /**
  * Keep every other sample, but always the newest one and the first sample of each age.
- * @param {HnrSeries} s The series (mutated).
+ * @param {HnrSeries} s Mutated.
  * @param {number[]} keepTurns Turns that must survive (age starts).
  */
 export function decimateSeries(s, keepTurns) {
@@ -197,8 +197,8 @@ export function decimateSeries(s, keepTurns) {
 /**
  * Append one trend sample (settlements, population, cumulative Triumphs) for living players.
  * A sample for a turn already recorded replaces it.
- * @param {CampaignDoc} doc The document.
- * @param {HnrWorldState} world The current state.
+ * @param {CampaignDoc} doc
+ * @param {HnrWorldState} world
  */
 export function appendSample(doc, world) {
   const s = doc.series;
@@ -230,7 +230,7 @@ function keepCumulative(arr, idx) {
 /**
  * Append a migration reading, padding with the earliest known value when the Emigration mod arrived
  * after recording began (the tallies are cumulative, so padding with it shows no movement).
- * @param {HnrPlayerSeries} ps The player's series (mutated).
+ * @param {HnrPlayerSeries} ps Mutated.
  * @param {{i:number, o:number}} mig Cumulative people in and out.
  */
 function pushMigration(ps, mig) {
@@ -245,10 +245,10 @@ function pushMigration(ps, mig) {
 /**
  * A player's series, created when new and padded to `at` samples (a player first seen late, or a
  * document recorded before scaled population existed).
- * @param {HnrSeries} s The series (mutated).
- * @param {string} pid Player id.
+ * @param {HnrSeries} s Mutated.
+ * @param {string} pid
  * @param {number} at Samples every array must hold before the new one.
- * @returns {HnrPlayerSeries} The player's series.
+ * @returns {HnrPlayerSeries}
  */
 function paddedSeries(s, pid, at) {
   const ps = (s.by[pid] = s.by[pid] || { set: [], pop: [], tri: [], pops: [] });
@@ -265,7 +265,7 @@ function paddedSeries(s, pid, at) {
 
 /**
  * Remove the newest sample from every array.
- * @param {HnrSeries} s The series (mutated).
+ * @param {HnrSeries} s Mutated.
  */
 function dropLastSample(s) {
   s.turns.pop();
@@ -277,7 +277,7 @@ function dropLastSample(s) {
 
 /**
  * Record how the game ended for the local player when a victory or defeat is seen.
- * @param {CampaignDoc} doc The document.
+ * @param {CampaignDoc} doc
  * @param {HnrEvent[]} events Events just appended.
  * @param {(pid:number) => number} teamOf Team of a player.
  */
@@ -294,9 +294,9 @@ export function applyOutcome(doc, events, teamOf) {
 
 /**
  * Whether an event is the local player's elimination in a game not yet decided.
- * @param {CampaignDoc} doc The document.
- * @param {HnrEvent} e Event.
- * @returns {boolean} True for a local defeat.
+ * @param {CampaignDoc} doc
+ * @param {HnrEvent} e
+ * @returns {boolean}
  */
 function isLocalDefeat(doc, e) {
   return e.k === "elim" && e.p === doc.local && doc.outcome.status === "in_progress";

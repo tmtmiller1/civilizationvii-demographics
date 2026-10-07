@@ -17,12 +17,11 @@ const EDGE_PAD = 8;
 
 /**
  * Create the shared Gantt hover-tooltip element (hidden, absolute).
- * @returns {HTMLElement} The tooltip element.
+ * @returns {HTMLElement}
  */
 export function createGanttTooltip() {
   const tooltip = document.createElement("div");
   tooltip.className = "demographics-chart-hover-tooltip demographics-wars-tooltip";
-  // Hidden until a bar is hovered.
   tooltip.style.display = "none";
   return tooltip;
 }
@@ -31,12 +30,12 @@ export function createGanttTooltip() {
  * Move the tooltip onto the screen frame the first time a hover needs it. The Gantt wrap scrolls
  * (`overflow: auto`), so a tooltip mounted in it can never extend past the wrap's visible box: at
  * 1280x720 a six-civ war tooltip is taller than the whole chart area and its lower rows were cut
- * off no matter how it was flipped (watched 2026-09-23). The frame gives it the full frame height.
+ * off no matter how it was flipped. The frame gives it the full frame height.
  * This runs at hover time, not mount time: mountGanttWrap builds the wrap detached, so `closest`
  * finds no frame until the wrap is in the document (the first attempt did exactly that and every
  * tooltip silently stayed in the canvas). The canvas remains the host outside the screen (tests).
  * Any tooltip left on the frame by a previous Gantt mount is removed first.
- * @param {{ wrap: HTMLElement, tooltip: HTMLElement, host: HTMLElement|null }} state Hover state.
+ * @param {{ wrap: HTMLElement, tooltip: HTMLElement, host: HTMLElement|null }} state
  */
 function ensureTooltipHost(state) {
   if (state.host) return;
@@ -55,8 +54,8 @@ function ensureTooltipHost(state) {
 /**
  * Hit-test a point (in SVG coords) against the war bar rects.
  * @param {*} barRects
- * @param {number} svgX The SVG-space x.
- * @param {number} svgY The SVG-space y.
+ * @param {number} svgX
+ * @param {number} svgY
  * @returns {*} The war under the point, or null.
  */
 function hitTestBars(barRects, svgX, svgY) {
@@ -76,7 +75,7 @@ function hitTestBars(barRects, svgX, svgY) {
 
 /**
  * Hide the Gantt tooltip and clear hover state.
- * @param {{ tooltip: HTMLElement, shownWar: * }} state Hover state.
+ * @param {{ tooltip: HTMLElement, shownWar: * }} state
  */
 function hideGanttTooltip(state) {
   state.tooltip.style.display = "none";
@@ -85,9 +84,9 @@ function hideGanttTooltip(state) {
 
 /**
  * The box the tooltip must stay inside and the client-rect origin its `left`/`top` are measured
- * from, both in the host's LOCAL px. On the frame there is no scrolling; in the canvas fallback
+ * from, both in the host's local px. On the frame there is no scrolling; in the canvas fallback
  * the wrap scrolls both ways, so the visible box follows scrollLeft/scrollTop.
- * @param {{ wrap: HTMLElement, host: HTMLElement|null }} state Hover state.
+ * @param {{ wrap: HTMLElement, host: HTMLElement|null }} state
  * @param {*} svgRect SVG client rect (the canvas-fallback origin).
  * @returns {{ origin: {left: number, top: number}, minX: number, maxX: number, minY: number, maxY: number }}
  */
@@ -108,8 +107,8 @@ function tooltipBounds(state, svgRect) {
  * Pick the tooltip's visual scale: the CSS enlargement, reduced (to a floor) when the tooltip's
  * natural box would not fit the host in either direction. Written inline so the CSS default is
  * overridden only while it has to be.
- * @param {HTMLElement} tooltip The tooltip element.
- * @param {{ minX: number, maxX: number, minY: number, maxY: number }} b The bounds.
+ * @param {HTMLElement} tooltip
+ * @param {{ minX: number, maxX: number, minY: number, maxY: number }} b
  * @returns {number} The scale applied.
  */
 function fitTooltipScale(tooltip, b) {
@@ -137,16 +136,16 @@ function placeAxis(cursor, size, min, max) {
 }
 
 /**
- * Position the Gantt tooltip near the cursor with right-edge AND bottom-edge flip, clamped to its
+ * Position the Gantt tooltip near the cursor with right-edge and bottom-edge flip, clamped to its
  * host and scaled down when it would not fit at all.
- * @param {{ wrap: HTMLElement, host: HTMLElement|null, tooltip: HTMLElement }} state Hover state.
+ * @param {{ wrap: HTMLElement, host: HTMLElement|null, tooltip: HTMLElement }} state
  * @param {*} ev Mouse event.
  * @param {*} rect SVG client rect.
  */
 function positionGanttTooltip(state, ev, rect) {
-  // clientX/Y and the rects are VISUAL px; `left`/`top`, clientWidth/Height and offsetWidth/Height
-  // are the host's LOCAL px. Under the frame's transform:scale the two differ, and writing the
-  // visual delta as local px put the tooltip 1/s too far and past the frame (watched 2026-09-23).
+  // clientX/Y and the rects are visual px; `left`/`top`, clientWidth/Height and offsetWidth/Height
+  // are the host's local px. Under the frame's transform:scale the two differ, and writing the
+  // visual delta as local px put the tooltip 1/s too far and past the frame.
   const b = tooltipBounds(state, rect);
   const k = fitTooltipScale(state.tooltip, b);
   const localX = toLocalPx(ev.clientX - b.origin.left);
@@ -170,7 +169,7 @@ function positionGanttTooltip(state, ev, rect) {
  *   W: number,
  *   H: number,
  *   shownWar: *,
- * }} state Hover state.
+ * }} state
  */
 function onGanttHoverMove(ev, state) {
   try {
@@ -208,16 +207,16 @@ function ganttHoverMoveBody(ev, state) {
   positionGanttTooltip(state, ev, rect);
   // The flip-left check reads offsetWidth, which is stale in the same tick the content was rendered
   // (GameFace lays out a frame later): a wide six-civ tooltip stayed on the cursor's right and ran
-  // off the frame until the next mouse move (watched 2026-09-23). Re-place once layout has settled.
+  // off the frame until the next mouse move. Re-place once layout has settled.
   if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => { if (state.shownWar) positionGanttTooltip(state, ev, rect); });
 }
 
 /**
  * Wire the Gantt's mousemove/leave hover tooltip behavior.
- * @param {Object} args Wiring inputs.
- * @param {HTMLElement} args.wrap The chart wrap.
- * @param {SVGElement} args.svg The chart SVG.
- * @param {HTMLElement} args.tooltip The tooltip element.
+ * @param {Object} args
+ * @param {HTMLElement} args.wrap
+ * @param {SVGElement} args.svg
+ * @param {HTMLElement} args.tooltip
  * @param {*} args.barRects
  * @param {Object} args.ctx Shared Gantt context (for tooltip rendering).
  * @param {number} args.W Canvas width.

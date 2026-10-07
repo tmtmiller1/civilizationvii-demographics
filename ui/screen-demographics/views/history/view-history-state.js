@@ -17,7 +17,7 @@ const PAGE_ID_ALIASES = {
  * Resolve active page id within the given (hub-scoped) page list, defaulting to the first page
  * when invalid. Retired page ids are aliased first; then a page hidden by the active UI
  * complexity tier clamps to the first visible page so a downgrade never strands the view.
- * @param {*} ctx Render context.
+ * @param {*} ctx
  * @param {{ id: string, tier?: string }[]} pages Page list (already scoped to the active hub).
  * @returns {string} Valid, tier-visible page id.
  */
@@ -36,10 +36,10 @@ export function resolveActivePageState(ctx, pages) {
 
 /**
  * Resolve active metric id within a page, falling back to first renderable.
- * @param {*} ctx Render context.
- * @param {{ metrics?: string[] }} page Active page.
+ * @param {*} ctx
+ * @param {{ metrics?: string[] }} page
  * @param {(id: string) => boolean} metricExists Metric-existence predicate.
- * @returns {string} Valid metric id.
+ * @returns {string}
  */
 export function resolveActiveMetricState(ctx, page, metricExists) {
   const metrics = page.metrics || [];
@@ -55,8 +55,8 @@ export function resolveActiveMetricState(ctx, page, metricExists) {
  * Resolve active time filter. Cross-age filters (all/age1/age2/age3) are honored
  * since history persists across ages; defaults to "all", and falls back to "all"
  * when the persisted id is unknown/disabled.
- * @param {*} ctx Render context.
- * @param {{ id: string, disabled?: boolean }[]} filters Time filter list.
+ * @param {*} ctx
+ * @param {{ id: string, disabled?: boolean }[]} filters
  * @returns {string} Valid enabled filter id.
  */
 export function resolveActiveFilterState(ctx, filters) {

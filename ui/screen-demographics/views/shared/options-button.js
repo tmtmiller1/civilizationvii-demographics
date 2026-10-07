@@ -1,7 +1,7 @@
 // options-button.js
 //
 // The persistent "Options" button: opens the native game Options screen (Mods → Demographics),
-// the single home for Demographics settings. Rendered ONCE by screen-demographics.js in the frame
+// the single home for Demographics settings. Rendered once by screen-demographics.js in the frame
 // header (top-right, at title level, left of the close button) so it is on every tab without costing
 // a row; styled like the chart-toolbar buttons it replaced.
 
@@ -13,7 +13,7 @@ import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 /**
  * Build the "Options" button. Clicking it opens the native Options screen (Mods → Demographics)
  * via a lazily-imported ContextManager; opening is best-effort (a no-op if the import fails).
- * @returns {HTMLElement} The button element.
+ * @returns {HTMLElement}
  */
 export function buildOptionsButton() {
   const btn = document.createElement("div");
@@ -36,7 +36,7 @@ export function buildOptionsButton() {
 }
 
 /**
- * Put the header Options button on the title's line: vertically centered on the MEASURED title, at
+ * Put the header Options button on the title's line: vertically centered on the measured title, at
  * the fixed right inset its stylesheet rule sets. Measured rather than a fixed top offset because
  * the title (an engine fxs-header with filigree) has no stable height across scales. Rects are
  * visual px while `top` is the frame's local px, hence the conversion. Safe to call repeatedly.

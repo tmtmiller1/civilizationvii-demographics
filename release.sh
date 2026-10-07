@@ -111,7 +111,7 @@ rsync -a --exclude='CHANGELOG.steam.txt' --exclude='.git' --exclude='.gitignore'
     "$SRC_DIR"/ "$TARGET_DIR"/
 
 # Guard: the T0 dev probe (ui/dev/) is excluded above, so a shipped modinfo must
-# not still reference it — that would dangle a UIScript at load. Fail loudly if the
+# not still reference it; that would dangle a UIScript at load. Fail if the
 # DEV PROBE registration was left in.
 if grep -q 'ui/dev/' "$TARGET_DIR/demographics.modinfo"; then
     echo "error: demographics.modinfo still references ui/dev/ (the T0 dev probe)."
@@ -130,8 +130,8 @@ find "$TARGET_DIR" -name '*.js' -type f -print0 | xargs -0 sed -i '' -E \
     -e 's/^let DEMOGRAPHICS_DEBUG = true;/let DEMOGRAPHICS_DEBUG = false;/' \
     -e 's/^const DEMOGRAPHICS_DEBUG = true;/const DEMOGRAPHICS_DEBUG = false;/'
 
-# Dist JS is ALWAYS shipped readable - no minification. Transparent, inspectable
-# source is a core property of this mod, so there is intentionally no minify path.
+# Dist JS is always shipped readable, no minification. Readable source is a property
+# of this mod, so there is no minify path on purpose.
 echo "==> Shipping dist JS readable (no minification)"
 
 echo "==> Syntax-checking dist JS"
@@ -220,7 +220,7 @@ cat >> "$out_path" <<EOF
     "visibility"     "0"
     "title"          "Demographics"
 EOF
-# NOTE: "description" is intentionally omitted. steamcmd's workshop_build_item
+# "description" is left out on purpose. steamcmd's workshop_build_item
 # only updates the fields present in this VDF, so leaving it out preserves the
 # description currently set on the Steam Workshop page instead of overwriting it.
 cat >> "$out_path" <<EOF

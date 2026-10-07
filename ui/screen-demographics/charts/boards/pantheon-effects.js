@@ -32,8 +32,8 @@ const YIELD_TO_CAT = (() => {
   return m;
 })();
 
-// Effect types whose `Amount` is a flat yield we count toward the estimate. Deliberately
-// narrow: only the plain per-player / per-city yield adjustments. Anything with a
+// Effect types whose `Amount` is a flat yield we count toward the estimate. Kept
+// narrow on purpose: only the plain per-player / per-city yield adjustments. Anything with a
 // `Percent` argument, or a "_PER_" scaling effect, is treated as conditional and skipped.
 const FLAT_YIELD_EFFECTS = new Set([
   "EFFECT_PLAYER_ADJUST_YIELD",
@@ -103,7 +103,7 @@ function effectTypeFor(modifierId) {
 /**
  * A modifier's arguments as a Name→Value map.
  * @param {string} modifierId
- * @returns {Record<string,string>} The argument map.
+ * @returns {Record<string,string>}
  */
 function argsFor(modifierId) {
   /** @type {Record<string,string>} */

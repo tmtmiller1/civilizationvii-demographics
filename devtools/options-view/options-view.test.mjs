@@ -27,7 +27,7 @@ function makeSettings() {
   };
 }
 
-// ── view renders ────────────────────────────────────────────────────
+// view renders
 const { render: renderOptions } = await import("./view-options.js");
 const optHost = document.createElement("div");
 optHost._rect.width = 1100; optHost._rect.height = 900;
@@ -40,7 +40,7 @@ renderOptions(optHost, {
 });
 assert.ok(optHost.children.length > 0);
 
-// ── destructive buttons need two clicks (no window.confirm in GameFace) ──
+// destructive buttons need two clicks (no window.confirm in GameFace)
 const { buildButtonRowPanel } = await import("./view-options-actions.js");
 const realNow = Date.now;
 const realSetTimeout = globalThis.setTimeout;

@@ -24,9 +24,8 @@ const CIVS_COL = 4;
  */
 
 /**
- * Open a game's page.
- * @param {string} id Record id.
- * @param {HofCtx} ctx Context.
+ * @param {string} id
+ * @param {HofCtx} ctx
  */
 function openGame(id, ctx) {
   viewState.detail = id;
@@ -36,9 +35,9 @@ function openGame(id, ctx) {
 
 /**
  * The civilizations a game's leader led, with emblems.
- * @param {ArchiveRecord} rec Record.
+ * @param {ArchiveRecord} rec
  * @param {string} cls Size variant.
- * @returns {HTMLElement} Progression.
+ * @returns {HTMLElement}
  */
 function progression(rec, cls) {
   return civProgression(rec.civs, (c) => typeName(c.name, c.civ), cls);
@@ -46,8 +45,8 @@ function progression(rec, cls) {
 
 /**
  * A slim strip of totals: games, victories, win rate, turns, Triumphs.
- * @param {ArchiveRecord[]} records Visible games.
- * @returns {HTMLElement} Strip.
+ * @param {ArchiveRecord[]} records
+ * @returns {HTMLElement}
  */
 function totals(records) {
   const o = overview(records);
@@ -63,12 +62,12 @@ function totals(records) {
 
 /**
  * One podium place: rank, portrait, honorific, leader, civilizations, result and figures.
- * @param {ArchiveRecord} rec Game.
+ * @param {ArchiveRecord} rec
  * @param {number} rank 1-3.
  * @param {number} best Most Triumphs in any game (the honorific scale).
- * @param {string} currentId The current game.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} Card.
+ * @param {string} currentId
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function podiumCard(rec, rank, best, currentId, ctx) {
   const card = el("div", { cls: "dgh-podium-card dgh-podium-card--" + rank + (rec.id === currentId ? " is-current" : "") }, [
@@ -91,11 +90,11 @@ function podiumCard(rec, rank, best, currentId, ctx) {
 
 /**
  * The podium: second, first and third place, the first raised in the middle.
- * @param {ArchiveRecord[]} top Best games.
+ * @param {ArchiveRecord[]} top
  * @param {number} best Honorific scale.
- * @param {string} currentId Current game.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement} Podium.
+ * @param {string} currentId
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement}
  */
 function podium(top, best, currentId, ctx) {
   const at = (/** @type {number} */ i) => (top[i] ? podiumCard(top[i], i + 1, best, currentId, ctx) : null);
@@ -107,9 +106,9 @@ function podium(top, best, currentId, ctx) {
  * @param {{rec: ArchiveRecord, rank: number}[]} rows Games with their ranks.
  * @param {number} best Honorific scale.
  * @param {string} currentId Current game (highlighted).
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  * @param {boolean} [narrow] Leave out the civilizations (for the side column).
- * @returns {HTMLElement} Table.
+ * @returns {HTMLElement}
  */
 function rankTable(rows, best, currentId, ctx, narrow = false) {
   const all = [
@@ -134,10 +133,10 @@ function rankTable(rows, best, currentId, ctx, narrow = false) {
 
 /**
  * The current game at its rank, between the games just above and below it.
- * @param {import("../model/history-hof.js").Standing["current"]} cur Current game's standing.
+ * @param {import("../model/history-hof.js").Standing["current"]} cur
  * @param {number} best Honorific scale.
- * @param {HofCtx} ctx Context.
- * @returns {HTMLElement|null} Section.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement|null}
  */
 function currentInContext(cur, best, ctx) {
   if (!cur) return null;
@@ -158,8 +157,8 @@ function currentInContext(cur, best, ctx) {
 
 /**
  * Victories by type, as bars.
- * @param {ArchiveRecord[]} records Visible games.
- * @returns {HTMLElement} Section.
+ * @param {ArchiveRecord[]} records
+ * @returns {HTMLElement}
  */
 function victoriesByType(records) {
   const o = overview(records);
@@ -177,10 +176,10 @@ function victoriesByType(records) {
 
 /**
  * The landing page.
- * @param {HTMLElement} host Container.
- * @param {ArchiveRecord[]} records Visible games.
+ * @param {HTMLElement} host
+ * @param {ArchiveRecord[]} records
  * @param {ArchiveRecord[]} all Every game (the honorific scale).
- * @param {HofCtx} ctx Context.
+ * @param {HofCtx} ctx
  */
 export function renderBest(host, records, all, ctx) {
   const best = Math.max(0, ...all.map((r) => statOf(r, "triumphs")));

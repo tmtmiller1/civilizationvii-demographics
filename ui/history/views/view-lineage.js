@@ -12,9 +12,9 @@ import { ageName } from "/demographics/ui/history/views/view-chronicle.js";
 
 /**
  * Player ids in display order: the local player, then everyone else known, living first.
- * @param {CampaignDoc} doc Campaign.
- * @param {(pid:number) => boolean} known Visibility.
- * @returns {number[]} Ids.
+ * @param {CampaignDoc} doc
+ * @param {(pid:number) => boolean} known
+ * @returns {number[]}
  */
 export function lineageOrder(doc, known) {
   return Object.keys(doc.players)
@@ -29,10 +29,10 @@ export function lineageOrder(doc, known) {
 
 /**
  * One cell: the civilization held in an age, a "fallen" marker, or nothing.
- * @param {HnrPlayer} p Player.
+ * @param {HnrPlayer} p
  * @param {HnrAge} age
  * @param {string} color Readable display color.
- * @returns {HTMLElement} Cell.
+ * @returns {HTMLElement}
  */
 function cell(p, age, color) {
   const span = (p.civs || []).find((c) => c.age === age.age);
@@ -55,9 +55,9 @@ function cell(p, age, color) {
 
 /**
  * Render the lineage grid.
- * @param {HTMLElement} host Container.
- * @param {CampaignDoc|null} doc Campaign.
- * @param {"full"|"met"|"own"} [visibility] Analytics visibility (see castFromDoc).
+ * @param {HTMLElement} host
+ * @param {CampaignDoc|null} doc
+ * @param {"full"|"met"|"own"} [visibility] See castFromDoc.
  */
 export function renderLineage(host, doc, visibility = "met") {
   clear(host);

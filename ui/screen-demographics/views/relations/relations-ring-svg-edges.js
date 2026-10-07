@@ -46,7 +46,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 // Line weight (viewBox units): thin so the ring reads as fine connectors.
 const STROKE_W = "0.4";
 
-// Endpoint trim: lines stop at the node's CIRCLE (radius + small gap) instead of
+// Endpoint trim: lines stop at the node's circle (radius + small gap) instead of
 // plunging into the leader icon at the center, which de-clutters the hubs.
 const ENDPOINT_GAP = 0.7; // viewBox units beyond the node radius
 const DEFAULT_NODE_R = 5; // fallback radius when a node's radius is unknown
@@ -63,8 +63,8 @@ let _dashLogged = false;
 
 /**
  * FNV-1a string hash → unsigned 32-bit int (deterministic across repaints).
- * @param {string} s Input string.
- * @returns {number} Hash value.
+ * @param {string} s
+ * @returns {number}
  */
 function hashStr(s) {
   let h = 2166136261;
@@ -78,7 +78,7 @@ function hashStr(s) {
 /**
  * Sorted undirected pair key for an edge ("min|max").
  * @param {Edge} e The edge.
- * @returns {string} The pair key.
+ * @returns {string}
  */
 function pairKey(e) {
   return Number(e.a) < Number(e.b) ? e.a + "|" + e.b : e.b + "|" + e.a;
@@ -88,8 +88,8 @@ function pairKey(e) {
  * Even spread of slot `i` of `n` across [-half, +half]; 0 when alone.
  * @param {number} i Index within the group.
  * @param {number} n Group size.
- * @param {number} half Half-range.
- * @returns {number} The spread value.
+ * @param {number} half
+ * @returns {number}
  */
 function evenSpread(i, n, half) {
   return n > 1 ? (i / (n - 1) - 0.5) * 2 * half : 0;
@@ -113,7 +113,7 @@ function signedCurveFor(e, i, n) {
  * be drawn as parallel offset lines. Drops edges whose endpoints aren't both
  * positioned.
  * @param {Edge[]} edges The edges to group.
- * @param {Map<number, {x: number, y: number}>} positions Node positions.
+ * @param {Map<number, {x: number, y: number}>} positions
  * @returns {Map<string, EdgeGeo[]>} Edge groups keyed by sorted pair.
  */
 export function groupEdgesByPair(edges, positions) {
@@ -123,7 +123,7 @@ export function groupEdgesByPair(edges, positions) {
     const pa = positions.get(e.a);
     const pb = positions.get(e.b);
     if (!pa || !pb) continue;
-    // Key by GEOMETRIC endpoints, not pids: two ties between the same two nodes
+    // Key by geometric endpoints, not pids: two ties between the same two nodes
     // always land in one group (a string-vs-number pid mismatch would otherwise
     // split them into two lone curves drawn on top of each other).
     const key = geoPairKey(pa, pb);
@@ -140,9 +140,9 @@ export function groupEdgesByPair(edges, positions) {
 /**
  * Order-independent geometric key for an endpoint pair (rounded so float jitter
  * can't split a pair).
- * @param {{x: number, y: number}} pa First endpoint.
- * @param {{x: number, y: number}} pb Second endpoint.
- * @returns {string} The pair key.
+ * @param {{x: number, y: number}} pa
+ * @param {{x: number, y: number}} pb
+ * @returns {string}
  */
 function geoPairKey(pa, pb) {
   const r = (/** @type {number} */ v) => Math.round(v * 100) / 100;
@@ -156,10 +156,10 @@ function geoPairKey(pa, pb) {
 /**
  * Build the quadratic-bezier control geometry for an edge between two points,
  * bowed by a signed fraction of the chord length (sign = which side it bows).
- * @param {{x: number, y: number}} p0 Start point.
- * @param {{x: number, y: number}} p1 End point.
+ * @param {{x: number, y: number}} p0
+ * @param {{x: number, y: number}} p1
  * @param {number} frac Signed bow as a fraction of chord length.
- * @returns {{p0: *, c: *, p1: *, len: number}} Curve descriptor.
+ * @returns {{p0: *, c: *, p1: *, len: number}}
  */
 function curveOf(p0, p1, frac) {
   const dx = p1.x - p0.x;
@@ -176,10 +176,10 @@ function curveOf(p0, p1, frac) {
  * Pull a chord's endpoints inward to each node's circle edge (radius + gap) so a
  * line terminates at the ring around a leader, not at the icon center. Trim is
  * clamped to keep a visible middle on short (crowded) chords.
- * @param {{x: number, y: number}} pa Source center.
- * @param {{x: number, y: number}} pb Target center.
- * @param {number} ra Source node radius.
- * @param {number} rb Target node radius.
+ * @param {{x: number, y: number}} pa
+ * @param {{x: number, y: number}} pb
+ * @param {number} ra
+ * @param {number} rb
  * @returns {{a: {x: number, y: number}, b: {x: number, y: number}}} Trimmed endpoints.
  */
 function trimChord(pa, pb, ra, rb) {
@@ -199,9 +199,9 @@ function trimChord(pa, pb, ra, rb) {
 
 /**
  * Point on the quadratic bezier at parameter s∈[0,1].
- * @param {{p0: *, c: *, p1: *}} q Curve descriptor.
+ * @param {{p0: *, c: *, p1: *}} q
  * @param {number} s Parameter.
- * @returns {{x: number, y: number}} The point.
+ * @returns {{x: number, y: number}}
  */
 function quadPoint(q, s) {
   const u = 1 - s;
@@ -213,9 +213,9 @@ function quadPoint(q, s) {
 
 /**
  * Tangent (derivative) of the quadratic bezier at parameter s (points toward p1).
- * @param {{p0: *, c: *, p1: *}} q Curve descriptor.
+ * @param {{p0: *, c: *, p1: *}} q
  * @param {number} s Parameter.
- * @returns {{x: number, y: number}} The tangent vector.
+ * @returns {{x: number, y: number}}
  */
 function quadTangent(q, s) {
   return {
@@ -250,9 +250,9 @@ function appendDashSeg(svg, color, pts) {
 /**
  * Append one small filled dot (`<circle>`) , the unit of a dotted line.
  * @param {Element} svg The SVG root.
- * @param {string} color Fill color.
- * @param {{x: number, y: number}} p Center.
- * @param {number} opacity Fill opacity.
+ * @param {string} color
+ * @param {{x: number, y: number}} p
+ * @param {number} opacity
  */
 function appendDot(svg, color, p, opacity) {
   const c = document.createElementNS(SVG_NS, "circle");
@@ -281,8 +281,8 @@ function logDashOnce(e, dash) {
  * Append a solid curved edge as a single quadratic `<path>`.
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{p0: *, c: *, p1: *}} q Curve descriptor.
- * @param {number} opacity Stroke opacity.
+ * @param {{p0: *, c: *, p1: *}} q
+ * @param {number} opacity
  */
 function appendSolidCurve(svg, e, q, opacity) {
   const path = document.createElementNS(SVG_NS, "path");
@@ -306,12 +306,12 @@ const DASH_OFF = 1.8;
 const DOT_SPACING = 2.3;
 
 /**
- * Render a DASHED curved edge: sample the bezier finely and emit a `<line>` for
+ * Render a dashed curved edge: sample the bezier finely and emit a `<line>` for
  * each step whose midpoint falls in an "on" run of the fixed dash cycle.
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{p0: *, c: *, p1: *, len: number}} q Curve descriptor.
- * @param {number} opacity Stroke opacity.
+ * @param {{p0: *, c: *, p1: *, len: number}} q
+ * @param {number} opacity
  */
 function appendDashedCurve(svg, e, q, opacity) {
   logDashOnce(e, "dashed");
@@ -332,13 +332,13 @@ function appendDashedCurve(svg, e, q, opacity) {
 }
 
 /**
- * Render a DOTTED curved edge: walk the bezier by arc length and drop a small
+ * Render a dotted curved edge: walk the bezier by arc length and drop a small
  * `<circle>` at every DOT_SPACING (crisp, evenly-spaced dots , far more reliable
  * than trying to coax round dots out of the dash synthesizer).
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{p0: *, c: *, p1: *, len: number}} q Curve descriptor.
- * @param {number} opacity Fill opacity.
+ * @param {{p0: *, c: *, p1: *, len: number}} q
+ * @param {number} opacity
  */
 function appendDottedCurve(svg, e, q, opacity) {
   const color = e.color || "#bfbfbf";
@@ -361,9 +361,9 @@ function appendDottedCurve(svg, e, q, opacity) {
  * Dispatch a non-directed edge to the right renderer for its style token.
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{p0: *, c: *, p1: *, len: number}} q Curve descriptor.
+ * @param {{p0: *, c: *, p1: *, len: number}} q
  * @param {string} style Style token ("" solid / "dashed" / "dotted").
- * @param {number} opacity Stroke/fill opacity.
+ * @param {number} opacity
  */
 function appendStyledCurve(svg, e, q, style, opacity) {
   if (style === "dashed") appendDashedCurve(svg, e, q, opacity);
@@ -381,9 +381,9 @@ const CHEVRON_S = [0.42, 0.62]; // parameters along the curve to place chevrons 
  * Append one direction chevron at parameter s, pointing along the tangent (→ b).
  * @param {Element} svg The SVG root.
  * @param {string} color Stroke color.
- * @param {{p0: *, c: *, p1: *}} q Curve descriptor.
- * @param {number} s Parameter along the curve.
- * @param {number} opacity Stroke opacity.
+ * @param {{p0: *, c: *, p1: *}} q
+ * @param {number} s
+ * @param {number} opacity
  */
 function appendOneChevron(svg, color, q, s, opacity) {
   const p = quadPoint(q, s);
@@ -404,8 +404,8 @@ function appendOneChevron(svg, color, q, s, opacity) {
  * Append static direction chevrons along a directed edge's curve (a → b).
  * @param {Element} svg The SVG root.
  * @param {Edge} e The edge.
- * @param {{p0: *, c: *, p1: *}} q Curve descriptor.
- * @param {number} opacity Stroke opacity.
+ * @param {{p0: *, c: *, p1: *}} q
+ * @param {number} opacity
  */
 function appendChevrons(svg, e, q, opacity) {
   const color = e.color || "#bfbfbf";
@@ -430,7 +430,7 @@ function canonicalSign(a, b) {
  * a pair's lines are kept apart along their whole length.
  * @param {{x: number, y: number}} a Endpoint a.
  * @param {{x: number, y: number}} b Endpoint b.
- * @param {number} off Perpendicular offset.
+ * @param {number} off
  * @returns {{a: {x: number, y: number}, b: {x: number, y: number}}} Shifted endpoints.
  */
 function offsetChord(a, b, off) {
@@ -458,13 +458,13 @@ function renderGroupEdge(svg, entry, cfg) {
   const rb = (cfg.radii && cfg.radii.get(e.b)) || DEFAULT_NODE_R;
   const trimmed = trimChord(pa, pb, ra, rb);
   // Offset + bow on the pair's canonical perpendicular (see canonicalSign), so two
-  // ties between the same nodes always land in DIFFERENT lanes regardless of which
+  // ties between the same nodes always land in different lanes regardless of which
   // way each edge's a→b happens to point.
   const orient = canonicalSign(trimmed.a, trimmed.b);
   const { a, b } = offsetChord(trimmed.a, trimmed.b, cfg.perpOff * orient);
   const q = curveOf(a, b, cfg.frac * orient);
 
-  // Each edge is its own <g> so the hover hit-test can highlight ALL of its pieces
+  // Each edge is its own <g> so the hover hit-test can highlight all of its pieces
   // at once (a dashed/dotted line is many sub-elements) by toggling .is-hovered.
   const g = document.createElementNS(SVG_NS, "g");
   g.setAttribute("class", "demographics-relations-edge");
@@ -485,7 +485,7 @@ function renderGroupEdge(svg, entry, cfg) {
 
 /**
  * Sample a curve into points (viewBox coords) for the hover distance test.
- * @param {{p0: *, c: *, p1: *}} q Curve descriptor.
+ * @param {{p0: *, c: *, p1: *}} q
  * @returns {{x: number, y: number}[]} Sampled points along the curve.
  */
 function sampleCurve(q) {
@@ -498,7 +498,7 @@ function sampleCurve(q) {
 
 /**
  * Prettify a filter key into a fallback label ("open_borders" → "Open Borders").
- * @param {string} [key] The filter key.
+ * @param {string} [key]
  * @returns {string} A readable label.
  */
 function prettyKey(key) {
@@ -508,7 +508,7 @@ function prettyKey(key) {
 
 /**
  * Render one pair's group of edges so they never overlap: each line is slid to its
- * own perpendicular lane (even spread across the pair) AND given a varied curve, so
+ * own perpendicular lane (even spread across the pair) and given a varied curve, so
  * the lines stay distinct along their whole length and bend in both directions.
  * @param {Element} svg The SVG root.
  * @param {EdgeGeo[]} entries The grouped edges for this pair.

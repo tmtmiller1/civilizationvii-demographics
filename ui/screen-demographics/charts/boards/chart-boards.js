@@ -25,7 +25,7 @@ import {
 /**
  * The players map of the most recent sample, or {} when history is empty.
  * @param {*} history The persisted history blob.
- * @returns {Record<string, any>} The latest players map.
+ * @returns {Record<string, any>}
  */
 function latestPlayers(history) {
   try {
@@ -40,7 +40,7 @@ function latestPlayers(history) {
 /**
  * A civ's display label (honors the Civ/Leader order).
  * @param {*} ps A sample player. @param {string} pid The player id key.
- * @returns {string} The label.
+ * @returns {string}
  */
 function civLabel(ps, pid) {
   if (!ps) return tPlayerFallback(pid);
@@ -76,13 +76,13 @@ function samplesOf(history) {
   return history && Array.isArray(history.samples) ? history.samples : [];
 }
 
-// ── Wonders board + races ──────────────────────────────────────────────────
+// Wonders board + races
 
 /**
  * Fold one player's wonderTypes into the first-seen-turn accumulator.
  * @param {*} ps A sample player. @param {number} turn The chart turn.
- * @param {Map<string, Map<string, number>>} out pid → (type → turn).
- * @param {string} pid The player id key.
+ * @param {Map<string, Map<string, number>>} out
+ * @param {string} pid
  */
 function foldWonderPlayer(ps, turn, out, pid) {
   const types = ps && Array.isArray(ps.wonderTypes) ? ps.wonderTypes : null;
@@ -138,7 +138,7 @@ function wonderLabels(types, turns) {
 /**
  * Render the Wonders board: one civ-colored column per civ, wonders in
  * completion order with their turn.
- * @param {HTMLElement} host The chart host. @param {{history:*}} opts Options.
+ * @param {HTMLElement} host @param {{history:*}} opts
  */
 export function renderWondersBoard(host, opts) {
   host.innerHTML = "";
@@ -162,7 +162,7 @@ export function renderWondersBoard(host, opts) {
 /**
  * Pivot the per-civ first-turns into the earliest builder of each wonder.
  * @param {Map<string, Map<string, number>>} firstTurns pid → (type → turn).
- * @returns {Map<string, {pid:string, turn:number}>} type → winner.
+ * @returns {Map<string, {pid:string, turn:number}>}
  */
 function wonderWinners(firstTurns) {
   const winners = new Map();
@@ -192,8 +192,8 @@ function wonderRaceRow(r) {
 }
 
 /**
- * Render Wonder Races: one row per wonder — who built it first, and when.
- * @param {HTMLElement} host The chart host. @param {{history:*}} opts Options.
+ * Render Wonder Races: one row per wonder, who built it first, and when.
+ * @param {HTMLElement} host @param {{history:*}} opts
  */
 export function renderWonderRaces(host, opts) {
   host.innerHTML = "";
@@ -281,7 +281,7 @@ function wonderProgressRow(r) {
   });
 }
 
-// ── By-type breakdowns (per-civ bar charts) ────────────────────────────────
+// By-type breakdowns (per-civ bar charts)
 
 /** @param {{name:string, color:string, total:number, items:{name:string, n:number}[]}} c @returns {HTMLElement} */
 function byTypeColumn(c) {
@@ -301,9 +301,9 @@ function byTypeColumn(c) {
 
 /**
  * Reduce one civ's by-type map to sorted {name, n} items + a total.
- * @param {Map<string, number>} byType type → count.
+ * @param {Map<string, number>} byType
  * @param {string} lookup The GameInfo table for name resolution.
- * @returns {{total:number, items:{name:string, n:number}[]}} The items + total.
+ * @returns {{total:number, items:{name:string, n:number}[]}}
  */
 function byTypeItems(byType, lookup) {
   let total = 0;
@@ -321,7 +321,7 @@ function byTypeItems(byType, lookup) {
  * @param {Map<*, Map<string, number>>} counts pid → (type → count).
  * @param {Record<string, any>} players The latest sample's players (labels/colors).
  * @param {string} lookup The GameInfo table for name resolution.
- * @returns {{name:string, color:string, total:number, items:{name:string, n:number}[]}[]} The columns.
+ * @returns {{name:string, color:string, total:number, items:{name:string, n:number}[]}[]}
  */
 function byTypeColumns(counts, players, lookup) {
   const cols = [];
@@ -336,8 +336,8 @@ function byTypeColumns(counts, players, lookup) {
 
 /**
  * Render a by-type breakdown: one civ-colored column per civ, a bar per type.
- * @param {HTMLElement} host The chart host.
- * @param {{history:*, datapointId:string, lookup:string}} opts Options.
+ * @param {HTMLElement} host
+ * @param {{history:*, datapointId:string, lookup:string}} opts
  */
 export function renderByTypeBoard(host, opts) {
   host.innerHTML = "";
@@ -350,7 +350,7 @@ export function renderByTypeBoard(host, opts) {
   for (const c of cols) row.appendChild(byTypeColumn(c));
 }
 
-// ── Religion standings (bars) ──────────────────────────────────────────────
+// Religion standings (bars)
 
 /**
  * Build the religion → row map from GameInfo.Religions.
@@ -405,7 +405,7 @@ function collectReligionRows() {
 /**
  * Render the Religion standings as bars (settlements following), colored by each
  * religion's own color.
- * @param {HTMLElement} host The chart host. @param {*} _opts Unused.
+ * @param {HTMLElement} host @param {*} _opts
  */
 export function renderReligionStandings(host, _opts) {
   const rows = collectReligionRows().sort((a, b) => b.settlements - a.settlements);
@@ -422,7 +422,7 @@ export function renderReligionStandings(host, _opts) {
   host.appendChild(wrap);
 }
 
-// ── Religion pantheons (Antiquity) ─────────────────────────────────────────
+// Religion pantheons (Antiquity)
 
 /**
  * @typedef {Object} PantheonEntry
@@ -545,7 +545,7 @@ function collectPantheonRows(history) {
 /**
  * Render the pantheons chosen (Antiquity Religion view) as one identity column per
  * civ, listing each pantheon's name and its effect.
- * @param {HTMLElement} host The chart host.
+ * @param {HTMLElement} host
  * @param {*} opts { history } for civ names/colors.
  */
 export function renderReligionPantheons(host, opts) {
@@ -560,10 +560,10 @@ export function renderReligionPantheons(host, opts) {
 }
 
 /**
- * Render the estimated pantheon YIELDS (Antiquity Religion view) as a small-multiple
+ * Render the estimated pantheon yields (Antiquity Religion view) as a small-multiple
  * card per civ: a colored, labeled horizontal bar per yield category, on a shared max
- * across civs so cards are directly comparable. Estimate only — see pantheon-effects.js.
- * @param {HTMLElement} host The chart host.
+ * across civs so cards are directly comparable. Estimate only; see pantheon-effects.js.
+ * @param {HTMLElement} host
  * @param {*} opts { history } for civ names/colors.
  */
 export function renderReligionPantheonYields(host, opts) {
@@ -585,7 +585,7 @@ export function renderReligionPantheonYields(host, opts) {
  * category (zero categories omitted), plus a note when conditional effects exist.
  * @param {PantheonRow} r The civ row.
  * @param {number} max The shared per-category max.
- * @returns {HTMLElement} The card.
+ * @returns {HTMLElement}
  */
 function pantheonYieldCard(r, max) {
   const card = U.box(
@@ -611,7 +611,7 @@ function pantheonYieldCard(r, max) {
   return card;
 }
 
-// ── Settlements Atlas (size histogram + Most Urbanized) ─────────────────────
+// Settlements Atlas (size histogram + Most Urbanized)
 
 /** Raw-population size buckets [lo, hi]. */
 const SIZE_BUCKETS = [[1, 5], [6, 10], [11, 15], [16, 20], [21, Infinity]];
@@ -644,7 +644,7 @@ function collectSizeDistribution() {
       for (const c of p.Cities.getCities() || []) bucketCity(c, counts);
     }
   } catch (_) {
-    /* defensive */
+    /* unreadable */
   }
   return counts;
 }
@@ -709,7 +709,7 @@ function collectUrbanization() {
       for (const c of p.Cities.getCities() || []) addUrbanRow(c, rows);
     }
   } catch (_) {
-    /* defensive */
+    /* unreadable */
   }
   return rows;
 }
@@ -740,7 +740,7 @@ function appendMostUrbanized(host) {
 
 /**
  * Render the Settlements Atlas: size histogram + Most-Urbanized ranking.
- * @param {HTMLElement} host The chart host. @param {*} _opts Unused.
+ * @param {HTMLElement} host @param {*} _opts
  */
 export function renderSettlementsAtlas(host, _opts) {
   host.innerHTML = "";

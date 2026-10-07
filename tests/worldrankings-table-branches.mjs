@@ -1,5 +1,5 @@
 // Covers: worldrankings-allcivs-table.js (the sortable civs-as-rows "table" branch
-// of the responsive All Civilizations screen) — civ-primary identity cell, value-
+// of the responsive All Civilizations screen): civ-primary identity cell, value-
 // descending sort with nulls last, per-metric rank cell, local-row highlight,
 // unmet masking, the sort + Rank/Value interactions, and the invalid-sort-key clamp.
 import assert from "node:assert/strict";
@@ -50,7 +50,7 @@ function qa(root, cls) {
   return Array.from(root.querySelectorAll("." + cls));
 }
 
-// ── Group 1: sort order, civ-primary identity, rank cell, local highlight ──────
+// Group 1: sort order, civ-primary identity, rank cell, local highlight
 const profiles = {
   "1": prof(1, "Rome", "Trajan", 50), // local player
   "2": prof(2, "Han", "Wu", 100), // highest score → first
@@ -118,10 +118,10 @@ assert.equal(leadCells.length, 1, "one metric with data → one leader cell");
 assert.equal(rows[0].querySelector(".is-leader"), leadCells[0], "the leader cell is in Han's row");
 assert.ok(leadCells[0].getAttribute("data-tooltip-content"), "leader cell names the category");
 
-// ── Group 2: a sort swaps the rows and LEAVES THE CHROME ALONE ────────────────
+// Group 2: a sort swaps the rows and leaves the chrome alone
 // Regression guard for the blinking filigree / column icons: a sort used to re-render the whole
 // page, so every `blp:`-backed chrome element was destroyed and re-created (and flashed while its
-// background re-resolved). The chrome elements must be the SAME node objects after a sort.
+// background re-resolved). The chrome elements must be the same node objects after a sort.
 const header = tables[1].querySelector(".demographics-settle-header");
 const metricHeaders = qa(header, "demographics-civtable-metric");
 assert.ok(metricHeaders.length > 1, "multiple sortable metric columns");
@@ -157,7 +157,7 @@ assert.equal(
   "the rows are swapped, not duplicated"
 );
 
-// ── Group 3: Rank/Value rewrites the cells IN PLACE (rows are not rebuilt) ─────
+// Group 3: Rank/Value rewrites the cells in place (rows are not rebuilt)
 // The rows hold each civ's leader portrait, so a mode switch must not re-create them.
 const toggle = host.querySelector(".demographics-civtable-toggle");
 const chips = qa(toggle, "demographics-chart-time-filter-pill");
@@ -177,7 +177,7 @@ assert.deepEqual(
 assert.ok(chips[1].classList.contains("is-active"), "the value chip takes the active state");
 assert.ok(!chips[0].classList.contains("is-active"), "and the rank chip drops it");
 
-// ── Group 4: unmet civ identity is masked when names are hidden ───────────────
+// Group 4: unmet civ identity is masked when names are hidden
 const maskedProfiles = {
   "1": prof(1, "Rome", "Trajan", 50),
   "9": { ...prof(9, "Maya", "Pacal", 70), met: false }
@@ -191,7 +191,7 @@ const masked = qa(mHost, "demographics-settle-datarow").some((r) => {
 });
 assert.ok(masked, "an unmet civ's identity is masked to the generic placeholder");
 
-// ── Group 5: an invalid persisted sort key clamps without throwing ────────────
+// Group 5: an invalid persisted sort key clamps without throwing
 const cHost = document.createElement("div");
 cHost._rect.width = 1600; cHost._rect.height = 900;
 renderCivTable(

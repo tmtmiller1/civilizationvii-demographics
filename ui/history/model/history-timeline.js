@@ -61,8 +61,8 @@ export const CURVE_POINTS = 60;
 
 /**
  * Start offset and length of every age on the axis.
- * @param {HnrAge[]} ages Ages of the campaign.
- * @returns {{from:number, len:number}[]} Spans.
+ * @param {HnrAge[]} ages
+ * @returns {{from:number, len:number}[]}
  */
 export function ageSpans(ages) {
   let from = 0;
@@ -77,9 +77,9 @@ export function ageSpans(ages) {
 /**
  * The span of an age index, falling back to the last age (an event recorded past the ages the
  * document knows) or a unit span for a document without ages.
- * @param {{from:number, len:number}[]} spans Age spans.
- * @param {number} a Age index.
- * @returns {{from:number, len:number}} Span.
+ * @param {{from:number, len:number}[]} spans
+ * @param {number} a
+ * @returns {{from:number, len:number}}
  */
 function spanOf(spans, a) {
   return spans[a] || spans[spans.length - 1] || { from: 0, len: 1 };
@@ -87,9 +87,9 @@ function spanOf(spans, a) {
 
 /**
  * Axis position of the end of an age.
- * @param {{from:number, len:number}[]} spans Age spans.
- * @param {number} a Age index.
- * @returns {number} Position.
+ * @param {{from:number, len:number}[]} spans
+ * @param {number} a
+ * @returns {number}
  */
 function ageEndOf(spans, a) {
   const s = spanOf(spans, a);
@@ -98,11 +98,11 @@ function ageEndOf(spans, a) {
 
 /**
  * Axis position of a turn in an age.
- * @param {{from:number, len:number}[]} spans Age spans.
+ * @param {{from:number, len:number}[]} spans
  * @param {HnrAge[]} ages
- * @param {number} a Age index.
- * @param {number} t Turn (restarts each age).
- * @returns {number} Position.
+ * @param {number} a
+ * @param {number} t Restarts each age.
+ * @returns {number}
  */
 export function positionOf(spans, ages, a, t) {
   const s = spanOf(spans, a);
@@ -113,9 +113,9 @@ export function positionOf(spans, ages, a, t) {
 /**
  * Age bands, named and dated from each age's opening event.
  * @param {HnrAge[]} ages
- * @param {{from:number, len:number}[]} spans Spans.
+ * @param {{from:number, len:number}[]} spans
  * @param {HnrEvent[]} events
- * @returns {Timeline["ages"]} Bands.
+ * @returns {Timeline["ages"]}
  */
 function ageBands(ages, spans, events) {
   return ages.map((a, i) => {
@@ -126,9 +126,9 @@ function ageBands(ages, spans, events) {
 
 /**
  * The other party of an event involving the local player, or -1.
- * @param {HnrEvent} e Event.
- * @param {number} local Local player id.
- * @returns {number} Player id.
+ * @param {HnrEvent} e
+ * @param {number} local
+ * @returns {number}
  */
 function otherParty(e, local) {
   if (e.p === local) return e.q ?? -1;
@@ -138,10 +138,10 @@ function otherParty(e, local) {
 /**
  * The local player's wars as intervals on the axis.
  * @param {HnrEvent[]} events
- * @param {number} local Local player id.
- * @param {(e: HnrEvent) => number} pos Position of an event.
+ * @param {number} local
+ * @param {(e: HnrEvent) => number} pos
  * @param {{from:number, len:number}[]} spans Age spans (a war ends with its age).
- * @returns {Timeline["wars"]} Wars.
+ * @returns {Timeline["wars"]}
  */
 export function warIntervals(events, local, pos, spans) {
   /** @type {Map<number, {from:number, a:number, d:string}>} */
@@ -164,7 +164,7 @@ export function warIntervals(events, local, pos, spans) {
 
 /**
  * Apply one event to the open wars.
- * @param {HnrEvent} e Event.
+ * @param {HnrEvent} e
  * @param {number} other The other party when the local player is involved, else -1.
  * @param {{open: Map<number, {from:number, a:number, d:string}>, close: (o:number, to:number) => void,
  *   pos: (e: HnrEvent) => number}} io Open wars and helpers.
@@ -178,9 +178,9 @@ function warStep(e, other, io) {
 /**
  * Crisis stages as intervals: each stage lasts until the next one or the end of its age.
  * @param {HnrEvent[]} events
- * @param {(e: HnrEvent) => number} pos Position of an event.
- * @param {{from:number, len:number}[]} spans Age spans.
- * @returns {Timeline["crises"]} Stages.
+ * @param {(e: HnrEvent) => number} pos
+ * @param {{from:number, len:number}[]} spans
+ * @returns {Timeline["crises"]}
  */
 export function crisisIntervals(events, pos, spans) {
   // A real game has at most four stages an age; the cap only bounds odd or modded data.
@@ -194,9 +194,9 @@ export function crisisIntervals(events, pos, spans) {
 
 /**
  * The milestone kind of an event for the local player's timeline, or "" when it is not one.
- * @param {HnrEvent} e Event.
- * @param {number} local Local player id.
- * @returns {string} Kind.
+ * @param {HnrEvent} e
+ * @param {number} local
+ * @returns {string}
  */
 export function markKind(e, local) {
   if (e.k === "victory") return "victory";
@@ -209,10 +209,10 @@ export function markKind(e, local) {
 /**
  * Milestones, capped by importance and returned in time order.
  * @param {HnrEvent[]} events
- * @param {number} local Local player id.
- * @param {(e: HnrEvent) => number} pos Position of an event.
- * @param {IconOf} [iconOf] Icon resolver.
- * @returns {Timeline["marks"]} Milestones.
+ * @param {number} local
+ * @param {(e: HnrEvent) => number} pos
+ * @param {IconOf} [iconOf]
+ * @returns {Timeline["marks"]}
  */
 export function milestones(events, local, pos, iconOf = () => "") {
   const all = events
@@ -227,8 +227,8 @@ export function milestones(events, local, pos, iconOf = () => "") {
 
 /**
  * The sample turns of a campaign (empty for a document without them).
- * @param {CampaignDoc} doc Campaign.
- * @returns {number[]} Turns.
+ * @param {CampaignDoc} doc
+ * @returns {number[]}
  */
 function seriesTurns(doc) {
   return doc.series.turns || [];
@@ -236,8 +236,8 @@ function seriesTurns(doc) {
 
 /**
  * The local player's series, if the campaign has one.
- * @param {CampaignDoc} doc Campaign.
- * @returns {HnrPlayerSeries|undefined} Series.
+ * @param {CampaignDoc} doc
+ * @returns {HnrPlayerSeries|undefined}
  */
 function localSeries(doc) {
   return (doc.series.by || {})[String(doc.local)];
@@ -245,7 +245,7 @@ function localSeries(doc) {
 
 /**
  * The local player's scaled population per sample (empty when never recorded).
- * @param {CampaignDoc} doc Campaign.
+ * @param {CampaignDoc} doc
  * @returns {number[]} People per sample.
  */
 function localPops(doc) {
@@ -255,8 +255,8 @@ function localPops(doc) {
 /**
  * Axis position of every trend sample. Samples carry turns that restart each age, so the age of a
  * sample advances whenever its turn goes back down.
- * @param {CampaignDoc} doc Campaign.
- * @param {{from:number, len:number}[]} spans Age spans.
+ * @param {CampaignDoc} doc
+ * @param {{from:number, len:number}[]} spans
  * @returns {number[]} Position per sample.
  */
 export function samplePositions(doc, spans) {
@@ -270,9 +270,9 @@ export function samplePositions(doc, spans) {
 
 /**
  * The local player's scaled population across the game, thinned to CURVE_POINTS points.
- * @param {CampaignDoc} doc Campaign.
- * @param {{from:number, len:number}[]} spans Age spans.
- * @returns {Timeline["curve"]} Curve.
+ * @param {CampaignDoc} doc
+ * @param {{from:number, len:number}[]} spans
+ * @returns {Timeline["curve"]}
  */
 export function popCurve(doc, spans) {
   const pops = localPops(doc);
@@ -287,9 +287,9 @@ export function popCurve(doc, spans) {
 /**
  * Scaled-population milestones the local player crossed. Samples carry turns that restart each
  * age, so the age of a sample advances whenever its turn goes back down.
- * @param {CampaignDoc} doc Campaign.
- * @param {{from:number, len:number}[]} spans Age spans.
- * @returns {Timeline["pops"]} Milestones.
+ * @param {CampaignDoc} doc
+ * @param {{from:number, len:number}[]} spans
+ * @returns {Timeline["pops"]}
  */
 export function popMilestones(doc, spans) {
   const pops = localPops(doc);
@@ -318,10 +318,10 @@ export const FOUNDS_CAP = 80;
 
 /**
  * Settlements the local player founded.
- * @param {HnrEvent[]} events Visible events.
- * @param {number} local Local player id.
- * @param {(e: HnrEvent) => number} pos Position of an event.
- * @returns {Timeline["founds"]} Foundings.
+ * @param {HnrEvent[]} events
+ * @param {number} local
+ * @param {(e: HnrEvent) => number} pos
+ * @returns {Timeline["founds"]}
  */
 export function foundings(events, local, pos) {
   return events
@@ -332,9 +332,9 @@ export function foundings(events, local, pos) {
 
 /**
  * Natural disasters that struck known civilizations' lands.
- * @param {HnrEvent[]} events Visible events.
- * @param {(e: HnrEvent) => number} pos Position of an event.
- * @returns {Timeline["disasters"]} Disasters.
+ * @param {HnrEvent[]} events
+ * @param {(e: HnrEvent) => number} pos
+ * @returns {Timeline["disasters"]}
  */
 export function disasterMarks(events, pos) {
   return events
@@ -346,8 +346,8 @@ export function disasterMarks(events, pos) {
 /**
  * The local player's migration (Emigration mod) as people in and out per stretch of the game,
  * from its cumulative tallies.
- * @param {CampaignDoc} doc Campaign.
- * @param {{from:number, len:number}[]} spans Age spans.
+ * @param {CampaignDoc} doc
+ * @param {{from:number, len:number}[]} spans
  * @param {number} total Axis length.
  * @returns {Timeline["mig"]} Buckets that saw movement.
  */
@@ -372,11 +372,11 @@ export function migrationBuckets(doc, spans, total) {
 
 /**
  * Wars fought between two civilizations other than the local player, as intervals.
- * @param {HnrEvent[]} events Visible events.
- * @param {number} local Local player id.
- * @param {(e: HnrEvent) => number} pos Position of an event.
+ * @param {HnrEvent[]} events
+ * @param {number} local
+ * @param {(e: HnrEvent) => number} pos
  * @param {{from:number, len:number}[]} spans Age spans (a war ends with its age).
- * @returns {RivalTracks["wars"]} Wars.
+ * @returns {RivalTracks["wars"]}
  */
 export function rivalWars(events, local, pos, spans) {
   /** @type {RivalWarIo} */
@@ -397,9 +397,9 @@ export function rivalWars(events, local, pos, spans) {
 
 /**
  * End an open war between two rivals.
- * @param {RivalWarIo} io State.
+ * @param {RivalWarIo} io
  * @param {string} k Pair key.
- * @param {number} to End position.
+ * @param {number} to
  */
 function closeRivalWar(io, k, to) {
   const w = io.open.get(k);
@@ -409,9 +409,9 @@ function closeRivalWar(io, k, to) {
 
 /**
  * Apply one event to the rivals' open wars.
- * @param {RivalWarIo} io State.
- * @param {HnrEvent} e Event.
- * @param {number} local Local player id.
+ * @param {RivalWarIo} io
+ * @param {HnrEvent} e
+ * @param {number} local
  */
 function rivalWarStep(io, e, local) {
   if (e.k === "elim") return closeWarsOf(io, e);
@@ -424,7 +424,7 @@ function rivalWarStep(io, e, local) {
 
 /**
  * End every open rival war of an eliminated civilization.
- * @param {RivalWarIo} io State.
+ * @param {RivalWarIo} io
  * @param {HnrEvent} e Elimination.
  */
 function closeWarsOf(io, e) {
@@ -433,10 +433,10 @@ function closeWarsOf(io, e) {
 
 /**
  * Whether two players are both civilizations other than the local player.
- * @param {number} a Player.
- * @param {number} b Player.
- * @param {number} local Local player id.
- * @returns {boolean} True for a pair of rivals.
+ * @param {number} a
+ * @param {number} b
+ * @param {number} local
+ * @returns {boolean}
  */
 function isRivalPair(a, b, local) {
   return a >= 0 && b >= 0 && a !== local && b !== local;
@@ -444,11 +444,11 @@ function isRivalPair(a, b, local) {
 
 /**
  * The other known civilizations' own milestones and foundings, capped per civilization.
- * @param {HnrEvent[]} events Visible events.
- * @param {number} local Local player id.
- * @param {(e: HnrEvent) => number} pos Position of an event.
- * @param {IconOf} [iconOf] Icon resolver.
- * @returns {{marks: RivalTracks["marks"], founds: RivalTracks["founds"]}} Tracks.
+ * @param {HnrEvent[]} events
+ * @param {number} local
+ * @param {(e: HnrEvent) => number} pos
+ * @param {IconOf} [iconOf]
+ * @returns {{marks: RivalTracks["marks"], founds: RivalTracks["founds"]}}
  */
 export function rivalDeeds(events, local, pos, iconOf = () => "") {
   /** @type {Map<number, {m: HnrEvent[], f: HnrEvent[]}>} */
@@ -478,10 +478,10 @@ export function rivalDeeds(events, local, pos, iconOf = () => "") {
 
 /**
  * One rival milestone.
- * @param {HnrEvent} e Event.
- * @param {(e: HnrEvent) => number} pos Position of an event.
- * @param {IconOf} iconOf Icon resolver.
- * @returns {RivalTracks["marks"][number]} Milestone.
+ * @param {HnrEvent} e
+ * @param {(e: HnrEvent) => number} pos
+ * @param {IconOf} iconOf
+ * @returns {RivalTracks["marks"][number]}
  */
 function rivalMark(e, pos, iconOf) {
   return { at: pos(e), k: e.k, p: e.p, q: e.q ?? -1, n: e.n || "", d: e.d || "", i: iconOf(e.x || "", e.k) };
@@ -489,10 +489,10 @@ function rivalMark(e, pos, iconOf) {
 
 /**
  * The other known civilizations' scaled population, each thinned to RIVAL_CURVE_POINTS.
- * @param {CampaignDoc} doc Campaign.
- * @param {{from:number, len:number}[]} spans Age spans.
+ * @param {CampaignDoc} doc
+ * @param {{from:number, len:number}[]} spans
  * @param {(pid:number) => boolean} known Whether a civilization may be shown.
- * @returns {RivalTracks["curves"]} Curves by player id.
+ * @returns {RivalTracks["curves"]} By player id.
  */
 export function rivalCurves(doc, spans, known) {
   const by = doc.series.by || {};
@@ -510,11 +510,11 @@ export function rivalCurves(doc, spans, known) {
 
 /**
  * The whole timeline of a live campaign.
- * @param {CampaignDoc} doc Campaign.
+ * @param {CampaignDoc} doc
  * @param {(e: HnrEvent) => boolean} [visible] Spoiler filter for events (default: all).
  * @param {(pid:number) => boolean} [known] Spoiler filter for civilizations (default: all).
  * @param {IconOf} [iconOf] Icon resolver for wonders and religions (default: none).
- * @returns {Timeline} Timeline.
+ * @returns {Timeline}
  */
 export function buildTimeline(doc, visible = () => true, known = () => true, iconOf = () => "") {
   const spans = ageSpans(doc.ages);
@@ -544,14 +544,14 @@ export function buildTimeline(doc, visible = () => true, known = () => true, ico
 /**
  * A position on the timeline, rounded for storage. Positions are percentages of the whole game, so
  * two decimals are finer than a pixel on any screen and take a third of the bytes.
- * @param {number} n Position.
- * @returns {number} Rounded.
+ * @param {number} n
+ * @returns {number}
  */
 const at2 = (n) => Math.round(Number(n) * 100) / 100;
 
 /**
  * Compact form for an archived record.
- * @param {Timeline} tl Timeline.
+ * @param {Timeline} tl
  * @returns {*} Packed timeline.
  */
 export function packTimeline(tl) {
@@ -595,8 +595,8 @@ export function unpackTimeline(t) {
 
 /**
  * Compact form of the rival tracks.
- * @param {RivalTracks} r Tracks.
- * @returns {*} Packed.
+ * @param {RivalTracks} r
+ * @returns {*}
  */
 function packRivals(r) {
   /** @type {Record<string, number[][]>} */
@@ -612,8 +612,8 @@ function packRivals(r) {
 
 /**
  * Unpack the rival tracks (empty when an older record has none).
- * @param {*} r Packed.
- * @returns {RivalTracks} Tracks.
+ * @param {*} r
+ * @returns {RivalTracks}
  */
 function unpackRivals(r) {
   const arr = (/** @type {*} */ x) => (Array.isArray(x) ? x : []);
@@ -634,10 +634,10 @@ function unpackRivals(r) {
  * when it is picked, and each picked rival's milestones, foundings, wars, disasters on its land and
  * population line folded into the same lanes. The victory, ages and crises always stay; an
  * elimination stays when the fallen civilization is picked.
- * @param {Timeline} tl Timeline.
- * @param {number} local Local player id.
+ * @param {Timeline} tl
+ * @param {number} local
  * @param {Set<number>} shown Picked civilizations.
- * @returns {Timeline} Narrowed timeline.
+ * @returns {Timeline}
  */
 export function focusTimeline(tl, local, shown) {
   const me = shown.has(local);
@@ -672,9 +672,9 @@ export function focusTimeline(tl, local, shown) {
 
 /**
  * Every civilization the timeline can show, the local player first.
- * @param {Timeline} tl Timeline.
- * @param {number} local Local player id.
- * @returns {number[]} Player ids.
+ * @param {Timeline} tl
+ * @param {number} local
+ * @returns {number[]}
  */
 export function timelineCivs(tl, local) {
   const rv = tl.rivals;

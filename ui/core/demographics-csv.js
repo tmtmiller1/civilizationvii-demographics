@@ -11,14 +11,13 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { makeClickable } from "/demographics/ui/core/demographics-a11y.js";
 
-/** Soft size threshold above which the full CSV log dump is skipped. */
+// above the soft limit the full UI.log dump is skipped; above the hard limit the
+// export is refused outright
 const CSV_SOFT_LIMIT = 2 * 1024 * 1024;
-/** Hard size threshold above which the export is refused outright. */
 const CSV_HARD_LIMIT = 8 * 1024 * 1024;
 
 /**
- * Error logger for this module.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function derr(...a) {
   console.error("[Demographics.csv]", ...a);
@@ -27,8 +26,8 @@ function derr(...a) {
 /**
  * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
  * when it contains a comma, quote, or newline.
- * @param {*} v The cell value.
- * @returns {string} The CSV-safe cell.
+ * @param {*} v
+ * @returns {string}
  */
 export function csvCell(v) {
   if (v === null || v === undefined) return "";
@@ -44,8 +43,8 @@ export function csvCell(v) {
 /**
  * Format a number to remove floating-point noise: integers stay integer; floats
  * round to 2 decimals; values ≥1000 round to integers.
- * @param {*} v The numeric value.
- * @returns {string} The formatted number, or "" for non-finite input.
+ * @param {*} v
+ * @returns {string} "" for non-finite input.
  */
 function fmtNum(v) {
   if (!isFinite(v)) return "";
@@ -55,10 +54,9 @@ function fmtNum(v) {
 }
 
 /**
- * Render one cell value: numbers go through {@link fmtNum}, everything else is
- * CSV-escaped as a string.
- * @param {*} v The cell value.
- * @returns {string} The CSV cell text.
+ * Numbers go through {@link fmtNum}, everything else is CSV-escaped as a string.
+ * @param {*} v
+ * @returns {string}
  */
 function fmtCell(v) {
   return typeof v === "number" ? fmtNum(v) : csvCell(v);
@@ -67,8 +65,8 @@ function fmtCell(v) {
 /**
  * Best-effort read of a labeled game-context value, swallowing engine-boundary
  * throws and returning "unknown".
- * @param {() => string|undefined} fn The reader.
- * @returns {string} The label, or "unknown".
+ * @param {() => string|undefined} fn
+ * @returns {string}
  */
 function safeLabel(fn) {
   try {
@@ -81,7 +79,7 @@ function safeLabel(fn) {
 
 /**
  * The current game-speed type label (lowercased, GAMESPEED_ stripped).
- * @returns {string|undefined} The speed label.
+ * @returns {string|undefined}
  */
 function readGameSpeed() {
   // Bare access (no optional chaining): any engine-boundary throw is caught by
@@ -95,7 +93,7 @@ function readGameSpeed() {
 
 /**
  * The current age type label (lowercased, AGE_ stripped).
- * @returns {string|undefined} The age label.
+ * @returns {string|undefined}
  */
 function readAge() {
   const row = Game?.age == null ? null : GameInfo?.Ages?.lookup?.(Game.age);
@@ -104,7 +102,7 @@ function readAge() {
 
 /**
  * Read the current game's speed / map / age for the CSV provenance header.
- * @returns {{ gameSpeed: string, mapType: string, currentAge: string }} Context.
+ * @returns {{ gameSpeed: string, mapType: string, currentAge: string }}
  */
 function readGameContext() {
   return {
@@ -118,10 +116,10 @@ function readGameContext() {
  * Build the `#`-prefixed provenance/context header lines that lead the CSV.
  * Most importers honor `#` lines as comments. Leads with a UTF-8 BOM so Excel
  * auto-detects the encoding (keeps accented civ/leader names intact).
- * @param {string} title Human-readable export title (the page name).
- * @param {number} rowCount Data row count.
- * @param {number} colCount Column count.
- * @returns {string[]} The metadata header lines (excluding the column header).
+ * @param {string} title The page name.
+ * @param {number} rowCount
+ * @param {number} colCount
+ * @returns {string[]} The metadata lines, without the column header.
  */
 function buildMetaHeader(title, rowCount, colCount) {
   const { gameSpeed, mapType, currentAge } = readGameContext();
@@ -140,9 +138,9 @@ function buildMetaHeader(title, rowCount, colCount) {
  * Show a transient toast in `host`, auto-removing after 4s. Replaces any prior
  * toast first. Toast chrome lives in the .demographics-csv-toast rule; only the
  * success/failure tint is dynamic.
- * @param {HTMLElement} host The host element.
- * @param {string} message Toast text.
- * @param {boolean} success Green (success) vs orange (failure) styling.
+ * @param {HTMLElement} host
+ * @param {string} message
+ * @param {boolean} success Green (success) vs orange (failure) tint.
  */
 function showCsvToast(host, message, success) {
   try {
@@ -169,8 +167,8 @@ function showCsvToast(host, message, success) {
 /**
  * Write `csv` to the clipboard via the engine's `UI.setClipboardText`, gated by
  * `UI.isClipboardAvailable()` where present (cite: pause-menu-model.js).
- * @param {string} csv The full CSV text.
- * @returns {boolean} True when the clipboard write succeeded.
+ * @param {string} csv
+ * @returns {boolean}
  */
 function writeCsvToClipboard(csv) {
   try {
@@ -189,11 +187,11 @@ function writeCsvToClipboard(csv) {
 }
 
 /**
- * Dump the CSV to UI.log as a recoverable fallback , full dump under the soft
- * limit, summary line above it.
- * @param {string} csv The full CSV text.
+ * Dump the CSV to UI.log as a recoverable fallback: the full text under the soft
+ * limit, a summary line above it.
+ * @param {string} csv
  * @param {string} sizeMB Formatted CSV size in MB.
- * @param {boolean} clipboardOk Whether the clipboard write succeeded.
+ * @param {boolean} clipboardOk
  */
 function logCsvDump(csv, sizeMB, clipboardOk) {
   if (csv.length <= CSV_SOFT_LIMIT) {
@@ -202,7 +200,7 @@ function logCsvDump(csv, sizeMB, clipboardOk) {
     console.warn("[Demographics.csv] END_DEMOGRAPHICS_CSV");
   } else {
     console.warn(
-      "[Demographics.csv] CSV is large (" + sizeMB + " MB) , skipping full log dump." +
+      "[Demographics.csv] CSV is large (" + sizeMB + " MB), skipping full log dump." +
         " Clipboard write was " + (clipboardOk ? "OK" : "FAILED") + "."
     );
   }
@@ -231,9 +229,9 @@ export function copyTableAsCsv(opts) {
  * Copy a built CSV string to the clipboard (with a UI.log fallback) and show the
  * result toast, refusing oversized exports.
  * @param {HTMLElement|undefined} host Host for the confirmation toast.
- * @param {string} csv The full CSV text.
- * @param {number} rowCount Data row count (for the toast).
- * @param {number} colCount Column count (for the toast).
+ * @param {string} csv
+ * @param {number} rowCount For the toast.
+ * @param {number} colCount For the toast.
  */
 function deliverCsv(host, csv, rowCount, colCount) {
   const sizeMB = (csv.length / (1024 * 1024)).toFixed(1);
@@ -255,8 +253,8 @@ function deliverCsv(host, csv, rowCount, colCount) {
 /**
  * Build a styled "Copy as CSV" button that plays the activate sound and invokes
  * `onClick`. Reuses the chart-toolbar button look.
- * @param {() => void} onClick The export handler.
- * @returns {HTMLElement} The button element.
+ * @param {() => void} onClick
+ * @returns {HTMLElement}
  */
 export function makeCsvButton(onClick) {
   const btn = document.createElement("div");
@@ -274,8 +272,8 @@ export function makeCsvButton(onClick) {
 /**
  * Build a left-aligned toolbar row wrapping a single "Copy as CSV" button, ready
  * to prepend to a page's content.
- * @param {() => void} onClick The export handler.
- * @returns {HTMLElement} The toolbar row element.
+ * @param {() => void} onClick
+ * @returns {HTMLElement}
  */
 export function buildCsvBar(onClick) {
   const bar = document.createElement("div");

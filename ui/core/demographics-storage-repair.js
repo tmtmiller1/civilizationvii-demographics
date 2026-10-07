@@ -8,13 +8,13 @@
 // settings-style mods share. It deletes every other key's bytes and the store cannot be enumerated
 // or backed up from inside the game, so it only runs on an explicit request. See docs/civ7-storage-bug.md.
 //
-// This module deliberately imports nothing from the mod: the callers pass in the slices to write.
+// This module imports nothing from the mod: the callers pass in the slices to write.
 
 export const ROOT_KEY = "modSettings";
 
 /**
  * Whether localStorage is usable at all in this context.
- * @returns {boolean} True when present.
+ * @returns {boolean}
  */
 export function hasStore() {
   try {
@@ -27,9 +27,9 @@ export function hasStore() {
 /**
  * Run an engine touch, returning the fallback when it throws.
  * @template T
- * @param {() => T} fn The call.
- * @param {T} fallback Value used when the call throws.
- * @returns {T} Result or fallback.
+ * @param {() => T} fn
+ * @param {T} fallback
+ * @returns {T}
  */
 function safe(fn, fallback) {
   try {
@@ -42,8 +42,8 @@ function safe(fn, fallback) {
 
 /**
  * A short reason string for a thrown value.
- * @param {*} e The thrown value.
- * @returns {string} Message text.
+ * @param {*} e
+ * @returns {string}
  */
 function reason(e) {
   return String((e && e.message) || e);
@@ -51,10 +51,10 @@ function reason(e) {
 
 /**
  * Whether a parsed value is shaped like the shared settings root: an object whose every top-level
- * value is itself an object (one slice per mod). Another mod's own store - an archive, a frame
- * dump, a bare string - fails this.
- * @param {*} v Parsed value.
- * @returns {boolean} True when it looks like the settings root.
+ * value is itself an object (one slice per mod). Another mod's own store (an archive, a frame
+ * dump, a bare string) fails this.
+ * @param {*} v
+ * @returns {boolean}
  */
 export function looksLikeSettingsRoot(v) {
   if (!v || typeof v !== "object" || Array.isArray(v)) return false;
@@ -76,9 +76,9 @@ export function storeRows() {
 
 /**
  * What the game hands back for the shared key, and whether it is usable. A settings root holding
- * no slice of ours is still "ok" - our slices simply have not been written yet; only a value that
- * cannot be a settings root at all is foreign.
- * @returns {{state: "ok"|"foreign"|"empty"|"unavailable", rows: number, bytes: number}} Diagnosis.
+ * no slice of ours is still "ok", our slices have not been written yet; only a value that cannot
+ * be a settings root at all is foreign.
+ * @returns {{state: "ok"|"foreign"|"empty"|"unavailable", rows: number, bytes: number}}
  */
 export function diagnose() {
   if (!hasStore()) return { state: "unavailable", rows: -1, bytes: 0 };
@@ -132,7 +132,7 @@ function serialize(slices) {
 
 /**
  * Empty the store and write the payload as its only row.
- * @param {string} text The payload.
+ * @param {string} text
  * @returns {string} Error, or "" when both steps went through.
  */
 function replaceStore(text) {
@@ -152,9 +152,8 @@ function replaceStore(text) {
 }
 
 /**
- * Read the store back and confirm it now hands over what was just written. Nothing here is
- * believed on the strength of the write alone: the engine bug is in reads, so only a read proves
- * the repair.
+ * Read the store back and confirm it now hands over what was just written. The engine bug is in
+ * reads, so only a read shows the repair took.
  * @param {string[]} sliceIds Slice ids that must be present.
  * @returns {string} Error, or "" when the readback is ours.
  */
@@ -174,7 +173,7 @@ function verifyRoot(sliceIds) {
 
 /**
  * Empty the store and write the shared root back with only these slices in it, so the shared key
- * owns the one readable slot. Destroys every other key's data - callers must have consent.
+ * owns the one readable slot. Destroys every other key's data, so callers must have consent.
  * @param {Record<string, object>} slices Slice id -> slice, written under {@link ROOT_KEY}.
  * @returns {RepairResult} What happened, from reading the store back afterward.
  */

@@ -4,12 +4,12 @@ import assert from "node:assert/strict";
 //
 // teardownExistingChart() only reaches a chart through the host element that still carries it, and
 // destroyChartsUnder() only walks hosts still under the screen root. A view/page swap detaches the
-// old host first, so the instance it held was unreachable by both and never destroyed — it kept its
-// canvas listeners and full dataset for the life of the UI context. Watched in game on 1.5.0:
-// every page-tab swap leaked 2 instances and closing + reopening the screen reclaimed none
-// (7/6 -> 14/13 across six swaps); after the fix the same sequence held at 1/0.
+// old host first, so the instance it held was unreachable by both and never destroyed: it kept its
+// canvas listeners and full dataset for the life of the UI context. On 1.5.0 every page-tab swap
+// leaked 2 instances and closing + reopening the screen reclaimed none (7/6 -> 14/13 across six
+// swaps); after the fix the same sequence held at 1/0.
 //
-// Chart.js is the ENGINE's global (fxs-hof-chart uses it too), so the sweep must destroy ONLY
+// Chart.js is the engine's global (fxs-hof-chart uses it too), so the sweep must destroy only
 // instances this mod created. That is the property most worth pinning: a sweep that took the
 // engine's charts would break the base-game graphs.
 

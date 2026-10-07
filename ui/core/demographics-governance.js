@@ -1,6 +1,6 @@
 // demographics-governance.js
 //
-// Multiplayer analytics-visibility governance: resolves one EFFECTIVE policy from
+// Multiplayer analytics-visibility governance: resolves one effective policy from
 // the host ceiling (GameConfiguration) and the client's local preference, which
 // can only be more restrictive. Consulted by both the data-access layer and the
 // render layer; reads fail safe to the most restrictive policy available.
@@ -35,7 +35,7 @@ export const POLICY_ORDER = [POLICY_DISABLED, POLICY_OWN, POLICY_MET, POLICY_FUL
 // host-set; clients only read it.
 const HOST_POLICY_KEY = "DemographicsAnalyticsPolicy_v1";
 
-// GameConfiguration key holding the EFFECTIVE policy this client resolved (host ceiling ∧ local
+// GameConfiguration key holding the effective policy this client resolved (host ceiling ∧ local
 // preference), published so companion mods can read the live value without touching our
 // localStorage settings slice.
 const EFFECTIVE_POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
@@ -45,7 +45,7 @@ const EFFECTIVE_POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
  * game, so a single key would hold whichever client opened the screen last; each seat publishes
  * under its own id and the companion reads its own seat first.
  * @param {number} pid Local player id.
- * @returns {string} The key.
+ * @returns {string}
  */
 export function effectivePolicyKeyFor(pid) {
   return EFFECTIVE_POLICY_KEY + "_P" + pid;
@@ -53,7 +53,7 @@ export function effectivePolicyKeyFor(pid) {
 
 /**
  * The local seat's player id, or -1 when it cannot be read.
- * @returns {number} Player id.
+ * @returns {number}
  */
 function localPid() {
   try {
@@ -68,8 +68,8 @@ function localPid() {
 
 /**
  * A known policy id, or null when the value is unrecognized.
- * @param {*} v Candidate value.
- * @returns {string|null} The policy id, or null.
+ * @param {*} v
+ * @returns {string|null}
  */
 function asPolicy(v) {
   return typeof v === "string" && Object.prototype.hasOwnProperty.call(POLICY_RANK, v) ? v : null;
@@ -82,8 +82,8 @@ function asPolicy(v) {
  */
 export function localPolicy() {
   try {
-    // The Spoil Guard checkbox (`hideUnmetStats`, default ON) is the single local control: ON
-    // hides unmet civilizations (met-civs-only), OFF reveals all.
+    // The Spoil Guard checkbox (`hideUnmetStats`, default on) is the single local control: on
+    // hides unmet civilizations (met-civs-only), off reveals all.
     const hideUnmet = DemographicsSettings.getSetting("hideUnmetStats", true) !== false;
     return hideUnmet ? POLICY_MET : POLICY_FULL;
   } catch (_) {
@@ -151,9 +151,9 @@ export function policyHidesUnmet() {
 }
 
 /**
- * Whether the policy restricts the screen to the local player's OWN civ only
+ * Whether the policy restricts the screen to the local player's own civ
  * (own-civ-only or disabled).
- * @returns {boolean} True when only the local civ may be shown.
+ * @returns {boolean}
  */
 export function policyOwnCivOnly() {
   const rank = POLICY_RANK[effectivePolicy()];
@@ -178,8 +178,8 @@ export function localPlayerId() {
 
 /**
  * Whether a civ is the local player's own civ.
- * @param {string|number} pid Civ player id.
- * @returns {boolean} True when `pid` is the local player.
+ * @param {string|number} pid
+ * @returns {boolean}
  */
 export function isLocalCiv(pid) {
   const me = localPlayerId();
@@ -188,7 +188,7 @@ export function isLocalCiv(pid) {
 
 /**
  * Whether the running game is multiplayer (best-effort; false off-engine).
- * @returns {boolean} True in a multiplayer game.
+ * @returns {boolean}
  */
 export function isMultiplayer() {
   try {
@@ -208,7 +208,7 @@ export function isMultiplayer() {
  * Whether the local player may set the host ceiling: always in single-player,
  * in multiplayer only when hosting. Returns false when host status can't be
  * resolved, so a non-host can't appear to set a policy that won't take.
- * @returns {boolean} True when the local player can write the host policy.
+ * @returns {boolean}
  */
 export function canSetHostPolicy() {
   if (!isMultiplayer()) return true;
@@ -245,7 +245,7 @@ export function setHostPolicy(mode) {
  * whether the host ceiling (not just local preference) is the binding
  * constraint. The screen localizes this into visible text.
  * @returns {{ show: boolean, policy: string, hostEnforced: boolean,
- *   multiplayer: boolean }} Banner info.
+ *   multiplayer: boolean }}
  */
 export function bannerInfo() {
   const policy = effectivePolicy();
@@ -257,7 +257,7 @@ export function bannerInfo() {
 /**
  * The networked flag from the game configuration, or null when it does not say.
  * @param {*} g The game configuration handle.
- * @returns {boolean|null} True/false when known, null when unknown.
+ * @returns {boolean|null} null when unknown.
  */
 function configNetworked(g) {
   if (!g) return null;
@@ -269,9 +269,9 @@ function configNetworked(g) {
 
 /**
  * Whether this game runs over a network (internet, LAN, cloud). Hotseat is multiplayer but one
- * machine owns the configuration, so it is not networked. Watched 2026-09-22: isAnyMultiplayer is
- * true in hotseat while Network.isHost() is false, so the shared key was not written there.
- * @returns {boolean} True for a networked game.
+ * machine owns the configuration, so it is not networked. isAnyMultiplayer is true in hotseat while
+ * Network.isHost() is false, which is why the shared key was once not written there.
+ * @returns {boolean}
  */
 export function isNetworkedGame() {
   try {

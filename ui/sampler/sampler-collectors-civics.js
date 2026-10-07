@@ -58,7 +58,7 @@ function _captureVictoryRow(ctx, v, row) {
 }
 
 /**
- * Score one OTHER player's contribution to `id`'s diplomatic approval.
+ * Score one other player's contribution to `id`'s diplomatic approval.
  * @param {*} dip The sampled player's Diplomacy handle.
  * @param {Pid} id The sampled player id.
  * @param {*} other The other player handle.
