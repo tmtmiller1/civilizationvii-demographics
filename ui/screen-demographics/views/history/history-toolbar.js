@@ -1,5 +1,5 @@
 // history-toolbar.js
-// Thin compatibility facade after splitting tabs/captions/controls.
+// Single import point for the Historical Data toolbar pieces (tabs, captions, controls).
 
 export {
   buildPageTabRow,

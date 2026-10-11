@@ -23,17 +23,27 @@ globalThis.GameplayMap = {
   getRevealedState: (p, x, y) => (world(x, y).revealed ? 1 : 0)
 };
 globalThis.Players = {
-  getEverAlive: () => [{ id: 0, isMajor: true, isAlive: true }, { id: 1, isMajor: true, isAlive: true }],
-  get: (pid) => ({ Cities: { getCities: () => (pid === 0 ? [{ location: { x: 1, y: 2 } }] : [{ location: { x: 5, y: 1 } }]) } })
+  getEverAlive: () => [
+    { id: 0, isMajor: true, isAlive: true },
+    { id: 1, isMajor: true, isAlive: true }
+  ],
+  get: (pid) => ({
+    Cities: { getCities: () => (pid === 0 ? [{ location: { x: 1, y: 2 } }] : [{ location: { x: 5, y: 1 } }]) }
+  })
 };
 
-const { captureMap, terrainAt, TERRAIN, UNEXPLORED, OTHER_OWNER } = await import("/demographics/ui/history/capture/history-mapgrid.js");
+const { captureMap, terrainAt, TERRAIN, UNEXPLORED, OTHER_OWNER } = await import(
+  "/demographics/ui/history/capture/history-mapgrid.js"
+);
 const { unrle } = await import("/demographics/ui/history/model/history-map.js");
 
 assert.equal(terrainAt(0, 0), TERRAIN.OCEAN);
 assert.equal(terrainAt(4, 0), TERRAIN.COAST, "shallow water");
 assert.equal(terrainAt(5, 3), TERRAIN.MOUNTAIN);
-assert.deepEqual([0, 1, 2, 3, 4].map((x) => terrainAt(x, 2)), [TERRAIN.GRASSLAND, TERRAIN.PLAINS, TERRAIN.DESERT, TERRAIN.TUNDRA, TERRAIN.TROPICAL]);
+assert.deepEqual(
+  [0, 1, 2, 3, 4].map((x) => terrainAt(x, 2)),
+  [TERRAIN.GRASSLAND, TERRAIN.PLAINS, TERRAIN.DESERT, TERRAIN.TUNDRA, TERRAIN.TROPICAL]
+);
 assert.equal(terrainAt(5, 2), TERRAIN.LAND, "an unlisted biome is plain land");
 
 const doc = { map: undefined };

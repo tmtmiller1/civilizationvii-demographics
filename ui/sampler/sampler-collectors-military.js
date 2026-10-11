@@ -2,7 +2,7 @@
 //
 // Military, wonders, and triumph collectors for per-civ sampling.
 
-import { dlog, safeCall, safeNum } from "/demographics/ui/sampler/sampler-shared.js";
+import { collectorLog, safeCall, safeNum } from "/demographics/ui/sampler/sampler-shared.js";
 import { recordUnitStrength } from "/demographics/ui/sampler/sampler-war-events.js";
 
 /**
@@ -15,15 +15,15 @@ function sumCityWonders(cityList, id) {
   if (!Array.isArray(cityList)) return undefined;
   let total = 0;
   let anyOK = false;
-  for (const c of cityList) {
+  for (const city of cityList) {
     try {
-      const n = _cityWonderCount(c);
-      if (n !== undefined) {
-        total += n;
+      const count = _cityWonderCount(city);
+      if (count !== undefined) {
+        total += count;
         anyOK = true;
       }
     } catch (e) {
-      dlog("city wonders err pid=", id, e);
+      collectorLog.debug("city wonders err pid=", id, e);
     }
   }
   return anyOK ? total : undefined;
@@ -31,28 +31,28 @@ function sumCityWonders(cityList, id) {
 
 /**
  * Read one city's completed-wonder count off its Constructibles handle.
- * @param {*} c A city handle.
+ * @param {*} city A city handle.
  * @returns {number | undefined} The finite count, or undefined if unreadable.
  */
-function _cityWonderCount(c) {
-  const con = c?.Constructibles;
+function _cityWonderCount(city) {
+  const con = city?.Constructibles;
   if (!con || typeof con.getNumWonders !== "function") return undefined;
-  const n = con.getNumWonders();
-  return typeof n === "number" && isFinite(n) ? n : undefined;
+  const count = con.getNumWonders();
+  return typeof count === "number" && isFinite(count) ? count : undefined;
 }
 
 /**
  * Capture the wonder count.
- * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  * @param {*} stats The player Stats handle.
  * @param {*} cityList The city list for the fallback path.
  */
 export function collectWonderCount(ctx, id, stats, cityList) {
   if (stats && typeof stats.getNumWonders === "function") {
     const wn = safeCall("stats.getNumWonders(false,false) (pid=" + id + ")", () => {
-      const v = stats.getNumWonders(false, false);
-      return safeNum(v);
+      const total = stats.getNumWonders(false, false);
+      return safeNum(total);
     });
     if (typeof wn === "number") ctx.wondersCount = wn;
   }
@@ -64,13 +64,13 @@ export function collectWonderCount(ctx, id, stats, cityList) {
 
 /**
  * Capture per-wonder identity (ConstructibleType strings).
- * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
- * @param {*} p The sampled player handle.
+ * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
+ * @param {*} player The sampled player handle.
  */
-export function collectWonderTypes(ctx, id, p) {
+export function collectWonderTypes(ctx, id, player) {
   try {
-    const playerCon = p?.Constructibles;
+    const playerCon = player?.Constructibles;
     if (!_wonderApiAvailable(playerCon)) return;
     const wonderComps = playerCon.getWonders(id);
     if (!Array.isArray(wonderComps)) return;
@@ -81,7 +81,7 @@ export function collectWonderTypes(ctx, id, p) {
     }
     if (types.length > 0) ctx.wonderTypes = types;
   } catch (e) {
-    dlog("wonder type capture err pid=", id, e);
+    collectorLog.debug("wonder type capture err pid=", id, e);
   }
 }
 
@@ -194,13 +194,13 @@ const MILITARY_FORMATIONS = new Set([
 
 /**
  * Compute the combat strength of one unit.
- * @param {*} u The unit handle.
+ * @param {*} unit The unit handle.
  * @param {Map<string, { Combat: number, RangedCombat: number, score: number }>} statsByType
  *   Map from {@link buildUnitStatsByType}.
  * @returns {number} The unit's strength (0 if non-military or unreadable).
  */
-function unitStrength(u, statsByType) {
-  const utype = u.type;
+function unitStrength(unit, statsByType) {
+  const utype = unit.type;
   if (utype === undefined || utype === null) return 0;
   const def = GameInfo?.Units?.lookup ? GameInfo.Units.lookup(utype) : null;
   if (!def) return 0;
@@ -227,18 +227,18 @@ function _defStrength(def, statsByType) {
 /**
  * Compute military power by iterating the player's units and summing combat
  * strength for military formations.
- * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
- * @param {*} p The sampled player handle.
+ * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
+ * @param {*} player The sampled player handle.
  */
-export function collectMilitaryPower(ctx, id, p) {
+export function collectMilitaryPower(ctx, id, player) {
   safeCall("computeMilitaryPower(pid=" + id + ")", () => {
-    const units = p.Units;
+    const units = player.Units;
     if (!units || typeof units.getUnitIds !== "function") return;
     const ids = units.getUnitIds();
     if (!ids || typeof ids[Symbol.iterator] !== "function") return;
     const statsByType = buildUnitStatsByType();
-    const { total, counted } = _sumUnitStrengths(ids, statsByType, id);
+    const { total, counted } = sumUnitStrengths(ids, statsByType, id);
     if (counted > 0 || total > 0) ctx.militaryPower = total;
     else ctx.militaryPower = 0;
   });
@@ -253,17 +253,17 @@ export function collectMilitaryPower(ctx, id, p) {
  * @param {number} [owner] The owner pid (for casualty-cache recording).
  * @returns {{ total: number, counted: number }} The summed strength + count.
  */
-export function _sumUnitStrengths(ids, statsByType, owner) {
+export function sumUnitStrengths(ids, statsByType, owner) {
   let total = 0;
   let counted = 0;
   for (const uid of ids) {
     try {
-      const u =
+      const unit =
         typeof Units !== "undefined" && typeof Units.get === "function"
           ? Units.get(uid)
           : undefined;
-      if (!u) continue;
-      const strength = unitStrength(u, statsByType);
+      if (!unit) continue;
+      const strength = unitStrength(unit, statsByType);
       if (strength > 0) {
         total += strength;
         counted++;
@@ -289,10 +289,10 @@ const SUBTYPE_TO_KEY = {
 
 /**
  * Count triumphs (Test of Time legacy system) per civ and store them on `ctx`.
- * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {*} p The sampled player handle.
+ * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {*} player The sampled player handle.
  */
-export function collectLegacyTriumphs(ctx, p) {
+export function collectLegacyTriumphs(ctx, player) {
   ctx.triumphsCultural = 0;
   ctx.triumphsDiplomatic = 0;
   ctx.triumphsEconomic = 0;
@@ -301,13 +301,13 @@ export function collectLegacyTriumphs(ctx, p) {
   ctx.triumphsExpansionist = 0;
   ctx.triumphsInProgress = 0;
   safeCall("triumphs/test-of-time", () => {
-    const pl = p?.Legacies;
-    if (!pl) return;
+    const legacies = player?.Legacies;
+    if (!legacies) return;
     if (typeof GameInfo === "undefined" || !GameInfo.Legacies) return;
     let inProgress = 0;
     try {
       for (const row of GameInfo.Legacies) {
-        if (_tallyTriumphRow(ctx, pl, row)) inProgress++;
+        if (tallyTriumphRow(ctx, legacies, row)) inProgress++;
       }
     } catch (_) {
       // Iterating GameInfo.Legacies / probing Legacies handle can throw.
@@ -318,30 +318,30 @@ export function collectLegacyTriumphs(ctx, p) {
 
 /**
  * Tally one Legacies row.
- * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {*} pl The player's Legacies handle.
+ * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {*} legacies The player's Legacies handle.
  * @param {*} row A GameInfo.Legacies row.
  * @returns {boolean} True if the row is an untriggered, in-progress triumph.
  */
-export function _tallyTriumphRow(ctx, pl, row) {
+export function tallyTriumphRow(ctx, legacies, row) {
   if (!row || !row.LegacyType) return false;
   const ctxKey = SUBTYPE_TO_KEY[row.LegacySubtype];
-  if (_legacyTriggered(pl, row.LegacyType)) {
+  if (_legacyTriggered(legacies, row.LegacyType)) {
     if (ctxKey) ctx[ctxKey] = (ctx[ctxKey] || 0) + 1;
     return false;
   }
-  return _legacyInProgress(pl, row.LegacyType);
+  return _legacyInProgress(legacies, row.LegacyType);
 }
 
 /**
  * Whether a legacy is triggered for the player.
- * @param {*} pl The player's Legacies handle.
- * @param {string} legacyType The LegacyType.
+ * @param {*} legacies The player's Legacies handle.
+ * @param {string} legacyType
  * @returns {boolean} True if triggered.
  */
-function _legacyTriggered(pl, legacyType) {
+function _legacyTriggered(legacies, legacyType) {
   try {
-    return !!pl.isTriggered?.(legacyType);
+    return !!legacies.isTriggered?.(legacyType);
   } catch (_) {
     return false;
   }
@@ -349,13 +349,13 @@ function _legacyTriggered(pl, legacyType) {
 
 /**
  * Whether an untriggered legacy has non-zero progress.
- * @param {*} pl The player's Legacies handle.
- * @param {string} legacyType The LegacyType.
+ * @param {*} legacies The player's Legacies handle.
+ * @param {string} legacyType
  * @returns {boolean} True if progress is in progress.
  */
-function _legacyInProgress(pl, legacyType) {
+function _legacyInProgress(legacies, legacyType) {
   try {
-    const prog = pl.getProgress?.(legacyType);
+    const prog = legacies.getProgress?.(legacyType);
     const cur = prog?.progress?.[0]?.current;
     return typeof cur === "number" && cur > 0;
   } catch (_) {

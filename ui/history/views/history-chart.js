@@ -5,12 +5,12 @@
 // where Chart.js is not loaded.
 
 import { el } from "/demographics/ui/history/core/history-dom.js";
-import { num } from "/demographics/ui/history/core/history-text.js";
+import { formatNumber } from "/demographics/ui/history/core/history-text.js";
 import { civChip } from "/demographics/ui/history/views/history-widgets.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-const W = 1000;
-const H = 400;
+const VIEW_W = 1000;
+const VIEW_H = 400;
 
 /**
  * @typedef {Object} Series
@@ -34,9 +34,9 @@ const H = 400;
  * @returns {Element}
  */
 function svg(tag, attrs) {
-  const e = document.createElementNS(SVG_NS, tag);
-  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
-  return e;
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  return node;
 }
 
 /**
@@ -60,7 +60,9 @@ export function niceMax(max) {
  */
 export function points(ys, count, yMax) {
   const span = Math.max(1, count - 1);
-  return ys.map((y, i) => ((i / span) * W).toFixed(1) + "," + (H - (Math.max(0, y) / yMax) * H).toFixed(1)).join(" ");
+  const x = (/** @type {number} */ i) => ((i / span) * VIEW_W).toFixed(1);
+  const y = (/** @type {number} */ value) => (VIEW_H - (Math.max(0, value) / yMax) * VIEW_H).toFixed(1);
+  return ys.map((value, i) => x(i) + "," + y(value)).join(" ");
 }
 
 /**
@@ -70,23 +72,23 @@ export function points(ys, count, yMax) {
  * @returns {Element}
  */
 function plotSvg(spec, yMax) {
-  const root = svg("svg", { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: "none", class: "dgh-chart-svg" });
-  for (let g = 1; g <= 4; g++) {
-    const y = String(H - (g / 4) * H);
-    root.appendChild(svg("line", { x1: "0", x2: String(W), y1: y, y2: y, class: "dgh-chart-grid" }));
+  const root = svg("svg", { viewBox: `0 0 ${VIEW_W} ${VIEW_H}`, preserveAspectRatio: "none", class: "dgh-chart-svg" });
+  for (let step = 1; step <= 4; step++) {
+    const y = String(VIEW_H - (step / 4) * VIEW_H);
+    root.appendChild(svg("line", { x1: "0", x2: String(VIEW_W), y1: y, y2: y, class: "dgh-chart-grid" }));
   }
   const span = Math.max(1, spec.count - 1);
-  for (const m of spec.markers || []) {
-    const x = String((m.i / span) * W);
-    root.appendChild(svg("line", { x1: x, x2: x, y1: "0", y2: String(H), class: "dgh-chart-marker" }));
+  for (const marker of spec.markers || []) {
+    const x = String((marker.i / span) * VIEW_W);
+    root.appendChild(svg("line", { x1: x, x2: x, y1: "0", y2: String(VIEW_H), class: "dgh-chart-marker" }));
   }
   const ordered = spec.series.slice().sort((a, b) => Number(!!a.mine) - Number(!!b.mine));
-  for (const s of ordered) {
+  for (const series of ordered) {
     root.appendChild(svg("polyline", {
-      points: points(s.ys, spec.count, yMax),
+      points: points(series.ys, spec.count, yMax),
       fill: "none",
-      stroke: s.color || "#c2c4cc",
-      "stroke-width": s.mine ? "4" : "2.2",
+      stroke: series.color || "#c2c4cc",
+      "stroke-width": series.mine ? "4" : "2.2",
       class: "dgh-chart-line"
     }));
   }
@@ -101,12 +103,13 @@ function plotSvg(spec, yMax) {
  */
 function overlays(spec, yMax) {
   const out = [];
-  for (let g = 0; g <= 4; g++) {
-    out.push(el("div", { cls: "dgh-chart-ytick", text: num((yMax * g) / 4), style: { bottom: g * 25 + "%" } }));
+  for (let step = 0; step <= 4; step++) {
+    out.push(el("div", { cls: "dgh-chart-ytick", text: formatNumber((yMax * step) / 4), style: { bottom: step * 25 + "%" } }));
   }
   const span = Math.max(1, spec.count - 1);
-  for (const m of spec.markers || []) {
-    out.push(el("div", { cls: "dgh-chart-mlabel", text: m.label, style: { left: (m.i / span) * 100 + "%" } }));
+  for (const marker of spec.markers || []) {
+    const left = (marker.i / span) * 100 + "%";
+    out.push(el("div", { cls: "dgh-chart-mlabel", text: marker.label, style: { left } }));
   }
   return out;
 }
@@ -122,7 +125,7 @@ export function lineChart(spec) {
   const yMax = 4 * Math.max(1, niceMax(max / 4));
   const plot = el("div", { cls: "dgh-chart-plot" });
   plot.appendChild(/** @type {any} */ (plotSvg(spec, yMax)));
-  for (const o of overlays(spec, yMax)) plot.appendChild(o);
+  for (const overlay of overlays(spec, yMax)) plot.appendChild(overlay);
   const legend = el("div", { cls: "dgh-chart-legend" }, spec.series.map((s) => civChip(s.label, s.color)));
   return el("div", { cls: "dgh-chart " + (spec.cls || "") }, [plot, legend]);
 }
@@ -135,7 +138,7 @@ export function lineChart(spec) {
  */
 export function sparkline(ys, color) {
   const box = el("div", { cls: "dgh-spark" });
-  const root = svg("svg", { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: "none", class: "dgh-spark-svg" });
+  const root = svg("svg", { viewBox: `0 0 ${VIEW_W} ${VIEW_H}`, preserveAspectRatio: "none", class: "dgh-spark-svg" });
   if (ys.length > 1) {
     root.appendChild(svg("polyline", {
       points: points(ys, ys.length, niceMax(Math.max(...ys))),

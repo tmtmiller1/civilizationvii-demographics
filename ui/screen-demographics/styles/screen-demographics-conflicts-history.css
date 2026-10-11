@@ -258,11 +258,11 @@
     text-align: left;
 }
 .demographics-wars-tooltip-key-label {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     margin-right: calc(0.25 * var(--dg-u));
 }
 .demographics-wars-tooltip-key-sep {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.45;
     margin-top: 0;
     margin-right: calc(0.15 * var(--dg-u));
@@ -626,7 +626,7 @@
     /* Horizontal-wrapping row, the way Gameface actually supports it (see the
        time-filter pill row): LONGHAND flex-direction + flex-wrap. The flex-flow
        shorthand is ignored, inline-block lays out as a block (one per line), and
-       CSS grid is unsupported - all of which collapsed earlier attempts.
+       CSS grid is unsupported.
        Spacing is via cell margins, not `gap`, because Gameface drops the
        row-gap on a wrapped flex row (the two rows would overlap). No max-width:
        the row fills the full panel and flex-grow stretches the cells edge to
@@ -985,7 +985,7 @@
     align-items: center;
     row-gap: calc(0.35 * var(--dg-u));
     column-gap: calc(0.35 * var(--dg-u));
-    color: var(--dg-ia-accent-gold-soft, #d9c08a);
+    color: var(--dg-accent-gold-soft, #d9c08a);
     font-weight: 600;
     margin-bottom: calc(0.2 * var(--dg-u));
 }
@@ -1154,7 +1154,7 @@
     box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.6);
 }
 /* Shared tooltip header: cream heading over a faint tan rule (matches the wars
-   tooltip's title treatment; replaces the brighter gold headers). */
+   tooltip's title treatment). */
 .demographics-tip-title {
     color: rgb(236, 224, 198);
     font-weight: 700;
@@ -1457,7 +1457,7 @@
 }
 /* Focused civ: brighter, bolder name. */
 .demographics-line-legend-row.is-focused .demographics-line-legend-name {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-weight: 700;
 }
 /* Eliminated civ: dimmed name (no strike-through). */

@@ -6,7 +6,7 @@
 //   screen from the main menu.
 
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
-import { derr } from "/demographics/ui/history/core/history-log.js";
+import { log } from "/demographics/ui/history/core/history-log.js";
 import { liveCampaign } from "/demographics/ui/history/capture/history-live.js";
 import { tabBar } from "/demographics/ui/history/views/history-widgets.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
@@ -39,8 +39,9 @@ function renderTimelinePage(body, doc, visibility) {
     return;
   }
   const cast = castFromDoc(doc, visibility);
-  const tl = buildTimeline(doc, (e) => eventVisible(e, cast), cast.known, engineIcon);
-  body.appendChild(el("div", { cls: "dgh-scroll" }, [section(t("LOC_DEMOGRAPHICS_HIST_TL_TITLE"), timelineWithMap(tl, mapView(doc), cast, null, "live"))]));
+  const tl = buildTimeline(doc, (event) => eventVisible(event, cast), cast.known, engineIcon);
+  const graphic = timelineWithMap(tl, mapView(doc), cast, null, "live");
+  body.appendChild(el("div", { cls: "dgh-scroll" }, [section(t("LOC_DEMOGRAPHICS_HIST_TL_TITLE"), graphic)]));
 }
 
 /** GameConfiguration key where Demographics publishes the effective analytics policy. */
@@ -53,14 +54,14 @@ const POLICY_KEY = "DemographicsAnalyticsPolicyEffective_v1";
  * @returns {"full"|"met"|"own"}
  */
 export function historyVisibility() {
-  let v = "";
+  let detail = "";
   try {
-    v = String(Configuration.getGame().getValue(POLICY_KEY) || "");
+    detail = String(Configuration.getGame().getValue(POLICY_KEY) || "");
   } catch (_) {
     // GameConfiguration unavailable: use the default.
   }
-  if (v === "full") return "full";
-  return v === "own-civ-only" || v === "disabled" ? "own" : "met";
+  if (detail === "full") return "full";
+  return detail === "own-civ-only" || detail === "disabled" ? "own" : "met";
 }
 
 /**
@@ -68,15 +69,15 @@ export function historyVisibility() {
  * happened instead of an empty panel. Anything already drawn (a page's Back button, say) stays.
  * @param {HTMLElement} host
  * @param {string} what Which render failed, for the log line.
- * @param {*} e
+ * @param {*} error
  */
-function renderFailed(host, what, e) {
-  derr(what, e);
+function renderFailed(host, what, error) {
+  log.error(what, error);
   try {
     host.appendChild(emptyState(t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED")));
   } catch (e2) {
     // The host itself cannot take a child: the log line above is all that can be done.
-    derr(what + " (no fallback)", e2);
+    log.error(what + " (no fallback)", e2);
   }
 }
 

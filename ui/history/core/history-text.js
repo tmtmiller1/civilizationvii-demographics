@@ -1,12 +1,12 @@
 // history-text.js
 //
 // The main menu's saved-text fallback layer over the mod's shared localization helpers. Every
-// user-visible string is a LOC tag resolved through t(); every number goes through num(). Strings
+// user-visible string is a LOC tag resolved through t(); every number goes through formatNumber(). Strings
 // live in text/<locale>/ModText.xml. Engine tags (leader, civilization, wonder, victory and age
 // names) are composed the same way, so they appear in the player's language.
 //
 // Composition and number formatting are not reimplemented here: t() delegates to the shared
-// resolver in ui/core/demographics-i18n.js and num() to localeNumber() in ui/metrics/metrics-format.js,
+// resolver in ui/core/demographics-i18n.js and formatNumber() to localeNumber() in ui/metrics/metrics-format.js,
 // so Locale semantics live in one place for the whole mod. What this module owns is the piece the
 // shared helpers cannot provide: at the main menu the gameplay text DB is not loaded, so a tag
 // first seen in a game resolves from the text stored with the archived record (savedTexts below).
@@ -27,17 +27,19 @@ const savedTexts = new Map();
  * @param {Record<string, string>|undefined} texts Tag -> text.
  */
 export function addSavedTexts(texts) {
-  for (const [k, v] of Object.entries(texts || {})) if (typeof v === "string" && v) savedTexts.set(k, v);
+  for (const [tag, text] of Object.entries(texts || {})) {
+    if (typeof text === "string" && text) savedTexts.set(tag, text);
+  }
 }
 
 /**
  * Whether composed text is an unresolved tag.
- * @param {string} s Composed text.
+ * @param {string} text Composed text.
  * @param {string} key
  * @returns {boolean}
  */
-function unresolved(s, key) {
-  return !s || s === key || s.startsWith("LOC_");
+function unresolved(text, key) {
+  return !text || text === key || text.startsWith("LOC_");
 }
 
 /**
@@ -51,8 +53,8 @@ export function t(key, ...args) {
   if (typeof Locale === "undefined" || typeof Locale.compose !== "function") return savedTexts.get(key) || key;
   // The shared resolver swallows a throw from Locale.compose and returns the key; `?? key` covers a
   // compose that returns nothing, so an unresolved tag always reaches the savedTexts fallback below.
-  const s = composeLoc(key, ...args) ?? key;
-  return args.length === 0 && unresolved(s, key) ? savedTexts.get(key) || s : s;
+  const text = composeLoc(key, ...args) ?? key;
+  return args.length === 0 && unresolved(text, key) ? savedTexts.get(key) || text : text;
 }
 
 /**
@@ -62,22 +64,25 @@ export function t(key, ...args) {
  * @returns {string} Localized text or the fallback.
  */
 export function tOr(key, fallback) {
-  const s = t(key);
-  return unresolved(s, key) ? fallback : s;
+  const text = t(key);
+  return unresolved(text, key) ? fallback : text;
 }
 
 /**
  * Format a number for the player's language.
- * @param {number} n
+ * @param {number} value
  * @returns {string}
  */
-export function num(n) {
-  const v = Number.isFinite(n) ? n : 0;
+export function formatNumber(value) {
+  const finite = Number.isFinite(value) ? value : 0;
   // "" as the fallback so an unavailable, throwing or empty Locale.toNumber all fall through to the
   // rounded form, which is what this module returned before the formatter was shared.
-  const s = localeNumber(v, "", "");
-  return s ? String(s) : String(Math.round(v));
+  const text = localeNumber(finite, "", "");
+  return text ? String(text) : String(Math.round(finite));
 }
+
+/** Engine type prefixes prettyType strips. */
+const TYPE_PREFIX = /^(CIVILIZATION|LEADER|BUILDING|WONDER|VICTORY|AGE|LEGACY|GAMESPEED|DIFFICULTY|MAPSIZE)_/;
 
 /**
  * Readable fallback for an engine type string: "CIVILIZATION_FRENCH_EMPIRE" -> "French Empire".
@@ -85,8 +90,8 @@ export function num(n) {
  * @returns {string} Title-cased words without the type prefix.
  */
 export function prettyType(type) {
-  const s = String(type || "");
-  const body = s.replace(/^(CIVILIZATION|LEADER|BUILDING|WONDER|VICTORY|AGE|LEGACY|GAMESPEED|DIFFICULTY|MAPSIZE)_/, "");
+  const text = String(type || "");
+  const body = text.replace(TYPE_PREFIX, "");
   return body
     .toLowerCase()
     .split("_")
@@ -137,7 +142,7 @@ export function victoryName(type, name) {
 /**
  * Keys for what a Triumph asked for and what it gave. Saved with the archive when a game is played
  * (the engine's tables are not loaded at the main menu) and read back through t().
- * @param {string} type LegacyType.
+ * @param {string} type
  * @returns {string}
  */
 export function legacyWhyKey(type) {
@@ -145,7 +150,7 @@ export function legacyWhyKey(type) {
 }
 
 /**
- * @param {string} type LegacyType.
+ * @param {string} type
  * @returns {string}
  */
 export function legacyWhatKey(type) {
@@ -156,11 +161,11 @@ export function legacyWhatKey(type) {
  * Plain text from a game string: the game marks its help text up with [B], [S], [LINK] and
  * [TIP:...]...[/TIP] wrappers and [icon:...] glyphs, none of which a plain panel renders, so the
  * wrappers are unwrapped and the rest is dropped.
- * @param {string} s Game text.
+ * @param {string} text Game text.
  * @returns {string}
  */
-export function plainText(s) {
-  return String(s || "")
+export function plainText(text) {
+  return String(text || "")
     .replace(/\[(TIP|LINK)[^\]]*\]/gi, "")
     .replace(/\[\/(TIP|LINK)\]/gi, "")
     .replace(/\[\/?[A-Za-z][^\]]*\]/g, "")

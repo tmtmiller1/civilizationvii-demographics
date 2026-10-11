@@ -41,7 +41,7 @@ export function isValid(history, version) {
 
 /**
  * Normalize optional history fields in place.
- * @param {any} history History object.
+ * @param {any} history
  * @returns {any} The same history object.
  */
 export function normalize(history) {

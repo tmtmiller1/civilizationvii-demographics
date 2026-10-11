@@ -29,16 +29,18 @@ export function lineageOrder(doc, known) {
 
 /**
  * One cell: the civilization held in an age, a "fallen" marker, or nothing.
- * @param {HnrPlayer} p
- * @param {HnrAge} age
+ * @param {HistoryPlayer} player
+ * @param {HistoryAge} age
  * @param {string} color Readable display color.
  * @returns {HTMLElement}
  */
-function cell(p, age, color) {
-  const span = (p.civs || []).find((c) => c.age === age.age);
-  const fell = p.elim && p.elim >= age.start && p.elim <= age.end;
+function cell(player, age, color) {
+  const span = (player.civs || []).find((c) => c.age === age.age);
+  const fell = player.elim && player.elim >= age.start && player.elim <= age.end;
   if (!span) {
-    const note = fell ? t("LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN") : p.elim === -1 ? t("LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE") : "";
+    let note = "";
+    if (fell) note = t("LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN");
+    else if (player.elim === -1) note = t("LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE");
     return el("div", { cls: "dgh-lin-cell is-empty", text: note });
   }
   const name = el("div", { cls: "dgh-lin-civrow" }, [
@@ -46,7 +48,9 @@ function cell(p, age, color) {
     el("div", { cls: "dgh-lin-civ", text: typeName(span.name, span.civ) })
   ]);
   const kids = [name];
-  if (fell) kids.push(el("div", { cls: "dgh-lin-fell", text: t("LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN", p.elim) }));
+  if (fell) {
+    kids.push(el("div", { cls: "dgh-lin-fell", text: t("LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN", player.elim) }));
+  }
   return el("div", { cls: "dgh-lin-cell", style: { borderColor: color || "#a8845a" } }, [
     el("div", { cls: "dgh-lin-band", style: { backgroundColor: color || "#a8845a" } }),
     ...kids
@@ -71,10 +75,13 @@ export function renderLineage(host, doc, visibility = "met") {
     ...doc.ages.map((a) => el("div", { cls: "dgh-lin-cell dgh-lin-age", text: ageName(doc, a.age) }))
   ]);
   const rows = lineageOrder(doc, cast.known).map((pid) => {
-    const p = doc.players[String(pid)];
+    const player = doc.players[String(pid)];
     return el("div", { cls: "dgh-lin-row" + (pid === doc.local ? " is-mine" : "") }, [
-      el("div", { cls: "dgh-lin-leader" }, [leaderIcon(p.leader), el("div", { cls: "dgh-lin-name", text: cast.leaderName(pid) })]),
-      ...doc.ages.map((a) => cell(p, a, cast.color(pid)))
+      el("div", { cls: "dgh-lin-leader" }, [
+        leaderIcon(player.leader),
+        el("div", { cls: "dgh-lin-name", text: cast.leaderName(pid) })
+      ]),
+      ...doc.ages.map((a) => cell(player, a, cast.color(pid)))
     ]);
   });
   const hidden = Object.keys(doc.players).length - rows.length;

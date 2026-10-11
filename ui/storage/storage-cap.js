@@ -77,21 +77,21 @@ export function detectGameSpeedType() {
 
 /**
  * Read raw sample cap override setting.
- * @param {(...a: any[]) => void} derr Error logger.
+ * @param {(...a: any[]) => void} logError
  * @returns {number | string} Override value, or "auto".
  */
-function readSampleCapOverride(derr) {
+function readSampleCapOverride(logError) {
   try {
     return DemographicsSettings.getSetting("sampleCapOverride", "auto");
   } catch (e) {
-    derr("readSampleCapOverride:", e);
+    logError("readSampleCapOverride:", e);
     return "auto";
   }
 }
 
 /**
  * Convert numeric override into cap/source pair.
- * @param {number} override Override value.
+ * @param {number} override
  * @returns {{ cap: number, source: string }} Effective cap.
  */
 function capFromNumber(override) {
@@ -101,7 +101,7 @@ function capFromNumber(override) {
 
 /**
  * Convert non-auto string override into cap/source pair.
- * @param {string} override Override string.
+ * @param {string} override
  * @returns {{ cap: number, source: string } | null} Effective cap or null.
  */
 function capFromString(override) {
@@ -133,11 +133,11 @@ function adaptiveCap() {
 
 /**
  * Resolve effective cap from override or adaptive defaults.
- * @param {(...a: any[]) => void} [derr] Error logger.
+ * @param {(...a: any[]) => void} [logError]
  * @returns {{ cap: number, source: string }} Effective cap.
  */
-export function resolveEffectiveCap(derr = () => {}) {
-  const override = readSampleCapOverride(derr);
+export function resolveEffectiveCap(logError = () => {}) {
+  const override = readSampleCapOverride(logError);
   if (typeof override === "number" && isFinite(override) && override !== 0) {
     return capFromNumber(override);
   }
@@ -150,14 +150,14 @@ export function resolveEffectiveCap(derr = () => {}) {
 
 /**
  * Whether decimation is user-disabled.
- * @param {(...a: any[]) => void} [derr] Error logger.
+ * @param {(...a: any[]) => void} [logError]
  * @returns {boolean}
  */
-export function decimationDisabled(derr = () => {}) {
+export function decimationDisabled(logError = () => {}) {
   try {
     return !!DemographicsSettings.getSetting("disableDecimation", false);
   } catch (e) {
-    derr("decimationDisabled:", e);
+    logError("decimationDisabled:", e);
     return false;
   }
 }

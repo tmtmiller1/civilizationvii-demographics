@@ -1,20 +1,21 @@
 import assert from "node:assert/strict";
 
 import { createFakeDocument } from "./_dom-stub.mjs";
+import { snapshotGlobals } from "./_engine-stubs.mjs";
 
-const saved = {
-  document: globalThis.document,
-  window: globalThis.window,
-  requestAnimationFrame: globalThis.requestAnimationFrame,
-  Chart: globalThis.Chart,
-  Configuration: globalThis.Configuration,
-  GameContext: globalThis.GameContext,
-  Game: globalThis.Game,
-  UI: globalThis.UI,
-  Locale: globalThis.Locale,
-  GameInfo: globalThis.GameInfo,
-  EmigrationData: globalThis.EmigrationData
-};
+const restoreGlobals = snapshotGlobals([
+  "document",
+  "window",
+  "requestAnimationFrame",
+  "Chart",
+  "Configuration",
+  "GameContext",
+  "Game",
+  "UI",
+  "Locale",
+  "GameInfo",
+  "EmigrationData"
+]);
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -90,8 +91,26 @@ function testRenderChartIntegration() {
         turn: 1,
         gameYear: "4000 BCE",
         players: {
-          "1": { leaderName: "Me", civName: "Rome", leaderType: "LEADER_ME", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true, metrics: { score: 10, emig_refugees: 2, settlement_cap_pct: 90 }, wonderTypes: ["BUILDING_PYRAMIDS"] },
-          "2": { leaderName: "Them", civName: "Han", leaderType: "LEADER_THEM", leaderTypeString: "LEADER_THEM", primaryColor: "#446688", met: true, metrics: { score: 8, emig_refugees: 1, settlement_cap_pct: 100 }, wonderTypes: [] }
+          1: {
+            leaderName: "Me",
+            civName: "Rome",
+            leaderType: "LEADER_ME",
+            leaderTypeString: "LEADER_ME",
+            primaryColor: "#224466",
+            met: true,
+            metrics: { score: 10, emig_refugees: 2, settlement_cap_pct: 90 },
+            wonderTypes: ["BUILDING_PYRAMIDS"]
+          },
+          2: {
+            leaderName: "Them",
+            civName: "Han",
+            leaderType: "LEADER_THEM",
+            leaderTypeString: "LEADER_THEM",
+            primaryColor: "#446688",
+            met: true,
+            metrics: { score: 8, emig_refugees: 1, settlement_cap_pct: 100 },
+            wonderTypes: []
+          }
         }
       },
       {
@@ -100,8 +119,26 @@ function testRenderChartIntegration() {
         turn: 2,
         gameYear: "3900 BCE",
         players: {
-          "1": { leaderName: "Me", civName: "Rome", leaderType: "LEADER_ME", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true, metrics: { score: 12, emig_refugees: 4, settlement_cap_pct: 110 }, wonderTypes: ["BUILDING_PYRAMIDS", "BUILDING_GARDENS"] },
-          "2": { leaderName: "Them", civName: "Han", leaderType: "LEADER_THEM", leaderTypeString: "LEADER_THEM", primaryColor: "#446688", met: true, metrics: { score: 9, emig_refugees: 3, settlement_cap_pct: 95 }, wonderTypes: [] }
+          1: {
+            leaderName: "Me",
+            civName: "Rome",
+            leaderType: "LEADER_ME",
+            leaderTypeString: "LEADER_ME",
+            primaryColor: "#224466",
+            met: true,
+            metrics: { score: 12, emig_refugees: 4, settlement_cap_pct: 110 },
+            wonderTypes: ["BUILDING_PYRAMIDS", "BUILDING_GARDENS"]
+          },
+          2: {
+            leaderName: "Them",
+            civName: "Han",
+            leaderType: "LEADER_THEM",
+            leaderTypeString: "LEADER_THEM",
+            primaryColor: "#446688",
+            met: true,
+            metrics: { score: 9, emig_refugees: 3, settlement_cap_pct: 95 },
+            wonderTypes: []
+          }
         }
       },
       {
@@ -110,8 +147,26 @@ function testRenderChartIntegration() {
         turn: 3,
         gameYear: "3800 BCE",
         players: {
-          "1": { leaderName: "Me", civName: "Rome", leaderType: "LEADER_ME", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true, metrics: { score: 13, emig_refugees: 6, settlement_cap_pct: 120, crisis_stage: 2 }, wonderTypes: ["BUILDING_GARDENS"] },
-          "2": { leaderName: "Them", civName: "Han", leaderType: "LEADER_THEM", leaderTypeString: "LEADER_THEM", primaryColor: "#446688", met: true, metrics: { score: 10, emig_refugees: 5, settlement_cap_pct: 97, crisis_stage: 2 }, wonderTypes: [] }
+          1: {
+            leaderName: "Me",
+            civName: "Rome",
+            leaderType: "LEADER_ME",
+            leaderTypeString: "LEADER_ME",
+            primaryColor: "#224466",
+            met: true,
+            metrics: { score: 13, emig_refugees: 6, settlement_cap_pct: 120, crisis_stage: 2 },
+            wonderTypes: ["BUILDING_GARDENS"]
+          },
+          2: {
+            leaderName: "Them",
+            civName: "Han",
+            leaderType: "LEADER_THEM",
+            leaderTypeString: "LEADER_THEM",
+            primaryColor: "#446688",
+            met: true,
+            metrics: { score: 10, emig_refugees: 5, settlement_cap_pct: 97, crisis_stage: 2 },
+            wonderTypes: []
+          }
         },
         wars: []
       }
@@ -151,15 +206,5 @@ try {
   testRenderChartIntegration();
   console.log("chart-line-render-integration harness passed");
 } finally {
-  globalThis.document = saved.document;
-  globalThis.window = saved.window;
-  globalThis.requestAnimationFrame = saved.requestAnimationFrame;
-  globalThis.Chart = saved.Chart;
-  globalThis.Configuration = saved.Configuration;
-  globalThis.GameContext = saved.GameContext;
-  globalThis.Game = saved.Game;
-  globalThis.UI = saved.UI;
-  globalThis.Locale = saved.Locale;
-  globalThis.GameInfo = saved.GameInfo;
-  globalThis.EmigrationData = saved.EmigrationData;
+  restoreGlobals();
 }

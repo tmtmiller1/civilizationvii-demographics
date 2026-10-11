@@ -6,7 +6,7 @@
 // Font Size setting, which the engine does not apply to mod content, and redraws when it changes.
 
 import Panel from "/core/ui/panel-support.js";
-import { derr, safe } from "/demographics/ui/history/core/history-log.js";
+import { log, safe } from "/demographics/ui/history/core/history-log.js";
 import { publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
 import { SCREEN_ID } from "/demographics/ui/history/screen/history-open.js";
 import { renderHallOfFame } from "/demographics/ui/history/views/history-app.js";
@@ -108,7 +108,7 @@ class ScreenHistoryRankings extends Panel {
       return;
     }
     if (tries < 30) requestAnimationFrame(() => this._mountWhenReady(tries + 1));
-    else derr("screen host not found");
+    else log.error("screen host not found");
   }
 
   _wireClose() {
@@ -147,5 +147,5 @@ try {
     classNames: ["dgh-screen", "w-full", "h-full"]
   });
 } catch (e) {
-  derr("Controls.define failed", e);
+  log.error("Controls.define failed", e);
 }

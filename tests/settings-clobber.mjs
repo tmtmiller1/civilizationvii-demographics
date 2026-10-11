@@ -4,12 +4,12 @@
 // and re-imports the (cache-busted) settings singleton so its load-time seed runs against it.
 import assert from "node:assert/strict";
 
-const SIB = "sib-classic-leader-screens";
+const SIB = "other-mod";
 
 /**
  * A minimal localStorage double. `flakyEmptyOnce` makes the next `getItem(modSettings)` return null
  * once (simulating Coherent's transient wiped read) so the test can check that the clobber guard re-reads.
- * @param {Record<string, string>} initial Initial key→raw-string entries.
+ * @param {Record<string, string>} initial
  */
 function makeLocalStorage(initial) {
   const store = new Map(Object.entries(initial));
@@ -132,7 +132,11 @@ const throwing = Object.assign(Object.create(ls), {
 globalThis.localStorage = throwing;
 settings = await loadSettings(7);
 settings.setSetting("smoothChart", true);
-assert.equal(ls.getItem("modSettings"), JSON.stringify({ [SIB]: { enabled: true } }), "a throwing read must not lead to a write");
+assert.equal(
+  ls.getItem("modSettings"),
+  JSON.stringify({ [SIB]: { enabled: true } }),
+  "a throwing read must not lead to a write"
+);
 assert.equal(settings.persistenceStatus(), "read-failed", "the Options footer learns why");
 assert.equal(settings.getSetting("smoothChart", false), true, "memory still serves the value");
 
@@ -141,7 +145,11 @@ ls = makeLocalStorage({ modSettings: JSON.stringify({ [SIB]: { enabled: true } }
 globalThis.localStorage = Object.assign(Object.create(ls), { getItem: () => null });
 settings = await loadSettings(8);
 settings.setSetting("smoothChart", true);
-assert.equal(ls.getItem("modSettings"), JSON.stringify({ [SIB]: { enabled: true } }), "rows present + empty read = no write");
+assert.equal(
+  ls.getItem("modSettings"),
+  JSON.stringify({ [SIB]: { enabled: true } }),
+  "rows present + empty read = no write"
+);
 assert.equal(settings.persistenceStatus(), "read-failed");
 
 // Scenario 9: the store answers correctly until our write lands, then the read-back returns
@@ -173,7 +181,9 @@ assert.equal(settings.persistenceStatus(), "read-failed");
 }
 
 // Scenario 10: a slice stamped by a newer build keeps its stamp.
-ls = makeLocalStorage({ modSettings: JSON.stringify({ demographics: { __schema: 2, futureKey: "x", smoothChart: false } }) });
+ls = makeLocalStorage({
+  modSettings: JSON.stringify({ demographics: { __schema: 2, futureKey: "x", smoothChart: false } })
+});
 globalThis.localStorage = ls;
 settings = await loadSettings(10);
 settings.setSetting("smoothChart", true);
@@ -220,4 +230,7 @@ assert.equal(settings.persistenceStatus(), "foreign");
 assert.equal(settings.getSetting("smoothChart", false), true, "memory still serves the value");
 
 delete globalThis.localStorage;
-console.log("settings-clobber harness passed (sibling slices preserved across flaky / unparseable / empty / foreign / throwing reads; read-back verified; newer schema kept)");
+console.log(
+  "settings-clobber harness passed (sibling slices preserved across flaky / unparseable / empty / foreign / " +
+    "throwing reads; read-back verified; newer schema kept)"
+);

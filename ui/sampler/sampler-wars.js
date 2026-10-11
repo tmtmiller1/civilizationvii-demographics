@@ -1,7 +1,7 @@
 // sampler-wars.js
 //
-// Compatibility facade for war tracking. Typedefs stay here for external
-// imports while implementation lives in sampler-wars-core.js.
+// The war tracker's entry point and the typedefs other modules import; the implementation is in
+// sampler-wars-core.js.
 
 /**
  * The persisted history blob as the sampler sees it: the shared DemoHistory

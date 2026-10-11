@@ -4,7 +4,7 @@
 // loaded. Inserted after "Additional Content" (before "Options" when that is missing); idempotent
 // and guarded so it can never break the menu.
 
-import { dlog, derr } from "/demographics/ui/history/core/history-log.js";
+import { log } from "/demographics/ui/history/core/history-log.js";
 import { tBaseGame } from "/demographics/ui/core/demographics-i18n.js";
 import { t } from "/demographics/ui/history/core/history-text.js";
 import { openHallOfFame } from "/demographics/ui/history/screen/history-open.js";
@@ -53,10 +53,10 @@ export function insertButton(box) {
   if (after && after.nextSibling) box.insertBefore(b, after.nextSibling);
   else if (before) box.insertBefore(b, before);
   else box.appendChild(b);
-  dlog("main menu button added");
+  log.debug("main menu button added");
 }
 
-class HnrMenuDecorator {
+class HistoryMenuDecorator {
   /** @param {any} component */
   constructor(component) {
     this._c = component;
@@ -68,7 +68,7 @@ class HnrMenuDecorator {
     try {
       insertButton(this._c?.Root?.querySelector(".main-menu-button-container"));
     } catch (e) {
-      derr("main menu button failed", e);
+      log.error("main menu button failed", e);
     }
   }
 
@@ -94,9 +94,9 @@ function insertIntoExistingMenu(tries) {
 /** Register the decorator. */
 export function installMainMenuButton() {
   try {
-    Controls.decorate("main-menu", (/** @type {any} */ c) => new HnrMenuDecorator(c));
+    Controls.decorate("main-menu", (/** @type {any} */ c) => new HistoryMenuDecorator(c));
   } catch (e) {
-    derr("main menu decorate failed", e);
+    log.error("main menu decorate failed", e);
   }
   insertIntoExistingMenu(20);
 }

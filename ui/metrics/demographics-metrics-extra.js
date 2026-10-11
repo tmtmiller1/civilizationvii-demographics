@@ -29,7 +29,7 @@ export const EXTRA_METRICS = [
     category: "culture",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Slotted great-works count.
      */
     accessor: (ctx) => safeNum(ctx.greatWorks),
@@ -44,7 +44,7 @@ export const EXTRA_METRICS = [
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} City count.
      */
     accessor: (ctx) => safeNum(ctx.citiesCount),
@@ -59,7 +59,7 @@ export const EXTRA_METRICS = [
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Town count.
      */
     accessor: (ctx) => safeNum(ctx.townsCount),
@@ -74,7 +74,7 @@ export const EXTRA_METRICS = [
     category: "age",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Settlement cap.
      */
     accessor: (ctx) => safeNum(ctx.settlementCap),
@@ -90,7 +90,7 @@ export const EXTRA_METRICS = [
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Conquered-settlement count.
      */
     accessor: (ctx) => safeNum(ctx.conqueredCum),
@@ -105,7 +105,7 @@ export const EXTRA_METRICS = [
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Percent of settlements conquered.
      */
     accessor: (ctx) => {
@@ -126,7 +126,7 @@ export const EXTRA_METRICS = [
     category: "culture",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Tourism total.
      */
     accessor: (ctx) => safeNum(ctx.tourism),
@@ -142,7 +142,7 @@ export const EXTRA_METRICS = [
     category: "culture",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Great people earned.
      */
     accessor: (ctx) => safeNum(ctx.greatPeople),
@@ -157,7 +157,7 @@ export const EXTRA_METRICS = [
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Enemy units killed.
      */
     accessor: (ctx) => safeNum(ctx.unitsKilled),
@@ -172,7 +172,7 @@ export const EXTRA_METRICS = [
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Own units lost.
      */
     accessor: (ctx) => safeNum(ctx.unitsLost),
@@ -187,7 +187,7 @@ export const EXTRA_METRICS = [
     category: "culture",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Faith total.
      */
     accessor: (ctx) => safeNum(ctx.faith),
@@ -203,7 +203,7 @@ export const EXTRA_METRICS = [
     worldRankingsAllCivsHidden: true,
     tooltip: "LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Combats fought.
      */
     accessor: (ctx) => safeNum(ctx.combats),
@@ -219,7 +219,7 @@ export const EXTRA_METRICS = [
     worldRankingsAllCivsHidden: true,
     tooltip: "LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Wars declared.
      */
     accessor: (ctx) => safeNum(ctx.warsDeclared),
@@ -235,7 +235,7 @@ export const EXTRA_METRICS = [
     worldRankingsAllCivsHidden: true,
     tooltip: "LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Wars received.
      */
     accessor: (ctx) => safeNum(ctx.warsReceived),
@@ -251,7 +251,7 @@ export const EXTRA_METRICS = [
     worldRankingsAllCivsHidden: true,
     tooltip: "LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Natural wonders discovered.
      */
     accessor: (ctx) => safeNum(ctx.naturalWonders),

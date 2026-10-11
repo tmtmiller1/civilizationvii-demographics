@@ -22,12 +22,14 @@ import {
 
 // Cost metrics shown per crisis: every war-cost figure except production directed to war and
 // settlements razed (both war-specific). Shared so the render and the snapshot agree.
-export const CRISIS_METRICS = COST_METRICS.filter((m) => m.id !== "warProdCum" && m.id !== "razedCum");
+export const CRISIS_METRICS = COST_METRICS.filter(
+  (metric) => metric.id !== "warProdCum" && metric.id !== "razedCum"
+);
 
-// m.key -> reduction mode, for summing each cost metric across crises/ages.
+// Cost key -> reduction mode, for summing each cost metric across crises/ages.
 /** @type {Record<string, string>} */
 export const COST_KEY_MODE = {};
-for (const m of CRISIS_METRICS) COST_KEY_MODE[m.key] = m.mode;
+for (const metric of CRISIS_METRICS) COST_KEY_MODE[metric.key] = metric.mode;
 
 /**
  * Every major civ present in the samples within [start, end] (one cost column each), first-seen
@@ -40,13 +42,13 @@ for (const m of CRISIS_METRICS) COST_KEY_MODE[m.key] = m.mode;
 export function crisisParticipants(samples, start, end) {
   const seen = new Set();
   const out = [];
-  for (const s of samples) {
-    if (typeof s?.turn !== "number" || s.turn < start || s.turn > end) continue;
-    for (const pid in s.players || {}) {
-      const n = Number(pid);
-      if (!seen.has(n)) {
-        seen.add(n);
-        out.push({ pid: n });
+  for (const sample of samples) {
+    if (typeof sample?.turn !== "number" || sample.turn < start || sample.turn > end) continue;
+    for (const pid in sample.players || {}) {
+      const numericPid = Number(pid);
+      if (!seen.has(numericPid)) {
+        seen.add(numericPid);
+        out.push({ pid: numericPid });
       }
     }
   }
@@ -63,15 +65,15 @@ export function groupCrises(segments) {
   /** @type {{ segments:any[], start:number, end:number, sample:Snapshot, age:* }[]} */
   const groups = [];
   /** @type {{ segments:any[], start:number, end:number, sample:Snapshot, age:* }|null} */
-  let cur = null;
-  for (const seg of segments) {
-    const age = seg.sample && seg.sample.age;
-    if (!cur || seg.stage === 1 || age !== cur.age) {
-      cur = { segments: [], start: seg.start, end: seg.end, sample: seg.sample, age };
-      groups.push(cur);
+  let current = null;
+  for (const segment of segments) {
+    const age = segment.sample && segment.sample.age;
+    if (!current || segment.stage === 1 || age !== current.age) {
+      current = { segments: [], start: segment.start, end: segment.end, sample: segment.sample, age };
+      groups.push(current);
     }
-    cur.segments.push(seg);
-    cur.end = seg.end;
+    current.segments.push(segment);
+    current.end = segment.end;
   }
   return groups;
 }
@@ -87,10 +89,10 @@ export function mergeCost(acc, add) {
   // A persisted snapshot column can carry a null/non-object cost; nothing to merge.
   if (!add || typeof add !== "object") return;
   for (const key of Object.keys(add)) {
-    const v = add[key];
-    if (typeof v !== "number" || !isFinite(v)) continue;
-    if (COST_KEY_MODE[key] === "level") acc[key] = v;
-    else acc[key] = (typeof acc[key] === "number" ? acc[key] : 0) + v;
+    const value = add[key];
+    if (typeof value !== "number" || !isFinite(value)) continue;
+    if (COST_KEY_MODE[key] === "level") acc[key] = value;
+    else acc[key] = (typeof acc[key] === "number" ? acc[key] : 0) + value;
   }
 }
 
@@ -103,12 +105,13 @@ export function mergeCost(acc, add) {
  */
 export function participantIdentity(pid, samples) {
   for (let i = samples.length - 1; i >= 0; i--) {
-    const s = samples[i];
-    const ps = s && s.players ? s.players[pid] : null;
-    if (ps) {
+    const sample = samples[i];
+    const samplePlayer = sample && sample.players ? sample.players[pid] : null;
+    if (samplePlayer) {
       return {
-        leaderType: typeof ps.leaderTypeString === "string" ? ps.leaderTypeString : undefined,
-        color: typeof ps.primaryColor === "string" ? ps.primaryColor : undefined
+        leaderType:
+          typeof samplePlayer.leaderTypeString === "string" ? samplePlayer.leaderTypeString : undefined,
+        color: typeof samplePlayer.primaryColor === "string" ? samplePlayer.primaryColor : undefined
       };
     }
   }
@@ -133,35 +136,35 @@ function ageCrisisGroups(ageSamples) {
  * carrying the civ's identity so it renders from a snapshot without live samples. Empty when the
  * age had no crisis.
  * @param {Snapshot[]} ageSamples Samples filtered to one age (must be dense for accurate losses).
- * @returns {CrisisCol[]} The cumulative cost columns.
+ * @returns {CrisisCol[]}
  */
 export function buildAgeCrisisCols(ageSamples) {
   /** @type {Map<number, { pid:number, cost:Record<string, number> }>} */
   const byPid = new Map();
   for (const group of ageCrisisGroups(ageSamples)) {
-    for (const p of crisisParticipants(ageSamples, group.start, group.end)) {
-      let col = byPid.get(p.pid);
+    for (const participant of crisisParticipants(ageSamples, group.start, group.end)) {
+      let col = byPid.get(participant.pid);
       if (!col) {
-        col = { pid: p.pid, cost: {} };
-        byPid.set(p.pid, col);
+        col = { pid: participant.pid, cost: {} };
+        byPid.set(participant.pid, col);
       }
-      mergeCost(col.cost, participantCost(ageSamples, p, group.start, group.end));
+      mergeCost(col.cost, participantCost(ageSamples, participant, group.start, group.end));
     }
   }
-  return Array.from(byPid.values()).map((c) => ({
-    ...c,
-    ...participantIdentity(c.pid, ageSamples)
+  return Array.from(byPid.values()).map((column) => ({
+    ...column,
+    ...participantIdentity(column.pid, ageSamples)
   }));
 }
 
 /**
  * Whether a (possibly persisted) column is a usable object. Snapshot arrays come from storage, so
  * an element can be null or a scalar; those are dropped rather than dereferenced.
- * @param {*} c
+ * @param {*} column
  * @returns {boolean}
  */
-function isCol(c) {
-  return !!c && typeof c === "object";
+function isCol(column) {
+  return !!column && typeof column === "object";
 }
 
 /**
@@ -170,10 +173,10 @@ function isCol(c) {
  * @returns {TableCol[]}
  */
 export function toTableCols(cols) {
-  return (Array.isArray(cols) ? cols : []).filter(isCol).map((c) => ({
-    entry: { pid: c.pid, leaderType: c.leaderType, color: c.color },
+  return (Array.isArray(cols) ? cols : []).filter(isCol).map((column) => ({
+    entry: { pid: column.pid, leaderType: column.leaderType, color: column.color },
     cs: null,
-    cost: c.cost
+    cost: column.cost
   }));
 }
 
@@ -181,19 +184,19 @@ export function toTableCols(cols) {
  * Merge per-age cumulative columns (snapshot or live) into one cross-age overall column set,
  * summed by pid.
  * @param {CrisisCol[][]} colSets One cumulative-column array per age.
- * @returns {TableCol[]} The overall buildCostTable columns.
+ * @returns {TableCol[]}
  */
 export function mergeAgeCols(colSets) {
   /** @type {Map<number, *>} */
   const byPid = new Map();
   for (const cols of colSets || []) {
-    for (const c of (Array.isArray(cols) ? cols : []).filter(isCol)) {
-      let acc = byPid.get(c.pid);
+    for (const column of (Array.isArray(cols) ? cols : []).filter(isCol)) {
+      let acc = byPid.get(column.pid);
       if (!acc) {
-        acc = { pid: c.pid, leaderType: c.leaderType, color: c.color, cost: {} };
-        byPid.set(c.pid, acc);
+        acc = { pid: column.pid, leaderType: column.leaderType, color: column.color, cost: {} };
+        byPid.set(column.pid, acc);
       }
-      mergeCost(acc.cost, c.cost);
+      mergeCost(acc.cost, column.cost);
     }
   }
   return toTableCols(Array.from(byPid.values()));

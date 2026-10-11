@@ -25,16 +25,16 @@ export function getLocalId() {
  * Test whether `id` should be counted as a met major from `localPid`.
  * @param {number} id
  * @param {number} localPid
- * @param {*} humanDiplo
+ * @param {*} localDiplomacy
  * @returns {boolean} True when `id` is local or a met major.
  */
-export function isMetMajor(id, localPid, humanDiplo) {
+export function isMetMajor(id, localPid, localDiplomacy) {
   const player = Players.get(id);
   if (!player) return false;
   if (typeof player.isMajor === "boolean" && !player.isMajor) return false;
   if (id === localPid) return true;
-  if (humanDiplo && typeof humanDiplo.hasMet === "function") {
-    return !!humanDiplo.hasMet(id);
+  if (localDiplomacy && typeof localDiplomacy.hasMet === "function") {
+    return !!localDiplomacy.hasMet(id);
   }
   return true;
 }
@@ -44,11 +44,11 @@ export function isMetMajor(id, localPid, humanDiplo) {
  * @param {number[]} out
  * @param {number} id
  * @param {number} localPid
- * @param {*} humanDiplo
+ * @param {*} localDiplomacy
  */
-function pushIfMetMajor(out, id, localPid, humanDiplo) {
+function pushIfMetMajor(out, id, localPid, localDiplomacy) {
   try {
-    if (isMetMajor(id, localPid, humanDiplo)) out.push(id);
+    if (isMetMajor(id, localPid, localDiplomacy)) out.push(id);
   } catch (_) {
     // One broken id lookup should not abort the full scan.
   }
@@ -74,11 +74,11 @@ export function getMetMajorIds(localPid) {
       const all = aliveFn.call(Players);
       if (!Array.isArray(all)) return [];
       const human = typeof Players.get === "function" ? Players.get(localPid) : null;
-      const humanDiplo = human?.Diplomacy;
+      const localDiplomacy = human?.Diplomacy;
       /** @type {number[]} */
       const out = [];
       for (const id of all) {
-        pushIfMetMajor(out, id, localPid, humanDiplo);
+        pushIfMetMajor(out, id, localPid, localDiplomacy);
       }
       return out;
     },
@@ -95,8 +95,8 @@ function collectAliveIdsPrimary() {
   let ids = [];
   try {
     if (typeof Players.getAliveIds === "function") {
-      const arr = Players.getAliveIds();
-      if (Array.isArray(arr)) ids = arr.slice();
+      const aliveIds = Players.getAliveIds();
+      if (Array.isArray(aliveIds)) ids = aliveIds.slice();
     }
   } catch (_) {
     // Engine boundary can throw; caller will use fallback surface.
@@ -112,9 +112,9 @@ function collectAliveIdsFallback() {
   /** @type {number[]} */
   const ids = [];
   try {
-    const arr = typeof Players.getAlive === "function" ? Players.getAlive() : null;
-    if (Array.isArray(arr)) {
-      for (const player of arr) {
+    const alive = typeof Players.getAlive === "function" ? Players.getAlive() : null;
+    if (Array.isArray(alive)) {
+      for (const player of alive) {
         const id = typeof player === "number" ? player : player?.id;
         if (typeof id === "number") ids.push(id);
       }
@@ -166,9 +166,9 @@ export function viewerHasMet(viewerPid, otherPid) {
     "viewerHasMet(" + viewerPid + "->" + otherPid + ")",
     () => {
       const viewer = typeof Players?.get === "function" ? Players.get(viewerPid) : null;
-      const diplo = viewer?.Diplomacy;
-      if (!diplo || typeof diplo.hasMet !== "function") return undefined;
-      return !!diplo.hasMet(otherPid);
+      const diplomacy = viewer?.Diplomacy;
+      if (!diplomacy || typeof diplomacy.hasMet !== "function") return undefined;
+      return !!diplomacy.hasMet(otherPid);
     },
     undefined
   );
@@ -183,8 +183,8 @@ export function viewerHasMet(viewerPid, otherPid) {
 function latestSampleMet(history, pid) {
   const samples = Array.isArray(history?.samples) ? history.samples : [];
   for (let i = samples.length - 1; i >= 0; i--) {
-    const ps = samples[i]?.players?.[pid];
-    if (ps && typeof ps.met === "boolean") return ps.met;
+    const samplePlayer = samples[i]?.players?.[pid];
+    if (samplePlayer && typeof samplePlayer.met === "boolean") return samplePlayer.met;
   }
   return undefined;
 }
@@ -200,8 +200,8 @@ function latestSampleMet(history, pid) {
 export function resolveMet(viewerPid, pid, localId, history) {
   let met = viewerHasMet(viewerPid, pid);
   if (met === undefined && viewerPid === localId) {
-    const snap = latestSampleMet(history, pid);
-    if (typeof snap === "boolean") met = snap;
+    const snapshotMet = latestSampleMet(history, pid);
+    if (typeof snapshotMet === "boolean") met = snapshotMet;
   }
   return met;
 }

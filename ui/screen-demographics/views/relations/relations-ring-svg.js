@@ -1,18 +1,16 @@
 // relations-ring-svg.js
 //
-// SVG ring renderer for the Global Relations view: ring geometry, edge drawing
-// (dashed lines are hand-synthesized because Coherent ignores
-// `stroke-dasharray`), node circles / CS discs / leader portraits, and the
-// deferred pixel-space portrait-overlay placement.
+// SVG ring renderer for the Global Relations view: ring geometry, the deferred pixel-space
+// portrait-overlay placement and the edge hover. Edges and nodes are drawn by
+// relations-ring-svg-edges.js and relations-ring-svg-nodes.js.
 //
-// Ring layout (evenly-spaced civs on a circle with an SVG <line> between each
-// pair) is adapted from Sloth's Global Relations Panel (corpus mod 3506996826).
+// Layout: civs sit at equal angles around an ellipse, the first at the top and the rest clockwise,
+// with each related pair joined by a curve between their nodes.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 import {
-  dlog,
-  derr,
+  log,
   setRingPxPerUnit
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
@@ -22,12 +20,11 @@ import {
 import {
   appendRingBackdrop
 } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-backdrop.js";
-// (radar/bezel/emblem removed , see relations-ring-svg-backdrop.js, now a quiet
-//  single orbit ring matching the game's restrained art.)
 import {
   appendRingNode,
   nodeRadius
 } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-nodes.js";
+import { measureRect, setClass } from "/demographics/ui/screen-demographics/screen/dom-helpers.js";
 
 /**
  * @typedef {import("./relations-ring-svg-nodes.js").NodeInfo} NodeInfo
@@ -53,36 +50,28 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  */
 
 // ring layout
-// ADAPTED from sloth/global-relations-panel.js.
 
 /**
- * Lay out `ids` evenly on an ellipse centered at `(cx, cy)`. Backward-
- * compatible: `ringPositions(ids, radius)` lays out a circle on a 100×100
- * viewBox; newer callers pass `rx, ry, cx, cy`.
- * @param {number[]} ids
- * @param {number} rx
- * @param {number} [ry] Ellipse y-radius (defaults to `rx`).
- * @param {number} [cx] Center x (defaults to 50).
- * @param {number} [cy] Center y (defaults to 50).
- * @returns {Map<number, {x: number, y: number}>}
+ * Seat `ids` at equal angles around an ellipse centered at `(cx, cy)`. The first id sits at the
+ * top and the rest follow clockwise (SVG y grows downward). A lone node sits at the right-hand
+ * end of the x-axis instead, level with the center.
+ * @param {number[]} ids Node ids in seating order.
+ * @param {number} rx Ellipse x-radius.
+ * @param {number} ry Ellipse y-radius.
+ * @param {number} cx Center x.
+ * @param {number} cy Center y.
+ * @returns {Map<number, {x: number, y: number}>} Node id → position.
  */
-function ringPositions(ids, rx, ry, cx, cy) {
-  // Backward-compatible: ringPositions(ids, radius) → circle on a 100×100
-  // viewBox. Newer callers pass rx, ry (different) plus cx, cy to lay
-  // nodes out on an ellipse centered at (cx, cy).
-  if (typeof ry !== "number") ry = rx;
-  if (typeof cx !== "number") cx = 50;
-  if (typeof cy !== "number") cy = 50;
-  const positions = new Map();
-  const N = ids.length;
-  if (N === 0) return positions;
-  for (let i = 0; i < N; i++) {
-    const angle = N === 1 ? 0 : -Math.PI / 2 + (2 * Math.PI * i) / N;
-    const x = cx + rx * Math.cos(angle);
-    const y = cy + ry * Math.sin(angle);
-    positions.set(ids[i], { x, y });
-  }
-  return positions;
+function seatsOnEllipse(ids, rx, ry, cx, cy) {
+  const seats = new Map();
+  const count = ids.length;
+  const firstAngle = count === 1 ? 0 : -Math.PI / 2;
+  const fullTurn = 2 * Math.PI;
+  ids.forEach((id, i) => {
+    const angle = firstAngle + (fullTurn * i) / count;
+    seats.set(id, { x: cx + rx * Math.cos(angle), y: cy + ry * Math.sin(angle) });
+  });
+  return seats;
 }
 
 /**
@@ -93,34 +82,35 @@ function ringPositions(ids, rx, ry, cx, cy) {
  * @returns {RingGeometry}
  */
 function computeRingGeometry(ringIds) {
-  // ovalT smoothly interpolates 0..1 across the N=12..N=24 range; the
+  // ovalT smoothly interpolates 0..1 across the 12..24 node range; the
   // viewBox widens to match so the SVG uses the surrounding wider canvas.
-  const N = ringIds.length;
-  const ovalT = Math.max(0, Math.min(1, (N - 12) / 12));
+  const nodeCount = ringIds.length;
+  const ovalT = Math.max(0, Math.min(1, (nodeCount - 12) / 12));
   const viewBoxW = 100 + ovalT * 80; // 100..180
   // Grow the viewBox HEIGHT with oval mode too, so radially-placed labels
   // have headroom both above the top node AND below the bottom node.
   const viewBoxH = 100 + ovalT * 24; // 100..124
   const cx = viewBoxW / 2;
-  // Lift small rings (N <= 12) slightly above the viewBox midpoint so the
+  // Lift small rings (12 nodes or fewer) slightly above the viewBox midpoint so the
   // diagram reads as centered under the tab/header chrome. Negative = up.
-  const cyBias = N <= 12 ? -4 : 0;
+  const cyBias = nodeCount <= 12 ? -4 : 0;
   const cy = viewBoxH / 2 + cyBias;
 
   // Ring radius scales with node count (few civs sit close to center, many
   // spread out); sparse rings stay a bit flatter so the top node clears the
   // header/tab chrome.
-  const ry = N <= 2 ? 18 : N <= 6 ? 32 : N <= 12 ? 40 : 38;
+  const ry = nodeCount <= 2 ? 18 : nodeCount <= 6 ? 32 : nodeCount <= 12 ? 40 : 38;
   // rx grows past ry when ovalT > 0 - the wider viewBox is what gives
   // us room for a longer X axis.
   const rx = ry + ovalT * 38; // 42..80 at max oval
-  const positions = ringPositions(ringIds, rx, ry, cx, cy);
+  const positions = seatsOnEllipse(ringIds, rx, ry, cx, cy);
 
   // Density factor: 1.0 when arc-spacing per node is comfortable (≥ 22
-  // SVG units), shrinking smoothly down to 0.32 when very crowded.
-  const _h = Math.pow((rx - ry) / (rx + ry), 2);
-  const ellipsePerim = Math.PI * (rx + ry) * (1 + (3 * _h) / (10 + Math.sqrt(4 - 3 * _h)));
-  const arcSpacing = N > 0 ? ellipsePerim / N : 100;
+  // SVG units), shrinking smoothly down to 0.32 when very crowded. The perimeter
+  // uses Ramanujan's approximation (ellipseH is its h term).
+  const ellipseH = Math.pow((rx - ry) / (rx + ry), 2);
+  const ellipsePerim = Math.PI * (rx + ry) * (1 + (3 * ellipseH) / (10 + Math.sqrt(4 - 3 * ellipseH)));
+  const arcSpacing = nodeCount > 0 ? ellipsePerim / nodeCount : 100;
   const density = Math.max(0.32, Math.min(1.0, arcSpacing / 22));
 
   return { viewBoxW, viewBoxH, cx, cy, rx, ry, density, positions };
@@ -129,22 +119,22 @@ function computeRingGeometry(ringIds) {
 /**
  * Append one queued portrait/icon overlay div, positioned in pixel coords.
  * @param {HTMLElement} wrap The ring wrap (overlay parent).
- * @param {PortraitPlacement} p The queued placement.
+ * @param {PortraitPlacement} placement
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
  * @param {(pid: number) => void} [onNodeToggle]
  * @param {Map<string, HTMLElement>} [cache] Overlay reuse cache (see {@link portraitKey}).
  * @returns {HTMLElement}
  */
-function appendPortraitDiv(wrap, p, layout, onNodeToggle, cache) {
-  const key = portraitKey(p);
+function appendPortraitDiv(wrap, placement, layout, onNodeToggle, cache) {
+  const key = portraitKey(placement);
   let div = cache ? cache.get(key) : null;
   if (!div) {
-    div = p.kind === "label" ? createNodeLabelDiv(p) : createPortraitDiv(p, onNodeToggle);
+    div = placement.kind === "label" ? createNodeLabelDiv(placement) : createPortraitDiv(placement, onNodeToggle);
     if (cache) cache.set(key, div);
   }
-  if (p.kind === "label") positionNodeLabel(div, p, layout);
-  else positionPortrait(div, p, layout);
+  if (placement.kind === "label") positionNodeLabel(div, placement, layout);
+  else positionPortrait(div, placement, layout);
   // Only touch the tree when the overlay is not already parented here: a repaint of the same ring
   // then moves nothing at all.
   if (div.parentNode !== wrap) wrap.appendChild(div);
@@ -155,48 +145,55 @@ function appendPortraitDiv(wrap, p, layout, onNodeToggle, cache) {
  * The stable identity of an overlay: the same node showing the same art. Position, size and the
  * selected/dimmed state are not part of it; those are pushed onto a reused element rather than
  * justifying a new one.
- * @param {PortraitPlacement} p The queued placement.
+ * @param {PortraitPlacement} placement
  * @returns {string}
  */
-function portraitKey(p) {
-  return [p.kind, p.pid, p.leaderType || "", p.iconUrl || "", p.color || "", p.text || ""].join("|");
+function portraitKey(placement) {
+  return [
+    placement.kind,
+    placement.pid,
+    placement.leaderType || "",
+    placement.iconUrl || "",
+    placement.color || "",
+    placement.text || ""
+  ].join("|");
 }
 
 /**
  * Create one portrait/icon overlay element (art and click wiring only, no geometry).
- * @param {PortraitPlacement} p The queued placement.
+ * @param {PortraitPlacement} placement
  * @param {(pid: number) => void} [onNodeToggle]
  * @returns {HTMLElement}
  */
-function createPortraitDiv(p, onNodeToggle) {
+function createPortraitDiv(placement, onNodeToggle) {
   const div = document.createElement("div");
   div.className = "demographics-relations-portrait";
   // The handler is wired once and survives reuse: it reads the selection off the live render
   // state at click time, and the cache shares that state's lifetime, so it can never go stale.
-  wirePortraitClick(div, p, onNodeToggle);
-  fillPortraitContent(div, p);
+  wirePortraitClick(div, placement, onNodeToggle);
+  fillPortraitContent(div, placement);
   return div;
 }
 
 /**
  * Push the current geometry and focus state onto a portrait overlay.
  * @param {HTMLElement} div The portrait element.
- * @param {PortraitPlacement} p The queued placement.
+ * @param {PortraitPlacement} placement
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
  */
-function positionPortrait(div, p, layout) {
-  const px = layout.contentLeft + p.vbX * layout.scale;
-  const py = layout.contentTop + p.vbY * layout.scale;
-  const diameter = p.vbR * 2 * layout.scale;
+function positionPortrait(div, placement, layout) {
+  const centerX = layout.contentLeft + placement.vbX * layout.scale;
+  const centerY = layout.contentTop + placement.vbY * layout.scale;
+  const diameter = placement.vbR * 2 * layout.scale;
   // The leader portrait covers the node's SVG circle (whose stroke turns gold
   // when selected), so the focus state must live on the portrait frame itself.
-  setOverlayClass(div, "is-selected", !!p.selected);
-  setOverlayClass(div, "is-dimmed", !!p.dimmed);
+  setClass(div, "is-selected", !!placement.selected);
+  setClass(div, "is-dimmed", !!placement.dimmed);
   // Pixel-coord placement + size are dynamic (computed from the letterboxed
   // viewBox); position:absolute and pointer-events live in the class.
-  div.style.left = px - diameter / 2 + "px";
-  div.style.top = py - diameter / 2 + "px";
+  div.style.left = centerX - diameter / 2 + "px";
+  div.style.top = centerY - diameter / 2 + "px";
   div.style.width = diameter + "px";
   div.style.height = diameter + "px";
 }
@@ -204,49 +201,38 @@ function positionPortrait(div, p, layout) {
 /**
  * Create a node name label as plain HTML text (no box), centered under the node.
  * Uses the same UI font/weight/color as the historical-data chart labels via CSS.
- * @param {PortraitPlacement} p The label placement (carries text).
+ * @param {PortraitPlacement} placement The label placement (carries text).
  * @returns {HTMLElement}
  */
-function createNodeLabelDiv(p) {
+function createNodeLabelDiv(placement) {
   const div = document.createElement("div");
   div.className = "demographics-relations-node-label";
-  div.textContent = p.text || "";
+  div.textContent = placement.text || "";
   return div;
 }
 
 /**
  * Push the current geometry and dim state onto a node label.
  * @param {HTMLElement} div The label element.
- * @param {PortraitPlacement} p The label placement.
+ * @param {PortraitPlacement} placement
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
  */
-function positionNodeLabel(div, p, layout) {
-  setOverlayClass(div, "is-dimmed", !!p.dimmed);
-  div.style.left = layout.contentLeft + p.vbX * layout.scale + "px";
-  div.style.top = layout.contentTop + p.vbY * layout.scale + "px";
-}
-
-/**
- * Toggle one class on an overlay without disturbing the rest of its class list.
- * @param {HTMLElement} el The overlay element.
- * @param {string} cls The class to toggle.
- * @param {boolean} on
- */
-function setOverlayClass(el, cls, on) {
-  if (on) el.classList.add(cls);
-  else el.classList.remove(cls);
+function positionNodeLabel(div, placement, layout) {
+  setClass(div, "is-dimmed", !!placement.dimmed);
+  div.style.left = layout.contentLeft + placement.vbX * layout.scale + "px";
+  div.style.top = layout.contentTop + placement.vbY * layout.scale + "px";
 }
 
 /**
  * Wire a portrait overlay's click-to-toggle-focus (no-op without a handler/pid).
  * @param {HTMLElement} div The portrait div.
- * @param {PortraitPlacement} p The placement (carries pid).
+ * @param {PortraitPlacement} placement The placement (carries pid).
  * @param {(pid: number) => void} [onNodeToggle]
  */
-function wirePortraitClick(div, p, onNodeToggle) {
-  if (typeof onNodeToggle !== "function" || typeof p.pid !== "number") return;
-  const pid = p.pid;
+function wirePortraitClick(div, placement, onNodeToggle) {
+  if (typeof onNodeToggle !== "function" || typeof placement.pid !== "number") return;
+  const pid = placement.pid;
   div.style.pointerEvents = "auto";
   div.style.cursor = "pointer";
   div.addEventListener("click", () => {
@@ -259,12 +245,12 @@ function wirePortraitClick(div, p, onNodeToggle) {
  * fxs-icon. (A background-image div resolves `blp:` paths the way every other
  * Civ7 UI surface does; the SVG `<image>` path was unreliable in Coherent.)
  * @param {HTMLElement} div The portrait div.
- * @param {PortraitPlacement} p The placement.
+ * @param {PortraitPlacement} placement
  */
-function fillPortraitContent(div, p) {
-  if (p.kind === "cs-icon") {
+function fillPortraitContent(div, placement) {
+  if (placement.kind === "cs-icon") {
     div.classList.add("demographics-relations-portrait-cs");
-    div.style.backgroundImage = "url('" + p.iconUrl + "')";
+    div.style.backgroundImage = "url('" + placement.iconUrl + "')";
     return;
   }
   // Leader = a gold-rimmed hexagon token tinted by the civ's color (pure-CSS
@@ -273,10 +259,10 @@ function fillPortraitContent(div, p) {
   div.appendChild(hexLayer("demographics-relations-hex-glow"));
   div.appendChild(hexLayer("demographics-relations-hex-rim"));
   const fill = hexLayer("demographics-relations-hex-fill");
-  if (p.color) fill.style.backgroundColor = p.color;
+  if (placement.color) fill.style.backgroundColor = placement.color;
   div.appendChild(fill);
   const icon = document.createElement("fxs-icon");
-  icon.setAttribute("data-icon-id", /** @type {string} */ (p.leaderType));
+  icon.setAttribute("data-icon-id", /** @type {string} */ (placement.leaderType));
   icon.setAttribute("data-icon-context", "LEADER");
   icon.classList.add("demographics-relations-portrait-icon");
   div.appendChild(icon);
@@ -284,7 +270,7 @@ function fillPortraitContent(div, p) {
 
 /**
  * Build one absolutely-positioned hex-token layer div.
- * @param {string} className The layer class.
+ * @param {string} className
  * @returns {HTMLElement}
  */
 function hexLayer(className) {
@@ -294,27 +280,10 @@ function hexLayer(className) {
 }
 
 /**
- * Measure an element's client rect, or null when it can't be measured.
- * getBoundingClientRect can throw on a detached node in GameFace, so every
- * measurement routes through here and never throws into the engine's dispatcher.
- * @param {*} el The element to measure (nullable).
- * @returns {DOMRect|null} The rect, or null when unavailable.
- */
-function measuredRect(el) {
-  if (!el || typeof el.getBoundingClientRect !== "function") return null;
-  try {
-    return el.getBoundingClientRect();
-  } catch (_) {
-    // A detached / torn-down node: treat as not laid out.
-    return null;
-  }
-}
-
-/**
  * Wrap a deferred (rAF / setTimeout) callback in a logged boundary so a throw
  * inside it is reported instead of escaping into the engine's frame dispatcher.
  * @param {string} label
- * @param {() => void} fn The callback body.
+ * @param {() => void} fn
  * @returns {() => void}
  */
 function guardedFrame(label, fn) {
@@ -322,7 +291,7 @@ function guardedFrame(label, fn) {
     try {
       fn();
     } catch (e) {
-      derr(label + ":", e);
+      log.error(label + ":", e);
     }
   };
 }
@@ -335,11 +304,11 @@ function guardedFrame(label, fn) {
  * @param {Set<HTMLElement>} keep The overlays that belong to this paint.
  */
 function stripStaleOverlays(wrap, keep) {
-  const old = wrap.querySelectorAll(
+  const overlays = wrap.querySelectorAll(
     ".demographics-relations-portrait, .demographics-relations-node-label"
   );
-  if (!old) return;
-  Array.prototype.forEach.call(old, (/** @type {*} */ el) => {
+  if (!overlays) return;
+  Array.prototype.forEach.call(overlays, (/** @type {*} */ el) => {
     if (el && el.parentNode && !keep.has(el)) el.parentNode.removeChild(el);
   });
 }
@@ -349,13 +318,13 @@ function stripStaleOverlays(wrap, keep) {
  * (GameFace's `Element.closest` is unreliable; an explicit walk is portable.)
  * @param {Element|null} el Starting element (inclusive).
  * @param {string} cls
- * @returns {Element|null} The matching ancestor, or null.
+ * @returns {Element|null}
  */
 function ancestorByClass(el, cls) {
-  let cur = el;
-  while (cur) {
-    if (cur.classList && cur.classList.contains(cls)) return cur;
-    cur = cur.parentElement;
+  let node = el;
+  while (node) {
+    if (node.classList && node.classList.contains(cls)) return node;
+    node = node.parentElement;
   }
   return null;
 }
@@ -368,8 +337,8 @@ function ancestorByClass(el, cls) {
  */
 function ringBottomLimit(wrap) {
   const frame = ancestorByClass(wrap.parentElement, "demographics-frame");
-  const r = measuredRect(frame);
-  if (r && r.height > 0) return r.bottom;
+  const frameRect = measureRect(frame);
+  if (frameRect && frameRect.height > 0) return frameRect.bottom;
   if (typeof window !== "undefined" && window.innerHeight) return window.innerHeight;
   return 0;
 }
@@ -383,12 +352,12 @@ function ringBottomLimit(wrap) {
  */
 function ringBottomReserve(wrap) {
   const relWrap = ancestorByClass(wrap, "demographics-relations-wrap");
-  const cap =
+  const captionEl =
     relWrap && typeof relWrap.querySelector === "function"
       ? relWrap.querySelector(".demographics-relations-caption")
       : null;
-  const r = measuredRect(cap);
-  return (r && r.height > 0 ? r.height : 0) + 4;
+  const captionRect = measureRect(captionEl);
+  return (captionRect && captionRect.height > 0 ? captionRect.height : 0) + 4;
 }
 
 /**
@@ -406,15 +375,15 @@ function constrainRingHeight(wrap) {
   // Clear any prior cap first so we read the body's natural top (fixed by the
   // tab/toolbar chrome above it) and never compound caps across resize re-runs.
   body.style.maxHeight = "";
-  const rect = measuredRect(body);
+  const rect = measureRect(body);
   if (!rect || rect.width === 0 || rect.height === 0) return;
   const bottom = ringBottomLimit(wrap);
   if (!(bottom > 0)) return;
   // Everything measured here is visual px; maxHeight is local px (frame may be transform-scaled).
-  const avail = toLocalPx(bottom - rect.top - ringBottomReserve(wrap));
+  const maxHeight = toLocalPx(bottom - rect.top - ringBottomReserve(wrap));
   // Only cap when there's a sane positive budget that actually shrinks the box;
   // never set a tiny/negative height that would collapse the ring to nothing.
-  if (avail > 0 && avail < toLocalPx(rect.height)) body.style.maxHeight = avail + "px";
+  if (maxHeight > 0 && maxHeight < toLocalPx(rect.height)) body.style.maxHeight = maxHeight + "px";
 }
 
 /**
@@ -422,7 +391,7 @@ function constrainRingHeight(wrap) {
  * viewBox is letterboxed via `xMidYMid meet`, so the tighter axis sets `scale`
  * and the other is centered; re-defers a frame if layout isn't ready yet.
  * @param {HTMLElement} wrap The ring wrap (overlay parent).
- * @param {Element} svg The SVG root.
+ * @param {Element} svg
  * @param {PortraitPlacement[]} portraitsToPlace
  * @param {{w: number, h: number}} viewBox
  * @param {{ onNodeToggle?: (pid: number) => void, cache?: Map<string, HTMLElement> }} opts
@@ -455,31 +424,31 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
    */
   function paintOverlaysNow() {
     if (wrap && wrap.isConnected === false) return;
-    const rect = measuredRect(svg);
+    const rect = measureRect(svg);
     if (!rect || rect.width === 0 || rect.height === 0) return;
     retries = 0;
     // The SVG rect is VISUAL px; portraits are positioned in the wrap's LOCAL px.
-    const rw = toLocalPx(rect.width);
-    const rh = toLocalPx(rect.height);
-    const scale = Math.min(rw / viewBox.w, rh / viewBox.h);
+    const boxW = toLocalPx(rect.width);
+    const boxH = toLocalPx(rect.height);
+    const scale = Math.min(boxW / viewBox.w, boxH / viewBox.h);
     // Publish the ring's px-per-viewBox-unit so the legend can draw its sample
     // lines at the exact same scale (matched dash lengths + stroke width).
     setRingPxPerUnit(scale);
-    const contentLeft = (rw - viewBox.w * scale) / 2;
-    const contentTop = (rh - viewBox.h * scale) / 2;
+    const contentLeft = (boxW - viewBox.w * scale) / 2;
+    const contentTop = (boxH - viewBox.h * scale) / 2;
     /** @type {Set<HTMLElement>} */
     const placed = new Set();
-    for (const p of portraitsToPlace) {
-      placed.add(appendPortraitDiv(wrap, p, { contentLeft, contentTop, scale }, onNodeToggle, cache));
+    for (const placement of portraitsToPlace) {
+      placed.add(appendPortraitDiv(wrap, placement, { contentLeft, contentTop, scale }, onNodeToggle, cache));
     }
     stripStaleOverlays(wrap, placed);
     // Drop cache entries this ring no longer uses, so switching top tabs can't grow it forever.
     if (cache) {
-      for (const [k, el] of cache) {
-        if (!placed.has(el)) cache.delete(k);
+      for (const [key, el] of cache) {
+        if (!placed.has(el)) cache.delete(key);
       }
     }
-    dlog("placed " + portraitsToPlace.length + " portraits @scale=" + scale.toFixed(2));
+    log.debug("placed " + portraitsToPlace.length + " portraits @scale=" + scale.toFixed(2));
   }
   const paintOverlays = guardedFrame("paintOverlays", paintOverlaysNow);
   /**
@@ -492,7 +461,7 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
     // or spin on an orphan). Only bails when isConnected is explicitly false, so
     // an engine without isConnected (undefined) falls through to the retry cap.
     if (wrap && wrap.isConnected === false) return;
-    const rect = measuredRect(svg);
+    const rect = measureRect(svg);
     if (!rect || rect.width === 0 || rect.height === 0) {
       scheduleRetry();
       return;
@@ -514,7 +483,7 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
  * regardless of the element's pixel size).
  * @param {number} viewBoxW
  * @param {number} viewBoxH
- * @returns {SVGElement} The configured SVG root (not yet mounted).
+ * @returns {SVGElement} Not yet mounted.
  */
 function createRingSvgRoot(viewBoxW, viewBoxH) {
   const svg = /** @type {SVGElement} */ (document.createElementNS(SVG_NS, "svg"));
@@ -594,7 +563,7 @@ export function buildRingSvg(ringIds, names, edges, localPid, options) {
 /**
  * Populate the ring (edges + nodes), collecting per-edge hover geometry, then wire
  * the HTML-wrap hover (Coherent doesn't deliver mouse events to SVG lines).
- * @param {Element} svg The SVG root.
+ * @param {Element} svg
  * @param {RingGeometry} geo
  * @param {Record<string, NodeInfo>} names
  * @param {Edge[]} edges
@@ -639,25 +608,25 @@ function createEdgeTooltip(wrap) {
   wrap.appendChild(tip);
   return {
     show(text, clientX, clientY) {
-      const r = measuredRect(wrap);
-      if (!r) return;
+      const wrapRect = measureRect(wrap);
+      if (!wrapRect) return;
       tip.textContent = text;
       tip.style.display = "block";
       // Cursor position within the wrap, in the wrap's LOCAL px (clientX and the rect are visual).
-      const x = toLocalPx(clientX - r.left);
-      const y = toLocalPx(clientY - r.top);
+      const x = toLocalPx(clientX - wrapRect.left);
+      const y = toLocalPx(clientY - wrapRect.top);
       // Default offset down-right of the cursor, but FLIP to up-left near the
       // wrap's right / bottom edge so the tip never clips off-panel.
       const GAP_X = 14;
       const GAP_Y = 8;
-      const tw = tip.offsetWidth || 0;
-      const th = tip.offsetHeight || 0;
-      const wrapW = wrap.clientWidth || r.width;
-      const wrapH = wrap.clientHeight || r.height;
+      const tipW = tip.offsetWidth || 0;
+      const tipH = tip.offsetHeight || 0;
+      const wrapW = wrap.clientWidth || wrapRect.width;
+      const wrapH = wrap.clientHeight || wrapRect.height;
       let left = x + GAP_X;
       let top = y + GAP_Y;
-      if (left + tw > wrapW) left = Math.max(0, x - GAP_X - tw);
-      if (top + th > wrapH) top = Math.max(0, y - GAP_Y - th);
+      if (left + tipW > wrapW) left = Math.max(0, x - GAP_X - tipW);
+      if (top + tipH > wrapH) top = Math.max(0, y - GAP_Y - tipH);
       tip.style.left = left + "px";
       tip.style.top = top + "px";
     },
@@ -674,34 +643,34 @@ const HOVER_DIST = 1.9;
  * Convert client (px) coords to the SVG's viewBox coords, accounting for the
  * xMidYMid-meet letterboxing. Returns null when the SVG isn't laid out yet.
  * @param {Element} svg The ring SVG.
- * @param {RingGeometry} geo The ring geometry (viewBox dims).
- * @param {number} cx
- * @param {number} cy
- * @returns {{x: number, y: number}|null} ViewBox-space point, or null.
+ * @param {RingGeometry} geo Supplies the viewBox dims.
+ * @param {number} clientX
+ * @param {number} clientY
+ * @returns {{x: number, y: number}|null}
  */
-function clientToViewBox(svg, geo, cx, cy) {
-  const r = measuredRect(svg);
-  if (!r || r.width <= 0 || r.height <= 0) return null;
-  const scale = Math.min(r.width / geo.viewBoxW, r.height / geo.viewBoxH);
+function clientToViewBox(svg, geo, clientX, clientY) {
+  const rect = measureRect(svg);
+  if (!rect || rect.width <= 0 || rect.height <= 0) return null;
+  const scale = Math.min(rect.width / geo.viewBoxW, rect.height / geo.viewBoxH);
   if (!(scale > 0)) return null;
-  const offX = r.left + (r.width - geo.viewBoxW * scale) / 2;
-  const offY = r.top + (r.height - geo.viewBoxH * scale) / 2;
-  return { x: (cx - offX) / scale, y: (cy - offY) / scale };
+  const offX = rect.left + (rect.width - geo.viewBoxW * scale) / 2;
+  const offY = rect.top + (rect.height - geo.viewBoxH * scale) / 2;
+  return { x: (clientX - offX) / scale, y: (clientY - offY) / scale };
 }
 
 /**
  * Minimum distance from a point to a set of sampled curve points (viewBox units).
  * @param {{x: number, y: number}[]} pts Sampled points.
  * @param {{x: number, y: number}} pt The query point.
- * @returns {number} The nearest distance.
+ * @returns {number}
  */
 function distToPts(pts, pt) {
   let min = Infinity;
-  for (const p of pts) {
-    const dx = p.x - pt.x;
-    const dy = p.y - pt.y;
-    const d = dx * dx + dy * dy;
-    if (d < min) min = d;
+  for (const sample of pts) {
+    const dx = sample.x - pt.x;
+    const dy = sample.y - pt.y;
+    const distSq = dx * dx + dy * dy;
+    if (distSq < min) min = distSq;
   }
   return Math.sqrt(min);
 }
@@ -710,15 +679,15 @@ function distToPts(pts, pt) {
  * The edge record nearest a point, within HOVER_DIST; null when none qualify.
  * @param {*[]} records
  * @param {{x: number, y: number}} pt The query point (viewBox coords).
- * @returns {*} The nearest record, or null.
+ * @returns {*} Null when none qualify.
  */
 function nearestEdge(records, pt) {
   let best = null;
-  let bestD = HOVER_DIST;
+  let bestDist = HOVER_DIST;
   for (const rec of records) {
-    const d = distToPts(rec.pts, pt);
-    if (d < bestD) {
-      bestD = d;
+    const dist = distToPts(rec.pts, pt);
+    if (dist < bestDist) {
+      bestDist = dist;
       best = rec;
     }
   }
@@ -733,7 +702,7 @@ function nearestEdge(records, pt) {
  * @param {Element} svg The ring SVG (for the coordinate mapping).
  * @param {RingGeometry} geo
  * @param {*[]} records
- * @param {{ show: (t: string, x: number, y: number) => void, hide: () => void }} tooltip Tip ctrl.
+ * @param {{ show: (text: string, x: number, y: number) => void, hide: () => void }} tooltip
  */
 function setupEdgeHover(wrap, svg, geo, records, tooltip) {
   let current = /** @type {*} */ (null);
@@ -771,14 +740,14 @@ function setupEdgeHover(wrap, svg, geo, records, tooltip) {
 /**
  * Draw the ring's edges (grouped by undirected pair into parallel offset lines)
  * then its nodes.
- * @param {Element} svg The SVG root.
+ * @param {Element} svg
  * @param {RingGeometry} geo
  * @param {Record<string, NodeInfo>} names
  * @param {Edge[]} edges
  * @param {RingRenderCtx} ringCtx
  */
 function populateRing(svg, geo, names, edges, ringCtx) {
-  // Cinematic backdrop first so depth rings / radar sweep sit behind everything.
+  // Backdrop first so the orbit ring sits behind everything.
   appendRingBackdrop(svg, geo);
   const focus = computeFocus(edges, ringCtx.selectedNodeIds);
   ringCtx.focusNodes = focus.nodes;
@@ -797,7 +766,7 @@ function populateRing(svg, geo, names, edges, ringCtx) {
  * @param {RingGeometry} geo The ring geometry (supplies density).
  * @param {Record<string, NodeInfo>} names
  * @param {RingRenderCtx} ringCtx Per-ring render context (supplies viewerPid).
- * @returns {Map<number, number>} Node radii by pid.
+ * @returns {Map<number, number>}
  */
 function buildNodeRadii(geo, names, ringCtx) {
   /** @type {Map<number, number>} */
@@ -822,9 +791,9 @@ function computeFocus(edges, selectedNodeIds) {
   const selected = selectedNodeIds && selectedNodeIds.size ? selectedNodeIds : null;
   if (!selected) return { selected: null, nodes: null };
   const nodes = new Set(selected);
-  for (const e of edges) {
-    if (selected.has(e.a)) nodes.add(e.b);
-    else if (selected.has(e.b)) nodes.add(e.a);
+  for (const edge of edges) {
+    if (selected.has(edge.a)) nodes.add(edge.b);
+    else if (selected.has(edge.b)) nodes.add(edge.a);
   }
   return { selected, nodes };
 }

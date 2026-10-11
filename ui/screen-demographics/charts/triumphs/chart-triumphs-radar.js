@@ -9,7 +9,7 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { buildLeaderIconGroup } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
 import { buildLegendControls } from "/demographics/ui/screen-demographics/charts/line/chart-line-legend.js";
 import {
-  dlog,
+  log,
   SVG_NS,
   svgEl,
   appendEmptyNotice,
@@ -55,7 +55,7 @@ function drawRadarGrid(svg, geo, scaleMax) {
   svg.appendChild(
     svgEl("polygon", {
       points: LEGACY_AXES.map(
-        (a) => cx + Math.cos(a.angle) * innerR + "," + (cy + Math.sin(a.angle) * innerR)
+        (axis) => cx + Math.cos(axis.angle) * innerR + "," + (cy + Math.sin(axis.angle) * innerR)
       ).join(" "),
       fill: "none",
       stroke: "rgba(201, 162, 76, 0.55)",
@@ -83,12 +83,12 @@ function drawRadarGrid(svg, geo, scaleMax) {
 function drawRadarRing(svg, geo, i, maxRings, ringStrokeW) {
   const { cx, cy, R } = geo;
   const r = (R * i) / maxRings;
-  const pts = LEGACY_AXES.map(
-    (a) => cx + Math.cos(a.angle) * r + "," + (cy + Math.sin(a.angle) * r)
+  const points = LEGACY_AXES.map(
+    (axis) => cx + Math.cos(axis.angle) * r + "," + (cy + Math.sin(axis.angle) * r)
   ).join(" ");
   svg.appendChild(
     svgEl("polygon", {
-      points: pts,
+      points,
       fill: "none",
       stroke: "rgba(201, 162, 76, 0.25)",
       "stroke-width": String(ringStrokeW)
@@ -119,13 +119,13 @@ function drawRadarRing(svg, geo, i, maxRings, ringStrokeW) {
  */
 function drawRadarSpokes(svg, geo) {
   const { cx, cy, R } = geo;
-  LEGACY_AXES.forEach((a) => {
+  LEGACY_AXES.forEach((axis) => {
     svg.appendChild(
       svgEl("line", {
         x1: cx,
         y1: cy,
-        x2: cx + Math.cos(a.angle) * R,
-        y2: cy + Math.sin(a.angle) * R,
+        x2: cx + Math.cos(axis.angle) * R,
+        y2: cy + Math.sin(axis.angle) * R,
         stroke: "rgba(201, 162, 76, 0.45)",
         "stroke-width": "1"
       })
@@ -133,11 +133,11 @@ function drawRadarSpokes(svg, geo) {
     // Anchor side labels inward (right-side axis → "end", left-side → "start") so a
     // long localized path name grows toward the center instead of off the meet-fit
     // viewBox's left/right edge and getting clipped; top/bottom stay centered.
-    const cosA = Math.cos(a.angle);
+    const cosA = Math.cos(axis.angle);
     const anchor = cosA > 0.25 ? "end" : cosA < -0.25 ? "start" : "middle";
-    const lbl = svgEl("text", {
+    const label = svgEl("text", {
       x: cx + cosA * (R + 22),
-      y: cy + Math.sin(a.angle) * (R + 22),
+      y: cy + Math.sin(axis.angle) * (R + 22),
       fill: "#f3c34c",
       "font-size": "18",
       "font-weight": "600",
@@ -147,15 +147,15 @@ function drawRadarSpokes(svg, geo) {
       "stroke-width": "3",
       "paint-order": "stroke"
     });
-    lbl.textContent = t(a.labelKey);
-    svg.appendChild(lbl);
+    label.textContent = t(axis.labelKey);
+    svg.appendChild(label);
   });
 }
 
 /**
  * A built radar polygon for one civ.
  * @typedef {Object} RadarPoly
- * @property {RadarCiv} c The source civ.
+ * @property {RadarCiv} civ The source civ.
  * @property {{ x: number, y: number, v: number }[]} points Per-axis vertices.
  * @property {{ x: number, y: number, v: number }[]} polyPts Drawn polygon vertices.
  * @property {number} area Shoelace area (for back-to-front sort).
@@ -165,18 +165,18 @@ function drawRadarSpokes(svg, geo) {
 /**
  * Build the drawable polygon for one civ (per-axis vertices + the populated-
  * only polygon path + its shoelace area).
- * @param {RadarCiv} c
+ * @param {RadarCiv} civ
  * @param {RadarGeometry} geo
  * @param {number} scaleMax
  * @returns {RadarPoly}
  */
-function buildRadarPoly(c, geo, scaleMax) {
+function buildRadarPoly(civ, geo, scaleMax) {
   const { cx, cy, R, innerR } = geo;
   // Per-axis vertex positions for spokes + vertex dots.
-  const points = LEGACY_AXES.map((a) => {
-    const v = c.values[a.id] || 0;
-    const r = (v / scaleMax) * R;
-    return { x: cx + Math.cos(a.angle) * r, y: cy + Math.sin(a.angle) * r, v };
+  const points = LEGACY_AXES.map((axis) => {
+    const value = civ.values[axis.id] || 0;
+    const r = (value / scaleMax) * R;
+    return { x: cx + Math.cos(axis.angle) * r, y: cy + Math.sin(axis.angle) * r, v: value };
   });
   // Populated-only polygon: connect only axes with value > 0 (3+); for 1-2
   // populated axes, empty axes fall back to the inner pedestal. 0 populated → no shape.
@@ -186,10 +186,10 @@ function buildRadarPoly(c, geo, scaleMax) {
   if (populated.length === 0) {
     polyPts = [];
   } else if (populated.length <= 2) {
-    polyPts = LEGACY_AXES.map((a, i) => {
+    polyPts = LEGACY_AXES.map((axis, i) => {
       const pt = points[i];
       if (pt.v > 0) return pt;
-      return { x: cx + Math.cos(a.angle) * innerR, y: cy + Math.sin(a.angle) * innerR, v: 0, i };
+      return { x: cx + Math.cos(axis.angle) * innerR, y: cy + Math.sin(axis.angle) * innerR, v: 0, i };
     });
   } else {
     polyPts = populated;
@@ -203,7 +203,7 @@ function buildRadarPoly(c, geo, scaleMax) {
     }
     area = Math.abs(area) / 2;
   }
-  return { c, points, polyPts, area, color: c.color };
+  return { civ, points, polyPts, area, color: civ.color };
 }
 
 /**
@@ -215,41 +215,41 @@ function buildRadarPoly(c, geo, scaleMax) {
 function drawRadarPolys(svg, polys, geo) {
   // Fills, then spokes, then outlines, then vertex dots. Each pass runs over
   // every poly so later passes sit on top.
-  for (const p of polys) drawRadarPolyFill(svg, p);
-  for (const p of polys) drawRadarPolySpokes(svg, p, geo);
-  for (const p of polys) drawRadarPolyOutline(svg, p);
-  for (const p of polys) drawRadarPolyDots(svg, p);
+  for (const poly of polys) drawRadarPolyFill(svg, poly);
+  for (const poly of polys) drawRadarPolySpokes(svg, poly, geo);
+  for (const poly of polys) drawRadarPolyOutline(svg, poly);
+  for (const poly of polys) drawRadarPolyDots(svg, poly);
 }
 
 /**
  * Draw one polygon's translucent fill (skipped for < 3 vertices).
  * @param {SVGElement} svg
- * @param {RadarPoly} p
+ * @param {RadarPoly} poly
  */
-function drawRadarPolyFill(svg, p) {
-  if (!p.polyPts || p.polyPts.length < 3) return;
-  const pts = p.polyPts.map((pt) => pt.x + "," + pt.y).join(" ");
+function drawRadarPolyFill(svg, poly) {
+  if (!poly.polyPts || poly.polyPts.length < 3) return;
+  const outline = poly.polyPts.map((pt) => pt.x + "," + pt.y).join(" ");
   svg.appendChild(
-    svgEl("polygon", { points: pts, fill: p.color, "fill-opacity": "0.35", stroke: "none" })
+    svgEl("polygon", { points: outline, fill: poly.color, "fill-opacity": "0.35", stroke: "none" })
   );
 }
 
 /**
  * Draw one polygon's spokes (center → each populated vertex).
  * @param {SVGElement} svg
- * @param {RadarPoly} p
+ * @param {RadarPoly} poly
  * @param {RadarGeometry} geo
  */
-function drawRadarPolySpokes(svg, p, geo) {
-  LEGACY_AXES.forEach((a, idx) => {
-    if ((p.c.values[a.id] || 0) <= 0) return;
+function drawRadarPolySpokes(svg, poly, geo) {
+  LEGACY_AXES.forEach((axis, idx) => {
+    if ((poly.civ.values[axis.id] || 0) <= 0) return;
     svg.appendChild(
       svgEl("line", {
         x1: geo.cx,
         y1: geo.cy,
-        x2: p.points[idx].x,
-        y2: p.points[idx].y,
-        stroke: p.color,
+        x2: poly.points[idx].x,
+        y2: poly.points[idx].y,
+        stroke: poly.color,
         "stroke-width": "1.2",
         "stroke-opacity": "0.55"
       })
@@ -260,16 +260,16 @@ function drawRadarPolySpokes(svg, p, geo) {
 /**
  * Draw one polygon's outline (skipped for < 2 vertices).
  * @param {SVGElement} svg
- * @param {RadarPoly} p
+ * @param {RadarPoly} poly
  */
-function drawRadarPolyOutline(svg, p) {
-  if (!p.polyPts || p.polyPts.length < 2) return;
-  const pts = p.polyPts.map((pt) => pt.x + "," + pt.y).join(" ");
+function drawRadarPolyOutline(svg, poly) {
+  if (!poly.polyPts || poly.polyPts.length < 2) return;
+  const outline = poly.polyPts.map((pt) => pt.x + "," + pt.y).join(" ");
   svg.appendChild(
     svgEl("polygon", {
-      points: pts,
+      points: outline,
       fill: "none",
-      stroke: p.color,
+      stroke: poly.color,
       "stroke-width": "2.2",
       "stroke-linejoin": "round",
       "stroke-opacity": "0.95"
@@ -280,17 +280,17 @@ function drawRadarPolyOutline(svg, p) {
 /**
  * Draw one polygon's vertex dots on populated axes.
  * @param {SVGElement} svg
- * @param {RadarPoly} p
+ * @param {RadarPoly} poly
  */
-function drawRadarPolyDots(svg, p) {
-  LEGACY_AXES.forEach((a, idx) => {
-    if ((p.c.values[a.id] || 0) <= 0) return;
+function drawRadarPolyDots(svg, poly) {
+  LEGACY_AXES.forEach((axis, idx) => {
+    if ((poly.civ.values[axis.id] || 0) <= 0) return;
     svg.appendChild(
       svgEl("circle", {
-        cx: p.points[idx].x,
-        cy: p.points[idx].y,
+        cx: poly.points[idx].x,
+        cy: poly.points[idx].y,
         r: "3.4",
-        fill: p.color,
+        fill: poly.color,
         stroke: "#1c1408",
         "stroke-width": "0.8"
       })
@@ -302,31 +302,31 @@ function drawRadarPolyDots(svg, p) {
  * Build one radar legend row, styled exactly like the line-chart legend rows
  * (colored dot + civ name), with the radar's per-civ total triumph count appended.
  * Clicking toggles the civ via `onToggle`.
- * @param {RadarCiv} c
+ * @param {RadarCiv} civ
  * @param {boolean} isHidden
  * @param {((leaderType: string) => void)|null} onToggle
  * @returns {HTMLElement}
  */
-function buildRadarLegendRow(c, isHidden, onToggle) {
+function buildRadarLegendRow(civ, isHidden, onToggle) {
   const row = document.createElement("div");
   row.className = "demographics-line-legend-row";
   if (isHidden) row.classList.add("is-hidden");
   // Same icon+dot group the line legend/tooltip use (no portrait, RadarCiv
   // carries no LEADER_* string, so buildLeaderIconGroup renders just the colored
   // dot, matching a portrait-less line legend row).
-  row.appendChild(buildLeaderIconGroup({ leaderType: c.leaderType }, c.color));
+  row.appendChild(buildLeaderIconGroup({ leaderType: civ.leaderType }, civ.color));
   const name = document.createElement("span");
   name.className = "demographics-line-legend-name";
   // Civ name + its total triumph count in parens. (Avoid a "Σ" prefix here: that
   // glyph isn't in the Latin BodyFont and Coherent renders it as a missing-glyph
   // box "[]".)
-  name.textContent = c.name + " (" + radarTriumphTotal(c) + ")";
+  name.textContent = civ.name + " (" + radarTriumphTotal(civ) + ")";
   row.appendChild(name);
   if (onToggle) {
     row.addEventListener("click", (ev) => {
       ev.stopPropagation();
       safePlaySound("data-audio-select-press", "audio-screen-unlocks");
-      onToggle(c.leaderType);
+      onToggle(civ.leaderType);
     });
   }
   return row;
@@ -344,7 +344,7 @@ function buildRadarLegendRow(c, isHidden, onToggle) {
 export function renderLegacyRadar(host, options) {
   const setup = prepareRadarRender(host, options);
   if (!setup) return null;
-  const { hostEl, opts, W, H, hidden, samples } = setup;
+  const { hostEl, opts, width, height, hidden, samples } = setup;
   if (samples.length === 0) {
     appendEmptyNotice(hostEl, t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES"));
     return null;
@@ -356,10 +356,10 @@ export function renderLegacyRadar(host, options) {
 
   /** @type {RadarGeometry} */
   const geo = {
-    cx: W / 2,
-    cy: H / 2 + 10, // slight nudge down to leave room for title
-    R: Math.min(W, H) * 0.42,
-    innerR: Math.min(W, H) * 0.42 * 0.1
+    cx: width / 2,
+    cy: height / 2 + 10, // slight nudge down to leave room for title
+    R: Math.min(width, height) * 0.42,
+    innerR: Math.min(width, height) * 0.42 * 0.1
   };
 
   const { svg, visibleCount } = buildRadarSvg({
@@ -367,18 +367,18 @@ export function renderLegacyRadar(host, options) {
     hidden,
     geo,
     scaleMax,
-    W,
-    H
+    width,
+    height
   });
 
   // HTML wrap, so a click-to-toggle legend can sit beside the SVG.
   const wrap = document.createElement("div");
   wrap.className = "demographics-chart-wrap";
   wrap.appendChild(svg);
-  mountRadarLegend({ wrap, civs, hidden, opts, W, H });
+  mountRadarLegend({ wrap, civs, hidden, opts, width, height });
 
   hostEl.appendChild(wrap);
-  dlog("legacy radar mounted; civs=", civs.size, "visible=", visibleCount);
+  log.debug("legacy radar mounted; civs=", civs.size, "visible=", visibleCount);
   return { svg };
 }
 
@@ -389,8 +389,8 @@ export function renderLegacyRadar(host, options) {
  * @returns {{
  *   hostEl: HTMLElement,
  *   opts: ChartOptions,
- *   W: number,
- *   H: number,
+ *   width: number,
+ *   height: number,
  *   hidden: Set<string>,
  *   samples: *[],
  * }|null} Prepared render context.
@@ -399,11 +399,11 @@ function prepareRadarRender(host, options) {
   if (!host) return null;
   while (host.firstChild) host.removeChild(host.firstChild);
   const opts = options || {};
-  const W = opts.width || 1400;
-  const H = opts.height || 600;
+  const width = opts.width || 1400;
+  const height = opts.height || 600;
   const hidden = coerceKeySet(opts.hiddenCivs);
   const samples = opts.history && Array.isArray(opts.history.samples) ? opts.history.samples : [];
-  return { hostEl: host, opts, W, H, hidden, samples };
+  return { hostEl: host, opts, width, height, hidden, samples };
 }
 
 /**
@@ -413,18 +413,18 @@ function prepareRadarRender(host, options) {
  *   hidden: Set<string>,
  *   geo: RadarGeometry,
  *   scaleMax: number,
- *   W: number,
- *   H: number
+ *   width: number,
+ *   height: number
  * }} params Radar build inputs.
  * @returns {{ svg: SVGElement, visibleCount: number }}
  */
 function buildRadarSvg(params) {
-  const { civs, hidden, geo, scaleMax, W, H } = params;
+  const { civs, hidden, geo, scaleMax, width, height } = params;
   const svg = svgEl("svg", {
     xmlns: SVG_NS,
-    viewBox: `0 0 ${W} ${H}`,
-    width: String(W),
-    height: String(H),
+    viewBox: `0 0 ${width} ${height}`,
+    width: String(width),
+    height: String(height),
     preserveAspectRatio: "xMidYMid meet",
     class: "demographics-chart-svg",
     "aria-label": t("LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR")
@@ -435,9 +435,9 @@ function buildRadarSvg(params) {
   /** @type {RadarPoly[]} */
   const polys = [];
   let visibleCount = 0;
-  civs.forEach((c) => {
-    if (hidden.has(c.leaderType)) return;
-    polys.push(buildRadarPoly(c, geo, scaleMax));
+  civs.forEach((civ) => {
+    if (hidden.has(civ.leaderType)) return;
+    polys.push(buildRadarPoly(civ, geo, scaleMax));
     visibleCount++;
   });
   polys.sort((a, b) => b.area - a.area); // largest first → drawn behind
@@ -454,25 +454,25 @@ function buildRadarSvg(params) {
  *   civs: Map<string, RadarCiv>,
  *   hidden: Set<string>,
  *   opts: ChartOptions|*,
- *   W: number,
- *   H: number
+ *   width: number,
+ *   height: number
  * }} params Legend mount inputs.
  */
 function mountRadarLegend(params) {
-  const { wrap, civs, hidden, opts, H } = params;
+  const { wrap, civs, hidden, opts, height } = params;
   const onToggle = typeof opts.onToggleCiv === "function" ? opts.onToggleCiv : null;
   const legend = document.createElement("div");
   legend.className = "demographics-line-legend demographics-line-legend-overlay";
-  legend.style.maxHeight = Math.max(80, (H || 600) - 64) + "px";
+  legend.style.maxHeight = Math.max(80, (height || 600) - 64) + "px";
   const title = document.createElement("div");
   title.className = "demographics-line-legend-title";
   title.textContent = t("LOC_DEMOGRAPHICS_LEGEND_TITLE");
   legend.appendChild(title);
   // Same All/None bulk-select controls the line legend renders.
-  const keys = [...civs.values()].map((c) => c.leaderType).filter(Boolean);
+  const keys = [...civs.values()].map((civ) => civ.leaderType).filter(Boolean);
   legend.appendChild(buildLegendControls(keys, opts.onSetAllHidden));
-  civs.forEach((c) =>
-    legend.appendChild(buildRadarLegendRow(c, hidden.has(c.leaderType), onToggle))
+  civs.forEach((civ) =>
+    legend.appendChild(buildRadarLegendRow(civ, hidden.has(civ.leaderType), onToggle))
   );
   wrap.appendChild(legend);
 }

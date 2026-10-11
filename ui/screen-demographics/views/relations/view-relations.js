@@ -15,10 +15,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
-import {
-  dlog,
-  derr
-} from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
+import { log } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
   FILTER_GROUPS,
   makeFilterPillRow
@@ -54,6 +51,7 @@ import {
 import {
   buildViewerDropdownPanel
 } from "/demographics/ui/screen-demographics/views/relations/relations-viewer-controls.js";
+import { measureRect } from "/demographics/ui/screen-demographics/screen/dom-helpers.js";
 
 /**
  * One relationship edge between two ring nodes. `a`/`b` are player ids; the
@@ -64,7 +62,7 @@ import {
  * @property {string} [color] Stroke color (hex or rgba).
  * @property {string} [label] Optional human-readable edge label.
  * @property {string} [filterKey] Filter category this edge belongs to.
- * @property {boolean} [dashed] Legacy dashed-line flag (suzerain edges).
+ * @property {boolean} [dashed] Dashed-line flag, set directly by suzerain edges.
  * @property {number} [width] Per-edge stroke width (currently ignored).
  * @property {number} [opacity] Per-edge stroke opacity (currently ignored).
  * @property {string|null} [_dashOverride] Per-tab dash-pattern override.
@@ -128,11 +126,11 @@ function makeTabBar(tabs, activeKey, className, onSelect) {
   bar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   bar.setAttribute("tab-item-class", "font-title text-base");
   bar.setAttribute("tab-items", JSON.stringify(tabs));
-  const idx = Math.max(
+  const selectedIndex = Math.max(
     0,
     tabs.findIndex((tab) => tab.id === activeKey)
   );
-  bar.setAttribute("selected-tab-index", String(idx));
+  bar.setAttribute("selected-tab-index", String(selectedIndex));
   bar.addEventListener("tab-selected", (event) => {
     const id = /** @type {*} */ (event)?.detail?.selectedItem?.id;
     if (!id) return;
@@ -157,7 +155,7 @@ function makeTabBar(tabs, activeKey, className, onSelect) {
 /**
  * Build the vertical-stack scaffold (tab hosts, body, filter host, caption)
  * and mount it under `host`.
- * @param {HTMLElement} host The view host element.
+ * @param {HTMLElement} host
  * @returns {RelationsScaffold}
  */
 function buildScaffold(host) {
@@ -167,8 +165,8 @@ function buildScaffold(host) {
   const wrap = addChild(host, "demographics-relations-wrap");
   const topTabHost = addChild(wrap, "demographics-relations-toptab-host");
   const subTabHost = addChild(wrap, "demographics-relations-subtab-host");
-  // (The Options button lives in the frame header now - screen-demographics.js - so there is no
-  // toolbar row here; the viewer/legend overlays are anchored by measurement, not by this row.)
+  // The Options button lives in the frame header (screen-demographics.js), so there is no toolbar
+  // row here; the viewer/legend overlays are anchored by measurement.
   // CS viewer dropdown host (only populated when topTab === "cs").
   const viewerHost = addChild(wrap, "demographics-relations-viewer-host");
   const body = addChild(wrap, "demographics-relations-body");
@@ -179,8 +177,8 @@ function buildScaffold(host) {
 
 /**
  * Create a `<div>` with a class, append it to `parent`, and return it.
- * @param {HTMLElement} parent The parent element.
- * @param {string} className The class string.
+ * @param {HTMLElement} parent
+ * @param {string} className
  * @returns {HTMLElement}
  */
 function addChild(parent, className) {
@@ -227,7 +225,7 @@ function addChild(parent, className) {
  * Keep only selected ids that still exist in the current ring.
  * @param {Set<number>} selected
  * @param {number[]} ringIds
- * @returns {Set<number>} Pruned selection.
+ * @returns {Set<number>}
  */
 function pruneSelectionToRing(selected, ringIds) {
   const ringSet = new Set(ringIds);
@@ -242,34 +240,34 @@ function pruneSelectionToRing(selected, ringIds) {
  * Filter edges to those touching any selected node. Empty selection means all.
  * @param {Edge[]} edges
  * @param {Set<number>} selected
- * @returns {Edge[]} The filtered edge list.
+ * @returns {Edge[]}
  */
 function filterEdgesBySelectedNodes(edges, selected) {
   if (!(selected instanceof Set) || selected.size === 0) return edges;
-  return edges.filter((e) => selected.has(e.a) || selected.has(e.b));
+  return edges.filter((edge) => selected.has(edge.a) || selected.has(edge.b));
 }
 
 /**
  * The filter descriptors for the active sub-group (Politics / Reputation /
  * Agreements) on the current top tab.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  * @returns {FilterDef[]}
  */
-function visibleGroupDefs(rs) {
-  return buildFilterDefs(rs.topTab).filter((f) => f.group === rs.activeSubGroup);
+function visibleGroupDefs(renderState) {
+  return buildFilterDefs(renderState.topTab).filter((def) => def.group === renderState.activeSubGroup);
 }
 
 /**
  * The active filter set restricted to the visible sub-group's keys, so the ring
  * shows only that group's toggled-on edges.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  * @returns {Set<string>}
  */
-function effectiveActiveSet(rs) {
-  const activeSet = rs.readFilterSet(rs.topTab);
-  const groupKeys = new Set(visibleGroupDefs(rs).map((f) => f.key));
+function effectiveActiveSet(renderState) {
+  const activeSet = renderState.readFilterSet(renderState.topTab);
+  const groupKeys = new Set(visibleGroupDefs(renderState).map((def) => def.key));
   const out = new Set();
-  for (const k of activeSet) if (groupKeys.has(k)) out.add(k);
+  for (const key of activeSet) if (groupKeys.has(key)) out.add(key);
   return out;
 }
 
@@ -277,19 +275,19 @@ function effectiveActiveSet(rs) {
  * Build the Politics / Reputation / Agreements sub-tab chip row into the sub-tab
  * host (mirrors the settlements All/Cities/Towns control). Selecting a chip swaps
  * which group's pills + lines are shown.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function buildSubGroupChips(rs) {
-  const { subTabHost } = rs.sc;
+function buildSubGroupChips(renderState) {
+  const { subTabHost } = renderState.sc;
   while (subTabHost.firstChild) subTabHost.removeChild(subTabHost.firstChild);
   // Use the shared metric-pill selector (rounded gold pills), matching the pill row on every
   // other tab, rather than the flat time-filter chip look.
   const items = FILTER_GROUPS.map((group) => ({ key: group.key, label: t(group.label) }));
-  const row = pillRow(items, rs.activeSubGroup, (/** @type {string} */ key) => {
-    rs.activeSubGroup = key;
-    writeActiveSubGroup(rs.settings, key);
+  const row = pillRow(items, renderState.activeSubGroup, (/** @type {string} */ key) => {
+    renderState.activeSubGroup = key;
+    writeActiveSubGroup(renderState.settings, key);
     safePlaySound("data-audio-activate", "audio-panel-diplo-ribbon");
-    rs.repaint();
+    renderState.repaint();
   });
   row.classList.add("demographics-relations-subgroup-row");
   subTabHost.appendChild(row);
@@ -298,40 +296,40 @@ function buildSubGroupChips(rs) {
 /**
  * Build the filter-pill row for the active sub-group into the filter host, wiring
  * per-pill and group "All On/Off" toggles to update the filter set and repaint.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function buildFilterRow(rs) {
-  const { filterHost } = rs.sc;
+function buildFilterRow(renderState) {
+  const { filterHost } = renderState.sc;
   while (filterHost.firstChild) filterHost.removeChild(filterHost.firstChild);
 
   const title = document.createElement("div");
   title.className = "demographics-relations-filter-title font-title text-xs";
-  const group = FILTER_GROUPS.find((g) => g.key === rs.activeSubGroup);
+  const group = FILTER_GROUPS.find((filterGroup) => filterGroup.key === renderState.activeSubGroup);
   title.textContent = group ? t(group.label) : "";
   filterHost.appendChild(title);
 
-  const defs = visibleGroupDefs(rs);
-  const activeSet = rs.readFilterSet(rs.topTab);
+  const defs = visibleGroupDefs(renderState);
+  const activeSet = renderState.readFilterSet(renderState.topTab);
   filterHost.appendChild(
     makeFilterPillRow(
       defs,
       activeSet,
       (key) => {
-        const cur = rs.readFilterSet(rs.topTab);
-        if (cur.has(key)) cur.delete(key);
-        else cur.add(key);
-        rs.writeFilterSet(rs.topTab, cur);
-        rs.repaint();
+        const filterSet = renderState.readFilterSet(renderState.topTab);
+        if (filterSet.has(key)) filterSet.delete(key);
+        else filterSet.add(key);
+        renderState.writeFilterSet(renderState.topTab, filterSet);
+        renderState.repaint();
       },
       (turnOn) => {
         // Bulk-toggle only the visible sub-group's filters.
-        const cur = rs.readFilterSet(rs.topTab);
-        for (const f of defs) {
-          if (turnOn) cur.add(f.key);
-          else cur.delete(f.key);
+        const filterSet = renderState.readFilterSet(renderState.topTab);
+        for (const def of defs) {
+          if (turnOn) filterSet.add(def.key);
+          else filterSet.delete(def.key);
         }
-        rs.writeFilterSet(rs.topTab, cur);
-        rs.repaint();
+        renderState.writeFilterSet(renderState.topTab, filterSet);
+        renderState.repaint();
       }
     )
   );
@@ -339,25 +337,23 @@ function buildFilterRow(rs) {
 
 /**
  * Compute the ring node set, edges, names, and caption for the active view.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  * @param {Set<string>} activeSet
  * @returns {{ ringIds: number[], edges: Edge[],
  *   names: Record<string, NodeInfo>, capText: string,
  *   ringViewerPid: number|undefined }}
- *   The computed ring inputs.
  */
-function computeRingData(rs, activeSet) {
+function computeRingData(renderState, activeSet) {
   /** @type {Record<string, NodeInfo>} */
-  const names = Object.assign({}, rs.namesBase);
-  if (rs.topTab === "civ") return computeCivRingData(rs, activeSet, names);
-  return computeCsRingData(rs, activeSet, names);
+  const names = Object.assign({}, renderState.namesBase);
+  if (renderState.topTab === "civ") return computeCivRingData(renderState, activeSet, names);
+  return computeCsRingData(renderState, activeSet, names);
 }
 
 /**
  * Build the ring SVG for the current selection, wiring node clicks to toggle
- * the per-tab focus set and repaint. Extracted to keep `renderRingBody` under
- * the line cap.
- * @param {RenderState} rs The render-loop state.
+ * the per-tab focus set and repaint.
+ * @param {RenderState} renderState
  * @param {number[]} ringIds
  * @param {Record<string, *>} names
  * @param {*[]} focusedEdges
@@ -365,22 +361,22 @@ function computeRingData(rs, activeSet) {
  *   Ring viewer pid (defaults to local) + the active focus set.
  * @returns {HTMLElement}
  */
-function buildFocusedRingSvg(rs, ringIds, names, focusedEdges, opts) {
+function buildFocusedRingSvg(renderState, ringIds, names, focusedEdges, opts) {
   return buildRingSvg(
     ringIds,
     names,
     focusedEdges,
-    /** @type {number} */ (rs.localId),
+    /** @type {number} */ (renderState.localId),
     {
       viewerPid: opts.viewerPid,
       selectedNodeIds: opts.selected,
-      portraitCache: rs.portraitCache,
+      portraitCache: renderState.portraitCache,
       onNodeToggle: (pid) => {
-        const cur = rs.readNodeSelection(rs.topTab);
-        if (cur.has(pid)) cur.delete(pid);
-        else cur.add(pid);
-        rs.writeNodeSelection(rs.topTab, cur);
-        rs.repaintRing();
+        const selection = renderState.readNodeSelection(renderState.topTab);
+        if (selection.has(pid)) selection.delete(pid);
+        else selection.add(pid);
+        renderState.writeNodeSelection(renderState.topTab, selection);
+        renderState.repaintRing();
       }
     }
   );
@@ -389,21 +385,21 @@ function buildFocusedRingSvg(rs, ringIds, names, focusedEdges, opts) {
 /**
  * Append the "Clear focus" caption button (with a leading spacer) used when one
  * or more nodes are focused.
- * @param {HTMLElement} caption The caption element.
- * @param {RenderState} rs The render-loop state.
+ * @param {HTMLElement} caption
+ * @param {RenderState} renderState
  */
-function appendFocusClearButton(caption, rs) {
-  const sep = document.createElement("span");
-  sep.textContent = "   ";
-  caption.appendChild(sep);
+function appendFocusClearButton(caption, renderState) {
+  const spacer = document.createElement("span");
+  spacer.textContent = "   ";
+  caption.appendChild(spacer);
 
   const clearBtn = document.createElement("button");
   clearBtn.type = "button";
   clearBtn.className = "demographics-relations-clear-focus-btn font-body text-xs";
   clearBtn.textContent = t("LOC_DEMOGRAPHICS_CLEAR_FOCUS");
   clearBtn.addEventListener("click", () => {
-    rs.writeNodeSelection(rs.topTab, new Set());
-    rs.repaintRing();
+    renderState.writeNodeSelection(renderState.topTab, new Set());
+    renderState.repaintRing();
   });
   caption.appendChild(clearBtn);
 }
@@ -411,27 +407,27 @@ function appendFocusClearButton(caption, rs) {
 /**
  * Tag each edge with its relationship-type label (from the filter definitions) so
  * the ring's hover tooltip can name the line.
- * @param {Edge[]} edges The edges to tag.
- * @param {string} topTab The active top tab ("civ"/"cs").
+ * @param {Edge[]} edges
+ * @param {string} topTab "civ" or "cs".
  */
 function tagEdgeTypeLabels(edges, topTab) {
   /** @type {Map<string, string>} */
   const labels = new Map();
-  for (const f of buildFilterDefs(topTab)) labels.set(f.key, f.label);
-  for (const e of edges) {
-    /** @type {*} */ (e)._typeLabel = (e.filterKey && labels.get(e.filterKey)) || "";
+  for (const def of buildFilterDefs(topTab)) labels.set(def.key, def.label);
+  for (const edge of edges) {
+    /** @type {*} */ (edge)._typeLabel = (edge.filterKey && labels.get(edge.filterKey)) || "";
   }
 }
 
 /**
  * Render the ring body + caption from computed ring data.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function renderRingBody(rs) {
-  const { body, caption } = rs.sc;
+function renderRingBody(renderState) {
+  const { body, caption } = renderState.sc;
   // Scope the ring to the active sub-group: only filter keys in the selected
   // group (Politics / Reputation / Agreements) that are also toggled on.
-  const effectiveSet = effectiveActiveSet(rs);
+  const effectiveSet = effectiveActiveSet(renderState);
 
   // The previous ring wrap is about to be removed; forget it so the resize hook
   // never re-fits an orphan (mountRing re-tracks the new wrap below).
@@ -439,13 +435,13 @@ function renderRingBody(rs) {
   while (body.firstChild) body.removeChild(body.firstChild);
   while (caption.firstChild) caption.removeChild(caption.firstChild);
 
-  if (typeof rs.localId !== "number") {
+  if (typeof renderState.localId !== "number") {
     appendObserverEmpty(body);
     return;
   }
 
   const { ringIds, edges, names, capText: baseCapText, ringViewerPid } = computeRingData(
-    rs,
+    renderState,
     effectiveSet
   );
   let capText = baseCapText;
@@ -453,14 +449,14 @@ function renderRingBody(rs) {
   // Align edge colors with the filter-pill legend so each line's color tells you
   // which filter owns it. CS uses its own color/dash vocabulary; the civ tab
   // collapses the diplomacy-event per-action colors onto the pill color.
-  if (rs.topTab === "cs") applyCsEdgeOverrides(edges);
+  if (renderState.topTab === "cs") applyCsEdgeOverrides(edges);
   else applyCivEdgeOverrides(edges);
 
   // Tag each edge with its human-readable relationship type for the hover tooltip.
-  tagEdgeTypeLabels(edges, rs.topTab);
+  tagEdgeTypeLabels(edges, renderState.topTab);
 
   // Node-focus filter: click one or more ring nodes to show only their edges.
-  const { selected, focusedEdges } = resolveFocus(rs, edges, ringIds);
+  const { selected, focusedEdges } = resolveFocus(renderState, edges, ringIds);
 
   if (selected.size > 0) {
     capText += "  " + t("LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT", selected.size);
@@ -468,12 +464,12 @@ function renderRingBody(rs) {
 
   // Civ-tab always uses the local player as the viewer; CS-tab uses the
   // selected viewer so its node keeps the larger "focus" size.
-  mountRing(body, buildFocusedRingSvg(rs, ringIds, names, focusedEdges, {
+  mountRing(body, buildFocusedRingSvg(renderState, ringIds, names, focusedEdges, {
     viewerPid: ringViewerPid,
     selected
   }));
   caption.textContent = capText;
-  if (selected.size > 0) appendFocusClearButton(caption, rs);
+  if (selected.size > 0) appendFocusClearButton(caption, renderState);
 }
 
 // The most-recently mounted ring wrap + live render state, plus a one-time
@@ -483,7 +479,7 @@ function renderRingBody(rs) {
 /** @type {HTMLElement|null} */
 let activeRingWrap = null;
 /** @type {RenderState|null} */
-let activeRelationsRs = null;
+let activeRenderState = null;
 let resizeReflowWired = false;
 
 /**
@@ -492,60 +488,43 @@ let resizeReflowWired = false;
  */
 export function releaseRelationsView() {
   activeRingWrap = null;
-  activeRelationsRs = null;
+  activeRenderState = null;
 }
 
 /**
  * Whether the tracked ring wrap / scaffold body has been detached from the DOM
  * (the screen closed or the host was rebuilt). Only an explicit `false` counts,
  * so an engine without `isConnected` keeps the resize re-fit alive.
- * @returns {boolean} True when the tracked view is no longer connected.
+ * @returns {boolean}
  */
 function relationsViewDetached() {
   const wrap = activeRingWrap;
   if (wrap && wrap.isConnected === false) return true;
-  const body = activeRelationsRs && activeRelationsRs.sc && activeRelationsRs.sc.body;
+  const body = activeRenderState && activeRenderState.sc && activeRenderState.sc.body;
   return !!body && body.isConnected === false;
-}
-
-/**
- * Measure an element's client rect, or null when it can't be measured
- * (getBoundingClientRect can throw on a detached node in GameFace; mirrors the
- * ring renderer's own measurement guard).
- * @param {*} el The element to measure (nullable).
- * @returns {DOMRect|null} The rect, or null when unavailable.
- */
-function measureRect(el) {
-  if (!el || typeof el.getBoundingClientRect !== "function") return null;
-  try {
-    return el.getBoundingClientRect();
-  } catch (_) {
-    // A detached / torn-down node: treat as not laid out.
-    return null;
-  }
 }
 
 /**
  * Resolve the measured rects needed to anchor the Relations overlays, or null if
  * the body isn't laid out yet (so callers bail cleanly).
- * @param {RenderState} rs The render-loop state.
- * @returns {{ sc: RelationsScaffold, wrapRect: DOMRect, bodyRect: DOMRect }|null} Metrics or null.
+ * @param {RenderState} renderState
+ * @returns {{ sc: RelationsScaffold, wrapRect: DOMRect, bodyRect: DOMRect }|null}
  */
-function relationsOverlayMetrics(rs) {
-  const sc = rs && rs.sc;
-  if (!sc || !sc.body) return null;
-  const body = sc.body;
+function relationsOverlayMetrics(renderState) {
+  const scaffold = renderState && renderState.sc;
+  if (!scaffold || !scaffold.body) return null;
+  const body = scaffold.body;
   const wrap = body.parentElement;
   if (!wrap) return null;
   const wrapRect = measureRect(wrap);
   const bodyRect = measureRect(body);
   if (!wrapRect || !bodyRect || bodyRect.height === 0) return null;
-  return { sc, wrapRect, bodyRect };
+  return { sc: scaffold, wrapRect, bodyRect };
 }
 
 /**
  * Set an overlay element's inline `top` in px (no-op when absent).
- * @param {HTMLElement|undefined} el The overlay element.
+ * @param {HTMLElement|undefined} el
  * @param {number} topPx
  */
 function setOverlayTop(el, topPx) {
@@ -557,23 +536,25 @@ function setOverlayTop(el, topPx) {
  * "viewer" dropdown) to the top of the ring body, measured at runtime because the
  * tab + toolbar chrome scales with Interface Size. Also caps the legend's height
  * to the body so it cannot spill past it.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function anchorRelationsOverlays(rs) {
-  const m = relationsOverlayMetrics(rs);
-  if (!m) return;
-  const { sc, wrapRect, bodyRect } = m;
+function anchorRelationsOverlays(renderState) {
+  const metrics = relationsOverlayMetrics(renderState);
+  if (!metrics) return;
+  const { sc: scaffold, wrapRect, bodyRect } = metrics;
   // A small inset so the overlay sits just inside the panel corner, not straddling
   // the body's top border.
   const inset = 4;
   // Rects are VISUAL px; `top` is written in the frame's LOCAL px (see demographics-font-ladder.js).
   const overlayTop = Math.max(0, Math.round(toLocalPx(bodyRect.top - wrapRect.top))) + inset;
-  setOverlayTop(sc.filterHost, overlayTop);
-  setOverlayTop(sc.viewerHost, overlayTop);
+  setOverlayTop(scaffold.filterHost, overlayTop);
+  setOverlayTop(scaffold.viewerHost, overlayTop);
   // Cap the legend to the body height (it scrolls internally past that) so a tall
   // legend at a large Interface Size never extends below the ring panel.
-  const avail = Math.max(0, Math.round(toLocalPx(bodyRect.height) - inset * 2));
-  if (sc.filterHost && sc.filterHost.style && avail > 0) sc.filterHost.style.maxHeight = avail + "px";
+  const maxHeight = Math.max(0, Math.round(toLocalPx(bodyRect.height) - inset * 2));
+  if (scaffold.filterHost && scaffold.filterHost.style && maxHeight > 0) {
+    scaffold.filterHost.style.maxHeight = maxHeight + "px";
+  }
 }
 
 /**
@@ -599,10 +580,10 @@ function ensureResizeReflow() {
       const wrap = activeRingWrap;
       const place = wrap ? /** @type {*} */ (wrap).__placePortraits : null;
       if (typeof place === "function") place();
-      if (activeRelationsRs) anchorRelationsOverlays(activeRelationsRs);
+      if (activeRenderState) anchorRelationsOverlays(activeRenderState);
     } catch (e) {
       // rAF callback off the engine's resize event: log, never throw into it.
-      derr("resize reflow:", e);
+      log.error("resize reflow:", e);
     }
   };
   window.addEventListener("resize", () => {
@@ -616,23 +597,23 @@ function ensureResizeReflow() {
 /**
  * Schedule a deferred overlay anchor, retrying (bounded) until the body is laid
  * out so the measurement is valid (mirrors the ring's deferred placement).
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function scheduleOverlayAnchor(rs) {
+function scheduleOverlayAnchor(renderState) {
   let tries = 0;
-  const MAX = 120; // ~2s at 60fps; a body unlaid by then isn't going to lay out
+  const MAX_TRIES = 120; // ~2s at 60fps; a body unlaid by then isn't going to lay out
   const defer = (/** @type {() => void} */ fn) =>
     typeof requestAnimationFrame === "function" ? requestAnimationFrame(fn) : setTimeout(fn, 16);
   const run = () => {
-    const body = rs && rs.sc && rs.sc.body;
+    const body = renderState && renderState.sc && renderState.sc.body;
     // A body that left the DOM (screen closed mid-retry) is never going to lay out.
     if (body && body.isConnected === false) return;
-    const r = measureRect(body);
-    if ((!r || r.height === 0) && ++tries <= MAX) {
+    const rect = measureRect(body);
+    if ((!rect || rect.height === 0) && ++tries <= MAX_TRIES) {
       defer(run);
       return;
     }
-    anchorRelationsOverlays(rs);
+    anchorRelationsOverlays(renderState);
   };
   defer(run);
 }
@@ -641,8 +622,8 @@ function scheduleOverlayAnchor(rs) {
  * Mount a ring wrap into the body and immediately place its portrait/label
  * overlays (the wrap must be in the DOM first so they can measure), so they
  * paint with the SVG rather than a frame later (avoids click flicker).
- * @param {HTMLElement} body The ring body element.
- * @param {HTMLElement} ringWrap The ring wrap to mount.
+ * @param {HTMLElement} body
+ * @param {HTMLElement} ringWrap
  */
 function mountRing(body, ringWrap) {
   body.appendChild(ringWrap);
@@ -655,7 +636,7 @@ function mountRing(body, ringWrap) {
 
 /**
  * Append the "no local observer" empty-state notice to the ring body.
- * @param {HTMLElement} body The ring body element.
+ * @param {HTMLElement} body
  */
 function appendObserverEmpty(body) {
   const empty = document.createElement("div");
@@ -667,67 +648,67 @@ function appendObserverEmpty(body) {
 /**
  * Resolve the node-focus selection (pruned to the ring) and the edges filtered
  * to it. Empty selection ⇒ all edges.
- * @param {RenderState} rs The render-loop state.
- * @param {*[]} edges The computed edges.
+ * @param {RenderState} renderState
+ * @param {*[]} edges
  * @param {number[]} ringIds
- * @returns {{ selected: Set<number>, focusedEdges: *[] }} Selection + filtered edges.
+ * @returns {{ selected: Set<number>, focusedEdges: *[] }}
  */
-function resolveFocus(rs, edges, ringIds) {
-  const selectedRaw = rs.readNodeSelection(rs.topTab);
+function resolveFocus(renderState, edges, ringIds) {
+  const selectedRaw = renderState.readNodeSelection(renderState.topTab);
   const selected = pruneSelectionToRing(selectedRaw, ringIds);
-  if (selected.size !== selectedRaw.size) rs.writeNodeSelection(rs.topTab, selected);
+  if (selected.size !== selectedRaw.size) renderState.writeNodeSelection(renderState.topTab, selected);
   return { selected, focusedEdges: filterEdgesBySelectedNodes(edges, selected) };
 }
 
 /**
  * Build the top + sub tab bars once per render. The bars are never torn down
  * on filter clicks (rebuilding `fxs-tab-bar` mid-event swallowed pip clicks).
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function buildTabBars(rs) {
-  const { topTabHost, subTabHost } = rs.sc;
+function buildTabBars(renderState) {
+  const { topTabHost, subTabHost } = renderState.sc;
   while (topTabHost.firstChild) topTabHost.removeChild(topTabHost.firstChild);
   const topTabs = [
     { id: "civ", label: t("LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS") },
     { id: "cs", label: t("LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES") }
   ];
   topTabHost.appendChild(
-    makeTabBar(topTabs, rs.topTab, "demographics-relations-toptabs", (id) => {
-      if (id === rs.topTab) return;
-      rs.topTab = id;
+    makeTabBar(topTabs, renderState.topTab, "demographics-relations-toptabs", (id) => {
+      if (id === renderState.topTab) return;
+      renderState.topTab = id;
       try {
-        rs.settings?.setSetting?.("relationsTopTab", id);
+        renderState.settings?.setSetting?.("relationsTopTab", id);
       } catch (_) {
-        // settings.setSetting persistence is best-effort; rs.topTab already
+        // settings.setSetting persistence is best-effort; renderState.topTab already
         // holds the live value for this session.
       }
-      rs.repaint();
+      renderState.repaint();
     })
   );
-  // Sub-tab row removed - political/economic/attitude views are now overlaid
-  // in a single ring; the filter pill row handles per-type toggling.
+  // Political/economic/attitude views share one overlaid ring, so the sub-tab host
+  // stays empty; the filter pill row handles per-type toggling.
   while (subTabHost.firstChild) subTabHost.removeChild(subTabHost.firstChild);
 }
 
 /**
  * Repaint the viewer row, filter pills, body SVG, and caption. Tab bars stay
  * live across repaints.
- * @param {RenderState} rs The render-loop state.
+ * @param {RenderState} renderState
  */
-function repaintView(rs) {
+function repaintView(renderState) {
   // Viewer dropdown (CS tab only); fxs-dropdown fires "dropdown-selection-change".
-  buildViewerDropdownPanel(rs);
+  buildViewerDropdownPanel(renderState);
   // Politics / Reputation / Agreements sub-tab chips (which group is shown).
-  buildSubGroupChips(rs);
+  buildSubGroupChips(renderState);
   // Filter pill row - one pill per type within the active sub-group.
-  buildFilterRow(rs);
+  buildFilterRow(renderState);
   // Body: ring SVG + caption.
-  renderRingBody(rs);
+  renderRingBody(renderState);
   // Pin the absolutely-positioned legend/viewer overlays to the measured top of
   // the body (their top offset must track the tab/toolbar chrome height, which
   // scales with Interface Size), and register this state for the resize re-anchor.
-  activeRelationsRs = rs;
-  scheduleOverlayAnchor(rs);
+  activeRenderState = renderState;
+  scheduleOverlayAnchor(renderState);
 }
 
 /**
@@ -743,17 +724,17 @@ export function render(host, ctx) {
   try {
     // The whole body (state prologue included) sits inside this one boundary so
     // an engine-query throw in the prologue cannot blank the panel.
-    const rs = buildRenderState(host, ctx);
-    buildTabBars(rs);
+    const renderState = buildRenderState(host, ctx);
+    buildTabBars(renderState);
     // First paint runs UNguarded so a failure reaches this catch and shows the
-    // fallback; the rs.repaint wrappers guard the later handler-driven repaints.
-    repaintView(rs);
-    dlog("rendered relations; topTab=", rs.topTab, "met=", rs.metIds.length);
+    // fallback; the renderState.repaint wrappers guard the later handler-driven repaints.
+    repaintView(renderState);
+    log.debug("rendered relations; topTab=", renderState.topTab, "met=", renderState.metIds.length);
   } catch (e) {
     // Top-level guard: own-logic bugs SURFACE here (logged) without crashing
-    // the game UI. Inner per-helper swallows around own logic were removed so
-    // failures propagate to this single logged boundary.
-    derr("render:", e);
+    // the game UI. Own-logic helpers do not swallow errors, so failures
+    // propagate to this single logged boundary.
+    log.error("render:", e);
     appendRenderFailed(host);
   }
 }
@@ -779,18 +760,18 @@ function buildRenderState(host, ctx) {
   const localId = getLocalId();
   const namesBase = buildNameMap(ctx.history);
   const metIds = typeof localId === "number" ? getMetMajorIds(localId) : [];
-  // Global "show unmet names" toggle (Fix 4). Default false → unmet civs/CSes
+  // Global "show unmet names" toggle. Default false → unmet civs/CSes
   // render as generic placeholders.
   const showUnmetNames = readShowUnmetNames(settings);
   const csViewerPid = readCsViewerPid(settings, localId, metIds);
 
-  const sc = buildScaffold(host);
+  const scaffold = buildScaffold(host);
 
   /** @type {RenderState} */
-  const rs = {
+  const renderState = {
     ctx,
     settings,
-    sc,
+    sc: scaffold,
     localId,
     metIds,
     namesBase,
@@ -810,27 +791,27 @@ function buildRenderState(host, ctx) {
     // Every click / toggle / dropdown handler repaints through these two, so a
     // throw in a sub-renderer is logged here instead of escaping to the engine's
     // event dispatcher.
-    repaint: () => guardedPaint("repaint", () => repaintView(rs)),
+    repaint: () => guardedPaint("repaint", () => repaintView(renderState)),
     // Ring-only repaint for node focus toggles: rebuilds just the ring body (not
     // the filter pills / viewer dropdown), so clicking an icon doesn't flicker
     // the whole panel.
-    repaintRing: () => guardedPaint("repaintRing", () => renderRingBody(rs)),
+    repaintRing: () => guardedPaint("repaintRing", () => renderRingBody(renderState)),
     portraitCache: new Map()
   };
-  return rs;
+  return renderState;
 }
 
 /**
  * Run a repaint body behind a logged boundary (see the `repaint` / `repaintRing`
  * fields on {@link RenderState}).
  * @param {string} label
- * @param {() => void} fn The repaint body.
+ * @param {() => void} fn
  */
 function guardedPaint(label, fn) {
   try {
     fn();
   } catch (e) {
-    derr(label + ":", e);
+    log.error(label + ":", e);
   }
 }
 
@@ -848,6 +829,6 @@ function appendRenderFailed(host) {
     host.appendChild(empty);
   } catch (e) {
     // The DOM itself is unusable here; the render error is already logged.
-    derr("render fallback:", e);
+    log.error("render fallback:", e);
   }
 }

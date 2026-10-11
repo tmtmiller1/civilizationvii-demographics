@@ -4,7 +4,10 @@ import { newCrisisState, crisisStep } from "/demographics/ui/history/capture/his
 // Onsets are new highs only; a steady stage is not re-announced.
 {
   const st = newCrisisState("AGE_ANTIQUITY");
-  assert.deepEqual([0, 0, 1, 1, 2, 2, 3, 4, 4].map((s) => crisisStep(st, "AGE_ANTIQUITY", s)), [0, 0, 1, 0, 2, 0, 3, 4, 0]);
+  assert.deepEqual(
+    [0, 0, 1, 1, 2, 2, 3, 4, 4].map((s) => crisisStep(st, "AGE_ANTIQUITY", s)),
+    [0, 0, 1, 0, 2, 0, 3, 4, 0]
+  );
 }
 // A stage lingering into the next age is not a new crisis; the new age's crisis counts once it
 // has reported a pre-crisis reading.

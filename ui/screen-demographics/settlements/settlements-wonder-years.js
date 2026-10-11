@@ -6,19 +6,19 @@
 
 /**
  * Fold one sample into the running wonder-year state.
- * @param {*} smp The sample.
  * @param {{ years: Map<string, string>, held: Set<string>, sampled: Set<string> }} acc
  *   years: type → completion year; held: types any civ has held; sampled: pids seen.
+ * @param {*} sample
  */
-function foldSample(acc, smp) {
-  const players = smp && smp.players ? smp.players : null;
+function foldSample(acc, sample) {
+  const players = sample && sample.players ? sample.players : null;
   if (!players) return;
   for (const pid of Object.keys(players)) {
     const first = !acc.sampled.has(pid);
     acc.sampled.add(pid);
     const types = Array.isArray(players[pid]?.wonderTypes) ? players[pid].wonderTypes : [];
     // A civ's first sample only seeds what it already held; nothing there is dated.
-    foldTypes(acc, types, first ? "" : smp.gameYear);
+    foldTypes(acc, types, first ? "" : sample.gameYear);
   }
 }
 
@@ -29,9 +29,9 @@ function foldSample(acc, smp) {
  * @param {string} year The sample's game year ("" = seed only, date nothing).
  */
 function foldTypes(acc, types, year) {
-  for (const ty of types) {
-    if (!acc.held.has(ty) && year) acc.years.set(ty, year);
-    acc.held.add(ty);
+  for (const type of types) {
+    if (!acc.held.has(type) && year) acc.years.set(type, year);
+    acc.held.add(type);
   }
 }
 
@@ -43,22 +43,23 @@ function foldTypes(acc, types, year) {
 export function wonderCompletionYears(history) {
   const acc = { years: new Map(), held: new Set(), sampled: new Set() };
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
-  for (const smp of samples) foldSample(acc, smp);
+  for (const sample of samples) foldSample(acc, sample);
   return acc.years;
 }
 
 /**
  * Stamp `year` on every settlement wonder whose completion was observed (the
  * showcase tooltip and the cinematic caption both read it).
- * @param {Array<{ wonders?: Array<{ type?: string, year?: string }> }>} settlements The records (mutated).
+ * @param {Array<{ wonders?: Array<{ type?: string, year?: string }> }>} settlements
+ *   The records (mutated).
  * @param {*} history The sampled history.
  */
 export function annotateWonderYears(settlements, history) {
   const years = wonderCompletionYears(history);
   if (!years.size) return;
-  for (const s of settlements) {
-    for (const w of Array.isArray(s.wonders) ? s.wonders : []) {
-      if (w && w.type && !w.year && years.has(w.type)) w.year = years.get(w.type);
+  for (const settlement of settlements) {
+    for (const wonder of Array.isArray(settlement.wonders) ? settlement.wonders : []) {
+      if (wonder && wonder.type && !wonder.year && years.has(wonder.type)) wonder.year = years.get(wonder.type);
     }
   }
 }

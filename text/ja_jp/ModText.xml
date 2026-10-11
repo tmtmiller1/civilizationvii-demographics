@@ -1532,17 +1532,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="ja_JP">
             <Text>標準</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="ja_JP">
-            <Text>アナリスト</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="ja_JP">
             <Text>主要な統計ページのみ。詳細グラフ、関係ネットワーク、調整コントロールは非表示です。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="ja_JP">
             <Text>すべてのグラフとタブ。詳細なストレージとサンプリングのコントロールは非表示のままです。</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="ja_JP">
-            <Text>ストレージ上限、間引き、サンプリングレートを含むすべて。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="ja_JP">
             <Text>時代の偉業の進捗：各文明のレガシー経路レーダー。</Text>
@@ -1601,7 +1595,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ja_JP"><Text>各遺産が完成したターンを履歴グラフの線上に表示します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="ja_JP"><Text>各戦争が始まったターンを Emigration の難民グラフ上に表示します。連携モッド Emigration が必要です。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="ja_JP"><Text>各災害が発生したターンを Emigration の難民グラフ上に表示します。連携モッド Emigration が必要です。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ja_JP"><Text>画面にどこまで表示するかを設定します。ベーシックは主要な統計ページのみ、スタンダードはすべてのグラフとタブを追加、アナリストはさらに保存・間引き・サンプリング間隔の設定を表示します。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ja_JP"><Text>画面にどこまで表示するかを設定します。ベーシックは主要な統計ページのみ、スタンダードはすべてのグラフとタブを追加します。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="ja_JP"><Text>履歴の線を3ターンの移動平均で描画し、傾向を読み取りやすくします。元のデータは変更されません。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="ja_JP"><Text>消滅した文明をグラフやランキングから消さずに表示し続けます。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="ja_JP"><Text>トップシティ一覧から都市をカメラでパンする「シネマティック表示」ボタンを有効にします。</Text></Replace>
@@ -1940,6 +1934,12 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="ja_JP">
             <Text>称号</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="ja_JP">
+            <Text>「{1_Title}」</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="ja_JP">
+            <Text>（称号：「{1_Title}」）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="ja_JP">
             <Text>結果</Text>

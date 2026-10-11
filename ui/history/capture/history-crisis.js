@@ -8,7 +8,7 @@
 /**
  * A fresh detection state. The first age starts armed: nothing can linger into it.
  * @param {string} age
- * @returns {HnrCrisisState}
+ * @returns {HistoryCrisisState}
  */
 export function newCrisisState(age) {
   return { age, last: 0, armed: true };
@@ -16,7 +16,7 @@ export function newCrisisState(age) {
 
 /**
  * Fold one reading into the state and return the onset it marks, if any.
- * @param {HnrCrisisState} st Mutated.
+ * @param {HistoryCrisisState} st Mutated.
  * @param {string} age
  * @param {number|undefined} stage The current reading.
  * @returns {number} The new stage when this reading is an onset, else 0.

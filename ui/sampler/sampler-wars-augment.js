@@ -17,7 +17,7 @@ import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
  * the snapshot first and falling back to live engine reads. Mirrors the trio
  * of CS checks view-relations.js uses.
  * @param {Snapshot} snapshot The current snapshot (for cached player info).
- * @param {number | string} pid The player id.
+ * @param {number | string} pid
  * @returns {WarRosterEntry} The resolved war-roster entry.
  */
 export function pidInfo(snapshot, pid) {
@@ -40,7 +40,7 @@ export function pidInfo(snapshot, pid) {
 /**
  * Resolve a war-roster civ type string from snapshot-first fallback logic.
  * @param {*} snapshotPlayer Snapshot player entry.
- * @param {number | string} pid Player id.
+ * @param {number | string} pid
  * @returns {string | undefined} Civ type string, when available.
  */
 function resolveRosterCivTypeString(snapshotPlayer, pid) {
@@ -52,7 +52,7 @@ function resolveRosterCivTypeString(snapshotPlayer, pid) {
 
 /**
  * Read the live player handle to fill in a missing civ name and the CS flag.
- * @param {number | string} pid The player id.
+ * @param {number | string} pid
  * @param {*} cachedCiv The civ name already known from the snapshot, if any.
  * @returns {{ civ: *, isCS: boolean }} The (possibly resolved) civ + CS flag.
  */
@@ -60,15 +60,15 @@ function pidLiveInfo(pid, cachedCiv) {
   let civ = cachedCiv;
   let isCS = false;
   try {
-    const p = Players.get(Number(pid));
-    if (p) {
-      if (!civ && p.civilizationName) {
+    const player = Players.get(Number(pid));
+    if (player) {
+      if (!civ && player.civilizationName) {
         civ =
           typeof Locale?.compose === "function"
-            ? Locale.compose(p.civilizationName)
-            : p.civilizationName;
+            ? Locale.compose(player.civilizationName)
+            : player.civilizationName;
       }
-      isCS = detectCityState(p);
+      isCS = detectCityState(player);
     }
   } catch (_) {
     // Players.get() / Locale.compose() can be null / throw mid age-transition;
@@ -97,13 +97,13 @@ function isCSByName(civ) {
 /**
  * Resolve the CIVILIZATION_X type string for a pid via the live player handle,
  * so wars carry the canonical, DLC-safe type for adjective lookups.
- * @param {number | string} pid The player id.
+ * @param {number | string} pid
  * @returns {string | undefined} The civilizationType string, or undefined.
  */
 function civTypeStringFor(pid) {
   try {
-    const p = Players.get(Number(pid));
-    const ct = p?.civilizationType;
+    const player = Players.get(Number(pid));
+    const ct = player?.civilizationType;
     if (typeof ct === "string" && ct.length > 0) return ct;
   } catch (_) {
     // Players.get() can be null / throw mid age-transition; treat the civ type
@@ -115,20 +115,20 @@ function civTypeStringFor(pid) {
 /**
  * Determine whether a live player handle is a city-state / independent /
  * non-major civ, mirroring view-relations.js.
- * @param {*} p A live player handle.
+ * @param {*} player A live player handle.
  * @returns {boolean} True if the player should be treated as a city-state.
  */
-function detectCityState(p) {
+function detectCityState(player) {
   /**
    * Coerce a boolean-or-thunk player flag to a boolean (or undefined).
-   * @param {*} v The flag value (boolean, function, or other).
+   * @param {*} value The flag value (boolean, function, or other).
    * @returns {boolean | undefined} The resolved flag, or undefined.
    */
-  function flag(v) {
-    if (typeof v === "boolean") return v;
-    if (typeof v === "function") {
+  function flag(value) {
+    if (typeof value === "boolean") return value;
+    if (typeof value === "function") {
       try {
-        return !!v.call(p);
+        return !!value.call(player);
       } catch (_) {
         // Calling a player flag accessor can throw on a stale handle.
       }
@@ -136,12 +136,12 @@ function detectCityState(p) {
     return undefined;
   }
   let isCS = false;
-  if (flag(p.isMinor) === true) isCS = true;
-  if (flag(p.isIndependent) === true) isCS = true;
-  if (flag(p.isCityState) === true) isCS = true;
+  if (flag(player.isMinor) === true) isCS = true;
+  if (flag(player.isIndependent) === true) isCS = true;
+  if (flag(player.isCityState) === true) isCS = true;
   if (!isCS) {
-    const major = flag(p.isMajor);
-    const fullCiv = flag(p.isFullCiv);
+    const major = flag(player.isMajor);
+    const fullCiv = flag(player.isFullCiv);
     if (major === false || fullCiv === false) isCS = true;
   }
   return isCS;
@@ -156,16 +156,16 @@ function detectCityState(p) {
  * @param {Snapshot[]} [samples] The recorded per-turn samples (for start-age civ lookup).
  */
 export function migrateWarRecords(snapshot, wars, samples) {
-  for (const w of wars) {
-    migrateWarRecord(w);
+  for (const war of wars) {
+    migrateWarRecord(war);
     const opts = {
       snapshot,
-      startTurn: w.startTurn,
-      warOpen: w.endTurn == null,
-      startPlayers: startSamplePlayers(samples, w)
+      startTurn: war.startTurn,
+      warOpen: war.endTurn == null,
+      startPlayers: startSamplePlayers(samples, war)
     };
-    w.sideACivs = prepareWarSideRoster(w.sideACivs, w.sideA, opts);
-    w.sideBCivs = prepareWarSideRoster(w.sideBCivs, w.sideB, opts);
+    war.sideACivs = prepareWarSideRoster(war.sideACivs, war.sideA, opts);
+    war.sideBCivs = prepareWarSideRoster(war.sideBCivs, war.sideB, opts);
   }
 }
 
@@ -173,7 +173,7 @@ export function migrateWarRecords(snapshot, wars, samples) {
  * The recorded players-by-pid map from the sample at (or just before) a war's start chart-turn:
  * the civ identities as they were when the war began. Null when start data isn't available.
  * @param {Snapshot[]|undefined} samples The recorded samples.
- * @param {WarRecord} war The war record.
+ * @param {WarRecord} war
  * @returns {Record<string, *>|null} pid → snapshot player at war start, or null.
  */
 function startSamplePlayers(samples, war) {
@@ -192,11 +192,11 @@ function startSamplePlayers(samples, war) {
 export function findStartSample(samples, target) {
   let best = null;
   let bestTurn = -Infinity;
-  for (const s of samples) {
-    const ct = s?.chartTurn;
+  for (const sample of samples) {
+    const ct = sample?.chartTurn;
     if (typeof ct === "number" && ct <= target && ct > bestTurn) {
       bestTurn = ct;
-      best = s;
+      best = sample;
     }
   }
   return best;
@@ -205,14 +205,14 @@ export function findStartSample(samples, target) {
 /**
  * Pin a roster entry's civ identity to the war's start age, read from the start sample. No-op when
  * that data isn't available (then the existing/current value stands).
- * @param {WarParticipant} e The roster entry (mutated).
+ * @param {WarParticipant} entry The roster entry (mutated).
  * @param {Record<string, *>|null} startPlayers pid → snapshot player at war start.
  */
-function applyHistoricalCiv(e, startPlayers) {
-  const sp = startPlayers ? startPlayers[e.pid] : null;
+function applyHistoricalCiv(entry, startPlayers) {
+  const sp = startPlayers ? startPlayers[entry.pid] : null;
   if (!sp) return;
-  if (typeof sp.civTypeString === "string" && sp.civTypeString) e.civTypeString = sp.civTypeString;
-  if (typeof sp.civName === "string" && sp.civName) e.civ = sp.civName;
+  if (typeof sp.civTypeString === "string" && sp.civTypeString) entry.civTypeString = sp.civTypeString;
+  if (typeof sp.civName === "string" && sp.civName) entry.civ = sp.civName;
 }
 
 /**
@@ -237,9 +237,9 @@ function prepareWarSideRoster(civs, pids, opts) {
       return entry;
     });
   }
-  for (const e of list) {
-    if (e.active) refreshActiveEntry(e, snapshot);
-    applyHistoricalCiv(e, startPlayers); // authoritative: the civ as it was at war start
+  for (const entry of list) {
+    if (entry.active) refreshActiveEntry(entry, snapshot);
+    applyHistoricalCiv(entry, startPlayers); // authoritative: the civ as it was at war start
   }
   return list;
 }
@@ -247,49 +247,49 @@ function prepareWarSideRoster(civs, pids, opts) {
 /**
  * Refresh an active roster entry's transient fields (leader/color/isCS) from the live player, and
  * backfill its civ only when missing. Civ identity is pinned by applyHistoricalCiv, not here.
- * @param {WarParticipant} e The roster entry (mutated).
+ * @param {WarParticipant} entry The roster entry (mutated).
  * @param {Snapshot} snapshot The current snapshot.
  */
-function refreshActiveEntry(e, snapshot) {
-  const info = pidInfo(snapshot, e.pid);
-  e.leader = info.leader;
-  e.color = info.color;
-  e.isCS = info.isCS;
-  if (!e.civ || /^Player\s/.test(e.civ)) e.civ = info.civ;
-  if (!e.civTypeString && info.civTypeString) e.civTypeString = info.civTypeString;
+function refreshActiveEntry(entry, snapshot) {
+  const info = pidInfo(snapshot, entry.pid);
+  entry.leader = info.leader;
+  entry.color = info.color;
+  entry.isCS = info.isCS;
+  if (!entry.civ || /^Player\s/.test(entry.civ)) entry.civ = info.civ;
+  if (!entry.civTypeString && info.civTypeString) entry.civTypeString = info.civTypeString;
 }
 
 /**
  * Migrate one war record from scalar sides to side arrays.
- * @param {WarRecord} w A history war record.
+ * @param {WarRecord} war A history war record.
  */
-function migrateWarRecord(w) {
-  if (Array.isArray(w.sideA) && Array.isArray(w.sideB)) return;
-  if (typeof w.aPid === "number" && typeof w.bPid === "number") {
-    w.sideA = [w.aPid];
-    w.sideB = [w.bPid];
-    w.participants = [w.aPid, w.bPid];
+function migrateWarRecord(war) {
+  if (Array.isArray(war.sideA) && Array.isArray(war.sideB)) return;
+  if (typeof war.aPid === "number" && typeof war.bPid === "number") {
+    war.sideA = [war.aPid];
+    war.sideB = [war.bPid];
+    war.participants = [war.aPid, war.bPid];
   } else {
-    w.sideA = w.sideA || [];
-    w.sideB = w.sideB || [];
-    if (typeof w.endTurn !== "number") w.endTurn = w.startTurn;
+    war.sideA = war.sideA || [];
+    war.sideB = war.sideB || [];
+    if (typeof war.endTurn !== "number") war.endTurn = war.startTurn;
   }
 }
 
 /**
  * Whether player handle p is a formal ally (alliance or defensive pact).
- * @param {*} p A player handle.
+ * @param {*} player A player handle.
  * @param {number} otherId The other major's pid.
  * @returns {boolean} True when allied or defensive-pacted.
  */
-function isAllyOrPact(p, otherId) {
+function isAllyOrPact(player, otherId) {
   try {
-    const d = p?.Diplomacy;
-    if (!d) return false;
-    if (typeof d.hasAllied === "function" && d.hasAllied(otherId)) return true;
+    const diplomacy = player?.Diplomacy;
+    if (!diplomacy) return false;
+    if (typeof diplomacy.hasAllied === "function" && diplomacy.hasAllied(otherId)) return true;
     if (
-      typeof d.hasDefensivePact === "function" &&
-      d.hasDefensivePact(otherId)
+      typeof diplomacy.hasDefensivePact === "function" &&
+      diplomacy.hasDefensivePact(otherId)
     ) {
       return true;
     }
@@ -324,7 +324,7 @@ function addSideAllies(side, otherSide, byId, majors) {
 
 /**
  * Augment active wars with formal allies.
- * @param {Map<*, ActiveWar>} activeWarsByID The active wars.
+ * @param {Map<*, ActiveWar>} activeWarsByID
  * @param {*[]} allPlayers The alive players list.
  */
 export function augmentWarsWithAllies(activeWarsByID, allPlayers) {
@@ -332,10 +332,10 @@ export function augmentWarsWithAllies(activeWarsByID, allPlayers) {
   const byId = new Map();
   /** @type {number[]} */
   const majors = [];
-  for (const p of allPlayers) {
-    if (!p || typeof p.id !== "number") continue;
-    byId.set(p.id, p);
-    if (p.isMinor !== true) majors.push(p.id);
+  for (const player of allPlayers) {
+    if (!player || typeof player.id !== "number") continue;
+    byId.set(player.id, player);
+    if (player.isMinor !== true) majors.push(player.id);
   }
   if (!majors.length) return;
   for (const war of activeWarsByID.values()) {
@@ -352,24 +352,24 @@ export function augmentWarsWithAllies(activeWarsByID, allPlayers) {
 function buildSuzerainMap(allPlayers) {
   /** @type {Map<number, Set<number>>} */
   const map = new Map();
-  for (const p of allPlayers) {
-    const suz = readSuzerain(p);
+  for (const player of allPlayers) {
+    const suz = readSuzerain(player);
     if (suz < 0) continue;
     if (!map.has(suz)) map.set(suz, new Set());
-    /** @type {Set<number>} */ (map.get(suz)).add(p.id);
+    /** @type {Set<number>} */ (map.get(suz)).add(player.id);
   }
   return map;
 }
 
 /**
  * Read a city-state player's suzerain pid, or -1 when unavailable.
- * @param {*} p A player handle.
+ * @param {*} player A player handle.
  * @returns {number} The suzerain pid, or -1.
  */
-function readSuzerain(p) {
+function readSuzerain(player) {
   try {
-    if (!p || p.isMinor !== true || typeof p.id !== "number") return -1;
-    const inf = p.Influence;
+    if (!player || player.isMinor !== true || typeof player.id !== "number") return -1;
+    const inf = player.Influence;
     const suz =
       inf && typeof inf.getSuzerain === "function" ? inf.getSuzerain() : -1;
     return typeof suz === "number" ? suz : -1;
@@ -381,17 +381,17 @@ function readSuzerain(p) {
 /**
  * Append a side's suzerained city-states to that side pid list.
  * @param {number[]} sidePids The side pid list (mutated).
- * @param {Map<number, Set<number>>} csBySuzerain The suzerain map.
+ * @param {Map<number, Set<number>>} csBySuzerain
  */
 function addSideCityStates(sidePids, csBySuzerain) {
   const existing = new Set(sidePids);
   for (const major of sidePids.slice()) {
-    const css = csBySuzerain.get(Number(major));
-    if (!css) continue;
-    for (const cs of css) {
-      if (!existing.has(cs)) {
-        sidePids.push(cs);
-        existing.add(cs);
+    const cityStates = csBySuzerain.get(Number(major));
+    if (!cityStates) continue;
+    for (const cityState of cityStates) {
+      if (!existing.has(cityState)) {
+        sidePids.push(cityState);
+        existing.add(cityState);
       }
     }
   }
@@ -399,7 +399,7 @@ function addSideCityStates(sidePids, csBySuzerain) {
 
 /**
  * Augment active wars with suzerained city-states.
- * @param {Map<*, ActiveWar>} activeWarsByID The active wars.
+ * @param {Map<*, ActiveWar>} activeWarsByID
  * @param {*[]} allPlayers The alive players list.
  */
 export function augmentWarsWithCityStates(activeWarsByID, allPlayers) {

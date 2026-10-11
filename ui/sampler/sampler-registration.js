@@ -13,8 +13,8 @@
  *   ageBoundaryDeps: any,
  *   startWarEventTracker: () => void,
  *   startFoundingTracker: () => void,
- *   ilog: (...a:any[]) => void,
- *   elog: (...a:any[]) => void,
+ *   logDebug: (...a:any[]) => void,
+ *   logError: (...a:any[]) => void,
  *   killThreshold: number,
  *   runKickoff: () => void
  * }} deps Registration dependencies.
@@ -37,7 +37,7 @@ export function registerSamplerHandlers(deps) {
     deps.startWarEventTracker();
     deps.startFoundingTracker();
 
-    deps.ilog(
+    deps.logDebug(
       "subscribed to PlayerTurnActivated + PlayerAgeTransitionComplete",
       "(re-registered fresh on load, kill at",
       deps.killThreshold,
@@ -45,14 +45,14 @@ export function registerSamplerHandlers(deps) {
     );
 
     if (typeof Loading !== "undefined" && typeof Loading.runWhenLoaded === "function") {
-      deps.ilog("startSampler: deferring kickoff until Loading.runWhenLoaded");
+      deps.logDebug("startSampler: deferring kickoff until Loading.runWhenLoaded");
       Loading.runWhenLoaded(deps.runKickoff);
       return;
     }
 
-    deps.ilog("startSampler: Loading.runWhenLoaded unavailable; using 250ms timeout fallback");
+    deps.logDebug("startSampler: Loading.runWhenLoaded unavailable; using 250ms timeout fallback");
     setTimeout(deps.runKickoff, 250);
   } catch (e) {
-    deps.elog("engine.on threw during startSampler:", e);
+    deps.logError("engine.on threw during startSampler:", e);
   }
 }

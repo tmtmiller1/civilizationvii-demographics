@@ -36,3 +36,15 @@ export const viewState = {
 
 /** Chronicle rows added by "Show more". */
 export const LIMIT_STEP = 300;
+
+/**
+ * Open one game's page in the Hall of Fame. Every game opens on your own civilization's story, so
+ * the timeline's civilization pick is cleared.
+ * @param {string} id Archived game id.
+ * @param {{rerender: () => void}} ctx
+ */
+export function openGame(id, ctx) {
+  viewState.detail = id;
+  viewState.tlCivs = null;
+  ctx.rerender();
+}

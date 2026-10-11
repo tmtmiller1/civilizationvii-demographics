@@ -2,7 +2,10 @@
 <Mod id="demographics-watch-probe" version="1" xmlns="ModInfo">
     <Properties>
         <Name>Demographics Watch Probe (dev)</Name>
-        <Description>Throwaway dev probe. Auto-loads a named save from the main menu and presses Begin Game, so a release watch can be driven hands-free over CDP. Not for release.</Description>
+        <Description>
+            Throwaway dev probe. Auto-loads a named save from the main menu and presses Begin Game, so a release watch
+            can be driven hands-free over CDP. Not for release.
+        </Description>
         <Authors>Tower</Authors>
         <Package>DemographicsWatchProbe</Package>
         <PackageSortIndex>9999</PackageSortIndex>
@@ -16,16 +19,16 @@
         <Criteria id="always"><AlwaysMet></AlwaysMet></Criteria>
     </ActionCriteria>
     <ActionGroups>
-        <ActionGroup id="ws-shell" scope="shell" criteria="always">
+        <ActionGroup id="watch-shell" scope="shell" criteria="always">
             <Properties><LoadOrder>9000</LoadOrder></Properties>
             <Actions>
-                <UIScripts><Item>ws-shell.js</Item></UIScripts>
+                <UIScripts><Item>watch-shell.js</Item></UIScripts>
             </Actions>
         </ActionGroup>
-        <ActionGroup id="ws-game" scope="game" criteria="always">
+        <ActionGroup id="watch-game" scope="game" criteria="always">
             <Properties><LoadOrder>9000</LoadOrder></Properties>
             <Actions>
-                <UIScripts><Item>ws-game.js</Item></UIScripts>
+                <UIScripts><Item>watch-game.js</Item></UIScripts>
             </Actions>
         </ActionGroup>
     </ActionGroups>

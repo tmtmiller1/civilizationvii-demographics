@@ -1,6 +1,7 @@
 // history-hof.js
 //
 // Pure: Hall of Fame figures computed from archive records. No engine access, no DOM.
+// ("hof" in file names is the Hall of Fame.)
 //
 // Ranking model: finished games before unfinished ones and victories before other results, then
 // more Triumphs, then fewer turns. The honorific is the rank of the game's Triumphs against your
@@ -14,13 +15,13 @@ export const TITLE_COUNT = 12;
 /**
  * A headline figure of a record, 0 when the record carries no figures (an archive written by hand
  * or by another version passes isRecord without them).
- * @param {ArchiveRecord} r
+ * @param {ArchiveRecord} rec
  * @param {keyof ArchiveRecord["stats"]} key
  * @returns {number}
  */
-export function statOf(r, key) {
-  const v = r.stats ? r.stats[key] : 0;
-  return typeof v === "number" && Number.isFinite(v) ? v : 0;
+export function statOf(rec, key) {
+  const value = rec.stats ? rec.stats[key] : 0;
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
 /**
@@ -32,17 +33,18 @@ export function statOf(r, key) {
  */
 export function visibleRecords(records, opts = {}) {
   return records
-    .filter((r) => opts.showShort || r.id === opts.keep || r.outcome.status !== "in_progress" || r.turns >= SHORT_GAME_TURNS)
+    .filter((rec) =>
+      opts.showShort || rec.id === opts.keep || rec.outcome.status !== "in_progress" || rec.turns >= SHORT_GAME_TURNS)
     .sort((a, b) => b.updated - a.updated);
 }
 
 /**
  * Sort weight of an outcome (lower first).
- * @param {HnrStatus} s
+ * @param {HistoryStatus} status
  * @returns {number}
  */
-function outcomeWeight(s) {
-  return s === "victory" ? 0 : s === "defeat" || s === "ended" ? 1 : 2;
+function outcomeWeight(status) {
+  return status === "victory" ? 0 : status === "defeat" || status === "ended" ? 1 : 2;
 }
 
 /**
@@ -80,13 +82,19 @@ export function standing(records, currentId = "", topN = 10) {
   const order = ranked(records);
   const latest = records.slice().sort((a, b) => b.updated - a.updated)[0];
   const id = currentId && order.some((r) => r.id === currentId) ? currentId : latest?.id;
-  const i = order.findIndex((r) => r.id === id);
+  const index = order.findIndex((r) => r.id === id);
   return {
     order,
     top: order.slice(0, topN),
-    current: i < 0
+    current: index < 0
       ? null
-      : { rec: order[i], rank: i + 1, of: order.length, above: order[i - 1] || null, below: order[i + 1] || null }
+      : {
+        rec: order[index],
+        rank: index + 1,
+        of: order.length,
+        above: order[index - 1] || null,
+        below: order[index + 1] || null
+      }
   };
 }
 
@@ -110,23 +118,28 @@ export function titleIndex(rec, best) {
  * @returns {Map<string, number>}
  */
 function tally(items, key) {
-  const m = new Map();
+  const counts = new Map();
   for (const it of items) {
-    const k = key(it);
-    if (k) m.set(k, (m.get(k) || 0) + 1);
+    const bucket = key(it);
+    if (bucket) counts.set(bucket, (counts.get(bucket) || 0) + 1);
   }
-  return m;
+  return counts;
 }
 
 /**
  * Key with the highest count (ties: first seen).
- * @param {Map<string, number>} m
+ * @param {Map<string, number>} counts
  * @returns {string} Key, or "".
  */
-function topKey(m) {
+function topKey(counts) {
   let best = "";
-  let n = 0;
-  for (const [k, v] of m) if (v > n) { best = k; n = v; }
+  let most = 0;
+  for (const [candidate, count] of counts) {
+    if (count > most) {
+      best = candidate;
+      most = count;
+    }
+  }
   return best;
 }
 
@@ -170,53 +183,61 @@ export function overview(records) {
  * @param {Map<string, GroupRow & {turnSum:number}>} rows Accumulator.
  * @param {string} key
  * @param {string} name LOC tag.
- * @param {ArchiveRecord} r
+ * @param {ArchiveRecord} rec
  */
-function fold(rows, key, name, r) {
+function fold(rows, key, name, rec) {
   const blank = {
     key, name, games: 0, wins: 0, losses: 0, ended: 0, open: 0, finished: 0, bestTriumphs: 0, avgTurns: 0, turnSum: 0
   };
   const row = rows.get(key) || blank;
   row.games++;
-  if (r.outcome.status !== "in_progress") row.finished++;
-  if (r.outcome.status === "victory") row.wins++;
-  else if (r.outcome.status === "defeat") row.losses++;
-  else if (r.outcome.status === "ended") row.ended++;
+  if (rec.outcome.status !== "in_progress") row.finished++;
+  if (rec.outcome.status === "victory") row.wins++;
+  else if (rec.outcome.status === "defeat") row.losses++;
+  else if (rec.outcome.status === "ended") row.ended++;
   else row.open++;
-  row.bestTriumphs = Math.max(row.bestTriumphs, statOf(r, "triumphs"));
-  row.turnSum += r.turns;
+  row.bestTriumphs = Math.max(row.bestTriumphs, statOf(rec, "triumphs"));
+  row.turnSum += rec.turns;
   row.avgTurns = Math.round(row.turnSum / row.games);
   rows.set(key, row);
 }
 
 /**
- * Per-leader table, most played first.
- * @param {ArchiveRecord[]} records
- * @returns {GroupRow[]}
+ * Who a game counts toward in one Hall of Fame table: a type key and its name's LOC tag.
+ * @typedef {{key: string, name: string}} TallyEntry
  */
-export function leaderRows(records) {
-  const rows = new Map();
-  for (const r of records) fold(rows, r.leader, r.leaderName, r);
-  return [...rows.values()].sort((a, b) => b.games - a.games || b.wins - a.wins);
-}
 
 /**
- * Per-civilization table (every civilization led in any age), most played first.
+ * Tally games into one row per key, most played first, then most won. A game that lists the same
+ * key twice counts once, under the first name it gives.
  * @param {ArchiveRecord[]} records
+ * @param {(r: ArchiveRecord) => TallyEntry[]} entriesOf Who each game counts toward.
  * @returns {GroupRow[]}
  */
-export function civRows(records) {
+export function tallyGames(records, entriesOf) {
   const rows = new Map();
-  for (const r of records) {
-    const seen = new Set();
-    for (const c of r.civs) {
-      if (seen.has(c.civ)) continue;
-      seen.add(c.civ);
-      fold(rows, c.civ, c.name, r);
+  for (const rec of records) {
+    const counted = new Set();
+    for (const { key, name } of entriesOf(rec)) {
+      if (counted.has(key)) continue;
+      counted.add(key);
+      fold(rows, key, name, rec);
     }
   }
   return [...rows.values()].sort((a, b) => b.games - a.games || b.wins - a.wins);
 }
+
+/**
+ * A game counts toward the leader who played it.
+ * @param {ArchiveRecord} r @returns {TallyEntry[]}
+ */
+export const byLeader = (r) => [{ key: r.leader, name: r.leaderName }];
+
+/**
+ * A game counts toward every civilization led in any of its ages.
+ * @param {ArchiveRecord} r @returns {TallyEntry[]}
+ */
+export const byCivilization = (r) => r.civs.map((c) => ({ key: c.civ, name: c.name }));
 
 /**
  * @typedef {Object} RecordHolder
@@ -234,10 +255,10 @@ export function civRows(records) {
  */
 function bestBy(records, val, lowest = false) {
   let best = null;
-  for (const r of records) {
-    const v = val(r);
-    if (v <= 0) continue;
-    if (!best || (lowest ? v < val(best) : v > val(best))) best = r;
+  for (const rec of records) {
+    const value = val(rec);
+    if (value <= 0) continue;
+    if (!best || (lowest ? value < val(best) : value > val(best))) best = rec;
   }
   return best;
 }

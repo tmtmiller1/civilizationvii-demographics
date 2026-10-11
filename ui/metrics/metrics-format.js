@@ -8,7 +8,7 @@
 /**
  * Format a number through the engine's locale-aware `Locale.toNumber`, or return
  * `fallback` (the manual English formatting) when that API is unavailable.
- * @param {number} n The value to format.
+ * @param {number} n
  * @param {string} spec A .NET-style numeric format ("0.0", "0.00"); "" for a
  *   plain grouped integer.
  * @param {string} fallback The off-engine result (must match the prior output).
@@ -49,8 +49,8 @@ function localeText(key, fallback) {
  * Format a number with a magnitude suffix, e.g. `1234567` -> `"1.23M"`.
  * Handles negatives and sub-1000 values (no suffix). The mantissa is localized;
  * the suffix tier is a mod convention (the engine does not abbreviate).
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} n
+ * @returns {string}
  */
 export function formatBigNumber(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
@@ -66,8 +66,8 @@ export function formatBigNumber(n) {
 
 /**
  * Format a value as currency, prefixing {@link formatBigNumber} with `$`.
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} n
+ * @returns {string}
  */
 export function formatCurrency(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
@@ -76,8 +76,8 @@ export function formatCurrency(n) {
 
 /**
  * Format an area value as a rounded, grouped count suffixed with ` km²`.
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} n
+ * @returns {string}
  */
 export function formatArea(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
@@ -86,8 +86,8 @@ export function formatArea(n) {
 
 /**
  * Format a value as a rounded integer percentage suffixed with `%`.
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} n
+ * @returns {string}
  */
 export function formatPercent(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
@@ -97,8 +97,8 @@ export function formatPercent(n) {
 
 /**
  * Format a value as a rounded integer with locale-aware thousands grouping.
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} n
+ * @returns {string}
  */
 export function formatCount(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";
@@ -108,8 +108,8 @@ export function formatCount(n) {
 
 /**
  * Format a value as a signed per-turn rate, e.g. `+12.3/turn`.
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} n
+ * @returns {string}
  */
 export function formatSignedRate(n) {
   if (typeof n !== "number" || !isFinite(n)) return "—";

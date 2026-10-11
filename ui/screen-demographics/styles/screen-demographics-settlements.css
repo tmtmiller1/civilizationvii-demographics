@@ -64,7 +64,7 @@
 /* Settlements view
    A live world leaderboard. Two sub-views (showcase / table). Per-owner civ
    colors are set inline (--owner / border-left-color); everything else is the
-   static chrome below, on the shared --dg-ia-* palette. */
+   static chrome below, on the shared --dg-* palette. */
 .demographics-settle-view {
     display: flex;
     flex-direction: column;
@@ -94,24 +94,24 @@
     padding-left: calc(1.1 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.2rem;
-    background-color: var(--dg-ia-frame-bg);
-    color: var(--dg-ia-text-secondary);
+    background-color: var(--dg-frame-bg);
+    color: var(--dg-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-95);
     letter-spacing: 0.02rem;
     cursor: pointer;
 }
 .demographics-settle-subtab.is-active {
-    border-top-color: var(--dg-ia-accent-gold-soft);
-    border-right-color: var(--dg-ia-accent-gold-soft);
-    border-bottom-color: var(--dg-ia-accent-gold-soft);
-    border-left-color: var(--dg-ia-accent-gold-soft);
-    color: var(--dg-ia-accent-gold);
+    border-top-color: var(--dg-accent-gold-soft);
+    border-right-color: var(--dg-accent-gold-soft);
+    border-bottom-color: var(--dg-accent-gold-soft);
+    border-left-color: var(--dg-accent-gold-soft);
+    color: var(--dg-accent-gold);
     background: rgba(243, 195, 76, 0.1);
 }
 
@@ -135,7 +135,7 @@
 }
 
 .demographics-settle-empty {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.7;
     text-align: center;
     padding-top: calc(2 * var(--dg-u));
@@ -151,11 +151,11 @@
     border-radius: 50%;
     border-width: 2px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border-hot);
-    border-right-color: var(--dg-ia-frame-border-hot);
-    border-bottom-color: var(--dg-ia-frame-border-hot);
-    border-left-color: var(--dg-ia-frame-border-hot);
-    background-color: var(--dg-ia-bg-primary);
+    border-top-color: var(--dg-frame-border-hot);
+    border-right-color: var(--dg-frame-border-hot);
+    border-bottom-color: var(--dg-frame-border-hot);
+    border-left-color: var(--dg-frame-border-hot);
+    background-color: var(--dg-bg-primary);
     flex-shrink: 0;
     overflow: hidden;
     display: flex;
@@ -189,14 +189,14 @@
    ".-owner-leader" class is the prominent line and now carries the CIV name, so
    it takes the accent color; ".-owner-civ" is the muted secondary leader line. */
 .demographics-settle-owner-leader {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-size: var(--dg-fs-85);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .demographics-settle-owner-civ {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-72);
     white-space: nowrap;
     overflow: hidden;
@@ -215,17 +215,17 @@
     text-transform: uppercase;
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
 }
 .demographics-settle-badge-city {
-    color: var(--dg-ia-accent-gold);
-    border-top-color: var(--dg-ia-accent-gold-soft);
-    border-right-color: var(--dg-ia-accent-gold-soft);
-    border-bottom-color: var(--dg-ia-accent-gold-soft);
-    border-left-color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold);
+    border-top-color: var(--dg-accent-gold-soft);
+    border-right-color: var(--dg-accent-gold-soft);
+    border-bottom-color: var(--dg-accent-gold-soft);
+    border-left-color: var(--dg-accent-gold-soft);
 }
 .demographics-settle-badge-town {
     color: #9fc3e8;
@@ -256,7 +256,7 @@
     flex-shrink: 0;
 }
 .demographics-settle-output-val {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-95);
 }
 
@@ -291,16 +291,16 @@
     padding-left: calc(1 * var(--dg-u));
     border-width: 2px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-top-width: 4px;
     border-radius: 0.4rem;
     background: linear-gradient(to bottom, rgba(35, 37, 43, 0.95) 0%, rgba(18, 21, 31, 0.95) 100%);
 }
 .demographics-settle-rank-1 {
-    border-top-color: var(--dg-ia-accent-gold);
+    border-top-color: var(--dg-accent-gold);
     margin-bottom: calc(1.5 * var(--dg-u));
     transform: scale(1.07);
     transform-origin: bottom center;
@@ -328,7 +328,7 @@
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-240);
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
     /* nudge the number into the wreath's open center */
     margin-top: calc(-0.15 * var(--dg-u));
@@ -341,7 +341,7 @@
     height: calc(6 * var(--dg-u));
 }
 .demographics-settle-podium-name {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-160);
@@ -351,12 +351,12 @@
 /* Middle line of the Settlement / Civilization / Leader podium hierarchy: the
    owning civ, more prominent than the leader line below it. */
 .demographics-settle-podium-civ {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-size: var(--dg-fs-120);
     margin-top: calc(0.15 * var(--dg-u));
 }
 .demographics-settle-podium-owner {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-105);
     margin-bottom: calc(0.3 * var(--dg-u));
 }
@@ -367,7 +367,7 @@
     column-gap: calc(0.5 * var(--dg-u));
 }
 .demographics-settle-podium-score {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-240);
@@ -387,7 +387,7 @@
     padding-left: calc(0.6 * var(--dg-u));
     text-align: center;
     font-size: var(--dg-fs-95);
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     opacity: 0.9;
 }
 .demographics-settle-list {
@@ -413,14 +413,14 @@
     padding-left: calc(1 * var(--dg-u));
     border-left-width: 3px;
     border-left-style: solid;
-    border-left-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-frame-border);
     background: rgba(20, 16, 10, 0.35);
     border-radius: 0.2rem;
 }
 .demographics-settle-list-rank {
     width: calc(2.8 * var(--dg-u));
     text-align: center;
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-weight: 700;
     font-size: var(--dg-fs-185);
     flex-shrink: 0;
@@ -441,7 +441,7 @@
     column-gap: calc(0.5 * var(--dg-u));
 }
 .demographics-settle-list-name {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-160);
     font-weight: 700;
     white-space: nowrap;
@@ -451,7 +451,7 @@
 /* Owning civilization under a ranked settlement's name (player feedback),
    small and muted so the settlement name stays primary. */
 .demographics-settle-list-civ {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-72);
     opacity: 0.9;
     white-space: nowrap;
@@ -459,7 +459,7 @@
     text-overflow: ellipsis;
 }
 .demographics-settle-list-score {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-weight: 700;
     font-size: var(--dg-fs-185);
     min-width: calc(4 * var(--dg-u));
@@ -476,7 +476,7 @@
 .demographics-settle-bar-fill {
     height: 100%;
     border-radius: 0.25rem;
-    background-color: var(--dg-ia-accent-gold);
+    background-color: var(--dg-accent-gold);
 }
 
 /* Showcase list header (column labels above the ranked list). */
@@ -489,7 +489,7 @@
     padding-right: calc(0.6 * var(--dg-u));
     padding-bottom: calc(0.2 * var(--dg-u));
     padding-left: calc(0.6 * var(--dg-u));
-    color: var(--dg-ia-fxs-header);
+    color: var(--dg-fxs-header);
     font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04rem;
@@ -570,7 +570,7 @@
     margin-left: 0;
 }
 .demographics-settle-section-title-text {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-size: var(--dg-fs-160);
     font-weight: 700;
     text-transform: uppercase;
@@ -594,10 +594,10 @@
     flex-direction: column;
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-divider);
-    border-right-color: var(--dg-ia-divider);
-    border-bottom-color: var(--dg-ia-divider);
-    border-left-color: var(--dg-ia-divider);
+    border-top-color: var(--dg-divider);
+    border-right-color: var(--dg-divider);
+    border-bottom-color: var(--dg-divider);
+    border-left-color: var(--dg-divider);
     border-radius: 0.3rem;
     overflow: hidden;
     /* Fill the available width; flexible columns (below) distribute the extra
@@ -614,7 +614,7 @@
     background: rgba(20, 16, 10, 0.6);
     border-bottom-width: 2px;
     border-bottom-style: solid;
-    border-bottom-color: var(--dg-ia-divider);
+    border-bottom-color: var(--dg-divider);
     padding-top: calc(0.45 * var(--dg-u));
     padding-right: 0;
     padding-bottom: calc(0.45 * var(--dg-u));
@@ -623,7 +623,7 @@
 .demographics-settle-datarow {
     border-left-width: 3px;
     border-left-style: solid;
-    border-left-color: var(--dg-ia-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-bottom: 1px solid rgba(168, 132, 90, 0.15);
     padding-top: calc(0.45 * var(--dg-u));
     padding-right: 0;
@@ -641,7 +641,7 @@
     flex: 1 1 0;
     min-width: 0;
     text-align: center;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-120);
     padding-top: 0;
     padding-right: calc(0.3 * var(--dg-u));
@@ -654,7 +654,7 @@
 }
 .demographics-settle-th {
     cursor: pointer;
-    color: var(--dg-ia-fxs-header);
+    color: var(--dg-fxs-header);
     font-weight: 700;
 }
 /* Output header: icon stacked over its prose label ("Culture" + icon). */
@@ -678,10 +678,10 @@
     background: rgba(243, 195, 76, 0.12);
 }
 .demographics-settle-th.is-sorted {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
 }
 .demographics-settle-scorecell {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-weight: 700;
 }
 .demographics-settle-col-rank {
@@ -736,7 +736,7 @@
     padding-left: calc(0.1 * var(--dg-u));
 }
 .demographics-towns-empty {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.8;
     padding-top: calc(0.6 * var(--dg-u));
     padding-right: calc(0.2 * var(--dg-u));
@@ -758,12 +758,12 @@
     border-bottom: 1px solid rgba(201, 162, 76, 0.15);
 }
 .demographics-towns-row-head {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     border-bottom: 1px solid rgba(243, 195, 76, 0.45);
 }
 .demographics-towns-cell {
     flex: 1 1 0;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     padding-top: calc(0.2 * var(--dg-u));
     padding-right: calc(0.35 * var(--dg-u));
     padding-bottom: calc(0.2 * var(--dg-u));
@@ -806,7 +806,7 @@
     column-gap: calc(0.25 * var(--dg-u));
 }
 .demographics-advisor-card-title {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     border-bottom: 1px solid rgba(201, 162, 76, 0.2);
     padding-bottom: calc(0.2 * var(--dg-u));
     margin-bottom: calc(0.1 * var(--dg-u));
@@ -825,31 +825,31 @@
     column-gap: calc(0.5 * var(--dg-u));
 }
 .demographics-advisor-line-label {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.8;
 }
 .demographics-advisor-line-value {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-weight: 600;
     text-align: right;
 }
 /* Suggestion differs from the town's current focus / upgrade is advised. */
 .demographics-advisor-line-value.is-change {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
 }
 /* Suggestion matches what the town is already doing / keep-as-town. */
 .demographics-advisor-line-value.is-match {
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
 }
 .demographics-advisor-why {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.7;
 }
 
 /* Empire-context header above the advisor cards. */
 .demographics-advisor-empire {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     opacity: 0.9;
     text-align: center;
     margin-top: calc(0.2 * var(--dg-u));
@@ -861,7 +861,7 @@
 
 /* Multi-factor justification list inside a recommendation card. */
 .demographics-advisor-why-list {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.78;
     margin-top: calc(0.25 * var(--dg-u));
     margin-right: 0;
@@ -917,7 +917,7 @@
     margin-bottom: calc(0.1 * var(--dg-u));
     margin-left: 0;
     font-size: var(--dg-fs-105);
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
 }
 .demographics-settle-citypop {
     display: flex;
@@ -927,7 +927,7 @@
 }
 .demographics-settle-citypop-val {
     font-size: var(--dg-fs-105);
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
 }
 .demographics-settle-founded {
     font-size: var(--dg-fs-105);
@@ -953,7 +953,7 @@
 .demographics-settle-trend-flat {
     width: calc(0.44 * var(--dg-u));
     height: calc(0.125 * var(--dg-u));
-    background-color: var(--dg-ia-text-accent);
+    background-color: var(--dg-text-accent);
 }
 
 /* City detail dossier */
@@ -975,13 +975,13 @@
     padding-left: calc(1.2 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.25rem;
-    background-color: var(--dg-ia-frame-bg);
-    color: var(--dg-ia-text-secondary);
+    background-color: var(--dg-frame-bg);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-header {
@@ -995,10 +995,10 @@
     padding-left: calc(0.9 * var(--dg-u));
     border-width: 2px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.4rem;
     background: linear-gradient(to bottom, rgba(35, 37, 43, 0.95) 0%, rgba(18, 21, 31, 0.95) 100%);
 }
@@ -1015,13 +1015,13 @@
     overflow: hidden;
 }
 .demographics-settle-detail-name {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-185);
 }
 .demographics-settle-detail-sub {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-badges {
@@ -1037,12 +1037,12 @@
     flex-shrink: 0;
 }
 .demographics-settle-detail-rank-num {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-weight: 700;
     font-size: var(--dg-fs-120);
 }
 .demographics-settle-detail-score {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-240);
@@ -1061,22 +1061,22 @@
     padding-left: calc(0.7 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.25rem;
-    background-color: var(--dg-ia-frame-bg);
+    background-color: var(--dg-frame-bg);
     min-width: calc(7 * var(--dg-u));
 }
 .demographics-settle-statchip-label {
-    color: var(--dg-ia-fxs-header);
+    color: var(--dg-fxs-header);
     font-size: var(--dg-fs-85);
     text-transform: uppercase;
     letter-spacing: 0.04rem;
 }
 .demographics-settle-statchip-value {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-120);
     font-weight: 700;
     display: flex;
@@ -1095,10 +1095,10 @@
     padding-left: calc(0.2 * var(--dg-u));
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: var(--dg-ia-divider);
+    border-top-color: var(--dg-divider);
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: var(--dg-ia-divider);
+    border-bottom-color: var(--dg-divider);
 }
 .demographics-settle-detail-yield {
     display: flex;
@@ -1107,7 +1107,7 @@
     column-gap: calc(0.25 * var(--dg-u));
 }
 .demographics-settle-detail-yield-val {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-wonders {
@@ -1117,7 +1117,7 @@
     column-gap: calc(0.4 * var(--dg-u));
 }
 .demographics-settle-detail-section-title {
-    color: var(--dg-ia-fxs-header);
+    color: var(--dg-fxs-header);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-105);
@@ -1140,23 +1140,23 @@
     padding-left: calc(0.6 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.25rem;
-    background-color: var(--dg-ia-frame-bg);
+    background-color: var(--dg-frame-bg);
 }
 .demographics-settle-detail-wonder .demographics-settle-wonder-icon {
     width: calc(1.5 * var(--dg-u));
     height: calc(1.5 * var(--dg-u));
 }
 .demographics-settle-detail-wonder-name {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-settle-detail-nowonders {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-size: var(--dg-fs-95);
 }
 
@@ -1176,7 +1176,7 @@
     border: 1px solid rgba(243, 195, 76, 0.6);
     border-radius: 0.35rem;
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.24) 0%, rgba(243, 195, 76, 0.07) 100%);
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-size: var(--dg-fs-95);
     font-weight: 700;
     letter-spacing: 0.02rem;
@@ -1205,7 +1205,7 @@
 .demographics-settle-mapbtn.is-disabled:hover {
     border-color: rgba(243, 195, 76, 0.6);
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.24) 0%, rgba(243, 195, 76, 0.07) 100%);
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
 }
 /* CSS-drawn location pin (no unicode glyph). */
 .demographics-settle-mapbtn-pin {
@@ -1285,10 +1285,10 @@
     padding-left: calc(1.6 * var(--dg-u));
     border-width: 2px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.45rem;
     background: linear-gradient(to bottom, rgba(35, 37, 43, 0.94) 0%, rgba(18, 21, 31, 0.94) 100%);
     text-align: center;
@@ -1313,24 +1313,24 @@
     margin-top: calc(-0.1 * var(--dg-u));
 }
 .demographics-map-overlay-rank {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-160);
 }
 .demographics-map-overlay-name {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-185);
 }
 .demographics-map-overlay-type {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-size: var(--dg-fs-105);
     opacity: 0.9;
 }
 .demographics-map-overlay-owner {
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
     font-size: var(--dg-fs-105);
 }
 /* Congratulatory block (acclaim + accomplishment lines). */
@@ -1341,7 +1341,7 @@
     column-gap: calc(0.3 * var(--dg-u));
 }
 .demographics-map-overlay-congrats-line {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-map-overlay-meta {
@@ -1357,7 +1357,7 @@
     align-items: center;
     row-gap: calc(0.3 * var(--dg-u));
     column-gap: calc(0.3 * var(--dg-u));
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-105);
 }
 .demographics-map-overlay-back {
@@ -1369,7 +1369,7 @@
     border: 2px solid rgba(243, 195, 76, 0.7);
     border-radius: 0.4rem;
     background: linear-gradient(to bottom, rgba(243, 195, 76, 0.28) 0%, rgba(243, 195, 76, 0.09) 100%);
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-family: TitilliumWeb, sans-serif;
     font-weight: 700;
     font-size: var(--dg-fs-120);
@@ -1390,7 +1390,7 @@
 .demographics-map-overlay-acclaim {
     font-size: var(--dg-fs-120);
     line-height: 1.4;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     margin-top: 0;
     margin-right: 0;
     margin-bottom: calc(0.15 * var(--dg-u));
@@ -1408,19 +1408,19 @@
     text-transform: uppercase;
     letter-spacing: 0.08rem;
     font-size: var(--dg-fs-85);
-    color: var(--dg-ia-text-accent);
+    color: var(--dg-text-accent);
 }
 .demographics-map-overlay-flyby-dots {
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-85);
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
 }
 /* "Now showing" wonder caption (name + build year) during the tour. */
 .demographics-map-overlay-caption {
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-120);
     font-weight: 700;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     min-height: calc(1.3 * var(--dg-u));
 }
 /* Secondary flavor sub-line beneath the caption: a quarter's description, the
@@ -1430,7 +1430,7 @@
     font-family: TitilliumWeb, sans-serif;
     font-size: var(--dg-fs-95);
     font-weight: 400;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     opacity: 0.82;
     max-width: calc(30 * var(--dg-u));
     line-height: 1.3;
@@ -1486,7 +1486,7 @@
     /* Vertical divider between the podium and the ranked list. */
     border-right-width: 1px;
     border-right-style: solid;
-    border-right-color: var(--dg-ia-divider);
+    border-right-color: var(--dg-divider);
     padding-right: calc(2 * var(--dg-u));
 }
 /* Grand "Greatest" heading: stack the filigree flourish above and below the title
@@ -1564,7 +1564,7 @@
     padding: 0;
 }
 /* Compact horizontal podium card: [medal+avatar] · [name/owner/meta] · [score].
-   Far shorter than the old vertical card, so the title can't collide with it. */
+   Far shorter than a vertical card, so the title can't collide with it. */
 .demographics-settle-split-left .demographics-settle-podium-card {
     width: 100%;
     flex: 0 0 auto;
@@ -1640,9 +1640,9 @@
     min-width: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-civ {
-    /* Snapped to the type ladder (screen-demographics.js FONT_SIZE_LADDER): the
-       old --dg-fs-135 / --dg-fs-110 steps were never published, so both lines
-       silently fell back to the inherited 16px. */
+    /* Snapped to the type ladder (screen-demographics.js FONT_SIZE_LADDER):
+       off-ladder steps such as --dg-fs-135 / --dg-fs-110 are never published, so
+       a line using one silently falls back to the inherited 16px. */
     font-size: var(--dg-fs-120);
     margin: 0;
     /* One line, like the name above it, so every podium card is the same height
@@ -1654,7 +1654,7 @@
 }
 .demographics-settle-split-left .demographics-settle-podium-owner {
     font-size: var(--dg-fs-105);
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     margin: 0;
 }
 .demographics-settle-split-left .demographics-settle-podium-score {
@@ -1677,15 +1677,30 @@
    its local row .is-local). */
 .demographics-settle-list-row.demographics-settle-medalrow-1,
 .demographics-settle-datarow.demographics-settle-medalrow-1 {
-    background: linear-gradient(95deg, rgba(212, 175, 90, 0.3) 0%, rgba(212, 175, 90, 0.1) 55%, rgba(20, 16, 10, 0.35) 100%);
+    background: linear-gradient(
+        95deg,
+        rgba(212, 175, 90, 0.3) 0%,
+        rgba(212, 175, 90, 0.1) 55%,
+        rgba(20, 16, 10, 0.35) 100%
+    );
 }
 .demographics-settle-list-row.demographics-settle-medalrow-2,
 .demographics-settle-datarow.demographics-settle-medalrow-2 {
-    background: linear-gradient(95deg, rgba(207, 211, 218, 0.24) 0%, rgba(207, 211, 218, 0.08) 55%, rgba(20, 16, 10, 0.35) 100%);
+    background: linear-gradient(
+        95deg,
+        rgba(207, 211, 218, 0.24) 0%,
+        rgba(207, 211, 218, 0.08) 55%,
+        rgba(20, 16, 10, 0.35) 100%
+    );
 }
 .demographics-settle-list-row.demographics-settle-medalrow-3,
 .demographics-settle-datarow.demographics-settle-medalrow-3 {
-    background: linear-gradient(95deg, rgba(205, 127, 71, 0.26) 0%, rgba(205, 127, 71, 0.09) 55%, rgba(20, 16, 10, 0.35) 100%);
+    background: linear-gradient(
+        95deg,
+        rgba(205, 127, 71, 0.26) 0%,
+        rgba(205, 127, 71, 0.09) 55%,
+        rgba(20, 16, 10, 0.35) 100%
+    );
 }
 .demographics-settle-list-row.is-own,
 .demographics-settle-datarow.is-own,
@@ -1746,13 +1761,13 @@
 }
 .demographics-settle-age-note {
     text-align: center;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-95);
     margin-bottom: calc(0.5 * var(--dg-u));
 }
 
-/* Category leaders are marked IN the tables (the separate leader-card strip was
-   removed): the cell of whoever leads a column gets a gold wash, bold gold text and
+/* Category leaders are marked IN the tables (there is no separate leader-card
+   strip): the cell of whoever leads a column gets a gold wash, bold gold text and
    a "World leader in <column>" tooltip. Settlement Rank by Yield, Civilization Rank
    by Yield, and its matrix layout all use it. */
 .demographics-settle-td.is-leader,

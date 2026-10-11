@@ -21,8 +21,8 @@ const STORED_INDEPENDENT_NAMES = new Set(["Villages"]);
 function composeRowName(table, type) {
   try {
     const tag = GameInfo[table]?.lookup?.(type)?.Name;
-    const s = tag ? Locale.compose(tag) : "";
-    return typeof s === "string" && !s.startsWith("LOC_") ? s : "";
+    const text = tag ? Locale.compose(tag) : "";
+    return typeof text === "string" && !text.startsWith("LOC_") ? text : "";
   } catch (_) {
     return ""; // No GameInfo or Locale (main menu, tests): keep the stored name.
   }
@@ -49,9 +49,9 @@ function rowName(table, type, cache) {
  */
 function independentName(cache) {
   if (cache.has("indep")) return /** @type {string} */ (cache.get("indep"));
-  const s = composeTag("LOC_DEMOGRAPHICS_CITY_STATE");
-  cache.set("indep", s);
-  return s;
+  const text = composeTag("LOC_DEMOGRAPHICS_CITY_STATE");
+  cache.set("indep", text);
+  return text;
 }
 
 /**
@@ -72,8 +72,8 @@ function isIndependentName(name, cache) {
  */
 function composeTag(tag) {
   try {
-    const s = Locale.compose(tag);
-    return typeof s === "string" && !s.startsWith("LOC_") ? s : "";
+    const text = Locale.compose(tag);
+    return typeof text === "string" && !text.startsWith("LOC_") ? text : "";
   } catch (_) {
     return ""; // No Locale (tests).
   }
@@ -81,29 +81,29 @@ function composeTag(tag) {
 
 /**
  * Re-read one war roster entry's names from its types.
- * @param {*} e Roster entry ({ civ, leader, civTypeString, leaderType, isCS }).
+ * @param {*} entry Roster entry ({ civ, leader, civTypeString, leaderType, isCS }).
  * @param {Map<string, string>} cache Per-load cache.
  */
-function localizeRosterEntry(e, cache) {
-  if (!e || typeof e !== "object") return;
-  const civ = rowName("Civilizations", e.civTypeString, cache);
-  if (civ) e.civ = civ;
-  else if (!e.civTypeString && isIndependentName(e.civ, cache)) e.civ = independentName(cache) || e.civ;
-  const leader = rowName("Leaders", e.leaderType, cache);
-  if (leader && e.leader) e.leader = leader;
+function localizeRosterEntry(entry, cache) {
+  if (!entry || typeof entry !== "object") return;
+  const civ = rowName("Civilizations", entry.civTypeString, cache);
+  if (civ) entry.civ = civ;
+  else if (!entry.civTypeString && isIndependentName(entry.civ, cache)) entry.civ = independentName(cache) || entry.civ;
+  const leader = rowName("Leaders", entry.leaderType, cache);
+  if (leader && entry.leader) entry.leader = leader;
 }
 
 /**
  * Re-read one sample player's names from its types.
- * @param {*} p Sample player ({ civName, leaderName, civTypeString, leaderTypeString }).
+ * @param {*} player Sample player ({ civName, leaderName, civTypeString, leaderTypeString }).
  * @param {Map<string, string>} cache Per-load cache.
  */
-function localizeSamplePlayer(p, cache) {
-  if (!p || typeof p !== "object") return;
-  const civ = rowName("Civilizations", p.civTypeString, cache);
-  if (civ) p.civName = civ;
-  const leader = rowName("Leaders", p.leaderTypeString, cache);
-  if (leader) p.leaderName = leader;
+function localizeSamplePlayer(player, cache) {
+  if (!player || typeof player !== "object") return;
+  const civ = rowName("Civilizations", player.civTypeString, cache);
+  if (civ) player.civName = civ;
+  const leader = rowName("Leaders", player.leaderTypeString, cache);
+  if (leader) player.leaderName = leader;
 }
 
 /** @param {*} side A war side roster. @returns {*[]} Its entries, or []. */
@@ -111,14 +111,14 @@ const rosterOf = (side) => (Array.isArray(side) ? side : []);
 
 /**
  * Re-read one war's roster names, and its declarer's from the matching roster entry.
- * @param {*} w War record.
+ * @param {*} war War record.
  * @param {Map<string, string>} cache Per-load cache.
  */
-function localizeWar(w, cache) {
-  if (!w || typeof w !== "object") return;
-  const roster = [...rosterOf(w.sideACivs), ...rosterOf(w.sideBCivs)];
-  for (const e of roster) localizeRosterEntry(e, cache);
-  const by = w.declaredBy;
+function localizeWar(war, cache) {
+  if (!war || typeof war !== "object") return;
+  const roster = [...rosterOf(war.sideACivs), ...rosterOf(war.sideBCivs)];
+  for (const entry of roster) localizeRosterEntry(entry, cache);
+  const by = war.declaredBy;
   const src = by && typeof by === "object" ? roster.find((e) => e && e.pid === by.pid) : null;
   if (!src) return;
   if (src.civ) by.civ = src.civ;
@@ -135,9 +135,9 @@ export function localizeStoredNames(history) {
   if (!history || typeof history !== "object") return history;
   /** @type {Map<string, string>} */
   const cache = new Map();
-  for (const s of Array.isArray(history.samples) ? history.samples : []) {
-    for (const p of Object.values((s && s.players) || {})) localizeSamplePlayer(p, cache);
+  for (const sample of Array.isArray(history.samples) ? history.samples : []) {
+    for (const player of Object.values((sample && sample.players) || {})) localizeSamplePlayer(player, cache);
   }
-  for (const w of Array.isArray(history.wars) ? history.wars : []) localizeWar(w, cache);
+  for (const war of Array.isArray(history.wars) ? history.wars : []) localizeWar(war, cache);
   return history;
 }

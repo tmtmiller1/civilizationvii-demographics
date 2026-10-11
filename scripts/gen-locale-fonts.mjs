@@ -35,7 +35,7 @@ function fontList(base, slot) {
 }
 
 /**
- * @param {string} family A rule's font-family value.
+ * @param {string} family
  * @returns {string|null} "title", "body", "keep:<list>" for another leading face, or null when the rule
  *   needs no copy (inherit, or already lists a CJK face).
  */
@@ -69,7 +69,7 @@ function collect() {
   return sel;
 }
 
-/** @returns {string} The generated stylesheet. */
+/** @returns {string} */
 function build() {
   const sel = collect();
   const lines = [

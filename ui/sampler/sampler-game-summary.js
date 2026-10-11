@@ -7,14 +7,9 @@
 // owning player; delta datasets accumulate while level datasets take the latest
 // point up to the turn.
 
-const DBG = false;
-/**
- * Debug logger, no-op unless {@link DBG}.
- * @param {...*} a Values to log.
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.summary]", ...a);
-}
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
+const log = makeLogger("summary");
 
 /**
  * Whether the Game.Summary dataset API is present and callable.
@@ -42,7 +37,7 @@ function objectMap() {
   try {
     for (const o of Game.Summary.getObjects() || []) m.set(o.ID, o);
   } catch (e) {
-    dlog("getObjects threw:", /** @type {*} */ (e)?.message);
+    log.debug("getObjects threw:", /** @type {*} */ (e)?.message);
   }
   return m;
 }
@@ -104,7 +99,7 @@ function getDataSetsSafe(datasetId) {
     const sets = Game.Summary.getDataSets(datasetId);
     return Array.isArray(sets) ? sets : [];
   } catch (e) {
-    dlog("getDataSets(" + datasetId + ") threw:", /** @type {*} */ (e)?.message);
+    log.debug("getDataSets(" + datasetId + ") threw:", /** @type {*} */ (e)?.message);
     return [];
   }
 }
@@ -112,7 +107,7 @@ function getDataSetsSafe(datasetId) {
 /**
  * Fold one dataset's contribution into the per-player accumulator, in place.
  * @param {*} ds One dataset ({owner, values}).
- * @param {Map<*, *>} objs The object map.
+ * @param {Map<*, *>} objs
  * @param {Map<number, number>} out The accumulator (mutated).
  * @param {{scope:"Player"|"City", delta:boolean, turn:number}} spec Reduce spec.
  */
@@ -136,7 +131,7 @@ export function byTypeCounts(datapointId) {
   try {
     dps = Game.Summary.getDataPoints();
   } catch (e) {
-    dlog("getDataPoints threw:", /** @type {*} */ (e)?.message);
+    log.debug("getDataPoints threw:", /** @type {*} */ (e)?.message);
     return out;
   }
   if (!Array.isArray(dps)) return out;
@@ -161,7 +156,7 @@ function dpValid(dp, datapointId) {
 /**
  * Fold one datapoint into the per-player by-type accumulator, in place.
  * @param {*} dp One datapoint ({ID, owner, type, value:{numeric}}).
- * @param {Map<*, *>} objs The object map.
+ * @param {Map<*, *>} objs
  * @param {string} datapointId The datapoint id to match.
  * @param {Map<number, Map<string, number>>} out The accumulator (mutated).
  */

@@ -4,7 +4,8 @@
 // used by chart-line.js. Both marker families render as vertical lines + label
 // pills over the plot area and share the same clipping and age offset table.
 
-import { localeFontFamily, localYear, t } from "/demographics/ui/core/demographics-i18n.js";
+import { localYear, t } from "/demographics/ui/core/demographics-i18n.js";
+import { chartFontFamily } from "/demographics/ui/screen-demographics/charts/shared/chart-style.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import {
@@ -13,18 +14,7 @@ import {
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
-
-/**
- * @param {*} chart
- * @returns {string} The chart font family, with a safe fallback chain.
- */
-function resolveChartFontFamily(chart) {
-  return (
-    chart?.options?.font?.family ||
-    (typeof Chart !== "undefined" && Chart.defaults?.font?.family) ||
-    localeFontFamily("body")
-  );
-}
+import { buildYearToChartTurn } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /**
  * A crisis stage-transition marker.
@@ -57,7 +47,8 @@ function resolveChartFontFamily(chart) {
  * @property {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @property {AgeBoundary[]} boundaries Age boundary table.
  * @property {string} gameSeedStr The game seed string (for flavor names).
- * @property {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => number|undefined} sampleX
+ * @property {(sample: Snapshot, offsets: Map<string, number>, boundaries: AgeBoundary[]) => number|undefined}
+ *   sampleX
  *   Sample → chart-X position resolver.
  */
 
@@ -79,9 +70,9 @@ export function collectCrisisMarkers(metricId, history, crisisCtx) {
   // onset-detection logic lives in one small helper. Label de-overlap is done at
   // draw time (pixel-aware lanes), so collection just gathers markers in order.
   const prevHolder = { prev: -2 }; // sentinel != -1 so first sample is "init"
-  for (const s of history.samples) {
-    const markers = detectCrisisOnset(s, prevHolder, crisisCtx);
-    for (const mk of markers) crisisMarkers.push(mk);
+  for (const sample of history.samples) {
+    const markers = detectCrisisOnset(sample, prevHolder, crisisCtx);
+    for (const marker of markers) crisisMarkers.push(marker);
   }
   return crisisMarkers;
 }
@@ -113,13 +104,13 @@ function shouldSkipCrisisMarkers(metricId, history) {
 /**
  * Detect a crisis stage onset on one sample, advancing the running `prev`
  * stage. Returns a marker on onset, else `null`.
- * @param {Snapshot|*} s
+ * @param {Snapshot|*} sample
  * @param {{ prev: number }} prevHolder Running previous-stage holder (mutated).
  * @param {CrisisCtx} ctx Age offsets/boundaries + seed + sampleX resolver.
  * @returns {CrisisMarker[]}
  */
-function detectCrisisOnset(s, prevHolder, ctx) {
-  const raw = readSampleCrisisStage(s);
+function detectCrisisOnset(sample, prevHolder, ctx) {
+  const raw = readSampleCrisisStage(sample);
   if (raw === undefined) return [];
   const prev = prevHolder.prev;
   // raw is the display value (engine+1): 0..4. A rise from a prior non-negative
@@ -132,7 +123,7 @@ function detectCrisisOnset(s, prevHolder, ctx) {
     // intermediate onset so labels remain complete in historical views.
     const startStage = Math.max(1, prev + 1);
     for (let stage = startStage; stage <= raw; stage++) {
-      markers.push(makeCrisisMarker(s, stage, ctx));
+      markers.push(makeCrisisMarker(sample, stage, ctx));
     }
   }
   if (raw >= 0) prevHolder.prev = raw;
@@ -154,43 +145,43 @@ function playerCrisisStage(players, pid) {
 /**
  * Read the global crisis_stage display value off any one player's metrics in a
  * sample.
- * @param {Snapshot|*} s
- * @returns {number|undefined} The display stage, or `undefined`.
+ * @param {Snapshot|*} sample
+ * @returns {number|undefined} The display stage.
  */
-function readSampleCrisisStage(s) {
+function readSampleCrisisStage(sample) {
   // crisis_stage is a global value stamped on every player's metrics, but scan
   // every row and pick the highest numeric stage so a single stale lower value
   // does not suppress an observed onset marker.
-  const players = s?.players;
+  const players = sample?.players;
   if (!players) return undefined;
   let best = undefined;
   for (const pid of Object.keys(players)) {
-    const v = playerCrisisStage(players, pid);
-    if (v === undefined) continue;
-    if (best === undefined || v > best) best = v;
+    const stage = playerCrisisStage(players, pid);
+    if (stage === undefined) continue;
+    if (best === undefined || stage > best) best = stage;
   }
   return best;
 }
 
 /**
  * Build one {@link CrisisMarker} for a stage onset.
- * @param {Snapshot} s The onset sample.
+ * @param {Snapshot} sample The onset sample.
  * @param {number} raw The display stage value.
  * @param {CrisisCtx} ctx Age offsets/boundaries + seed + sampleX resolver.
  * @returns {CrisisMarker}
  */
-function makeCrisisMarker(s, raw, ctx) {
+function makeCrisisMarker(sample, raw, ctx) {
   const { ageOffsets, boundaries, gameSeedStr, sampleX } = ctx;
   // `raw` is a 1-based stage; clamp into the label/color array.
   const stageIdx = Math.max(0, Math.min(CRISIS_STAGE_LABELS.length - 1, raw - 1));
-  const cx = sampleX(s, ageOffsets, boundaries);
+  const chartX = sampleX(sample, ageOffsets, boundaries);
   return {
-    turn: typeof cx === "number" ? cx : s.turn,
+    turn: typeof chartX === "number" ? chartX : sample.turn,
     stage: raw,
     label: t(CRISIS_STAGE_LABELS[stageIdx]),
     color: CRISIS_STAGE_COLORS[stageIdx],
-    year: s.gameYear || "",
-    crisisName: flavorCrisisName(s, raw, gameSeedStr)
+    year: sample.gameYear || "",
+    crisisName: flavorCrisisName(sample, raw, gameSeedStr)
   };
 }
 
@@ -210,16 +201,18 @@ export function collectAgeMarkers(history, ageOffsets) {
     AGE_EXPLORATION: t("LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS"),
     AGE_MODERN: t("LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS")
   };
-  for (const b of history.ageBoundaries) {
-    if (!b || typeof b.age !== "string") continue;
+  for (const boundary of history.ageBoundaries) {
+    if (!boundary || typeof boundary.age !== "string") continue;
     // The boundary marker sits at the leftmost X of the new age. From the
     // deterministic offset table that's the age's offset + 1 (the new age's
     // first localTurn is 1).
-    const baseOffset = ageOffsets.get(b.age);
+    const baseOffset = ageOffsets.get(boundary.age);
     if (typeof baseOffset !== "number") continue;
     ageMarkers.push({
       turn: baseOffset + 1,
-      label: AGE_NAMES[b.age] || t("LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS", b.age.replace(/^AGE_/, "")),
+      label:
+        AGE_NAMES[boundary.age] ||
+        t("LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS", boundary.age.replace(/^AGE_/, "")),
       color: "#b78cff" // soft purple
     });
   }
@@ -229,19 +222,24 @@ export function collectAgeMarkers(history, ageOffsets) {
 /**
  * Measure a crisis marker's label pill (text lines + box size).
  * @param {*} ctx2
- * @param {CrisisMarker} mk
+ * @param {CrisisMarker} marker
  * @param {string} family
  * @returns {{ stageText: string, nameText: string, pillW: number,
- *   pillH: number }} The pill metrics.
+ *   pillH: number }}
  */
-function measureCrisisPill(ctx2, mk, family) {
-  const stageText = mk.label + (mk.year ? " · " + localYear(mk.year) : "");
-  const nameText = mk.crisisName || "";
+function measureCrisisPill(ctx2, marker, family) {
+  const stageText = marker.label + (marker.year ? " · " + localYear(marker.year) : "");
+  const nameText = marker.crisisName || "";
   ctx2.font = "17px " + family;
   const stageW = ctx2.measureText(stageText).width;
   ctx2.font = "14px " + family;
   const nameW = nameText ? ctx2.measureText(nameText).width : 0;
-  return { stageText, nameText, pillW: Math.max(stageW, nameW) + 10, pillH: nameText ? 38 : 24 };
+  return {
+    stageText,
+    nameText,
+    pillW: Math.max(stageW, nameW) + 10,
+    pillH: nameText ? 38 : 24
+  };
 }
 
 /**
@@ -255,10 +253,10 @@ function measureCrisisPill(ctx2, mk, family) {
 export function maxCrisisPillWidth(chart, markers) {
   if (!chart || !chart.ctx || !markers || markers.length === 0) return 0;
   const ctx2 = chart.ctx;
-  const family = resolveChartFontFamily(chart);
+  const family = chartFontFamily(chart);
   let max = 0;
-  for (const mk of markers) {
-    const { pillW } = measureCrisisPill(ctx2, mk, family);
+  for (const marker of markers) {
+    const { pillW } = measureCrisisPill(ctx2, marker, family);
     if (pillW > max) max = pillW;
   }
   return max;
@@ -273,19 +271,18 @@ export function maxCrisisPillWidth(chart, markers) {
  * @param {*} xScale The Chart.js x scale.
  * @param {number} right Plot-area right edge.
  * @param {string} family
- * @returns {{ mk: CrisisMarker, x: number, dx: number, lane: number,
+ * @returns {{ marker: CrisisMarker, x: number, dx: number, lane: number,
  *   pillW: number, pillH: number, stageText: string, nameText: string }[]}
- *   The layouts.
  */
 function layoutCrisisMarkers(ctx2, markers, xScale, right, family) {
   const items = [];
-  for (const mk of markers) {
-    if (mk.turn < xScale.min || mk.turn > xScale.max) continue;
-    const x = xScale.getPixelForValue(mk.turn);
-    const m = measureCrisisPill(ctx2, mk, family);
+  for (const marker of markers) {
+    if (marker.turn < xScale.min || marker.turn > xScale.max) continue;
+    const x = xScale.getPixelForValue(marker.turn);
+    const pill = measureCrisisPill(ctx2, marker, family);
     // Flip the pill left of the line when it would overflow the right edge.
-    const dx = x + 4 + m.pillW > right ? -(m.pillW + 4) : 4;
-    items.push({ mk, x, dx, lane: 0, ...m });
+    const dx = x + 4 + pill.pillW > right ? -(pill.pillW + 4) : 4;
+    items.push({ marker, x, dx, lane: 0, ...pill });
   }
   items.sort((a, b) => a.x - b.x);
   assignCrisisLanes(items);
@@ -301,12 +298,12 @@ function layoutCrisisMarkers(ctx2, markers, xScale, right, family) {
 function assignCrisisLanes(items) {
   /** @type {number[]} */
   const laneRight = []; // right pixel each lane is occupied to
-  for (const it of items) {
-    const left = it.x + it.dx;
+  for (const item of items) {
+    const left = item.x + item.dx;
     let lane = 0;
     while (lane < laneRight.length && laneRight[lane] > left) lane++;
-    it.lane = lane;
-    laneRight[lane] = left + it.pillW + 2; // +2px gap
+    item.lane = lane;
+    laneRight[lane] = left + item.pillW + 2; // +2px gap
   }
 }
 
@@ -314,26 +311,26 @@ function assignCrisisLanes(items) {
  * Draw one crisis marker layout: its vertical line + the two-line label pill at
  * its assigned lane.
  * @param {*} ctx2
- * @param {*} L The marker layout (from {@link layoutCrisisMarkers}).
+ * @param {*} layout The marker layout (from {@link layoutCrisisMarkers}).
  * @param {number} top Plot-area top.
  * @param {number} bottom Plot-area bottom.
  * @param {string} family
  */
-function drawCrisisMarkerLayout(ctx2, L, top, bottom, family) {
+function drawCrisisMarkerLayout(ctx2, layout, top, bottom, family) {
   ctx2.save();
-  ctx2.strokeStyle = L.mk.color;
+  ctx2.strokeStyle = layout.marker.color;
   ctx2.lineWidth = 1.4;
   ctx2.setLineDash([4, 3]);
   ctx2.globalAlpha = 0.85;
   ctx2.beginPath();
-  ctx2.moveTo(L.x, top);
-  ctx2.lineTo(L.x, bottom);
+  ctx2.moveTo(layout.x, top);
+  ctx2.lineTo(layout.x, bottom);
   ctx2.stroke();
   ctx2.setLineDash([]);
   // Stage line on top (marker color), formal crisis name below (cream), in a
   // background pill, dropped to this marker's lane so it never hides a neighbor.
-  const stackY = top + 6 + L.lane * (L.pillH + 4);
-  drawCrisisLabel(ctx2, L, stackY, family);
+  const stackY = top + 6 + layout.lane * (layout.pillH + 4);
+  drawCrisisLabel(ctx2, layout, stackY, family);
   ctx2.restore();
 }
 
@@ -341,45 +338,45 @@ function drawCrisisMarkerLayout(ctx2, L, top, bottom, family) {
  * Draw a crisis marker's label pill: a dark background, the stage text in the
  * marker color, and (when present) the formal crisis name in cream below.
  * @param {*} ctx2 The 2D canvas context (already saved/translated by caller).
- * @param {*} L The per-marker layout (x/dx/lane/pill size/text/color).
+ * @param {*} layout The per-marker layout (x/dx/lane/pill size/text/color).
  * @param {number} stackY The lane-stacked y offset.
  * @param {string} family
  */
-function drawCrisisLabel(ctx2, L, stackY, family) {
-  ctx2.translate(L.x + L.dx, stackY);
+function drawCrisisLabel(ctx2, layout, stackY, family) {
+  ctx2.translate(layout.x + layout.dx, stackY);
   ctx2.fillStyle = "rgba(20, 16, 10, 0.85)";
-  ctx2.fillRect(0, 0, L.pillW, L.pillH);
+  ctx2.fillRect(0, 0, layout.pillW, layout.pillH);
   ctx2.font = "17px " + family;
-  ctx2.fillStyle = L.mk.color;
-  ctx2.fillText(L.stageText, 5, 18);
-  if (L.nameText) {
+  ctx2.fillStyle = layout.marker.color;
+  ctx2.fillText(layout.stageText, 5, 18);
+  if (layout.nameText) {
     ctx2.font = "14px " + family;
     ctx2.fillStyle = "#e5d2ac";
-    ctx2.fillText(L.nameText, 5, 34);
+    ctx2.fillText(layout.nameText, 5, 34);
   }
 }
 
 /**
  * Build the crisis-marker Chart.js plugin: vertical lines + labels at each
  * crisis stage onset, respecting the active x-scale range.
- * @param {CrisisMarker[]} crisisMarkers The markers to draw.
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @param {CrisisMarker[]} crisisMarkers
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeCrisisMarkerPlugin(crisisMarkers) {
   return {
     id: "demographicsCrisisMarkers",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    afterDatasetsDraw(c) {
+    afterDatasetsDraw(chart) {
       if (!crisisMarkers || crisisMarkers.length === 0) return;
-      const xScale = c.scales.x;
-      if (!xScale || !c.chartArea) return;
-      const ctx2 = c.ctx;
-      const { top, bottom, right } = c.chartArea;
-      const family = resolveChartFontFamily(c);
+      const xScale = chart.scales.x;
+      if (!xScale || !chart.chartArea) return;
+      const ctx2 = chart.ctx;
+      const { top, bottom, right } = chart.chartArea;
+      const family = chartFontFamily(chart);
       const layouts = layoutCrisisMarkers(ctx2, crisisMarkers, xScale, right, family);
-      for (const L of layouts) drawCrisisMarkerLayout(ctx2, L, top, bottom, family);
+      for (const layout of layouts) drawCrisisMarkerLayout(ctx2, layout, top, bottom, family);
     }
   };
 }
@@ -387,28 +384,28 @@ export function makeCrisisMarkerPlugin(crisisMarkers) {
 /**
  * Build the age-boundary-marker Chart.js plugin: purple long-dash lines +
  * labels at each age transition.
- * @param {AgeMarker[]} ageMarkers The markers to draw.
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @param {AgeMarker[]} ageMarkers
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeAgeMarkerPlugin(ageMarkers) {
   return {
     id: "demographicsAgeMarkers",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    afterDatasetsDraw(c) {
+    afterDatasetsDraw(chart) {
       if (!ageMarkers || ageMarkers.length === 0) return;
-      const xScale = c.scales.x;
-      if (!xScale || !c.chartArea) return;
-      const ctx2 = c.ctx;
-      const { top, bottom, right } = c.chartArea;
-      const family = resolveChartFontFamily(c);
-      for (const mk of ageMarkers) {
-        if (mk.turn < xScale.min || mk.turn > xScale.max) continue;
-        const x = xScale.getPixelForValue(mk.turn);
+      const xScale = chart.scales.x;
+      if (!xScale || !chart.chartArea) return;
+      const ctx2 = chart.ctx;
+      const { top, bottom, right } = chart.chartArea;
+      const family = chartFontFamily(chart);
+      for (const marker of ageMarkers) {
+        if (marker.turn < xScale.min || marker.turn > xScale.max) continue;
+        const x = xScale.getPixelForValue(marker.turn);
         ctx2.save();
-        strokeAgeLine(ctx2, mk, x, top, bottom);
-        drawAgeLabel(ctx2, mk, x, { top, bottom, right, family });
+        strokeAgeLine(ctx2, marker, x, top, bottom);
+        drawAgeLabel(ctx2, marker, x, { top, bottom, right, family });
         ctx2.restore();
       }
     }
@@ -418,20 +415,20 @@ export function makeAgeMarkerPlugin(ageMarkers) {
 /**
  * Stroke an age boundary's vertical long-dash line (caller has saved the ctx).
  * @param {*} ctx2
- * @param {AgeMarker} mk
+ * @param {AgeMarker} marker
  * @param {number} x The marker pixel x.
  * @param {number} top Chart-area top.
  * @param {number} bottom Chart-area bottom.
  */
-function strokeAgeLine(ctx2, mk, x, top, bottom) {
-  ctx2.strokeStyle = mk.color;
+function strokeAgeLine(ctx2, marker, x, top, bottom) {
+  ctx2.strokeStyle = marker.color;
   ctx2.lineWidth = 2.8;
   // Long-dash pattern (different from crisis [4,3]) so the two marker types are
   // distinguishable beyond color alone.
   ctx2.setLineDash([8, 4]);
   ctx2.globalAlpha = 1;
   // Soft glow so the age boundary reads as a major, highlighted divider.
-  ctx2.shadowColor = mk.color;
+  ctx2.shadowColor = marker.color;
   ctx2.shadowBlur = 7;
   ctx2.beginPath();
   ctx2.moveTo(x, top);
@@ -446,14 +443,14 @@ function strokeAgeLine(ctx2, mk, x, top, bottom) {
  * right edge. Anchored to the bottom of the plot so it never collides with the
  * crisis labels, which stack from the top.
  * @param {*} ctx2
- * @param {AgeMarker} mk
+ * @param {AgeMarker} marker
  * @param {number} x The marker pixel x.
  * @param {{ top: number, bottom: number, right: number, family: string }} area
  *   Chart-area top/bottom/right + font.
  */
-function drawAgeLabel(ctx2, mk, x, area) {
+function drawAgeLabel(ctx2, marker, x, area) {
   ctx2.font = "17px " + area.family;
-  const pillW = ctx2.measureText(mk.label).width + 16;
+  const pillW = ctx2.measureText(marker.label).width + 16;
   const pillH = 24;
   const dx = x + 4 + pillW > area.right ? -(pillW + 4) : 4;
   ctx2.translate(x + dx, area.bottom - pillH - 6);
@@ -461,12 +458,12 @@ function drawAgeLabel(ctx2, mk, x, area) {
   // prominent, highlighted chip (matching the crisis-label treatment).
   ctx2.fillStyle = "rgba(20, 16, 10, 0.9)";
   ctx2.fillRect(0, 0, pillW, pillH);
-  ctx2.fillStyle = mk.color;
+  ctx2.fillStyle = marker.color;
   ctx2.fillRect(0, 0, 3, pillH);
   // Cream label text (matching the crisis-name pill) so the age divider reads as
   // a clear category chip rather than low-contrast purple-on-dark.
   ctx2.fillStyle = "#e5d2ac";
-  ctx2.fillText(mk.label, 9, 17);
+  ctx2.fillText(marker.label, 9, 17);
 }
 
 // Refugees-chart event markers: war + disaster onsets
@@ -480,7 +477,7 @@ const REFUGEE_DISASTER_COLOR = "#e0a458"; // amber, disaster onsets
 /**
  * Read the `showWarMarkers` setting (default on): the Options toggle for the Refugees chart's war
  * onset markers, mirroring the wonder-markers filter.
- * @returns {boolean} Whether to show the war onset markers.
+ * @returns {boolean}
  */
 export function shouldShowWarMarkers() {
   try {
@@ -494,7 +491,7 @@ export function shouldShowWarMarkers() {
 /**
  * Read the `showDisasterMarkers` setting (default on): the Options toggle for the Refugees chart's
  * disaster onset markers (independent of the war-markers toggle).
- * @returns {boolean} Whether to show the disaster onset markers.
+ * @returns {boolean}
  */
 export function shouldShowDisasterMarkers() {
   try {
@@ -502,23 +499,6 @@ export function shouldShowDisasterMarkers() {
   } catch (_) {
     return true;
   }
-}
-
-/**
- * Build a game-year → chart-X (chartTurn) map from the sample stream, so an event carrying only a
- * year label can be placed on the continuous timeline.
- * @param {Snapshot[]|*[]} samples
- * @returns {Map<string, number>} game-year → chartTurn.
- */
-function buildYearToChartTurn(samples) {
-  /** @type {Map<string, number>} */
-  const m = new Map();
-  for (const s of samples) {
-    if (s && typeof s.gameYear === "string" && typeof s.chartTurn === "number" && !m.has(s.gameYear)) {
-      m.set(s.gameYear, s.chartTurn);
-    }
-  }
-  return m;
 }
 
 /**
@@ -546,9 +526,13 @@ function resolveEventX(chartVal, year, localVal, yearToChart) {
 function warStartChartTurn(war, fronts) {
   if (!war._merged) return war.startChartTurn;
   const members = new Set(war.participants || []);
-  const roster = (/** @type {*} */ r) => (Array.isArray(r) ? r : []);
-  const first = fronts.find((f) => f.startTurn === war.startTurn && f.startYear === war.startYear &&
-    [...roster(f.sideACivs), ...roster(f.sideBCivs)].every((c) => members.has(c?.pid)));
+  const roster = (/** @type {*} */ civs) => (Array.isArray(civs) ? civs : []);
+  const first = fronts.find(
+    (front) =>
+      front.startTurn === war.startTurn &&
+      front.startYear === war.startYear &&
+      [...roster(front.sideACivs), ...roster(front.sideBCivs)].every((civ) => members.has(civ?.pid))
+  );
   return first ? first.startChartTurn : undefined;
 }
 
@@ -583,11 +567,11 @@ function namedWars(history, samples) {
 function collectWarOnsetMarkers(history, yearToChart, out) {
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
   const { fronts, wars, names } = namedWars(history, samples);
-  for (const w of wars) {
-    const x = resolveEventX(warStartChartTurn(w, fronts), w.startYear, w.startTurn, yearToChart);
+  for (const war of wars) {
+    const x = resolveEventX(warStartChartTurn(war, fronts), war.startYear, war.startTurn, yearToChart);
     if (x === null) continue;
-    const label = names.get(w.warUniqueID) || t("LOC_DEMOGRAPHICS_MARKER_WAR");
-    out.push({ turn: x, label, year: w.startYear || "", color: REFUGEE_WAR_COLOR });
+    const label = names.get(war.warUniqueID) || t("LOC_DEMOGRAPHICS_MARKER_WAR");
+    out.push({ turn: x, label, year: war.startYear || "", color: REFUGEE_WAR_COLOR });
   }
 }
 
@@ -605,14 +589,14 @@ function collectDisasterMarkers(yearToChart, out) {
   } catch (_) {
     events = [];
   }
-  for (const d of events || []) {
-    if (!d) continue;
-    const x = resolveEventX(undefined, d.year, d.turn, yearToChart);
+  for (const disaster of events || []) {
+    if (!disaster) continue;
+    const x = resolveEventX(undefined, disaster.year, disaster.turn, yearToChart);
     if (x === null) continue;
     out.push({
       turn: x,
-      label: d.name || t("LOC_DEMOGRAPHICS_MARKER_DISASTER"),
-      year: d.year || "",
+      label: disaster.name || t("LOC_DEMOGRAPHICS_MARKER_DISASTER"),
+      year: disaster.year || "",
       color: REFUGEE_DISASTER_COLOR
     });
   }
@@ -650,14 +634,14 @@ export function collectRefugeeEventMarkers(metricId, history) {
  */
 function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
   const items = [];
-  for (const mk of markers) {
-    if (mk.turn < xScale.min || mk.turn > xScale.max) continue;
-    const x = xScale.getPixelForValue(mk.turn);
-    const text = mk.label + (mk.year ? " · " + localYear(mk.year) : "");
+  for (const marker of markers) {
+    if (marker.turn < xScale.min || marker.turn > xScale.max) continue;
+    const x = xScale.getPixelForValue(marker.turn);
+    const text = marker.label + (marker.year ? " · " + localYear(marker.year) : "");
     ctx2.font = "15px " + family;
     const pillW = ctx2.measureText(text).width + 14;
     const dx = x + 4 + pillW > right ? -(pillW + 4) : 4;
-    items.push({ mk, x, dx, lane: 0, pillW, pillH: 22, text });
+    items.push({ marker, x, dx, lane: 0, pillW, pillH: 22, text });
   }
   items.sort((a, b) => a.x - b.x);
   assignRefugeeLanes(items);
@@ -671,12 +655,12 @@ function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
 function assignRefugeeLanes(items) {
   /** @type {number[]} */
   const laneRight = [];
-  for (const it of items) {
-    const left = it.x + it.dx;
+  for (const item of items) {
+    const left = item.x + item.dx;
     let lane = 0;
     while (lane < laneRight.length && laneRight[lane] > left) lane++;
-    it.lane = lane;
-    laneRight[lane] = left + it.pillW + 2; // +2px gap
+    item.lane = lane;
+    laneRight[lane] = left + item.pillW + 2; // +2px gap
   }
 }
 
@@ -684,24 +668,24 @@ function assignRefugeeLanes(items) {
  * Draw one refugee event marker: a dashed vertical line in its color + a single-line "name · year"
  * pill (dark background, colored left accent bar, cream text) at its assigned lane.
  * @param {*} ctx2
- * @param {*} L The marker layout (from {@link layoutRefugeeMarkers}).
+ * @param {*} layout The marker layout (from {@link layoutRefugeeMarkers}).
  * @param {number} top Plot-area top.
  * @param {number} bottom Plot-area bottom.
  * @param {string} family
  */
-function drawRefugeeMarkerLayout(ctx2, L, top, bottom, family) {
+function drawRefugeeMarkerLayout(ctx2, layout, top, bottom, family) {
   ctx2.save();
-  ctx2.strokeStyle = L.mk.color;
+  ctx2.strokeStyle = layout.marker.color;
   ctx2.lineWidth = 1.4;
   ctx2.setLineDash([4, 3]);
   ctx2.globalAlpha = 0.85;
   ctx2.beginPath();
-  ctx2.moveTo(L.x, top);
-  ctx2.lineTo(L.x, bottom);
+  ctx2.moveTo(layout.x, top);
+  ctx2.lineTo(layout.x, bottom);
   ctx2.stroke();
   ctx2.setLineDash([]);
   ctx2.globalAlpha = 1;
-  drawRefugeeLabel(ctx2, L, top + 6 + L.lane * (L.pillH + 4), family);
+  drawRefugeeLabel(ctx2, layout, top + 6 + layout.lane * (layout.pillH + 4), family);
   ctx2.restore();
 }
 
@@ -709,43 +693,43 @@ function drawRefugeeMarkerLayout(ctx2, L, top, bottom, family) {
  * Draw a refugee marker's label pill (dark background, colored left accent bar, cream "name ·
  * year").
  * @param {*} ctx2 The 2D canvas context (already saved by the caller).
- * @param {*} L The per-marker layout (x/dx/pill size/text/color).
+ * @param {*} layout The per-marker layout (x/dx/pill size/text/color).
  * @param {number} stackY The lane-stacked y offset.
  * @param {string} family
  */
-function drawRefugeeLabel(ctx2, L, stackY, family) {
-  ctx2.translate(L.x + L.dx, stackY);
+function drawRefugeeLabel(ctx2, layout, stackY, family) {
+  ctx2.translate(layout.x + layout.dx, stackY);
   ctx2.fillStyle = "rgba(20, 16, 10, 0.85)";
-  ctx2.fillRect(0, 0, L.pillW, L.pillH);
-  ctx2.fillStyle = L.mk.color;
-  ctx2.fillRect(0, 0, 3, L.pillH); // colored left accent bar
+  ctx2.fillRect(0, 0, layout.pillW, layout.pillH);
+  ctx2.fillStyle = layout.marker.color;
+  ctx2.fillRect(0, 0, 3, layout.pillH); // colored left accent bar
   ctx2.font = "15px " + family;
   ctx2.fillStyle = "#e5d2ac";
-  ctx2.fillText(L.text, 8, 16);
+  ctx2.fillText(layout.text, 8, 16);
 }
 
 /**
  * Build the refugees-chart event-marker Chart.js plugin: dashed vertical lines + "name · year"
  * label pills at each war / disaster onset, lane-stacked from the top, clipped to the active
  * x-scale range.
- * @param {{turn:number, label:string, year:string, color:string}[]} markers The markers to draw.
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @param {{turn:number, label:string, year:string, color:string}[]} markers
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeRefugeeEventMarkerPlugin(markers) {
   return {
     id: "demographicsRefugeeEventMarkers",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    afterDatasetsDraw(c) {
+    afterDatasetsDraw(chart) {
       if (!markers || markers.length === 0) return;
-      const xScale = c.scales.x;
-      if (!xScale || !c.chartArea) return;
-      const ctx2 = c.ctx;
-      const { top, bottom, right } = c.chartArea;
-      const family = resolveChartFontFamily(c);
+      const xScale = chart.scales.x;
+      if (!xScale || !chart.chartArea) return;
+      const ctx2 = chart.ctx;
+      const { top, bottom, right } = chart.chartArea;
+      const family = chartFontFamily(chart);
       const layouts = layoutRefugeeMarkers(ctx2, markers, xScale, right, family);
-      for (const L of layouts) drawRefugeeMarkerLayout(ctx2, L, top, bottom, family);
+      for (const layout of layouts) drawRefugeeMarkerLayout(ctx2, layout, top, bottom, family);
     }
   };
 }

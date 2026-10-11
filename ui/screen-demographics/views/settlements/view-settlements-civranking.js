@@ -3,15 +3,14 @@
 // Civilization-ranking sub-view rendering for the Settlements view.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { div, fmt, fmtPop, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { div, formatRounded, formatPopulation, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
-import {
-  SETTLEMENT_OUTPUTS
-} from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
+import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 import {
   buildRankCell,
   rankedRowClass
 } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
+import { finiteOrZero } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
 /**
  * @typedef {{
@@ -19,9 +18,9 @@ import {
  *   buildSectionTitle: (key: string) => HTMLElement,
  *   buildListHeader: (nameKey?: string) => HTMLElement,
  *   buildOwnerAvatar: (owner: *) => HTMLElement,
- *   buildOutputStrip: (s: *) => HTMLElement,
+ *   buildOutputStrip: (settlement: *) => HTMLElement,
  *   buildLaurelMedal: (place: number) => HTMLElement,
- *   buildCameraButtons: (s: *, st: *) => (HTMLElement|null),
+ *   buildCameraButtons: (settlement: *, state: *) => (HTMLElement|null),
  *   maskOwner: (owner: *) => *
  * }} CivRankingDeps
  */
@@ -30,17 +29,17 @@ import {
  * Fold one settlement into its owner civ's cumulative aggregate (major civs
  * only). Sums composite score, settlement count, population, and every output.
  * @param {Record<string, *>} map
- * @param {*} s The settlement.
+ * @param {*} settlement
  */
-function aggregateCiv(map, s) {
-  if (!s.owner || !s.owner.isMajor) return;
-  const pid = typeof s.owner.pid === "number" ? s.owner.pid : -1;
-  const c = map[pid] || (map[pid] = newCivAgg(pid, s.owner));
-  c.count += 1;
-  c.populationEstimate += num(s.populationEstimate);
-  if (s.isCapital && !c.capital) c.capital = s;
+function aggregateCiv(map, settlement) {
+  if (!settlement.owner || !settlement.owner.isMajor) return;
+  const pid = typeof settlement.owner.pid === "number" ? settlement.owner.pid : -1;
+  const civ = map[pid] || (map[pid] = newCivAgg(pid, settlement.owner));
+  civ.count += 1;
+  civ.populationEstimate += finiteOrZero(settlement.populationEstimate);
+  if (settlement.isCapital && !civ.capital) civ.capital = settlement;
   for (const col of SETTLEMENT_OUTPUTS) {
-    c.outputs[col.id] = (c.outputs[col.id] || 0) + num(s.outputs[col.id]);
+    civ.outputs[col.id] = (civ.outputs[col.id] || 0) + finiteOrZero(settlement.outputs[col.id]);
   }
 }
 
@@ -48,7 +47,7 @@ function aggregateCiv(map, s) {
  * A fresh civ aggregate record.
  * @param {number} pid
  * @param {*} owner
- * @returns {*} The empty aggregate.
+ * @returns {*}
  */
 function newCivAgg(pid, owner) {
   return {
@@ -65,15 +64,6 @@ function newCivAgg(pid, owner) {
 }
 
 /**
- * A finite number, or 0.
- * @param {*} v
- * @returns {number} The number, or 0.
- */
-function num(v) {
-  return typeof v === "number" && isFinite(v) ? v : 0;
-}
-
-/**
  * A civ's total output: the sum of its settlements' economic yields (food,
  * production, gold, science, culture). Population/happiness and wonder count
  * are excluded.
@@ -83,7 +73,7 @@ function num(v) {
 function civTotalOutput(outputs) {
   let total = 0;
   for (const col of SETTLEMENT_OUTPUTS) {
-    if (col.composite && col.yt) total += num(outputs[col.id]);
+    if (col.composite && col.yieldType) total += finiteOrZero(outputs[col.id]);
   }
   return total;
 }
@@ -96,9 +86,9 @@ function civTotalOutput(outputs) {
 function buildCivBoard(settlements) {
   /** @type {Record<string, *>} */
   const map = {};
-  for (const s of settlements) aggregateCiv(map, s);
-  const civs = Object.keys(map).map((k) => map[k]);
-  for (const c of civs) c.score = civTotalOutput(c.outputs);
+  for (const settlement of settlements) aggregateCiv(map, settlement);
+  const civs = Object.keys(map).map((key) => map[key]);
+  for (const civ of civs) civ.score = civTotalOutput(civ.outputs);
   civs.sort((a, b) => b.score - a.score);
   const max = civs.length ? civs[0].score : 0;
   for (let i = 0; i < civs.length; i++) {
@@ -117,56 +107,58 @@ function buildCivBoard(settlements) {
 function markOutputLeaders(civs) {
   for (const col of SETTLEMENT_OUTPUTS) {
     let best = null;
-    for (const c of civs) if (!best || num(c.outputs[col.id]) > num(best.outputs[col.id])) best = c;
+    for (const civ of civs) {
+      if (!best || finiteOrZero(civ.outputs[col.id]) > finiteOrZero(best.outputs[col.id])) best = civ;
+    }
     if (best) best.ranks[col.id] = 1;
   }
 }
 
 /**
  * Obscure an unmet civ's identity when "hide unmet players" is on.
- * @param {*} st
- * @param {*} c The civ aggregate.
+ * @param {*} state
+ * @param {*} civ
  * @param {CivRankingDeps} deps
  * @returns {*} The civ to render (masked clone when applicable).
  */
-function civDisplay(st, c, deps) {
-  if (st.showUnmetNames || !c.owner || c.owner.met !== false) return c;
-  return Object.assign({}, c, {
+function civDisplay(state, civ, deps) {
+  if (state.showUnmetNames || !civ.owner || civ.owner.met !== false) return civ;
+  return Object.assign({}, civ, {
     name: t("LOC_DEMOGRAPHICS_UNMET_CIV"),
-    owner: deps.maskOwner(c.owner),
+    owner: deps.maskOwner(civ.owner),
     masked: true
   });
 }
 
 /**
  * Build a civ's score bar (fill = score% of the leader; owner-colored).
- * @param {*} c The civ aggregate.
+ * @param {*} civ
  * @returns {HTMLElement}
  */
-function buildCivScoreBar(c) {
+function buildCivScoreBar(civ) {
   const bar = div("demographics-settle-bar");
   const fill = div("demographics-settle-bar-fill");
-  fill.style.width = Math.max(0, Math.min(100, c.scorePct)) + "%";
+  fill.style.width = Math.max(0, Math.min(100, civ.scorePct)) + "%";
   fill.style.backgroundColor =
-    c.owner.readable || c.owner.primary || "rgba(243, 195, 76, 0.85)";
+    civ.owner.readable || civ.owner.primary || "rgba(243, 195, 76, 0.85)";
   bar.appendChild(fill);
   return bar;
 }
 
 /**
  * Build a civ meta line: total population + settlement count.
- * @param {*} c The civ aggregate.
+ * @param {*} civ
  * @returns {HTMLElement}
  */
-function buildCivMeta(c) {
+function buildCivMeta(civ) {
   const meta = div("demographics-settle-citymeta");
   const pop = div("demographics-settle-citypop");
   pop.appendChild(iconEl("blp:Yield_Population", "demographics-settle-yield-icon"));
-  pop.appendChild(div("demographics-settle-citypop-val", fmtPop(c.populationEstimate)));
+  pop.appendChild(div("demographics-settle-citypop-val", formatPopulation(civ.populationEstimate)));
   meta.appendChild(pop);
   const cities = div("demographics-settle-citypop");
   cities.appendChild(iconEl("blp:Yield_Cities", "demographics-settle-yield-icon"));
-  cities.appendChild(div("demographics-settle-citypop-val", String(c.count)));
+  cities.appendChild(div("demographics-settle-citypop-val", String(civ.count)));
   meta.appendChild(cities);
   return meta;
 }
@@ -175,88 +167,88 @@ function buildCivMeta(c) {
  * Build a civ podium card's body column, line for line the Top 25 podium
  * card's: civ name, "Capital: <city>", leader, population + settlement count,
  * and the capital's map + cinematic buttons (disabled for an unmet civ).
- * @param {*} c The (display) civ aggregate.
- * @param {*} st
+ * @param {*} civ The (display) civ aggregate.
+ * @param {*} state
  * @param {CivRankingDeps} deps
  * @returns {HTMLElement}
  */
-function buildCivPodiumBody(c, st, deps) {
+function buildCivPodiumBody(civ, state, deps) {
   const body = div("demographics-settle-podium-body");
-  body.appendChild(div("demographics-settle-podium-name", c.name));
-  if (c.capital) {
-    const capName = c.masked ? t("LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME") : c.capital.name;
+  body.appendChild(div("demographics-settle-podium-name", civ.name));
+  if (civ.capital) {
+    const capName = civ.masked ? t("LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME") : civ.capital.name;
     body.appendChild(div("demographics-settle-podium-civ", t("LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF", capName)));
   }
-  body.appendChild(div("demographics-settle-podium-owner", orderedNames(c.owner.leaderName, c.owner.civName)[1]));
-  body.appendChild(buildCivMeta(c));
-  const cams = c.capital ? deps.buildCameraButtons(c.capital, st) : null;
+  body.appendChild(div("demographics-settle-podium-owner", orderedNames(civ.owner.leaderName, civ.owner.civName)[1]));
+  body.appendChild(buildCivMeta(civ));
+  const cams = civ.capital ? deps.buildCameraButtons(civ.capital, state) : null;
   if (cams) body.appendChild(cams);
   return body;
 }
 
 /**
  * Build one civ podium card (gold/silver/bronze laurel + cumulative score).
- * @param {*} c The civ aggregate.
+ * @param {*} civ
  * @param {number} place
- * @param {*} st
+ * @param {*} state
  * @param {CivRankingDeps} deps
  * @returns {HTMLElement}
  */
-function buildCivPodiumCard(c, place, st, deps) {
-  c = civDisplay(st, c, deps);
+function buildCivPodiumCard(civ, place, state, deps) {
+  civ = civDisplay(state, civ, deps);
   const card = div("demographics-settle-podium-card demographics-settle-rank-" + place);
-  if (c.owner.readable || c.owner.primary) {
-    card.style.borderColor = c.owner.readable || c.owner.primary;
+  if (civ.owner.readable || civ.owner.primary) {
+    card.style.borderColor = civ.owner.readable || civ.owner.primary;
   }
   // Horizontal card: [medal + avatar] · [name / owner / meta] · [score].
   const left = div("demographics-settle-podium-left");
   left.appendChild(deps.buildLaurelMedal(place));
-  left.appendChild(deps.buildOwnerAvatar(c.owner));
+  left.appendChild(deps.buildOwnerAvatar(civ.owner));
   card.appendChild(left);
 
-  card.appendChild(buildCivPodiumBody(c, st, deps));
+  card.appendChild(buildCivPodiumBody(civ, state, deps));
 
   const scoreCol = div("demographics-settle-podium-scorecol");
-  scoreCol.appendChild(div("demographics-settle-podium-score", fmt(c.score)));
+  scoreCol.appendChild(div("demographics-settle-podium-score", formatRounded(civ.score)));
   card.appendChild(scoreCol);
   return card;
 }
 
 /**
  * Build one civ ranked-list row.
- * @param {*} c The civ aggregate.
- * @param {*} st
+ * @param {*} civ
+ * @param {*} state
  * @param {CivRankingDeps} deps
  * @returns {HTMLElement}
  */
-function buildCivRow(c, st, deps) {
-  c = civDisplay(st, c, deps);
-  const row = div(rankedRowClass("demographics-settle-list-row", c, c.rank));
-  if (c.owner.readable || c.owner.primary) {
-    row.style.setProperty("border-left-color", c.owner.readable || c.owner.primary);
+function buildCivRow(civ, state, deps) {
+  civ = civDisplay(state, civ, deps);
+  const row = div(rankedRowClass("demographics-settle-list-row", civ, civ.rank));
+  if (civ.owner.readable || civ.owner.primary) {
+    row.style.setProperty("border-left-color", civ.owner.readable || civ.owner.primary);
   }
-  row.appendChild(buildRankCell(c.rank, c));
-  row.appendChild(deps.buildOwnerAvatar(c.owner));
+  row.appendChild(buildRankCell(civ.rank, civ));
+  row.appendChild(deps.buildOwnerAvatar(civ.owner));
   const mid = div("demographics-settle-list-mid");
   const nameRow = div("demographics-settle-list-namerow");
-  nameRow.appendChild(div("demographics-settle-list-name", c.name));
+  nameRow.appendChild(div("demographics-settle-list-name", civ.name));
   mid.appendChild(nameRow);
-  mid.appendChild(buildCivMeta(c));
-  mid.appendChild(buildCivScoreBar(c));
+  mid.appendChild(buildCivMeta(civ));
+  mid.appendChild(buildCivScoreBar(civ));
   row.appendChild(mid);
-  row.appendChild(div("demographics-settle-list-score", fmt(c.score)));
+  row.appendChild(div("demographics-settle-list-score", formatRounded(civ.score)));
   return row;
 }
 
 /**
  * Build the civ top-3 podium (visual order 2-1-3).
  * @param {*[]} top The top civ aggregates.
- * @param {*} st
+ * @param {*} state
  * @param {CivRankingDeps} deps
  * @param {boolean} [vertical] Stack gold→bronze top-to-bottom (left-column layout).
  * @returns {HTMLElement}
  */
-function buildCivPodium(top, st, deps, vertical) {
+function buildCivPodium(top, state, deps, vertical) {
   const podium = div("demographics-settle-podium");
   // Horizontal podium centers the winner (2-1-3); the vertical (left-column)
   // layout reads top-to-bottom, so emit gold → silver → bronze instead.
@@ -264,7 +256,7 @@ function buildCivPodium(top, st, deps, vertical) {
   const places = vertical ? [1, 2, 3] : [2, 1, 3];
   for (let i = 0; i < order.length; i++) {
     if (order[i]) {
-      podium.appendChild(buildCivPodiumCard(order[i], places[i], st, deps));
+      podium.appendChild(buildCivPodiumCard(order[i], places[i], state, deps));
     }
   }
   return podium;
@@ -272,13 +264,13 @@ function buildCivPodium(top, st, deps, vertical) {
 
 /**
  * Render the Civilization Ranking sub-view.
- * @param {*} st
+ * @param {*} state
  * @param {CivRankingDeps} deps
  */
-export function renderCivRankingPanel(st, deps) {
-  const civs = buildCivBoard(st.board.settlements);
+export function renderCivRankingPanel(state, deps) {
+  const civs = buildCivBoard(state.board.settlements);
   if (!civs.length) {
-    st.content.appendChild(deps.buildEmpty());
+    state.content.appendChild(deps.buildEmpty());
     return;
   }
   // Two-column layout: podium + score note (left) beside the full ranked list
@@ -287,16 +279,16 @@ export function renderCivRankingPanel(st, deps) {
   const left = div("demographics-settle-split-left");
   left.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE"));
   left.appendChild(div("demographics-settle-note", t("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE")));
-  left.appendChild(buildCivPodium(civs.slice(0, 3), st, deps, true));
+  left.appendChild(buildCivPodium(civs.slice(0, 3), state, deps, true));
   split.appendChild(left);
 
   const right = div("demographics-settle-split-right");
   right.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE"));
   const list = div("demographics-settle-list");
   list.appendChild(deps.buildListHeader("LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV"));
-  for (const c of civs) list.appendChild(buildCivRow(c, st, deps));
+  for (const civ of civs) list.appendChild(buildCivRow(civ, state, deps));
   right.appendChild(list);
   split.appendChild(right);
 
-  st.content.appendChild(split);
+  state.content.appendChild(split);
 }

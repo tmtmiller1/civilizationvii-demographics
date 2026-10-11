@@ -6,13 +6,9 @@
 // positionally to `{N_Name}` placeholders; a new tag must be added to every
 // locale file (see text/README.md). Base-game-owned strings: BASE_GAME_LOC_KEYS below.
 
-const DBG = false;
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.i18n]", ...a);
-}
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
+const log = makeLogger("i18n");
 
 /** Display locales that need a CJK font, by their slot in the game's font lists below. */
 const CJK_FONT_SLOT = /** @type {Record<string, number>} */ ({ zh_Hans_CN: 1, zh_Hant_HK: 2, ja_JP: 3, ko_KR: 4 });
@@ -132,7 +128,7 @@ export function t(key, ...args) {
     }
   } catch (_) {
     // Locale.compose can throw on a malformed/missing tag; fall back to the key.
-    dlog("Locale.compose threw for", key);
+    log.debug("Locale.compose threw for", key);
   }
   return key;
 }
@@ -191,7 +187,7 @@ export function stylizeLocaleTag(tag) {
     }
   } catch (_) {
     // Locale.stylize can throw on a malformed/missing tag; fall through to plain text.
-    dlog("Locale.stylize threw for", tag);
+    log.debug("Locale.stylize threw for", tag);
   }
   return escapeMarkupHtml(stripLocaleMarkup(t(tag)));
 }
@@ -238,7 +234,7 @@ export function tCsFallback(pid) {
 // Some strings the mod displays are owned by the base game, whose localization
 // DB ships their `LOC_*` tag, so the mod does not redefine them in ModText.xml.
 // This registry is where "intentionally external" is recorded: `tBaseGame()`
-// resolves one, `isBaseGameLoc()` lets audit tooling exclude them (including
+// resolves one, `isBaseGameLoc()` lets the loc-keys test exclude them (including
 // tags built at runtime from a documented prefix).
 
 /** Exact base-game LOC tags the mod references (not defined in our ModText.xml). */

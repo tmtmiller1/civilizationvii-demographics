@@ -10,41 +10,10 @@
 // an in-memory copy at render time.
 
 import { DemographicsStorage } from "/demographics/ui/storage/demographics-storage.js";
+import { getGameSeed, orFallback } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
 /** Max population samples retained per settlement. */
 const CAP = 12;
-
-/**
- * Run `fn`, returning its result or `fb` on throw. Never throws.
- * @template T
- * @param {() => T} fn
- * @param {T} [fb]
- * @returns {T|undefined} Result or fallback.
- */
-function safe(fn, fb) {
-  try {
-    return fn();
-  } catch (_) {
-    return fb;
-  }
-}
-
-/**
- * Current game seed string (namespaces the buffer per playthrough).
- * @returns {string} The seed, or "".
- */
-function gameSeed() {
-  return (
-    safe(() => {
-      if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
-        const g = Configuration.getGame();
-        const s = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
-        if (s !== undefined && s !== null) return String(s);
-      }
-      return "";
-    }, "") || ""
-  );
-}
 
 /**
  * The per-settlement trace: founding stamps and rolling population windows.
@@ -69,12 +38,12 @@ const pendingExact = new Map();
 
 /**
  * The value as a usable trace, or null.
- * @param {*} v
- * @returns {Trace|null} The trace, or null.
+ * @param {*} value
+ * @returns {Trace|null}
  */
-function asTrace(v) {
-  return v && typeof v === "object" && v.founded && typeof v.founded === "object" &&
-    v.pop && typeof v.pop === "object" ? v : null;
+function asTrace(value) {
+  return value && typeof value === "object" && value.founded && typeof value.founded === "object" &&
+    value.pop && typeof value.pop === "object" ? value : null;
 }
 
 /**
@@ -83,9 +52,9 @@ function asTrace(v) {
  * @returns {Trace}
  */
 function currentTrace() {
-  const seed = gameSeed();
+  const seed = getGameSeed();
   if (cache && cache.seed === seed) return cache.trace;
-  const saved = safe(() => DemographicsStorage.load(), null);
+  const saved = orFallback(() => DemographicsStorage.load(), null);
   const trace = asTrace(saved && saved.settleTrace) || { founded: {}, pop: {} };
   cache = { seed, trace };
   return trace;
@@ -94,14 +63,14 @@ function currentTrace() {
 /**
  * Plot key "x,y" for a city handle, or null.
  * @param {*} city
- * @returns {string|null} The key, or null.
+ * @returns {string|null}
  */
 function locKey(city) {
-  const k = safe(() => {
-    const l = city?.location;
-    return l && l.x != null && l.y != null ? l.x + "," + l.y : null;
+  const key = orFallback(() => {
+    const loc = city?.location;
+    return loc && loc.x != null && loc.y != null ? loc.x + "," + loc.y : null;
   }, null);
-  return typeof k === "string" ? k : null;
+  return typeof key === "string" ? key : null;
 }
 
 // CityAddedToMap (exact founding)
@@ -136,8 +105,11 @@ function cityFromId(cityId) {
  */
 function noteExactFounding(loc) {
   if (pendingExact.has(loc) || currentTrace().founded[loc]) return;
-  const turn = safe(() => (typeof Game !== "undefined" ? Game.turn : undefined), undefined);
-  const year = safe(() => (typeof Game !== "undefined" && Game.getTurnDate ? Game.getTurnDate() : ""), "");
+  const turn = orFallback(() => (typeof Game !== "undefined" ? Game.turn : undefined), undefined);
+  const year = orFallback(
+    () => (typeof Game !== "undefined" && Game.getTurnDate ? Game.getTurnDate() : ""),
+    ""
+  );
   pendingExact.set(loc, { turn: typeof turn === "number" ? turn : -1, year: year || "", exact: true });
 }
 
@@ -147,9 +119,8 @@ function noteExactFounding(loc) {
  * @param {*} data The event payload (carries cityID).
  */
 function onCityAdded(data) {
-  safe(() => {
-    const cid = cityIdFromAddedEvent(data);
-    const city = cityFromId(cid);
+  orFallback(() => {
+    const city = cityFromId(cityIdFromAddedEvent(data));
     const loc = locKey(city);
     if (!loc) return;
     noteExactFounding(loc);
@@ -165,9 +136,9 @@ export function startFoundingTracker() {
   // Module state outlives the game: a founding stamped in the previous game but
   // never folded (no sample ran after it) must not land on this game's history.
   pendingExact.clear();
-  safe(() => {
+  orFallback(() => {
     if (typeof engine === "undefined" || typeof engine.on !== "function") return;
-    addedHandlerRef = (/** @type {*} */ d) => onCityAdded(d);
+    addedHandlerRef = (/** @type {*} */ data) => onCityAdded(data);
     engine.on("CityAddedToMap", addedHandlerRef);
   });
 }
@@ -176,7 +147,7 @@ export function startFoundingTracker() {
 export function stopFoundingTracker() {
   const ref = addedHandlerRef;
   if (ref && typeof engine !== "undefined" && typeof engine.off === "function") {
-    safe(() => engine.off("CityAddedToMap", ref));
+    orFallback(() => engine.off("CityAddedToMap", ref));
   }
   addedHandlerRef = null;
 }
@@ -188,18 +159,21 @@ export function stopFoundingTracker() {
  * @returns {Array<{locId: string, pop: number}>}
  */
 function readAllSettlements() {
-  const players = safe(() => (typeof Players !== "undefined" && Players.getAlive ? Players.getAlive() : null), null);
+  const players = orFallback(
+    () => (typeof Players !== "undefined" && Players.getAlive ? Players.getAlive() : null),
+    null
+  );
   if (!Array.isArray(players)) return [];
   /** @type {Array<{locId: string, pop: number}>} */
   const out = [];
-  for (const p of players) {
-    const ids = safe(() => p?.Cities?.getCityIds?.(), null);
+  for (const player of players) {
+    const ids = orFallback(() => player?.Cities?.getCityIds?.(), null);
     if (!Array.isArray(ids)) continue;
     for (const id of ids) {
-      const city = safe(() => (typeof Cities !== "undefined" ? Cities.get(id) : null), null);
+      const city = orFallback(() => (typeof Cities !== "undefined" ? Cities.get(id) : null), null);
       const loc = locKey(city);
       if (!loc) continue;
-      out.push({ locId: loc, pop: safe(() => city.population, 0) || 0 });
+      out.push({ locId: loc, pop: orFallback(() => city.population, 0) || 0 });
     }
   }
   return out;
@@ -221,26 +195,26 @@ export function recordSettlementTrace(history, turn, year) {
   const trace = asTrace(history.settleTrace) || (history.settleTrace = { founded: {}, pop: {} });
   for (const [loc, stamp] of pendingExact) if (!trace.founded[loc]) trace.founded[loc] = stamp;
   pendingExact.clear();
-  for (const s of settlements) {
-    foldPop(trace, s, turn);
-    foldFounding(trace, s.locId, turn, year);
+  for (const settlement of settlements) {
+    foldPop(trace, settlement, turn);
+    foldFounding(trace, settlement.locId, turn, year);
   }
-  cache = { seed: gameSeed(), trace };
+  cache = { seed: getGameSeed(), trace };
   return true;
 }
 
 /**
  * Append a settlement's population to its rolling window (dedupe same turn, cap).
  * @param {*} blob The trace blob (mutated).
- * @param {{locId: string, pop: number}} s The settlement.
+ * @param {{locId: string, pop: number}} settlement
  * @param {number} turn The sample turn.
  */
-function foldPop(blob, s, turn) {
-  const arr = blob.pop[s.locId] || (blob.pop[s.locId] = []);
-  const last = arr[arr.length - 1];
-  if (last && last.t === turn) last.pop = s.pop;
-  else arr.push({ t: turn, pop: s.pop });
-  if (arr.length > CAP) arr.splice(0, arr.length - CAP);
+function foldPop(blob, settlement, turn) {
+  const popWindow = blob.pop[settlement.locId] || (blob.pop[settlement.locId] = []);
+  const last = popWindow[popWindow.length - 1];
+  if (last && last.t === turn) last.pop = settlement.pop;
+  else popWindow.push({ t: turn, pop: settlement.pop });
+  if (popWindow.length > CAP) popWindow.splice(0, popWindow.length - CAP);
 }
 
 /**
@@ -252,9 +226,9 @@ function foldPop(blob, s, turn) {
  * @param {string} [year] The sample's game-year string.
  */
 function foldFounding(blob, locId, turn, year) {
-  const f = blob.founded[locId];
-  if (!f) blob.founded[locId] = { turn, year: year || "", exact: false };
-  else if (!f.year && year) f.year = year;
+  const founded = blob.founded[locId];
+  if (!founded) blob.founded[locId] = { turn, year: year || "", exact: false };
+  else if (!founded.year && year) founded.year = year;
 }
 
 // readers (render time)
@@ -288,15 +262,15 @@ function trendDirection(rate) {
  */
 export function getCityTrend(locId) {
   if (!locId) return null;
-  const arr = currentTrace().pop[locId];
-  if (!Array.isArray(arr) || arr.length < 2) return null;
-  const first = arr[0];
-  const last = arr[arr.length - 1];
+  const popWindow = currentTrace().pop[locId];
+  if (!Array.isArray(popWindow) || popWindow.length < 2) return null;
+  const first = popWindow[0];
+  const last = popWindow[popWindow.length - 1];
   const span = last.t - first.t;
   const rate = span > 0 ? (last.pop - first.pop) / span : 0;
   return {
     popGrowthPerTurn: rate,
     dir: trendDirection(rate),
-    samples: arr.length
+    samples: popWindow.length
   };
 }

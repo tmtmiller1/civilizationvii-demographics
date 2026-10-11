@@ -55,11 +55,11 @@ export const SYNTHETIC_METRICS = {
     title: "LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE"
   },
   units_killed_type: {
-    label: "Kills by Unit",
+    label: "Kills by Unit Type",
     title: "LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE"
   },
   units_lost_type: {
-    label: "Losses by Unit",
+    label: "Losses by Unit Type",
     title: "LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE"
   },
   buildings_type: {
@@ -92,7 +92,7 @@ export const SYNTHETIC_METRICS = {
     subtitle: "LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE"
   },
   settlements_atlas: {
-    label: "Settlement Sizes",
+    label: "Settlements by Size",
     title: "LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE"
   },
   power_race: {

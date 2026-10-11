@@ -6,7 +6,7 @@
 // take down the renderer, which JS cannot catch.
 
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
-import { derr } from "/demographics/ui/history/core/history-log.js";
+import { log } from "/demographics/ui/history/core/history-log.js";
 import { t } from "/demographics/ui/history/core/history-text.js";
 import { unrle, frameAt } from "/demographics/ui/history/model/history-map.js";
 import { civIcon } from "/demographics/ui/history/views/history-widgets.js";
@@ -14,7 +14,17 @@ import { civIcon } from "/demographics/ui/history/views/history-widgets.js";
 /** Canvas width of one hex column, in pixels. */
 const HEX_W = 18;
 /** Terrain colors by class (capture/history-mapgrid.js TERRAIN), close to the game's minimap. */
-const TERRAIN_COLORS = ["#1b3a5e", "#5f6f42", "#77726a", "#3d7aa6", "#6f8c3e", "#a8995a", "#cfb77c", "#8e9a8c", "#4f7d3b"];
+const TERRAIN_COLORS = [
+  "#1b3a5e",
+  "#5f6f42",
+  "#77726a",
+  "#3d7aa6",
+  "#6f8c3e",
+  "#a8995a",
+  "#cfb77c",
+  "#8e9a8c",
+  "#4f7d3b"
+];
 const UNEXPLORED_COLOR = "#0d1016";
 const OTHER_COLOR = "#8d8a82";
 const OTHER_OWNER = -2;
@@ -28,86 +38,98 @@ const MAP_MAX_W_REM = 40;
 /**
  * @typedef {import("../model/history-map.js").MapView} MapView
  * @typedef {import("../model/history-narrate.js").Cast} Cast
+ * @typedef {MapView["frames"][number]} MapFrame
+ * @typedef {{side:number, rowHeight:number, canvasWidth:number, canvasHeight:number}} HexLayout
+ *   Hex side and row height, and the canvas size, in canvas pixels.
  */
 
 /**
  * A color the canvas accepts for sure, or null.
- * @param {string} c
+ * @param {string} color
  * @returns {string|null}
  */
-export function safeColor(c) {
-  if (typeof c !== "string") return null;
-  if (/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?([0-9a-fA-F]{2})?$/.test(c)) return c;
-  if (/^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(,\s*[\d.]+\s*)?\)$/i.test(c)) return c;
+export function safeColor(color) {
+  if (typeof color !== "string") return null;
+  if (/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?([0-9a-fA-F]{2})?$/.test(color)) return color;
+  if (/^rgba?\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*(,\s*[\d.]+\s*)?\)$/i.test(color)) return color;
   return null;
 }
 
 /**
  * Hex geometry for a grid.
- * @param {{w:number, h:number}} m
- * @returns {{s:number, rowH:number, cw:number, ch:number}} Side, row height, canvas size.
+ * @param {{w:number, h:number}} grid
+ * @returns {HexLayout}
  */
-export function hexLayout(m) {
-  const s = HEX_W / Math.sqrt(3);
-  const rowH = 1.5 * s;
-  return { s, rowH, cw: Math.ceil((m.w + 0.5) * HEX_W), ch: Math.ceil(2 * s + (m.h - 1) * rowH) };
+export function hexLayout(grid) {
+  const side = HEX_W / Math.sqrt(3);
+  const rowHeight = 1.5 * side;
+  return {
+    side,
+    rowHeight,
+    canvasWidth: Math.ceil((grid.w + 0.5) * HEX_W),
+    canvasHeight: Math.ceil(2 * side + (grid.h - 1) * rowHeight)
+  };
 }
 
 /**
  * On-screen size of the map: MAP_REM tall, or MAP_MAX_W_REM wide when the world is wider than that.
- * @param {{cw:number, ch:number}} L
- * @returns {{w:number, h:number}} Size in rem.
+ * @param {HexLayout} layout
+ * @returns {{width:number, height:number}} Size in rem.
  */
-export function displaySize(L) {
-  const ar = L.cw / Math.max(1, L.ch);
-  const w = Math.min(MAP_MAX_W_REM, MAP_REM * ar);
-  return { w, h: w / ar };
+export function displaySize(layout) {
+  const aspect = layout.canvasWidth / Math.max(1, layout.canvasHeight);
+  const width = Math.min(MAP_MAX_W_REM, MAP_REM * aspect);
+  return { width, height: width / aspect };
 }
 
 /**
  * Center of a cell on the canvas. Map rows count from the south edge, so the last row is drawn at
  * the top; odd rows are shifted half a hex, as on the game's minimap.
- * @param {{s:number, rowH:number}} L
- * @param {{w:number, h:number}} m
- * @param {number} i
+ * @param {HexLayout} layout
+ * @param {{w:number, h:number}} grid
+ * @param {number} cell Cell index.
  * @returns {{x:number, y:number}}
  */
-export function cellCenter(L, m, i) {
-  const col = i % m.w;
-  const row = Math.floor(i / m.w);
-  return { x: (col + (row % 2) * 0.5 + 0.5) * HEX_W, y: L.s + (m.h - 1 - row) * L.rowH };
+export function cellCenter(layout, grid, cell) {
+  const col = cell % grid.w;
+  const row = Math.floor(cell / grid.w);
+  return {
+    x: (col + (row % 2) * 0.5 + 0.5) * HEX_W,
+    y: layout.side + (grid.h - 1 - row) * layout.rowHeight
+  };
 }
 
 /**
- * @param {CanvasRenderingContext2D} g
+ * Trace a pointy-top hex path.
+ * @param {CanvasRenderingContext2D} context
  * @param {number} x
  * @param {number} y
- * @param {number} s
+ * @param {number} side
  */
-function hex(g, x, y, s) {
-  g.beginPath();
+function hex(context, x, y, side) {
+  context.beginPath();
   for (let k = 0; k < 6; k++) {
-    const a = (Math.PI / 180) * (60 * k - 90);
-    if (k === 0) g.moveTo(x + s * Math.cos(a), y + s * Math.sin(a));
-    else g.lineTo(x + s * Math.cos(a), y + s * Math.sin(a));
+    const angle = (Math.PI / 180) * (60 * k - 90);
+    if (k === 0) context.moveTo(x + side * Math.cos(angle), y + side * Math.sin(angle));
+    else context.lineTo(x + side * Math.cos(angle), y + side * Math.sin(angle));
   }
-  g.closePath();
+  context.closePath();
 }
 
 /**
  * Paint one frame.
- * @param {HTMLCanvasElement} cv
- * @param {MapView} mv
- * @param {MapView["frames"][number]} f
+ * @param {HTMLCanvasElement} canvas
+ * @param {MapView} mapView
+ * @param {MapFrame} frame
  * @param {(pid:number) => string} colorOf Civilization color ("" for one not to show).
  */
-function paint(cv, mv, f, colorOf) {
-  const g = cv.getContext("2d");
-  if (!g) return;
-  const L = hexLayout(mv);
-  g.clearRect(0, 0, cv.width, cv.height);
-  paintCells(g, L, mv, f, colorOf);
-  paintSettlements(g, L, mv, f, colorOf);
+function paint(canvas, mapView, frame, colorOf) {
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  const layout = hexLayout(mapView);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  paintCells(context, layout, mapView, frame, colorOf);
+  paintSettlements(context, layout, mapView, frame, colorOf);
 }
 
 /**
@@ -126,143 +148,155 @@ export function cellLayers(owner, terrain, colorOf) {
 
 /**
  * Paint every cell: terrain, then the holder's color over it.
- * @param {CanvasRenderingContext2D} g
- * @param {{s:number, rowH:number}} L
- * @param {MapView} mv
- * @param {MapView["frames"][number]} f
+ * @param {CanvasRenderingContext2D} context
+ * @param {HexLayout} layout
+ * @param {MapView} mapView
+ * @param {MapFrame} frame
  * @param {(pid:number) => string} colorOf
  */
-function paintCells(g, L, mv, f, colorOf) {
-  const n = mv.w * mv.h;
-  const terrain = unrle(mv.terrain, n, 1);
-  const owners = unrle(f.o, n, -1);
-  for (let i = 0; i < n; i++) {
-    const p = cellCenter(L, mv, i);
+function paintCells(context, layout, mapView, frame, colorOf) {
+  const cells = mapView.w * mapView.h;
+  const terrain = unrle(mapView.terrain, cells, 1);
+  const owners = unrle(frame.o, cells, -1);
+  for (let i = 0; i < cells; i++) {
+    const center = cellCenter(layout, mapView, i);
     const layer = cellLayers(owners[i], terrain[i], colorOf);
-    hex(g, p.x, p.y, L.s + 0.35);
-    g.fillStyle = layer.base;
-    g.fill();
+    hex(context, center.x, center.y, layout.side + 0.35);
+    context.fillStyle = layer.base;
+    context.fill();
     if (layer.tint) {
-      g.globalAlpha = TINT;
-      g.fillStyle = layer.tint;
-      g.fill();
-      g.globalAlpha = 1;
+      context.globalAlpha = TINT;
+      context.fillStyle = layer.tint;
+      context.fill();
+      context.globalAlpha = 1;
     }
   }
 }
 
 /**
  * Paint the settlements of shown civilizations as ringed dots.
- * @param {CanvasRenderingContext2D} g
- * @param {{s:number, rowH:number}} L
- * @param {MapView} mv
- * @param {MapView["frames"][number]} f
+ * @param {CanvasRenderingContext2D} context
+ * @param {HexLayout} layout
+ * @param {MapView} mapView
+ * @param {MapFrame} frame
  * @param {(pid:number) => string} colorOf
  */
-function paintSettlements(g, L, mv, f, colorOf) {
-  const n = mv.w * mv.h;
-  const r = Math.max(2.5, L.s * 0.45);
-  g.lineWidth = 1.5;
-  g.strokeStyle = "#1a140c";
-  g.fillStyle = "#fff8e6";
-  for (const c of f.c || []) {
-    const i = Number(c[0]);
-    if (!(i >= 0 && i < n) || !colorOf(Number(c[1]))) continue;
-    const p = cellCenter(L, mv, i);
-    g.beginPath();
-    g.arc(p.x, p.y, r, 0, Math.PI * 2);
-    g.fill();
-    g.stroke();
+function paintSettlements(context, layout, mapView, frame, colorOf) {
+  const cells = mapView.w * mapView.h;
+  const radius = Math.max(2.5, layout.side * 0.45);
+  context.lineWidth = 1.5;
+  context.strokeStyle = "#1a140c";
+  context.fillStyle = "#fff8e6";
+  for (const settlement of frame.c || []) {
+    const cell = Number(settlement[0]);
+    if (!(cell >= 0 && cell < cells) || !colorOf(Number(settlement[1]))) continue;
+    const center = cellCenter(layout, mapView, cell);
+    context.beginPath();
+    context.arc(center.x, center.y, radius, 0, Math.PI * 2);
+    context.fill();
+    context.stroke();
   }
 }
 
 /**
  * Who holds land in a frame, most land first.
- * @param {MapView} mv
- * @param {MapView["frames"][number]} f
- * @returns {{pid:number, cells:number, towns:number}[]} Holders.
+ * @param {MapView} mapView
+ * @param {MapFrame} frame
+ * @returns {{pid:number, cells:number, towns:number}[]}
  */
-export function holders(mv, f) {
+export function holders(mapView, frame) {
   /** @type {Map<number, {pid:number, cells:number, towns:number}>} */
-  const by = new Map();
-  for (const o of unrle(f.o, mv.w * mv.h, -1)) {
-    if (o < 0) continue;
-    const h = by.get(o) || { pid: o, cells: 0, towns: 0 };
-    h.cells++;
-    by.set(o, h);
+  const byPid = new Map();
+  for (const owner of unrle(frame.o, mapView.w * mapView.h, -1)) {
+    if (owner < 0) continue;
+    const holder = byPid.get(owner) || { pid: owner, cells: 0, towns: 0 };
+    holder.cells++;
+    byPid.set(owner, holder);
   }
-  for (const c of f.c || []) {
-    const h = by.get(Number(c[1]));
-    if (h) h.towns++;
+  for (const settlement of frame.c || []) {
+    const holder = byPid.get(Number(settlement[1]));
+    if (holder) holder.towns++;
   }
-  return [...by.values()].sort((a, b) => b.cells - a.cells);
+  return [...byPid.values()].sort((a, b) => b.cells - a.cells);
 }
 
 /**
  * Fill the legend for a frame: title, when, and who holds land (most first, ten at most).
  * @param {HTMLElement} legend Emptied first.
- * @param {MapView} mv
- * @param {MapView["frames"][number]} f
+ * @param {MapView} mapView
+ * @param {MapFrame} frame
  * @param {Cast} cast
  * @param {{ageAt: (at:number) => string, whenAt: (at:number) => string}} labels Age and position labels.
  */
-function fillLegend(legend, mv, f, cast, labels) {
+function fillLegend(legend, mapView, frame, cast, labels) {
   clear(legend);
   legend.appendChild(el("div", { cls: "dgh-map-title", text: t("LOC_DEMOGRAPHICS_HIST_MAP_TITLE") }));
-  legend.appendChild(el("div", { cls: "dgh-map-when", text: labels.whenAt(f.at) }));
-  const age = labels.ageAt(f.at);
-  for (const h of holders(mv, f).filter((x) => cast.known(x.pid) && cast.color(x.pid)).slice(0, 10)) {
-    const civ = cast.civType(h.pid, age);
-    const chip = el("div", { cls: "dgh-map-legend-item" + (h.pid === cast.local ? " is-mine" : "") }, [
-      el("div", { cls: "dgh-civ-dot", style: { backgroundColor: safeColor(cast.color(h.pid)) || "#85878c" } }),
-      civ ? civIcon(civ, "dgh-civ-icon dgh-map-legend-icon") : null,
-      el("div", { cls: "dgh-map-legend-name", text: cast.civName(h.pid, age) || cast.leaderName(h.pid) }),
-      h.towns ? el("div", { cls: "dgh-map-legend-towns" }, [
-        el("div", { cls: "dgh-map-house" }, [el("div", { cls: "dgh-tl-found-roof" })]),
-        el("div", { text: String(h.towns) })
-      ]) : null
-    ]);
-    legend.appendChild(chip);
-  }
+  legend.appendChild(el("div", { cls: "dgh-map-when", text: labels.whenAt(frame.at) }));
+  const age = labels.ageAt(frame.at);
+  const shown = holders(mapView, frame).filter((holder) => cast.known(holder.pid) && cast.color(holder.pid));
+  for (const holder of shown.slice(0, 10)) legend.appendChild(legendItem(holder, cast, age));
+}
+
+/**
+ * One holder's legend entry: color dot, emblem, name and settlement count.
+ * @param {{pid:number, towns:number}} holder
+ * @param {Cast} cast
+ * @param {string} age
+ * @returns {HTMLElement}
+ */
+function legendItem(holder, cast, age) {
+  const civ = cast.civType(holder.pid, age);
+  const towns = holder.towns
+    ? el("div", { cls: "dgh-map-legend-towns" }, [
+      el("div", { cls: "dgh-map-house" }, [el("div", { cls: "dgh-tl-found-roof" })]),
+      el("div", { text: String(holder.towns) })
+    ])
+    : null;
+  return el("div", { cls: "dgh-map-legend-item" + (holder.pid === cast.local ? " is-mine" : "") }, [
+    el("div", { cls: "dgh-civ-dot", style: { backgroundColor: safeColor(cast.color(holder.pid)) || "#85878c" } }),
+    civ ? civIcon(civ, "dgh-civ-icon dgh-map-legend-icon") : null,
+    el("div", { cls: "dgh-map-legend-name", text: cast.civName(holder.pid, age) || cast.leaderName(holder.pid) }),
+    towns
+  ]);
 }
 
 /**
  * The map panel. show() is called from the timeline's playback timer and its click handlers, so it
  * never throws: a frame that cannot be painted or described is logged and the panel keeps its last
  * good state.
- * @param {MapView} mv
+ * @param {MapView} mapView
  * @param {Cast} cast
  * @param {(at:number) => string} ageAt Age type at a timeline position.
  * @param {(at:number) => string} [whenAt] Label of a timeline position ("Modern, T157").
  * @returns {{el: HTMLElement, show: (at:number) => void}} Panel and its painter.
  */
-export function mapPanel(mv, cast, ageAt, whenAt = () => "") {
-  const L = hexLayout(mv);
-  const cv = /** @type {HTMLCanvasElement} */ (document.createElement("canvas"));
-  cv.width = L.cw;
-  cv.height = L.ch;
-  cv.className = "dgh-map-canvas";
-  const size = displaySize(L);
-  cv.style.width = size.w.toFixed(2) + "rem";
-  cv.style.height = size.h.toFixed(2) + "rem";
+export function mapPanel(mapView, cast, ageAt, whenAt = () => "") {
+  const layout = hexLayout(mapView);
+  const canvas = /** @type {HTMLCanvasElement} */ (document.createElement("canvas"));
+  canvas.width = layout.canvasWidth;
+  canvas.height = layout.canvasHeight;
+  canvas.className = "dgh-map-canvas";
+  const size = displaySize(layout);
+  canvas.style.width = size.width.toFixed(2) + "rem";
+  canvas.style.height = size.height.toFixed(2) + "rem";
   const legend = el("div", { cls: "dgh-map-legend" });
-  let shown = /** @type {MapView["frames"][number]|null} */ (null);
+  let shown = /** @type {MapFrame|null} */ (null);
   const show = (/** @type {number} */ at) => {
-    const f = frameAt(mv, at);
-    if (!f || f === shown) return;
-    shown = f;
+    const frame = frameAt(mapView, at);
+    if (!frame || frame === shown) return;
+    shown = frame;
     try {
-      paint(cv, mv, f, (pid) => (cast.known(pid) ? cast.color(pid) : ""));
+      paint(canvas, mapView, frame, (pid) => (cast.known(pid) ? cast.color(pid) : ""));
     } catch (e) {
-      derr("map paint failed", e);
+      log.error("map paint failed", e);
     }
     try {
-      fillLegend(legend, mv, f, cast, { ageAt, whenAt });
+      fillLegend(legend, mapView, frame, cast, { ageAt, whenAt });
     } catch (e) {
-      derr("map legend failed", e);
+      log.error("map legend failed", e);
     }
   };
-  const box = el("div", { cls: "dgh-map" }, [el("div", { cls: "dgh-map-frame" }, [cv]), legend]);
-  show(mv.frames[mv.frames.length - 1].at);
+  const box = el("div", { cls: "dgh-map" }, [el("div", { cls: "dgh-map-frame" }, [canvas]), legend]);
+  show(mapView.frames[mapView.frames.length - 1].at);
   return { el: box, show };
 }

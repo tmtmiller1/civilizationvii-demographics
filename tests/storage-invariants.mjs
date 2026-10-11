@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { listJs, rel, ROOT, UI_DIR } from "./_fs-helpers.mjs";
 
 // Shared-storage invariants gate ("never again" for the localStorage bug class).
 //
@@ -33,9 +33,6 @@ import { fileURLToPath } from "node:url";
 //     or a computed member (`localStorage["setItem"]`) is not seen at all.
 // The gate prints every file scanned and every storage call site it judged.
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const UI = path.join(ROOT, "ui");
-const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/");
 
 const ROOT_LITERAL = "modSettings";
 const REPAIR = "ui/core/demographics-storage-repair.js";
@@ -43,15 +40,18 @@ const SETTINGS = "ui/core/demographics-settings.js";
 const CLEAR_ALLOWED = new Set([REPAIR]);
 const REMOVE_ALLOWED = new Set([SETTINGS, REPAIR]);
 const READ_MARKER = /getItem\(\s*ROOT_KEY\b|\breadRoot\s*\(|\breadRootForWrite\s*\(/;
-const NOT_FUNCTION_HEADS = new Set(["if", "for", "while", "switch", "catch", "with", "return", "await", "typeof", "yield"]);
-
-/** @param {string} dir @returns {string[]} */
-function listJs(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
-    const p = path.join(dir, d.name);
-    return d.isDirectory() ? listJs(p) : d.name.endsWith(".js") ? [p] : [];
-  });
-}
+const NOT_FUNCTION_HEADS = new Set([
+  "if",
+  "for",
+  "while",
+  "switch",
+  "catch",
+  "with",
+  "return",
+  "await",
+  "typeof",
+  "yield"
+]);
 
 /** Blank a span to spaces, keeping newlines, so every index and line number survives. */
 const blankSpan = (s) => s.replace(/[^\n]/g, " ");
@@ -152,7 +152,11 @@ function firstArg(struct, text, open) {
 function resolvesToRootLiteral(id, text, file, depth = 0) {
   const local = text.match(new RegExp(`\\b(?:const|let|var)\\s+${id}\\s*=\\s*"([^"]*)"`));
   if (local) return local[1] === ROOT_LITERAL;
-  const imp = text.match(new RegExp(`import\\s*\\{[^}]*\\b(?:([A-Za-z_$][\\w$]*)\\s+as\\s+)?${id}\\b[^}]*\\}\\s*from\\s*"(/demographics/[^"]+)"`));
+  const imp = text.match(
+    new RegExp(
+      `import\\s*\\{[^}]*\\b(?:([A-Za-z_$][\\w$]*)\\s+as\\s+)?${id}\\b[^}]*\\}\\s*from\\s*"(/demographics/[^"]+)"`
+    )
+  );
   if (!imp || depth > 3) return false;
   const src = path.join(ROOT, imp[2].replace(/^\/demographics\//, ""));
   if (!fs.existsSync(src)) return false;
@@ -165,7 +169,7 @@ const scanned = [];
 const sites = [];
 const CALL = /\blocalStorage\s*\.\s*(setItem|removeItem|clear)\s*\(/g;
 
-for (const abs of listJs(UI)) {
+for (const abs of listJs(UI_DIR)) {
   const file = rel(abs);
   const text = blankComments(fs.readFileSync(abs, "utf8"));
   const struct = blankStrings(text);
@@ -184,7 +188,8 @@ for (const abs of listJs(UI)) {
     }
     if (kind === "removeItem") {
       sites.push(`${where} removeItem ${REMOVE_ALLOWED.has(file) ? "allowed" : "FORBIDDEN"}`);
-      if (!REMOVE_ALLOWED.has(file)) failures.push(`(c) ${where}: localStorage.removeItem() is only allowed in ${[...REMOVE_ALLOWED].join(", ")}`);
+      if (!REMOVE_ALLOWED.has(file))
+        failures.push(`(c) ${where}: localStorage.removeItem() is only allowed in ${[...REMOVE_ALLOWED].join(", ")}`);
       continue;
     }
     // setItem: (a) key, (d) value, (e) read-before-write
@@ -193,13 +198,17 @@ for (const abs of listJs(UI)) {
     if (!keyOk) {
       failures.push(
         `(a) ${where}: localStorage.setItem key is \`${key}\`, which ` +
-          (/^[A-Za-z_$][\w$]*$/.test(key) ? `does not resolve to the literal "${ROOT_LITERAL}" in this file (define or import ROOT_KEY)` : `is not the ROOT_KEY identifier`)
+          (/^[A-Za-z_$][\w$]*$/.test(key)
+            ? `does not resolve to the literal "${ROOT_LITERAL}" in this file (define or import ROOT_KEY)`
+            : `is not the ROOT_KEY identifier`)
       );
     }
     const closeParen = matchBracket(struct, open);
     const callText = closeParen > 0 ? text.slice(open, closeParen + 1) : text.slice(open);
     if (/^\(\s*[^,]+,\s*(?:"\{\}"|'\{\}'|JSON\.stringify\(\s*\{\s*\}\s*\))\s*\)$/.test(callText)) {
-      failures.push(`(d) ${where}: writes a literal empty root; a reset of the shared "${ROOT_LITERAL}" key wipes every mod's slice`);
+      failures.push(
+        `(d) ${where}: writes a literal empty root; a reset of the shared "${ROOT_LITERAL}" key wipes every mod's slice`
+      );
     }
     const fn = enclosing(bodies, at);
     let verdict;
@@ -224,9 +233,14 @@ for (const abs of listJs(UI)) {
         callers.push({ line: lineOf(text, c.index), name: caller ? caller.name : "<top-level>", reads });
       }
       const bad = callers.filter((x) => !x.reads);
-      if (!callers.length) verdict = `FAIL: ${fn.name}() writes without reading and has no call site in this file`;
-      else if (bad.length) verdict = `FAIL: ${fn.name}() writes without reading; caller(s) not reading first: ${bad.map((x) => `${x.name}@${x.line}`).join(", ")}`;
-      else verdict = `ok: ${fn.name}() is a write helper; every caller reads first (${callers.map((x) => `${x.name}@${x.line}`).join(", ")})`;
+      const names = (list) => list.map((x) => `${x.name}@${x.line}`).join(", ");
+      if (!callers.length) {
+        verdict = `FAIL: ${fn.name}() writes without reading and has no call site in this file`;
+      } else if (bad.length) {
+        verdict = `FAIL: ${fn.name}() writes without reading; caller(s) not reading first: ${names(bad)}`;
+      } else {
+        verdict = `ok: ${fn.name}() is a write helper; every caller reads first (${names(callers)})`;
+      }
     }
     sites.push(`${where} setItem(${key}) ${verdict}`);
     if (verdict.startsWith("FAIL")) failures.push(`(e) ${where}: ${verdict.slice(6)}`);
@@ -242,6 +256,13 @@ console.log(`storage-invariants: scanned ${scanned.length} file(s) under ui/ (` 
   [...perFolder].sort().map(([k, n]) => `${k.replace(/^ui\//, "")}: ${n}`).join(", ") + ")");
 console.log(`storage-invariants: ${sites.length} localStorage call site(s)`);
 for (const s of sites) console.log(`  ${s}`);
-assert.ok(sites.some((s) => s.includes(" setItem(")), "expected at least one localStorage.setItem site under ui/ (scan is broken if none)");
-assert.equal(failures.length, 0, `${failures.length} shared-storage invariant violation(s):\n  ${failures.join("\n  ")}`);
+assert.ok(
+  sites.some((s) => s.includes(" setItem(")),
+  "expected at least one localStorage.setItem site under ui/ (scan is broken if none)"
+);
+assert.equal(
+  failures.length,
+  0,
+  `${failures.length} shared-storage invariant violation(s):\n  ${failures.join("\n  ")}`
+);
 console.log("storage-invariants harness passed");

@@ -22,45 +22,48 @@ import {
  */
 
 /**
- * `hex` with alpha `a` applied, as an `rgba()` string. Accepts #rgb, #rrggbb, rgb() and
+ * `hex` with `alpha` applied, as an `rgba()` string. Accepts #rgb, #rrggbb, rgb() and
  * rgba(); anything else falls back to translucent white. Used to dim muted/backgrounded lines.
  * @param {*} hex
- * @param {number} a Alpha (0-1).
+ * @param {number} alpha Alpha (0-1).
  * @returns {string}
  */
-function colorWithAlpha(hex, a) {
-  if (typeof hex !== "string") return "rgba(255,255,255," + a + ")";
-  const s = hex.trim();
-  const rgba = s.match(
+function colorWithAlpha(hex, alpha) {
+  if (typeof hex !== "string") return "rgba(255,255,255," + alpha + ")";
+  const color = hex.trim();
+  const rgba = color.match(
     /^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\)$/i
   );
   if (rgba) {
-    return "rgba(" + rgba[1] + "," + rgba[2] + "," + rgba[3] + "," + a + ")";
+    return "rgba(" + rgba[1] + "," + rgba[2] + "," + rgba[3] + "," + alpha + ")";
   }
-  const rgb = s.match(/^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i);
+  const rgb = color.match(/^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i);
   if (rgb) {
-    return "rgba(" + rgb[1] + "," + rgb[2] + "," + rgb[3] + "," + a + ")";
+    return "rgba(" + rgb[1] + "," + rgb[2] + "," + rgb[3] + "," + alpha + ")";
   }
-  const shortHex = s.match(/^#?([0-9a-fA-F]{3})$/);
+  const shortHex = color.match(/^#?([0-9a-fA-F]{3})$/);
   if (shortHex) {
-    const h = shortHex[1];
-    const n = parseInt(h[0] + h[0] + h[1] + h[1] + h[2] + h[2], 16);
+    const digits = shortHex[1];
+    const [red, green, blue] = digits;
+    const packed = parseInt(red + red + green + green + blue + blue, 16);
     return (
       "rgba(" +
-      ((n >> 16) & 0xff) +
+      ((packed >> 16) & 0xff) +
       "," +
-      ((n >> 8) & 0xff) +
+      ((packed >> 8) & 0xff) +
       "," +
-      (n & 0xff) +
+      (packed & 0xff) +
       "," +
-      a +
+      alpha +
       ")"
     );
   }
-  const m = s.match(/^#?([0-9a-fA-F]{6})$/);
-  if (!m) return "rgba(255,255,255," + a + ")";
-  const n = parseInt(m[1], 16);
-  return "rgba(" + ((n >> 16) & 0xff) + "," + ((n >> 8) & 0xff) + "," + (n & 0xff) + "," + a + ")";
+  const longHex = color.match(/^#?([0-9a-fA-F]{6})$/);
+  if (!longHex) return "rgba(255,255,255," + alpha + ")";
+  const packed = parseInt(longHex[1], 16);
+  return (
+    "rgba(" + ((packed >> 16) & 0xff) + "," + ((packed >> 8) & 0xff) + "," + (packed & 0xff) + "," + alpha + ")"
+  );
 }
 
 /**
@@ -71,9 +74,9 @@ function colorWithAlpha(hex, a) {
  */
 function applyShowEliminated(allSeries) {
   try {
-    const showElim = !!DemographicsSettings.getSetting("showEliminatedCivs", true);
-    if (!showElim) {
-      return allSeries.filter((s) => !s.eliminated);
+    const showEliminated = !!DemographicsSettings.getSetting("showEliminatedCivs", true);
+    if (!showEliminated) {
+      return allSeries.filter((series) => !series.eliminated);
     }
   } catch (_) {
     // DemographicsSettings.getSetting may throw; fall back to showing all series.
@@ -85,7 +88,7 @@ function applyShowEliminated(allSeries) {
  * Apply the `smoothChart` setting: 3-turn centered moving average.
  * First/last points keep raw values; series with <3 points are untouched.
  * @param {ChartSeries[]} allSeries
- * @returns {ChartSeries[]} The transformed series list.
+ * @returns {ChartSeries[]}
  */
 function applySmoothChart(allSeries) {
   let smooth = false;
@@ -98,23 +101,23 @@ function applySmoothChart(allSeries) {
   // Own-logic smoothing math runs outside the engine guard so a real bug here
   // surfaces (propagating to the logged top-level render guard) rather than
   // being swallowed.
-  return allSeries.map((s) => {
-    if (!Array.isArray(s.points) || s.points.length < 3) return s;
-    const src = s.points;
+  return allSeries.map((series) => {
+    if (!Array.isArray(series.points) || series.points.length < 3) return series;
+    const src = series.points;
     const out = new Array(src.length);
     out[0] = src[0];
     out[src.length - 1] = src[src.length - 1];
     for (let i = 1; i < src.length - 1; i++) {
-      const a = src[i - 1].v;
-      const b = src[i].v;
-      const c = src[i + 1].v;
-      if (typeof a === "number" && typeof b === "number" && typeof c === "number") {
-        out[i] = { ...src[i], v: (a + b + c) / 3 };
+      const before = src[i - 1].v;
+      const here = src[i].v;
+      const after = src[i + 1].v;
+      if (typeof before === "number" && typeof here === "number" && typeof after === "number") {
+        out[i] = { ...src[i], v: (before + here + after) / 3 };
       } else {
         out[i] = src[i];
       }
     }
-    return { ...s, points: out };
+    return { ...series, points: out };
   });
 }
 
@@ -142,7 +145,7 @@ function resolveMetricMeta(metricId) {
 function globalDonorLine(allSeries, metricMeta, metricId) {
   const donor =
     allSeries.reduce(
-      (best, s) => (s.points.length > best.points.length ? s : best),
+      (best, series) => (series.points.length > best.points.length ? series : best),
       allSeries[0]
     ) || allSeries[0];
   const nameKey = "LOC_DEMOGRAPHICS_METRIC_" + String(metricId).toUpperCase();
@@ -179,16 +182,16 @@ function collapseGlobalMetric(allSeries, metricMeta, metricId) {
  * withholds, so a hidden civ's trend is never plotted. The local player's own civ is never
  * dropped; "All civilizations" keeps everyone (applyUnmetNames then masks names).
  * @param {ChartSeries[]} allSeries
- * @returns {ChartSeries[]} The filtered series list.
+ * @returns {ChartSeries[]}
  */
 function applyPolicyHide(allSeries) {
   const ownOnly = policyOwnCivOnly();
   if (!ownOnly && !policyHidesUnmet()) return allSeries; // "All civilizations": show every civ
   const localPid = resolveLocalPid();
-  return allSeries.filter((s) => {
-    if (localPid !== undefined && s.pid === localPid) return true; // own civ is always shown
+  return allSeries.filter((series) => {
+    if (localPid !== undefined && series.pid === localPid) return true; // own civ is always shown
     if (ownOnly) return false; // own-civ-only: hide every other civ
-    return s.met !== false; // met-civs-only: hide civs the player hasn't met
+    return series.met !== false; // met-civs-only: hide civs the player hasn't met
   });
 }
 
@@ -196,7 +199,7 @@ function applyPolicyHide(allSeries) {
  * Apply the `showUnmetNames` setting (default false): when disabled, mask each
  * non-local unmet civ's series name with a generic placeholder.
  * @param {ChartSeries[]} allSeries
- * @returns {ChartSeries[]} The transformed series list.
+ * @returns {ChartSeries[]}
  */
 function applyUnmetNames(allSeries) {
   let showUnmet = false;
@@ -207,10 +210,10 @@ function applyUnmetNames(allSeries) {
   }
   if (showUnmet) return allSeries;
   const localPid = resolveLocalPid();
-  return allSeries.map((s) => {
-    const isLocal = localPid !== undefined && s.pid === localPid;
-    if (isLocal || s.met !== false) return s;
-    return { ...s, name: t("LOC_DEMOGRAPHICS_LINE_UNMET_CIV") };
+  return allSeries.map((series) => {
+    const isLocal = localPid !== undefined && series.pid === localPid;
+    if (isLocal || series.met !== false) return series;
+    return { ...series, name: t("LOC_DEMOGRAPHICS_LINE_UNMET_CIV") };
   });
 }
 
@@ -220,33 +223,35 @@ function applyUnmetNames(allSeries) {
  * @param {ChartSeries[]} allSeries
  * @param {Set<string>} muted Muted series keys (legend-toggled off, dimmed).
  * @param {Set<string>} focused
- * @param {{ min: number, max: number }|null} tr Time-range filter, or null.
- * @returns {Record<string, *>[]} The Chart.js datasets.
+ * @param {{ min: number, max: number }|null} turnRange Time-range filter, or null.
+ * @returns {Record<string, *>[]}
  */
-function buildChartDatasets(allSeries, muted, focused, tr) {
+function buildChartDatasets(allSeries, muted, focused, turnRange) {
   // Hardware-adaptive render clamp: bound plotted points per series after the
   // visible-range filter so marathon saves don't draw thousands of points.
   const pointBudget = renderPointBudget();
-  return allSeries.map((s) => {
-    const isMuted = muted.has(s.leaderType);
+  return allSeries.map((series) => {
+    const isMuted = muted.has(series.leaderType);
     const anyFocused = focused.size > 0;
-    const isFocused = !isMuted && anyFocused && focused.has(s.leaderType);
+    const isFocused = !isMuted && anyFocused && focused.has(series.leaderType);
     // A civ reads "backgrounded" (dimmed) when the user toggled it off in the
     // legend (All/None or a row), or when another civ is focused and this one
     // isn't. Backgrounded lines stay on the chart, dimmed; they don't vanish.
-    const isDimmed = isMuted || (anyFocused && !focused.has(s.leaderType));
-    const inRange = s.points.filter((p) => !tr || (p.t >= tr.min && p.t <= tr.max));
-    const dataPoints = lodDownsample(inRange, pointBudget).map((p) => ({ x: p.t, y: p.v }));
+    const isDimmed = isMuted || (anyFocused && !focused.has(series.leaderType));
+    const inRange = series.points.filter(
+      (point) => !turnRange || (point.t >= turnRange.min && point.t <= turnRange.max)
+    );
+    const dataPoints = lodDownsample(inRange, pointBudget).map((point) => ({ x: point.t, y: point.v }));
     // Lift dim blue civ colors so the line / label / value reads on
     // the dark chart background (same lift used in the tooltip).
-    const baseColor = safeTextColor(s.color) || s.color;
+    const baseColor = safeTextColor(series.color) || series.color;
     const color = isDimmed ? colorWithAlpha(baseColor, 0.35) : baseColor;
     return {
-      label: s.name,
+      label: series.name,
       // The civ's player id, so a metric's tooltipAttribution callback gets the pid (not the civ
       // name). Without it, attribution lookups keyed by pid (e.g. Emigration's net-migration "why"
       // breakdown) resolve to 0 and show nothing.
-      pidForContext: s.pid,
+      pidForContext: series.pid,
       data: dataPoints,
       borderColor: color,
       backgroundColor: color,
@@ -262,9 +267,9 @@ function buildChartDatasets(allSeries, muted, focused, tr) {
       // Never fully remove a line: backgrounded civs are dimmed (above), so the
       // legend's "None" grays lines out rather than making them disappear.
       hidden: false,
-      leaderType: s.leaderType,
-      leaderTypeString: s.leaderTypeString,
-      _eliminated: !!s.eliminated
+      leaderType: series.leaderType,
+      leaderTypeString: series.leaderTypeString,
+      _eliminated: !!series.eliminated
     };
   });
 }

@@ -41,13 +41,13 @@ export function emptySlice() {
 
 /**
  * Whether a value is a record this version can display.
- * @param {*} r
+ * @param {*} rec
  * @returns {boolean}
  */
-export function isRecord(r) {
+export function isRecord(rec) {
   return !!(
-    r && typeof r === "object" && r.v === RECORD_VERSION && typeof r.id === "string" &&
-    typeof r.leader === "string" && r.outcome && typeof r.turns === "number" && Array.isArray(r.civs)
+    rec && typeof rec === "object" && rec.v === RECORD_VERSION && typeof rec.id === "string" &&
+    typeof rec.leader === "string" && rec.outcome && typeof rec.turns === "number" && Array.isArray(rec.civs)
   );
 }
 
@@ -55,23 +55,24 @@ export function isRecord(r) {
  * Whether a value is a record written by a newer version of this mod. Such a record is carried
  * through every load and save untouched (so going back to this version loses nothing) but is never
  * shown, since its shape is unknown here.
- * @param {*} r
+ * @param {*} rec
  * @returns {boolean} True when it is a record from a later version.
  */
-export function isNewerRecord(r) {
-  return !!(r && typeof r === "object" && typeof r.v === "number" && r.v > RECORD_VERSION && typeof r.id === "string");
+export function isNewerRecord(rec) {
+  if (!rec || typeof rec !== "object") return false;
+  return typeof rec.v === "number" && rec.v > RECORD_VERSION && typeof rec.id === "string";
 }
 
 /**
  * Whether a value is an archive slice written by this mod. Used before every write so the mod never
  * replaces something it does not recognize.
- * @param {*} s
+ * @param {*} slice
  * @returns {boolean}
  */
-export function isSlice(s) {
+export function isSlice(slice) {
   return !!(
-    s && typeof s === "object" && !Array.isArray(s) && s.__schema === ARCHIVE_SCHEMA &&
-    s.games && typeof s.games === "object" && s.hidden && typeof s.hidden === "object"
+    slice && typeof slice === "object" && !Array.isArray(slice) && slice.__schema === ARCHIVE_SCHEMA &&
+    slice.games && typeof slice.games === "object" && slice.hidden && typeof slice.hidden === "object"
   );
 }
 
@@ -89,13 +90,13 @@ export function sliceTexts(slice) {
 /**
  * Downsample a series to at most `n` points, always keeping the last.
  * @param {number[]} arr
- * @param {number} n Target size.
+ * @param {number} count Target size.
  * @returns {number[]}
  */
-export function downsample(arr, n) {
-  if (arr.length <= n) return arr.slice();
+export function downsample(arr, count) {
+  if (arr.length <= count) return arr.slice();
   const out = [];
-  for (let i = 0; i < n; i++) out.push(arr[Math.round((i * (arr.length - 1)) / (n - 1))]);
+  for (let i = 0; i < count; i++) out.push(arr[Math.round((i * (arr.length - 1)) / (count - 1))]);
   return out;
 }
 
@@ -115,11 +116,12 @@ export function turnsPlayed(doc) {
 /**
  * The most important events for the local player, oldest first.
  * @param {CampaignDoc} doc
- * @returns {HnrEvent[]} Up to HIGHLIGHTS_CAP events.
+ * @returns {HistoryEvent[]} Up to HIGHLIGHTS_CAP events.
  */
 export function pickHighlights(doc) {
-  const mine = (/** @type {HnrEvent} */ e) =>
-    e.k === "victory" || e.k === "age" || e.k === "crisis" || e.p === doc.local || (e.k === "elim" && e.q === doc.local);
+  const mine = (/** @type {HistoryEvent} */ event) =>
+    event.k === "victory" || event.k === "age" || event.k === "crisis" || event.p === doc.local ||
+    (event.k === "elim" && event.q === doc.local);
   const scored = doc.events
     .map((e, i) => ({ e, i, w: HIGHLIGHT_WEIGHT[e.k] || 0 }))
     .filter((x) => x.w > 0 && mine(x.e));
@@ -133,7 +135,7 @@ export function pickHighlights(doc) {
 /**
  * Count the local player's events of a kind.
  * @param {CampaignDoc} doc
- * @param {HnrEventKind} kind
+ * @param {HistoryEventKind} kind
  * @returns {number}
  */
 function countMine(doc, kind) {
@@ -150,7 +152,7 @@ export function localStats(doc) {
   const ps = (doc.series.by || {})[me] || { set: [], pop: [], tri: [] };
   const state = doc.last?.players?.[me] || null;
   const religion = doc.events.find((e) => e.k === "religion" && e.p === doc.local);
-  const byMe = (/** @type {HnrEventKind} */ k) => doc.events.filter((e) => e.k === k && e.p === doc.local).length;
+  const byMe = (/** @type {HistoryEventKind} */ k) => doc.events.filter((e) => e.k === k && e.p === doc.local).length;
   return {
     settlements: settlementsHeld(state, ps),
     peakSettlements: Math.max(0, ...ps.set),
@@ -165,8 +167,8 @@ export function localStats(doc) {
 
 /**
  * Settlements the local player holds in the latest state, else the last sampled count.
- * @param {HnrPlayerState|null} state
- * @param {HnrPlayerSeries} ps
+ * @param {HistoryPlayerState|null} state
+ * @param {HistoryPlayerSeries} ps
  * @returns {number}
  */
 function settlementsHeld(state, ps) {
@@ -176,7 +178,7 @@ function settlementsHeld(state, ps) {
 /**
  * Wonders the local player holds in the latest state (0 without one, or for a state that carries
  * no wonder list).
- * @param {HnrPlayerState|null} state
+ * @param {HistoryPlayerState|null} state
  * @returns {number}
  */
 function wondersHeld(state) {
@@ -185,8 +187,8 @@ function wondersHeld(state) {
 
 /**
  * The local player's population, as a count and in Demographics' real-world scale.
- * @param {HnrPlayerState|null} state
- * @param {HnrPlayerSeries} ps
+ * @param {HistoryPlayerState|null} state
+ * @param {HistoryPlayerSeries} ps
  * @returns {{population:number, populationScaled:number}}
  */
 function localPopulation(state, ps) {
@@ -207,7 +209,7 @@ function lastOf(arr) {
  * Everyone else the player met, frozen with their final civilization. Civilizations never met are
  * left out, so the Hall of Fame does not reveal them for a game still being played.
  * @param {CampaignDoc} doc
- * @returns {HnrRival[]}
+ * @returns {HistoryRival[]}
  */
 export function rivalsOf(doc) {
   const tri = triumphCounts(doc);
@@ -215,12 +217,22 @@ export function rivalsOf(doc) {
     !doc.last || !!doc.last.players?.[pid]?.met || doc.players[pid]?.elim === -1;
   return Object.entries(doc.players)
     .filter(([pid]) => Number(pid) !== doc.local && met(pid))
-    .map(([pid, p]) => {
-      const civs = p.civs || [];
+    .map(([pid, player]) => {
+      const civs = player.civs || [];
       const civ = civs[civs.length - 1] || { civ: "", name: "" };
-      /** @type {HnrRival} */
-      const r = [Number(pid), p.leader, p.leaderName, civ.civ, civ.name, p.color, p.elim, tri[pid] || 0, p.color2 || ""];
-      return r;
+      /** @type {HistoryRival} */
+      const row = [
+        Number(pid),
+        player.leader,
+        player.leaderName,
+        civ.civ,
+        civ.name,
+        player.color,
+        player.elim,
+        tri[pid] || 0,
+        player.color2 || ""
+      ];
+      return row;
     });
 }
 
@@ -260,15 +272,15 @@ export function buildRecord(doc) {
 /**
  * The LOC tags of a record that may not resolve at the main menu, where only setup text is loaded:
  * names first seen in a game (settlements, wonders, Triumphs, religions) and the victory's name.
- * @param {ArchiveRecord} rec The record.
+ * @param {ArchiveRecord} rec
  * @returns {string[]} Unique tags.
  */
 export function recordTags(rec) {
   const col = (/** @type {*} */ list, /** @type {number} */ i) =>
     (Array.isArray(list) ? list.map((/** @type {*[]} */ x) => String(x[i] || "")) : []);
   const tl = rec.tl || {};
-  const r = tl.r || {};
-  const names = [...col(tl.m, 4), ...col(tl.z, 1), ...col(tl.f, 1), ...col(r.m, 4), ...col(r.f, 1)];
+  const rivals = tl.r || {};
+  const names = [...col(tl.m, 4), ...col(tl.z, 1), ...col(tl.f, 1), ...col(rivals.m, 4), ...col(rivals.f, 1)];
   const all = [rec.outcome?.name, rec.stats?.religion, ...(rec.highlights || []).map((e) => e.n || ""), ...names];
   return [...new Set(all.filter((x) => typeof x === "string" && x.startsWith("LOC_")))];
 }
@@ -290,7 +302,7 @@ export function supersedes(a, b) {
 /**
  * Insert or replace a record unless it is hidden or an existing copy shows more progress.
  * @param {ArchiveSlice} slice Mutated.
- * @param {ArchiveRecord} rec The record.
+ * @param {ArchiveRecord} rec
  * @returns {boolean} True when the slice changed.
  */
 export function upsert(slice, rec) {
@@ -385,12 +397,12 @@ function stripParts(byAge, total, cap) {
     (/** @type {ArchiveRecord} */ r) => delete r.tl
   ];
   for (const strip of strips) {
-    for (const r of byAge) {
+    for (const rec of byAge) {
       if (total <= cap) return total;
-      if (isNewerRecord(r)) continue;
-      const before = sizeOf(r);
-      strip(r);
-      total -= before - sizeOf(r);
+      if (isNewerRecord(rec)) continue;
+      const before = sizeOf(rec);
+      strip(rec);
+      total -= before - sizeOf(rec);
     }
   }
   return total;
@@ -409,9 +421,11 @@ function stripParts(byAge, total, cap) {
 function evictGames(slice, total, cap, keep) {
   /** @type {string[]} */
   const evicted = [];
-  const order = Object.values(slice.games).filter((r) => r.id !== keep && !isNewerRecord(r)).sort(
-    (a, b) => Number(a.outcome?.status !== "in_progress") - Number(b.outcome?.status !== "in_progress") || a.updated - b.updated
-  );
+  // Unfinished games go first, then the oldest.
+  const finished = (/** @type {ArchiveRecord} */ rec) => Number(rec.outcome?.status !== "in_progress");
+  const order = Object.values(slice.games)
+    .filter((rec) => rec.id !== keep && !isNewerRecord(rec))
+    .sort((a, b) => finished(a) - finished(b) || a.updated - b.updated);
   const drop = () => {
     const victim = /** @type {ArchiveRecord} */ (order.shift());
     delete slice.games[victim.id];

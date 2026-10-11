@@ -3,7 +3,24 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
-==== 2.8.1 | 2026-10-07 | src a91a6a67ea66 | gen 2703374fe725 ====
+==== 2.8.2 | 2026-10-11 | src 0c6510ff2ba8 | gen 2e7b5af2efc0 ====
+[b]Version 2.8.2 · 11 October 2026[/b]
+Tooltips that stay on screen at the right of a graph, boards that read more easily, clearer Hall of Fame honorifics, and a simpler Complexity setting.
+
+[b]Fixed[/b]
+• A graph's tooltip near the right edge was cut off. Hovering the last points of a line graph, or a point at the right of a Soft Power scatter plot, drew the tooltip to the cursor's right and ran it past the chart's edge. The tooltip is meant to flip to the cursor's left there, but it measured its own width as the game lays it out, and the game reports a freshly filled box as zero wide for a frame or two, so the flip never happened. It now places itself from the size it last measured and settles once the real size is known.
+
+[b]Changed[/b]
+• Board colors. The text, outlines and gold accent on the boards (Wonders Board, Wonder Races, Settlements by Size, Quarters, Buildings and the other board pages) are tuned for contrast on the dark screen. Small captions and counts now meet the 4.5:1 contrast that readability guidelines ask of small text; everything else looks as before.
+• Complexity has two choices, Basic and Standard. Analyst showed the same pages as Standard; a game set to Analyst opens on Standard with nothing hidden. The setting's description says what each choice shows, in every language.
+• Clearer English labels: “Kills by Unit Type”, “Losses by Unit Type” and “Settlements by Size”.
+• Quarters board: a half-built Unique Quarter is marked by its gold “Unique: … needs …” line alone, without a warning symbol.
+• Hall of Fame honorifics no longer read as the leader's name. The honorifics are historical rulers (Augustus Caesar down to Ethelred the Unready), so a card showing “Augustus Caesar” above Catherine the Great's portrait looked wrong. Cards and a game's page now show (Honorific Title: “Augustus Caesar”), and the tables head the column Honorific Title with each title in quotes, in every language.
+
+[b]Internal[/b]
+• Readable source: descriptive names throughout, one shared logger, naming conventions written down in CONTRIBUTING.md, and a single test runner (npm test) that finds every test by itself. The mod's CSS variables are prefixed --dg-. No change in play.
+
+==== 2.8.1 | 2026-10-07 | src e264db165c74 | gen 2703374fe725 ====
 [b]Version 2.8.1 · 7 October 2026[/b]
 Settings that survive a restart: the mod now carries the Tower Settings Keeper.
 
@@ -76,13 +93,12 @@ A small follow-up to 2.7.3. Three things a player can see: the Hall of Fame no l
 • A new check keeps text that the game itself assembles from going missing. Those names appear nowhere in the mod's own code, so removing one used to pass every other check and only show up in the running game.
 • A check on the chart teardown, covering the case that matters most: the game's own graphs share the same charting library, and the cleanup must never reach one of those.
 
-==== 2.7.3 | 2026-09-23 | src 6d08a541e09a | gen c596c20c8254 ====
+==== 2.7.3 | 2026-09-23 | src 6496baeaf336 | gen b96c1a264deb ====
 [b]Version 2.7.3 · 23 September 2026[/b]
-A cleanup release, with no new graphs. Everything here is about how what is already in the mod looks, reads and holds up: fitting the resolution you play at, drawing the styling it always specified, reading consistently from page to page, getting its grammar right, and not losing your data.
-The screen now fits the resolution it is played at. Before this, the same layout occupied about 1% of the screen's height at 2880x1800 and about 2% at 1280x720, so on smaller displays the menus filled half the screen, only one of the top-three settlement cards was visible, tab labels wrapped onto two lines and the timeline ran off the right edge. 2880x1800 renders exactly as it did; every other resolution now approximates that layout. Along the way a sweep of the stylesheets found a class of styling this UI engine silently drops, which had been costing the screen its gold borders and all of its italic text.
-Alongside that is a consistency pass over how the screen reads. The Options button and the analytics-policy note share one header row on every tab instead of costing a row of their own on some pages. Every page now draws from one type scale, including the compact History boards that had been laid out in fixed pixels and ignored the Font Size setting. The Hall of Fame's short-games filter is a single button on the sections line rather than two buttons on a row of their own. Clicking a filter, a column header or a metric pill no longer throws away and rebuilds the parts of the page that did not change, so headings, flourishes, yield icons and leader portraits stop blinking, and the page tabs stop flicking back to their first entry.
-The cinematic tour got the same treatment: its info panel is back in its own frame at the bottom of the screen, and a flyby can no longer be clicked or hovered through to the game underneath. The sentence that panel writes about a settlement also reads correctly again for every wonder in the game. It names each one in prose, so each needs to be right about “the”, and the list it checked against had fallen behind the game: wonders and natural wonders added since that text was written all collected a wrong article, and one was listed under a spelling the game does not use. All 48 wonders and 19 natural wonders are now matched on their internal id rather than their name.
-The rest is hardening: every change closes a way the mod could lose data, blank a panel, or step on another mod, found by a code audit after the shared-storage bug in 2.7.1. Nothing there changes for a player whose game was already working; the notes say what each change protects.
+A release with no new graphs. The screen fits the resolution it is played at, draws styling the game's UI engine had been dropping, reads the same from page to page, and keeps your data safer.
+Before this, the same layout took about 1% of the screen's height at 2880x1800 and about 2% at 1280x720, so on smaller displays the menus filled half the screen and tab labels wrapped. 2880x1800 renders exactly as it did; every other resolution now approximates that layout. The gold borders and every line of italic text are back.
+The Options button and the analytics-policy note share one header row, every page uses one type scale, and clicking a filter or a column no longer rebuilds what did not change, so icons and portraits stop blinking. The cinematic tour's info panel is back in its frame, and the tour names every wonder correctly.
+The rest closes ways the mod could lose data, blank a panel or disturb another mod's settings, found in a review of the code after the shared-storage bug in 2.7.1. Nothing there changes for a player whose game was already working.
 
 [b]Added[/b]
 • Resolution scaling
@@ -123,12 +139,25 @@ The rest is hardening: every change closes a way the mod could lose data, blank 
 
 [b]Changed[/b]
 • The three best games wear their medals
+• The Hall of Fame's short-games filter is one button on the sections' line
+• The line-chart legend covered the data on short screens
+• Hall of Fame footer note removed
+• The cinematic's info panel is very slightly more see-through, so a little of the shot reads behind it
+• Podium headings carry one flourish instead of two
+• The type scale has one source in JavaScript and one declaration in CSS, and the test suite fails if they drift
 
 [b]Known issues[/b]
+• At 1280x720 some pages are still cramped: column headings and long leader names can be cut off
 
 [b]Added (release gates, not shipped)[/b]
+• test:storage-invariants: no file may write a top-level storage key other than the shared one, reset it, or clear the store outside the...
+• test:core-imports: every base-game module the mod imports must exist in the installed game
+• test:loc-keys: every LOC key referenced in code must exist in the English text or the base-game registry
+• test:control-assets: every HTML/CSS asset a screen registers must exist and be declared in the modinfo
+• The stylesheet gate sweeps every sheet for constructs this UI engine silently drops: a variable inside a shorthand (border-color, bord...
+• The modinfo test now fails on a runtime import cycle
 
-More changes in the [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/CHANGELOG.md]full changelog[/url].
+Details in the [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/CHANGELOG.md]full changelog[/url].
 
 ==== 2.7.2 | 2026-09-22 | src 8782e95ab166 | gen 4dbe5c713d66 ====
 [b]Version 2.7.2 · 22 September 2026[/b]
@@ -203,7 +232,7 @@ A compatibility and stability release. Everything works unchanged on Civilizatio
 • The shared mod-settings store is no longer overwritten with unrelated data. When the game's storage layer returns another mod's data in place of the settings store, Demographics now leaves the store untouched for the session instead of saving that data back into it. Settings keep working normally while you play. Nothing is ever deleted or rewritten.
 • Internally, the module graph is now acyclic. The sampler's shared helpers and the Historical Data page catalogue moved into dedicated modules, clearing the circular imports the game reported on every load. No behavior changes.
 
-==== 2.5.1 | 2026-07-17 | src 79ef5767c760 | gen 2541a8e907c1 ====
+==== 2.5.1 | 2026-07-17 | src 1e431b0e2a7b | gen 2541a8e907c1 ====
 [b]Version 2.5.1 · 17 July 2026[/b]
 
 [b]Changed[/b]
@@ -255,15 +284,15 @@ A localization release. The Top-6 Settlements cinematic now draws its rank word 
 [b]Added[/b]
 • The Top-6 cinematic rank word is now localizable. The “Recognized as the _sixth_ greatest settlement in the world” line previously hardcoded the English ordinal word and fell back to a bare number in every other language. The six ranks now resolve through dedicated tags (LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1–_6), so languages that need grammatical inflection (e.g. Polish) can provide a properly declined form. The tags ship in all eleven locale files; English keeps its existing wording and the already-translated languages keep the numeric form their sentence frames are built around, so nothing changes on screen until a translation is supplied.
 
-==== 2.4.3 | 2026-07-06 | src e9b58d95caf7 | gen 9fcf45efaf64 ====
+==== 2.4.3 | 2026-07-06 | src 8d2144189ee6 | gen ee8e65a2c422 ====
 [b]Version 2.4.3 · 6 July 2026[/b]
-A code-quality and test-hardening release. There are no gameplay, UI, or behavior changes; the mod runs exactly as 2.4.1 did. This release only strengthens the automated safety net behind two of the mod's trickier subsystems so future changes are less likely to regress them.
+A release with no change in play: the mod runs exactly as 2.4.1 did. It adds tests for two of its trickier parts, the war tracker and the crisis cost table, so later changes are less likely to break them.
 
 [b]Internal / Quality[/b]
 • New branch-coverage tests for the war tracker. The Conflicts sampler (the code that detects active wars, ingests each war event's diplomatic data, and runs the per-turn war tracker) gained dedicated test suites (sampler-wars-detect, sampler-wars-ingest, sampler-wars-core) that exercise its edge cases (missing engine data, duplicate declarations, ally and city-state augmentation, record migration). These are wired into the release gate, so a bad edit to war detection now fails verify instead of shipping.
 • New branch-coverage tests for the crisis cost model. The Crises cost table (crisis-cost-model.js), with its participant ordering, age-column merging, and cost aggregation, is now covered by its own crisis-cost-branches suite, also part of the release gate.
-• Targeted mutation-testing config added. stryker.full.targeted.json mutation-tests the crisis cost model and the entire wars-sampler pipeline (detect / ingest / core / augment) against the new suites.
-• Lint gate tightened. Three per-file max-lines exemptions (the metrics catalog, the screen controller, and the storage facade) were removed now that those modules fit the standard limit; the modularization gate applies uniformly with no remaining per-file waivers.
+• A configuration (stryker.full.targeted.json) that plants deliberate faults in the crisis cost model and the whole war tracker (detect / ingest / core / augment) and checks the new suites catch them.
+• Lint gate tightened. Three per-file max-lines exemptions (the metrics catalog, the screen controller, and the storage facade) were removed now that those modules fit the standard limit; the size limits now apply to every file with no exceptions.
 
 ==== 2.4.1 | 2026-07-05 | src b07f0d5ef325 | gen 00784bef5910 ====
 [b]Version 2.4.1 · 5 July 2026[/b]
@@ -328,16 +357,16 @@ Every screen now scales smoothly to lower resolutions.
 [b]Fixed[/b]
 • Every screen now renders properly on lower resolutions. On sub-1080p displays (1366×768, 1600×900 and similar) the game pins the UI font at its smallest size, so all the fixed elements (titles, tab bars, the chart toolbar and legends, the World Rankings header band, the Settlements avatars and sub-tabs, the Relations filter chips) kept their full size and crowded the actual data into a sliver (the reported “charts only use 20% of the screen”). The fixed-size content now scales [i]continuously[/i] with the available height: each element eases smoothly from its full size down to a readable floor as the window gets shorter, with no abrupt jumps between resolutions. At the standard resolutions (1080p / 1440p / 4K) nothing changes.
 
-==== 2.1.1 | 2026-06-27 | src 091c82d272a5 | gen 9fba8e6cbba8 ====
+==== 2.1.1 | 2026-06-27 | src dfd0505ddf36 | gen c67388c4bfa9 ====
 [b]Version 2.1.1 · 27 June 2026[/b]
 A correctness pass on two charted figures that could balloon to absurd values on long or slow (Marathon) games, the same “a number escaped its bound” class the 2.1.0 population rework addressed, now closed for war casualties and GDP. No saves affected; presentation only.
 
 [b]Fixed[/b]
 • War-casualties no longer read in the billions on long / slow games. The “soldiers killed” chart used an unbounded 1.009^turn era multiplier (the same term the population formula already dropped), which ran to thousands× on a long Marathon game. It is now capped at a full game's worth of era growth, so casualty figures stay sane and comparable across eras and speeds.
 • GDP no longer balloons purely because time passed. The GDP figure multiplied per-turn yield by the raw turn counter with no bound, making a mature empire read hundreds of times “richer” late game (worse on Marathon). The turn factor is now capped at a full game's length, so a normal game is unchanged while overtime / slow speeds / very long games can't run the figure away.
-• Hardened the population soft ceiling against a divide-by-zero in the (today impossible) case of a zero ceiling.
+• The population soft ceiling can no longer divide by zero, should the ceiling ever be zero (it cannot be today).
 
-==== 2.1.0 | 2026-06-27 | src 2ea19d03e4f3 | gen ff912b25c939 ====
+==== 2.1.0 | 2026-06-27 | src fa767459eefc | gen 06f5ddf89904 ====
 [b]Version 2.1.0 · 27 June 2026[/b]
 A population-realism release. The scaled “people” figures the dashboard shows are completely reworked so that every age reads at a believable historical scale: towns in the thousands, great cities up to ~1 million in the pre-modern world, and true 10–38 million megacities only in the Modern age. The empire total is now the exact sum of its settlements rather than a separate, hotter number. Existing saves are unaffected; this is presentation only and never touches gameplay.
 
@@ -352,34 +381,26 @@ A population-realism release. The scaled “people” figures the dashboard show
 • The Population chart bridges age transitions. Civ VII mechanically slashes settlement population when an age rolls over; the people line now smooths across that artificial reset so it reads as a continuous history, while still showing a genuine war or collapse that happens to land near the boundary.
 
 [b]Internal[/b]
-• A historical-anchor + age-boundary-continuity test suite, a cross-mod parity guard pinning the shared scaling to the Emigration companion mod, and an upper safety bound so a bad engine read can never resurrect a multi-billion figure. Design + review notes under reports/.
+• A historical-anchor + age-boundary-continuity test suite, a cross-mod parity guard pinning the shared scaling to the Emigration companion mod, and an upper safety bound so a bad engine read can never resurrect a multi-billion figure.
 
-==== 2.0.8 | 2026-06-27 | src d4684701b3c5 | gen 1c50a87a8805 ====
+==== 2.0.8 | 2026-06-27 | src 7117eaef35bf | gen 02190f5fe228 ====
 [b]Version 2.0.8 · 27 June 2026[/b]
-A stability and quality-assurance release. No charts, metrics, or behavior changed for the player. This hardens how the mod stores its history and adds a large automated test-coverage pass (around four dozen new regression harnesses) that exercises the error paths and edge cases of nearly every screen and subsystem, so corrupt input, missing data, and unavailable engine APIs are handled instead of crashing.
+A release with no change to charts, metrics or behavior. Saved history now carries a version number, and about four dozen new tests cover the error paths and edge cases of nearly every screen, so corrupt input, missing data and unavailable engine functions are handled instead of crashing.
 
 [b]Changed[/b]
-• Saved-history persistence now uses a versioned envelope. Demographics history is written as { v: 2, data: ... } instead of a bare payload, so future schema changes can be migrated cleanly. Loading remains fully backward-compatible: legacy raw payloads from older versions are still read, so existing saves are unaffected.
+• Saved history now carries a version. Demographics history is written as { v: 2, data: ... } instead of a bare payload, so future format changes can be migrated. Older saves are still read as they were, so existing saves are unaffected.
 
 [b]Added[/b]
-• Storage / persistence hardening harnesses covering the persistence layer's failure modes, so a corrupt, truncated, or old-schema blob is handled instead of throwing: storage-schema (versioned-envelope shape), storage-load-branches (malformed / legacy load paths), storage-backend-branches (storage-backend availability fallbacks), storage-cap-branches (bounded-growth caps), and governance-branches (analytics-visibility governance paths).
-• Relations-graph coverage, the largest area, hardening the Global Relations diagram end to end: relations-queries-branches, relations-shared-branches, relations-settings-branches, relations-filters-branches, relations-filters-dom-branches, relations-viewer-controls-branches, relations-node-info-branches, relations-edges-branches, relations-edges-cs-branches, relations-ring-compute-branches, relations-ring-svg-branches, relations-ring-svg-nodes-branches, relations-ring-svg-edges-branches, relations-ring-svg-backdrop-branches, and relations-render-integration.
-• Line-chart coverage for the history graphs: chart-line-axis-branches, chart-line-config-branches, chart-line-datasets-branches, chart-line-series-branches, chart-line-legend-branches, chart-line-plugins-branches, chart-line-event-markers-branches, chart-line-wonder-markers-branches, and chart-line-render-integration.
-• Settlements and city-map coverage: settlements-pure-branches, settlements-detail-render-branches, settlements-render-integration, and city-map-view-branches.
-• Radar, World Rankings and resources coverage: radar-data-branches, worldrankings-profiles-branches, resources-radar-render-integration, and options-worldrankings-render-integration.
-• Crisis, conflicts and history view render coverage: crisis-render-integration, conflicts-render-integration, and history-view-render-integration.
-• Bootstrap, registration and shared-helper coverage: bootstrap-branches, hardware-branches, screen-demographics-registration-branches, re-export-barrels-branches, ui-helpers-contracts-branches, camera-utils-branches, view-pills-branches, and wars-naming-branches.
-• New shared test scaffolding (tests/_dom-stub.mjs, an engine panel-support stub) so the render-integration harnesses can drive the real view code off-engine.
-• scripts/required-scripts-gate.mjs, a script-integrity guard that fails the build if a required test script is missing from package.json or from the verify chain, so a harness can't be silently dropped.
-• A release:gate script chaining required-scripts, verify, and coverage into a single pre-release check.
+• Tests for saved history: a corrupt, truncated or old-format record is handled instead of throwing, storage that is unavailable falls back, history stays within its caps, and the analytics policy is applied.
+• Tests across the Global Relations diagram, the line charts, the settlements and city-map views, the radar, World Rankings and resources views, the crisis, war and history views, and start-up and the shared helpers. A stub of the engine's panel support lets them drive the real view code outside the game.
+• scripts/required-scripts-gate.mjs, which fails the build if a required test goes missing from package.json or from the verify chain, and a release:gate script that runs it, verify and coverage before a release.
 
 [b]Internal[/b]
-• Strengthened the package gates so verify and the coverage chain (test:js) run the new harnesses, preventing accidental script-chain regressions; the automated suite now runs roughly four dozen more harnesses than 2.0.7.
-• Pruned generated coverage temp artifacts (coverage/tmp) from the working tree to keep local outputs reproducible and avoid stale report carryover.
+• verify and the coverage run include the new tests: about four dozen more than 2.0.7.
 
-==== 2.0.7 | 2026-06-25 | src 874f37b5dbb9 | gen f61d4832e581 ====
+==== 2.0.7 | 2026-06-25 | src 19e5bf6f4326 | gen 3c59258801ab ====
 [b]Version 2.0.7 · 25 June 2026[/b]
-A full-codebase resolution / Interface-Size hardening pass (follow-up to the 2.0.6 ring fix), driven by an audit for every place content could clip, overflow, or mis-scale at a non-default resolution or Interface Size.
+A pass over every place content could clip, overflow or scale wrongly at a non-default resolution or Interface Size, following the 2.0.6 ring fix.
 
 [b]Fixed[/b]
 • History charts now re-fit when the window or Interface Size changes. Every chart (line, war Gantt, war/crisis graphs, resources, Legacy radar) measured its size once and kept it; changing Interface Size or resizing while Demographics was open left the chart stale (overflowing or shrunk) until a metric was re-picked. They now re-render on resize, mirroring the relations ring.
@@ -398,9 +419,9 @@ A full-codebase resolution / Interface-Size hardening pass (follow-up to the 2.0
 [b]Fixed[/b]
 • Global Relations diagram still clipped at the bottom on some setups. The ring's bottom node (and ~20% of the wheel) could hang below the frame off-screen at larger Interface Sizes / shorter windows, most visibly with a full lobby (7–12 majors, the largest ring). Earlier fixes removed the SVG min-height floors, but the diagram's flex container could still resolve taller than the frame in GameFace, so the box itself overran the bottom edge. The view now measures the visible space in pixels at runtime (the body's top to the frame's bottom, minus the caption row) and caps the diagram to it, so the whole ring always fits at any resolution or Interface Size, with no hard-coded sizes. The fit re-runs on window resize, and the SVG keeps scaling to the capped box via meet.
 
-==== 2.0.5 | 2026-06-25 | src 6aa5a3987566 | gen 592154489157 ====
+==== 2.0.5 | 2026-06-25 | src 1e74d0e3c3cb | gen fb1ddc95e110 ====
 [b]Version 2.0.5 · 25 June 2026[/b]
-A correctness pass from an audit across every subsystem.
+A correctness pass across every part of the mod.
 
 [b]Changed[/b]
 • Removed the Refresh and Time buttons from the Triumphs radar screen. Both were meaningless on a snapshot view (the radar reloads when you pick a snapshot, and the turn/year toggle has no time axis to act on); the snapshot selector, Copy CSV, and Options controls remain.
@@ -413,8 +434,8 @@ A correctness pass from an audit across every subsystem.
 • Settlements “Options” button vanished after sorting/toggling inside the All Civilizations sub-tab, because that view clears its host on each internal re-render. The toolbar is now re-attached after every re-render (idempotently).
 • Chart tooltips clipped off the bottom. The war-graphs hover tooltip and the Gantt tooltip only flipped horizontally; both now also flip vertically so hovers in the lower rows of scrollable grids stay on-screen.
 • Crisis graphs re-parsed the entire sample history on every legend toggle (~8× per click). Parsed series are now cached per game, so a visibility toggle reuses them instead of re-walking the whole stream.
-• Global Relations diagram hardening. An orphaned ring's deferred portrait placement could spin in an unbounded animation-frame loop against a detached node after rapid re-renders; added a liveness check and a retry cap. The view's in-memory filter / node-focus caches now reset when the game/save changes, so a second game in one session no longer inherits the previous game's selections.
-• Wrapped rows could overlap vertically. Several flex-wrap containers used a single-value gap, whose row-gap GameFace drops on wrap; converted to explicit two-value gaps. Hardened two dropdowns (.demographics-option-dropdown, .demographics-chart-viewer-dropdown) against the same min-width > max-width overflow trap as the relations ring, and de-duplicated a conflicting .demographics-option-hint rule that resolved differently by file load order.
+• Global Relations diagram: no runaway loop after quick redraws. An orphaned ring's deferred portrait placement could spin in an unbounded animation-frame loop against a detached node after rapid re-renders; added a liveness check and a retry cap. The view's in-memory filter / node-focus caches now reset when the game/save changes, so a second game in one session no longer inherits the previous game's selections.
+• Wrapped rows could overlap vertically. Several flex-wrap containers used a single-value gap, whose row-gap GameFace drops on wrap; converted to explicit two-value gaps. Two dropdowns (.demographics-option-dropdown, .demographics-chart-viewer-dropdown) no longer overflow through the same min-width > max-width trap as the relations ring, and de-duplicated a conflicting .demographics-option-hint rule that resolved differently by file load order.
 
 [b]Internal[/b]
 • Markers that relied on stroke-dasharray (which Coherent ignores) had the no-op attribute removed and the color-based differentiation documented inline.
@@ -432,20 +453,20 @@ A correctness pass from an audit across every subsystem.
 [b]Fixed[/b]
 • Critical mod-compatibility fix (dead Begin Game button / missing mod options). Demographics shipped a file named mod-options.js, the same basename many other mods use for their options bootstrap. The game's UI module loader resolves these by basename, so Demographics' copy (which has no default export) shadowed every other mod's mod-options.js, making their option modules fail with “does not provide an export named 'default'”. That broke the Begin Game button after the load screen and hid those mods' options entirely. Demographics' bootstrap is now demographics-mod-options.js, a unique name that can never shadow another mod. (Companion to the 2.0.2 shared-settings fix.)
 
-==== 2.0.2 | 2026-06-25 | src 3eb2b7a16194 | gen ce94d4f44420 ====
+==== 2.0.2 | 2026-06-25 | src 33d95dbd0695 | gen 4344a885ceec ====
 [b]Version 2.0.2 · 25 June 2026[/b]
 
 [b]Fixed[/b]
-• Critical mod-compatibility fix. Demographics could wipe other mods' settings out of the shared options store. Mods share one modSettings blob (one slice each), and when the game's UI layer handed back a momentarily-empty or unreadable copy of it, Demographics wrote back only its own slice, deleting every other mod's saved options. The visible result was other mods (e.g. Classic Leader Screens, Dynamic Main Menu, Flag Corps, Map Trix) behaving as if uninstalled and, in some setups, the “Start Game” button doing nothing after the load screen. Demographics now re-reads on an empty result, refuses to write when the shared store can't be safely read, and only ever touches its own slice, so it can never drop another mod's settings.
+• Critical mod-compatibility fix. Demographics could wipe other mods' settings out of the shared options store. Mods share one modSettings blob (one slice each), and when the game's UI layer handed back a momentarily-empty or unreadable copy of it, Demographics wrote back only its own slice, deleting every other mod's saved options. The visible result was other mods losing their settings, behaving as if uninstalled and, in some setups, the “Start Game” button doing nothing after the load screen. Demographics now re-reads on an empty result, refuses to write when the shared store can't be safely read, and only ever touches its own slice, so it can never drop another mod's settings.
 
-==== 2.0.1 | 2026-06-24 | src 3aa71eb3a130 | gen e4fc2da64f6d ====
+==== 2.0.1 | 2026-06-24 | src ed01437df508 | gen 864248950fbb ====
 [b]Version 2.0.1 · 24 June 2026[/b]
 
 [b]Changed[/b]
 • UI now scales across resolutions. Tab rows (the Geopolitics / Global Relations tabs and every other tab bar) could overflow past the window edge at lower resolutions or with long localized labels; each tab now shrinks to share the available width instead of spilling off-screen. The Global Relations filter legend, the Settlements podium/advisor cards, and the inline dropdowns likewise clamp to the panel so they never run past a narrow frame.
 
 [b]Fixed[/b]
-• Hardened the Options-screen category bootstrap that runs at the main menu: its writes to the engine's shared Options model are now guarded, so a future game patch that reshapes that model can no longer throw there and take the main menu down with it.
+• The Options-screen category set-up that runs at the main menu now guards its writes to the engine's shared Options model, so a future game patch that reshapes that model can no longer throw there and take the main menu down with it.
 
 ==== 2.0.0 | 2026-06-23 | src cb52dca213e4 | gen a46dacb49eb3 ====
 [b]Version 2.0.0 · 23 June 2026[/b]
@@ -458,7 +479,7 @@ A correctness pass from an audit across every subsystem.
 • Companion-mod metric hook (globalThis.DemographicsMetricsAPI with registerMetric + registerMetricToPage). Lets a separate mod contribute a metric that flows through the normal sample → store → line-chart pipeline and appears on a chosen Historical Data page. Inert unless another mod calls it, so base behavior is unchanged. The handshake is load-order-independent: this module is dynamic-imported (after engine.whenReady), so it drains any registrations a companion mod queued before it loaded. (Used by the companion Emigration mod to add a net-migration graph next to Population.)
 • Companion-mod panel hook (DemographicsMetricsAPI.registerPanel). Beyond a line-chart metric, a companion mod can contribute a whole page whose body it renders itself: the Historical Data screen adds it as its own page/tab and hands the companion's render(container, ctx) callback a container (the time-filter and CSV toolbar are suppressed for these custom pages). Inert unless called; the base mod gains no dependency on the companion. (Used by Emigration to add a dedicated Migration dashboard page.)
 
-==== 1.3.0 | 2026-06-09 | src 58942ab031d0 | gen 83cf99cb509d ====
+==== 1.3.0 | 2026-06-09 | src 1715a9e5e03d | gen fcbcf0de5fe3 ====
 [b]Version 1.3.0 · 9 June 2026[/b]
 
 [b]Fixed[/b]
@@ -470,9 +491,13 @@ A correctness pass from an audit across every subsystem.
 • Workshop and README copy now state the readable-source release posture and companion triumphs-progress-overlay split.
 
 [b]Internal[/b]
-• Wave 2 refactor decomposition expanded across major view controllers: - Settlements split into detail, civ ranking, showcase, and table modules. - Relations name-map and city-state node-info extraction moved into relations-node-info.js. - Options storage controls and action controls moved into dedicated modules. - History chart host/render routing moved into view-history-chart-render.js.
+• The larger view modules were split into smaller ones:
+ ◦ Settlements into detail, civ ranking, showcase, and table modules.
+ ◦ The Relations name map and city-state node info into relations-node-info.js.
+ ◦ The Options storage and action controls into their own modules.
+ ◦ History chart hosting and rendering into view-history-chart-render.js.
 
-==== 1.2.0 | 2026-06-05 | src 286620050e59 | gen d0c86343aa73 ====
+==== 1.2.0 | 2026-06-05 | src 2e28f96f9452 | gen d0c86343aa73 ====
 [b]Version 1.2.0 · 5 June 2026[/b]
 
 [b]Added[/b]
@@ -491,7 +516,7 @@ A correctness pass from an audit across every subsystem.
 • Build pipeline (minification): release.sh now minifies every shipped JS file in place (esbuild, per-file transform) while preserving the module layout and import paths, and constant-folds out the debug logging. Source stays unminified and readable; only the shipped dist/ copy is minified, so players never need any build tooling.
 • Loading architecture: the chart barrel (demographics-chart.js) now imports the heavy Conflicts charts on demand via ensureChartForMetric, and the screen imports the All Civilizations/Relations tab modules on first open, replacing the previous all-at-once static imports.
 
-==== 1.1.12 | 2026-06-04 | src 3b6c687faca0 | gen efda5ff65fdb ====
+==== 1.1.12 | 2026-06-04 | src 4551910895ac | gen efda5ff65fdb ====
 [b]Version 1.1.12 · 4 June 2026[/b]
 
 [b]Fixed[/b]
@@ -510,7 +535,7 @@ A correctness pass from an audit across every subsystem.
 • Refined the line-chart time and crisis marker pipeline to keep chart-X mapping, time-range filters, and marker overlays aligned under the new persisted chartTurn chronology model.
 • Reworked decimation and crisis helper structure to satisfy the mod's complexity and verification gates without changing user-facing behavior.
 
-==== 1.1.11 | 2026-06-04 | src ca865925e22c | gen 8bb15e7b081c ====
+==== 1.1.11 | 2026-06-04 | src 7b536b4a0a52 | gen 8bb15e7b081c ====
 [b]Version 1.1.11 · 4 June 2026[/b]
 
 [b]Improved[/b]
@@ -519,7 +544,7 @@ A correctness pass from an audit across every subsystem.
 [b]Documentation[/b]
 • The Workshop description now details the Conflicts and Crises views: the war Gantt timeline and per-war graphs, and the staged crisis severity bars, per-stage cost tables, and crisis graphs.
 
-==== 1.1.10 | 2026-06-03 | src 9c3325ea083f | gen cdb1c21508da ====
+==== 1.1.10 | 2026-06-03 | src 91a7227bbb47 | gen cdb1c21508da ====
 [b]Version 1.1.10 · 3 June 2026[/b]
 
 [b]Fixed[/b]
@@ -532,19 +557,28 @@ A correctness pass from an audit across every subsystem.
 [b]Thanks[/b]
 • renouf, for reporting the unreadable dark line colors (a black Alexander line on the dark background) that prompted all of the chart color-readability work in this release.
 
-==== 1.1.9 | 2026-06-02 | src 1918af3282b9 | gen 889a2b916d58 ====
+==== 1.1.9 | 2026-06-02 | src 9f9ee7d9702b | gen 018c337d99bc ====
 [b]Version 1.1.9 · 2 June 2026[/b]
 
 [b]Added[/b]
-• Relations legend titles for both Global Relations tabs: - Major Civilizations - City States
-• New chart-line sibling modules to continue the monolith split: - chart-line-axis.js - chart-line-config.js - chart-line-event-markers.js - chart-line-plugins.js - chart-line-tooltip.js
+• Relations legend titles for both Global Relations tabs:
+ ◦ Major Civilizations
+ ◦ City States
+• The line chart split further, into new modules:
+ ◦ chart-line-axis.js
+ ◦ chart-line-config.js
+ ◦ chart-line-event-markers.js
+ ◦ chart-line-plugins.js
+ ◦ chart-line-tooltip.js
 
 [b]Improved[/b]
 • Overhauled the war-titling system on the Wars timeline so generated conflict names read consistently and avoid repetitive/misleading labels across ages.
 • Reworked long-war duration naming: rare/accurate suffixing, realistic rounded spans, and strict “Hundred Years' War” gating.
 • Improved chart and relations tooltip readability and presentation so hover details are clearer and more consistent across views.
 • Continued reducing chart-line.js size and surface area by extracting cohesive subsystems without behavior changes. The line chart architecture is now split into focused modules for axis math, config shape-builders, overlays, and tooltip rendering.
-• Global Relations overlay layout polish: - Viewer label/dropdown placement no longer clashes with panel framing. - Viewer controls and legend now align on the same horizontal plane (viewer on left, legend on right).
+• Global Relations overlay layout polish:
+ ◦ Viewer label/dropdown placement no longer clashes with panel framing.
+ ◦ Viewer controls and legend now align on the same horizontal plane (viewer on left, legend on right).
 
 [b]Fixed[/b]
 • City-State Global Relations viewer control positioning so the “Viewer” label and dropdown do not collide with the border frame.
@@ -552,10 +586,9 @@ A correctness pass from an audit across every subsystem.
 • Resolved multiple war-graph rendering bugs affecting timeline labeling and edge-case display behavior.
 
 [b]Internal[/b]
-• Updated remediation tracking for the chart-line split workstream and synchronized extracted module references in docs.
 • Release changenote source now reflects all bullets in this section so Steam Workshop updates show the full change list for this upload.
 
-==== 1.1.8 | 2026-06-01 | src ecea7fec978c | gen f46d6dccae19 ====
+==== 1.1.8 | 2026-06-01 | src c2db1320506d | gen aa145c5803d9 ====
 [b]Version 1.1.8 · 1 June 2026[/b]
 
 [b]Improved[/b]
@@ -565,9 +598,9 @@ A correctness pass from an audit across every subsystem.
 • War-tab labels now stay readable over any civilization bar color, including white, black, or a black+white mix, via a crisp dark text outline.
 
 [b]Internal[/b]
-• Continued breaking up the chart-line.js monolith: extracted the history→series pipeline (chart-line-series.js) and the series→dataset shaping (chart-line-datasets.js). Behavior-identical; chart-line.js is now roughly 432 lines, down about 82% from the original ~2,394.
+• chart-line.js split further: extracted the history→series pipeline (chart-line-series.js) and the series→dataset shaping (chart-line-datasets.js). Behavior-identical; chart-line.js is now roughly 432 lines, down about 82% from the original ~2,394.
 
-==== 1.1.7 | 2026-06-01 | src dbe33b3220e2 | gen f5691722dca8 ====
+==== 1.1.7 | 2026-06-01 | src fcc3d48502dc | gen f5691722dca8 ====
 [b]Version 1.1.7 · 1 June 2026[/b]
 
 [b]Added[/b]
@@ -577,7 +610,7 @@ A correctness pass from an audit across every subsystem.
 • The line chart now reveals a civ's full history the moment you meet them, instead of being stuck showing only data from the meeting turn forward (now consistent with the Radar and All Civilizations views).
 • Greatly reduced settings log spam: the shared modSettings localStorage blob is parsed quietly with a single warning per session instead of an error on every settings write.
 
-==== 1.1.6 | 2026-05-31 | src 777d72fc093c | gen d4be6ffa9f3d ====
+==== 1.1.6 | 2026-05-31 | src 58dc090501b4 | gen 454f2f002b14 ====
 [b]Version 1.1.6 · 31 May 2026[/b]
 
 [b]Added[/b]
@@ -588,11 +621,11 @@ A correctness pass from an audit across every subsystem.
 • MIT license.
 
 [b]Changed[/b]
-• Localized and credibility-hardened crisis names, with native-speaker passes across all languages and renames to avoid charged real-world references.
+• Crisis names localized and reworded, with native-speaker passes across all languages and renames to avoid charged real-world references.
 • Moved the spoiler guard from sample-time to display-time so the toggle is reversible without re-sampling.
 • Adopted an honest persistence model: history persists within an age (cross-age state does not survive current engine builds) and the UI states this plainly.
 • Relabeled the sample-frequency setting as the performance control (lighter per-turn work on slow machines or long games).
-• Audited all README and Workshop claims for accuracy.
+• README and Workshop text checked against what the mod does.
 
 [b]Fixed[/b]
 • Replaced fabricated war casualties and battle counts with data-backed per-side war costs.
@@ -600,7 +633,7 @@ A correctness pass from an audit across every subsystem.
 • Settings shared-namespace defense: stamp a schema version into the persisted slice and warn once if it returns missing-amid-siblings, malformed, or version-mismatched.
 
 [b]Internal[/b]
-• Split monolithic files into roughly 15 typed modules (barrel re-exports), holding zero TypeScript, ESLint, and complexity/length violations.
+• Large files split into roughly 15 typed modules (barrel re-exports), with no TypeScript, ESLint, or complexity/length violations.
 • Migrated static inline styles to CSS classes mod-wide.
 • Defaulted all debug flags off in source and removed a debug-only Triumphs probe.
-• Added a release.sh zip allow-list audit so stray files cannot ship.
+• release.sh checks the zip against an allow-list, so stray files cannot ship.

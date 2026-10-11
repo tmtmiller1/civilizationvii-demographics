@@ -10,7 +10,10 @@ assert.deepEqual(diffWorld(null, world(1, { 0: pstate() }), ctx), []);
 
 // Founding, capture (keyed by location), razing.
 {
-  const a = world(5, { 0: pstate({ cities: { "1,1": "Roma" } }), 1: pstate({ cities: { "9,9": "Memphis", "8,8": "Thebes" } }) });
+  const a = world(5, {
+    0: pstate({ cities: { "1,1": "Roma" } }),
+    1: pstate({ cities: { "9,9": "Memphis", "8,8": "Thebes" } })
+  });
   const b = world(6, {
     0: pstate({ cities: { "1,1": "Roma", "2,2": "Antium", "9,9": "Memphis" } }),
     1: pstate({ cities: {} })

@@ -12,7 +12,7 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Force an immediate sample, then request a reload.
- * @param {*} ctx Render context.
+ * @param {*} ctx
  */
 function refreshSampleNow(ctx) {
   try {
@@ -37,8 +37,8 @@ const SAME_PRESS_MS = 350;
 /**
  * Re-label a button built by the Options view's makeButton (an fxs-button carrying a `caption`
  * attribute) or a plain element (text content), so tests and the engine both read the new label.
- * @param {HTMLElement} btn The button.
- * @param {string} text The new label.
+ * @param {HTMLElement} btn
+ * @param {string} text
  */
 function setButtonLabel(btn, text) {
   if (typeof btn.getAttribute === "function" && btn.getAttribute("caption") != null) {
@@ -61,9 +61,9 @@ function setButtonLabel(btn, text) {
  * Build a destructive-action button that needs two clicks: the first re-labels the button with the
  * confirm text and adds `is-armed`; the second performs; any other button press, or a timeout,
  * disarms. GameFace has no native dialogs, so this is the only confirmation the player gets.
- * @param {ActionDeps} deps Action dependencies.
- * @param {ArmedSpec} spec The button spec.
- * @returns {HTMLElement} The button.
+ * @param {ActionDeps} deps
+ * @param {ArmedSpec} spec
+ * @returns {HTMLElement}
  */
 function armedButton(deps, spec) {
   let armed = false;
@@ -107,7 +107,7 @@ function armedButton(deps, spec) {
 
 /**
  * Clear all persisted history (the armed "Clear history" button's second click).
- * @param {*} ctx Render context.
+ * @param {*} ctx
  */
 function clearHistory(ctx) {
   try {
@@ -120,7 +120,7 @@ function clearHistory(ctx) {
 
 /**
  * Clear only history.wars[] and save (the armed "Reset war history" button's second click).
- * @param {*} ctx Render context.
+ * @param {*} ctx
  */
 function resetWarHistory(ctx) {
   try {
@@ -137,9 +137,9 @@ function resetWarHistory(ctx) {
 
 /**
  * Build kill-switch recovery controls when sampling is paused.
- * @param {*} ctx Render context.
- * @param {ActionDeps} deps Action dependencies.
- * @returns {HTMLElement} The paused-state row.
+ * @param {*} ctx
+ * @param {ActionDeps} deps
+ * @returns {HTMLElement}
  */
 export function buildSamplerRecoveryRowPanel(ctx, deps) {
   const row = document.createElement("div");
@@ -172,9 +172,9 @@ export function buildSamplerRecoveryRowPanel(ctx, deps) {
 
 /**
  * Build the button row (refresh, clear history, reset war history).
- * @param {*} ctx Render context.
- * @param {ActionDeps} deps Action dependencies.
- * @returns {HTMLElement} The button-row element.
+ * @param {*} ctx
+ * @param {ActionDeps} deps
+ * @returns {HTMLElement}
  */
 export function buildButtonRowPanel(ctx, deps) {
   const btnRow = document.createElement("div");

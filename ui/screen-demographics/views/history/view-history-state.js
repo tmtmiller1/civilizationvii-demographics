@@ -8,9 +8,14 @@ import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 // is the one being shown (else the first-visible clamp below takes over).
 /** @type {Record<string, string>} */
 const PAGE_ID_ALIASES = {
-  knowledge: "power", science_culture: "power", age: "society",
-  expansion: "settlements_land", construction: "settlements_land",
-  resources: "economy", conflicts: "military", wars: "military"
+  knowledge: "power",
+  science_culture: "power",
+  age: "society",
+  expansion: "settlements_land",
+  construction: "settlements_land",
+  resources: "economy",
+  conflicts: "military",
+  wars: "military"
 };
 
 /**
@@ -23,11 +28,11 @@ const PAGE_ID_ALIASES = {
  */
 export function resolveActivePageState(ctx, pages) {
   const fallback = pages.length ? pages[0].id : "yields";
-  let want = ctx.activePage || "";
-  if (PAGE_ID_ALIASES[want]) want = PAGE_ID_ALIASES[want];
-  let id = want && pages.some((p) => p.id === want) ? want : fallback;
-  const def = pages.find((p) => p.id === id);
-  if (def && !pageVisibleInTier(def)) {
+  let requested = ctx.activePage || "";
+  if (PAGE_ID_ALIASES[requested]) requested = PAGE_ID_ALIASES[requested];
+  let id = requested && pages.some((p) => p.id === requested) ? requested : fallback;
+  const pageDef = pages.find((p) => p.id === id);
+  if (pageDef && !pageVisibleInTier(pageDef)) {
     const firstVisible = pages.find((p) => pageVisibleInTier(p));
     id = firstVisible ? firstVisible.id : id;
   }
@@ -38,7 +43,7 @@ export function resolveActivePageState(ctx, pages) {
  * Resolve active metric id within a page, falling back to first renderable.
  * @param {*} ctx
  * @param {{ metrics?: string[] }} page
- * @param {(id: string) => boolean} metricExists Metric-existence predicate.
+ * @param {(id: string) => boolean} metricExists
  * @returns {string}
  */
 export function resolveActiveMetricState(ctx, page, metricExists) {

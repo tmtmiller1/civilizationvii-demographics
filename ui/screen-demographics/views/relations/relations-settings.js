@@ -23,13 +23,13 @@ let _cacheGameToken = null;
 /**
  * Best-effort per-game token (the configured game seed) used to scope the
  * in-memory caches to a single game/save.
- * @returns {string|null} The token, or null when unavailable.
+ * @returns {string|null} Null when unavailable.
  */
 function currentGameToken() {
   try {
     if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
-      const g = Configuration.getGame();
-      const seed = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
+      const gameConfig = Configuration.getGame();
+      const seed = gameConfig && (gameConfig.startSeed ?? gameConfig.gameSeed ?? gameConfig.mapSeed);
       if (seed !== undefined && seed !== null) return String(seed);
     }
   } catch (_) {
@@ -55,7 +55,7 @@ export function resetRelationsCachesIfGameChanged() {
 /**
  * Read the persisted top tab ("civ"/"cs"), defaulting to "civ".
  * @param {*} settings
- * @returns {string} Validated top tab.
+ * @returns {string}
  */
 export function readTopTab(settings) {
   let topTab = "civ";
@@ -85,23 +85,23 @@ export function readShowUnmetNames(settings) {
  * Read the persisted active filter sub-group ("politics"/"reputation"/
  * "agreements"), defaulting to "politics".
  * @param {*} settings
- * @returns {string} Validated sub-group key.
+ * @returns {string}
  */
 export function readActiveSubGroup(settings) {
-  let g = "politics";
+  let subGroup = "politics";
   try {
-    g = settings?.getSetting?.("relationsSubGroup", "politics") || "politics";
-    if (!FILTER_GROUPS.some((x) => x.key === g)) g = "politics";
+    subGroup = settings?.getSetting?.("relationsSubGroup", "politics") || "politics";
+    if (!FILTER_GROUPS.some((group) => group.key === subGroup)) subGroup = "politics";
   } catch (_) {
     // Storage boundary can throw; keep default.
   }
-  return g;
+  return subGroup;
 }
 
 /**
  * Persist the active filter sub-group (best-effort).
  * @param {*} settings
- * @param {string} key The sub-group key.
+ * @param {string} key Sub-group key.
  */
 export function writeActiveSubGroup(settings, key) {
   try {
@@ -144,10 +144,10 @@ function filterKeyForState(topTab) {
 /**
  * Default all-on filter key list for a top tab.
  * @param {string} topTab
- * @returns {string[]} Default filter keys.
+ * @returns {string[]}
  */
 function defaultFiltersFor(topTab) {
-  return filtersForView(topTab).map((f) => f.key);
+  return filtersForView(topTab).map((filter) => filter.key);
 }
 
 /**
@@ -159,15 +159,15 @@ export function makeFilterSetReader(settings) {
   return (top) => {
     if (_filterSetCache.has(top)) return _filterSetCache.get(top);
     const key = filterKeyForState(top);
-    const dflt = defaultFiltersFor(top);
-    let arr;
+    const defaults = defaultFiltersFor(top);
+    let stored;
     try {
-      arr = settings?.getSetting?.(key, dflt);
+      stored = settings?.getSetting?.(key, defaults);
     } catch (_) {
-      arr = dflt;
+      stored = defaults;
     }
-    if (!Array.isArray(arr)) arr = dflt;
-    const set = new Set(arr);
+    if (!Array.isArray(stored)) stored = defaults;
+    const set = new Set(stored);
     _filterSetCache.set(top, set);
     return set;
   };

@@ -4,7 +4,15 @@ import {
   rle, unrle, thinFrames, addFrame, mapView, packMap, unpackMap, frameAt, DOC_FRAMES_CAP, RECORD_FRAMES_CAP,
   withinBytes, RECORD_MAP_BYTES, DOC_MAP_BYTES
 } from "/demographics/ui/history/model/history-map.js";
-import { holders, safeColor, hexLayout, displaySize, cellCenter, cellLayers, mapPanel } from "/demographics/ui/history/views/history-map-view.js";
+import {
+  holders,
+  safeColor,
+  hexLayout,
+  displaySize,
+  cellCenter,
+  cellLayers,
+  mapPanel
+} from "/demographics/ui/history/views/history-map-view.js";
 import { createFakeDocument } from "./_dom-stub.mjs";
 import { gridWidth } from "/demographics/ui/history/capture/history-mapgrid.js";
 
@@ -38,21 +46,54 @@ assert.deepEqual(thinFrames([1, 2], 5), [1, 2]);
 {
   const big = Array.from({ length: 16 }, (_, i) => ({ id: i, bytes: 5000 }));
   const kept = withinBytes(big, 24000, (f) => f.bytes);
-  assert.ok(kept.length * 5000 <= 24000 && kept[kept.length - 1].id === 15 && kept[0].id === 0, "thinned, first and newest kept");
-  assert.deepEqual(withinBytes([{ id: 0, bytes: 9e5 }, { id: 1, bytes: 9e5 }], 1000, (f) => f.bytes).map((f) => f.id), [1], "only the newest when even two do not fit");
+  assert.ok(
+    kept.length * 5000 <= 24000 && kept[kept.length - 1].id === 15 && kept[0].id === 0,
+    "thinned, first and newest kept"
+  );
+  assert.deepEqual(
+    withinBytes(
+      [
+        { id: 0, bytes: 9e5 },
+        { id: 1, bytes: 9e5 }
+      ],
+      1000,
+      (f) => f.bytes
+    ).map((f) => f.id),
+    [1],
+    "only the newest when even two do not fit"
+  );
   const ragged = { at: 0, o: Array.from({ length: 3000 }, (_, i) => (i % 2 ? "1x1" : "-1x1")).join("."), c: [] };
-  const packed = packMap({ w: 60, h: 50, terrain: "", frames: Array.from({ length: 30 }, (_, i) => ({ ...ragged, at: i })) });
+  const packed = packMap({
+    w: 60,
+    h: 50,
+    terrain: "",
+    frames: Array.from({ length: 30 }, (_, i) => ({ ...ragged, at: i }))
+  });
   assert.ok(JSON.stringify(packed.f).length <= RECORD_MAP_BYTES + 2000, "a ragged map fits the record budget");
   const docMap = { w: 60, h: 50, terrain: "", frames: [] };
   for (let t = 0; t < 60; t++) addFrame(docMap, { t, a: 0, o: ragged.o + "." + t + "x1", c: [] });
-  assert.ok(docMap.frames.reduce((n, f) => n + f.o.length, 0) <= DOC_MAP_BYTES, "the saved map stays within its budget");
+  assert.ok(
+    docMap.frames.reduce((n, f) => n + f.o.length, 0) <= DOC_MAP_BYTES,
+    "the saved map stays within its budget"
+  );
   assert.equal(docMap.frames[docMap.frames.length - 1].t, 59, "newest frame kept");
 }
 
 // Placement on the timeline axis (turns restart each age) and the archive form.
 const doc = {
-  ages: [{ age: "AGE_ANTIQUITY", start: 1, end: 100 }, { age: "AGE_EXPLORATION", start: 1, end: 50 }],
-  map: { w: 2, h: 2, terrain: "0x1.1x3", frames: [{ t: 10, a: 0, o: "0x4", c: [[1, 0]] }, { t: 5, a: 1, o: "1x4", c: [] }] }
+  ages: [
+    { age: "AGE_ANTIQUITY", start: 1, end: 100 },
+    { age: "AGE_EXPLORATION", start: 1, end: 50 }
+  ],
+  map: {
+    w: 2,
+    h: 2,
+    terrain: "0x1.1x3",
+    frames: [
+      { t: 10, a: 0, o: "0x4", c: [[1, 0]] },
+      { t: 5, a: 1, o: "1x4", c: [] }
+    ]
+  }
 };
 const mv = mapView(doc);
 assert.deepEqual(mv.frames.map((f) => f.at), [9, 104]);
@@ -94,7 +135,11 @@ assert.deepEqual(holders({ w: 2, h: 1 }, { at: 0, o: "0x2" }), [{ pid: 0, cells:
   const before = logged.filter((l) => l.includes("map legend failed")).length;
   assert.equal(before, 1);
   assert.doesNotThrow(() => panel.show(0));
-  assert.equal(logged.filter((l) => l.includes("map legend failed")).length, 2, "the next frame was tried and logged too");
+  assert.equal(
+    logged.filter((l) => l.includes("map legend failed")).length,
+    2,
+    "the next frame was tried and logged too"
+  );
   console.error = saved;
   delete globalThis.document;
 }
@@ -107,28 +152,32 @@ assert.equal(safeColor("hsl(1,2%,3%)"), null);
 assert.equal(safeColor(undefined), null);
 
 // Canvas size follows the grid.
-const L = hexLayout({ w: 48, h: 30 });
-assert.equal(L.cw, Math.ceil(48.5 * 18));
-assert.ok(L.ch > 0 && L.ch < L.cw);
+const layout = hexLayout({ w: 48, h: 30 });
+assert.equal(layout.canvasWidth, Math.ceil(48.5 * 18));
+assert.ok(layout.canvasHeight > 0 && layout.canvasHeight < layout.canvasWidth);
 
 // Grid detail follows the world's size (about two tiles a cell, within bounds).
-assert.deepEqual([60, 84, 106, 180, 20].map(gridWidth), [60, 84, 106, 110, 20], "one cell per tile, very large maps sampled down");
+assert.deepEqual(
+  [60, 84, 106, 180, 20].map(gridWidth),
+  [60, 84, 106, 110, 20],
+  "one cell per tile, very large maps sampled down"
+);
 
 // On screen: a fixed height, unless a very wide world would pass the width cap.
 const std = displaySize(hexLayout({ w: 42, h: 27 }));
 const wide = displaySize(hexLayout({ w: 60, h: 20 }));
-assert.equal(std.h, 21);
-assert.ok(wide.w <= 40 && wide.h < 21, "a very wide world is shown shorter, not wider than the cap");
+assert.equal(std.height, 21);
+assert.ok(wide.width <= 40 && wide.height < 21, "a very wide world is shown shorter, not wider than the cap");
 
 // Drawn as the game's minimap is: map row 0 is the south edge, so it is drawn at the bottom; odd
 // rows sit half a hex to the right.
 {
   const m = { w: 4, h: 3 };
-  const L2 = hexLayout(m);
-  const south = cellCenter(L2, m, 0);
-  const north = cellCenter(L2, m, 8);
+  const smallLayout = hexLayout(m);
+  const south = cellCenter(smallLayout, m, 0);
+  const north = cellCenter(smallLayout, m, 8);
   assert.ok(south.y > north.y, "row 0 (south) below row 2 (north)");
-  assert.ok(cellCenter(L2, m, 4).x > cellCenter(L2, m, 0).x, "odd row shifted right");
+  assert.ok(cellCenter(smallLayout, m, 4).x > cellCenter(smallLayout, m, 0).x, "odd row shifted right");
 }
 
 // Layers: unexplored cells are blank, held land is tinted over its terrain.

@@ -2,23 +2,15 @@
 //
 // Per-subtab edge builders for the Global Relations ring: political actions
 // (alliance / war / denounced / research / endeavors / open borders), economic
-// trade routes, pairwise attitudes, and the City-State suzerain / trade /
-// attitude builders. Also owns the diplomatic-query helpers, attitude/color
-// resolution, and the City-State type resolution those builders rely on.
+// trade routes and pairwise attitudes. Also owns the diplomatic-query and
+// attitude/color helpers, which the City-State builders in
+// relations-edges-city-states.js reuse.
 
 import {
   AGREEMENT_TYPES,
   safeCall
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import { getAttitudeColors } from "/demographics/ui/core/demographics-palette.js";
-export {
-  buildCsAgreementEdges,
-  buildCsAttitudeEdges,
-  buildCsSuzerainEdges,
-  buildCsTradeEdges,
-  csTypeMeta,
-  resolveCsType
-} from "/demographics/ui/screen-demographics/views/relations/relations-edges-cs.js";
 
 /**
  * One relationship edge between two ring nodes. `a`/`b` are player ids; the
@@ -29,7 +21,7 @@ export {
  * @property {string} [color] Stroke color (hex or rgba).
  * @property {string} [label] Optional human-readable edge label.
  * @property {string} [filterKey] Filter category this edge belongs to.
- * @property {boolean} [dashed] Legacy dashed-line flag (suzerain edges).
+ * @property {boolean} [dashed] Dashed-line flag, set directly by suzerain edges.
  * @property {boolean} [directed] When set, render a→b direction chevrons.
  * @property {number} [width] Per-edge stroke width (currently ignored).
  * @property {number} [opacity] Per-edge stroke opacity (currently ignored).
@@ -49,18 +41,18 @@ export {
 // diplomatic queries
 
 /**
- * Whether `p1` has an alliance with player `p2id`, defensively.
- * @param {*} p1
- * @param {number} p2id
+ * Whether `player` has an alliance with player `otherPid`, defensively.
+ * @param {*} player
+ * @param {number} otherPid
  * @returns {boolean} True when an alliance is reported.
  */
-function hasAlliance(p1, p2id) {
+function hasAlliance(player, otherPid) {
   return safeCall(
     "hasAllied",
     () => {
-      const d = p1?.Diplomacy;
-      if (!d) return false;
-      if (typeof d.hasAllied === "function") return !!d.hasAllied(p2id);
+      const diplomacy = player?.Diplomacy;
+      if (!diplomacy) return false;
+      if (typeof diplomacy.hasAllied === "function") return !!diplomacy.hasAllied(otherPid);
       return false;
     },
     false
@@ -68,18 +60,18 @@ function hasAlliance(p1, p2id) {
 }
 
 /**
- * Whether `p1` is at war with player `p2id`, defensively.
- * @param {*} p1
- * @param {number} p2id
+ * Whether `player` is at war with player `otherPid`, defensively.
+ * @param {*} player
+ * @param {number} otherPid
  * @returns {boolean} True when at war.
  */
-function isAtWar(p1, p2id) {
+export function isAtWar(player, otherPid) {
   return safeCall(
     "isAtWarWith",
     () => {
-      const d = p1?.Diplomacy;
-      if (!d) return false;
-      if (typeof d.isAtWarWith === "function") return !!d.isAtWarWith(p2id);
+      const diplomacy = player?.Diplomacy;
+      if (!diplomacy) return false;
+      if (typeof diplomacy.isAtWarWith === "function") return !!diplomacy.isAtWarWith(otherPid);
       return false;
     },
     false
@@ -87,16 +79,16 @@ function isAtWar(p1, p2id) {
 }
 
 /**
- * Resolve the engine relationship enum from `p1` toward `p2id`, defensively.
- * @param {*} p1
- * @param {number} p2id
+ * Resolve the engine relationship enum from `player` toward `otherPid`, defensively.
+ * @param {*} player
+ * @param {number} otherPid
  * @returns {*} The relationship enum value, or `undefined`.
  */
-function getRelationship(p1, p2id) {
+export function getRelationship(player, otherPid) {
   return safeCall("getRelationshipEnum", () => {
-    const d = p1?.Diplomacy;
-    if (!d || typeof d.getRelationshipEnum !== "function") return undefined;
-    return d.getRelationshipEnum(p2id);
+    const diplomacy = player?.Diplomacy;
+    if (!diplomacy || typeof diplomacy.getRelationshipEnum !== "function") return undefined;
+    return diplomacy.getRelationshipEnum(otherPid);
   });
 }
 
@@ -104,7 +96,7 @@ function getRelationship(p1, p2id) {
  * Build a relationship-enum to attitude-key lookup map from engine constants.
  * @returns {Map<*, string>}
  */
-function relationshipKeyMap() {
+export function relationshipKeyMap() {
   /** @type {Map<*, string>} */
   const map = new Map();
   if (typeof DiplomacyPlayerRelationships === "undefined" || !DiplomacyPlayerRelationships) {
@@ -132,7 +124,7 @@ function relationshipKeyMap() {
  * @param {*} rel
  * @returns {string} The attitude key (defaults to "neutral").
  */
-function attitudeKeyFromEnum(rel) {
+export function attitudeKeyFromEnum(rel) {
   const key = relationshipKeyMap().get(rel);
   return key || "neutral";
 }
@@ -142,7 +134,7 @@ function attitudeKeyFromEnum(rel) {
  * @param {string} key
  * @returns {string} The palette color (gray fallback).
  */
-function categoryColor(key) {
+export function categoryColor(key) {
   const colors = getAttitudeColors();
   return colors[key] || "#bfbfbf";
 }
@@ -154,12 +146,12 @@ function categoryColor(key) {
 
 /**
  * Read a player's diplomatic events list defensively.
- * @param {number} a
+ * @param {number} pid
  * @returns {*[]} The events array (empty on any error).
  */
-function getPlayerEvents(a) {
+export function getPlayerEvents(pid) {
   return safeCall(
-    "getPlayerEvents(" + a + ")",
+    "getPlayerEvents(" + pid + ")",
     () => {
       if (
         typeof Game === "undefined" ||
@@ -169,8 +161,8 @@ function getPlayerEvents(a) {
         return [];
       // The engine can hand back a non-array (a plain object / null); the
       // for..of consumers need a real array or they throw on a non-iterable.
-      const r = Game.Diplomacy.getPlayerEvents(a);
-      return Array.isArray(r) ? r : [];
+      const events = Game.Diplomacy.getPlayerEvents(pid);
+      return Array.isArray(events) ? events : [];
     },
     []
   );
@@ -178,16 +170,16 @@ function getPlayerEvents(a) {
 
 /**
  * Resolve the "other" player id involved in a diplomacy event, relative to
- * the queried player `a`. Mirrors the original target/other/initial fallback.
+ * the queried player `sourcePid`: the target player, else the other player, else the initiator.
  * @param {*} ev
- * @param {number} a The player whose events list `ev` came from.
+ * @param {number} sourcePid The player whose events list `ev` came from.
  * @returns {number|undefined} The other player id, or `undefined`.
  */
-function resolveEventOther(ev, a) {
+export function resolveEventOther(ev, sourcePid) {
   let other = ev.targetPlayer;
   if (typeof other !== "number") other = ev.otherPlayer;
   if (typeof other !== "number") {
-    other = ev.initialPlayer !== a ? ev.initialPlayer : undefined;
+    other = ev.initialPlayer !== sourcePid ? ev.initialPlayer : undefined;
   }
   return other;
 }
@@ -201,13 +193,14 @@ function buildAllianceEdges(metIds) {
   /** @type {Edge[]} */
   const edges = [];
   for (let i = 0; i < metIds.length; i++) {
-    const a = metIds[i];
-    const pa = safeCall("Players.get(" + a + ")", () => Players.get(a), null);
-    if (!pa) continue;
+    const pidA = metIds[i];
+    const playerA = safeCall("Players.get(" + pidA + ")", () => Players.get(pidA), null);
+    if (!playerA) continue;
     for (let j = i + 1; j < metIds.length; j++) {
-      const b = metIds[j];
-      if (hasAlliance(pa, b)) {
-        edges.push({ a, b, color: "#9933ff", filterKey: "alliance" });
+      const pidB = metIds[j];
+      if (hasAlliance(playerA, pidB)) {
+        // The palette's alliance swatch, the same color the filter pill shows for this line.
+        edges.push({ a: pidA, b: pidB, color: categoryColor("alliance"), filterKey: "alliance" });
       }
     }
   }
@@ -223,13 +216,13 @@ function buildWarEdges(metIds) {
   /** @type {Edge[]} */
   const edges = [];
   for (let i = 0; i < metIds.length; i++) {
-    const a = metIds[i];
-    const pa = safeCall("Players.get(" + a + ")", () => Players.get(a), null);
-    if (!pa) continue;
+    const pidA = metIds[i];
+    const playerA = safeCall("Players.get(" + pidA + ")", () => Players.get(pidA), null);
+    if (!playerA) continue;
     for (let j = i + 1; j < metIds.length; j++) {
-      const b = metIds[j];
-      if (isAtWar(pa, b)) {
-        edges.push({ a, b, color: "#e02020", filterKey: "war" });
+      const pidB = metIds[j];
+      if (isAtWar(playerA, pidB)) {
+        edges.push({ a: pidA, b: pidB, color: "#e02020", filterKey: "war" });
       }
     }
   }
@@ -255,14 +248,14 @@ function actionPairFromEvent(ev, sourcePid, actionType, metSet) {
 /**
  * Orient an edge so `a` is the initiating player when the event exposes one
  * (used for directed actions like denounce: denouncer → denounced).
- * @param {Edge} edge The edge (mutated).
+ * @param {Edge} edge Mutated in place.
  * @param {*} ev
  * @param {Set<number>} metSet
  */
 function orientByInitiator(edge, ev, metSet) {
-  const init = ev && typeof ev.initialPlayer === "number" ? ev.initialPlayer : undefined;
-  if (init === undefined || !metSet.has(init)) return;
-  if (edge.b === init) {
+  const initiator = ev && typeof ev.initialPlayer === "number" ? ev.initialPlayer : undefined;
+  if (initiator === undefined || !metSet.has(initiator)) return;
+  if (edge.b === initiator) {
     const tmp = edge.a;
     edge.a = edge.b;
     edge.b = tmp;
@@ -286,10 +279,10 @@ function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
   if (actionType === undefined) return edges;
   const metSet = new Set(metIds);
   const seen = new Set();
-  for (const a of metIds) {
-    const events = getPlayerEvents(a);
+  for (const sourcePid of metIds) {
+    const events = getPlayerEvents(sourcePid);
     for (const ev of events) {
-      const pair = actionPairFromEvent(ev, a, actionType, metSet);
+      const pair = actionPairFromEvent(ev, sourcePid, actionType, metSet);
       if (!pair) continue;
       const key = Math.min(pair.a, pair.b) + "|" + Math.max(pair.a, pair.b);
       if (seen.has(key)) continue;
@@ -310,7 +303,7 @@ function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
  * Pre-resolve an agreement-type list into engine int + color + per-action key
  * lookups, skipping entries with no runtime `DiplomacyActionTypes` int.
  * @param {{ key: string, action: string, color: string }[]} actionList
- * @returns {ActionLookup[]} Resolved lookups.
+ * @returns {ActionLookup[]}
  */
 function resolveEndeavorLookups(actionList) {
   /** @type {ActionLookup[]} */
@@ -356,9 +349,9 @@ function buildAgreementEdges(metIds) {
   /** @type {{ metIds: number[], lookups: ActionLookup[] }} */
   const ctx = { metIds, lookups };
   const seen = new Set();
-  for (const a of metIds) {
-    for (const ev of getPlayerEvents(a)) {
-      pushOneEndeavorEdge(edges, seen, ev, a, ctx);
+  for (const sourcePid of metIds) {
+    for (const ev of getPlayerEvents(sourcePid)) {
+      pushOneEndeavorEdge(edges, seen, ev, sourcePid, ctx);
     }
   }
   return edges;
@@ -371,23 +364,29 @@ function buildAgreementEdges(metIds) {
  * @param {Edge[]} edges Accumulator to push into.
  * @param {Set<string>} seen
  * @param {*} ev
- * @param {number} a The player whose events list `ev` came from.
+ * @param {number} sourcePid The player whose events list `ev` came from.
  * @param {{ metIds: number[], lookups: ActionLookup[] }} ctx
  */
-function pushOneEndeavorEdge(edges, seen, ev, a, ctx) {
+function pushOneEndeavorEdge(edges, seen, ev, sourcePid, ctx) {
   const { metIds, lookups } = ctx;
   if (!ev || typeof ev.actionType !== "number") return;
-  const hit = lookups.find((l) => l.t === ev.actionType);
+  const hit = lookups.find((lookup) => lookup.t === ev.actionType);
   if (!hit) return;
-  const other = resolveEventOther(ev, a);
-  if (typeof other !== "number" || other === a) return;
+  const other = resolveEventOther(ev, sourcePid);
+  if (typeof other !== "number" || other === sourcePid) return;
   if (!metIds.includes(other)) return;
   // Dedupe pair + action-type so different agreements between the same pair
   // show as separate edges.
-  const key = Math.min(a, other) + "|" + Math.max(a, other) + "|" + hit.t;
+  const key = Math.min(sourcePid, other) + "|" + Math.max(sourcePid, other) + "|" + hit.t;
   if (seen.has(key)) return;
   seen.add(key);
-  edges.push({ a, b: other, color: hit.color, filterKey: hit.key, label: endeavorLabel(hit.name) });
+  edges.push({
+    a: sourcePid,
+    b: other,
+    color: hit.color,
+    filterKey: hit.key,
+    label: endeavorLabel(hit.name)
+  });
 }
 
 /**
@@ -403,7 +402,7 @@ function actionTypeByName(name) {
  * Build the political-action edges for a single filter key (alliance, war,
  * denounced, research, endeavors, openborders) among the met-major ring.
  * @param {number[]} metIds
- * @param {string} filterKey The political filter key to build.
+ * @param {string} filterKey
  * @returns {Edge[]} The edges for that filter (empty when unhandled).
  */
 export function buildPoliticalEdges(metIds, filterKey) {
@@ -440,7 +439,7 @@ export function buildPoliticalEdges(metIds, filterKey) {
  * @param {number} fromPid
  * @returns {*} The trade handle, or `null`.
  */
-function resolveTradeHandle(fromPid) {
+export function resolveTradeHandle(fromPid) {
   const fromPlayer = safeCall("Players.get(" + fromPid + ")", () => Players.get(fromPid), null);
   const trade = fromPlayer?.Trade;
   if (!trade || typeof trade.countPlayerTradeRoutesTo !== "function") return null;
@@ -453,7 +452,7 @@ function resolveTradeHandle(fromPid) {
  * @param {number} toPid
  * @returns {number} The route count (`0` on any error).
  */
-function tradeRouteCount(trade, toPid) {
+export function tradeRouteCount(trade, toPid) {
   try {
     return trade.countPlayerTradeRoutesTo(toPid) | 0;
   } catch (_) {
@@ -473,9 +472,9 @@ function tradeRouteCount(trade, toPid) {
 function pushTradeEdgesForSource(edges, trade, fromPid, pids) {
   for (const toPid of pids) {
     if (toPid === fromPid) continue;
-    const n = tradeRouteCount(trade, toPid);
-    if (n <= 0) continue;
-    const weight = Math.min(1, n / 3);
+    const routeCount = tradeRouteCount(trade, toPid);
+    if (routeCount <= 0) continue;
+    const weight = Math.min(1, routeCount / 3);
     edges.push({
       a: fromPid,
       b: toPid,
@@ -515,16 +514,24 @@ export function buildEconomicEdges(metIds, _filterKey, localPid) {
 // War / Alliance are surfaced explicitly so they color over the bare enum.
 
 /**
- * Resolve the attitude category key for a directed (a → b) relationship,
- * surfacing war / alliance explicitly over the bare enum.
- * @param {*} pa
- * @param {number} b
+ * Declared stances checked before the attitude enum, in priority order: a pair at war reads as
+ * war even if an alliance flag lingers, and only a pair with neither falls through to the enum.
+ * @type {[string, (player: *, otherPid: number) => boolean][]}
+ */
+const DECLARED_STANCES = [
+  ["war", isAtWar],
+  ["alliance", hasAlliance]
+];
+
+/**
+ * The attitude category key for a directed (a → b) relationship.
+ * @param {*} player
+ * @param {number} otherPid
  * @returns {string}
  */
-function attitudeCatFor(pa, b) {
-  if (isAtWar(pa, b)) return "war";
-  if (hasAlliance(pa, b)) return "alliance";
-  return attitudeKeyFromEnum(getRelationship(pa, b));
+function pairAttitudeKey(player, otherPid) {
+  const declared = DECLARED_STANCES.find(([, holds]) => holds(player, otherPid));
+  return declared ? declared[0] : attitudeKeyFromEnum(getRelationship(player, otherPid));
 }
 
 /**
@@ -538,13 +545,13 @@ export function buildAttitudeEdges(metIds, _localPid) {
   const edges = [];
   if (typeof Players === "undefined" || typeof Players.get !== "function") return edges;
   for (let i = 0; i < metIds.length; i++) {
-    const a = metIds[i];
-    const pa = safeCall("Players.get(" + a + ")", () => Players.get(a), null);
-    if (!pa) continue;
+    const pidA = metIds[i];
+    const playerA = safeCall("Players.get(" + pidA + ")", () => Players.get(pidA), null);
+    if (!playerA) continue;
     for (let j = i + 1; j < metIds.length; j++) {
-      const b = metIds[j];
-      const catKey = attitudeCatFor(pa, b);
-      edges.push({ a, b, color: categoryColor(catKey), filterKey: catKey });
+      const pidB = metIds[j];
+      const catKey = pairAttitudeKey(playerA, pidB);
+      edges.push({ a: pidA, b: pidB, color: categoryColor(catKey), filterKey: catKey });
     }
   }
   return edges;
@@ -566,7 +573,7 @@ const POLITICAL_EVENT_FILTER_KEYS = ["openborders", "denounced"];
  * Resolve major-player and trade handles once for the civ-ring passes.
  * @param {number[]} metIds
  * @param {number|undefined} localPid Local player id to force-include.
- * @returns {CivPairContext} Resolved pairwise context.
+ * @returns {CivPairContext}
  */
 function resolveCivPairContext(metIds, localPid) {
   const pids = metIds.slice();
@@ -576,8 +583,8 @@ function resolveCivPairContext(metIds, localPid) {
   /** @type {Map<number, *>} */
   const tradesById = new Map();
   for (const pid of pids) {
-    const p = safeCall("Players.get(" + pid + ")", () => Players.get(pid), null);
-    playersById.set(pid, p);
+    const player = safeCall("Players.get(" + pid + ")", () => Players.get(pid), null);
+    playersById.set(pid, player);
     tradesById.set(pid, resolveTradeHandle(pid));
   }
   return { pids, playersById, tradesById };
@@ -586,35 +593,35 @@ function resolveCivPairContext(metIds, localPid) {
 /**
  * Append directional trade edges for one unordered major-major pair.
  * @param {Edge[]} edges Accumulator to push into.
- * @param {number} a
- * @param {number} b
- * @param {*} tradeA Trade handle for `a` (or null).
- * @param {*} tradeB Trade handle for `b` (or null).
+ * @param {number} pidA
+ * @param {number} pidB
+ * @param {*} tradeA Trade handle for `pidA` (or null).
+ * @param {*} tradeB Trade handle for `pidB` (or null).
  */
-function appendPairTradeEdges(edges, a, b, tradeA, tradeB) {
+function appendPairTradeEdges(edges, pidA, pidB, tradeA, tradeB) {
   if (tradeA) {
-    const nAB = tradeRouteCount(tradeA, b);
-    if (nAB > 0) {
-      const wAB = Math.min(1, nAB / 3);
+    const routesAB = tradeRouteCount(tradeA, pidB);
+    if (routesAB > 0) {
+      const weightAB = Math.min(1, routesAB / 3);
       edges.push({
-        a,
-        b,
+        a: pidA,
+        b: pidB,
         color: "#4dc6c6",
-        opacity: 0.5 + wAB * 0.5,
+        opacity: 0.5 + weightAB * 0.5,
         filterKey: "trade",
         directed: true
       });
     }
   }
   if (tradeB) {
-    const nBA = tradeRouteCount(tradeB, a);
-    if (nBA > 0) {
-      const wBA = Math.min(1, nBA / 3);
+    const routesBA = tradeRouteCount(tradeB, pidA);
+    if (routesBA > 0) {
+      const weightBA = Math.min(1, routesBA / 3);
       edges.push({
-        a: b,
-        b: a,
+        a: pidB,
+        b: pidA,
         color: "#4dc6c6",
-        opacity: 0.5 + wBA * 0.5,
+        opacity: 0.5 + weightBA * 0.5,
         filterKey: "trade",
         directed: true
       });
@@ -624,7 +631,7 @@ function appendPairTradeEdges(edges, a, b, tradeA, tradeB) {
 
 /**
  * Fused civ pair pass: one i<j loop computes attitude (optional) and trade.
- * @param {CivPairContext} ctx Pre-resolved pair context.
+ * @param {CivPairContext} ctx
  * @param {boolean} includeAttitude
  * @returns {Edge[]}
  */
@@ -633,18 +640,18 @@ function buildPairwiseCivEdges(ctx, includeAttitude) {
   const edges = [];
   const { pids, playersById, tradesById } = ctx;
   for (let i = 0; i < pids.length; i++) {
-    const a = pids[i];
-    const pa = playersById.get(a);
+    const pidA = pids[i];
+    const playerA = playersById.get(pidA);
     for (let j = i + 1; j < pids.length; j++) {
-      const b = pids[j];
-      const tradeA = tradesById.get(a) || null;
-      const tradeB = tradesById.get(b) || null;
+      const pidB = pids[j];
+      const tradeA = tradesById.get(pidA) || null;
+      const tradeB = tradesById.get(pidB) || null;
       try {
-        if (includeAttitude && pa) {
-          const catKey = attitudeCatFor(pa, b);
-          edges.push({ a, b, color: categoryColor(catKey), filterKey: catKey });
+        if (includeAttitude && playerA) {
+          const catKey = pairAttitudeKey(playerA, pidB);
+          edges.push({ a: pidA, b: pidB, color: categoryColor(catKey), filterKey: catKey });
         }
-        appendPairTradeEdges(edges, a, b, tradeA, tradeB);
+        appendPairTradeEdges(edges, pidA, pidB, tradeA, tradeB);
       } catch (_) {
         // One pair can fail on transient engine reads; skip that pair only.
       }
@@ -659,7 +666,7 @@ function buildPairwiseCivEdges(ctx, includeAttitude) {
  * @param {number[]} metIds
  * @param {number|undefined} localPid
  * @param {boolean} includeAttitude
- * @returns {Edge[]} Full tagged edge set.
+ * @returns {Edge[]}
  */
 export function buildCivTaggedEdges(metIds, localPid, includeAttitude) {
   /** @type {Edge[]} */
@@ -667,8 +674,8 @@ export function buildCivTaggedEdges(metIds, localPid, includeAttitude) {
   if (typeof Players === "undefined" || typeof Players.get !== "function") return edges;
   const pairCtx = resolveCivPairContext(metIds, localPid);
   edges = edges.concat(buildPairwiseCivEdges(pairCtx, includeAttitude));
-  for (const k of POLITICAL_EVENT_FILTER_KEYS) {
-    edges = edges.concat(buildPoliticalEdges(metIds, k));
+  for (const filterKey of POLITICAL_EVENT_FILTER_KEYS) {
+    edges = edges.concat(buildPoliticalEdges(metIds, filterKey));
   }
   // Each cooperative agreement type is its own per-action-tagged line.
   edges = edges.concat(buildAgreementEdges(metIds));

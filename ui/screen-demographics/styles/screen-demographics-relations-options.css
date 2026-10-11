@@ -54,18 +54,17 @@
     position: absolute;
     /* Top offset clears both the top-tab row and the optional viewer-host
        dropdown that the City-State tab renders ("Showing relations from:
-       <civ>"). Previously the legend hovered just below the tab bar; on
-       major civs that left a clean gap, but on CS the dropdown landed in
-       that gap and the legend visually overlapped it. 7.5rem clears both
+       <civ>"). Just below the tab bar, the legend would overlap that
+       dropdown on the CS tab. 7.5rem clears both
        on either tab so the two views are pixel-equivalent. This rem value is only
-       a PRE-LAYOUT FALLBACK now: JS (anchorRelationsOverlays) measures the actual
+       a PRE-LAYOUT FALLBACK: JS (anchorRelationsOverlays) measures the actual
        chrome height at runtime and overrides `top` in px, so the legend tracks the
        tab/toolbar height at any Interface Size instead of assuming it's ~9.5rem. */
     top: calc(9.5 * var(--dg-u));
     right: calc(1.5 * var(--dg-u));
     /* Fixed width (not max-width) so the box has the same horizontal
        footprint on the major-civs tab (11 entries) and the city-states
-       tab (8 entries). Earlier max-width let it shrink to the widest
+       tab (8 entries). A max-width alone lets it shrink to the widest
        pill, making the CS legend visibly narrower than the civ legend.
        Cap it so on a narrow frame (low resolution / tall aspect) it can
        never grow past the panel edge; max-width overrides the fixed width
@@ -110,7 +109,7 @@
 .demographics-relations-caption {
     width: 100%;
     text-align: center;
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
     flex: 0 0 auto;
     padding-top: calc(0.2 * var(--dg-u));
@@ -192,7 +191,7 @@
     padding-left: calc(1 * var(--dg-u));
 }
 .demographics-relations-filter-label {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     white-space: nowrap;
     /* Ellipsize an over-long localized label inside the fixed-width legend rather than overflowing
        the pill. Needs min-width:0 so the flex item is allowed to shrink below its content width. */
@@ -201,7 +200,7 @@
     text-overflow: ellipsis;
 }
 .demographics-relations-filter-pill.is-hidden .demographics-relations-filter-label {
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
 }
 /* Legend entries, not toggle buttons. Each entry shows a real sample line
    (color + texture matching what the ring draws) followed by the label,
@@ -220,7 +219,7 @@
     border: none;
     background: transparent;
     cursor: pointer;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-95);
     white-space: nowrap;
     line-height: 1.3;
@@ -230,16 +229,16 @@
     width: 100%;
 }
 .demographics-relations-filter-pill:hover {
-    color: var(--dg-ia-accent-gold, #f3c34c);
+    color: var(--dg-accent-gold, #f3c34c);
 }
 .demographics-relations-filter-pill.is-active {
     /* No border; full opacity reads as "active". */
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
 }
 .demographics-relations-filter-pill.is-hidden {
     /* Dimmed; the sample SVG dims with it via opacity inheritance. */
     opacity: 0.35;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
 }
 /* "Pip": filled disc when active, hollow when toggled off. */
 .demographics-relations-filter-pip {
@@ -288,7 +287,12 @@
        lines. Layered radial gradients (top → bottom in paint order). */
     background:
         radial-gradient(ellipse at 50% 44%, rgba(243, 195, 76, 0.05) 0%, rgba(243, 195, 76, 0) 36%),
-        radial-gradient(ellipse at 50% 44%, rgba(40, 32, 20, 0.5) 0%, rgba(12, 10, 6, 0.9) 62%, rgba(4, 3, 2, 0.97) 100%);
+        radial-gradient(
+            ellipse at 50% 44%,
+            rgba(40, 32, 20, 0.5) 0%,
+            rgba(12, 10, 6, 0.9) 62%,
+            rgba(4, 3, 2, 0.97) 100%
+        );
     border: 1px solid rgba(201, 162, 76, 0.4);
     border-radius: 0.4rem;
     box-shadow:
@@ -425,7 +429,7 @@
 .demographics-relations-node-label {
     position: absolute;
     transform: translateX(-50%);
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-weight: 600;
     font-size: var(--dg-fs-95);
     line-height: 1.1;
@@ -450,7 +454,7 @@
     width: 100%;
 }
 .demographics-options-heading {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     margin-bottom: calc(0.3 * var(--dg-u));
 }
 .demographics-option-row {
@@ -469,10 +473,9 @@
     margin: 0;
 }
 .demographics-option-label {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
 }
-/* .demographics-option-hint moved to screen-demographics-base.css (single
-   declaration; it was duplicated here and only won by load order). */
+/* .demographics-option-hint is declared in screen-demographics-base.css. */
 .demographics-options-buttons {
     display: flex;
     flex-direction: row;
@@ -489,7 +492,7 @@
 }
 .demographics-session-info {
     margin-top: calc(0.6 * var(--dg-u));
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
 }
 
@@ -498,8 +501,7 @@
     /* No min-width floor: CSS min-width overrides max-width, so a fixed floor
        lets the dropdown overflow a narrow options panel (high Interface Size)
        instead of being capped at the container. max-width: 100% constrains it;
-       the dropdown sizes to its content below that. (Same min-overrides-max
-       trap as the relations ring's old min-height.) */
+       the dropdown sizes to its content below that. */
     max-width: 100%;
 }
 

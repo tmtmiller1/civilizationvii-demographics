@@ -4,7 +4,7 @@
 
 /**
  * Get alive major player ids defensively.
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @returns {number[]} Alive major ids, or empty array on failure.
  */
 export function getAliveMajorIds(safeCall) {
@@ -20,7 +20,7 @@ export function getAliveMajorIds(safeCall) {
 
 /**
  * Get alive minor (city-state/independent) player ids defensively.
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @returns {number[]} Alive minor ids, or empty array on failure.
  */
 export function getAliveMinorIds(safeCall) {

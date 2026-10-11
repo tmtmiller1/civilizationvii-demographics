@@ -11,7 +11,7 @@ import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * Build a pid → display-name map from the latest sample's players.
- * @param {*[]} samples The sample stream.
+ * @param {*[]} samples
  * @returns {Map<number, string>} pid → leader/civ name.
  */
 function pidNameMap(samples) {
@@ -20,8 +20,8 @@ function pidNameMap(samples) {
   const last = samples.length ? samples[samples.length - 1] : null;
   const players = last?.players || {};
   for (const pid of Object.keys(players)) {
-    const p = players[pid] || {};
-    map.set(Number(pid), p.leaderName || p.civName || tPlayerFallback(pid));
+    const player = players[pid] || {};
+    map.set(Number(pid), player.leaderName || player.civName || tPlayerFallback(pid));
   }
   return map;
 }
@@ -30,11 +30,11 @@ function pidNameMap(samples) {
  * Join a war side's roster into a "; "-separated name list.
  * @param {*[]} side The side roster (entries with a `pid`).
  * @param {Map<number, string>} names
- * @returns {string} The joined roster.
+ * @returns {string}
  */
 function sideNames(side, names) {
   return (Array.isArray(side) ? side : [])
-    .map((e) => names.get(Number(e?.pid)) || tPlayerFallback(e?.pid))
+    .map((entry) => names.get(Number(entry?.pid)) || tPlayerFallback(entry?.pid))
     .join("; ");
 }
 
@@ -44,20 +44,20 @@ function sideNames(side, names) {
  * @returns {{ headers: string[], rows: Array<Array<string|number>> }}
  */
 export function warsCsv(history) {
-  const h = history || {};
-  const samples = Array.isArray(h.samples) ? h.samples : [];
+  const safeHistory = history || {};
+  const samples = Array.isArray(safeHistory.samples) ? safeHistory.samples : [];
   const latest = samples.length ? samples[samples.length - 1].turn || 0 : 0;
-  const wars = mergeWars(policyVisibleWars(h.wars, samples), latest);
+  const wars = mergeWars(policyVisibleWars(safeHistory.wars, samples), latest);
   const named = nameMergedWars(wars, samples);
   const names = pidNameMap(samples);
   const headers = ["war", "startTurn", "endTurn", "status", "sideA", "sideB"];
-  const rows = wars.map((w) => [
-    named.get(w.warUniqueID) || t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", w.warUniqueID),
-    typeof w.startTurn === "number" ? w.startTurn : "",
-    typeof w.endTurn === "number" ? w.endTurn : "",
-    typeof w.endTurn === "number" ? "ended" : "ongoing",
-    sideNames(w.sideACivs, names),
-    sideNames(w.sideBCivs, names)
+  const rows = wars.map((war) => [
+    named.get(war.warUniqueID) || t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", war.warUniqueID),
+    typeof war.startTurn === "number" ? war.startTurn : "",
+    typeof war.endTurn === "number" ? war.endTurn : "",
+    typeof war.endTurn === "number" ? "ended" : "ongoing",
+    sideNames(war.sideACivs, names),
+    sideNames(war.sideBCivs, names)
   ]);
   return { headers, rows };
 }

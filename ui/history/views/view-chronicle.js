@@ -5,13 +5,19 @@
 // player's language. Events about civilizations the player has not met are hidden and counted.
 
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
-import { t, num, typeName } from "/demographics/ui/history/core/history-text.js";
-import { castFromDoc, eventText, eventVisible, summarizeAge, spanFor } from "/demographics/ui/history/model/history-narrate.js";
+import { t, formatNumber, typeName } from "/demographics/ui/history/core/history-text.js";
+import {
+  castFromDoc,
+  eventText,
+  eventVisible,
+  summarizeAge,
+  spanFor
+} from "/demographics/ui/history/model/history-narrate.js";
 import { pillRow, section, emptyState, textButton } from "/demographics/ui/history/views/history-widgets.js";
 import { viewState, LIMIT_STEP } from "/demographics/ui/history/views/history-state.js";
 
 /** Category filters: key -> event kinds (empty = all). */
-export const FILTERS = /** @type {Record<string, HnrEventKind[]>} */ ({
+export const FILTERS = /** @type {Record<string, HistoryEventKind[]>} */ ({
   all: [],
   mine: [],
   settlements: ["found", "capture", "razed"],
@@ -29,38 +35,42 @@ export const FILTERS = /** @type {Record<string, HnrEventKind[]>} */ ({
  * @returns {string}
  */
 export function ageName(doc, age) {
-  const e = doc.events.find((x) => x.k === "age" && x.x === age);
-  return typeName(e?.n || "", age);
+  const opening = doc.events.find((x) => x.k === "age" && x.x === age);
+  return typeName(opening?.n || "", age);
 }
 
 /**
  * Events passing the current filters, with visibility applied.
  * @param {CampaignDoc} doc
  * @param {import("../model/history-narrate.js").Cast} cast
- * @returns {{shown: HnrEvent[], hidden: number}} Events and the count hidden as spoilers.
+ * @returns {{shown: HistoryEvent[], hidden: number}} Events and the count hidden as spoilers.
  */
 export function filteredEvents(doc, cast) {
   const kinds = FILTERS[viewState.filter] || [];
-  const ageIdx = viewState.age === "all" ? -1 : doc.ages.findIndex((a) => a.age === viewState.age);
-  const inScope = doc.events.filter((e) => (ageIdx < 0 || e.a === ageIdx) && (!kinds.length || kinds.includes(e.k)));
-  const mine = viewState.filter === "mine" ? inScope.filter((e) => e.p === doc.local || e.q === doc.local) : inScope;
-  const shown = mine.filter((e) => eventVisible(e, cast));
+  const ageIdx = viewState.age === "all" ? -1 : doc.ages.findIndex((age) => age.age === viewState.age);
+  const inScope = doc.events.filter((event) =>
+    (ageIdx < 0 || event.a === ageIdx) && (!kinds.length || kinds.includes(event.k)));
+  const mine = viewState.filter === "mine"
+    ? inScope.filter((event) => event.p === doc.local || event.q === doc.local)
+    : inScope;
+  const shown = mine.filter((event) => eventVisible(event, cast));
   return { shown, hidden: mine.length - shown.length };
 }
 
 /**
  * A single feed row.
- * @param {HnrEvent} e
+ * @param {HistoryEvent} event
  * @param {import("../model/history-narrate.js").Cast} cast
  * @param {string} age
  * @returns {HTMLElement}
  */
-function eventRow(e, cast, age) {
-  const mine = e.p === cast.local || e.q === cast.local;
-  return el("div", { cls: "dgh-event dgh-event--" + e.k + (mine ? " is-mine" : "") }, [
-    el("div", { cls: "dgh-event-date", text: e.d || t("LOC_DEMOGRAPHICS_HIST_TURN_N", e.t) }),
-    el("div", { cls: "dgh-event-dot", style: { backgroundColor: (e.p >= 0 && cast.color(e.p)) || "#a8845a" } }),
-    el("div", { cls: "dgh-event-text", text: eventText(e, cast, age) })
+function eventRow(event, cast, age) {
+  const mine = event.p === cast.local || event.q === cast.local;
+  const dotColor = (event.p >= 0 && cast.color(event.p)) || "#a8845a";
+  return el("div", { cls: "dgh-event dgh-event--" + event.k + (mine ? " is-mine" : "") }, [
+    el("div", { cls: "dgh-event-date", text: event.d || t("LOC_DEMOGRAPHICS_HIST_TURN_N", event.t) }),
+    el("div", { cls: "dgh-event-dot", style: { backgroundColor: dotColor } }),
+    el("div", { cls: "dgh-event-text", text: eventText(event, cast, age) })
   ]);
 }
 
@@ -73,36 +83,61 @@ function eventRow(e, cast, age) {
  */
 export function ageCard(doc, idx, cast) {
   const age = doc.ages[idx].age;
-  const s = summarizeAge(doc.events.filter((e) => e.a === idx), cast, age);
+  const summary = summarizeAge(doc.events.filter((event) => event.a === idx), cast, age);
   const span = spanFor(doc.players[String(doc.local)]?.civs || [], age);
-  const lead = t("LOC_DEMOGRAPHICS_HIST_NARR_LEAD", cast.leaderName(doc.local), span ? typeName(span.name, span.civ) : "");
-  const facts = [
-    [s.founded, "LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED"], [s.captured, "LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED"], [s.lost, "LOC_DEMOGRAPHICS_HIST_FACT_LOST"],
-    [s.wonders.length, "LOC_DEMOGRAPHICS_HIST_FACT_WONDERS"], [s.triumphs, "LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS"], [s.wars, "LOC_DEMOGRAPHICS_HIST_FACT_WARS"]
-  ];
-  const chips = el("div", { cls: "dgh-facts" }, facts.map(([n, label]) =>
-    el("div", { cls: "dgh-fact" + (n ? "" : " is-zero") }, [el("div", { cls: "dgh-fact-n", text: num(Number(n)) }), el("div", { cls: "dgh-fact-l", text: t(String(label)) })])
-  ));
+  const civName = span ? typeName(span.name, span.civ) : "";
+  const lead = t("LOC_DEMOGRAPHICS_HIST_NARR_LEAD", cast.leaderName(doc.local), civName);
   const since = idx === 0 && doc.since?.partial
-    ? el("div", { cls: "dgh-subtitle", text: t("LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL", doc.since.d || t("LOC_DEMOGRAPHICS_HIST_TURN_N", doc.since.t)) })
+    ? el("div", {
+      cls: "dgh-subtitle",
+      text: t("LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL", doc.since.d || t("LOC_DEMOGRAPHICS_HIST_TURN_N", doc.since.t))
+    })
     : null;
-  return section(ageName(doc, age), [el("div", { cls: "dgh-lead", text: lead }), since, chips, ...namedLines(s)], "dgh-age-card");
+  return section(ageName(doc, age), [
+    el("div", { cls: "dgh-lead", text: lead }),
+    since,
+    factChips(summary),
+    ...namedLines(summary)
+  ], "dgh-age-card");
+}
+
+/**
+ * The counted facts of an age summary, one chip each (dimmed at zero).
+ * @param {import("../model/history-narrate.js").AgeSummary} summary
+ * @returns {HTMLElement}
+ */
+function factChips(summary) {
+  const facts = [
+    [summary.founded, "LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED"],
+    [summary.captured, "LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED"],
+    [summary.lost, "LOC_DEMOGRAPHICS_HIST_FACT_LOST"],
+    [summary.wonders.length, "LOC_DEMOGRAPHICS_HIST_FACT_WONDERS"],
+    [summary.triumphs, "LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS"],
+    [summary.wars, "LOC_DEMOGRAPHICS_HIST_FACT_WARS"]
+  ];
+  return el("div", { cls: "dgh-facts" }, facts.map(([count, label]) =>
+    el("div", { cls: "dgh-fact" + (count ? "" : " is-zero") }, [
+      el("div", { cls: "dgh-fact-n", text: formatNumber(Number(count)) }),
+      el("div", { cls: "dgh-fact-l", text: t(String(label)) })
+    ])
+  ));
 }
 
 /**
  * Named detail lines for an age summary (wonders, religion, fallen civilizations).
- * @param {import("../model/history-narrate.js").AgeSummary} s
+ * @param {import("../model/history-narrate.js").AgeSummary} summary
  * @returns {HTMLElement[]}
  */
-function namedLines(s) {
+function namedLines(summary) {
   /** @type {Array<[string, string]>} */
   const lines = [
-    ["LOC_DEMOGRAPHICS_HIST_LINE_WONDERS", s.wonders.join(", ")],
-    ["LOC_DEMOGRAPHICS_HIST_LINE_RELIGION", s.religion],
-    ["LOC_DEMOGRAPHICS_HIST_LINE_FALLEN", s.fallen.join(", ")]
+    ["LOC_DEMOGRAPHICS_HIST_LINE_WONDERS", summary.wonders.join(", ")],
+    ["LOC_DEMOGRAPHICS_HIST_LINE_RELIGION", summary.religion],
+    ["LOC_DEMOGRAPHICS_HIST_LINE_FALLEN", summary.fallen.join(", ")]
   ];
-  return lines.filter(([, v]) => !!v).map(([k, v]) => el("div", { cls: "dgh-line" }, [
-    el("span", { cls: "dgh-line-k", text: t(k) }), el("span", { cls: "dgh-line-v", text: v })
+  return lines.filter(([, value]) => !!value).map(([key, value]) => el("div", { cls: "dgh-line" }, [
+    el("span", { cls: "dgh-line-k", text: t(key) }),
+    el("span", { cls: "dgh-line-v", text: value })
   ]));
 }
 
@@ -117,14 +152,21 @@ function controls(doc, rerender) {
     Object.assign(viewState, patch, { limit: LIMIT_STEP });
     rerender();
   };
-  const ages = [{ key: "all", label: t("LOC_DEMOGRAPHICS_HIST_ALL_AGES") }, ...doc.ages.map((a) => ({ key: a.age, label: ageName(doc, a.age) }))];
-  const filters = Object.keys(FILTERS).map((k) => ({ key: k, label: t("LOC_DEMOGRAPHICS_HIST_FILTER_" + k.toUpperCase()) }));
-  const order = [{ key: "new", label: t("LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST") }, { key: "old", label: t("LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST") }];
+  const ages = [
+    { key: "all", label: t("LOC_DEMOGRAPHICS_HIST_ALL_AGES") },
+    ...doc.ages.map((age) => ({ key: age.age, label: ageName(doc, age.age) }))
+  ];
+  const filters = Object.keys(FILTERS)
+    .map((key) => ({ key, label: t("LOC_DEMOGRAPHICS_HIST_FILTER_" + key.toUpperCase()) }));
+  const order = [
+    { key: "new", label: t("LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST") },
+    { key: "old", label: t("LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST") }
+  ];
   return [
-    pillRow(ages, viewState.age, (k) => set({ age: k })),
+    pillRow(ages, viewState.age, (key) => set({ age: key })),
     el("div", { cls: "dgh-toolbar" }, [
-      pillRow(filters, viewState.filter, (k) => set({ filter: k }), "filter"),
-      pillRow(order, viewState.newestFirst ? "new" : "old", (k) => set({ newestFirst: k === "new" }), "filter")
+      pillRow(filters, viewState.filter, (key) => set({ filter: key }), "filter"),
+      pillRow(order, viewState.newestFirst ? "new" : "old", (key) => set({ newestFirst: key === "new" }), "filter")
     ])
   ];
 }
@@ -132,7 +174,7 @@ function controls(doc, rerender) {
 /**
  * The grouped feed.
  * @param {CampaignDoc} doc
- * @param {HnrEvent[]} events Visible events.
+ * @param {HistoryEvent[]} events Visible events.
  * @param {import("../model/history-narrate.js").Cast} cast
  * @returns {HTMLElement[]}
  */
@@ -144,11 +186,14 @@ function feed(doc, events, cast) {
   const groups = [];
   for (const idx of order) {
     if (viewState.age !== "all" && doc.ages[idx].age !== viewState.age) continue;
-    const list = events.filter((e) => e.a === idx);
+    const list = events.filter((event) => event.a === idx);
     if (viewState.newestFirst) list.reverse();
-    const rows = list.slice(0, Math.max(0, budget)).map((e) => eventRow(e, cast, doc.ages[idx].age));
+    const rows = list.slice(0, Math.max(0, budget)).map((event) => eventRow(event, cast, doc.ages[idx].age));
     budget -= rows.length;
-    groups.push(el("div", { cls: "dgh-age-group" }, [ageCard(doc, idx, cast), el("div", { cls: "dgh-feed" }, rows)]));
+    groups.push(el("div", { cls: "dgh-age-group" }, [
+      ageCard(doc, idx, cast),
+      el("div", { cls: "dgh-feed" }, rows)
+    ]));
   }
   return groups;
 }
@@ -170,9 +215,15 @@ export function renderChronicle(host, doc, rerender, visibility = "met") {
   const { shown, hidden } = filteredEvents(doc, cast);
   const body = el("div", { cls: "dgh-scroll" }, feed(doc, shown, cast));
   if (shown.length > viewState.limit) {
-    body.appendChild(textButton("LOC_DEMOGRAPHICS_HIST_SHOW_MORE", () => { viewState.limit += LIMIT_STEP; rerender(); }, "dgh-more"));
+    const showMore = () => {
+      viewState.limit += LIMIT_STEP;
+      rerender();
+    };
+    body.appendChild(textButton("LOC_DEMOGRAPHICS_HIST_SHOW_MORE", showMore, "dgh-more"));
   }
-  if (hidden > 0) body.appendChild(el("div", { cls: "dgh-note", text: t("LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET", hidden) }));
-  for (const c of controls(doc, rerender)) host.appendChild(c);
+  if (hidden > 0) {
+    body.appendChild(el("div", { cls: "dgh-note", text: t("LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET", hidden) }));
+  }
+  for (const control of controls(doc, rerender)) host.appendChild(control);
   host.appendChild(body);
 }

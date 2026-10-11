@@ -5,24 +5,17 @@
 
 import { formatCount } from "/demographics/ui/metrics/metrics-format.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-const DBG = false;
-
-/**
- * Debug logger, no-op unless {@link DBG}.
- * @param {...*} a Values to log.
- */
-export function dlog(...a) {
-  if (DBG) console.warn("[Demographics.metrics]", ...a);
-}
+export const log = makeLogger("metrics");
 
 /**
  * Coerce a value to a finite number, or `undefined` if it isn't one.
- * @param {*} v Candidate value.
- * @returns {number | undefined} The number, or undefined.
+ * @param {*} value
+ * @returns {number | undefined}
  */
-export function safeNum(v) {
-  return typeof v === "number" && isFinite(v) ? v : undefined;
+export function safeNum(value) {
+  return typeof value === "number" && isFinite(value) ? value : undefined;
 }
 
 /**
@@ -89,12 +82,12 @@ const OVERTIME_MAX = 5; // hard cap on the multiplier; bounds the absolute worst
 
 /**
  * Smoothstep on [0,1].
- * @param {number} x Input.
- * @returns {number} Smoothed value.
+ * @param {number} x
+ * @returns {number}
  */
 function smoothstep(x) {
-  const c = Math.max(0, Math.min(1, x));
-  return c * c * (3 - 2 * c);
+  const clamped = Math.max(0, Math.min(1, x));
+  return clamped * clamped * (3 - 2 * clamped);
 }
 
 /**
@@ -112,14 +105,14 @@ export function eraGrowthParams(ageType, ageProgressPct) {
   if (prev === cur) return cur;
   // Unreadable progress defaults to 100 (a known age is a fully-developed member of itself); safe
   // because softCeil bounds the result.
-  const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
-  const s = smoothstep(p / BLEND_PCT);
-  if (s <= 0) return prev; // exact at the boundary (bit-identical continuity)
-  if (s >= 1) return cur;
+  const progress = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
+  const blend = smoothstep(progress / BLEND_PCT);
+  if (blend <= 0) return prev; // exact at the boundary (bit-identical continuity)
+  if (blend >= 1) return cur;
   return {
-    flat: prev.flat + (cur.flat - prev.flat) * s,
-    scalar: prev.scalar + (cur.scalar - prev.scalar) * s,
-    exp: prev.exp + (cur.exp - prev.exp) * s
+    flat: prev.flat + (cur.flat - prev.flat) * blend,
+    scalar: prev.scalar + (cur.scalar - prev.scalar) * blend,
+    exp: prev.exp + (cur.exp - prev.exp) * blend
   };
 }
 
@@ -152,7 +145,7 @@ export function growthEffort(n, params) {
  * Falls back to a coarse aggregate estimate for samples without `populationScaled`.
  * @param {number} raw Raw per-civ population total (sum of settlement sizes).
  * @param {{ turn?: number } | null | undefined} scaleCtx Per-player scale context.
- * @param {PopScaleCtx | null | undefined} ctx Per-player accessor context.
+ * @param {PopScaleCtx | null | undefined} ctx
  * @returns {number} The scaled civ population.
  */
 export function scalePopulation(raw, scaleCtx, ctx) {
@@ -168,7 +161,7 @@ export function scalePopulation(raw, scaleCtx, ctx) {
  * Coarse civ-population estimate from the aggregate raw total (legacy/fallback path only). Treats the
  * empire as a handful of average settlements so the figure stays in the per-settlement regime.
  * @param {number} raw Raw population total (sum of settlement sizes).
- * @param {number} _turn Unused (kept for signature compatibility; scaling is age-based now).
+ * @param {number} _turn Unused: scaling depends on the age; kept so every scale function takes the same arguments.
  * @param {PopScaleCtx | null | undefined} [ctx] Optional age context.
  * @returns {number} The scaled population (0 for non-positive/invalid input).
  */
@@ -212,8 +205,8 @@ export function scaleCasualties(raw, scaleCtx, ctx) {
  */
 export function scaleCasualtiesAt(raw, turn) {
   if (typeof raw !== "number" || !isFinite(raw) || raw <= 0) return 0;
-  const t = typeof turn === "number" && isFinite(turn) ? turn : 0;
-  const eraMult = Math.min(CASUALTY_MAX_ERA_MULT, Math.pow(1.009, t));
+  const safeTurn = typeof turn === "number" && isFinite(turn) ? turn : 0;
+  const eraMult = Math.min(CASUALTY_MAX_ERA_MULT, Math.pow(1.009, safeTurn));
   return raw * SOLDIERS_PER_UNIT * eraMult;
 }
 
@@ -228,8 +221,8 @@ export function scaleCasualtiesAt(raw, turn) {
  */
 function modernMegacityBoost(n, ageType, ageProgressPct) {
   if (ageType !== "AGE_MODERN" || n <= MEGA_KNEE) return 1;
-  const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
-  const ramp = smoothstep((p / 100 - 0.1) / 0.8);
+  const progress = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
+  const ramp = smoothstep((progress / 100 - 0.1) / 0.8);
   if (ramp <= 0) return 1;
   return 1 + MEGA_STRENGTH * ramp * Math.pow((n - MEGA_KNEE) / MEGA_KNEE, MEGA_POW);
 }
@@ -246,11 +239,11 @@ function eraCeiling(ageType, ageProgressPct) {
   const idx = ERA_ORDER.indexOf(key);
   const prev = idx > 0 ? ERA_CEILING[ERA_ORDER[idx - 1]] : cur;
   if (prev === cur) return cur;
-  const p = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
-  const s = smoothstep(p / BLEND_PCT);
-  if (s <= 0) return prev; // exact at the boundary (bit-identical continuity)
-  if (s >= 1) return cur;
-  return Math.exp(Math.log(prev) + (Math.log(cur) - Math.log(prev)) * s);
+  const progress = typeof ageProgressPct === "number" && isFinite(ageProgressPct) ? ageProgressPct : 100;
+  const blend = smoothstep(progress / BLEND_PCT);
+  if (blend <= 0) return prev; // exact at the boundary (bit-identical continuity)
+  if (blend >= 1) return cur;
+  return Math.exp(Math.log(prev) + (Math.log(cur) - Math.log(prev)) * blend);
 }
 
 /**
@@ -288,7 +281,7 @@ function softCeil(x, ceiling) {
  * progress))`, with a Modern-only megacity bump and a smooth saturation toward the era's max-city
  * ceiling. Continuous across age boundaries (see {@link eraGrowthParams}); no turn-based multiplier.
  * @param {number} raw The settlement's size (raw population points).
- * @param {number} [_turn] Unused (kept for signature compatibility; scaling is age-based now).
+ * @param {number} [_turn] Unused: scaling depends on the age; kept so every scale function takes the same arguments.
  * @param {string | undefined} [ageType] Age type (e.g. AGE_MODERN).
  * @param {number | undefined} [ageProgressPct] Age progress percent [0,100].
  * @returns {number} The scaled city people count (0 for non-positive/invalid input).
@@ -358,15 +351,16 @@ export function gdpAccessor(ctx) {
     culture: 1.2,
     science: 1.2
   };
-  const [g, p, f, i, c, s] = gdpYields(ctx);
-  if (allUndefined([g, p, f, i, c, s])) return undefined;
+  const yields = gdpYields(ctx);
+  if (allUndefined(yields)) return undefined;
+  const [gold, production, food, influence, culture, science] = yields;
   return (
-    (g || 0) * weights.gold +
-    (p || 0) * weights.production +
-    (f || 0) * weights.food +
-    (i || 0) * weights.influence +
-    (c || 0) * weights.culture +
-    (s || 0) * weights.science
+    (gold || 0) * weights.gold +
+    (production || 0) * weights.production +
+    (food || 0) * weights.food +
+    (influence || 0) * weights.influence +
+    (culture || 0) * weights.culture +
+    (science || 0) * weights.science
   );
 }
 
@@ -405,9 +399,9 @@ export function scoreFallback(ctx) {
 export function scoreAccessor(ctx) {
   const heuristic = scoreFallback(ctx);
   try {
-    const s = ctx.stats;
-    if (s && typeof s.getScore === "function") {
-      const value = safeNum(s.getScore());
+    const stats = ctx.stats;
+    if (stats && typeof stats.getScore === "function") {
+      const value = safeNum(stats.getScore());
       // Only trust an engine score that doesn't regress below the continuous
       // heuristic; this guards against a per-age engine score cliffing the line.
       if (value !== undefined && value >= heuristic) return value;
@@ -434,10 +428,10 @@ export function civicsAccessor(ctx) {
  * @returns {number | undefined} The utilization percent, or undefined.
  */
 export function settlementCapPctAccessor(ctx) {
-  const n = safeNum(ctx.numSettlements);
+  const settlements = safeNum(ctx.numSettlements);
   const cap = safeNum(ctx.settlementCap);
-  if (n === undefined || !cap || cap <= 0) return undefined;
-  return (n / cap) * 100;
+  if (settlements === undefined || !cap || cap <= 0) return undefined;
+  return (settlements / cap) * 100;
 }
 
 /**
@@ -463,32 +457,32 @@ export function landAccessor(ctx) {
 
 /**
  * Format the Diplomatic Approval reputation aggregate.
- * @param {number} n Reputation value.
- * @returns {string} The formatted string.
+ * @param {number} value Reputation value.
+ * @returns {string}
  */
-export function formatApproval(n) {
-  if (typeof n !== "number" || !isFinite(n)) return "—";
-  return (n >= 0 ? "+" : "") + (Math.round(n * 10) / 10);
+export function formatApproval(value) {
+  if (typeof value !== "number" || !isFinite(value)) return "—";
+  return (value >= 0 ? "+" : "") + (Math.round(value * 10) / 10);
 }
 
 /**
  * Format a rounded value to a count.
- * @param {number} n Value to format.
- * @returns {string} The formatted string.
+ * @param {number} value
+ * @returns {string}
  */
-export function formatRoundedCount(n) {
-  return formatCount(Math.round(n));
+export function formatRoundedCount(value) {
+  return formatCount(Math.round(value));
 }
 
 /**
  * Format a crisis stage value into its localized user-facing label. Stages 1-4
  * reuse the mod's existing `LOC_DEMOGRAPHICS_CRISIS_STAGE_*` keys (translated in
  * every locale); 0 is pre-crisis.
- * @param {number} n Display stage value.
+ * @param {number} stage Display stage value.
  * @returns {string} The stage label.
  */
-export function formatCrisisStage(n) {
-  const value = Math.max(0, Math.round(n));
+export function formatCrisisStage(stage) {
+  const value = Math.max(0, Math.round(stage));
   if (value === 0) return t("LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE");
   if (value === 1) return t("LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS");
   if (value === 2) return t("LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES");

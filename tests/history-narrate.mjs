@@ -10,19 +10,46 @@ const { castFromDoc, castFromRecord, eventText, eventVisible, summarizeAge, span
 const doc = {
   local: 0,
   players: {
-    0: { leader: "LEADER_A", leaderName: "LOC_LA", color: "#111", elim: 0, human: true, civs: [
-      { age: "AGE_ANTIQUITY", civ: "CIV_ROME", name: "LOC_ROME", from: 1 },
-      { age: "AGE_EXPLORATION", civ: "CIV_NORMAN", name: "LOC_NORMAN", from: 1 }
-    ] },
-    1: { leader: "LEADER_B", leaderName: "LOC_LB", color: "#222", elim: 0, human: false, civs: [{ age: "AGE_ANTIQUITY", civ: "CIV_EGYPT", name: "LOC_EGYPT", from: 1 }] },
-    2: { leader: "LEADER_C", leaderName: "LOC_LC", color: "#333", elim: 0, human: false, civs: [{ age: "AGE_ANTIQUITY", civ: "CIV_GREECE", name: "LOC_GREECE", from: 1 }] }
+    0: {
+      leader: "LEADER_A",
+      leaderName: "LOC_LA",
+      color: "#111",
+      elim: 0,
+      human: true,
+      civs: [
+        { age: "AGE_ANTIQUITY", civ: "CIV_ROME", name: "LOC_ROME", from: 1 },
+        { age: "AGE_EXPLORATION", civ: "CIV_NORMAN", name: "LOC_NORMAN", from: 1 }
+      ]
+    },
+    1: {
+      leader: "LEADER_B",
+      leaderName: "LOC_LB",
+      color: "#222",
+      elim: 0,
+      human: false,
+      civs: [{ age: "AGE_ANTIQUITY", civ: "CIV_EGYPT", name: "LOC_EGYPT", from: 1 }]
+    },
+    2: {
+      leader: "LEADER_C",
+      leaderName: "LOC_LC",
+      color: "#333",
+      elim: 0,
+      human: false,
+      civs: [{ age: "AGE_ANTIQUITY", civ: "CIV_GREECE", name: "LOC_GREECE", from: 1 }]
+    }
   },
   last: { players: { 0: { met: true }, 1: { met: true }, 2: { met: false } } }
 };
 const cast = castFromDoc(doc);
 
 // An unresolved tag never reaches the screen: it falls back to a readable type name.
-assert.equal(castFromDoc({ ...doc, players: { 0: { ...doc.players[0], civs: [{ age: "A", civ: "CIVILIZATION_FRENCH_EMPIRE", name: "", from: 1 }] } } }).civName(0, "A"), "French Empire");
+assert.equal(
+  castFromDoc({
+    ...doc,
+    players: { 0: { ...doc.players[0], civs: [{ age: "A", civ: "CIVILIZATION_FRENCH_EMPIRE", name: "", from: 1 }] } }
+  }).civName(0, "A"),
+  "French Empire"
+);
 
 // Civilization names follow the age of the event.
 assert.equal(cast.civName(0, "AGE_ANTIQUITY"), "ROME");
@@ -30,17 +57,48 @@ assert.equal(cast.civName(0, "AGE_EXPLORATION"), "NORMAN");
 assert.equal(spanFor(doc.players[1].civs, "AGE_MODERN").civ, "CIV_EGYPT", "falls back to the latest span");
 
 // Sentences carry their arguments in template order.
-assert.equal(eventText({ t: 5, a: 0, k: "capture", p: 0, q: 1, n: "Memphis" }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_CAPTURE|ROME|Memphis|EGYPT");
-assert.equal(eventText({ t: 5, a: 0, k: "war", p: 1, q: 0 }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_WAR|EGYPT|ROME");
-assert.equal(eventText({ t: 5, a: 0, k: "razed", p: -1, q: 1, n: "Thebes" }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_RAZED|Thebes|EGYPT");
-assert.equal(eventText({ t: 1, a: 1, k: "age", p: -1, x: "AGE_EXPLORATION", n: "LOC_AGE_EXP" }, cast, "AGE_EXPLORATION"), "LOC_DEMOGRAPHICS_HIST_EV_AGE|AGE_EXP");
-assert.equal(eventText({ t: 1, a: 1, k: "civ", p: 0, x: "CIV_NORMAN", n: "LOC_NORMAN" }, cast, "AGE_EXPLORATION"), "LOC_DEMOGRAPHICS_HIST_EV_CIV|LA|NORMAN");
-assert.equal(eventText({ t: 9, a: 0, k: "capture", p: 0, q: -1, n: "Ur" }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_CAPTURE|ROME|Ur|DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
-assert.equal(eventText({ t: 9, a: 0, k: "wonder", p: 0, x: "WONDER_PYRAMIDS" }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_WONDER|ROME|Pyramids");
+assert.equal(
+  eventText({ t: 5, a: 0, k: "capture", p: 0, q: 1, n: "Memphis" }, cast, "AGE_ANTIQUITY"),
+  "LOC_DEMOGRAPHICS_HIST_EV_CAPTURE|ROME|Memphis|EGYPT"
+);
+assert.equal(
+  eventText({ t: 5, a: 0, k: "war", p: 1, q: 0 }, cast, "AGE_ANTIQUITY"),
+  "LOC_DEMOGRAPHICS_HIST_EV_WAR|EGYPT|ROME"
+);
+assert.equal(
+  eventText({ t: 5, a: 0, k: "razed", p: -1, q: 1, n: "Thebes" }, cast, "AGE_ANTIQUITY"),
+  "LOC_DEMOGRAPHICS_HIST_EV_RAZED|Thebes|EGYPT"
+);
+assert.equal(
+  eventText({ t: 1, a: 1, k: "age", p: -1, x: "AGE_EXPLORATION", n: "LOC_AGE_EXP" }, cast, "AGE_EXPLORATION"),
+  "LOC_DEMOGRAPHICS_HIST_EV_AGE|AGE_EXP"
+);
+assert.equal(
+  eventText({ t: 1, a: 1, k: "civ", p: 0, x: "CIV_NORMAN", n: "LOC_NORMAN" }, cast, "AGE_EXPLORATION"),
+  "LOC_DEMOGRAPHICS_HIST_EV_CIV|LA|NORMAN"
+);
+assert.equal(
+  eventText({ t: 9, a: 0, k: "capture", p: 0, q: -1, n: "Ur" }, cast, "AGE_ANTIQUITY"),
+  "LOC_DEMOGRAPHICS_HIST_EV_CAPTURE|ROME|Ur|DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE"
+);
+assert.equal(
+  eventText({ t: 9, a: 0, k: "wonder", p: 0, x: "WONDER_PYRAMIDS" }, cast, "AGE_ANTIQUITY"),
+  "LOC_DEMOGRAPHICS_HIST_EV_WONDER|ROME|Pyramids"
+);
 
 // Victories use a short name; Domination's game name ("Domination Victory") would repeat the word.
-assert.equal(eventText({ t: 9, a: 2, k: "victory", p: 0, x: "VICTORY_SCIENCE_MODERN", n: "LOC_SCI" }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_VICTORY|ROME|SCI");
-assert.equal(eventText({ t: 9, a: 2, k: "victory", p: 0, x: "VICTORY_DOMINATION", n: "LOC_VICTORY_DOMINATION_NAME" }, cast, "AGE_ANTIQUITY"), "LOC_DEMOGRAPHICS_HIST_EV_VICTORY|ROME|DEMOGRAPHICS_HIST_VICTORY_DOMINATION");
+assert.equal(
+  eventText({ t: 9, a: 2, k: "victory", p: 0, x: "VICTORY_SCIENCE_MODERN", n: "LOC_SCI" }, cast, "AGE_ANTIQUITY"),
+  "LOC_DEMOGRAPHICS_HIST_EV_VICTORY|ROME|SCI"
+);
+assert.equal(
+  eventText(
+    { t: 9, a: 2, k: "victory", p: 0, x: "VICTORY_DOMINATION", n: "LOC_VICTORY_DOMINATION_NAME" },
+    cast,
+    "AGE_ANTIQUITY"
+  ),
+  "LOC_DEMOGRAPHICS_HIST_EV_VICTORY|ROME|DEMOGRAPHICS_HIST_VICTORY_DOMINATION"
+);
 
 // Spoilers: events about unmet civilizations are hidden; ages and victories always show.
 assert.ok(eventVisible({ t: 1, a: 0, k: "war", p: 0, q: 1 }, cast));
@@ -59,7 +117,16 @@ assert.ok(eventVisible({ t: 1, a: 0, k: "victory", p: 2 }, cast));
   ];
   const s = summarizeAge(evs, cast, "AGE_ANTIQUITY");
   assert.deepEqual(
-    { founded: s.founded, captured: s.captured, lost: s.lost, wonders: s.wonders, triumphs: s.triumphs, wars: s.wars, religion: s.religion, fallen: s.fallen },
+    {
+      founded: s.founded,
+      captured: s.captured,
+      lost: s.lost,
+      wonders: s.wonders,
+      triumphs: s.triumphs,
+      wars: s.wars,
+      religion: s.religion,
+      fallen: s.fallen
+    },
     { founded: 2, captured: 1, lost: 1, wonders: ["W"], triumphs: 1, wars: 1, religion: "REL", fallen: ["EGYPT"] }
   );
 }
@@ -88,7 +155,13 @@ assert.ok(castFromDoc(doc, "own").known(0), "the local player is always known");
   const noLast = castFromDoc({ ...doc, last: {} });
   assert.ok(noLast.known(0) && !noLast.known(1), "only the local player is known");
   assert.ok(!castFromDoc({ ...doc, last: { players: null } }).known(1));
-  const noRivals = castFromRecord({ local: 0, leader: "LEADER_A", leaderName: "LOC_LA", color: "#111", civs: doc.players[0].civs });
+  const noRivals = castFromRecord({
+    local: 0,
+    leader: "LEADER_A",
+    leaderName: "LOC_LA",
+    color: "#111",
+    civs: doc.players[0].civs
+  });
   assert.equal(noRivals.civName(5, "AGE_ANTIQUITY"), "");
   assert.equal(noRivals.leaderName(5), "");
   assert.equal(noRivals.civType(5, "AGE_ANTIQUITY"), "");

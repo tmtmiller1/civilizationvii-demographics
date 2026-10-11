@@ -26,71 +26,73 @@ import {
 import {
   resolveCsType,
   csTypeMeta
-} from "/demographics/ui/screen-demographics/views/relations/relations-edges.js";
+} from "/demographics/ui/screen-demographics/views/relations/relations-edges-city-states.js";
 import { localYear, t, turnLabel } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
- * Displayed duration in turns, in one turn space. `sTurn` is a global chart turn, but for an
- * ongoing war `eTurn` is the age-local last turn (kept so because the cost windowing is age-local
- * by design); subtracting them showed "-98 turns" for a war begun at T-164 in an age at local turn
- * 66. An ongoing war therefore measures to the global latest turn.
- * @param {*} w
- * @param {number} sTurn Global start turn.
- * @param {number} eTurn End turn as used for cost windowing (age-local when ongoing).
+ * Displayed duration in turns, in one turn space. `startTurn` is a global chart turn, but for an
+ * ongoing war `endTurn` is the age-local last turn (kept so because the cost windowing is age-local
+ * by design); subtracting them would show "-98 turns" for a war begun at T-164 in an age at local
+ * turn 66. An ongoing war therefore measures to the global latest turn.
+ * @param {*} war
+ * @param {number} startTurn Global start turn.
+ * @param {number} endTurn End turn as used for cost windowing (age-local when ongoing).
  * @param {number} latestTurn Global latest sampled turn.
  * @returns {number} Turns elapsed.
  */
-function warDurationTurns(w, sTurn, eTurn, latestTurn) {
-  if (typeof w.endTurn === "number") return w.endTurn - sTurn;
-  const end = typeof latestTurn === "number" && isFinite(latestTurn) ? latestTurn : eTurn;
-  return end - sTurn;
+function warDurationTurns(war, startTurn, endTurn, latestTurn) {
+  if (typeof war.endTurn === "number") return war.endTurn - startTurn;
+  const end = typeof latestTurn === "number" && isFinite(latestTurn) ? latestTurn : endTurn;
+  return end - startTurn;
 }
 
 /**
  * Build the structured tooltip body for a war.
- * @param {*} w
+ * @param {*} war
  * @param {Object} ctx Shared Gantt context.
  * @param {Map<*, string>} ctx.nameOverride war → display label.
  * @param {Map<number, string>} ctx.turnYearMap chart-turn → year map.
  * @param {number} ctx.latestTurn
  * @param {Snapshot[]} ctx.samples
- * @returns {Record<string, *>} The tooltip body fields.
+ * @returns {Record<string, *>}
  */
-function buildWarTooltipBody(w, ctx) {
+function buildWarTooltipBody(war, ctx) {
   const { nameOverride, turnYearMap, latestTurn, samples } = ctx;
   // Age-scope the sample stream to the war's age so cost windowing (age-local turns) can't
   // pull in same-numbered turns from other ages; ageLastTurn bounds an ongoing war correctly.
-  const { scoped, ageLastTurn } = warAgeScope(samples, w);
-  const sTurn = w.startTurn;
-  const eTurn = typeof w.endTurn === "number" ? w.endTurn : ageLastTurn;
-  const startYr = w.startYear ? localYear(w.startYear) : turnLabel(sTurn);
+  const { scoped, ageLastTurn } = warAgeScope(samples, war);
+  const startTurn = war.startTurn;
+  const endTurn = typeof war.endTurn === "number" ? war.endTurn : ageLastTurn;
+  const startYr = war.startYear ? localYear(war.startYear) : turnLabel(startTurn);
   const endYr =
-    typeof w.endTurn === "number" ? (w.endYear ? localYear(w.endYear) : turnLabel(eTurn)) : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
-  const yrs = warDurationYears(w, turnYearMap, latestTurn);
-  const turns = warDurationTurns(w, sTurn, eTurn, latestTurn);
-  const declared = warDeclaredBy(w);
+    typeof war.endTurn === "number"
+      ? (war.endYear ? localYear(war.endYear) : turnLabel(endTurn))
+      : t("LOC_DEMOGRAPHICS_WARS_ONGOING");
+  const yrs = warDurationYears(war, turnYearMap, latestTurn);
+  const turns = warDurationTurns(war, startTurn, endTurn, latestTurn);
+  const declared = warDeclaredBy(war);
   return {
     // Use the World War override when 4+ civs are involved; fall back to the
     // bilateral name otherwise.
-    title: nameOverride.get(w) || w.name,
-    ongoing: typeof w.endTurn !== "number",
+    title: nameOverride.get(war) || war.name,
+    ongoing: typeof war.endTurn !== "number",
     status:
-      typeof w.endTurn === "number"
+      typeof war.endTurn === "number"
         ? t("LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED")
         : t("LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING"),
-    sideA: majorsOnSide(w.sideACivs),
-    sideB: majorsOnSide(w.sideBCivs),
+    sideA: majorsOnSide(war.sideACivs),
+    sideB: majorsOnSide(war.sideBCivs),
     // City-state / independent allies on each side (the entries majorsOnSide
     // drops), for the tooltip's "City State Allies" sections + the allied totals.
-    csA: csOnSide(w.sideACivs),
-    csB: csOnSide(w.sideBCivs),
+    csA: csOnSide(war.sideACivs),
+    csB: csOnSide(war.sideBCivs),
     declared,
     startYr,
     endYr,
     yrs,
     turns,
-    warStart: typeof sTurn === "number" ? sTurn : 0,
-    warEnd: eTurn,
+    warStart: typeof startTurn === "number" ? startTurn : 0,
+    warEnd: endTurn,
     // Age-scoped sample stream for the cost windowing below (warWindow/participantCost).
     scoped
   };
@@ -99,10 +101,10 @@ function buildWarTooltipBody(w, ctx) {
 /**
  * Filter a war-side roster to its city-state / independent (non-major) entries.
  * @param {*[]} roster A war side's roster.
- * @returns {*[]} The city-state entries.
+ * @returns {*[]}
  */
 function csOnSide(roster) {
-  return (roster || []).filter((r) => r && r.isCS);
+  return (roster || []).filter((entry) => entry && entry.isCS);
 }
 
 /**
@@ -124,22 +126,22 @@ function csSideTotals(csList, win) {
 
 /**
  * The "declared by" line for a war (its major declarer, else "unknown").
- * @param {*} w
+ * @param {*} war
  * @returns {string}
  */
-function warDeclaredBy(w) {
-  if (!w.declaredBy || w.declaredBy.isCS) return t("LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN");
-  return w.declaredBy.leader ? w.declaredBy.leader + ", " + w.declaredBy.civ : w.declaredBy.civ;
+function warDeclaredBy(war) {
+  if (!war.declaredBy || war.declaredBy.isCS) return t("LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN");
+  return war.declaredBy.leader ? war.declaredBy.leader + ", " + war.declaredBy.civ : war.declaredBy.civ;
 }
 
 /**
  * Render the tooltip DOM for a war into the shared tooltip element.
  * @param {HTMLElement} tooltip Cleared and repopulated.
- * @param {*} w
+ * @param {*} war
  * @param {*} ctx Shared Gantt context (see {@link buildWarTooltipBody}).
  */
-export function renderWarTooltip(tooltip, w, ctx) {
-  const tip = buildWarTooltipBody(w, ctx);
+export function renderWarTooltip(tooltip, war, ctx) {
+  const tip = buildWarTooltipBody(war, ctx);
   const samples = ctx.samples || [];
   while (tooltip.firstChild) tooltip.removeChild(tooltip.firstChild);
 
@@ -180,10 +182,10 @@ const SIGN_KEY_ITEMS = [
  * Append one sign-key entry (an optional separator, the colored sign glyph, and
  * its label) to the key row.
  * @param {HTMLElement} key
- * @param {{ cls: string, sign: string, label: string }} it
+ * @param {{ cls: string, sign: string, label: string }} item
  * @param {boolean} withSep Whether to prepend a "·" separator.
  */
-function appendKeyItem(key, it, withSep) {
+function appendKeyItem(key, item, withSep) {
   if (withSep) {
     const sep = document.createElement("span");
     sep.className = "demographics-wars-tooltip-key-sep";
@@ -191,13 +193,13 @@ function appendKeyItem(key, it, withSep) {
     key.appendChild(sep);
   }
   const sign = document.createElement("span");
-  sign.className = "demographics-wars-tooltip-leader-val " + it.cls;
-  sign.textContent = it.sign;
+  sign.className = "demographics-wars-tooltip-leader-val " + item.cls;
+  sign.textContent = item.sign;
   key.appendChild(sign);
-  const lbl = document.createElement("span");
-  lbl.className = "demographics-wars-tooltip-key-label";
-  lbl.textContent = t(it.label);
-  key.appendChild(lbl);
+  const label = document.createElement("span");
+  label.className = "demographics-wars-tooltip-key-label";
+  label.textContent = t(item.label);
+  key.appendChild(label);
 }
 
 /**
@@ -208,7 +210,7 @@ function appendKeyItem(key, it, withSep) {
 function buildTooltipKey() {
   const key = document.createElement("div");
   key.className = "demographics-wars-tooltip-key";
-  SIGN_KEY_ITEMS.forEach((it, i) => appendKeyItem(key, it, i > 0));
+  SIGN_KEY_ITEMS.forEach((item, i) => appendKeyItem(key, item, i > 0));
   return key;
 }
 
@@ -286,10 +288,11 @@ function pushSideCols(cols, majors, csList, ctx) {
  */
 function liveSuzerain(pid) {
   try {
-    const p = typeof Players !== "undefined" && Players.get ? Players.get(Number(pid)) : null;
-    const inf = p && p.Influence;
-    const suz = inf && typeof inf.getSuzerain === "function" ? inf.getSuzerain() : -1;
-    return typeof suz === "number" ? suz : -1;
+    const player = typeof Players !== "undefined" && Players.get ? Players.get(Number(pid)) : null;
+    const influence = player && player.Influence;
+    const suzerain =
+      influence && typeof influence.getSuzerain === "function" ? influence.getSuzerain() : -1;
+    return typeof suzerain === "number" ? suzerain : -1;
   } catch (_) {
     return -1;
   }
@@ -306,12 +309,12 @@ function liveSuzerain(pid) {
 function groupCSBySuzerain(majors, csList) {
   /** @type {Map<number, *[]>} */
   const map = new Map();
-  for (const m of majors) map.set(Number(m.pid), []);
+  for (const major of majors) map.set(Number(major.pid), []);
   if (!majors.length) return map;
   const fallback = Number(majors[0].pid);
   for (const cs of csList) {
-    const suz = liveSuzerain(cs.pid);
-    const key = map.has(suz) ? suz : fallback;
+    const suzerain = liveSuzerain(cs.pid);
+    const key = map.has(suzerain) ? suzerain : fallback;
     const bucket = map.get(key);
     if (bucket) bucket.push(cs);
   }
@@ -340,10 +343,10 @@ function csDisplayName(ally) {
  * @returns {string|null}
  */
 function csLiveName(pid) {
-  const p = typeof Players !== "undefined" && Players.get ? Players.get(Number(pid)) : null;
-  if (!p || !p.name) return null;
+  const player = typeof Players !== "undefined" && Players.get ? Players.get(Number(pid)) : null;
+  if (!player || !player.name) return null;
   if (typeof Locale === "undefined" || typeof Locale.compose !== "function") return null;
-  const composed = Locale.compose(p.name);
+  const composed = Locale.compose(player.name);
   return typeof composed === "string" && composed.length > 0 ? composed : null;
 }
 
@@ -384,7 +387,7 @@ function buildSidesEl(tip, samples, win) {
  * @param {*} tip The tooltip body (see {@link buildWarTooltipBody}).
  * @param {Snapshot[]} samples Unused; kept for symmetry.
  * @param {Snapshot[]} win The war-window samples.
- * @returns {HTMLElement|null} The CS table, or null if there are no allies.
+ * @returns {HTMLElement|null}
  */
 function buildCSTable(tip, samples, win) {
   if (!tip.csA.length && !tip.csB.length) return null;
@@ -408,9 +411,9 @@ function csSuzerainColumns(tip) {
   const grpB = groupCSBySuzerain(tip.sideB, tip.csB);
   /** @type {{ entry: *, css: *[] }[]} */
   const cols = [];
-  for (const m of tip.sideA) cols.push({ entry: m, css: grpA.get(Number(m.pid)) || [] });
+  for (const major of tip.sideA) cols.push({ entry: major, css: grpA.get(Number(major.pid)) || [] });
   const aCount = cols.length;
-  for (const m of tip.sideB) cols.push({ entry: m, css: grpB.get(Number(m.pid)) || [] });
+  for (const major of tip.sideB) cols.push({ entry: major, css: grpB.get(Number(major.pid)) || [] });
   const vsAt = aCount > 0 && cols.length > aCount ? aCount : -1;
   return { cols, vsAt };
 }
@@ -428,16 +431,16 @@ function buildCSRow(cols, vsAt, i, win) {
   const row = document.createElement("div");
   row.className = "demographics-wars-tooltip-trow";
   row.appendChild(buildCSLabelCell());
-  cols.forEach((c, ci) => {
-    if (ci === vsAt) row.appendChild(buildVsCell(""));
-    row.appendChild(buildCSAllyCell(c.css[i], win));
+  cols.forEach((column, colIndex) => {
+    if (colIndex === vsAt) row.appendChild(buildVsCell(""));
+    row.appendChild(buildCSAllyCell(column.css[i], win));
   });
   return row;
 }
 
 /** The two military metrics shown for each city-state ally (Current + Lost). */
 function csMetrics() {
-  return COST_METRICS.filter((m) => m.id === "milpowerLevel" || m.id === "milpower");
+  return COST_METRICS.filter((metric) => metric.id === "milpowerLevel" || metric.id === "milpower");
 }
 
 /**
@@ -452,11 +455,11 @@ function buildCSLabelCell() {
   const spacer = document.createElement("div");
   spacer.className = "demographics-wars-tooltip-cs-ally-name";
   cell.appendChild(spacer);
-  for (const m of csMetrics()) {
-    const lbl = document.createElement("div");
-    lbl.className = "demographics-wars-tooltip-cs-ally-val";
-    lbl.textContent = costMetricTitle(m);
-    cell.appendChild(lbl);
+  for (const metric of csMetrics()) {
+    const label = document.createElement("div");
+    label.className = "demographics-wars-tooltip-cs-ally-val";
+    label.textContent = costMetricTitle(metric);
+    cell.appendChild(label);
   }
   return cell;
 }
@@ -511,18 +514,18 @@ function buildCSAllyName(cs) {
 function buildCSStat(val, mode) {
   const fig = formatCostFigure(val, mode);
   const el = document.createElement("div");
-  el.className = "demographics-wars-tooltip-cs-ally-val demographics-wars-tooltip-leader-val " + fig.cls;
+  el.className =
+    "demographics-wars-tooltip-cs-ally-val demographics-wars-tooltip-leader-val " + fig.cls;
   el.textContent = fig.text;
   return el;
 }
-
 
 /**
  * Append a thin horizontal divider to the tooltip.
  * @param {HTMLElement} tooltip
  */
 function appendDivider(tooltip) {
-  const d = document.createElement("div");
-  d.className = "demographics-wars-tooltip-divider";
-  tooltip.appendChild(d);
+  const divider = document.createElement("div");
+  divider.className = "demographics-wars-tooltip-divider";
+  tooltip.appendChild(divider);
 }

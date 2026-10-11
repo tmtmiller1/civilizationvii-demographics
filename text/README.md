@@ -48,9 +48,9 @@ Every other locale uses a `LocalizedText` block with `Replace` + a `Language` at
 
 ## The tag-parity invariant
 
-**Every locale file must contain exactly the same set of tags as `en_us`** (currently
-1093; `npm run test:i18n` enforces it). The engine loads a separate DB per language, so a tag missing from `fr_fr` renders
-as the raw `LOC_...` string for French players. Keep the sets identical.
+**Every locale file must contain exactly the same set of tags as `en_us`** (`tests/i18n.mjs` enforces it). The engine
+loads a separate DB per language, so a tag missing from `fr_fr` renders as the raw `LOC_...` string for French players.
+Keep the sets identical.
 
 ## Placeholder text is expected
 
@@ -86,7 +86,7 @@ it when the tag does not resolve.
 Because the Hall of Fame runs at the main menu, `ui/core/demographics-i18n.js` is declared in
 **both** ActionGroups in `demographics.modinfo` — the `demographics-shell` group as well as
 `demographics-game`. A module the main menu imports but the shell group does not declare fails
-`npm run test:modinfo` (it runs a shell-scope import closure), not just the running game.
+`tests/modinfo.mjs` (it runs a shell-scope import closure), not just the running game.
 
 **Polish** keeps a different layout from the other locales: one `<Replace>` per line,
 tab-indented, with the translator's header comment at the top. Keep that shape when adding tags.

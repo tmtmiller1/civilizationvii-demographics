@@ -3,19 +3,22 @@
 // Table and leaders rendering for the Settlements view.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { div, fmt, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { div, formatRounded, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import {
   SETTLEMENT_OUTPUTS,
   valueOf
 } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
-import { rankedRowClass } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
+import {
+  rankedRowClass
+} from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
+import { setClass } from "/demographics/ui/screen-demographics/screen/dom-helpers.js";
 
 /**
  * @typedef {{
  *   topN: number,
  *   setSetting: (settings: *, key: string, value: *) => void,
  *   safePlaySound: (id: string) => void,
- *   displayOf: (st: *, s: *) => *,
+ *   displayOf: (state: *, settlement: *) => *,
  *   buildOwnerCell: (owner: *) => HTMLElement,
  *   buildTypeBadge: (isTown: boolean) => HTMLElement,
  *   buildSectionTitle: (key: string) => HTMLElement,
@@ -40,19 +43,19 @@ import { rankedRowClass } from "/demographics/ui/screen-demographics/views/settl
 
 /**
  * The table filters, in display order.
- * @type {Array<{ id: string, label: string, test: (s: *) => boolean }>}
+ * @type {Array<{ id: string, label: string, test: (settlement: *) => boolean }>}
  */
 const FILTERS = [
   { id: "all", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL", test: () => true },
   {
     id: "cities",
     label: "LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES",
-    test: (s) => !s.isTown
+    test: (settlement) => !settlement.isTown
   },
   {
     id: "towns",
     label: "LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS",
-    test: (s) => s.isTown
+    test: (settlement) => settlement.isTown
   }
 ];
 
@@ -67,9 +70,9 @@ function columnLeaders(pool) {
   /** @type {Record<string, number>} */
   const out = {};
   for (const col of SETTLEMENT_OUTPUTS) {
-    const vals = pool.map((s) => valueOf(s, col.id));
-    const max = Math.max(...vals);
-    if (max > 0 && vals.some((v) => v < max)) out[col.id] = max;
+    const values = pool.map((settlement) => valueOf(settlement, col.id));
+    const max = Math.max(...values);
+    if (max > 0 && values.some((value) => value < max)) out[col.id] = max;
   }
   return out;
 }
@@ -77,25 +80,25 @@ function columnLeaders(pool) {
 /**
  * Build the All/Cities/Towns filter chip row. The chips are built once and registered in `ui`;
  * their active state is a class toggle in {@link refreshTable}.
- * @param {*} st
+ * @param {*} state
  * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
  * @returns {HTMLElement}
  */
-function buildFilterRow(st, deps, ui) {
+function buildFilterRow(state, deps, ui) {
   const row = div("demographics-settle-filters");
-  for (const f of FILTERS) {
+  for (const filter of FILTERS) {
     const chip = div("demographics-chart-time-filter-pill");
-    chip.textContent = t(f.label);
+    chip.textContent = t(filter.label);
     chip.addEventListener("click", () => {
-      if (st.filter === f.id) return;
-      st.filter = f.id;
+      if (state.filter === filter.id) return;
+      state.filter = filter.id;
       // Session-only: the ranking always reopens on All (see view-settlements.js),
       // so the chosen filter is intentionally not persisted.
       deps.safePlaySound("data-audio-activate");
       ui.refresh();
     });
-    ui.chips.set(f.id, chip);
+    ui.chips.set(filter.id, chip);
     row.appendChild(chip);
   }
   return row;
@@ -116,20 +119,20 @@ const FIXED_COLS = [
 /**
  * Build a sortable header cell. The cell (and the yield icon it carries) is built once and
  * registered in `ui`; its sorted state is a class toggle in {@link refreshTable}.
- * @param {*} st
+ * @param {*} state
  * @param {string} key
  * @param {HTMLElement} inner
  * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
  * @returns {HTMLElement}
  */
-function buildSortHeader(st, key, inner, deps, ui) {
+function buildSortHeader(state, key, inner, deps, ui) {
   const cell = div("demographics-settle-th demographics-settle-col-" + key);
   cell.appendChild(inner);
   cell.addEventListener("click", () => {
-    if (st.sortKey === key) return;
-    st.sortKey = key;
-    deps.setSetting(st.settings, "settlementsSortKey", key);
+    if (state.sortKey === key) return;
+    state.sortKey = key;
+    deps.setSetting(state.settings, "settlementsSortKey", key);
     deps.safePlaySound("data-audio-activate");
     ui.refresh();
   });
@@ -139,27 +142,27 @@ function buildSortHeader(st, key, inner, deps, ui) {
 
 /**
  * Build the table header row.
- * @param {*} st
+ * @param {*} state
  * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
  * @returns {HTMLElement}
  */
-function buildHeaderRow(st, deps, ui) {
+function buildHeaderRow(state, deps, ui) {
   const row = div("demographics-settle-row demographics-settle-header");
-  for (const c of FIXED_COLS) {
-    if (c.id === "composite") {
+  for (const col of FIXED_COLS) {
+    if (col.id === "composite") {
       row.appendChild(
         buildSortHeader(
-          st,
+          state,
           "composite",
-          div("demographics-settle-th-label", t(c.label)),
+          div("demographics-settle-th-label", t(col.label)),
           deps,
           ui
         )
       );
     } else {
-      const cell = div("demographics-settle-th demographics-settle-col-" + c.id);
-      cell.appendChild(div("demographics-settle-th-label", t(c.label)));
+      const cell = div("demographics-settle-th demographics-settle-col-" + col.id);
+      cell.appendChild(div("demographics-settle-th-label", t(col.label)));
       row.appendChild(cell);
     }
   }
@@ -167,7 +170,7 @@ function buildHeaderRow(st, deps, ui) {
     const inner = div("demographics-settle-th-inner");
     inner.appendChild(iconEl(col.icon, "demographics-settle-yield-icon"));
     inner.appendChild(div("demographics-settle-th-label", t(col.label)));
-    row.appendChild(buildSortHeader(st, col.id, inner, deps, ui));
+    row.appendChild(buildSortHeader(state, col.id, inner, deps, ui));
   }
   return row;
 }
@@ -175,66 +178,56 @@ function buildHeaderRow(st, deps, ui) {
 /**
  * Build one output cell. The leading settlement's cell carries the gold leader
  * wash and a "World leader in <output>" tooltip.
- * @param {*} s The settlement.
+ * @param {*} settlement
  * @param {{ id: string, label: string }} col The output column.
  * @param {string} sortKey
  * @param {Record<string, number>} leads
  * @returns {HTMLElement}
  */
-function buildOutputCell(s, col, sortKey, leads) {
-  const lead = col.id in leads && valueOf(s, col.id) === leads[col.id];
+function buildOutputCell(settlement, col, sortKey, leads) {
+  const lead = col.id in leads && valueOf(settlement, col.id) === leads[col.id];
   const cell = div(
     "demographics-settle-td demographics-settle-col-" + col.id +
       (sortKey === col.id ? " is-sorted" : "") + (lead ? " is-leader" : ""),
-    fmt(s.outputs[col.id])
+    formatRounded(settlement.outputs[col.id])
   );
-  if (lead) cell.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", t(col.label)));
+  if (lead) {
+    cell.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", t(col.label)));
+  }
   return cell;
 }
 
 /**
  * Build one settlement data row for the table.
- * @param {*} s The settlement.
+ * @param {*} settlement
  * @param {number} rank The 1-based rank within the current sort.
  * @param {string} sortKey
  * @param {Record<string, number>} leads
  * @param {TableDeps} deps
  * @returns {HTMLElement}
  */
-function buildTableRow(s, rank, sortKey, leads, deps) {
-  const row = div(rankedRowClass("demographics-settle-row demographics-settle-datarow", s, rank));
-  if (s.owner.readable || s.owner.primary) {
-    row.style.setProperty("border-left-color", s.owner.readable || s.owner.primary);
+function buildTableRow(settlement, rank, sortKey, leads, deps) {
+  const row = div(rankedRowClass("demographics-settle-row demographics-settle-datarow", settlement, rank));
+  if (settlement.owner.readable || settlement.owner.primary) {
+    row.style.setProperty("border-left-color", settlement.owner.readable || settlement.owner.primary);
   }
   row.appendChild(div("demographics-settle-td demographics-settle-col-rank", String(rank)));
   const ownerTd = div("demographics-settle-td demographics-settle-col-owner");
-  ownerTd.appendChild(deps.buildOwnerCell(s.owner));
+  ownerTd.appendChild(deps.buildOwnerCell(settlement.owner));
   row.appendChild(ownerTd);
-  row.appendChild(div("demographics-settle-td demographics-settle-col-name", s.name));
+  row.appendChild(div("demographics-settle-td demographics-settle-col-name", settlement.name));
   const typeTd = div("demographics-settle-td demographics-settle-col-type");
-  typeTd.appendChild(deps.buildTypeBadge(s.isTown));
+  typeTd.appendChild(deps.buildTypeBadge(settlement.isTown));
   row.appendChild(typeTd);
   row.appendChild(
     div(
       "demographics-settle-td demographics-settle-col-composite demographics-settle-scorecell" +
         (sortKey === "composite" ? " is-sorted" : ""),
-      fmt(s.composite)
+      formatRounded(settlement.composite)
     )
   );
-  for (const col of SETTLEMENT_OUTPUTS) row.appendChild(buildOutputCell(s, col, sortKey, leads));
+  for (const col of SETTLEMENT_OUTPUTS) row.appendChild(buildOutputCell(settlement, col, sortKey, leads));
   return row;
-}
-
-/**
- * Toggle one class on an element without disturbing the rest of its class list (so a chrome
- * element is never rebuilt just to change its state).
- * @param {HTMLElement} el The element.
- * @param {string} cls The class to toggle.
- * @param {boolean} on
- */
-function setClass(el, cls, on) {
-  if (on) el.classList.add(cls);
-  else el.classList.remove(cls);
 }
 
 /**
@@ -242,29 +235,29 @@ function setClass(el, cls, on) {
  * swap only the data rows. The filter chips, the filigree section title and the header row (with
  * its yield icons) are never rebuilt, so nothing re-resolves a `blp:` background and nothing
  * blinks.
- * @param {*} st
+ * @param {*} state
  * @param {TableDeps} deps
  * @param {TableUi} ui The panel's chrome handles.
  */
-function refreshTable(st, deps, ui) {
-  for (const [id, chip] of ui.chips) setClass(chip, "is-active", id === st.filter);
-  for (const [key, cell] of ui.heads) setClass(cell, "is-sorted", key === st.sortKey);
+function refreshTable(state, deps, ui) {
+  for (const [id, chip] of ui.chips) setClass(chip, "is-active", id === state.filter);
+  for (const [key, cell] of ui.heads) setClass(cell, "is-sorted", key === state.sortKey);
   for (const row of ui.rows) {
     if (row.parentNode === ui.table) ui.table.removeChild(row);
   }
   ui.rows.length = 0;
-  const filter = FILTERS.find((f) => f.id === st.filter) || FILTERS[0];
-  const pool = st.board.settlements.filter(filter.test);
+  const filter = FILTERS.find((entry) => entry.id === state.filter) || FILTERS[0];
+  const pool = state.board.settlements.filter(filter.test);
   const leads = columnLeaders(pool);
   const ranked = pool
     .slice()
     .sort(
       (/** @type {*} */ a, /** @type {*} */ b) =>
-        valueOf(b, st.sortKey) - valueOf(a, st.sortKey)
+        valueOf(b, state.sortKey) - valueOf(a, state.sortKey)
     )
     .slice(0, deps.topN);
   for (let i = 0; i < ranked.length; i++) {
-    const row = buildTableRow(deps.displayOf(st, ranked[i]), i + 1, st.sortKey, leads, deps);
+    const row = buildTableRow(deps.displayOf(state, ranked[i]), i + 1, state.sortKey, leads, deps);
     ui.rows.push(row);
     ui.table.appendChild(row);
   }
@@ -273,10 +266,10 @@ function refreshTable(st, deps, ui) {
 /**
  * Render the detail table (filter chips + sortable rows). The chrome is built once here; every
  * later filter/sort click goes through {@link refreshTable} rather than a panel rebuild.
- * @param {*} st
+ * @param {*} state
  * @param {TableDeps} deps
  */
-export function renderTablePanel(st, deps) {
+export function renderTablePanel(state, deps) {
   /** @type {TableUi} */
   const ui = {
     chips: new Map(),
@@ -285,14 +278,14 @@ export function renderTablePanel(st, deps) {
     rows: [],
     refresh: () => {}
   };
-  ui.refresh = () => refreshTable(st, deps, ui);
-  st.content.appendChild(buildFilterRow(st, deps, ui));
-  if (!st.board.settlements.length) {
-    st.content.appendChild(deps.buildEmpty());
+  ui.refresh = () => refreshTable(state, deps, ui);
+  state.content.appendChild(buildFilterRow(state, deps, ui));
+  if (!state.board.settlements.length) {
+    state.content.appendChild(deps.buildEmpty());
     return;
   }
-  st.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE"));
-  ui.table.appendChild(buildHeaderRow(st, deps, ui));
-  st.content.appendChild(ui.table);
-  refreshTable(st, deps, ui);
+  state.content.appendChild(deps.buildSectionTitle("LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE"));
+  ui.table.appendChild(buildHeaderRow(state, deps, ui));
+  state.content.appendChild(ui.table);
+  refreshTable(state, deps, ui);
 }

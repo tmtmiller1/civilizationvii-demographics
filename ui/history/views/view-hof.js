@@ -2,12 +2,17 @@
 //
 // Hall of Fame: every campaign this computer has recorded. Tabs: Best Games (the landing page: the
 // best playthroughs and the current game in context), Rankings, Leaders, Civilizations and Records;
-// any game opens a detail page. Works both in game (the current
-// campaign is included live) and at the main menu (archive only).
+// any game opens a detail page. Works both in game (the current campaign is included live) and at
+// the main menu (archive only). ("hof" in file names is the Hall of Fame.)
 
 import { el, clear, onActivate } from "/demographics/ui/history/core/history-dom.js";
 import { t, addSavedTexts } from "/demographics/ui/history/core/history-text.js";
-import { allRecords, archiveStatus, archiveTexts, repairStorage } from "/demographics/ui/history/store/history-archive-store.js";
+import {
+  allRecords,
+  archiveStatus,
+  archiveTexts,
+  repairStorage
+} from "/demographics/ui/history/store/history-archive-store.js";
 import { buildRecord, emptySlice, isRecord, upsert } from "/demographics/ui/history/store/history-archive.js";
 import { visibleRecords } from "/demographics/ui/history/model/history-hof.js";
 import { emptyState, pillRow, tabBar, textButton } from "/demographics/ui/history/views/history-widgets.js";
@@ -15,7 +20,11 @@ import { SHORT_GAME_TURNS } from "/demographics/ui/history/model/history-hof.js"
 import { renderBest } from "/demographics/ui/history/views/view-hof-best.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
 import { renderGames, renderDetail } from "/demographics/ui/history/views/view-hof-games.js";
-import { renderLeaders, renderCivs, renderRecords } from "/demographics/ui/history/views/view-hof-people.js";
+import {
+  renderCivilizationTab,
+  renderLeaderTab,
+  renderRecords
+} from "/demographics/ui/history/views/view-hof-people.js";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 
 export const HOF_TABS = [
@@ -40,7 +49,8 @@ export const HOF_TABS = [
 /** A finite number, or 0. */
 const numOr0 = (/** @type {*} */ v) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
 /** A plain object, or an empty one. */
-const objOf = (/** @type {*} */ v) => /** @type {Record<string, any>} */ (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+const objOf = (/** @type {*} */ value) =>
+  /** @type {Record<string, any>} */ (value && typeof value === "object" && !Array.isArray(value) ? value : {});
 /** An array, or an empty one. */
 const arrOf = (/** @type {*} */ v) => (Array.isArray(v) ? v : []);
 
@@ -48,24 +58,24 @@ const arrOf = (/** @type {*} */ v) => (Array.isArray(v) ? v : []);
  * A copy of a record with every part the views read present. isRecord() checks only the fields the
  * storage rules need, so each missing part gets its empty default here and reads as "none" instead
  * of blanking the panel.
- * @param {ArchiveRecord} r Has passed isRecord.
+ * @param {ArchiveRecord} raw Has passed isRecord.
  * @returns {ArchiveRecord} A normalized copy.
  */
-export function normalizeRecord(r) {
-  const stats = objOf(r.stats);
-  const spark = objOf(r.spark);
+export function normalizeRecord(raw) {
+  const stats = objOf(raw.stats);
+  const spark = objOf(raw.spark);
   return /** @type {ArchiveRecord} */ ({
-    ...r,
+    ...raw,
     stats: {
       ...stats,
       triumphs: numOr0(stats.triumphs), wonders: numOr0(stats.wonders),
       peakSettlements: numOr0(stats.peakSettlements), captured: numOr0(stats.captured)
     },
     spark: { ...spark, tri: arrOf(spark.tri) },
-    rivals: arrOf(r.rivals),
-    highlights: arrOf(r.highlights),
-    ages: arrOf(r.ages),
-    setup: objOf(r.setup)
+    rivals: arrOf(raw.rivals),
+    highlights: arrOf(raw.highlights),
+    ages: arrOf(raw.ages),
+    setup: objOf(raw.setup)
   });
 }
 
@@ -77,7 +87,7 @@ export function normalizeRecord(r) {
  */
 export function hofRecords(live) {
   const slice = emptySlice();
-  for (const r of allRecords()) if (isRecord(r)) upsert(slice, r);
+  for (const rec of allRecords()) if (isRecord(rec)) upsert(slice, rec);
   const cur = live ? buildRecord(live) : null;
   if (cur) slice.games[cur.id] = cur;
   return Object.values(slice.games).map(normalizeRecord);
@@ -185,8 +195,12 @@ function shortGamesFilter(all, ctx) {
   const hidden = hiddenCount(all, ctx);
   if (hidden <= 0) return null;
   const showing = viewState.showShort;
-  const toggle = el("div", { cls: "dgh-pill dgh-hof-filter-btn", text: t(showing ? "LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" : "LOC_DEMOGRAPHICS_HIST_SHOW_SHORT") });
-  onActivate(toggle, () => { viewState.showShort = !viewState.showShort; ctx.rerender(); });
+  const label = showing ? "LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" : "LOC_DEMOGRAPHICS_HIST_SHOW_SHORT";
+  const toggle = el("div", { cls: "dgh-pill dgh-hof-filter-btn", text: t(label) });
+  onActivate(toggle, () => {
+    viewState.showShort = !viewState.showShort;
+    ctx.rerender();
+  });
   const note = showing
     ? null
     : el("div", { cls: "dgh-filter-note", text: t("LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN", hidden, SHORT_GAME_TURNS) });
@@ -307,9 +321,9 @@ function blockedNote(status, done, ctx) {
   if (panel) {
     if (status === "foreign") wireToggle(trigger, panel);
     else {
-      const b = textButton("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX", () => {}, "dgh-repair-toggle");
-      wireToggle(b, panel);
-      kids.push(b);
+      const button = textButton("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX", () => {}, "dgh-repair-toggle");
+      wireToggle(button, panel);
+      kids.push(button);
     }
     kids.push(el("div", { cls: "dgh-options" }, [panel]));
   }
@@ -323,10 +337,10 @@ function blockedNote(status, done, ctx) {
  * @returns {HTMLElement|null}
  */
 function storageNote(ctx) {
-  const s = archiveStatus();
+  const status = archiveStatus();
   const done = repairOutcomeNote();
   const settingsLine = settingsNote();
-  if (s === "ok" || s === "empty") {
+  if (status === "ok" || status === "empty") {
     // Nothing to say when storage is healthy. That a record also lives in each save only matters
     // when the archive cannot be read, and the unreadable message below already says so, next to
     // the repair the player can act on.
@@ -336,7 +350,7 @@ function storageNote(ctx) {
     if (!kids.length) return null;
     return kids.length > 1 ? el("div", { cls: "dgh-storage" }, kids) : kids[0];
   }
-  const blocked = blockedNote(s, done, ctx);
+  const blocked = blockedNote(status, done, ctx);
   if (settingsLine) blocked.appendChild(settingsLine);
   return blocked;
 }
@@ -356,7 +370,9 @@ function settingsNote() {
     // A settings double without the accessor reports as saved.
   }
   if (status === "ok") return null;
-  const tag = status === "unavailable" ? "LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" : "LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED";
+  const tag = status === "unavailable"
+    ? "LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE"
+    : "LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED";
   return el("div", { cls: "dgh-note dgh-note--warn dgh-note--settings", text: t(tag) });
 }
 
@@ -369,8 +385,8 @@ function settingsNote() {
  */
 function renderSection(body, records, all, ctx) {
   if (viewState.hofTab === "games") renderGames(body, records, all, ctx);
-  else if (viewState.hofTab === "leaders") renderLeaders(body, records);
-  else if (viewState.hofTab === "civs") renderCivs(body, records);
+  else if (viewState.hofTab === "leaders") renderLeaderTab(body, records);
+  else if (viewState.hofTab === "civs") renderCivilizationTab(body, records);
   else if (viewState.hofTab === "records") renderRecords(body, records, ctx);
   else renderBest(body, records, all, ctx);
 }
@@ -387,7 +403,7 @@ export function renderHof(host, ctx) {
   if (ctx.filterHost) clear(ctx.filterHost);
   const all = hofRecords(ctx.live);
   addSavedTexts(archiveTexts());
-  for (const r of all) addSavedTexts(r.texts);
+  for (const rec of all) addSavedTexts(rec.texts);
   const records = visibleRecords(all, { showShort: viewState.showShort, keep: ctx.live?.id });
   const detail = viewState.detail ? all.find((r) => r.id === viewState.detail) : null;
   if (detail) {

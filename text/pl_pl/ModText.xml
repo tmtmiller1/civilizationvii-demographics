@@ -128,7 +128,6 @@
 		<Text>Skalowana populacja w świecie rzeczywistym, obliczona wykładniczo na podstawie całkowitej liczby obywateli.</Text>
 	</Replace>
 
-	<!-- V7-specific creative -->
 
 	<Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="pl_PL">
 		<Text>Wpływy na turę</Text>
@@ -457,7 +456,7 @@
 		<Text>Odśwież dane teraz</Text>
 	</Replace>
 
-	<!-- Unmet placeholder strings (Fix 4) -->
+	<!-- Unmet placeholder strings -->
 
 	<Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="pl_PL">
 		<Text>Nieznana cywilizacja</Text>
@@ -2214,17 +2213,11 @@
 	<Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="pl_PL">
 		<Text>Standardowa</Text>
 	</Replace>
-	<Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="pl_PL">
-		<Text>Analityczna</Text>
-	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="pl_PL">
 		<Text>Wyłącznie podstawowe statystyki; zaawansowane wykresy, sieć relacji i ustawienia tuningu są ukryte.</Text>
 	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="pl_PL">
 		<Text>Wszystkie wykresy i zakładki; zaawansowane ustawienia przechowywania danych i częstotliwości próbkowania pozostają ukryte.</Text>
-	</Replace>
-	<Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="pl_PL">
-		<Text>Wszystko, w tym limit przechowywania danych, redukcja danych i kontrola częstotliwości próbkowania.</Text>
 	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="pl_PL">
 		<Text>Postęp epoki w zakresie triumfów: radar ścieżki dziedzictwa dla każdej cywilizacji.</Text>
@@ -2368,7 +2361,7 @@
 		<Text>Oznacza moment, w którym każda z katastrof miała miejsce na mapie uchodźców z modyfikacji „Emigration”. Wymaga modyfikacji towarzyszącej „Emigration”.</Text>
 	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="pl_PL">
-		<Text>Ile informacji wyświetla ekran. Podstawowa obejmuje tylko kluczowe strony statystyk; Standardowa dodaje wszystkie wykresy i zakładki; Analityczna ujawnia również ustawienia przechowywania danych, redukcji danych i częstotliwości próbkowania.</Text>
+		<Text>Ile informacji wyświetla ekran. Podstawowa obejmuje tylko kluczowe strony statystyk; Standardowa dodaje wszystkie wykresy i zakładki.</Text>
 	</Replace>
 	<Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="pl_PL">
 		<Text>Wyświetla linie historyczne jako 3-okresową średnią ruchomą, dzięki czemu trendy są lepiej widoczne. Dane bazowe pozostają niezmienione.</Text>
@@ -2645,7 +2638,9 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS" Language="pl_PL"><Text>Triumfy</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS" Language="pl_PL"><Text>Osiedla</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION" Language="pl_PL"><Text>Populacja</Text></Replace>
-		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="pl_PL"><Text>Tytuł</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="pl_PL"><Text>Tytuł honorowy</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="pl_PL"><Text>„{1_Title}”</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="pl_PL"><Text>(Tytuł honorowy: „{1_Title}”)</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="pl_PL"><Text>Wynik</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS" Language="pl_PL"><Text>Tury</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED" Language="pl_PL"><Text>Data</Text></Replace>

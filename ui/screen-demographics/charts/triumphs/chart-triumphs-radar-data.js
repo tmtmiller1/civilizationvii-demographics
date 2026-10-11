@@ -76,9 +76,9 @@ const RADAR_SUBTYPE_TO_AXIS = {
  */
 function radarEmptyValues() {
   /** @type {Record<string, number>} */
-  const v = {};
-  for (const k of RADAR_AXIS_KEYS) v[k] = 0;
-  return v;
+  const values = {};
+  for (const key of RADAR_AXIS_KEYS) values[key] = 0;
+  return values;
 }
 
 /**
@@ -99,23 +99,23 @@ function radarCivName(src, pid) {
  */
 function radarValuesFromRow(row) {
   const values = radarEmptyValues();
-  for (const k of RADAR_AXIS_KEYS) {
-    if (typeof row[k] === "number" && isFinite(row[k])) values[k] = row[k];
+  for (const key of RADAR_AXIS_KEYS) {
+    if (typeof row[key] === "number" && isFinite(row[key])) values[key] = row[key];
   }
   return values;
 }
 
 /**
  * Build the civ map from a frozen per-age legacy snapshot.
- * @param {Record<string, *>} snap The snapshot (pid → row).
+ * @param {Record<string, *>} snapshot pid → row.
  * @returns {Map<string, RadarCiv>}
  */
-function loadRadarCivsFromSnapshot(snap) {
+function loadRadarCivsFromSnapshot(snapshot) {
   /** @type {Map<string, RadarCiv>} */
   const out = new Map();
-  let idx = 0;
-  for (const pid of Object.keys(snap || {})) {
-    const row = snap[pid];
+  let paletteIndex = 0;
+  for (const pid of Object.keys(snapshot || {})) {
+    const row = snapshot[pid];
     if (!row || typeof row !== "object") continue;
     // Prefer the civ's stored banner color so a civ keeps the same color in the
     // frozen per-age view as in the live current-age view; palette is a fallback
@@ -123,7 +123,7 @@ function loadRadarCivsFromSnapshot(snap) {
     const color =
       typeof row.primaryColor === "string" && row.primaryColor.length > 0
         ? row.primaryColor
-        : PALETTE[idx++ % PALETTE.length];
+        : PALETTE[paletteIndex++ % PALETTE.length];
     out.set(pid, {
       pid,
       leaderType: String(row.leaderType ?? "pid:" + pid),
@@ -147,10 +147,10 @@ function loadRadarCivsCurrent(samples) {
   /** @type {string[]} */
   const pidOrder = [];
   // Walk samples for names + colors and as a fallback data source.
-  samples.forEach((s) => {
-    if (!s || !s.players) return;
-    for (const pid of Object.keys(s.players)) {
-      foldRadarSample(civs, pidOrder, pid, s.players[pid]);
+  samples.forEach((sample) => {
+    if (!sample || !sample.players) return;
+    for (const pid of Object.keys(sample.players)) {
+      foldRadarSample(civs, pidOrder, pid, sample.players[pid]);
     }
   });
   // Live pull via player.Legacies (Test of Time): tally triggered triumphs by
@@ -165,22 +165,22 @@ function loadRadarCivsCurrent(samples) {
  * @param {Map<string, RadarCiv>} civs Mutated.
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  * @param {string} pid
- * @param {CivSample|*} ps One civ's sample.
+ * @param {CivSample|*} player One civ's sample.
  */
-function foldRadarSample(civs, pidOrder, pid, ps) {
+function foldRadarSample(civs, pidOrder, pid, player) {
   // A persisted sample can hold a null player-state; there is nothing to fold.
-  if (!ps) return;
-  const m = ps.metrics || {};
+  if (!player) return;
+  const metrics = player.metrics || {};
   let civ = civs.get(pid);
   if (!civ) {
     const color =
-      typeof ps.primaryColor === "string" && ps.primaryColor.length > 0
-        ? ps.primaryColor
+      typeof player.primaryColor === "string" && player.primaryColor.length > 0
+        ? player.primaryColor
         : PALETTE[pidOrder.length % PALETTE.length];
     civ = {
       pid,
-      leaderType: String(ps.leaderType ?? "pid:" + pid),
-      name: radarCivName(ps, pid),
+      leaderType: String(player.leaderType ?? "pid:" + pid),
+      name: radarCivName(player, pid),
       color,
       values: radarEmptyValues()
     };
@@ -188,7 +188,7 @@ function foldRadarSample(civs, pidOrder, pid, ps) {
     pidOrder.push(pid);
   }
   // take the max; triumph counts are non-decreasing per age
-  mergeMaxAxes(civ.values, m);
+  mergeMaxAxes(civ.values, metrics);
 }
 
 /**
@@ -197,20 +197,20 @@ function foldRadarSample(civs, pidOrder, pid, ps) {
  * @param {Record<string, *>} src Numeric or not.
  */
 function mergeMaxAxes(target, src) {
-  for (const k of RADAR_AXIS_KEYS) {
-    const v = src[k];
-    if (typeof v === "number" && isFinite(v) && v > target[k]) {
-      target[k] = v;
+  for (const key of RADAR_AXIS_KEYS) {
+    const value = src[key];
+    if (typeof value === "number" && isFinite(value) && value > target[key]) {
+      target[key] = value;
     }
   }
 }
 
 /**
  * Tally one alive major's triggered triumphs by axis from `player.Legacies`.
- * @param {*} pl The player's Legacies accessor.
+ * @param {*} legacies The player's Legacies accessor.
  * @returns {Record<string, number>} Per-axis triggered counts.
  */
-function tallyLiveTriumphs(pl) {
+function tallyLiveTriumphs(legacies) {
   const counts = radarEmptyValues();
   try {
     for (const row of GameInfo.Legacies) {
@@ -219,7 +219,7 @@ function tallyLiveTriumphs(pl) {
       if (!axis) continue;
       let triggered = false;
       try {
-        triggered = !!pl.isTriggered?.(row.LegacyType);
+        triggered = !!legacies.isTriggered?.(row.LegacyType);
       } catch (_) {
         // player.Legacies.isTriggered may throw for this row; treat as not triggered.
       }
@@ -241,9 +241,9 @@ function liveRadarPull(civs, pidOrder) {
   try {
     if (!legaciesApiAvailable()) return;
     for (const pid of Players.getAliveMajorIds()) {
-      const pl = typeof Players.get === "function" ? Players.get(pid)?.Legacies : null;
-      if (!pl) continue;
-      mergeLiveMajorTriumphs(civs, pidOrder, pid, tallyLiveTriumphs(pl));
+      const legacies = typeof Players.get === "function" ? Players.get(pid)?.Legacies : null;
+      if (!legacies) continue;
+      mergeLiveMajorTriumphs(civs, pidOrder, pid, tallyLiveTriumphs(legacies));
     }
   } catch (_) {
     // Players.getAliveMajorIds / Players.get may throw; skip the live override.
@@ -342,25 +342,25 @@ export function loadRadarCivs(opts, samples) {
  */
 export function radarScaleMax(civs) {
   let scaleMax = 0;
-  civs.forEach((c) => {
-    for (const k of Object.keys(c.values)) {
-      if (c.values[k] > scaleMax) scaleMax = c.values[k];
+  civs.forEach((civ) => {
+    for (const key of Object.keys(civ.values)) {
+      if (civ.values[key] > scaleMax) scaleMax = civ.values[key];
     }
   });
   return scaleMax <= 0 ? 1 : scaleMax;
 }
 
 /**
- * @param {RadarCiv} c
+ * @param {RadarCiv} civ
  * @returns {number} The civ's six triumph-axis values summed, rounded.
  */
-export function radarTriumphTotal(c) {
+export function radarTriumphTotal(civ) {
   return Math.round(
-    (c.values.triumphs_cultural || 0) +
-      (c.values.triumphs_diplomatic || 0) +
-      (c.values.triumphs_economic || 0) +
-      (c.values.triumphs_scientific || 0) +
-      (c.values.triumphs_militaristic || 0) +
-      (c.values.triumphs_expansionist || 0)
+    (civ.values.triumphs_cultural || 0) +
+      (civ.values.triumphs_diplomatic || 0) +
+      (civ.values.triumphs_economic || 0) +
+      (civ.values.triumphs_scientific || 0) +
+      (civ.values.triumphs_militaristic || 0) +
+      (civ.values.triumphs_expansionist || 0)
   );
 }

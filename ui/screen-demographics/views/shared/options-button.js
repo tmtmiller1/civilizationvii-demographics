@@ -3,7 +3,7 @@
 // The persistent "Options" button: opens the native game Options screen (Mods → Demographics),
 // the single home for Demographics settings. Rendered once by screen-demographics.js in the frame
 // header (top-right, at title level, left of the close button) so it is on every tab without costing
-// a row; styled like the chart-toolbar buttons it replaced.
+// a row; styled like the chart-toolbar buttons.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { makeClickable } from "/demographics/ui/core/demographics-a11y.js";
@@ -24,9 +24,9 @@ export function buildOptionsButton() {
     ev?.stopPropagation?.();
     safePlaySound("data-audio-activate", "options");
     import("/core/ui/context-manager/context-manager.js")
-      .then((m) => {
-        const CM = /** @type {*} */ (m.default || m.ContextManager || m);
-        CM.push("screen-options", { singleton: true, createMouseGuard: true });
+      .then((mod) => {
+        const contextManager = /** @type {*} */ (mod.default || mod.ContextManager || mod);
+        contextManager.push("screen-options", { singleton: true, createMouseGuard: true });
       })
       .catch(() => {
         /* opening the options screen is best-effort */
@@ -44,14 +44,19 @@ export function buildOptionsButton() {
  */
 export function alignOptionsHeaderButton(frame) {
   try {
-    const btn = /** @type {HTMLElement|null} */ (frame && (frame.querySelector(".demographics-header-right") || frame.querySelector(".demographics-options-header-btn")));
+    const btn = /** @type {HTMLElement|null} */ (
+      frame &&
+      (frame.querySelector(".demographics-header-right") ||
+        frame.querySelector(".demographics-options-header-btn"))
+    );
     const title = frame && frame.querySelector(".demographics-title");
     if (!frame || !btn || !title) return;
-    const fr = frame.getBoundingClientRect();
-    const tr = title.getBoundingClientRect();
-    const br = btn.getBoundingClientRect();
-    if (!(tr.height > 0) || !(br.height > 0)) return;
-    btn.style.top = Math.round(toLocalPx((tr.top - fr.top) + tr.height / 2 - br.height / 2)) + "px";
+    const frameRect = frame.getBoundingClientRect();
+    const titleRect = title.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    if (!(titleRect.height > 0) || !(btnRect.height > 0)) return;
+    const centeredTop = (titleRect.top - frameRect.top) + titleRect.height / 2 - btnRect.height / 2;
+    btn.style.top = Math.round(toLocalPx(centeredTop)) + "px";
   } catch (_) {
     // Alignment is cosmetic; the stylesheet's fallback top applies if measurement fails.
   }

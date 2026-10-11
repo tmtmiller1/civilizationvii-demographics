@@ -26,7 +26,7 @@ export function buildCostTable(cols, metrics, samples, vsAt) {
   const table = document.createElement("div");
   table.className = "demographics-wars-tooltip-table";
   table.appendChild(buildTableHeadRow(cols, samples, vsAt));
-  for (const m of metrics) table.appendChild(buildTableMetricRow(m, cols, vsAt));
+  for (const metric of metrics) table.appendChild(buildTableMetricRow(metric, cols, vsAt));
   return table;
 }
 
@@ -39,12 +39,13 @@ export function buildCostTable(cols, metrics, samples, vsAt) {
  */
 function participantIdentity(pid, samples) {
   for (let i = samples.length - 1; i >= 0; i--) {
-    const s = samples[i];
-    const ps = s && s.players ? s.players[pid] : null;
-    if (ps) {
+    const sample = samples[i];
+    const samplePlayer = sample && sample.players ? sample.players[pid] : null;
+    if (samplePlayer) {
       return {
-        leaderType: typeof ps.leaderTypeString === "string" ? ps.leaderTypeString : null,
-        color: typeof ps.primaryColor === "string" ? ps.primaryColor : null
+        leaderType:
+          typeof samplePlayer.leaderTypeString === "string" ? samplePlayer.leaderTypeString : null,
+        color: typeof samplePlayer.primaryColor === "string" ? samplePlayer.primaryColor : null
       };
     }
   }
@@ -77,11 +78,11 @@ function buildCombatantPortrait(leaderType) {
  * @returns {HTMLElement}
  */
 function buildLeaderHeadCell(entry, samples) {
-  const id = participantIdentity(entry.pid, samples);
+  const identity = participantIdentity(entry.pid, samples);
   // The roster entry carries the civ color; the LEADER_* type is in the samples
   // (pidInfo stores civTypeString); newer wars also stamp entry.leaderType.
-  const leaderType = entry.leaderType || id.leaderType;
-  const color = entry.color || id.color;
+  const leaderType = entry.leaderType || identity.leaderType;
+  const color = entry.color || identity.color;
   const cell = document.createElement("div");
   cell.className = "demographics-wars-tooltip-tcell demographics-wars-tooltip-thead-cell";
   cell.appendChild(buildCombatantPortrait(leaderType));
@@ -97,19 +98,20 @@ function buildLeaderHeadCell(entry, samples) {
 /**
  * Build one leader's value cell for a metric: the stat icon + the value (with
  * the allied-total parenthetical on the Military Power / Power Lost rows).
- * @param {*} m The cost-metric descriptor.
- * @param {*} cost The participant's per-metric figures (keyed by m.key).
+ * @param {*} metric The cost-metric descriptor.
+ * @param {*} cost The participant's per-metric figures (keyed by metric.key).
  * @param {{ power: number, lost: number }|null} csTotals The side's CS totals, or null.
  * @returns {HTMLElement}
  */
-function buildValueCell(m, cost, csTotals) {
-  const fig = formatCostFigure(cost[m.key], m.mode);
+function buildValueCell(metric, cost, csTotals) {
+  const fig = formatCostFigure(cost[metric.key], metric.mode);
   const cell = document.createElement("div");
   cell.className = "demographics-wars-tooltip-tcell";
-  if (m.blp) cell.appendChild(buildCostIcon(m.blp));
+  if (metric.blp) cell.appendChild(buildCostIcon(metric.blp));
   const val = document.createElement("span");
   val.className = "demographics-wars-tooltip-leader-val " + fig.cls;
-  val.textContent = fig.text + alliedSuffix(m, cost, csTotals) + scaledCasualtySuffix(m, cost);
+  val.textContent =
+    fig.text + alliedSuffix(metric, cost, csTotals) + scaledCasualtySuffix(metric, cost);
   cell.appendChild(val);
   return cell;
 }
@@ -117,12 +119,12 @@ function buildValueCell(m, cost, csTotals) {
 /**
  * The "≈ soldiers killed" parenthetical for the Units-Lost row: the raw unit count scaled to a
  * population-comparable figure (computed in participantCost). "" for every other metric.
- * @param {*} m The cost-metric descriptor.
+ * @param {*} metric The cost-metric descriptor.
  * @param {*} cost The participant's per-metric figures.
- * @returns {string} The scaled suffix (may be "").
+ * @returns {string}
  */
-function scaledCasualtySuffix(m, cost) {
-  if (m.key !== "unitsLost" || !(cost.unitsLostScaled > 0)) return "";
+function scaledCasualtySuffix(metric, cost) {
+  if (metric.key !== "unitsLost" || !(cost.unitsLostScaled > 0)) return "";
   return " (≈" + formatMagnitude(cost.unitsLostScaled) + ")";
 }
 
@@ -163,38 +165,38 @@ function buildTableHeadRow(cols, samples, vsAt) {
   const row = document.createElement("div");
   row.className = "demographics-wars-tooltip-trow is-head";
   row.appendChild(buildLabelCell(""));
-  cols.forEach((c, i) => {
+  cols.forEach((column, i) => {
     if (i === vsAt) row.appendChild(buildVsCell(t("LOC_DEMOGRAPHICS_WARS_VS")));
-    row.appendChild(headCellFor(c, samples));
+    row.appendChild(headCellFor(column, samples));
   });
   return row;
 }
 
 /**
  * Build a column's header cell (a major leader's portrait + color dot).
- * @param {*} c
+ * @param {*} column A cost-table column (`entry` is its roster participant).
  * @param {Snapshot[]} samples For leader identity.
  * @returns {HTMLElement}
  */
-function headCellFor(c, samples) {
-  return buildLeaderHeadCell(c.entry, samples);
+function headCellFor(column, samples) {
+  return buildLeaderHeadCell(column.entry, samples);
 }
 
 /**
  * Build one metric row: the prose label, then each leader's icon+value cell
  * (with the vs spacer between the two sides).
- * @param {*} m The cost-metric descriptor.
+ * @param {*} metric The cost-metric descriptor.
  * @param {*[]} cols The leader columns.
  * @param {number} vsAt The column index the vs divider precedes (-1 for none).
  * @returns {HTMLElement}
  */
-function buildTableMetricRow(m, cols, vsAt) {
+function buildTableMetricRow(metric, cols, vsAt) {
   const row = document.createElement("div");
   row.className = "demographics-wars-tooltip-trow";
-  row.appendChild(buildLabelCell(costMetricTitle(m)));
-  cols.forEach((c, i) => {
+  row.appendChild(buildLabelCell(costMetricTitle(metric)));
+  cols.forEach((column, i) => {
     if (i === vsAt) row.appendChild(buildVsCell(""));
-    row.appendChild(buildValueCell(m, c.cost, c.cs));
+    row.appendChild(buildValueCell(metric, column.cost, column.cs));
   });
   return row;
 }
@@ -203,15 +205,17 @@ function buildTableMetricRow(m, cols, vsAt) {
  * The allied-total parenthetical for a metric row: " (major + side CS)" on the
  * Military Power and Power Lost rows when the side has city-state allies; ""
  * otherwise.
- * @param {*} m The cost-metric descriptor.
+ * @param {*} metric The cost-metric descriptor.
  * @param {*} cost The participant's per-metric figures.
  * @param {{ power: number, lost: number }|null} csTotals The side's CS totals, or null.
- * @returns {string} The parenthetical suffix (may be "").
+ * @returns {string}
  */
-function alliedSuffix(m, cost, csTotals) {
+function alliedSuffix(metric, cost, csTotals) {
   if (!csTotals) return "";
-  if (m.key === "milPower") return " (" + formatMagnitude((cost.milPower || 0) + csTotals.power) + ")";
-  if (m.key === "milLost") {
+  if (metric.key === "milPower") {
+    return " (" + formatMagnitude((cost.milPower || 0) + csTotals.power) + ")";
+  }
+  if (metric.key === "milLost") {
     const total = (cost.milLost || 0) + csTotals.lost;
     return " (" + (total > 0 ? formatMagnitude(total) : "0") + ")";
   }

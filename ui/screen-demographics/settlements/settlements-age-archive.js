@@ -24,43 +24,43 @@ export const ARCHIVE_TOP = 10;
 
 /**
  * The owner identity fields worth freezing (no live-only `met`).
- * @param {*} o The live owner identity.
- * @returns {*} The frozen owner.
+ * @param {*} owner The live owner identity.
+ * @returns {*}
  */
-function compactOwner(o) {
+function compactOwner(owner) {
   return {
-    pid: o.pid,
-    leaderName: o.leaderName,
-    civName: o.civName,
-    leaderType: o.leaderType,
-    primary: o.primary,
-    secondary: o.secondary,
-    readable: o.readable,
-    isMajor: o.isMajor
+    pid: owner.pid,
+    leaderName: owner.leaderName,
+    civName: owner.civName,
+    leaderType: owner.leaderType,
+    primary: owner.primary,
+    secondary: owner.secondary,
+    readable: owner.readable,
+    isMajor: owner.isMajor
   };
 }
 
 /**
  * A compact, serializable copy of one ranked settlement.
- * @param {*} s The live settlement record.
+ * @param {*} settlement The live settlement record.
  * @returns {*}
  */
-function compactSettlement(s) {
+function compactSettlement(settlement) {
   return {
-    name: s.name,
-    isTown: !!s.isTown,
-    isCapital: !!s.isCapital,
-    composite: Math.round(s.composite * 10) / 10,
-    populationEstimate: Math.round(s.populationEstimate || 0),
-    outputs: s.outputs,
-    ranks: s.ranks,
-    wonders: (Array.isArray(s.wonders) ? s.wonders : []).map((/** @type {*} */ w) => ({
-      type: w.type,
-      icon: w.icon,
-      nameKey: w.nameKey
+    name: settlement.name,
+    isTown: !!settlement.isTown,
+    isCapital: !!settlement.isCapital,
+    composite: Math.round(settlement.composite * 10) / 10,
+    populationEstimate: Math.round(settlement.populationEstimate || 0),
+    outputs: settlement.outputs,
+    ranks: settlement.ranks,
+    wonders: (Array.isArray(settlement.wonders) ? settlement.wonders : []).map((/** @type {*} */ wonder) => ({
+      type: wonder.type,
+      icon: wonder.icon,
+      nameKey: wonder.nameKey
     })),
-    holy: s.holy || null,
-    owner: compactOwner(s.owner || {})
+    holy: settlement.holy || null,
+    owner: compactOwner(settlement.owner || {})
   };
 }
 
@@ -104,40 +104,49 @@ function ageName(age) {
  * Rehydrate an archive record for the showcase builders: re-read the met state,
  * mark it archived (no live handle, so no camera), and default every field the
  * showcase dereferences so an incomplete record still renders.
- * @param {*} r The archive record.
+ * @param {*} record The archive record.
  * @returns {*}
  */
-function rehydrate(r) {
-  const owner = Object.assign({}, r.owner, { met: localHasMet(r.owner && r.owner.pid) });
-  return Object.assign({}, r, {
+function rehydrate(record) {
+  const owner = Object.assign({}, record.owner, { met: localHasMet(record.owner && record.owner.pid) });
+  return Object.assign({}, record, {
     owner,
     archived: true,
     location: null,
     explored: true,
-    outputs: r.outputs && typeof r.outputs === "object" ? r.outputs : {},
-    ranks: r.ranks && typeof r.ranks === "object" ? r.ranks : {},
-    wonders: Array.isArray(r.wonders) ? r.wonders : []
+    outputs: record.outputs && typeof record.outputs === "object" ? record.outputs : {},
+    ranks: record.ranks && typeof record.ranks === "object" ? record.ranks : {},
+    wonders: Array.isArray(record.wonders) ? record.wonders : []
   });
+}
+
+/**
+ * Whether one `top` slot is a usable record object (not null/junk).
+ * @param {*} record
+ * @returns {boolean}
+ */
+function isRecord(record) {
+  return !!record && typeof record === "object";
 }
 
 /**
  * Whether an archive entry holds at least one recorded settlement (a null/junk
  * entry in `top` does not count).
- * @param {*} e The archive entry.
- * @returns {boolean} True when it has standings.
+ * @param {*} entry The archive entry.
+ * @returns {boolean}
  */
-function hasStandings(e) {
-  return !!e && Array.isArray(e.top) && e.top.some((/** @type {*} */ r) => !!r && typeof r === "object");
+function hasStandings(entry) {
+  return !!entry && Array.isArray(entry.top) && entry.top.some(isRecord);
 }
 
 /**
  * The renderable records of an archive entry: null/junk entries dropped, the
  * rest rehydrated.
- * @param {*} e The archive entry (has standings).
+ * @param {*} entry The archive entry (has standings).
  * @returns {Array<*>}
  */
-function entryTop(e) {
-  return e.top.filter((/** @type {*} */ r) => !!r && typeof r === "object").map(rehydrate);
+function entryTop(entry) {
+  return entry.top.filter(isRecord).map(rehydrate);
 }
 
 /**
@@ -155,9 +164,9 @@ export function readAgeArchive(history) {
   /** @type {Array<{ age: string, label: string, year: string, top: Array<*> }>} */
   const out = [];
   for (const age of Object.keys(ages)) {
-    const e = ages[age];
-    if (age !== current && hasStandings(e)) {
-      out.push({ age, label: ageName(age), year: e.year || "", top: entryTop(e) });
+    const entry = ages[age];
+    if (age !== current && hasStandings(entry)) {
+      out.push({ age, label: ageName(age), year: entry.year || "", top: entryTop(entry) });
     }
   }
   return out;

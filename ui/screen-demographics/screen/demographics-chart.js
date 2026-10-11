@@ -7,10 +7,10 @@
 // reflects without re-importing. Until then those bindings are `undefined` and
 // every caller guards with `typeof chartMod.X === "function"`.
 //
-//   chart-line.js          - the main time-series line chart (renderChart)
-//   chart-triumphs-radar.js  - the Legacy Path radar (renderLegacyRadar)
-//   chart-resources.js     - the resources stacked-area chart
-//   chart-conflicts-timeline.js    - the conflicts Gantt timeline (lazy)
+//   chart-line.js                - the main time-series line chart (renderChart)
+//   chart-triumphs-radar.js      - the Legacy Path radar (renderLegacyRadar)
+//   chart-resources.js           - the resources stacked-area chart
+//   chart-conflicts-timeline.js  - the conflicts Gantt timeline (lazy)
 //   chart-conflicts-graphs.js    - the per-war graphs (lazy)
 
 export {

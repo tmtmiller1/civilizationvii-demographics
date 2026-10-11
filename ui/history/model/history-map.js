@@ -33,17 +33,17 @@ export const RECORD_MAP_BYTES = 14 * 1024;
 export function rle(arr) {
   if (!arr.length) return "";
   const out = [];
-  let v = arr[0];
-  let c = 1;
+  let value = arr[0];
+  let count = 1;
   for (let i = 1; i < arr.length; i++) {
-    if (arr[i] === v) c++;
+    if (arr[i] === value) count++;
     else {
-      out.push(v + "x" + c);
-      v = arr[i];
-      c = 1;
+      out.push(value + "x" + count);
+      value = arr[i];
+      count = 1;
     }
   }
-  out.push(v + "x" + c);
+  out.push(value + "x" + count);
   return out.join(".");
 }
 
@@ -58,12 +58,12 @@ export function unrle(str, len, fill = -1) {
   const out = new Array(Math.max(0, len)).fill(fill);
   let i = 0;
   for (const run of String(str || "").split(".")) {
-    const x = run.indexOf("x");
-    if (x < 1) continue;
-    const v = Number(run.slice(0, x));
-    const c = Number(run.slice(x + 1));
-    if (!Number.isFinite(v) || !Number.isFinite(c)) continue;
-    for (let k = 0; k < c && i < len; k++) out[i++] = v;
+    const sep = run.indexOf("x");
+    if (sep < 1) continue;
+    const value = Number(run.slice(0, sep));
+    const count = Number(run.slice(sep + 1));
+    if (!Number.isFinite(value) || !Number.isFinite(count)) continue;
+    for (let k = 0; k < count && i < len; k++) out[i++] = value;
   }
   return out;
 }
@@ -84,8 +84,8 @@ export function thinFrames(frames, cap) {
 
 /**
  * Add a frame to a campaign's map, skipping one identical to the newest and thinning past the cap.
- * @param {HnrMapGrid} map Mutated.
- * @param {HnrMapFrame} frame
+ * @param {HistoryMapGrid} map Mutated.
+ * @param {HistoryMapFrame} frame
  * @returns {boolean} True when the frame was kept.
  */
 export function addFrame(map, frame) {
@@ -121,55 +121,60 @@ export function withinBytes(frames, budget, bytes) {
  * @returns {MapView|null} null when none was captured.
  */
 export function mapView(doc) {
-  const m = doc.map;
-  if (!m || !m.w || !m.h || !m.frames?.length) return null;
+  const map = doc.map;
+  if (!map || !map.w || !map.h || !map.frames?.length) return null;
   const spans = ageSpans(doc.ages);
   return {
-    w: m.w,
-    h: m.h,
-    terrain: m.terrain,
-    frames: m.frames.map((f) => ({ at: positionOf(spans, doc.ages, f.a, f.t), o: f.o, c: f.c }))
+    w: map.w,
+    h: map.h,
+    terrain: map.terrain,
+    frames: map.frames.map((f) => ({ at: positionOf(spans, doc.ages, f.a, f.t), o: f.o, c: f.c }))
   };
 }
 
 /**
  * Compact archive form of a map.
- * @param {MapView|null} mv
+ * @param {MapView|null} mapView
  * @returns {*} Packed map, or undefined.
  */
-export function packMap(mv) {
-  if (!mv) return undefined;
+export function packMap(mapView) {
+  if (!mapView) return undefined;
   const size = (/** @type {MapView["frames"][number]} */ f) => f.o.length + JSON.stringify(f.c).length;
-  const kept = withinBytes(thinFrames(mv.frames, RECORD_FRAMES_CAP), RECORD_MAP_BYTES, size);
-  return { w: mv.w, h: mv.h, r: mv.terrain, f: kept.map((f) => [f.at, f.o, f.c]) };
+  const kept = withinBytes(thinFrames(mapView.frames, RECORD_FRAMES_CAP), RECORD_MAP_BYTES, size);
+  return { w: mapView.w, h: mapView.h, r: mapView.terrain, f: kept.map((f) => [f.at, f.o, f.c]) };
 }
 
 /**
  * Unpack an archived map (tolerating a missing or partial one).
- * @param {*} p Packed map.
+ * @param {*} packed Packed map.
  * @returns {MapView|null}
  */
-export function unpackMap(p) {
-  if (!p || typeof p !== "object" || !(p.w > 0) || !(p.h > 0) || !Array.isArray(p.f) || !p.f.length) return null;
+export function unpackMap(packed) {
+  if (!packed || typeof packed !== "object" || !(packed.w > 0) || !(packed.h > 0)) return null;
+  if (!Array.isArray(packed.f) || !packed.f.length) return null;
   return {
-    w: Number(p.w),
-    h: Number(p.h),
-    terrain: String(p.r || ""),
-    frames: p.f.map((/** @type {*[]} */ f) => ({ at: Number(f[0]) || 0, o: String(f[1] || ""), c: Array.isArray(f[2]) ? f[2] : [] }))
+    w: Number(packed.w),
+    h: Number(packed.h),
+    terrain: String(packed.r || ""),
+    frames: packed.f.map((/** @type {*[]} */ row) => ({
+      at: Number(row[0]) || 0,
+      o: String(row[1] || ""),
+      c: Array.isArray(row[2]) ? row[2] : []
+    }))
   };
 }
 
 /**
  * The frame to show at a timeline position: the newest at or before it, else the first.
- * @param {MapView} mv
+ * @param {MapView} mapView
  * @param {number} at
  * @returns {MapView["frames"][number]}
  */
-export function frameAt(mv, at) {
-  let pick = mv.frames[0];
-  for (const f of mv.frames) {
-    if (f.at > at) break;
-    pick = f;
+export function frameAt(mapView, at) {
+  let pick = mapView.frames[0];
+  for (const frame of mapView.frames) {
+    if (frame.at > at) break;
+    pick = frame;
   }
   return pick;
 }

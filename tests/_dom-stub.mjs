@@ -89,7 +89,10 @@ class FakeElement {
     const styleMap = {};
     this.style = new Proxy(styleMap, {
       get(t, k) {
-        if (k === "setProperty") return (prop, val) => { styleMap[prop] = val; };
+        if (k === "setProperty")
+          return (prop, val) => {
+            styleMap[prop] = val;
+          };
         if (k === "cssText") return styleMap.__cssText || "";
         return styleMap[k];
       },
@@ -269,4 +272,32 @@ export function createFakeDocument() {
     head: new FakeElement("head")
   };
   return { document: doc, FakeElement };
+}
+
+// First node under `root` (root included, breadth first) whose class list contains `cls`.
+export function findByClass(root, cls) {
+  const queue = [root];
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    if (typeof cur.className === "string" && cur.className.split(/\s+/).includes(cls)) return cur;
+    queue.push(...(cur.children || []));
+  }
+  return null;
+}
+
+/**
+ * The first argument of each console.error call made while `fn` runs.
+ * @param {() => void} fn
+ * @returns {string[]}
+ */
+export function captureErrors(fn) {
+  const lines = [];
+  const orig = console.error;
+  console.error = (...a) => lines.push(String(a[0]));
+  try {
+    fn();
+  } finally {
+    console.error = orig;
+  }
+  return lines;
 }

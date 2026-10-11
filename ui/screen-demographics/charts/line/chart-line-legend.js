@@ -10,51 +10,51 @@ import { t } from "/demographics/ui/core/demographics-i18n.js";
 
 /**
  * @param {HTMLElement} row
- * @param {Record<string, *>} ds
+ * @param {Record<string, *>} dataset
  */
-function applyLegendRowState(row, ds) {
-  if (ds._muted || ds.hidden) row.classList.add("is-hidden");
-  if (ds._focused) row.classList.add("is-focused");
-  if (ds._eliminated) row.classList.add("is-eliminated");
+function applyLegendRowState(row, dataset) {
+  if (dataset._muted || dataset.hidden) row.classList.add("is-hidden");
+  if (dataset._focused) row.classList.add("is-focused");
+  if (dataset._eliminated) row.classList.add("is-eliminated");
 }
 
 /**
  * @param {HTMLElement} row
- * @param {Record<string, *>} ds
+ * @param {Record<string, *>} dataset
  * @param {*} opts
  */
-function wireLegendRowToggle(row, ds, opts) {
-  const cb = opts && (opts.onToggleVisibility || opts.onToggleCiv);
-  if (typeof cb !== "function" || !ds.leaderType) return;
-  row.addEventListener("click", () => cb(ds.leaderType));
+function wireLegendRowToggle(row, dataset, opts) {
+  const onToggle = opts && (opts.onToggleVisibility || opts.onToggleCiv);
+  if (typeof onToggle !== "function" || !dataset.leaderType) return;
+  row.addEventListener("click", () => onToggle(dataset.leaderType));
 }
 
 /**
  * Build one legend row: leader portrait + colored dot + civ name, clickable to
  * toggle the civ. Reflects muted (legend-toggled off), focused, and eliminated
  * state.
- * @param {Record<string, *>} ds The Chart.js dataset.
+ * @param {Record<string, *>} dataset
  * @param {*} opts The render options (carries onToggleCiv).
  * @returns {HTMLElement}
  */
-function buildLegendRow(ds, opts) {
+function buildLegendRow(dataset, opts) {
   const row = document.createElement("div");
   row.className = "demographics-line-legend-row";
-  applyLegendRowState(row, ds);
+  applyLegendRowState(row, dataset);
 
-  // Same portrait + colored dot the tooltip uses; ds.borderColor is already the
+  // Same portrait + colored dot the tooltip uses; dataset.borderColor is already the
   // lifted civ color (or dimmed when another civ is focused).
-  row.appendChild(buildLeaderIconGroup(ds, ds.borderColor));
+  row.appendChild(buildLeaderIconGroup(dataset, dataset.borderColor));
 
   const name = document.createElement("span");
   name.className = "demographics-line-legend-name";
-  name.textContent = ds.label || "";
+  name.textContent = dataset.label || "";
   row.appendChild(name);
 
   // Legend rows toggle muted visibility state, so they work with the All/None
   // controls: after "None", clicking a row brings that civ back. (Line labels on
   // the chart still toggle focus via onToggleCiv.)
-  wireLegendRowToggle(row, ds, opts);
+  wireLegendRowToggle(row, dataset, opts);
   return row;
 }
 
@@ -109,8 +109,8 @@ export function buildLineLegend(datasets, opts) {
   const legend = document.createElement("div");
   legend.className = "demographics-line-legend";
   legend.appendChild(buildLegendTitle());
-  const keys = datasets.map((ds) => ds.leaderType).filter(Boolean);
+  const keys = datasets.map((dataset) => dataset.leaderType).filter(Boolean);
   legend.appendChild(buildLegendControls(keys, opts && opts.onSetAllHidden));
-  for (const ds of datasets) legend.appendChild(buildLegendRow(ds, opts));
+  for (const dataset of datasets) legend.appendChild(buildLegendRow(dataset, opts));
   return legend;
 }

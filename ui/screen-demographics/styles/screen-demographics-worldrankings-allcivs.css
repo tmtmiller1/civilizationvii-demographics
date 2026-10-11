@@ -8,15 +8,14 @@
     width: 100%;
     overflow-x: auto;
     overflow-y: auto;
-    /* Match the All Settlements table frame: transparent fill + divider border
-       (not the old dark-fill / gold-border matrix look). */
+    /* Match the All Settlements table frame: transparent fill + divider border. */
     background: transparent;
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-divider);
-    border-right-color: var(--dg-ia-divider);
-    border-bottom-color: var(--dg-ia-divider);
-    border-left-color: var(--dg-ia-divider);
+    border-top-color: var(--dg-divider);
+    border-right-color: var(--dg-divider);
+    border-bottom-color: var(--dg-divider);
+    border-left-color: var(--dg-divider);
     border-radius: 0.3rem;
 }
 
@@ -84,9 +83,9 @@
     /* Local header isn't hidable, so no hover affordance. */
     background: rgba(40, 30, 14, 0.7);
 }
-/* (Removed the :last-child grow rule because it made the bottom row balloon.
-   Instead every value cell flex-grows equally; see .demographics-worldrankings-allcivs-
-   value-cell / .demographics-worldrankings-allcivs-label-cell rules below.) */
+/* No :last-child grow rule: it makes the bottom row balloon. Instead every value
+   cell flex-grows equally; see .demographics-worldrankings-allcivs-value-cell /
+   .demographics-worldrankings-allcivs-label-cell rules below. */
 
 /* Sticky-left columns. The label column anchors at left:0; the local-player
    column sits flush against the label column (offset by its width). */
@@ -110,7 +109,7 @@
 }
 /* "Rank" header over the grid (the cells below each civ are world ranks). */
 .demographics-worldrankings-allcivs-corner-label {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 600;
@@ -158,7 +157,7 @@
     width: 100%;
 }
 .demographics-worldrankings-allcivs-civ-header-leader {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -167,7 +166,7 @@
     line-height: 1.15;
 }
 .demographics-worldrankings-allcivs-civ-header-civ {
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -196,7 +195,7 @@
     background-repeat: no-repeat;
 }
 .demographics-worldrankings-allcivs-avatar-placeholder {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-family: inherit;
     font-size: var(--dg-fs-120);
     font-weight: 600;
@@ -207,7 +206,7 @@
    floor; flex: 1 1 0 makes every label row share remaining vertical space
    EQUALLY so the column matches the value-column row heights exactly. */
 .demographics-worldrankings-allcivs-label-cell {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     min-height: calc(2.6 * var(--dg-u));
     flex: 1 1 0;
     padding-top: calc(0.2 * var(--dg-u));
@@ -248,7 +247,7 @@
 /* Value cell: value on top, rank on bottom. Same flex-grow as the label
    cells so rows line up and every row has identical height. */
 .demographics-worldrankings-allcivs-cell {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     padding-top: calc(0.15 * var(--dg-u));
     padding-right: calc(0.3 * var(--dg-u));
     padding-bottom: calc(0.15 * var(--dg-u));
@@ -270,14 +269,14 @@
     column-gap: calc(0.05 * var(--dg-u));
 }
 .demographics-worldrankings-allcivs-cell-value {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     line-height: 1.15;
     font-weight: 600;
 }
 /* The small "(<icon> value)" line. A nowrap flex row so the open-paren, the
    background-image icon and the value never block-break onto separate lines
    (Coherent block-breaks a bg-image div placed among text; that wrapping is
-   what previously ballooned cell height and shattered the grid alignment). */
+   what balloons cell height and shatters the grid alignment). */
 .demographics-worldrankings-allcivs-cell-rank {
     display: flex;
     flex-direction: row;
@@ -285,7 +284,7 @@
     justify-content: center;
     flex-wrap: nowrap;
     white-space: nowrap;
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
     line-height: 1.1;
 }
@@ -351,8 +350,8 @@
 }
 /* Metric columns: the base-game recipe. `flex: 1 1 auto` makes every column share
    the frame width equally; `min-width: 0` lets them shrink below their content
-   width (flex children default to min-width:auto, which is exactly what used to
-   force the header to overflow and clip). Identical flex on `th`/`td` keeps the
+   width (flex children default to min-width:auto, which forces the header to
+   overflow and clip). Identical flex on `th`/`td` keeps the
    header row and data rows column-aligned. */
 .demographics-civtable .demographics-settle-th,
 .demographics-civtable .demographics-settle-td {

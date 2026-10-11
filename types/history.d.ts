@@ -1,9 +1,15 @@
 // Dev-only typings for the mod's OWN data shapes. Ships to no one (release.sh excludes types/).
+//
+// Chronicle event records (HistoryEvent) keep one-letter keys because every event is stored in the
+// save, and long keys would grow it for nothing. The keys:
+//   t turn · a age index into CampaignDoc.ages · k kind · p acting player · q other player
+//   n display name (LOC tag or literal text) · x engine type string · d date label at the time
+
 export {};
 
 declare global {
   /** Event kinds recorded in a campaign chronicle. */
-  type HnrEventKind =
+  type HistoryEventKind =
     | "found"
     | "capture"
     | "razed"
@@ -20,13 +26,13 @@ declare global {
     | "crisis"
     | "disaster";
 
-  /** One chronicle entry. Short keys keep the saved blob small. */
-  interface HnrEvent {
+  /** One chronicle entry; see the key legend at the top of this file. */
+  interface HistoryEvent {
     /** Game turn the change was observed on. */
     t: number;
     /** Index into CampaignDoc.ages. */
     a: number;
-    k: HnrEventKind;
+    k: HistoryEventKind;
     /** Acting player (founder, new owner, winner, first party). -1 when none. */
     p: number;
     /** Other party (old owner, war target, met player). */
@@ -40,7 +46,7 @@ declare global {
   }
 
   /** One civilization a player led in one age. */
-  interface HnrCivSpan {
+  interface HistoryCivSpan {
     age: string;
     civ: string;
     /** LOC tag of the civilization name. */
@@ -49,11 +55,11 @@ declare global {
   }
 
   /** Everything the mod knows about one participant, frozen for the archive. */
-  interface HnrPlayer {
+  interface HistoryPlayer {
     leader: string;
     /** LOC tag of the leader name. */
     leaderName: string;
-    civs: HnrCivSpan[];
+    civs: HistoryCivSpan[];
     human: boolean;
     /** Primary color as a CSS string. */
     color: string;
@@ -64,14 +70,14 @@ declare global {
   }
 
   /** One age's span inside the campaign. */
-  interface HnrAge {
+  interface HistoryAge {
     age: string;
     start: number;
     end: number;
   }
 
-  /** Per-player sampled standings. Arrays are aligned with HnrSeries.turns. */
-  interface HnrPlayerSeries {
+  /** Per-player sampled standings. Arrays are aligned with HistorySeries.turns. */
+  interface HistoryPlayerSeries {
     set: number[];
     pop: number[];
     tri: number[];
@@ -83,13 +89,13 @@ declare global {
     mo?: number[];
   }
 
-  interface HnrSeries {
+  interface HistorySeries {
     turns: number[];
-    by: Record<string, HnrPlayerSeries>;
+    by: Record<string, HistoryPlayerSeries>;
   }
 
   /** Per-player state kept between samples so the next sample can be diffed against it. */
-  interface HnrPlayerState {
+  interface HistoryPlayerState {
     alive: boolean;
     civ: string;
     met: boolean;
@@ -108,11 +114,11 @@ declare global {
     mig?: { i: number; o: number };
   }
 
-  interface HnrWorldState {
+  interface HistoryWorldState {
     turn: number;
     age: string;
     date: string;
-    players: Record<string, HnrPlayerState>;
+    players: Record<string, HistoryPlayerState>;
     /** Victories already claimed, as "team:VICTORY_TYPE". */
     victories: string[];
     /** The age crisis: its event type and current stage (above 0 = active stage, 1-based). */
@@ -120,7 +126,7 @@ declare global {
   }
 
   /** One territory-map frame: game turn, age index, run-length owners, [cell, owner] settlements. */
-  interface HnrMapFrame {
+  interface HistoryMapFrame {
     t: number;
     a: number;
     o: string;
@@ -128,25 +134,25 @@ declare global {
   }
 
   /** The territory map of a campaign (model/history-map.js). */
-  interface HnrMapGrid {
+  interface HistoryMapGrid {
     w: number;
     h: number;
     /** Run-length terrain: 0 water, 1 land, 2 mountain. */
     terrain: string;
-    frames: HnrMapFrame[];
+    frames: HistoryMapFrame[];
   }
 
   /** Crisis onset detection state kept between readings (mirrors Demographics' Crises page). */
-  interface HnrCrisisState {
+  interface HistoryCrisisState {
     age: string;
     last: number;
     armed: boolean;
   }
 
-  type HnrStatus = "in_progress" | "victory" | "defeat" | "ended";
+  type HistoryStatus = "in_progress" | "victory" | "defeat" | "ended";
 
-  interface HnrOutcome {
-    status: HnrStatus;
+  interface HistoryOutcome {
+    status: HistoryStatus;
     /** Victory type the game was won with (by anyone), when known. */
     victory: string;
     /** LOC tag of that victory's name. */
@@ -158,7 +164,7 @@ declare global {
     turn: number;
   }
 
-  interface HnrSetup {
+  interface HistorySetup {
     speed: string;
     difficulty: string;
     mapSize: string;
@@ -175,29 +181,29 @@ declare global {
     seed: number;
     created: number;
     updated: number;
-    setup: HnrSetup;
+    setup: HistorySetup;
     local: number;
-    players: Record<string, HnrPlayer>;
-    ages: HnrAge[];
-    events: HnrEvent[];
-    series: HnrSeries;
-    last: HnrWorldState | null;
-    outcome: HnrOutcome;
+    players: Record<string, HistoryPlayer>;
+    ages: HistoryAge[];
+    events: HistoryEvent[];
+    series: HistorySeries;
+    last: HistoryWorldState | null;
+    outcome: HistoryOutcome;
     /** Triumphs held per age index, per player, as last read (earned before recording included). */
     tri?: Record<string, Record<string, number>>;
     /** Where recording began, when the mod joined an existing game. */
     since?: { t: number; d: string; partial: boolean };
     /** Crisis onset detection state. */
-    crisis?: HnrCrisisState;
+    crisis?: HistoryCrisisState;
     /** Territory map frames. */
-    map?: HnrMapGrid;
+    map?: HistoryMapGrid;
   }
 
   /**
    * A rival as frozen into an archive record:
    * [pid, leader, leaderName, civ, civName, color, elimTurn, triumphs, color2].
    */
-  type HnrRival = [number, string, string, string, string, string, number, number, string?];
+  type HistoryRival = [number, string, string, string, string, string, number, number, string?];
 
   /** The compact cross-game summary of one campaign. */
   interface ArchiveRecord {
@@ -211,11 +217,11 @@ declare global {
     leaderName: string;
     color: string;
     color2?: string;
-    civs: HnrCivSpan[];
-    setup: HnrSetup;
+    civs: HistoryCivSpan[];
+    setup: HistorySetup;
     turns: number;
     ages: string[];
-    outcome: HnrOutcome;
+    outcome: HistoryOutcome;
     stats: {
       settlements: number;
       peakSettlements: number;
@@ -228,8 +234,8 @@ declare global {
       wars: number;
       religion: string;
     };
-    rivals: HnrRival[];
-    highlights: HnrEvent[];
+    rivals: HistoryRival[];
+    highlights: HistoryEvent[];
     spark: { tri: number[]; set: number[] };
     /** Text of this record's tags as shown in game, for tags the main menu cannot resolve. */
     texts?: Record<string, string>;

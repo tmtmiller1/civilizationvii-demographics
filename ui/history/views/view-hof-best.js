@@ -2,17 +2,26 @@
 //
 // The Hall of Fame's landing page: a strip of totals, a podium for the three best games, the rest
 // of the top ten, and the current game placed at its rank between its neighbors, beside victories
-// by type. Ranking follows history-hof.js ranked().
+// by type. Ranking follows history-hof.js ranked(). ("hof" in file names is the Hall of Fame.)
 
 import { el } from "/demographics/ui/history/core/history-dom.js";
-import { t, num, typeName, victoryName } from "/demographics/ui/history/core/history-text.js";
+import { t, formatNumber, typeName, victoryName } from "/demographics/ui/history/core/history-text.js";
 import { overview, standing, statOf, titleIndex } from "/demographics/ui/history/model/history-hof.js";
 import {
-  emptyState, laurelMedal, leaderIcon, outcomeMark, pageHead, section, statTile, table, trophyIcon,
-  victoryIcon, civProgression
+  civProgression,
+  emptyState,
+  laurelMedal,
+  leaderIcon,
+  outcomeMark,
+  pageHead,
+  section,
+  statTile,
+  table,
+  trophyIcon,
+  victoryIcon
 } from "/demographics/ui/history/views/history-widgets.js";
-import { outcomeLabel, titleName } from "/demographics/ui/history/views/history-format.js";
-import { viewState } from "/demographics/ui/history/views/history-state.js";
+import { labelledTitle, outcomeLabel, quotedTitle } from "/demographics/ui/history/views/history-format.js";
+import { openGame } from "/demographics/ui/history/views/history-state.js";
 
 /** Games listed on the landing page. */
 const TOP_N = 10;
@@ -22,16 +31,6 @@ const CIVS_COL = 4;
 /**
  * @typedef {import("./view-hof.js").HofCtx} HofCtx
  */
-
-/**
- * @param {string} id
- * @param {HofCtx} ctx
- */
-function openGame(id, ctx) {
-  viewState.detail = id;
-  viewState.tlCivs = null;
-  ctx.rerender();
-}
 
 /**
  * The civilizations a game's leader led, with emblems.
@@ -49,14 +48,14 @@ function progression(rec, cls) {
  * @returns {HTMLElement}
  */
 function totals(records) {
-  const o = overview(records);
-  const rate = o.finished ? Math.round((100 * o.victories) / o.finished) : 0;
+  const sums = overview(records);
+  const rate = sums.finished ? Math.round((100 * sums.victories) / sums.finished) : 0;
   return el("div", { cls: "dgh-tiles dgh-tiles--slim" }, [
-    statTile(num(o.games), t("LOC_DEMOGRAPHICS_HIST_STAT_GAMES")),
-    statTile(num(o.victories), t("LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES")),
+    statTile(formatNumber(sums.games), t("LOC_DEMOGRAPHICS_HIST_STAT_GAMES")),
+    statTile(formatNumber(sums.victories), t("LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES")),
     statTile(t("LOC_DEMOGRAPHICS_HIST_PERCENT", rate), t("LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE")),
-    statTile(num(o.turns), t("LOC_DEMOGRAPHICS_HIST_STAT_TURNS")),
-    statTile(num(o.triumphs), t("LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS"), trophyIcon())
+    statTile(formatNumber(sums.turns), t("LOC_DEMOGRAPHICS_HIST_STAT_TURNS")),
+    statTile(formatNumber(sums.triumphs), t("LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS"), trophyIcon())
   ]);
 }
 
@@ -70,10 +69,17 @@ function totals(records) {
  * @returns {HTMLElement}
  */
 function podiumCard(rec, rank, best, currentId, ctx) {
-  const card = el("div", { cls: "dgh-podium-card dgh-podium-card--" + rank + (rec.id === currentId ? " is-current" : "") }, [
+  const current = rec.id === currentId;
+  const currentNote = current
+    ? el("div", {
+      cls: "dgh-podium-current",
+      text: t(ctx.live ? "LOC_DEMOGRAPHICS_HIST_THIS_GAME" : "LOC_DEMOGRAPHICS_HIST_LATEST_GAME")
+    })
+    : null;
+  const card = el("div", { cls: "dgh-podium-card dgh-podium-card--" + rank + (current ? " is-current" : "") }, [
     laurelMedal(rank, "dgh-podium-rank"),
     leaderIcon(rec.leader, "dgh-leader-icon dgh-podium-portrait"),
-    el("div", { cls: "dgh-podium-honor", text: titleName(titleIndex(rec, best)) }),
+    el("div", { cls: "dgh-podium-honor", text: labelledTitle(titleIndex(rec, best)) }),
     el("div", { cls: "dgh-podium-name", text: typeName(rec.leaderName, rec.leader) }),
     progression(rec, "dgh-progression--sm dgh-podium-civs"),
     el("div", { cls: "dgh-podium-result" }, [outcomeMark(rec.outcome), el("div", { text: outcomeLabel(rec) })]),
@@ -82,7 +88,7 @@ function podiumCard(rec, rank, best, currentId, ctx) {
       trophyIcon("dgh-trophy-icon dgh-trophy-icon--sm"),
       el("div", { text: t("LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS", statOf(rec, "triumphs")) })
     ]),
-    rec.id === currentId ? el("div", { cls: "dgh-podium-current", text: t(ctx.live ? "LOC_DEMOGRAPHICS_HIST_THIS_GAME" : "LOC_DEMOGRAPHICS_HIST_LATEST_GAME") }) : null
+    currentNote
   ]);
   card.addEventListener("click", () => openGame(rec.id, ctx));
   return card;
@@ -112,18 +118,29 @@ function podium(top, best, currentId, ctx) {
  */
 function rankTable(rows, best, currentId, ctx, narrow = false) {
   const all = [
-    { label: "#", cls: "dgh-col-xs" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_TITLE"), cls: "dgh-col-md" }, { label: "", cls: "dgh-col-icon" },
-    { label: t("LOC_DEMOGRAPHICS_HIST_COL_LEADER"), cls: "dgh-col-md" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS"), cls: "dgh-col-grow" },
-    { label: t("LOC_DEMOGRAPHICS_HIST_COL_RESULT"), cls: "dgh-col-result" }, { label: t("LOC_DEMOGRAPHICS_HIST_COL_TURNS"), cls: "dgh-col-num" },
+    { label: "#", cls: "dgh-col-xs" },
+    { label: t("LOC_DEMOGRAPHICS_HIST_COL_TITLE"), cls: "dgh-col-md" },
+    { label: "", cls: "dgh-col-icon" },
+    { label: t("LOC_DEMOGRAPHICS_HIST_COL_LEADER"), cls: "dgh-col-md" },
+    { label: t("LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS"), cls: "dgh-col-grow" },
+    { label: t("LOC_DEMOGRAPHICS_HIST_COL_RESULT"), cls: "dgh-col-result" },
+    { label: t("LOC_DEMOGRAPHICS_HIST_COL_TURNS"), cls: "dgh-col-num" },
     { label: t("LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS"), cls: "dgh-col-num" }
   ];
   const keep = (/** @type {*} */ _x, /** @type {number} */ i) => !narrow || i !== CIVS_COL;
   const cols = all.filter(keep);
   const cells = rows.map(({ rec, rank }) => [
-    num(rank), titleName(titleIndex(rec, best)), leaderIcon(rec.leader, "dgh-leader-icon dgh-leader-icon--sm"),
-    typeName(rec.leaderName, rec.leader), progression(rec, "dgh-progression--sm"),
-    el("div", { cls: "dgh-result-row" }, [outcomeMark(rec.outcome), el("div", { cls: "dgh-result", text: outcomeLabel(rec) })]),
-    num(rec.turns), num(statOf(rec, "triumphs"))
+    formatNumber(rank),
+    quotedTitle(titleIndex(rec, best)),
+    leaderIcon(rec.leader, "dgh-leader-icon dgh-leader-icon--sm"),
+    typeName(rec.leaderName, rec.leader),
+    progression(rec, "dgh-progression--sm"),
+    el("div", { cls: "dgh-result-row" }, [
+      outcomeMark(rec.outcome),
+      el("div", { cls: "dgh-result", text: outcomeLabel(rec) })
+    ]),
+    formatNumber(rec.turns),
+    formatNumber(statOf(rec, "triumphs"))
   ].filter(keep));
   return table(cols, cells, {
     onRow: (i) => openGame(rows[i].rec.id, ctx),
@@ -149,7 +166,10 @@ function currentInContext(cur, best, ctx) {
   return section(title, [
     el("div", { cls: "dgh-standing" }, [
       el("div", { cls: "dgh-standing-rank", text: t("LOC_DEMOGRAPHICS_HIST_RANK_OF", cur.rank, cur.of) }),
-      el("div", { cls: "dgh-standing-note", text: cur.rank <= TOP_N ? t("LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN") : t("LOC_DEMOGRAPHICS_HIST_RANKING_RULE") })
+      el("div", {
+        cls: "dgh-standing-note",
+        text: cur.rank <= TOP_N ? t("LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN") : t("LOC_DEMOGRAPHICS_HIST_RANKING_RULE")
+      })
     ]),
     rankTable(rows, best, cur.rec.id, ctx, true)
   ], "dgh-col dgh-standing-section");
@@ -161,17 +181,19 @@ function currentInContext(cur, best, ctx) {
  * @returns {HTMLElement}
  */
 function victoriesByType(records) {
-  const o = overview(records);
-  const rows = o.victoriesByType.map(([type, n]) => {
-    const rec = records.find((r) => r.outcome.victory === type);
+  const sums = overview(records);
+  const rows = sums.victoriesByType.map(([type, count]) => {
+    const rec = records.find((record) => record.outcome.victory === type);
+    const width = Math.round((100 * count) / Math.max(1, sums.victories)) + "%";
     return el("div", { cls: "dgh-bar-row" }, [
       victoryIcon(rec?.outcome.cls || "", "dgh-victory-icon dgh-mark"),
       el("div", { cls: "dgh-bar-label", text: victoryName(type, rec?.outcome.name || "") }),
-      el("div", { cls: "dgh-bar" }, [el("div", { cls: "dgh-bar-fill", style: { width: Math.round((100 * n) / Math.max(1, o.victories)) + "%" } })]),
-      el("div", { cls: "dgh-bar-n", text: num(n) })
+      el("div", { cls: "dgh-bar" }, [el("div", { cls: "dgh-bar-fill", style: { width } })]),
+      el("div", { cls: "dgh-bar-n", text: formatNumber(count) })
     ]);
   });
-  return section(t("LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE"), rows.length ? rows : [emptyState(t("LOC_DEMOGRAPHICS_HIST_NO_VICTORIES"))], "dgh-col");
+  const body = rows.length ? rows : [emptyState(t("LOC_DEMOGRAPHICS_HIST_NO_VICTORIES"))];
+  return section(t("LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE"), body, "dgh-col");
 }
 
 /**
@@ -182,17 +204,23 @@ function victoriesByType(records) {
  * @param {HofCtx} ctx
  */
 export function renderBest(host, records, all, ctx) {
-  const best = Math.max(0, ...all.map((r) => statOf(r, "triumphs")));
-  const st = standing(records, ctx.live?.id || "", TOP_N);
-  const currentId = st.current?.rec.id || "";
-  const rest = st.top.slice(3).map((rec, i) => ({ rec, rank: i + 4 }));
+  const best = Math.max(0, ...all.map((record) => statOf(record, "triumphs")));
+  const standings = standing(records, ctx.live?.id || "", TOP_N);
+  const currentId = standings.current?.rec.id || "";
+  const rest = standings.top.slice(3).map((rec, i) => ({ rec, rank: i + 4 }));
+  const nextBest = rest.length
+    ? section(t("LOC_DEMOGRAPHICS_HIST_NEXT_BEST"), [rankTable(rest, best, currentId, ctx)], "dgh-col dgh-col--wide")
+    : null;
   host.appendChild(el("div", { cls: "dgh-scroll dgh-best" }, [
     pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_BEST"), t("LOC_DEMOGRAPHICS_HIST_BEST_NOTE")),
     totals(records),
-    section(t("LOC_DEMOGRAPHICS_HIST_BEST_TITLE"), [podium(st.top, best, currentId, ctx)]),
+    section(t("LOC_DEMOGRAPHICS_HIST_BEST_TITLE"), [podium(standings.top, best, currentId, ctx)]),
     el("div", { cls: "dgh-cols" }, [
-      rest.length ? section(t("LOC_DEMOGRAPHICS_HIST_NEXT_BEST"), [rankTable(rest, best, currentId, ctx)], "dgh-col dgh-col--wide") : null,
-      el("div", { cls: "dgh-col dgh-col-stack" }, [currentInContext(st.current, best, ctx), victoriesByType(records)])
+      nextBest,
+      el("div", { cls: "dgh-col dgh-col-stack" }, [
+        currentInContext(standings.current, best, ctx),
+        victoriesByType(records)
+      ])
     ])
   ]));
 }

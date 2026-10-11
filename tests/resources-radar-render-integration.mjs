@@ -1,5 +1,5 @@
 // Covers: chart-resources.js, chart-triumphs-radar.js, chart-quarters-board.js,
-// chart-settlement-boards.js (engine-table hardening).
+// chart-settlement-boards.js, including engine tables that are missing or return junk.
 // Uses DOM stub + fake Chart constructor.
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
@@ -14,8 +14,18 @@ globalThis.UI = { getIconURL: () => "blp:test" };
 
 class FakeChart {
   static defaults = { font: { family: "BodyFont" } };
-  constructor(_ctx, config) { this.config = config; this.chartArea = { left: 40, right: 760, top: 20, bottom: 380 }; this.width = 800; this.height = 400; this.scales = { x: { min: 1, max: 20, getPixelForValue: (v) => v * 20 }, y: { min: 0, max: 200, getPixelForValue: (v) => 380 - v } }; }
-  update() {} destroy() {}
+  constructor(_ctx, config) {
+    this.config = config;
+    this.chartArea = { left: 40, right: 760, top: 20, bottom: 380 };
+    this.width = 800;
+    this.height = 400;
+    this.scales = {
+      x: { min: 1, max: 20, getPixelForValue: (v) => v * 20 },
+      y: { min: 0, max: 200, getPixelForValue: (v) => 380 - v }
+    };
+  }
+  update() {}
+  destroy() {}
 }
 globalThis.Chart = FakeChart;
 

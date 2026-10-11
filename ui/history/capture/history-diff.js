@@ -1,9 +1,14 @@
 // history-diff.js
 //
-// Pure: compare two HnrWorldStates and return the chronicle events that explain the change;
+// Pure: compare two HistoryWorldStates and return the chronicle events that explain the change;
 // engine-derived names come in through a Namer. The first state is a baseline and produces no
 // events, and across an age change only the age, civilization changes and eliminations are
 // reported, since the engine ends every war and rebuilds Triumph lists at the transition.
+//
+// Chronicle event records (HistoryEvent) keep one-letter keys because every event is stored in the
+// save, and long keys would grow it for nothing. The keys:
+//   t turn · a age index into CampaignDoc.ages · k kind · p acting player · q other player
+//   n display name (LOC tag or literal text) · x engine type string · d date label at the time
 
 /**
  * Engine-name resolvers injected by the caller.
@@ -17,34 +22,34 @@
  */
 
 /**
- * @param {HnrWorldState} s
+ * @param {HistoryWorldState} state
  * @returns {string[]} Player id keys.
  */
-const ids = (s) => Object.keys(s.players);
+const ids = (state) => Object.keys(state.players);
 
 /**
  * An event stamped with the new state's turn, age index and date.
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
- * @param {Omit<HnrEvent, "t"|"a"|"d">} fields The event body.
- * @returns {HnrEvent}
+ * @param {Omit<HistoryEvent, "t"|"a"|"d">} fields The event body.
+ * @returns {HistoryEvent}
  */
 function stamp(next, ageIdx, fields) {
-  /** @type {HnrEvent} */
-  const e = { t: next.turn, a: ageIdx, ...fields };
-  if (next.date) e.d = next.date;
-  return e;
+  /** @type {HistoryEvent} */
+  const event = { t: next.turn, a: ageIdx, ...fields };
+  if (next.date) event.d = next.date;
+  return event;
 }
 
 /**
  * Settlement ownership across all players: "x,y" -> { owner, name }.
- * @param {HnrWorldState} s
+ * @param {HistoryWorldState} state
  * @returns {Map<string, {owner:number, name:string}>}
  */
-export function ownership(s) {
+export function ownership(state) {
   const map = new Map();
-  for (const pid of ids(s)) {
-    for (const [loc, name] of Object.entries(s.players[pid].cities || {})) {
+  for (const pid of ids(state)) {
+    for (const [loc, name] of Object.entries(state.players[pid].cities || {})) {
       map.set(loc, { owner: Number(pid), name });
     }
   }
@@ -53,20 +58,22 @@ export function ownership(s) {
 
 /**
  * Founding, capture and razing events.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffCities(prev, next, ageIdx) {
   const before = ownership(prev);
   const after = ownership(next);
-  /** @type {HnrEvent[]} */
+  /** @type {HistoryEvent[]} */
   const out = [];
   for (const [loc, cur] of after) {
     const old = before.get(loc);
     if (!old) out.push(stamp(next, ageIdx, { k: "found", p: cur.owner, n: cur.name }));
-    else if (old.owner !== cur.owner) out.push(stamp(next, ageIdx, { k: "capture", p: cur.owner, q: old.owner, n: cur.name }));
+    else if (old.owner !== cur.owner) {
+      out.push(stamp(next, ageIdx, { k: "capture", p: cur.owner, q: old.owner, n: cur.name }));
+    }
   }
   for (const [loc, old] of before) {
     if (!after.has(loc)) out.push(stamp(next, ageIdx, { k: "razed", p: -1, q: old.owner, n: old.name }));
@@ -76,21 +83,21 @@ export function diffCities(prev, next, ageIdx) {
 
 /**
  * First-completion wonder events.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
  * @param {Namer} names
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffWonders(prev, next, ageIdx, names) {
   const seen = new Set(ids(prev).flatMap((pid) => prev.players[pid].wonders || []));
-  /** @type {HnrEvent[]} */
+  /** @type {HistoryEvent[]} */
   const out = [];
   for (const pid of ids(next)) {
-    for (const w of next.players[pid].wonders || []) {
-      if (seen.has(w)) continue;
-      seen.add(w);
-      out.push(stamp(next, ageIdx, { k: "wonder", p: Number(pid), x: w, n: names.wonder(w) }));
+    for (const wonder of next.players[pid].wonders || []) {
+      if (seen.has(wonder)) continue;
+      seen.add(wonder);
+      out.push(stamp(next, ageIdx, { k: "wonder", p: Number(pid), x: wonder, n: names.wonder(wonder) }));
     }
   }
   return out;
@@ -98,19 +105,20 @@ export function diffWonders(prev, next, ageIdx, names) {
 
 /**
  * Newly earned Triumphs.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
  * @param {Namer} names
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffTriumphs(prev, next, ageIdx, names) {
-  /** @type {HnrEvent[]} */
+  /** @type {HistoryEvent[]} */
   const out = [];
   for (const pid of ids(next)) {
     const had = new Set(prev.players[pid]?.triumphs || []);
-    for (const x of next.players[pid].triumphs || []) {
-      if (!had.has(x)) out.push(stamp(next, ageIdx, { k: "triumph", p: Number(pid), x, n: names.triumph(x) }));
+    for (const triumph of next.players[pid].triumphs || []) {
+      if (had.has(triumph)) continue;
+      out.push(stamp(next, ageIdx, { k: "triumph", p: Number(pid), x: triumph, n: names.triumph(triumph) }));
     }
   }
   return out;
@@ -118,29 +126,32 @@ export function diffTriumphs(prev, next, ageIdx, names) {
 
 /**
  * Religions founded.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffReligions(prev, next, ageIdx) {
   return ids(next)
     .filter((pid) => next.players[pid].religion && !prev.players[pid]?.religion)
-    .map((pid) => stamp(next, ageIdx, { k: "religion", p: Number(pid), n: next.players[pid].religion, x: next.players[pid].religionType || "" }));
+    .map((pid) => {
+      const player = next.players[pid];
+      return stamp(next, ageIdx, { k: "religion", p: Number(pid), n: player.religion, x: player.religionType || "" });
+    });
 }
 
 /**
  * Unordered war pairs "a:b" (a < b) in a state.
- * @param {HnrWorldState} s
+ * @param {HistoryWorldState} state
  * @returns {Set<string>}
  */
-export function warPairs(s) {
+export function warPairs(state) {
   const out = new Set();
-  for (const pid of ids(s)) {
-    for (const q of s.players[pid].wars || []) {
-      const a = Math.min(Number(pid), q);
-      const b = Math.max(Number(pid), q);
-      out.add(a + ":" + b);
+  for (const pid of ids(state)) {
+    for (const enemy of state.players[pid].wars || []) {
+      const low = Math.min(Number(pid), enemy);
+      const high = Math.max(Number(pid), enemy);
+      out.add(low + ":" + high);
     }
   }
   return out;
@@ -148,40 +159,40 @@ export function warPairs(s) {
 
 /**
  * Wars that broke out and wars that ended in peace (not by elimination).
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffWars(prev, next, ageIdx) {
   const before = warPairs(prev);
   const after = warPairs(next);
-  /** @type {HnrEvent[]} */
+  /** @type {HistoryEvent[]} */
   const out = [];
   const alive = (/** @type {number} */ id) => !!next.players[String(id)]?.alive;
   for (const pair of after) {
     if (before.has(pair)) continue;
-    const [p, q] = pair.split(":").map(Number);
-    out.push(stamp(next, ageIdx, { k: "war", p, q }));
+    const [first, second] = pair.split(":").map(Number);
+    out.push(stamp(next, ageIdx, { k: "war", p: first, q: second }));
   }
   for (const pair of before) {
     if (after.has(pair)) continue;
-    const [p, q] = pair.split(":").map(Number);
-    if (alive(p) && alive(q)) out.push(stamp(next, ageIdx, { k: "peace", p, q }));
+    const [first, second] = pair.split(":").map(Number);
+    if (alive(first) && alive(second)) out.push(stamp(next, ageIdx, { k: "peace", p: first, q: second }));
   }
   return out;
 }
 
 /**
  * Eliminations and first contacts with the local player.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
  * @param {number} local
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffPeople(prev, next, ageIdx, local) {
-  /** @type {HnrEvent[]} */
+  /** @type {HistoryEvent[]} */
   const out = [];
   for (const pid of ids(next)) {
     const was = prev.players[pid];
@@ -196,32 +207,33 @@ export function diffPeople(prev, next, ageIdx, local) {
 
 /**
  * Newly claimed victories.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx
  * @param {Namer} names
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffVictories(prev, next, ageIdx, names) {
   const had = new Set(prev.victories || []);
   return (next.victories || [])
     .filter((v) => !had.has(v))
-    .map((v) => {
-      const [team, type] = v.split(":");
-      return stamp(next, ageIdx, { k: "victory", p: names.teamPlayer(Number(team)), x: type, n: names.victory(type) });
+    .map((claim) => {
+      const [team, type] = claim.split(":");
+      const winner = names.teamPlayer(Number(team));
+      return stamp(next, ageIdx, { k: "victory", p: winner, x: type, n: names.victory(type) });
     });
 }
 
 /**
  * Age change: the new age plus every living civilization's new identity.
- * @param {HnrWorldState} prev
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState} prev
+ * @param {HistoryWorldState} next
  * @param {number} ageIdx Index of the new age.
  * @param {Namer} names
- * @returns {HnrEvent[]}
+ * @returns {HistoryEvent[]}
  */
 export function diffAge(prev, next, ageIdx, names) {
-  /** @type {HnrEvent[]} */
+  /** @type {HistoryEvent[]} */
   const out = [stamp(next, ageIdx, { k: "age", p: -1, x: next.age, n: names.age(next.age) })];
   for (const pid of ids(next)) {
     const now = next.players[pid];
@@ -235,16 +247,17 @@ export function diffAge(prev, next, ageIdx, names) {
 
 /**
  * Every event between two states.
- * @param {HnrWorldState|null} prev Older state, or null for the first sample.
- * @param {HnrWorldState} next
+ * @param {HistoryWorldState|null} prev Older state, or null for the first sample.
+ * @param {HistoryWorldState} next
  * @param {{ageIdx:number, local:number, names:Namer}} ctx
- * @returns {HnrEvent[]} Events, in a stable order.
+ * @returns {HistoryEvent[]} Events, in a stable order.
  */
 export function diffWorld(prev, next, ctx) {
   if (!prev) return [];
   const { ageIdx, local, names } = ctx;
   if (prev.age !== next.age) {
-    return [...diffAge(prev, next, ageIdx, names), ...diffPeople(prev, next, ageIdx, local).filter((e) => e.k === "elim")];
+    const eliminations = diffPeople(prev, next, ageIdx, local).filter((event) => event.k === "elim");
+    return [...diffAge(prev, next, ageIdx, names), ...eliminations];
   }
   return [
     ...diffCities(prev, next, ageIdx),

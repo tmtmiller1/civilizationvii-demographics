@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { isBaseGameLoc, BASE_GAME_LOC_KEYS, BASE_GAME_LOC_PREFIXES } from "/demographics/ui/core/demographics-i18n.js";
+import { listFiles, rel, ROOT, stripComments, UI_DIR } from "./_fs-helpers.mjs";
 
 // LOC-key definedness gate: every literal `LOC_[A-Z0-9_]+` referenced in ui/**/*.js (comments
 // stripped) and ui/**/*.html (HTML comments stripped) must be defined in text/en_us/ModText.xml,
@@ -18,12 +18,8 @@ import { isBaseGameLoc, BASE_GAME_LOC_KEYS, BASE_GAME_LOC_PREFIXES } from "/demo
 // REVERSE direction, for keys the ENGINE composes and the mod therefore never names: those are
 // invisible to the scan above, so deleting one passes every other gate and shows up only in game
 // as a raw "LOC_..." heading. Each such key is declared in ENGINE_COMPOSED below with the engine
-// source that builds it, and this gate asserts it is still defined. See BACKLOG for the wider
-// sweep of keys that are defined but reachable from nothing (the orphan check this cannot yet be).
+// source that builds it, and this gate asserts it is still defined.
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const UI = path.join(ROOT, "ui");
-const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/");
 
 // Keys the engine builds from a value the mod supplies, so the tag never appears as a literal in
 // ui/ and the reference scan below cannot see it. Deleting one is silent everywhere except the
@@ -33,32 +29,27 @@ const ENGINE_COMPOSED = [
   {
     key: "LOC_OPTIONS_GROUP_DEMOGRAPHICS",
     why:
-      'Base/modules/core/ui/options/options-helpers.js GetGroupLocKey() returns `LOC_OPTIONS_GROUP_${group.toUpperCase()}`; ' +
+      "Base/modules/core/ui/options/options-helpers.js GetGroupLocKey() returns " +
+      "`LOC_OPTIONS_GROUP_${group.toUpperCase()}`; " +
       'ui/demographics-options.js passes group MAIN_GROUP = "demographics". Heading of the mod\'s Options > Mods block.'
   }
 ];
 
-/** @param {string} dir @returns {string[]} */
-function listFiles(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
-    const p = path.join(dir, d.name);
-    return d.isDirectory() ? listFiles(p) : /\.(js|html)$/.test(d.name) ? [p] : [];
-  });
-}
-const stripJs = (s) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/[^\n]*/g, "$1");
 const stripHtml = (s) => s.replace(/<!--[\s\S]*?-->/g, "");
 
 const defined = new Set(
-  [...fs.readFileSync(path.join(ROOT, "text/en_us/ModText.xml"), "utf8").matchAll(/Tag="(LOC_[A-Z0-9_]+)"/g)].map((m) => m[1])
+  [...fs.readFileSync(path.join(ROOT, "text/en_us/ModText.xml"), "utf8").matchAll(/Tag="(LOC_[A-Z0-9_]+)"/g)].map(
+    (m) => m[1]
+  )
 );
 assert.ok(defined.size > 0, "text/en_us/ModText.xml defines no LOC tags (parse failure?)");
 
 /** @type {Map<string, Set<string>>} key or prefix -> referencing files */
 const refs = new Map();
-const files = listFiles(UI);
+const files = listFiles(UI_DIR, /\.(js|html)$/);
 for (const abs of files) {
   const raw = fs.readFileSync(abs, "utf8");
-  const code = abs.endsWith(".js") ? stripJs(raw) : stripHtml(raw);
+  const code = abs.endsWith(".js") ? stripComments(raw) : stripHtml(raw);
   // `*` (not `+`) so a bare `"LOC_" + x` build is captured as the generic prefix "LOC_" and counted.
   for (const m of code.matchAll(/(?<![A-Za-z0-9_])LOC_[A-Z0-9_]*/g)) {
     if (!refs.has(m[0])) refs.set(m[0], new Set());
@@ -66,7 +57,10 @@ for (const abs of files) {
   }
 }
 
-const prefixHasKey = (p) => [...defined].some((k) => k.startsWith(p)) || [...BASE_GAME_LOC_KEYS].some((k) => k.startsWith(p)) || BASE_GAME_LOC_PREFIXES.some((b) => b.startsWith(p) || p.startsWith(b));
+const prefixHasKey = (p) =>
+  [...defined].some((k) => k.startsWith(p)) ||
+  [...BASE_GAME_LOC_KEYS].some((k) => k.startsWith(p)) ||
+  BASE_GAME_LOC_PREFIXES.some((b) => b.startsWith(p) || p.startsWith(b));
 
 const missing = [];
 let exact = 0, prefixes = 0, baseGame = 0, generic = 0, modDefined = 0;
@@ -89,7 +83,8 @@ for (const [key, where] of [...refs].sort()) {
 
 console.log(
   `loc-keys: scanned ${files.length} file(s); ${defined.size} en_us keys; ${exact} exact ref(s) ` +
-    `(${modDefined} mod-defined, ${baseGame} base-game), ${prefixes} prefix build(s), ${generic} generic "LOC_"+x build(s)`
+    `(${modDefined} mod-defined, ${baseGame} base-game), ${prefixes} prefix build(s), ` +
+    `${generic} generic "LOC_"+x build(s)`
 );
 assert.equal(
   missing.length,

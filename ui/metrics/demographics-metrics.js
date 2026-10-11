@@ -28,12 +28,12 @@ import {
 import {
   civicsAccessor,
   crisisStageAccessor,
-  dlog,
   formatApproval,
   formatCrisisStage,
   formatRoundedCount,
   gdpAccessor,
   landAccessor,
+  log,
   scaleGDP,
   scaleLandArea,
   scalePopulation,
@@ -68,7 +68,7 @@ export const METRICS = [
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Treasury gold.
      */
     accessor: (ctx) => safeNum(ctx.gold),
@@ -85,7 +85,7 @@ export const METRICS = [
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net gold per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldGold),
@@ -100,7 +100,7 @@ export const METRICS = [
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Settlement count.
      */
     accessor: (ctx) => safeNum(ctx.settlementsCount),
@@ -114,7 +114,7 @@ export const METRICS = [
     category: "science",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Researched-tech count.
      */
     accessor: (ctx) => safeNum(ctx.techsCount),
@@ -160,7 +160,7 @@ export const METRICS = [
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net food per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldFood),
@@ -179,7 +179,7 @@ export const METRICS = [
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net production per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldProduction),
@@ -196,7 +196,7 @@ export const METRICS = [
     category: "knowledge",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net science per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldScience),
@@ -213,7 +213,7 @@ export const METRICS = [
     category: "knowledge",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net culture per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldCulture),
@@ -233,7 +233,7 @@ export const METRICS = [
     category: "diplomacy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Diplomatic approval aggregate.
      */
     accessor: (ctx) => safeNum(ctx.diplomaticApproval),
@@ -248,7 +248,7 @@ export const METRICS = [
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Raw total population.
      */
     accessor: (ctx) => safeNum(ctx.totalPopulation),
@@ -282,7 +282,7 @@ export const METRICS = [
     category: "diplomacy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net influence per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldDiplomacy),
@@ -299,7 +299,7 @@ export const METRICS = [
     category: "people",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Net happiness per turn.
      */
     accessor: (ctx) => safeNum(ctx.yieldHappiness),
@@ -313,7 +313,7 @@ export const METRICS = [
     category: "diplomacy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Ongoing deal count.
      */
     accessor: (ctx) => safeNum(ctx.ongoingDealsCount),
@@ -328,7 +328,7 @@ export const METRICS = [
     category: "economy",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Active trade-route count.
      */
     accessor: (ctx) => safeNum(ctx.tradeRoutesCount),
@@ -345,7 +345,7 @@ export const METRICS = [
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Combined military power.
      */
     accessor: (ctx) => safeNum(ctx.militaryPower),
@@ -362,7 +362,7 @@ export const METRICS = [
     category: "power",
     tooltip: "LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Wonder count.
      */
     accessor: (ctx) => safeNum(ctx.wondersCount),
@@ -379,7 +379,7 @@ export const METRICS = [
     worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Cultural triumph count.
      */
     accessor: (ctx) => safeNum(ctx.triumphsCultural)
@@ -390,7 +390,7 @@ export const METRICS = [
     worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Diplomatic triumph count.
      */
     accessor: (ctx) => safeNum(ctx.triumphsDiplomatic)
@@ -401,7 +401,7 @@ export const METRICS = [
     worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Economic triumph count.
      */
     accessor: (ctx) => safeNum(ctx.triumphsEconomic)
@@ -412,7 +412,7 @@ export const METRICS = [
     worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Scientific triumph count.
      */
     accessor: (ctx) => safeNum(ctx.triumphsScientific)
@@ -423,7 +423,7 @@ export const METRICS = [
     worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Militaristic triumph count.
      */
     accessor: (ctx) => safeNum(ctx.triumphsMilitaristic)
@@ -434,7 +434,7 @@ export const METRICS = [
     worldRankingsAllCivsHidden: true,
     hidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Expansionist triumph count.
      */
     accessor: (ctx) => safeNum(ctx.triumphsExpansionist)
@@ -479,7 +479,7 @@ export const METRICS = [
     title: "Total Assigned Resources",
     category: "resources",
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Total assigned resources.
      */
     accessor: (ctx) => safeNum(ctx.resourcesTotal),
@@ -493,7 +493,7 @@ export const METRICS = [
     category: "resources",
     worldRankingsAllCivsHidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Bonus resources assigned.
      */
     accessor: (ctx) => safeNum(ctx.resourcesBonus),
@@ -507,7 +507,7 @@ export const METRICS = [
     category: "resources",
     worldRankingsAllCivsHidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Empire resources assigned.
      */
     accessor: (ctx) => safeNum(ctx.resourcesEmpire),
@@ -521,7 +521,7 @@ export const METRICS = [
     category: "resources",
     worldRankingsAllCivsHidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} City resources assigned.
      */
     accessor: (ctx) => safeNum(ctx.resourcesCity),
@@ -535,7 +535,7 @@ export const METRICS = [
     category: "resources",
     worldRankingsAllCivsHidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Factory resources assigned.
      */
     accessor: (ctx) => safeNum(ctx.resourcesFactory),
@@ -549,7 +549,7 @@ export const METRICS = [
     category: "resources",
     worldRankingsAllCivsHidden: true,
     /**
-     * @param {MetricCtx} ctx Per-player accessor context.
+     * @param {MetricCtx} ctx
      * @returns {number | undefined} Treasure resources assigned.
      */
     accessor: (ctx) => safeNum(ctx.resourcesTreasure),
@@ -769,4 +769,4 @@ if (Array.isArray(_api.pending)) {
   }
 }
 
-dlog("metrics module loaded; registry size=", METRICS.length);
+log.debug("metrics module loaded; registry size=", METRICS.length);

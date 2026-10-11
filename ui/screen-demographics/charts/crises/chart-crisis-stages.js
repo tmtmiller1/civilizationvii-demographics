@@ -13,7 +13,8 @@ import {
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { participantCost } from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-cost.js";
 import { buildCostTable } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-cost-table.js";
-import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 import {
   CRISIS_STAGE_COLORS as STAGE_COLORS,
   CRISIS_STAGE_LABELS as STAGE_LABELS,
@@ -40,8 +41,10 @@ import { localYear, t, turnPlain } from "/demographics/ui/core/demographics-i18n
 function buildYearMap(samples) {
   /** @type {Map<number, string>} */
   const map = new Map();
-  for (const s of samples) {
-    if (s && typeof s.turn === "number" && typeof s.gameYear === "string") map.set(s.turn, s.gameYear);
+  for (const sample of samples) {
+    if (sample && typeof sample.turn === "number" && typeof sample.gameYear === "string") {
+      map.set(sample.turn, sample.gameYear);
+    }
   }
   return map;
 }
@@ -54,14 +57,14 @@ function buildYearMap(samples) {
  * @param {number} end The stage's last turn.
  * @param {Map<number, string>} yearMap Turn -> game-year string.
  * @param {string} mode The time-unit mode ("turn" / "year" / "both").
- * @returns {string} The formatted span.
+ * @returns {string}
  */
 function formatStageSpan(start, end, yearMap, mode) {
   const turns = turnPlain(start) + " – " + turnPlain(end);
   if (mode === "turn") return turns;
-  const ys = localYear(yearMap.get(start));
-  const ye = localYear(yearMap.get(end));
-  const years = ys && ye ? ys + " – " + ye : null;
+  const startYear = localYear(yearMap.get(start));
+  const endYear = localYear(yearMap.get(end));
+  const years = startYear && endYear ? startYear + " – " + endYear : null;
   if (!years) return turns;
   if (mode === "year") return years;
   return turns + " · " + years;
@@ -71,24 +74,25 @@ function formatStageSpan(start, end, yearMap, mode) {
  * Build one stage's colored header bar (crisis name + stage label + time span).
  * The bar's background fades from black (behind the name, so it stays readable)
  * into the stage's severity color (the same orange/red shades used elsewhere).
- * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg
+ * @param {{ stage: number, start: number, end: number, sample: Snapshot }} segment
  * @param {number} idx The clamped stage index (0..3).
  * @param {string} seed The game seed (for the flavor crisis name).
  * @param {string} spanText The pre-formatted time span.
  * @returns {HTMLElement}
  */
-function buildStageBar(seg, idx, seed, spanText) {
+function buildStageBar(segment, idx, seed, spanText) {
   const bar = document.createElement("div");
   bar.className = "demographics-crisis-stage-bar";
   bar.style.borderLeftColor = STAGE_COLORS[idx];
-  bar.style.background = "linear-gradient(to right, #000 0%, #000 22%, " + STAGE_COLORS[idx] + " 60%)";
+  bar.style.background =
+    "linear-gradient(to right, #000 0%, #000 22%, " + STAGE_COLORS[idx] + " 60%)";
   const label = document.createElement("span");
   label.className = "demographics-crisis-stage-label";
   label.textContent = t(STAGE_LABELS[idx]);
   bar.appendChild(label);
   const name = document.createElement("span");
   name.className = "demographics-crisis-stage-name";
-  name.textContent = flavorCrisisName(seg.sample, seg.stage, seed);
+  name.textContent = flavorCrisisName(segment.sample, segment.stage, seed);
   bar.appendChild(name);
   const span = document.createElement("span");
   span.className = "demographics-crisis-stage-span";
@@ -105,10 +109,10 @@ function buildStageBar(seg, idx, seed, spanText) {
  * @returns {*[]}
  */
 function liveCrisisCols(samples, start, end) {
-  return crisisParticipants(samples, start, end).map((p) => ({
-    entry: p,
+  return crisisParticipants(samples, start, end).map((participant) => ({
+    entry: participant,
     cs: null,
-    cost: participantCost(samples, p, start, end)
+    cost: participantCost(samples, participant, start, end)
   }));
 }
 
@@ -123,7 +127,9 @@ function liveCrisisCols(samples, start, end) {
 function costSection(cols, samples) {
   const costs = document.createElement("div");
   costs.className = "demographics-crisis-stage-costs";
-  const shown = cols.filter((c) => !civDroppedByPolicy(samples, c && c.entry ? c.entry.pid : undefined));
+  const shown = cols.filter(
+    (column) => !civDroppedByPolicy(samples, column && column.entry ? column.entry.pid : undefined)
+  );
   costs.appendChild(buildCostTable(shown, CRISIS_METRICS, samples, -1));
   return costs;
 }
@@ -142,10 +148,10 @@ function buildCostSection(samples, start, end) {
 /**
  * The cumulative cost columns for a crisis group, preferring the age-end snapshot (persisted while
  * the finished age's samples were still dense) over recomputing from now-decimated samples, which
- * is what made the loss columns blank out from a later age.
+ * would blank out the loss columns when viewed from a later age.
  * @param {{ start:number, end:number, sample:Snapshot }} group The crisis run.
  * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx
- * @returns {*[]} The cost-table columns.
+ * @returns {*[]}
  */
 function cumulativeCols(group, ctx) {
   const snap = ctx.crisisSnapshots && ctx.crisisSnapshots[sampleAgeKey(group.sample)];
@@ -155,19 +161,24 @@ function cumulativeCols(group, ctx) {
 
 /**
  * Build one stage block: the colored bar plus that stage's own per-civ cost table.
- * @param {{ stage: number, start: number, end: number, sample: Snapshot }} seg
+ * @param {{ stage: number, start: number, end: number, sample: Snapshot }} segment
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
  *   mode: string }} ctx Render context.
  * @returns {HTMLElement}
  */
-function buildStageBlock(seg, ctx) {
-  const idx = Math.max(0, Math.min(3, seg.stage - 1));
+function buildStageBlock(segment, ctx) {
+  const idx = Math.max(0, Math.min(3, segment.stage - 1));
   const block = document.createElement("div");
   block.className = "demographics-crisis-stage";
   block.appendChild(
-    buildStageBar(seg, idx, ctx.seed, formatStageSpan(seg.start, seg.end, ctx.yearMap, ctx.mode))
+    buildStageBar(
+      segment,
+      idx,
+      ctx.seed,
+      formatStageSpan(segment.start, segment.end, ctx.yearMap, ctx.mode)
+    )
   );
-  block.appendChild(buildCostSection(ctx.samples, seg.start, seg.end));
+  block.appendChild(buildCostSection(ctx.samples, segment.start, segment.end));
   return block;
 }
 
@@ -183,10 +194,10 @@ function buildStageBlock(seg, ctx) {
 function buildCumulativeBlock(group, ctx) {
   const block = document.createElement("div");
   block.className = "demographics-crisis-stage demographics-crisis-cumulative";
-  const cap = document.createElement("div");
-  cap.className = "demographics-crisis-cumulative-caption";
-  cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE");
-  block.appendChild(cap);
+  const caption = document.createElement("div");
+  caption.className = "demographics-crisis-cumulative-caption";
+  caption.textContent = t("LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE");
+  block.appendChild(caption);
   block.appendChild(costSection(cumulativeCols(group, ctx), ctx.samples));
   return block;
 }
@@ -198,7 +209,7 @@ function buildCumulativeBlock(group, ctx) {
  * @param {{ segments:any[], start:number, end:number, sample:Snapshot }} group The crisis run.
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
  *   mode: string }} ctx Render context.
- * @returns {HTMLElement} The crisis-group element.
+ * @returns {HTMLElement}
  */
 function buildCrisisGroup(group, ctx) {
   const wrap = document.createElement("div");
@@ -207,7 +218,7 @@ function buildCrisisGroup(group, ctx) {
   header.className = "demographics-crisis-group-header";
   header.textContent = flavorCrisisName(group.sample, group.segments[0].stage, ctx.seed);
   wrap.appendChild(header);
-  for (const seg of group.segments) wrap.appendChild(buildStageBlock(seg, ctx));
+  for (const segment of group.segments) wrap.appendChild(buildStageBlock(segment, ctx));
   if (group.segments.length >= 2) wrap.appendChild(buildCumulativeBlock(group, ctx));
   return wrap;
 }
@@ -222,8 +233,10 @@ function buildCrisisGroup(group, ctx) {
  */
 function groupCtx(ctx, group) {
   const age = sampleAgeKey(group.sample);
-  const gSamples = ctx.samples.filter((/** @type {Snapshot} */ s) => sampleAgeKey(s) === age);
-  return { ...ctx, samples: gSamples, yearMap: buildYearMap(gSamples) };
+  const ageSamples = ctx.samples.filter(
+    (/** @type {Snapshot} */ sample) => sampleAgeKey(sample) === age
+  );
+  return { ...ctx, samples: ageSamples, yearMap: buildYearMap(ageSamples) };
 }
 
 /**
@@ -231,7 +244,7 @@ function groupCtx(ctx, group) {
  * persisted age-end snapshot over recomputing from now-decimated samples.
  * @param {string} age
  * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx
- * @returns {*[]} The age's cumulative cost columns.
+ * @returns {*[]}
  */
 function ageOverallCols(age, ctx) {
   const snap = ctx.crisisSnapshots && ctx.crisisSnapshots[age];
@@ -264,10 +277,10 @@ function buildOverallBlock(groups, ctx) {
   const block = document.createElement("div");
   block.className =
     "demographics-crisis-stage demographics-crisis-cumulative demographics-crisis-overall";
-  const cap = document.createElement("div");
-  cap.className = "demographics-crisis-cumulative-caption";
-  cap.textContent = t("LOC_DEMOGRAPHICS_CRISIS_OVERALL");
-  block.appendChild(cap);
+  const caption = document.createElement("div");
+  caption.className = "demographics-crisis-cumulative-caption";
+  caption.textContent = t("LOC_DEMOGRAPHICS_CRISIS_OVERALL");
+  block.appendChild(caption);
   block.appendChild(costSection(aggregateOverallCols(groups, ctx), ctx.samples));
   return block;
 }

@@ -8,23 +8,11 @@
 // Engine APIs are not safe to touch before whenReady resolves, doing
 // so silently kills the module with no stack trace.
 
-const DEMOGRAPHICS_DEBUG = false;
+import { debugLoggingOn, makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.bootstrap]", ...a);
-}
+const log = makeLogger("bootstrap");
 
-/**
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.bootstrap]", ...a);
-}
-
-dlog("loaded; debug=", DEMOGRAPHICS_DEBUG);
+log.debug("loaded; debug=", debugLoggingOn());
 
 /**
  * Dynamic-import the engine contract guard and log a one-line status report.
@@ -38,7 +26,7 @@ function checkContracts() {
       if (typeof mod.logContractReport === "function") mod.logContractReport();
     })
     .catch((e) => {
-      derr("contracts import REJECTED:", e);
+      log.error("contracts import REJECTED:", e);
     });
 }
 
@@ -48,14 +36,14 @@ function checkContracts() {
  * @returns {Promise<*>} The imported module, or `undefined` on failure.
  */
 function loadDecorator() {
-  dlog("about to dynamic-import demographics-dock-decorator.js");
+  log.debug("about to dynamic-import demographics-dock-decorator.js");
   return /** @type {Promise<*>} */ (import("/demographics/ui/core/demographics-dock-decorator.js"))
     .then((mod) => {
-      dlog("dock-decorator import resolved; module keys:", Object.keys(mod || {}));
+      log.debug("dock-decorator import resolved; module keys:", Object.keys(mod || {}));
       return mod;
     })
     .catch((e) => {
-      derr("dock-decorator import REJECTED:", e);
+      log.error("dock-decorator import REJECTED:", e);
     });
 }
 
@@ -65,23 +53,23 @@ function loadDecorator() {
  * @returns {Promise<void>}
  */
 function startSampler() {
-  dlog("about to dynamic-import demographics-sampler.js");
+  log.debug("about to dynamic-import demographics-sampler.js");
   return /** @type {Promise<*>} */ (import("/demographics/ui/sampler/demographics-sampler.js"))
     .then((mod) => {
-      dlog("sampler import resolved; keys:", Object.keys(mod || {}));
+      log.debug("sampler import resolved; keys:", Object.keys(mod || {}));
       try {
         if (typeof mod.startSampler === "function") {
           mod.startSampler();
-          dlog("sampler.startSampler() returned");
+          log.debug("sampler.startSampler() returned");
         } else {
-          derr("sampler module missing startSampler export");
+          log.error("sampler module missing startSampler export");
         }
       } catch (e) {
-        derr("sampler.startSampler threw:", e);
+        log.error("sampler.startSampler threw:", e);
       }
     })
     .catch((e) => {
-      derr("sampler import REJECTED:", e);
+      log.error("sampler import REJECTED:", e);
     });
 }
 
@@ -100,11 +88,11 @@ function startHistory() {
           engine.on("BeforeUnload", () => mod.stopCapture?.());
         }
       } catch (e) {
-        derr("history capture unload hook failed:", e);
+        log.error("history capture unload hook failed:", e);
       }
     })
     .catch((e) => {
-      derr("history capture import REJECTED:", e);
+      log.error("history capture import REJECTED:", e);
     });
 }
 
@@ -117,29 +105,29 @@ try {
     engine.whenReady &&
     typeof engine.whenReady.then === "function"
   ) {
-    dlog("engine.whenReady present; deferring decorator + sampler load");
+    log.debug("engine.whenReady present; deferring decorator + sampler load");
     engine.whenReady
       .then(() => {
-        dlog("engine.whenReady fired");
+        log.debug("engine.whenReady fired");
         checkContracts();
         loadDecorator();
         startSampler();
         startHistory();
       })
       .catch((e) => {
-        derr("engine.whenReady REJECTED:", e);
+        log.error("engine.whenReady REJECTED:", e);
         checkContracts();
         loadDecorator(); // best-effort fallback
         startSampler();
         startHistory();
       });
   } else {
-    derr("engine or engine.whenReady missing ; loading decorator immediately as fallback");
+    log.error("engine or engine.whenReady missing ; loading decorator immediately as fallback");
     checkContracts();
     loadDecorator();
     startSampler();
     startHistory();
   }
 } catch (e) {
-  derr("bootstrap top-level threw:", e);
+  log.error("bootstrap top-level threw:", e);
 }

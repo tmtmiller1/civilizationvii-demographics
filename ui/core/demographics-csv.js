@@ -10,18 +10,14 @@
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { makeClickable } from "/demographics/ui/core/demographics-a11y.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 // above the soft limit the full UI.log dump is skipped; above the hard limit the
 // export is refused outright
 const CSV_SOFT_LIMIT = 2 * 1024 * 1024;
 const CSV_HARD_LIMIT = 8 * 1024 * 1024;
 
-/**
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.csv]", ...a);
-}
+const log = makeLogger("csv");
 
 /**
  * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
@@ -46,7 +42,7 @@ export function csvCell(v) {
  * @param {*} v
  * @returns {string} "" for non-finite input.
  */
-function fmtNum(v) {
+function formatCsvNumber(v) {
   if (!isFinite(v)) return "";
   if (Number.isInteger(v)) return String(v);
   if (Math.abs(v) >= 1000) return String(Math.round(v));
@@ -54,12 +50,12 @@ function fmtNum(v) {
 }
 
 /**
- * Numbers go through {@link fmtNum}, everything else is CSV-escaped as a string.
+ * Numbers go through {@link formatCsvNumber}, everything else is CSV-escaped as a string.
  * @param {*} v
  * @returns {string}
  */
-function fmtCell(v) {
-  return typeof v === "number" ? fmtNum(v) : csvCell(v);
+function formatCsvCell(v) {
+  return typeof v === "number" ? formatCsvNumber(v) : csvCell(v);
 }
 
 /**
@@ -181,7 +177,7 @@ function writeCsvToClipboard(csv) {
     UI.setClipboardText(csv);
     return true;
   } catch (e) {
-    derr("clipboard write threw:", /** @type {*} */ (e)?.message);
+    log.error("clipboard write threw:", /** @type {*} */ (e)?.message);
     return false;
   }
 }
@@ -221,7 +217,7 @@ export function copyTableAsCsv(opts) {
   }
   const lines = buildMetaHeader(title, rows.length, headers.length);
   lines.push(headers.map(csvCell).join(","));
-  for (const r of rows) lines.push(r.map(fmtCell).join(","));
+  for (const r of rows) lines.push(r.map(formatCsvCell).join(","));
   deliverCsv(host, lines.join("\n"), rows.length, headers.length);
 }
 

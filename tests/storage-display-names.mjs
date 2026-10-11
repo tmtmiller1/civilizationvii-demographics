@@ -12,28 +12,70 @@ const TEXT = {
   LOC_CIVILIZATION_INDEPENDENT_NAME: "촌락"
 };
 const rows = {
-  Civilizations: { CIVILIZATION_GREAT_BRITAIN: "LOC_CIVILIZATION_GREAT_BRITAIN_NAME", CIVILIZATION_MONGOLIA: "LOC_CIVILIZATION_MONGOLIA_NAME", CIVILIZATION_NOTEXT: "LOC_CIVILIZATION_NOTEXT_NAME" },
+  Civilizations: {
+    CIVILIZATION_GREAT_BRITAIN: "LOC_CIVILIZATION_GREAT_BRITAIN_NAME",
+    CIVILIZATION_MONGOLIA: "LOC_CIVILIZATION_MONGOLIA_NAME",
+    CIVILIZATION_NOTEXT: "LOC_CIVILIZATION_NOTEXT_NAME"
+  },
   Leaders: { LEADER_AUGUSTUS: "LOC_LEADER_AUGUSTUS_NAME" }
 };
-globalThis.GameInfo = Object.fromEntries(Object.entries(rows).map(([t, m]) => [t, { lookup: (k) => (m[k] ? { Name: m[k] } : null) }]));
+globalThis.GameInfo = Object.fromEntries(
+  Object.entries(rows).map(([t, m]) => [t, { lookup: (k) => (m[k] ? { Name: m[k] } : null) }])
+);
 globalThis.Locale = { compose: (k) => TEXT[k] || k };
 const { localizeStoredNames } = await import("/demographics/ui/storage/storage-display-names.js");
 
 try {
   const h = {
     samples: [
-      { players: { 0: { civName: "Great Britain", leaderName: "Augustus", civTypeString: "CIVILIZATION_GREAT_BRITAIN", leaderTypeString: "LEADER_AUGUSTUS" } } },
-      { players: { 0: { civName: "몽골", leaderName: "아우구스투스", civTypeString: "CIVILIZATION_MONGOLIA", leaderTypeString: "LEADER_AUGUSTUS" },
-        1: { civName: "Kept", leaderName: "City-State", civTypeString: "CIVILIZATION_NOTEXT" }, 2: null } },
+      {
+        players: {
+          0: {
+            civName: "Great Britain",
+            leaderName: "Augustus",
+            civTypeString: "CIVILIZATION_GREAT_BRITAIN",
+            leaderTypeString: "LEADER_AUGUSTUS"
+          }
+        }
+      },
+      {
+        players: {
+          0: {
+            civName: "몽골",
+            leaderName: "아우구스투스",
+            civTypeString: "CIVILIZATION_MONGOLIA",
+            leaderTypeString: "LEADER_AUGUSTUS"
+          },
+          1: { civName: "Kept", leaderName: "City-State", civTypeString: "CIVILIZATION_NOTEXT" },
+          2: null
+        }
+      },
       null
     ],
-    wars: [{
-      name: "1st Great Britain vs Villages War", _nameKeyA: "Great Britain",
-      sideACivs: [{ pid: 0, civ: "Great Britain", leader: "Augustus", civTypeString: "CIVILIZATION_GREAT_BRITAIN", leaderType: "LEADER_AUGUSTUS" }],
-      sideBCivs: [{ pid: 34, civ: "Villages", leader: "", isCS: true }, { pid: 40, civ: "Kumbi Saleh", leader: "", isCS: true },
-        { pid: 41, civ: "Villages", leader: "", isCS: false }, { pid: 42, civ: "촌락", leader: "", isCS: false }],
-      declaredBy: { pid: 0, civ: "Great Britain", leader: "Augustus" }
-    }, null, { sideACivs: 5 }]
+    wars: [
+      {
+        name: "1st Great Britain vs Villages War",
+        _nameKeyA: "Great Britain",
+        sideACivs: [
+          {
+            pid: 0,
+            civ: "Great Britain",
+            leader: "Augustus",
+            civTypeString: "CIVILIZATION_GREAT_BRITAIN",
+            leaderType: "LEADER_AUGUSTUS"
+          }
+        ],
+        sideBCivs: [
+          { pid: 34, civ: "Villages", leader: "", isCS: true },
+          { pid: 40, civ: "Kumbi Saleh", leader: "", isCS: true },
+          { pid: 41, civ: "Villages", leader: "", isCS: false },
+          { pid: 42, civ: "촌락", leader: "", isCS: false }
+        ],
+        declaredBy: { pid: 0, civ: "Great Britain", leader: "Augustus" }
+      },
+      null,
+      { sideACivs: 5 }
+    ]
   };
   assert.equal(localizeStoredNames(h), h);
   assert.equal(h.samples[0].players[0].civName, "대영제국");

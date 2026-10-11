@@ -14,8 +14,8 @@ import { effectivePolicy } from "/demographics/ui/core/demographics-governance.j
  * @typedef {{
  *   metricExists: (id: string) => boolean,
  *   nyiText: string,
- *   dlog: (...a: any[]) => void,
- *   derr: (...a: any[]) => void
+ *   logDebug: (...a: any[]) => void,
+ *   logError: (...a: any[]) => void
  * }} ChartRenderDeps
  */
 
@@ -23,16 +23,16 @@ import { effectivePolicy } from "/demographics/ui/core/demographics-governance.j
  * Run fn, returning result or fallback on throw.
  * @template T
  * @param {() => T} fn
- * @param {(...a: any[]) => void} derr
- * @param {T} [fb]
- * @returns {T|undefined} Result or fallback.
+ * @param {(...a: any[]) => void} logError
+ * @param {T} [fallback]
+ * @returns {T|undefined}
  */
-function safeCall(fn, derr, fb) {
+function safeCall(fn, logError, fallback) {
   try {
     return fn();
   } catch (e) {
-    derr("safeCall:", e);
-    return fb;
+    logError("safeCall:", e);
+    return fallback;
   }
 }
 
@@ -102,7 +102,7 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
 // analytics-visibility policy so a Spoilers change re-renders the companion panel
 // instead of leaving stale, unmasked DOM in place on the same turn.
 /** @type {{ id: string|null, turn: number, host: HTMLElement|null, policy: string }} */
-let _extLast = { id: null, turn: -1, host: null, policy: "" };
+let lastExternalRender = { id: null, turn: -1, host: null, policy: "" };
 
 /**
  * The current game turn (for external-panel render-skip invalidation), or -1 off-engine.
@@ -118,7 +118,7 @@ function currentTurn() {
 
 /**
  * The effective analytics-visibility policy, defensively (for the render-skip key).
- * @returns {string} The policy id, or "" off-engine.
+ * @returns {string} "" off-engine.
  */
 function safePolicy() {
   try {
@@ -131,15 +131,15 @@ function safePolicy() {
 /**
  * Resolve `activeMetric` to its owning external panel and (for multi-tab panels) the bare sub-tab
  * id, or null when it isn't an external panel/sub-tab.
- * @param {string} activeMetric The active metric id (a panel id, or "panelId::subId").
- * @returns {{panel:*, subId:(string|undefined)}|null} The owning panel + sub-tab id, or null.
+ * @param {string} activeMetric A panel id, or "panelId::subId".
+ * @returns {{panel:*, subId:(string|undefined)}|null}
  */
 function findPanelFor(activeMetric) {
-  for (const p of EXTERNAL_PANELS) {
-    if (activeMetric === p.id) return { panel: p, subId: undefined };
-    const prefix = p.id + PANEL_SUBTAB_SEP;
+  for (const panel of EXTERNAL_PANELS) {
+    if (activeMetric === panel.id) return { panel, subId: undefined };
+    const prefix = panel.id + PANEL_SUBTAB_SEP;
     if (typeof activeMetric === "string" && activeMetric.startsWith(prefix)) {
-      return { panel: p, subId: activeMetric.slice(prefix.length) };
+      return { panel, subId: activeMetric.slice(prefix.length) };
     }
   }
   return null;
@@ -155,11 +155,12 @@ function findPanelFor(activeMetric) {
  * @param {number} turn
  * @param {string} policy Effective analytics-visibility policy.
  * @param {HTMLElement} chartHost
- * @returns {boolean} True when the existing DOM can be kept.
+ * @returns {boolean}
  */
 function extUnchanged(activeMetric, turn, policy, chartHost) {
-  return _extLast.id === activeMetric && _extLast.turn === turn && _extLast.host === chartHost
-    && _extLast.policy === policy && chartHost.childElementCount > 0;
+  const last = lastExternalRender;
+  return last.id === activeMetric && last.turn === turn && last.host === chartHost
+    && last.policy === policy && chartHost.childElementCount > 0;
 }
 
 /**
@@ -182,7 +183,7 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
   try {
     chartHost.innerHTML = "";
     found.panel.render(chartHost, ctx, found.subId);
-    _extLast = { id: activeMetric, turn, host: chartHost, policy };
+    lastExternalRender = { id: activeMetric, turn, host: chartHost, policy };
   } catch (e) {
     // The history ctx doesn't carry derr; log so a broken external panel is diagnosable.
     if (ctx && typeof ctx.derr === "function") ctx.derr("external panel render:", e);
@@ -211,8 +212,8 @@ function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size) {
       height,
       ageSource: ctx.activeRadarAge || "current",
       onToggleCiv: (/** @type {string} */ leaderKey) => ctx.toggleCiv?.(leaderKey),
-      onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) =>
-        ctx.setAllCivsHidden?.(h, keys)
+      onSetAllHidden: (/** @type {boolean} */ hide, /** @type {string[]} */ keys) =>
+        ctx.setAllCivsHidden?.(hide, keys)
     });
     return true;
   }
@@ -251,23 +252,28 @@ const BYTYPE_SPECS = {
  * @type {Record<string, {field:string, typesField?:string, empty:string}>}
  */
 const SETTLEMENT_BOARDS = {
-  buildings_type: { field: "buildings", typesField: "buildingTypes", empty: "LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" }
+  buildings_type: {
+    field: "buildings",
+    typesField: "buildingTypes",
+    empty: "LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS"
+  }
 };
 
 /**
  * Synthetic board id → renderer invocation. Renderers are statically exported
  * (always present), so no per-id `typeof` guard is needed here.
- * @type {Record<string, (cm:*, host:HTMLElement, ctx:*) => void>}
+ * @type {Record<string, (chartMod:*, host:HTMLElement, ctx:*) => void>}
  */
 const BOARD_RENDERERS = {
-  wonders_board: (cm, h, ctx) => cm.renderWondersBoard(h, { history: ctx.history }),
-  wonder_races: (cm, h, ctx) => cm.renderWonderRaces(h, { history: ctx.history }),
-  religion_pantheons: (cm, h, ctx) => cm.renderReligionPantheons(h, { history: ctx.history }),
-  religion_pantheon_yields: (cm, h, ctx) => cm.renderReligionPantheonYields(h, { history: ctx.history }),
-  religion_standings: (cm, h) => cm.renderReligionStandings(h, {}),
-  religion_spread: (cm, h, ctx) => cm.renderReligionSpread(h, { history: ctx.history }),
-  religion_by_pop: (cm, h, ctx) => cm.renderReligionByPop(h, { history: ctx.history }),
-  settlements_atlas: (cm, h) => cm.renderSettlementsAtlas(h, {})
+  wonders_board: (chartMod, el, ctx) => chartMod.renderWondersBoard(el, { history: ctx.history }),
+  wonder_races: (chartMod, el, ctx) => chartMod.renderWonderRaces(el, { history: ctx.history }),
+  religion_pantheons: (chartMod, el, ctx) => chartMod.renderReligionPantheons(el, { history: ctx.history }),
+  religion_pantheon_yields: (chartMod, el, ctx) =>
+    chartMod.renderReligionPantheonYields(el, { history: ctx.history }),
+  religion_standings: (chartMod, el) => chartMod.renderReligionStandings(el, {}),
+  religion_spread: (chartMod, el, ctx) => chartMod.renderReligionSpread(el, { history: ctx.history }),
+  religion_by_pop: (chartMod, el, ctx) => chartMod.renderReligionByPop(el, { history: ctx.history }),
+  settlements_atlas: (chartMod, el) => chartMod.renderSettlementsAtlas(el, {})
 };
 
 /**
@@ -277,16 +283,22 @@ const BOARD_RENDERERS = {
  */
 const SCATTER_SPECS = {
   civ_scatter: {
-    xMetric: "science_yield", yMetric: "milpower",
-    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT", yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER"
+    xMetric: "science_yield",
+    yMetric: "milpower",
+    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT",
+    yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER"
   },
   scatter_wealth_culture: {
-    xMetric: "gpt", yMetric: "culture_yield",
-    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT", yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT"
+    xMetric: "gpt",
+    yMetric: "culture_yield",
+    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT",
+    yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT"
   },
   scatter_soft_power: {
-    xMetric: "influence", yMetric: "hpt",
-    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT", yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT"
+    xMetric: "influence",
+    yMetric: "hpt",
+    xTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT",
+    yTitle: "LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT"
   }
 };
 
@@ -314,15 +326,15 @@ const FILTERABLE_TRENDS = {
  */
 function tryRenderTrend(chartHost, ctx, activeMetric, size) {
   const fnName = FILTERABLE_TRENDS[activeMetric];
-  const cm = /** @type {*} */ (ctx.chartMod);
-  if (!fnName || typeof cm[fnName] !== "function") return false;
-  cm[fnName](chartHost, {
+  const chartMod = /** @type {*} */ (ctx.chartMod);
+  if (!fnName || typeof chartMod[fnName] !== "function") return false;
+  chartMod[fnName](chartHost, {
     history: ctx.history,
     width: size.width,
     height: size.height,
     hiddenCivs: ctx.hiddenCivs,
-    onToggleCiv: (/** @type {string} */ k) => ctx.toggleCiv?.(k),
-    onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) => ctx.setAllCivsHidden?.(h, keys)
+    onToggleCiv: (/** @type {string} */ leaderKey) => ctx.toggleCiv?.(leaderKey),
+    onSetAllHidden: (/** @type {boolean} */ hide, /** @type {string[]} */ keys) => ctx.setAllCivsHidden?.(hide, keys)
   });
   return true;
 }
@@ -333,51 +345,54 @@ function tryRenderTrend(chartHost, ctx, activeMetric, size) {
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
- * @param {{ width: number, height: number }} [size] Chart size (for the scatters).
+ * @param {{ width: number, height: number }} [size] Used by the scatters.
  * @returns {boolean}
  */
 function tryRenderBoards(chartHost, ctx, activeMetric, size) {
-  const cm = /** @type {*} */ (ctx.chartMod);
-  const fn = BOARD_RENDERERS[activeMetric];
-  if (fn) {
-    fn(cm, chartHost, ctx);
+  const chartMod = /** @type {*} */ (ctx.chartMod);
+  const renderBoard = BOARD_RENDERERS[activeMetric];
+  if (renderBoard) {
+    renderBoard(chartMod, chartHost, ctx);
     return true;
   }
   const scatter = SCATTER_SPECS[activeMetric];
-  if (scatter && typeof cm.renderCivScatter === "function") {
-    cm.renderCivScatter(chartHost, {
-      history: ctx.history, ...scatter,
+  if (scatter && typeof chartMod.renderCivScatter === "function") {
+    chartMod.renderCivScatter(chartHost, {
+      history: ctx.history,
+      ...scatter,
       width: size?.width,
       height: size?.height,
       hiddenCivs: ctx.hiddenCivs,
-      onToggleCiv: (/** @type {string} */ k) => ctx.toggleCiv?.(k),
-      onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) => ctx.setAllCivsHidden?.(h, keys)
+      onToggleCiv: (/** @type {string} */ leaderKey) => ctx.toggleCiv?.(leaderKey),
+      onSetAllHidden: (/** @type {boolean} */ hide, /** @type {string[]} */ keys) => ctx.setAllCivsHidden?.(hide, keys)
     });
     return true;
   }
-  return tryConstructibleBoards(cm, chartHost, ctx, activeMetric);
+  return tryConstructibleBoards(chartMod, chartHost, ctx, activeMetric);
 }
 
 /**
  * Attempt the constructible-based boards: Quarters (districts_type), the per-settlement
  * Buildings board, and the Game.Summary by-type breakdowns.
- * @param {*} cm The chart module. @param {HTMLElement} chartHost
- * @param {*} ctx Render context. @param {string} activeMetric Active metric id.
+ * @param {*} chartMod
+ * @param {HTMLElement} chartHost
+ * @param {*} ctx
+ * @param {string} activeMetric
  * @returns {boolean}
  */
-function tryConstructibleBoards(cm, chartHost, ctx, activeMetric) {
-  if (activeMetric === "districts_type" && typeof cm.renderQuartersBoard === "function") {
-    cm.renderQuartersBoard(chartHost, {});
+function tryConstructibleBoards(chartMod, chartHost, ctx, activeMetric) {
+  if (activeMetric === "districts_type" && typeof chartMod.renderQuartersBoard === "function") {
+    chartMod.renderQuartersBoard(chartHost, {});
     return true;
   }
-  const settle = SETTLEMENT_BOARDS[activeMetric];
-  if (settle && typeof cm.renderConstructiblesBoard === "function") {
-    cm.renderConstructiblesBoard(chartHost, settle);
+  const settlementBoard = SETTLEMENT_BOARDS[activeMetric];
+  if (settlementBoard && typeof chartMod.renderConstructiblesBoard === "function") {
+    chartMod.renderConstructiblesBoard(chartHost, settlementBoard);
     return true;
   }
   const spec = BYTYPE_SPECS[activeMetric];
-  if (spec && typeof cm.renderByTypeBoard === "function") {
-    cm.renderByTypeBoard(chartHost, { history: ctx.history, ...spec });
+  if (spec && typeof chartMod.renderByTypeBoard === "function") {
+    chartMod.renderByTypeBoard(chartHost, { history: ctx.history, ...spec });
     return true;
   }
   return false;
@@ -487,19 +502,19 @@ export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
   host.appendChild(chartHost);
 
   if (!deps.metricExists(activeMetric)) {
-    const ph = document.createElement("div");
-    ph.className = "demographics-nyi font-body text-base";
-    ph.textContent = deps.nyiText;
-    chartHost.appendChild(ph);
+    const placeholder = document.createElement("div");
+    placeholder.className = "demographics-nyi font-body text-base";
+    placeholder.textContent = deps.nyiText;
+    chartHost.appendChild(placeholder);
     return;
   }
 
   const doRender = () =>
     safeCall(() => {
       const { width, height } = measureChartSize(chartHost);
-      deps.dlog("chart render size=" + width + "x" + height, "activeMetric=" + activeMetric);
+      deps.logDebug("chart render size=" + width + "x" + height, "activeMetric=" + activeMetric);
       routeChartRender(chartHost, ctx, activeMetric, turnRange, { width, height });
-    }, deps.derr);
+    }, deps.logError);
 
   // Re-fit this chart on resize / Interface-Size change. A resize isn't a turn
   // change, so clear the external-panel skip cache first to force a re-measure.
@@ -509,7 +524,7 @@ export function buildChartHostPanel(host, ctx, activeMetric, turnRange, deps) {
       activeChartReflow = null;
       return;
     }
-    _extLast = { id: null, turn: -1, host: null, policy: "" };
+    lastExternalRender = { id: null, turn: -1, host: null, policy: "" };
     doRender();
   };
   ensureChartResizeReflow();

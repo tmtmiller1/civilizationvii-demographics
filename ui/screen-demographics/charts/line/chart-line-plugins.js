@@ -7,38 +7,27 @@
 // frame's transform scale). None of these own any shared state; each call
 // returns a fresh plugin object.
 
-import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
+import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { chartFontFamily } from "/demographics/ui/screen-demographics/charts/shared/chart-style.js";
 import { appliedVisualScale } from "/demographics/ui/core/demographics-font-ladder.js";
-
-/**
- * @param {*} chart
- * @returns {string} The chart font family, with a safe fallback chain.
- */
-function resolveChartFontFamily(chart) {
-  return (
-    chart?.options?.font?.family ||
-    (typeof Chart !== "undefined" && Chart.defaults?.font?.family) ||
-    localeFontFamily("body")
-  );
-}
 
 /**
  * Build the focus-glow Chart.js plugin: redraws each focused line wider and
  * translucent behind the real strokes.
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeFocusGlowPlugin() {
   return {
     id: "demographicsFocusGlow",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    beforeDatasetsDraw(c) {
-      const ctx2 = c.ctx;
-      const datasets = c.data && c.data.datasets;
+    beforeDatasetsDraw(chart) {
+      const ctx2 = chart.ctx;
+      const datasets = chart.data && chart.data.datasets;
       if (!datasets) return;
       for (let i = 0; i < datasets.length; i++) {
-        const elems = focusedGlowElems(c, datasets[i], i);
+        const elems = focusedGlowElems(chart, datasets[i], i);
         if (elems) strokeGlowPath(ctx2, datasets[i], elems);
       }
     }
@@ -48,17 +37,16 @@ export function makeFocusGlowPlugin() {
 /**
  * Return a focused, visible dataset's point elements (>=2), or `null` when the
  * dataset shouldn't glow.
- * @param {*} c The Chart instance.
- * @param {Record<string, *>} ds
+ * @param {*} chart
+ * @param {Record<string, *>} dataset
  * @param {number} i The dataset index.
- * @returns {{ x: number, y: number, skip?: boolean }[]|null} The point
- *   elements, or `null`.
+ * @returns {{ x: number, y: number, skip?: boolean }[]|null}
  */
-function focusedGlowElems(c, ds, i) {
-  if (!ds || !ds._focused || ds.hidden) return null;
-  const dsMeta = c.getDatasetMeta(i);
-  if (!dsMeta || dsMeta.hidden) return null;
-  const elems = dsMeta.data;
+function focusedGlowElems(chart, dataset, i) {
+  if (!dataset || !dataset._focused || dataset.hidden) return null;
+  const datasetMeta = chart.getDatasetMeta(i);
+  if (!datasetMeta || datasetMeta.hidden) return null;
+  const elems = datasetMeta.data;
   if (!elems || elems.length < 2) return null;
   return elems;
 }
@@ -66,29 +54,29 @@ function focusedGlowElems(c, ds, i) {
 /**
  * Stroke one focused line's translucent glow path.
  * @param {*} ctx2
- * @param {Record<string, *>} ds
+ * @param {Record<string, *>} dataset
  * @param {{ x: number, y: number, skip?: boolean }[]} elems The dataset's
  *   point elements.
  */
-function strokeGlowPath(ctx2, ds, elems) {
+function strokeGlowPath(ctx2, dataset, elems) {
   ctx2.save();
-  ctx2.strokeStyle = ds.borderColor;
+  ctx2.strokeStyle = dataset.borderColor;
   ctx2.globalAlpha = 0.35;
-  ctx2.lineWidth = (ds.borderWidth || 3) + 4;
+  ctx2.lineWidth = (dataset.borderWidth || 3) + 4;
   ctx2.lineJoin = "round";
   ctx2.lineCap = "round";
   ctx2.beginPath();
   let started = false;
-  for (const pt of elems) {
-    if (!pt || pt.skip || typeof pt.x !== "number" || typeof pt.y !== "number") {
+  for (const point of elems) {
+    if (!point || point.skip || typeof point.x !== "number" || typeof point.y !== "number") {
       started = false;
       continue;
     }
     if (!started) {
-      ctx2.moveTo(pt.x, pt.y);
+      ctx2.moveTo(point.x, point.y);
       started = true;
     } else {
-      ctx2.lineTo(pt.x, pt.y);
+      ctx2.lineTo(point.x, point.y);
     }
   }
   if (started) ctx2.stroke();
@@ -104,24 +92,24 @@ function strokeGlowPath(ctx2, ds, elems) {
  * Rescale the event before Chart.js hit-tests it. `inChartArea` was computed from the unscaled
  * point, so recompute it. Chart.js replays its last event on update; the marker keeps a replayed
  * event from being divided twice.
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makePointerScalePlugin() {
   return {
     id: "demographicsPointerScale",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      * @param {*} args The beforeEvent args ({ event, replay, inChartArea }).
      */
-    beforeEvent(c, args) {
+    beforeEvent(chart, args) {
       const e = args && args.event;
       if (!e || e._demographicsScaled) return;
       e._demographicsScaled = true;
-      const s = appliedVisualScale();
-      if (!(s > 0) || s === 1) return;
-      if (typeof e.x === "number") e.x /= s;
-      if (typeof e.y === "number") e.y /= s;
-      if (typeof c.isPointInArea === "function") args.inChartArea = c.isPointInArea(e);
+      const scale = appliedVisualScale();
+      if (!(scale > 0) || scale === 1) return;
+      if (typeof e.x === "number") e.x /= scale;
+      if (typeof e.y === "number") e.y /= scale;
+      if (typeof chart.isPointInArea === "function") args.inChartArea = chart.isPointInArea(e);
     }
   };
 }
@@ -129,22 +117,22 @@ export function makePointerScalePlugin() {
 /**
  * Build the hover-crosshair Chart.js plugin: a gold dashed vertical line at
  * the tooltip's nearest-x.
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeHoverCrosshairPlugin() {
   return {
     id: "demographicsHoverCrosshair",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    afterDatasetsDraw(c) {
-      const tt = c.tooltip;
-      if (!tt || !tt.opacity || !tt.dataPoints || tt.dataPoints.length === 0) return;
-      if (!c.scales.x || !c.chartArea) return;
-      const hoverX = tt.dataPoints[0].element?.x;
+    afterDatasetsDraw(chart) {
+      const tooltip = chart.tooltip;
+      if (!tooltip || !tooltip.opacity || !tooltip.dataPoints || tooltip.dataPoints.length === 0) return;
+      if (!chart.scales.x || !chart.chartArea) return;
+      const hoverX = tooltip.dataPoints[0].element?.x;
       if (typeof hoverX !== "number") return;
-      const ctx2 = c.ctx;
-      const { top, bottom } = c.chartArea;
+      const ctx2 = chart.ctx;
+      const { top, bottom } = chart.chartArea;
       ctx2.save();
       ctx2.strokeStyle = "#f3c34c"; // accent gold
       ctx2.lineWidth = 1.2;
@@ -171,36 +159,36 @@ export function makeSignZonesPlugin() {
   const ZERO = "rgba(229, 210, 172, 0.6)";
   return {
     id: "demographicsSignZones",
-    /** @param {*} c The Chart instance. */
-    beforeDraw(c) {
-      if (!c.config || c.config.type !== "bar") return;
-      const y = c.scales && c.scales.y;
-      const area = c.chartArea;
-      if (!y || !area) return;
-      const y0 = Math.max(area.top, Math.min(area.bottom, y.getPixelForValue(0)));
-      const ctx2 = c.ctx;
+    /** @param {*} chart */
+    beforeDraw(chart) {
+      if (!chart.config || chart.config.type !== "bar") return;
+      const yScale = chart.scales && chart.scales.y;
+      const area = chart.chartArea;
+      if (!yScale || !area) return;
+      const zeroY = Math.max(area.top, Math.min(area.bottom, yScale.getPixelForValue(0)));
+      const ctx2 = chart.ctx;
       ctx2.save();
       ctx2.fillStyle = GREEN;
-      ctx2.fillRect(area.left, area.top, area.right - area.left, y0 - area.top);
+      ctx2.fillRect(area.left, area.top, area.right - area.left, zeroY - area.top);
       ctx2.fillStyle = RED;
-      ctx2.fillRect(area.left, y0, area.right - area.left, area.bottom - y0);
+      ctx2.fillRect(area.left, zeroY, area.right - area.left, area.bottom - zeroY);
       ctx2.restore();
     },
-    /** @param {*} c The Chart instance. */
-    afterDatasetsDraw(c) {
-      if (!c.config || c.config.type !== "bar") return;
-      const y = c.scales && c.scales.y;
-      const area = c.chartArea;
-      if (!y || !area) return;
-      const y0 = y.getPixelForValue(0);
-      if (y0 < area.top || y0 > area.bottom) return;
-      const ctx2 = c.ctx;
+    /** @param {*} chart */
+    afterDatasetsDraw(chart) {
+      if (!chart.config || chart.config.type !== "bar") return;
+      const yScale = chart.scales && chart.scales.y;
+      const area = chart.chartArea;
+      if (!yScale || !area) return;
+      const zeroY = yScale.getPixelForValue(0);
+      if (zeroY < area.top || zeroY > area.bottom) return;
+      const ctx2 = chart.ctx;
       ctx2.save();
       ctx2.strokeStyle = ZERO;
       ctx2.lineWidth = 1.6;
       ctx2.beginPath();
-      ctx2.moveTo(area.left, y0);
-      ctx2.lineTo(area.right, y0);
+      ctx2.moveTo(area.left, zeroY);
+      ctx2.lineTo(area.right, zeroY);
       ctx2.stroke();
       ctx2.restore();
     }
@@ -211,23 +199,23 @@ export function makeSignZonesPlugin() {
  * Build the cap-limit-line Chart.js plugin: a red rule at y=100 on the
  * Settlement Cap Utilization chart. No-op on other metrics.
  * @param {string} metricId
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeCapLimitLinePlugin(metricId) {
   return {
     id: "demographicsCapLimitLine",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    afterDatasetsDraw(c) {
+    afterDatasetsDraw(chart) {
       if (metricId !== "settlement_cap_pct") return;
-      const yScale = c.scales.y;
+      const yScale = chart.scales.y;
       if (!yScale) return;
       if (100 < yScale.min || 100 > yScale.max) return;
-      if (!c.chartArea) return;
+      if (!chart.chartArea) return;
       const y = yScale.getPixelForValue(100);
-      const { left, right } = c.chartArea;
-      const ctx2 = c.ctx;
+      const { left, right } = chart.chartArea;
+      const ctx2 = chart.ctx;
       ctx2.save();
       ctx2.strokeStyle = "#e02020";
       ctx2.lineWidth = 2;
@@ -236,7 +224,7 @@ export function makeCapLimitLinePlugin(metricId) {
       ctx2.moveTo(left, y);
       ctx2.lineTo(right, y);
       ctx2.stroke();
-      drawCapLimitLabel(c, ctx2, { left, right, y });
+      drawCapLimitLabel(chart, ctx2, { left, right, y });
       ctx2.restore();
     }
   };
@@ -249,7 +237,7 @@ export function makeCapLimitLinePlugin(metricId) {
  * @param {{ left: number, right: number, y: number }} pos Line geometry.
  */
 function drawCapLimitLabel(chart, ctx2, pos) {
-  ctx2.font = "11px " + resolveChartFontFamily(chart);
+  ctx2.font = "11px " + chartFontFamily(chart);
   const text = t("LOC_DEMOGRAPHICS_LINE_CAP_LIMIT");
   const textW = ctx2.measureText(text).width;
   const labelX = Math.max(pos.left + 2, pos.right - textW - 8);

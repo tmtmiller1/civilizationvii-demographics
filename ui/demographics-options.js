@@ -9,11 +9,10 @@ import "/demographics/ui/demographics-mod-options.js";
 
 const MAIN_GROUP = "demographics";
 
-const COMPLEXITY_VALUES = ["basic", "standard", "analyst"];
+const COMPLEXITY_VALUES = ["basic", "standard"];
 const COMPLEXITY_ITEMS = [
   { label: "LOC_DEMOGRAPHICS_TIER_BASIC" },
-  { label: "LOC_DEMOGRAPHICS_TIER_STANDARD" },
-  { label: "LOC_DEMOGRAPHICS_TIER_ANALYST" }
+  { label: "LOC_DEMOGRAPHICS_TIER_STANDARD" }
 ];
 
 // Reveal mode: "full" reveals a civ's back-history on first

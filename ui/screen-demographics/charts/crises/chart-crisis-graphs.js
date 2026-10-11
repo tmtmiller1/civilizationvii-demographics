@@ -13,7 +13,8 @@ import {
 } from "/demographics/ui/screen-demographics/charts/wars/chart-war-mini-chart.js";
 import {
   attachHover,
-  buildNoData
+  buildNoData,
+  appendGraphsEmpty
 } from "/demographics/ui/screen-demographics/charts/wars/chart-war-graphs-hover.js";
 import {
   COST_METRICS,
@@ -27,6 +28,7 @@ import {
   CRISIS_STAGE_LABELS
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { clearHost } from "/demographics/ui/screen-demographics/screen/dom-helpers.js";
 
 /**
  * Which snapshot.metrics series each crisis-cost metric is graphed from. Most
@@ -57,8 +59,12 @@ const Y_LABEL = {
  * @type {{ id: string, label: string, blp: string, series: string, yLabel: string }[]}
  */
 const CRISIS_GRAPH_METRICS = COST_METRICS.filter(
-  (m) => m.id !== "warProdCum" && m.id !== "razedCum"
-).map((m) => ({ ...m, series: SERIES_KEY[m.id] || m.id, yLabel: Y_LABEL[m.id] || "" }));
+  (metric) => metric.id !== "warProdCum" && metric.id !== "razedCum"
+).map((metric) => ({
+  ...metric,
+  series: SERIES_KEY[metric.id] || metric.id,
+  yLabel: Y_LABEL[metric.id] || ""
+}));
 
 /**
  * Dropdown scope label (LOC tag) per crisis-bearing age. Each age runs its own
@@ -82,8 +88,8 @@ function crisisAges(history) {
   const samples = Array.isArray(history.samples) ? history.samples : [];
   const seen = [];
   const set = new Set();
-  for (const o of crisisStageOnsets(samples)) {
-    const age = o.sample && typeof o.sample.age === "string" ? o.sample.age : undefined;
+  for (const onset of crisisStageOnsets(samples)) {
+    const age = onset.sample && typeof onset.sample.age === "string" ? onset.sample.age : undefined;
     if (!age || set.has(age)) continue;
     set.add(age);
     seen.push(age);
@@ -140,7 +146,7 @@ const _rawSeriesCache = new WeakMap();
  * Parse (or reuse a cached) per-civ series for one metric out of `history`.
  * @param {*} history
  * @param {string} seriesKey The metric series id.
- * @returns {any[]} The raw per-civ series array.
+ * @returns {any[]} The raw per-civ series.
  */
 function rawSeriesFor(history, seriesKey) {
   if (!history || typeof history !== "object") {
@@ -163,31 +169,11 @@ function rawSeriesFor(history, seriesKey) {
  * Drop hidden-civ keys not present in the current roster, so a stale toggle from
  * an earlier history/game can't linger or coincidentally match a reused leader
  * key. Keeps the module-global set bounded to the civs actually on screen.
- * @param {{ key: string }[]} roster The current civ roster.
+ * @param {{ key: string }[]} roster
  */
 function pruneHiddenKeys(roster) {
   const valid = new Set(roster.map((c) => c.key));
   for (const key of hiddenKeys) if (!valid.has(key)) hiddenKeys.delete(key);
-}
-
-/**
- * Remove every child of `host`.
- * @param {HTMLElement} host
- */
-function clearHost(host) {
-  while (host.firstChild) host.removeChild(host.firstChild);
-}
-
-/**
- * Append a centered empty-state message.
- * @param {HTMLElement} host
- * @param {string} msg
- */
-function appendEmpty(host, msg) {
-  const el = document.createElement("div");
-  el.className = "demographics-war-graphs-empty";
-  el.textContent = msg;
-  host.appendChild(el);
 }
 
 /**
@@ -199,7 +185,7 @@ function appendEmpty(host, msg) {
  */
 function canonicalRoster(history) {
   const raw = rawSeriesFor(history, "milpower");
-  return raw.map((s) => ({ key: s.leaderType, name: s.name, color: s.color }));
+  return raw.map((series) => ({ key: series.leaderType, name: series.name, color: series.color }));
 }
 
 /** Lead-in (in chart-X turns) shown before the first crisis onset. */
@@ -209,22 +195,22 @@ const PRE_CRISIS_LEAD = 8;
  * Build one metric's per-civ series (points mapped to chart-X/Y), colored from
  * the canonical roster, filtered to the civs not toggled off, and clipped to the
  * shared x-domain start (so the long pre-crisis run isn't plotted).
- * @param {{ series: string }} m The crisis graph metric.
+ * @param {{ series: string }} metric The crisis graph metric.
  * @param {*} history
  * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
  * @param {number|undefined} minX The earliest chart-X to keep (or undefined for all).
  * @param {number|undefined} maxX The latest chart-X to keep (or undefined for all).
  * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]}
  */
-function seriesFor(m, history, rosterMap, minX, maxX) {
-  const raw = rawSeriesFor(history, m.series);
+function seriesFor(metric, history, rosterMap, minX, maxX) {
+  const raw = rawSeriesFor(history, metric.series);
   const out = [];
-  for (const s of raw) {
-    if (hiddenKeys.has(s.leaderType)) continue;
-    const points = clipPoints(s.points, minX, maxX);
+  for (const series of raw) {
+    if (hiddenKeys.has(series.leaderType)) continue;
+    const points = clipPoints(series.points, minX, maxX);
     if (!points.length) continue;
-    const meta = rosterMap.get(s.leaderType);
-    out.push({ name: meta ? meta.name : s.name, color: meta ? meta.color : s.color, points });
+    const meta = rosterMap.get(series.leaderType);
+    out.push({ name: meta ? meta.name : series.name, color: meta ? meta.color : series.color, points });
   }
   return out;
 }
@@ -235,14 +221,14 @@ function seriesFor(m, history, rosterMap, minX, maxX) {
  * @param {{ t: number, v: number }[]} rawPoints The series points.
  * @param {number|undefined} minX The earliest chart-X to keep (or undefined for all).
  * @param {number|undefined} maxX The latest chart-X to keep (or undefined for all).
- * @returns {{ x: number, y: number }[]} The clipped points.
+ * @returns {{ x: number, y: number }[]}
  */
 function clipPoints(rawPoints, minX, maxX) {
   const points = [];
-  for (const p of rawPoints) {
-    if (typeof minX === "number" && p.t < minX) continue;
-    if (typeof maxX === "number" && p.t > maxX) continue;
-    points.push({ x: p.t, y: p.v });
+  for (const point of rawPoints) {
+    if (typeof minX === "number" && point.t < minX) continue;
+    if (typeof maxX === "number" && point.t > maxX) continue;
+    points.push({ x: point.t, y: point.v });
   }
   return points;
 }
@@ -256,7 +242,6 @@ function clipPoints(rawPoints, minX, maxX) {
  * @param {string} scopeAge "all" or the age type to isolate.
  * @returns {{ markers: { x: number, color: string, label: string }[],
  *   xDomain: ({ xMin: number, xMax: number }|null) }}
- *   The markers and the shared x-domain.
  */
 function crisisAxis(history, scopeAge) {
   const samples = Array.isArray(history.samples) ? history.samples : [];
@@ -279,7 +264,7 @@ function crisisAxis(history, scopeAge) {
  * @param {Map<string, number>} offsets
  * @param {*[]} boundaries
  * @param {string} scopeAge "all" or the age type to isolate.
- * @returns {{ lo: number, hi: number }} The chart-X range.
+ * @returns {{ lo: number, hi: number }}
  */
 function scopeXRange(samples, offsets, boundaries, scopeAge) {
   const scoped =
@@ -299,8 +284,8 @@ function scopeXRange(samples, offsets, boundaries, scopeAge) {
 function sampleXRange(samples, offsets, boundaries) {
   let lo = Infinity;
   let hi = -Infinity;
-  for (const s of samples) {
-    const x = sampleX(s, offsets, boundaries);
+  for (const sample of samples) {
+    const x = sampleX(sample, offsets, boundaries);
     if (typeof x !== "number") continue;
     if (x < lo) lo = x;
     if (x > hi) hi = x;
@@ -316,17 +301,17 @@ function sampleXRange(samples, offsets, boundaries) {
  * @param {*[]} boundaries
  * @param {string} scopeAge "all", or an age type to keep only that crisis's onsets.
  * @returns {{ markers: { x: number, color: string, label: string }[],
- *   firstOnset: number }} The markers + first onset.
+ *   firstOnset: number }}
  */
 function buildCrisisMarkers(samples, offsets, boundaries, scopeAge) {
   const markers = [];
   let firstOnset = Infinity;
-  for (const o of crisisStageOnsets(samples)) {
-    if (scopeAge && scopeAge !== "all" && o.sample && o.sample.age !== scopeAge) continue;
-    const x = sampleX(o.sample, offsets, boundaries);
+  for (const onset of crisisStageOnsets(samples)) {
+    if (scopeAge && scopeAge !== "all" && onset.sample && onset.sample.age !== scopeAge) continue;
+    const x = sampleX(onset.sample, offsets, boundaries);
     if (typeof x !== "number") continue;
     if (x < firstOnset) firstOnset = x;
-    const idx = Math.max(0, Math.min(3, o.stage - 1));
+    const idx = Math.max(0, Math.min(3, onset.stage - 1));
     markers.push({ x, color: CRISIS_STAGE_COLORS[idx], label: t(CRISIS_STAGE_LABELS[idx]) });
   }
   return { markers, firstOnset };
@@ -335,40 +320,40 @@ function buildCrisisMarkers(samples, offsets, boundaries, scopeAge) {
 /**
  * Build a metric cell head: the cost icon + the shared metric title (so titles
  * match the war graphs + the war-timeline tooltip).
- * @param {*} m The crisis graph metric.
+ * @param {*} metric The crisis graph metric.
  * @returns {HTMLElement}
  */
-function buildCellHead(m) {
+function buildCellHead(metric) {
   const head = document.createElement("div");
   head.className = "demographics-war-graph-cell-head";
-  if (m.blp) head.appendChild(buildCostIcon(m.blp));
+  if (metric.blp) head.appendChild(buildCostIcon(metric.blp));
   const title = document.createElement("span");
-  title.textContent = graphMetricTitle(m);
+  title.textContent = graphMetricTitle(metric);
   head.appendChild(title);
   return head;
 }
 
 /**
  * Build one metric cell: head, then the line chart (or a no-data note).
- * @param {*} m The crisis graph metric.
+ * @param {*} metric The crisis graph metric.
  * @param {*} history
  * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
  * @param {{ markers: *[], xDomain: * }} axis The shared markers + x-domain.
  * @returns {HTMLElement}
  */
-function buildCell(m, history, rosterMap, axis) {
+function buildCell(metric, history, rosterMap, axis) {
   const cell = document.createElement("div");
   cell.className = "demographics-war-graph-cell";
-  cell.appendChild(buildCellHead(m));
+  cell.appendChild(buildCellHead(metric));
   const chart = buildLineChartFromSeries(
     seriesFor(
-      m,
+      metric,
       history,
       rosterMap,
       axis.xDomain ? axis.xDomain.xMin : undefined,
       axis.xDomain ? axis.xDomain.xMax : undefined
     ),
-    m.yLabel,
+    metric.yLabel,
     axis.markers,
     axis.xDomain
   );
@@ -395,7 +380,7 @@ function buildFillerCell() {
 /**
  * Build one clickable legend item (swatch + name); clicking toggles that civ
  * across every graph and re-renders.
- * @param {{ key: string, name: string, color: string }} civ The roster entry.
+ * @param {{ key: string, name: string, color: string }} civ
  * @param {() => void} onChange Re-render callback.
  * @returns {HTMLElement}
  */
@@ -476,14 +461,14 @@ function renderInto(host, opts) {
   const history = opts.history || {};
   const roster = canonicalRoster(history);
   if (!roster.length) {
-    appendEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY"));
+    appendGraphsEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY"));
     return;
   }
   // Gate on a crisis actually having begun (as the "Stages" sub-tab does), or
   // the graphs would plot ordinary metric history as "crisis impact".
   const samples = Array.isArray(history.samples) ? history.samples : [];
   if (!crisisStageOnsets(samples).length) {
-    appendEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE"));
+    appendGraphsEmpty(host, t("LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE"));
     return;
   }
   pruneHiddenKeys(roster);
@@ -529,8 +514,8 @@ function buildCrisisPanel(host, opts, roster) {
 function buildCrisisGrid(history, rosterMap, axis) {
   const grid = document.createElement("div");
   grid.className = "demographics-war-graphs-grid";
-  for (const m of CRISIS_GRAPH_METRICS) {
-    grid.appendChild(buildCell(m, history, rosterMap, axis));
+  for (const metric of CRISIS_GRAPH_METRICS) {
+    grid.appendChild(buildCell(metric, history, rosterMap, axis));
   }
   const pad = (3 - (CRISIS_GRAPH_METRICS.length % 3)) % 3;
   for (let i = 0; i < pad; i++) grid.appendChild(buildFillerCell());

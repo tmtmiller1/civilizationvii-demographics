@@ -8,8 +8,8 @@
    render resolutions from 1280x720 to 3840x2160 and across window sizes. So `rem` does not track
    resolution: identical markup occupies ~1% of screen height at 1800p but ~2% at 720p, which is why
    the screen read as oversized and scroll-heavy at low resolutions. The viewport measures 44.4rem
-   tall at 720p and 133.3rem at 2160p, a 3x range, not the "~60rem at every design resolution" this
-   file used to assume. Every constant below is derived from that range.
+   tall at 720p and 133.3rem at 2160p, a 3x range, not a fixed ~60rem at every design resolution.
+   Every constant below is derived from that range.
 
    Two layers:
 
@@ -35,8 +35,8 @@
         Above 61rem the frame is drawn at exactly the reference proportions and needs no
         compaction; these tiers exist only to close the gap the readability floor leaves.
 
-        The old thresholds (53.9 / 43.9) came from the false 60rem premise: micro could never fire
-        at any real resolution, and compact only below 873px.
+        Thresholds derived from a fixed 60rem viewport (53.9 / 43.9) would never fire micro at any
+        real resolution, and would fire compact only below 873px.
 
    @media with rem units is supported and fires correctly. `matchMedia` does not exist in GameFace,
    so breakpoints cannot be queried from JS. Only spacing / font-size is touched, never the flex
@@ -45,7 +45,7 @@
 /* Floor active: viewport ≤ 78rem (1920x1200 down to 720p)
    The visual scale is pinned at its 0.7 floor once the viewport is under 1260px (77.8rem), so from
    here down the inner layout is shorter than the reference and the top-3 podium loses its third
-   card (2 of 3 at 1920x1080 and 1600x900 with the old 61rem threshold). The podium must
+   card (2 of 3 at 1920x1080 and 1600x900 with a 61rem threshold). The podium must
    show all three at every resolution, so its compaction starts exactly where the floor does. */
 @media (max-height: 78rem) {
     .demographics-screen .demographics-settle-section-fil {
@@ -410,12 +410,10 @@
    value, so nothing changes at the reference and everything eases with the
    viewport elsewhere.
 
-   This replaces a clamp(floor, K·vh, canonical) layer that never executed:
-   GameFace drops clamp() silently, so every one of these rules was inert at
-   every resolution, and its K constants assumed a ~60rem viewport that does not
-   occur. The readability floor that clamp's first argument used to provide now
-   lives in the JS scale bounds (MIN_TYPE_SCALE / MIN_BOX_SCALE), applied once for the whole screen
-   instead of per declaration. */
+   No clamp(floor, K·vh, canonical) here: GameFace drops clamp() silently, so such
+   a rule is inert at every resolution. The readability floor lives in the JS
+   scale bounds (MIN_TYPE_SCALE / MIN_BOX_SCALE), applied once for the whole
+   screen instead of per declaration. */
 
 /* Shared section cards (used by every non-history view) */
 .demographics-screen .demographics-section {
@@ -453,7 +451,7 @@
    (not calc and not a two-arg var fallback; Coherent's parser rejects both).
 
    The defaults these fall back to are declared once, for both screens, in
-   screen-demographics-history.css; this sheet used to carry a second copy of the whole ladder. */
+   screen-demographics-history.css. */
 .demographics-screen .demographics-worldrankings-allcivs-civ-header-leader {
     font-size: var(--dg-fs-lead);
 }

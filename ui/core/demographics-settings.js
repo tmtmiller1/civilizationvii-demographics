@@ -12,6 +12,8 @@
 //   DemographicsSettings.getSetting(key, dflt)   → any
 //   DemographicsSettings.setSetting(key, value)  → also persists
 
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
 /**
  * The known settings keys (mirroring {@link DEFAULTS}).
  * @typedef {Object} SettingsShape
@@ -39,19 +41,7 @@
  * @typedef {Record<string, SettingsBucket>} SettingsRoot
  */
 
-const DBG = false;
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.settings]", ...a);
-}
-/**
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.settings]", ...a);
-}
+const log = makeLogger("settings");
 
 const MOD_ID = "demographics";
 const ROOT_KEY = "modSettings";
@@ -94,9 +84,8 @@ const DEFAULTS = {
   // "met-civs-only", "full". A multiplayer host can cap it via a GameConfiguration
   // ceiling (demographics-governance.js); the effective policy is the more restrictive.
   analyticsPolicy: "met-civs-only",
-  // Progressive-disclosure profile: "basic" (core stat pages only),
-  // "standard" (all pages/tabs, advanced tuning hidden; the default), or
-  // "analyst" (everything, including storage/sampling controls).
+  // Progressive-disclosure profile: "basic" (core stat pages only) or
+  // "standard" (all pages and tabs; the default).
   uiComplexity: "standard",
   // What the line chart shows for a civ after you meet it, when hideUnmetStats
   // is on: true reveals the civ's entire history once met; false reveals only
@@ -126,28 +115,28 @@ const SCHEMA = {
 
 /**
  * Coerce a value to a clamped integer, or undefined when non-numeric.
- * @param {*} v
+ * @param {*} value
  * @param {{ min?: number, max?: number }} spec
  * @returns {number|undefined}
  */
-function coerceInt(v, spec) {
-  const n = typeof v === "number" ? v : Number(v);
-  if (!Number.isFinite(n)) return undefined;
-  let i = Math.round(n);
-  if (typeof spec.min === "number") i = Math.max(spec.min, i);
-  if (typeof spec.max === "number") i = Math.min(spec.max, i);
-  return i;
+function coerceInt(value, spec) {
+  const num = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(num)) return undefined;
+  let int = Math.round(num);
+  if (typeof spec.min === "number") int = Math.max(spec.min, int);
+  if (typeof spec.max === "number") int = Math.min(spec.max, int);
+  return int;
 }
 
 /**
  * Coerce the sample-cap override: "auto", or a finite number (-1 = unlimited).
- * @param {*} v
+ * @param {*} value
  * @returns {string|number|undefined}
  */
-function coerceCapOverride(v) {
-  if (v === "auto") return "auto";
-  const n = typeof v === "number" ? v : Number(v);
-  return Number.isFinite(n) ? n : undefined;
+function coerceCapOverride(value) {
+  if (value === "auto") return "auto";
+  const num = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(num) ? num : undefined;
 }
 
 /** @type {Record<string, (v: *, spec: *) => *>} */
@@ -172,7 +161,7 @@ function repairBucket(bucket) {
     const validate = TYPE_VALIDATORS[SCHEMA[key].type];
     const repaired = validate ? validate(bucket[key], SCHEMA[key]) : bucket[key];
     if (repaired === undefined) {
-      derr("settings: '" + key + "' invalid (" + typeof bucket[key] + "); reset to default");
+      log.error("settings: '" + key + "' invalid (" + typeof bucket[key] + "); reset to default");
       bucket[key] = DEFAULTS[key];
     } else {
       bucket[key] = repaired;
@@ -228,10 +217,10 @@ function sliceToPersist(bucket) {
   const merged = normalizeSlice(bucket);
   /** @type {SettingsBucket} */
   const slice = {};
-  for (const k of Object.keys(merged)) {
-    if (k === SCHEMA_KEY) continue;
-    const matchesDefault = k in DEFAULTS && JSON.stringify(merged[k]) === JSON.stringify(DEFAULTS[k]);
-    if (!matchesDefault) slice[k] = merged[k];
+  for (const key of Object.keys(merged)) {
+    if (key === SCHEMA_KEY) continue;
+    const matchesDefault = key in DEFAULTS && JSON.stringify(merged[key]) === JSON.stringify(DEFAULTS[key]);
+    if (!matchesDefault) slice[key] = merged[key];
   }
   const stamped = merged[SCHEMA_KEY];
   slice[SCHEMA_KEY] =
@@ -250,7 +239,7 @@ function safeCall(fn, fallback) {
   try {
     return fn();
   } catch (e) {
-    derr("safeCall:", e);
+    log.error("safeCall:", e);
     return /** @type {T} */ (fallback);
   }
 }
@@ -289,7 +278,7 @@ function readRoot() {
   } catch (_e) {
     if (!_rootParseWarned) {
       _rootParseWarned = true;
-      derr(
+      log.error(
         "shared '" +
           ROOT_KEY +
           "' localStorage value is not valid JSON (likely written by another " +
@@ -358,9 +347,9 @@ function verifyWrite() {
  */
 function looksLikeSettingsRoot(parsed) {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
-  return Object.keys(parsed).every((k) => {
-    const v = parsed[k];
-    return !!v && typeof v === "object" && !Array.isArray(v);
+  return Object.keys(parsed).every((key) => {
+    const value = parsed[key];
+    return !!value && typeof value === "object" && !Array.isArray(value);
   });
 }
 
@@ -376,8 +365,8 @@ const READ_THREW = Symbol("read-threw");
  */
 function readRawRoot() {
   try {
-    const v = localStorage.getItem(ROOT_KEY);
-    return typeof v === "string" ? v : null;
+    const raw = localStorage.getItem(ROOT_KEY);
+    return typeof raw === "string" ? raw : null;
   } catch (_e) {
     // getItem can throw in some Coherent UI contexts; the caller must not treat this as empty.
     return READ_THREW;
@@ -389,8 +378,8 @@ function readRawRoot() {
  * @returns {number} -1 when unknown.
  */
 function storeRowCount() {
-  const n = safeCall(() => localStorage.length, -1);
-  return typeof n === "number" ? n : -1;
+  const rows = safeCall(() => localStorage.length, -1);
+  return typeof rows === "number" ? rows : -1;
 }
 
 /**
@@ -405,9 +394,9 @@ function emptyReadIsAbsentKey() {
   if (rows <= 0) return true;
   return safeCall(() => {
     for (let i = 0; i < rows; i += 1) {
-      const k = localStorage.key(i);
-      if (k === ROOT_KEY) return false;
-      if (k === null || k === undefined) return false; // cannot enumerate: 1.5.0 behavior
+      const key = localStorage.key(i);
+      if (key === ROOT_KEY) return false;
+      if (key === null || key === undefined) return false; // cannot enumerate: 1.5.0 behavior
     }
     return true;
   }, false);
@@ -430,7 +419,7 @@ function disablePersistence(reason, status = "read-failed") {
   if (!_persistDisabled) {
     _persistDisabled = reason;
     _persistStatus = status;
-    derr(
+    log.error(
       "persistence disabled for this session (" +
         reason +
         "); settings are kept in memory so no other mod's data is overwritten."
@@ -463,7 +452,7 @@ function readRootForWrite() {
   if (!looksLikeSettingsRoot(parsed)) {
     if (!_foreignRootWarned) {
       _foreignRootWarned = true;
-      derr(
+      log.error(
         "read of '" +
           ROOT_KEY +
           "' returned a value that is not a settings root (Coherent's getItem " +
@@ -501,7 +490,7 @@ function parseRootForWrite(raw) {
     // siblings are present but unparseable; overwriting would destroy them
     if (!_clobberGuardWarned) {
       _clobberGuardWarned = true;
-      derr(
+      log.error(
         "shared '" +
           ROOT_KEY +
           "' is present but not valid JSON; skipping persistence this session so " +
@@ -575,12 +564,12 @@ function purgeStrayTopLevelKeys() {
     /** @type {string[]} */
     const stray = [];
     for (let i = 0; i < localStorage.length; i += 1) {
-      const k = localStorage.key(i);
-      if (typeof k === "string" && k !== ROOT_KEY && STRAY_KEY_RE.test(k)) stray.push(k);
+      const key = localStorage.key(i);
+      if (typeof key === "string" && key !== ROOT_KEY && STRAY_KEY_RE.test(key)) stray.push(key);
     }
-    for (const k of stray) {
-      localStorage.removeItem(k);
-      derr("purged stray demographics localStorage key: " + k);
+    for (const key of stray) {
+      localStorage.removeItem(key);
+      log.error("purged stray demographics localStorage key: " + key);
     }
   });
 }
@@ -600,7 +589,7 @@ function purgeStrayTopLevelKeys() {
       delete memoryBucket[SCHEMA_KEY]; // keep the schema marker out of the settings keyspace
     }
   } catch (e) {
-    derr("_seedMemoryFromStorage:", e);
+    log.error("_seedMemoryFromStorage:", e);
   }
 })();
 
@@ -634,8 +623,8 @@ export const DemographicsSettings = {
    * @returns {*}
    */
   getSetting(key, dflt) {
-    const s = this.getSettings();
-    return key in s ? s[key] : dflt !== undefined ? dflt : DEFAULTS[key];
+    const settings = this.getSettings();
+    return key in settings ? settings[key] : dflt !== undefined ? dflt : DEFAULTS[key];
   },
   /**
    * @param {string} key
@@ -668,7 +657,7 @@ export const DemographicsSettings = {
         writeRoot(root);
       }
     }
-    dlog("setSettings", Object.keys(entries).join(","));
+    log.debug("setSettings", Object.keys(entries).join(","));
   },
   /**
    * This mod's slice as it would be stored, for a caller that is writing the shared root itself.
@@ -699,5 +688,5 @@ export const DemographicsSettings = {
   }
 };
 
-dlog("settings module loaded; hasLocalStorage=", hasLocalStorage());
+log.debug("settings module loaded; hasLocalStorage=", hasLocalStorage());
 export default DemographicsSettings;

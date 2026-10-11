@@ -1,20 +1,21 @@
 import assert from "node:assert/strict";
 
-import { createFakeDocument } from "./_dom-stub.mjs";
+import { captureErrors, createFakeDocument, findByClass } from "./_dom-stub.mjs";
+import { snapshotGlobals } from "./_engine-stubs.mjs";
 
-const saved = {
-  document: globalThis.document,
-  window: globalThis.window,
-  requestAnimationFrame: globalThis.requestAnimationFrame,
-  setTimeout: globalThis.setTimeout,
-  Locale: globalThis.Locale,
-  Configuration: globalThis.Configuration,
-  Game: globalThis.Game,
-  GameContext: globalThis.GameContext,
-  Players: globalThis.Players,
-  UI: globalThis.UI,
-  GameInfo: globalThis.GameInfo
-};
+const restoreGlobals = snapshotGlobals([
+  "document",
+  "window",
+  "requestAnimationFrame",
+  "setTimeout",
+  "Locale",
+  "Configuration",
+  "Game",
+  "GameContext",
+  "Players",
+  "UI",
+  "GameInfo"
+]);
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -96,8 +97,32 @@ function buildHistory() {
         gameYear: "4000 BCE",
         age: "AGE_ANTIQUITY",
         players: {
-          "1": { metrics: { milpower: 100, cityWarNetCum: 0, razedCum: 0, warLandCum: 0, populationRaw: 30, crops: 12, production: 10, warProdCum: 2, unitsLostCum: 0 } },
-          "2": { metrics: { milpower: 95, cityWarNetCum: 0, razedCum: 0, warLandCum: 0, populationRaw: 28, crops: 11, production: 9, warProdCum: 1, unitsLostCum: 0 } }
+          1: {
+            metrics: {
+              milpower: 100,
+              cityWarNetCum: 0,
+              razedCum: 0,
+              warLandCum: 0,
+              populationRaw: 30,
+              crops: 12,
+              production: 10,
+              warProdCum: 2,
+              unitsLostCum: 0
+            }
+          },
+          2: {
+            metrics: {
+              milpower: 95,
+              cityWarNetCum: 0,
+              razedCum: 0,
+              warLandCum: 0,
+              populationRaw: 28,
+              crops: 11,
+              production: 9,
+              warProdCum: 1,
+              unitsLostCum: 0
+            }
+          }
         }
       },
       {
@@ -106,8 +131,34 @@ function buildHistory() {
         gameYear: "3900 BCE",
         age: "AGE_EXPLORATION",
         players: {
-          "1": { metrics: { milpower: 90, milLostCum: 10, cityWarNetCum: 1, razedCum: 0, warLandCum: 2, populationRaw: 29, crops: 10, production: 8, warProdCum: 4, unitsLostCum: 1 } },
-          "2": { metrics: { milpower: 80, milLostCum: 15, cityWarNetCum: -1, razedCum: 1, warLandCum: -2, populationRaw: 25, crops: 9, production: 7, warProdCum: 3, unitsLostCum: 2 } }
+          1: {
+            metrics: {
+              milpower: 90,
+              milLostCum: 10,
+              cityWarNetCum: 1,
+              razedCum: 0,
+              warLandCum: 2,
+              populationRaw: 29,
+              crops: 10,
+              production: 8,
+              warProdCum: 4,
+              unitsLostCum: 1
+            }
+          },
+          2: {
+            metrics: {
+              milpower: 80,
+              milLostCum: 15,
+              cityWarNetCum: -1,
+              razedCum: 1,
+              warLandCum: -2,
+              populationRaw: 25,
+              crops: 9,
+              production: 7,
+              warProdCum: 3,
+              unitsLostCum: 2
+            }
+          }
         }
       },
       {
@@ -116,8 +167,34 @@ function buildHistory() {
         gameYear: "3800 BCE",
         age: "AGE_EXPLORATION",
         players: {
-          "1": { metrics: { milpower: 85, milLostCum: 18, cityWarNetCum: 1, razedCum: 1, warLandCum: 2, populationRaw: 28, crops: 9, production: 7, warProdCum: 6, unitsLostCum: 2 } },
-          "2": { metrics: { milpower: 70, milLostCum: 28, cityWarNetCum: -1, razedCum: 2, warLandCum: -3, populationRaw: 22, crops: 8, production: 6, warProdCum: 4, unitsLostCum: 4 } }
+          1: {
+            metrics: {
+              milpower: 85,
+              milLostCum: 18,
+              cityWarNetCum: 1,
+              razedCum: 1,
+              warLandCum: 2,
+              populationRaw: 28,
+              crops: 9,
+              production: 7,
+              warProdCum: 6,
+              unitsLostCum: 2
+            }
+          },
+          2: {
+            metrics: {
+              milpower: 70,
+              milLostCum: 28,
+              cityWarNetCum: -1,
+              razedCum: 2,
+              warLandCum: -3,
+              populationRaw: 22,
+              crops: 8,
+              production: 6,
+              warProdCum: 4,
+              unitsLostCum: 4
+            }
+          }
         }
       }
     ],
@@ -131,42 +208,11 @@ function buildHistory() {
         endChartTurn: 3,
         startYear: "4000 BCE",
         endYear: "3800 BCE",
-        sideACivs: [
-          { pid: 1, civ: "Rome", leader: "A", color: "#225588", isCS: false }
-        ],
-        sideBCivs: [
-          { pid: 2, civ: "Han", leader: "B", color: "#884422", isCS: false }
-        ]
+        sideACivs: [{ pid: 1, civ: "Rome", leader: "A", color: "#225588", isCS: false }],
+        sideBCivs: [{ pid: 2, civ: "Han", leader: "B", color: "#884422", isCS: false }]
       }
     ]
   };
-}
-
-function findByClass(root, cls) {
-  const queue = [root];
-  while (queue.length > 0) {
-    const cur = queue.shift();
-    if (typeof cur.className === "string" && cur.className.split(/\s+/).includes(cls)) return cur;
-    queue.push(...(cur.children || []));
-  }
-  return null;
-}
-
-/**
- * Capture console.error lines emitted while `fn` runs.
- * @param {() => void} fn The body.
- * @returns {string[]} The first argument of each console.error call.
- */
-function captureErrors(fn) {
-  const lines = [];
-  const orig = console.error;
-  console.error = (...a) => lines.push(String(a[0]));
-  try {
-    fn();
-  } finally {
-    console.error = orig;
-  }
-  return lines;
 }
 
 function testNullPersistedElements() {
@@ -266,9 +312,9 @@ function testConflictsRenderIntegration() {
 
 /**
  * The crisis labels get a band of their own at the top of the plot, so the first war bar starts
- * below them. Before this the labels were drawn over the first two bars and only cleared their
- * names at the reference resolution, where the names happen to be short (720p regression,
- * 2026-09-23). Checked on the layout rather than on mounted rects: the DOM stub has no text metrics.
+ * below them. Without it the labels draw over the first two bars, which only looks right at the
+ * reference resolution, where the names happen to be short (at 720p they collide). Checked on the
+ * layout rather than on mounted rects: the DOM stub has no text metrics.
  */
 async function testCrisisBandClearsTheBars() {
   const { buildGanttLayout, crisisBandHeight, CRISIS_LABEL_ROWS } = await import(
@@ -304,15 +350,5 @@ try {
   testGanttHoverIsGuarded();
   console.log("conflicts-render-integration harness passed");
 } finally {
-  globalThis.document = saved.document;
-  globalThis.window = saved.window;
-  globalThis.requestAnimationFrame = saved.requestAnimationFrame;
-  globalThis.setTimeout = saved.setTimeout;
-  globalThis.Locale = saved.Locale;
-  globalThis.Configuration = saved.Configuration;
-  globalThis.Game = saved.Game;
-  globalThis.GameContext = saved.GameContext;
-  globalThis.Players = saved.Players;
-  globalThis.UI = saved.UI;
-  globalThis.GameInfo = saved.GameInfo;
+  restoreGlobals();
 }

@@ -1532,17 +1532,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="ko_KR">
             <Text>표준</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="ko_KR">
-            <Text>분석가</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="ko_KR">
             <Text>핵심 통계 페이지만 표시되며 고급 그래프, 관계 네트워크, 조정 컨트롤은 숨겨집니다.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="ko_KR">
             <Text>모든 그래프와 탭이 표시되며 고급 저장 및 샘플링 컨트롤은 숨겨진 상태로 유지됩니다.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="ko_KR">
-            <Text>저장 한도, 데시메이션, 샘플링 속도를 포함한 모든 항목.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="ko_KR">
             <Text>시대 업적 진행도: 각 문명의 유산 경로 레이더.</Text>
@@ -1601,7 +1595,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ko_KR"><Text>각 불가사의가 완성된 턴을 기록 그래프 선에 표시합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="ko_KR"><Text>각 전쟁이 시작된 턴을 Emigration 난민 그래프에 표시합니다. 연동 모드 Emigration이 필요합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="ko_KR"><Text>각 재해가 발생한 턴을 Emigration 난민 그래프에 표시합니다. 연동 모드 Emigration이 필요합니다.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ko_KR"><Text>화면에 얼마나 표시할지 설정합니다. 기본은 핵심 통계 페이지만, 표준은 모든 그래프와 탭을 추가하고, 분석가는 저장, 데시메이션, 샘플링 속도 설정까지 표시합니다.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ko_KR"><Text>화면에 얼마나 표시할지 설정합니다. 기본은 핵심 통계 페이지만, 표준은 모든 그래프와 탭을 추가합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="ko_KR"><Text>기록 선을 3턴 이동 평균으로 그려 추세를 더 명확하게 보여줍니다. 원본 데이터는 바뀌지 않습니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="ko_KR"><Text>멸망한 문명을 제거하지 않고 그래프와 순위에 계속 표시합니다.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="ko_KR"><Text>주요 도시 목록에서 정착지를 카메라로 훑는 시네마틱 보기 버튼을 활성화합니다.</Text></Replace>
@@ -1940,6 +1934,12 @@
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="ko_KR">
             <Text>칭호</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="ko_KR">
+            <Text>“{1_Title}”</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="ko_KR">
+            <Text>(칭호: “{1_Title}”)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="ko_KR">
             <Text>결과</Text>

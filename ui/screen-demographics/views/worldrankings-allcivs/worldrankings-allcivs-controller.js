@@ -8,23 +8,9 @@ import {
   buildLabelColumn,
   syncLabelResetButton
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-const DBG = false;
-/**
- * Debug logger, no-op unless `DBG` is set.
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.view-worldrankings-allcivs]", ...a);
-}
-
-/**
- * Error logger (always emits).
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.view-worldrankings-allcivs]", ...a);
-}
+const log = makeLogger("view-worldrankings-allcivs");
 
 /** @typedef {import("./worldrankings-allcivs-profiles.js").CivProfile} CivProfile */
 /** @typedef {import("./worldrankings-allcivs-profiles.js").WorldRankingsAllCivsCtx} AllCivsCtx */
@@ -57,21 +43,21 @@ function derr(...a) {
 /**
  * Whether `pid` should be masked as unmet. Defensive: only mask when `met` is
  * EXPLICITLY false.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  * @param {string} pid
- * @returns {boolean} True when the civ should be masked.
+ * @returns {boolean}
  */
-export function stripIsUnmet(st, pid) {
-  if (st.showUnmetNames) return false;
-  if (pid === st.localPid) return false;
-  const p = st.profiles[pid];
-  return !!(p && p.met === false);
+export function stripIsUnmet(state, pid) {
+  if (state.showUnmetNames) return false;
+  if (pid === state.localPid) return false;
+  const profile = state.profiles[pid];
+  return !!(profile && profile.met === false);
 }
 
 /**
  * Read the persisted hidden-civ set, defensively, into a string `Set`.
  * @param {AllCivsCtx} ctx
- * @returns {Set<string>} The persisted hidden pids (empty on any error).
+ * @returns {Set<string>} Empty on any error.
  */
 export function readHiddenCivs(ctx) {
   try {
@@ -86,55 +72,55 @@ export function readHiddenCivs(ctx) {
 
 /**
  * Persist the current hidden-civ set, defensively.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  */
-export function saveHiddenCivs(st) {
+export function saveHiddenCivs(state) {
   try {
-    st.ctx.settings?.setSetting?.("worldRankingsAllCivsHiddenCivs", Array.from(st.hiddenCivs));
+    state.ctx.settings?.setSetting?.("worldRankingsAllCivsHiddenCivs", Array.from(state.hiddenCivs));
   } catch (_) {
     // settings.setSetting("worldRankingsAllCivsHiddenCivs") persistence is best-effort;
-    // st.hiddenCivs already holds the live set for this session.
+    // state.hiddenCivs already holds the live set for this session.
   }
 }
 
 /**
  * Toggle one civ's hidden state, persist, and re-render the strip.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  * @param {string} pid
  */
-export function toggleCiv(st, pid) {
-  const k = String(pid);
-  if (st.hiddenCivs.has(k)) st.hiddenCivs.delete(k);
-  else st.hiddenCivs.add(k);
-  saveHiddenCivs(st);
-  updateStripColumns(st, [k]);
+export function toggleCiv(state, pid) {
+  const key = String(pid);
+  if (state.hiddenCivs.has(key)) state.hiddenCivs.delete(key);
+  else state.hiddenCivs.add(key);
+  saveHiddenCivs(state);
+  updateStripColumns(state, [key]);
 }
 
 /**
  * Clear all hidden civs, persist, and restore their columns.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  */
-export function resetHidden(st) {
+export function resetHidden(state) {
   // Only the columns that were hidden change shape (ghost → full); the rest are left alone.
-  const wasHidden = Array.from(st.hiddenCivs);
-  st.hiddenCivs.clear();
-  saveHiddenCivs(st);
-  updateStripColumns(st, wasHidden);
+  const wasHidden = Array.from(state.hiddenCivs);
+  state.hiddenCivs.clear();
+  saveHiddenCivs(state);
+  updateStripColumns(state, wasHidden);
 }
 
 /**
  * The non-local pids in display order: visible civs first (in the sorted order), then the hidden
  * ones as thin "ghost" columns at the far right.
- * @param {StripState} st The strip state.
- * @returns {string[]} The ordered pids.
+ * @param {StripState} state
+ * @returns {string[]}
  */
-function orderedOtherPids(st) {
+function orderedOtherPids(state) {
   /** @type {string[]} */
   const visible = [];
   /** @type {string[]} */
   const hidden = [];
-  for (const pid of st.otherPids) {
-    if (st.hiddenCivs.has(String(pid))) hidden.push(String(pid));
+  for (const pid of state.otherPids) {
+    if (state.hiddenCivs.has(String(pid))) hidden.push(String(pid));
     else visible.push(String(pid));
   }
   return visible.concat(hidden);
@@ -145,73 +131,73 @@ function orderedOtherPids(st) {
  * new places, and update the label column's reset button. Every untouched column keeps its
  * element, and therefore its already-resolved portrait, so nothing blinks. Falls back to a full
  * strip render if anything throws, so a failed update cannot leave a half-built strip.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  * @param {string[]} pids The pids whose columns must be rebuilt.
  */
-function updateStripColumns(st, pids) {
+function updateStripColumns(state, pids) {
   try {
-    const ordered = orderedOtherPids(st);
-    for (const pid of pids) rebuildOneColumn(st, String(pid), ordered);
-    reconcileStripOrder(st, ordered);
-    if (st.labelCol) {
-      syncLabelResetButton(st.labelCol, {
-        hiddenCount: st.hiddenCivs.size,
-        onReset: () => resetHidden(st)
+    const ordered = orderedOtherPids(state);
+    for (const pid of pids) rebuildOneColumn(state, String(pid), ordered);
+    reconcileStripOrder(state, ordered);
+    if (state.labelCol) {
+      syncLabelResetButton(state.labelCol, {
+        hiddenCount: state.hiddenCivs.size,
+        onReset: () => resetHidden(state)
       });
     }
   } catch (e) {
-    derr("strip column update failed, falling back to a full render:", e);
-    renderStrip(st);
+    log.error("strip column update failed, falling back to a full render:", e);
+    renderStrip(state);
   }
 }
 
 /**
  * Replace one civ's column with a freshly built one at its new position.
- * @param {StripState} st The strip state.
- * @param {string} pid The pid to rebuild.
+ * @param {StripState} state
+ * @param {string} pid
  * @param {string[]} ordered The target pid order.
  */
-function rebuildOneColumn(st, pid, ordered) {
-  const prior = st.cols.get(pid);
-  if (prior && prior.parentNode === st.strip) st.strip.removeChild(prior);
-  const col = buildOtherColumn(st, pid);
-  st.cols.set(pid, col);
+function rebuildOneColumn(state, pid, ordered) {
+  const prior = state.cols.get(pid);
+  if (prior && prior.parentNode === state.strip) state.strip.removeChild(prior);
+  const col = buildOtherColumn(state, pid);
+  state.cols.set(pid, col);
   const at = ordered.indexOf(pid);
-  const next = at >= 0 ? st.cols.get(ordered[at + 1]) : undefined;
-  if (next && next.parentNode === st.strip) st.strip.insertBefore(col, next);
-  else st.strip.appendChild(col);
+  const next = at >= 0 ? state.cols.get(ordered[at + 1]) : undefined;
+  if (next && next.parentNode === state.strip) state.strip.insertBefore(col, next);
+  else state.strip.appendChild(col);
 }
 
 /**
  * Put every civ column in `ordered`'s order, moving only the ones that are out of place. Moving
  * an element is not rebuilding it, so this cannot cause the blink a rebuild does.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  * @param {string[]} ordered The target pid order.
  */
-function reconcileStripOrder(st, ordered) {
+function reconcileStripOrder(state, ordered) {
   for (let i = 0; i < ordered.length; i++) {
-    const want = st.cols.get(ordered[i]);
-    if (!want) continue;
-    const at = st.strip.children[st.head + i];
-    if (at !== want) st.strip.insertBefore(want, at || null);
+    const column = state.cols.get(ordered[i]);
+    if (!column) continue;
+    const occupant = state.strip.children[state.head + i];
+    if (occupant !== column) state.strip.insertBefore(column, occupant || null);
   }
 }
 
 /**
  * Build one non-local civ column (ghost or full) and wire its header click.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  * @param {string} pid
  * @returns {HTMLElement}
  */
-export function buildOtherColumn(st, pid) {
-  const isHidden = st.hiddenCivs.has(String(pid));
+export function buildOtherColumn(state, pid) {
+  const isHidden = state.hiddenCivs.has(String(pid));
   const headerOpts = {
     visible: !isHidden,
-    onToggle: () => toggleCiv(st, pid)
+    onToggle: () => toggleCiv(state, pid)
   };
   const col = isHidden
-    ? buildGhostCivColumn(st.profiles[pid], stripIsUnmet(st, pid), headerOpts)
-    : buildCivColumn(st.profiles[pid], st.profiles, false, stripIsUnmet(st, pid), headerOpts);
+    ? buildGhostCivColumn(state.profiles[pid], stripIsUnmet(state, pid), headerOpts)
+    : buildCivColumn(state.profiles[pid], state.profiles, false, stripIsUnmet(state, pid), headerOpts);
   const header = /** @type {HTMLElement|null} */ (
     col.querySelector(".demographics-worldrankings-allcivs-civ-header")
   );
@@ -222,8 +208,8 @@ export function buildOtherColumn(st, pid) {
       : t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE");
     header.addEventListener("click", () => {
       safePlaySound("data-audio-checkbox-press", "audio-screen-unlocks");
-      dlog("worldrankings-allcivs header click pid=" + pid, "wasHidden=" + isHidden);
-      toggleCiv(st, pid);
+      log.debug("worldrankings-allcivs header click pid=" + pid, "wasHidden=" + isHidden);
+      toggleCiv(state, pid);
     });
   }
   return col;
@@ -231,23 +217,23 @@ export function buildOtherColumn(st, pid) {
 
 /**
  * Append the label column (1) and sticky local-player column (2) to the strip.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  */
-export function appendStickyColumns(st) {
+export function appendStickyColumns(state) {
   // Column 1: metric labels (sticky-left).
   const labelCol = buildLabelColumn({
-    hiddenCount: st.hiddenCivs.size,
-    onReset: () => resetHidden(st)
+    hiddenCount: state.hiddenCivs.size,
+    onReset: () => resetHidden(state)
   });
   labelCol.classList.add("demographics-worldrankings-allcivs-col-sticky");
-  st.labelCol = labelCol;
-  st.strip.appendChild(labelCol);
+  state.labelCol = labelCol;
+  state.strip.appendChild(labelCol);
 
   // Column 2: local player (sticky-left, never hidable).
-  const localCol = buildCivColumn(st.profiles[st.localPid], st.profiles, true, false);
+  const localCol = buildCivColumn(state.profiles[state.localPid], state.profiles, true, false);
   localCol.classList.add("demographics-worldrankings-allcivs-col-sticky-2");
-  st.strip.appendChild(localCol);
-  st.head = st.strip.children.length;
+  state.strip.appendChild(localCol);
+  state.head = state.strip.children.length;
 }
 
 /**
@@ -255,31 +241,31 @@ export function appendStickyColumns(st) {
  * (adjacent to the local column) and hidden ghost columns at the far right. The
  * header clicks and reset button re-render through here, so it is their throw
  * boundary: a throwing column builder leaves the "render failed" notice.
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  */
-export function renderStrip(st) {
-  while (st.strip.firstChild) st.strip.removeChild(st.strip.firstChild);
+export function renderStrip(state) {
+  while (state.strip.firstChild) state.strip.removeChild(state.strip.firstChild);
   try {
-    appendStripColumns(st);
+    appendStripColumns(state);
   } catch (e) {
-    appendRenderFailed(st.strip, "renderStrip", e);
+    appendRenderFailed(state.strip, "renderStrip", e);
   }
 }
 
 /**
  * Append every strip column to the (already cleared) strip (see `renderStrip`).
- * @param {StripState} st The strip state.
+ * @param {StripState} state
  */
-function appendStripColumns(st) {
-  st.cols.clear();
-  appendStickyColumns(st);
+function appendStripColumns(state) {
+  state.cols.clear();
+  appendStickyColumns(state);
 
   // Columns 3+: visible civs first (preserve sort), then any hidden
   // ones pushed to the far right as thin "ghost" columns.
-  for (const pid of orderedOtherPids(st)) {
-    const col = buildOtherColumn(st, pid);
-    st.cols.set(pid, col);
-    st.strip.appendChild(col);
+  for (const pid of orderedOtherPids(state)) {
+    const col = buildOtherColumn(state, pid);
+    state.cols.set(pid, col);
+    state.strip.appendChild(col);
   }
 }
 
@@ -288,7 +274,7 @@ function appendStripColumns(st) {
  * re-render entry point. Owns the per-civ visibility set, which persists in
  * `modSettings.demographics.worldRankingsAllCivsHiddenCivs` as an array of pid strings;
  * the local player is never hidden.
- * @param {HTMLElement} strip The strip container to populate.
+ * @param {HTMLElement} strip
  * @param {Record<string, CivProfile>} profiles
  * @param {{ localPid: string, otherPids: string[] }} pids The local-column pid
  *   and the sorted non-local pids.
@@ -298,7 +284,7 @@ function appendStripColumns(st) {
  */
 export function mountWorldRankingsAllCivsStrip(strip, profiles, pids, ctx, showUnmetNames) {
   /** @type {StripState} */
-  const st = {
+  const state = {
     strip,
     profiles,
     localPid: pids.localPid,
@@ -310,6 +296,6 @@ export function mountWorldRankingsAllCivsStrip(strip, profiles, pids, ctx, showU
     labelCol: null,
     head: 0
   };
-  renderStrip(st);
-  return { render: () => renderStrip(st) };
+  renderStrip(state);
+  return { render: () => renderStrip(state) };
 }

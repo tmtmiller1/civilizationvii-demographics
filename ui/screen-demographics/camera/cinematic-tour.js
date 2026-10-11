@@ -34,12 +34,11 @@ const CLUTTER_LAYERS = [
 ];
 
 /** @type {*} */
-let lens_mgr = null;
+let lensManager = null;
 import("/core/ui/lenses/lens-manager.js")
   .then((mod) => {
     const loaded = /** @type {*} */ (mod);
-    lens_mgr =
-      (loaded && (loaded.default || loaded.LensManager || loaded)) || null;
+    lensManager = (loaded && (loaded.default || loaded.LensManager || loaded)) || null;
   })
   .catch(() => {
     // lens-manager unavailable in this context; overlays will not be hidden
@@ -130,9 +129,9 @@ export function popShotCamera(holder) {
 export function layerOn(name) {
   try {
     return (
-      !!lens_mgr &&
-      typeof lens_mgr.isLayerEnabled === "function" &&
-      !!lens_mgr.isLayerEnabled(name)
+      !!lensManager &&
+      typeof lensManager.isLayerEnabled === "function" &&
+      !!lensManager.isLayerEnabled(name)
     );
   } catch (_) {
     return false;
@@ -146,11 +145,11 @@ export function layerOn(name) {
 export function hideClutterLayers() {
   /** @type {string[]} */
   const hidden = [];
-  if (!lens_mgr || typeof lens_mgr.disableLayer !== "function") return hidden;
+  if (!lensManager || typeof lensManager.disableLayer !== "function") return hidden;
   for (const name of CLUTTER_LAYERS) {
     if (layerOn(name)) hidden.push(name);
     try {
-      lens_mgr.disableLayer(name);
+      lensManager.disableLayer(name);
     } catch (_) {
       // an unknown layer should not abort the rest
     }
@@ -163,10 +162,10 @@ export function hideClutterLayers() {
  * @param {string[]} names
  */
 export function restoreClutterLayers(names) {
-  if (!lens_mgr || typeof lens_mgr.enableLayer !== "function") return;
+  if (!lensManager || typeof lensManager.enableLayer !== "function") return;
   for (const name of names || []) {
     try {
-      lens_mgr.enableLayer(name);
+      lensManager.enableLayer(name);
     } catch (_) {
       // ignore a single-layer restore failure
     }
@@ -277,7 +276,7 @@ export function cityEstablishCaption(target, role) {
 /**
  * @param {{x: number, y: number}} plot
  * @param {number} angle
- * @param {number} duration Seconds. Shot duration in seconds.
+ * @param {number} duration Shot duration in seconds.
  * @param {*} [caption] Optional caption.
  * @returns {*}
  */
@@ -297,15 +296,15 @@ export function obliqueShot(plot, angle, duration, caption) {
 
 /**
  * Build a two-shot POI vignette: an approach fly-past, then an orbit that centers on the POI.
- * The approach carries a neutral city interstitial (`approachCap`), never the POI name, so the
+ * The approach carries a neutral city interstitial (`approachCaption`), never the POI name, so the
  * fly-past can't mislabel a neighbor; the POI's own caption appears only on the orbit.
  * @param {{loc: {x: number, y: number}, cap: *}} poi Point of interest.
  * @param {number} index
- * @param {*} approachCap Neutral caption for the approach leg.
+ * @param {*} approachCaption Neutral caption for the approach leg.
  * @returns {Array<*>} Shots for this POI.
  */
-export function poiVignette(poi, index, approachCap) {
-  const approach = obliqueShot(poi.loc, 150 + index * 55, 3.0, approachCap || null);
+export function poiVignette(poi, index, approachCaption) {
+  const approach = obliqueShot(poi.loc, 150 + index * 55, 3.0, approachCaption || null);
   const orbit = shot(
     "orbit",
     poi.loc,
@@ -345,7 +344,7 @@ function applyFlybyFallback(target, flowState, ctx) {
 
 /**
  * @param {*} target
- * @param {(key: string, dflt: *) => *} cfg
+ * @param {(key: string, fallback: *) => *} cfg
  * @returns {Array<*>} Shot sequence.
  */
 export function buildTour(target, cfg) {
@@ -357,17 +356,17 @@ export function buildTour(target, cfg) {
   // City-flavor caption for the opening; a neutral "Aerial view of <city>"
   // interstitial for the approach legs + no-POI fallback sweeps, so every shot
   // says something without the fly-past ever claiming a specific building.
-  const cityCap = cityEstablishCaption(target, "open");
-  const approachCap = target.name ? { touringCity: target.name } : cityCap;
-  const shots = [establishShot(city, rotate, "open", cityCap)];
+  const cityCaption = cityEstablishCaption(target, "open");
+  const approachCaption = target.name ? { touringCity: target.name } : cityCaption;
+  const shots = [establishShot(city, rotate, "open", cityCaption)];
   if (pois.length) {
     pois.slice(0, maxPois).forEach((poi, index) => {
-      for (const poiShot of poiVignette(poi, index, approachCap)) shots.push(poiShot);
+      for (const poiShot of poiVignette(poi, index, approachCaption)) shots.push(poiShot);
     });
   } else {
-    shots.push(obliqueShot(city, 210, 5.0, approachCap));
+    shots.push(obliqueShot(city, 210, 5.0, approachCaption));
   }
-  if (medium && !pois.length) shots.push(obliqueShot(city, 330, 4.5, approachCap));
+  if (medium && !pois.length) shots.push(obliqueShot(city, 330, 4.5, approachCaption));
   shots.push(establishShot(city, rotate, "finale", cityEstablishCaption(target, "finale")));
   return shots;
 }
@@ -394,7 +393,7 @@ export function scheduleInspect(ms, token, flowState, isToken, clearTimers) {
  * @param {{focus: {x: number, y: number}, zoom: number}} frame
  * @param {number} token
  * @param {*} flowState
- * @param {{cfg: (key: string, dflt: *) => *, clamp: (v: number,
+ * @param {{cfg: (key: string, fallback: *) => *, clamp: (value: number,
  *   lo: number, hi: number) => number, addKf: (frame: *) => void,
  *   isToken: (token: number) => boolean,
  *   clearTimers: (state: *) => void}} deps Dependencies.
@@ -548,8 +547,8 @@ function startTourWatchdog(
  * @param {*} target
  * @param {{focus: {x: number, y: number}, zoom: number}|null} frame Fallback frame.
  * @param {number} token
- * @param {{flowState: *, cfg: (key: string, dflt: *) => *,
- *   clamp: (v: number, lo: number, hi: number) => number,
+ * @param {{flowState: *, cfg: (key: string, fallback: *) => *,
+ *   clamp: (value: number, lo: number, hi: number) => number,
  *   addKf: (frame: *) => void, isToken: (token: number) => boolean,
  *   clearTimers: (state: *) => void,
  *   delay: (ms: number) => Promise<void>,

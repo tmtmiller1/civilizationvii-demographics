@@ -77,7 +77,7 @@ export function resetKillSwitchState(deps) {
  *   firstSampleSucceeded: () => boolean,
  *   setFirstSampleSucceeded: (v:boolean) => void,
  *   setDebugEnabled: (v:boolean) => void,
- *   ilog: (...a:any[]) => void
+ *   logDebug: (...a:any[]) => void
  * }} deps Success-path dependencies.
  */
 export function noteSampleSucceeded(curTurn, deps) {
@@ -85,7 +85,7 @@ export function noteSampleSucceeded(curTurn, deps) {
   if (!deps.firstSampleSucceeded()) {
     deps.setFirstSampleSucceeded(true);
     deps.setDebugEnabled(false);
-    deps.ilog("first sample SUCCEEDED; downgrading log verbosity for subsequent turns");
+    deps.logDebug("first sample SUCCEEDED; downgrading log verbosity for subsequent turns");
   }
 }
 
@@ -98,7 +98,7 @@ export function noteSampleSucceeded(curTurn, deps) {
  *   resolvePollEveryNTurns: () => number,
  *   shouldSampleTurn: (turn:any, lastSampledTurn:number, pollEveryNTurns:number) => boolean,
  *   getLastSampledTurn: () => number,
- *   ilog: (...a:any[]) => void,
+ *   logDebug: (...a:any[]) => void,
  *   doSample: () => any,
  *   setLastSampledTurn: (v:number) => void,
  *   tripIfTooMany: (label:string, e:any) => void
@@ -116,16 +116,16 @@ export function runResumeKickoff(deps) {
       pollEveryNTurns
     );
 
-    deps.ilog("startSampler runKickoff: storedCount=", storedCount, "curTurn=", curTurn);
+    deps.logDebug("startSampler runKickoff: storedCount=", storedCount, "curTurn=", curTurn);
 
     if (storedCount === 0 || canSample) {
-      deps.ilog("startSampler: kicking off resume sample for turn", curTurn);
+      deps.logDebug("startSampler: kicking off resume sample for turn", curTurn);
       const snap = deps.doSample();
       if (snap && typeof curTurn === "number") deps.setLastSampledTurn(curTurn);
       return;
     }
 
-    deps.ilog(
+    deps.logDebug(
       "startSampler: skipping resume sample, turn",
       curTurn,
       "off-cadence; last sampled turn",

@@ -25,7 +25,10 @@ import {
   restoreClutterLayers,
   setFoV
 } from "/demographics/ui/screen-demographics/camera/cinematic-tour.js";
-import { resolveSpecialDistricts } from "/demographics/ui/screen-demographics/camera/cinematic-tour-highlights.js";
+import {
+  cityPurchasedIndices,
+  resolveSpecialDistricts
+} from "/demographics/ui/screen-demographics/camera/cinematic-tour-highlights.js";
 import {
   blockedTarget,
   cfg,
@@ -39,27 +42,20 @@ import {
   isEscape,
   nowMs
 } from "/demographics/ui/screen-demographics/camera/city-camera-controller-utils.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 const SCREEN_TAG = "screen-demographics";
 const REGION = { min: { x: 0.275, y: 0.025 }, max: { x: 0.975, y: 0.975 } };
 const INSTANT_ZOOM = 0.4;
 const INSTANT_TILT = 32;
 const ARM_DELAY_MS = 350; // ignore engine interrupts fired by our own screen-pop
-const DBG = false;
+const log = makeLogger("camera");
 
 // The one in-flight camera flow, or null. `token` increments per launch so any
 // stale async continuation can detect it has been superseded.
 /** @type {*} */
 let state = null;
 let tokenCounter = 0;
-
-/**
- * Debug logger, no-op unless {@link DBG}.
- * @param {...*} a Values to log.
- */
-function clog(...a) {
-  if (DBG) console.warn("[Demographics.camera]", ...a);
-}
 
 /**
  * Whether `token` is still the active flow's token.
@@ -109,10 +105,10 @@ function addKf(frame) {
     if (typeof Camera === "undefined" || typeof Camera.addKeyframe !== "function") return;
     const ease = enumVal("InterpolationFunc", "EaseOutSin");
     const flagAll = enumVal("KeyframeFlag", "FLAG_ALL");
-    const kf = Object.assign({}, frame);
-    if (kf.func === undefined && ease !== undefined) kf.func = ease;
-    if (flagAll !== undefined) kf.writeMask = flagAll;
-    Camera.addKeyframe(kf);
+    const keyframe = Object.assign({}, frame);
+    if (keyframe.func === undefined && ease !== undefined) keyframe.func = ease;
+    if (flagAll !== undefined) keyframe.writeMask = flagAll;
+    Camera.addKeyframe(keyframe);
   } catch (_) {
     // Camera.addKeyframe can throw; the watchdog/teardown still recovers the camera.
   }
@@ -159,19 +155,19 @@ function safeRestoreCamera(didSaveZoom) {
  */
 function emergencyKeyframe() {
   addKf({ duration: 0.8, zoom: 0.9, tilt: 30, end: true });
-  clog("emergency keyframe issued (restore failed)");
+  log.debug("emergency keyframe issued (restore failed)");
 }
 
 /**
  * Compute the city framing via the engine's plot-fit, or null.
  * @param {*[]} plots The city's purchased plots.
- * @returns {{x: number, y: number, z: number}|null} The fit, or null.
+ * @returns {{x: number, y: number, z: number}|null}
  */
 function calcFocus(plots) {
   try {
     if (typeof Camera !== "undefined" && typeof Camera.calculateCameraFocusAndZoom === "function") {
-      const f = Camera.calculateCameraFocusAndZoom(plots, 30, { region: REGION });
-      if (f && typeof f.x === "number" && typeof f.y === "number") return f;
+      const fit = Camera.calculateCameraFocusAndZoom(plots, 30, { region: REGION });
+      if (fit && typeof fit.x === "number" && typeof fit.y === "number") return fit;
     }
   } catch (_) {
     // calculateCameraFocusAndZoom can throw for a degenerate plot set; fall through.
@@ -183,11 +179,11 @@ function calcFocus(plots) {
 
 /**
  * Resolve the engine context manager and invoke `fn` with it.
- * @param {(cm: *) => void} fn Callback receiving the ContextManager.
+ * @param {(contextManager: *) => void} fn Callback receiving the ContextManager.
  */
 function withContextManager(fn) {
   import("/core/ui/context-manager/context-manager.js")
-    .then((m) => fn(/** @type {*} */ (m.default || m.ContextManager || m)))
+    .then((imported) => fn(/** @type {*} */ (imported.default || imported.ContextManager || imported)))
     .catch(() => {
       // context-manager import can fail in headless contexts; the camera move still happened.
     });
@@ -196,11 +192,11 @@ function withContextManager(fn) {
 /**
  * Resolve the engine display-queue manager (the popup/notification sequencer the
  * base game's own cinematics defer through) and invoke `fn` with it.
- * @param {(dq: *) => void} fn Callback receiving the DisplayQueueManager.
+ * @param {(displayQueue: *) => void} fn Callback receiving the DisplayQueueManager.
  */
 function withDisplayQueue(fn) {
   import("/core/ui/context-manager/display-queue-manager.js")
-    .then((m) => fn(/** @type {*} */ (m.DisplayQueueManager || m.default || m)))
+    .then((imported) => fn(/** @type {*} */ (imported.DisplayQueueManager || imported.default || imported)))
     .catch(() => {
       // display-queue-manager import can fail in headless contexts; popups just won't defer.
     });
@@ -213,10 +209,11 @@ function withDisplayQueue(fn) {
  * @param {*} flowState The active flow state (flagged so teardown resumes once).
  */
 function suspendPopups(flowState) {
-  withDisplayQueue((dq) => {
+  withDisplayQueue((displayQueue) => {
     try {
-      if (typeof dq.suspend === "function" && typeof dq.isSuspended === "function" && !dq.isSuspended()) {
-        dq.suspend();
+      const canSuspend = typeof displayQueue.suspend === "function" && typeof displayQueue.isSuspended === "function";
+      if (canSuspend && !displayQueue.isSuspended()) {
+        displayQueue.suspend();
         if (flowState) flowState.popupsSuspended = true;
       }
     } catch (_) {
@@ -234,10 +231,11 @@ function suspendPopups(flowState) {
 function resumePopups(flowState) {
   if (!flowState || !flowState.popupsSuspended) return;
   flowState.popupsSuspended = false;
-  withDisplayQueue((dq) => {
+  withDisplayQueue((displayQueue) => {
     try {
-      if (typeof dq.resume === "function" && typeof dq.isSuspended === "function" && dq.isSuspended()) {
-        dq.resume();
+      const canResume = typeof displayQueue.resume === "function" && typeof displayQueue.isSuspended === "function";
+      if (canResume && displayQueue.isSuspended()) {
+        displayQueue.resume();
       }
     } catch (_) {
       // resume can throw if the queue state changed; non-fatal.
@@ -247,9 +245,9 @@ function resumePopups(flowState) {
 
 /** Pop the Demographics screen so the map is visible. */
 function popScreen() {
-  withContextManager((cm) => {
+  withContextManager((contextManager) => {
     try {
-      if (typeof cm.pop === "function") cm.pop(SCREEN_TAG);
+      if (typeof contextManager.pop === "function") contextManager.pop(SCREEN_TAG);
     } catch (_) {
       // pop can warn/throw if the screen is no longer top-of-stack; ignore.
     }
@@ -270,9 +268,11 @@ function reopenScreen() {
   } catch (_) {
     // setSetting can throw if storage is wiped; the panel still reopens on its last view.
   }
-  withContextManager((cm) => {
+  withContextManager((contextManager) => {
     try {
-      if (typeof cm.push === "function") cm.push(SCREEN_TAG, { singleton: true, createMouseGuard: true });
+      if (typeof contextManager.push === "function") {
+        contextManager.push(SCREEN_TAG, { singleton: true, createMouseGuard: true });
+      }
     } catch (_) {
       // push can throw mid-transition; ignore.
     }
@@ -282,23 +282,6 @@ function reopenScreen() {
 // Framing
 
 /**
- * Re-resolve a live city's purchased plots from its ComponentID (handles go
- * stale across renders, so we never retain them).
- * @param {*} componentId The city ComponentID.
- * @returns {*[]} The purchased plots (empty when unavailable).
- */
-function livePlots(componentId) {
-  try {
-    const city = componentId && typeof Cities !== "undefined" && Cities.get ? Cities.get(componentId) : null;
-    const plots = city && typeof city.getPurchasedPlots === "function" ? city.getPurchasedPlots() : null;
-    return Array.isArray(plots) ? plots : [];
-  } catch (_) {
-    // Cities.get / getPurchasedPlots can throw for a stale id; treat as none.
-    return [];
-  }
-}
-
-/**
  * Resolve a smooth-camera frame for a settlement: prefer the engine plot-fit,
  * else fall back to the focus plot at a fixed zoom. Returns null when neither a
  * plot-fit nor a focus plot is available (caller then tries lookAtID).
@@ -306,7 +289,7 @@ function livePlots(componentId) {
  * @returns {{focus: {x: number, y: number}, zoom: number, usedFallback: boolean}|null}
  */
 function resolveCityFrame(target) {
-  const fit = calcFocus(livePlots(target.componentId));
+  const fit = calcFocus(cityPurchasedIndices(target.componentId));
   if (fit) {
     return {
       focus: { x: fit.x, y: fit.y },
@@ -341,19 +324,19 @@ function updateNowShowing(caption) {
  */
 function replayCinematic() {
   if (!state) return;
-  const s = state;
-  clearTimers(s);
-  removeFireworks(s);
-  popShotCamera(s);
-  unbindInterrupts(s);
-  removeOverlay(s);
-  s.token = ++tokenCounter;
-  s.phase = "preparing";
-  s.pushedCamera = false;
-  mountCurrentOverlay(s.target, s.mode);
-  bindInterrupts(s.token);
+  const flow = state;
+  clearTimers(flow);
+  removeFireworks(flow);
+  popShotCamera(flow);
+  unbindInterrupts(flow);
+  removeOverlay(flow);
+  flow.token = ++tokenCounter;
+  flow.phase = "preparing";
+  flow.pushedCamera = false;
+  mountCurrentOverlay(flow.target, flow.mode);
+  bindInterrupts(flow.token);
   safePlaySound("data-audio-activate");
-  runFlyby(s.target, null, s.token);
+  runFlyby(flow.target, null, flow.token);
 }
 
 // World input and interrupts
@@ -423,85 +406,85 @@ function showUnitFlags() {
  * @param {number} token
  */
 function bindInterrupts(token) {
-  const s = state;
-  s.onKey = (/** @type {*} */ e) => {
+  const flow = state;
+  flow.onKey = (/** @type {*} */ e) => {
     if (isEscape(e)) teardownActiveCinematic("escape");
   };
-  s.onMode = () => {
+  flow.onMode = () => {
     try {
-      if (s.armed && isToken(token)) teardownActiveCinematic("interrupt");
+      if (flow.armed && isToken(token)) teardownActiveCinematic("interrupt");
     } catch (e) {
       // An engine event handler must never throw into the engine's dispatch; log and carry on.
-      clog("onMode threw:", /** @type {*} */ (e)?.message);
+      log.debug("onMode threw:", /** @type {*} */ (e)?.message);
     }
   };
   // Engine world-input: a map click replays the cinematic; cancel/ESC exits.
   // World selection is already disabled, so this never selects a city.
-  s.onInput = (/** @type {*} */ e) => handleCinematicInput(s, token, e);
+  flow.onInput = (/** @type {*} */ e) => handleCinematicInput(flow, token, e);
   try {
-    window.addEventListener("keydown", s.onKey, true);
-    window.addEventListener("engine-input", s.onInput, true);
+    window.addEventListener("keydown", flow.onKey, true);
+    window.addEventListener("engine-input", flow.onInput, true);
   } catch (_) {
     // addEventListener can be absent in headless hosts; Back still works.
   }
   try {
     if (typeof engine !== "undefined" && typeof engine.on === "function") {
-      engine.on("InterfaceModeChanged", s.onMode);
+      engine.on("InterfaceModeChanged", flow.onMode);
     }
   } catch (_) {
     // engine.on may be unavailable; the interface-mode interrupt is best-effort.
   }
   setTimeout(() => {
-    if (isToken(token)) s.armed = true;
+    if (isToken(token)) flow.armed = true;
   }, ARM_DELAY_MS);
 }
 
 /**
  * Handle an engine-input event during the cinematic: debounced, armed-gated; a
  * click replays, cancel exits. Consumes the event so nothing else reacts.
- * @param {*} s
+ * @param {*} flow
  * @param {number} token
  * @param {*} e The engine-input event.
  */
-function handleCinematicInput(s, token, e) {
-  if (!s.armed || !isToken(token)) return;
+function handleCinematicInput(flow, token, e) {
+  if (!flow.armed || !isToken(token)) return;
   const kind = classifyInput(e && e.detail);
   if (!kind) return;
   // A click on the overlay UI (Back button / card) just fired a DOM mousedown;
   // don't also treat it as a map click → replay. Let the button's handler run.
-  if (ignoreUiReplay(s, kind)) return;
+  if (ignoreUiReplay(flow, kind)) return;
   consumeEvent(e);
-  if (inputDebounced(s)) return; // a single physical click fires START + FINISH
+  if (inputDebounced(flow)) return; // a single physical click fires START + FINISH
   if (kind === "exit") teardownActiveCinematic("cancel");
   else replayCinematic();
 }
 
 /**
  * Whether replay input should be ignored because it likely came from overlay UI.
- * @param {*} s
+ * @param {*} flow
  * @param {string} kind Classified input kind.
  * @returns {boolean} True when replay should be ignored.
  */
-function ignoreUiReplay(s, kind) {
+function ignoreUiReplay(flow, kind) {
   if (kind !== "replay") return false;
-  if (!s.uiClickAt) return false;
-  return nowMs() - s.uiClickAt < 400;
+  if (!flow.uiClickAt) return false;
+  return nowMs() - flow.uiClickAt < 400;
 }
 
 /**
  * Detach the active flow's interrupt listeners.
- * @param {*} s
+ * @param {*} flow
  */
-function unbindInterrupts(s) {
+function unbindInterrupts(flow) {
   try {
-    if (s.onKey) window.removeEventListener("keydown", s.onKey, true);
-    if (s.onInput) window.removeEventListener("engine-input", s.onInput, true);
+    if (flow.onKey) window.removeEventListener("keydown", flow.onKey, true);
+    if (flow.onInput) window.removeEventListener("engine-input", flow.onInput, true);
   } catch (_) {
     // ignore detach errors
   }
   try {
-    if (s.onMode && typeof engine !== "undefined" && typeof engine.off === "function") {
-      engine.off("InterfaceModeChanged", s.onMode);
+    if (flow.onMode && typeof engine !== "undefined" && typeof engine.off === "function") {
+      engine.off("InterfaceModeChanged", flow.onMode);
     }
   } catch (_) {
     // ignore detach errors
@@ -512,15 +495,15 @@ function unbindInterrupts(s) {
 
 /**
  * Clear any pending timers on the flow state.
- * @param {*} s
+ * @param {*} flow
  */
-function clearTimers(s) {
+function clearTimers(flow) {
   try {
-    if (s.watchdog) clearTimeout(s.watchdog);
+    if (flow.watchdog) clearTimeout(flow.watchdog);
   } catch (_) {
     // clearTimeout rarely throws; ignore
   }
-  s.watchdog = null;
+  flow.watchdog = null;
 }
 
 /**
@@ -532,11 +515,11 @@ function clearTimers(s) {
  */
 export function teardownActiveCinematic(reason) {
   if (!state) return;
-  const s = state;
+  const flow = state;
   state = null; // claim ownership so re-entrant calls and stale continuations no-op
-  s.phase = "restoring";
-  clog("teardown:", reason);
-  restoreFromCinematic(s, reason);
+  flow.phase = "restoring";
+  log.debug("teardown:", reason);
+  restoreFromCinematic(flow, reason);
 }
 
 /**
@@ -544,22 +527,22 @@ export function teardownActiveCinematic(reason) {
  * shot camera, fireworks, clutter layers, FoV, world input/banners/flags, the
  * saved camera (emergency keyframe on failure), and reopen the screen, except after an
  * "interrupt" teardown.
- * @param {*} s
+ * @param {*} flow
  * @param {string} reason The teardown reason.
  */
-function restoreFromCinematic(s, reason) {
-  clearTimers(s);
-  unbindInterrupts(s);
-  removeOverlay(s);
-  popShotCamera(s);
-  removeFireworks(s);
-  restoreClutterLayers(s.hiddenLayers);
-  if (s.fovTouched) setFoV(s.savedFoV);
+function restoreFromCinematic(flow, reason) {
+  clearTimers(flow);
+  unbindInterrupts(flow);
+  removeOverlay(flow);
+  popShotCamera(flow);
+  removeFireworks(flow);
+  restoreClutterLayers(flow.hiddenLayers);
+  if (flow.fovTouched) setFoV(flow.savedFoV);
   enableWorldInput();
   showCityBanners();
   showUnitFlags();
-  resumePopups(s);
-  if (!safeRestoreCamera(s.didSaveZoom)) {
+  resumePopups(flow);
+  if (!safeRestoreCamera(flow.didSaveZoom)) {
     emergencyKeyframe();
   }
   // "interrupt" means the interface mode changed under us (End Turn, a diplomacy screen, a unit
@@ -650,7 +633,16 @@ function beginFlow(target, mode) {
   if (blockedTarget(target)) return undefined; // unmet/masked gate (button is also disabled)
   if (isCinematicActive()) teardownActiveCinematic("relaunch");
   const token = ++tokenCounter;
-  state = { token, target, phase: "preparing", mode, didSaveZoom: false, armed: false, overlay: null, watchdog: null };
+  state = {
+    token,
+    target,
+    phase: "preparing",
+    mode,
+    didSaveZoom: false,
+    armed: false,
+    overlay: null,
+    watchdog: null
+  };
   saveCamera();
   state.savedFoV = readFoV();
   state.hiddenLayers = hideClutterLayers();
@@ -675,7 +667,7 @@ function beginFlow(target, mode) {
  */
 export function startInstant(target) {
   if (!cameraReady()) {
-    clog("camera contract unsatisfied; skipping View-on-map");
+    log.debug("camera contract unsatisfied; skipping View-on-map");
     return false;
   }
   if (blockedTarget(target) || !target.location) return false;
@@ -747,7 +739,7 @@ function lookAtInstantReturn(loc) {
  */
 export function launchCinematic(target) {
   if (!cameraReady()) {
-    clog("camera contract unsatisfied; skipping Cinematic");
+    log.debug("camera contract unsatisfied; skipping Cinematic");
     return false;
   }
   if (blockedTarget(target)) return false;

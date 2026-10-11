@@ -1,5 +1,8 @@
 // Dev-only ESLint flat config. Enforces the modularization gate (function length +
-// cyclomatic complexity) and catches real bugs. Not shipped; release.sh excludes it.
+// cyclomatic complexity) on ui/ and catches real bugs everywhere. Not shipped; release.sh excludes it.
+
+// @eslint/js ships with eslint itself, so it needs no entry of its own in package.json.
+import js from "@eslint/js";
 
 const ENGINE_GLOBALS = {
   // Civ7 true globals used without importing (see civ7-modding-docs/06).
@@ -82,6 +85,54 @@ const BROWSER_GLOBALS = {
   atob: "readonly"
 };
 
+const NODE_GLOBALS = {
+  process: "readonly",
+  console: "readonly",
+  globalThis: "readonly",
+  Buffer: "readonly",
+  URL: "readonly",
+  setTimeout: "readonly",
+  clearTimeout: "readonly",
+  setInterval: "readonly",
+  clearInterval: "readonly",
+  structuredClone: "readonly",
+  performance: "readonly"
+};
+
+// Engine globals the dev probes use beyond what ui/ needs: lobby setup, save loading, and the events
+// they fire to drive a game from a script.
+const PROBE_GLOBALS = {
+  GameModeTypes: "readonly",
+  ServerType: "readonly",
+  SlotStatus: "readonly",
+  GameSetup: "readonly",
+  SaveLocationCategories: "readonly",
+  SaveLocationOptions: "readonly",
+  SaveLocations: "readonly",
+  SaveTypes: "readonly",
+  SaveFileTypes: "readonly",
+  MouseEvent: "readonly"
+};
+
+// Test and tool code: correctness rules only. The size limits are for the shipped modules; a test
+// file is a list of scenarios, and splitting one up to satisfy a statement count hides the story.
+const TOOL_RULES = {
+  ...js.configs.recommended.rules,
+  "max-len": [
+    "warn",
+    {
+      code: 120,
+      ignoreUrls: true,
+      ignoreRegExpLiterals: true
+    }
+  ],
+  "no-unused-vars": [
+    "error",
+    { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", varsIgnorePattern: "^_" }
+  ],
+  eqeqeq: ["error", "always", { null: "ignore" }]
+};
+
 export default [
   // Tower Settings Keeper, copied unchanged from its own repo; it is linted and tested there.
   { ignores: ["ui/core/settings-keeper.js"] },
@@ -127,5 +178,25 @@ export default [
       // Match the engine's own `== null` undefined-check idiom.
       eqeqeq: ["error", "always", { null: "ignore" }]
     }
+  },
+  {
+    files: ["tests/**/*.mjs", "scripts/**/*.mjs", "devtools/**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      // Tests stand in for the browser and the engine, so they read and assign those globals too.
+      globals: { ...NODE_GLOBALS, ...ENGINE_GLOBALS, ...BROWSER_GLOBALS }
+    },
+    rules: TOOL_RULES
+  },
+  {
+    // In-game code outside the shipped mod: the dev probes and the unmounted options view.
+    files: ["devtools/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...ENGINE_GLOBALS, ...BROWSER_GLOBALS, ...PROBE_GLOBALS }
+    },
+    rules: TOOL_RULES
   }
 ];

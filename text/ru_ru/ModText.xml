@@ -1532,17 +1532,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="ru_RU">
             <Text>Стандартный</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="ru_RU">
-            <Text>Аналитик</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="ru_RU">
             <Text>Только основные страницы статистики; расширенные графики, сеть отношений и настройки скрыты.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="ru_RU">
             <Text>Все графики и вкладки; расширенные настройки хранения и выборки остаются скрытыми.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="ru_RU">
-            <Text>Всё, включая лимит хранения, прореживание и частоту выборки.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="ru_RU">
             <Text>Прогресс триумфов эпохи: радар путей наследия для каждой цивилизации.</Text>
@@ -1601,7 +1595,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="ru_RU"><Text>Отмечает на линиях графиков ход, когда было построено каждое чудо.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="ru_RU"><Text>Отмечает на графике беженцев Emigration ход, когда началась каждая война. Требуется дополнение Emigration.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="ru_RU"><Text>Отмечает на графике беженцев Emigration ход, когда произошла каждая катастрофа. Требуется дополнение Emigration.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ru_RU"><Text>Сколько показывать на экране. «Базовый» — только основные страницы статистики; «Стандартный» добавляет все графики и вкладки; «Аналитик» также открывает настройки хранения, прореживания и частоты выборки.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="ru_RU"><Text>Сколько показывать на экране. «Базовый» — только основные страницы статистики; «Стандартный» добавляет все графики и вкладки.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="ru_RU"><Text>Рисует линии истории как скользящее среднее за 3 хода, чтобы тенденции читались чётче. Исходные данные не меняются.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="ru_RU"><Text>Оставляет выбывшие цивилизации видимыми на графиках и в рейтингах, а не убирает их.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="ru_RU"><Text>Включает кнопку «Кинематографический вид», которая ведёт камеру по поселению из списка лучших городов.</Text></Replace>
@@ -1939,7 +1933,13 @@
             <Text>Население</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="ru_RU">
-            <Text>Титул</Text>
+            <Text>Почётный титул</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="ru_RU">
+            <Text>«{1_Title}»</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="ru_RU">
+            <Text>(Почётный титул: «{1_Title}»)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="ru_RU">
             <Text>Результат</Text>

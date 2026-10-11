@@ -22,14 +22,16 @@ section onto that, and writes the result back. So:
 - The one mod whose own entry sorts first is the only one that works. Everyone else is reading its data.
 - Demographics keeps its Hall of Fame (the list of past games) in that shared entry. It refuses to write when what it
   reads back is not the shared entry, because writing would copy a stranger's data into it. So the Hall of Fame cannot
-  read or save its list of past games, and a notice box on every Hall of Fame page says so. Every game is still stored in its own save.
+  read or save its list of past games, and a notice box on every Hall of Fame page says so. Every game is still stored
+  in its own save.
 
 ## What the repair does
 
 Deleting, unlike reading, works correctly. **Repair mod storage** empties the store and writes the shared entry back
 with Demographics' settings and past games in it. The shared entry is then the first (and only) key, so every read
 returns it, which is the right answer for every mod that keeps its settings there. Other mods add their own sections
-back to it the next time they save a setting. From then on, settings persist and the Hall of Fame's list of past games is saved.
+back to it the next time they save a setting. From then on, settings persist and the Hall of Fame's list of past games
+is saved.
 
 Nothing is reserved for Demographics. It restarts the shared entry; it does not own it. After the repair and a cold
 relaunch on 2026-09-22, a third-party options panel read back every setting stored in the shared entry.

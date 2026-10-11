@@ -17,16 +17,16 @@ import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises
  * turns from other ages. Also returns that age's last sampled turn.
  * @param {Snapshot[]} samples The full sample stream.
  * @param {*} war Carries startChartTurn.
- * @returns {{scoped: Snapshot[], ageLastTurn: number}} Age-scoped samples + the age's last turn.
+ * @returns {{scoped: Snapshot[], ageLastTurn: number}}
  */
 export function warAgeScope(samples, war) {
   const all = Array.isArray(samples) ? samples : [];
   const start = war && typeof war.startChartTurn === "number" ? war.startChartTurn : Infinity;
   const warAge = sampleAgeKey(findStartSample(all, start));
-  const scoped = all.filter((/** @type {*} */ s) => sampleAgeKey(s) === warAge);
+  const scoped = all.filter((/** @type {*} */ sample) => sampleAgeKey(sample) === warAge);
   let ageLastTurn = 0;
-  for (const s of scoped) {
-    if (typeof s?.turn === "number" && s.turn > ageLastTurn) ageLastTurn = s.turn;
+  for (const sample of scoped) {
+    if (typeof sample?.turn === "number" && sample.turn > ageLastTurn) ageLastTurn = sample.turn;
   }
   return { scoped, ageLastTurn };
 }
@@ -51,23 +51,23 @@ const GRAPH_TITLE = {
 /**
  * The display title for a cost metric in the tooltip (and the default elsewhere):
  * the shared descriptive title, else the metric's short label.
- * @param {{ id: string, label: string }} m
- * @returns {string} The localized title.
+ * @param {{ id: string, label: string }} metric
+ * @returns {string} Localized.
  */
-export function costMetricTitle(m) {
-  return t(GRAPH_TITLE[m.id] || m.label);
+export function costMetricTitle(metric) {
+  return t(GRAPH_TITLE[metric.id] || metric.label);
 }
 
 /**
  * The display title for a metric on the War Graphs tab: same as the tooltip,
  * except standing Military Power reads "(Over Time)" there (a trajectory) vs
  * "(Current)" in the tooltip (a single end-of-war value).
- * @param {{ id: string, label: string }} m A COST_METRICS entry.
- * @returns {string} The localized title.
+ * @param {{ id: string, label: string }} metric A COST_METRICS entry.
+ * @returns {string} Localized.
  */
-export function graphMetricTitle(m) {
-  if (m.id === "milpowerLevel") return t("LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER");
-  return costMetricTitle(m);
+export function graphMetricTitle(metric) {
+  if (metric.id === "milpowerLevel") return t("LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER");
+  return costMetricTitle(metric);
 }
 
 /**
@@ -92,9 +92,9 @@ export function formatMagnitude(n) {
  */
 function participantMetricSeries(windowSamples, pid, metricId) {
   const series = [];
-  for (const s of windowSamples) {
-    const v = s?.players?.[pid]?.metrics?.[metricId];
-    if (typeof v === "number" && isFinite(v)) series.push(v);
+  for (const sample of windowSamples) {
+    const value = sample?.players?.[pid]?.metrics?.[metricId];
+    if (typeof value === "number" && isFinite(value)) series.push(value);
   }
   return series;
 }
@@ -107,12 +107,12 @@ function participantMetricSeries(windowSamples, pid, metricId) {
  */
 function maxDrawdown(values) {
   let peak = -Infinity;
-  let maxDD = 0;
-  for (const v of values) {
-    if (v > peak) peak = v;
-    if (peak - v > maxDD) maxDD = peak - v;
+  let maxDrop = 0;
+  for (const value of values) {
+    if (value > peak) peak = value;
+    if (peak - value > maxDrop) maxDrop = peak - value;
   }
-  return maxDD;
+  return maxDrop;
 }
 
 /**
@@ -350,20 +350,20 @@ function militaryLossFigure(win, pid) {
  * read a counter's increase, everything else flows through {@link reduceCostSeries}.
  * @param {Snapshot[]} win The samples inside the participation window.
  * @param {Pid | string} pid
- * @param {{ id: string, mode: string, series?: string }} m The cost-metric descriptor.
+ * @param {{ id: string, mode: string, series?: string }} metric A COST_METRICS entry.
  * @returns {number | null} The figure, or null when no data.
  */
-function participantMetricFigure(win, pid, m) {
-  if (m.id === "milpower") return militaryLossFigure(win, pid);
-  const seriesId = m.series || m.id;
+function participantMetricFigure(win, pid, metric) {
+  if (metric.id === "milpower") return militaryLossFigure(win, pid);
+  const seriesId = metric.series || metric.id;
   // "level": the standing value at the end of the window (last finite sample).
-  if (m.mode === "level") return lastFinite(participantMetricSeries(win, pid, seriesId));
+  if (metric.mode === "level") return lastFinite(participantMetricSeries(win, pid, seriesId));
   // "accrued" (loss counter) and "spent" (neutral spending) both read a
   // cumulative counter's increase over the window; they differ only in display.
-  if (m.mode === "accrued" || m.mode === "spent") return accruedFigure(win, pid, m.id);
+  if (metric.mode === "accrued" || metric.mode === "spent") return accruedFigure(win, pid, metric.id);
   return reduceCostSeries(
     participantMetricSeries(win, pid, seriesId),
-    /** @type {"drawdown" | "net" | "losses"} */ (m.mode)
+    /** @type {"drawdown" | "net" | "losses"} */ (metric.mode)
   );
 }
 
@@ -386,9 +386,9 @@ function lastFinite(series) {
  */
 function minorMetricSeries(windowSamples, pid, metricId) {
   const series = [];
-  for (const s of windowSamples) {
-    const v = /** @type {*} */ (s)?.minors?.[pid]?.metrics?.[metricId];
-    if (typeof v === "number" && isFinite(v)) series.push(v);
+  for (const sample of windowSamples) {
+    const value = /** @type {*} */ (sample)?.minors?.[pid]?.metrics?.[metricId];
+    if (typeof value === "number" && isFinite(value)) series.push(value);
   }
   return series;
 }
@@ -440,19 +440,21 @@ export function warWindow(samples, warStart, warEnd) {
  * Compute one participant's per-metric war cost over its participation window
  * ([joinTurn, leaveTurn || war end]).
  * @param {Snapshot[]} samples
- * @param {*} participant The roster entry.
+ * @param {*} participant A roster entry.
  * @param {number} warStart
  * @param {number} warEnd The war's end turn (or latest).
- * @returns {Record<string, number | null>} Per-metric figure keyed by m.key.
+ * @returns {Record<string, number | null>} Per-metric figure keyed by the metric's `key`.
  */
 export function participantCost(samples, participant, warStart, warEnd) {
-  const jt = typeof participant?.joinTurn === "number" ? participant.joinTurn : warStart;
-  const lt = typeof participant?.leaveTurn === "number" ? participant.leaveTurn : warEnd;
-  const win = samples.filter((s) => typeof s?.turn === "number" && s.turn >= jt && s.turn <= lt);
+  const fromTurn = typeof participant?.joinTurn === "number" ? participant.joinTurn : warStart;
+  const toTurn = typeof participant?.leaveTurn === "number" ? participant.leaveTurn : warEnd;
+  const win = samples.filter(
+    (sample) => typeof sample?.turn === "number" && sample.turn >= fromTurn && sample.turn <= toTurn
+  );
   /** @type {Record<string, number | null>} */
   const acc = {};
-  for (const m of COST_METRICS) {
-    acc[m.key] = participantMetricFigure(win, participant.pid, m);
+  for (const metric of COST_METRICS) {
+    acc[metric.key] = participantMetricFigure(win, participant.pid, metric);
   }
   acc.unitsLostScaled = scaledCasualtyFigure(win, acc.unitsLost, warEnd);
   return acc;
@@ -482,17 +484,17 @@ function scaledCasualtyFigure(win, rawUnits, warEnd) {
  */
 export function formatCostFigure(raw, mode) {
   if (raw == null) return { text: "—", cls: "is-none" }; // null/undefined → "—"
-  const r = Math.round(raw);
+  const rounded = Math.round(raw);
   if (mode === "net") {
-    if (r === 0) return { text: "0", cls: "is-none" };
-    if (r > 0) return { text: "+" + formatMagnitude(r), cls: "is-gain" };
-    return { text: "−" + formatMagnitude(Math.abs(r)), cls: "is-loss" };
+    if (rounded === 0) return { text: "0", cls: "is-none" };
+    if (rounded > 0) return { text: "+" + formatMagnitude(rounded), cls: "is-gain" };
+    return { text: "−" + formatMagnitude(Math.abs(rounded)), cls: "is-loss" };
   }
   if (mode === "spent" || mode === "level") {
     // Neutral magnitude, no sign, not colored as a loss: "spent" is war investment
     // the player chose; "level" is a standing value (current Military Power).
-    return r > 0 ? { text: formatMagnitude(r), cls: "is-spent" } : { text: "0", cls: "is-none" };
+    return rounded > 0 ? { text: formatMagnitude(rounded), cls: "is-spent" } : { text: "0", cls: "is-none" };
   }
-  if (r <= 0) return { text: "0", cls: "is-none" };
-  return { text: "−" + formatMagnitude(r), cls: "is-loss" };
+  if (rounded <= 0) return { text: "0", cls: "is-none" };
+  return { text: "−" + formatMagnitude(rounded), cls: "is-loss" };
 }

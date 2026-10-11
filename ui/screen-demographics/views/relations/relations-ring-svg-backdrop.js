@@ -2,8 +2,8 @@
 //
 // Quiet backdrop for the Global Relations ring: a single faint orbit ring that
 // the nodes sit on, grounding the layout without competing with the edges or the
-// gold leader hexes. (An earlier radar-sweep / bezel / emblem treatment read as
-// sci-fi clutter against Civ VII's restrained antiquity art and was removed.)
+// gold leader hexes. Kept to one plain ring: busier radar / bezel / emblem treatments
+// read as sci-fi clutter against Civ VII's restrained antiquity art.
 //
 // Coherent-safe: a plain SVG ellipse, no filters / SMIL / animation.
 
@@ -12,7 +12,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 /**
  * Draw the quiet backdrop into the ring SVG (call before edges/nodes so it sits
  * behind them).
- * @param {Element} svg The SVG root.
+ * @param {Element} svg
  * @param {import("./relations-ring-svg.js").RingGeometry} geo
  */
 export function appendRingBackdrop(svg, geo) {

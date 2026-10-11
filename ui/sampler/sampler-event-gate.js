@@ -5,7 +5,7 @@
 /**
  * Resolve player id from a PlayerTurnActivated payload.
  * @param {*} data Event payload.
- * @returns {number|undefined} Event player id.
+ * @returns {number|undefined}
  */
 export function eventPlayerId(data) {
   const evtPid = data && (data.player ?? data.playerID);
@@ -21,7 +21,7 @@ export function eventPlayerId(data) {
  *   shouldSampleTurn: (turn:any, lastSampledTurn:number, pollEveryNTurns:number) => boolean,
  *   resolvePollEveryNTurns: () => number,
  *   lastSampledTurn: number,
- *   vlog: (...a:any[]) => void
+ *   logDebug: (...a:any[]) => void
  * }} deps Dependencies and event payload.
  * @returns {{ localId: number, curTurn: number }|null} Sampling context.
  */
@@ -29,7 +29,7 @@ export function localSamplingContextFromEvent(deps) {
   const localId = deps.getLocalPlayerID();
   const evtPid = eventPlayerId(deps.data);
   if (typeof localId !== "number" || typeof evtPid !== "number") {
-    deps.vlog("skip: localId/evtPid not numeric", localId, evtPid);
+    deps.logDebug("skip: localId/evtPid not numeric", localId, evtPid);
     return null;
   }
   if (evtPid !== localId) return null;
@@ -38,7 +38,7 @@ export function localSamplingContextFromEvent(deps) {
 
   const pollEveryNTurns = deps.resolvePollEveryNTurns();
   if (!deps.shouldSampleTurn(curTurn, deps.lastSampledTurn, pollEveryNTurns)) {
-    deps.vlog(
+    deps.logDebug(
       "skip turn",
       curTurn,
       "by polling rate (every",

@@ -32,7 +32,14 @@ const fresh = () => newCampaign({ id: "g1", seed: 7, now: 1000, setup, local: 0 
 // Lineage: one span per age, even when the civilization is unchanged.
 {
   const doc = fresh();
-  const id = (civ) => ({ leader: "LEADER_A", leaderName: "LOC_A", civ, civName: "LOC_" + civ, color: "#fff", human: true });
+  const id = (civ) => ({
+    leader: "LEADER_A",
+    leaderName: "LOC_A",
+    civ,
+    civName: "LOC_" + civ,
+    color: "#fff",
+    human: true
+  });
   upsertPlayer(doc, 0, id("CIV_ROME"), { age: "AGE_ANTIQUITY", turn: 1 });
   upsertPlayer(doc, 0, id("CIV_ROME"), { age: "AGE_ANTIQUITY", turn: 2 });
   upsertPlayer(doc, 0, id("CIV_NORMAN"), { age: "AGE_EXPLORATION", turn: 1 });
@@ -64,7 +71,10 @@ const fresh = () => newCampaign({ id: "g1", seed: 7, now: 1000, setup, local: 0 
   appendSample(doc, world(1, { 0: pstate({ cities: { a: "A" }, population: 3, popScaled: 30000 }) }));
   appendEvents(doc, [{ t: 2, a: 0, k: "triumph", p: 0, x: "L" }]);
   appendSample(doc, world(2, { 0: pstate({ cities: { a: "A", b: "B" }, population: 5 }), 1: pstate() }));
-  appendSample(doc, world(2, { 0: pstate({ cities: { a: "A", b: "B" }, population: 6, popScaled: 52000 }), 1: pstate() }));
+  appendSample(
+    doc,
+    world(2, { 0: pstate({ cities: { a: "A", b: "B" }, population: 6, popScaled: 52000 }), 1: pstate() })
+  );
   assert.deepEqual(doc.series.turns, [1, 2]);
   assert.deepEqual(doc.series.by["0"], { set: [1, 2], pop: [3, 6], tri: [0, 1], pops: [30000, 52000] });
   const old = { turns: [1], by: { 0: { set: [1], pop: [3], tri: [0] } } };
@@ -113,7 +123,13 @@ const fresh = () => newCampaign({ id: "g1", seed: 7, now: 1000, setup, local: 0 
   assert.equal(a.outcome.status, "victory");
   const b = fresh();
   applyOutcome(b, [{ t: 300, a: 2, k: "victory", p: 3, x: "VICTORY_CULTURE_MODERN", n: "LOC_V" }], teamOf);
-  assert.deepEqual(b.outcome, { status: "defeat", victory: "VICTORY_CULTURE_MODERN", name: "LOC_V", winner: 3, turn: 300 });
+  assert.deepEqual(b.outcome, {
+    status: "defeat",
+    victory: "VICTORY_CULTURE_MODERN",
+    name: "LOC_V",
+    winner: 3,
+    turn: 300
+  });
   const c = fresh();
   applyOutcome(c, [{ t: 90, a: 1, k: "elim", p: 0 }], teamOf);
   assert.equal(c.outcome.status, "defeat");

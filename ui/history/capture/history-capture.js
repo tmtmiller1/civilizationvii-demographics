@@ -5,11 +5,24 @@
 // events and a trend sample to the CampaignDoc, saves it into the save file and refreshes the Hall
 // of Fame record. State diffing means changes made during other players' turns are still recorded.
 
-import { dlog, derr, safe } from "/demographics/ui/history/core/history-log.js";
-import { readWorld, playerIdentity, everMajors, infoRow, turnDate, legacyBlurb } from "/demographics/ui/history/capture/history-world.js";
+import { log, safe } from "/demographics/ui/history/core/history-log.js";
+import {
+  everMajors,
+  infoRow,
+  legacyBlurb,
+  playerIdentity,
+  readWorld,
+  turnDate
+} from "/demographics/ui/history/capture/history-world.js";
 import { diffWorld } from "/demographics/ui/history/capture/history-diff.js";
 import {
-  newCampaign, ensureAge, upsertPlayer, appendEvents, appendSample, applyOutcome, noteTriumphs
+  appendEvents,
+  appendSample,
+  applyOutcome,
+  ensureAge,
+  newCampaign,
+  noteTriumphs,
+  upsertPlayer
 } from "/demographics/ui/history/store/history-campaign.js";
 import { loadCampaign, saveCampaign } from "/demographics/ui/history/store/history-campaign-store.js";
 import { buildRecord, recordTags } from "/demographics/ui/history/store/history-archive.js";
@@ -18,7 +31,8 @@ import { saveRecord } from "/demographics/ui/history/store/history-archive-store
 import { live } from "/demographics/ui/history/capture/history-live.js";
 import { newCrisisState, crisisStep } from "/demographics/ui/history/capture/history-crisis.js";
 import { captureMap } from "/demographics/ui/history/capture/history-mapgrid.js";
-import { flavorCrisisName, getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
 /** @typedef {(...args: any[]) => void} Handler */
 /**
@@ -35,7 +49,7 @@ const NAMER = {
   civ: (type) => infoRow("Civilizations", type)?.Name || "",
   age: (type) => infoRow("Ages", type)?.Name || "",
   victory: (type) => infoRow("Victories", type)?.Name || "",
-  teamPlayer: (team) => everMajors().find((p) => safe(() => p.team, -2) === team)?.id ?? -1
+  teamPlayer: (team) => everMajors().find((player) => safe(() => player.team, -2) === team)?.id ?? -1
 };
 
 /**
@@ -70,11 +84,11 @@ export function isHost() {
  * Whether this client may store the campaign in the shared game configuration. In a networked
  * game the host owns that object and is the only client that writes it; guests keep the campaign
  * in memory (History and the Hall of Fame keep working live) and read the host's copy on load.
- * @param {{network: boolean, host: boolean}} mp
+ * @param {{network: boolean, host: boolean}} session Whether the game is networked and this client hosts it.
  * @returns {boolean}
  */
-export function mayStoreCampaign(mp) {
-  return !mp.network || mp.host;
+export function mayStoreCampaign(session) {
+  return !session.network || session.host;
 }
 
 /**
@@ -109,7 +123,7 @@ export function adoptViewpoint(doc, local, network) {
 
 /**
  * Setup facts for the archive, as LOC name tags.
- * @returns {HnrSetup}
+ * @returns {HistorySetup}
  */
 export function readSetup() {
   const cfg = safe(() => Configuration.getGame(), null);
@@ -152,7 +166,7 @@ export function campaignId(seed) {
 export function openCampaign() {
   const seed = campaignSeed();
   // Parking an unusable stored campaign and restoring a parked one are writes to the shared game
-  // configuration; in a networked game only the host may make them (the 2.7.2 rule saveCampaign follows).
+  // configuration; in a networked game only the host may make them (the same rule saveCampaign follows).
   const stored = loadCampaign({
     mayWrite: () => mayStoreCampaign({ network: isNetworkMultiplayer(), host: isHost() })
   });
@@ -174,13 +188,13 @@ export function sampleNow(reason) {
     const doc = (live.doc = live.doc || openCampaign());
     const world = readWorld(local);
     if (!shouldSampleTurn(state, world.turn, world.age, reason)) return;
-    const n = recordWorld(doc, local, world);
+    const eventCount = recordWorld(doc, local, world);
     safe(() => captureMap(doc, doc.ages.length - 1, world.turn, reason !== "turn"), false);
     persist(doc);
-    dlog("sample", reason, "events", n);
+    log.debug("sample", reason, "events", eventCount);
   } catch (e) {
     state.errors++;
-    derr("sample failed (" + reason + ")", e);
+    log.error("sample failed (" + reason + ")", e);
   }
 }
 
@@ -188,7 +202,7 @@ export function sampleNow(reason) {
  * Fold one world reading into the campaign.
  * @param {CampaignDoc} doc Mutated.
  * @param {number} local
- * @param {HnrWorldState} world
+ * @param {HistoryWorldState} world
  * @returns {number} Number of new events.
  */
 export function recordWorld(doc, local, world) {
@@ -216,13 +230,13 @@ export function recordWorld(doc, local, world) {
 /**
  * Record every major's identity; a dead player gets no civilization span for the age.
  * @param {CampaignDoc} doc Mutated.
- * @param {HnrWorldState} world
+ * @param {HistoryWorldState} world
  */
 function upsertAll(doc, world) {
-  for (const p of everMajors()) {
-    const alive = !!world.players[String(p.id)]?.alive;
-    const id = playerIdentity(p);
-    upsertPlayer(doc, p.id, alive ? id : { ...id, civ: "" }, { age: world.age, turn: world.turn });
+  for (const player of everMajors()) {
+    const alive = !!world.players[String(player.id)]?.alive;
+    const identity = playerIdentity(player);
+    upsertPlayer(doc, player.id, alive ? identity : { ...identity, civ: "" }, { age: world.age, turn: world.turn });
   }
 }
 
@@ -230,22 +244,23 @@ function upsertAll(doc, world) {
  * A crisis stage onset for this reading, if any. The first reading of a campaign only sets the
  * baseline, so a game joined mid-crisis does not announce a stage that began earlier.
  * @param {CampaignDoc} doc Mutated (detection state).
- * @param {HnrWorldState} world
+ * @param {HistoryWorldState} world
  * @param {number} ageIdx
- * @returns {HnrEvent|null}
+ * @returns {HistoryEvent|null}
  */
 function crisisEvent(doc, world, ageIdx) {
-  const c = world.crisis;
-  if (!c) return null;
+  const crisis = world.crisis;
+  if (!crisis) return null;
   if (!doc.crisis) {
     doc.crisis = newCrisisState(world.age);
-    doc.crisis.last = Math.max(0, c.stage);
+    doc.crisis.last = Math.max(0, crisis.stage);
     return null;
   }
-  const stage = crisisStep(doc.crisis, world.age, c.stage);
+  const stage = crisisStep(doc.crisis, world.age, crisis.stage);
   if (!stage) return null;
-  const name = String(safe(() => flavorCrisisName({ crisisEventType: c.type, age: world.age }, stage, getGameSeed()), "") || "");
-  return { t: world.turn, a: ageIdx, k: "crisis", p: -1, q: stage, x: c.type, n: name, d: world.date };
+  const flavor = () => flavorCrisisName({ crisisEventType: crisis.type, age: world.age }, stage, getGameSeed());
+  const name = String(safe(flavor, "") || "");
+  return { t: world.turn, a: ageIdx, k: "crisis", p: -1, q: stage, x: crisis.type, n: name, d: world.date };
 }
 
 /**
@@ -255,13 +270,13 @@ function crisisEvent(doc, world, ageIdx) {
  * @returns {number} Player id, or -1 for unclaimed land.
  */
 function disasterOwner(loc) {
-  const majors = new Set(everMajors().map((p) => p.id));
+  const majors = new Set(everMajors().map((player) => player.id));
   const at = (/** @type {number} */ x, /** @type {number} */ y) => Number(safe(() => GameplayMap.getOwner(x, y), -1));
   const first = at(loc.x, loc.y);
   if (majors.has(first)) return first;
   for (const idx of safe(() => GameplayMap.getPlotIndicesInRadius(loc.x, loc.y, 1), []) || []) {
-    const p = safe(() => GameplayMap.getLocationFromIndex(idx), null);
-    const owner = p ? at(p.x, p.y) : -1;
+    const plot = safe(() => GameplayMap.getLocationFromIndex(idx), null);
+    const owner = plot ? at(plot.x, plot.y) : -1;
     if (majors.has(owner)) return owner;
   }
   return -1;
@@ -271,7 +286,7 @@ function disasterOwner(loc) {
  * The chronicle event for a natural disaster, or null when it struck no major civilization's land.
  * @param {CampaignDoc} doc
  * @param {*} data RandomEventOccurred payload (eventType, location).
- * @returns {HnrEvent|null}
+ * @returns {HistoryEvent|null}
  */
 export function disasterEvent(doc, data) {
   const info = safe(() => GameInfo.RandomEvents.lookup(data.eventType), null);
@@ -279,7 +294,15 @@ export function disasterEvent(doc, data) {
   const owner = disasterOwner(data.location);
   if (owner < 0) return null;
   const turn = Number(safe(() => Game.turn, 0)) || 0;
-  return { t: turn, a: doc.ages.length - 1, k: "disaster", p: owner, n: String(info.Name || ""), x: String(info.RandomEventType || ""), d: turnDate() };
+  return {
+    t: turn,
+    a: doc.ages.length - 1,
+    k: "disaster",
+    p: owner,
+    n: String(info.Name || ""),
+    x: String(info.RandomEventType || ""),
+    d: turnDate()
+  };
 }
 
 /**
@@ -288,10 +311,10 @@ export function disasterEvent(doc, data) {
  */
 function onDisaster(data) {
   const doc = live.doc;
-  const e = doc && data ? disasterEvent(doc, data) : null;
-  if (!doc || !e) return;
-  appendEvents(doc, [e]);
-  dlog("disaster", e.x, "owner", e.p);
+  const event = doc && data ? disasterEvent(doc, data) : null;
+  if (!doc || !event) return;
+  appendEvents(doc, [event]);
+  log.debug("disaster", event.x, "owner", event.p);
 }
 
 /**
@@ -308,7 +331,7 @@ function noteVictoryClass(doc) {
  * First reading of a campaign: note where recording began and mark civilizations that were
  * already gone.
  * @param {CampaignDoc} doc Mutated.
- * @param {HnrWorldState} world The first reading.
+ * @param {HistoryWorldState} world The first reading.
  */
 function markBaseline(doc, world) {
   const cfg = safe(() => Configuration.getGame(), null);
@@ -316,9 +339,9 @@ function markBaseline(doc, world) {
   const startAge = String(safe(() => infoRow("Ages", cfg.startAgeType)?.AgeType, "") || "");
   const partial = !(world.age === startAge && world.turn <= startTurn + 1);
   doc.since = { t: world.turn, d: world.date, partial };
-  for (const [pid, st] of Object.entries(world.players)) {
-    const p = doc.players[pid];
-    if (p && !st.alive && !p.elim) p.elim = -1;
+  for (const [pid, reading] of Object.entries(world.players)) {
+    const player = doc.players[pid];
+    if (player && !reading.alive && !player.elim) player.elim = -1;
   }
 }
 
@@ -343,8 +366,8 @@ export function savedTextsFor(rec) {
   /** @type {Record<string, string>} */
   const out = {};
   for (const tag of recordTags(rec)) {
-    const s = t(tag);
-    if (s && s !== tag && !s.startsWith("LOC_")) out[tag] = s;
+    const text = t(tag);
+    if (text && text !== tag && !text.startsWith("LOC_")) out[tag] = text;
   }
   return out;
 }
@@ -354,11 +377,11 @@ export function savedTextsFor(rec) {
  * as the Triumph is earned: the engine loads only the current age's Legacies, so an Antiquity
  * Triumph can no longer be looked up once the game reaches Exploration.
  * @param {CampaignDoc} doc Campaign (mutated).
- * @param {HnrEvent[]} events Events just appended.
+ * @param {HistoryEvent[]} events Events just appended.
  */
 export function rememberTriumphWords(doc, events) {
-  for (const e of events) {
-    if (e.k === "triumph" && e.x) rememberOneTriumph(doc, String(e.x), doc.ages[e.a]?.age || "");
+  for (const event of events) {
+    if (event.k === "triumph" && event.x) rememberOneTriumph(doc, String(event.x), doc.ages[event.a]?.age || "");
   }
 }
 
@@ -373,13 +396,13 @@ function rememberOneTriumph(doc, type, age) {
   if (texts[legacyWhyKey(type)] || texts[legacyWhatKey(type)]) return;
   const { why, what } = legacyBlurb(type, age);
   const readable = (/** @type {string} */ tag) => {
-    const s = t(tag);
-    return s && !s.startsWith("LOC_") ? plainText(s) : "";
+    const text = t(tag);
+    return text && !text.startsWith("LOC_") ? plainText(text) : "";
   };
-  const w1 = readable(why);
-  const w2 = readable(what);
-  if (w1) texts[legacyWhyKey(type)] = w1;
-  if (w2) texts[legacyWhatKey(type)] = w2;
+  const whyText = readable(why);
+  const whatText = readable(what);
+  if (whyText) texts[legacyWhyKey(type)] = whyText;
+  if (whatText) texts[legacyWhatKey(type)] = whatText;
 }
 
 /**
@@ -406,8 +429,9 @@ export function startCapture() {
   listen("GameAgeEnded", () => sampleNow("age-ended"));
   listen("RandomEventOccurred", (/** @type {any} */ data) => safe(() => onDisaster(data), undefined));
   const kick = () => sampleNow("load");
-  if (typeof Loading !== "undefined" && typeof Loading.runWhenLoaded === "function") Loading.runWhenLoaded(kick);
-  else setTimeout(kick, 250);
+  if (typeof Loading !== "undefined" && typeof Loading.runWhenLoaded === "function") {
+    Loading.runWhenLoaded(kick);
+  } else setTimeout(kick, 250);
 }
 
 /**

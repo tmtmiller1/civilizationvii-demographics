@@ -373,16 +373,16 @@ const CRISIS_FALLBACK_BY_AGE = {
 
 /**
  * FNV-1a-ish 32-bit string hash, used to seed deterministic crisis-name picks.
- * @param {string} s
+ * @param {string} text
  * @returns {number} An unsigned 32-bit hash.
  */
-function hashString(s) {
-  let h = 2166136261 >>> 0; // FNV-1a-ish
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
+function hashString(text) {
+  let hash = 2166136261 >>> 0; // FNV-1a-ish
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619) >>> 0;
   }
-  return h >>> 0;
+  return hash >>> 0;
 }
 
 /**
@@ -390,34 +390,17 @@ function hashString(s) {
  * @template T
  * @param {T[]} arr
  * @param {number} seed
- * @returns {T} The selected element.
+ * @returns {T}
  */
 function pickSeeded(arr, seed) {
   return arr[seed % arr.length];
 }
 
 /**
- * The game's start seed from the engine `Configuration`.
- * @returns {string} The seed string, or "" when unavailable.
- */
-export function getGameSeed() {
-  try {
-    if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
-      const g = Configuration.getGame();
-      const s = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
-      if (s !== undefined && s !== null) return String(s);
-    }
-  } catch (_) {
-    // Configuration.getGame may be absent or throw; fall back to an empty seed string.
-  }
-  return "";
-}
-
-/**
  * Resolve the `{ names, arcs }` LOC-key entry for a crisis sample, tolerating
  * the flat-array shape. Entries hold `LOC_DEMOGRAPHICS_CRISIS_*` tags.
  * @param {Snapshot|*} sample
- * @returns {{ names: string[], arcs: string[][] }} The resolved key pools.
+ * @returns {{ names: string[], arcs: string[][] }}
  */
 function resolveCrisisEntry(sample) {
   const type = sample && sample.crisisEventType;
@@ -429,9 +412,10 @@ function resolveCrisisEntry(sample) {
 }
 
 /**
+ * The template entry for a crisis type, else the age's fallback, else the generic "The Crisis" pool.
  * @param {*} type Crisis event type.
  * @param {*} age Sample age tag.
- * @returns {*[]} | {{ names: string[], arcs: string[][] }} Template entry.
+ * @returns {*[] | { names: string[], arcs: string[][] }} A flat name array or a `{ names, arcs }` entry.
  */
 function crisisTemplateEntry(type, age) {
   return (
@@ -444,7 +428,8 @@ function crisisTemplateEntry(type, age) {
 }
 
 /**
- * @param {*[] | { names?: string[] }} entry Template entry.
+ * The single-pick name pool of a template entry (the array itself for the flat shape).
+ * @param {*[] | { names?: string[] }} entry
  * @returns {string[]}
  */
 function crisisEntryNames(entry) {
@@ -453,7 +438,8 @@ function crisisEntryNames(entry) {
 }
 
 /**
- * @param {*[] | { arcs?: string[][] }} entry Template entry.
+ * The multi-stage arcs of a template entry (none for the flat shape).
+ * @param {*[] | { arcs?: string[][] }} entry
  * @returns {string[][]}
  */
 function crisisEntryArcs(entry) {

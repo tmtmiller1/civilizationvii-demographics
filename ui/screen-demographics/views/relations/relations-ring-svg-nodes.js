@@ -80,8 +80,8 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 /**
  * Resolve a ring node's display name: "Leader, Civilization" for majors, the
  * CS name for city-states, falling back to "P<id>".
- * @param {NodeInfo} info The node's display info.
- * @param {number} id The node's player id.
+ * @param {NodeInfo} info
+ * @param {number} id Player id.
  * @returns {string}
  */
 function nodeDisplayName(info, id) {
@@ -96,9 +96,9 @@ function nodeDisplayName(info, id) {
 /**
  * Resolve a node's stroke + fill colors. For CSes the type color is preferred
  * over the (unreliable) CS primary; both are scrubbed (defense-in-depth).
- * @param {NodeInfo} info The node's display info.
+ * @param {NodeInfo} info
  * @param {boolean} isCs
- * @returns {{ stroke: string, fill: string }} The resolved colors.
+ * @returns {{ stroke: string, fill: string }}
  */
 function resolveNodeColors(info, isCs) {
   const stroke = isCs
@@ -116,11 +116,11 @@ function resolveNodeColors(info, isCs) {
  * Queue a city-state type icon overlay (background-image div placed in pixel
  * space later, like leader portraits). The SVG `<image href="blp:">` path renders
  * blank in Coherent, so CS icons ride the same HTML-overlay pipeline.
- * @param {NodeInfo} info The node's display info.
+ * @param {NodeInfo} info
  * @param {{x: number, y: number}} pos
  * @param {number} r
  * @param {PortraitPlacement[]} portraitsToPlace
- * @returns {PortraitPlacement|null} The queued placement, or null.
+ * @returns {PortraitPlacement|null} Null when nothing was queued.
  */
 function queueCsIcon(info, pos, r, portraitsToPlace) {
   if (!info.csTypeIcon) return null;
@@ -142,7 +142,7 @@ function queueCsIcon(info, pos, r, portraitsToPlace) {
  * e.g. unmet city-states).
  * @param {Element} node The node group.
  * @param {number} r
- * @param {NodeInfo} info The node's display info.
+ * @param {NodeInfo} info
  */
 function appendCsTypeDisc(node, r, info) {
   if (!info.csTypeColor) return;
@@ -161,7 +161,7 @@ function appendCsTypeDisc(node, r, info) {
  * @param {boolean} isViewer
  * @param {boolean} isCs
  * @param {number} density The ring density factor.
- * @returns {number} The node radius in viewBox units.
+ * @returns {number} In viewBox units.
  */
 export function nodeRadius(isViewer, isCs, density) {
   // CS sized so their type icon reads large; the colored ring is just a thin
@@ -216,12 +216,12 @@ function appendNodeCircle(node) {
 
 /**
  * Queue a leader portrait overlay for later pixel-space placement.
- * @param {NodeInfo} info The node's display info.
+ * @param {NodeInfo} info
  * @param {{x: number, y: number}} pos
  * @param {number} r
  * @param {PortraitPlacement[]} portraitsToPlace
  * @param {boolean} isSelected
- * @returns {PortraitPlacement|null} The queued placement, or null.
+ * @returns {PortraitPlacement|null} Null when nothing was queued.
  */
 function queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected) {
   if (!info.leaderTypeString) return null;
@@ -315,7 +315,7 @@ function configureNodeElement(node, nodeData, geo, ctx) {
  * Focus mode: when a node is selected, everything outside its relationship
  * neighborhood fades back so the selected node's web reads clearly.
  * @param {Element} node The node group.
- * @param {number} id The node player id.
+ * @param {number} id Player id.
  * @param {Set<number>|null|undefined} focusNodes The bright set, or null.
  */
 function applyFocusDim(node, id, focusNodes) {
@@ -326,11 +326,11 @@ function applyFocusDim(node, id, focusNodes) {
 
 /**
  * Make the whole node group click-to-focus, not just the (HTML) portrait overlay
- * on top of it - so the ring filters even where the overlay is absent (initial
+ * on top of it, so the ring filters even where the overlay is absent (initial
  * letters, CS discs) or doesn't capture the click.
  * @param {*} node The node group.
- * @param {number} id The node player id.
- * @param {((pid: number) => void)|undefined} onNodeToggle The toggle handler.
+ * @param {number} id Player id.
+ * @param {((pid: number) => void)|undefined} onNodeToggle
  */
 function wireNodeClick(node, id, onNodeToggle) {
   if (typeof onNodeToggle !== "function" || typeof id !== "number") return;
@@ -341,8 +341,8 @@ function wireNodeClick(node, id, onNodeToggle) {
 /**
  * Append one ring node, including the node circle, CS disc, leader portrait
  * queue entry, and label text.
- * @param {Element} svg The SVG root.
- * @param {number} id The node player id.
+ * @param {Element} svg
+ * @param {number} id Player id.
  * @param {{ positions: Map<number, {x: number, y: number}>, density: number,
  *   cx: number, cy: number, viewBoxH: number }} geo Ring geometry.
  * @param {Record<string, NodeInfo>} names

@@ -39,6 +39,7 @@ import {
   writeSerializedPayload
 } from "/demographics/ui/storage/storage-retention.js";
 import { loadEmpty, loadParsed, readRaw } from "/demographics/ui/storage/storage-load.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 // The global {History} typedef merges with the DOM lib's `History` interface,
 // so the same shape is aliased under a local name (mirrors types/demographics.d.ts).
@@ -53,26 +54,12 @@ import { loadEmpty, loadParsed, readRaw } from "/demographics/ui/storage/storage
  * @property {*} [settleAges] End-of-age top-settlement archive (settlements-age-archive.js).
  */
 
-const DBG = false;
-/**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.storage]", ...a);
-}
-/**
- * Error logger; always emits.
- * @param {...*} a Values to log.
- */
-function derr(...a) {
-  console.error("[Demographics.storage]", ...a);
-}
+const log = makeLogger("storage");
 
 /**
  * Run `fn`, returning its result, or `fallback` if it throws. Never throws.
  * @template T
- * @param {() => T} fn Thunk to invoke.
+ * @param {() => T} fn
  * @param {T} fallback Value returned if `fn` throws.
  * @returns {T} The result of `fn`, or `fallback` on error.
  */
@@ -80,7 +67,7 @@ function safeCall(fn, fallback) {
   try {
     return fn();
   } catch (e) {
-    derr("safeCall:", e);
+    log.error("safeCall:", e);
     return fallback;
   }
 }
@@ -96,7 +83,7 @@ const PAYLOAD_KEY = "json";
 /**
  * Pick the persistence store: the GameConfiguration KV store as the primary
  * backend, with the Tutorial bag as a read-only fallback. Writes go to the config store only.
- * @param {{ catalogScope: string, derr: (...a: any[]) => void }} options Resolver options.
+ * @param {{ catalogScope: string, logError: (...a: any[]) => void }} options Resolver options.
  * @returns {PersistStore | null} The store, or null when no backend is available.
  */
 function pickPersistStore(options) {
@@ -107,8 +94,8 @@ function pickPersistStore(options) {
   return {
     pid: config.pid,
     read: (key) => {
-      const v = config.read(key);
-      if (v !== null && v !== undefined && v !== "") return v;
+      const value = config.read(key);
+      if (value !== null && value !== undefined && value !== "") return value;
       return legacy.read(key); // one-time migration from the old Tutorial bag
     },
     write: (key, val) => config.write(key, val)
@@ -138,20 +125,20 @@ const YIELD_METRIC_IDS = ["gdp", "gpt", "crops", "production", "science", "cultu
 /**
  * Sum |yield-metric| across all players in a sample, flagging whether any
  * yield metric was present at all.
- * @param {*} s One sample.
+ * @param {*} sample One sample.
  * @returns {{ total: number, seen: boolean }} The absolute yield total + seen flag.
  */
-function sumSampleYields(s) {
+function sumSampleYields(sample) {
   let total = 0;
   let seen = false;
-  const players = s && s.players;
+  const players = sample && sample.players;
   if (!players) return { total, seen };
   for (const pid of Object.keys(players)) {
-    const m = players[pid] && players[pid].metrics;
-    if (!m) continue;
-    for (const k of YIELD_METRIC_IDS) {
-      if (typeof m[k] === "number") {
-        total += Math.abs(m[k]);
+    const metrics = players[pid] && players[pid].metrics;
+    if (!metrics) continue;
+    for (const metricId of YIELD_METRIC_IDS) {
+      if (typeof metrics[metricId] === "number") {
+        total += Math.abs(metrics[metricId]);
         seen = true;
       }
     }
@@ -163,13 +150,13 @@ function sumSampleYields(s) {
  * Whether `s` is a premature age-boundary sample: the first sample of a new age
  * (age differs from `prev`) whose yields are all zero while `prev` (age-end) had
  * real yields: the artifact from sampling before the new age's economy spun up.
- * @param {*} s The candidate sample.
+ * @param {*} sample The candidate sample.
  * @param {*} prev The preceding sample, or null.
  * @returns {boolean} True when `s` should be dropped.
  */
-function isPrematureBoundarySample(s, prev) {
-  if (!prev || !s || !s.age || !prev.age || s.age === prev.age) return false;
-  const cur = sumSampleYields(s);
+function isPrematureBoundarySample(sample, prev) {
+  if (!prev || !sample || !sample.age || !prev.age || sample.age === prev.age) return false;
+  const cur = sumSampleYields(sample);
   return cur.seen && cur.total === 0 && sumSampleYields(prev).total > 0;
 }
 
@@ -186,7 +173,7 @@ function dropPrematureBoundarySamples(history) {
     (s, i) => !isPrematureBoundarySample(s, i > 0 ? samples[i - 1] : null)
   );
   if (kept.length !== samples.length) {
-    derr("dropped " + (samples.length - kept.length) + " premature age-boundary sample(s)");
+    log.error("dropped " + (samples.length - kept.length) + " premature age-boundary sample(s)");
     history.samples = kept;
   }
 }
@@ -247,7 +234,7 @@ class StorageImpl {
     // guard in storage-load.js loadParsed).
     if (this._memIsForDifferentGame()) return parsed;
     if (memSamples <= parsed.samples.length) return parsed;
-    dlog(
+    log.debug(
       "load: persistent=" +
         parsed.samples.length +
         " < _mem=" +
@@ -258,7 +245,7 @@ class StorageImpl {
       const mem = this._mem;
       if (mem) store.write(PAYLOAD_KEY, serializePayload(mem));
     } catch (e) {
-      derr("_loadParsed: recovery store.write threw:", e);
+      log.error("_loadParsed: recovery store.write threw:", e);
     }
     return /** @type {StoredHistory} */ (this._mem);
   }
@@ -274,7 +261,7 @@ class StorageImpl {
     this._refreshSeedFromConfiguration();
     this._initialized = true;
     this._installEngineHooks();
-    dlog("init: seed=", this._seed, "scope=", CATALOG_SCOPE);
+    log.debug("init: seed=", this._seed, "scope=", CATALOG_SCOPE);
   }
 
   /**
@@ -293,7 +280,7 @@ class StorageImpl {
         if (seed !== undefined && seed !== null) this._seed = seed;
       }
     } catch (e) {
-      derr("seed lookup threw:", e);
+      log.error("seed lookup threw:", e);
     }
   }
 
@@ -309,11 +296,11 @@ class StorageImpl {
     const flush = () => {
       try {
         if (this._mem) {
-          dlog("flush: samples=" + this._mem.samples.length);
+          log.debug("flush: samples=" + this._mem.samples.length);
           this.save(this._mem);
         }
       } catch (e) {
-        derr("flush hook threw:", e);
+        log.error("flush hook threw:", e);
       }
     };
     if (activePersistenceMode() === "legacy_tutorial_bag") {
@@ -346,14 +333,14 @@ class StorageImpl {
           engine.off("BeforeAgeTransition", this._beforeAgeTransitionHook);
         }
       } catch (e) {
-        derr("teardown BeforeAgeTransition off threw:", e);
+        log.error("teardown BeforeAgeTransition off threw:", e);
       }
       try {
         if (this._beforeUnloadHook) {
           engine.off("BeforeUnload", this._beforeUnloadHook);
         }
       } catch (e) {
-        derr("teardown BeforeUnload off threw:", e);
+        log.error("teardown BeforeUnload off threw:", e);
       }
     }
     this._beforeAgeTransitionHook = null;
@@ -366,7 +353,7 @@ class StorageImpl {
    * @returns {PersistStore | null}
    */
   _pickStore() {
-    const options = { catalogScope: CATALOG_SCOPE, derr };
+    const options = { catalogScope: CATALOG_SCOPE, logError: log.error };
     return pickPersistStore(options);
   }
 
@@ -376,7 +363,7 @@ class StorageImpl {
    * @returns {string | null} The raw payload, or null on error/empty.
    */
   _readRaw(store) {
-    return readRaw(store, PAYLOAD_KEY, derr);
+    return readRaw(store, PAYLOAD_KEY, log.error);
   }
 
   /**
@@ -395,8 +382,8 @@ class StorageImpl {
       emptyHistory,
       isValid,
       normalize,
-      dlog,
-      derr
+      logDebug: log.debug,
+      logError: log.error
     });
   }
 
@@ -418,8 +405,8 @@ class StorageImpl {
       isValid,
       normalize,
       preferMemWhenNewer: (parsed) => this._preferMemWhenNewer(parsed, store),
-      dlog,
-      derr
+      logDebug: log.debug,
+      logError: log.error
     });
   }
 
@@ -433,7 +420,7 @@ class StorageImpl {
     if (!store) {
       // Player not yet available. Return _mem if we have it,
       // otherwise an empty shell. Subsequent loads will retry.
-      dlog(
+      log.debug(
         "load: no store available yet (pre-player-init); _mem=" +
           (this._mem ? this._mem.samples.length : "null")
       );
@@ -461,7 +448,7 @@ class StorageImpl {
     this._mem = history;
     const store = this._pickStore();
     if (!store) {
-      dlog("save: no store available; held in _mem (samples=" + history.samples.length + ")");
+      log.debug("save: no store available; held in _mem (samples=" + history.samples.length + ")");
       return false;
     }
     return this._writeStorePayload(store, history);
@@ -477,8 +464,8 @@ class StorageImpl {
       version: VERSION,
       isValid,
       normalize,
-      resolveEffectiveCap: () => resolveEffectiveCap(derr),
-      derr
+      resolveEffectiveCap: () => resolveEffectiveCap(log.error),
+      logError: log.error
     });
   }
 
@@ -493,7 +480,7 @@ class StorageImpl {
   _writeStorePayload(store, history) {
     const serialized = this._serializeWithinBudget(history);
     if (serialized === null) return false;
-    return writeSerializedPayload(store, PAYLOAD_KEY, serialized, derr);
+    return writeSerializedPayload(store, PAYLOAD_KEY, serialized, log.error);
   }
 
   /**
@@ -506,12 +493,12 @@ class StorageImpl {
     let result;
     try {
       result = serializeWithinBudget(history, {
-        cap: resolveEffectiveCap(derr).cap,
+        cap: resolveEffectiveCap(log.error).cap,
         softBytes: PAYLOAD_SOFT_BYTES,
         tighten: (h, cap) => this._tightenToCap(h, cap)
       });
     } catch (e) {
-      derr("save: stringify threw:", e);
+      log.error("save: stringify threw:", e);
       return null;
     }
     this._lastPayloadBytes = result.serialized.length;
@@ -523,13 +510,13 @@ class StorageImpl {
    * Re-run the decimation/cap step against a tighter cap, for the byte budget.
    * The user's "keep every sample" override is bypassed on purpose: the budget
    * protects the save itself.
-   * @param {StoredHistory} h Target history (mutated).
+   * @param {StoredHistory} history Target history (mutated).
    * @param {number} cap The tightened sample cap.
    */
-  _tightenToCap(h, cap) {
+  _tightenToCap(history, cap) {
     const eff = { cap, source: "bytes:" + cap };
-    this._maybeDecimate(h, eff, { decimationDisabled: () => false, splitDecimationBuckets });
-    if (h.samples.length > cap) h.samples = h.samples.slice(-cap);
+    this._maybeDecimate(history, eff, { decimationDisabled: () => false, splitDecimationBuckets });
+    if (history.samples.length > cap) history.samples = history.samples.slice(-cap);
   }
 
   /**
@@ -542,13 +529,13 @@ class StorageImpl {
   _notePayloadBytes(initialBytes, finalBytes, attempts) {
     if (initialBytes > PAYLOAD_SOFT_BYTES && !this._payloadSoftNotified) {
       this._payloadSoftNotified = true;
-      derr(
+      log.error(
         "save: payload " + initialBytes + " bytes exceeds the soft budget " + PAYLOAD_SOFT_BYTES +
           "; tightened to " + finalBytes + " bytes in " + attempts + " pass(es)"
       );
     }
     if (finalBytes > PAYLOAD_HARD_BYTES) {
-      derr(
+      log.error(
         "save: payload " + finalBytes + " bytes still exceeds the hard budget " + PAYLOAD_HARD_BYTES +
           " after " + attempts + " pass(es); writing anyway"
       );
@@ -560,30 +547,30 @@ class StorageImpl {
    * De-dupes by (age, localTurn) so repeat events on the same age-local turn
    * (notably per-pid PlayerAgeTransitionComplete bursts) don't pile up at one
    * chart X coord.
-   * @param {StoredHistory} h Target history.
+   * @param {StoredHistory} history Target history.
    * @param {Snapshot} snapshot Snapshot to insert.
    */
-  _insertSnapshot(h, snapshot) {
-    insertSnapshot(h, snapshot);
+  _insertSnapshot(history, snapshot) {
+    insertSnapshot(history, snapshot);
   }
 
   /**
    * Decimate older samples in place once the count exceeds a cap-derived
    * threshold, preserving the latest age and any age-boundary turns.
-   * @param {StoredHistory} h Target history (mutated).
+   * @param {StoredHistory} history Target history (mutated).
    * @param {EffectiveCap} eff The active effective cap.
    * @param {Parameters<typeof maybeDecimate>[2]} [deps] Decimation dependencies
    *   (default: the user's decimation setting + the schema bucket split).
    */
-  _maybeDecimate(h, eff, deps) {
+  _maybeDecimate(history, eff, deps) {
     const summary = maybeDecimate(
-      h,
+      history,
       eff,
-      deps || { decimationDisabled: () => decimationDisabled(derr), splitDecimationBuckets }
+      deps || { decimationDisabled: () => decimationDisabled(log.error), splitDecimationBuckets }
     );
     if (!summary.decimated) return;
-    this._noteDecimation(h, eff, summary.keepEveryNth || 3);
-    dlog(
+    this._noteDecimation(history, eff, summary.keepEveryNth || 3);
+    log.debug(
       "decimated; before=" +
         summary.beforeCount +
         " after=" +
@@ -596,17 +583,17 @@ class StorageImpl {
   }
 
   /**
-   * Fire the one-time, always-on downsampling notice (not gated by DBG) and
+   * Fire the one-time, always-on downsampling notice (not behind the debug switch) and
    * record the turn it first triggered; the Options panel mirrors this via
    * {@link StorageImpl#decimationStatus}.
-   * @param {StoredHistory} h The (already decimated) history.
+   * @param {StoredHistory} history The (already decimated) history.
    * @param {EffectiveCap} eff The active effective cap.
    * @param {number} keepEveryNth The keep-1-in-N decimation ratio.
    */
-  _noteDecimation(h, eff, keepEveryNth) {
+  _noteDecimation(history, eff, keepEveryNth) {
     if (this._decimationNotified) return;
     this._decimationNotified = true;
-    const last = h.samples[h.samples.length - 1];
+    const last = history.samples[history.samples.length - 1];
     this._decimationTurn = last && typeof last.turn === "number" ? last.turn : -1;
     console.warn(
       "[Demographics.storage] History sample cap approached; older samples " +
@@ -636,13 +623,13 @@ class StorageImpl {
    *   `payloadBytes` is the length of the last payload serialized or read.
    */
   decimationStatus() {
-    const eff = resolveEffectiveCap(derr);
+    const eff = resolveEffectiveCap(log.error);
     return {
       active: this._decimationNotified,
       firstTurn: this._decimationTurn,
       cap: eff.cap,
       capSource: eff.source,
-      disabled: decimationDisabled(derr),
+      disabled: decimationDisabled(log.error),
       payloadBytes: this._lastPayloadBytes
     };
   }
@@ -656,16 +643,16 @@ class StorageImpl {
    * @returns {StoredHistory} The updated history.
    */
   appendSample(snapshot, opts) {
-    const h = this.load();
+    const history = this.load();
 
-    this._insertSnapshot(h, snapshot);
+    this._insertSnapshot(history, snapshot);
 
-    const eff = resolveEffectiveCap(derr);
-    this._maybeDecimate(h, eff);
+    const eff = resolveEffectiveCap(log.error);
+    this._maybeDecimate(history, eff);
 
-    if (!opts || opts.persist !== false) this.save(h);
-    else this._mem = h;
-    return h;
+    if (!opts || opts.persist !== false) this.save(history);
+    else this._mem = history;
+    return history;
   }
 
   /**
@@ -697,7 +684,7 @@ class StorageImpl {
       try {
         store.write(PAYLOAD_KEY, serializePayload(empty));
       } catch (e) {
-        derr("clear: store.write threw:", e);
+        log.error("clear: store.write threw:", e);
       }
     }
   }

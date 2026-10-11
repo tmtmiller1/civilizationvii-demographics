@@ -12,8 +12,8 @@
  * @property {(pid: Pid | null) => void} setWarsFilterPid Filter wars by player.
  * @property {(id: number | null) => void} setWarGraphsWarId Select a war for War Graphs.
  * @property {(id: string) => void} setCrisisGraphsAge Select a crisis scope for Crisis Graphs.
- * @property {(v: boolean) => void} setWarsShowCs Toggle city-states in wars.
- * @property {(v: boolean) => void} setWarsActiveOnly Toggle active-only wars.
+ * @property {(value: boolean) => void} setWarsShowCs Toggle city-states in wars.
+ * @property {(value: boolean) => void} setWarsActiveOnly Toggle active-only wars.
  * @property {(pid: Pid | null) => void} setResourcesViewerPid Open resources.
  * @property {(leaderKey: string) => void} toggleFocusCiv Toggle a focused civ.
  * @property {() => void} clearFocus Clear all focused civs.
@@ -63,8 +63,8 @@ function buildHistoryCallbacks(screen) {
     setWarsFilterPid: (pid) => screen._setAndPersist("warsFilterPid", "warsFilterPid", pid),
     setWarGraphsWarId: (id) => screen._setAndPersist("warGraphsWarId", "warGraphsWarId", id),
     setCrisisGraphsAge: (id) => screen._setAndPersist("crisisGraphsAge", "crisisGraphsAge", id),
-    setWarsShowCs: (v) => screen._setAndPersist("warsShowCs", "warsShowCs", !!v),
-    setWarsActiveOnly: (v) => screen._setAndPersist("warsActiveOnly", "warsActiveOnly", !!v),
+    setWarsShowCs: (value) => screen._setAndPersist("warsShowCs", "warsShowCs", !!value),
+    setWarsActiveOnly: (value) => screen._setAndPersist("warsActiveOnly", "warsActiveOnly", !!value),
     setResourcesViewerPid: (pid) =>
       screen._setAndPersist("resourcesViewerPid", "resourcesViewerPid", pid),
     toggleFocusCiv: (leaderKey) => screen._toggleFocusCiv(leaderKey),

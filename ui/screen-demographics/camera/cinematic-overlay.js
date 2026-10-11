@@ -1,6 +1,6 @@
 import { localYear, t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
-import { div, iconEl, fmtPop } from "/demographics/ui/core/ui-helpers.js";
+import { div, iconEl, formatPopulation } from "/demographics/ui/core/ui-helpers.js";
 import { publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /** @type {Record<number, string>} */
@@ -70,9 +70,9 @@ export const QUARTER_ARTICLE = {
 /** @type {Set<string>} */
 export const NO_ARTICLE_TYPES = new Set([
   // Every WONDER_* / FEATURE_* below was read from GameInfo on Civilization VII 1.5.0 with all
-  // released packs. Matching on the id rather than the display name is what keeps this correct
-  // when a name is spelled differently than expected: "Machu Pikchu" is the game's own spelling,
-  // and the name-only list missed it and produced "the Machu Pikchu".
+  // released packs. Matching on the id rather than the display name keeps this correct when a
+  // name is spelled differently than expected: "Machu Pikchu" is the game's own spelling, which a
+  // name match would miss and render as "the Machu Pikchu".
   //
   // To refresh after a pack adds wonders: in a running game, list
   // `GameInfo.Constructibles` where `ConstructibleClass === "WONDER"` and the null-class
@@ -231,7 +231,7 @@ function buildOverlayMeta(settlement) {
   const pop = div("demographics-map-overlay-pop");
   pop.appendChild(iconEl("blp:Yield_Population", "demographics-settle-yield-icon"));
   pop.appendChild(
-    div("demographics-map-overlay-pop-val", fmtPop(settlement.populationEstimate))
+    div("demographics-map-overlay-pop-val", formatPopulation(settlement.populationEstimate))
   );
   meta.appendChild(pop);
   const wonders = Array.isArray(settlement.wonders) ? settlement.wonders : [];
@@ -286,8 +286,7 @@ export function captionText(caption) {
     return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED", localYear(caption.foundedYear));
   }
   if (typeof caption.standingRank === "number") {
-    const ord = ordinalText(caption.standingRank);
-    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN", ord);
+    return t("LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN", ordinalText(caption.standingRank));
   }
   if (caption.touringCity) {
     return t("LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING", caption.touringCity);
@@ -537,7 +536,10 @@ export function mountOverlay(flowState, settlement, mode, options) {
   const shield = div("demographics-map-shield");
   try {
     for (const type of ["mousedown", "mouseup", "click", "mousemove", "mouseover", "wheel", "contextmenu"]) {
-      shield.addEventListener(type, (e) => { e.stopPropagation(); e.preventDefault(); }, true);
+      shield.addEventListener(type, (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }, true);
     }
   } catch (_) {
     // addEventListener may be absent in headless hosts; the shield still covers the HUD visually.

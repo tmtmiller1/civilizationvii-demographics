@@ -7,7 +7,7 @@ import DemographicsStorage from "/demographics/ui/storage/demographics-storage.j
 /**
  * Coerce a value to a finite number, or null.
  * @param {*} v Candidate value.
- * @returns {number|null} Finite number or null.
+ * @returns {number|null}
  */
 function finiteOrNull(v) {
   return typeof v === "number" && isFinite(v) ? v : null;

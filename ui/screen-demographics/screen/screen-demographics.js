@@ -7,8 +7,10 @@
 import Panel from "/core/ui/panel-support.js";
 import { setNameOrder } from "/demographics/ui/core/player-label.js";
 import { applyVisualScale, publishFontLadder } from "/demographics/ui/core/demographics-font-ladder.js";
-import { alignOptionsHeaderButton, buildOptionsButton } from "/demographics/ui/screen-demographics/views/shared/options-button.js";
-import { destroyChartsUnder, makeCancelInputListener, renderFailedFallback } from "/demographics/ui/screen-demographics/screen/screen-lifecycle-support.js";
+import { alignOptionsHeaderButton, buildOptionsButton }
+  from "/demographics/ui/screen-demographics/views/shared/options-button.js";
+import { destroyChartsUnder, makeCancelInputListener, renderFailedFallback }
+  from "/demographics/ui/screen-demographics/screen/screen-lifecycle-support.js";
 import * as ViewHistory from "/demographics/ui/screen-demographics/views/history/view-history.js";
 import { buildHistoryContext } from "/demographics/ui/screen-demographics/screen/screen-history-context.js";
 import { buildPolicyBanner } from "/demographics/ui/screen-demographics/views/history/history-captions.js";
@@ -18,6 +20,7 @@ import {
   migrationHubHasCompanion
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import { publishEffectivePolicy } from "/demographics/ui/core/demographics-governance.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 // The heavy views are imported on first open instead of statically, so they are never parsed
 // for sessions that only use the default view. Specifier per lazy view id, cached by _renderLazyView.
@@ -54,21 +57,8 @@ const LAZY_CHART_METRICS = new Set(["wars_gantt", "war_graphs"]);
  * @property {string} id Tab identifier (also the active-view key).
  * @property {string} label Localization key for the tab label.
  */
-const DBG = false;
-/**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.screen]", ...a);
-}
-/**
- * Error logger; always emits.
- * @param {...*} a Values to log.
- */
-function derr(...a) {
-  console.error("[Demographics.screen]", ...a);
-}
+
+const log = makeLogger("screen");
 
 /** The view tabs, in display order. The first entry is the default view. */
 /** @type {ViewTab[]} */
@@ -84,18 +74,18 @@ const VIEW_TABS = [
 const HUB_VIEWS = new Set(["statistics", "migration", "geopolitics"]);
 
 /**
- * Run `fn`, returning its result, or `fb` if it throws. Never throws.
+ * Run `fn`, returning its result, or `fallback` if it throws. Never throws.
  * @template T
  * @param {() => T} fn
- * @param {T} [fb] Returned if `fn` throws.
+ * @param {T} [fallback] Returned if `fn` throws.
  * @returns {T | undefined}
  */
-function safeCall(fn, fb) {
+function safeCall(fn, fallback) {
   try {
     return fn();
   } catch (e) {
-    derr("safeCall:", e);
-    return fb;
+    log.error("safeCall:", e);
+    return fallback;
   }
 }
 
@@ -153,7 +143,7 @@ class ScreenDemographics extends Panel {
 
   /** Panel lifecycle: configure audio cues before attach. */
   onInitialize() {
-    dlog("onInitialize");
+    log.debug("onInitialize");
     super.onInitialize?.();
     // Panel plays data-audio-showing on attach and data-audio-hiding on close when these flags
     // are true; the group-ref scopes lookups to the audio-screen-unlocks bank.
@@ -174,7 +164,7 @@ class ScreenDemographics extends Panel {
    * modules, restore state, build the tab bar, and render the active view.
    */
   onAttach() {
-    dlog("onAttach");
+    log.debug("onAttach");
     super.onAttach();
     // Mirror the (possibly persisted) analytics policy to GameConfiguration up front, so the
     // companion Emigration tabs read the player's live choice instead of the wiped localStorage.
@@ -185,9 +175,8 @@ class ScreenDemographics extends Panel {
       () => safeCall(() => this._liveRefresh());
     this._wireCloseButton();
     // One Options button for every tab, in the frame header at title level (left of the close
-    // button). It used to be rendered per view: alone on its own row under the ranking / relations
-    // sub-tabs, and inside the chart toolbar elsewhere.
-    // The header row: [policy banner, when constrained][Options]. One place, every tab, no rows spent.
+    // button). The header row: [policy banner, when constrained][Options]. One place, every tab,
+    // no content rows spent.
     safeCall(() => {
       const frame = this.Root.querySelector(".demographics-frame");
       if (frame && !frame.querySelector(".demographics-header-right")) {
@@ -196,9 +185,9 @@ class ScreenDemographics extends Panel {
         const status = document.createElement("div");
         status.className = "demographics-header-status";
         row.appendChild(status);
-        const btn = buildOptionsButton();
-        btn.classList.add("demographics-options-header-btn");
-        row.appendChild(btn);
+        const optionsButton = buildOptionsButton();
+        optionsButton.classList.add("demographics-options-header-btn");
+        row.appendChild(optionsButton);
         frame.appendChild(row);
       }
       alignOptionsHeaderButton(frame);
@@ -255,14 +244,14 @@ class ScreenDemographics extends Panel {
   /** Wire the template's close button to {@link ScreenDemographics#close}. */
   _wireCloseButton() {
     safeCall(() => {
-      const closeBtn = this.Root.querySelector("[data-ia-close]");
+      const closeBtn = this.Root.querySelector("[data-dg-close]");
       if (closeBtn) {
         closeBtn.addEventListener("action-activate", () => {
-          dlog("close button activated");
+          log.debug("close button activated");
           safeCall(() => this.close());
         });
       } else {
-        derr("close button not found in template");
+        log.error("close button not found in template");
       }
     });
   }
@@ -291,7 +280,7 @@ class ScreenDemographics extends Panel {
         this.buildTopTabs();
         this.renderActiveView();
       })
-      .catch((e) => derr("module import REJECTED:", e));
+      .catch((e) => log.error("module import REJECTED:", e));
   }
 
   /**
@@ -313,7 +302,7 @@ class ScreenDemographics extends Panel {
     this._restoreViewerPids();
     this._restoreConflictsState();
     this._restoreHiddenCivs();
-    dlog(
+    log.debug(
       "restored: view=",
       this.activeView,
       "metric=",
@@ -333,10 +322,10 @@ class ScreenDemographics extends Panel {
    */
   _takePendingReturnView() {
     try {
-      const v = this.settings.getSetting("pendingReturnView", "");
-      if (v) {
+      const pendingView = this.settings.getSetting("pendingReturnView", "");
+      if (pendingView) {
         this.settings.setSetting("pendingReturnView", "");
-        return String(v);
+        return String(pendingView);
       }
     } catch (_) {
       // settings unavailable → no override; fall through to the default view.
@@ -365,20 +354,20 @@ class ScreenDemographics extends Panel {
 
   /** Restore the resources / triumphs / radar-age viewer selections. */
   _restoreViewerPids() {
-    const rvp = this.settings.getSetting("resourcesViewerPid", null);
-    this.resourcesViewerPid = typeof rvp === "number" ? rvp : null;
+    const viewerPid = this.settings.getSetting("resourcesViewerPid", null);
+    this.resourcesViewerPid = typeof viewerPid === "number" ? viewerPid : null;
     this.activeRadarAge = this.settings.getSetting("activeRadarAge", "current");
     this.crisisGraphsAge = this.settings.getSetting("crisisGraphsAge", "latest");
   }
 
   /** Restore the wars-Gantt filter / city-state / active-only flags. */
   _restoreConflictsState() {
-    const wfp = this.settings.getSetting("warsFilterPid", null);
-    this.warsFilterPid = typeof wfp === "number" ? wfp : null;
+    const filterPid = this.settings.getSetting("warsFilterPid", null);
+    this.warsFilterPid = typeof filterPid === "number" ? filterPid : null;
     this.warsShowCs = this.settings.getSetting("warsShowCs", true) !== false;
     this.warsActiveOnly = !!this.settings.getSetting("warsActiveOnly", false);
-    const wgw = this.settings.getSetting("warGraphsWarId", null);
-    this.warGraphsWarId = typeof wgw === "number" ? wgw : null;
+    const warId = this.settings.getSetting("warGraphsWarId", null);
+    this.warGraphsWarId = typeof warId === "number" ? warId : null;
   }
 
   /** Restore the hidden-civ set, coercing legacy numeric entries to strings. */
@@ -386,7 +375,7 @@ class ScreenDemographics extends Panel {
     const hidden = this.settings.getSetting("hiddenCivs", []);
     // Stored values are strings (we normalize to String for the Set
     // key); older payloads may have numeric entries, so coerce.
-    this.hiddenCivs = new Set((Array.isArray(hidden) ? hidden : []).map((v) => String(v)));
+    this.hiddenCivs = new Set((Array.isArray(hidden) ? hidden : []).map((entry) => String(entry)));
   }
 
   /** Load the history blob from storage into {@link ScreenDemographics#history}. */
@@ -394,7 +383,7 @@ class ScreenDemographics extends Panel {
     if (this.storage && typeof this.storage.load === "function") {
       this.history = this.storage.load() || this.history;
     }
-    dlog("history loaded; sample count=", this.history.samples?.length || 0);
+    log.debug("history loaded; sample count=", this.history.samples?.length || 0);
   }
 
   /**
@@ -403,11 +392,11 @@ class ScreenDemographics extends Panel {
    */
   _ensureInitialSample() {
     if (!(this.history.samples?.length > 0) && this.sampler?.sampleNow) {
-      dlog("history empty ; forcing on-demand sampleNow()");
+      log.debug("history empty ; forcing on-demand sampleNow()");
       safeCall(() => {
         this.sampler.sampleNow();
         if (this.storage?.load) this.history = this.storage.load() || this.history;
-        dlog("post-sampleNow sample count=", this.history.samples?.length || 0);
+        log.debug("post-sampleNow sample count=", this.history.samples?.length || 0);
       });
     }
   }
@@ -419,13 +408,13 @@ class ScreenDemographics extends Panel {
   buildTopTabs() {
     const host = this.Root.querySelector(".demographics-view-tab-host");
     if (!host) {
-      derr("view-tab-bar host missing");
+      log.error("view-tab-bar host missing");
       return;
     }
     const tabBar = this._makeViewTabBar();
     host.appendChild(tabBar);
     this.viewTabBar = tabBar;
-    dlog("view tab bar built; active=", this.activeView);
+    log.debug("view tab bar built; active=", this.activeView);
   }
 
   /**
@@ -439,8 +428,8 @@ class ScreenDemographics extends Panel {
     tabBar.setAttribute("tab-item-class", "font-title text-base");
     const visibleTabs = this._visibleViewTabs();
     tabBar.setAttribute("tab-items", JSON.stringify(visibleTabs));
-    const idx = Math.max(0, visibleTabs.findIndex((v) => v.id === this.activeView));
-    tabBar.setAttribute("selected-tab-index", String(idx));
+    const selectedIndex = Math.max(0, visibleTabs.findIndex((tab) => tab.id === this.activeView));
+    tabBar.setAttribute("selected-tab-index", String(selectedIndex));
     this._applyTabBarNavHints(tabBar);
     this.viewTabBarListener = (/** @type {*} */ event) => this._onViewTabSelected(event);
     tabBar.addEventListener("tab-selected", this.viewTabBarListener);
@@ -453,29 +442,29 @@ class ScreenDemographics extends Panel {
    * @returns {ViewTab[]} The visible tab descriptors.
    */
   _visibleViewTabs() {
-    const base = VIEW_TABS.filter((v) => viewTabVisibleInTier(v.id));
+    const base = VIEW_TABS.filter((tab) => viewTabVisibleInTier(tab.id));
     // The Migration hub exists only to host the Emigration companion, so hide the tab when
     // Emigration isn't active and label it "Emigration" when it is.
     const hasEmigration = migrationHubHasCompanion();
     // Companion mods can also contribute a top-level view tab (e.g. the Historical Timeline, or a
     // legacy `topLevel` registerPanel such as an un-updated Emigration). Insert those right after
     // Geopolitics so Geopolitics reads before them, in registration order.
-    const ext = this._topLevelPanelTabs();
-    const hasGeopolitics = base.some((v) => v.id === "geopolitics");
+    const companionTabs = this._topLevelPanelTabs();
+    const hasGeopolitics = base.some((tab) => tab.id === "geopolitics");
     /** @type {ViewTab[]} */
     const visibleTabs = [];
-    for (const v of base) {
-      if (v.id === "migration") {
+    for (const tab of base) {
+      if (tab.id === "migration") {
         if (!hasEmigration) continue;
-        visibleTabs.push({ id: v.id, label: "LOC_DEMOGRAPHICS_TAB_EMIGRATION" });
+        visibleTabs.push({ id: tab.id, label: "LOC_DEMOGRAPHICS_TAB_EMIGRATION" });
         continue;
       }
-      visibleTabs.push(v);
-      if (v.id === "geopolitics") visibleTabs.push(...ext);
+      visibleTabs.push(tab);
+      if (tab.id === "geopolitics") visibleTabs.push(...companionTabs);
     }
     // Geopolitics hidden (e.g. Basic tier) but companion tabs exist: still surface them.
-    if (!hasGeopolitics && ext.length) visibleTabs.push(...ext);
-    if (!visibleTabs.some((v) => v.id === this.activeView)) this.activeView = "statistics";
+    if (!hasGeopolitics && companionTabs.length) visibleTabs.push(...companionTabs);
+    if (!visibleTabs.some((tab) => tab.id === this.activeView)) this.activeView = "statistics";
     return visibleTabs;
   }
 
@@ -486,8 +475,8 @@ class ScreenDemographics extends Panel {
    */
   _topLevelPanelTabs() {
     return EXTERNAL_PANELS
-      .filter((p) => p && p.topLevel)
-      .map((p) => ({ id: p.id, label: p.pageLabel || p.title || p.id }));
+      .filter((panel) => panel && panel.topLevel)
+      .map((panel) => ({ id: panel.id, label: panel.pageLabel || panel.title || panel.id }));
   }
 
   /**
@@ -519,7 +508,7 @@ class ScreenDemographics extends Panel {
   _onViewTabSelected(event) {
     const id = event?.detail?.selectedItem?.id;
     if (!id || id === this.activeView) return;
-    dlog("view-tab-selected:", id);
+    log.debug("view-tab-selected:", id);
     this.activeView = id;
     // Open the new hub on its first page + first metric/member, not a stale prior selection, so
     // e.g. Migration always lands on "Population & Migration" → Population. (Resets in-memory; the
@@ -553,11 +542,11 @@ class ScreenDemographics extends Panel {
     // view; every other view shows it via the banner-host below the view host. Either way the
     // banner-host is cleared so a stale banner never lingers across view switches.
     const usesHistoryRender = HUB_VIEWS.has(this.activeView)
-      || this._topLevelPanelTabs().some((v) => v.id === this.activeView);
+      || this._topLevelPanelTabs().some((tab) => tab.id === this.activeView);
     safeCall(() => this._renderPolicyBanner(usesHistoryRender));
     const host = this.Root.querySelector(".demographics-view-host");
     if (!host) {
-      derr("view-host missing");
+      log.error("view-host missing");
       return;
     }
     // The Historical Data view can put its page-tab row back instead of rebuilding it (a fresh
@@ -571,8 +560,8 @@ class ScreenDemographics extends Panel {
     try {
       this._dispatchView(host);
     } catch (e) {
-      derr("renderActiveView threw:", e);
-      // Leave the player a message rather than a blank tab (derr goes to UI.log only).
+      log.error("renderActiveView threw:", e);
+      // Leave the player a message rather than a blank tab (log.error goes to UI.log only).
       safeCall(() => host.appendChild(renderFailedFallback()));
     }
   }
@@ -581,8 +570,7 @@ class ScreenDemographics extends Panel {
    * Render (or clear) the analytics-governance policy banner in the header status slot, left of
    * the Options button. It shows whenever the effective policy withholds data, so every player can
    * see the comparative analytics are constrained and whether the multiplayer host is the binding
-   * constraint. It used to sit in a bottom row (and the history views drew their own copy);
-   * the header is the one place it appears now, on every tab, so it costs no content rows.
+   * constraint. The header is the one place it appears, on every tab, so it costs no content rows.
    * @param {boolean} [_renderedInView] Ignored; kept for the call site's shape.
    */
   _renderPolicyBanner(_renderedInView) {
@@ -602,7 +590,7 @@ class ScreenDemographics extends Panel {
   _dispatchView(host) {
     // A companion top-level panel (e.g. a legacy Emigration): render the history machinery pinned
     // to that panel's page (its sub-tabs + native charts), with no page-tab row.
-    if (this._topLevelPanelTabs().some((v) => v.id === this.activeView)) {
+    if (this._topLevelPanelTabs().some((tab) => tab.id === this.activeView)) {
       this._renderHistoricalDataView(host, { onlyPage: this.activeView });
       return;
     }
@@ -637,7 +625,7 @@ class ScreenDemographics extends Panel {
         while (host.firstChild) host.removeChild(host.firstChild);
         mod.render(host, { history: this.history, settings: this.settings });
       })
-      .catch((/** @type {*} */ e) => derr("lazy view load failed:", id, e));
+      .catch((/** @type {*} */ e) => log.error("lazy view load failed:", id, e));
   }
 
   /**
@@ -671,7 +659,7 @@ class ScreenDemographics extends Panel {
           while (host.firstChild) host.removeChild(host.firstChild);
           ViewHistory.render(host, buildHistoryContext(this), viewOpts);
         })
-        .catch((/** @type {*} */ e) => derr("lazy chart load failed:", metric, e));
+        .catch((/** @type {*} */ e) => log.error("lazy chart load failed:", metric, e));
       return;
     }
     ViewHistory.render(host, buildHistoryContext(this), viewOpts);
@@ -695,9 +683,9 @@ class ScreenDemographics extends Panel {
    */
   _toggleFocusCiv(leaderKey) {
     if (!leaderKey) return;
-    const k = String(leaderKey);
-    if (this.focusedCivs.has(k)) this.focusedCivs.delete(k);
-    else this.focusedCivs.add(k);
+    const key = String(leaderKey);
+    if (this.focusedCivs.has(key)) this.focusedCivs.delete(key);
+    else this.focusedCivs.add(key);
     this.renderActiveView();
   }
 
@@ -739,10 +727,10 @@ class ScreenDemographics extends Panel {
    */
   toggleCiv(leaderKey) {
     if (!leaderKey) return;
-    const k = String(leaderKey);
-    if (this.hiddenCivs.has(k)) this.hiddenCivs.delete(k);
-    else this.hiddenCivs.add(k);
-    dlog("toggle civ:", k, "hidden now:", this.hiddenCivs.has(k));
+    const key = String(leaderKey);
+    if (this.hiddenCivs.has(key)) this.hiddenCivs.delete(key);
+    else this.hiddenCivs.add(key);
+    log.debug("toggle civ:", key, "hidden now:", this.hiddenCivs.has(key));
     safeCall(() => this.settings.setSetting("hiddenCivs", Array.from(this.hiddenCivs)));
     this.renderActiveView();
   }
@@ -755,7 +743,7 @@ class ScreenDemographics extends Panel {
    */
   setAllCivsHidden(hide, keys) {
     if (hide) {
-      for (const k of keys || []) this.hiddenCivs.add(String(k));
+      for (const key of keys || []) this.hiddenCivs.add(String(key));
     } else {
       this.hiddenCivs.clear();
     }
@@ -768,7 +756,7 @@ class ScreenDemographics extends Panel {
    * writes so closing the panel saves all in-flight samples.
    */
   onDetach() {
-    dlog("onDetach");
+    log.debug("onDetach");
     // stop options from poking a closed screen
     /** @type {*} */ (globalThis).DemographicsLiveRefresh = null;
     const onFontScale = this._onFontScaleChange;
@@ -824,8 +812,8 @@ try {
     Controls.define("screen-demographics", {
       createInstance: ScreenDemographics,
       description: "Demographics: multi-view stats panel.",
-      // GameFace honors only the first CSS @import, so load each split stylesheet
-      // here (cascade order preserved) instead of @import-chaining them through
+      // GameFace honors only the first CSS @import, so load each stylesheet here
+      // (cascade order preserved) instead of @import-chaining them through
       // screen-demographics.css.
       styles: [
         "fs://game/demographics/ui/screen-demographics/styles/screen-demographics-base.css",
@@ -842,8 +830,8 @@ try {
       classNames: ["demographics-screen", "w-full", "h-full"]
     });
   } else {
-    derr("Controls.define unavailable");
+    log.error("Controls.define unavailable");
   }
 } catch (e) {
-  derr("Controls.define THREW:", e);
+  log.error("Controls.define THREW:", e);
 }

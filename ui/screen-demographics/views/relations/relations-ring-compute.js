@@ -3,13 +3,13 @@
 // Ring-data computation for the Global Relations view.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { buildCivTaggedEdges } from "/demographics/ui/screen-demographics/views/relations/relations-edges.js";
 import {
-  buildCivTaggedEdges,
   buildCsAgreementEdges,
   buildCsAttitudeEdges,
   buildCsSuzerainEdges,
   buildCsTradeEdges
-} from "/demographics/ui/screen-demographics/views/relations/relations-edges.js";
+} from "/demographics/ui/screen-demographics/views/relations/relations-edges-city-states.js";
 import {
   filtersForView,
   filterVisuals,
@@ -154,7 +154,7 @@ export function applyCivEdgeOverrides(edges) {
  * Filter edges by active filter keys.
  * @param {*[]} edges
  * @param {Set<string>} activeSet
- * @returns {*[]} Filtered edge set.
+ * @returns {*[]}
  */
 function filterEdgesByActiveSet(edges, activeSet) {
   return edges.filter((edge) => !!edge.filterKey && activeSet.has(edge.filterKey));
@@ -162,19 +162,18 @@ function filterEdgesByActiveSet(edges, activeSet) {
 
 /**
  * Compute civ-tab ring data, including edge caching and active-filter pass.
- * @param {*} rs
+ * @param {*} renderState
  * @param {Set<string>} activeSet
  * @param {Record<string, *>} names
  * @returns {{ ringIds: number[], edges: *[], names: Record<string, *>,
  *   capText: string, ringViewerPid: number|undefined }}
- *   Ring-data payload.
  */
-export function computeCivRingData(rs, activeSet, names) {
-  const localId = /** @type {number} */ (rs.localId);
-  applyMetMaskForMajors(localId, rs.metIds, names, {
-    showUnmetNames: rs.showUnmetNames,
+export function computeCivRingData(renderState, activeSet, names) {
+  const localId = /** @type {number} */ (renderState.localId);
+  applyMetMaskForMajors(localId, renderState.metIds, names, {
+    showUnmetNames: renderState.showUnmetNames,
     localId,
-    history: rs.ctx.history
+    history: renderState.ctx.history
   });
 
   const turn = readGameTurn();
@@ -186,20 +185,20 @@ export function computeCivRingData(rs, activeSet, names) {
     "|" +
     String(localId) +
     "|" +
-    String(rs.metIds.length) +
+    String(renderState.metIds.length) +
     "|att:" +
     String(includeAttitude ? 1 : 0);
-  const slot = rs.edgeCacheByTop.civ;
+  const slot = renderState.edgeCacheByTop.civ;
   if (slot.key !== cacheKey) {
     slot.key = cacheKey;
-    slot.edges = buildCivTaggedEdges(rs.metIds, localId, includeAttitude);
+    slot.edges = buildCivTaggedEdges(renderState.metIds, localId, includeAttitude);
   }
 
   return {
-    ringIds: rs.metIds.slice(),
+    ringIds: renderState.metIds.slice(),
     edges: filterEdgesByActiveSet(slot.edges, activeSet),
     names,
-    // No descriptive caption , the diagram + legend are self-explanatory. (The
+    // No descriptive caption: the diagram + legend are self-explanatory. (The
     // focus hint still appends here when nodes are selected.)
     capText: "",
     ringViewerPid: localId
@@ -208,20 +207,19 @@ export function computeCivRingData(rs, activeSet, names) {
 
 /**
  * Compute city-state-tab ring data, including edge caching and filter pass.
- * @param {*} rs
+ * @param {*} renderState
  * @param {Set<string>} activeSet
  * @param {Record<string, *>} names
  * @returns {{ ringIds: number[], edges: *[], names: Record<string, *>,
  *   capText: string, ringViewerPid: number|undefined }}
- *   Ring-data payload.
  */
-export function computeCsRingData(rs, activeSet, names) {
-  const localId = /** @type {number} */ (rs.localId);
-  const viewerPid = typeof rs.csViewerPid === "number" ? rs.csViewerPid : localId;
-  applyMetMaskForMajors(viewerPid, rs.metIds, names, {
-    showUnmetNames: rs.showUnmetNames,
+export function computeCsRingData(renderState, activeSet, names) {
+  const localId = /** @type {number} */ (renderState.localId);
+  const viewerPid = typeof renderState.csViewerPid === "number" ? renderState.csViewerPid : localId;
+  applyMetMaskForMajors(viewerPid, renderState.metIds, names, {
+    showUnmetNames: renderState.showUnmetNames,
     localId,
-    history: rs.ctx.history
+    history: renderState.ctx.history
   });
 
   const csIds = getCityStateIds();
@@ -230,7 +228,7 @@ export function computeCsRingData(rs, activeSet, names) {
     names[id] = Object.assign(
       {},
       names[id] || {},
-      rs.buildCsNodeInfo(id, viewerPid, rs.showUnmetNames, localId, rs.ctx.history)
+      renderState.buildCsNodeInfo(id, viewerPid, renderState.showUnmetNames, localId, renderState.ctx.history)
     );
   }
 
@@ -244,12 +242,12 @@ export function computeCsRingData(rs, activeSet, names) {
     "|" +
     String(viewerPid) +
     "|" +
-    String(rs.metIds.length) +
+    String(renderState.metIds.length) +
     "|" +
     String(csIds.length) +
     "|att:" +
     String(includeAttitude ? 1 : 0);
-  const slot = rs.edgeCacheByTop.cs;
+  const slot = renderState.edgeCacheByTop.cs;
   if (slot.key !== cacheKey) {
     slot.key = cacheKey;
     slot.edges = buildCsEdges(viewerPid, csIds, includeAttitude, csMetSet);

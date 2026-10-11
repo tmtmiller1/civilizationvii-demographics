@@ -4,14 +4,14 @@
 
 import { t, tCsFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
-  dlog,
+  log,
   safeCall,
   normalizeCivColor
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
   resolveCsType,
   csTypeMeta
-} from "/demographics/ui/screen-demographics/views/relations/relations-edges.js";
+} from "/demographics/ui/screen-demographics/views/relations/relations-edges-city-states.js";
 import { resolveMet } from "/demographics/ui/screen-demographics/views/relations/relations-queries.js";
 
 const UNMET_GRAY = "#7d7d7d";
@@ -32,15 +32,15 @@ function assignIfNonEmpty(target, field, value) {
  * Fold one civ sample into the running name map.
  * @param {Record<string, Record<string, *>>} map
  * @param {string} pid
- * @param {*} ps
+ * @param {*} samplePlayer
  */
-function foldNameSample(map, pid, ps) {
+function foldNameSample(map, pid, samplePlayer) {
   if (!map[pid]) map[pid] = {};
   const target = map[pid];
-  assignIfNonEmpty(target, "leaderName", ps?.leaderName);
-  assignIfNonEmpty(target, "civName", ps?.civName);
-  assignIfNonEmpty(target, "leaderTypeString", ps?.leaderTypeString);
-  assignIfNonEmpty(target, "primaryColor", ps?.primaryColor);
+  assignIfNonEmpty(target, "leaderName", samplePlayer?.leaderName);
+  assignIfNonEmpty(target, "civName", samplePlayer?.civName);
+  assignIfNonEmpty(target, "leaderTypeString", samplePlayer?.leaderTypeString);
+  assignIfNonEmpty(target, "primaryColor", samplePlayer?.primaryColor);
 }
 
 /**
@@ -54,10 +54,10 @@ export function buildNameMap(history) {
   // A non-array `samples` (a corrupt blob or another mod's saved data) must not
   // reach the for..of below, which would throw on a non-iterable.
   const samples = Array.isArray(history?.samples) ? history.samples : [];
-  for (const s of samples) {
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
-      foldNameSample(map, pid, s.players[pid]);
+  for (const sample of samples) {
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
+      foldNameSample(map, pid, sample.players[pid]);
     }
   }
   return map;
@@ -66,15 +66,15 @@ export function buildNameMap(history) {
 /**
  * Resolve a CS primary color via UI.Player accessor.
  * @param {number} pid
- * @returns {string} The color string, or empty when unavailable.
+ * @returns {string} Empty when unavailable.
  */
 function resolveCsPrimaryColor(pid) {
   return safeCall(
     "resolveCsPrimaryColor(" + pid + ")",
     () => {
       if (typeof UI?.Player?.getPrimaryColorValueAsString === "function") {
-        const s = UI.Player.getPrimaryColorValueAsString(pid);
-        if (typeof s === "string" && s.length > 0) return s;
+        const color = UI.Player.getPrimaryColorValueAsString(pid);
+        if (typeof color === "string" && color.length > 0) return color;
       }
       return "";
     },
@@ -84,15 +84,15 @@ function resolveCsPrimaryColor(pid) {
 
 /**
  * Compose a locale key safely; return raw key on failure.
- * @param {string} key The locale key or raw string.
- * @returns {string} The composed string, or key unchanged.
+ * @param {string} key Locale key or raw string.
+ * @returns {string} Composed string, or `key` unchanged.
  */
 function localeComposeSafe(key) {
   if (typeof Locale?.compose === "function") {
     try {
-      const s = Locale.compose(key);
+      const composed = Locale.compose(key);
       // Guard against a missing tag echoing the raw key back (it would render "LOC_..." on a node).
-      if (typeof s === "string" && s.length > 0 && !s.startsWith("LOC_")) return s;
+      if (typeof composed === "string" && composed.length > 0 && !composed.startsWith("LOC_")) return composed;
     } catch (_) {
       // Fall through to raw key.
     }
@@ -102,12 +102,12 @@ function localeComposeSafe(key) {
 
 /**
  * Resolve CS name from GameInfo.Civilizations row.
- * @param {*} p The CS player handle.
+ * @param {*} cityState CS player handle.
  * @returns {string|null} The composed/raw name, or null.
  */
-function csNameFromCivType(p) {
+function csNameFromCivType(cityState) {
   try {
-    const civType = p?.civilizationType;
+    const civType = cityState?.civilizationType;
     if (typeof GameInfo?.Civilizations?.lookup === "function") {
       const row = GameInfo.Civilizations.lookup(civType);
       if (row?.Name) return localeComposeSafe(row.Name);
@@ -121,18 +121,18 @@ function csNameFromCivType(p) {
 /**
  * Resolve a city-state display name.
  * @param {number} pid
- * @returns {string} The resolved display name.
+ * @returns {string}
  */
 function resolveCsName(pid) {
   return safeCall(
     "resolveCsName(" + pid + ")",
     () => {
-      const p = typeof Players?.get === "function" ? Players.get(pid) : null;
-      if (p && p.name) {
-        const composed = localeComposeSafe(p.name);
+      const cityState = typeof Players?.get === "function" ? Players.get(pid) : null;
+      if (cityState && cityState.name) {
+        const composed = localeComposeSafe(cityState.name);
         if (typeof composed === "string" && composed.length > 0) return composed;
       }
-      return csNameFromCivType(p) || tCsFallback(pid);
+      return csNameFromCivType(cityState) || tCsFallback(pid);
     },
     tCsFallback(pid)
   );
@@ -148,7 +148,7 @@ function resolveCsName(pid) {
  *   typeLabel: null,
  *   typeColor: string,
  *   typeIcon: null
- * }} The unmet visual fields.
+ * }}
  */
 function unmetCsVisuals() {
   return {
@@ -174,11 +174,11 @@ function unmetCsVisuals() {
  *   typeLabel: string|null,
  *   typeColor: string,
  *   typeIcon: string|null
- * }} The resolved visual fields.
+ * }}
  */
 function resolveCsVisuals(id, csIsMet) {
   if (!csIsMet) {
-    dlog("CS pid=" + id, "met=false", "type=null", "typeColor=-", "primary=-");
+    log.debug("CS pid=" + id, "met=false", "type=null", "typeColor=-", "primary=-");
     return unmetCsVisuals();
   }
   const csType = resolveCsType(id);
@@ -187,7 +187,7 @@ function resolveCsVisuals(id, csIsMet) {
   const safePrimary = normalizeCivColor(primary);
   const typeColor = typeMeta ? typeMeta.color : null;
   const metColor = typeColor || safePrimary || "#9aa8c8";
-  dlog(
+  log.debug(
     "CS pid=" + id,
     "met=true",
     "type=" + csType,
@@ -221,16 +221,16 @@ export function buildCsNodeInfo(id, viewerPid, showUnmetNames, localId, history)
       ? t("LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS")
       : resolveCsName(id);
   const csIsMet = metCs !== false;
-  const v = resolveCsVisuals(id, csIsMet);
+  const visuals = resolveCsVisuals(id, csIsMet);
   return {
     isCityState: true,
     csName: label,
     leaderName: label,
     csMet: csIsMet,
-    primaryColor: v.csColor,
-    csTypeKey: v.csType,
-    csTypeLabel: v.typeLabel,
-    csTypeColor: v.typeColor,
-    csTypeIcon: v.typeIcon
+    primaryColor: visuals.csColor,
+    csTypeKey: visuals.csType,
+    csTypeLabel: visuals.typeLabel,
+    csTypeColor: visuals.typeColor,
+    csTypeIcon: visuals.typeIcon
   };
 }

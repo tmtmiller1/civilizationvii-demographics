@@ -2089,17 +2089,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="es_ES">
             <Text>Estándar</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="es_ES">
-            <Text>Analista</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="es_ES">
             <Text>Solo las páginas de estadísticas principales; los gráficos avanzados, la red de relaciones y los controles de ajuste están ocultos.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="es_ES">
             <Text>Todos los gráficos y pestañas; los controles avanzados de almacenamiento y muestreo permanecen ocultos.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="es_ES">
-            <Text>Todo, incluidos el límite de almacenamiento, el diezmado y la frecuencia de muestreo.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="es_ES">
             <Text>Progreso de triunfos de la era: el radar de senda de legado de cada civilización.</Text>
@@ -2158,7 +2152,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="es_ES"><Text>Marca en las líneas de las gráficas el turno en que se completó cada maravilla.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="es_ES"><Text>Marca en la gráfica de refugiados de Emigration el turno en que comenzó cada guerra. Requiere el mod complementario Emigration.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="es_ES"><Text>Marca en la gráfica de refugiados de Emigration el turno en que ocurrió cada desastre. Requiere el mod complementario Emigration.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="es_ES"><Text>Cuánto se muestra en la pantalla. Básico solo incluye las páginas de estadísticas principales; Estándar añade todas las gráficas y pestañas; Analista también muestra los controles de almacenamiento, diezmado y frecuencia de muestreo.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="es_ES"><Text>Cuánto se muestra en la pantalla. Básico solo incluye las páginas de estadísticas principales; Estándar añade todas las gráficas y pestañas.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="es_ES"><Text>Dibuja las líneas del historial como una media móvil de 3 turnos para que las tendencias se vean con más claridad. Los datos subyacentes no cambian.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="es_ES"><Text>Mantiene visibles en las gráficas y clasificaciones a las civilizaciones eliminadas en lugar de quitarlas.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="es_ES"><Text>Activa el botón Vista cinematográfica que desplaza la cámara por un asentamiento desde la lista de Mejores ciudades.</Text></Replace>
@@ -2496,7 +2490,13 @@
             <Text>Población</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="es_ES">
-            <Text>Título</Text>
+            <Text>Título honorífico</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="es_ES">
+            <Text>«{1_Title}»</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="es_ES">
+            <Text>(Título honorífico: «{1_Title}»)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="es_ES">
             <Text>Resultado</Text>

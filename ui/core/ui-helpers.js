@@ -32,7 +32,7 @@ export function iconEl(iconPath, cls) {
  * @param {number} v
  * @returns {string} An em dash for non-finite input.
  */
-export function fmt(v) {
+export function formatRounded(v) {
   return typeof v === "number" && isFinite(v) ? String(Math.round(v)) : "—";
 }
 
@@ -41,7 +41,7 @@ export function fmt(v) {
  * @param {number} v
  * @returns {string}
  */
-export function fmtPop(v) {
+export function formatPopulation(v) {
   if (typeof v !== "number" || !isFinite(v) || v <= 0) return "—";
   // Locale-aware grouping (Locale.toNumber via metrics-format) instead of JS toLocaleString,
   // which in Gameface always renders English grouping regardless of the player's language.

@@ -19,12 +19,12 @@ export function perfNow() {
 
 /**
  * Log one sample's wall-clock cost and key sizes.
- * @param {( ...a: any[] ) => void} ilog Informational logger.
+ * @param {( ...a: any[] ) => void} logDebug
  * @param {{ start: number, work: number, write: number, end: number }} t Phase timestamps.
  * @param {{ players: number, minors: number, samples: number }} counts Size counts.
  */
-export function logSampleTiming(ilog, t, counts) {
-  ilog(
+export function logSampleTiming(logDebug, t, counts) {
+  logDebug(
     "perf doSample total=" + (t.end - t.start).toFixed(1) + "ms",
     "(majors+minors=" + (t.work - t.start).toFixed(1) +
       " write=" + (t.write - t.work).toFixed(1) +
@@ -39,7 +39,7 @@ export function logSampleTiming(ilog, t, counts) {
  * Record auxiliary town history for one sample pass in a single batched settings write, so the
  * shared `modSettings` store is parsed + stringified once per turn. Settlement founding/trend
  * history rides the saved history blob instead (see finalizeSampleLifecycle).
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @param {{
  *   recordLocalTownsNow: (chartTurn: number) => ({key: string, value: *}|null),
  *   setSettings: (entries: Record<string, *>) => void
@@ -96,7 +96,7 @@ export function commitSample(storage, tripIfTooMany, history) {
 /**
  * Finalize one sample pass: write, war tracking, and perf log.
  * @param {*} snapshot Built snapshot.
- * @param {number} turn Sample turn.
+ * @param {number} turn
  * @param {number} tStart Sample start timestamp.
  * @param {number} minorCount Number of sampled minors.
  * @param {{

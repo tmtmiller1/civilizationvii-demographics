@@ -9,7 +9,7 @@
         <SpecialThanks>robk (original "Demographics" mod for Civilization V); Gedemon (CivGraphs mod for Civilization VI); Slothoth (Global Relations mod for Civilization VII, the basis of the relations graphs here); the Firaxis &amp; Civ modding community for the game, documentation, sample mods, and testing.</SpecialThanks>
         <Package>DemographicsMod</Package>
         <PackageSortIndex>1000</PackageSortIndex>
-        <Version>2.8.1</Version>
+        <Version>2.8.2</Version>
     </Properties>
     <Dependencies>
         <Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" />
@@ -51,6 +51,7 @@
                     <Item>ui/demographics-mod-options.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
                     <Item>ui/core/demographics-storage-repair.js</Item>
+                    <Item>ui/core/demographics-log.js</Item>
                     <!-- The mod's shared LOC resolver. Declared here as well as in the game group so
                          the Hall of Fame, which runs at the main menu in shell scope, composes text
                          through the same helper as the rest of the mod (ui/history/core/history-text.js
@@ -143,6 +144,7 @@
                     <Item>ui/metrics/metrics-format.js</Item>
                     <Item>ui/core/demographics-settings.js</Item>
                     <Item>ui/core/demographics-storage-repair.js</Item>
+                    <Item>ui/core/demographics-log.js</Item>
                     <Item>ui/core/demographics-governance.js</Item>
                     <Item>ui/core/demographics-tiers.js</Item>
                     <Item>ui/core/demographics-hardware.js</Item>
@@ -162,7 +164,10 @@
                     <Item>ui/screen-demographics/styles/screen-demographics-settlements.css</Item>
                     <Item>ui/screen-demographics/styles/screen-demographics-density.css</Item>
                     <Item>ui/screen-demographics/screen/demographics-chart.js</Item>
+                    <Item>ui/screen-demographics/screen/guarded-reads.js</Item>
+                    <Item>ui/screen-demographics/screen/dom-helpers.js</Item>
                     <Item>ui/screen-demographics/charts/shared/chart-shared.js</Item>
+                    <Item>ui/screen-demographics/charts/shared/chart-style.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-names.js</Item>
                     <Item>ui/screen-demographics/charts/triumphs/chart-triumphs-radar-data.js</Item>
@@ -188,6 +193,7 @@
                     <Item>ui/screen-demographics/charts/boards/chart-compare-svg.js</Item>
                     <Item>ui/screen-demographics/views/shared/view-pills.js</Item>
                     <Item>ui/screen-demographics/views/shared/options-button.js</Item>
+                    <Item>ui/screen-demographics/views/shared/section-title.js</Item>
                     <Item>ui/screen-demographics/views/history/history-synthetic-metrics.js</Item>
                     <Item>ui/screen-demographics/views/history/view-history.js</Item>
                     <Item>ui/screen-demographics/views/history/history-tabs.js</Item>
@@ -219,7 +225,7 @@
                     <Item>ui/screen-demographics/views/relations/view-relations.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-shared.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-edges.js</Item>
-                    <Item>ui/screen-demographics/views/relations/relations-edges-cs.js</Item>
+                    <Item>ui/screen-demographics/views/relations/relations-edges-city-states.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-filters.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-queries.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-settings.js</Item>
@@ -242,9 +248,8 @@
                     <Item>ui/screen-demographics/charts/wars/chart-wars-tooltip.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-stage-data.js</Item>
                     <Item>ui/screen-demographics/charts/crises/crisis-cost-model.js</Item>
-                    <!-- Submodules split out of the modules above during the monolith→focused-module
-                         refactors. Imported (statically) by declared modules, so they're listed here
-                         to keep ImportFiles a complete, accurate inventory of the mod's JS. -->
+                    <!-- Helper modules that only other modules import. Listed so ImportFiles stays a
+                         complete list of the mod's JS. -->
                     <Item>ui/core/demographics-csv.js</Item>
                     <Item>ui/metrics/demographics-metrics-helpers.js</Item>
                     <Item>ui/sampler/sampler-age-boundary-deps.js</Item>

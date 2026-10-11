@@ -1,15 +1,14 @@
 // sampler-collectors.js
 //
-// Compatibility facade for legacy imports.
+// One import point for the collector helpers; they are defined in sampler-collectors-core.js.
 
 export {
-  _canonicalTypeString,
-  _composeLocale,
-  _newPlayerCtx,
-  _prettifyType,
+  canonicalTypeString,
+  composeLocaleTag,
+  newPlayerCtx,
+  prettifyType,
   buildMinorMilitaryCtx,
   buildPlayerCtx,
-  dlog,
   getCurrentAgeType,
   lookupInfoRow,
   netYield,

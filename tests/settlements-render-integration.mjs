@@ -2,6 +2,7 @@
 //         view-settlements-showcase.js, view-settlements-table.js
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
+import { installMemoryLocalStorage, makeSettings } from "./_engine-stubs.mjs";
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -14,20 +15,7 @@ globalThis.UI = { getIconURL: () => "blp:test" };
 globalThis.Constructibles = { getAt: () => null };
 globalThis.GameplayMap = { getPlotByIndex: () => null, getSize: () => ({ width: 60, height: 40 }) };
 
-const storage = new Map();
-globalThis.localStorage = {
-  getItem: (k) => (storage.has(k) ? storage.get(k) : null),
-  setItem: (k, v) => storage.set(k, String(v)),
-  removeItem: (k) => storage.delete(k)
-};
-
-function makeSettings() {
-  const data = {};
-  return {
-    getSetting: (k, d) => (Object.prototype.hasOwnProperty.call(data, k) ? data[k] : d),
-    setSetting: (k, v) => { data[k] = v; }
-  };
-}
+installMemoryLocalStorage();
 
 const { render: renderSettlements } = await import(
   "/demographics/ui/screen-demographics/views/settlements/view-settlements.js"

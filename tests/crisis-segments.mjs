@@ -12,10 +12,10 @@ const E = "AGE_EXPLORATION";
 
 /**
  * Build a sample whose single player reports `stage` as its crisis stage.
- * @param {string} age Age key.
+ * @param {string} age
  * @param {number} turn Age-local turn.
- * @param {number} stage Display crisis stage.
- * @returns {object} The sample.
+ * @param {number} stage
+ * @returns {object}
  */
 function crisisSample(age, turn, stage) {
   return { age, turn, players: { 0: { metrics: { crisis_stage: stage } } } };

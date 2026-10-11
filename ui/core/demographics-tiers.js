@@ -1,20 +1,19 @@
 // demographics-tiers.js
 //
-// UI complexity tiers. A single setting (`uiComplexity`) picks basic (core pages only), standard
-// (default; every page, advanced tuning hidden) or analyst (everything, including the storage /
-// sampling power-user controls). Reads fail safe to `standard`.
+// UI complexity tiers. A single setting (`uiComplexity`) picks basic (core pages only) or standard
+// (default; every page). Reads fail safe to `standard`, which is also how a saved "analyst" from
+// earlier versions reads: that tier showed the same pages as standard.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 
 export const TIER_BASIC = "basic";
 export const TIER_STANDARD = "standard";
-export const TIER_ANALYST = "analyst";
 
 /** Ordered least → most complex (for the Options dropdown). */
-export const TIER_ORDER = [TIER_BASIC, TIER_STANDARD, TIER_ANALYST];
+export const TIER_ORDER = [TIER_BASIC, TIER_STANDARD];
 
 /** @type {Record<string, number>} */
-const TIER_RANK = { [TIER_BASIC]: 0, [TIER_STANDARD]: 1, [TIER_ANALYST]: 2 };
+const TIER_RANK = { [TIER_BASIC]: 0, [TIER_STANDARD]: 1 };
 
 // basic-tier page visibility is per-page (`page.tier === "basic"`), see pageVisibleInTier; hub tabs
 // are always visible
@@ -30,15 +29,6 @@ export function getTier() {
   } catch (_) {
     return TIER_STANDARD;
   }
-}
-
-/**
- * Whether the active tier is at least `tier` in complexity.
- * @param {string} tier
- * @returns {boolean}
- */
-export function tierAtLeast(tier) {
-  return TIER_RANK[getTier()] >= (TIER_RANK[tier] ?? 0);
 }
 
 /**
@@ -61,20 +51,4 @@ export function pageVisibleInTier(page) {
  */
 export function viewTabVisibleInTier(_viewId) {
   return true;
-}
-
-/**
- * Whether the advanced camera (cinematic / flyby) options are shown: standard and up.
- * @returns {boolean}
- */
-export function showCameraOptionsInTier() {
-  return tierAtLeast(TIER_STANDARD);
-}
-
-/**
- * Whether the advanced storage / sampling tuning options are shown: analyst only.
- * @returns {boolean}
- */
-export function showStorageOptionsInTier() {
-  return tierAtLeast(TIER_ANALYST);
 }

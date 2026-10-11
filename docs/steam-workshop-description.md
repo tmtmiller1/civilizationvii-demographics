@@ -1,15 +1,14 @@
 [h1]Demographics[/h1]
-[b]New in 2.7.3:[/b] the screen fits your resolution, so 1080p, 1440p and 4K get the full layout, with its gold borders and italic text restored. For Civilization VII 1.5.0.
-[b]History and the Hall of Fame[/b]
-History & Rankings is part of Demographics: a [b]History[/b] tab that tells the story of your campaign, and a [b]Hall of Fame[/b] that ranks every campaign you have played, in game and from the main menu. Special thanks to [b]Slothoth[/b] for the keys to data persistence; a co-author credit is gladly offered.
-Demographics adds graphs, civilization rankings, global relations, war history, campaign history and a Hall of Fame to Civilization VII, recording per-civ data every turn so you can see how the world changes over a game. A spiritual successor to robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), extending Slothoth's Global Relations (Civ VII) with added diplomacy and filtering.
-[h2]The Mod Includes[/h2]
+[b]Version 2.8.2. For Civilization VII 1.5.0.[/b] Settings now survive a restart: the mod carries the Tower Settings Keeper.
+Demographics adds graphs, civilization rankings, global relations, war history, campaign history and a Hall of Fame to Civilization VII. It records every civilization's figures each turn, so you can see how the world changes over a game. It only reads the game: balance, opponents and base-game files are untouched.
+It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and builds on Slothoth's Global Relations panel (Civ VII) with more diplomacy and filtering.
+[h2]Graphs and rankings[/h2]
 [list]
-[*]Historical charts, continuous across ages, for economy, power, knowledge, influence, resources, conflicts and Triumph progress.
-[*]World Rankings: an All Civilizations matrix of current values and world rank for every metric, your civ pinned first. Click a metric to sort; flip each cell between Value and Rank.
-[*]Global Relations: met civilizations and city-states in a ring layout.
-[*]Copy-to-CSV, plus options for smoothing, unmet-name masking, eliminated civs, colorblind mode, and font size.
-[*]Readable, un-minified source.
+[*]Per-turn charts, continuous across ages, for yields, economy, resources, society, religion, land, settlements and military, with crisis stages, age changes and wonders marked on the timeline.
+[*]World Rankings: a podium and full list of civilizations, a sortable rank-by-yield table for civilizations and another for settlements (flip each cell between Rank and Value), and a Top 25 Settlements board with holy cities, world leaders and each finished age's top ten.
+[*]Global Relations: the civilizations and city-states you have met in a ring, with wars, alliances, attitudes and agreements between them.
+[*]Real-world scale: populations from thousands to tens of millions by age, GDP in dollars, territory in km².
+[*]Copy as CSV, a spoiler guard for civilizations you have not met, colorblind mode, smoothed lines, and a Basic mode that shows only the core pages.
 [/list]
 [h2]History[/h2]
 [list]
@@ -24,50 +23,51 @@ Demographics adds graphs, civilization rankings, global relations, war history, 
 [*]Opens on your best games: a podium of your top three, the rest of your top ten, and the game you are playing at its rank.
 [*]Every campaign you played, ranked by result, Triumphs and speed, each with an honorific from Augustus Caesar down to Ethelred the Unready.
 [*]Leader and civilization tallies with a win-rate bar, records, and a page per game with its map, rivals, timeline and highlights, where every Triumph says what it was earned for and what it gave.
-[*]Opens from World Rankings, the main menu, and the end-of-game screen.
+[*]Opens from World Rankings, the main menu and the end-of-game screen.
 [*]Hide short games or show all, on every page, with a count of what is hidden.
 [/list]
-[h2]Conflicts[/h2]
+[h2]Wars and crises[/h2]
 [list]
-[*]A Gantt timeline of every war from diplomacy events: the declarer, supporters, and opposers share one stable war ID, so coalitions and multi-front wars read as a single conflict.
-[*]Each war's cost is the observed change in participants' military, settlements, population, and production, read from recorded per-turn samples, never estimated.
-[*]A per-war Graphs view plots those metrics over just that war's window and belligerents, with consistent generated war names across ages.
+[*]A timeline of every war, built from diplomacy events: the declarer, supporters and opposers share one war, so a coalition reads as a single conflict, and each war gets a generated name.
+[*]Each war's cost is the observed change in its participants' military, settlements, population and production, read from the per-turn samples.
+[*]War Impact charts those figures over one war and its belligerents.
+[*]Crisis Impact splits each age's crisis into its stages (Begins, Intensifies, Culminates, Ends), with every civilization's losses per stage, and Crisis Impact Graphs chart each crisis statistic per civilization.
 [/list]
-[h2]Crises[/h2]
+[h2]Top settlements and the cinematic view[/h2]
 [list]
-[*]The current age's crisis split into its stages (Begins, Intensifies, Culminates, Ends) as severity-colored bars matching the line-chart markers.
-[*]A permanent per-stage cost table of every civ's losses, plus a Crisis Graphs grid charting each crisis statistic per civ across the whole game.
-[/list]
-[h2]Top Settlements & Cinematic Flyby[/h2]
-[list]
-[*]A ranked board of the world's largest cities and towns with owner, population, output and gold/silver/bronze medals.
-[*]“View on map” flies the camera to any settlement; “Cinematic view” orbits its districts and wonders and finishes with fireworks; camera style and length are configurable.
+[*]A ranked board of the world's largest cities and towns with owner, population, output, wonders and gold, silver and bronze medals.
+[*]View on map flies the camera to any settlement; Cinematic view orbits its quarters and wonders and finishes with fireworks. The camera style and length are set in Options.
 [/list]
 [h2]Pairs with Emigration[/h2]
 [list]
-[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts a dedicated Emigration tab and a Net Migration graph beside Population. The hooks stay inert when it is not installed, so the base mod is unchanged.
+[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts its Emigration tab and migration charts beside Population. Without it nothing changes.
 [/list]
 [h2]Languages[/h2]
-Fully localized in English, German, Spanish, French, Italian, Japanese, Korean, Portuguese (Brazil), Russian and Simplified Chinese, with each language's own number formatting. Polish is included and in progress.
+English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian and Simplified Chinese, each with its own number formatting.
 [h2]Notes[/h2]
-Read-only and additive: it does not change balance, alter opponents, or overwrite base-game files. Per-save data storage; the Hall of Fame is kept on your computer. Triumph card progress overlays ship as a separate companion mod: triumphs-progress-overlay.
-At 1280x720, the smallest supported resolution, some pages are still tight: everything is readable, but column headings and long leader names can be cut off. Higher resolutions are unaffected; a fix is next on the list.
+[list]
+[*]Recorded history is kept in each save; the Hall of Fame is kept on your computer.
+[*]The screen scales to the resolution it is played at. At 1280x720, the smallest supported resolution, some pages are tight: everything is readable, but column headings and long leader names can be cut off.
+[*]Triumph card progress overlays are a separate companion mod: triumphs-progress-overlay.
+[*]Readable, unminified source.
+[/list]
 [h2]A Civilization VII bug, and the workaround for it[/h2]
-Civilization VII 1.5.0 has a bug in the storage mods use for their settings: whenever a mod asks for its own saved data, the game returns whichever mod's entry sorts first. Only that mod's data works: shared option-panel settings reset every launch, and the Hall of Fame cannot save its list of past games (each game is still stored in its own save). It is Firaxis's bug to fix; a reproduction is written up for them. When it blocks the Hall of Fame, a notice box on that page names the bug and opens [b]Repair mod storage[/b]: a sheet that explains everything, then a two-click button with a Cancel. It leaves one entry, the shared settings entry most mods with an options panel use, so those mods save normally from then on, and deletes every other entry, including the one that was sorting first. Saves, the history inside them, the game's settings and every mod's files are untouched. Full explanation: https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/docs/civ7-storage-bug.md
+Civilization VII 1.5.0 has a bug in the storage mods use for their settings: whenever a mod asks for its own saved data, the game returns whichever mod's entry sorts first. Only that one mod's data works; the entry most mod option panels share can never be read back, so their settings reset every launch and the Hall of Fame cannot save its list of past games (every game is still stored in its own save). It is Firaxis's bug to fix; a reproduction is written up for them.
+Demographics carries the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3815023570]Tower Settings Keeper[/url], which keeps every mod's settings in the one entry the game reads correctly, without deleting anything. If the Hall of Fame still cannot read its list, a notice box on that page names the bug and opens [b]Repair mod storage[/b]: a sheet that explains everything, then a two-click button with a Cancel. It empties the storage and leaves one entry, the shared settings entry most mods with an options panel use, so those mods save settings normally from then on. It deletes every separate entry, including the one that was sorting first and was therefore the only one working. Saves, the history inside them, the game's settings and every mod's files are untouched. Full explanation: https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/docs/civ7-storage-bug.md
 [h2]Source and documentation[/h2]
 [list]
 [*][b]What's new:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/releases/latest]the latest release notes and a download[/url]
-[*][b]Full documentation:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.md]how the mod works[/url]
+[*][b]Full documentation:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.md]every page and figure, and how each is calculated[/url]
 [*][b]The same as a PDF:[/b] [url=https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/README.pdf]README.pdf, typeset with the screenshots[/url]
 [/list]
 [h2]For modders[/h2]
-This mod is developed with [url=https://github.com/tmtmiller1/civilizationvii_tower-bench]Tower Bench[/url], a free, open-source test bench for Civilization VII mods. It connects to a running game from your browser or the command line: inspect and change the map with every write verified and undoable, diff the world between two turns, prove your deployed code is what the game runs, find which mod causes a crash, and see which copy of each mod is actually loaded.
+This mod is developed with [url=https://github.com/tmtmiller1/civilizationvii_tower-bench]Tower Bench[/url], a free, open-source test bench for macOS to make it easier to create Civilization VII mods.
 [h2]Credits[/h2]
 [list]
 [*][b]Tower[/b], for design and Civilization VII implementation, including the History and Hall of Fame carried over from History & Rankings.
 [*][b]robk[/b], creator of InfoAddict for Civilization V.
 [*][b]Gedemon[/b], creator of CivGraphs for Civilization VI.
-[*][b]Slothoth[/b], creator of Global Relations for Civilization VII, and for the keys to data persistence across ages; co-author credit offered.
+[*][b]Slothoth[/b], creator of Global Relations for Civilization VII, and for the keys to data persistence across ages.
 [/list]
 [h2]Special Thanks[/h2]
 [list]

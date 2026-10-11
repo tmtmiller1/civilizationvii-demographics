@@ -9,14 +9,25 @@ assert.equal(markIcon({ k: "nonsense" }), "");
 for (const k of ["victory", "wonder", "triumph", "religion", "capture", "lost", "elim", "crisis"]) {
   assert.match(KIND_ICONS[k], /^blp:ntf_/, k + " uses a game icon");
 }
-for (const t of ["RANDOM_EVENT_VOLCANO", "RANDOM_EVENT_FLOOD", "RANDOM_EVENT_BLIZZARD", "RANDOM_EVENT_DROUGHT", "RANDOM_EVENT_X"]) {
+for (const t of [
+  "RANDOM_EVENT_VOLCANO",
+  "RANDOM_EVENT_FLOOD",
+  "RANDOM_EVENT_BLIZZARD",
+  "RANDOM_EVENT_DROUGHT",
+  "RANDOM_EVENT_X"
+]) {
   assert.ok(DISASTER_ICONS[disasterFamily(t)], "every disaster family has an icon: " + t);
 }
 
 // No icon table (the main menu, tests): nothing resolved.
 assert.equal(engineIcon("WONDER_PYRAMIDS", "wonder"), "");
 const calls = [];
-globalThis.UI = { getIconURL: (type, ctx) => { calls.push([type, ctx]); return type === "BAD" ? "not-a-path" : "blp:" + type.toLowerCase(); } };
+globalThis.UI = {
+  getIconURL: (type, ctx) => {
+    calls.push([type, ctx]);
+    return type === "BAD" ? "not-a-path" : "blp:" + type.toLowerCase();
+  }
+};
 assert.equal(engineIcon("WONDER_PYRAMIDS", "wonder"), "blp:wonder_pyramids");
 assert.equal(engineIcon("RELIGION_ISLAM", "religion"), "blp:religion_islam");
 assert.deepEqual(calls.at(-1), ["RELIGION_ISLAM", "PLAYER"], "religions use the player icon");
