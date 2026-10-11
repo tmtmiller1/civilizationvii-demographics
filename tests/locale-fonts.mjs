@@ -49,7 +49,11 @@ try {
     const p = path.join(dir, d.name);
     return d.isDirectory() ? listFiles(p) : /\.(js|html)$/.test(d.name) ? [p] : [];
   });
-  const strip = (src) => src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/[^\n]*/g, "$1").replace(/<!--[\s\S]*?-->/g, "");
+  const strip = (src) =>
+    src
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/(^|[^:])\/\/[^\n]*/g, "$1")
+      .replace(/<!--[\s\S]*?-->/g, "");
   const named = listFiles(path.join(ROOT, "ui"))
     .filter((f) => !f.endsWith(path.join("core", "demographics-i18n.js")))
     .filter((f) => /\b(BodyFont|TitleFont|TitilliumWeb)\b/.test(strip(fs.readFileSync(f, "utf8"))))

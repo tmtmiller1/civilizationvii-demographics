@@ -60,7 +60,7 @@ export function livePurchased(componentId) {
  * @param {number} y
  * @returns {boolean}
  */
-function isNatWonder(x, y) {
+function isNaturalWonder(x, y) {
   try {
     return (
       typeof GameplayMap !== "undefined" &&
@@ -237,7 +237,7 @@ function pushDistrictPois(pois, target) {
 function pushTerrainPois(pois, target) {
   const plots = livePurchased(target.componentId);
   for (const plot of plots) {
-    if (!isNatWonder(plot.x, plot.y)) continue;
+    if (!isNaturalWonder(plot.x, plot.y)) continue;
     pois.push({
       loc: { x: plot.x, y: plot.y },
       cap: { textKey: "LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" }

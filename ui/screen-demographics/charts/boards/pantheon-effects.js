@@ -24,12 +24,17 @@ export const YIELD_CATEGORIES = [
   { key: "influence", label: "LOC_YIELD_DIPLOMACY", color: "#199e70", yields: ["YIELD_DIPLOMACY", "YIELD_INFLUENCE"] }
 ];
 
-/** YIELD_* type → category key. Built once from YIELD_CATEGORIES. @type {Record<string,string>} */
-const YIELD_TO_CAT = (() => {
+/**
+ * YIELD_* type → category key. Built once from YIELD_CATEGORIES.
+ * @type {Record<string,string>}
+ */
+const YIELD_TO_CATEGORY = (() => {
   /** @type {Record<string,string>} */
-  const m = {};
-  for (const c of YIELD_CATEGORIES) for (const y of c.yields) m[y] = c.key;
-  return m;
+  const categoryOf = {};
+  for (const category of YIELD_CATEGORIES) {
+    for (const yieldType of category.yields) categoryOf[yieldType] = category.key;
+  }
+  return categoryOf;
 })();
 
 // Effect types whose `Amount` is a flat yield we count toward the estimate. Kept
@@ -46,9 +51,9 @@ const FLAT_YIELD_EFFECTS = new Set([
  */
 export function emptyYields() {
   /** @type {Record<string, number>} */
-  const y = {};
-  for (const c of YIELD_CATEGORIES) y[c.key] = 0;
-  return y;
+  const bucket = {};
+  for (const category of YIELD_CATEGORIES) bucket[category.key] = 0;
+  return bucket;
 }
 
 /**
@@ -77,8 +82,8 @@ function modifierIdsForBelief(beliefType) {
   try {
     if (typeof GameInfo === "undefined" || !GameInfo.BeliefModifiers) return [];
     return GameInfo.BeliefModifiers
-      .filter((/** @type {*} */ bm) => bm && bm.BeliefType === beliefType)
-      .map((/** @type {*} */ bm) => bm.ModifierId);
+      .filter((/** @type {*} */ row) => row && row.BeliefType === beliefType)
+      .map((/** @type {*} */ row) => row.ModifierId);
   } catch (_) {
     return [];
   }
@@ -91,10 +96,12 @@ function modifierIdsForBelief(beliefType) {
  */
 function effectTypeFor(modifierId) {
   try {
-    const m = GameInfo.Modifiers.find((/** @type {*} */ x) => x && x.ModifierId === modifierId);
-    if (!m) return "";
-    const dm = GameInfo.DynamicModifiers.find((/** @type {*} */ d) => d && d.ModifierType === m.ModifierType);
-    return (dm && dm.EffectType) || "";
+    const modifier = GameInfo.Modifiers.find((/** @type {*} */ row) => row && row.ModifierId === modifierId);
+    if (!modifier) return "";
+    const dynamic = GameInfo.DynamicModifiers.find(
+      (/** @type {*} */ row) => row && row.ModifierType === modifier.ModifierType
+    );
+    return (dynamic && dynamic.EffectType) || "";
   } catch (_) {
     return "";
   }
@@ -109,8 +116,9 @@ function argsFor(modifierId) {
   /** @type {Record<string,string>} */
   const out = {};
   try {
-    for (const a of GameInfo.ModifierArguments.filter((/** @type {*} */ x) => x && x.ModifierId === modifierId)) {
-      if (a && a.Name != null) out[a.Name] = a.Value;
+    const rows = GameInfo.ModifierArguments.filter((/** @type {*} */ row) => row && row.ModifierId === modifierId);
+    for (const arg of rows) {
+      if (arg && arg.Name != null) out[arg.Name] = arg.Value;
     }
   } catch (_) {
     /* leave partial */
@@ -121,19 +129,19 @@ function argsFor(modifierId) {
 /**
  * Classify one modifier's yield effect: its countable flat contribution (if any) and
  * whether it touches yields at all (used to flag uncounted conditional effects).
- * @param {string} modId The modifier id.
- * @returns {{ flat: { cat: string, amount: number }|null, touchesYield: boolean }}
+ * @param {string} modId
+ * @returns {{ flat: { cat: string, amount: number }|null, touchesYield: boolean }} `cat` is a category key.
  */
 function yieldContribution(modId) {
   const effect = effectTypeFor(modId);
   // Any yield-touching effect we don't count as flat → conditional flag.
   const touchesYield = effect.indexOf("YIELD") !== -1;
   const args = argsFor(modId);
-  const cat = args.YieldType ? YIELD_TO_CAT[args.YieldType] : undefined;
+  const category = args.YieldType ? YIELD_TO_CATEGORY[args.YieldType] : undefined;
   const amount = Number(args.Amount);
-  const isFlat = FLAT_YIELD_EFFECTS.has(effect) && cat && args.Percent == null &&
+  const isFlat = FLAT_YIELD_EFFECTS.has(effect) && category && args.Percent == null &&
     isFinite(amount) && amount !== 0;
-  return { flat: isFlat ? { cat, amount } : null, touchesYield };
+  return { flat: isFlat ? { cat: category, amount } : null, touchesYield };
 }
 
 /**

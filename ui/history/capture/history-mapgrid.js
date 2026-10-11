@@ -38,11 +38,11 @@ export const MAP_EVERY = 3;
 
 /**
  * Cells across the grid for a world this many tiles wide.
- * @param {number} w World width in tiles.
+ * @param {number} worldWidth World width in tiles.
  * @returns {number}
  */
-export function gridWidth(w) {
-  return Math.min(w, Math.max(MIN_CELLS_W, Math.min(MAX_CELLS_W, Math.round(w / TILES_PER_CELL))));
+export function gridWidth(worldWidth) {
+  return Math.min(worldWidth, Math.max(MIN_CELLS_W, Math.min(MAX_CELLS_W, Math.round(worldWidth / TILES_PER_CELL))));
 }
 
 /**
@@ -50,25 +50,25 @@ export function gridWidth(w) {
  * @returns {{w:number, h:number, gw:number, gh:number}|null} null without a map.
  */
 function dims() {
-  const w = Number(safe(() => GameplayMap.getGridWidth(), 0));
-  const h = Number(safe(() => GameplayMap.getGridHeight(), 0));
-  if (!(w > 0 && h > 0)) return null;
-  const gw = gridWidth(w);
-  return { w, h, gw, gh: Math.max(1, Math.round((gw * h) / w)) };
+  const width = Number(safe(() => GameplayMap.getGridWidth(), 0));
+  const height = Number(safe(() => GameplayMap.getGridHeight(), 0));
+  if (!(width > 0 && height > 0)) return null;
+  const gw = gridWidth(width);
+  return { w: width, h: height, gw, gh: Math.max(1, Math.round((gw * height) / width)) };
 }
 
 /**
  * Sample the world onto the grid.
- * @param {{w:number, h:number, gw:number, gh:number}} d
+ * @param {{w:number, h:number, gw:number, gh:number}} grid
  * @param {(x:number, y:number) => number} fn Value of a plot.
  * @returns {number[]} Values, row by row.
  */
-function sample(d, fn) {
-  const out = new Array(d.gw * d.gh);
-  for (let gy = 0; gy < d.gh; gy++) {
-    const y = Math.min(d.h - 1, Math.floor(((gy + 0.5) * d.h) / d.gh));
-    for (let gx = 0; gx < d.gw; gx++) {
-      out[gy * d.gw + gx] = fn(Math.min(d.w - 1, Math.floor(((gx + 0.5) * d.w) / d.gw)), y);
+function sample(grid, fn) {
+  const out = new Array(grid.gw * grid.gh);
+  for (let gy = 0; gy < grid.gh; gy++) {
+    const y = Math.min(grid.h - 1, Math.floor(((gy + 0.5) * grid.h) / grid.gh));
+    for (let gx = 0; gx < grid.gw; gx++) {
+      out[gy * grid.gw + gx] = fn(Math.min(grid.w - 1, Math.floor(((gx + 0.5) * grid.w) / grid.gw)), y);
     }
   }
   return out;
@@ -83,12 +83,13 @@ function sample(d, fn) {
  */
 export function terrainAt(x, y) {
   if (safe(() => GameplayMap.isWater(x, y), false)) {
-    const t = String(safe(() => GameInfo.Terrains.lookup(GameplayMap.getTerrainType(x, y))?.TerrainType, "") || "");
-    return t === "TERRAIN_OCEAN" ? TERRAIN.OCEAN : TERRAIN.COAST;
+    const row = safe(() => GameInfo.Terrains.lookup(GameplayMap.getTerrainType(x, y)), null);
+    const terrain = String(safe(() => row?.TerrainType, "") || "");
+    return terrain === "TERRAIN_OCEAN" ? TERRAIN.OCEAN : TERRAIN.COAST;
   }
   if (safe(() => GameplayMap.isMountain(x, y), false)) return TERRAIN.MOUNTAIN;
-  const b = String(safe(() => GameInfo.Biomes.lookup(GameplayMap.getBiomeType(x, y))?.BiomeType, "") || "");
-  return BIOME_CLASS[b] ?? TERRAIN.LAND;
+  const biome = String(safe(() => GameInfo.Biomes.lookup(GameplayMap.getBiomeType(x, y))?.BiomeType, "") || "");
+  return BIOME_CLASS[biome] ?? TERRAIN.LAND;
 }
 
 /**
@@ -107,20 +108,20 @@ function explored(local, x, y) {
 
 /**
  * The settlements of the major civilizations as [cell, owner].
- * @param {{w:number, h:number, gw:number, gh:number}} d
+ * @param {{w:number, h:number, gw:number, gh:number}} grid
  * @param {Set<number>} majors Major player ids.
  * @returns {number[][]}
  */
-function settlements(d, majors) {
+function settlements(grid, majors) {
   const out = [];
   for (const pid of majors) {
     const list = safe(() => Players.get(pid)?.Cities?.getCities?.(), []) || [];
-    for (const c of list) {
-      const loc = safe(() => c.location, null);
+    for (const city of list) {
+      const loc = safe(() => city.location, null);
       if (!loc || typeof loc.x !== "number" || typeof loc.y !== "number") continue;
-      const gx = Math.min(d.gw - 1, Math.floor((loc.x * d.gw) / d.w));
-      const gy = Math.min(d.gh - 1, Math.floor((loc.y * d.gh) / d.h));
-      out.push([gy * d.gw + gx, pid]);
+      const gx = Math.min(grid.gw - 1, Math.floor((loc.x * grid.gw) / grid.w));
+      const gy = Math.min(grid.gh - 1, Math.floor((loc.y * grid.gh) / grid.h));
+      out.push([gy * grid.gw + gx, pid]);
     }
   }
   return out.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
@@ -135,10 +136,10 @@ function settlements(d, majors) {
  * @returns {boolean} True when a frame was recorded.
  */
 export function captureMap(doc, ageIdx, turn, force) {
-  const d = dims();
-  if (!d) return false;
-  if (!doc.map || doc.map.w !== d.gw || doc.map.h !== d.gh) {
-    doc.map = { w: d.gw, h: d.gh, terrain: rle(sample(d, terrainAt)), frames: [] };
+  const grid = dims();
+  if (!grid) return false;
+  if (!doc.map || doc.map.w !== grid.gw || doc.map.h !== grid.gh) {
+    doc.map = { w: grid.gw, h: grid.gh, terrain: rle(sample(grid, terrainAt)), frames: [] };
   }
   const last = doc.map.frames[doc.map.frames.length - 1];
   const due = force || !last || last.a !== ageIdx || turn - last.t >= MAP_EVERY;
@@ -147,11 +148,11 @@ export function captureMap(doc, ageIdx, turn, force) {
   const local = Number(safe(() => GameContext.localPlayerID, -1));
   const owner = (/** @type {number} */ x, /** @type {number} */ y) => {
     if (!explored(local, x, y)) return UNEXPLORED;
-    const o = Number(safe(() => GameplayMap.getOwner(x, y), -1));
-    if (majors.has(o)) return o;
-    return o >= 0 ? OTHER_OWNER : -1;
+    const holder = Number(safe(() => GameplayMap.getOwner(x, y), -1));
+    if (majors.has(holder)) return holder;
+    return holder >= 0 ? OTHER_OWNER : -1;
   };
-  const owners = sample(d, owner);
-  const towns = settlements(d, majors).filter((c) => owners[c[0]] !== UNEXPLORED);
+  const owners = sample(grid, owner);
+  const towns = settlements(grid, majors).filter((c) => owners[c[0]] !== UNEXPLORED);
   return addFrame(doc.map, { t: turn, a: ageIdx, o: rle(owners), c: towns });
 }

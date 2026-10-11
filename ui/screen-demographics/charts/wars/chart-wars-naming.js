@@ -6,15 +6,15 @@
 // imports this so a given war shows the same name everywhere.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { dlog, buildStackTurnYears } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
+import { log, buildStackTurnYears } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /**
  * Filter a roster to its major (non-city-state) civs.
  * @param {*[]} roster A war side's roster.
- * @returns {*[]} The major civs.
+ * @returns {*[]}
  */
 export function majorsOnSide(roster) {
-  return (roster || []).filter((r) => r && !r.isCS);
+  return (roster || []).filter((entry) => entry && !entry.isCS);
 }
 
 // CIV_ADJECTIVE: civ display-name → grammatical adjective form. Covers every
@@ -127,8 +127,10 @@ function deriveAdjectiveSuffix(cleaned) {
 }
 
 /**
+ * Compose a locale tag, treating a missing Locale, an empty result or an unresolved "LOC_" echo as no
+ * adjective.
  * @param {string} tag Locale tag.
- * @returns {string|null} The composed adjective, or null when unresolved.
+ * @returns {string|null}
  */
 function composeAdjective(tag) {
   if (typeof Locale === "undefined") return null;
@@ -144,7 +146,7 @@ function composeAdjective(tag) {
  * Resolve a civ's adjective from the engine's `LOC_CIVILIZATION_*_ADJECTIVE`
  * string, or `null` when unavailable. See CivilizationText.xml.
  * @param {*} civType The engine CivilizationType string.
- * @returns {string|null} The composed adjective, or `null`.
+ * @returns {string|null}
  */
 function adjectiveFromCivType(civType) {
   if (typeof civType !== "string" || !civType) return null;
@@ -164,7 +166,7 @@ function adjectiveFromCivType(civType) {
 /**
  * Resolve a civ's adjective from the bundled map, then a heuristic English
  * suffix derivation. Used when the engine adjective isn't available.
- * @param {*} name The civ display name.
+ * @param {*} name
  * @returns {string}
  */
 function civAdjectiveFromName(name) {
@@ -194,12 +196,12 @@ function civAdjective(rosterEntry) {
  * Localized ordinal word for a 1-based count: 1–5 spelled out, otherwise a
  * generic suffix form. Each language's forms are war-gendered so they agree
  * with "war" / "Weltkrieg" / "Guerra" / etc.
- * @param {number} n The 1-based count.
+ * @param {number} count The 1-based count.
  * @returns {string}
  */
-function ordinalWord(n) {
-  if (n >= 1 && n <= 5) return t("LOC_DEMOGRAPHICS_ORDINAL_" + n);
-  return t("LOC_DEMOGRAPHICS_ORDINAL_N", n);
+function ordinalWord(count) {
+  if (count >= 1 && count <= 5) return t("LOC_DEMOGRAPHICS_ORDINAL_" + count);
+  return t("LOC_DEMOGRAPHICS_ORDINAL_N", count);
 }
 
 /**
@@ -224,34 +226,34 @@ function romanize(n) {
     ["IV", 4],
     ["I", 1]
   ];
-  let r = "",
-    v = n;
-  for (const [s, d] of numerals) {
-    while (v >= d) {
-      r += s;
-      v -= d;
+  let roman = "";
+  let remaining = n;
+  for (const [symbol, value] of numerals) {
+    while (remaining >= value) {
+      roman += symbol;
+      remaining -= value;
     }
   }
-  return r || "I";
+  return roman || "I";
 }
 
 /**
  * Parse a Civ7 gameYear ("2725 BCE", "100 CE", "1842") into a signed integer
  * (BCE → negative). Numbers pass through.
- * @param {*} s The year string or number.
+ * @param {*} year The year string or number.
  * @returns {number|null}
  */
-export function parseYear(s) {
-  if (typeof s !== "number") {
-    if (typeof s !== "string") return null;
-    const m = s.match(/(-?\d+)\s*(BCE|BC|CE|AD)?/i);
-    if (!m) return null;
-    const n = parseInt(m[1], 10);
-    if (!isFinite(n)) return null;
-    const era = (m[2] || "").toUpperCase();
-    return era === "BCE" || era === "BC" ? -n : n;
+export function parseYear(year) {
+  if (typeof year !== "number") {
+    if (typeof year !== "string") return null;
+    const match = year.match(/(-?\d+)\s*(BCE|BC|CE|AD)?/i);
+    if (!match) return null;
+    const value = parseInt(match[1], 10);
+    if (!isFinite(value)) return null;
+    const era = (match[2] || "").toUpperCase();
+    return era === "BCE" || era === "BC" ? -value : value;
   }
-  return s;
+  return year;
 }
 
 /**
@@ -263,18 +265,18 @@ export function parseYear(s) {
  * @returns {number} The duration in years (>= 1).
  */
 function warDurationYears(war, turnYearMap, latestTurn) {
-  const sY = parseYear(war.startYear);
-  const eY =
+  const startYear = parseYear(war.startYear);
+  const endYear =
     typeof war.endTurn === "number"
       ? parseYear(war.endYear)
       : parseYear(turnYearMap.get(latestTurn));
-  if (sY !== null && eY !== null) {
-    const d = Math.abs(eY - sY);
-    return d > 0 ? d : 1;
+  if (startYear !== null && endYear !== null) {
+    const span = Math.abs(endYear - startYear);
+    return span > 0 ? span : 1;
   }
   // turn-count fallback when years aren't available
-  const t = (typeof war.endTurn === "number" ? war.endTurn : latestTurn) - war.startTurn;
-  return Math.max(1, t);
+  const turns = (typeof war.endTurn === "number" ? war.endTurn : latestTurn) - war.startTurn;
+  return Math.max(1, turns);
 }
 
 /**
@@ -290,8 +292,8 @@ function buildContinentMap(samples) {
   const players = last && last.players ? last.players : null;
   if (!players) return map;
   for (const pid in players) {
-    const c = /** @type {*} */ (players[pid])?.continent;
-    if (typeof c === "number") map.set(Number(pid), c);
+    const continent = /** @type {*} */ (players[pid])?.continent;
+    if (typeof continent === "number") map.set(Number(pid), continent);
   }
   return map;
 }
@@ -311,8 +313,8 @@ export function nameMergedWars(wars, samples) {
   const overrides = buildWarNameOverrides(wars, turnYearMap, latestTurn, continentMap);
   /** @type {Map<number, string>} */
   const byId = new Map();
-  for (const [w, name] of overrides) {
-    if (typeof w.warUniqueID === "number") byId.set(w.warUniqueID, name);
+  for (const [war, name] of overrides) {
+    if (typeof war.warUniqueID === "number") byId.set(war.warUniqueID, name);
   }
   return byId;
 }
@@ -340,16 +342,16 @@ export function buildWarNameOverrides(filtered, turnYearMap, latestTurn, contine
   const flair = buildDurationFlairContext(sorted, latestTurn);
 
   let flairCount = 0;
-  for (const w of sorted) {
-    const n = majorsOnSide(w.sideACivs).length + majorsOnSide(w.sideBCivs).length;
-    let label = composeWarLabel(w, pairCounts, worldWars, continentMap);
-    if (n < 6 && flair.warTurns(w) >= flair.flairCut) {
-      label = epicWarLabel(label, w, turnYearMap, latestTurn);
+  for (const war of sorted) {
+    const majorCount = majorsOnSide(war.sideACivs).length + majorsOnSide(war.sideBCivs).length;
+    let label = composeWarLabel(war, pairCounts, worldWars, continentMap);
+    if (majorCount < 6 && flair.warTurns(war) >= flair.flairCut) {
+      label = epicWarLabel(label, war, turnYearMap, latestTurn);
       flairCount++;
     }
-    nameOverride.set(w, label);
+    nameOverride.set(war, label);
   }
-  dlog(
+  log.debug(
     "war-name flair: eligible=" +
       flair.durations.length +
       " medianTurns=" +
@@ -370,10 +372,10 @@ export function buildWarNameOverrides(filtered, turnYearMap, latestTurn, contine
  *   flairCut: number }}
  */
 function buildDurationFlairContext(sorted, latestTurn) {
-  const warTurns = (/** @type {*} */ w) =>
-    Math.max(1, (typeof w.endTurn === "number" ? w.endTurn : latestTurn) - w.startTurn);
+  const warTurns = (/** @type {*} */ war) =>
+    Math.max(1, (typeof war.endTurn === "number" ? war.endTurn : latestTurn) - war.startTurn);
   const durations = sorted
-    .filter((w) => majorsOnSide(w.sideACivs).length + majorsOnSide(w.sideBCivs).length < 6)
+    .filter((war) => majorsOnSide(war.sideACivs).length + majorsOnSide(war.sideBCivs).length < 6)
     .map(warTurns)
     .sort((a, b) => a - b);
   const median = durations.length ? durations[Math.floor((durations.length - 1) / 2)] : 0;
@@ -387,13 +389,13 @@ function buildDurationFlairContext(sorted, latestTurn) {
  * a clean figure: "Hundred Years' War" for spans that round to ~100, otherwise
  * an "(N-Year War)" suffix.
  * @param {string} base
- * @param {*} w
+ * @param {*} war
  * @param {Map<number, string>} turnYearMap chart-turn → year map.
  * @param {number} latestTurn
  * @returns {string}
  */
-function epicWarLabel(base, w, turnYearMap, latestTurn) {
-  const yrs = warDurationYears(w, turnYearMap, latestTurn);
+function epicWarLabel(base, war, turnYearMap, latestTurn) {
+  const yrs = warDurationYears(war, turnYearMap, latestTurn);
   const rounded = Math.max(50, Math.round(yrs / 50) * 50);
   // Civ's compressed early timeline can make an epic war span many centuries;
   // cap the figure so it reads as evocative ("Centuries' War") rather than an
@@ -413,9 +415,9 @@ function epicWarLabel(base, w, turnYearMap, latestTurn) {
  */
 function distinctContinents(civs, continentMap) {
   const set = new Set();
-  for (const c of civs) {
-    const cont = continentMap.get(Number(c.pid));
-    if (cont !== undefined && cont !== null) set.add(cont);
+  for (const civ of civs) {
+    const continent = continentMap.get(Number(civ.pid));
+    if (continent !== undefined && continent !== null) set.add(continent);
   }
   return set.size;
 }
@@ -425,51 +427,53 @@ function distinctContinents(civs, continentMap) {
  * span 2+ continents; a multi-continent "Great War" otherwise when 2+ continents;
  * and a single-continent fight is a "Regional War". Advances the world-war count.
  * @param {Object} args
- * @param {*} args.w
- * @param {*[]} args.a Side A majors.
- * @param {*[]} args.b Side B majors.
+ * @param {*} args.war
+ * @param {*[]} args.majorsA Side A majors.
+ * @param {*[]} args.majorsB Side B majors.
  * @param {string[]} args.adjA Side A adjectives.
  * @param {string[]} args.adjB Side B adjectives.
- * @param {number} args.n Total major count.
+ * @param {number} args.majorCount Total major count.
  * @param {*[]} args.worldWars World-war list (mutated, for numbering).
  * @param {Map<number, number>} args.continentMap pid → home-continent type.
  * @returns {string}
  */
 function largeWarLabel(args) {
-  const { w, a, b, adjA, adjB, n, worldWars, continentMap } = args;
-  const continents = distinctContinents(a.concat(b), continentMap);
-  if (n >= 6 && continents >= 2) {
-    worldWars.push(w);
+  const { war, majorsA, majorsB, adjA, adjB, majorCount, worldWars, continentMap } = args;
+  const continents = distinctContinents(majorsA.concat(majorsB), continentMap);
+  if (majorCount >= 6 && continents >= 2) {
+    worldWars.push(war);
     const idx = worldWars.length;
     // Pass both numeral forms; each language's template picks one.
     return t("LOC_DEMOGRAPHICS_WARNAME_WORLD", romanize(idx), ordinalWord(idx));
   }
-  if (continents >= 2) return t("LOC_DEMOGRAPHICS_WARNAME_GREAT", adjA[0], adjB[0], n - 2);
-  return t("LOC_DEMOGRAPHICS_WARNAME_REGIONAL", adjA[0], adjB[0], n - 2);
+  if (continents >= 2) return t("LOC_DEMOGRAPHICS_WARNAME_GREAT", adjA[0], adjB[0], majorCount - 2);
+  return t("LOC_DEMOGRAPHICS_WARNAME_REGIONAL", adjA[0], adjB[0], majorCount - 2);
 }
 
 /**
  * Compose a war's base name by participant count + geography (world / great /
  * regional / tripartite / bilateral / fallback), advancing the pair-count and
  * world-war state.
- * @param {*} w
+ * @param {*} war
  * @param {Map<string, number>} pairCounts Recurring-matchup counts (mutated).
  * @param {*[]} worldWars World-war list (mutated, for numbering).
  * @param {Map<number, number>} continentMap pid → home-continent type.
  * @returns {string}
  */
-function composeWarLabel(w, pairCounts, worldWars, continentMap) {
-  const a = majorsOnSide(w.sideACivs);
-  const b = majorsOnSide(w.sideBCivs);
-  const n = a.length + b.length;
+function composeWarLabel(war, pairCounts, worldWars, continentMap) {
+  const majorsA = majorsOnSide(war.sideACivs);
+  const majorsB = majorsOnSide(war.sideBCivs);
+  const majorCount = majorsA.length + majorsB.length;
   // Pass the full roster object so civAdjective can use civTypeString.
-  const adjA = a.map((r) => civAdjective(r));
-  const adjB = b.map((r) => civAdjective(r));
+  const adjA = majorsA.map((entry) => civAdjective(entry));
+  const adjB = majorsB.map((entry) => civAdjective(entry));
   // A war has two sides, so 3+ majors is always a coalition (e.g. 1-vs-2), never a
   // true three-way "tripartite" war (which this two-sided model can't represent).
   // Route it to the coalition namer ("Regional/Great <A>-<B> War (+N others)").
-  if (n >= 3) return largeWarLabel({ w, a, b, adjA, adjB, n, worldWars, continentMap });
-  return smallWarLabel({ n, adjA, adjB, pairCounts, w });
+  if (majorCount >= 3) {
+    return largeWarLabel({ war, majorsA, majorsB, adjA, adjB, majorCount, worldWars, continentMap });
+  }
+  return smallWarLabel({ majorCount, adjA, adjB, pairCounts, war });
 }
 
 /**
@@ -492,24 +496,24 @@ function recurringOrdinalLabel(pairCounts, key, template, ...adjs) {
  * Name a small (1-2 major) war: standard bilateral, single-belligerent (a major
  * vs only city-states / independents), or the persisted fallback when there are
  * no majors at all. All localized so no English name leaks to non-English UIs.
- * @param {{ n: number, adjA: string[], adjB: string[],
- *   pairCounts: Map<string, number>, w: * }} args
+ * @param {{ majorCount: number, adjA: string[], adjB: string[],
+ *   pairCounts: Map<string, number>, war: * }} args
  * @returns {string}
  */
-function smallWarLabel({ n, adjA, adjB, pairCounts, w }) {
+function smallWarLabel({ majorCount, adjA, adjB, pairCounts, war }) {
   const unknown = t("LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ");
-  if (n === 2) {
+  if (majorCount === 2) {
     // Stable adjective key (alpha order) so reruns get ordinal prefixes.
     const pair = [adjA[0] || unknown, adjB[0] || unknown].sort();
     return recurringOrdinalLabel(
       pairCounts, pair.join("|"), "LOC_DEMOGRAPHICS_WARNAME_BILATERAL", pair[0], pair[1]);
   }
-  if (n === 1) {
+  if (majorCount === 1) {
     const adj = adjA[0] || adjB[0] || unknown;
     return recurringOrdinalLabel(pairCounts, adj, "LOC_DEMOGRAPHICS_WARNAME_SINGLE", adj);
   }
   // No majors at all (all but never shown). The persisted `name` is English, so not that.
-  return t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", w.warUniqueID);
+  return t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", war.warUniqueID);
 }
 
 /**

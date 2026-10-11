@@ -3,21 +3,14 @@
 // War start/end detection over live diplomacy events.
 
 import { ingestWarEvent } from "/demographics/ui/sampler/sampler-wars-ingest.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").WarRecord} WarRecord
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").ActiveWar} ActiveWar
  */
 
-// Flip to true for local debugging (committed off, matching the rest of the mod).
-const DEMOGRAPHICS_DEBUG = false;
-/**
- * Informational logger; no-op unless DEMOGRAPHICS_DEBUG is set.
- * @param {...*} a Values to log.
- */
-function ilog(...a) {
-  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
-}
+const log = makeLogger("sampler");
 
 /**
  * Whether the diplomacy API needed for war tracking is available.
@@ -52,7 +45,7 @@ export function collectActiveWars(allPlayers) {
   /** @type {Map<*, ActiveWar>} */
   const activeWarsByID = new Map();
   if (!diplomacyWarApiReady()) {
-    ilog("warTracker: Game.Diplomacy API unavailable, skipping turn");
+    log.debug("warTracker: Game.Diplomacy API unavailable, skipping turn");
     return null;
   }
   for (const p of allPlayers) {
@@ -82,7 +75,7 @@ export function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
       // migration so it doesn't linger forever.
       w.endTurn = turn;
       w.endYear = gameYear;
-      ilog("WAR ENDED (legacy migration):", w.name, "turn=", turn);
+      log.debug("WAR ENDED (legacy migration):", w.name, "turn=", turn);
       continue;
     }
     if (!activeWarsByID.has(w.warUniqueID)) {
@@ -90,7 +83,7 @@ export function closeEndedWars(wars, activeWarsByID, gameYear, turn) {
       w.endYear = gameYear;
       // Map the end onto the continuous timeline (last active global turn).
       if (typeof w.lastChartTurn === "number") w.endChartTurn = w.lastChartTurn;
-      ilog("WAR ENDED:", w.name, "uid=", w.warUniqueID, "turn=", turn);
+      log.debug("WAR ENDED:", w.name, "uid=", w.warUniqueID, "turn=", turn);
     }
   }
 }

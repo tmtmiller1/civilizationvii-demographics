@@ -13,13 +13,13 @@ export const SERIES_CAP = 360;
 /**
  * Event kinds from least to most important. When the chronicle is over its cap, the oldest events
  * of the least important kind still present are dropped first.
- * @type {HnrEventKind[]}
+ * @type {HistoryEventKind[]}
  */
 export const DROP_ORDER = ["met", "found", "peace", "war", "razed", "capture", "religion", "triumph", "wonder"];
 
 /**
  * A fresh document.
- * @param {{id:string, seed:number, now:number, setup:HnrSetup, local:number}} init
+ * @param {{id:string, seed:number, now:number, setup:HistorySetup, local:number}} init
  * @returns {CampaignDoc}
  */
 export function newCampaign(init) {
@@ -42,21 +42,21 @@ export function newCampaign(init) {
 
 /**
  * Whether a parsed blob is a usable CampaignDoc.
- * @param {*} d Parsed JSON.
+ * @param {*} doc Parsed JSON.
  * @returns {boolean}
  */
-export function isCampaign(d) {
+export function isCampaign(doc) {
   return !!(
-    d &&
-    typeof d === "object" &&
-    d.v === CAMPAIGN_VERSION &&
-    typeof d.id === "string" &&
-    d.players &&
-    typeof d.players === "object" &&
-    Array.isArray(d.ages) &&
-    Array.isArray(d.events) &&
-    d.series &&
-    Array.isArray(d.series.turns)
+    doc &&
+    typeof doc === "object" &&
+    doc.v === CAMPAIGN_VERSION &&
+    typeof doc.id === "string" &&
+    doc.players &&
+    typeof doc.players === "object" &&
+    Array.isArray(doc.ages) &&
+    Array.isArray(doc.events) &&
+    doc.series &&
+    Array.isArray(doc.series.turns)
   );
 }
 
@@ -92,22 +92,22 @@ export function ensureAge(doc, age, turn) {
  */
 export function upsertPlayer(doc, pid, id, at) {
   const key = String(pid);
-  let p = doc.players[key];
-  if (!p) {
-    p = { leader: id.leader, leaderName: id.leaderName, civs: [], human: id.human, color: id.color, elim: 0 };
-    doc.players[key] = p;
+  let player = doc.players[key];
+  if (!player) {
+    player = { leader: id.leader, leaderName: id.leaderName, civs: [], human: id.human, color: id.color, elim: 0 };
+    doc.players[key] = player;
   }
-  if (id.color) p.color = id.color;
-  if (id.color2) p.color2 = id.color2;
-  const last = p.civs[p.civs.length - 1];
+  if (id.color) player.color = id.color;
+  if (id.color2) player.color2 = id.color2;
+  const last = player.civs[player.civs.length - 1];
   if (id.civ && (!last || last.civ !== id.civ || last.age !== at.age)) {
-    p.civs.push({ age: at.age, civ: id.civ, name: id.civName, from: at.turn });
+    player.civs.push({ age: at.age, civ: id.civ, name: id.civName, from: at.turn });
   }
 }
 
 /**
  * Remove events until the chronicle fits EVENTS_CAP, oldest of the least important kind first.
- * @param {HnrEvent[]} events Mutated.
+ * @param {HistoryEvent[]} events Mutated.
  */
 export function trimEvents(events) {
   for (const kind of DROP_ORDER) {
@@ -126,12 +126,12 @@ export function trimEvents(events) {
 /**
  * Append events, mark eliminations on the roster, then enforce the cap.
  * @param {CampaignDoc} doc
- * @param {HnrEvent[]} events
+ * @param {HistoryEvent[]} events
  */
 export function appendEvents(doc, events) {
-  for (const e of events) {
-    doc.events.push(e);
-    if (e.k === "elim" && doc.players[String(e.p)]) doc.players[String(e.p)].elim = e.t;
+  for (const event of events) {
+    doc.events.push(event);
+    if (event.k === "elim" && doc.players[String(event.p)]) doc.players[String(event.p)].elim = event.t;
   }
   trimEvents(doc.events);
 }
@@ -144,14 +144,16 @@ export function appendEvents(doc, events) {
 export function triumphCounts(doc) {
   /** @type {Record<string, number>} */
   const fromEvents = {};
-  for (const e of doc.events) if (e.k === "triumph") fromEvents[String(e.p)] = (fromEvents[String(e.p)] || 0) + 1;
+  for (const event of doc.events) {
+    if (event.k === "triumph") fromEvents[String(event.p)] = (fromEvents[String(event.p)] || 0) + 1;
+  }
   /** @type {Record<string, number>} */
   const held = {};
   for (const byPid of Object.values(doc.tri || {})) {
-    for (const [pid, n] of Object.entries(byPid)) held[pid] = (held[pid] || 0) + n;
+    for (const [pid, count] of Object.entries(byPid)) held[pid] = (held[pid] || 0) + count;
   }
   const out = { ...fromEvents };
-  for (const [pid, n] of Object.entries(held)) out[pid] = Math.max(n, fromEvents[pid] || 0);
+  for (const [pid, count] of Object.entries(held)) out[pid] = Math.max(count, fromEvents[pid] || 0);
   return out;
 }
 
@@ -161,7 +163,7 @@ export function triumphCounts(doc) {
  * an age and is rebuilt at the next age, so the per-age maximum is kept.
  * @param {CampaignDoc} doc Mutated.
  * @param {number} ageIdx
- * @param {HnrWorldState} world
+ * @param {HistoryWorldState} world
  */
 export function noteTriumphs(doc, ageIdx, world) {
   /** @type {Record<string, Record<string, number>>} */
@@ -169,22 +171,22 @@ export function noteTriumphs(doc, ageIdx, world) {
   /** @type {Record<string, number>} */
   const age = (tri[String(ageIdx)] = tri[String(ageIdx)] || {});
   for (const [pid, st] of Object.entries(world.players)) {
-    const n = (st.triumphs || []).length;
-    if (n > (age[pid] || 0)) age[pid] = n;
+    const count = (st.triumphs || []).length;
+    if (count > (age[pid] || 0)) age[pid] = count;
   }
 }
 
 /**
  * Keep every other sample, but always the newest one and the first sample of each age.
- * @param {HnrSeries} s Mutated.
+ * @param {HistorySeries} series Mutated.
  * @param {number[]} keepTurns Turns that must survive (age starts).
  */
-export function decimateSeries(s, keepTurns) {
+export function decimateSeries(series, keepTurns) {
   const keep = new Set(keepTurns);
-  const last = s.turns.length - 1;
-  const idx = s.turns.map((turn, i) => i).filter((i) => i % 2 === 0 || i === last || keep.has(s.turns[i]));
-  s.turns = idx.map((i) => s.turns[i]);
-  for (const ps of Object.values(s.by)) {
+  const last = series.turns.length - 1;
+  const idx = series.turns.map((turn, i) => i).filter((i) => i % 2 === 0 || i === last || keep.has(series.turns[i]));
+  series.turns = idx.map((i) => series.turns[i]);
+  for (const ps of Object.values(series.by)) {
     ps.set = idx.map((i) => ps.set[i] ?? 0);
     ps.pop = idx.map((i) => ps.pop[i] ?? 0);
     ps.tri = idx.map((i) => ps.tri[i] ?? 0);
@@ -198,23 +200,23 @@ export function decimateSeries(s, keepTurns) {
  * Append one trend sample (settlements, population, cumulative Triumphs) for living players.
  * A sample for a turn already recorded replaces it.
  * @param {CampaignDoc} doc
- * @param {HnrWorldState} world
+ * @param {HistoryWorldState} world
  */
 export function appendSample(doc, world) {
-  const s = doc.series;
+  const series = doc.series;
   const tri = triumphCounts(doc);
-  if (s.turns[s.turns.length - 1] === world.turn) dropLastSample(s);
-  const at = s.turns.length;
-  s.turns.push(world.turn);
+  if (series.turns[series.turns.length - 1] === world.turn) dropLastSample(series);
+  const at = series.turns.length;
+  series.turns.push(world.turn);
   for (const [pid, st] of Object.entries(world.players)) {
-    const ps = paddedSeries(s, pid, at);
+    const ps = paddedSeries(series, pid, at);
     ps.set.push(Object.keys(st.cities || {}).length);
     ps.pop.push(st.population || 0);
     /** @type {number[]} */ (ps.pops).push(st.popScaled || 0);
     ps.tri.push(tri[pid] || 0);
     if (st.mig) pushMigration(ps, st.mig);
   }
-  if (s.turns.length > SERIES_CAP) decimateSeries(s, doc.ages.map((a) => a.start));
+  if (series.turns.length > SERIES_CAP) decimateSeries(series, doc.ages.map((a) => a.start));
 }
 
 /**
@@ -230,7 +232,7 @@ function keepCumulative(arr, idx) {
 /**
  * Append a migration reading, padding with the earliest known value when the Emigration mod arrived
  * after recording began (the tallies are cumulative, so padding with it shows no movement).
- * @param {HnrPlayerSeries} ps Mutated.
+ * @param {HistoryPlayerSeries} ps Mutated.
  * @param {{i:number, o:number}} mig Cumulative people in and out.
  */
 function pushMigration(ps, mig) {
@@ -245,13 +247,13 @@ function pushMigration(ps, mig) {
 /**
  * A player's series, created when new and padded to `at` samples (a player first seen late, or a
  * document recorded before scaled population existed).
- * @param {HnrSeries} s Mutated.
+ * @param {HistorySeries} series Mutated.
  * @param {string} pid
  * @param {number} at Samples every array must hold before the new one.
- * @returns {HnrPlayerSeries}
+ * @returns {HistoryPlayerSeries}
  */
-function paddedSeries(s, pid, at) {
-  const ps = (s.by[pid] = s.by[pid] || { set: [], pop: [], tri: [], pops: [] });
+function paddedSeries(series, pid, at) {
+  const ps = (series.by[pid] = series.by[pid] || { set: [], pop: [], tri: [], pops: [] });
   const pops = (ps.pops = ps.pops || []);
   while (pops.length < ps.pop.length) pops.push(0);
   while (ps.set.length < at) {
@@ -265,29 +267,43 @@ function paddedSeries(s, pid, at) {
 
 /**
  * Remove the newest sample from every array.
- * @param {HnrSeries} s Mutated.
+ * @param {HistorySeries} series Mutated.
  */
-function dropLastSample(s) {
-  s.turns.pop();
-  for (const ps of Object.values(s.by)) {
-    if (ps.set.length > s.turns.length) { ps.set.pop(); ps.pop.pop(); ps.tri.pop(); ps.pops?.pop(); }
-    if (ps.mi && ps.mi.length > s.turns.length) { ps.mi.pop(); ps.mo?.pop(); }
+function dropLastSample(series) {
+  series.turns.pop();
+  for (const ps of Object.values(series.by)) {
+    if (ps.set.length > series.turns.length) {
+      ps.set.pop();
+      ps.pop.pop();
+      ps.tri.pop();
+      ps.pops?.pop();
+    }
+    if (ps.mi && ps.mi.length > series.turns.length) {
+      ps.mi.pop();
+      ps.mo?.pop();
+    }
   }
 }
 
 /**
  * Record how the game ended for the local player when a victory or defeat is seen.
  * @param {CampaignDoc} doc
- * @param {HnrEvent[]} events Events just appended.
+ * @param {HistoryEvent[]} events Events just appended.
  * @param {(pid:number) => number} teamOf Team of a player.
  */
 export function applyOutcome(doc, events, teamOf) {
-  for (const e of events) {
-    if (e.k === "victory" && doc.outcome.status !== "victory") {
-      const won = e.p >= 0 && teamOf(e.p) === teamOf(doc.local);
-      doc.outcome = { status: won ? "victory" : "defeat", victory: e.x || "", name: e.n || "", winner: e.p, turn: e.t };
-    } else if (isLocalDefeat(doc, e)) {
-      doc.outcome = { status: "defeat", victory: "", name: "", winner: -1, turn: e.t };
+  for (const event of events) {
+    if (event.k === "victory" && doc.outcome.status !== "victory") {
+      const won = event.p >= 0 && teamOf(event.p) === teamOf(doc.local);
+      doc.outcome = {
+        status: won ? "victory" : "defeat",
+        victory: event.x || "",
+        name: event.n || "",
+        winner: event.p,
+        turn: event.t
+      };
+    } else if (isLocalDefeat(doc, event)) {
+      doc.outcome = { status: "defeat", victory: "", name: "", winner: -1, turn: event.t };
     }
   }
 }
@@ -295,9 +311,9 @@ export function applyOutcome(doc, events, teamOf) {
 /**
  * Whether an event is the local player's elimination in a game not yet decided.
  * @param {CampaignDoc} doc
- * @param {HnrEvent} e
+ * @param {HistoryEvent} event
  * @returns {boolean}
  */
-function isLocalDefeat(doc, e) {
-  return e.k === "elim" && e.p === doc.local && doc.outcome.status === "in_progress";
+function isLocalDefeat(doc, event) {
+  return event.k === "elim" && event.p === doc.local && doc.outcome.status === "in_progress";
 }

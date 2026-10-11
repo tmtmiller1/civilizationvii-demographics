@@ -1,7 +1,7 @@
 {
   "testRunner": "command",
   "commandRunner": {
-    "command": "npm run test:crisis-cost-snapshot && npm run test:crisis-cost-branches && npm run test:sampler-wars-detect-branches && npm run test:sampler-wars-ingest-branches && npm run test:sampler-wars-core-branches && npm run test:wars-naming-branches"
+    "command": "node tests/run-all.mjs crisis-cost sampler-wars wars-naming"
   },
   "coverageAnalysis": "off",
   "mutate": [

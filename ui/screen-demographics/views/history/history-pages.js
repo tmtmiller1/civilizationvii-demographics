@@ -26,7 +26,7 @@ import { getMetric } from "/demographics/ui/metrics/demographics-metrics.js";
 export const PAGES = [
   // Global Statistics hub
   {
-    // All per-turn output rates in one place (stock/flow split from Economy):
+    // All per-turn output rates in one place; stocks live on the Economy page:
     // Food · Production · Gold · Science · Culture · Happiness · Influence.
     id: "yields",
     label: "LOC_DEMOGRAPHICS_PAGE_YIELDS",
@@ -102,8 +102,11 @@ export const PAGES = [
     // the very cycle this module exists to break.
   },
   {
-    id: "agreements", label: "LOC_DEMOGRAPHICS_PAGE_AGREEMENTS",
-    hub: "geopolitics", tier: "standard", metrics: ["approval", "deals"]
+    id: "agreements",
+    label: "LOC_DEMOGRAPHICS_PAGE_AGREEMENTS",
+    hub: "geopolitics",
+    tier: "standard",
+    metrics: ["approval", "deals"]
   },
   {
     // The current age's crisis, broken into stages with a per-civ cost section.
@@ -160,8 +163,8 @@ export function metricExists(id) {
  * Attach a render function to a page entry. The Geopolitics "relations" page is a
  * RENDER page whose renderer lives in view-history.js; view-history injects it at
  * module load so this module can stay a leaf.
- * @param {string} pageId The page id to bind.
- * @param {(host: HTMLElement, ctx: *) => void} render The render function.
+ * @param {string} pageId
+ * @param {(host: HTMLElement, ctx: *) => void} render
  * @returns {boolean} True when a matching page was found and bound.
  */
 export function setPageRenderer(pageId, render) {

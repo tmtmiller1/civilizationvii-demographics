@@ -34,7 +34,7 @@ export const Options = {
 /**
  * Drain the queued init callbacks (what the engine does when the options screen initializes) and
  * return the option specs registered as a result. Idempotent: clears prior captures first.
- * @returns {any[]} The registered option specs.
+ * @returns {any[]}
  */
 export function __collectRegisteredOptions() {
   registered.length = 0;

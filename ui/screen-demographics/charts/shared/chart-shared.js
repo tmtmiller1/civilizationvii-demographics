@@ -15,6 +15,7 @@ import {
   isLocalCiv
 } from "/demographics/ui/core/demographics-governance.js";
 import { localHasMet } from "/demographics/ui/screen-demographics/settlements/settlements-met.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
  * @typedef {import(
@@ -22,20 +23,13 @@ import { localHasMet } from "/demographics/ui/screen-demographics/settlements/se
  * ).ChartOptions} ChartOptions
  */
 
-const DBG = false;
-/**
- * Debug logger; no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.chart]", ...a);
-}
+const log = makeLogger("chart");
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 // Each chart render reads the palette fresh so the colorblind-mode toggle
 // in Options takes effect on the very next paint without a mod reload.
-// Define PALETTE as a getter so existing `PALETTE[i]` indexing keeps working.
+// PALETTE is a Proxy so callers can index it like an array (`PALETTE[i]`).
 // Typed `any` because the Proxy returns either a number (`.length`) or a color
 // string (numeric index) depending on the key, a dynamic shape callers index
 // freely.
@@ -47,9 +41,9 @@ const PALETTE = new Proxy(/** @type {Record<string, string>} */ ({}), {
    * @returns {*} The palette length or the color at the index.
    */
   get(_, prop) {
-    const p = getPalette();
-    if (prop === "length") return p.length;
-    return p[Number(prop)];
+    const palette = getPalette();
+    if (prop === "length") return palette.length;
+    return palette[Number(prop)];
   }
 });
 
@@ -61,7 +55,7 @@ const PALETTE = new Proxy(/** @type {Record<string, string>} */ ({}), {
  */
 function svgEl(tag, attrs) {
   const el = document.createElementNS(SVG_NS, tag);
-  if (attrs) for (const k of Object.keys(attrs)) el.setAttribute(k, attrs[k]);
+  if (attrs) for (const attr of Object.keys(attrs)) el.setAttribute(attr, String(attrs[attr]));
   return el;
 }
 
@@ -118,12 +112,12 @@ function shouldAppendCivName(list, name) {
 function collectCivHistory(samples, pid) {
   /** @type {string[]} */
   const list = [];
-  for (const s of samples) {
-    const nm = sampleCivName(s, pid);
-    if (!shouldAppendCivName(list, nm)) continue;
+  for (const sample of samples) {
+    const name = sampleCivName(sample, pid);
+    if (!shouldAppendCivName(list, name)) continue;
     // De-dup by sequence position, not set membership, so a non-adjacent
     // recurrence (Rome -> Han -> Rome) is still detected.
-    list.push(nm);
+    list.push(name);
   }
   return list;
 }
@@ -224,8 +218,8 @@ function isCivUnmet(samples, pid) {
   if (!Array.isArray(samples)) return false;
   const key = String(pid);
   for (let i = samples.length - 1; i >= 0; i--) {
-    const ps = samples[i] && samples[i].players ? samples[i].players[key] : null;
-    if (ps && typeof ps.met === "boolean") return ps.met === false;
+    const player = samples[i] && samples[i].players ? samples[i].players[key] : null;
+    if (player && typeof player.met === "boolean") return player.met === false;
   }
   return false;
 }
@@ -256,8 +250,8 @@ export function getXAxisMode() {
  * @returns {Set<string>}
  */
 function coerceKeySet(src) {
-  const arr = src instanceof Set ? Array.from(src) : Array.isArray(src) ? src : [];
-  return new Set(arr.map((v) => String(v)));
+  const keys = src instanceof Set ? Array.from(src) : Array.isArray(src) ? src : [];
+  return new Set(keys.map((key) => String(key)));
 }
 
 /**
@@ -302,8 +296,8 @@ function addLiveTurnYear(turnYearMap, xOffset = 0) {
       typeof Game.turn === "number" &&
       typeof Game.getTurnDate === "function"
     ) {
-      const y = Game.getTurnDate();
-      if (typeof y === "string" && y.length > 0) turnYearMap.set(Game.turn + xOffset, y);
+      const year = Game.getTurnDate();
+      if (typeof year === "string" && year.length > 0) turnYearMap.set(Game.turn + xOffset, year);
     }
   } catch (_) {
     // Game.turn / Game.getTurnDate may be absent or throw; skip the live entry.
@@ -322,11 +316,11 @@ function nearestByTurn(map, turn) {
   /** @type {V|null} */
   let best = null;
   let bestDist = Infinity;
-  map.forEach((val, t) => {
-    const d = Math.abs(t - turn);
-    if (d < bestDist) {
-      bestDist = d;
-      best = val;
+  map.forEach((value, key) => {
+    const distance = Math.abs(key - turn);
+    if (distance < bestDist) {
+      bestDist = distance;
+      best = value;
     }
   });
   return best;
@@ -340,14 +334,14 @@ function nearestByTurn(map, turn) {
 function buildStackTurnYears(samples) {
   /** @type {Map<number, string>} */
   const stackTurnYears = new Map();
-  for (const s of samples) {
+  for (const sample of samples) {
     if (
-      s &&
-      typeof s.turn === "number" &&
-      typeof s.gameYear === "string" &&
-      s.gameYear.length > 0
+      sample &&
+      typeof sample.turn === "number" &&
+      typeof sample.gameYear === "string" &&
+      sample.gameYear.length > 0
     ) {
-      stackTurnYears.set(s.turn, s.gameYear);
+      stackTurnYears.set(sample.turn, sample.gameYear);
     }
   }
   addLiveTurnYear(stackTurnYears);
@@ -357,34 +351,57 @@ function buildStackTurnYears(samples) {
 /**
  * Compose a dropdown/option label from a civ sample ("Leader (Civ)" or
  * "Leader" or "Player <pid>").
- * @param {CivSample|*} ps One civ's sample.
+ * @param {CivSample|*} player One civ's sample.
  * @param {string} pid
  * @returns {string}
  */
-function civOptionLabel(ps, pid) {
-  if (!ps.leaderName) return tPlayerFallback(pid);
-  return inlineLabel(ps.leaderName, ps.civName);
+function civOptionLabel(player, pid) {
+  if (!player.leaderName) return tPlayerFallback(pid);
+  return inlineLabel(player.leaderName, player.civName);
 }
 
 /**
  * Escape HTML-special characters for insertion into tooltip markup.
- * @param {*} s Coerced to string.
+ * @param {*} value Coerced to string.
  * @returns {string}
  */
-function escapeHtml(s) {
-  return String(s)
+function escapeHtml(value) {
+  return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
 
+/**
+ * Build a game-year → chart-X (chartTurn) map from the sample stream, so an event carrying only a
+ * year label can be placed on the continuous timeline.
+ * @param {Snapshot[]|*[]} samples
+ * @returns {Map<string, number>} game-year → chartTurn.
+ */
+function buildYearToChartTurn(samples) {
+  /** @type {Map<string, number>} */
+  const yearToTurn = new Map();
+  for (const sample of samples) {
+    if (
+      sample &&
+      typeof sample.gameYear === "string" &&
+      typeof sample.chartTurn === "number" &&
+      !yearToTurn.has(sample.gameYear)
+    ) {
+      yearToTurn.set(sample.gameYear, sample.chartTurn);
+    }
+  }
+  return yearToTurn;
+}
+
 export {
-  dlog,
+  log,
   SVG_NS,
   PALETTE,
   svgEl,
   historySamples,
+  buildYearToChartTurn,
   appendEmptyNotice,
   coerceKeySet,
   resolveLocalPid,

@@ -5,8 +5,11 @@ import assert from "node:assert/strict";
 
 const saved = globalThis.Locale;
 const JA = {
-  LOC_DEMOGRAPHICS_YEAR_BCE: "紀元前{1_Year}年", LOC_DEMOGRAPHICS_YEAR_CE: "西暦{1_Year}年",
-  LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY: "古{1_Turn}", LOC_DEMOGRAPHICS_TURN_DASH: "T-{1_Turn}", LOC_DEMOGRAPHICS_TURN_SHORT: "T{1_Turn}"
+  LOC_DEMOGRAPHICS_YEAR_BCE: "紀元前{1_Year}年",
+  LOC_DEMOGRAPHICS_YEAR_CE: "西暦{1_Year}年",
+  LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY: "古{1_Turn}",
+  LOC_DEMOGRAPHICS_TURN_DASH: "T-{1_Turn}",
+  LOC_DEMOGRAPHICS_TURN_SHORT: "T{1_Turn}"
 };
 globalThis.Locale = { compose: (k, ...a) => (JA[k] ? JA[k].replace(/\{1_[A-Za-z]+\}/, String(a[0])) : k) };
 const { localYear, turnLabel, turnPlain } = await import("/demographics/ui/core/demographics-i18n.js");

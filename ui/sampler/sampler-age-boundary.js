@@ -22,7 +22,7 @@ import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises
  * @typedef {AgeReadDeps & {
  *   loadHistory: () => WarHistory,
  *   saveHistory: (history: WarHistory) => void,
- *   ilog: (...args: any[]) => void,
+ *   logDebug: (...args: any[]) => void,
  *   tripIfTooMany: (label: string, err: unknown) => void,
  *   doSample: () => unknown,
  *   getCurrentTurn: () => (number | undefined),
@@ -35,7 +35,7 @@ import { sampleAgeKey } from "/demographics/ui/screen-demographics/charts/crises
  * @param {AgeReadDeps} deps Transition helper dependencies.
  * @returns {string | undefined} The new (re-read) age type.
  */
-export function _readNewAgeType(deps) {
+export function readNewAgeType(deps) {
   // Clear cache first so getCurrentAgeType re-reads Game.age.
   deps.resetAgeCaches();
   return deps.getCurrentAgeType();
@@ -49,7 +49,7 @@ export function _readNewAgeType(deps) {
  * @param {number} turn The age-local Game.turn at transition.
  * @returns {boolean} True if already recorded.
  */
-export function _ageBoundaryAlreadyRecorded(history, age, turn) {
+export function ageBoundaryAlreadyRecorded(history, age, turn) {
   const arr = history && history.ageBoundaries;
   if (!Array.isArray(arr)) return false;
   // Same age + same age-local turn = same transition event (multiple pids
@@ -67,13 +67,13 @@ export function _ageBoundaryAlreadyRecorded(history, age, turn) {
  * Identify the age that just finished, given the new age starting at `turn`.
  * The boundary fires when `newAge` begins; the finished age is the one just
  * before this turn in the (sorted) boundary list.
- * @param {*} h The persisted history blob.
+ * @param {*} history The persisted history blob.
  * @param {string} newAge The new age type.
  * @param {number} turn The age-local turn at transition.
  * @returns {string} The finished age type.
  */
-export function _resolveFinishedAge(h, newAge, turn) {
-  const sorted = h.ageBoundaries
+export function resolveFinishedAge(history, newAge, turn) {
+  const sorted = history.ageBoundaries
     .slice()
     .sort((/** @type {*} */ a, /** @type {*} */ b) => (a.turn || 0) - (b.turn || 0));
   const idx = sorted.findIndex((/** @type {*} */ b) => b.age === newAge && b.turn === turn);
@@ -86,16 +86,16 @@ export function _resolveFinishedAge(h, newAge, turn) {
  * @param {*} ps A snapshot player record.
  * @returns {object | undefined} The triumph record, or undefined if no metrics.
  */
-export function _legacyRecordForPlayer(ps) {
-  const m = ps.metrics;
-  if (!m) return undefined;
+export function legacyRecordForPlayer(ps) {
+  const metrics = ps.metrics;
+  if (!metrics) return undefined;
   return {
-    triumphs_cultural: m.triumphs_cultural || 0,
-    triumphs_diplomatic: m.triumphs_diplomatic || 0,
-    triumphs_economic: m.triumphs_economic || 0,
-    triumphs_scientific: m.triumphs_scientific || 0,
-    triumphs_militaristic: m.triumphs_militaristic || 0,
-    triumphs_expansionist: m.triumphs_expansionist || 0,
+    triumphs_cultural: metrics.triumphs_cultural || 0,
+    triumphs_diplomatic: metrics.triumphs_diplomatic || 0,
+    triumphs_economic: metrics.triumphs_economic || 0,
+    triumphs_scientific: metrics.triumphs_scientific || 0,
+    triumphs_militaristic: metrics.triumphs_militaristic || 0,
+    triumphs_expansionist: metrics.triumphs_expansionist || 0,
     leaderName: ps.leaderName,
     civName: ps.civName,
     leaderType: ps.leaderType,
@@ -112,16 +112,16 @@ export function _legacyRecordForPlayer(ps) {
  * @param {*} h The persisted history blob.
  * @returns {Record<string, object>} The pid → triumph-snapshot map.
  */
-export function _buildLegacySnapshot(h) {
+export function buildLegacySnapshot(h) {
   /** @type {Record<string, object>} */
   const snap = {};
   const samps = h.samples || [];
   for (let i = samps.length - 1; i >= 0; i--) {
-    const s = samps[i];
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
+    const sample = samps[i];
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
       if (snap[pid]) continue;
-      const rec = _legacyRecordForPlayer(s.players[pid]);
+      const rec = legacyRecordForPlayer(sample.players[pid]);
       if (rec) snap[pid] = rec;
     }
   }
@@ -135,7 +135,7 @@ export function _buildLegacySnapshot(h) {
  * @param {*} h The persisted history blob (mutated).
  * @param {string} finishedAge The age that just ended.
  */
-export function _snapshotCrisisCost(h, finishedAge) {
+export function snapshotCrisisCost(h, finishedAge) {
   if (!h.crisisSnapshots || typeof h.crisisSnapshots !== "object") h.crisisSnapshots = {};
   const ageSamples = (h.samples || []).filter(
     (/** @type {*} */ s) => sampleAgeKey(s) === finishedAge
@@ -152,28 +152,28 @@ export function _snapshotCrisisCost(h, finishedAge) {
  * @param {AgeBoundaryDeps} deps Age-boundary dependencies.
  */
 export function recordAgeBoundary(newAge, turn, deps) {
-  const h = deps.loadHistory();
-  if (!newAge || _ageBoundaryAlreadyRecorded(h, newAge, turn)) return;
+  const history = deps.loadHistory();
+  if (!newAge || ageBoundaryAlreadyRecorded(history, newAge, turn)) return;
   // Drop the obsolete stored offset: the chart computes X at render time from
   // age + localTurn.
-  delete h.cumulativeTurnOffset;
-  h.ageBoundaries.push({
+  delete history.cumulativeTurnOffset;
+  history.ageBoundaries.push({
     turn, // age-local Game.turn at transition
     localTurn: turn,
     age: newAge
   });
-  deps.ilog("ageBoundary: recorded", newAge, "at localTurn=", turn);
+  deps.logDebug("ageBoundary: recorded", newAge, "at localTurn=", turn);
   // Snapshot per-civ triumph counts at this moment (the latest sample's values
   // are the age-end totals) under history.legacySnapshots[age].
-  if (!h.legacySnapshots || typeof h.legacySnapshots !== "object") {
-    h.legacySnapshots = {};
+  if (!history.legacySnapshots || typeof history.legacySnapshots !== "object") {
+    history.legacySnapshots = {};
   }
-  const finishedAge = _resolveFinishedAge(h, newAge, turn);
-  const snap = _buildLegacySnapshot(h);
-  h.legacySnapshots[finishedAge] = snap;
-  _snapshotCrisisCost(h, finishedAge);
-  deps.saveHistory(h);
-  deps.ilog(
+  const finishedAge = resolveFinishedAge(history, newAge, turn);
+  const snap = buildLegacySnapshot(history);
+  history.legacySnapshots[finishedAge] = snap;
+  snapshotCrisisCost(history, finishedAge);
+  deps.saveHistory(history);
+  deps.logDebug(
     "appended ageBoundary turn=",
     turn,
     "age=",
@@ -209,9 +209,9 @@ export function resetAgeBoundaryDebounce() {
 function _readGameSeed() {
   try {
     if (typeof Configuration === "undefined" || typeof Configuration.getGame !== "function") return "";
-    const g = Configuration.getGame();
-    const s = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
-    return s === undefined || s === null ? "" : String(s);
+    const game = Configuration.getGame();
+    const seed = game && (game.startSeed ?? game.gameSeed ?? game.mapSeed);
+    return seed === undefined || seed === null ? "" : String(seed);
   } catch (_) {
     // Configuration.getGame() can throw before the game is set up; fall back to no seed.
     return "";
@@ -227,7 +227,7 @@ function _readGameSeed() {
 export function onPlayerAgeTransitionComplete(data, deps) {
   if (deps.isDisabled()) return;
   try {
-    const newAge = _readNewAgeType(deps);
+    const newAge = readNewAgeType(deps);
     const turn = deps.getCurrentTurn() ?? -1;
     // Debounce: PlayerAgeTransitionComplete fires once per major civ, but the
     // boundary record only needs to happen once per transition. Keyed on the
@@ -235,7 +235,7 @@ export function onPlayerAgeTransitionComplete(data, deps) {
     const boundaryKey = _readGameSeed() + "|" + String(newAge) + "|" + String(turn);
     if (boundaryKey === _lastHandledBoundary) return;
     _lastHandledBoundary = boundaryKey;
-    deps.ilog(
+    deps.logDebug(
       "PlayerAgeTransitionComplete pid=",
       data && data.player,
       "newAge=",

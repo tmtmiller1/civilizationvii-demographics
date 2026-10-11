@@ -29,20 +29,17 @@
 
 import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
 import {
-  elog,
   getLocalPlayerID,
   getPlayer,
-  ilog,
+  log,
   safeCall,
   safeNum,
   setSamplerDebug,
-  setSamplerErrorHandler,
-  vlog
+  setSamplerErrorHandler
 } from "/demographics/ui/sampler/sampler-shared.js";
 
-// Re-exported so the collectors and snapshot modules that have always imported
-// these from the sampler keep working; they now resolve to the leaf module that
-// breaks the sampler <-> collectors-core import cycle.
+// Re-exported for the modules that import these from the sampler. They are defined in the leaf
+// sampler-shared.js so the sampler and collectors-core never import each other.
 export { safeCall, safeNum, getLocalPlayerID, getPlayer };
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
@@ -79,7 +76,9 @@ import {
   resetSamplerRuntimeState,
   runResumeKickoff
 } from "/demographics/ui/sampler/sampler-runtime-state.js";
-import { registerSamplerHandlers as registerSamplerHandlersCore } from "/demographics/ui/sampler/sampler-registration.js";
+import {
+  registerSamplerHandlers as registerSamplerHandlersCore
+} from "/demographics/ui/sampler/sampler-registration.js";
 import { handlePlayerTurnActivated } from "/demographics/ui/sampler/sampler-turn-handler.js";
 import { buildAgeBoundaryDeps } from "/demographics/ui/sampler/sampler-age-boundary-deps.js";
 import {
@@ -161,12 +160,12 @@ function _teardown() {
     try {
       if (handlerRef) engine.off("PlayerTurnActivated", handlerRef);
     } catch (e) {
-      vlog("engine.off PlayerTurnActivated threw:", /** @type {*} */ (e)?.message);
+      log.debug("engine.off PlayerTurnActivated threw:", /** @type {*} */ (e)?.message);
     }
     try {
       if (_ageHandlerRef) engine.off("PlayerAgeTransitionComplete", _ageHandlerRef);
     } catch (e) {
-      vlog(
+      log.debug(
         "engine.off PlayerAgeTransitionComplete threw:",
         /** @type {*} */ (e)?.message
       );
@@ -201,28 +200,28 @@ function fullErrorStack(err) {
  * without a committed sample in between, permanently disable sampling and
  * unsubscribe for this session.
  * @param {string} label A label identifying where the error occurred.
- * @param {*} e The thrown error.
+ * @param {*} error The thrown error.
  */
-function tripIfTooMany(label, e) {
+function tripIfTooMany(label, error) {
   if (!firstExceptionLogged) {
     firstExceptionLogged = true;
-    firstException = { label, stack: fullErrorStack(e) };
-    elog("first sampler exception in accessor:", label, "\n" + firstException.stack);
+    firstException = { label, stack: fullErrorStack(error) };
+    log.error("first sampler exception in accessor:", label, "\n" + firstException.stack);
   }
   errorCount++;
-  elog("error in", label, "errorCount=", errorCount, "/", KILL_THRESHOLD, "err:", e);
+  log.error("error in", label, "errorCount=", errorCount, "/", KILL_THRESHOLD, "err:", error);
   if (errorCount >= KILL_THRESHOLD) {
-    ilog("kill switch tripped, disabling sampling permanently for this session");
+    log.debug("kill switch tripped, disabling sampling permanently for this session");
     disabled = true;
     try {
       _teardown();
     } catch (e2) {
-      elog("engine.off threw during kill:", e2);
+      log.error("engine.off threw during kill:", e2);
     }
     try {
       DemographicsStorage.teardown?.();
     } catch (e3) {
-      elog("DemographicsStorage.teardown threw during kill:", e3);
+      log.error("DemographicsStorage.teardown threw during kill:", e3);
     }
   }
 }
@@ -258,7 +257,7 @@ function seedNodeBaselinesForSample(ageType) {
     );
   } catch (e) {
     setNodeBaselineByPid(null);
-    elog("computeNodeBaselines threw; tech/civic baseline skipped this sample:", e);
+    log.error("computeNodeBaselines threw; tech/civic baseline skipped this sample:", e);
   }
 }
 
@@ -270,7 +269,7 @@ function doSample() {
   const localTurn = getCurrentTurn(safeCall) ?? -1;
   const ids = getAliveMajorIds(safeCall);
   if (ids.length < 2) {
-    ilog("skip sample: too few alive players (", ids.length, ") at localTurn=", localTurn);
+    log.debug("skip sample: too few alive players (", ids.length, ") at localTurn=", localTurn);
     return null;
   }
   const tStart = perfNow();
@@ -294,7 +293,7 @@ function doSample() {
     ids,
     buildMajorPlayerSnapshots,
     buildPlayerCtx,
-    computeMetrics: (ctx, turn) => computeMetrics(ctx, turn, tripIfTooMany, elog),
+    computeMetrics: (ctx, turn) => computeMetrics(ctx, turn, tripIfTooMany, log.error),
     stampWarMetrics,
     buildSnapshotPlayer
   }));
@@ -328,7 +327,7 @@ function doSample() {
  * the founding/trend trace (keyed by the monotonic chart turn so trend windows
  * span age boundaries), then the current age's top-settlement archive.
  * @param {*} history The in-progress history blob (mutated).
- * @param {Snapshot} built The built snapshot.
+ * @param {Snapshot} built
  * @param {number} localTurn The age-local sample turn.
  */
 function recordSettlementHistory(history, built, localTurn) {
@@ -340,7 +339,7 @@ function recordSettlementHistory(history, built, localTurn) {
 /**
  * Persist the snapshot, run the war tracker, and log sample timing. A committed
  * sample (append + save both succeeded) restarts the kill-switch count.
- * @param {Snapshot} snapshot The built snapshot.
+ * @param {Snapshot} snapshot
  * @param {number} turn The sample turn.
  * @param {number} tStart The sample start time (perfNow).
  * @param {number} minorCount The number of sampled minors.
@@ -353,7 +352,7 @@ function finalizeSample(snapshot, turn, tStart, minorCount) {
     runWarTracker,
     recordSettlementHistory: (history, built) => recordSettlementHistory(history, built, turn),
     commitSample: (history) => commitSample(DemographicsStorage, tripIfTooMany, history),
-    logSampleTiming: (timings, counts) => logSampleTiming(ilog, timings, counts)
+    logSampleTiming: (timings, counts) => logSampleTiming(log.debug, timings, counts)
   });
   if (stored > 0) noteSampleCommitted();
 }
@@ -376,21 +375,21 @@ function onPlayerTurnActivated(data) {
         DemographicsSettings.getSetting(key, fallback)
       ),
     getLastSampledTurn: () => lastSampledTurn,
-    vlog,
+    logDebug: log.debug,
     doSample,
     noteSampleSucceeded: (curTurn) => {
       noteSampleSucceeded(curTurn, {
-        setLastSampledTurn: (v) => {
-          lastSampledTurn = v;
+        setLastSampledTurn: (value) => {
+          lastSampledTurn = value;
         },
         firstSampleSucceeded: () => firstSampleSucceeded,
-        setFirstSampleSucceeded: (v) => {
-          firstSampleSucceeded = v;
+        setFirstSampleSucceeded: (value) => {
+          firstSampleSucceeded = value;
         },
-        setDebugEnabled: (v) => {
-          setSamplerDebug(v);
+        setDebugEnabled: (value) => {
+          setSamplerDebug(value);
         },
-        ilog
+        logDebug: log.debug
       });
     },
     tripIfTooMany
@@ -408,29 +407,29 @@ function resetSamplerState() {
   resetAgeBoundaryDebounce();
   resetSamplerRuntimeState({
     storage: DemographicsStorage,
-    setHandlerRef: (v) => {
-      handlerRef = v;
+    setHandlerRef: (value) => {
+      handlerRef = value;
     },
-    setAgeHandlerRef: (v) => {
-      _ageHandlerRef = v;
+    setAgeHandlerRef: (value) => {
+      _ageHandlerRef = value;
     },
-    setDisabled: (v) => {
-      disabled = v;
+    setDisabled: (value) => {
+      disabled = value;
     },
-    setErrorCount: (v) => {
-      errorCount = v;
+    setErrorCount: (value) => {
+      errorCount = value;
     },
-    setFirstExceptionLogged: (v) => {
-      firstExceptionLogged = v;
+    setFirstExceptionLogged: (value) => {
+      firstExceptionLogged = value;
     },
-    setFirstException: (v) => {
-      firstException = v;
+    setFirstException: (value) => {
+      firstException = value;
     },
-    setFirstSampleSucceeded: (v) => {
-      firstSampleSucceeded = v;
+    setFirstSampleSucceeded: (value) => {
+      firstSampleSucceeded = value;
     },
-    setLastSampledTurn: (v) => {
-      lastSampledTurn = v;
+    setLastSampledTurn: (value) => {
+      lastSampledTurn = value;
     },
     seedWarEventsFromHistory
   });
@@ -452,10 +451,10 @@ function runKickoff() {
       ),
     shouldSampleTurn,
     getLastSampledTurn: () => lastSampledTurn,
-    ilog,
+    logDebug: log.debug,
     doSample,
-    setLastSampledTurn: (v) => {
-      lastSampledTurn = v;
+    setLastSampledTurn: (value) => {
+      lastSampledTurn = value;
     },
     tripIfTooMany
   });
@@ -473,7 +472,7 @@ function registerSamplerHandlers() {
       load: () => /** @type {WarHistory} */ (DemographicsStorage.load()),
       save: (history) => DemographicsStorage.save(history)
     },
-    ilog,
+    logDebug: log.debug,
     tripIfTooMany,
     doSample,
     getCurrentTurn: () => getCurrentTurn(safeCall),
@@ -493,8 +492,8 @@ function registerSamplerHandlers() {
     ageBoundaryDeps,
     startWarEventTracker,
     startFoundingTracker,
-    ilog,
-    elog,
+    logDebug: log.debug,
+    logError: log.error,
     killThreshold: KILL_THRESHOLD,
     runKickoff
   });
@@ -511,7 +510,7 @@ export function startSampler() {
   resetSamplerState();
 
   if (typeof engine === "undefined" || typeof engine.on !== "function") {
-    elog("engine.on unavailable; cannot start sampler");
+    log.error("engine.on unavailable; cannot start sampler");
     return;
   }
   registerSamplerHandlers();
@@ -540,20 +539,20 @@ export function getSamplerFirstException() {
 export function reenableSampler() {
   if (!disabled) return true;
   resetKillSwitchState({
-    setDisabled: (v) => {
-      disabled = v;
+    setDisabled: (value) => {
+      disabled = value;
     },
-    setErrorCount: (v) => {
-      errorCount = v;
+    setErrorCount: (value) => {
+      errorCount = value;
     },
-    setFirstExceptionLogged: (v) => {
-      firstExceptionLogged = v;
+    setFirstExceptionLogged: (value) => {
+      firstExceptionLogged = value;
     },
-    setFirstException: (v) => {
-      firstException = v;
+    setFirstException: (value) => {
+      firstException = value;
     },
-    setFirstSampleSucceeded: (v) => {
-      firstSampleSucceeded = v;
+    setFirstSampleSucceeded: (value) => {
+      firstSampleSucceeded = value;
     }
   });
   try {
@@ -562,7 +561,7 @@ export function reenableSampler() {
     return true;
   } catch (e) {
     disabled = true;
-    elog("reenableSampler failed:", e);
+    log.error("reenableSampler failed:", e);
     return false;
   }
 }
@@ -573,11 +572,11 @@ export function reenableSampler() {
  */
 export function sampleNow() {
   if (disabled) {
-    ilog("sampleNow called but sampler is disabled");
+    log.debug("sampleNow called but sampler is disabled");
     return null;
   }
   try {
-    ilog("sampleNow invoked");
+    log.debug("sampleNow invoked");
     return doSample();
   } catch (e) {
     tripIfTooMany("sampleNow", e);

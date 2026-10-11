@@ -2,11 +2,11 @@
 //
 // The resources stacked-area chart (one civ, resource-class bands stacked
 // over time): collectResourceCivOptions + renderResourcesStack and their
-// private layout / domain / drawing helpers. Reused by the triumph stack via
-// the bands / yAxisLabel options.
+// private layout / domain / drawing helpers. The bands / yAxisLabel options
+// let it stack any band set.
 
 import {
-  dlog,
+  log,
   SVG_NS,
   svgEl,
   historySamples,
@@ -45,34 +45,34 @@ const RESOURCE_BANDS = [
 
 /**
  * Whether a metrics object carries any numeric resource-class value.
- * @param {Record<string, *>} m One civ's metrics.
+ * @param {Record<string, *>} metrics One civ's metrics.
  * @returns {boolean}
  */
-function hasResourceMetric(m) {
+function hasResourceMetric(metrics) {
   return (
-    typeof m.resources_total === "number" ||
-    typeof m.resources_bonus === "number" ||
-    typeof m.resources_empire === "number" ||
-    typeof m.resources_city === "number"
+    typeof metrics.resources_total === "number" ||
+    typeof metrics.resources_bonus === "number" ||
+    typeof metrics.resources_empire === "number" ||
+    typeof metrics.resources_city === "number"
   );
 }
 
 /**
  * List every civ that has at least one sample with a resource value, for the
  * resources-stack viewer dropdown.
- * @param {DemoHistory|*} history The history blob.
+ * @param {DemoHistory|*} history
  * @returns {{ pid: string, label: string }[]}
  */
 export function collectResourceCivOptions(history) {
-  const samps = history && Array.isArray(history.samples) ? history.samples : [];
+  const samples = history && Array.isArray(history.samples) ? history.samples : [];
   /** @type {Map<string, { pid: string, label: string }>} */
   const seen = new Map();
-  for (const s of samps) {
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
+  for (const sample of samples) {
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
       // Governance: don't offer policy-hidden civs as a pickable target.
-      if (civDroppedByPolicy(samps, pid)) continue;
-      foldResourceCivOption(seen, s.players[pid], pid);
+      if (civDroppedByPolicy(samples, pid)) continue;
+      foldResourceCivOption(seen, sample.players[pid], pid);
     }
   }
   return Array.from(seen.values());
@@ -81,13 +81,13 @@ export function collectResourceCivOptions(history) {
 /**
  * Record a civ as a resource-stack option when it has a resource metric.
  * @param {Map<string, { pid: string, label: string }>} seen Mutated.
- * @param {CivSample|*} ps One civ's sample.
+ * @param {CivSample|*} player One civ's sample.
  * @param {string} pid
  */
-function foldResourceCivOption(seen, ps, pid) {
-  const m = ps?.metrics;
-  if (!m || !hasResourceMetric(m) || seen.has(pid)) return;
-  seen.set(pid, { pid, label: civOptionLabel(ps, pid) });
+function foldResourceCivOption(seen, player, pid) {
+  const metrics = player?.metrics;
+  if (!metrics || !hasResourceMetric(metrics) || seen.has(pid)) return;
+  seen.set(pid, { pid, label: civOptionLabel(player, pid) });
 }
 
 /**
@@ -150,12 +150,12 @@ function resolveStackTargetPid(opts) {
 function buildStackPoints(samples, targetPid, bands) {
   /** @type {StackPoint[]} */
   const points = [];
-  for (const s of samples) {
-    if (!s?.players) continue;
-    const pid = targetPid ? targetPid : Object.keys(s.players)[0];
-    const ps = s.players[pid];
-    if (!ps?.metrics) continue;
-    const row = buildStackRow(stackTurnOf(s), ps.metrics, bands);
+  for (const sample of samples) {
+    if (!sample?.players) continue;
+    const pid = targetPid ? targetPid : Object.keys(sample.players)[0];
+    const player = sample.players[pid];
+    if (!player?.metrics) continue;
+    const row = buildStackRow(stackTurnOf(sample), player.metrics, bands);
     if (row) points.push(row);
   }
   return points;
@@ -165,31 +165,31 @@ function buildStackPoints(samples, targetPid, bands) {
  * The continuous (cross-age) x value for a sample: the global `chartTurn` when
  * present, else the raw turn. `snapshot.turn` is age-local (resets each age), so
  * using it would overlap ages on one axis; chartTurn keeps the timeline linear.
- * @param {Snapshot|*} s One sample.
+ * @param {Snapshot|*} sample
  * @returns {number} The continuous turn value.
  */
-function stackTurnOf(s) {
-  return typeof s?.chartTurn === "number" ? s.chartTurn : s.turn;
+function stackTurnOf(sample) {
+  return typeof sample?.chartTurn === "number" ? sample.chartTurn : sample.turn;
 }
 
 /**
  * Build one stack row from a metrics object, or `null` when no band is
  * positive.
  * @param {number|*} turn
- * @param {Record<string, *>} m One civ's metrics.
+ * @param {Record<string, *>} metrics One civ's metrics.
  * @param {StackBand[]} bands
- * @returns {StackPoint|null} The row, or `null`.
+ * @returns {StackPoint|null}
  */
-function buildStackRow(turn, m, bands) {
+function buildStackRow(turn, metrics, bands) {
   /** @type {StackPoint} */
   const row = { turn, values: {} };
-  let any = false;
+  let anyPositive = false;
   for (const band of bands) {
-    const v = typeof m[band.id] === "number" && isFinite(m[band.id]) ? m[band.id] : 0;
-    if (v > 0) any = true;
-    row.values[band.id] = v;
+    const value = typeof metrics[band.id] === "number" && isFinite(metrics[band.id]) ? metrics[band.id] : 0;
+    if (value > 0) anyPositive = true;
+    row.values[band.id] = value;
   }
-  return any ? row : null;
+  return anyPositive ? row : null;
 }
 
 /**
@@ -198,10 +198,10 @@ function buildStackRow(turn, m, bands) {
  * @param {ChartOptions|*} opts
  */
 function clampStackPoints(points, opts) {
-  const stackTr = resolveTurnRange(opts);
-  if (!stackTr) return;
+  const range = resolveTurnRange(opts);
+  if (!range) return;
   for (let i = points.length - 1; i >= 0; i--) {
-    if (points[i].turn < stackTr.min || points[i].turn > stackTr.max) {
+    if (points[i].turn < range.min || points[i].turn > range.max) {
       points.splice(i, 1);
     }
   }
@@ -217,10 +217,10 @@ function computeStackDomain(points, bands) {
   let xMin = Infinity,
     xMax = -Infinity,
     yMax = 0;
-  for (const p of points) {
-    if (p.turn < xMin) xMin = p.turn;
-    if (p.turn > xMax) xMax = p.turn;
-    const stack = sumBands(p.values, bands);
+  for (const point of points) {
+    if (point.turn < xMin) xMin = point.turn;
+    if (point.turn > xMax) xMax = point.turn;
+    const stack = sumBands(point.values, bands);
     if (stack > yMax) yMax = stack;
   }
   if (!isFinite(xMin)) xMin = 0;
@@ -243,20 +243,20 @@ function sumBands(values, bands) {
 
 /**
  * Build the stack-chart layout (pads, plot size, x/y mappers).
- * @param {number} W Canvas width.
- * @param {number} H Canvas height.
- * @param {{ xMin: number, xMax: number, yMax: number }} dom
+ * @param {number} width Canvas width.
+ * @param {number} height Canvas height.
+ * @param {{ xMin: number, xMax: number, yMax: number }} domain
  * @returns {StackLayout}
  */
-function buildStackLayout(W, H, dom) {
+function buildStackLayout(width, height, domain) {
   const padL = 70,
-    // Legend moved to a row on top of the chart (like the other graphs), so the right margin no
-    // longer reserves space for it, just enough to keep the last x-tick label from clipping.
+    // The legend sits in a row above the chart, so the right margin only has to keep the last
+    // x-tick label from clipping.
     padR = 40,
     padT = 30,
     padB = 64;
-  const innerW = W - padL - padR;
-  const innerH = H - padT - padB;
+  const innerW = width - padL - padR;
+  const innerH = height - padT - padB;
   return {
     padL,
     padR,
@@ -264,8 +264,8 @@ function buildStackLayout(W, H, dom) {
     padB,
     innerW,
     innerH,
-    xOf: (t) => padL + ((t - dom.xMin) / (dom.xMax - dom.xMin || 1)) * innerW,
-    yOf: (v) => padT + innerH - (v / dom.yMax) * innerH
+    xOf: (turn) => padL + ((turn - domain.xMin) / (domain.xMax - domain.xMin || 1)) * innerW,
+    yOf: (value) => padT + innerH - (value / domain.yMax) * innerH
   };
 }
 
@@ -274,9 +274,9 @@ function buildStackLayout(W, H, dom) {
  * @param {SVGElement} svg
  * @param {StackPoint[]} points
  * @param {StackBand[]} bands
- * @param {StackLayout} L
+ * @param {StackLayout} layout
  */
-function drawStackBands(svg, points, bands, L) {
+function drawStackBands(svg, points, bands, layout) {
   // Each band is a polygon bounded above by (cum + band) and below by (cum);
   // then cum moves up.
   const cum = new Array(points.length).fill(0);
@@ -284,24 +284,24 @@ function drawStackBands(svg, points, bands, L) {
     const upper = [];
     const lower = [];
     for (let i = 0; i < points.length; i++) {
-      const p = points[i];
-      const v = p.values[band.id] || 0;
-      lower.push({ x: L.xOf(p.turn), y: L.yOf(cum[i]) });
-      cum[i] += v;
-      upper.push({ x: L.xOf(p.turn), y: L.yOf(cum[i]) });
+      const point = points[i];
+      const value = point.values[band.id] || 0;
+      lower.push({ x: layout.xOf(point.turn), y: layout.yOf(cum[i]) });
+      cum[i] += value;
+      upper.push({ x: layout.xOf(point.turn), y: layout.yOf(cum[i]) });
     }
     // upper edge left→right, then lower edge right→left
-    const pts =
-      upper.map((p) => p.x + "," + p.y).join(" ") +
+    const outline =
+      upper.map((corner) => corner.x + "," + corner.y).join(" ") +
       " " +
       lower
         .slice()
         .reverse()
-        .map((p) => p.x + "," + p.y)
+        .map((corner) => corner.x + "," + corner.y)
         .join(" ");
     svg.appendChild(
       svgEl("polygon", {
-        points: pts,
+        points: outline,
         fill: band.color,
         "fill-opacity": "0.7",
         stroke: band.color,
@@ -314,8 +314,7 @@ function drawStackBands(svg, points, bands, L) {
 
 /**
  * Build the stack chart's band legend as a horizontal row shown on top of the chart (matching the
- * other graphs), instead of a vertical list in the right margin. Each item is a color dot + the
- * band label and its latest value.
+ * other graphs). Each item is a color dot + the band label and its latest value.
  * @param {StackBand[]} bands
  * @param {StackPoint[]} points
  * @returns {HTMLElement}
@@ -336,11 +335,11 @@ function buildStackLegendTop(bands, points) {
     dot.style.backgroundColor = band.color;
     item.appendChild(dot);
 
-    const txt = document.createElement("span");
-    txt.className = "demographics-chart-line-label-text";
+    const label = document.createElement("span");
+    label.className = "demographics-chart-line-label-text";
     const latest = points[points.length - 1]?.values?.[band.id] || 0;
-    txt.textContent = band.label + " , " + latest;
-    item.appendChild(txt);
+    label.textContent = band.label + " , " + latest;
+    item.appendChild(label);
 
     row.appendChild(item);
   });
@@ -351,7 +350,7 @@ function buildStackLegendTop(bands, points) {
  * Options accepted by {@link renderResourcesStack}.
  * @typedef {Object} StackOptions
  * @property {DemoHistory|*} [history] The history blob.
- * @property {StackBand[]} [bands] Override band set (used by triumph stack).
+ * @property {StackBand[]} [bands] Override band set.
  * @property {number} [width] Canvas width.
  * @property {number} [height] Canvas height.
  * @property {number|string} [viewerPid] Which civ to chart.
@@ -362,7 +361,7 @@ function buildStackLegendTop(bands, points) {
 /**
  * Render the resources stacked-area chart (one civ, bands stacked over time)
  * into `host`. The `bands` / `yAxisLabel` options generalize it for arbitrary
- * stacked band sets (used by the now-removed triumph stack; kept generic).
+ * stacked band sets.
  * @param {HTMLElement} host The view host element (cleared and repopulated).
  * @param {StackOptions} [options]
  * @returns {{ svg: SVGElement }|null} The mounted SVG handle, or `null`.
@@ -370,23 +369,24 @@ function buildStackLegendTop(bands, points) {
 export function renderResourcesStack(host, options) {
   const setup = prepareResourcesStackRender(host, options);
   if (!setup) return null;
-  const { hostEl, opts, BANDS, W, H, samples } = setup;
+  const { hostEl, opts, bands, width, height, samples } = setup;
   if (!guardSamplesPresent(hostEl, samples)) return null;
   // viewerPid (option) lets the caller pick which civ's stacked resources to
   // chart; defaults to the local player so the panel "just works" on first open.
-  const points = buildStackPoints(samples, resolveStackTargetPid(opts), BANDS);
+  const points = buildStackPoints(samples, resolveStackTargetPid(opts), bands);
   clampStackPoints(points, opts);
   if (!guardPointsPresent(hostEl, points)) return null;
 
-  const dom = computeStackDomain(points, BANDS);
-  const L = buildStackLayout(W, H, dom);
-  const { svg, tickPositions } = buildStackSvg(samples, points, BANDS, { L, dom, W, H });
-  const wrap = mountStackWrap(svg, opts, { tickPositions }, { L, W, H });
+  const domain = computeStackDomain(points, bands);
+  const layout = buildStackLayout(width, height, domain);
+  const dims = { L: layout, dom: domain, W: width, H: height };
+  const { svg, tickPositions } = buildStackSvg(samples, points, bands, dims);
+  const wrap = mountStackWrap(svg, opts, { tickPositions }, { L: layout, W: width, H: height });
 
   // Band legend on top of the chart (like the other graphs), then the chart wrap below it.
-  hostEl.appendChild(buildStackLegendTop(BANDS, points));
+  hostEl.appendChild(buildStackLegendTop(bands, points));
   hostEl.appendChild(wrap);
-  dlog("resources stacked area mounted; turns=", points.length, "yMax=", dom.yMax);
+  log.debug("resources stacked area mounted; turns=", points.length, "yMax=", domain.yMax);
   return { svg };
 }
 
@@ -397,9 +397,9 @@ export function renderResourcesStack(host, options) {
  * @returns {{
  *   hostEl: HTMLElement,
  *   opts: StackOptions,
- *   BANDS: StackBand[],
- *   W: number,
- *   H: number,
+ *   bands: StackBand[],
+ *   width: number,
+ *   height: number,
  *   samples: Snapshot[],
  * }|null} Prepared setup.
  */
@@ -407,11 +407,11 @@ function prepareResourcesStackRender(host, options) {
   if (!host) return null;
   while (host.firstChild) host.removeChild(host.firstChild);
   const opts = options || {};
-  const BANDS = resolveStackBands(opts);
-  const W = opts.width || 1400;
-  const H = opts.height || 600;
+  const bands = resolveStackBands(opts);
+  const width = opts.width || 1400;
+  const height = opts.height || 600;
   const samples = historySamples(opts.history);
-  return { hostEl: host, opts, BANDS, W, H, samples };
+  return { hostEl: host, opts, bands, width, height, samples };
 }
 
 /**
@@ -444,9 +444,9 @@ function guardPointsPresent(host, points) {
  * @param {SVGElement} svg
  * @param {StackOptions} opts For yAxisLabel.
  * @param {{ tickPositions: { t: number, x: number, year: string|null, labelY: number }[] }} data
- *   The x-tick positions (the band legend now mounts on top of the chart, outside this wrap).
+ *   The x-tick positions (the band legend mounts on top of the chart, outside this wrap).
  * @param {{ L: StackLayout, W: number, H: number }} dims Layout + canvas size.
- * @returns {HTMLElement} The chart wrap.
+ * @returns {HTMLElement}
  */
 function mountStackWrap(svg, opts, data, dims) {
   const { tickPositions } = data;
@@ -465,9 +465,11 @@ function mountStackWrap(svg, opts, data, dims) {
     W,
     H,
     xClassName:
-      "demographics-chart-axis-title demographics-chart-axis-x demographics-resources-axis-title demographics-resources-axis-x",
+      "demographics-chart-axis-title demographics-chart-axis-x " +
+      "demographics-resources-axis-title demographics-resources-axis-x",
     yClassName:
-      "demographics-chart-axis-title demographics-chart-axis-y demographics-resources-axis-title demographics-resources-axis-y",
+      "demographics-chart-axis-title demographics-chart-axis-y " +
+      "demographics-resources-axis-title demographics-resources-axis-y",
     xText: t("LOC_DEMOGRAPHICS_AXIS_TIME"),
     yText: yAxisLabel
   });
@@ -492,26 +494,26 @@ function mountStackWrap(svg, opts, data, dims) {
  *   The SVG and the x-tick positions for HTML overlays.
  */
 function buildStackSvg(samples, points, bands, dims) {
-  const { L, dom, W, H } = dims;
+  const { L: layout, dom: domain, W: width, H: height } = dims;
   const svg = svgEl("svg", {
     xmlns: SVG_NS,
-    viewBox: `0 0 ${W} ${H}`,
-    width: String(W),
-    height: String(H),
+    viewBox: `0 0 ${width} ${height}`,
+    width: String(width),
+    height: String(height),
     preserveAspectRatio: "none",
     class: "demographics-chart-svg",
     "aria-label": t("LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE")
   });
   const gridCfg = buildStackGridConfig();
-  drawStackGrid(svg, L, dom.yMax, gridCfg, svgEl);
+  drawStackGrid(svg, layout, domain.yMax, gridCfg, svgEl);
   const stackTurnYears = buildStackTurnYearMap(samples);
   const tickPositions = drawStackXTicks(
     svg,
-    { L, dom, turnYearMap: stackTurnYears },
+    { L: layout, dom: domain, turnYearMap: stackTurnYears },
     { cfg: gridCfg, nearestByTurn, svgEl }
   );
-  drawStackBands(svg, points, bands, L);
-  drawStackAgeLines(svg, samples, L, dom);
+  drawStackBands(svg, points, bands, layout);
+  drawStackAgeLines(svg, samples, layout, domain);
   return { svg, tickPositions };
 }
 
@@ -524,9 +526,9 @@ function buildStackSvg(samples, points, bands, dims) {
 function buildStackTurnYearMap(samples) {
   /** @type {Map<number, string>} */
   const map = new Map();
-  for (const s of samples) {
-    if (s && typeof s.gameYear === "string" && s.gameYear.length > 0) {
-      map.set(stackTurnOf(s), s.gameYear);
+  for (const sample of samples) {
+    if (sample && typeof sample.gameYear === "string" && sample.gameYear.length > 0) {
+      map.set(stackTurnOf(sample), sample.gameYear);
     }
   }
   return map;
@@ -538,22 +540,22 @@ function buildStackTurnYearMap(samples) {
  * markers. (Coherent ignores SVG stroke-dasharray, so the line is solid.)
  * @param {SVGElement} svg
  * @param {Snapshot[]} samples
- * @param {StackLayout} L
- * @param {{ xMin: number, xMax: number, yMax: number }} dom
+ * @param {StackLayout} layout
+ * @param {{ xMin: number, xMax: number, yMax: number }} domain
  */
-function drawStackAgeLines(svg, samples, L, dom) {
+function drawStackAgeLines(svg, samples, layout, domain) {
   let prevAge = null;
-  for (const s of samples) {
-    const age = s && typeof s.age === "string" ? s.age : null;
+  for (const sample of samples) {
+    const age = sample && typeof sample.age === "string" ? sample.age : null;
     if (prevAge !== null && age !== null && age !== prevAge) {
-      const tx = stackTurnOf(s);
-      if (tx >= dom.xMin && tx <= dom.xMax) {
+      const turn = stackTurnOf(sample);
+      if (turn >= domain.xMin && turn <= domain.xMax) {
         svg.appendChild(
           svgEl("line", {
-            x1: L.xOf(tx),
-            y1: L.padT,
-            x2: L.xOf(tx),
-            y2: L.padT + L.innerH,
+            x1: layout.xOf(turn),
+            y1: layout.padT,
+            x2: layout.xOf(turn),
+            y2: layout.padT + layout.innerH,
             stroke: "#b78cff",
             "stroke-width": "1.8",
             "stroke-opacity": "0.9"

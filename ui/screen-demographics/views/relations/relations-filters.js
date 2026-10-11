@@ -10,8 +10,8 @@ import {
   AGREEMENT_TYPES,
   CS_AGREEMENT_TYPES,
   diplomacyActionLabel,
-  dlog,
   getRingPxPerUnit,
+  log,
   LINE_DASH
 } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 import {
@@ -40,10 +40,10 @@ const FILTER_PILL_COLORS = {
 };
 // Each individual agreement type contributes its own pill/line color so the
 // legend swatch and the ring line match (applyCivEdgeOverrides reads this).
-for (const _a of AGREEMENT_TYPES) FILTER_PILL_COLORS[_a.key] = _a.color;
-// City-State agreement types (befriend / suzerain directives) likewise , their CS
+for (const agreement of AGREEMENT_TYPES) FILTER_PILL_COLORS[agreement.key] = agreement.color;
+// City-State agreement types (befriend / suzerain directives) likewise: their CS
 // ring edges keep their builder color, so the pill swatch must use the same hue.
-for (const _c of CS_AGREEMENT_TYPES) FILTER_PILL_COLORS[_c.key] = _c.color;
+for (const agreement of CS_AGREEMENT_TYPES) FILTER_PILL_COLORS[agreement.key] = agreement.color;
 
 /**
  * Filter sub-tabs in display order.
@@ -59,32 +59,44 @@ export const FILTER_GROUPS = [
 
 /**
  * Resolve the civ-tab filter definitions.
- * @returns {FilterDef[]} Ordered filter definitions.
+ * @returns {FilterDef[]} In display order.
  */
 function civFilters() {
   return [
     { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude", group: "politics" },
     { key: "alliance", label: t("LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE"), kind: "attitude", group: "politics" },
     { key: "openborders", label: t("LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS"), kind: "political", group: "politics" },
-    { key: "denounced", label: t("LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED"), kind: "political", group: "politics", directed: true },
+    {
+      key: "denounced",
+      label: t("LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED"),
+      kind: "political",
+      group: "politics",
+      directed: true
+    },
     { key: "helpful", label: t("LOC_DEMOGRAPHICS_RELATIONS_HELPFUL"), kind: "attitude", group: "politics" },
     { key: "friendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY"), kind: "attitude", group: "politics" },
     { key: "unfriendly", label: t("LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY"), kind: "attitude", group: "politics" },
     { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude", group: "politics" },
     // One filter per individual cooperative agreement type, each its own line.
-    ...AGREEMENT_TYPES.map((a) => ({
-      key: a.key,
-      label: diplomacyActionLabel(a.action),
+    ...AGREEMENT_TYPES.map((agreement) => ({
+      key: agreement.key,
+      label: diplomacyActionLabel(agreement.action),
       kind: "agreement",
       group: "agreements"
     })),
-    { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic", group: "agreements", directed: true }
+    {
+      key: "trade",
+      label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"),
+      kind: "economic",
+      group: "agreements",
+      directed: true
+    }
   ];
 }
 
 /**
  * Resolve the city-state-tab filter definitions.
- * @returns {FilterDef[]} Ordered filter definitions.
+ * @returns {FilterDef[]} In display order.
  */
 function cityStateFilters() {
   return [
@@ -97,21 +109,27 @@ function cityStateFilters() {
     { key: "hostile", label: t("LOC_DEMOGRAPHICS_RELATIONS_HOSTILE"), kind: "attitude", group: "politics" },
     // City-State cooperative agreements: befriending + suzerain benefit directives,
     // each its own line (mirrors the major-civ Agreements list).
-    ...CS_AGREEMENT_TYPES.map((a) => ({
-      key: a.key,
-      label: diplomacyActionLabel(a.action),
+    ...CS_AGREEMENT_TYPES.map((agreement) => ({
+      key: agreement.key,
+      label: diplomacyActionLabel(agreement.action),
       kind: "agreement",
       group: "agreements",
       directed: true
     })),
-    { key: "trade", label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"), kind: "economic", group: "agreements", directed: true }
+    {
+      key: "trade",
+      label: t("LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES"),
+      kind: "economic",
+      group: "agreements",
+      directed: true
+    }
   ];
 }
 
 /**
  * Resolve filter definitions for one top tab.
  * @param {string} topTab
- * @returns {FilterDef[]} Ordered filter definitions.
+ * @returns {FilterDef[]} In display order.
  */
 export function filtersForView(topTab) {
   return topTab === "civ" ? civFilters() : cityStateFilters();
@@ -137,8 +155,8 @@ export function filterVisuals(key, topTab) {
  * @returns {string}
  */
 export function pillColorFor(key, topTab) {
-  const ov = filterVisuals(key, topTab);
-  if (ov && ov.color) return ov.color;
+  const override = filterVisuals(key, topTab);
+  if (override && override.color) return override.color;
   const attitudeColors = getAttitudeColors();
   if (attitudeColors[key]) return attitudeColors[key];
   return FILTER_PILL_COLORS[key] || "#bfbfbf";
@@ -160,13 +178,13 @@ export function pillColorFor(key, topTab) {
 
 /**
  * Append a "·" separator span to a control row.
- * @param {HTMLElement} row The row element.
+ * @param {HTMLElement} row
  */
 function appendCtrlSep(row) {
-  const sep = document.createElement("span");
-  sep.textContent = "·";
-  sep.className = "demographics-relations-filter-sep";
-  row.appendChild(sep);
+  const separator = document.createElement("span");
+  separator.textContent = "·";
+  separator.className = "demographics-relations-filter-sep";
+  row.appendChild(separator);
 }
 
 /**
@@ -214,7 +232,7 @@ let _remPxCache = 0;
 
 /**
  * Measure the on-screen px length of 1rem at the current Interface Size.
- * @returns {number} Pixels per rem (falls back to 16 if unmeasurable).
+ * @returns {number} Falls back to 16 if unmeasurable.
  */
 function remPx() {
   if (_remPxCache > 0) return _remPxCache;
@@ -226,9 +244,9 @@ function remPx() {
     probe.style.visibility = "hidden";
     probe.style.pointerEvents = "none";
     document.body.appendChild(probe);
-    const w = probe.getBoundingClientRect().width;
+    const probeWidth = probe.getBoundingClientRect().width;
     document.body.removeChild(probe);
-    _remPxCache = w > 0 ? w : 16;
+    _remPxCache = probeWidth > 0 ? probeWidth : 16;
   } catch (_) {
     _remPxCache = 16;
   }
@@ -240,23 +258,27 @@ function remPx() {
  * actual line at the ring's measured px-per-unit, so dash lengths + stroke width
  * match the ring exactly. The width scales with Interface Size (rem) and the
  * viewBox width is derived from it to keep the 1:1 viewBox→px scale.
- * @param {FilterDef} f The filter descriptor.
+ * @param {FilterDef} filterDef
  * @returns {SVGElement}
  */
-function buildFilterSwatch(f) {
-  const pxu = getRingPxPerUnit() || 5; // fallback until the ring is first measured
+function buildFilterSwatch(filterDef) {
+  const pxPerUnit = getRingPxPerUnit() || 5; // fallback until the ring is first measured
   const swatchPxW = SWATCH_W_REM * remPx(); // physical width scales with Interface Size
-  const vbW = swatchPxW / pxu; // keep viewBox 1:1 with px so dashes match the ring exactly
+  const vbW = swatchPxW / pxPerUnit; // keep viewBox 1:1 with px so dashes match the ring exactly
   const svg = /** @type {SVGElement} */ (document.createElementNS(SVG_NS, "svg"));
   svg.setAttribute("viewBox", "0 0 " + vbW + " " + SWATCH_VB_H);
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
   svg.setAttribute("class", "demographics-relations-swatch");
   svg.style.width = swatchPxW + "px";
-  svg.style.height = SWATCH_VB_H * pxu + "px";
+  svg.style.height = SWATCH_VB_H * pxPerUnit + "px";
   const y = SWATCH_VB_H / 2;
   appendSampleEdge(
     svg,
-    { color: f.color || "#bfbfbf", dash: resolveSwatchDashPattern(f), directed: f.directed },
+    {
+      color: filterDef.color || "#bfbfbf",
+      dash: resolveSwatchDashPattern(filterDef),
+      directed: filterDef.directed
+    },
     { x: 1, y },
     { x: vbW - 1, y }
   );
@@ -265,27 +287,28 @@ function buildFilterSwatch(f) {
 
 /**
  * Resolve the dash pattern used for a filter's legend swatch.
- * @param {FilterDef} f The filter descriptor.
- * @returns {string} Dash pattern string, empty for solid lines.
+ * @param {FilterDef} filterDef
+ * @returns {string} Empty for solid lines.
  */
-function resolveSwatchDashPattern(f) {
-  return f._dashOverride !== undefined ? f._dashOverride || "" : LINE_DASH[f.key] || "";
+function resolveSwatchDashPattern(filterDef) {
+  if (filterDef._dashOverride !== undefined) return filterDef._dashOverride || "";
+  return LINE_DASH[filterDef.key] || "";
 }
 
 /**
  * Attach the de-bounced click / action-activate / mousedown handlers to a
  * filter pill. Coherent may dispatch both `click` and `action-activate` for
  * one activation; a 50ms window guards against the double-toggle.
- * @param {HTMLElement} pill The pill element.
- * @param {FilterDef} f The filter descriptor.
+ * @param {HTMLElement} pill
+ * @param {FilterDef} filterDef
  * @param {boolean} active The pill's active state at build time.
  * @param {(key: string) => void} onToggle
  */
-function wireFilterPill(pill, f, active, onToggle) {
+function wireFilterPill(pill, filterDef, active, onToggle) {
   let lastFired = 0;
   /**
    * Build a de-bounced event handler for one event name.
-   * @param {string} evName The event name (for logging).
+   * @param {string} evName For logging.
    * @returns {(ev: *) => void}
    */
   const fire = (evName) => (ev) => {
@@ -293,35 +316,38 @@ function wireFilterPill(pill, f, active, onToggle) {
     const now =
       typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
     if (now - lastFired < 50) {
-      dlog("filter pill " + evName + " key=" + f.key, "SKIPPED (dedup)");
+      log.debug("filter pill " + evName + " key=" + filterDef.key, "SKIPPED (dedup)");
       return;
     }
     lastFired = now;
     safePlaySound("data-audio-activate", "audio-panel-diplo-ribbon");
-    dlog("filter pill " + evName + " key=" + f.key, "wasActive=" + active);
-    onToggle(f.key);
+    log.debug("filter pill " + evName + " key=" + filterDef.key, "wasActive=" + active);
+    onToggle(filterDef.key);
   };
   pill.addEventListener("click", fire("click"));
   pill.addEventListener("action-activate", fire("action-activate"));
   pill.addEventListener("mousedown", (_ev) => {
-    dlog("filter pill MOUSEDOWN key=" + f.key);
+    log.debug("filter pill MOUSEDOWN key=" + filterDef.key);
   });
 }
 
 /**
  * Build a single filter pill (swatch + label) wired to `onToggle`.
- * @param {FilterDef} f The filter descriptor.
- * @param {Set<string>} activeSet The active filter-key set.
+ * @param {FilterDef} filterDef
+ * @param {Set<string>} activeSet
  * @param {(key: string) => void} onToggle
  * @returns {HTMLElement}
  */
-function buildFilterPill(f, activeSet, onToggle) {
-  const active = activeSet.has(f.key);
-  const label = typeof f.label === "string" && f.label.length > 0 ? f.label : "(" + f.key + ")";
-  dlog(
-    "filter pill build key=" + f.key,
+function buildFilterPill(filterDef, activeSet, onToggle) {
+  const active = activeSet.has(filterDef.key);
+  const label =
+    typeof filterDef.label === "string" && filterDef.label.length > 0
+      ? filterDef.label
+      : "(" + filterDef.key + ")";
+  log.debug(
+    "filter pill build key=" + filterDef.key,
     "label='" + label + "'",
-    "color=" + f.color,
+    "color=" + filterDef.color,
     "active=" + active
   );
 
@@ -337,12 +363,12 @@ function buildFilterPill(f, activeSet, onToggle) {
 
   // Mini sample line showing what this filter's edges look like on the ring (same color + dash
   // pattern); the legend mapping color+texture → filter type.
-  pill.appendChild(buildFilterSwatch(f));
-  const lbl = document.createElement("span");
-  lbl.textContent = label;
-  pill.appendChild(lbl);
+  pill.appendChild(buildFilterSwatch(filterDef));
+  const labelEl = document.createElement("span");
+  labelEl.textContent = label;
+  pill.appendChild(labelEl);
 
-  wireFilterPill(pill, f, active, onToggle);
+  wireFilterPill(pill, filterDef, active, onToggle);
   return pill;
 }
 
@@ -351,7 +377,7 @@ function buildFilterPill(f, activeSet, onToggle) {
  * caller passes only the visible group's filters). The "All On / All Off"
  * header flips just those.
  * @param {FilterDef[]} filters Filter descriptors to render (one group's worth).
- * @param {Set<string>} activeSet The active filter-key set.
+ * @param {Set<string>} activeSet
  * @param {(key: string) => void} onToggle
  * @param {(turnOn: boolean) => void} [onToggleAll] Bulk-toggle callback (this group).
  * @returns {HTMLElement}
@@ -364,8 +390,8 @@ export function makeFilterPillRow(filters, activeSet, onToggle, onToggleAll) {
   if (typeof onToggleAll === "function") {
     row.appendChild(buildAllToggleRow(onToggleAll));
   }
-  for (const f of filters) {
-    row.appendChild(buildFilterPill(f, activeSet, onToggle));
+  for (const filterDef of filters) {
+    row.appendChild(buildFilterPill(filterDef, activeSet, onToggle));
   }
   return row;
 }

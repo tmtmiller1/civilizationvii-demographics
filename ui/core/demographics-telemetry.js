@@ -5,7 +5,9 @@
 // by multiple of the median). Debug-gated and throttled; reads the snapshot the
 // sampler just built and never throws.
 
-const DBG = false;
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
+const log = makeLogger("balance");
 
 // Throttle: emit at most once per this many sampled turns.
 const REPORT_INTERVAL = 10;
@@ -16,18 +18,6 @@ const SCORE_MEDIAN_MULTIPLE = 2.5;
 const MIN_CIVS = 3;
 
 let _lastReportTurn = -999;
-
-/**
- * @param {string} msg
- */
-function blog(msg) {
-  if (!DBG) return;
-  try {
-    console.warn("[Demographics.balance] " + msg);
-  } catch (_) {
-    /* ignore */
-  }
-}
 
 /**
  * Collect each major player's `score` metric from a snapshot.
@@ -78,7 +68,7 @@ export function reportBalanceSignals(snapshot, turn) {
     const share = total > 0 ? top.score / total : 0;
     const multiple = med > 0 ? top.score / med : 0;
     if (share >= SCORE_DOMINANCE_SHARE && multiple >= SCORE_MEDIAN_MULTIPLE) {
-      blog(
+      log.debug(
         "suspected runaway leader civ=" + top.pid + " score=" + Math.round(top.score) +
           " share=" + Math.round(share * 100) + "pct median x" + multiple.toFixed(1) +
           " (>= " + Math.round(SCORE_DOMINANCE_SHARE * 100) + "pct & x" + SCORE_MEDIAN_MULTIPLE + ")"

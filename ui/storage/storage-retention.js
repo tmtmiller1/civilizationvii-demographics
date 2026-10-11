@@ -22,14 +22,14 @@ export function serializePayload(history) {
  *   isValid: (history: any, version: number) => boolean,
  *   normalize: (history: any) => any,
  *   resolveEffectiveCap: () => { cap: number, source: string },
- *   derr: (...a: any[]) => void
+ *   logError: (...a: any[]) => void
  * }} options Validation and cap dependencies.
  * @returns {boolean} True when history is valid and ready to write.
  */
 export function prepareHistoryForSave(history, options) {
-  const { version, isValid, normalize, resolveEffectiveCap, derr } = options;
+  const { version, isValid, normalize, resolveEffectiveCap, logError } = options;
   if (!isValid(history, version)) {
-    derr("save: refusing to persist invalid history");
+    logError("save: refusing to persist invalid history");
     return false;
   }
   normalize(history);
@@ -44,19 +44,19 @@ export function prepareHistoryForSave(history, options) {
  * Serialize and write a history payload to a store.
  * @param {{ write: (key: string, value: string) => void }} store Persist store.
  * @param {string} payloadKey Store payload key.
- * @param {object} history History object.
- * @param {(...a: any[]) => void} derr Error logger.
+ * @param {object} history
+ * @param {(...a: any[]) => void} logError
  * @returns {boolean} True on successful write.
  */
-export function writeStorePayload(store, payloadKey, history, derr) {
+export function writeStorePayload(store, payloadKey, history, logError) {
   let serialized;
   try {
     serialized = serializePayload(history);
   } catch (e) {
-    derr("save: stringify threw:", e);
+    logError("save: stringify threw:", e);
     return false;
   }
-  return writeSerializedPayload(store, payloadKey, serialized, derr);
+  return writeSerializedPayload(store, payloadKey, serialized, logError);
 }
 
 /**
@@ -64,15 +64,15 @@ export function writeStorePayload(store, payloadKey, history, derr) {
  * @param {{ write: (key: string, value: string) => void }} store Persist store.
  * @param {string} payloadKey Store payload key.
  * @param {string} serialized Serialized payload envelope.
- * @param {(...a: any[]) => void} derr Error logger.
+ * @param {(...a: any[]) => void} logError
  * @returns {boolean} True on successful write.
  */
-export function writeSerializedPayload(store, payloadKey, serialized, derr) {
+export function writeSerializedPayload(store, payloadKey, serialized, logError) {
   try {
     store.write(payloadKey, serialized);
     return true;
   } catch (e) {
-    derr("save: store.write threw:", e);
+    logError("save: store.write threw:", e);
     return false;
   }
 }

@@ -9,15 +9,9 @@
 // tooltip reads its increase over a war window. Only combat deaths count, a raze
 // later halted still counts, and gold/faith purchases are not counted.
 
-// Flip to true for local debugging (committed off, matching the rest of the mod).
-const DEMOGRAPHICS_DEBUG = false;
-/**
- * Informational logger; no-op unless {@link DEMOGRAPHICS_DEBUG} is set.
- * @param {...*} a Values to log.
- */
-function clog(...a) {
-  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.casualties]", ...a);
-}
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
+const log = makeLogger("casualties");
 
 /**
  * Live cache of each tracked unit's owner + combat strength, keyed by
@@ -119,8 +113,8 @@ function unitIdOf(uid) {
 
 /**
  * Build the cache key for a unit.
- * @param {number} owner The owner pid.
- * @param {number} id The unit id.
+ * @param {number} owner
+ * @param {number} id
  * @returns {string} The `owner:id` key.
  */
 function unitKey(owner, id) {
@@ -131,7 +125,7 @@ function unitKey(owner, id) {
  * Record one military unit's strength so it can be resolved after the unit dies.
  * Called by the military-power collector for every counted (strength > 0) unit.
  * @param {*} uid The unit id / ComponentID from getUnitIds().
- * @param {number} owner The owner pid.
+ * @param {number} owner
  * @param {number} strength The unit's combat strength.
  */
 export function recordUnitStrength(uid, owner, strength) {
@@ -146,8 +140,8 @@ export function recordUnitStrength(uid, owner, strength) {
  * @returns {number} The cumulative casualty strength (0 if untracked).
  */
 export function getCumulativeCasualty(pid) {
-  const v = casualtyByPid.get(Number(pid));
-  return typeof v === "number" && isFinite(v) ? v : 0;
+  const casualties = casualtyByPid.get(Number(pid));
+  return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
 /**
@@ -156,8 +150,8 @@ export function getCumulativeCasualty(pid) {
  * @returns {number} The cumulative unit-loss count (0 if untracked).
  */
 export function getCumulativeUnitsLost(pid) {
-  const v = unitsLostByPid.get(Number(pid));
-  return typeof v === "number" && isFinite(v) ? v : 0;
+  const casualties = unitsLostByPid.get(Number(pid));
+  return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
 /**
@@ -175,7 +169,7 @@ function locKey(loc) {
  * sample so a later razing can recover who owned the plot before any capture.
  * Called by the city collector for each of a player's settlements.
  * @param {*} city A city handle (carries `location`).
- * @param {number} owner The owner pid.
+ * @param {number} owner
  */
 export function recordCity(city, owner) {
   try {
@@ -183,7 +177,7 @@ export function recordCity(city, owner) {
     if (key === null || typeof owner !== "number") return;
     cityOwnerByLoc.set(key, owner);
   } catch (e) {
-    clog("recordCity threw:", /** @type {*} */ (e)?.message);
+    log.debug("recordCity threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -193,8 +187,8 @@ export function recordCity(city, owner) {
  * @returns {number} The cumulative razed count (0 if untracked).
  */
 export function getCumulativeRazed(pid) {
-  const v = razedByPid.get(Number(pid));
-  return typeof v === "number" && isFinite(v) ? v : 0;
+  const casualties = razedByPid.get(Number(pid));
+  return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
 /**
@@ -204,8 +198,8 @@ export function getCumulativeRazed(pid) {
  * @returns {number} The cumulative war production (0 if untracked).
  */
 export function getCumulativeWarProd(pid) {
-  const v = warProdByPid.get(Number(pid));
-  return typeof v === "number" && isFinite(v) ? v : 0;
+  const casualties = warProdByPid.get(Number(pid));
+  return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
 /**
@@ -215,8 +209,8 @@ export function getCumulativeWarProd(pid) {
  * @returns {number} The cumulative net captures.
  */
 export function getCumulativeCityWarNet(pid) {
-  const v = cityWarNetByPid.get(Number(pid));
-  return typeof v === "number" && isFinite(v) ? v : 0;
+  const casualties = cityWarNetByPid.get(Number(pid));
+  return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
 /**
@@ -226,8 +220,8 @@ export function getCumulativeCityWarNet(pid) {
  * @returns {number} The cumulative net captured territory in km².
  */
 export function getCumulativeWarLand(pid) {
-  const v = warLandByPid.get(Number(pid));
-  return typeof v === "number" && isFinite(v) ? v : 0;
+  const casualties = warLandByPid.get(Number(pid));
+  return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
 /**
@@ -306,7 +300,7 @@ function cityLocationOf(cityID, data) {
 /**
  * Apply one side of a capture to the net-captures and net-territory tallies:
  * `sign` is +1 for the captor, -1 for the prior owner.
- * @param {number} pid The player id.
+ * @param {number} pid
  * @param {number} sign +1 (gained) or -1 (lost).
  * @param {number} land The captured city's territory in km².
  */
@@ -339,7 +333,7 @@ function onCityTransfered(data) {
       applyCaptureTallies(newOwner, 1, land);
     }
   } catch (e) {
-    clog("onCityTransfered threw:", /** @type {*} */ (e)?.message);
+    log.debug("onCityTransfered threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -352,7 +346,7 @@ function onCityRazingStarted(data) {
   try {
     const ev = resolveEventCity(data);
     if (!ev) {
-      clog("raze payload not resolvable; keys=", data && Object.keys(data));
+      log.debug("raze payload not resolvable; keys=", data && Object.keys(data));
       return;
     }
     const victim = capturedFromByLoc.has(ev.key)
@@ -360,12 +354,12 @@ function onCityRazingStarted(data) {
       : cityOwnerByLoc.get(ev.key);
     if (typeof victim === "number") {
       razedByPid.set(victim, (razedByPid.get(victim) || 0) + 1);
-      clog("razed: victim=", victim, "loc=", ev.key, "cum=", razedByPid.get(victim));
+      log.debug("razed: victim=", victim, "loc=", ev.key, "cum=", razedByPid.get(victim));
     }
     capturedFromByLoc.delete(ev.key);
     cityOwnerByLoc.delete(ev.key);
   } catch (e) {
-    clog("onCityRazingStarted threw:", /** @type {*} */ (e)?.message);
+    log.debug("onCityRazingStarted threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -406,7 +400,7 @@ function onUnitKilledInCombat(data) {
   try {
     const victim = resolveKilledUnit(data);
     if (!victim) {
-      clog("kill payload not resolvable; keys=", data && Object.keys(data));
+      log.debug("kill payload not resolvable; keys=", data && Object.keys(data));
       return;
     }
     const key = unitKey(victim.owner, victim.id);
@@ -414,15 +408,15 @@ function onUnitKilledInCombat(data) {
     if (!cached) {
       // Unit never sampled (built and killed within one turn); strength is
       // gone with the unit; can't be counted.
-      clog("kill with no cached strength for", key);
+      log.debug("kill with no cached strength for", key);
       return;
     }
     casualtyByPid.set(cached.owner, (casualtyByPid.get(cached.owner) || 0) + cached.strength);
     unitsLostByPid.set(cached.owner, (unitsLostByPid.get(cached.owner) || 0) + 1); // body count
     unitStrengthCache.delete(key);
-    clog("casualty owner=", cached.owner, "str=", cached.strength, "cum=", casualtyByPid.get(cached.owner));
+    log.debug("casualty owner=", cached.owner, "str=", cached.strength, "cum=", casualtyByPid.get(cached.owner));
   } catch (e) {
-    clog("onUnitKilledInCombat threw:", /** @type {*} */ (e)?.message);
+    log.debug("onUnitKilledInCombat threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -446,7 +440,7 @@ export function seedWarEventsFromHistory(samples) {
     if (!players) return;
     for (const pid in players) seedOnePlayer(pid, players[pid]?.metrics);
   } catch (e) {
-    clog("seedWarEventsFromHistory threw:", /** @type {*} */ (e)?.message);
+    log.debug("seedWarEventsFromHistory threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -468,11 +462,11 @@ function seedOnePlayer(pid, metrics) {
  * Seed one pid's cumulative total into a counter map from a stored value.
  * @param {Map<number, number>} into The counter map (casualtyByPid / razedByPid).
  * @param {string} pid The player id (object key).
- * @param {*} v The stored cumulative value.
+ * @param {*} value The stored cumulative value.
  */
-function seedOnePid(into, pid, v) {
-  if (typeof v !== "number" || !isFinite(v)) return;
-  into.set(Number(pid), v);
+function seedOnePid(into, pid, value) {
+  if (typeof value !== "number" || !isFinite(value)) return;
+  into.set(Number(pid), value);
 }
 
 /**
@@ -494,7 +488,7 @@ function militaryConstructibleSet() {
       if (row && MILITARY_CONSTRUCTIBLE_TAGS.has(row.Tag)) set.add(row.Type);
     }
   } catch (e) {
-    clog("militaryConstructibleSet threw:", /** @type {*} */ (e)?.message);
+    log.debug("militaryConstructibleSet threw:", /** @type {*} */ (e)?.message);
   }
   _militaryConstructibles = set;
   return set;
@@ -520,12 +514,12 @@ const MILITARY_FORMATIONS = new Set([
 function decodeProduced(kind, item) {
   if (typeof ProductionKind === "undefined") return null;
   if (kind === ProductionKind.UNIT) {
-    const d = lookupDef("Units", item);
-    return d ? { table: "UNIT", typeStr: d.UnitType, formation: d.FormationClass } : null;
+    const def = lookupDef("Units", item);
+    return def ? { table: "UNIT", typeStr: def.UnitType, formation: def.FormationClass } : null;
   }
   if (kind === ProductionKind.CONSTRUCTIBLE) {
-    const d = lookupDef("Constructibles", item);
-    return d ? { table: "CONSTRUCTIBLE", typeStr: d.ConstructibleType, formation: "" } : null;
+    const def = lookupDef("Constructibles", item);
+    return def ? { table: "CONSTRUCTIBLE", typeStr: def.ConstructibleType, formation: "" } : null;
   }
   return null;
 }
@@ -538,8 +532,8 @@ function decodeProduced(kind, item) {
  */
 function lookupDef(tbl, item) {
   try {
-    const t = typeof GameInfo !== "undefined" ? GameInfo[tbl] : null;
-    return t && typeof t.lookup === "function" ? t.lookup(item) : null;
+    const table = typeof GameInfo !== "undefined" ? GameInfo[tbl] : null;
+    return table && typeof table.lookup === "function" ? table.lookup(item) : null;
   } catch (_) {
     return null;
   }
@@ -611,12 +605,12 @@ function militaryProductionCredit(data) {
  */
 function onCityProductionCompleted(data) {
   try {
-    const c = militaryProductionCredit(data);
-    if (!c) return;
-    warProdByPid.set(c.owner, (warProdByPid.get(c.owner) || 0) + c.cost);
-    clog("warProd owner=", c.owner, c.typeStr, "+", c.cost, "cum=", warProdByPid.get(c.owner));
+    const credit = militaryProductionCredit(data);
+    if (!credit) return;
+    warProdByPid.set(credit.owner, (warProdByPid.get(credit.owner) || 0) + credit.cost);
+    log.debug("warProd owner=", credit.owner, credit.typeStr, "+", credit.cost, "cum=", warProdByPid.get(credit.owner));
   } catch (e) {
-    clog("onCityProductionCompleted threw:", /** @type {*} */ (e)?.message);
+    log.debug("onCityProductionCompleted threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -641,8 +635,8 @@ export function startWarEventTracker() {
  */
 function exposeWarData() {
   try {
-    const g = /** @type {*} */ (globalThis);
-    g.DemographicsData = Object.assign(g.DemographicsData || {}, {
+    const root = /** @type {*} */ (globalThis);
+    root.DemographicsData = Object.assign(root.DemographicsData || {}, {
       casualtyCumFor: (/** @type {number} */ pid) => getCumulativeCasualty(pid),
       unitsLostCumFor: (/** @type {number} */ pid) => getCumulativeUnitsLost(pid),
       razedCumFor: (/** @type {number} */ pid) => getCumulativeRazed(pid),
@@ -666,10 +660,10 @@ function subscribe(event, handler) {
   try {
     const ref = (/** @type {*} */ data) => handler(data);
     engine.on(event, ref);
-    clog("subscribed to", event);
+    log.debug("subscribed to", event);
     return ref;
   } catch (e) {
-    clog("engine.on", event, "threw:", /** @type {*} */ (e)?.message);
+    log.debug("engine.on", event, "threw:", /** @type {*} */ (e)?.message);
     return null;
   }
 }
@@ -700,7 +694,7 @@ function unsubscribe(event, ref) {
     try {
       engine.off(event, ref);
     } catch (e) {
-      clog("engine.off", event, "threw:", /** @type {*} */ (e)?.message);
+      log.debug("engine.off", event, "threw:", /** @type {*} */ (e)?.message);
     }
   }
   return null;

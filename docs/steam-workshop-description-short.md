@@ -1,30 +1,20 @@
 [h1]Demographics[/h1]
-[b]New in 2.7.3: the screen fits your resolution[/b]
-The dashboard is now drawn to the size of the display it is played on, so 1080p, 1440p and 4K get the layout 2880x1800 always had. The same sweep restored the screen's gold borders and every line of italic text, which the game's UI engine had been dropping. Plus a hardening pass over saved data and shared settings. For Civilization VII 1.5.0.
-[b]History and the Hall of Fame[/b]
-History & Rankings is part of Demographics: a [b]History[/b] tab with a chronicle, an interactive timeline and territory map, and a lineage of leaders, plus a [b]Hall of Fame[/b] of every campaign you have played, also on the main menu. Special thanks to [b]Slothoth[/b] for the keys to data persistence across ages.
-Demographics adds graphs, civilization rankings, global relations, war history, campaign history, and a Hall of Fame to Civilization VII. It records data for each civilization and presents it as charts, rankings, relationship views, and war history, so you can see how the world changes over the course of a game.
-It is intended to be the spiritual successor to robk's InfoAddict for Civilization V, Gedemon's CivGraphs for Civilization VI, and an extension of Slothoth's Global Relations for Civilization VII that adds additional diplomatic concerns and filtering.
+[b]Version 2.8.2. For Civilization VII 1.5.0.[/b] Settings now survive a restart: the mod carries the Tower Settings Keeper.
+Demographics adds graphs, civilization rankings, global relations, war history, campaign history and a Hall of Fame to Civilization VII. It records every civilization's figures each turn and shows them as charts, rankings, relationship views and war history, so you can see how the world changes over a game.
+It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and builds on Slothoth's Global Relations panel (Civ VII) with more diplomacy and filtering.
 [b]The Mod Includes:[/b]
 [list]
-[*]Historical charts, continuous across the age boundary, for economy, power, knowledge, influence, resources, conflicts, and Triumph progress.
-[*]A World Rankings view: an All Civilizations matrix of current values and world rank for every metric.
-[*]A Global Relations view with met civilizations and city-states arranged in a ring layout.
-[*]A Gantt war timeline built from diplomacy events, with per-war cost and a per-war Graphs view.
-[*]A Crises view with per-stage cost tables and per-civilization crisis graphs.
-[*]A Top Settlements board with a cinematic flyby and map fly-to.
+[*]Per-turn charts, continuous across ages, for yields, economy, resources, society, religion, land, settlements and military.
+[*]World Rankings: civilization and settlement leaderboards, sortable rank-by-yield tables, and a Top 25 Settlements board with map fly-to and a cinematic view.
+[*]Global Relations: met civilizations and city-states in a ring, with wars, alliances, attitudes and agreements.
+[*]A timeline of every war, with each war's cost and its own graphs, and every crisis broken down stage by stage.
 [*]A History tab: a chronicle of your campaign, an interactive timeline with a territory map that replays your expansion, and a lineage of every leader.
-[*]A Hall of Fame ranking every campaign you have played, with a page for each game.
-[*]Copy-to-CSV for recorded history.
-[*]Options for smoothing, unmet-name handling, eliminated civilizations, performance mode, colorblind mode, and sample limits.
+[*]A Hall of Fame ranking every campaign you have played, with a page for each game, also on the main menu.
+[*]Copy as CSV, a spoiler guard for civilizations you have not met, colorblind mode, smoothed lines, and a Basic mode.
 [/list]
 [b]Pairs with Emigration:[/b]
 [list]
-[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts a dedicated Emigration tab and a Net Migration graph beside Population. The hooks stay inert when Emigration is not installed, so the base mod is unchanged.
-[/list]
-[b]Triumphs Overlay:[/b]
-[list]
-[*]Triumph card progress overlays now ship as a separate companion mod: triumphs-progress-overlay.
+[*]With the [b]Emigration[/b] companion mod installed, Demographics hosts its Emigration tab and migration charts beside Population. Without it nothing changes.
 [/list]
 [b]What The Mod Does Not Do:[/b]
 [list]
@@ -34,10 +24,9 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [/list]
 [b]Compatibility:[/b]
 [list]
-[*]Read-only presentation layer.
-[*]No base-game file replacement.
-[*]Per-save data storage; the Hall of Fame is kept on your computer.
-[*]Civilization VII 1.5.0 has a bug in mod storage: whatever a mod asks for, the game returns the first mod's saved data, so only one mod's data works and shared settings never persist. It is Firaxis's to fix. When it blocks past games, a notice box on every Hall of Fame page names the bug and opens [b]Repair mod storage[/b], which restarts the storage with only the shared settings entry in it (the one most option panels use, so those mods load and save normally again; a mod with its own separate entry is not helped) and permanently deletes that one mod's saved data. It explains itself first and only runs when you press it, twice. Details: https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/docs/civ7-storage-bug.md
+[*]Recorded history is kept in each save; the Hall of Fame is kept on your computer.
+[*]Triumph card progress overlays are a separate companion mod: triumphs-progress-overlay.
+[*]Civilization VII 1.5.0 has a bug in mod storage: whatever a mod asks for, the game returns the first mod's saved data, so only one mod's data works and shared settings never persist. It is Firaxis's to fix. Demographics carries the Tower Settings Keeper, which keeps every mod's settings in the one entry the game reads correctly. If the Hall of Fame still cannot read its past games, a notice box on every Hall of Fame page names the bug and opens [b]Repair mod storage[/b], which restarts the storage with only the shared settings entry in it (the one most option panels use, so those mods load and save normally again; a mod with its own separate entry is not helped) and permanently deletes that one mod's saved data. It explains itself first and only runs when you press it, twice. Details: https://github.com/tmtmiller1/civilizationvii-demographics/blob/main/docs/civ7-storage-bug.md
 [/list]
 [b]Installation:[/b]
 [list=1]
@@ -49,7 +38,7 @@ It is intended to be the spiritual successor to robk's InfoAddict for Civilizati
 [list]
 [*]robk for InfoAddict for Civilization V.
 [*]Gedemon for CivGraphs for Civilization VI.
-[*]Slothoth for Global Relations for Civilization VII, and for the keys to data persistence across ages: co-author credit offered.
+[*]Slothoth for Global Relations for Civilization VII, and for the keys to data persistence across ages.
 [*]Tower for the Civilization VII implementation and expansion work.
 [/list]
 [b]Special Thanks[/b]

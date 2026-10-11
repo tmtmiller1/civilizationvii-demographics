@@ -7,21 +7,14 @@
 // Font-family resolution is deferred to call time and guarded.
 
 import { makeTooltipExternal } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
-import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
-
-// Axis labels/titles use the same color as the chart's HTML title
-// (--dg-ia-text-secondary) so they match it (Chart.js canvas needs a literal).
-const AXIS_COLOR = "#e5d2ac";
-
-/**
- * @returns {string} The chart font family, with a safe fallback chain.
- */
-function resolveChartFontFamily() {
-  return (
-    (typeof Chart !== "undefined" && Chart.defaults?.font?.family) ||
-    localeFontFamily("body")
-  );
-}
+import { t } from "/demographics/ui/core/demographics-i18n.js";
+import {
+  AXIS_BORDER_COLOR,
+  AXIS_COLOR,
+  axisTitle,
+  chartFontFamily,
+  GRID_COLOR
+} from "/demographics/ui/screen-demographics/charts/shared/chart-style.js";
 
 // Maps each English `unit` string in the metric registry to its localized LOC
 // key. Symbols that read the same in every language ($, %, km²) are absent and
@@ -80,15 +73,15 @@ function localizedUnit(unit) {
   if (!unit) return "";
   const key = UNIT_LOC[unit];
   if (!key) return unit;
-  const v = t(key);
-  return v && v !== key ? v : unit;
+  const localized = t(key);
+  return localized && localized !== key ? localized : unit;
 }
 
 /**
  * The Y-axis title for a metric: its localized name plus the localized unit in
  * parentheses (e.g. "Military Power (strength)", "Crop Yield (food / turn)").
  * @param {*} metricMeta
- * @returns {string} The Y-axis title.
+ * @returns {string}
  */
 function yAxisTitle(metricMeta) {
   if (!metricMeta) return "";
@@ -102,32 +95,18 @@ function yAxisTitle(metricMeta) {
 }
 
 /**
- * A Chart.js scale `title` block matching the chart title's color.
- * @param {string} text
- * @returns {Record<string, *>}
- */
-function axisTitleOpts(text) {
-  return {
-    display: !!text,
-    text,
-    color: AXIS_COLOR,
-    font: { family: resolveChartFontFamily(), size: 18, weight: "600" }
-  };
-}
-
-/**
  * @typedef {import("/demographics/ui/screen-demographics/charts/line/chart-line-axis.js").
  *   AxisFormatters} AxisFormatters
  */
 
 /**
  * Build the full Chart.js line-chart config (data + plugins + options).
- * @param {Object} parts Config inputs.
+ * @param {Object} parts
  * @param {Record<string, *>[]} parts.datasets
- * @param {Record<string, *>[]} parts.plugins The plugin instances.
+ * @param {Record<string, *>[]} parts.plugins
  * @param {*} parts.metricMeta
  * @param {AxisFormatters} parts.formatters
- * @returns {Record<string, *>} The Chart.js config object.
+ * @returns {Record<string, *>} The Chart.js config.
  */
 export function buildLineChartConfig(parts) {
   const { datasets, plugins, metricMeta, formatters } = parts;
@@ -169,11 +148,11 @@ export function buildLineChartConfig(parts) {
 
 /**
  * The absolute y-value of a chart data point, or 0 when missing/non-finite.
- * @param {*} pt A {x, y} data point.
+ * @param {*} point A {x, y} data point.
  * @returns {number}
  */
-function ptAbsY(pt) {
-  return pt && typeof pt.y === "number" && isFinite(pt.y) ? Math.abs(pt.y) : 0;
+function pointAbsY(point) {
+  return point && typeof point.y === "number" && isFinite(point.y) ? Math.abs(point.y) : 0;
 }
 
 /**
@@ -183,21 +162,21 @@ function ptAbsY(pt) {
  * @returns {number}
  */
 function symmetricYBound(datasets) {
-  let m = 0;
-  for (const ds of datasets || []) {
-    for (const pt of (ds && ds.data) || []) {
-      const y = ptAbsY(pt);
-      if (y > m) m = y;
+  let maxAbs = 0;
+  for (const dataset of datasets || []) {
+    for (const point of (dataset && dataset.data) || []) {
+      const y = pointAbsY(point);
+      if (y > maxAbs) maxAbs = y;
     }
   }
-  return m > 0 ? m : 1;
+  return maxAbs > 0 ? maxAbs : 1;
 }
 
 /**
  * Build the Chart.js `options.plugins` block (legend / tooltip / title).
  * @param {AxisFormatters} formatters
  * @param {*} [metricMeta]
- * @returns {Record<string, *>} The plugins options block.
+ * @returns {Record<string, *>}
  */
 function buildChartPluginsOpts(formatters, metricMeta) {
   const { fmtX, fmtY } = formatters;
@@ -224,7 +203,7 @@ function buildChartPluginsOpts(formatters, metricMeta) {
  * @param {*} metricMeta
  * @param {AxisFormatters} formatters
  * @param {number|null} [symBound] Symmetric y half-range for a diverging bar chart (null = auto).
- * @returns {Record<string, *>} The scales options block.
+ * @returns {Record<string, *>}
  */
 function buildChartScalesOpts(metricMeta, formatters, symBound) {
   const { fmtX, fmtY } = formatters;
@@ -235,37 +214,37 @@ function buildChartScalesOpts(metricMeta, formatters, symBound) {
   return {
     x: {
       type: "linear",
-      title: axisTitleOpts(t("LOC_DEMOGRAPHICS_AXIS_TIME")),
+      title: axisTitle(t("LOC_DEMOGRAPHICS_AXIS_TIME")),
       ticks: {
         color: AXIS_COLOR,
-        font: { family: resolveChartFontFamily(), size: 17 },
+        font: { family: chartFontFamily(), size: 17 },
         maxRotation: 0,
         autoSkipPadding: 30,
-        callback: (/** @type {number} */ v) => fmtX(v)
+        callback: (/** @type {number} */ value) => fmtX(value)
       },
-      grid: { color: "rgba(133, 135, 140, 0.25)" },
-      border: { color: "#85878C" }
+      grid: { color: GRID_COLOR },
+      border: { color: AXIS_BORDER_COLOR }
     },
     y: {
       type: "linear",
       ...yBounds,
-      title: axisTitleOpts(yAxisTitle(metricMeta)),
+      title: axisTitle(yAxisTitle(metricMeta)),
       ticks: {
         color: AXIS_COLOR,
-        font: { family: resolveChartFontFamily(), size: 17 },
+        font: { family: chartFontFamily(), size: 17 },
         // Blank fractional tick labels for `integerOnly` metrics and diverging bar charts so a
         // near-zero axis shows clean -1 / 0 / +1. Chart.js still draws the gridlines.
-        callback: (/** @type {number} */ v) => {
-          if (metricMeta && metricMeta.integerOnly && Math.round(v) !== v) return "";
-          if (diverging && Math.round(v) !== v) return "";
-          return fmtY(v);
+        callback: (/** @type {number} */ value) => {
+          if (metricMeta && metricMeta.integerOnly && Math.round(value) !== value) return "";
+          if (diverging && Math.round(value) !== value) return "";
+          return fmtY(value);
         },
         // Force integer step + zero decimals for integer-only metrics. Safe for the
         // small-range Crisis Stage ordinal; a large-range metric would need a range gate.
         ...(metricMeta && metricMeta.integerOnly ? { stepSize: 1, precision: 0 } : {})
       },
-      grid: { color: "rgba(133, 135, 140, 0.25)" },
-      border: { color: "#85878C" }
+      grid: { color: GRID_COLOR },
+      border: { color: AXIS_BORDER_COLOR }
     }
   };
 }

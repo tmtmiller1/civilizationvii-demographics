@@ -1,11 +1,12 @@
 // view-hof-people.js
 //
 // Hall of Fame Leaders and Civilizations cards (games, victories, best Triumphs, average length)
-// and the Records board (the single best game for each record).
+// and the Records board (the single best game for each record). ("hof" in file names is the Hall
+// of Fame.)
 
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
-import { t, num, typeName } from "/demographics/ui/history/core/history-text.js";
-import { leaderRows, civRows, recordHolders } from "/demographics/ui/history/model/history-hof.js";
+import { t, formatNumber, typeName } from "/demographics/ui/history/core/history-text.js";
+import { byCivilization, byLeader, recordHolders, tallyGames } from "/demographics/ui/history/model/history-hof.js";
 import { civIcon, emptyState, leaderIcon, pageHead, section } from "/demographics/ui/history/views/history-widgets.js";
 import { gameCard } from "/demographics/ui/history/views/view-hof-games.js";
 
@@ -19,33 +20,36 @@ import { gameCard } from "/demographics/ui/history/views/view-hof-games.js";
  * @returns {HTMLElement}
  */
 function figure(value, label) {
-  return el("div", { cls: "dgh-fact" }, [el("div", { cls: "dgh-fact-n", text: value }), el("div", { cls: "dgh-fact-l", text: t(label) })]);
+  return el("div", { cls: "dgh-fact" }, [
+    el("div", { cls: "dgh-fact-n", text: value }),
+    el("div", { cls: "dgh-fact-l", text: t(label) })
+  ]);
 }
 
 /**
  * The parts of the bar: the finished games, split into those won and those not. Games still being
  * played are left out; they have no result yet, so they cannot be won or lost.
- * @param {GroupRow} r
+ * @param {GroupRow} row
  * @returns {{key: string, n: number, label: string, pct: number}[]} Parts, empty ones left out.
  */
-function recordParts(r) {
-  const finished = Math.max(0, r.finished);
+function recordParts(row) {
+  const finished = Math.max(0, row.finished);
   const share = (/** @type {number} */ n) => (finished ? Math.round((100 * n) / finished) : 0);
   return [
-    { key: "win", n: r.wins, label: "LOC_DEMOGRAPHICS_HIST_N_WON", pct: share(r.wins) },
-    { key: "loss", n: finished - r.wins, label: "LOC_DEMOGRAPHICS_HIST_N_NOT_WON", pct: share(finished - r.wins) }
+    { key: "win", n: row.wins, label: "LOC_DEMOGRAPHICS_HIST_N_WON", pct: share(row.wins) },
+    { key: "loss", n: finished - row.wins, label: "LOC_DEMOGRAPHICS_HIST_N_NOT_WON", pct: share(finished - row.wins) }
   ].filter((p) => p.n > 0);
 }
 
 /**
  * The win rate as a bar: green for the games won, red for the rest of the finished games. With
  * nothing finished the bar stays empty, so gray always means "no result yet".
- * @param {GroupRow} r
+ * @param {GroupRow} row
  * @returns {HTMLElement}
  */
-function recordBar(r) {
-  const total = Math.max(1, r.finished);
-  return el("div", { cls: "dgh-record-bar" }, recordParts(r).map(
+function recordBar(row) {
+  const total = Math.max(1, row.finished);
+  return el("div", { cls: "dgh-record-bar" }, recordParts(row).map(
     (p) => el("div", { cls: "dgh-record-seg dgh-record-seg--" + p.key, style: { width: (100 * p.n) / total + "%" } })
   ));
 }
@@ -53,19 +57,21 @@ function recordBar(r) {
 /**
  * What the bar is made of, in words: "Victories: 2 (67%) · No victory: 1 (33%)", each part in its
  * own color, with any unfinished games named after them.
- * @param {GroupRow} r
+ * @param {GroupRow} row
  * @returns {HTMLElement}
  */
-function recordLegend(r) {
+function recordLegend(row) {
   /** @type {(HTMLElement|null)[]} */
   const items = [];
   const add = (/** @type {string} */ key, /** @type {string} */ text) => {
     if (items.length) items.push(el("span", { cls: "dgh-record-sep", text: "·" }));
     items.push(el("span", { cls: "dgh-record-key dgh-record-key--" + key, text }));
   };
-  for (const p of recordParts(r)) add(p.key, t(p.label, p.n) + " (" + t("LOC_DEMOGRAPHICS_HIST_PERCENT", p.pct) + ")");
-  if (!r.finished) add("open", t("LOC_DEMOGRAPHICS_HIST_NO_FINISHED"));
-  if (r.open) add("open", t("LOC_DEMOGRAPHICS_HIST_N_UNFINISHED", r.open));
+  for (const part of recordParts(row)) {
+    add(part.key, t(part.label, part.n) + " (" + t("LOC_DEMOGRAPHICS_HIST_PERCENT", part.pct) + ")");
+  }
+  if (!row.finished) add("open", t("LOC_DEMOGRAPHICS_HIST_NO_FINISHED"));
+  if (row.open) add("open", t("LOC_DEMOGRAPHICS_HIST_N_UNFINISHED", row.open));
   return el("div", { cls: "dgh-record-legend" }, items);
 }
 
@@ -74,11 +80,11 @@ function recordLegend(r) {
  * bar with both parts named and given their share, then the figures.
  * @param {HTMLElement} icon Portrait or emblem.
  * @param {string} name Localized name.
- * @param {GroupRow} r
+ * @param {GroupRow} row
  * @returns {HTMLElement}
  */
-function groupCard(icon, name, r) {
-  const rate = r.finished ? Math.round((100 * r.wins) / r.finished) : 0;
+function groupCard(icon, name, row) {
+  const rate = row.finished ? Math.round((100 * row.wins) / row.finished) : 0;
   return el("div", { cls: "dgh-person-card" }, [
     icon,
     el("div", { cls: "dgh-person-body" }, [
@@ -86,19 +92,39 @@ function groupCard(icon, name, r) {
         el("div", { cls: "dgh-person-name", text: name }),
         el("div", { cls: "dgh-person-rate" }, [
           // Nothing finished yet: the rate is 0% in gray, beside an empty gray bar, until a game ends.
-          el("div", { cls: "dgh-person-rate-n" + (r.finished ? "" : " is-none"), text: t("LOC_DEMOGRAPHICS_HIST_PERCENT", rate) }),
+          el("div", {
+            cls: "dgh-person-rate-n" + (row.finished ? "" : " is-none"),
+            text: t("LOC_DEMOGRAPHICS_HIST_PERCENT", rate)
+          }),
           el("div", { cls: "dgh-person-rate-l", text: t("LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE") })
         ])
       ]),
-      recordBar(r),
-      recordLegend(r),
+      recordBar(row),
+      recordLegend(row),
       el("div", { cls: "dgh-facts" }, [
-        figure(num(r.games), "LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS"),
-        figure(num(r.bestTriumphs), "LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS"),
-        figure(num(r.avgTurns), "LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS")
+        figure(formatNumber(row.games), "LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS"),
+        figure(formatNumber(row.bestTriumphs), "LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS"),
+        figure(formatNumber(row.avgTurns), "LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS")
       ])
     ])
   ]);
+}
+
+/**
+ * A tab of one card per tallied leader or civilization.
+ * @param {HTMLElement} host
+ * @param {GroupRow[]} rows Tallied rows, already in display order.
+ * @param {(key: string) => HTMLElement} iconFor The card icon for a row key.
+ * @param {string} title LOC tag for the page heading.
+ * @param {string} note LOC tag for the line under the heading.
+ */
+function renderTallyTab(host, rows, iconFor, title, note) {
+  clear(host);
+  const cards = rows.map((r) => groupCard(iconFor(r.key), typeName(r.name, r.key), r));
+  const body = cards.length
+    ? el("div", { cls: "dgh-cards" }, cards)
+    : emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF"));
+  host.appendChild(el("div", { cls: "dgh-scroll" }, [pageHead(t(title), t(note)), section("", [body])]));
 }
 
 /**
@@ -106,13 +132,10 @@ function groupCard(icon, name, r) {
  * @param {HTMLElement} host
  * @param {ArchiveRecord[]} records
  */
-export function renderLeaders(host, records) {
-  clear(host);
-  const cards = leaderRows(records).map((r) => groupCard(leaderIcon(r.key, "dgh-leader-icon dgh-leader-icon--lg"), typeName(r.name, r.key), r));
-  host.appendChild(el("div", { cls: "dgh-scroll" }, [
-    pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_LEADERS"), t("LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE")),
-    section("", [cards.length ? el("div", { cls: "dgh-cards" }, cards) : emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF"))])
-  ]));
+export function renderLeaderTab(host, records) {
+  const icon = (/** @type {string} */ key) => leaderIcon(key, "dgh-leader-icon dgh-leader-icon--lg");
+  renderTallyTab(host, tallyGames(records, byLeader), icon,
+    "LOC_DEMOGRAPHICS_HIST_HOF_LEADERS", "LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE");
 }
 
 /**
@@ -120,13 +143,10 @@ export function renderLeaders(host, records) {
  * @param {HTMLElement} host
  * @param {ArchiveRecord[]} records
  */
-export function renderCivs(host, records) {
-  clear(host);
-  const cards = civRows(records).map((r) => groupCard(civIcon(r.key, "dgh-civ-icon dgh-civ-icon--lg"), typeName(r.name, r.key), r));
-  host.appendChild(el("div", { cls: "dgh-scroll" }, [
-    pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_CIVS"), t("LOC_DEMOGRAPHICS_HIST_CIVS_NOTE")),
-    section("", [cards.length ? el("div", { cls: "dgh-cards" }, cards) : emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF"))])
-  ]));
+export function renderCivilizationTab(host, records) {
+  const icon = (/** @type {string} */ key) => civIcon(key, "dgh-civ-icon dgh-civ-icon--lg");
+  renderTallyTab(host, tallyGames(records, byCivilization), icon,
+    "LOC_DEMOGRAPHICS_HIST_HOF_CIVS", "LOC_DEMOGRAPHICS_HIST_CIVS_NOTE");
 }
 
 /**
@@ -138,15 +158,18 @@ export function renderCivs(host, records) {
 export function renderRecords(host, records, ctx) {
   clear(host);
   const holders = recordHolders(records);
-  const cards = holders.map((h) => el("div", { cls: "dgh-record" }, [
+  const cards = holders.map((holder) => el("div", { cls: "dgh-record" }, [
     el("div", { cls: "dgh-record-head" }, [
-      el("div", { cls: "dgh-record-name", text: t("LOC_DEMOGRAPHICS_HIST_RECORD_" + h.id.toUpperCase()) }),
-      el("div", { cls: "dgh-record-value", text: num(h.value) })
+      el("div", { cls: "dgh-record-name", text: t("LOC_DEMOGRAPHICS_HIST_RECORD_" + holder.id.toUpperCase()) }),
+      el("div", { cls: "dgh-record-value", text: formatNumber(holder.value) })
     ]),
-    gameCard(h.game, ctx)
+    gameCard(holder.game, ctx)
   ]));
+  const body = cards.length
+    ? [el("div", { cls: "dgh-records" }, cards)]
+    : [emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF"))];
   host.appendChild(el("div", { cls: "dgh-scroll" }, [
     pageHead(t("LOC_DEMOGRAPHICS_HIST_HOF_RECORDS"), t("LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE")),
-    section("", cards.length ? [el("div", { cls: "dgh-records" }, cards)] : [emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF"))])
+    section("", body)
   ]));
 }

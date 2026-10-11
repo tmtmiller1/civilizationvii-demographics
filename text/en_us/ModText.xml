@@ -120,7 +120,6 @@
             <Text>Scaled real-world population, exponentially derived from total citizen count.</Text>
         </Row>
 
-        <!-- V7-specific creative -->
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE">
             <Text>Influence (IPT)</Text>
         </Row>
@@ -432,7 +431,7 @@
             <Text>Refresh sample now</Text>
         </Row>
 
-        <!-- Unmet placeholder strings (Fix 4) -->
+        <!-- Unmet placeholder strings -->
         <Row Tag="LOC_DEMOGRAPHICS_UNMET_CIV">
             <Text>Unmet Civilization</Text>
         </Row>
@@ -2194,17 +2193,11 @@
         <Row Tag="LOC_DEMOGRAPHICS_TIER_STANDARD">
             <Text>Standard</Text>
         </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TIER_ANALYST">
-            <Text>Analyst</Text>
-        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC">
             <Text>Core stat pages only; advanced graphs, the relations network, and tuning controls are hidden.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC">
             <Text>All graphs and tabs; advanced storage and sampling controls stay hidden.</Text>
-        </Row>
-        <Row Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC">
-            <Text>Everything, including storage cap, decimation, and sample-rate controls.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE">
             <Text>Age triumph progress: the legacy-path radar for each civilization.</Text>
@@ -2348,7 +2341,7 @@
             <Text>Marks the turn each disaster struck on the Emigration refugees chart. Requires the Emigration companion mod.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO">
-            <Text>How much of the screen to show. Basic is core stat pages only; Standard adds every graph and tab; Analyst also exposes storage, decimation, and sample-rate controls.</Text>
+            <Text>How much of the screen to show. Basic is core stat pages only; Standard adds every graph and tab.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO">
             <Text>Draws history lines as a 3-turn moving average so trends read more clearly. The underlying data is unchanged.</Text>
@@ -2448,9 +2441,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE"><Text>Wonders Built by Civilization</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE"><Text>Units Trained</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE"><Text>Units Trained by Type</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE"><Text>Kills by Unit</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE"><Text>Kills by Unit Type</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE"><Text>Enemy Units Killed by Your Unit Type</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE"><Text>Losses by Unit</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE"><Text>Losses by Unit Type</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE"><Text>Units Lost by Type</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE"><Text>Buildings</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE"><Text>Buildings Constructed by Type</Text></Row>
@@ -2460,7 +2453,7 @@
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE"><Text>Religion Standings: Settlements Following</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION"><Text>Construction</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION"><Text>Religion</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS"><Text>Settlement Sizes</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS"><Text>Settlements by Size</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE"><Text>Settlement Size Distribution</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD"><Text>Religious Spread</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE"><Text>Religion Spread: Settlements Following Over Time</Text></Row>
@@ -2516,7 +2509,7 @@
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE"><Text>No comparable data recorded yet.</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION"><Text>Under Construction</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED"><Text>Completed</Text></Row>
-        <Row Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES"><Text>Settlement Sizes</Text></Row>
+        <Row Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES"><Text>Settlements by Size</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED"><Text>Most Urbanized</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT"><Text>{1_Turns}t</Text></Row>
         <Row Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX"><Text>{1_Count} pop</Text></Row>
@@ -2733,7 +2726,13 @@
             <Text>Population</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE">
-            <Text>Title</Text>
+            <Text>Honorific Title</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED">
+            <Text>“{1_Title}”</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED">
+            <Text>(Honorific Title: “{1_Title}”)</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT">
             <Text>Result</Text>

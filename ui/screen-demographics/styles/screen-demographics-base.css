@@ -1,7 +1,7 @@
 /* screen-demographics.css
    Sizing patterned on the diplomacy peace-deal trade screen:
    - panel-diplomacy-peace-deal.css:1-4  panel-diplomacy-peace-deal { width: 100vw; height: 100vh }
-   Earlier references kept for posterity:
+   Other reference sizes:
    - panel-end-result-graphs.css:1-3   .graph-container { width: 66.66rem; height: 33.33rem }
    - screen-victory-progress.css:9-10  .progression_nav { max-width: 74.44rem } */
 
@@ -15,30 +15,29 @@
      default.css:10730 .text-accent-4        { color: #85878c }
      default.css:5382  .bg-primary           { background-color: #4c5366 }
      default.css:2368  .fxs-header           { color: #a8845a; gradient #fffdfa }
-   Replace bespoke gold (var(--dg-ia-accent-gold)) with these where it makes semantic sense. */
+   Replace bespoke gold (var(--dg-accent-gold)) with these where it makes semantic sense. */
 /* Row-gap on a wrapping flex row
-   These rows carry a two-value `gap`. The original comment here said GameFace drops a single-value
-   row-gap when the row wraps. On 1.5.0 that is false: `gap:X`, `gap:X X` and the row-gap/column-gap
-   longhands all produce the same vertical gap on a wrapping flex row, set via setAttribute or via
-   style.cssText, in px or in rem. It may well have been true on an earlier build; it is not true
-   now. The two-value form is kept because it is explicit and costs nothing, not because the
-   single-value form is broken. Do not add new workarounds for this. */
+   These rows carry a two-value `gap`. GameFace 1.5.0 does not drop a single-value row-gap when the
+   row wraps: `gap:X`, `gap:X X` and the row-gap/column-gap longhands all produce the same vertical
+   gap on a wrapping flex row, set via setAttribute or via style.cssText, in px or in rem. The
+   two-value form is kept because it is explicit and costs nothing, not because the single-value
+   form is broken. Do not add new workarounds for this. */
 :root {
-    --dg-ia-text-secondary:    #e5d2ac;   /* primary heading/title color  */
-    --dg-ia-text-secondary-2:  #c0a875;   /* dimmer heading variant       */
-    --dg-ia-text-accent:       #616266;   /* tertiary text                */
-    --dg-ia-text-accent-2:     #c2c4cc;   /* body text                    */
-    --dg-ia-text-accent-4:     #85878c;   /* muted gridlines / labels     */
-    --dg-ia-fxs-header:        #a8845a;   /* section header copper        */
-    --dg-ia-bg-primary:        #4c5366;   /* dark slate body bg           */
-    --dg-ia-accent-gold:       #f3c34c;   /* civ-bright gold for emphasis */
-    --dg-ia-accent-gold-soft:  #c9a24c;   /* gold border tone             */
-    --dg-ia-frame-bg:          rgba(20, 16, 10, 0.55);
+    --dg-text-secondary:    #e5d2ac;   /* primary heading/title color  */
+    --dg-text-secondary-2:  #c0a875;   /* dimmer heading variant       */
+    --dg-text-accent:       #616266;   /* tertiary text                */
+    --dg-text-accent-2:     #c2c4cc;   /* body text                    */
+    --dg-text-accent-4:     #85878c;   /* muted gridlines / labels     */
+    --dg-fxs-header:        #a8845a;   /* section header copper        */
+    --dg-bg-primary:        #4c5366;   /* dark slate body bg           */
+    --dg-accent-gold:       #f3c34c;   /* civ-bright gold for emphasis */
+    --dg-accent-gold-soft:  #c9a24c;   /* gold border tone             */
+    --dg-frame-bg:          rgba(20, 16, 10, 0.55);
     /* Opaque, and always applied through the four `border-<side>-color` longhands: `border-color`
        is a shorthand and GameFace drops `var()` in shorthands. See the note in the history sheet. */
-    --dg-ia-frame-border:      #a8845a;   /* card/frame hairline          */
-    --dg-ia-frame-border-hot:  #e5d2ac;   /* hover/selected frame         */
-    --dg-ia-divider:           #7a6242;   /* inner rules, tables, chips   */
+    --dg-frame-border:      #a8845a;   /* card/frame hairline          */
+    --dg-frame-border-hot:  #e5d2ac;   /* hover/selected frame         */
+    --dg-divider:           #7a6242;   /* inner rules, tables, chips   */
 }
 
 /* Reusable "section card": mirrors the look of an inner Victors panel,
@@ -46,16 +45,16 @@
    section's path. Apply via `class="demographics-section"` plus inline
    border-top-color for path-specific tints. */
 .demographics-section {
-    background-color: var(--dg-ia-frame-bg);
+    background-color: var(--dg-frame-bg);
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-top-width: 0.18rem;
     border-top-style: solid;
-    border-top-color: var(--dg-ia-fxs-header);
+    border-top-color: var(--dg-fxs-header);
     border-radius: 0.2rem;
     padding-top: calc(0.55 * var(--dg-u));
     padding-right: calc(0.8 * var(--dg-u));
@@ -66,7 +65,7 @@
 /* Reusable section/group heading typography, matching the Victors panel's
    uppercase font-title tracking-150 in text-gradient-secondary. */
 .demographics-section-title {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-105);
     font-weight: 800;
@@ -74,7 +73,7 @@
     letter-spacing: 0.1em;
 }
 .demographics-section-subtitle {
-    color: var(--dg-ia-text-accent-2);
+    color: var(--dg-text-accent-2);
     font-family: BodyFont, sans-serif;
     font-size: var(--dg-fs-85);
     line-height: 1.3;
@@ -129,10 +128,10 @@
 }
 
 /* The header row: the analytics-policy banner (when constrained) and the Options button, once in
-   the frame header, top-right at title level, just left of the close button - not per view. The
-   button used to sit alone on its own row under the ranking / relations sub-tabs and the banner in
-   a bottom row; both cost content rows on every tab. JS keeps the row on the title's measured
-   center line (alignOptionsHeaderButton). */
+   the frame header, top-right at title level, just left of the close button - not per view. A row
+   of its own for the button (under the ranking / relations sub-tabs) or for the banner would cost
+   content rows on every tab. JS keeps the row on the title's measured center line
+   (alignOptionsHeaderButton). */
 .demographics-header-right {
     position: absolute;
     top: calc(0.95 * var(--dg-u));
@@ -179,7 +178,7 @@
     width: 100%;
 }
 
-/* Resolution hardening: keep tab rows inside the frame
+/* Keep tab rows inside the frame
    The engine's `fxs-tab-item` is laid out `flex-1` with an auto-shrinking
    `font-fit-shrink` label, but flex children default to `min-width: auto`, so a
    row of tabs can never shrink below its combined min-content width. At lower
@@ -198,7 +197,7 @@
 .demographics-chart-title {
     width: 100%;
     text-align: center;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-weight: 800;
     text-transform: uppercase;
@@ -249,36 +248,36 @@
     padding-bottom: calc(0.1 * var(--dg-u));
     padding-left: calc(0.35 * var(--dg-u));
     border-radius: 0.2rem;
-    background-color: var(--dg-ia-frame-bg);
+    background-color: var(--dg-frame-bg);
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     white-space: nowrap;
     line-height: 1.1;
     font-size: var(--dg-fs-72);
     font-weight: 600;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     pointer-events: auto;
     user-select: none;
 }
 .demographics-chart-line-label:hover {
-    border-top-color: var(--dg-ia-frame-border-hot);
-    border-right-color: var(--dg-ia-frame-border-hot);
-    border-bottom-color: var(--dg-ia-frame-border-hot);
-    border-left-color: var(--dg-ia-frame-border-hot);
+    border-top-color: var(--dg-frame-border-hot);
+    border-right-color: var(--dg-frame-border-hot);
+    border-bottom-color: var(--dg-frame-border-hot);
+    border-left-color: var(--dg-frame-border-hot);
     background: rgba(40, 30, 14, 0.85);
 }
 .demographics-chart-line-label.is-hidden {
     opacity: 0.55;
-    color: var(--dg-ia-text-secondary-2);
+    color: var(--dg-text-secondary-2);
     font-size: var(--dg-fs-72);
 }
 .demographics-chart-line-label.is-eliminated {
     opacity: 0.4;
-    color: var(--dg-ia-text-accent-4);
+    color: var(--dg-text-accent-4);
 }
 .demographics-chart-line-label.is-dimmed {
     opacity: 0.3;
@@ -338,9 +337,9 @@
 }
 /* Filter row and toolbar both present: stack them as two centered rows (pills on top, toolbar and
    any far-left bar below) by switching the controls row to a column. flex-direction:column is a basic,
-   reliably-supported primitive; GameFace does not honor the flex-basis tricks (`flex-basis:0`/`100%`)
-   we tried before, which silently left everything on one row. This removes the old pills-vs-toolbar
-   gap, can never overlap (separate rows), and keeps a stable controls height so the chart below
+   reliably-supported primitive; GameFace does not honor flex-basis tricks (`flex-basis:0`/`100%`),
+   which silently leave everything on one row. Two rows leave no pills-vs-toolbar gap, can never
+   overlap, and keep a stable controls height so the chart below
    measures correctly and fills the window. The pill row centers and wraps within its own full row. */
 .demographics-history-controls-row--centered {
     flex-direction: column;
@@ -375,7 +374,7 @@
     margin-top: calc(0.7 * var(--dg-u));
 }
 .demographics-chart-toolbar-label {
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     margin-right: calc(0.2 * var(--dg-u));
 }
 /* Toolbar buttons styled with the engine's `hud_production_pill` BLP as a
@@ -388,7 +387,7 @@
     padding-right: calc(0.85 * var(--dg-u));
     padding-bottom: calc(0.22 * var(--dg-u));
     padding-left: calc(0.85 * var(--dg-u));
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -407,7 +406,7 @@
     transition: color 0.12s, text-shadow 0.12s;
 }
 .demographics-chart-toolbar-btn:hover {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     /* Rollover glow via text-shadow only. A CSS `filter` (brightness/drop-shadow)
        here forces the border-image BLP to re-rasterize each frame in GameFace,
        which flickers; text-shadow gives the same glow without that repaint. */
@@ -417,14 +416,13 @@
     /* No min-width floor: CSS min-width overrides max-width, so a fixed floor
        lets the dropdown overflow a narrow container (high Interface Size)
        instead of being capped at it. max-width: 100% constrains it; the
-       dropdown sizes to its content below that. (Same min-overrides-max trap
-       as the relations ring's old min-height.) */
+       dropdown sizes to its content below that. */
     max-width: 100%;
 }
 
 /* War label sitting on top of each Gantt bar. */
 .demographics-chart-war-label {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-size: var(--dg-fs-72);
     font-weight: 600;
     white-space: nowrap;
@@ -459,14 +457,14 @@
     user-select: none;
 }
 .demographics-chart-x-tick-year {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-85);
     font-weight: 700;
     letter-spacing: 0.04em;
 }
 .demographics-chart-x-tick-turn {
-    color: var(--dg-ia-text-accent-2);
+    color: var(--dg-text-accent-2);
     font-size: var(--dg-fs-72);
     font-weight: 500;
     margin-top: calc(0.05 * var(--dg-u));
@@ -475,7 +473,7 @@
 /* Axis titles: a descriptive name for what the X / Y axis represents,
    shown in addition to the per-tick units already drawn at each gridline. */
 .demographics-chart-axis-title {
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     font-size: var(--dg-fs-85);
     font-weight: 700;
@@ -513,13 +511,13 @@
     padding-left: calc(0.55 * var(--dg-u));
     border-width: 1px;
     border-style: solid;
-    border-top-color: var(--dg-ia-frame-border);
-    border-right-color: var(--dg-ia-frame-border);
-    border-bottom-color: var(--dg-ia-frame-border);
-    border-left-color: var(--dg-ia-frame-border);
+    border-top-color: var(--dg-frame-border);
+    border-right-color: var(--dg-frame-border);
+    border-bottom-color: var(--dg-frame-border);
+    border-left-color: var(--dg-frame-border);
     border-radius: 0.2rem;
-    background-color: var(--dg-ia-frame-bg);
-    color: var(--dg-ia-text-secondary);
+    background-color: var(--dg-frame-bg);
+    color: var(--dg-text-secondary);
     font-family: TitleFont, BodyFont, sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -530,15 +528,15 @@
     user-select: none;
 }
 .demographics-chart-time-filter-pill:hover {
-    border-top-color: var(--dg-ia-frame-border-hot);
-    border-right-color: var(--dg-ia-frame-border-hot);
-    border-bottom-color: var(--dg-ia-frame-border-hot);
-    border-left-color: var(--dg-ia-frame-border-hot);
+    border-top-color: var(--dg-frame-border-hot);
+    border-right-color: var(--dg-frame-border-hot);
+    border-bottom-color: var(--dg-frame-border-hot);
+    border-left-color: var(--dg-frame-border-hot);
 }
 .demographics-chart-time-filter-pill.is-active {
     border-color: rgba(243, 195, 76, 0.95);
     background: rgba(60, 45, 20, 0.85);
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-weight: 600;
 }
 /* Disabled (cross-age) filter pill. Grayed via color / border alpha rather
@@ -570,11 +568,11 @@
     border-radius: 0.25rem;
     font-size: var(--dg-fs-85);
     line-height: 1.25;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     box-shadow: 0 0.15rem 0.6rem rgba(0, 0, 0, 0.7);
 }
 .demographics-chart-hover-tooltip-header {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-weight: 700;
     margin-bottom: calc(0.3 * var(--dg-u));
     padding-bottom: calc(0.2 * var(--dg-u));
@@ -596,13 +594,13 @@
 }
 .demographics-chart-hover-tooltip-name {
     flex: 1 1 auto;
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .demographics-chart-hover-tooltip-value {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     font-variant-numeric: tabular-nums;
     margin-left: auto;
 }
@@ -632,7 +630,7 @@
     border: 1px solid rgba(201, 162, 76, 0.6);
     border-radius: 0.2rem;
     background: rgba(40, 30, 14, 0.7);
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
@@ -661,7 +659,7 @@
     line-height: 1.35;
     text-align: center;
 }
-.demographics-chart-caption b { color: var(--dg-ia-accent-gold); }
+.demographics-chart-caption b { color: var(--dg-accent-gold); }
 .demographics-chart-caption i { opacity: 0.75; }
 
 /* Compact single-line GDP affordance (replaces the multi-line caption block).
@@ -682,7 +680,7 @@
     line-height: 1.2;
 }
 .demographics-chart-caption-compact:hover {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
 }
 
 /* Rich-content popover that appears when hovering the ⓘ caption trigger.
@@ -724,7 +722,7 @@
     list-style: disc;
 }
 .demographics-metric-info-body li { margin: 0.1rem 0; }
-.demographics-metric-info-body b { color: var(--dg-ia-accent-gold); }
+.demographics-metric-info-body b { color: var(--dg-accent-gold); }
 .demographics-metric-info-body i {
     color: rgba(243, 231, 196, 0.7);
     font-style: normal;
@@ -772,12 +770,12 @@
 }
 
 .demographics-legend-leader {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     margin-right: calc(0.6 * var(--dg-u));
     flex: 1 1 auto;
 }
 .demographics-legend-civ {
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
     margin-right: calc(0.4 * var(--dg-u));
 }
@@ -814,13 +812,13 @@
 }
 
 .demographics-legend-name {
-    color: var(--dg-ia-accent-gold);
+    color: var(--dg-accent-gold);
     margin-right: calc(0.4 * var(--dg-u));
 }
 
 .demographics-legend-value {
     margin-left: calc(0.6 * var(--dg-u));
-    color: var(--dg-ia-text-secondary);
+    color: var(--dg-text-secondary);
     font-variant-numeric: tabular-nums;
 }
 
@@ -871,12 +869,12 @@
     margin-right: auto;
     margin-bottom: calc(2 * var(--dg-u));
     margin-left: auto;
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
     opacity: 0.85;
     text-align: center;
 }
 
-/* Multiplayer analytics-governance policy banner (P0.1): a constrained-visibility
+/* Multiplayer analytics-governance policy banner: a constrained-visibility
    notice shown above the active view whenever the effective policy is not "full". */
 .demographics-policy-banner-host {
     width: 100%;
@@ -916,9 +914,8 @@
     color: #f3c34c;
     text-align: center;
 }
-/* Hint caption under an option control (Options view). Declared only here;
-   a duplicate previously lived in screen-demographics-relations-options.css and
-   won purely by load order; these are the values that were actually shipping. */
+/* Hint caption under an option control (Options view). Declared only here, so
+   no other sheet's rule can win on load order. */
 .demographics-option-hint {
     color: rgba(243, 231, 196, 0.65);
     margin-top: calc(0.15 * var(--dg-u));
@@ -928,13 +925,13 @@
     line-height: 1.3;
 }
 
-/* Contextual description caption under an advanced History page tab row (P1.5). */
+/* Contextual description caption under an advanced History page tab row. */
 .demographics-page-desc {
     margin-top: calc(0.05 * var(--dg-u));
     margin-right: 0;
     margin-bottom: calc(0.35 * var(--dg-u));
     margin-left: 0;
     opacity: 0.7;
-    color: var(--dg-ia-accent-gold-soft);
+    color: var(--dg-accent-gold-soft);
 }
 

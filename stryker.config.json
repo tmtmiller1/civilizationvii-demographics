@@ -1,9 +1,14 @@
 {
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
-  "_comment": "Mutation testing scoped to the DOM-free, harness-exercised core modules (crisis/wars cost + sampler war-civ identity). The command runner re-runs the full Node harness suite per mutant; coverageAnalysis is off because the command runner has no per-test hooks. The ESM loader (tests/loader.mjs) anchors /demographics/ to its own location, so Stryker's sandbox copy resolves to the mutated sandbox files - no inPlace needed.",
+  "_comment": [
+    "Mutation testing scoped to the DOM-free core modules the Node tests exercise:",
+    "crisis/wars cost and sampler war-civ identity. The command runner re-runs the whole suite per mutant;",
+    "coverageAnalysis is off because the command runner has no per-test hooks. tests/loader.mjs anchors",
+    "/demographics/ to its own location, so the sandbox copy resolves to the mutated files without inPlace."
+  ],
   "testRunner": "command",
   "commandRunner": {
-    "command": "npm run test:js"
+    "command": "node tests/run-all.mjs"
   },
   "coverageAnalysis": "off",
   "mutate": [

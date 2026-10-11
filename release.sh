@@ -6,8 +6,8 @@
 #
 # What this does:
 #   1. Mirrors the mod source into dist/demographics/
-#   2. Sed-replaces `const DBG = true` -> `const DBG = false` in every JS file
-#      so the verbose `console.warn` traces don't fire in shipped builds.
+#   2. Sed-replaces `const DBG = true` -> `const DBG = false` (the switch in
+#      ui/core/demographics-log.js) so debug traces don't fire in shipped builds.
 #      Source code stays development-friendly; only the dist copy is muted.
 #   3. Always ships readable JS (no minification; transparent source is a core
 #      property of the mod, so there is no minify path).
@@ -99,7 +99,8 @@ rm -rf "$DIST_DIR"
 mkdir -p "$TARGET_DIR"
 
 echo "==> Mirroring $SRC_DIR/ → $TARGET_DIR/ (excluding dev cruft)"
-rsync -a --exclude='CHANGELOG.steam.txt' --exclude='.git' --exclude='.gitignore' --exclude='.DS_Store' --exclude='dist' \
+rsync -a --exclude='CHANGELOG.steam.txt' --exclude='.git' --exclude='.gitignore' \
+    --exclude='.DS_Store' --exclude='dist' \
     --exclude='release.sh' --exclude='*.bak' --exclude='node_modules' \
     --exclude='tsconfig.json' --exclude='jsconfig.json' --exclude='types' --exclude='docs' \
     --exclude='eslint.config.js' --exclude='package.json' --exclude='package-lock.json' \
@@ -120,15 +121,11 @@ if grep -q 'ui/dev/' "$TARGET_DIR/demographics.modinfo"; then
 fi
 
 echo "==> Disabling debug logging in dist JS files"
-# Both patterns we use across the codebase:
-#   `const DBG = true;`               (most modules)
-#   `let DEMOGRAPHICS_DEBUG = true;`   (sampler; var so it can self-downgrade)
-#   `const DEMOGRAPHICS_DEBUG = true;` (bootstrap, view-relations)
+# The one debug switch is `const DBG` in ui/core/demographics-log.js; this keeps a
+# development build that left it on from shipping verbose traces.
 # BSD/macOS sed needs the empty -i argument.
 find "$TARGET_DIR" -name '*.js' -type f -print0 | xargs -0 sed -i '' -E \
-    -e 's/^const DBG = true;/const DBG = false;/' \
-    -e 's/^let DEMOGRAPHICS_DEBUG = true;/let DEMOGRAPHICS_DEBUG = false;/' \
-    -e 's/^const DEMOGRAPHICS_DEBUG = true;/const DEMOGRAPHICS_DEBUG = false;/'
+    -e 's/^const DBG = true;/const DBG = false;/'
 
 # Dist JS is always shipped readable, no minification. Readable source is a property
 # of this mod, so there is no minify path on purpose.

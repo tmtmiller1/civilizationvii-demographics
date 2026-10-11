@@ -1,20 +1,15 @@
 // demographics-endgame-entry.js
 //
-// Injects a "Demographics" button into the end-of-game results screen
+// Adds a "Demographics" button to the end-of-game results screen
 // (screen-victory-progress) and the pause menu, so the dashboard stays reachable
 // when the subsystem dock is gone. UI-only, read-only; mirrors the dock
 // decorator's defensive ContextManager.push. Never throws into the game loop.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-const DBG = false;
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.endgame]", ...a);
-}
+const log = makeLogger("endgame");
 
 // The end-of-game screens we attach to. `endgame-screen` is the results banner
 // shown when a game finishes (pushed by base-standard/ui/endgame/screen-endgame.js);
@@ -58,7 +53,7 @@ function reportMissingHookLater(screen, selector, btnId) {
         " ms; the Demographics button was not added (base-game DOM change?)"
       );
     } catch (e) {
-      dlog("hook report threw:", /** @type {*} */ (e)?.message);
+      log.debug("hook report threw:", /** @type {*} */ (e)?.message);
     }
   }, HOOK_GRACE_MS);
 }
@@ -86,9 +81,9 @@ function openScreen(focusView) {
         const cm = /** @type {any} */ (m.default || m.ContextManager || m);
         cm.push("screen-demographics", { singleton: true, createMouseGuard: true });
       })
-      .catch((e) => dlog("context-manager import failed:", /** @type {*} */ (e)?.message));
+      .catch((e) => log.debug("context-manager import failed:", /** @type {*} */ (e)?.message));
   } catch (e) {
-    dlog("openScreen threw:", /** @type {*} */ (e)?.message);
+    log.debug("openScreen threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -113,14 +108,14 @@ function makeButton(id, label, focusView) {
 }
 
 /**
- * Inject the button into the results screen's action row, once.
+ * Put the button in the results screen's action row, once.
  * @param {HTMLElement} screen
  */
-function injectResults(screen) {
+function addResultsButton(screen) {
   if (!screen || screen.querySelector("#" + RESULTS_BTN_ID)) return;
   // Only ever place the button in the screen's own action row; falling back to
   // the screen root would strand a floating button in the top-left corner. A
-  // miss here is not final: inspect() re-enters when the row itself mounts.
+  // miss here is not final: onNodeAdded() re-enters when the row itself mounts.
   const row = screen.querySelector(ACTION_ROW);
   if (!row) {
     // Only the end-of-game screen always has the row; the mid-game tracker legitimately lacks it.
@@ -134,10 +129,10 @@ function injectResults(screen) {
 }
 
 /**
- * Inject the button into the pause-menu button container, once.
+ * Put the button in the pause-menu button container, once.
  * @param {HTMLElement} container
  */
-function injectPause(container) {
+function addPauseButton(container) {
   if (!container || container.querySelector("#" + PAUSE_BTN_ID)) return;
   const btn = makeButton(PAUSE_BTN_ID, t("LOC_MOD_DEMOGRAPHICS_NAME"));
   btn.classList.add("mt-4");
@@ -156,14 +151,14 @@ function findPauseContainer(node) {
 }
 
 /**
- * Inject the pause button into the container a node brought in; when the node is (or contains)
+ * Add the pause button to the container a node brought in; when the node is (or contains)
  * the pause menu itself and the container is missing, report the miss once.
  * @param {HTMLElement} node
  */
-function injectPauseFor(node) {
+function addPauseButtonFor(node) {
   const pause = findPauseContainer(node);
   if (pause) {
-    injectPause(pause);
+    addPauseButton(pause);
     return;
   }
   let menu = null;
@@ -212,16 +207,17 @@ function resultScreenFor(node) {
 }
 
 /**
+ * Add whichever button a newly mounted node makes room for.
  * @param {*} node A mutation-added node.
  */
-function inspect(node) {
+function onNodeAdded(node) {
   if (!(node instanceof HTMLElement)) return;
   try {
     const screen = resultScreenFor(node);
-    if (screen) injectResults(screen);
-    injectPauseFor(node);
+    if (screen) addResultsButton(screen);
+    addPauseButtonFor(node);
   } catch (e) {
-    dlog("inspect threw:", /** @type {*} */ (e)?.message);
+    log.debug("added-node handler threw:", /** @type {*} */ (e)?.message);
   }
 }
 
@@ -232,30 +228,30 @@ function inspect(node) {
  * @param {*} node
  * @returns {boolean}
  */
-function worthInspecting(node) {
+function mayHoldHook(node) {
   if (!node || node.nodeType !== 1) return false;
   return !!(node.id || node.className || node.firstChild) || isResultScreen(node);
 }
 
 /**
- * Install initial injection + a MutationObserver for later screen mounts. The observer is never
+ * Add the buttons to any screens already up, then watch for later screen mounts. The observer is never
  * disconnected: the pause container is re-created on every pause, and the results screens mount
  * once per game end.
  */
 function install() {
   try {
     const existing = document.querySelector(RESULT_SCREENS);
-    if (existing instanceof HTMLElement) injectResults(existing);
+    if (existing instanceof HTMLElement) addResultsButton(existing);
     const pause = document.getElementById("pause-menu-button-container");
-    if (pause) injectPause(pause);
+    if (pause) addPauseButton(pause);
     new MutationObserver((muts) => {
       for (const mut of muts) {
-        for (const added of mut.addedNodes) if (worthInspecting(added)) inspect(added);
+        for (const added of mut.addedNodes) if (mayHoldHook(added)) onNodeAdded(added);
       }
     }).observe(document.body, { childList: true, subtree: true });
-    dlog("installed");
+    log.debug("installed");
   } catch (e) {
-    dlog("install threw:", /** @type {*} */ (e)?.message);
+    log.debug("install threw:", /** @type {*} */ (e)?.message);
   }
 }
 

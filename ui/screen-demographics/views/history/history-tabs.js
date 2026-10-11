@@ -12,13 +12,13 @@ import {
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import { pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 // Short contextual descriptions for the advanced History pages, shown as
 // a caption under the page tab row so a newcomer knows what an advanced page is.
 /** @type {Record<string, string>} */
 const PAGE_DESCRIPTIONS = {
-  // Age + Resources page notes intentionally removed (per design): the radar / resource titles are
-  // self-explanatory, so the standalone caption was redundant.
+  // No Age or Resources note: the radar and resource chart titles are self-explanatory.
   wars: "LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS"
   // crises: omitted on purpose, its description rides as a hover tooltip on the chart title
   // instead of a standalone on-page note (see CHART_TITLE_TOOLTIPS / buildChartTitle).
@@ -34,16 +34,16 @@ const CHART_TITLE_TOOLTIPS = {
 
 /**
  * The label for a multi-tab panel's sub-tab id ("panelId::subId"), or null when `id` isn't one.
- * @param {string} id The metric/sub-tab id.
- * @returns {string|null} The sub-tab's label, or null.
+ * @param {string} id
+ * @returns {string|null}
  */
 function subTabLabel(id) {
   const sep = id.indexOf(PANEL_SUBTAB_SEP);
   if (sep <= 0) return null;
-  const owner = EXTERNAL_PANELS.find((x) => x.id === id.slice(0, sep));
+  const owner = EXTERNAL_PANELS.find((panel) => panel.id === id.slice(0, sep));
   if (!owner || !Array.isArray(owner.tabs)) return null;
   const subId = id.slice(sep + PANEL_SUBTAB_SEP.length);
-  const tab = owner.tabs.find((/** @type {*} */ tt) => tt.id === subId);
+  const tab = owner.tabs.find((/** @type {*} */ subTab) => subTab.id === subId);
   return tab ? tab.label || tab.title || subId : null;
 }
 
@@ -51,11 +51,11 @@ function subTabLabel(id) {
  * The tab label for a companion external panel (whose id can't follow the
  * LOC_DEMOGRAPHICS_METRIC_<ID> convention) or one of its sub-tabs, or null when `id` isn't one.
  * @param {string} id
- * @returns {string|null} The panel's own tab label, or null.
+ * @returns {string|null}
  */
 function externalTabLabel(id) {
   // Single-tab panel: the id IS the panel id.
-  const direct = EXTERNAL_PANELS.find((x) => x.id === id);
+  const direct = EXTERNAL_PANELS.find((panel) => panel.id === id);
   if (direct && !(Array.isArray(direct.tabs) && direct.tabs.length)) {
     return direct.tabLabel || direct.title || id;
   }
@@ -66,14 +66,7 @@ function externalTabLabel(id) {
   return typeof id === "string" ? subTabLabel(id) : null;
 }
 
-const DBG = false;
-
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.history-tabs]", ...a);
-}
+const log = makeLogger("history-tabs");
 
 /**
  * Build and append the page-level tab bar (the row of metric-group tabs). When `priorPageHost`
@@ -86,7 +79,7 @@ function dlog(...a) {
  * @param {string} activePage
  * @param {{id:string,label:string,tier?:string}[]} [pages] Hub-scoped page list (defaults to all
  * PAGES).
- * @param {HTMLElement|null} [priorPageHost] The previous render's page-tab host, if any.
+ * @param {HTMLElement|null} [priorPageHost]
  */
 export function buildPageTabRow(host, ctx, activePage, pages, priorPageHost) {
   const row = pageRowSpec(ctx, activePage, pages);
@@ -122,7 +115,7 @@ export function buildPageTabRow(host, ctx, activePage, pages, priorPageHost) {
  * @param {string} activePage
  * @param {{id:string,label:string,tier?:string}[]} [pages] Hub-scoped page list (defaults to all
  * PAGES).
- * @returns {{ pageTabs: {id:string,label:string}[], pageIdx: number, sig: string }} The row spec.
+ * @returns {{ pageTabs: {id:string,label:string}[], pageIdx: number, sig: string }}
  */
 function pageRowSpec(ctx, activePage, pages) {
   const topLevelIds = new Set(EXTERNAL_PANELS.filter((p) => p && p.topLevel).map((p) => p.id));
@@ -140,9 +133,9 @@ function pageRowSpec(ctx, activePage, pages) {
  * only its tab-selected listener (the render context is rebuilt per render, so the old closure
  * would act on a stale one).
  * @param {HTMLElement} host
- * @param {HTMLElement|null|undefined} priorPageHost The previous render's page-tab host.
- * @param {string} sig The signature of the row about to be built.
- * @param {(event: *) => void} onSelected The listener for this render.
+ * @param {HTMLElement|null|undefined} priorPageHost
+ * @param {string} sig Signature of the row about to be built.
+ * @param {(event: *) => void} onSelected
  * @returns {boolean} True when the prior row was reused.
  */
 function reusePageRow(host, priorPageHost, sig, onSelected) {
@@ -160,22 +153,22 @@ function reusePageRow(host, priorPageHost, sig, onSelected) {
  * Whether a page should appear in the page-tab row: render-pages and the active
  * page are always kept; a metric-page is kept only when at least one of its
  * metrics is currently visible, so empty categories auto-hide.
- * @param {*} p The page definition.
+ * @param {*} page
  * @param {*} ctx The view context (carries `history`).
- * @param {string} activePage The active page id (never hidden).
- * @returns {boolean} True if the page should be shown.
+ * @param {string} activePage Never hidden.
+ * @returns {boolean}
  */
-function pageHasVisibleContent(p, ctx, activePage) {
-  if (!p) return false;
-  if (p.id === activePage) return true;
-  if (!Array.isArray(p.metrics)) return true;
-  return visibleMetrics(p.metrics, ctx).length > 0;
+function pageHasVisibleContent(page, ctx, activePage) {
+  if (!page) return false;
+  if (page.id === activePage) return true;
+  if (!Array.isArray(page.metrics)) return true;
+  return visibleMetrics(page.metrics, ctx).length > 0;
 }
 
 /**
  * Append the advanced-page contextual description caption, if any.
- * @param {HTMLElement} pageHost The page-tab host.
- * @param {string} activePage The active page id.
+ * @param {HTMLElement} pageHost
+ * @param {string} activePage
  */
 function appendPageDescription(pageHost, activePage) {
   const key = PAGE_DESCRIPTIONS[activePage];
@@ -193,7 +186,7 @@ function appendPageDescription(pageHost, activePage) {
  */
 function onPageTabSelected(ctx, activePage, id) {
   if (!id || id === activePage) return;
-  dlog("page-selected:", id);
+  log.debug("page-selected:", id);
   const targetPage = PAGES.find((p) => p.id === id);
   const firstMetric = targetPage?.metrics?.[0];
   if (firstMetric && typeof ctx.setActiveMetric === "function") {
@@ -236,15 +229,15 @@ export function visibleMetricsForAge(metrics) {
  * Whether any player in one sample has a finite value for `metricId`.
  * @param {*} sample One persisted sample ({ players: { pid: { metrics } } }).
  * @param {string} metricId
- * @returns {boolean} True if a finite value is present.
+ * @returns {boolean}
  */
 function sampleHasMetric(sample, metricId) {
   const players = sample && sample.players;
   if (!players) return false;
   for (const pid in players) {
     const metrics = players[pid] && players[pid].metrics;
-    const v = metrics ? metrics[metricId] : undefined;
-    if (typeof v === "number" && isFinite(v)) return true;
+    const value = metrics ? metrics[metricId] : undefined;
+    if (typeof value === "number" && isFinite(value)) return true;
   }
   return false;
 }
@@ -253,15 +246,15 @@ function sampleHasMetric(sample, metricId) {
  * Whether any player has ever recorded a finite value for `metricId` across the
  * persisted samples. Fail open (returns true) when there is no history yet, so a
  * fresh game never hides everything before the first sample lands.
- * @param {string} metricId The sampled metric id.
+ * @param {string} metricId
  * @param {*} history The persisted history blob (ctx.history), or nullish.
  * @returns {boolean} True if data exists (or history is unavailable).
  */
 export function metricHasData(metricId, history) {
   const samples = history && Array.isArray(history.samples) ? history.samples : null;
   if (!samples || !samples.length) return true;
-  for (const s of samples) {
-    if (sampleHasMetric(s, metricId)) return true;
+  for (const sample of samples) {
+    if (sampleHasMetric(sample, metricId)) return true;
   }
   return false;
 }
@@ -273,7 +266,7 @@ export function metricHasData(metricId, history) {
  * @param {string[]} metrics Candidate metric ids in display order.
  * @param {*} ctx The view context (carries `history`).
  * @param {string} [keepId] A metric id to always retain (the active selection).
- * @returns {string[]} The visible metric ids.
+ * @returns {string[]}
  */
 export function visibleMetrics(metrics, ctx, keepId) {
   const ageOk = visibleMetricsForAge(metrics);
@@ -283,7 +276,6 @@ export function visibleMetrics(metrics, ctx, keepId) {
     (mid) => mid === keepId || SYNTHETIC_METRICS[mid] || metricHasData(mid, history)
   );
 }
-
 
 /**
  * Build and append the metric selector for `page` as a row of pills (the 3rd-level selector).
@@ -302,8 +294,8 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
   if (metrics.length <= 1) return;
 
   const items = metrics.map((mid) => {
-    const ext = externalTabLabel(mid);
-    if (ext) return { key: mid, label: ext };
+    const externalLabel = externalTabLabel(mid);
+    if (externalLabel) return { key: mid, label: externalLabel };
     const exists = metricExists(mid);
     return {
       key: mid,
@@ -330,8 +322,8 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
  * Whether `pageId` is a companion panel shown as its own top-level view tab (Emigration). Such
  * pages have no page-tab row, so their section selector renders as a native tab bar instead of
  * pills.
- * @param {string} pageId The active page id.
- * @returns {boolean} True for a top-level companion panel.
+ * @param {string} pageId
+ * @returns {boolean}
  */
 function isTopLevelPanelPage(pageId) {
   return EXTERNAL_PANELS.some((p) => p && p.topLevel && p.id === pageId);
@@ -344,7 +336,7 @@ function isTopLevelPanelPage(pageId) {
  * @param {HTMLElement} host
  * @param {*} ctx
  * @param {{key:string,label:string}[]} items The section items (metric id + label).
- * @param {string} activeMetric The active section/metric id.
+ * @param {string} activeMetric
  */
 function buildSectionTabBar(host, ctx, items, activeMetric) {
   const tabHost = document.createElement("div");
@@ -355,9 +347,9 @@ function buildSectionTabBar(host, ctx, items, activeMetric) {
   bar.classList.add("demographics-page-tabs", "w-full", "font-title", "text-sm");
   bar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   bar.setAttribute("tab-item-class", "font-title text-base");
-  bar.setAttribute("tab-items", JSON.stringify(items.map((it) => ({ id: it.key, label: it.label }))));
-  const idx = Math.max(0, items.findIndex((it) => it.key === activeMetric));
-  bar.setAttribute("selected-tab-index", String(idx));
+  bar.setAttribute("tab-items", JSON.stringify(items.map((item) => ({ id: item.key, label: item.label }))));
+  const selectedIdx = Math.max(0, items.findIndex((item) => item.key === activeMetric));
+  bar.setAttribute("selected-tab-index", String(selectedIdx));
   bar.addEventListener("tab-selected", (event) => {
     const id = /** @type {*} */ (event)?.detail?.selectedItem?.id;
     if (!id || id === activeMetric) return;
@@ -372,7 +364,7 @@ function buildSectionTabBar(host, ctx, items, activeMetric) {
  * is unresolved (t() returns the key unchanged on a miss).
  * @param {string} id
  * @param {*} metricObj The metric descriptor (for fallback text).
- * @returns {string} The localized name.
+ * @returns {string}
  */
 function localizedMetricName(id, metricObj) {
   const key = "LOC_DEMOGRAPHICS_METRIC_" + String(id).toUpperCase();
@@ -428,7 +420,7 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
  * Append the optional subtitle line under the chart title: synthetic metrics carry their own
  * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key or a
  * plain `subtitle` string on the descriptor.
- * @param {HTMLElement} host The title host.
+ * @param {HTMLElement} host
  * @param {string} activeMetric
  * @param {*} synthMeta The synthetic-metric meta, when the metric is synthetic.
  * @param {*} [metricObj] The metric descriptor (for a raw `subtitle` fallback).
@@ -448,8 +440,8 @@ function appendChartSubtitle(host, activeMetric, synthMeta, metricObj) {
     }
   }
   if (!subtitle) return;
-  const sub = document.createElement("div");
-  sub.className = "demographics-chart-subtitle demographics-history-subtitle font-body text-sm";
-  sub.textContent = subtitle;
-  host.appendChild(sub);
+  const subtitleEl = document.createElement("div");
+  subtitleEl.className = "demographics-chart-subtitle demographics-history-subtitle font-body text-sm";
+  subtitleEl.textContent = subtitle;
+  host.appendChild(subtitleEl);
 }

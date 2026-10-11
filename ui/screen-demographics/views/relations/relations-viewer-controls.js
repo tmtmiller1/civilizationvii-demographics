@@ -3,29 +3,29 @@
 // Viewer dropdown controls for the Global Relations city-state tab.
 
 import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
-import { dlog } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
+import { log } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 
 /**
  * Resolve selected viewer index from dropdown event payload.
  * @param {*} event
  * @param {number} itemCount
- * @returns {number|null} Selected index, or null when invalid.
+ * @returns {number|null} Null when invalid.
  */
 function viewerSelectionIndex(event, itemCount) {
-  const idx = /** @type {*} */ (event)?.detail?.selectedIndex;
-  if (typeof idx !== "number") return null;
-  if (idx < 0 || idx >= itemCount) return null;
-  return idx;
+  const selectedIndex = /** @type {*} */ (event)?.detail?.selectedIndex;
+  if (typeof selectedIndex !== "number") return null;
+  if (selectedIndex < 0 || selectedIndex >= itemCount) return null;
+  return selectedIndex;
 }
 
 /**
  * Persist selected CS viewer pid to settings (best effort).
- * @param {*} rs
+ * @param {*} renderState
  * @param {number} pid
  */
-function persistViewerPid(rs, pid) {
+function persistViewerPid(renderState, pid) {
   try {
-    rs.settings?.setSetting?.("relationsCsViewerPid", pid);
+    renderState.settings?.setSetting?.("relationsCsViewerPid", pid);
   } catch (_) {
     // settings persistence is best-effort; in-memory state is authoritative.
   }
@@ -33,67 +33,67 @@ function persistViewerPid(rs, pid) {
 
 /**
  * Handle CS viewer dropdown selection changes.
- * @param {*} rs
+ * @param {*} renderState
  * @param {{ pid: number }[]} items
  * @param {*} event
  */
-function onViewerSelectionChange(rs, items, event) {
-  const idx = viewerSelectionIndex(event, items.length);
-  if (idx === null) return;
-  const newPid = items[idx].pid;
-  if (newPid === rs.csViewerPid) return;
-  rs.csViewerPid = newPid;
-  persistViewerPid(rs, newPid);
-  dlog("CS viewer changed to pid", newPid);
-  rs.repaint();
+function onViewerSelectionChange(renderState, items, event) {
+  const selectedIndex = viewerSelectionIndex(event, items.length);
+  if (selectedIndex === null) return;
+  const newPid = items[selectedIndex].pid;
+  if (newPid === renderState.csViewerPid) return;
+  renderState.csViewerPid = newPid;
+  persistViewerPid(renderState, newPid);
+  log.debug("CS viewer changed to pid", newPid);
+  renderState.repaint();
 }
 
 /**
  * Append the "Viewer" label before the CS-viewer dropdown.
- * @param {HTMLElement} viewerHost The viewer host element.
+ * @param {HTMLElement} viewerHost
  */
 function appendViewerLabel(viewerHost) {
-  const lbl = document.createElement("div");
-  lbl.className = "demographics-relations-viewer-label font-body text-xs";
-  lbl.textContent = t("LOC_DEMOGRAPHICS_LABEL_VIEWER");
-  lbl.style.color = "#f3e7c4";
-  lbl.style.marginRight = "0.5rem";
-  viewerHost.appendChild(lbl);
+  const label = document.createElement("div");
+  label.className = "demographics-relations-viewer-label font-body text-xs";
+  label.textContent = t("LOC_DEMOGRAPHICS_LABEL_VIEWER");
+  label.style.color = "#f3e7c4";
+  label.style.marginRight = "0.5rem";
+  viewerHost.appendChild(label);
 }
 
 /**
  * Build the CS-tab viewer dropdown into the viewer host (no-op off CS tab).
- * @param {*} rs The render-loop state.
+ * @param {*} renderState
  */
-export function buildViewerDropdownPanel(rs) {
-  const { viewerHost } = rs.sc;
+export function buildViewerDropdownPanel(renderState) {
+  const { viewerHost } = renderState.sc;
   while (viewerHost.firstChild) viewerHost.removeChild(viewerHost.firstChild);
-  if (!(rs.topTab === "cs" && rs.metIds.length > 0)) return;
+  if (!(renderState.topTab === "cs" && renderState.metIds.length > 0)) return;
 
   appendViewerLabel(viewerHost);
 
-  const items = rs.metIds.map((/** @type {number} */ pid) => {
-    const info = rs.namesBase[pid] || {};
-    const isYou = pid === rs.localId;
+  const items = renderState.metIds.map((/** @type {number} */ pid) => {
+    const info = renderState.namesBase[pid] || {};
+    const isYou = pid === renderState.localId;
     const baseName = info.leaderName || t("LOC_DEMOGRAPHICS_PLAYER_YOU");
-    const nm = isYou
+    const displayName = isYou
       ? t("LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU", baseName)
       : info.leaderName || tPlayerFallback(pid);
-    return { label: nm, id: "viewer_" + pid, pid };
+    return { label: displayName, id: "viewer_" + pid, pid };
   });
-  let selIdx = rs.metIds.indexOf(/** @type {number} */ (rs.csViewerPid));
-  if (selIdx < 0) selIdx = 0;
-  const dd = document.createElement("fxs-dropdown");
-  dd.classList.add("demographics-relations-viewer-dropdown");
-  dd.setAttribute("data-audio-group-ref", "audio-panel-diplo-ribbon");
-  dd.setAttribute("data-audio-focus-ref", "data-audio-dropdown-focus");
-  dd.setAttribute(
+  let selectedIndex = renderState.metIds.indexOf(/** @type {number} */ (renderState.csViewerPid));
+  if (selectedIndex < 0) selectedIndex = 0;
+  const dropdown = document.createElement("fxs-dropdown");
+  dropdown.classList.add("demographics-relations-viewer-dropdown");
+  dropdown.setAttribute("data-audio-group-ref", "audio-panel-diplo-ribbon");
+  dropdown.setAttribute("data-audio-focus-ref", "data-audio-dropdown-focus");
+  dropdown.setAttribute(
     "dropdown-items",
-    JSON.stringify(items.map((/** @type {{ label: string }} */ it) => ({ label: it.label })))
+    JSON.stringify(items.map((/** @type {{ label: string }} */ item) => ({ label: item.label })))
   );
-  dd.setAttribute("selected-item-index", String(selIdx));
-  dd.addEventListener("dropdown-selection-change", (event) =>
-    onViewerSelectionChange(rs, items, event)
+  dropdown.setAttribute("selected-item-index", String(selectedIndex));
+  dropdown.addEventListener("dropdown-selection-change", (event) =>
+    onViewerSelectionChange(renderState, items, event)
   );
-  viewerHost.appendChild(dd);
+  viewerHost.appendChild(dropdown);
 }

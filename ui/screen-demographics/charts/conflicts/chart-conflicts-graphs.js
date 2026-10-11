@@ -35,8 +35,11 @@ import { scaleCasualtiesAt } from "/demographics/ui/metrics/demographics-metrics
 import {
   attachBarHover,
   attachHover,
-  buildNoData
+  buildNoData,
+  appendGraphsEmpty
 } from "/demographics/ui/screen-demographics/charts/wars/chart-war-graphs-hover.js";
+import { clearHost } from "/demographics/ui/screen-demographics/screen/dom-helpers.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
  * Y-axis title (unit) per COST_METRICS id; the X axis is always the turn.
@@ -55,43 +58,30 @@ const Y_LABEL = {
   unitsLostCum: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS"
 };
 
-/**
- * Error logger for the click handlers that re-enter a render outside the initial render's guard.
- * @param {...*} a Values to log.
- */
-function derr(...a) {
-  console.error("[Demographics.chart-conflicts-graphs]", ...a);
-}
+// For the click handlers that re-enter a render outside the initial render's guard.
+const log = makeLogger("chart-conflicts-graphs");
 
 /**
  * Run a re-render from a click handler. The initial render runs inside the view's safeCall, but a
  * click handler does not, so a throw here is logged rather than escaping the handler (the prior
  * DOM stays in place).
  * @param {string} what The re-render name (for the log line).
- * @param {() => void} fn The re-render.
+ * @param {() => void} fn
  */
 function safeRerender(what, fn) {
   try {
     fn();
   } catch (e) {
     // Logged, not rethrown: the handler must not surface an uncaught error to the engine.
-    derr(what + " re-render failed:", e);
+    log.error(what + " re-render failed:", e);
   }
-}
-
-/**
- * Remove every child of `host`.
- * @param {HTMLElement} host
- */
-function clearHost(host) {
-  while (host.firstChild) host.removeChild(host.firstChild);
 }
 
 /**
  * Resolve the war to display: the one matching `id`, else the most recent war.
  * @param {*[]} wars The history war list.
  * @param {*} id The selected warUniqueID (or null).
- * @returns {*} The war record, or null.
+ * @returns {*} The war record, or null when there are no wars.
  */
 function resolveWar(wars, id) {
   if (typeof id === "number") {
@@ -103,7 +93,7 @@ function resolveWar(wars, id) {
 
 /**
  * Whether a roster entry is a unique major participant row.
- * @param {*} entry One roster entry.
+ * @param {*} entry
  * @param {Set<number>} seen
  * @returns {boolean}
  */
@@ -116,7 +106,7 @@ function includeMajorParticipant(entry, seen) {
 /**
  * @param {{ pid: number, name: string, color: string }[]} out
  * @param {Set<number>} seen
- * @param {*} entry One roster entry.
+ * @param {*} entry
  */
 function pushMajorParticipant(out, seen, entry) {
   seen.add(entry.pid);
@@ -137,28 +127,28 @@ function warParticipants(war) {
   const seen = new Set();
   /** @type {{ pid: number, name: string, color: string }[]} */
   const out = [];
-  for (const e of rosters) {
-    if (!includeMajorParticipant(e, seen)) continue;
-    pushMajorParticipant(out, seen, e);
+  for (const entry of rosters) {
+    if (!includeMajorParticipant(entry, seen)) continue;
+    pushMajorParticipant(out, seen, entry);
   }
   return out;
 }
 
 /**
  * A cell head: cost icon + metric title.
- * @param {*} m A COST_METRICS entry.
+ * @param {*} metric A COST_METRICS entry.
  * @returns {HTMLElement}
  */
-function buildCellHead(m) {
+function buildCellHead(metric) {
   const head = document.createElement("div");
   head.className = "demographics-war-graph-cell-head";
-  if (m.blp) head.appendChild(buildCostIcon(m.blp));
+  if (metric.blp) head.appendChild(buildCostIcon(metric.blp));
   const title = document.createElement("span");
-  title.textContent = metricTitle(m);
+  title.textContent = metricTitle(metric);
   // Surface the Guide's plain-language explanation as a hover tooltip on the
   // graph title, so the notes are available in context (not just on the Guide tab).
-  if (m.glossary) {
-    title.setAttribute("data-tooltip-content", t(m.glossary));
+  if (metric.glossary) {
+    title.setAttribute("data-tooltip-content", t(metric.glossary));
     title.style.cursor = "help";
   }
   head.appendChild(title);
@@ -168,15 +158,15 @@ function buildCellHead(m) {
 /**
  * Build one metric cell. The two military graphs get a 3-way filter (belligerent
  * civs / city-state allies / cumulative allied); the rest are plain.
- * @param {*} m A COST_METRICS entry.
+ * @param {*} metric A COST_METRICS entry.
  * @param {{ war: *, participants: { pid: number, name: string,
- *   color: string }[], win: Snapshot[] }} view The war view.
+ *   color: string }[], win: Snapshot[] }} view
  * @returns {HTMLElement}
  */
-function buildMetricCell(m, view) {
-  if (MIL_GRAPH_IDS.has(m.id)) return buildMilitaryCell(m, view);
-  if (m.id === "unitsLostCum") return buildCasualtyCell(m, view);
-  return buildPlainMetricCell(m, visibleParticipants(view.participants), view.win);
+function buildMetricCell(metric, view) {
+  if (MIL_GRAPH_IDS.has(metric.id)) return buildMilitaryCell(metric, view);
+  if (metric.id === "unitsLostCum") return buildCasualtyCell(metric, view);
+  return buildPlainMetricCell(metric, visibleParticipants(view.participants), view.win);
 }
 
 /** The two casualties-graph representation modes: raw unit count vs scaled "soldiers killed". */
@@ -192,43 +182,43 @@ const casMode = /** @type {Record<string, string>} */ ({});
  * Build the casualties graph cell: head, a 2-way Units / Scaled toggle, then a body
  * that re-renders in place. "Scaled" multiplies the loss line by the era's
  * soldiers-per-unit factor (scaleCasualties), matching the war tooltip's estimate.
- * @param {*} m The COST_METRICS entry.
+ * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @returns {HTMLElement}
  */
-function buildCasualtyCell(m, view) {
+function buildCasualtyCell(metric, view) {
   const cell = document.createElement("div");
   cell.className = "demographics-war-graph-cell";
-  cell.appendChild(buildCellHead(m));
+  cell.appendChild(buildCellHead(metric));
   const body = document.createElement("div");
   body.className = "demographics-war-graph-mil-body";
-  cell.appendChild(buildCasToggle(m, view, body));
+  cell.appendChild(buildCasToggle(metric, view, body));
   cell.appendChild(body);
-  renderCasualtyChart(m, view, body, casMode[m.id] || "units");
+  renderCasualtyChart(metric, view, body, casMode[metric.id] || "units");
   return cell;
 }
 
 /**
  * Build the 2-way Units ↔ Scaled toggle pills for the casualties graph; clicking re-renders the
  * body.
- * @param {*} m The COST_METRICS entry.
+ * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body The chart body to re-render.
  * @returns {HTMLElement}
  */
-function buildCasToggle(m, view, body) {
+function buildCasToggle(metric, view, body) {
   const row = document.createElement("div");
   row.className = "demographics-war-graph-filter";
   for (const mode of CAS_MODES) {
     const btn = document.createElement("div");
     btn.className = "demographics-war-graph-filter-btn";
     btn.textContent = t(mode.label);
-    if ((casMode[m.id] || "units") === mode.id) btn.classList.add("is-active");
+    if ((casMode[metric.id] || "units") === mode.id) btn.classList.add("is-active");
     btn.addEventListener("click", () => {
-      casMode[m.id] = mode.id;
-      for (const b of Array.from(row.children)) b.classList.remove("is-active");
+      casMode[metric.id] = mode.id;
+      for (const pill of Array.from(row.children)) pill.classList.remove("is-active");
       btn.classList.add("is-active");
-      safeRerender("renderCasualtyChart", () => renderCasualtyChart(m, view, body, mode.id));
+      safeRerender("renderCasualtyChart", () => renderCasualtyChart(metric, view, body, mode.id));
     });
     row.appendChild(btn);
   }
@@ -239,12 +229,12 @@ function buildCasToggle(m, view, body) {
  * Render (or re-render) the casualties chart for the chosen representation. "scaled" multiplies
  * every loss-line value by scaleCasualties at the war-end era (a constant, so the shape is
  * unchanged).
- * @param {*} m The COST_METRICS entry.
+ * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body
  * @param {string} mode The active representation id ("units" | "scaled").
  */
-function renderCasualtyChart(m, view, body, mode) {
+function renderCasualtyChart(metric, view, body, mode) {
   while (body.firstChild) body.removeChild(body.firstChild);
   const win = view.win;
   const parts = visibleParticipants(view.participants);
@@ -253,8 +243,9 @@ function renderCasualtyChart(m, view, body, mode) {
   if (mode === "scaled") {
     const endTurn = win.length ? Number(win[win.length - 1]?.turn) || 0 : 0;
     const factor = scaleCasualtiesAt(1, endTurn); // soldiers per unit at the war's end era
-    seriesList = seriesList.map((s) => ({
-      ...s, points: s.points.map((pt) => ({ x: pt.x, y: pt.y * factor }))
+    seriesList = seriesList.map((series) => ({
+      ...series,
+      points: series.points.map((pt) => ({ x: pt.x, y: pt.y * factor }))
     }));
   }
   const chart = buildLineChartFromSeries(seriesList, ySpec);
@@ -264,7 +255,7 @@ function renderCasualtyChart(m, view, body, mode) {
   }
   body.appendChild(buildPlot(chart.svg, chart.labels));
   if (chart.hover) {
-    chart.hover.blp = m.blp;
+    chart.hover.blp = metric.blp;
     attachHover(body, chart.svg, chart.hover);
   }
 }
@@ -272,24 +263,24 @@ function renderCasualtyChart(m, view, body, mode) {
 /**
  * Build a plain (non-military) metric cell: head, then the mini chart (or a
  * no-data note).
- * @param {*} m A COST_METRICS entry.
- * @param {{ pid: number, name: string, color: string }[]} participants The civs.
+ * @param {*} metric A COST_METRICS entry.
+ * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win The windowed samples.
  * @returns {HTMLElement}
  */
-function buildPlainMetricCell(m, participants, win) {
+function buildPlainMetricCell(metric, participants, win) {
   const cell = document.createElement("div");
   cell.className = "demographics-war-graph-cell";
-  cell.appendChild(buildCellHead(m));
+  cell.appendChild(buildCellHead(metric));
 
-  const chart = buildChart(m, participants, win);
+  const chart = buildChart(metric, participants, win);
   if (!chart) {
     cell.appendChild(buildNoData());
     return cell;
   }
   cell.appendChild(buildPlot(chart.svg, chart.labels));
   if (chart.hover) attachHover(cell, chart.svg, chart.hover);
-  if (chart.bars) attachBarHover(cell, chart.bars, metricTitle(m), m.blp);
+  if (chart.bars) attachBarHover(cell, chart.bars, metricTitle(metric), metric.blp);
   return cell;
 }
 
@@ -328,43 +319,43 @@ function pruneHiddenWarCivs(participants) {
 /**
  * Build a military graph cell: head, a 3-way filter row, then a chart body that
  * re-renders in place when the filter changes.
- * @param {*} m A COST_METRICS entry (milpower / milpowerLevel).
+ * @param {*} metric A COST_METRICS entry (milpower / milpowerLevel).
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @returns {HTMLElement}
  */
-function buildMilitaryCell(m, view) {
+function buildMilitaryCell(metric, view) {
   const cell = document.createElement("div");
   cell.className = "demographics-war-graph-cell";
-  cell.appendChild(buildCellHead(m));
+  cell.appendChild(buildCellHead(metric));
   const body = document.createElement("div");
   body.className = "demographics-war-graph-mil-body";
-  cell.appendChild(buildMilFilter(m, view, body));
+  cell.appendChild(buildMilFilter(metric, view, body));
   cell.appendChild(body);
-  renderMilChart(m, view, body, milFilterMode[m.id] || "belligerents");
+  renderMilChart(metric, view, body, milFilterMode[metric.id] || "belligerents");
   return cell;
 }
 
 /**
  * Build the 3-way filter pill row for a military graph; clicking re-renders the
  * chart body in place and remembers the choice.
- * @param {*} m The COST_METRICS entry.
+ * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body The chart body to re-render.
  * @returns {HTMLElement}
  */
-function buildMilFilter(m, view, body) {
+function buildMilFilter(metric, view, body) {
   const row = document.createElement("div");
   row.className = "demographics-war-graph-filter";
   for (const mode of MIL_FILTER_MODES) {
     const btn = document.createElement("div");
     btn.className = "demographics-war-graph-filter-btn";
     btn.textContent = t(mode.label);
-    if ((milFilterMode[m.id] || "belligerents") === mode.id) btn.classList.add("is-active");
+    if ((milFilterMode[metric.id] || "belligerents") === mode.id) btn.classList.add("is-active");
     btn.addEventListener("click", () => {
-      milFilterMode[m.id] = mode.id;
-      for (const b of Array.from(row.children)) b.classList.remove("is-active");
+      milFilterMode[metric.id] = mode.id;
+      for (const pill of Array.from(row.children)) pill.classList.remove("is-active");
       btn.classList.add("is-active");
-      safeRerender("renderMilChart", () => renderMilChart(m, view, body, mode.id));
+      safeRerender("renderMilChart", () => renderMilChart(metric, view, body, mode.id));
     });
     row.appendChild(btn);
   }
@@ -373,16 +364,16 @@ function buildMilFilter(m, view, body) {
 
 /**
  * Render (or re-render) a military graph's chart body for the chosen filter mode.
- * @param {*} m The COST_METRICS entry.
+ * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body
  * @param {string} mode The active filter mode id.
  */
-function renderMilChart(m, view, body, mode) {
+function renderMilChart(metric, view, body, mode) {
   while (body.firstChild) body.removeChild(body.firstChild);
-  const isLoss = m.id === "milpower";
+  const isLoss = metric.id === "milpower";
   const seriesList = milSeriesFor(view, mode, isLoss, visibleParticipants(view.participants));
-  const chart = buildLineChartFromSeries(seriesList, Y_LABEL[m.id]);
+  const chart = buildLineChartFromSeries(seriesList, Y_LABEL[metric.id]);
   if (!chart) {
     body.appendChild(buildNoData());
     return;
@@ -392,7 +383,7 @@ function renderMilChart(m, view, body, mode) {
   // here; otherwise the two military graphs' hover headers lack the cost icon
   // the other seven graphs show.
   if (chart.hover) {
-    chart.hover.blp = m.blp;
+    chart.hover.blp = metric.blp;
     attachHover(body, chart.svg, chart.hover);
   }
 }
@@ -401,7 +392,7 @@ function renderMilChart(m, view, body, mode) {
  * Build the "cities gained/lost" chart: one zero-centered bar per participant,
  * its height the net cities won (above) or lost (below) through capture, read
  * from `cityWarNetCum`. Returns null when no civ has capture data.
- * @param {{ pid: number, name: string, color: string }[]} participants The civs.
+ * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win The windowed samples.
  * @param {string} metricId The cumulative metric key ("cityWarNetCum").
  * @returns {{ svg: SVGElement, civs: { name: string, color: string,
@@ -410,16 +401,16 @@ function renderMilChart(m, view, body, mode) {
  */
 function buildSettlementsBars(participants, win, metricId) {
   const civs = [];
-  let mag = 0;
-  for (const p of participants) {
-    const net = windowNet(p, win, metricId);
+  let maxMagnitude = 0;
+  for (const participant of participants) {
+    const net = windowNet(participant, win, metricId);
     if (net === null) continue;
-    civs.push({ name: p.name, color: p.color, net });
-    if (Math.abs(net) > mag) mag = Math.abs(net);
+    civs.push({ name: participant.name, color: participant.color, net });
+    if (Math.abs(net) > maxMagnitude) maxMagnitude = Math.abs(net);
   }
   if (!civs.length) return null;
-  const m = Math.max(mag, 1);
-  return { svg: buildCivBarSvg(civs, m), civs, m };
+  const extent = Math.max(maxMagnitude, 1);
+  return { svg: buildCivBarSvg(civs, extent), civs, m: extent };
 }
 
 /**
@@ -472,8 +463,8 @@ const EXTRA_GRAPHS = [
 
 /** Every graph descriptor by id (cost metrics + extras), for explicit ordering. */
 const GRAPH_BY_ID = /** @type {Record<string, any>} */ ({});
-for (const m of COST_METRICS) GRAPH_BY_ID[m.id] = m;
-for (const m of EXTRA_GRAPHS) GRAPH_BY_ID[m.id] = m;
+for (const metric of COST_METRICS) GRAPH_BY_ID[metric.id] = metric;
+for (const metric of EXTRA_GRAPHS) GRAPH_BY_ID[metric.id] = metric;
 
 /** War Graphs display order: three rows of three. */
 const GRAPH_ORDER = [
@@ -496,25 +487,30 @@ const GRAPH_METRICS = GRAPH_ORDER.map((id) => GRAPH_BY_ID[id]).filter(Boolean);
  * Build the chart for one metric per {@link GRAPH_SPEC}. Returns null when
  * there's no data. The `hover` field carries the per-civ series + bounds for the
  * crosshair tooltip (null for the bar chart, which isn't a time series).
- * @param {*} m A COST_METRICS entry.
- * @param {{ pid: number, name: string, color: string }[]} participants The civs.
+ * @param {*} metric A COST_METRICS entry.
+ * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win The windowed samples.
  * @returns {{ svg: SVGElement, hover: { series: *[], bounds: *,
  *   yLabel: string } | null, bars?: *[], labels: * } | null}
- *   The chart, or null.
  */
-function buildChart(m, participants, win) {
-  const spec = GRAPH_SPEC[m.id];
-  const yLabel = t(Y_LABEL[m.id] || "");
+function buildChart(metric, participants, win) {
+  const spec = GRAPH_SPEC[metric.id];
+  const yLabel = t(Y_LABEL[metric.id] || "");
   if (spec?.kind === "bars") {
-    const r = buildSettlementsBars(participants, win, m.id);
-    return r ? { svg: r.svg, hover: null, bars: r.civs, labels: barLabels(yLabel, r.m) } : null;
+    const settlement = buildSettlementsBars(participants, win, metric.id);
+    if (!settlement) return null;
+    return {
+      svg: settlement.svg,
+      hover: null,
+      bars: settlement.civs,
+      labels: barLabels(yLabel, settlement.m)
+    };
   }
-  const seriesList = buildMetricSeries(spec, participants, win, m.id);
-  const b = seriesBounds(seriesList);
-  if (!b) return null;
-  const hover = { series: seriesList, bounds: b, yLabel, blp: m.blp };
-  return { svg: buildMiniSvg(seriesList, b), hover, labels: lineLabels(yLabel, b) };
+  const seriesList = buildMetricSeries(spec, participants, win, metric.id);
+  const bounds = seriesBounds(seriesList);
+  if (!bounds) return null;
+  const hover = { series: seriesList, bounds, yLabel, blp: metric.blp };
+  return { svg: buildMiniSvg(seriesList, bounds), hover, labels: lineLabels(yLabel, bounds) };
 }
 
 /**
@@ -540,17 +536,17 @@ function buildMetricSeries(spec, participants, win, metricId) {
 /**
  * The chart title for a metric: the shared descriptive title, so it always
  * matches the war-timeline tooltip's prose labels.
- * @param {*} m A COST_METRICS entry.
- * @returns {string} The localized title.
+ * @param {*} metric A COST_METRICS entry.
+ * @returns {string} Localized.
  */
-function metricTitle(m) {
-  return graphMetricTitle(m);
+function metricTitle(metric) {
+  return graphMetricTitle(metric);
 }
 
 /**
  * Build the "All" / "None" bulk-select controls that show or hide every
  * belligerent civ at once across all war graphs.
- * @param {{ pid: number }[]} participants The civs.
+ * @param {{ pid: number }[]} participants
  * @param {() => void} onChange Re-render callback.
  * @returns {HTMLElement}
  */
@@ -568,7 +564,7 @@ function buildLegendControls(participants, onChange) {
   none.className = "demographics-war-graph-filter-btn";
   none.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE");
   none.addEventListener("click", () => {
-    for (const p of participants) hiddenWarCivs.add(p.pid);
+    for (const participant of participants) hiddenWarCivs.add(participant.pid);
     onChange();
   });
   row.appendChild(all);
@@ -579,22 +575,22 @@ function buildLegendControls(participants, onChange) {
 /**
  * Build one clickable legend item (swatch + name); clicking toggles that civ's
  * lines across the per-civ graphs and re-renders.
- * @param {{ pid: number, name: string, color: string }} p The participant.
+ * @param {{ pid: number, name: string, color: string }} participant
  * @param {() => void} onChange Re-render callback.
  * @returns {HTMLElement}
  */
-function buildLegendItem(p, onChange) {
+function buildLegendItem(participant, onChange) {
   const item = document.createElement("span");
   item.className = "demographics-war-graphs-legend-item";
-  if (hiddenWarCivs.has(p.pid)) item.classList.add("is-hidden");
+  if (hiddenWarCivs.has(participant.pid)) item.classList.add("is-hidden");
   const dot = document.createElement("span");
   dot.className = "demographics-war-graphs-legend-dot";
-  dot.style.backgroundColor = p.color;
+  dot.style.backgroundColor = participant.color;
   item.appendChild(dot);
-  item.appendChild(document.createTextNode(p.name));
+  item.appendChild(document.createTextNode(participant.name));
   item.addEventListener("click", () => {
-    if (hiddenWarCivs.has(p.pid)) hiddenWarCivs.delete(p.pid);
-    else hiddenWarCivs.add(p.pid);
+    if (hiddenWarCivs.has(participant.pid)) hiddenWarCivs.delete(participant.pid);
+    else hiddenWarCivs.add(participant.pid);
     onChange();
   });
   return item;
@@ -604,7 +600,7 @@ function buildLegendItem(p, onChange) {
  * Build the header: the war name, the All/None controls, and the interactive
  * participant legend that governs the per-civ graphs.
  * @param {{ war: *, participants: { pid: number, name: string,
- *   color: string }[], warName?: string }} view The war view.
+ *   color: string }[], warName?: string }} view
  * @param {() => void} onChange Re-render callback.
  * @returns {HTMLElement}
  */
@@ -618,21 +614,9 @@ function buildHeader(view, onChange) {
   head.appendChild(buildLegendControls(view.participants, onChange));
   const legend = document.createElement("div");
   legend.className = "demographics-war-graphs-legend";
-  for (const p of view.participants) legend.appendChild(buildLegendItem(p, onChange));
+  for (const participant of view.participants) legend.appendChild(buildLegendItem(participant, onChange));
   head.appendChild(legend);
   return head;
-}
-
-/**
- * Append a centered empty-state message.
- * @param {HTMLElement} host
- * @param {string} msg
- */
-function appendEmpty(host, msg) {
-  const el = document.createElement("div");
-  el.className = "demographics-war-graphs-empty";
-  el.textContent = msg;
-  host.appendChild(el);
 }
 
 /**
@@ -642,8 +626,8 @@ function appendEmpty(host, msg) {
  */
 function latestSampleTurn(samples) {
   if (!samples.length) return 0;
-  const t = samples[samples.length - 1].turn;
-  return typeof t === "number" ? t : 0;
+  const turn = samples[samples.length - 1].turn;
+  return typeof turn === "number" ? turn : 0;
 }
 
 /**
@@ -686,10 +670,10 @@ function buildWarView(history, selectedWarId) {
 export function renderConflictsGraphs(host, opts) {
   if (!host) return null;
   clearHost(host);
-  const o = opts || {};
-  const view = buildWarView(o.history || {}, o.selectedWarId);
+  const options = opts || {};
+  const view = buildWarView(options.history || {}, options.selectedWarId);
   if (!view) {
-    appendEmpty(host, t("LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE"));
+    appendGraphsEmpty(host, t("LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE"));
     return null;
   }
   pruneHiddenWarCivs(view.participants);
@@ -699,7 +683,7 @@ export function renderConflictsGraphs(host, opts) {
   panel.appendChild(buildHeader(view, rerender));
   const grid = document.createElement("div");
   grid.className = "demographics-war-graphs-grid";
-  for (const m of GRAPH_METRICS) grid.appendChild(buildMetricCell(m, view));
+  for (const metric of GRAPH_METRICS) grid.appendChild(buildMetricCell(metric, view));
   panel.appendChild(grid);
   host.appendChild(panel);
   return null;

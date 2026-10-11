@@ -142,8 +142,12 @@ const boards = await import("/demographics/ui/screen-demographics/charts/boards/
 const { renderConstructiblesBoard } = await import(
   "/demographics/ui/screen-demographics/charts/boards/chart-settlement-boards.js"
 );
-const { renderQuartersBoard } = await import("/demographics/ui/screen-demographics/charts/boards/chart-quarters-board.js");
-const { renderCrisisStages } = await import("/demographics/ui/screen-demographics/charts/crises/chart-crisis-stages.js");
+const { renderQuartersBoard } = await import(
+  "/demographics/ui/screen-demographics/charts/boards/chart-quarters-board.js"
+);
+const { renderCrisisStages } = await import(
+  "/demographics/ui/screen-demographics/charts/crises/chart-crisis-stages.js"
+);
 const { renderConflictsTimeline, collectWarCivOptions } = await import(
   "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-timeline.js"
 );
@@ -226,7 +230,10 @@ for (const [name, render] of Object.entries(SURFACES)) {
 assert.deepEqual(leaking, [], "spoiler guard ON, unmet civ shown on:\n  " + leaking.join("\n  "));
 
 // The met civ's own war stays visible, and the timeline is not emptied by the gate.
-assert.ok(SURFACES.warTimeline().includes(NAMES[MET].color), "the local player's war with a met civ stays on the timeline");
+assert.ok(
+  SURFACES.warTimeline().includes(NAMES[MET].color),
+  "the local player's war with a met civ stays on the timeline"
+);
 assert.ok(SURFACES.pantheons().includes(NAMES[MET].civ), "a met civ's pantheon is still listed");
 
 // Guard OFF: every surface must show the unmet civ again, so each check above is one that can fail.

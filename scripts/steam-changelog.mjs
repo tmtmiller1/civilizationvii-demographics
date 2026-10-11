@@ -10,12 +10,12 @@
 // rules. The Steam file holds one ready-to-paste block per release, so release.sh can upload the current one and old
 // Workshop entries can be fixed by pasting their block into the Steam "Edit" box.
 //
-// Steam rendering rules (seen on the live change-notes page, 2026-09-21):
+// Steam rendering rules (as the live change-notes page renders them):
 //   - The whole note sits in one <p>, and every newline becomes a <br>.
 //   - [list] must not be used: a <ul> cannot nest in a <p>, so the note's box closes at the first list and the
 //     bullets spill out below it. Bullets are plain "• " lines instead.
 //   - [b], [i] and [url] render.
-//   - steamcmd's VDF parser ends the string at an escaped \" (it truncated earlier notes mid-sentence), so the note
+//   - steamcmd's VDF parser ends the string at an escaped \" (the rest of the note is lost), so the note
 //     carries no straight double quotes and no backslashes.
 //
 // Hand edits: each block header records a hash of its CHANGELOG.md section (src) and of the generated text (gen).

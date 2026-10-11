@@ -29,21 +29,26 @@ export function createGanttTooltip() {
 /**
  * Move the tooltip onto the screen frame the first time a hover needs it. The Gantt wrap scrolls
  * (`overflow: auto`), so a tooltip mounted in it can never extend past the wrap's visible box: at
- * 1280x720 a six-civ war tooltip is taller than the whole chart area and its lower rows were cut
+ * 1280x720 a six-civ war tooltip is taller than the whole chart area and its lower rows would be cut
  * off no matter how it was flipped. The frame gives it the full frame height.
  * This runs at hover time, not mount time: mountGanttWrap builds the wrap detached, so `closest`
- * finds no frame until the wrap is in the document (the first attempt did exactly that and every
- * tooltip silently stayed in the canvas). The canvas remains the host outside the screen (tests).
+ * finds no frame until the wrap is in the document (resolving it at mount would leave every tooltip
+ * silently in the canvas). The canvas remains the host outside the screen (tests).
  * Any tooltip left on the frame by a previous Gantt mount is removed first.
  * @param {{ wrap: HTMLElement, tooltip: HTMLElement, host: HTMLElement|null }} state
  */
 function ensureTooltipHost(state) {
   if (state.host) return;
   const frame = /** @type {HTMLElement|null} */ (
-    typeof state.wrap.closest === "function" ? state.wrap.closest(".demographics-frame") : null);
+    typeof state.wrap.closest === "function" ? state.wrap.closest(".demographics-frame") : null
+  );
   if (!frame) return;
   for (const stale of Array.from(frame.children || [])) {
-    if (stale !== state.tooltip && stale.classList && stale.classList.contains("demographics-wars-tooltip")) {
+    if (
+      stale !== state.tooltip &&
+      stale.classList &&
+      stale.classList.contains("demographics-wars-tooltip")
+    ) {
       frame.removeChild(stale);
     }
   }
@@ -56,7 +61,7 @@ function ensureTooltipHost(state) {
  * @param {*} barRects
  * @param {number} svgX
  * @param {number} svgY
- * @returns {*} The war under the point, or null.
+ * @returns {*} The war under the point, or null when none.
  */
 function hitTestBars(barRects, svgX, svgY) {
   for (const rect of barRects) {
@@ -88,19 +93,28 @@ function hideGanttTooltip(state) {
  * the wrap scrolls both ways, so the visible box follows scrollLeft/scrollTop.
  * @param {{ wrap: HTMLElement, host: HTMLElement|null }} state
  * @param {*} svgRect SVG client rect (the canvas-fallback origin).
- * @returns {{ origin: {left: number, top: number}, minX: number, maxX: number, minY: number, maxY: number }}
+ * @returns {{ origin: {left: number, top: number},
+ *   minX: number, maxX: number, minY: number, maxY: number }}
  */
 function tooltipBounds(state, svgRect) {
   if (state.host) {
-    const hr = state.host.getBoundingClientRect();
-    return { origin: { left: hr.left, top: hr.top },
-      minX: EDGE_PAD, maxX: state.host.clientWidth - EDGE_PAD,
-      minY: EDGE_PAD, maxY: state.host.clientHeight - EDGE_PAD };
+    const hostRect = state.host.getBoundingClientRect();
+    return {
+      origin: { left: hostRect.left, top: hostRect.top },
+      minX: EDGE_PAD,
+      maxX: state.host.clientWidth - EDGE_PAD,
+      minY: EDGE_PAD,
+      maxY: state.host.clientHeight - EDGE_PAD
+    };
   }
   const { scrollLeft, scrollTop, clientWidth, clientHeight } = state.wrap;
-  return { origin: { left: svgRect.left, top: svgRect.top },
-    minX: scrollLeft + EDGE_PAD, maxX: scrollLeft + clientWidth - EDGE_PAD,
-    minY: scrollTop + EDGE_PAD, maxY: scrollTop + clientHeight - EDGE_PAD };
+  return {
+    origin: { left: svgRect.left, top: svgRect.top },
+    minX: scrollLeft + EDGE_PAD,
+    maxX: scrollLeft + clientWidth - EDGE_PAD,
+    minY: scrollTop + EDGE_PAD,
+    maxY: scrollTop + clientHeight - EDGE_PAD
+  };
 }
 
 /**
@@ -108,16 +122,16 @@ function tooltipBounds(state, svgRect) {
  * natural box would not fit the host in either direction. Written inline so the CSS default is
  * overridden only while it has to be.
  * @param {HTMLElement} tooltip
- * @param {{ minX: number, maxX: number, minY: number, maxY: number }} b
+ * @param {{ minX: number, maxX: number, minY: number, maxY: number }} bounds
  * @returns {number} The scale applied.
  */
-function fitTooltipScale(tooltip, b) {
+function fitTooltipScale(tooltip, bounds) {
   const w = tooltip.offsetWidth || 1;
   const h = tooltip.offsetHeight || 1;
-  const fit = Math.min(TOOLTIP_SCALE, (b.maxX - b.minX) / w, (b.maxY - b.minY) / h);
-  const k = Math.max(MIN_TOOLTIP_SCALE, Math.round(fit * 100) / 100);
-  tooltip.style.transform = "scale(" + k + ")";
-  return k;
+  const fit = Math.min(TOOLTIP_SCALE, (bounds.maxX - bounds.minX) / w, (bounds.maxY - bounds.minY) / h);
+  const scale = Math.max(MIN_TOOLTIP_SCALE, Math.round(fit * 100) / 100);
+  tooltip.style.transform = "scale(" + scale + ")";
+  return scale;
 }
 
 /**
@@ -145,13 +159,13 @@ function placeAxis(cursor, size, min, max) {
 function positionGanttTooltip(state, ev, rect) {
   // clientX/Y and the rects are visual px; `left`/`top`, clientWidth/Height and offsetWidth/Height
   // are the host's local px. Under the frame's transform:scale the two differ, and writing the
-  // visual delta as local px put the tooltip 1/s too far and past the frame.
-  const b = tooltipBounds(state, rect);
-  const k = fitTooltipScale(state.tooltip, b);
-  const localX = toLocalPx(ev.clientX - b.origin.left);
-  const localY = toLocalPx(ev.clientY - b.origin.top);
-  const left = placeAxis(localX, state.tooltip.offsetWidth * k, b.minX, b.maxX);
-  const top = placeAxis(localY, state.tooltip.offsetHeight * k, b.minY, b.maxY);
+  // visual delta as local px would put the tooltip 1/s too far and past the frame.
+  const bounds = tooltipBounds(state, rect);
+  const scale = fitTooltipScale(state.tooltip, bounds);
+  const localX = toLocalPx(ev.clientX - bounds.origin.left);
+  const localY = toLocalPx(ev.clientY - bounds.origin.top);
+  const left = placeAxis(localX, state.tooltip.offsetWidth * scale, bounds.minX, bounds.maxX);
+  const top = placeAxis(localY, state.tooltip.offsetHeight * scale, bounds.minY, bounds.maxY);
   state.tooltip.style.left = left + "px";
   state.tooltip.style.top = top + "px";
 }
@@ -206,9 +220,13 @@ function ganttHoverMoveBody(ev, state) {
   }
   positionGanttTooltip(state, ev, rect);
   // The flip-left check reads offsetWidth, which is stale in the same tick the content was rendered
-  // (GameFace lays out a frame later): a wide six-civ tooltip stayed on the cursor's right and ran
+  // (GameFace lays out a frame later): a wide six-civ tooltip would stay on the cursor's right and run
   // off the frame until the next mouse move. Re-place once layout has settled.
-  if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => { if (state.shownWar) positionGanttTooltip(state, ev, rect); });
+  if (typeof requestAnimationFrame === "function") {
+    requestAnimationFrame(() => {
+      if (state.shownWar) positionGanttTooltip(state, ev, rect);
+    });
+  }
 }
 
 /**

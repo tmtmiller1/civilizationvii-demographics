@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 // stub here gives us the same instance the mod registers against.
 import { __collectRegisteredOptions, CategoryType } from "./stubs/engine-options-stub.mjs";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
+import { getTier, pageVisibleInTier } from "/demographics/ui/core/demographics-tiers.js";
 
 // Importing the options module runs mod-options.js (sets CategoryType.Mods) and queues the mod's
 // init callback against the stubbed Options.addInitCallback.
@@ -78,9 +79,23 @@ function testComplexityDropdownUsesStringValues() {
   DemographicsSettings.setSetting("uiComplexity", "standard");
   const info = {};
   o.initListener(info);
-  assert.equal(info.selectedItemIndex, 1); // basic/standard/analyst → "standard" is index 1
-  o.updateListener({}, 2); // "analyst"
-  assert.equal(DemographicsSettings.getSetting("uiComplexity", "standard"), "analyst");
+  assert.equal(info.selectedItemIndex, 1); // basic/standard: "standard" is index 1
+  o.updateListener({}, 0);
+  assert.equal(DemographicsSettings.getSetting("uiComplexity", "standard"), "basic");
+  o.updateListener({}, 2); // out of range: ignored
+  assert.equal(DemographicsSettings.getSetting("uiComplexity", "standard"), "basic");
+}
+
+// Earlier versions offered "analyst", which showed the same pages as standard. A saved "analyst"
+// must open the dropdown on Standard and read as standard everywhere.
+function testSavedAnalystReadsAsStandard() {
+  const o = byId.get("demographics-ui-complexity");
+  DemographicsSettings.setSetting("uiComplexity", "analyst");
+  const info = {};
+  o.initListener(info);
+  assert.equal(info.selectedItemIndex, 1);
+  assert.equal(getTier(), "standard");
+  assert.equal(pageVisibleInTier({ tier: "standard" }), true);
 }
 
 testAllExpectedOptionsRegister();
@@ -89,5 +104,6 @@ testCheckboxListenerRoundTrips();
 testDropdownListenerMapsIndexToValue();
 testRevealModeMapsDropdownToLegacyBoolean();
 testComplexityDropdownUsesStringValues();
+testSavedAnalystReadsAsStandard();
 
 console.log(`options-registration harness passed (${opts.length} options registered under Mods)`);

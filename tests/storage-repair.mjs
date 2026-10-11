@@ -5,27 +5,20 @@
 // store back. The engine behavior modeled here (reads always return the first key by sort order,
 // writes/removes/clear are correct) is what the game does.
 import assert from "node:assert/strict";
-import { buggyStorage } from "./_history-fixtures.mjs";
+import { archiveRecord, buggyStorage } from "./_history-fixtures.mjs";
 
 const repair = await import("/demographics/ui/core/demographics-storage-repair.js");
 const store = await import("/demographics/ui/history/store/history-archive-store.js");
 
-/** The contaminated store this machine actually has: a foreign archive sorts ahead of modSettings. */
-const CHRONICLE = JSON.stringify({ v: 2, updated: 1784329667306, games: { x: { turns: 1 } } });
+/** A contaminated store as players have it: a foreign archive sorts ahead of modSettings. */
+const FOREIGN_ARCHIVE = JSON.stringify({ v: 2, updated: 1784329667306, games: { x: { turns: 1 } } });
 const contaminated = () =>
   buggyStorage({
-    "!chronicle": CHRONICLE,
-    "cd-probe-flips-v1": JSON.stringify({ v: 1, data: [] }),
-    htlData: CHRONICLE,
+    "!other-archive": FOREIGN_ARCHIVE,
+    "another-mod-v1": JSON.stringify({ v: 1, data: [] }),
+    anotherModData: FOREIGN_ARCHIVE,
     modSettings: JSON.stringify({ demographics: { __schema: 1, activeView: "rankings" } })
   });
-
-/** A minimal valid archive record. */
-const rec = (id, turns = 40) => ({
-  v: 1, id, created: 1, updated: turns, local: 0, leader: "L", leaderName: "", color: "", civs: [],
-  setup: {}, turns, ages: ["AGE_ANTIQUITY"], outcome: { status: "in_progress", victory: "", winner: -1, turn: 0 },
-  stats: { triumphs: 0 }, rivals: [], highlights: [], spark: { tri: [], set: [] }
-});
 
 // looksLikeSettingsRoot
 
@@ -63,7 +56,7 @@ const rec = (id, turns = 40) => ({
   const d = repair.diagnose();
   assert.equal(d.state, "foreign", "the first key's archive is not a settings root");
   assert.equal(d.rows, 4);
-  assert.equal(d.bytes, CHRONICLE.length, "the read returned the first key, not modSettings");
+  assert.equal(d.bytes, FOREIGN_ARCHIVE.length, "the read returned the first key, not modSettings");
 
   globalThis.localStorage = buggyStorage({ modSettings: "not json at all" });
   assert.equal(repair.diagnose().state, "foreign");
@@ -74,7 +67,10 @@ const rec = (id, turns = 40) => ({
 // 4. Happy path: every other row goes, ours is the only one left, and it reads back.
 {
   globalThis.localStorage = contaminated();
-  const slices = { demographics: { __schema: 1 }, "demographics-halloffame": { __schema: 1, games: {}, hidden: {}, texts: {} } };
+  const slices = {
+    demographics: { __schema: 1 },
+    "demographics-halloffame": { __schema: 1, games: {}, hidden: {}, texts: {} }
+  };
   const r = repair.repairStore(slices);
   assert.equal(r.ok, true, r.error);
   assert.equal(r.error, "");
@@ -143,7 +139,7 @@ const rec = (id, turns = 40) => ({
 {
   const stubborn = contaminated();
   const realClear = stubborn.clear;
-  stubborn.clear = () => { realClear(); stubborn.setItem("!chronicle", CHRONICLE); };
+  stubborn.clear = () => { realClear(); stubborn.setItem("!other-archive", FOREIGN_ARCHIVE); };
   globalThis.localStorage = stubborn;
   const r = repair.repairStore({ demographics: { __schema: 1 } });
   assert.equal(r.ok, false);
@@ -189,7 +185,7 @@ const rec = (id, turns = 40) => ({
 {
   store._resetForTests();
   globalThis.localStorage = contaminated();
-  assert.equal(store.saveRecord(rec("a")), false, "a contaminated store cannot be written");
+  assert.equal(store.saveRecord(archiveRecord("a")), false, "a contaminated store cannot be written");
   assert.equal(store.archiveStatus(), "foreign");
 
   const r = store.repairStorage();
@@ -202,7 +198,7 @@ const rec = (id, turns = 40) => ({
   assert.equal(store.allRecords().length, 1);
 
   // And the store works normally afterward: a second record persists through the ordinary path.
-  assert.equal(store.saveRecord(rec("b")), true);
+  assert.equal(store.saveRecord(archiveRecord("b")), true);
   const after = JSON.parse(localStorage.dump().modSettings);
   assert.ok(after["demographics-halloffame"].games.b);
   assert.ok(after.demographics, "the ordinary write preserves the settings slice");
@@ -212,7 +208,7 @@ const rec = (id, turns = 40) => ({
 {
   store._resetForTests();
   globalThis.localStorage = contaminated();
-  store.saveRecord(rec("a"));
+  store.saveRecord(archiveRecord("a"));
   localStorage.setItem = () => { throw new Error("quota"); };
   const r = store.repairStorage();
   assert.equal(r.ok, false);

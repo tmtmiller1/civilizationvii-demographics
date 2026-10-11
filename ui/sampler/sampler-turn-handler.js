@@ -28,7 +28,7 @@ function nowMs() {
  *   shouldSampleTurn: (turn:any, lastSampledTurn:number, pollEveryNTurns:number) => boolean,
  *   resolvePollEveryNTurns: () => number,
  *   getLastSampledTurn: () => number,
- *   vlog: (...a:any[]) => void,
+ *   logDebug: (...a:any[]) => void,
  *   doSample: () => any,
  *   noteSampleSucceeded: (curTurn:number|undefined) => void,
  *   tripIfTooMany: (label:string, e:any) => void
@@ -44,15 +44,15 @@ export function handlePlayerTurnActivated(deps) {
       shouldSampleTurn: deps.shouldSampleTurn,
       resolvePollEveryNTurns: deps.resolvePollEveryNTurns,
       lastSampledTurn: deps.getLastSampledTurn(),
-      vlog: deps.vlog
+      logDebug: deps.logDebug
     });
     if (!sampleCtx) return;
 
     const { localId, curTurn } = sampleCtx;
-    deps.vlog("about to sample turn for localPlayer=", localId);
-    const t0 = nowMs(); // Time the per-turn sample (debug-only via vlog).
+    deps.logDebug("about to sample turn for localPlayer=", localId);
+    const t0 = nowMs(); // Time the per-turn sample (only logged with debug on).
     const snap = deps.doSample();
-    deps.vlog("sampled turn in", Math.round(nowMs() - t0), "ms");
+    deps.logDebug("sampled turn in", Math.round(nowMs() - t0), "ms");
     if (snap) {
       deps.noteSampleSucceeded(curTurn);
       // Balance telemetry: throttled runaway-leader alert (debug-gated).

@@ -35,19 +35,19 @@ export function buildStackGridConfig(overrides = {}) {
  * Draw the plot background and optional y-grid lines + labels.
  * @param {SVGElement} svg
  * @param {{ padL:number, padT:number, innerW:number, innerH:number,
- *   yOf:(v:number)=>number }} L
+ *   yOf:(v:number)=>number }} layout
  * @param {number} yMax
  * @param {StackGridConfig} cfg
  * @param {(tag:string, attrs:Record<string, string|number>) => SVGElement}
  *   svgEl
  */
-export function drawStackGrid(svg, L, yMax, cfg, svgEl) {
+export function drawStackGrid(svg, layout, yMax, cfg, svgEl) {
   svg.appendChild(
     svgEl("rect", {
-      x: L.padL,
-      y: L.padT,
-      width: L.innerW,
-      height: L.innerH,
+      x: layout.padL,
+      y: layout.padT,
+      width: layout.innerW,
+      height: layout.innerH,
       fill: cfg.plotFill,
       stroke: cfg.plotStroke,
       "stroke-width": cfg.plotStrokeWidth
@@ -57,28 +57,28 @@ export function drawStackGrid(svg, L, yMax, cfg, svgEl) {
   if (!cfg.drawYGrid) return;
   const yTicks = Math.max(0, cfg.yTicks);
   for (let i = 0; i <= yTicks; i++) {
-    const v = yTicks === 0 ? 0 : (yMax * i) / yTicks;
-    const y = L.yOf(v);
+    const value = yTicks === 0 ? 0 : (yMax * i) / yTicks;
+    const y = layout.yOf(value);
     svg.appendChild(
       svgEl("line", {
-        x1: L.padL,
+        x1: layout.padL,
         y1: y,
-        x2: L.padL + L.innerW,
+        x2: layout.padL + layout.innerW,
         y2: y,
         stroke: cfg.yGridStroke,
         "stroke-width": cfg.yGridStrokeWidth
       })
     );
     if (!cfg.drawYLabels) continue;
-    const lbl = svgEl("text", {
-      x: L.padL - 6,
+    const label = svgEl("text", {
+      x: layout.padL - 6,
       y: y + 4,
       fill: cfg.yLabelFill,
       "font-size": cfg.yLabelFontSize,
       "text-anchor": "end"
     });
-    lbl.textContent = String(Math.round(v));
-    svg.appendChild(lbl);
+    label.textContent = String(Math.round(value));
+    svg.appendChild(label);
   }
 }
 
@@ -95,20 +95,20 @@ export function drawStackGrid(svg, L, yMax, cfg, svgEl) {
  * @returns {{ t:number, x:number, year:string|null, labelY:number }[]} Tick positions.
  */
 export function drawStackXTicks(svg, axis, deps) {
-  const { L, dom, turnYearMap } = axis;
+  const { L: layout, dom: domain, turnYearMap } = axis;
   const { cfg, nearestByTurn, svgEl } = deps;
   const xTicks = Math.max(1, cfg.xTicks);
   /** @type {{ t:number, x:number, year:string|null, labelY:number }[]} */
   const ticks = [];
   for (let i = 0; i <= xTicks; i++) {
-    const t = Math.round(dom.xMin + ((dom.xMax - dom.xMin) * i) / xTicks);
-    const x = L.xOf(t);
+    const turn = Math.round(domain.xMin + ((domain.xMax - domain.xMin) * i) / xTicks);
+    const x = layout.xOf(turn);
     svg.appendChild(
       svgEl("line", {
         x1: x,
         x2: x,
-        y1: L.padT + L.innerH,
-        y2: L.padT + L.innerH + cfg.xTickBottomLen,
+        y1: layout.padT + layout.innerH,
+        y2: layout.padT + layout.innerH + cfg.xTickBottomLen,
         stroke: cfg.xTickStroke,
         "stroke-width": cfg.xTickStrokeWidth
       })
@@ -118,18 +118,18 @@ export function drawStackXTicks(svg, axis, deps) {
         svgEl("line", {
           x1: x,
           x2: x,
-          y1: L.padT,
-          y2: L.padT + L.innerH,
+          y1: layout.padT,
+          y2: layout.padT + layout.innerH,
           stroke: cfg.xVerticalGridStroke,
           "stroke-width": cfg.xVerticalGridStrokeWidth
         })
       );
     }
     ticks.push({
-      t,
+      t: turn,
       x,
-      year: nearestByTurn(turnYearMap, t),
-      labelY: L.padT + L.innerH + cfg.tickLabelYOffset
+      year: nearestByTurn(turnYearMap, turn),
+      labelY: layout.padT + layout.innerH + cfg.tickLabelYOffset
     });
   }
   return ticks;
@@ -150,10 +150,10 @@ export function mountStackXTicks(wrap, ticks, opts) {
     div.style.top = (tick.labelY / opts.H) * 100 + "%";
 
     if (opts.mode !== "turn" && tick.year) {
-      const yr = document.createElement("div");
-      yr.className = "demographics-chart-x-tick-year";
-      yr.textContent = localYear(tick.year);
-      div.appendChild(yr);
+      const yearEl = document.createElement("div");
+      yearEl.className = "demographics-chart-x-tick-year";
+      yearEl.textContent = localYear(tick.year);
+      div.appendChild(yearEl);
     }
 
     if (opts.mode !== "year" || !tick.year) {
@@ -172,9 +172,10 @@ export function mountStackXTicks(wrap, ticks, opts) {
  *   xText:string, yText:string }} opts
  */
 export function mountStackAxisTitles(wrap, opts) {
+  const layout = opts.L;
   const xTitle = document.createElement("div");
   xTitle.className = opts.xClassName;
-  xTitle.style.left = ((opts.L.padL + opts.L.innerW / 2) / opts.W) * 100 + "%";
+  xTitle.style.left = ((layout.padL + layout.innerW / 2) / opts.W) * 100 + "%";
   xTitle.style.top = ((opts.H - 4) / opts.H) * 100 + "%";
   xTitle.textContent = opts.xText;
   wrap.appendChild(xTitle);
@@ -182,7 +183,7 @@ export function mountStackAxisTitles(wrap, opts) {
   const yTitle = document.createElement("div");
   yTitle.className = opts.yClassName;
   yTitle.style.left = (12 / opts.W) * 100 + "%";
-  yTitle.style.top = ((opts.L.padT + opts.L.innerH / 2) / opts.H) * 100 + "%";
+  yTitle.style.top = ((layout.padT + layout.innerH / 2) / opts.H) * 100 + "%";
   yTitle.textContent = opts.yText;
   wrap.appendChild(yTitle);
 }
@@ -216,8 +217,8 @@ export function mountStackAxisTitles(wrap, opts) {
  * @param {boolean} parenthesize Whether to use `(T-n)` format.
  */
 function appendTickTurn(div, turn, parenthesize) {
-  const tn = document.createElement("div");
-  tn.className = "demographics-chart-x-tick-turn";
-  tn.textContent = parenthesize ? "(" + turnLabel(turn) + ")" : turnLabel(turn);
-  div.appendChild(tn);
+  const turnEl = document.createElement("div");
+  turnEl.className = "demographics-chart-x-tick-turn";
+  turnEl.textContent = parenthesize ? "(" + turnLabel(turn) + ")" : turnLabel(turn);
+  div.appendChild(turnEl);
 }

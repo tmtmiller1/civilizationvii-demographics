@@ -5,7 +5,7 @@
 // (settlements `s`, population `p`).
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
+import * as board from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
 
 const VW = 1000;
 const VH = 520;
@@ -22,17 +22,17 @@ const PAD_B = 34;
 function religionMeta(hashKey) {
   try {
     if (typeof GameInfo !== "undefined" && GameInfo.Religions) {
-      for (const r of GameInfo.Religions) {
-        if (r && String(r.$hash) === hashKey) {
-          const name = r.Name && typeof Locale !== "undefined" ? Locale.compose(r.Name) : hashKey;
-          return { name, color: U.readable(r.Color || "#B0B0B0") };
+      for (const religion of GameInfo.Religions) {
+        if (religion && String(religion.$hash) === hashKey) {
+          const name = religion.Name && typeof Locale !== "undefined" ? Locale.compose(religion.Name) : hashKey;
+          return { name, color: board.readable(religion.Color || board.FALLBACK_COLOR) };
         }
       }
     }
   } catch (_) {
     /* fall through */
   }
-  return { name: t("LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK", hashKey), color: "#B0B0B0" };
+  return { name: t("LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK", hashKey), color: board.FALLBACK_COLOR };
 }
 
 /**
@@ -45,33 +45,33 @@ function collectSeries(history, key) {
   /** @type {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} */
   const acc = { series: new Map(), minX: Infinity, maxX: -Infinity, maxY: 0 };
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
-  for (const s of samples) foldRelSample(s, key, acc);
+  for (const sample of samples) foldRelSample(sample, key, acc);
   return acc;
 }
 
 /**
  * Fold one sample's `rel` map into the series accumulator, in place.
- * @param {*} s
+ * @param {*} sample
  * @param {"s"|"p"} key
  * @param {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} acc
  *   The accumulator (mutated).
  */
-function foldRelSample(s, key, acc) {
-  const rel = s && s.rel;
-  const x = s && s.chartTurn;
-  if (!rel || typeof x !== "number") return;
+function foldRelSample(sample, key, acc) {
+  const followers = sample && sample.rel;
+  const x = sample && sample.chartTurn;
+  if (!followers || typeof x !== "number") return;
   acc.minX = Math.min(acc.minX, x);
   acc.maxX = Math.max(acc.maxX, x);
-  for (const hash in rel) {
-    const y = rel[hash] && rel[hash][key];
+  for (const hash in followers) {
+    const y = followers[hash] && followers[hash][key];
     if (typeof y !== "number") continue;
     acc.maxY = Math.max(acc.maxY, y);
-    let pts = acc.series.get(hash);
-    if (!pts) {
-      pts = [];
-      acc.series.set(hash, pts);
+    let points = acc.series.get(hash);
+    if (!points) {
+      points = [];
+      acc.series.set(hash, points);
     }
-    pts.push({ x, y });
+    points.push({ x, y });
   }
 }
 
@@ -79,49 +79,55 @@ function foldRelSample(s, key, acc) {
  * Map a data point to SVG viewport coordinates.
  * @param {number} x Data x (chart turn).
  * @param {number} y
- * @param {{minX:number, maxX:number, maxY:number}} d Domain bounds.
+ * @param {{minX:number, maxX:number, maxY:number}} domain
  * @returns {{px:number, py:number}} Viewport coords.
  */
-function project(x, y, d) {
-  const spanX = d.maxX - d.minX || 1;
-  const px = PAD_L + ((x - d.minX) / spanX) * (VW - PAD_L - PAD_R);
-  const py = VH - PAD_B - (y / (d.maxY || 1)) * (VH - PAD_T - PAD_B);
+function project(x, y, domain) {
+  const spanX = domain.maxX - domain.minX || 1;
+  const px = PAD_L + ((x - domain.minX) / spanX) * (VW - PAD_L - PAD_R);
+  const py = VH - PAD_B - (y / (domain.maxY || 1)) * (VH - PAD_T - PAD_B);
   return { px, py };
 }
 
 /**
  * Append the axis frame + min/max labels to the SVG.
  * @param {SVGElement} svg
- * @param {{minX:number, maxX:number, maxY:number}} d Domain bounds.
+ * @param {{minX:number, maxX:number, maxY:number}} domain
  */
-function appendAxes(svg, d) {
-  svg.appendChild(U.svgEl("line", { x1: PAD_L, y1: PAD_T, x2: PAD_L, y2: VH - PAD_B, stroke: U.GRID }));
-  svg.appendChild(U.svgEl("line", {
-    x1: PAD_L, y1: VH - PAD_B, x2: VW - PAD_R, y2: VH - PAD_B, stroke: U.GRID
+function appendAxes(svg, domain) {
+  svg.appendChild(board.svgEl("line", { x1: PAD_L, y1: PAD_T, x2: PAD_L, y2: VH - PAD_B, stroke: board.GRID }));
+  svg.appendChild(board.svgEl("line", {
+    x1: PAD_L, y1: VH - PAD_B, x2: VW - PAD_R, y2: VH - PAD_B, stroke: board.GRID
   }));
-  svg.appendChild(U.svgText(PAD_L - 6, PAD_T + 10, String(Math.round(d.maxY)), { anchor: "end" }));
-  svg.appendChild(U.svgText(PAD_L, VH - 8, t("LOC_DEMOGRAPHICS_WONDER_TURN", d.minX)));
-  svg.appendChild(U.svgText(VW - PAD_R, VH - 8, t("LOC_DEMOGRAPHICS_WONDER_TURN", d.maxX), { anchor: "end" }));
+  svg.appendChild(board.svgText(PAD_L - 6, PAD_T + 10, String(Math.round(domain.maxY)), { anchor: "end" }));
+  svg.appendChild(board.svgText(PAD_L, VH - 8, t("LOC_DEMOGRAPHICS_WONDER_TURN", domain.minX)));
+  svg.appendChild(board.svgText(VW - PAD_R, VH - 8, t("LOC_DEMOGRAPHICS_WONDER_TURN", domain.maxX), {
+    anchor: "end"
+  }));
 }
 
 /**
  * Append one religion's polyline; return its legend meta.
  * @param {SVGElement} svg
- * @param {{hash:string, pts:{x:number, y:number}[]}} s
- * @param {{minX:number, maxX:number, maxY:number}} d Domain bounds.
+ * @param {{hash:string, pts:{x:number, y:number}[]}} entry
+ * @param {{minX:number, maxX:number, maxY:number}} domain
  * @returns {{name:string, color:string}} Legend meta for the series.
  */
-function appendSeries(svg, s, d) {
-  const meta = religionMeta(s.hash);
-  const points = s.pts
+function appendSeries(svg, entry, domain) {
+  const meta = religionMeta(entry.hash);
+  const points = entry.pts
     .sort((a, b) => a.x - b.x)
     .map((pt) => {
-      const { px, py } = project(pt.x, pt.y, d);
+      const { px, py } = project(pt.x, pt.y, domain);
       return px.toFixed(1) + "," + py.toFixed(1);
     })
     .join(" ");
-  const line = U.svgEl("polyline", {
-    points, fill: "none", stroke: meta.color, "stroke-width": 2.5, "stroke-linejoin": "round"
+  const line = board.svgEl("polyline", {
+    points,
+    fill: "none",
+    stroke: meta.color,
+    "stroke-width": 2.5,
+    "stroke-linejoin": "round"
   });
   line.setAttribute("data-tooltip-content", meta.name);
   svg.appendChild(line);
@@ -136,13 +142,15 @@ function appendSeries(svg, s, d) {
  */
 function renderReligionLines(host, history, key) {
   host.innerHTML = "";
-  const d = collectSeries(history, key);
-  if (!d.series.size || d.maxX < d.minX) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_RELIGION"));
-  const svg = U.svgRoot(host, VW, VH);
-  appendAxes(svg, d);
+  const domain = collectSeries(history, key);
+  if (!domain.series.size || domain.maxX < domain.minX) {
+    return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_RELIGION"));
+  }
+  const svg = board.svgRoot(host, VW, VH);
+  appendAxes(svg, domain);
   const meta = [];
-  for (const [hash, pts] of d.series) meta.push(appendSeries(svg, { hash, pts }, d));
-  host.appendChild(U.legend(meta));
+  for (const [hash, points] of domain.series) meta.push(appendSeries(svg, { hash, pts: points }, domain));
+  host.appendChild(board.legend(meta));
 }
 
 /**

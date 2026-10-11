@@ -3,8 +3,8 @@
 // Economy and progression collectors for per-civ sampling.
 
 import {
-  _readFiniteProp,
-  dlog,
+  readFiniteProp,
+  collectorLog,
   netYield,
   safeCall,
   safeNum
@@ -34,7 +34,7 @@ function _resolveFullyUnlockedState() {
 /**
  * Resolve a single tree node's state for `pid`.
  * @param {*} nodeType The node type/hash.
- * @param {Pid} pid The player id.
+ * @param {Pid} pid
  * @returns {*} The engine node-state value, or undefined.
  */
 function _nodeState(nodeType, pid) {
@@ -51,7 +51,7 @@ function _nodeState(nodeType, pid) {
 /**
  * Fallback completion check used when the FULLY_UNLOCKED enum is unavailable.
  * @param {*} nodeType The node type/hash.
- * @param {Pid} pid The player id.
+ * @param {Pid} pid
  * @returns {boolean} True if the node looks fully unlocked.
  */
 function _nodeUnlockedByDepth(nodeType, pid) {
@@ -67,7 +67,7 @@ function _nodeUnlockedByDepth(nodeType, pid) {
 /**
  * Decide whether a single tree node is fully unlocked for `pid`.
  * @param {*} node A tree node (object or raw type).
- * @param {Pid} pid The player id.
+ * @param {Pid} pid
  * @param {*} fullyUnlocked The resolved FULLY_UNLOCKED enum, or undefined.
  * @returns {boolean} True if the node is fully unlocked for `pid`.
  */
@@ -83,7 +83,7 @@ function _nodeIsFullyUnlocked(node, pid, fullyUnlocked) {
 /**
  * Count nodes in a single tree object that are fully unlocked for `pid`.
  * @param {*} tree A tree object exposing a `nodes` array.
- * @param {Pid} pid The player id.
+ * @param {Pid} pid
  * @param {string} treeKind "Techs" or "Culture" (for log attribution).
  * @returns {number} The count of fully-unlocked nodes (0 if none/unknown).
  */
@@ -95,7 +95,7 @@ function countNodesInTree(tree, pid, treeKind) {
     try {
       if (_nodeIsFullyUnlocked(node, pid, fullyUnlocked)) count++;
     } catch (e) {
-      dlog("node iter err in", treeKind, "for pid", pid, e);
+      collectorLog.debug("node iter err in", treeKind, "for pid", pid, e);
     }
   }
   return count;
@@ -191,7 +191,7 @@ function _treeRowMatches(row, systemType, age) {
 
 /**
  * Count fully-unlocked nodes for a player across all trees of a branch.
- * @param {Pid} pid The player id.
+ * @param {Pid} pid
  * @param {string} treeKind "Techs" or "Culture".
  * @returns {number | undefined} Total count, or undefined if no tree found.
  */
@@ -230,15 +230,15 @@ function sumOwnedTiles(cityList, pid) {
   if (!Array.isArray(cityList)) return undefined;
   let total = 0;
   let anyOK = false;
-  for (const c of cityList) {
+  for (const city of cityList) {
     try {
-      const n = _cityPlotCount(c);
-      if (n !== undefined) {
-        total += n;
+      const plots = _cityPlotCount(city);
+      if (plots !== undefined) {
+        total += plots;
         anyOK = true;
       }
     } catch (e) {
-      dlog("getPurchasedPlots err pid=", pid, e);
+      collectorLog.debug("getPurchasedPlots err pid=", pid, e);
     }
   }
   return anyOK ? total : undefined;
@@ -246,12 +246,12 @@ function sumOwnedTiles(cityList, pid) {
 
 /**
  * Whether a city handle is the player's capital (defensively).
- * @param {*} c A city handle.
+ * @param {*} city A city handle.
  * @returns {boolean} True for the capital.
  */
-function _isCapital(c) {
+function _isCapital(city) {
   try {
-    return !!c && c.isCapital === true;
+    return !!city && city.isCapital === true;
   } catch (_) {
     return false;
   }
@@ -290,12 +290,12 @@ function _capitalLoc(cityList) {
 
 /**
  * Count purchased plots for one city.
- * @param {*} c A city handle.
+ * @param {*} city A city handle.
  * @returns {number | undefined} The plot count, or undefined if unreadable.
  */
-function _cityPlotCount(c) {
-  if (!c || typeof c.getPurchasedPlots !== "function") return undefined;
-  const plots = c.getPurchasedPlots();
+function _cityPlotCount(city) {
+  if (!city || typeof city.getPurchasedPlots !== "function") return undefined;
+  const plots = city.getPurchasedPlots();
   if (Array.isArray(plots)) return plots.length;
   if (plots && typeof plots.length === "number") return plots.length;
   return undefined;
@@ -303,27 +303,27 @@ function _cityPlotCount(c) {
 
 /**
  * Read the gold balance off the player's Treasury handle.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
- * @param {*} p The sampled player handle.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
+ * @param {*} player The sampled player handle.
  */
-export function collectGold(ctx, id, p) {
-  const treasury = safeCall("p.Treasury (pid=" + id + ")", () => p.Treasury);
+export function collectGold(ctx, id, player) {
+  const treasury = safeCall("p.Treasury (pid=" + id + ")", () => player.Treasury);
   if (treasury) {
-    const g = safeCall("treasury.getGoldBalance() (pid=" + id + ")", () => {
+    const gold = safeCall("treasury.getGoldBalance() (pid=" + id + ")", () => {
       if (typeof treasury.getGoldBalance === "function") return treasury.getGoldBalance();
       if (typeof treasury.goldBalance === "number") return treasury.goldBalance;
       return undefined;
     });
-    if (typeof g === "number" && isFinite(g)) ctx.gold = g;
+    if (typeof gold === "number" && isFinite(gold)) ctx.gold = gold;
   }
 }
 
 /**
  * Read the count of slotted great works off the player's Stats handle.
  * citation: player.Stats.getTotalGreatWorksSlotted() (base-standard).
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  * @param {*} stats The player Stats handle.
  */
 export function collectGreatWorks(ctx, id, stats) {
@@ -339,30 +339,30 @@ export function collectGreatWorks(ctx, id, stats) {
 /**
  * Read the cumulative count of settlements taken by force off the Stats handle.
  * citation: player.Stats.getNumConqueredSettlements(...) (base-standard).
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  * @param {*} stats The player Stats handle.
  */
 export function collectConquered(ctx, id, stats) {
   if (stats && typeof stats.getNumConqueredSettlements === "function") {
-    const n = safeCall(
+    const count = safeCall(
       "stats.getNumConqueredSettlements() (pid=" + id + ")",
       () => safeNum(stats.getNumConqueredSettlements(true, true, true, false))
     );
-    if (typeof n === "number") ctx.conqueredCum = n;
+    if (typeof count === "number") ctx.conqueredCum = count;
   }
 }
 
 /**
  * Resolve the player's cities, store settlement count + owned tiles, and
  * return the city list for downstream reuse.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
- * @param {*} p The sampled player handle.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
+ * @param {*} player The sampled player handle.
  * @returns {*} The city list (array/array-like), or undefined.
  */
-export function collectCities(ctx, id, p) {
-  const cities = safeCall("p.Cities (pid=" + id + ")", () => p.Cities);
+export function collectCities(ctx, id, player) {
+  const cities = safeCall("p.Cities (pid=" + id + ")", () => player.Cities);
   let cityList = undefined;
   if (cities) {
     cityList = safeCall("cities.getCities() (pid=" + id + ")", () => {
@@ -378,7 +378,7 @@ export function collectCities(ctx, id, p) {
     if (typeof tiles === "number") ctx.tilesOwned = tiles;
 
     if (Array.isArray(cityList)) {
-      for (const c of cityList) recordCity(c, id);
+      for (const city of cityList) recordCity(city, id);
     }
 
     collectScaledPopulation(ctx, cityList);
@@ -388,15 +388,15 @@ export function collectCities(ctx, id, p) {
 
 /**
  * Read a settlement's size (raw population points) defensively: `population`, else urban+rural.
- * @param {*} c City handle.
+ * @param {*} city City handle.
  * @returns {number} The size (0 when unreadable).
  */
-export function readCitySize(c) {
+export function readCitySize(city) {
   try {
-    if (typeof c?.population === "number" && isFinite(c.population)) return c.population;
-    const u = typeof c?.urbanPopulation === "number" ? c.urbanPopulation : 0;
-    const r = typeof c?.ruralPopulation === "number" ? c.ruralPopulation : 0;
-    return u + r;
+    if (typeof city?.population === "number" && isFinite(city.population)) return city.population;
+    const urban = typeof city?.urbanPopulation === "number" ? city.urbanPopulation : 0;
+    const rural = typeof city?.ruralPopulation === "number" ? city.ruralPopulation : 0;
+    return urban + rural;
   } catch (_) {
     return 0;
   }
@@ -423,7 +423,7 @@ export function readAgeProgressPct() {
  * Compute the civ's scaled people total as the sum of its settlements' per-city estimates (the same
  * growth-formula curve the Settlements board uses), and stash the age context for the metric layer.
  * Summing per-settlement (never scaling the aggregate) is required because the curve is super-linear.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
  * @param {*} cityList The player's city list.
  */
 function collectScaledPopulation(ctx, cityList) {
@@ -433,15 +433,15 @@ function collectScaledPopulation(ctx, cityList) {
   ctx.ageType = ageType;
   ctx.ageProgressPct = ageProgressPct;
   let sum = 0;
-  for (const c of cityList) {
-    sum += scaleCityPopulationAt(readCitySize(c), undefined, ageType, ageProgressPct);
+  for (const city of cityList) {
+    sum += scaleCityPopulationAt(readCitySize(city), undefined, ageType, ageProgressPct);
   }
   ctx.populationScaled = sum;
 }
 
 /**
  * Capture the civ's home continent from capital (or first city).
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
  * @param {*} cityList The player's city list (from collectCities).
  */
 export function collectContinent(ctx, cityList) {
@@ -468,15 +468,15 @@ export function setNodeBaselineByPid(map) {
 
 /**
  * Resolve one pid's cumulative tech/civic baseline, defaulting to zeros.
- * @param {Pid} id The player id.
+ * @param {Pid} id
  * @returns {{ techs: number, civics: number }} Prior-age completed-node totals.
  */
 function nodeBaselineFor(id) {
-  const m = _nodeBaselineByPid;
-  const b = m ? m[String(id)] || m[/** @type {*} */ (id)] : undefined;
+  const baselines = _nodeBaselineByPid;
+  const baseline = baselines ? baselines[String(id)] || baselines[/** @type {*} */ (id)] : undefined;
   return {
-    techs: b && typeof b.techs === "number" ? b.techs : 0,
-    civics: b && typeof b.civics === "number" ? b.civics : 0
+    techs: baseline && typeof baseline.techs === "number" ? baseline.techs : 0,
+    civics: baseline && typeof baseline.civics === "number" ? baseline.civics : 0
   };
 }
 
@@ -492,7 +492,7 @@ export function computeNodeBaselines(samples, currentAge) {
   /** @type {Record<string, { techs: number, civics: number }>} */
   const out = {};
   if (!Array.isArray(samples) || typeof currentAge !== "string") return out;
-  for (const s of samples) foldNodeBaselineSample(out, s, currentAge);
+  for (const sample of samples) foldNodeBaselineSample(out, sample, currentAge);
   return out;
 }
 
@@ -500,14 +500,14 @@ export function computeNodeBaselines(samples, currentAge) {
  * Fold one prior-age sample's per-pid tech/civic counts into the running max
  * baseline. No-ops for the current age, untagged, or player-less samples.
  * @param {Record<string, { techs: number, civics: number }>} out Baseline map (mutated).
- * @param {*} s One persisted sample.
+ * @param {*} sample One persisted sample.
  * @param {string} currentAge The age being sampled now.
  */
-function foldNodeBaselineSample(out, s, currentAge) {
-  if (!s || typeof s.age !== "string" || s.age === currentAge || !s.players) return;
-  for (const pid of Object.keys(s.players)) {
-    const m = s.players[pid] && s.players[pid].metrics;
-    if (m) bumpBaselineMax(out[pid] || (out[pid] = { techs: 0, civics: 0 }), m);
+function foldNodeBaselineSample(out, sample, currentAge) {
+  if (!sample || typeof sample.age !== "string" || sample.age === currentAge || !sample.players) return;
+  for (const pid of Object.keys(sample.players)) {
+    const metrics = sample.players[pid] && sample.players[pid].metrics;
+    if (metrics) bumpBaselineMax(out[pid] || (out[pid] = { techs: 0, civics: 0 }), metrics);
   }
 }
 
@@ -515,19 +515,19 @@ function foldNodeBaselineSample(out, s, currentAge) {
  * Raise a pid's running tech/civic baseline to the max seen so far. Reads the stored metric keys
  * (`metrics.techs` / `metrics.civics`), not the `*Count` ctx field names.
  * @param {{ techs: number, civics: number }} cur The pid's baseline (mutated).
- * @param {*} m One sample's metric map for that pid.
+ * @param {*} metrics One sample's metric map for that pid.
  */
-function bumpBaselineMax(cur, m) {
-  if (typeof m.techs === "number" && m.techs > cur.techs) cur.techs = m.techs;
-  if (typeof m.civics === "number" && m.civics > cur.civics) cur.civics = m.civics;
+function bumpBaselineMax(cur, metrics) {
+  if (typeof metrics.techs === "number" && metrics.techs > cur.techs) cur.techs = metrics.techs;
+  if (typeof metrics.civics === "number" && metrics.civics > cur.civics) cur.civics = metrics.civics;
 }
 
 /**
  * Count fully-unlocked tech + culture nodes and store them on `ctx`, made cumulative across ages by
  * adding the prior-age baseline (see {@link computeNodeBaselines}). When the current age's tree
  * isn't ready yet, the count holds at the baseline.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  */
 export function collectTechAndCivicCounts(ctx, id) {
   const base = nodeBaselineFor(id);
@@ -541,8 +541,8 @@ export function collectTechAndCivicCounts(ctx, id) {
 
 /**
  * Read net yields + population/city/town counts off the Stats handle.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  * @param {*} stats The player Stats handle.
  */
 export function collectYieldsAndSizes(ctx, id, stats) {
@@ -555,22 +555,22 @@ export function collectYieldsAndSizes(ctx, id, stats) {
   ctx.yieldFood = netYield(stats, "YIELD_FOOD", id);
   ctx.yieldDiplomacy = netYield(stats, "YIELD_DIPLOMACY", id);
 
-  const tp = _readFiniteProp(stats, "totalPopulation");
+  const tp = readFiniteProp(stats, "totalPopulation");
   if (tp !== undefined) ctx.totalPopulation = tp;
-  const nc = _readFiniteProp(stats, "numCities");
+  const nc = readFiniteProp(stats, "numCities");
   if (nc !== undefined) ctx.citiesCount = nc;
-  const nt = _readFiniteProp(stats, "numTowns");
+  const nt = readFiniteProp(stats, "numTowns");
   if (nt !== undefined) ctx.townsCount = nt;
 }
 
 /**
  * Read the player-level trade-route count off the Trade handle.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
- * @param {*} p The sampled player handle.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
+ * @param {*} player The sampled player handle.
  */
-export function collectTradeRoutes(ctx, id, p) {
-  const trade = safeCall("p.Trade (pid=" + id + ")", () => p.Trade);
+export function collectTradeRoutes(ctx, id, player) {
+  const trade = safeCall("p.Trade (pid=" + id + ")", () => player.Trade);
   if (trade) {
     const tr = safeCall("trade.countPlayerTradeRoutes() (pid=" + id + ")", () => {
       if (typeof trade.countPlayerTradeRoutes === "function") {
@@ -584,8 +584,8 @@ export function collectTradeRoutes(ctx, id, p) {
 
 /**
  * Count ongoing diplomatic actions involving this player.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  */
 export function collectOngoingDeals(ctx, id) {
   const events = safeCall("Game.Diplomacy.getPlayerEvents(" + id + ")", () => {
@@ -599,7 +599,7 @@ export function collectOngoingDeals(ctx, id) {
 
 /**
  * Capture the settlement cap + settlements-used.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
  * @param {*} stats The player Stats handle.
  */
 export function collectSettlementCap(ctx, stats) {
@@ -607,7 +607,7 @@ export function collectSettlementCap(ctx, stats) {
     if (!stats) return;
     const cap = stats.settlementCap;
     if (typeof cap === "number" && isFinite(cap)) ctx.settlementCap = cap;
-    const n = stats.numSettlements;
-    if (typeof n === "number" && isFinite(n)) ctx.numSettlements = n;
+    const count = stats.numSettlements;
+    if (typeof count === "number" && isFinite(count)) ctx.numSettlements = count;
   });
 }

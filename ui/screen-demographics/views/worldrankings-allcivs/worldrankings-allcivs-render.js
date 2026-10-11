@@ -7,50 +7,50 @@ import {
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 import {
   computeRanks,
   leadsMetric
 } from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-profiles.js";
 
-// Scaled / Civ number mode
 // Several metrics come in a matched pair: a scaled-"people" version (the visible row) and a raw
 // Civ-numbers twin (registered but hidden). The matrix shows one row per pair and a Scaled/Civ
 // toggle swaps which side every paired row displays; the mode is a module-level flag set by the
 // view before it rebuilds, so the label column and every civ column stay aligned.
 const NUMBER_MODES = ["scaled", "civ"];
-let _numberMode = "scaled";
+let matrixNumberMode = "scaled";
 
 /**
  * Set the active Scaled/Civ number mode for the matrix. Call before rebuilding.
  * @param {string} mode
  */
 export function setMatrixNumberMode(mode) {
-  _numberMode = NUMBER_MODES.includes(mode) ? mode : "scaled";
+  matrixNumberMode = NUMBER_MODES.includes(mode) ? mode : "scaled";
 }
 
 /**
  * Add a 2D metric group's scaled→civ member pairs into `map`, when the group
  * exposes both a "scaled" and a "civ" view.
  * @param {Map<string, string>} map Accumulator (mutated).
- * @param {*} g A registered metric group.
+ * @param {*} group A registered metric group.
  */
-function addGroupPairs(map, g) {
-  if (!Array.isArray(g.members) || !Array.isArray(g.views)) return;
-  const viewIds = g.views.map((/** @type {*} */ v) => v && v.id);
+function addGroupPairs(map, group) {
+  if (!Array.isArray(group.members) || !Array.isArray(group.views)) return;
+  const viewIds = group.views.map((/** @type {*} */ view) => view && view.id);
   if (!viewIds.includes("scaled") || !viewIds.includes("civ")) return;
-  for (const m of g.members) addMemberPair(map, m);
+  for (const member of group.members) addMemberPair(map, member);
 }
 
 /**
  * Record one group member's scaled→civ id pair (when both are distinct strings).
  * @param {Map<string, string>} map Accumulator (mutated).
- * @param {*} m A group member ({scaled, civ, ...}).
+ * @param {*} member A group member ({scaled, civ, ...}).
  */
-function addMemberPair(map, m) {
-  const s = m && m.scaled;
-  const c = m && m.civ;
-  if (typeof s === "string" && typeof c === "string" && s !== c) map.set(s, c);
+function addMemberPair(map, member) {
+  const scaledId = member && member.scaled;
+  const civId = member && member.civ;
+  if (typeof scaledId === "string" && typeof civId === "string" && scaledId !== civId) map.set(scaledId, civId);
 }
 
 /**
@@ -60,18 +60,18 @@ function addMemberPair(map, m) {
  */
 function scaledToCivPairs() {
   const map = new Map([["population", "population_civ"]]);
-  for (const g of EXTERNAL_METRIC_GROUPS) addGroupPairs(map, g);
+  for (const group of EXTERNAL_METRIC_GROUPS) addGroupPairs(map, group);
   return map;
 }
 
 /**
  * True when at least one visible metric has a Civ-numbers twin (so the Scaled/Civ
  * toggle is meaningful). The base Population pair guarantees this in practice.
- * @returns {boolean} Whether the number-mode toggle should be offered.
+ * @returns {boolean}
  */
 export function matrixHasNumberModePairs() {
   const pairs = scaledToCivPairs();
-  return METRICS.some((m) => !m.worldRankingsAllCivsHidden && pairs.has(m.id));
+  return METRICS.some((metric) => !metric.worldRankingsAllCivsHidden && pairs.has(metric.id));
 }
 
 /**
@@ -81,14 +81,14 @@ export function matrixHasNumberModePairs() {
  * @returns {*[]}
  */
 function shownMetrics() {
-  const base = /** @type {*[]} */ (METRICS).filter((m) => !m.worldRankingsAllCivsHidden);
-  if (_numberMode !== "civ") return base;
+  const base = /** @type {*[]} */ (METRICS).filter((metric) => !metric.worldRankingsAllCivsHidden);
+  if (matrixNumberMode !== "civ") return base;
   const pairs = scaledToCivPairs();
-  return base.map((m) => {
-    const civId = pairs.get(m.id);
-    if (!civId) return m;
-    const civ = METRICS.find((x) => x.id === civId);
-    return civ || m;
+  return base.map((metric) => {
+    const civId = pairs.get(metric.id);
+    if (!civId) return metric;
+    const civTwin = METRICS.find((candidate) => candidate.id === civId);
+    return civTwin || metric;
   });
 }
 
@@ -108,13 +108,7 @@ function shownMetrics() {
  * @property {() => void} [onReset] Clear all hidden civs.
  */
 
-/**
- * Error logger (always emits).
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.view-worldrankings-allcivs]", ...a);
-}
+const log = makeLogger("view-worldrankings-allcivs");
 
 /**
  * Build the leader-avatar element: a real `<fxs-icon>` portrait when the
@@ -140,7 +134,7 @@ export function buildLeaderAvatar(profile, sizeRem) {
   } catch (e) {
     // Own-logic DOM build (fxs-icon portrait) - surface failures, then fall
     // through to the initial-letter placeholder below.
-    derr("buildLeaderAvatar:", e);
+    log.error("buildLeaderAvatar:", e);
   }
 
   const placeholder = document.createElement("div");
@@ -175,7 +169,7 @@ function buildLeaderPortrait(leaderType) {
 
 /**
  * Append the leader / civ / "formerly" text rows to a civ-header text block.
- * @param {HTMLElement} text The header text container to append into.
+ * @param {HTMLElement} text The header text container.
  * @param {CivProfile} profile
  * @param {boolean} maskAsUnmet When true, emit generic unmet placeholders.
  */
@@ -216,13 +210,13 @@ function appendCivNameRows(text, profile) {
     text.appendChild(leader);
   }
 
-  const all = Array.isArray(profile.civNames) ? profile.civNames : [];
-  const prior = all.filter((n) => n && n !== profile.civName);
+  const civNames = Array.isArray(profile.civNames) ? profile.civNames : [];
+  const prior = civNames.filter((name) => name && name !== profile.civName);
   if (prior.length <= 0) return;
-  const fmr = document.createElement("div");
-  fmr.className = "demographics-worldrankings-allcivs-civ-header-formerly font-body text-xs";
-  fmr.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY", prior.join(", "));
-  text.appendChild(fmr);
+  const formerly = document.createElement("div");
+  formerly.className = "demographics-worldrankings-allcivs-civ-header-formerly font-body text-xs";
+  formerly.textContent = t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY", prior.join(", "));
+  text.appendChild(formerly);
 }
 
 /**
@@ -296,26 +290,26 @@ export const METRIC_ICONS = {
 
 /**
  * Format a metric's latest value to a display string (defensive).
- * @param {MetricDef} metric The metric definition.
- * @param {*} v The raw value.
- * @returns {string} The formatted value, or "—".
+ * @param {MetricDef} metric
+ * @param {*} value
+ * @returns {string} "—" for a missing or non-finite value.
  */
-export function formatMetricValue(metric, v) {
-  if (typeof v !== "number" || !isFinite(v)) return "—";
+export function formatMetricValue(metric, value) {
+  if (typeof value !== "number" || !isFinite(value)) return "—";
   try {
-    return /** @type {(n: number) => string} */ (metric.format)(v);
+    return /** @type {(n: number) => string} */ (metric.format)(value);
   } catch (e) {
     // A metric's format() callback threw - surface it, then fall back to a
     // rounded integer so the cell still shows a value.
-    derr("formatMetricValue(" + metric.id + "):", e);
-    return String(Math.round(v));
+    log.error("formatMetricValue(" + metric.id + "):", e);
+    return String(Math.round(value));
   }
 }
 
 /**
- * Build the small value line: "(<icon> value)" in the (former rank) small style.
+ * Build the small value line: "(<icon> value)" in the small secondary style.
  * A missing value shows a bare "—" (no parens/icon).
- * @param {MetricDef} metric The metric definition.
+ * @param {MetricDef} metric
  * @param {CivProfile} profile
  * @returns {HTMLElement}
  */
@@ -330,15 +324,15 @@ function buildValueLine(metric, profile) {
   // Flex row of explicit spans + a sized icon item: Coherent block-breaks a background-image div
   // among raw text nodes, so each piece is a discrete flex child and the row is nowrap. The icon
   // sits inside the parens.
-  const blp = METRIC_ICONS[metric.id];
+  const iconId = METRIC_ICONS[metric.id];
   const open = document.createElement("span");
-  open.textContent = blp ? "(" : "(" + formatted + ")";
+  open.textContent = iconId ? "(" : "(" + formatted + ")";
   line.appendChild(open);
-  if (blp) {
-    line.appendChild(iconEl(blp, "demographics-worldrankings-allcivs-yield-icon"));
-    const val = document.createElement("span");
-    val.textContent = formatted + ")";
-    line.appendChild(val);
+  if (iconId) {
+    line.appendChild(iconEl(iconId, "demographics-worldrankings-allcivs-yield-icon"));
+    const valueSpan = document.createElement("span");
+    valueSpan.textContent = formatted + ")";
+    line.appendChild(valueSpan);
   }
   return line;
 }
@@ -347,7 +341,7 @@ function buildValueLine(metric, profile) {
  * Build a single metric cell, RANK-FORWARD: the bare rank number is the big
  * headline (the column context makes "rank" obvious - no "Rank" word, no /total
  * fraction) and the yield value is the small "(<icon> value)" line below.
- * @param {MetricDef} metric The metric definition for this row.
+ * @param {MetricDef} metric
  * @param {CivProfile} profile
  * @param {number|undefined} rank
  * @returns {HTMLElement}
@@ -394,7 +388,7 @@ export function buildLabelColumn(opts) {
  * Add, update or remove the label column's reset button in place. The label column carries the
  * metric icons, so it must never be rebuilt just because the hidden-civ count changed; a fresh
  * element's `blp:` background resolves a frame or more after insertion and visibly blinks.
- * @param {HTMLElement} labelCol The label column.
+ * @param {HTMLElement} labelCol
  * @param {LabelColumnOpts} opts
  */
 export function syncLabelResetButton(labelCol, opts) {
@@ -413,7 +407,7 @@ export function syncLabelResetButton(labelCol, opts) {
 /**
  * Build the label-column reset button when hidden civs exist.
  * @param {LabelColumnOpts|undefined} opts
- * @returns {HTMLElement|null} Reset button, or null when not needed.
+ * @returns {HTMLElement|null} Null when no civs are hidden.
  */
 function buildLabelResetButton(opts) {
   if (!(opts && (opts.hiddenCount ?? 0) > 0 && typeof opts.onReset === "function")) {
@@ -433,22 +427,22 @@ function buildLabelResetButton(opts) {
 
 /**
  * Append all metric label rows to the label column.
- * @param {HTMLElement} col The label column element.
+ * @param {HTMLElement} col
  */
 function appendMetricLabelRows(col) {
   let rowIdx = 0;
-  for (const m of shownMetrics()) {
+  for (const metric of shownMetrics()) {
     const row = document.createElement("div");
     row.className =
       "demographics-worldrankings-allcivs-cell demographics-worldrankings-allcivs-label-cell font-body text-base";
     if (rowIdx > 0 && rowIdx % 4 === 0) row.classList.add("is-heavy-divider");
     // Icon (when we have one for this metric) + name, so the row headings read at a
     // glance. The text carries the font-fit; the icon is a fixed-size leading glyph.
-    const icon = METRIC_ICONS[m.id];
+    const icon = METRIC_ICONS[metric.id];
     if (icon) row.appendChild(iconEl(icon, "demographics-worldrankings-allcivs-metric-icon"));
     const label = document.createElement("span");
     label.className = "demographics-worldrankings-allcivs-metric-label-text";
-    label.textContent = localizedMetricName(m);
+    label.textContent = localizedMetricName(metric);
     row.appendChild(label);
     col.appendChild(row);
     rowIdx++;
@@ -458,12 +452,15 @@ function appendMetricLabelRows(col) {
 /**
  * Mark a matrix cell as its metric's world leader: the same gold leader wash and
  * tooltip the table branch uses.
- * @param {HTMLElement} cell The value cell.
- * @param {MetricDef} m The metric.
+ * @param {HTMLElement} cell
+ * @param {MetricDef} metric
  */
-function markLeaderCell(cell, m) {
+function markLeaderCell(cell, metric) {
   cell.classList.add("is-leader");
-  cell.setAttribute("data-tooltip-content", t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", localizedMetricName(m)));
+  cell.setAttribute(
+    "data-tooltip-content",
+    t("LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP", localizedMetricName(metric))
+  );
 }
 
 /**
@@ -483,10 +480,10 @@ export function buildCivColumn(profile, profiles, isLocal, maskAsUnmet, opts) {
   col.appendChild(buildCivHeader(profile, isLocal, maskAsUnmet, opts));
 
   let rowIdx = 0;
-  for (const m of shownMetrics()) {
-    const info = computeRanks(profiles, m.id);
-    const cell = buildValueCell(m, profile, info.ranks.get(profile.pid));
-    if (leadsMetric(info, profile.pid)) markLeaderCell(cell, m);
+  for (const metric of shownMetrics()) {
+    const info = computeRanks(profiles, metric.id);
+    const cell = buildValueCell(metric, profile, info.ranks.get(profile.pid));
+    if (leadsMetric(info, profile.pid)) markLeaderCell(cell, metric);
     if (rowIdx > 0 && rowIdx % 4 === 0) cell.classList.add("is-heavy-divider");
     col.appendChild(cell);
     rowIdx++;
@@ -533,7 +530,7 @@ export function buildGhostCivColumn(profile, maskAsUnmet, _opts) {
 
 /**
  * Append the "no samples yet" empty-state notice to the host.
- * @param {HTMLElement} host The view host element.
+ * @param {HTMLElement} host
  */
 export function appendEmptyState(host) {
   const empty = document.createElement("div");
@@ -546,12 +543,12 @@ export function appendEmptyState(host) {
  * Log a sub-renderer's throw and append the "render failed" notice to the host
  * in place of the blank panel the throw would otherwise leave (the host was
  * already cleared by the time a renderer runs).
- * @param {HTMLElement} host The view host element.
- * @param {string} what
- * @param {*} e The thrown error.
+ * @param {HTMLElement} host
+ * @param {string} what Name of the renderer that threw, for the log line.
+ * @param {*} e
  */
 export function appendRenderFailed(host, what, e) {
-  derr(what + " threw:", e);
+  log.error(what + " threw:", e);
   const failed = document.createElement("div");
   failed.className = "demographics-empty font-body text-base";
   failed.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED");

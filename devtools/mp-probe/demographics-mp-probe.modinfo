@@ -2,7 +2,11 @@
 <Mod id="demographics-mp-probe" version="1" xmlns="ModInfo">
     <Properties>
         <Name>Demographics MP Probe (dev)</Name>
-        <Description>Throwaway dev probe. Hosts a hotseat game with two human seats from the main menu, presses Begin Game, ends turns for each seat and opens the Demographics History tab, logging [HS] lines to UI.log, so a multiplayer crash can be reproduced on one machine. Not for release.</Description>
+        <Description>
+            Throwaway dev probe. Hosts a hotseat game with two human seats from the main menu, presses Begin Game, ends
+            turns for each seat and opens the Demographics History tab, logging [HS] lines to UI.log, so a multiplayer
+            crash can be reproduced on one machine. Not for release.
+        </Description>
         <Authors>Tower</Authors>
         <Package>DemographicsMPProbe</Package>
         <PackageSortIndex>9999</PackageSortIndex>
@@ -16,16 +20,18 @@
         <Criteria id="always"><AlwaysMet></AlwaysMet></Criteria>
     </ActionCriteria>
     <ActionGroups>
-        <ActionGroup id="hs-shell" scope="shell" criteria="always">
+        <ActionGroup id="hotseat-shell" scope="shell" criteria="always">
             <Properties><LoadOrder>9000</LoadOrder></Properties>
             <Actions>
-                <UIScripts><Item>hs-shell.js</Item></UIScripts>
+                <UIScripts><Item>hotseat-shell.js</Item></UIScripts>
+                <ImportFiles><Item>hotseat-helpers.js</Item></ImportFiles>
             </Actions>
         </ActionGroup>
-        <ActionGroup id="hs-game" scope="game" criteria="always">
+        <ActionGroup id="hotseat-game" scope="game" criteria="always">
             <Properties><LoadOrder>9000</LoadOrder></Properties>
             <Actions>
-                <UIScripts><Item>hs-game.js</Item></UIScripts>
+                <UIScripts><Item>hotseat-game.js</Item></UIScripts>
+                <ImportFiles><Item>hotseat-helpers.js</Item></ImportFiles>
             </Actions>
         </ActionGroup>
     </ActionGroups>

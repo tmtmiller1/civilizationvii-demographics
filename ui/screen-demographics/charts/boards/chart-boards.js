@@ -10,10 +10,11 @@ import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { inlineLabel } from "/demographics/ui/core/player-label.js";
 import { byTypeCounts } from "/demographics/ui/sampler/sampler-game-summary.js";
 import { buildSettlementBoard } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
-import * as U from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
+import * as board from "/demographics/ui/screen-demographics/charts/boards/board-ui.js";
 import {
   civDroppedByPolicy,
-  liveCivDroppedByPolicy
+  liveCivDroppedByPolicy,
+  historySamples
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import {
   YIELD_CATEGORIES,
@@ -39,60 +40,64 @@ function latestPlayers(history) {
 
 /**
  * A civ's display label (honors the Civ/Leader order).
- * @param {*} ps A sample player. @param {string} pid The player id key.
+ * @param {*} player A sample player.
+ * @param {string} pid
  * @returns {string}
  */
-function civLabel(ps, pid) {
-  if (!ps) return tPlayerFallback(pid);
-  return ps.leaderName ? inlineLabel(ps.leaderName, ps.civName) : ps.civName || tPlayerFallback(pid);
-}
-
-/** @param {string} type @returns {string} "Type Like This" from TYPE_LIKE_THIS. */
-function prettifyType(type) {
-  return String(type).replace(/^[A-Z]+_/, "").toLowerCase().replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+function civLabel(player, pid) {
+  if (!player) return tPlayerFallback(pid);
+  return player.leaderName ? inlineLabel(player.leaderName, player.civName) : player.civName || tPlayerFallback(pid);
 }
 
 /**
- * Resolve a type id to a localized name via GameInfo, else prettify.
- * @param {string} table The GameInfo table. @param {string} type The type id.
- * @returns {string} The display name.
+ * Readable words from a database type id, used when the game has no localized name for it:
+ * BUILDING_GREAT_LIBRARY becomes "Great Library" (the leading table prefix is dropped).
+ * @param {string} type
+ * @returns {string}
  */
-function resolveTypeName(table, type) {
-  try {
-    const def = typeof GameInfo !== "undefined" && GameInfo[table] && GameInfo[table].lookup(type);
-    if (def && def.Name && typeof Locale !== "undefined") {
-      const name = Locale.compose(def.Name);
-      if (name && name.trim()) return name;
-    }
-  } catch (_) {
-    /* prettify */
-  }
-  return prettifyType(type);
+function titleCaseFromType(type) {
+  const words = String(type).replace(/^[A-Z]+_/, "").toLowerCase().split("_");
+  return words.map((word) => word.replace(/\b\w/g, (c) => c.toUpperCase())).join(" ");
 }
 
-/** @param {*} history @returns {*[]} The history's samples, or []. */
-function samplesOf(history) {
-  return history && Array.isArray(history.samples) ? history.samples : [];
+/**
+ * The game's localized name for a type id, or null when the table, the row, its Name, or the
+ * Locale lookup is missing or comes back blank.
+ * @param {string} table The GameInfo table.
+ * @param {string} type
+ * @returns {string | null}
+ */
+function localizedTypeName(table, type) {
+  try {
+    if (typeof GameInfo === "undefined" || typeof Locale === "undefined") return null;
+    const rows = GameInfo[table];
+    const row = rows ? rows.lookup(type) : null;
+    if (!row || !row.Name) return null;
+    const text = Locale.compose(row.Name);
+    return text && text.trim() ? text : null;
+  } catch (_) {
+    return null; // a lookup that throws reads the same as a missing row
+  }
 }
 
 // Wonders board + races
 
 /**
  * Fold one player's wonderTypes into the first-seen-turn accumulator.
- * @param {*} ps A sample player. @param {number} turn The chart turn.
+ * @param {*} player A sample player.
+ * @param {number} turn The chart turn.
  * @param {Map<string, Map<string, number>>} out
  * @param {string} pid
  */
-function foldWonderPlayer(ps, turn, out, pid) {
-  const types = ps && Array.isArray(ps.wonderTypes) ? ps.wonderTypes : null;
+function foldWonderPlayer(player, turn, out, pid) {
+  const types = player && Array.isArray(player.wonderTypes) ? player.wonderTypes : null;
   if (!types) return;
-  let m = out.get(pid);
-  if (!m) {
-    m = new Map();
-    out.set(pid, m);
+  let firstTurns = out.get(pid);
+  if (!firstTurns) {
+    firstTurns = new Map();
+    out.set(pid, firstTurns);
   }
-  for (const tp of types) if (!m.has(tp)) m.set(tp, turn);
+  for (const type of types) if (!firstTurns.has(type)) firstTurns.set(type, turn);
 }
 
 /**
@@ -102,18 +107,19 @@ function foldWonderPlayer(ps, turn, out, pid) {
  */
 function wonderFirstTurns(history) {
   const out = new Map();
-  const samples = samplesOf(history);
-  for (const s of samples) foldSample(s, out, samples);
+  const samples = historySamples(history);
+  for (const sample of samples) foldSample(sample, out, samples);
   return out;
 }
 
 /**
- * @param {*} s A sample. @param {Map<string, Map<string, number>>} out The accumulator.
+ * @param {*} sample
+ * @param {Map<string, Map<string, number>>} out The accumulator.
  * @param {*[]} samples The whole stream, for the spoiler guard.
  */
-function foldSample(s, out, samples) {
-  const players = s && s.players;
-  const turn = s && s.chartTurn;
+function foldSample(sample, out, samples) {
+  const players = sample && sample.players;
+  const turn = sample && sample.chartTurn;
   if (!players) return;
   for (const pid in players) {
     if (!civDroppedByPolicy(samples, pid)) foldWonderPlayer(players[pid], turn, out, pid);
@@ -124,21 +130,22 @@ function foldSample(s, out, samples) {
  * Wonder labels for one civ, in completion order, annotated with the turn.
  * @param {string[]} types Wonder ConstructibleType ids.
  * @param {Map<string, number>} [turns] type → first chart-turn.
- * @returns {string[]} The ordered labels.
+ * @returns {string[]}
  */
 function wonderLabels(types, turns) {
-  const items = types.map((tp) => ({
-    name: resolveTypeName("Constructibles", tp),
-    turn: turns ? turns.get(tp) : undefined
+  const items = types.map((type) => ({
+    name: localizedTypeName("Constructibles", type) || titleCaseFromType(type),
+    turn: turns ? turns.get(type) : undefined
   }));
   items.sort((a, b) => (a.turn == null ? 1e9 : a.turn) - (b.turn == null ? 1e9 : b.turn));
-  return items.map((it) => (it.turn != null ? it.name + " · " + t("LOC_DEMOGRAPHICS_WONDER_TURN", it.turn) : it.name));
+  return items.map(({ name, turn }) => (turn != null ? name + " · " + t("LOC_DEMOGRAPHICS_WONDER_TURN", turn) : name));
 }
 
 /**
  * Render the Wonders board: one civ-colored column per civ, wonders in
  * completion order with their turn.
- * @param {HTMLElement} host @param {{history:*}} opts
+ * @param {HTMLElement} host
+ * @param {{history:*}} opts
  */
 export function renderWondersBoard(host, opts) {
   host.innerHTML = "";
@@ -147,16 +154,17 @@ export function renderWondersBoard(host, opts) {
   const firstTurns = wonderFirstTurns(history);
   const cols = [];
   for (const pid in players) {
-    if (civDroppedByPolicy(samplesOf(history), pid)) continue;
-    const ps = players[pid];
-    const types = ps && Array.isArray(ps.wonderTypes) ? ps.wonderTypes : [];
+    if (civDroppedByPolicy(historySamples(history), pid)) continue;
+    const player = players[pid];
+    const types = player && Array.isArray(player.wonderTypes) ? player.wonderTypes : [];
     if (!types.length) continue;
-    cols.push({ name: civLabel(ps, pid), color: U.civColor(ps), items: wonderLabels(types, firstTurns.get(pid)) });
+    const items = wonderLabels(types, firstTurns.get(pid));
+    cols.push({ name: civLabel(player, pid), color: board.civColor(player), items });
   }
   cols.sort((a, b) => b.items.length - a.items.length);
-  if (!cols.length) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_WONDERS"));
-  const row = U.columnsRow(host);
-  for (const c of cols) row.appendChild(U.boardColumn(c.name, c.color, c.items.length, c.items));
+  if (!cols.length) return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_WONDERS"));
+  const row = board.columnsRow(host);
+  for (const col of cols) row.appendChild(board.boardColumn(col.name, col.color, col.items.length, col.items));
 }
 
 /**
@@ -166,34 +174,38 @@ export function renderWondersBoard(host, opts) {
  */
 function wonderWinners(firstTurns) {
   const winners = new Map();
-  for (const [pid, m] of firstTurns) {
-    for (const [type, turn] of m) {
-      const cur = winners.get(type);
-      if (!cur || (turn != null && (cur.turn == null || turn < cur.turn))) winners.set(type, { pid, turn });
+  for (const [pid, typeTurns] of firstTurns) {
+    for (const [type, turn] of typeTurns) {
+      const best = winners.get(type);
+      if (!best || (turn != null && (best.turn == null || turn < best.turn))) winners.set(type, { pid, turn });
     }
   }
   return winners;
 }
 
-/** @param {{name:string, civ:string, color:string, turn:number|undefined}} r @returns {HTMLElement} */
-function wonderRaceRow(r) {
-  const line = U.box("display:flex;align-items:center;gap:0.556rem;min-height:1.222rem");
-  line.setAttribute("data-tooltip-content", r.name + " — " + r.civ);
-  line.appendChild(U.box("flex:0 0 14rem;color:" + U.INK + ";font-size:var(--dg-fs-95);text-align:right;" +
-    "white-space:nowrap;overflow:hidden;text-overflow:ellipsis", r.name, "font-body"));
-  const who = U.box("flex:1 1 auto;display:flex;align-items:center;gap:0.389rem;min-width:0");
-  who.appendChild(U.swatch(r.color, 11));
-  who.appendChild(U.box("color:" + U.INK + ";font-size:var(--dg-fs-85);white-space:nowrap;overflow:hidden;" +
-    "text-overflow:ellipsis", r.civ, "font-body"));
+/**
+ * @param {{name:string, civ:string, color:string, turn:number|undefined}} race
+ * @returns {HTMLElement}
+ */
+function wonderRaceRow(race) {
+  const line = board.box("display:flex;align-items:center;gap:0.556rem;min-height:1.222rem");
+  line.setAttribute("data-tooltip-content", race.name + " — " + race.civ);
+  line.appendChild(board.box("flex:0 0 14rem;color:" + board.INK + ";font-size:var(--dg-fs-95);text-align:right;" +
+    "white-space:nowrap;overflow:hidden;text-overflow:ellipsis", race.name, "font-body"));
+  const who = board.box("flex:1 1 auto;display:flex;align-items:center;gap:0.389rem;min-width:0");
+  who.appendChild(board.swatch(race.color, 11));
+  who.appendChild(board.box("color:" + board.INK + ";font-size:var(--dg-fs-85);white-space:nowrap;overflow:hidden;" +
+    "text-overflow:ellipsis", race.civ, "font-body"));
   line.appendChild(who);
-  line.appendChild(U.box("flex:0 0 5rem;color:" + U.INK_MUTED + ";font-size:var(--dg-fs-85)",
-    r.turn != null ? t("LOC_DEMOGRAPHICS_WONDER_TURN", r.turn) : "—", "font-body"));
+  line.appendChild(board.box("flex:0 0 5rem;color:" + board.INK_MUTED + ";font-size:var(--dg-fs-85)",
+    race.turn != null ? t("LOC_DEMOGRAPHICS_WONDER_TURN", race.turn) : "—", "font-body"));
   return line;
 }
 
 /**
  * Render Wonder Races: one row per wonder, who built it first, and when.
- * @param {HTMLElement} host @param {{history:*}} opts
+ * @param {HTMLElement} host
+ * @param {{history:*}} opts
  */
 export function renderWonderRaces(host, opts) {
   host.innerHTML = "";
@@ -201,7 +213,7 @@ export function renderWonderRaces(host, opts) {
   const completed = completedWonderRows(opts && opts.history, players);
   const building = inProgressWonderRows();
   if (!completed.length && !building.length) {
-    return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING"));
+    return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING"));
   }
   appendWonderSection(host, t("LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION"), building, wonderProgressRow);
   appendWonderSection(host, t("LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED"), completed, wonderRaceRow);
@@ -209,15 +221,18 @@ export function renderWonderRaces(host, opts) {
 
 /**
  * Completed-wonder rows (first builder + turn), earliest first.
- * @param {*} history @param {Record<string, any>} players @returns {*[]} The rows.
+ * @param {*} history
+ * @param {Record<string, any>} players
+ * @returns {*[]}
  */
 function completedWonderRows(history, players) {
   const rows = [];
-  for (const [type, w] of wonderWinners(wonderFirstTurns(history))) {
-    const ps = players[w.pid];
+  for (const [type, winner] of wonderWinners(wonderFirstTurns(history))) {
+    const player = players[winner.pid];
     rows.push({
-      name: resolveTypeName("Constructibles", type), civ: civLabel(ps, w.pid),
-      color: U.civColor(ps), turn: w.turn
+      name: localizedTypeName("Constructibles", type) || titleCaseFromType(type),
+      civ: civLabel(player, winner.pid),
+      color: board.civColor(player), turn: winner.turn
     });
   }
   rows.sort((a, b) => (a.turn == null ? 1e9 : a.turn) - (b.turn == null ? 1e9 : b.turn));
@@ -233,8 +248,8 @@ function inProgressWonderRows() {
   /** @type {*[]} */
   let settlements = [];
   try {
-    const b = buildSettlementBoard();
-    settlements = b && Array.isArray(b.settlements) ? b.settlements : [];
+    const settlementBoard = buildSettlementBoard();
+    settlements = settlementBoard && Array.isArray(settlementBoard.settlements) ? settlementBoard.settlements : [];
   } catch (_) {
     settlements = [];
   }
@@ -243,57 +258,81 @@ function inProgressWonderRows() {
   return rows;
 }
 
-/** @param {*} s A settlement. @returns {*|null} Its in-progress-wonder row, or null. */
-function inProgressWonderRow(s) {
-  const w = s.wonderInProgress;
-  if (!w) return null;
-  const o = s.owner || {};
-  if (o.pid != null && liveCivDroppedByPolicy(o.pid)) return null;
-  const civ = o.leaderName ? inlineLabel(o.leaderName, o.civName) : o.civName || "—";
+/**
+ * @param {*} settlement
+ * @returns {*|null} Its in-progress-wonder row, or null.
+ */
+function inProgressWonderRow(settlement) {
+  const wonder = settlement.wonderInProgress;
+  if (!wonder) return null;
+  const owner = settlement.owner || {};
+  if (owner.pid != null && liveCivDroppedByPolicy(owner.pid)) return null;
+  const civ = owner.leaderName ? inlineLabel(owner.leaderName, owner.civName) : owner.civName || "—";
   return {
-    name: w.name, civ, settlement: s.name,
-    color: U.readable((o.readable || o.primary) || "#B0B0B0"),
-    percent: w.percent, turnsLeft: w.turnsLeft
+    name: wonder.name, civ, settlement: settlement.name,
+    color: board.readable((owner.readable || owner.primary) || board.FALLBACK_COLOR),
+    percent: wonder.percent, turnsLeft: wonder.turnsLeft
   };
 }
 
-/** @param {HTMLElement} host @param {string} title @param {*[]} rows @param {(r:*)=>HTMLElement} rowFn */
+/**
+ * @param {HTMLElement} host
+ * @param {string} title
+ * @param {*[]} rows
+ * @param {(r:*)=>HTMLElement} rowFn
+ */
 function appendWonderSection(host, title, rows, rowFn) {
   if (!rows.length) return;
-  host.appendChild(U.sectionTitle(title));
-  const wrap = U.stack();
-  for (const r of rows) wrap.appendChild(rowFn(r));
+  host.appendChild(board.sectionTitle(title));
+  const wrap = board.stack();
+  for (const row of rows) wrap.appendChild(rowFn(row));
   host.appendChild(wrap);
 }
 
 /**
  * One in-progress wonder row: a progress bar (how close) with the wonder name,
  * the building civ + settlement, and turns-left.
- * @param {{name:string, civ:string, settlement:string, color:string, percent:number|null, turnsLeft:number|null}} r
- * @returns {HTMLElement} The bar row.
+ * @param {{name:string, civ:string, settlement:string, color:string, percent:number|null,
+ *   turnsLeft:number|null}} wonder
+ * @returns {HTMLElement}
  */
-function wonderProgressRow(r) {
-  const pct = r.percent != null ? r.percent + "%" : "—";
-  const turns = r.turnsLeft != null ? " · " + t("LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT", r.turnsLeft) : "";
-  return U.barRow({
-    label: r.name, value: r.percent || 0, max: 100, color: r.color,
-    right: pct + turns + " · " + r.civ, labelWidth: "13rem"
+function wonderProgressRow(wonder) {
+  const percentText = wonder.percent != null ? wonder.percent + "%" : "—";
+  const turns = wonder.turnsLeft != null ? " · " + t("LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT", wonder.turnsLeft) : "";
+  return board.barRow({
+    label: wonder.name, value: wonder.percent || 0, max: 100, color: wonder.color,
+    right: percentText + turns + " · " + wonder.civ, labelWidth: "13rem"
   });
 }
 
 // By-type breakdowns (per-civ bar charts)
 
-/** @param {{name:string, color:string, total:number, items:{name:string, n:number}[]}} c @returns {HTMLElement} */
-function byTypeColumn(c) {
-  const col = U.box(
-    "flex:0 0 auto;min-width:14rem;max-width:19rem;display:flex;flex-direction:column;" +
-      "border:1px solid " + U.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + U.PANEL
+/**
+ * A bordered panel column for a per-civ card.
+ * @param {string} minWidth CSS length.
+ * @param {string} maxWidth CSS length.
+ * @returns {HTMLElement}
+ */
+function cardBox(minWidth, maxWidth) {
+  return board.box(
+    "flex:0 0 auto;min-width:" + minWidth + ";max-width:" + maxWidth + ";display:flex;flex-direction:column;" +
+      "border:1px solid " + board.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + board.PANEL
   );
-  col.appendChild(U.columnHeader(c.name, c.color, c.total));
-  const max = Math.max(1, ...c.items.map((i) => i.n));
-  const body = U.box("display:flex;flex-direction:column;gap:0.278rem;padding:0.444rem 0.556rem");
-  for (const it of c.items) {
-    body.appendChild(U.barRow({ label: it.name, value: it.n, max, color: c.color, right: String(it.n), labelWidth: "7rem" }));
+}
+
+/**
+ * @param {{name:string, color:string, total:number, items:{name:string, n:number}[]}} column
+ * @returns {HTMLElement}
+ */
+function byTypeColumn(column) {
+  const col = cardBox("14rem", "19rem");
+  col.appendChild(board.columnHeader(column.name, column.color, column.total));
+  const max = Math.max(1, ...column.items.map((item) => item.n));
+  const body = board.box("display:flex;flex-direction:column;gap:0.278rem;padding:0.444rem 0.556rem");
+  for (const item of column.items) {
+    body.appendChild(board.barRow({
+      label: item.name, value: item.n, max, color: column.color, right: String(item.n), labelWidth: "7rem"
+    }));
   }
   col.appendChild(body);
   return col;
@@ -308,9 +347,9 @@ function byTypeColumn(c) {
 function byTypeItems(byType, lookup) {
   let total = 0;
   const items = [];
-  for (const [type, n] of byType) {
-    total += n;
-    items.push({ name: resolveTypeName(lookup, type), n });
+  for (const [type, count] of byType) {
+    total += count;
+    items.push({ name: localizedTypeName(lookup, type) || titleCaseFromType(type), n: count });
   }
   items.sort((a, b) => b.n - a.n);
   return { total, items };
@@ -329,7 +368,7 @@ function byTypeColumns(counts, players, lookup) {
     if (liveCivDroppedByPolicy(pid)) continue;
     const { total, items } = byTypeItems(byType, lookup);
     if (!items.length) continue;
-    cols.push({ name: civLabel(players[pid], String(pid)), color: U.civColor(players[pid]), total, items });
+    cols.push({ name: civLabel(players[pid], String(pid)), color: board.civColor(players[pid]), total, items });
   }
   return cols;
 }
@@ -345,9 +384,9 @@ export function renderByTypeBoard(host, opts) {
   const counts = byTypeCounts((opts && opts.datapointId) || "");
   const cols = byTypeColumns(counts, players, (opts && opts.lookup) || "Units");
   cols.sort((a, b) => b.total - a.total);
-  if (!cols.length) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN"));
-  const row = U.columnsRow(host);
-  for (const c of cols) row.appendChild(byTypeColumn(c));
+  if (!cols.length) return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN"));
+  const row = board.columnsRow(host);
+  for (const col of cols) row.appendChild(byTypeColumn(col));
 }
 
 // Religion standings (bars)
@@ -359,22 +398,25 @@ export function renderByTypeBoard(host, opts) {
 function buildReligionMeta() {
   const meta = new Map();
   if (typeof GameInfo === "undefined" || !GameInfo.Religions || typeof Locale === "undefined") return meta;
-  for (const r of GameInfo.Religions) {
-    if (!r || r.$hash == null) continue;
-    const name = r.Name ? Locale.compose(r.Name) : prettifyType(r.ReligionType);
-    meta.set(r.$hash, { name, color: r.Color || "#B0B0B0", settlements: 0, pop: 0 });
+  for (const religion of GameInfo.Religions) {
+    if (!religion || religion.$hash == null) continue;
+    const name = religion.Name ? Locale.compose(religion.Name) : titleCaseFromType(religion.ReligionType);
+    meta.set(religion.$hash, { name, color: religion.Color || board.FALLBACK_COLOR, settlements: 0, pop: 0 });
   }
   return meta;
 }
 
-/** @param {*} c A city. @param {Map<*, *>} meta The religion map (mutated). */
-function tallyCity(c, meta) {
+/**
+ * @param {*} city
+ * @param {Map<*, *>} meta The religion map (mutated).
+ */
+function tallyCity(city, meta) {
   try {
-    const rel = c && c.Religion && c.Religion.majorityReligion;
-    const m = rel != null && rel !== -1 ? meta.get(rel) : null;
-    if (!m) return;
-    m.settlements += 1;
-    if (typeof c.population === "number") m.pop += c.population;
+    const majority = city && city.Religion && city.Religion.majorityReligion;
+    const entry = majority != null && majority !== -1 ? meta.get(majority) : null;
+    if (!entry) return;
+    entry.settlements += 1;
+    if (typeof city.population === "number") entry.pop += city.population;
   } catch (_) {
     /* stale handle */
   }
@@ -382,9 +424,9 @@ function tallyCity(c, meta) {
 
 /** @param {Map<*, *>} meta Add each alive player's cities' majority religion. */
 function tallyReligion(meta) {
-  for (const p of Players.getAlive() || []) {
-    if (!p || !p.Cities || typeof p.Cities.getCities !== "function") continue;
-    for (const c of p.Cities.getCities() || []) tallyCity(c, meta);
+  for (const player of Players.getAlive() || []) {
+    if (!player || !player.Cities || typeof player.Cities.getCities !== "function") continue;
+    for (const city of player.Cities.getCities() || []) tallyCity(city, meta);
   }
 }
 
@@ -395,7 +437,7 @@ function collectReligionRows() {
     const meta = buildReligionMeta();
     tallyReligion(meta);
     const out = [];
-    for (const m of meta.values()) if (m.settlements > 0) out.push(m);
+    for (const entry of meta.values()) if (entry.settlements > 0) out.push(entry);
     return out;
   } catch (_) {
     return [];
@@ -405,18 +447,19 @@ function collectReligionRows() {
 /**
  * Render the Religion standings as bars (settlements following), colored by each
  * religion's own color.
- * @param {HTMLElement} host @param {*} _opts
+ * @param {HTMLElement} host
+ * @param {*} _opts
  */
 export function renderReligionStandings(host, _opts) {
   const rows = collectReligionRows().sort((a, b) => b.settlements - a.settlements);
   host.innerHTML = "";
-  if (!rows.length) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_RELIGION"));
-  const max = Math.max(1, ...rows.map((r) => r.settlements));
-  const wrap = U.stack();
-  for (const r of rows) {
-    wrap.appendChild(U.barRow({
-      label: r.name, value: r.settlements, max, color: U.readable(r.color),
-      right: r.settlements + " · " + t("LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX", r.pop), labelWidth: "11rem"
+  if (!rows.length) return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_RELIGION"));
+  const max = Math.max(1, ...rows.map((religion) => religion.settlements));
+  const wrap = board.stack();
+  for (const religion of rows) {
+    wrap.appendChild(board.barRow({
+      label: religion.name, value: religion.settlements, max, color: board.readable(religion.color),
+      right: religion.settlements + " · " + t("LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX", religion.pop), labelWidth: "11rem"
     }));
   }
   host.appendChild(wrap);
@@ -445,10 +488,10 @@ function pantheonEntryFromRef(ref, canLookup) {
   if (!def) return null;
   if (def.BeliefClassType && def.BeliefClassType !== "BELIEF_CLASS_PANTHEON") return null;
   const name = def.Name && typeof Locale !== "undefined"
-    ? Locale.compose(def.Name) : prettifyType(def.BeliefType || "");
+    ? Locale.compose(def.Name) : titleCaseFromType(def.BeliefType || "");
   if (!name) return null;
-  const est = estimateYields(def);
-  return { name, effect: effectText(def), yields: est.yields, conditional: est.conditional };
+  const estimate = estimateYields(def);
+  return { name, effect: effectText(def), yields: estimate.yields, conditional: estimate.conditional };
 }
 
 /**
@@ -501,22 +544,22 @@ function pantheonEntriesFor(player) {
 /**
  * One civ's pantheon row from a live player, labeled/colored from the latest sample,
  * with a per-civ flat-yield total, or null when the player has no pantheon.
- * @param {*} p A live player (from Players.getAlive()).
- * @param {*} sample The latest sample's player map (for civ names/colors).
+ * @param {*} player A live player (from Players.getAlive()).
+ * @param {*} samplePlayers The latest sample's player map (for civ names/colors).
  * @returns {PantheonRow|null}
  */
-function pantheonRowFor(p, sample) {
-  const pantheons = pantheonEntriesFor(p);
+function pantheonRowFor(player, samplePlayers) {
+  const pantheons = pantheonEntriesFor(player);
   if (!pantheons.length) return null;
-  const pid = String(p.id);
-  const ps = sample[pid];
+  const pid = String(player.id);
+  const samplePlayer = samplePlayers[pid];
   const yields = emptyYields();
   let conditional = false;
-  for (const pn of pantheons) {
-    for (const c of YIELD_CATEGORIES) yields[c.key] += pn.yields[c.key] || 0;
-    if (pn.conditional) conditional = true;
+  for (const pantheon of pantheons) {
+    for (const category of YIELD_CATEGORIES) yields[category.key] += pantheon.yields[category.key] || 0;
+    if (pantheon.conditional) conditional = true;
   }
-  return { label: civLabel(ps, pid), color: U.civColor(ps), pantheons, yields, conditional };
+  return { label: civLabel(samplePlayer, pid), color: board.civColor(samplePlayer), pantheons, yields, conditional };
 }
 
 /**
@@ -528,12 +571,12 @@ function pantheonRowFor(p, sample) {
 function collectPantheonRows(history) {
   try {
     if (typeof Players === "undefined") return [];
-    const sample = latestPlayers(history);
+    const samplePlayers = latestPlayers(history);
     /** @type {PantheonRow[]} */
     const out = [];
-    for (const p of Players.getAlive() || []) {
-      if (!p || liveCivDroppedByPolicy(p.id)) continue;
-      const row = pantheonRowFor(p, sample);
+    for (const player of Players.getAlive() || []) {
+      if (!player || liveCivDroppedByPolicy(player.id)) continue;
+      const row = pantheonRowFor(player, samplePlayers);
       if (row) out.push(row);
     }
     return out;
@@ -551,11 +594,11 @@ function collectPantheonRows(history) {
 export function renderReligionPantheons(host, opts) {
   const rows = collectPantheonRows(opts && opts.history);
   host.innerHTML = "";
-  if (!rows.length) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS"));
-  const row = U.columnsRow(host);
-  for (const r of rows) {
-    const items = r.pantheons.map((pn) => ({ title: pn.name, sub: pn.effect }));
-    row.appendChild(U.boardColumn(r.label, U.readable(r.color), r.pantheons.length, items));
+  if (!rows.length) return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS"));
+  const row = board.columnsRow(host);
+  for (const civRow of rows) {
+    const items = civRow.pantheons.map((pantheon) => ({ title: pantheon.name, sub: pantheon.effect }));
+    row.appendChild(board.boardColumn(civRow.label, board.readable(civRow.color), civRow.pantheons.length, items));
   }
 }
 
@@ -569,42 +612,39 @@ export function renderReligionPantheons(host, opts) {
 export function renderReligionPantheonYields(host, opts) {
   const rows = collectPantheonRows(opts && opts.history);
   host.innerHTML = "";
-  const withYields = rows.filter((r) => YIELD_CATEGORIES.some((c) => (r.yields[c.key] || 0) > 0));
-  if (!withYields.length) return U.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS"));
+  const withYields = rows.filter((row) => YIELD_CATEGORIES.some((c) => (row.yields[c.key] || 0) > 0));
+  if (!withYields.length) return board.emptyState(host, t("LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS"));
   // Shared scale: the largest single-category value across all civs.
   let max = 1;
-  for (const r of withYields) {
-    for (const c of YIELD_CATEGORIES) max = Math.max(max, r.yields[c.key] || 0);
+  for (const civRow of withYields) {
+    for (const category of YIELD_CATEGORIES) max = Math.max(max, civRow.yields[category.key] || 0);
   }
-  const flow = U.columnsRow(host, true);
-  for (const r of withYields) flow.appendChild(pantheonYieldCard(r, max));
+  const flow = board.columnsRow(host, true);
+  for (const civRow of withYields) flow.appendChild(pantheonYieldCard(civRow, max));
 }
 
 /**
  * One civ's estimated-yield card: identity header + a labeled colored bar per yield
  * category (zero categories omitted), plus a note when conditional effects exist.
- * @param {PantheonRow} r The civ row.
+ * @param {PantheonRow} civRow
  * @param {number} max The shared per-category max.
  * @returns {HTMLElement}
  */
-function pantheonYieldCard(r, max) {
-  const card = U.box(
-    "flex:0 0 auto;min-width:15rem;max-width:20rem;display:flex;flex-direction:column;" +
-      "border:1px solid " + U.BORDER + ";border-radius:0.333rem;overflow:hidden;background:" + U.PANEL
-  );
-  const nonZero = YIELD_CATEGORIES.filter((c) => (r.yields[c.key] || 0) > 0);
-  card.appendChild(U.columnHeader(r.label, U.readable(r.color), nonZero.length));
-  const wrap = U.stack();
-  for (const c of nonZero) {
-    const v = r.yields[c.key];
-    wrap.appendChild(U.barRow({
-      label: t(c.label), value: v, max, color: c.color, right: "+" + v, labelWidth: "6.5rem"
+function pantheonYieldCard(civRow, max) {
+  const card = cardBox("15rem", "20rem");
+  const nonZero = YIELD_CATEGORIES.filter((category) => (civRow.yields[category.key] || 0) > 0);
+  card.appendChild(board.columnHeader(civRow.label, board.readable(civRow.color), nonZero.length));
+  const wrap = board.stack();
+  for (const category of nonZero) {
+    const value = civRow.yields[category.key];
+    wrap.appendChild(board.barRow({
+      label: t(category.label), value, max, color: category.color, right: "+" + value, labelWidth: "6.5rem"
     }));
   }
   card.appendChild(wrap);
-  if (r.conditional) {
-    card.appendChild(U.box(
-      "padding:0.222rem 0.667rem 0.5rem;color:" + U.INK_DIM + ";font-size:var(--dg-fs-78)",
+  if (civRow.conditional) {
+    card.appendChild(board.box(
+      "padding:0.222rem 0.667rem 0.5rem;color:" + board.INK_DIM + ";font-size:var(--dg-fs-78)",
       t("LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL"), "font-body"
     ));
   }
@@ -613,22 +653,58 @@ function pantheonYieldCard(r, max) {
 
 // Settlements Atlas (size histogram + Most Urbanized)
 
-/** Raw-population size buckets [lo, hi]. */
-const SIZE_BUCKETS = [[1, 5], [6, 10], [11, 15], [16, 20], [21, Infinity]];
-const MIN_URBAN_POP = 5;
+/**
+ * Size classes for the histogram, by raw population. Each entry is the largest population in its
+ * class; the class starts one above the previous entry (the first at 1), and one more open-ended
+ * class holds everything above the last entry.
+ */
+const SIZE_CLASS_TOPS = [5, 10, 15, 20];
+const SIZE_CLASS_COUNT = SIZE_CLASS_TOPS.length + 1;
+/** Settlements smaller than this stay out of the Most-Urbanized ranking. */
+const URBAN_RANK_MIN_POP = 5;
 const URBAN_PRIOR = 6;
 
-/** @param {*} c @param {number[]} counts Fold a city into size buckets. */
-function bucketCity(c, counts) {
+/**
+ * @param {number} i A size class index.
+ * @returns {number} The smallest population in it.
+ */
+function sizeClassFloor(i) {
+  return i === 0 ? 1 : SIZE_CLASS_TOPS[i - 1] + 1;
+}
+
+/**
+ * The size class a population falls in, or -1 when it is below 1 or sits between two classes.
+ * @param {number} pop A finite population.
+ * @returns {number}
+ */
+function sizeClassOf(pop) {
+  for (let i = 0; i < SIZE_CLASS_COUNT; i++) {
+    if (!(pop >= sizeClassFloor(i))) return -1;
+    if (i === SIZE_CLASS_TOPS.length || pop <= SIZE_CLASS_TOPS[i]) return i;
+  }
+  return -1;
+}
+
+/**
+ * @param {number} i A size class index.
+ * @returns {string} "1–5", ..., "21+".
+ */
+function sizeClassRange(i) {
+  const floor = sizeClassFloor(i);
+  return i === SIZE_CLASS_TOPS.length ? floor + "+" : floor + "–" + SIZE_CLASS_TOPS[i];
+}
+
+/**
+ * Fold a city into the size-class counts.
+ * @param {*} city
+ * @param {number[]} counts
+ */
+function bucketCity(city, counts) {
   try {
-    const pop = c && c.population;
+    const pop = city && city.population;
     if (typeof pop !== "number" || !isFinite(pop)) return;
-    for (let i = 0; i < SIZE_BUCKETS.length; i++) {
-      if (pop >= SIZE_BUCKETS[i][0] && pop <= SIZE_BUCKETS[i][1]) {
-        counts[i] += 1;
-        return;
-      }
-    }
+    const sizeClass = sizeClassOf(pop);
+    if (sizeClass >= 0) counts[sizeClass] += 1;
   } catch (_) {
     /* stale handle */
   }
@@ -636,12 +712,12 @@ function bucketCity(c, counts) {
 
 /** @returns {number[]} Per-bucket settlement counts. */
 function collectSizeDistribution() {
-  const counts = SIZE_BUCKETS.map(() => 0);
+  const counts = new Array(SIZE_CLASS_COUNT).fill(0);
   try {
     if (typeof Players === "undefined") return counts;
-    for (const p of Players.getAlive() || []) {
-      if (!p || !p.Cities || typeof p.Cities.getCities !== "function") continue;
-      for (const c of p.Cities.getCities() || []) bucketCity(c, counts);
+    for (const player of Players.getAlive() || []) {
+      if (!player || !player.Cities || typeof player.Cities.getCities !== "function") continue;
+      for (const city of player.Cities.getCities() || []) bucketCity(city, counts);
     }
   } catch (_) {
     /* unreadable */
@@ -654,19 +730,24 @@ function appendSizeHistogram(host) {
   const counts = collectSizeDistribution();
   if (!counts.reduce((a, b) => a + b, 0)) return;
   const max = Math.max(1, ...counts);
-  host.appendChild(U.sectionTitle(t("LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES")));
-  const wrap = U.stack();
-  SIZE_BUCKETS.forEach((b, i) => {
-    const label = t("LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX", b[1] === Infinity ? b[0] + "+" : b[0] + "–" + b[1]);
-    wrap.appendChild(U.barRow({ label, value: counts[i], max, color: U.ACCENT, right: String(counts[i]), labelWidth: "7rem" }));
+  host.appendChild(board.sectionTitle(t("LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES")));
+  const wrap = board.stack();
+  counts.forEach((count, i) => {
+    const label = t("LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX", sizeClassRange(i));
+    wrap.appendChild(board.barRow({
+      label, value: count, max, color: board.ACCENT, right: String(count), labelWidth: "7rem"
+    }));
   });
   host.appendChild(wrap);
 }
 
-/** @param {*} c @returns {string} Localized city name. */
-function cityName(c) {
+/**
+ * @param {*} city
+ * @returns {string} Localized city name.
+ */
+function cityName(city) {
   try {
-    return typeof Locale !== "undefined" ? Locale.compose(c.name) : String(c && c.name);
+    return typeof Locale !== "undefined" ? Locale.compose(city.name) : String(city && city.name);
   } catch (_) {
     return "?";
   }
@@ -676,13 +757,17 @@ function cityName(c) {
  * @typedef {{name:string, urban:number, total:number, index?:number}} UrbanRow
  */
 
-/** @param {*} c @param {UrbanRow[]} rows Add a city's urbanization row. */
-function addUrbanRow(c, rows) {
+/**
+ * Add a city's urbanization row.
+ * @param {*} city
+ * @param {UrbanRow[]} rows
+ */
+function addUrbanRow(city, rows) {
   try {
-    const total = c && c.population;
-    const urban = c && c.urbanPopulation;
-    if (typeof total !== "number" || typeof urban !== "number" || total < MIN_URBAN_POP) return;
-    rows.push({ name: cityName(c), urban, total });
+    const total = city && city.population;
+    const urban = city && city.urbanPopulation;
+    if (typeof total !== "number" || typeof urban !== "number" || total < URBAN_RANK_MIN_POP) return;
+    rows.push({ name: cityName(city), urban, total });
   } catch (_) {
     /* stale handle */
   }
@@ -692,10 +777,11 @@ function addUrbanRow(c, rows) {
  * Whether a live player's cities may enter the Most-Urbanized ranking. City names identify their
  * civ, so the ranking follows the spoiler guard; the size histogram stays world-wide because it
  * counts settlements and names none.
- * @param {*} p A live player. @returns {boolean} True when its cities are readable and shown.
+ * @param {*} owner A live player.
+ * @returns {boolean} True when its cities are readable and shown.
  */
-function rankableOwner(p) {
-  return !!p && !!p.Cities && typeof p.Cities.getCities === "function" && !liveCivDroppedByPolicy(p.id);
+function rankableOwner(owner) {
+  return !!owner && !!owner.Cities && typeof owner.Cities.getCities === "function" && !liveCivDroppedByPolicy(owner.id);
 }
 
 /** @returns {UrbanRow[]} Live urbanization rows. */
@@ -704,9 +790,9 @@ function collectUrbanization() {
   const rows = [];
   try {
     if (typeof Players === "undefined") return rows;
-    for (const p of Players.getAlive() || []) {
-      if (!rankableOwner(p)) continue;
-      for (const c of p.Cities.getCities() || []) addUrbanRow(c, rows);
+    for (const player of Players.getAlive() || []) {
+      if (!rankableOwner(player)) continue;
+      for (const city of player.Cities.getCities() || []) addUrbanRow(city, rows);
     }
   } catch (_) {
     /* unreadable */
@@ -718,21 +804,18 @@ function collectUrbanization() {
 function appendMostUrbanized(host) {
   const rows = collectUrbanization();
   if (!rows.length) return;
-  let su = 0;
-  let st = 0;
-  for (const r of rows) {
-    su += r.urban;
-    st += r.total;
-  }
-  const pBar = st > 0 ? su / st : 0;
-  for (const r of rows) r.index = (r.urban + URBAN_PRIOR * pBar) / (r.total + URBAN_PRIOR);
+  const urbanSum = rows.reduce((sum, row) => sum + row.urban, 0);
+  const totalSum = rows.reduce((sum, row) => sum + row.total, 0);
+  // Shrink small cities toward the world-wide urban share so a size-5 town can't top the list on noise.
+  const worldUrbanShare = totalSum > 0 ? urbanSum / totalSum : 0;
+  for (const row of rows) row.index = (row.urban + URBAN_PRIOR * worldUrbanShare) / (row.total + URBAN_PRIOR);
   rows.sort((a, b) => (b.index || 0) - (a.index || 0));
-  host.appendChild(U.sectionTitle(t("LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED")));
-  const wrap = U.stack();
-  for (const r of rows.slice(0, 12)) {
-    wrap.appendChild(U.barRow({
-      label: r.name, value: r.index || 0, max: 1, color: "#6FA8DC",
-      right: t("LOC_DEMOGRAPHICS_BOARD_URBAN_PCT", Math.round((r.urban / r.total) * 100)), labelWidth: "10rem"
+  host.appendChild(board.sectionTitle(t("LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED")));
+  const wrap = board.stack();
+  for (const row of rows.slice(0, 12)) {
+    wrap.appendChild(board.barRow({
+      label: row.name, value: row.index || 0, max: 1, color: "#6FA8DC",
+      right: t("LOC_DEMOGRAPHICS_BOARD_URBAN_PCT", Math.round((row.urban / row.total) * 100)), labelWidth: "10rem"
     }));
   }
   host.appendChild(wrap);
@@ -740,13 +823,14 @@ function appendMostUrbanized(host) {
 
 /**
  * Render the Settlements Atlas: size histogram + Most-Urbanized ranking.
- * @param {HTMLElement} host @param {*} _opts
+ * @param {HTMLElement} host
+ * @param {*} _opts
  */
 export function renderSettlementsAtlas(host, _opts) {
   host.innerHTML = "";
-  const scroll = U.box("width:100%;height:100%;overflow:auto");
+  const scroll = board.box("width:100%;height:100%;overflow:auto");
   appendSizeHistogram(scroll);
   appendMostUrbanized(scroll);
-  if (!scroll.childElementCount) U.emptyState(scroll, t("LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART"));
+  if (!scroll.childElementCount) board.emptyState(scroll, t("LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART"));
   host.appendChild(scroll);
 }

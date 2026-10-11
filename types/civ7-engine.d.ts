@@ -139,7 +139,10 @@ declare global {
 
   /** World-camera control surface (see base-standard city-zoomer.js). */
   const Camera: {
-    lookAtPlot(location: { x: number; y: number }, options?: { zoom?: number; tilt?: number; instantaneous?: boolean }): void;
+    lookAtPlot(
+      location: { x: number; y: number },
+      options?: { zoom?: number; tilt?: number; instantaneous?: boolean }
+    ): void;
     lookAt(x: number, y: number, options?: any): void;
     saveCameraZoom(): void;
     restoreCameraZoom(): void;

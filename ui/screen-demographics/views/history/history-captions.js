@@ -11,8 +11,8 @@ import {
 
 /**
  * The localized label for an analytics-governance policy.
- * @param {string} policy The policy key.
- * @returns {string} The localized label.
+ * @param {string} policy
+ * @returns {string}
  */
 function policyLabel(policy) {
   if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
@@ -24,7 +24,7 @@ function policyLabel(policy) {
 /**
  * Build the analytics-governance policy banner element, or null when the effective policy is "full"
  * (nothing withheld). Shared so the screen and the Historical Data view can place it consistently.
- * @returns {HTMLElement|null} The banner element, or null.
+ * @returns {HTMLElement|null}
  */
 export function buildPolicyBanner() {
   const info = bannerInfo();
@@ -111,7 +111,6 @@ function buildCaptionTrigger(text) {
 /**
  * Build the metric caption popover body.
  * @param {{ triggerText: string, title: string, bodyHtml: string }} opts
- *   Caption text bundle.
  * @returns {HTMLElement}
  */
 function buildCaptionPopover(opts) {

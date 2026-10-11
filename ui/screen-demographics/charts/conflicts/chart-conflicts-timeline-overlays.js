@@ -30,9 +30,9 @@ import { CRISIS_LABEL_ROWS } from "/demographics/ui/screen-demographics/charts/w
  * adjacent onsets don't collide. Mirrors the historical charts' marker labels.
  *
  * The labels sit in the band the layout reserves for them at the top of the plot
- * ({@link crisisBandHeight}), above the first war bar. They used to start just inside padT, on top
- * of the first two bars, which only looked clear because the reference resolution's war names are
- * short; at 1280x720 the names are relatively wider and ran straight under them.
+ * ({@link crisisBandHeight}), above the first war bar. Starting them just inside padT would put them
+ * over the first two bars: that looks clear at the reference resolution, where war names are short,
+ * but at 1280x720 the names are relatively wider and run straight under the labels.
  * @param {HTMLElement} wrap
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets
  * @param {{ L: *, dom: { xMin: number, xMax: number }, seed: string,
@@ -44,16 +44,16 @@ function mountCrisisLabels(wrap, onsets, ctx) {
   // Stagger inside the band: its own height divided by the stagger depth, so the rows always fit
   // the room reserved for them however much the type is boosted.
   const step = band > 0 ? (band - 6) / CRISIS_LABEL_ROWS : 30;
-  const top0 = L.padT - band + 2;
-  (onsets || []).forEach((o, i) => {
-    if (o.turn < dom.xMin || o.turn > dom.xMax) return;
-    const idx = Math.max(0, Math.min(3, o.stage - 1));
-    const x = L.xOf(o.turn);
+  const bandTop = L.padT - band + 2;
+  (onsets || []).forEach((onset, i) => {
+    if (onset.turn < dom.xMin || onset.turn > dom.xMax) return;
+    const idx = Math.max(0, Math.min(3, onset.stage - 1));
+    const x = L.xOf(onset.turn);
     const div = document.createElement("div");
     div.className = "demographics-wars-crisis-label";
     // Per-marker geometry stays dynamic; stagger each label down to reduce overlap.
     div.style.left = (x / W) * 100 + "%";
-    div.style.top = ((top0 + (i % CRISIS_LABEL_ROWS) * step) / H) * 100 + "%";
+    div.style.top = ((bandTop + (i % CRISIS_LABEL_ROWS) * step) / H) * 100 + "%";
     const stage = document.createElement("div");
     stage.className = "demographics-wars-crisis-label-stage";
     stage.style.color = safeTextColor(CRISIS_STAGE_COLORS[idx]);
@@ -61,7 +61,7 @@ function mountCrisisLabels(wrap, onsets, ctx) {
     div.appendChild(stage);
     const name = document.createElement("div");
     name.className = "demographics-wars-crisis-label-name";
-    name.textContent = flavorCrisisName(o.sample, o.stage, seed);
+    name.textContent = flavorCrisisName(onset.sample, onset.stage, seed);
     div.appendChild(name);
     wrap.appendChild(div);
   });
@@ -120,12 +120,13 @@ function mountConflictLabels(wrap, barRects, env) {
  * @param {number} H Canvas height.
  */
 function mountGanttXTicks(wrap, tickPositions, L, W, H) {
-  mountStackXTicks(wrap, tickPositions.map((tick) => ({
+  const ticks = tickPositions.map((tick) => ({
     t: tick.t,
     x: tick.x,
     year: tick.year,
     labelY: L.padT + L.innerH + 8
-  })), {
+  }));
+  mountStackXTicks(wrap, ticks, {
     W,
     H,
     mode: /** @type {"turn"|"year"|"both"} */ (getXAxisMode()),
@@ -135,6 +136,7 @@ function mountGanttXTicks(wrap, tickPositions, L, W, H) {
 }
 
 /**
+ * Mount the Gantt's "Time" and "Conflicts" axis titles.
  * @param {HTMLElement} wrap
  * @param {*} L
  * @param {number} W Canvas width.
@@ -146,9 +148,11 @@ function mountGanttAxisTitles(wrap, L, W, H) {
     W,
     H,
     xClassName:
-      "demographics-chart-axis-title demographics-chart-axis-x demographics-wars-axis-title demographics-wars-axis-x",
+      "demographics-chart-axis-title demographics-chart-axis-x " +
+      "demographics-wars-axis-title demographics-wars-axis-x",
     yClassName:
-      "demographics-chart-axis-title demographics-chart-axis-y demographics-wars-axis-title demographics-wars-axis-y",
+      "demographics-chart-axis-title demographics-chart-axis-y " +
+      "demographics-wars-axis-title demographics-wars-axis-y",
     xText: t("LOC_DEMOGRAPHICS_AXIS_TIME"),
     yText: t("LOC_DEMOGRAPHICS_AXIS_CONFLICTS")
   });
@@ -187,14 +191,14 @@ function mountCurrentTurnLabel(wrap, L, latestTurn, W, H) {
  */
 function mountGanttAgeLabels(wrap, markers, ctx) {
   const { L, dom, W, H } = ctx;
-  for (const m of markers || []) {
-    if (m.turn < dom.xMin || m.turn > dom.xMax) continue;
-    const x = L.xOf(m.turn);
+  for (const marker of markers || []) {
+    if (marker.turn < dom.xMin || marker.turn > dom.xMax) continue;
+    const x = L.xOf(marker.turn);
     const div = document.createElement("div");
     div.className = "demographics-wars-age-label";
     div.style.left = (x / W) * 100 + "%";
     div.style.top = ((L.padT + L.innerH - 24) / H) * 100 + "%";
-    div.textContent = m.label;
+    div.textContent = marker.label;
     wrap.appendChild(div);
   }
 }
@@ -237,13 +241,14 @@ export function mountGanttOverlays(canvas, env) {
 function clampEdgeLabels(canvas) {
   const run = () => {
     if (canvas.isConnected === false) return;
-    const c = canvas.getBoundingClientRect();
-    if (!(c.width > 0)) return;
-    const sel = ".demographics-wars-crisis-label, .demographics-wars-age-label, .demographics-wars-now-label";
+    const canvasRect = canvas.getBoundingClientRect();
+    if (!(canvasRect.width > 0)) return;
+    const sel =
+      ".demographics-wars-crisis-label, .demographics-wars-age-label, .demographics-wars-now-label";
     for (const el of canvas.querySelectorAll(sel)) {
-      const r = el.getBoundingClientRect();
-      if (r.right > c.right + 1) el.classList.add("is-clamp-right");
-      else if (r.left < c.left - 1) el.classList.add("is-clamp-left");
+      const rect = el.getBoundingClientRect();
+      if (rect.right > canvasRect.right + 1) el.classList.add("is-clamp-right");
+      else if (rect.left < canvasRect.left - 1) el.classList.add("is-clamp-left");
     }
   };
   if (typeof requestAnimationFrame === "function") requestAnimationFrame(run);

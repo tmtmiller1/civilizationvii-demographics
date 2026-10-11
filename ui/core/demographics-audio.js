@@ -4,13 +4,9 @@
 // the auto-emit behavior fxs-* widgets pick up from data-audio-*-ref. The engine resolves a sound
 // via Component.audio[group][id], falling back to "audio-base"; "none" silences the call.
 
-const DBG = false;
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.audio]", ...a);
-}
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
+const log = makeLogger("audio");
 
 /**
  * Play an engine sound by id. Never throws: the audio subsystem is absent in
@@ -25,7 +21,7 @@ export function safePlaySound(id, group) {
     const mgr = /** @type {any} */ (typeof Audio !== "undefined" ? Audio : null);
     if (mgr && typeof mgr.playSound === "function") {
       mgr.playSound(id, group);
-      dlog("playSound", id, "group=", group);
+      log.debug("playSound", id, "group=", group);
     }
   } catch (_) {
     // sound is optional; see the note above

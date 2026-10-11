@@ -11,26 +11,15 @@ import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographi
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { pillRow } from "/demographics/ui/screen-demographics/views/shared/view-pills.js";
 import { setNameOrder } from "/demographics/ui/core/player-label.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-const DBG = false;
-
-/** @param {...*} a */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.history-controls]", ...a);
-}
-
-/**
- * Error logger (always on) for failures the toolbar swallows to stay up.
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.history-controls]", ...a);
-}
+// The toolbar logs and swallows its own failures so it stays up.
+const log = makeLogger("history-controls");
 
 /**
  * Build the radar snapshot selector as a centered filter row (matching the time-filter row on other
- * graphs): a "Snapshot:" label + one pill per age snapshot. Replaces the old right-aligned toolbar
- * placement so the snapshot filters center like the year filters elsewhere.
+ * graphs): a "Snapshot:" label + one pill per age snapshot, so the snapshot filters center like the
+ * year filters elsewhere.
  * @param {*} ctx Render context (carries activeRadarAge, history, setActiveRadarAge).
  * @returns {HTMLElement}
  */
@@ -84,9 +73,9 @@ function buildRadarSnapshotPill(opt, active, ctx) {
  * @param {*} ctx
  */
 function appendWarsControls(toolbar, ctx) {
-  const wopts = safeWarCivOptions(ctx).filter((/** @type {*} */ o) => o && !o.isCS);
+  const warCivOptions = safeWarCivOptions(ctx).filter((/** @type {*} */ o) => o && !o.isCS);
   const allOpt = { pid: null, label: t("LOC_DEMOGRAPHICS_WARS_ALL_MAJORS"), isCS: false };
-  const dropdownOpts = [allOpt].concat(wopts);
+  const dropdownOpts = [allOpt].concat(warCivOptions);
   toolbar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_LABEL_CIV")));
   toolbar.appendChild(buildWarsCivDropdown(dropdownOpts, ctx));
   toolbar.appendChild(buildWarsActiveOnlyPill(ctx));
@@ -98,17 +87,17 @@ function appendWarsControls(toolbar, ctx) {
  * @returns {HTMLElement}
  */
 function buildToolbarLabel(text) {
-  const lbl = document.createElement("div");
-  lbl.className = "demographics-chart-toolbar-label font-body text-xs";
-  lbl.textContent = text;
-  return lbl;
+  const label = document.createElement("div");
+  label.className = "demographics-chart-toolbar-label font-body text-xs";
+  label.textContent = text;
+  return label;
 }
 
 /**
  * Whether a wars dropdown option matches the current filter pid.
  * @param {{ pid: number|null, label?: string }} option
  * @param {*} warsFilterPid
- * @returns {boolean} True when this option is selected.
+ * @returns {boolean}
  */
 function warsOptionMatchesFilter(option, warsFilterPid) {
   if (option.pid === null) return warsFilterPid == null;
@@ -122,19 +111,19 @@ function warsOptionMatchesFilter(option, warsFilterPid) {
  * @returns {HTMLElement}
  */
 function buildWarsCivDropdown(dropdownOpts, ctx) {
-  const dd = document.createElement("fxs-dropdown");
-  dd.classList.add("demographics-chart-viewer-dropdown");
-  dd.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
-  dd.setAttribute("dropdown-items", JSON.stringify(dropdownOpts.map((o) => ({ label: o.label }))));
-  let didx = dropdownOpts.findIndex((o) => warsOptionMatchesFilter(o, ctx.warsFilterPid));
-  if (didx < 0) didx = 0;
-  dd.setAttribute("selected-item-index", String(didx));
-  dd.addEventListener("dropdown-selection-change", (event) => {
+  const dropdown = document.createElement("fxs-dropdown");
+  dropdown.classList.add("demographics-chart-viewer-dropdown");
+  dropdown.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  dropdown.setAttribute("dropdown-items", JSON.stringify(dropdownOpts.map((o) => ({ label: o.label }))));
+  let selectedIdx = dropdownOpts.findIndex((o) => warsOptionMatchesFilter(o, ctx.warsFilterPid));
+  if (selectedIdx < 0) selectedIdx = 0;
+  dropdown.setAttribute("selected-item-index", String(selectedIdx));
+  dropdown.addEventListener("dropdown-selection-change", (event) => {
     const i = /** @type {*} */ (event)?.detail?.selectedIndex;
     if (typeof i !== "number" || i < 0 || i >= dropdownOpts.length) return;
     if (typeof ctx.setWarsFilterPid === "function") ctx.setWarsFilterPid(dropdownOpts[i].pid);
   });
-  return dd;
+  return dropdown;
 }
 
 /**
@@ -169,21 +158,21 @@ function appendViewerDropdown(toolbar, opts, currentPid, setViewerPid) {
   label.className = "demographics-chart-toolbar-label font-body text-xs";
   label.textContent = t("LOC_DEMOGRAPHICS_LABEL_VIEWING");
   toolbar.appendChild(label);
-  const dd = document.createElement("fxs-dropdown");
-  dd.classList.add("demographics-chart-viewer-dropdown");
-  dd.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
-  dd.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
-  let idx = opts.findIndex((o) => Number(o.pid) === Number(currentPid));
-  if (idx < 0) idx = 0;
-  dd.setAttribute("selected-item-index", String(idx));
-  dd.addEventListener("dropdown-selection-change", (event) => {
+  const dropdown = document.createElement("fxs-dropdown");
+  dropdown.classList.add("demographics-chart-viewer-dropdown");
+  dropdown.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  dropdown.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
+  let selectedIdx = opts.findIndex((o) => Number(o.pid) === Number(currentPid));
+  if (selectedIdx < 0) selectedIdx = 0;
+  dropdown.setAttribute("selected-item-index", String(selectedIdx));
+  dropdown.addEventListener("dropdown-selection-change", (event) => {
     const i = /** @type {*} */ (event)?.detail?.selectedIndex;
     if (typeof i !== "number" || i < 0 || i >= opts.length) return;
     if (typeof setViewerPid === "function") {
       setViewerPid(Number(opts[i].pid));
     }
   });
-  toolbar.appendChild(dd);
+  toolbar.appendChild(dropdown);
 }
 
 /**
@@ -289,14 +278,14 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
     try {
       const next = !ctx.settings?.getSetting?.("showWonderMarkers", true);
       ctx.settings?.setSetting?.("showWonderMarkers", next);
-      dlog("wonders toggle clicked; new value=" + next);
+      log.debug("wonders toggle clicked; new value=" + next);
     } catch (_) {
       // Best-effort persistence.
     }
     ctx.requestReload?.();
   });
   toolbar.appendChild(wondersBtn);
-  dlog("wonders button mounted; activeMetric=" + activeMetric + " wondersOn=" + wondersOn);
+  log.debug("wonders button mounted; activeMetric=" + activeMetric + " wondersOn=" + wondersOn);
 }
 
 /**
@@ -407,7 +396,7 @@ function appendMetricSpecificControls(toolbar, ctx, activeMetric) {
  * Append the Crisis Graphs age-scope selector. The chart module reports the
  * available scopes and returns an empty list until a second crisis exists, so
  * the dropdown only appears then.
- * @param {HTMLElement} toolbar The toolbar element.
+ * @param {HTMLElement} toolbar
  * @param {*} ctx
  */
 function appendCrisisGraphsControls(toolbar, ctx) {
@@ -426,23 +415,23 @@ function appendCrisisGraphsControls(toolbar, ctx) {
  * @returns {HTMLElement}
  */
 function buildCrisisScopeDropdown(opts, ctx) {
-  const dd = document.createElement("fxs-dropdown");
-  dd.classList.add("demographics-chart-viewer-dropdown");
-  dd.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
-  dd.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
+  const dropdown = document.createElement("fxs-dropdown");
+  dropdown.classList.add("demographics-chart-viewer-dropdown");
+  dropdown.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  dropdown.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
   const active =
     typeof ctx.chartMod.resolveCrisisScope === "function"
       ? ctx.chartMod.resolveCrisisScope(ctx.history, ctx.crisisGraphsAge)
       : ctx.crisisGraphsAge;
-  let didx = opts.findIndex((o) => o.id === active);
-  if (didx < 0) didx = 0;
-  dd.setAttribute("selected-item-index", String(didx));
-  dd.addEventListener("dropdown-selection-change", (event) => {
+  let selectedIdx = opts.findIndex((o) => o.id === active);
+  if (selectedIdx < 0) selectedIdx = 0;
+  dropdown.setAttribute("selected-item-index", String(selectedIdx));
+  dropdown.addEventListener("dropdown-selection-change", (event) => {
     const i = /** @type {*} */ (event)?.detail?.selectedIndex;
     if (typeof i !== "number" || i < 0 || i >= opts.length) return;
     if (typeof ctx.setCrisisGraphsAge === "function") ctx.setCrisisGraphsAge(opts[i].id);
   });
-  return dd;
+  return dropdown;
 }
 
 /**
@@ -457,7 +446,7 @@ function safeWarCivOptions(ctx) {
     return Array.isArray(opts) ? opts : [];
   } catch (e) {
     // Malformed persisted wars must not take the toolbar down with them.
-    derr("collectWarCivOptions failed:", e);
+    log.error("collectWarCivOptions failed:", e);
     return [];
   }
 }
@@ -476,7 +465,7 @@ function safeMergedWarNames(rawWars, samples) {
     return { wars, names: nameMergedWars(wars, samples) };
   } catch (e) {
     // Malformed persisted wars must not take the left bar down with them.
-    derr("war picker merge/naming failed:", e);
+    log.error("war picker merge/naming failed:", e);
     return { wars: [], names: new Map() };
   }
 }
@@ -490,15 +479,15 @@ function safeMergedWarNames(rawWars, samples) {
 export function buildWarGraphsPicker(ctx) {
   const bar = document.createElement("div");
   bar.className = "demographics-chart-leftbar font-body text-xs";
-  const h = ctx.history || {};
-  const rawWars = Array.isArray(h.wars) ? h.wars : [];
-  const samples = Array.isArray(h.samples) ? h.samples : [];
+  const history = ctx.history || {};
+  const rawWars = Array.isArray(history.wars) ? history.wars : [];
+  const samples = Array.isArray(history.samples) ? history.samples : [];
   const { wars, names } = safeMergedWarNames(rawWars, samples);
   const opts = wars
-    .filter((w) => typeof w?.warUniqueID === "number")
-    .map((w) => ({
-      id: w.warUniqueID,
-      label: names.get(w.warUniqueID) || w.name || t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", w.warUniqueID)
+    .filter((war) => typeof war?.warUniqueID === "number")
+    .map((war) => ({
+      id: war.warUniqueID,
+      label: names.get(war.warUniqueID) || war.name || t("LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME", war.warUniqueID)
     }))
     .reverse();
   bar.appendChild(buildToolbarLabel(t("LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK")));
@@ -513,19 +502,19 @@ export function buildWarGraphsPicker(ctx) {
  * @returns {HTMLElement}
  */
 function buildWarGraphsDropdown(opts, ctx) {
-  const dd = document.createElement("fxs-dropdown");
-  dd.classList.add("demographics-chart-viewer-dropdown");
-  dd.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
-  dd.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
-  let didx = opts.findIndex((o) => Number(o.id) === Number(ctx.warGraphsWarId));
-  if (didx < 0) didx = 0;
-  dd.setAttribute("selected-item-index", String(didx));
-  dd.addEventListener("dropdown-selection-change", (event) => {
+  const dropdown = document.createElement("fxs-dropdown");
+  dropdown.classList.add("demographics-chart-viewer-dropdown");
+  dropdown.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
+  dropdown.setAttribute("dropdown-items", JSON.stringify(opts.map((o) => ({ label: o.label }))));
+  let selectedIdx = opts.findIndex((o) => Number(o.id) === Number(ctx.warGraphsWarId));
+  if (selectedIdx < 0) selectedIdx = 0;
+  dropdown.setAttribute("selected-item-index", String(selectedIdx));
+  dropdown.addEventListener("dropdown-selection-change", (event) => {
     const i = /** @type {*} */ (event)?.detail?.selectedIndex;
     if (typeof i !== "number" || i < 0 || i >= opts.length) return;
     if (typeof ctx.setWarGraphsWarId === "function") ctx.setWarGraphsWarId(opts[i].id);
   });
-  return dd;
+  return dropdown;
 }
 
 /**
@@ -598,13 +587,13 @@ function appendNameOrderToggle(toolbar, ctx) {
     { key: "civLeader", label: t("LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER") },
     { key: "leaderCiv", label: t("LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV") }
   ];
-  toolbar.appendChild(pillRow(items, order, (/** @type {string} */ o) => {
+  toolbar.appendChild(pillRow(items, order, (/** @type {string} */ nextOrder) => {
     try {
-      ctx?.settings?.setSetting?.("nameOrder", o);
+      ctx?.settings?.setSetting?.("nameOrder", nextOrder);
     } catch (_) {
       /* settings unavailable → in-memory only for this session */
     }
-    setNameOrder(o);
+    setNameOrder(nextOrder);
     if (typeof ctx.requestReload === "function") ctx.requestReload();
   }, "filter"));
 }
@@ -622,9 +611,9 @@ export function buildPopulationModeToggle(ctx) {
     { key: "scaled", label: t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED") },
     { key: "civ", label: t("LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV") }
   ];
-  return pillRow(items, mode, (/** @type {string} */ m) => {
+  return pillRow(items, mode, (/** @type {string} */ nextMode) => {
     try {
-      ctx?.settings?.setSetting?.("populationNumberMode", m);
+      ctx?.settings?.setSetting?.("populationNumberMode", nextMode);
     } catch (_) {
       /* settings unavailable → in-memory only for this session */
     }

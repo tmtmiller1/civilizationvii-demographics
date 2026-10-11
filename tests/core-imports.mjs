@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { listJs, rel, stripComments, UI_DIR } from "./_fs-helpers.mjs";
 
 // Engine-import existence gate: every `/core/...` or `/base-standard/...` module specifier that
 // ui/ imports must exist in the installed game's script tree, so a game patch that moves or
@@ -16,9 +16,6 @@ import { fileURLToPath } from "node:url";
 // finding a known engine file (core/ui/panel-support.js) before anything else is judged.
 // When no install is found the gate prints a warning and exits 0, so CI without the game passes.
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const UI = path.join(ROOT, "ui");
-const rel = (p) => path.relative(ROOT, p).split(path.sep).join("/");
 const KNOWN = "core/ui/panel-support.js";
 const ENGINE_PREFIX = /^\/(core|base-standard)\//;
 
@@ -27,31 +24,30 @@ const candidates = [
   process.env.CIV7_GAME_DIR,
   path.join(appSupport, "Steam/steamapps/common/Sid Meier's Civilization VII/CivilizationVII.app/Contents/Resources"),
   path.join(appSupport, "Steam/steamapps/common/Sid Meier's Civilization VII"),
-  path.join(appSupport, "Steam/steamapps/common/Sid Meier's Civilization VII/CivilizationVII.app/Contents/Resources/Base/modules")
+  path.join(
+    appSupport,
+    "Steam/steamapps/common/Sid Meier's Civilization VII/CivilizationVII.app/Contents/Resources/Base/modules"
+  )
 ].filter(Boolean);
 
 /** @returns {string|null} The folder that "/core/..." resolves under, checked by the known file. */
 function findModulesRoot() {
   for (const c of candidates) {
-    for (const probe of [c, path.join(c, "Base/modules"), path.join(c, "CivilizationVII.app/Contents/Resources/Base/modules")]) {
+    for (const probe of [
+      c,
+      path.join(c, "Base/modules"),
+      path.join(c, "CivilizationVII.app/Contents/Resources/Base/modules")
+    ]) {
       if (fs.existsSync(path.join(probe, KNOWN))) return probe;
     }
   }
   return null;
 }
 
-/** @param {string} dir @returns {string[]} */
-function listJs(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
-    const p = path.join(dir, d.name);
-    return d.isDirectory() ? listJs(p) : d.name.endsWith(".js") ? [p] : [];
-  });
-}
-const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/[^\n]*/g, "$1");
 
 // Collect specifier -> importing modules (static import/export-from, bare import, dynamic import()).
 const uses = new Map();
-for (const abs of listJs(UI)) {
+for (const abs of listJs(UI_DIR)) {
   const code = stripComments(fs.readFileSync(abs, "utf8"));
   for (const m of code.matchAll(/(?:\bfrom\s*|\bimport\s*\(?\s*)"([^"]+)"/g)) {
     if (!ENGINE_PREFIX.test(m[1])) continue;
@@ -79,7 +75,12 @@ for (const [spec, importers] of [...uses].sort()) {
 }
 
 console.log(`core-imports: modules root ${modulesRoot}`);
-console.log(`core-imports: ${uses.size} distinct engine specifier(s) from ${new Set([...uses.values()].flatMap((s) => [...s])).size} module(s)`);
+const importerCount = new Set([...uses.values()].flatMap((s) => [...s])).size;
+console.log(`core-imports: ${uses.size} distinct engine specifier(s) from ${importerCount} module(s)`);
 for (const [spec, importers] of [...uses].sort()) console.log(`  ${spec} <- ${[...importers].join(", ")}`);
-assert.equal(missing.length, 0, `${missing.length} engine import(s) not found in the installed game:\n  ${missing.join("\n  ")}`);
+assert.equal(
+  missing.length,
+  0,
+  `${missing.length} engine import(s) not found in the installed game:\n  ${missing.join("\n  ")}`
+);
 console.log(`core-imports harness passed (${uses.size} engine specifier(s) all present)`);

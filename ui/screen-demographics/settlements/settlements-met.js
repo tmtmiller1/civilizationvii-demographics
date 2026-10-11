@@ -36,8 +36,8 @@ export function localHasMet(pid) {
     const localId = localPlayerId();
     if (typeof localId !== "number") return undefined;
     if (pid === localId) return true;
-    const d = localDiplomacy(localId);
-    if (d && typeof d.hasMet === "function") return !!d.hasMet(pid);
+    const diplomacy = localDiplomacy(localId);
+    if (diplomacy && typeof diplomacy.hasMet === "function") return !!diplomacy.hasMet(pid);
   } catch (_) {
     // GameContext.localPlayerID / Players.get / Diplomacy.hasMet can throw mid age-transition.
   }

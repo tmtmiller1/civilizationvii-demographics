@@ -3,8 +3,8 @@
 // Per-civ metric collector orchestrators and shared utilities.
 
 import {
-  _readFiniteProp,
-  dlog,
+  readFiniteProp,
+  collectorLog,
   getLocalPlayerID,
   getPlayer,
   netYield,
@@ -15,7 +15,7 @@ import {
 
 // Re-exported for the modules that import these from core; the definitions live in the leaf
 // module so core and the collectors don't form an import cycle.
-export { dlog, yieldEnum, netYield, _readFiniteProp };
+export { yieldEnum, netYield, readFiniteProp };
 import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import {
   collectCities,
@@ -125,26 +125,19 @@ import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collecto
  */
 
 /**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
- */
-
-
-
-/**
  * Capture whether the local player has met `id` at sample time.
  * @param {PlayerCtx} ctx The context to mutate.
  * @param {Pid} id The player id being sampled.
- * @param {*} p The sampled player handle.
+ * @param {*} player The sampled player handle.
  */
-function collectMet(ctx, id, p) {
+function collectMet(ctx, id, player) {
   // Known hotseat limitation: `met` is read from whichever seat is local when the sample runs,
   // so the flag records that seat's contacts, not a fixed player's (per-seat map not implemented).
   try {
     const localId = getLocalPlayerID();
     if (typeof localId !== "number") return;
     if (id === localId) ctx.met = true;
-    else ctx.met = readHasMet(id === localId ? p : getPlayer(localId), id);
+    else ctx.met = readHasMet(id === localId ? player : getPlayer(localId), id);
   } catch (_) {
     // getLocalPlayerID() / getPlayer().Diplomacy can be null / throw.
   }
@@ -157,10 +150,10 @@ function collectMet(ctx, id, p) {
  * @returns {boolean|undefined} Met state, or undefined when unreadable.
  */
 function readHasMet(localP, id) {
-  const d = localP?.Diplomacy;
-  if (!(d && typeof d.hasMet === "function")) return undefined;
+  const diplomacy = localP?.Diplomacy;
+  if (!(diplomacy && typeof diplomacy.hasMet === "function")) return undefined;
   try {
-    return !!d.hasMet(id);
+    return !!diplomacy.hasMet(id);
   } catch (_) {
     return undefined;
   }
@@ -169,20 +162,20 @@ function readHasMet(localP, id) {
 /**
  * Read the raw leaderType / civilizationType off the player handle.
  * @param {PlayerCtx} ctx The context to mutate.
- * @param {*} p The sampled player handle.
+ * @param {*} player The sampled player handle.
  * @returns {{ rawLeader: *, rawCiv: * }} The raw values for downstream lookup.
  */
-function collectRawTypes(ctx, p) {
+function collectRawTypes(ctx, player) {
   let rawLeader = undefined;
   let rawCiv = undefined;
   try {
-    rawLeader = p.leaderType ?? p.LeaderType;
+    rawLeader = player.leaderType ?? player.LeaderType;
     if (rawLeader !== undefined && rawLeader !== null) ctx.leaderType = rawLeader;
   } catch (_e) {
     // p.leaderType property access can throw on a stale player handle.
   }
   try {
-    rawCiv = p.civilizationType ?? p.CivilizationType;
+    rawCiv = player.civilizationType ?? player.CivilizationType;
     if (rawCiv !== undefined && rawCiv !== null) ctx.civType = rawCiv;
   } catch (_e) {
     // p.civilizationType property access can throw on a stale player handle.
@@ -195,13 +188,13 @@ function collectRawTypes(ctx, p) {
  * @param {*} tag The LOC tag (or any value) to compose.
  * @returns {string | undefined} The composed string, or undefined.
  */
-export function _composeLocale(tag) {
+export function composeLocaleTag(tag) {
   if (typeof Locale === "undefined" || typeof Locale.compose !== "function") {
     return undefined;
   }
   try {
-    const s = Locale.compose(tag);
-    if (typeof s === "string" && s.length > 0) return s;
+    const text = Locale.compose(tag);
+    if (typeof text === "string" && text.length > 0) return text;
   } catch (_) {
     // Locale.compose() can throw on a malformed tag.
   }
@@ -274,12 +267,12 @@ export function lookupInfoRow(table, raw, typeField) {
 export function resolveDisplayName(row, typeField, raw, prefix, fallback) {
   try {
     const nm = row?.Name;
-    if (nm) return _composeLocale(nm) || String(nm);
+    if (nm) return composeLocaleTag(nm) || String(nm);
   } catch (_) {
     // row.Name access can throw on a proxy GameInfo row.
   }
   const typeStr = row?.[typeField] || (typeof raw === "string" ? raw : "");
-  if (typeStr) return _prettifyType(typeStr, prefix);
+  if (typeStr) return prettifyType(typeStr, prefix);
   return fallback;
 }
 
@@ -290,16 +283,16 @@ export function resolveDisplayName(row, typeField, raw, prefix, fallback) {
  */
 function localizedPlayerCivName(value) {
   if (typeof value !== "string" || value.length === 0) return null;
-  return _composeLocale(value) || value;
+  return composeLocaleTag(value) || value;
 }
 
 /**
  * Turn a "PREFIX_FOO_BAR" type string into a Title-Cased display name.
- * @param {string} typeStr The type string.
+ * @param {string} typeStr
  * @param {string} prefix The prefix to strip.
  * @returns {string} The prettified display name.
  */
-export function _prettifyType(typeStr, prefix) {
+export function prettifyType(typeStr, prefix) {
   return String(typeStr)
     .replace(new RegExp("^" + prefix), "")
     .split("_")
@@ -309,16 +302,16 @@ export function _prettifyType(typeStr, prefix) {
 
 /**
  * Resolve the civilization display name.
- * @param {*} p The sampled player handle.
+ * @param {*} player The sampled player handle.
  * @param {*} civRow The GameInfo.Civilizations row (or null).
  * @param {*} rawCiv The raw civ type value.
  * @returns {string} The resolved civ display name (may be "").
  */
-export function resolveCivName(p, civRow, rawCiv) {
+export function resolveCivName(player, civRow, rawCiv) {
   try {
-    const direct = localizedPlayerCivName(p?.civilizationName);
+    const direct = localizedPlayerCivName(player?.civilizationName);
     if (direct) return direct;
-    const full = localizedPlayerCivName(p?.civilizationFullName);
+    const full = localizedPlayerCivName(player?.civilizationFullName);
     if (full) return full;
   } catch (_) {
     // p.civilizationName / p.civilizationFullName access can throw.
@@ -328,7 +321,7 @@ export function resolveCivName(p, civRow, rawCiv) {
 
 /**
  * Read one UI.Player color getter and return a non-empty string.
- * @param {Pid} id Player id.
+ * @param {Pid} id
  * @param {"getPrimaryColorValueAsString"|"getSecondaryColorValueAsString"} getter
  *   UI getter name.
  * @returns {string|undefined} Color string, when available.
@@ -344,12 +337,12 @@ function readUiPlayerColor(id, getter) {
 /**
  * Resolve leader/civ display names + canonical type strings and store on ctx.
  * @param {PlayerCtx} ctx The context to mutate.
- * @param {Pid} id The player id.
- * @param {*} p The sampled player handle.
+ * @param {Pid} id
+ * @param {*} player The sampled player handle.
  * @param {*} rawLeader The raw leader type value.
  * @param {*} rawCiv The raw civ type value.
  */
-function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
+function collectNamesAndTypeStrings(ctx, id, player, rawLeader, rawCiv) {
   const leaderRow = lookupInfoRow(
     typeof GameInfo !== "undefined" ? GameInfo.Leaders : null,
     rawLeader,
@@ -368,11 +361,11 @@ function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
     rawCiv,
     "CivilizationType"
   );
-  ctx.civName = resolveCivName(p, civRow, rawCiv);
-  dlog("civName (pid=" + id + ") = '" + ctx.civName + "'");
+  ctx.civName = resolveCivName(player, civRow, rawCiv);
+  collectorLog.debug("civName (pid=" + id + ") = '" + ctx.civName + "'");
 
-  ctx.leaderTypeString = _canonicalTypeString(leaderRow?.LeaderType, rawLeader);
-  ctx.civTypeString = _canonicalTypeString(civRow?.CivilizationType, rawCiv);
+  ctx.leaderTypeString = canonicalTypeString(leaderRow?.LeaderType, rawLeader);
+  ctx.civTypeString = canonicalTypeString(civRow?.CivilizationType, rawCiv);
 }
 
 /**
@@ -381,7 +374,7 @@ function collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv) {
  * @param {*} raw The raw type value off the player handle.
  * @returns {string | undefined} The canonical type string, or undefined.
  */
-export function _canonicalTypeString(rowType, raw) {
+export function canonicalTypeString(rowType, raw) {
   if (typeof rowType === "string" && rowType.length > 0) return rowType;
   if (typeof raw === "string" && raw.length > 0) return raw;
   return undefined;
@@ -390,7 +383,7 @@ export function _canonicalTypeString(rowType, raw) {
 /**
  * Capture the player's banner colors.
  * @param {PlayerCtx} ctx The context to mutate.
- * @param {Pid} id The player id.
+ * @param {Pid} id
  */
 function collectColors(ctx, id) {
   try {
@@ -406,10 +399,10 @@ function collectColors(ctx, id) {
 
 /**
  * Allocate the per-civ context object with every field pre-initialized.
- * @param {Pid} id The player id.
+ * @param {Pid} id
  * @returns {PlayerCtx} The freshly-allocated context.
  */
-export function _newPlayerCtx(id) {
+export function newPlayerCtx(id) {
   /** @type {PlayerCtx} */
   const ctx = {
     id,
@@ -452,18 +445,18 @@ export function _newPlayerCtx(id) {
  * @returns {PlayerCtx} The assembled per-civ context.
  */
 export function buildPlayerCtx(id) {
-  const ctx = _newPlayerCtx(id);
-  const p = getPlayer(id);
-  if (!p) return ctx;
-  ctx.player = p;
-  collectIdentity(ctx, id, p);
+  const ctx = newPlayerCtx(id);
+  const player = getPlayer(id);
+  if (!player) return ctx;
+  ctx.player = player;
+  collectIdentity(ctx, id, player);
   try {
-    ctx.stats = p.Stats;
+    ctx.stats = player.Stats;
   } catch (_e) {
     // p.Stats accessor can throw on a stale player handle.
   }
-  collectEconomy(ctx, id, p, ctx.stats);
-  collectPowerAndCivics(ctx, id, p);
+  collectEconomy(ctx, id, player, ctx.stats);
+  collectPowerAndCivics(ctx, id, player);
   return ctx;
 }
 
@@ -471,13 +464,13 @@ export function buildPlayerCtx(id) {
  * Collect a civ's identity: met status, raw/canonical leader+civ types, display
  * names, and banner colors.
  * @param {PlayerCtx} ctx The context to fill.
- * @param {Pid} id The player id.
- * @param {*} p The player handle.
+ * @param {Pid} id
+ * @param {*} player The player handle.
  */
-function collectIdentity(ctx, id, p) {
-  collectMet(ctx, id, p);
-  const { rawLeader, rawCiv } = collectRawTypes(ctx, p);
-  collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv);
+function collectIdentity(ctx, id, player) {
+  collectMet(ctx, id, player);
+  const { rawLeader, rawCiv } = collectRawTypes(ctx, player);
+  collectNamesAndTypeStrings(ctx, id, player, rawLeader, rawCiv);
   collectColors(ctx, id);
 }
 
@@ -485,20 +478,20 @@ function collectIdentity(ctx, id, p) {
  * Collect a civ's economy: gold, cities/continent, tech+civic counts, yields,
  * trade routes, ongoing deals, wonders, and settlement cap.
  * @param {PlayerCtx} ctx The context to fill.
- * @param {Pid} id The player id.
- * @param {*} p The player handle.
+ * @param {Pid} id
+ * @param {*} player The player handle.
  * @param {*} stats The player's Stats handle.
  */
-function collectEconomy(ctx, id, p, stats) {
-  collectGold(ctx, id, p);
-  const cityList = collectCities(ctx, id, p);
+function collectEconomy(ctx, id, player, stats) {
+  collectGold(ctx, id, player);
+  const cityList = collectCities(ctx, id, player);
   collectContinent(ctx, cityList);
   collectTechAndCivicCounts(ctx, id);
   collectYieldsAndSizes(ctx, id, stats);
-  collectTradeRoutes(ctx, id, p);
+  collectTradeRoutes(ctx, id, player);
   collectOngoingDeals(ctx, id);
   collectWonderCount(ctx, id, stats, cityList);
-  collectWonderTypes(ctx, id, p);
+  collectWonderTypes(ctx, id, player);
   collectSettlementCap(ctx, stats);
   collectGreatWorks(ctx, id, stats);
   collectConquered(ctx, id, stats);
@@ -508,15 +501,15 @@ function collectEconomy(ctx, id, p, stats) {
  * Collect a civ's military power, triumphs, victory points, diplomatic approval,
  * and resource categories.
  * @param {PlayerCtx} ctx The context to fill.
- * @param {Pid} id The player id.
- * @param {*} p The player handle.
+ * @param {Pid} id
+ * @param {*} player The player handle.
  */
-function collectPowerAndCivics(ctx, id, p) {
-  collectMilitaryPower(ctx, id, p);
-  collectLegacyTriumphs(ctx, p);
-  collectVictoryPoints(ctx, p);
-  collectDiplomaticApproval(ctx, id, p);
-  collectResourceCategories(ctx, id, p);
+function collectPowerAndCivics(ctx, id, player) {
+  collectMilitaryPower(ctx, id, player);
+  collectLegacyTriumphs(ctx, player);
+  collectVictoryPoints(ctx, player);
+  collectDiplomaticApproval(ctx, id, player);
+  collectResourceCategories(ctx, id, player);
   collectSummaryMetrics(ctx, id);
 }
 
@@ -526,15 +519,15 @@ function collectPowerAndCivics(ctx, id, p) {
  * @returns {PlayerCtx} The trimmed per-civ context.
  */
 export function buildMinorMilitaryCtx(id) {
-  const ctx = _newPlayerCtx(id);
-  const p = getPlayer(id);
-  if (!p) return ctx;
-  ctx.player = p;
-  collectMet(ctx, id, p);
-  const { rawLeader, rawCiv } = collectRawTypes(ctx, p);
-  collectNamesAndTypeStrings(ctx, id, p, rawLeader, rawCiv);
+  const ctx = newPlayerCtx(id);
+  const player = getPlayer(id);
+  if (!player) return ctx;
+  ctx.player = player;
+  collectMet(ctx, id, player);
+  const { rawLeader, rawCiv } = collectRawTypes(ctx, player);
+  collectNamesAndTypeStrings(ctx, id, player, rawLeader, rawCiv);
   collectColors(ctx, id);
-  collectMilitaryPower(ctx, id, p);
+  collectMilitaryPower(ctx, id, player);
   return ctx;
 }
 

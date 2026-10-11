@@ -10,7 +10,7 @@
 
 import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
 import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
-import { getGameSeed } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
+import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 import {
   buildTurnMaps,
   computeAgeOffsets,
@@ -53,7 +53,7 @@ import {
   resolveMetricMeta
 } from "/demographics/ui/screen-demographics/charts/line/chart-line-datasets.js";
 import {
-  dlog,
+  log,
   coerceKeySet,
   resolveTurnRange
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
@@ -105,7 +105,7 @@ const EXTRA_WIDE_Y_LEGEND = new Set([
 // reuse the Chart.defaults the engine sets for parity with the in-game graphs.
 
 /** Marks a Chart instance as created by this mod (see {@link reclaimOrphanedCharts}). */
-export const DG_OWNED = "$demographicsOwned";
+export const OWNED_CHART_FLAG = "$demographicsOwned";
 
 /**
  * Destroy any prior Chart instance cached on the host before re-mounting.
@@ -113,10 +113,10 @@ export const DG_OWNED = "$demographicsOwned";
  */
 export function teardownExistingChart(host) {
   if (!host) return;
-  const cur = host._demographicsChart;
-  if (cur && typeof cur.destroy === "function") {
+  const existing = host._demographicsChart;
+  if (existing && typeof existing.destroy === "function") {
     try {
-      cur.destroy();
+      existing.destroy();
     } catch (_) {
       // Chart#destroy may throw on an already-disposed instance; ignore.
     }
@@ -139,16 +139,16 @@ export function teardownExistingChart(host) {
  */
 export function reclaimOrphanedCharts() {
   if (typeof Chart === "undefined" || !Chart.instances) return 0;
-  const inDoc = (/** @type {*} */ c) =>
-    typeof document !== "undefined" && document.body && c.canvas && document.body.contains(c.canvas);
+  const inDoc = (/** @type {*} */ chart) =>
+    typeof document !== "undefined" && document.body && chart.canvas && document.body.contains(chart.canvas);
   let destroyed = 0;
   // Snapshot the keys: Chart#destroy removes the instance from Chart.instances as we iterate.
   for (const key of Object.keys(Chart.instances)) {
-    const c = Chart.instances[key];
-    if (!c || c[DG_OWNED] !== true || typeof c.destroy !== "function") continue;
-    if (inDoc(c)) continue;
+    const chart = Chart.instances[key];
+    if (!chart || chart[OWNED_CHART_FLAG] !== true || typeof chart.destroy !== "function") continue;
+    if (inDoc(chart)) continue;
     try {
-      c.destroy();
+      chart.destroy();
       destroyed += 1;
     } catch (_) {
       // An already-disposed instance can throw; it is going away either way.
@@ -222,7 +222,7 @@ function clampRenderByHint(render, hint) {
  * @param {ChartOptions} opts
  * @param {number} W Caller width floor.
  * @param {number} H Caller height floor.
- * @returns {{ renderW: number, renderH: number }} The render dimensions.
+ * @returns {{ renderW: number, renderH: number }}
  */
 export function computeRenderSize(opts, W, H) {
   let renderW, renderH;
@@ -265,7 +265,7 @@ function foldXBounds(bounds, point) {
 /**
  * Mount the Chart.js instance into `host`, logging on success and rendering a
  * fallback message on failure.
- * @param {Object} parts Mount inputs.
+ * @param {Object} parts
  * @param {*} parts.host The chart host (carries the engine `_demographicsChart`).
  * @param {*} parts.canvas
  * @param {Record<string, *>} parts.config The Chart.js config.
@@ -316,7 +316,7 @@ export function tryCreateChart(canvas, config, host) {
     // Ownership tag. Chart.js is the engine's global (fxs-hof-chart uses it too), so
     // `Chart.instances` holds base-game charts as well; reclaimOrphanedCharts() destroys only
     // instances carrying this flag and never touches one of the game's own.
-    chart[DG_OWNED] = true;
+    chart[OWNED_CHART_FLAG] = true;
     host._demographicsChart = chart;
     return chart;
   } catch (e) {
@@ -340,12 +340,12 @@ export function tryCreateChart(canvas, config, host) {
  *   sampleCount: number,
  *   W: number,
  *   H: number,
- * }} args Logging inputs.
+ * }} args
  */
 function logChartMounted(args) {
   const { chart, datasets, metricId, sampleCount, W, H } = args;
   const visibleCount = datasets.filter((/** @type {*} */ d) => !d._muted).length;
-  dlog(
+  log.debug(
     "Chart.js mounted; visible=",
     visibleCount,
     "of",
@@ -380,14 +380,14 @@ function logChartMounted(args) {
  * Prepared chart data: series, metric metadata, datasets, axis formatters,
  * and the age-offset context needed for markers.
  * @typedef {Object} ChartPrep
- * @property {ChartSeries[]} allSeries The (transformed) series list.
- * @property {number} sampleCount The sample count.
- * @property {*} metricMeta The metric metadata.
+ * @property {ChartSeries[]} allSeries Series after the settings transforms.
+ * @property {number} sampleCount
+ * @property {*} metricMeta
  * @property {Record<string, *>[]} datasets The Chart.js datasets.
  * @property {import("/demographics/ui/screen-demographics/charts/line/chart-line-axis.js").
- *   AxisFormatters} formatters The axis tick formatters.
+ *   AxisFormatters} formatters
  * @property {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @property {AgeBoundary[]} boundaries Age boundary table.
+ * @property {AgeBoundary[]} boundaries
  */
 
 /**
@@ -395,7 +395,7 @@ function logChartMounted(args) {
  * axis formatters, and the age-offset context for markers.
  * @param {ChartOptions} opts
  * @param {string} metricId
- * @returns {ChartPrep} The prepared chart data.
+ * @returns {ChartPrep}
  */
 function prepareChartData(opts, metricId) {
   const muted = coerceKeySet(opts.hiddenCivs);
@@ -417,16 +417,16 @@ function prepareChartData(opts, metricId) {
   // Emigration tabs do, then showUnmetNames handles name masking for any civ that remains.
   allSeries = applyUnmetNames(applyPolicyHide(allSeries));
 
-  const tr = resolveTurnRange(opts);
+  const turnRange = resolveTurnRange(opts);
 
-  const samps = opts.history && Array.isArray(opts.history.samples) ? opts.history.samples : [];
+  const samples = opts.history && Array.isArray(opts.history.samples) ? opts.history.samples : [];
   const boundaries =
     opts.history && Array.isArray(opts.history.ageBoundaries) ? opts.history.ageBoundaries : [];
-  const { offsets: ageOffsets, maxLocalByAge } = computeAgeOffsets(samps, boundaries);
-  const turnMaps = buildTurnMaps(samps, ageOffsets, boundaries);
+  const { offsets: ageOffsets, maxLocalByAge } = computeAgeOffsets(samples, boundaries);
+  const turnMaps = buildTurnMaps(samples, ageOffsets, boundaries);
   const formatters = makeAxisFormatters(turnMaps, metricMeta, ageOffsets, maxLocalByAge);
 
-  const datasets = buildChartDatasets(allSeries, muted, focused, tr);
+  const datasets = buildChartDatasets(allSeries, muted, focused, turnRange);
 
   return { allSeries, sampleCount, metricMeta, datasets, formatters, ageOffsets, boundaries };
 }
@@ -436,7 +436,7 @@ function prepareChartData(opts, metricId) {
  * crosshair, crisis markers, age markers, cap-limit line) for one render.
  * @param {ChartOptions} opts
  * @param {string} metricId
- * @param {ChartPrep} prep The prepared chart data.
+ * @param {ChartPrep} prep
  * @returns {{ plugins: Record<string, *>[], crisisMarkers: Record<string, *>[] }}
  *   The ordered plugin instances plus the collected crisis markers.
  */
@@ -459,11 +459,11 @@ function buildChartPluginSet(opts, metricId, prep) {
     );
   }
   resolveWonderEvents(wonderEventsByPid);
-  dlog(
+  log.debug(
     "wonder events detected:",
     wonderEventsByPid.size,
     "civs;",
-    Array.from(wonderEventsByPid.values()).reduce((n, arr) => n + arr.length, 0),
+    Array.from(wonderEventsByPid.values()).reduce((total, events) => total + events.length, 0),
     "total wonder events"
   );
   const wonderMarkerEls = new Map(); // key: "pid:turn" -> div element
@@ -516,9 +516,9 @@ const MAX_CRISIS_PAD_FRACTION = 0.12;
  */
 function dataXBounds(datasets) {
   const bounds = { min: Infinity, max: -Infinity };
-  for (const ds of datasets || []) {
-    for (const p of (ds && ds.data) || []) {
-      foldXBounds(bounds, p);
+  for (const dataset of datasets || []) {
+    for (const point of (dataset && dataset.data) || []) {
+      foldXBounds(bounds, point);
     }
   }
   return bounds.min <= bounds.max ? bounds : null;
@@ -537,17 +537,17 @@ function applyCrisisRightPadding(chart, crisisMarkers, datasets) {
   if (!crisisMarkers.length || !chart.chartArea || !chart.options.scales) return;
   const label = maxCrisisPillWidth(chart, crisisMarkers) + 8; // +8px breathing gap
   const plotW = chart.chartArea.right - chart.chartArea.left;
-  const b = dataXBounds(datasets);
-  if (!b || b.max <= b.min || plotW <= label) return;
+  const xBounds = dataXBounds(datasets);
+  if (!xBounds || xBounds.max <= xBounds.min || plotW <= label) return;
   // Closed form: pad max so plotW * (max - dataMax) / (max - dataMin) == label.
-  const padded = (plotW * b.max - label * b.min) / (plotW - label);
+  const padded = (plotW * xBounds.max - label * xBounds.min) / (plotW - label);
   // Cap the padding at a fraction of the data span. The closed form asks for whatever the widest
   // label needs in pixels, which is fine on a wide plot but runaway on a narrow one: at 1280x720
   // the plot was 928px and the widest crisis pill 238px, pushing the axis max to 304 for data
   // ending at 226, so the series stopped three quarters of the way across and the right quarter
-  // of the chart was empty. The label may now overhang slightly at small sizes, which is far less
+  // of the chart was empty. The label may overhang slightly at small sizes, which is far less
   // bad than losing a quarter of the plot.
-  const cap = b.max + (b.max - b.min) * MAX_CRISIS_PAD_FRACTION;
+  const cap = xBounds.max + (xBounds.max - xBounds.min) * MAX_CRISIS_PAD_FRACTION;
   chart.options.scales.x.max = Math.min(padded, cap);
   chart.update("none");
 }
@@ -592,7 +592,7 @@ export function renderChart(host, options) {
  * @param {HTMLElement} host
  * @param {ChartOptions|undefined} options
  * @returns {{ hostEl: HTMLElement, opts: ChartOptions, W: number, H: number,
- *   metricId: string }|null} Prepared setup.
+ *   metricId: string }|null}
  */
 function prepareLineChartRender(host, options) {
   if (!host) {
@@ -634,8 +634,8 @@ function prepareLineChartRender(host, options) {
  *   sampleCount: number,
  *   renderW: number,
  *   renderH: number,
- * }} args Mount inputs.
- * @returns {{ canvas: HTMLElement, chart: * }|null} Mount outputs.
+ * }} args
+ * @returns {{ canvas: HTMLElement, chart: * }|null}
  */
 function mountPreparedLineChart(args) {
   const {

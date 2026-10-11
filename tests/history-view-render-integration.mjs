@@ -1,21 +1,22 @@
 import assert from "node:assert/strict";
 
-import { createFakeDocument } from "./_dom-stub.mjs";
+import { captureErrors, createFakeDocument, findByClass } from "./_dom-stub.mjs";
+import { installMemoryLocalStorage, snapshotGlobals } from "./_engine-stubs.mjs";
 
-const saved = {
-  document: globalThis.document,
-  window: globalThis.window,
-  requestAnimationFrame: globalThis.requestAnimationFrame,
-  setTimeout: globalThis.setTimeout,
-  Locale: globalThis.Locale,
-  localStorage: globalThis.localStorage,
-  Game: globalThis.Game,
-  GameInfo: globalThis.GameInfo,
-  UI: globalThis.UI,
-  Audio: globalThis.Audio,
-  Configuration: globalThis.Configuration,
-  GameContext: globalThis.GameContext
-};
+const restoreGlobals = snapshotGlobals([
+  "document",
+  "window",
+  "requestAnimationFrame",
+  "setTimeout",
+  "Locale",
+  "localStorage",
+  "Game",
+  "GameInfo",
+  "UI",
+  "Audio",
+  "Configuration",
+  "GameContext"
+]);
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -39,12 +40,7 @@ globalThis.Locale = {
   }
 };
 
-const storage = new Map();
-globalThis.localStorage = {
-  getItem: (k) => (storage.has(k) ? storage.get(k) : null),
-  setItem: (k, v) => storage.set(k, String(v)),
-  removeItem: (k) => storage.delete(k)
-};
+installMemoryLocalStorage();
 
 globalThis.Game = {
   turn: 20,
@@ -83,16 +79,6 @@ const { render } = await import(
   "/demographics/ui/screen-demographics/views/history/view-history.js"
 );
 
-function findByClass(root, cls) {
-  const queue = [root];
-  while (queue.length > 0) {
-    const cur = queue.shift();
-    if (typeof cur.className === "string" && cur.className.split(/\s+/).includes(cls)) return cur;
-    queue.push(...(cur.children || []));
-  }
-  return null;
-}
-
 function makeCtx() {
   const state = {
     activePage: "economy",
@@ -118,8 +104,22 @@ function makeCtx() {
           gameYear: "4000 BCE",
           age: "AGE_ANTIQUITY",
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true, metrics: { gdp: 12, score: 10, emig_refugees: 1 } },
-            "2": { leaderName: "Them", civName: "Han", leaderTypeString: "LEADER_THEM", primaryColor: "#446688", met: true, metrics: { gdp: 9, score: 8, emig_refugees: 0 } }
+            1: {
+              leaderName: "Me",
+              civName: "Rome",
+              leaderTypeString: "LEADER_ME",
+              primaryColor: "#224466",
+              met: true,
+              metrics: { gdp: 12, score: 10, emig_refugees: 1 }
+            },
+            2: {
+              leaderName: "Them",
+              civName: "Han",
+              leaderTypeString: "LEADER_THEM",
+              primaryColor: "#446688",
+              met: true,
+              metrics: { gdp: 9, score: 8, emig_refugees: 0 }
+            }
           }
         },
         {
@@ -128,8 +128,22 @@ function makeCtx() {
           gameYear: "3900 BCE",
           age: "AGE_EXPLORATION",
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true, metrics: { gdp: 14, score: 11, emig_refugees: 2, crisis_stage: 1 } },
-            "2": { leaderName: "Them", civName: "Han", leaderTypeString: "LEADER_THEM", primaryColor: "#446688", met: true, metrics: { gdp: 10, score: 9, emig_refugees: 1, crisis_stage: 1 } }
+            1: {
+              leaderName: "Me",
+              civName: "Rome",
+              leaderTypeString: "LEADER_ME",
+              primaryColor: "#224466",
+              met: true,
+              metrics: { gdp: 14, score: 11, emig_refugees: 2, crisis_stage: 1 }
+            },
+            2: {
+              leaderName: "Them",
+              civName: "Han",
+              leaderTypeString: "LEADER_THEM",
+              primaryColor: "#446688",
+              met: true,
+              metrics: { gdp: 10, score: 9, emig_refugees: 1, crisis_stage: 1 }
+            }
           }
         },
         {
@@ -138,8 +152,22 @@ function makeCtx() {
           gameYear: "3800 BCE",
           age: "AGE_EXPLORATION",
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true, metrics: { gdp: 15, score: 12, emig_refugees: 3, crisis_stage: 2 } },
-            "2": { leaderName: "Them", civName: "Han", leaderTypeString: "LEADER_THEM", primaryColor: "#446688", met: true, metrics: { gdp: 11, score: 10, emig_refugees: 2, crisis_stage: 2 } }
+            1: {
+              leaderName: "Me",
+              civName: "Rome",
+              leaderTypeString: "LEADER_ME",
+              primaryColor: "#224466",
+              met: true,
+              metrics: { gdp: 15, score: 12, emig_refugees: 3, crisis_stage: 2 }
+            },
+            2: {
+              leaderName: "Them",
+              civName: "Han",
+              leaderTypeString: "LEADER_THEM",
+              primaryColor: "#446688",
+              met: true,
+              metrics: { gdp: 11, score: 10, emig_refugees: 2, crisis_stage: 2 }
+            }
           }
         }
       ],
@@ -250,16 +278,28 @@ function testHistoryRenderIntegration() {
   const pageHost1 = findByClass(host, "demographics-page-tab-host");
   assert.ok(pageBar1 && pageHost1, "the statistics hub renders a page-tab row");
   render(host, makeCtx(), { hub: "statistics" }); // same page, fresh ctx (as requestReload does)
-  assert.equal(findByClass(host, "demographics-page-tabs"), pageBar1, "same page: the page tab bar is the SAME element");
+  assert.equal(
+    findByClass(host, "demographics-page-tabs"),
+    pageBar1,
+    "same page: the page tab bar is the SAME element"
+  );
   assert.equal(findByClass(host, "demographics-page-tab-host"), pageHost1, "…and so is its host");
-  assert.equal(host.querySelectorAll ? host.querySelectorAll(".demographics-page-tab-host").length : 1, 1, "kept once, not duplicated");
+  assert.equal(
+    host.querySelectorAll ? host.querySelectorAll(".demographics-page-tab-host").length : 1,
+    1,
+    "kept once, not duplicated"
+  );
   // The real entry point: screen-demographics.js empties the host before the view runs and hands
   // the captured row in through opts. A reuse that only works on an un-cleared host would never
   // engage in the game (the bar was still rebuilt there), so cover that path.
   const capturedRow = findByClass(host, "demographics-page-tab-host");
   while (host.firstChild) host.removeChild(host.firstChild);
   render(host, makeCtx(), { hub: "statistics", priorPageHost: capturedRow });
-  assert.equal(findByClass(host, "demographics-page-tabs"), pageBar1, "pre-cleared host + opts.priorPageHost: same bar");
+  assert.equal(
+    findByClass(host, "demographics-page-tabs"),
+    pageBar1,
+    "pre-cleared host + opts.priorPageHost: same bar"
+  );
   const listenerCtx = makeCtx();
   let selectedPage = null;
   listenerCtx.setActivePage = (id) => { selectedPage = id; };
@@ -291,23 +331,6 @@ function testHistoryRenderIntegration() {
   ctx.activeMetric = "emig_refugees";
   render(host, ctx, { hub: "statistics" });
   assert.ok(findByClass(host, "chart-marker-standard"), "standard line renderer should run");
-}
-
-/**
- * Capture console.error lines emitted while `fn` runs.
- * @param {() => void} fn The body.
- * @returns {string[]} The first argument of each console.error call.
- */
-function captureErrors(fn) {
-  const lines = [];
-  const orig = console.error;
-  console.error = (...a) => lines.push(String(a[0]));
-  try {
-    fn();
-  } finally {
-    console.error = orig;
-  }
-  return lines;
 }
 
 function testToolbarSurvivesChartModuleThrows() {
@@ -344,16 +367,5 @@ try {
   testToolbarSurvivesChartModuleThrows();
   console.log("history-view-render-integration harness passed");
 } finally {
-  globalThis.document = saved.document;
-  globalThis.window = saved.window;
-  globalThis.requestAnimationFrame = saved.requestAnimationFrame;
-  globalThis.setTimeout = saved.setTimeout;
-  globalThis.Locale = saved.Locale;
-  globalThis.localStorage = saved.localStorage;
-  globalThis.Game = saved.Game;
-  globalThis.GameInfo = saved.GameInfo;
-  globalThis.UI = saved.UI;
-  globalThis.Audio = saved.Audio;
-  globalThis.Configuration = saved.Configuration;
-  globalThis.GameContext = saved.GameContext;
+  restoreGlobals();
 }

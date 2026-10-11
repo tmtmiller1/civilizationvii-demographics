@@ -9,6 +9,7 @@
 // is read by towns-data.js at advisor render time.
 
 import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
+import { getGameSeed, orFallback } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
 /** Settings key holding the rolling buffer (lives under the shared modSettings slice). */
 const KEY = "townTrendBuf";
@@ -16,79 +17,47 @@ const KEY = "townTrendBuf";
 const CAP = 12;
 
 /**
- * Run `fn`, returning its result or `fb` on throw. Never throws.
- * @template T
- * @param {() => T} fn
- * @param {T} [fb]
- * @returns {T|undefined} Result or fallback.
- */
-function safe(fn, fb) {
-  try {
-    return fn();
-  } catch (_) {
-    return fb;
-  }
-}
-
-/**
- * Current game seed (string), for namespacing the buffer per playthrough.
- * @returns {string} The seed, or "".
- */
-function gameSeed() {
-  return (
-    safe(() => {
-      if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
-        const g = Configuration.getGame();
-        const s = g && (g.startSeed ?? g.gameSeed ?? g.mapSeed);
-        if (s !== undefined && s !== null) return String(s);
-      }
-      return "";
-    }, "") || ""
-  );
-}
-
-/**
  * The local player (or observer) id.
- * @returns {number|undefined} The id, or undefined.
+ * @returns {number|undefined}
  */
 function localPid() {
-  return safe(() => {
+  return orFallback(() => {
     if (typeof GameContext === "undefined") return undefined;
-    const v = GameContext.localPlayerID;
-    if (typeof v === "number") return v;
-    const o = GameContext.localObserverID;
-    return typeof o === "number" ? o : undefined;
+    const playerId = GameContext.localPlayerID;
+    if (typeof playerId === "number") return playerId;
+    const observerId = GameContext.localObserverID;
+    return typeof observerId === "number" ? observerId : undefined;
   }, undefined);
 }
 
 /**
  * Light read of one settlement id: { locId, pop } when it is a town, else null.
  * @param {*} id The settlement ComponentID.
- * @returns {{locId: string, pop: number}|null} The light town, or null.
+ * @returns {{locId: string, pop: number}|null}
  */
 function lightTownAt(id) {
-  const c = safe(() => (typeof Cities !== "undefined" ? Cities.get(id) : null), null);
-  if (!c || !safe(() => c.isTown, false)) return null;
-  const loc = safe(() => c.location, null);
+  const city = orFallback(() => (typeof Cities !== "undefined" ? Cities.get(id) : null), null);
+  if (!city || !orFallback(() => city.isTown, false)) return null;
+  const loc = orFallback(() => city.location, null);
   if (!loc || loc.x == null || loc.y == null) return null;
-  return { locId: loc.x + "," + loc.y, pop: safe(() => c.population, 0) || 0 };
+  return { locId: loc.x + "," + loc.y, pop: orFallback(() => city.population, 0) || 0 };
 }
 
 /**
  * Cheap read of the local player's towns: just plot key + population.
- * @returns {Array<{locId: string, pop: number}>} The light town list.
+ * @returns {Array<{locId: string, pop: number}>}
  */
 function readLightTowns() {
   const pid = localPid();
   if (typeof pid !== "number" || typeof Players === "undefined") return [];
-  const player = safe(() => Players.get(pid), null);
-  const ids = safe(() => player?.Cities?.getCityIds?.(), null);
+  const player = orFallback(() => Players.get(pid), null);
+  const ids = orFallback(() => player?.Cities?.getCityIds?.(), null);
   if (!Array.isArray(ids)) return [];
   /** @type {Array<{locId: string, pop: number}>} */
   const out = [];
   for (const id of ids) {
-    const tn = lightTownAt(id);
-    if (tn) out.push(tn);
+    const town = lightTownAt(id);
+    if (town) out.push(town);
   }
   return out;
 }
@@ -99,8 +68,8 @@ function readLightTowns() {
  * @returns {{seed: string, byLoc: Record<string, Array<{t: number, pop: number}>>}}
  */
 function loadBuffer(seed) {
-  const buf = DemographicsSettings.getSetting(KEY, null);
-  if (buf && buf.seed === seed && buf.byLoc && typeof buf.byLoc === "object") return buf;
+  const buffer = DemographicsSettings.getSetting(KEY, null);
+  if (buffer && buffer.seed === seed && buffer.byLoc && typeof buffer.byLoc === "object") return buffer;
   return { seed, byLoc: {} };
 }
 
@@ -114,20 +83,20 @@ function loadBuffer(seed) {
 export function recordLocalTownsNow(turn) {
   const towns = readLightTowns();
   if (!towns.length) return null;
-  const seed = gameSeed();
-  const buf = loadBuffer(seed);
+  const seed = getGameSeed();
+  const buffer = loadBuffer(seed);
   /** @type {Record<string, boolean>} */
   const present = {};
-  for (const tn of towns) {
-    present[tn.locId] = true;
-    const arr = buf.byLoc[tn.locId] || (buf.byLoc[tn.locId] = []);
-    const last = arr[arr.length - 1];
-    if (last && last.t === turn) last.pop = tn.pop;
-    else arr.push({ t: turn, pop: tn.pop });
-    if (arr.length > CAP) arr.splice(0, arr.length - CAP);
+  for (const town of towns) {
+    present[town.locId] = true;
+    const samples = buffer.byLoc[town.locId] || (buffer.byLoc[town.locId] = []);
+    const last = samples[samples.length - 1];
+    if (last && last.t === turn) last.pop = town.pop;
+    else samples.push({ t: turn, pop: town.pop });
+    if (samples.length > CAP) samples.splice(0, samples.length - CAP);
   }
-  for (const loc of Object.keys(buf.byLoc)) if (!present[loc]) delete buf.byLoc[loc];
-  return { key: KEY, value: buf };
+  for (const loc of Object.keys(buffer.byLoc)) if (!present[loc]) delete buffer.byLoc[loc];
+  return { key: KEY, value: buffer };
 }
 
 /**
@@ -138,16 +107,16 @@ export function recordLocalTownsNow(turn) {
  */
 export function getTownTrend(locId) {
   if (!locId) return null;
-  const buf = DemographicsSettings.getSetting(KEY, null);
-  if (!buf || buf.seed !== gameSeed() || !buf.byLoc) return null;
-  const arr = buf.byLoc[locId];
-  if (!Array.isArray(arr) || arr.length < 2) return null;
-  const first = arr[0];
-  const last = arr[arr.length - 1];
+  const buffer = DemographicsSettings.getSetting(KEY, null);
+  if (!buffer || buffer.seed !== getGameSeed() || !buffer.byLoc) return null;
+  const samples = buffer.byLoc[locId];
+  if (!Array.isArray(samples) || samples.length < 2) return null;
+  const first = samples[0];
+  const last = samples[samples.length - 1];
   const span = last.t - first.t;
   return {
     popGrowthPerTurn: span > 0 ? (last.pop - first.pop) / span : 0,
-    samples: arr.length,
+    samples: samples.length,
     span
   };
 }

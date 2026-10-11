@@ -15,8 +15,21 @@ document.createElement = (tag) => {
   if (String(tag).toLowerCase() === "canvas") {
     let arcs = false;
     node.getContext = () => ({
-      clearRect() {}, beginPath() { arcs = false; }, moveTo() {}, lineTo() {}, closePath() {}, stroke() {},
-      arc() { arcs = true; }, fill() { if (arcs) paints.towns++; else paints.hexes++; }
+      clearRect() {},
+      beginPath() {
+        arcs = false;
+      },
+      moveTo() {},
+      lineTo() {},
+      closePath() {},
+      stroke() {},
+      arc() {
+        arcs = true;
+      },
+      fill() {
+        if (arcs) paints.towns++;
+        else paints.hexes++;
+      }
     });
   }
   return node;
@@ -25,34 +38,120 @@ installEchoLocale();
 const errors = [];
 console.error = (...a) => errors.push(a.map(String).join(" "));
 
-const { newCampaign, ensureAge, upsertPlayer, appendEvents, appendSample } = await import("/demographics/ui/history/store/history-campaign.js");
+const { newCampaign, ensureAge, upsertPlayer, appendEvents, appendSample } = await import(
+  "/demographics/ui/history/store/history-campaign.js"
+);
 const { buildRecord } = await import("/demographics/ui/history/store/history-archive.js");
 
 // A two-age campaign with every event kind.
-const doc = newCampaign({ id: "live", seed: 1, now: 1, setup: { speed: "LOC_S", difficulty: "LOC_D", mapSize: "LOC_M", mapScript: "{base-standard}maps/continents-plus.js", startAge: "AGE_ANTIQUITY" }, local: 0 });
-const idn = (leader, civ) => ({ leader, leaderName: "LOC_" + leader, civ, civName: "LOC_" + civ, color: "#abc", human: leader === "LEADER_A" });
+const doc = newCampaign({
+  id: "live",
+  seed: 1,
+  now: 1,
+  setup: {
+    speed: "LOC_S",
+    difficulty: "LOC_D",
+    mapSize: "LOC_M",
+    mapScript: "{base-standard}maps/continents-plus.js",
+    startAge: "AGE_ANTIQUITY"
+  },
+  local: 0
+});
+const idn = (leader, civ) => ({
+  leader,
+  leaderName: "LOC_" + leader,
+  civ,
+  civName: "LOC_" + civ,
+  color: "#abc",
+  human: leader === "LEADER_A"
+});
 ensureAge(doc, "AGE_ANTIQUITY", 1);
 upsertPlayer(doc, 0, idn("LEADER_A", "CIV_ROME"), { age: "AGE_ANTIQUITY", turn: 1 });
 upsertPlayer(doc, 1, idn("LEADER_B", "CIV_EGYPT"), { age: "AGE_ANTIQUITY", turn: 1 });
-const kinds = ["found", "capture", "razed", "wonder", "war", "peace", "religion", "triumph", "met", "elim", "disaster", "crisis"];
-appendEvents(doc, [{ t: 1, a: 0, k: "age", p: -1, x: "AGE_ANTIQUITY", n: "LOC_AGE_A", d: "4000 BCE" }, ...kinds.map((k, i) => ({ t: 2 + i, a: 0, k, p: 0, q: 1, n: "LOC_N", x: "X" })),
-  { t: 5, a: 0, k: "wonder", p: 1, x: "W_R", n: "LOC_W_R" }, { t: 6, a: 0, k: "found", p: 1, n: "LOC_CITY_R" }]);
+const kinds = [
+  "found",
+  "capture",
+  "razed",
+  "wonder",
+  "war",
+  "peace",
+  "religion",
+  "triumph",
+  "met",
+  "elim",
+  "disaster",
+  "crisis"
+];
+appendEvents(doc, [
+  { t: 1, a: 0, k: "age", p: -1, x: "AGE_ANTIQUITY", n: "LOC_AGE_A", d: "4000 BCE" },
+  ...kinds.map((k, i) => ({ t: 2 + i, a: 0, k, p: 0, q: 1, n: "LOC_N", x: "X" })),
+  { t: 5, a: 0, k: "wonder", p: 1, x: "W_R", n: "LOC_W_R" },
+  { t: 6, a: 0, k: "found", p: 1, n: "LOC_CITY_R" }
+]);
 for (let t = 1; t <= 12; t++) {
   ensureAge(doc, "AGE_ANTIQUITY", t);
-  appendSample(doc, world(t, { 0: pstate({ cities: { a: "A" }, population: t, popScaled: t * 1e5, mig: { i: t * 300, o: t * 100 } }), 1: pstate() }));
+  appendSample(
+    doc,
+    world(t, {
+      0: pstate({ cities: { a: "A" }, population: t, popScaled: t * 1e5, mig: { i: t * 300, o: t * 100 } }),
+      1: pstate()
+    })
+  );
 }
 ensureAge(doc, "AGE_EXPLORATION", 1);
 upsertPlayer(doc, 0, idn("LEADER_A", "CIV_NORMAN"), { age: "AGE_EXPLORATION", turn: 1 });
-appendEvents(doc, [{ t: 1, a: 1, k: "age", p: -1, x: "AGE_EXPLORATION", n: "LOC_AGE_E" }, { t: 1, a: 1, k: "civ", p: 0, x: "CIV_NORMAN", n: "LOC_CIV_NORMAN" }, { t: 30, a: 1, k: "victory", p: 0, x: "VICTORY_X", n: "LOC_VX" }]);
+appendEvents(doc, [
+  { t: 1, a: 1, k: "age", p: -1, x: "AGE_EXPLORATION", n: "LOC_AGE_E" },
+  { t: 1, a: 1, k: "civ", p: 0, x: "CIV_NORMAN", n: "LOC_CIV_NORMAN" },
+  { t: 30, a: 1, k: "victory", p: 0, x: "VICTORY_X", n: "LOC_VX" }
+]);
 ensureAge(doc, "AGE_EXPLORATION", 30);
-doc.map = { w: 3, h: 2, terrain: "0x2.1x3.2x1", frames: [{ t: 2, a: 0, o: "0x2.-1x2.1x1.-2x1", c: [[0, 0], [4, 1]] }, { t: 20, a: 1, o: "0x3.-1x1.1x2", c: [[0, 0], [1, 0], [4, 1]] }] };
-doc.last = world(30, { 0: pstate({ cities: { a: "A", b: "B" }, population: 20 }), 1: pstate() }, { age: "AGE_EXPLORATION" });
+doc.map = {
+  w: 3,
+  h: 2,
+  terrain: "0x2.1x3.2x1",
+  frames: [
+    {
+      t: 2,
+      a: 0,
+      o: "0x2.-1x2.1x1.-2x1",
+      c: [
+        [0, 0],
+        [4, 1]
+      ]
+    },
+    {
+      t: 20,
+      a: 1,
+      o: "0x3.-1x1.1x2",
+      c: [
+        [0, 0],
+        [1, 0],
+        [4, 1]
+      ]
+    }
+  ]
+};
+doc.last = world(
+  30,
+  { 0: pstate({ cities: { a: "A", b: "B" }, population: 20 }), 1: pstate() },
+  { age: "AGE_EXPLORATION" }
+);
 appendSample(doc, doc.last);
 doc.outcome = { status: "victory", victory: "VICTORY_X", name: "LOC_VX", winner: 0, turn: 30 };
 
-globalThis.Configuration = { getGame: () => ({ getValue: () => JSON.stringify(doc) }), getUser: () => ({ uiFontScale: 1 }) };
-const past = { ...buildRecord(doc), id: "past", outcome: { status: "defeat", victory: "", name: "", winner: 1, turn: 90 } };
-globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { past }, hidden: {} } }) });
+globalThis.Configuration = {
+  getGame: () => ({ getValue: () => JSON.stringify(doc) }),
+  getUser: () => ({ uiFontScale: 1 })
+};
+const past = {
+  ...buildRecord(doc),
+  id: "past",
+  outcome: { status: "defeat", victory: "", name: "", winner: 1, turn: 90 }
+};
+globalThis.localStorage = buggyStorage({
+  modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { past }, hidden: {} } })
+});
 
 const { render, renderHallOfFame } = await import("/demographics/ui/history/views/history-app.js");
 const { viewState } = await import("/demographics/ui/history/views/history-state.js");
@@ -76,7 +175,10 @@ for (const tab of ["chronicle", "timeline", "lineage"]) {
   check(host, "history:" + tab);
 }
 
-const findAll = (n, cls) => [...(n.className && String(n.className).split(/\s+/).includes(cls) ? [n] : []), ...(n.children || []).flatMap((c) => findAll(c, cls))];
+const findAll = (n, cls) => [
+  ...(n.className && String(n.className).split(/\s+/).includes(cls) ? [n] : []),
+  ...(n.children || []).flatMap((c) => findAll(c, cls))
+];
 
 // Regression guard for the standalone Hall of Fame's section tabs flashing to "Best" on every
 // rerender (short-games filter, storage-repair buttons): a rerender is renderHallOfFame() on the
@@ -135,7 +237,11 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
     check(host, mode + ":" + hofTab);
     // Nothing in this fixture is a short unfinished game, so the filter renders nothing at all:
     // it is a control for a condition that is not present, and it used to occupy a row regardless.
-    assert.equal(findAll(host, "dgh-hof-filter").length, 0, "no short-games filter with nothing to hide on " + hofTab + " (" + mode + ")");
+    assert.equal(
+      findAll(host, "dgh-hof-filter").length,
+      0,
+      "no short-games filter with nothing to hide on " + hofTab + " (" + mode + ")"
+    );
     const head = findAll(host, "dgh-page-head")[0];
     assert.ok(head, "page heading on " + hofTab);
     assert.ok(texts(head).includes(PAGE_TITLES[hofTab]), "page title on " + hofTab);
@@ -160,12 +266,18 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
     "every part of the bar is named"
   );
   assert.ok(named.includes("LOC_DEMOGRAPHICS_HIST_PERCENT"), "and given its share");
-  assert.ok(texts(findAll(host, "dgh-person-rate")[0]).includes("LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE"), "the rate says what it is");
+  assert.ok(
+    texts(findAll(host, "dgh-person-rate")[0]).includes("LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE"),
+    "the rate says what it is"
+  );
   const segs = findAll(host, "dgh-record-seg");
   const widths = segs.map((n) => Number(String(n.style.width || "").replace("%", "")));
   assert.ok(widths.every((w) => w > 0), "a segment only for a part that happened");
   for (const card of findAll(host, "dgh-person-card")) {
-    const total = findAll(card, "dgh-record-seg").reduce((n, e) => n + Number(String(e.style.width || "0").replace("%", "")), 0);
+    const total = findAll(card, "dgh-record-seg").reduce(
+      (n, e) => n + Number(String(e.style.width || "0").replace("%", "")),
+      0
+    );
     assert.ok(total === 0 || Math.abs(total - 100) < 0.01, "the bar is the finished games, whole (got " + total + ")");
   }
 }
@@ -174,11 +286,19 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
   viewState.hofTab = "overview";
   const land = document.createElement("div");
   renderHallOfFame(land, { mode: "game" });
-  const fnd = (n, cls) => (String(n.className || "").split(/\s+/).includes(cls) ? n : (n.children || []).map((c) => fnd(c, cls)).find(Boolean));
+  const fnd = (n, cls) =>
+    String(n.className || "")
+      .split(/\s+/)
+      .includes(cls)
+      ? n
+      : (n.children || []).map((c) => fnd(c, cls)).find(Boolean);
   assert.ok(fnd(land, "dgh-podium"), "podium");
   assert.ok(fnd(land, "dgh-podium-card--1"), "first place");
   assert.ok(texts(land).includes("LOC_DEMOGRAPHICS_HIST_RANK_OF"), "the current game's rank");
-  assert.ok(texts(land).includes("LOC_DEMOGRAPHICS_HIST_THIS_GAME"), "in game, the current game is the one being played");
+  assert.ok(
+    texts(land).includes("LOC_DEMOGRAPHICS_HIST_THIS_GAME"),
+    "in game, the current game is the one being played"
+  );
   const menu = document.createElement("div");
   renderHallOfFame(menu, { mode: "shell" });
   assert.ok(texts(menu).includes("LOC_DEMOGRAPHICS_HIST_LATEST_GAME"), "at the main menu, the latest game");
@@ -200,9 +320,19 @@ for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
 }
 
 viewState.detail = "past";
-const detail = check((() => { const h = document.createElement("div"); renderHallOfFame(h, { mode: "shell" }); return h; })(), "detail");
+const detail = check(
+  (() => {
+    const h = document.createElement("div");
+    renderHallOfFame(h, { mode: "shell" });
+    return h;
+  })(),
+  "detail"
+);
 assert.ok(texts(detail).includes("LOC_DEMOGRAPHICS_HIST_REMOVE_GAME"));
-const find = (n, cls) => (n.className && String(n.className).split(/\s+/).includes(cls) ? n : (n.children || []).map((c) => find(c, cls)).find(Boolean));
+const find = (n, cls) =>
+  n.className && String(n.className).split(/\s+/).includes(cls)
+    ? n
+    : (n.children || []).map((c) => find(c, cls)).find(Boolean);
 // Removing a game sits behind the Options toggle, folded away by default.
 const panel = find(detail, "dgh-options-panel");
 assert.ok(panel && panel.classList.contains("is-hidden"), "remove is folded away");
@@ -219,26 +349,60 @@ assert.ok(paints.hexes >= 6, "every cell painted (held cells twice: terrain, the
 assert.ok(paints.hexes >= 6 && paints.towns >= 3, "cells and settlements painted");
 assert.equal(findAll(mapEl, "dgh-map-legend-item").length, 2, "who holds land in the last frame");
 const hl = find(detail, "dgh-hl-section");
-assert.ok(hl && findAll(hl, "dgh-hl-age").length === 2 && findAll(hl, "dgh-hl-kind").length > 3, "highlights by age with kind tags");
+assert.ok(
+  hl && findAll(hl, "dgh-hl-age").length === 2 && findAll(hl, "dgh-hl-kind").length > 3,
+  "highlights by age with kind tags"
+);
 assert.ok(texts(hl).includes("LOC_DEMOGRAPHICS_HIST_KIND_WONDER"));
 // The timeline: lanes, turn ticks, controls that redraw in place.
 const tlRoot = find(detail, "dgh-tl");
-for (const lane of ["ages", "wars", "crises", "marks-wonders", "marks-triumphs", "marks-faith", "marks-conquests", "marks-fates", "founds", "disasters", "mig", "pops", "ruler"]) {
+for (const lane of [
+  "ages",
+  "wars",
+  "crises",
+  "marks-wonders",
+  "marks-triumphs",
+  "marks-faith",
+  "marks-conquests",
+  "marks-fates",
+  "founds",
+  "disasters",
+  "mig",
+  "pops",
+  "ruler"
+]) {
   assert.ok(find(tlRoot, "dgh-tl-lane--" + lane), "timeline lane " + lane);
 }
 assert.ok(findAll(tlRoot, "dgh-tl-tick--major").length >= 3, "labeled turn ticks");
 assert.ok(findAll(tlRoot, "dgh-tl-grid").length >= 3, "turn guides through the lanes");
-assert.ok(findAll(tlRoot, "dgh-tl-medal").every((m) => /url\('(blp:|fs:)/.test(m.style.backgroundImage)), "milestones show game icons");
-assert.ok(findAll(tlRoot, "dgh-tl-disaster").every((m) => /url\('blp:/.test(m.style.backgroundImage)), "disasters show game icons");
+assert.ok(
+  findAll(tlRoot, "dgh-tl-medal").every((m) => /url\('(blp:|fs:)/.test(m.style.backgroundImage)),
+  "milestones show game icons"
+);
+assert.ok(
+  findAll(tlRoot, "dgh-tl-disaster").every((m) => /url\('blp:/.test(m.style.backgroundImage)),
+  "disasters show game icons"
+);
 // Every drawn item carries a tooltip, except the stems, curve, axis and guides.
-const untipped = findAll(tlRoot, "dgh-tl-item").filter((n) => !n.getAttribute?.("data-tooltip-content"))
+const untipped = findAll(tlRoot, "dgh-tl-item")
+  .filter((n) => !n.getAttribute?.("data-tooltip-content"))
   .map((n) => String(n.className).split(/\s+/)[1])
-  .filter((c) => !["dgh-tl-stem", "dgh-tl-curve-box", "dgh-tl-mig-axis"].includes(c) && !String(c).startsWith("dgh-tl-tick"));
+  .filter(
+    (c) => !["dgh-tl-stem", "dgh-tl-curve-box", "dgh-tl-mig-axis"].includes(c) && !String(c).startsWith("dgh-tl-tick")
+  );
 assert.deepEqual([...new Set(untipped)], [], "items without a tooltip");
-assert.ok(findAll(tlRoot, "dgh-tl-tick--major").every((n) => n.getAttribute("data-tooltip-content")), "turn ticks name their turn");
+assert.ok(
+  findAll(tlRoot, "dgh-tl-tick--major").every((n) => n.getAttribute("data-tooltip-content")),
+  "turn ticks name their turn"
+);
 // Each milestone kind keeps its own lane.
 for (const [lane, kind] of [["marks-wonders", "wonder"], ["marks-triumphs", "triumph"], ["marks-faith", "religion"]]) {
-  assert.ok(findAll(find(tlRoot, "dgh-tl-lane--" + lane), "dgh-tl-medal").every((m) => m.classList.contains("dgh-tl-medal--" + kind)), lane);
+  assert.ok(
+    findAll(find(tlRoot, "dgh-tl-lane--" + lane), "dgh-tl-medal").every((m) =>
+      m.classList.contains("dgh-tl-medal--" + kind)
+    ),
+    lane
+  );
 }
 // The civilization filter: just yours by default; picking a rival adds its deeds.
 viewState.tlCivs = null;
@@ -327,11 +491,25 @@ viewState.detail = null;
 viewState.tab = "chronicle";
 for (const filter of ["mine", "settlements", "war", "world"]) {
   viewState.filter = filter;
-  check((() => { const h = document.createElement("div"); render(h); return h; })(), "chronicle:" + filter);
+  check(
+    (() => {
+      const h = document.createElement("div");
+      render(h);
+      return h;
+    })(),
+    "chronicle:" + filter
+  );
 }
 viewState.age = "AGE_EXPLORATION";
 viewState.newestFirst = false;
-check((() => { const h = document.createElement("div"); render(h); return h; })(), "chronicle:age");
+check(
+  (() => {
+    const h = document.createElement("div");
+    render(h);
+    return h;
+  })(),
+  "chronicle:age"
+);
 
 // No campaign and no archive: empty states, still no errors.
 globalThis.Configuration = { getGame: () => ({ getValue: () => null }), getUser: () => ({}) };
@@ -404,7 +582,10 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
   assert.ok(texts(h).includes("LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE"), "no storage at all has its own line");
   // Blocked archive layout keeps the line too.
   store._resetForTests();
-  globalThis.localStorage = buggyStorage({ "!chronicle": JSON.stringify({ games: [1] }), modSettings: JSON.stringify({ x: 1 }) });
+  globalThis.localStorage = buggyStorage({
+    "!another-mod": JSON.stringify({ games: [1] }),
+    modSettings: JSON.stringify({ x: 1 })
+  });
   settings.persistenceStatus = () => "foreign";
   h = document.createElement("div");
   renderHallOfFame(h, { mode: "shell" });
@@ -417,7 +598,10 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
 {
   const store = await import("/demographics/ui/history/store/history-archive-store.js");
   store._resetForTests();
-  globalThis.localStorage = buggyStorage({ "!chronicle": JSON.stringify({ games: [1, 2, 3] }), modSettings: JSON.stringify({ x: 1 }) });
+  globalThis.localStorage = buggyStorage({
+    "!another-mod": JSON.stringify({ games: [1, 2, 3] }),
+    modSettings: JSON.stringify({ x: 1 })
+  });
   const h = document.createElement("div");
   viewState.detail = null;
   viewState.hofTab = "overview";
@@ -480,7 +664,9 @@ const bare = {
   const { hofRecords } = await import("/demographics/ui/history/views/view-hof.js");
   store._resetForTests();
   const future = { v: 2, id: "future", updated: 3, shape: "unknown" };
-  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { bare, future }, hidden: {} } }) });
+  globalThis.localStorage = buggyStorage({
+    modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { bare, future }, hidden: {} } })
+  });
   viewState.detail = null;
   viewState.showShort = false;
   for (const hofTab of ["overview", "games", "leaders", "civs", "records"]) {
@@ -496,7 +682,11 @@ const bare = {
   renderHallOfFame(h, { mode: "shell" });
   check(h, "bare:detail");
   const shown = texts(h);
-  for (const tag of ["LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF", "LOC_DEMOGRAPHICS_HIST_NO_RIVALS", "LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS"]) {
+  for (const tag of [
+    "LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF",
+    "LOC_DEMOGRAPHICS_HIST_NO_RIVALS",
+    "LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS"
+  ]) {
     assert.ok(shown.includes(tag), "detail carries " + tag);
   }
   viewState.detail = null;
@@ -508,7 +698,9 @@ const bare = {
   const store = await import("/demographics/ui/history/store/history-archive-store.js");
   store._resetForTests();
   const broken = { ...bare, id: "broken", civs: [null] };
-  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { broken }, hidden: {} } }) });
+  globalThis.localStorage = buggyStorage({
+    modSettings: JSON.stringify({ "demographics-halloffame": { __schema: 1, games: { broken }, hidden: {} } })
+  });
   viewState.detail = "broken";
   const h = document.createElement("div");
   renderHallOfFame(h, { mode: "shell" });
@@ -548,12 +740,20 @@ const bare = {
   const savedCI = globalThis.clearInterval;
   let tickFn = null;
   const cleared = [];
-  globalThis.setInterval = (fn) => { tickFn = fn; return 7; };
+  globalThis.setInterval = (fn) => {
+    tickFn = fn;
+    return 7;
+  };
   globalThis.clearInterval = (id) => cleared.push(id);
   let seeks = 0;
   viewState.tlAge = "all";
   viewState.tlCivs = null;
-  const root = timelineGraphic(buildTimeline(doc), castFromDoc(doc, "full"), { onSeek: () => { if (++seeks > 2) throw new Error("seek boom"); }, key: "tick" });
+  const root = timelineGraphic(buildTimeline(doc), castFromDoc(doc, "full"), {
+    onSeek: () => {
+      if (++seeks > 2) throw new Error("seek boom");
+    },
+    key: "tick"
+  });
   assert.deepEqual(errors, [], "the graphic drew");
   find(root, "dgh-tl-play").dispatch("click");
   assert.equal(typeof tickFn, "function", "playing");
@@ -566,10 +766,14 @@ const bare = {
   assert.ok(texts(find(root, "dgh-tl-play")).includes("LOC_DEMOGRAPHICS_HIST_TL_PLAY"), "the button reads Play again");
   // The other handlers outside the render try/catch log instead of throwing too.
   const lane = find(root, "dgh-tl-lane--pops");
-  lane.getBoundingClientRect = () => { throw new Error("rect boom"); };
+  lane.getBoundingClientRect = () => {
+    throw new Error("rect boom");
+  };
   assert.doesNotThrow(() => lane.dispatch("mousemove", { clientX: 5 }));
   const ruler = find(root, "dgh-tl-lane--ruler");
-  ruler.getBoundingClientRect = () => { throw new Error("rect boom"); };
+  ruler.getBoundingClientRect = () => {
+    throw new Error("rect boom");
+  };
   assert.doesNotThrow(() => ruler.dispatch("click", { clientX: 5 }));
   assert.equal(errors.length, 2);
   errors.length = 0;
@@ -585,7 +789,13 @@ const bare = {
   const { castFromDoc } = await import("/demographics/ui/history/model/history-narrate.js");
   const cast = castFromDoc(doc, "full");
   let draws = 0;
-  const flaky = { ...cast, civName: (...a) => { if (draws > 0) throw new Error("name boom"); return cast.civName(...a); } };
+  const flaky = {
+    ...cast,
+    civName: (...a) => {
+      if (draws > 0) throw new Error("name boom");
+      return cast.civName(...a);
+    }
+  };
   const root = timelineGraphic(buildTimeline(doc), flaky, { key: "flaky" });
   assert.deepEqual(errors, []);
   draws++;
@@ -603,7 +813,11 @@ const bare = {
 // still steps back or closes, once, and never throws.
 {
   const defs = {};
-  globalThis.Controls = { define: (id, def) => { defs[id] = def; } };
+  globalThis.Controls = {
+    define: (id, def) => {
+      defs[id] = def;
+    }
+  };
   globalThis.engine = { on() {}, off() {} };
   const { SCREEN_ID } = await import("/demographics/ui/history/screen/history-open.js");
   await import("/demographics/ui/history/screen/screen-hall-of-fame.js");

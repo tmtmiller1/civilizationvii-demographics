@@ -21,32 +21,32 @@ import {
  * Apply a metric's optional scale function.
  * @param {*} metric Metric definition.
  * @param {number} value Raw metric value.
- * @param {*} scaleCtx Scale context.
- * @param {*} playerCtx Player context.
- * @param {( ...a: any[] ) => void} elog Error logger.
+ * @param {*} scaleCtx
+ * @param {*} playerCtx
+ * @param {( ...a: any[] ) => void} logError
  * @returns {number} Scaled value, or raw value on absence/failure.
  */
-export function applyMetricScale(metric, value, scaleCtx, playerCtx, elog) {
+export function applyMetricScale(metric, value, scaleCtx, playerCtx, logError) {
   if (typeof metric.scale !== "function") return value;
   try {
     const scaled = metric.scale(value, scaleCtx, playerCtx);
     if (typeof scaled === "number" && isFinite(scaled)) return scaled;
   } catch (e) {
-    elog("scale fn threw for", metric.id, e);
+    logError("scale fn threw for", metric.id, e);
   }
   return value;
 }
 
 /**
  * Compute all configured metrics for one player context.
- * @param {PlayerCtx} playerCtx Per-civ context.
+ * @param {PlayerCtx} playerCtx
  * @param {number} turn Monotonic chart turn (not age-local) used by the
  *   era-scaling metrics, so GDP/Population stay continuous across age boundaries.
  * @param {(label: string, e: any) => void} tripIfTooMany Error hook.
- * @param {( ...a: any[] ) => void} elog Error logger.
+ * @param {( ...a: any[] ) => void} logError
  * @returns {Record<string, number>} Metric id -> value map.
  */
-export function computeMetrics(playerCtx, turn, tripIfTooMany, elog) {
+export function computeMetrics(playerCtx, turn, tripIfTooMany, logError) {
   /** @type {Record<string, number>} */
   const metrics = {};
   const scaleCtx = { turn, sampleIndex: undefined };
@@ -55,7 +55,7 @@ export function computeMetrics(playerCtx, turn, tripIfTooMany, elog) {
     try {
       const value = metric.accessor(playerCtx);
       if (typeof value === "number" && isFinite(value)) {
-        metrics[metric.id] = applyMetricScale(metric, value, scaleCtx, playerCtx, elog);
+        metrics[metric.id] = applyMetricScale(metric, value, scaleCtx, playerCtx, logError);
       }
     } catch (e) {
       tripIfTooMany("metric accessor " + metric.id, e);
@@ -66,7 +66,7 @@ export function computeMetrics(playerCtx, turn, tripIfTooMany, elog) {
 
 /**
  * Build persisted snapshot player payload from context + metrics.
- * @param {PlayerCtx} playerCtx Per-civ context.
+ * @param {PlayerCtx} playerCtx
  * @param {Record<string, number>} metrics Computed metrics.
  * @returns {object} Snapshot player record.
  */
@@ -109,7 +109,7 @@ function stampEmigrationRefugees(playerId) {
  * Stamp event-derived war metrics onto a player's metric map.
  * @param {Record<string, number>} metrics Metric map to augment.
  * @param {number} playerId
- * @param {*} playerCtx Player context.
+ * @param {*} playerCtx
  */
 export function stampWarMetrics(metrics, playerId, playerCtx) {
   metrics.milLostCum = getCumulativeCasualty(playerId);

@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
 
-// Regression gate for the Chart.js instance leak fixed on 2026-09-24.
+// Guards against leaking Chart.js instances.
 //
 // teardownExistingChart() only reaches a chart through the host element that still carries it, and
 // destroyChartsUnder() only walks hosts still under the screen root. A view/page swap detaches the
-// old host first, so the instance it held was unreachable by both and never destroyed: it kept its
-// canvas listeners and full dataset for the life of the UI context. On 1.5.0 every page-tab swap
-// leaked 2 instances and closing + reopening the screen reclaimed none (7/6 -> 14/13 across six
-// swaps); after the fix the same sequence held at 1/0.
+// old host first, so the instance it held is unreachable by both: without reclaimOrphanedCharts()
+// it keeps its canvas listeners and full dataset for the life of the UI context, two more on every
+// page-tab swap.
 //
 // Chart.js is the engine's global (fxs-hof-chart uses it too), so the sweep must destroy only
 // instances this mod created. That is the property most worth pinning: a sweep that took the

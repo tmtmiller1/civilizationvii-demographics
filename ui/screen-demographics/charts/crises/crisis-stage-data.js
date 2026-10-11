@@ -21,15 +21,15 @@ export const CRISIS_STAGE_LABELS = [
 /**
  * Read the global crisis_stage display value (0..4) off any one player in a
  * sample (the sampler stamps it on every player's metrics).
- * @param {Snapshot|*} s
- * @returns {number|undefined} The display stage, or undefined.
+ * @param {Snapshot|*} sample
+ * @returns {number|undefined} The display stage, or undefined when no player carries one.
  */
-function readSampleCrisisStage(s) {
-  const players = s?.players;
+function readSampleCrisisStage(sample) {
+  const players = sample?.players;
   if (!players) return undefined;
   let best = undefined;
-  for (const k of Object.keys(players)) {
-    best = maxStage(best, players[k]?.metrics?.crisis_stage);
+  for (const pid of Object.keys(players)) {
+    best = maxStage(best, players[pid]?.metrics?.crisis_stage);
   }
   return best;
 }
@@ -60,7 +60,7 @@ export function crisisStageOnsets(samples) {
   // this age reports a pre-crisis (<=0) reading; a lingering value is then never
   // mistaken for a fresh onset. The very first age starts armed.
   const state = { last: 0, age: /** @type {*} */ (undefined), armed: true };
-  for (const s of samples || []) onsetStep(s, state, onsets);
+  for (const sample of samples || []) onsetStep(sample, state, onsets);
   return onsets;
 }
 
@@ -68,18 +68,18 @@ export function crisisStageOnsets(samples) {
  * Fold one sample into the onset accumulator: reset the running max at age
  * changes, disarm across real age transitions until a pre-crisis reading
  * confirms this age's baseline, then record each genuine new-high onset.
- * @param {Snapshot|*} s
+ * @param {Snapshot|*} sample
  * @param {{ last: number, age: *, armed: boolean }} state Detection state (mutated).
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets Accumulator.
  */
-function onsetStep(s, state, onsets) {
-  if (!s) return;
-  handleAgeChange(s, state);
-  const raw = readSampleCrisisStage(s);
+function onsetStep(sample, state, onsets) {
+  if (!sample) return;
+  handleAgeChange(sample, state);
+  const raw = readSampleCrisisStage(sample);
   if (raw === undefined) return;
   if (raw <= 0) state.armed = true; // confirmed pre-crisis baseline for this age
-  if (isNewOnset(state, raw, s)) {
-    onsets.push({ stage: raw, turn: s.turn, sample: s });
+  if (isNewOnset(state, raw, sample)) {
+    onsets.push({ stage: raw, turn: sample.turn, sample });
   }
   if (raw >= 0) state.last = raw;
 }
@@ -87,13 +87,13 @@ function onsetStep(s, state, onsets) {
 /**
  * Reset the running max at an age change and disarm detection across real
  * age-to-age transitions (the first age has nothing to linger from).
- * @param {Snapshot|*} s
+ * @param {Snapshot|*} sample
  * @param {{ last: number, age: *, armed: boolean }} state Detection state (mutated).
  */
-function handleAgeChange(s, state) {
-  if (s.age === state.age) return;
+function handleAgeChange(sample, state) {
+  if (sample.age === state.age) return;
   if (state.age !== undefined) state.armed = false;
-  state.age = s.age;
+  state.age = sample.age;
   state.last = 0;
 }
 
@@ -102,11 +102,11 @@ function handleAgeChange(s, state) {
  * the running max, at least stage 1, and turn-stamped.
  * @param {{ last: number, armed: boolean }} state Detection state.
  * @param {number} raw The sample's crisis stage.
- * @param {Snapshot|*} s
- * @returns {boolean} True when a new onset should be recorded.
+ * @param {Snapshot|*} sample
+ * @returns {boolean}
  */
-function isNewOnset(state, raw, s) {
-  return state.armed && raw > state.last && raw >= 1 && typeof s.turn === "number";
+function isNewOnset(state, raw, sample) {
+  return state.armed && raw > state.last && raw >= 1 && typeof sample.turn === "number";
 }
 
 /**
@@ -129,11 +129,11 @@ export function sampleAgeKey(sample) {
 export function ageLastTurns(samples) {
   /** @type {Map<string, number>} */
   const map = new Map();
-  for (const s of samples || []) {
-    if (!s || typeof s.turn !== "number") continue;
-    const a = sampleAgeKey(s);
-    const prev = map.get(a);
-    if (prev === undefined || s.turn > prev) map.set(a, s.turn);
+  for (const sample of samples || []) {
+    if (!sample || typeof sample.turn !== "number") continue;
+    const age = sampleAgeKey(sample);
+    const prev = map.get(age);
+    if (prev === undefined || sample.turn > prev) map.set(age, sample.turn);
   }
   return map;
 }
@@ -166,10 +166,10 @@ function segmentEnd(onsets, i, latestTurn, ageLastTurn) {
  * @returns {{ stage: number, start: number, end: number, sample: Snapshot }[]}
  */
 export function crisisStageSegments(onsets, latestTurn, ageLastTurn) {
-  return onsets.map((o, i) => ({
-    stage: o.stage,
-    start: o.turn,
+  return onsets.map((onset, i) => ({
+    stage: onset.stage,
+    start: onset.turn,
     end: segmentEnd(onsets, i, latestTurn, ageLastTurn),
-    sample: o.sample
+    sample: onset.sample
   }));
 }

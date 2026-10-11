@@ -6,32 +6,18 @@
 // with UI.log as a fallback. Either path ends with a visible toast.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-const DBG = false;
-/**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.history-csv]", ...a);
-}
-/**
- * Error logger for this module.
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.history-csv]", ...a);
-}
+const log = makeLogger("history-csv");
 
 /**
  * Show a transient toast in `host`, auto-removing after 4s. Replaces any prior
  * toast first.
- * @param {HTMLElement} host The view host element.
+ * @param {HTMLElement} host
  * @param {string} message
  * @param {boolean} success Green (success) vs orange (failure) styling.
  */
 function showCsvToast(host, message, success) {
-  // Remove any prior toast first.
   try {
     const old = host.querySelector(".demographics-csv-toast");
     if (old) old.remove();
@@ -92,17 +78,17 @@ const CSV_CATEGORY_ORDER = {
 /**
  * Collect every metric id seen across all samples so the column set is stable.
  * @param {DemoHistory} history
- * @returns {Set<string>} The set of metric ids.
+ * @returns {Set<string>}
  */
 function collectMetricKeys(history) {
   /** @type {Set<string>} */
   const metricKeys = new Set();
-  for (const s of history.samples) {
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
-      const m = s.players[pid]?.metrics;
-      if (!m) continue;
-      for (const k of Object.keys(m)) metricKeys.add(k);
+  for (const sample of history.samples) {
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
+      const metrics = sample.players[pid]?.metrics;
+      if (!metrics) continue;
+      for (const k of Object.keys(metrics)) metricKeys.add(k);
     }
   }
   return metricKeys;
@@ -111,8 +97,8 @@ function collectMetricKeys(history) {
 /**
  * Order the seen metric keys by category, then append any uncategorised keys
  * alphabetically so newly-introduced metrics survive.
- * @param {Set<string>} metricKeys The set of seen metric ids.
- * @returns {string[]} The ordered metric column list.
+ * @param {Set<string>} metricKeys
+ * @returns {string[]}
  */
 function orderMetricColumns(metricKeys) {
   /** @type {string[]} */
@@ -141,44 +127,44 @@ function orderMetricColumns(metricKeys) {
 /**
  * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
  * when it contains a comma, quote, or newline.
- * @param {*} v The cell value.
+ * @param {*} value
  * @returns {string}
  */
-function csvCell(v) {
-  if (v === null || v === undefined) return "";
-  let s = String(v);
+function csvCell(value) {
+  if (value === null || value === undefined) return "";
+  let text = String(value);
   // Formula-injection guard: spreadsheets execute a cell starting with = + - @
   // (or a leading tab/CR) as a formula. Prefix a single quote, but skip plain
   // numbers (incl. negatives / BCE years) so numeric values keep their meaning.
-  if (/^[=+\-@\t\r]/.test(s) && !/^[+-]?[0-9]/.test(s)) s = "'" + s;
-  if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-  return s;
+  if (/^[=+\-@\t\r]/.test(text) && !/^[+-]?[0-9]/.test(text)) text = "'" + text;
+  if (/[",\n]/.test(text)) return '"' + text.replace(/"/g, '""') + '"';
+  return text;
 }
 
 /**
  * Format a number to remove floating-point noise. Integers stay integer; floats
  * round to 2 decimals; values ≥1000 round to integers (drops 50+% of file size
  * and makes the data readable in a spreadsheet).
- * @param {*} v The numeric value.
- * @returns {string} The formatted number, or "" for non-finite input.
+ * @param {*} value
+ * @returns {string} "" for non-finite input.
  */
-function fmtNum(v) {
-  if (typeof v !== "number" || !isFinite(v)) return "";
-  if (Number.isInteger(v)) return String(v);
-  if (Math.abs(v) >= 1000) return String(Math.round(v));
-  return String(Math.round(v * 100) / 100);
+function formatCsvNumber(value) {
+  if (typeof value !== "number" || !isFinite(value)) return "";
+  if (Number.isInteger(value)) return String(value);
+  if (Math.abs(value) >= 1000) return String(Math.round(value));
+  return String(Math.round(value * 100) / 100);
 }
 
 /**
  * The monotonic, cross-age-unique turn for a snapshot: `chartTurn` (continuous
  * across ages), since `turn` resets at every age boundary. Falls back to `turn`
  * for saves without chartTurn.
- * @param {Snapshot} s The sample row.
- * @returns {number} The monotonic turn used as the row key + sort key.
+ * @param {Snapshot} sample
+ * @returns {number} The turn used as both the row key and the sort key.
  */
-function rowSortTurn(s) {
-  if (typeof s.chartTurn === "number" && isFinite(s.chartTurn)) return s.chartTurn;
-  return typeof s.turn === "number" ? s.turn : 0;
+function rowSortTurn(sample) {
+  if (typeof sample.chartTurn === "number" && isFinite(sample.chartTurn)) return sample.chartTurn;
+  return typeof sample.turn === "number" ? sample.turn : 0;
 }
 
 /**
@@ -191,11 +177,11 @@ function rowSortTurn(s) {
 function buildCsvRowMap(history, metricCols) {
   /** @type {Map<string, string[]>} */
   const rowByKey = new Map();
-  for (const s of history.samples) {
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
-      const cells = buildCsvRowCells(s, pid, s.players[pid], metricCols);
-      rowByKey.set(rowSortTurn(s) + ":" + pid, cells);
+  for (const sample of history.samples) {
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
+      const cells = buildCsvRowCells(sample, pid, sample.players[pid], metricCols);
+      rowByKey.set(rowSortTurn(sample) + ":" + pid, cells);
     }
   }
   return rowByKey;
@@ -204,25 +190,25 @@ function buildCsvRowMap(history, metricCols) {
 /**
  * Build the ordered cell array for one (turn, pid) CSV row: the seven identity
  * columns followed by one formatted value per metric column.
- * @param {Snapshot} s The sample row.
+ * @param {Snapshot} sample
  * @param {string} pid
- * @param {CivSample} ps The per-civ sample.
+ * @param {CivSample} civSample
  * @param {string[]} metricCols
- * @returns {string[]} The row's cell array.
+ * @returns {string[]}
  */
-function buildCsvRowCells(s, pid, ps, metricCols) {
+function buildCsvRowCells(sample, pid, civSample, metricCols) {
   const cells = [
-    csvCell(s.turn),
-    csvCell(s.age || ""),
-    csvCell(s.gameYear || ""),
+    csvCell(sample.turn),
+    csvCell(sample.age || ""),
+    csvCell(sample.gameYear || ""),
     csvCell(pid),
-    csvCell(ps.leaderName || ""),
-    csvCell(ps.civName || ""),
-    csvCell(ps.civTypeString || ""),
-    csvCell(ps.met)
+    csvCell(civSample.leaderName || ""),
+    csvCell(civSample.civName || ""),
+    csvCell(civSample.civTypeString || ""),
+    csvCell(civSample.met)
   ];
   for (const k of metricCols) {
-    cells.push(fmtNum(ps.metrics?.[k]));
+    cells.push(formatCsvNumber(civSample.metrics?.[k]));
   }
   return cells;
 }
@@ -258,7 +244,7 @@ function readGameSpeedLabel() {
 
 /**
  * Resolve a GameSpeed hash to its lowercased speed-type label via GameInfo.
- * @param {*} speedHash The GameSpeed config hash.
+ * @param {*} speedHash
  * @returns {string} The lowercased speed type, or "unknown".
  */
 function gameSpeedLabelFor(speedHash) {
@@ -275,9 +261,9 @@ function gameSpeedLabelFor(speedHash) {
 function readMapTypeLabel() {
   try {
     if (typeof Configuration !== "undefined" && Configuration.getMap) {
-      const m = Configuration.getMap();
-      const ms = m?.mapScript;
-      if (typeof ms === "string") return ms;
+      const mapConfig = Configuration.getMap();
+      const mapScript = mapConfig?.mapScript;
+      if (typeof mapScript === "string") return mapScript;
     }
   } catch (_) {
     // Configuration.getMap().mapScript can throw at the engine boundary;
@@ -318,7 +304,7 @@ function buildCsvMetaHeader(history, rowByKey, metricCols) {
   const turnsCovered = (lastSample?.turn || 0) - (firstSample?.turn || 0) + 1;
   const { gameSpeed, mapType, currentAge } = readCsvGameContext();
   const civCount = Array.from(rowByKey.keys()).reduce(
-    (s, k) => s.add(k.split(":")[1]),
+    (pids, key) => pids.add(key.split(":")[1]),
     /** @type {Set<string>} */ (new Set())
   ).size;
   /** @type {string[]} */
@@ -352,7 +338,7 @@ function buildCsvMetaHeader(history, rowByKey, metricCols) {
 /**
  * Write `csv` to the clipboard via the engine's `UI.setClipboardText`, gated by
  * `UI.isClipboardAvailable()` where present (cite: pause-menu-model.js).
- * @param {string} csv The full CSV text.
+ * @param {string} csv
  * @returns {boolean} True when the clipboard write succeeded.
  */
 function writeCsvToClipboard(csv) {
@@ -372,7 +358,7 @@ function writeCsvToClipboard(csv) {
       clipboardOk = true;
     }
   } catch (e) {
-    derr("CSV export: clipboard write threw:", /** @type {*} */ (e)?.message);
+    log.error("CSV export: clipboard write threw:", /** @type {*} */ (e)?.message);
   }
   return clipboardOk;
 }
@@ -386,13 +372,12 @@ function writeCsvToClipboard(csv) {
  */
 export function exportHistoryAsCsv(history, host) {
   if (!history || !Array.isArray(history.samples) || history.samples.length === 0) {
-    dlog("CSV export: no samples to write");
+    log.debug("CSV export: no samples to write");
     if (host) showCsvToast(host, t("LOC_DEMOGRAPHICS_CSV_NO_SAMPLES"), false);
     return;
   }
   const { csv, lines, headers } = buildCsvDocument(history);
 
-  // size guard
   // Large payloads stall the log writer and can drop the Coherent IPC call.
   //   < 2 MB  → normal flow, clipboard + log
   //   2-8 MB  → clipboard yes, log summary only (no full dump)
@@ -418,7 +403,7 @@ export function exportHistoryAsCsv(history, host) {
     clipboardOk
   });
 
-  dlog(
+  log.debug(
     "CSV export complete; clipboard=" +
       clipboardOk +
       " rows=" +
@@ -441,7 +426,6 @@ const CSV_HARD_LIMIT = 8 * 1024 * 1024;
  *   its line array, and the column-header array.
  */
 function buildCsvDocument(history) {
-  // Collect every metric ID we've ever seen so columns are stable.
   const metricKeys = collectMetricKeys(history);
   const metricCols = orderMetricColumns(metricKeys);
   const headers = [
@@ -459,11 +443,10 @@ function buildCsvDocument(history) {
   // Emit sorted by (chartTurn ASC, pid ASC) for predictable, chronological
   // spreadsheet order across ages (the key is "chartTurn:pid").
   const sortedKeys = Array.from(rowByKey.keys()).sort((a, b) => {
-    const [ta, pa] = a.split(":").map(Number);
-    const [tb, pb] = b.split(":").map(Number);
-    return ta - tb || pa - pb;
+    const [turnA, pidA] = a.split(":").map(Number);
+    const [turnB, pidB] = b.split(":").map(Number);
+    return turnA - turnB || pidA - pidB;
   });
-  // metadata header
   // `#`-prefixed provenance + game context lines; most importers honor them as comments.
   const lines = buildCsvMetaHeader(history, rowByKey, metricCols);
   lines.push(headers.join(","));
@@ -492,7 +475,7 @@ function refuseOversizedCsv(host, sizeMB) {
 /**
  * Dump the CSV to UI.log as a recoverable fallback - full dump under the soft
  * limit, summary line above it (so the log writer isn't stalled).
- * @param {string} csv The full CSV text.
+ * @param {string} csv
  * @param {number} lineCount
  * @param {string} sizeMB
  * @param {boolean} clipboardOk
@@ -533,7 +516,7 @@ function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
  *   colCount: number,
  *   sizeMB: string,
  *   clipboardOk: boolean
- * }} params Toast payload.
+ * }} params
  */
 function showCsvResultToast(params) {
   const { host, csv, lineCount, colCount, sizeMB, clipboardOk } = params;

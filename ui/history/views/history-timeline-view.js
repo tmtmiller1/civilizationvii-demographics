@@ -6,7 +6,7 @@
 // redraws in place so the page keeps its scroll position. Everything is HTML placed by percentage.
 
 import { el, clear, onActivate } from "/demographics/ui/history/core/history-dom.js";
-import { derr, safe } from "/demographics/ui/history/core/history-log.js";
+import { log, safe } from "/demographics/ui/history/core/history-log.js";
 import { t, typeName } from "/demographics/ui/history/core/history-text.js";
 import { eventText } from "/demographics/ui/history/model/history-narrate.js";
 import { pillRow, civIcon, emptyState } from "/demographics/ui/history/views/history-widgets.js";
@@ -15,8 +15,22 @@ import { KIND_ICONS, DISASTER_ICONS } from "/demographics/ui/history/core/histor
 import { focusTimeline, timelineCivs } from "/demographics/ui/history/model/history-timeline.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
 import {
-  xp, ageHeader, warLane, crisisLane, milestoneLanes, settlementLane, disasterLane, migrationLane, populationLane,
-  rulerLane, gridLines, shortPeople, newItemCache, beginItemPass, endItemPass
+  ageHeader,
+  beginItemPass,
+  crisisLane,
+  disasterLane,
+  endItemPass,
+  gridLines,
+  migrationLane,
+  milestoneLanes,
+  newItemCache,
+  partyName,
+  populationLane,
+  rulerLane,
+  settlementLane,
+  shortPeople,
+  turnToPercent,
+  warLane
 } from "/demographics/ui/history/views/history-timeline-lanes.js";
 
 export { stackRows, shortPeople } from "/demographics/ui/history/views/history-timeline-lanes.js";
@@ -41,7 +55,7 @@ const MARK_LEGEND = [
 /**
  * @typedef {import("../model/history-timeline.js").Timeline} Timeline
  * @typedef {import("../model/history-narrate.js").Cast} Cast
- * @typedef {{from:number, to:number}} Win
+ * @typedef {import("./history-timeline-lanes.js").AxisWindow} AxisWindow
  * @typedef {{at:number, text:string}} Beat
  */
 
@@ -59,7 +73,7 @@ function guarded(what, fn) {
     try {
       fn(...args);
     } catch (e) {
-      derr("timeline " + what + " failed", e);
+      log.error("timeline " + what + " failed", e);
     }
   };
 }
@@ -68,11 +82,11 @@ function guarded(what, fn) {
  * The window shown for the selected age ("all" is the whole game).
  * @param {Timeline} tl
  * @param {string} age Selected age type or "all".
- * @returns {Win}
+ * @returns {AxisWindow}
  */
 export function windowFor(tl, age) {
-  const a = tl.ages.find((x) => x.age === age);
-  return a ? { from: a.from, to: a.from + a.len } : { from: 0, to: Math.max(1, tl.total) };
+  const span = tl.ages.find((x) => x.age === age);
+  return span ? { from: span.from, to: span.from + span.len } : { from: 0, to: Math.max(1, tl.total) };
 }
 
 /**
@@ -82,63 +96,60 @@ export function windowFor(tl, age) {
  * @returns {Beat[]}
  */
 export function beats(tl, cast) {
-  const ageAt = (/** @type {number} */ at) => tl.ages.find((a) => at >= a.from && at < a.from + a.len)?.age || "";
-  const said = (/** @type {number} */ at, /** @type {string} */ d, /** @type {HnrEvent} */ e) =>
-    ({ at, text: dated(d, eventText(e, cast, ageAt(at))) });
-  const ev = (/** @type {*} */ o) => /** @type {HnrEvent} */ ({ t: 0, a: 0, ...o });
+  const ageAt = (/** @type {number} */ at) =>
+    tl.ages.find((span) => at >= span.from && at < span.from + span.len)?.age || "";
+  const said = (/** @type {number} */ at, /** @type {string} */ date, /** @type {HistoryEvent} */ event) =>
+    ({ at, text: dated(date, eventText(event, cast, ageAt(at))) });
+  const asEvent = (/** @type {*} */ fields) => /** @type {HistoryEvent} */ ({ t: 0, a: 0, ...fields });
+  const markEvent = (/** @type {Timeline["marks"][number]} */ mark) =>
+    asEvent({ k: mark.k === "lost" ? "capture" : mark.k, p: mark.p, q: mark.q, n: mark.n, x: mark.x });
   /** @type {Beat[]} */
   const out = [
-    ...tl.ages.map((a) => ({ at: a.from, text: dated(a.d, typeName(a.n, a.age)) })),
-    ...tl.wars.map((w) => ({ at: w.from, text: dated(w.d, warText(cast, w, ageAt(w.from))) })),
-    ...tl.crises.map((c) => ({ at: c.from, text: crisisText(c) })),
-    ...tl.marks.map((m) => said(m.at, m.d, ev({ k: m.k === "lost" ? "capture" : m.k, p: m.p, q: m.q, n: m.n, x: m.x }))),
-    ...tl.disasters.map((d) => said(d.at, d.d, ev({ k: "disaster", p: d.p, n: d.n, x: d.x }))),
-    ...tl.founds.map((f) => said(f.at, f.d, ev({ k: "found", p: f.p ?? cast.local, n: f.n }))),
-    ...tl.pops.map((p) => ({ at: p.at, text: t("LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED", shortPeople(p.v)) }))
+    ...tl.ages.map((span) => ({ at: span.from, text: dated(span.d, typeName(span.n, span.age)) })),
+    ...tl.wars.map((war) => ({ at: war.from, text: dated(war.d, warText(cast, war, ageAt(war.from))) })),
+    ...tl.crises.map((stage) => ({ at: stage.from, text: crisisText(stage) })),
+    ...tl.marks.map((mark) => said(mark.at, mark.d, markEvent(mark))),
+    ...tl.disasters.map((strike) =>
+      said(strike.at, strike.d, asEvent({ k: "disaster", p: strike.p, n: strike.n, x: strike.x }))),
+    ...tl.founds.map((found) =>
+      said(found.at, found.d, asEvent({ k: "found", p: found.p ?? cast.local, n: found.n }))),
+    ...tl.pops.map((pop) => ({ at: pop.at, text: t("LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED", shortPeople(pop.v)) }))
   ];
   return out.sort((a, b) => a.at - b.at);
 }
 
 /**
  * "date: text", or the text alone without a date.
- * @param {string} d
- * @param {string} s
+ * @param {string} date
+ * @param {string} text
  * @returns {string}
  */
-function dated(d, s) {
-  return (d ? d + ": " : "") + s;
-}
-
-/**
- * The enemy's name for a war (independent peoples when unnamed).
- * @param {Cast} cast
- * @param {number} pid
- * @param {string} age
- * @returns {string}
- */
-function warName(cast, pid, age) {
-  return cast.civName(pid, age) || t("LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
+function dated(date, text) {
+  return (date ? date + ": " : "") + text;
 }
 
 /**
  * A war's caption: yours against the enemy, or two other civilizations against each other.
  * @param {Cast} cast
- * @param {Timeline["wars"][number]} w
+ * @param {Timeline["wars"][number]} war
  * @param {string} age
  * @returns {string}
  */
-function warText(cast, w, age) {
-  if (w.a != null && w.a !== cast.local) return t("LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR", warName(cast, w.a, age), warName(cast, w.other, age));
-  return t("LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH", warName(cast, w.other, age));
+function warText(cast, war, age) {
+  if (war.a != null && war.a !== cast.local) {
+    return t("LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR", partyName(cast, war.a, age), partyName(cast, war.other, age));
+  }
+  return t("LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH", partyName(cast, war.other, age));
 }
 
 /**
  * A crisis stage's caption.
- * @param {Timeline["crises"][number]} c
+ * @param {Timeline["crises"][number]} stage
  * @returns {string}
  */
-function crisisText(c) {
-  return (t(c.n) || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED")) + ", " + t("LOC_DEMOGRAPHICS_HIST_TL_STAGE", c.stage);
+function crisisText(stage) {
+  const name = t(stage.n) || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED");
+  return name + ", " + t("LOC_DEMOGRAPHICS_HIST_TL_STAGE", stage.stage);
 }
 
 /**
@@ -149,9 +160,9 @@ function crisisText(c) {
  */
 export function beatAt(list, at) {
   let found = null;
-  for (const b of list) {
-    if (b.at > at) break;
-    found = b;
+  for (const beat of list) {
+    if (beat.at > at) break;
+    found = beat;
   }
   return found;
 }
@@ -163,28 +174,34 @@ export function beatAt(list, at) {
  * @returns {string}
  */
 function turnLabel(tl, at) {
-  const a = tl.ages.find((x) => at >= x.from && at < x.from + x.len) || tl.ages[tl.ages.length - 1];
-  if (!a) return "";
-  return typeName(a.n, a.age) + ", " + t("LOC_DEMOGRAPHICS_HIST_TL_TURN", Math.round((a.t0 || 1) + at - a.from));
+  const span = tl.ages.find((x) => at >= x.from && at < x.from + x.len) || tl.ages[tl.ages.length - 1];
+  if (!span) return "";
+  const turn = Math.round((span.t0 || 1) + at - span.from);
+  return typeName(span.n, span.age) + ", " + t("LOC_DEMOGRAPHICS_HIST_TL_TURN", turn);
 }
 
 /**
  * The lanes of the window, in drawing order.
  * @param {Timeline} tl
- * @param {Win} w
+ * @param {AxisWindow} win
  * @param {Cast} cast
  * @param {number} zoom
  * @param {import("./history-timeline-lanes.js").ItemCache} [cache] Item-reuse cache, handed to the
  *   lanes whose items carry engine art (emblems, medallions, gems) so a redraw keeps those
  *   elements instead of re-creating them and making each one blink.
- * @returns {import("./history-timeline-lanes.js").Lane[]} Lanes.
+ * @returns {import("./history-timeline-lanes.js").Lane[]}
  */
-function lanesFor(tl, w, cast, zoom, cache) {
+function lanesFor(tl, win, cast, zoom, cache) {
   return [
-    ageHeader(tl, w, cast, cache), warLane(tl, w, cast, cache), crisisLane(tl, w, cache),
-    ...milestoneLanes(tl, w, cast, cache),
-    settlementLane(tl, w, cast), disasterLane(tl, w, cast, cache), migrationLane(tl, w),
-    populationLane(tl, w, cast), rulerLane(tl, w, zoom)
+    ageHeader(tl, win, cast, cache),
+    warLane(tl, win, cast, cache),
+    crisisLane(tl, win, cache),
+    ...milestoneLanes(tl, win, cast, cache),
+    settlementLane(tl, win, cast),
+    disasterLane(tl, win, cast, cache),
+    migrationLane(tl, win),
+    populationLane(tl, win, cast),
+    rulerLane(tl, win, zoom)
   ].filter((x) => !!x).map((x) => /** @type {import("./history-timeline-lanes.js").Lane} */ (x));
 }
 
@@ -194,7 +211,7 @@ function lanesFor(tl, w, cast, zoom, cache) {
  * @returns {HTMLElement}
  */
 function legend(tl) {
-  const present = new Set(tl.marks.map((m) => m.k));
+  const present = new Set(tl.marks.map((mark) => mark.k));
   const item = (/** @type {string} */ swatch, /** @type {string} */ label) =>
     el("div", { cls: "dgh-tl-legend-item" }, [el("div", { cls: swatch }), el("div", { text: t(label) })]);
   const iconItem = (/** @type {string} */ icon, /** @type {string} */ label) => {
@@ -202,7 +219,9 @@ function legend(tl) {
     swatch.style.backgroundImage = "url('" + icon + "')";
     return el("div", { cls: "dgh-tl-legend-item" }, [swatch, el("div", { text: t(label) })]);
   };
-  const items = MARK_LEGEND.filter(([k]) => present.has(k)).map(([k, label]) => iconItem(KIND_ICONS[k], label));
+  const items = MARK_LEGEND
+    .filter(([kind]) => present.has(kind))
+    .map(([kind, label]) => iconItem(KIND_ICONS[kind], label));
   if (tl.crises.length) items.push(iconItem(KIND_ICONS.crisis, "LOC_DEMOGRAPHICS_HIST_TL_CRISES"));
   if (tl.disasters.length) items.push(iconItem(DISASTER_ICONS.volcano, "LOC_DEMOGRAPHICS_HIST_TL_DISASTERS"));
   if (tl.mig.length) {
@@ -216,17 +235,17 @@ function legend(tl) {
  * The territory map (when the game has one) above the timeline, following its cursor, with an
  * optional companion (the rivals) to its right.
  * @param {Timeline} tl
- * @param {import("../model/history-map.js").MapView|null} mv Territory map.
+ * @param {import("../model/history-map.js").MapView|null} mapView Territory map.
  * @param {Cast} cast
  * @param {HTMLElement|null} [side] Shown to the right of the map.
  * @param {string} [key] The game's id (the civilization filter is remembered per game).
  * @returns {HTMLElement[]} Map row and timeline.
  */
-export function timelineWithMap(tl, mv, cast, side = null, key = "") {
-  if (!mv) return side ? [side, timelineGraphic(tl, cast, { key })] : [timelineGraphic(tl, cast, { key })];
+export function timelineWithMap(tl, mapView, cast, side = null, key = "") {
+  if (!mapView) return side ? [side, timelineGraphic(tl, cast, { key })] : [timelineGraphic(tl, cast, { key })];
   const ageAt = (/** @type {number} */ at) =>
-    (tl.ages.find((a) => at >= a.from && at < a.from + a.len) || tl.ages[tl.ages.length - 1])?.age || "";
-  const map = mapPanel(mv, cast, ageAt, (at) => turnLabel(tl, at));
+    (tl.ages.find((span) => at >= span.from && at < span.from + span.len) || tl.ages[tl.ages.length - 1])?.age || "";
+  const map = mapPanel(mapView, cast, ageAt, (at) => turnLabel(tl, at));
   const row = el("div", { cls: "dgh-map-row" }, [map.el, side ? el("div", { cls: "dgh-map-side" }, [side]) : null]);
   return [row, timelineGraphic(tl, cast, { onSeek: map.show, key })];
 }
@@ -235,8 +254,9 @@ export function timelineWithMap(tl, mv, cast, side = null, key = "") {
  * The interactive timeline of one game.
  * @param {Timeline} tl
  * @param {Cast} cast
- * @param {{onSeek?: (at:number) => void, key?: string}} [opts] onSeek: told the position shown (the cursor,
- *   else the end of the window), so a companion such as the territory map can follow; key: the game's id.
+ * @param {{onSeek?: (at:number) => void, key?: string}} [opts] onSeek: told the position shown (the
+ *   cursor, else the end of the window), so a companion such as the territory map can follow; key: the
+ *   game's id.
  * @returns {HTMLElement}
  */
 export function timelineGraphic(tl, cast, opts = {}) {
@@ -261,7 +281,7 @@ export function timelineGraphic(tl, cast, opts = {}) {
   const draw = () => {
     stop();
     try {
-      if (!tl.ages.some((a) => a.age === viewState.tlAge)) viewState.tlAge = "all";
+      if (!tl.ages.some((span) => span.age === viewState.tlAge)) viewState.tlAge = "all";
       const shown = shownCivs(opts.key || "", cast);
       const focused = focusTimeline(tl, cast.local, shown);
       const sig = Array.from(shown).sort((a, b) => a - b).join(",");
@@ -274,7 +294,7 @@ export function timelineGraphic(tl, cast, opts = {}) {
       const fx = { redraw: draw, stop, onSeek: opts.onSeek || (() => {}) };
       drawInto(root, focused, cast, play, { ...fx, civs: chrome.civs, legend: chrome.legend, items });
     } catch (e) {
-      derr("timeline draw failed", e);
+      log.error("timeline draw failed", e);
       // The kept chrome may be half-wired after a throw, and the item pass never finished; force a
       // clean rebuild of both on the next draw.
       chrome.sig = null;
@@ -310,21 +330,23 @@ function shownCivs(key, cast) {
  */
 function civFilter(tl, cast, shown, key, redraw) {
   const age = tl.ages[tl.ages.length - 1]?.age || "";
-  const civs = timelineCivs(tl, cast.local).filter((pid) => pid === cast.local || (cast.known(pid) && cast.color(pid)));
+  const civs = timelineCivs(tl, cast.local)
+    .filter((pid) => pid === cast.local || (cast.known(pid) && cast.color(pid)));
   if (civs.length < 2) return null;
   const set = guarded("civilization filter", (/** @type {number[]} */ pids) => {
     viewState.tlCivs = { key, pids };
     redraw();
   });
   const quick = (/** @type {string} */ label, /** @type {number[]} */ pids, /** @type {boolean} */ on) => {
-    const b = el("div", { cls: "dgh-pill dgh-tl-civ-quick" + (on ? " is-active" : ""), text: t(label) });
-    onActivate(b, () => set(pids));
-    return b;
+    const button = el("div", { cls: "dgh-pill dgh-tl-civ-quick" + (on ? " is-active" : ""), text: t(label) });
+    onActivate(button, () => set(pids));
+    return button;
   };
   const chips = civs.map((pid) => {
     const on = shown.has(pid);
     const civ = cast.civType(pid, age);
-    const chip = el("div", { cls: "dgh-tl-civ" + (on ? " is-active" : "") + (pid === cast.local ? " is-mine" : "") }, [
+    const cls = "dgh-tl-civ" + (on ? " is-active" : "") + (pid === cast.local ? " is-mine" : "");
+    const chip = el("div", { cls }, [
       el("div", { cls: "dgh-civ-dot", style: { backgroundColor: cast.color(pid) || "#85878c" } }),
       civ ? civIcon(civ, "dgh-civ-icon dgh-tl-civ-icon") : null,
       el("div", { text: cast.civName(pid, age) || cast.leaderName(pid) })
@@ -355,18 +377,22 @@ function civFilter(tl, cast, shown, key, redraw) {
  */
 function drawInto(root, tl, cast, play, fx) {
   const zoom = ZOOMS.includes(viewState.tlZoom) ? viewState.tlZoom : 1;
-  const w = windowFor(tl, viewState.tlAge);
+  const win = windowFor(tl, viewState.tlAge);
   beginItemPass(fx.items);
-  const lanes = lanesFor(tl, w, cast, zoom, fx.items);
+  const lanes = lanesFor(tl, win, cast, zoom, fx.items);
   endItemPass(fx.items);
-  const labels = el("div", { cls: "dgh-tl-labels" }, lanes.map((l) =>
-    el("div", { cls: "dgh-tl-label", text: l.label ? t(l.label) : "", style: { height: l.height + "rem" } })));
-  const laneEls = lanes.map((l) => el("div", { cls: "dgh-tl-lane dgh-tl-lane--" + l.key, style: { height: l.height + "rem" } }, l.items));
-  const canvas = el("div", { cls: "dgh-tl-canvas", style: { width: zoom * 100 + "%" } }, [...gridLines(tl, w, zoom), ...laneEls]);
+  const labels = el("div", { cls: "dgh-tl-labels" }, lanes.map((lane) =>
+    el("div", { cls: "dgh-tl-label", text: lane.label ? t(lane.label) : "", style: { height: lane.height + "rem" } })));
+  const laneEls = lanes.map((lane) =>
+    el("div", { cls: "dgh-tl-lane dgh-tl-lane--" + lane.key, style: { height: lane.height + "rem" } }, lane.items));
+  const canvas = el("div", { cls: "dgh-tl-canvas", style: { width: zoom * 100 + "%" } }, [
+    ...gridLines(tl, win, zoom),
+    ...laneEls
+  ]);
   const viewport = el("div", { cls: "dgh-tl-viewport" }, [canvas]);
   const caption = el("div", { cls: "dgh-tl-caption" });
-  const player = playback(tl, cast, w, play, { canvas, viewport, caption, stop: fx.stop, onSeek: fx.onSeek });
-  wireLanes(tl, w, lanes.map((l, i) => ({ key: l.key, node: laneEls[i] })), player, cast);
+  const player = playback(tl, cast, win, play, { canvas, viewport, caption, stop: fx.stop, onSeek: fx.onSeek });
+  wireLanes(tl, win, lanes.map((lane, i) => ({ key: lane.key, node: laneEls[i] })), player, cast);
   root.appendChild(controls(tl, player, viewport, fx));
   if (fx.civs) root.appendChild(fx.civs);
   root.appendChild(el("div", { cls: "dgh-tl-body" }, [labels, viewport]));
@@ -374,8 +400,8 @@ function drawInto(root, tl, cast, play, fx) {
   // Kept from the previous draw when the shown civilizations did not change (see `chrome` in
   // timelineGraphic); appending an element already in the tree moves it back into place.
   root.appendChild(fx.legend || legend(tl));
-  if (play.at >= w.from && play.at <= w.to) player.seek(play.at);
-  else fx.onSeek(w.to - 0.5);
+  if (play.at >= win.from && play.at <= win.to) player.seek(play.at);
+  else fx.onSeek(win.to - 0.5);
 }
 
 /**
@@ -393,19 +419,19 @@ function clearExcept(node, keep) {
  * Mouse behavior of the lanes: the ruler seeks on click, and the ruler and population lane show a
  * readout that follows the mouse.
  * @param {Timeline} tl
- * @param {Win} w
+ * @param {AxisWindow} win
  * @param {{key:string, node:HTMLElement}[]} lanes
  * @param {Player} player
  * @param {Cast} cast
  */
-function wireLanes(tl, w, lanes, player, cast) {
-  const ruler = lanes.find((l) => l.key === "ruler")?.node;
+function wireLanes(tl, win, lanes, player, cast) {
+  const ruler = lanes.find((lane) => lane.key === "ruler")?.node;
   if (ruler) {
-    onActivateAt(ruler, (frac) => player.seek(w.from + frac * (w.to - w.from)));
-    hoverReadout(ruler, w, (at) => turnLabel(tl, at));
+    onActivateAt(ruler, (frac) => player.seek(win.from + frac * (win.to - win.from)));
+    hoverReadout(ruler, win, (at) => turnLabel(tl, at));
   }
-  const pops = lanes.find((l) => l.key === "pops")?.node;
-  if (pops) hoverReadout(pops, w, (at) => turnLabel(tl, at) + "  ·  " + populationsAt(tl, cast, at));
+  const pops = lanes.find((lane) => lane.key === "pops")?.node;
+  if (pops) hoverReadout(pops, win, (at) => turnLabel(tl, at) + "  ·  " + populationsAt(tl, cast, at));
 }
 
 /**
@@ -417,10 +443,15 @@ function wireLanes(tl, w, lanes, player, cast) {
  */
 function populationsAt(tl, cast, at) {
   const lines = tl.lines || [];
-  const age = tl.ages.find((a) => at >= a.from && at < a.from + a.len)?.age || "";
+  const age = tl.ages.find((span) => at >= span.from && at < span.from + span.len)?.age || "";
   if (!lines.length) return shortPeople(valueAt(tl.curve, at));
   const all = [...(tl.curve.length ? [{ pid: cast.local, pts: tl.curve }] : []), ...lines];
-  return all.map((l) => (cast.civName(l.pid, age) || cast.leaderName(l.pid)) + " " + shortPeople(valueAt(l.pts, at))).join("  ·  ");
+  return all
+    .map((line) => {
+      const name = cast.civName(line.pid, age) || cast.leaderName(line.pid);
+      return name + " " + shortPeople(valueAt(line.pts, at));
+    })
+    .join("  ·  ");
 }
 
 /**
@@ -432,9 +463,11 @@ function populationsAt(tl, cast, at) {
 export function valueAt(curve, at) {
   if (!curve.length || at < curve[0].at) return 0;
   for (let i = 1; i < curve.length; i++) {
-    const a = curve[i - 1];
-    const b = curve[i];
-    if (at <= b.at) return b.at === a.at ? b.v : a.v + ((b.v - a.v) * (at - a.at)) / (b.at - a.at);
+    const prev = curve[i - 1];
+    const next = curve[i];
+    if (at <= next.at) {
+      return next.at === prev.at ? next.v : prev.v + ((next.v - prev.v) * (at - prev.at)) / (next.at - prev.at);
+    }
   }
   return curve[curve.length - 1].v;
 }
@@ -442,20 +475,20 @@ export function valueAt(curve, at) {
 /**
  * A readout that follows the mouse across a lane: a hairline and a label naming what is under it.
  * @param {HTMLElement} lane
- * @param {Win} w
+ * @param {AxisWindow} win
  * @param {(at:number) => string} textAt Label for a position.
  */
-function hoverReadout(lane, w, textAt) {
+function hoverReadout(lane, win, textAt) {
   const line = el("div", { cls: "dgh-tl-hover-line" });
   const label = el("div", { cls: "dgh-tl-hover-label" });
   const box = el("div", { cls: "dgh-tl-hover is-hidden" }, [line, label]);
   lane.appendChild(box);
   lane.addEventListener("mousemove", guarded("readout", (/** @type {any} */ ev) => {
-    const r = lane.getBoundingClientRect();
-    if (!(r.width > 0) || typeof ev.clientX !== "number") return;
-    const frac = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width));
+    const rect = lane.getBoundingClientRect();
+    if (!(rect.width > 0) || typeof ev.clientX !== "number") return;
+    const frac = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
     box.style.left = (frac * 100).toFixed(3) + "%";
-    label.textContent = textAt(w.from + frac * (w.to - w.from));
+    label.textContent = textAt(win.from + frac * (win.to - win.from));
     if (frac > 0.75) label.classList.add("is-left");
     else label.classList.remove("is-left");
     box.classList.remove("is-hidden");
@@ -463,10 +496,11 @@ function hoverReadout(lane, w, textAt) {
   // GameFace also sends mouseleave when the pointer crosses the lane's own children, so hide only
   // once it is really outside the lane.
   lane.addEventListener("mouseleave", (/** @type {any} */ ev) => {
-    const r = lane.getBoundingClientRect();
+    const rect = lane.getBoundingClientRect();
     const x = ev?.clientX;
     const y = ev?.clientY;
-    const inside = typeof x === "number" && typeof y === "number" && x > r.left && x < r.left + r.width && y > r.top && y < r.top + r.height;
+    const inside = typeof x === "number" && typeof y === "number" &&
+      x > rect.left && x < rect.left + rect.width && y > rect.top && y < rect.top + rect.height;
     if (!inside) box.classList.add("is-hidden");
   });
 }
@@ -478,8 +512,8 @@ function hoverReadout(lane, w, textAt) {
  */
 function onActivateAt(target, fn) {
   target.addEventListener("click", guarded("seek", (/** @type {any} */ ev) => {
-    const r = target.getBoundingClientRect();
-    if (r.width > 0) fn(Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)));
+    const rect = target.getBoundingClientRect();
+    if (rect.width > 0) fn(Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width)));
   }));
 }
 
@@ -495,27 +529,30 @@ function onActivateAt(target, fn) {
  * Playback: a cursor with a veil over the future and a caption naming the latest event.
  * @param {Timeline} tl
  * @param {Cast} cast
- * @param {Win} w
+ * @param {AxisWindow} win
  * @param {{timer: any, at: number}} play Playback state (kept across redraws).
  * @param {{canvas: HTMLElement, viewport: HTMLElement, caption: HTMLElement, stop: () => void,
  *   onSeek: (at:number) => void}} ui
  * @returns {Player}
  */
-function playback(tl, cast, w, play, ui) {
+function playback(tl, cast, win, play, ui) {
   const list = beats(tl, cast);
   const cursor = el("div", { cls: "dgh-tl-cursor" });
   const veil = el("div", { cls: "dgh-tl-veil" });
   /** @type {(() => void)|null} */
   let onChange = null;
   const seek = (/** @type {number} */ at) => {
-    play.at = Math.max(w.from, Math.min(w.to, at));
-    const x = xp(w, play.at);
-    if (!cursor.parentNode) { ui.canvas.appendChild(veil); ui.canvas.appendChild(cursor); }
-    cursor.style.left = x.toFixed(3) + "%";
-    veil.style.left = x.toFixed(3) + "%";
+    play.at = Math.max(win.from, Math.min(win.to, at));
+    const percent = turnToPercent(win, play.at);
+    if (!cursor.parentNode) {
+      ui.canvas.appendChild(veil);
+      ui.canvas.appendChild(cursor);
+    }
+    cursor.style.left = percent.toFixed(3) + "%";
+    veil.style.left = percent.toFixed(3) + "%";
     const beat = beatAt(list, play.at);
-    ui.caption.textContent = turnLabel(tl, play.at) + (beat && beat.at >= w.from ? "  ·  " + beat.text : "");
-    follow(ui.viewport, ui.canvas, x);
+    ui.caption.textContent = turnLabel(tl, play.at) + (beat && beat.at >= win.from ? "  ·  " + beat.text : "");
+    follow(ui.viewport, ui.canvas, percent);
     ui.onSeek(play.at);
   };
   // A throw inside a tick stops playback first: the interval would otherwise throw again every
@@ -523,12 +560,15 @@ function playback(tl, cast, w, play, ui) {
   const tick = () => {
     try {
       if (!ui.canvas.isConnected) return ui.stop();
-      const next = play.at + (w.to - w.from) / PLAY_TICKS;
+      const next = play.at + (win.to - win.from) / PLAY_TICKS;
       seek(next);
-      if (next >= w.to) { ui.stop(); onChange?.(); }
+      if (next >= win.to) {
+        ui.stop();
+        onChange?.();
+      }
     } catch (e) {
       ui.stop();
-      derr("timeline playback failed", e);
+      log.error("timeline playback failed", e);
       safe(() => onChange?.(), undefined);
     }
   };
@@ -538,11 +578,13 @@ function playback(tl, cast, w, play, ui) {
     toggle: () => {
       if (play.timer != null) ui.stop();
       else {
-        if (play.at < w.from || play.at >= w.to) seek(w.from);
+        if (play.at < win.from || play.at >= win.to) seek(win.from);
         play.timer = setInterval(tick, PLAY_MS);
       }
     },
-    onEnd: (fn) => { onChange = fn; }
+    onEnd: (fn) => {
+      onChange = fn;
+    }
   };
 }
 
@@ -550,10 +592,10 @@ function playback(tl, cast, w, play, ui) {
  * Keep the cursor in view while it moves.
  * @param {HTMLElement} viewport Scroll box.
  * @param {HTMLElement} canvas
- * @param {number} x Cursor position in percent of the canvas.
+ * @param {number} percent Cursor position in percent of the canvas.
  */
-function follow(viewport, canvas, x) {
-  const px = (canvas.offsetWidth * x) / 100;
+function follow(viewport, canvas, percent) {
+  const px = (canvas.offsetWidth * percent) / 100;
   const view = viewport.clientWidth;
   const off = px < viewport.scrollLeft + view * 0.1 || px > viewport.scrollLeft + view * 0.8;
   if (off) viewport.scrollLeft = Math.max(0, px - view * 0.3);
@@ -570,9 +612,9 @@ function follow(viewport, canvas, x) {
 function controls(tl, player, viewport, fx) {
   const ages = [
     { key: "all", label: t("LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES") },
-    ...tl.ages.map((a) => ({ key: a.age, label: typeName(a.n, a.age) }))
+    ...tl.ages.map((span) => ({ key: span.age, label: typeName(span.n, span.age) }))
   ];
-  const zooms = ZOOMS.map((z) => ({ key: String(z), label: z + "×" }));
+  const zooms = ZOOMS.map((zoom) => ({ key: String(zoom), label: zoom + "×" }));
   const pan = (/** @type {number} */ dir) => {
     viewport.scrollLeft = Math.max(0, viewport.scrollLeft + dir * viewport.clientWidth * 0.8);
   };
@@ -580,21 +622,35 @@ function controls(tl, player, viewport, fx) {
   const label = () => {
     clear(playBtn);
     playBtn.appendChild(el("div", { cls: player.playing() ? "dgh-tl-pause-icon" : "dgh-tl-play-icon" }));
-    playBtn.appendChild(el("div", { text: t(player.playing() ? "LOC_DEMOGRAPHICS_HIST_TL_PAUSE" : "LOC_DEMOGRAPHICS_HIST_TL_PLAY") }));
+    const text = t(player.playing() ? "LOC_DEMOGRAPHICS_HIST_TL_PAUSE" : "LOC_DEMOGRAPHICS_HIST_TL_PLAY");
+    playBtn.appendChild(el("div", { text }));
   };
   player.onEnd(label);
-  onActivate(playBtn, guarded("play", () => { player.toggle(); label(); }));
+  onActivate(playBtn, guarded("play", () => {
+    player.toggle();
+    label();
+  }));
   label();
   const panBtn = (/** @type {string} */ text, /** @type {number} */ dir) => {
-    const b = el("div", { cls: "dgh-button dgh-tl-pan", text });
-    onActivate(b, () => pan(dir));
-    return b;
+    const button = el("div", { cls: "dgh-button dgh-tl-pan", text });
+    onActivate(button, () => pan(dir));
+    return button;
   };
+  const pickAge = guarded("age window", (/** @type {string} */ key) => {
+    viewState.tlAge = key;
+    fx.redraw();
+  });
+  const pickZoom = guarded("zoom", (/** @type {string} */ key) => {
+    viewState.tlZoom = Number(key);
+    fx.redraw();
+  });
   return el("div", { cls: "dgh-tl-controls" }, [
-    pillRow(ages, viewState.tlAge, guarded("age window", (k) => { viewState.tlAge = k; fx.redraw(); })),
+    pillRow(ages, viewState.tlAge, pickAge),
     el("div", { cls: "dgh-tl-controls-right" }, [
-      pillRow(zooms, String(viewState.tlZoom), guarded("zoom", (k) => { viewState.tlZoom = Number(k); fx.redraw(); })),
-      panBtn("←", -1), panBtn("→", 1), playBtn
+      pillRow(zooms, String(viewState.tlZoom), pickZoom),
+      panBtn("←", -1),
+      panBtn("→", 1),
+      playBtn
     ])
   ]);
 }

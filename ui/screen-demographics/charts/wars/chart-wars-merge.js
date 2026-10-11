@@ -18,29 +18,29 @@ import { civDroppedByPolicy } from "/demographics/ui/screen-demographics/charts/
  */
 function pidsOf(civs) {
   return (civs || [])
-    .map((/** @type {*} */ e) => e.pid)
-    .filter((/** @type {*} */ p) => typeof p === "number");
+    .map((/** @type {*} */ entry) => entry.pid)
+    .filter((/** @type {*} */ pid) => typeof pid === "number");
 }
 
 /**
  * A war's participant pids (both resolved-roster sides, incl. allies + CS).
- * @param {*} w
+ * @param {*} war
  * @returns {number[]}
  */
-function warPids(w) {
-  return pidsOf(w.sideACivs).concat(pidsOf(w.sideBCivs));
+function warPids(war) {
+  return pidsOf(war.sideACivs).concat(pidsOf(war.sideBCivs));
 }
 
 /**
  * A war's [start, end] turn window; an ongoing war ends at latestTurn.
- * @param {*} w
+ * @param {*} war
  * @param {number} latestTurn
  * @returns {{ s: number, e: number }}
  */
-function warWindowOf(w, latestTurn) {
-  const s = typeof w.startTurn === "number" ? w.startTurn : 0;
-  const e = typeof w.endTurn === "number" ? w.endTurn : latestTurn;
-  return { s, e: Math.max(e, s) };
+function warWindowOf(war, latestTurn) {
+  const start = typeof war.startTurn === "number" ? war.startTurn : 0;
+  const end = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
+  return { s: start, e: Math.max(end, start) };
 }
 
 /**
@@ -60,17 +60,17 @@ function windowsOverlap(a, b) {
  * @returns {boolean}
  */
 function setsIntersect(a, b) {
-  for (const p of a) if (b.has(p)) return true;
+  for (const pid of a) if (b.has(pid)) return true;
   return false;
 }
 
 /**
  * A tiny union-find over array indices.
- * @param {number} n
+ * @param {number} count
  * @returns {{ find: (x: number) => number, union: (a: number, b: number) => void }}
  */
-function makeUF(n) {
-  const parent = Array.from({ length: n }, (_, i) => i);
+function makeUF(count) {
+  const parent = Array.from({ length: count }, (_, i) => i);
   const find = (/** @type {number} */ x) => {
     while (parent[x] !== x) {
       parent[x] = parent[parent[x]];
@@ -92,21 +92,21 @@ function makeUF(n) {
  * @returns {number[][]} Components as arrays of war indices.
  */
 function warComponents(wars, latestTurn) {
-  const n = wars.length;
-  const uf = makeUF(n);
-  const wins = wars.map((w) => warWindowOf(w, latestTurn));
-  const pidSets = wars.map((w) => new Set(warPids(w)));
-  for (let i = 0; i < n; i++) {
-    for (let j = i + 1; j < n; j++) {
+  const count = wars.length;
+  const uf = makeUF(count);
+  const wins = wars.map((war) => warWindowOf(war, latestTurn));
+  const pidSets = wars.map((war) => new Set(warPids(war)));
+  for (let i = 0; i < count; i++) {
+    for (let j = i + 1; j < count; j++) {
       if (windowsOverlap(wins[i], wins[j]) && setsIntersect(pidSets[i], pidSets[j])) uf.union(i, j);
     }
   }
   /** @type {Map<number, number[]>} */
   const groups = new Map();
-  for (let i = 0; i < n; i++) {
-    const r = uf.find(i);
-    if (!groups.has(r)) groups.set(r, []);
-    /** @type {number[]} */ (groups.get(r)).push(i);
+  for (let i = 0; i < count; i++) {
+    const root = uf.find(i);
+    if (!groups.has(root)) groups.set(root, []);
+    /** @type {number[]} */ (groups.get(root)).push(i);
   }
   return Array.from(groups.values());
 }
@@ -120,29 +120,29 @@ function warComponents(wars, latestTurn) {
  */
 function makeParityUF() {
   const parent = new Map();
-  const par = new Map(); // parity from node to its parent
+  const parityToParent = new Map(); // parity from node to its parent
   const ensure = (/** @type {number} */ x) => {
     if (!parent.has(x)) {
       parent.set(x, x);
-      par.set(x, 0);
+      parityToParent.set(x, 0);
     }
   };
   const find = (/** @type {number} */ x) => {
     ensure(x);
-    let p = 0;
+    let parity = 0;
     let cur = x;
     while (parent.get(cur) !== cur) {
-      p ^= par.get(cur);
+      parity ^= parityToParent.get(cur);
       cur = parent.get(cur);
     }
-    return { root: cur, p };
+    return { root: cur, p: parity };
   };
   const union = (/** @type {number} */ a, /** @type {number} */ b, /** @type {number} */ diff) => {
-    const fa = find(a);
-    const fb = find(b);
-    if (fa.root === fb.root) return (fa.p ^ fb.p) === diff;
-    parent.set(fb.root, fa.root);
-    par.set(fb.root, diff ^ fa.p ^ fb.p);
+    const rootA = find(a);
+    const rootB = find(b);
+    if (rootA.root === rootB.root) return (rootA.p ^ rootB.p) === diff;
+    parent.set(rootB.root, rootA.root);
+    parityToParent.set(rootB.root, diff ^ rootA.p ^ rootB.p);
     return true;
   };
   const color = (/** @type {number} */ x) => find(x).p;
@@ -152,16 +152,16 @@ function makeParityUF() {
 /**
  * Apply one war's side constraints to the parity UF: same color within each side,
  * opposite colors across the two sides. Returns false on a contradiction.
- * @param {*} w
+ * @param {*} war
  * @param {{ union: (a: number, b: number, diff: number) => boolean }} uf The parity UF.
  * @returns {boolean}
  */
-function applyWarConstraints(w, uf) {
-  const a = pidsOf(w.sideACivs);
-  const b = pidsOf(w.sideBCivs);
-  for (let i = 1; i < a.length; i++) if (!uf.union(a[0], a[i], 0)) return false;
-  for (let i = 1; i < b.length; i++) if (!uf.union(b[0], b[i], 0)) return false;
-  if (a.length && b.length && !uf.union(a[0], b[0], 1)) return false;
+function applyWarConstraints(war, uf) {
+  const pidsA = pidsOf(war.sideACivs);
+  const pidsB = pidsOf(war.sideBCivs);
+  for (let i = 1; i < pidsA.length; i++) if (!uf.union(pidsA[0], pidsA[i], 0)) return false;
+  for (let i = 1; i < pidsB.length; i++) if (!uf.union(pidsB[0], pidsB[i], 0)) return false;
+  if (pidsA.length && pidsB.length && !uf.union(pidsA[0], pidsB[0], 1)) return false;
   return true;
 }
 
@@ -169,13 +169,13 @@ function applyWarConstraints(w, uf) {
  * 2-color a war component's participants. Returns the color map + the reference
  * color that defines "side A" (the earliest war's side A), or null when the
  * component isn't cleanly bipartite.
- * @param {*[]} cw The component's wars.
+ * @param {*[]} componentWars The component's wars.
  * @returns {{ colorOf: (pid: number) => number, refColor: number } | null}
  */
-function colorComponent(cw) {
+function colorComponent(componentWars) {
   const uf = makeParityUF();
-  for (const w of cw) if (!applyWarConstraints(w, uf)) return null;
-  const first = cw.slice().sort((x, y) => (x.startTurn || 0) - (y.startTurn || 0))[0];
+  for (const war of componentWars) if (!applyWarConstraints(war, uf)) return null;
+  const first = componentWars.slice().sort((x, y) => (x.startTurn || 0) - (y.startTurn || 0))[0];
   const refPid = pidsOf(first.sideACivs)[0];
   const refColor = typeof refPid === "number" ? uf.color(refPid) : 0;
   return { colorOf: (pid) => uf.color(pid), refColor };
@@ -184,18 +184,18 @@ function colorComponent(cw) {
 /**
  * Union every component war's roster entries into two side maps by color
  * (earliest joinTurn wins on duplicate pids).
- * @param {*[]} cw The component's wars.
+ * @param {*[]} componentWars The component's wars.
  * @param {{ colorOf: (pid: number) => number, refColor: number }} coloring
  * @returns {{ a: *[], b: *[] }}
  */
-function mergeRosters(cw, coloring) {
+function mergeRosters(componentWars, coloring) {
   /** @type {Map<number, *>} */
   const aMap = new Map();
   /** @type {Map<number, *>} */
   const bMap = new Map();
-  for (const w of cw) {
-    for (const e of (w.sideACivs || []).concat(w.sideBCivs || [])) {
-      addRosterEntry(e, coloring, aMap, bMap);
+  for (const war of componentWars) {
+    for (const entry of (war.sideACivs || []).concat(war.sideBCivs || [])) {
+      addRosterEntry(entry, coloring, aMap, bMap);
     }
   }
   return { a: Array.from(aMap.values()), b: Array.from(bMap.values()) };
@@ -204,16 +204,16 @@ function mergeRosters(cw, coloring) {
 /**
  * Place one roster entry into the A or B side map by its color, keeping the
  * earliest joinTurn on duplicate pids.
- * @param {*} e
+ * @param {*} entry
  * @param {{ colorOf: (pid: number) => number, refColor: number }} coloring
  * @param {Map<number, *>} aMap Side A accumulator.
  * @param {Map<number, *>} bMap Side B accumulator.
  */
-function addRosterEntry(e, coloring, aMap, bMap) {
-  if (typeof e.pid !== "number") return;
-  const dest = coloring.colorOf(e.pid) === coloring.refColor ? aMap : bMap;
-  const prev = dest.get(e.pid);
-  if (!prev || (e.joinTurn || 0) < (prev.joinTurn || Infinity)) dest.set(e.pid, e);
+function addRosterEntry(entry, coloring, aMap, bMap) {
+  if (typeof entry.pid !== "number") return;
+  const dest = coloring.colorOf(entry.pid) === coloring.refColor ? aMap : bMap;
+  const prev = dest.get(entry.pid);
+  if (!prev || (entry.joinTurn || 0) < (prev.joinTurn || Infinity)) dest.set(entry.pid, entry);
 }
 
 /**
@@ -233,27 +233,29 @@ function mergedName(aCivs, bCivs) {
  */
 function majorCivNames(civs) {
   return (civs || [])
-    .filter((/** @type {*} */ e) => !e.isCS)
-    .map((/** @type {*} */ e) => e.civ)
+    .filter((/** @type {*} */ entry) => !entry.isCS)
+    .map((/** @type {*} */ entry) => entry.civ)
     .sort()
     .join(" & ");
 }
 
 /**
  * Assemble one merged war record from a component's wars + its coloring.
- * @param {*[]} cw The component's wars.
+ * @param {*[]} componentWars The component's wars.
  * @param {{ colorOf: (pid: number) => number, refColor: number }} coloring
  * @param {number} latestTurn
  * @returns {*}
  */
-function buildMergedWar(cw, coloring, latestTurn) {
-  const byStart = cw.slice().sort((x, y) => (x.startTurn || 0) - (y.startTurn || 0));
+function buildMergedWar(componentWars, coloring, latestTurn) {
+  const byStart = componentWars.slice().sort((x, y) => (x.startTurn || 0) - (y.startTurn || 0));
   const first = byStart[0];
-  const ongoing = cw.some((w) => typeof w.endTurn !== "number");
-  const byEnd = cw.slice().sort((x, y) => (y.endTurn || 0) - (x.endTurn || 0));
+  const ongoing = componentWars.some((war) => typeof war.endTurn !== "number");
+  const byEnd = componentWars.slice().sort((x, y) => (y.endTurn || 0) - (x.endTurn || 0));
   const last = byEnd[0];
-  const { a, b } = mergeRosters(cw, coloring);
-  const uids = cw.map((w) => (typeof w.warUniqueID === "number" ? w.warUniqueID : Infinity));
+  const { a: rosterA, b: rosterB } = mergeRosters(componentWars, coloring);
+  const uids = componentWars.map((war) =>
+    (typeof war.warUniqueID === "number" ? war.warUniqueID : Infinity)
+  );
   const minUid = Math.min(...uids);
   return {
     warUniqueID: isFinite(minUid) ? minUid : first.warUniqueID,
@@ -261,15 +263,15 @@ function buildMergedWar(cw, coloring, latestTurn) {
     endTurn: ongoing ? null : last.endTurn,
     startYear: first.startYear,
     endYear: ongoing ? null : last.endYear,
-    sideA: pidsOf(a),
-    sideB: pidsOf(b),
-    participants: pidsOf(a).concat(pidsOf(b)),
-    sideACivs: a,
-    sideBCivs: b,
+    sideA: pidsOf(rosterA),
+    sideB: pidsOf(rosterB),
+    participants: pidsOf(rosterA).concat(pidsOf(rosterB)),
+    sideACivs: rosterA,
+    sideBCivs: rosterB,
     declaredBy: first.declaredBy || null,
-    name: mergedName(a, b),
+    name: mergedName(rosterA, rosterB),
     _merged: true,
-    _frontCount: cw.length,
+    _frontCount: componentWars.length,
     _latestTurn: latestTurn
   };
 }
@@ -292,13 +294,13 @@ export function mergeWars(wars, latestTurn) {
       out.push(list[comp[0]]);
       continue;
     }
-    const cw = comp.map((i) => list[i]);
-    const coloring = colorComponent(cw);
+    const componentWars = comp.map((i) => list[i]);
+    const coloring = colorComponent(componentWars);
     if (!coloring) {
-      for (const w of cw) out.push(w); // non-bipartite: leave the fronts separate
+      for (const war of componentWars) out.push(war); // non-bipartite: leave the fronts separate
       continue;
     }
-    out.push(buildMergedWar(cw, coloring, latestTurn));
+    out.push(buildMergedWar(componentWars, coloring, latestTurn));
   }
   return out;
 }
@@ -316,9 +318,9 @@ export function mergeWars(wars, latestTurn) {
 export function policyVisibleWars(wars, samples) {
   const hidden = (/** @type {*} */ pid) => pid != null && civDroppedByPolicy(samples, pid);
   const out = [];
-  for (const w of Array.isArray(wars) ? wars : []) {
-    if (!w) continue;
-    const gated = gateWar(w, hidden);
+  for (const war of Array.isArray(wars) ? wars : []) {
+    if (!war) continue;
+    const gated = gateWar(war, hidden);
     if (gated) out.push(gated);
   }
   return out;
@@ -326,43 +328,44 @@ export function policyVisibleWars(wars, samples) {
 
 /**
  * Whether a side had a major civ before the spoiler guard and has none after it.
- * @param {*} before The side's roster as persisted. @param {*[]} after The gated roster.
+ * @param {*} before The side's roster as persisted.
+ * @param {*[]} after The gated roster.
  * @returns {boolean}
  */
 function lostEveryMajor(before, after) {
-  const isMajor = (/** @type {*} */ e) => !!e && !e.isCS;
+  const isMajor = (/** @type {*} */ entry) => !!entry && !entry.isCS;
   return (before || []).some(isMajor) && !after.some(isMajor);
 }
 
 /**
  * One war after the spoiler guard: the war itself when nothing is hidden, a copy without the
  * hidden majors, or null when a side is left with no major civ.
- * @param {*} w
+ * @param {*} war
  * @param {(pid: *) => boolean} hidden Whether a civ is hidden by the policy.
  * @returns {*|null}
  */
-function gateWar(w, hidden) {
+function gateWar(war, hidden) {
   const removed = new Set();
-  const keep = (/** @type {*} */ e) => {
-    if (!e || e.isCS || !hidden(e.pid)) return true;
-    removed.add(e.pid);
+  const keep = (/** @type {*} */ entry) => {
+    if (!entry || entry.isCS || !hidden(entry.pid)) return true;
+    removed.add(entry.pid);
     return false;
   };
-  const a = (w.sideACivs || []).filter(keep);
-  const b = (w.sideBCivs || []).filter(keep);
+  const keptA = (war.sideACivs || []).filter(keep);
+  const keptB = (war.sideBCivs || []).filter(keep);
   // Legacy scalar-schema records name their two sides directly.
-  if (hidden(w.aPid) || hidden(w.bPid)) return null;
-  if (!removed.size) return w;
-  if (lostEveryMajor(w.sideACivs, a) || lostEveryMajor(w.sideBCivs, b)) return null;
+  if (hidden(war.aPid) || hidden(war.bPid)) return null;
+  if (!removed.size) return war;
+  if (lostEveryMajor(war.sideACivs, keptA) || lostEveryMajor(war.sideBCivs, keptB)) return null;
   const visible = (/** @type {*} */ list) => (Array.isArray(list) ? list.filter((p) => !removed.has(p)) : list);
   return {
-    ...w,
-    sideACivs: a,
-    sideBCivs: b,
-    sideA: visible(w.sideA),
-    sideB: visible(w.sideB),
-    participants: visible(w.participants),
+    ...war,
+    sideACivs: keptA,
+    sideBCivs: keptB,
+    sideA: visible(war.sideA),
+    sideB: visible(war.sideB),
+    participants: visible(war.participants),
     name: undefined,
-    declaredBy: w.declaredBy && removed.has(w.declaredBy.pid) ? null : w.declaredBy
+    declaredBy: war.declaredBy && removed.has(war.declaredBy.pid) ? null : war.declaredBy
   };
 }

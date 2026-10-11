@@ -1,8 +1,8 @@
 /* screen-demographics-history.css - History tab and Hall of Fame
    One stylesheet (GameFace honors only the first @import). Flexbox only: GameFace has no CSS grid.
    Sizes are rem so the layout follows Interface Size; text sizes come from the Demographics
-   --dg-fs-* ladder, which each screen republishes from the player's Font Size setting. Palette matches the engine's default
-   theme (core/ui/themes/default/default.css) and the Demographics mod. */
+   --dg-fs-* ladder, which each screen republishes from the player's Font Size setting. Palette
+   matches the engine's default theme (core/ui/themes/default/default.css) and the Demographics mod. */
 
 :root {
     --dgh-text-title:    #e5d2ac;   /* .text-secondary */
@@ -50,14 +50,14 @@
 .dgh-screen,
 /* The cinematic overlay is mounted on document.body, outside both screens, so it inherits nothing
    from them. Without this it resolves no `--dg-u` at all and every `calc(n * var(--dg-u))` in its
-   rules is invalid and dropped - which unpinned it from the bottom of the screen, removed its
-   width bounds and its padding, and dropped its border color to the fallback. It is listed here
+   rules is invalid and dropped - which unpins it from the bottom of the screen, removes its
+   width bounds and its padding, and drops its border color to the fallback. It is listed here
    so it always has the reference-size defaults; mountOverlay() then republishes the scaled values
    onto the element so it tracks resolution like the rest of the mod. */
 .demographics-map-overlay {
     /* The box unit. Resolution-sensitive metrics are `calc(<number> * var(--dg-u))`; JS republishes
        this scaled to the viewport (demographics-font-ladder.js). 1rem here = the reference size, so
-       an un-set var renders exactly as the old fixed-rem values did. */
+       an un-set var renders at the reference proportions. */
     --dg-u: 1rem;
     /* Type-scaled unit, for widths that must contain text (see demographics-font-ladder.js). */
     --dg-t: 1rem;
@@ -105,7 +105,14 @@
     align-items: center;
     justify-content: flex-end;
 }
-.dgh-body { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; background-color: rgba(10, 12, 18, 0.72); }
+.dgh-body {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(10, 12, 18, 0.72);
+}
 .dgh-screen-host { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 
 /* app layout */
@@ -269,7 +276,13 @@
     color: #bfae86;
     font-size: var(--dg-fs-95);
 }
-.dgh-pill:hover { color: var(--dgh-text-title); border-top-color: var(--dgh-gold-soft); border-right-color: var(--dgh-gold-soft); border-bottom-color: var(--dgh-gold-soft); border-left-color: var(--dgh-gold-soft); }
+.dgh-pill:hover {
+    color: var(--dgh-text-title);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
+}
 .dgh-pill.is-active { color: #1c1408; background-color: var(--dgh-gold); font-weight: bold; }
 .dgh-pill-row--filter .dgh-pill {
     border-radius: 0.2rem;
@@ -390,7 +403,14 @@
     border: 1px solid rgba(0, 0, 0, 0.6);
 }
 .dgh-civ-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dgh-leader-icon { width: 3rem; height: 3rem; flex: 0 0 auto; background-size: contain; background-repeat: no-repeat; background-position: center; }
+.dgh-leader-icon {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 .dgh-leader-icon--sm { width: 2rem; height: 2rem; }
 .dgh-leader-icon--lg { width: 5rem; height: 5rem; }
 .dgh-recent { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 -0.3rem; }
@@ -424,7 +444,12 @@
 }
 .dgh-fact.is-zero { opacity: 0.45; }
 .dgh-fact-n { color: var(--dgh-gold); font-size: var(--dg-fs-120); font-weight: bold; }
-.dgh-fact-l { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); text-transform: uppercase; letter-spacing: 0.06em; }
+.dgh-fact-l {
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
 .dgh-line { font-size: var(--dg-fs-85); margin-top: 0.15rem; }
 .dgh-line-k { color: var(--dgh-text-title-2); margin-right: 0.4rem; }
 .dgh-line-v { color: var(--dgh-text-body); }
@@ -460,7 +485,13 @@
 .dgh-lineage { display: flex; flex-direction: column; }
 .dgh-lin-row { display: flex; flex-direction: row; align-items: stretch; margin-bottom: 0.3rem; }
 .dgh-lin-row.is-mine .dgh-lin-name { color: var(--dgh-gold); }
-.dgh-lin-head { color: var(--dgh-text-title-2); font-family: TitleFont, BodyFont, sans-serif; text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--dg-fs-72); }
+.dgh-lin-head {
+    color: var(--dgh-text-title-2);
+    font-family: TitleFont, BodyFont, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--dg-fs-72);
+}
 .dgh-lin-leader { flex: 0 0 15rem; display: flex; flex-direction: row; align-items: center; }
 .dgh-lin-name { margin-left: 0.5rem; }
 .dgh-lin-cell {
@@ -510,7 +541,12 @@
 }
 .dgh-stat-head { display: flex; flex-direction: row; align-items: center; }
 .dgh-stat-value { color: var(--dgh-gold); font-size: var(--dg-fs-160); font-weight: bold; }
-.dgh-stat-label { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); text-transform: uppercase; letter-spacing: 0.06em; }
+.dgh-stat-label {
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
 .dgh-bar-row { display: flex; flex-direction: row; align-items: center; margin: 0.25rem 0; }
 .dgh-bar-label { flex: 0 0 11rem; font-size: var(--dg-fs-85); }
 .dgh-bar { flex: 1 1 auto; height: 0.7rem; background-color: rgba(0, 0, 0, 0.35); border-radius: 0.35rem; }
@@ -565,7 +601,12 @@
 }
 .dgh-record .dgh-game-card { border: none; background-color: transparent; padding: 0.2rem 0 0; }
 .dgh-record-head { display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 0.25rem; }
-.dgh-record-name { color: var(--dgh-text-title-2); text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--dg-fs-85); }
+.dgh-record-name {
+    color: var(--dgh-text-title-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--dg-fs-85);
+}
 .dgh-record-value { color: var(--dgh-gold); font-weight: bold; font-size: var(--dg-fs-140); }
 .dgh-result--win { color: var(--dgh-win-text); }
 .dgh-result--loss { color: var(--dgh-loss-text); }
@@ -583,11 +624,23 @@
     margin-bottom: calc(0.4 * var(--dg-u));
 }
 .dgh-detail-top .dgh-detail-head { flex: 0 1 auto; margin-right: 1.5rem; }
-.dgh-detail-figures { display: flex; flex-direction: column; align-items: flex-end; flex: 1 1 auto; margin-bottom: 0.7rem; }
+.dgh-detail-figures {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex: 1 1 auto;
+    margin-bottom: 0.7rem;
+}
 .dgh-detail-figures .dgh-tiles { justify-content: flex-end; }
 .dgh-detail-figures .dgh-pill-row { margin-bottom: 0.4rem; }
 .dgh-detail-titles { margin-left: 1rem; min-width: 0; }
-.dgh-detail-name { color: var(--dgh-text-title); font-family: TitleFont, BodyFont, sans-serif; font-size: var(--dg-fs-160); text-transform: uppercase; letter-spacing: 0.08em; }
+.dgh-detail-name {
+    color: var(--dgh-text-title);
+    font-family: TitleFont, BodyFont, sans-serif;
+    font-size: var(--dg-fs-160);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
 .dgh-detail-honor { color: var(--dgh-gold); font-size: var(--dg-fs-105); margin-bottom: 0.2rem; }
 .dgh-detail-line { font-size: var(--dg-fs-95); }
 
@@ -628,7 +681,13 @@
     font-size: var(--dg-fs-72);
     white-space: nowrap;
 }
-.dgh-chart-legend { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; font-size: var(--dg-fs-85); }
+.dgh-chart-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: var(--dg-fs-85);
+}
 .dgh-spark { width: 6rem; height: 1.4rem; position: relative; }
 .dgh-spark-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 
@@ -672,7 +731,11 @@
     background-repeat: no-repeat;
     background-position: center;
 }
-.dgh-trophy-icon--sm { width: calc(1.1 * var(--dg-u)); height: calc(1.1 * var(--dg-u)); margin-right: calc(0.2 * var(--dg-u)); }
+.dgh-trophy-icon--sm {
+    width: calc(1.1 * var(--dg-u));
+    height: calc(1.1 * var(--dg-u));
+    margin-right: calc(0.2 * var(--dg-u));
+}
 .dgh-mark { flex: 0 0 auto; }
 .dgh-mark--win, .dgh-mark--loss, .dgh-mark--ended, .dgh-mark--open {
     width: calc(0.8 * var(--dg-u));
@@ -686,7 +749,14 @@
 .dgh-mark--win { background-color: var(--dgh-win); }
 .dgh-mark--loss { background-color: var(--dgh-loss); }
 .dgh-mark--ended { background-color: var(--dgh-text-muted); }
-.dgh-mark--open { border-width: 0.12rem; border-style: solid; border-top-color: var(--dgh-text-muted); border-right-color: var(--dgh-text-muted); border-bottom-color: var(--dgh-text-muted); border-left-color: var(--dgh-text-muted); }
+.dgh-mark--open {
+    border-width: 0.12rem;
+    border-style: solid;
+    border-top-color: var(--dgh-text-muted);
+    border-right-color: var(--dgh-text-muted);
+    border-bottom-color: var(--dgh-text-muted);
+    border-left-color: var(--dgh-text-muted);
+}
 .dgh-result-row { display: flex; flex-direction: row; align-items: center; min-width: 0; }
 .dgh-lin-civrow { display: flex; flex-direction: row; align-items: center; }
 .dgh-toolbar .dgh-pill-row { flex-wrap: nowrap; }
@@ -745,7 +815,13 @@
 }
 .dgh-storage-banner-p { color: var(--dgh-text-title); font-size: var(--dg-fs-95); line-height: 1.35; }
 .dgh-storage-banner--button { cursor: pointer; }
-.dgh-storage-banner--button:hover { border-top-color: var(--dgh-gold); border-right-color: var(--dgh-gold); border-bottom-color: var(--dgh-gold); border-left-color: var(--dgh-gold); background-color: rgba(70, 22, 16, 0.7); }
+.dgh-storage-banner--button:hover {
+    border-top-color: var(--dgh-gold);
+    border-right-color: var(--dgh-gold);
+    border-bottom-color: var(--dgh-gold);
+    border-left-color: var(--dgh-gold);
+    background-color: rgba(70, 22, 16, 0.7);
+}
 .dgh-storage-banner--button.is-open { border-bottom-color: rgba(193, 77, 69, 0.35); }
 .dgh-storage-banner-cta {
     margin-top: calc(0.35 * var(--dg-u));
@@ -895,9 +971,22 @@
     margin-bottom: calc(0.3 * var(--dg-u));
 }
 .dgh-person-head { display: flex; flex-direction: row; align-items: baseline; justify-content: space-between; }
-.dgh-person-head .dgh-person-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dgh-person-head .dgh-person-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .dgh-person-name { margin-bottom: 0.2rem; }
-.dgh-person-rate { display: flex; flex-direction: row; align-items: baseline; flex: 0 0 auto; margin-left: 0.6rem; white-space: nowrap; }
+.dgh-person-rate {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    flex: 0 0 auto;
+    margin-left: 0.6rem;
+    white-space: nowrap;
+}
 .dgh-person-rate-n { color: var(--dgh-gold); font-size: var(--dg-fs-120); font-weight: bold; margin-right: 0.3rem; }
 .dgh-person-rate-n.is-none { color: var(--dgh-text-muted); }
 .dgh-person-rate-l {
@@ -1093,7 +1182,14 @@
 .dgh-tl-crisis--3 { background-image: linear-gradient(180deg, #d0543a 0%, #92321e 100%); }
 .dgh-tl-crisis--4 { background-image: linear-gradient(180deg, #b02a32 0%, #6c1218 100%); }
 .dgh-tl-crisis-n { color: #fff4e0; font-weight: bold; font-size: var(--dg-fs-65); text-shadow: 0 0 0.15rem #000000; }
-.dgh-tl-crisis-name { display: flex; flex-direction: row; align-items: center; color: #f0b870; font-size: var(--dg-fs-72); font-style: normal; }
+.dgh-tl-crisis-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #f0b870;
+    font-size: var(--dg-fs-72);
+    font-style: normal;
+}
 .dgh-tl-crisis-icon { width: 1.1rem; height: 1.1rem; margin-right: 0.25rem; background-size: cover; }
 
 /* milestones */
@@ -1139,8 +1235,16 @@
 /* migration */
 .dgh-tl-mig-axis { background-color: rgba(229, 210, 172, 0.25); }
 .dgh-tl-mig { min-width: 0.15rem; }
-.dgh-tl-mig--in { background-image: linear-gradient(0deg, rgba(80, 180, 170, 0.5) 0%, #7fe0d0 100%); border-top-left-radius: 0.1rem; border-top-right-radius: 0.1rem; }
-.dgh-tl-mig--out { background-image: linear-gradient(180deg, rgba(200, 110, 70, 0.5) 0%, #f0a070 100%); border-bottom-left-radius: 0.1rem; border-bottom-right-radius: 0.1rem; }
+.dgh-tl-mig--in {
+    background-image: linear-gradient(0deg, rgba(80, 180, 170, 0.5) 0%, #7fe0d0 100%);
+    border-top-left-radius: 0.1rem;
+    border-top-right-radius: 0.1rem;
+}
+.dgh-tl-mig--out {
+    background-image: linear-gradient(180deg, rgba(200, 110, 70, 0.5) 0%, #f0a070 100%);
+    border-bottom-left-radius: 0.1rem;
+    border-bottom-right-radius: 0.1rem;
+}
 .dgh-tl-swatch { width: 0.8rem; height: 0.8rem; margin-right: 0.35rem; border-radius: 0.1rem; }
 .dgh-tl-swatch--in { background-color: #7fe0d0; }
 .dgh-tl-swatch--out { background-color: #f0a070; }
@@ -1179,8 +1283,23 @@
 .dgh-tl-tick { width: 0.08rem; background-color: rgba(229, 210, 172, 0.5); overflow: visible; }
 .dgh-tl-tick--major { background-color: rgba(229, 210, 172, 0.85); }
 .dgh-tl-tick--age { width: 0.12rem; background-color: var(--dgh-gold-soft); }
-.dgh-tl-tick-label { position: absolute; top: 0.7rem; left: -1rem; width: 2rem; text-align: center; color: var(--dgh-text-muted); font-size: var(--dg-fs-65); }
-.dgh-tl-tick-date { position: absolute; top: 0.95rem; left: 0.25rem; color: var(--dgh-gold-soft); font-size: var(--dg-fs-65); font-weight: bold; }
+.dgh-tl-tick-label {
+    position: absolute;
+    top: 0.7rem;
+    left: -1rem;
+    width: 2rem;
+    text-align: center;
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-65);
+}
+.dgh-tl-tick-date {
+    position: absolute;
+    top: 0.95rem;
+    left: 0.25rem;
+    color: var(--dgh-gold-soft);
+    font-size: var(--dg-fs-65);
+    font-weight: bold;
+}
 
 /* playback */
 .dgh-tl-veil {
@@ -1211,9 +1330,28 @@
     font-size: var(--dg-fs-85);
 }
 
-.dgh-tl-legend { display: flex; flex-direction: row; flex-wrap: wrap; margin: 0.4rem 0 0 8rem; font-size: var(--dg-fs-72); color: var(--dgh-text-muted); }
-.dgh-tl-legend-item { display: flex; flex-direction: row; align-items: center; margin-right: 1.1rem; margin-bottom: 0.2rem; }
-.dgh-tl-legend-icon { width: 1.5rem; height: 1.5rem; margin-right: 0.35rem; background-size: cover; background-position: center; }
+.dgh-tl-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0.4rem 0 0 8rem;
+    font-size: var(--dg-fs-72);
+    color: var(--dgh-text-muted);
+}
+.dgh-tl-legend-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 1.1rem;
+    margin-bottom: 0.2rem;
+}
+.dgh-tl-legend-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.35rem;
+    background-size: cover;
+    background-position: center;
+}
 
 /* settlements lane */
 .dgh-tl-found {
@@ -1276,9 +1414,29 @@
     letter-spacing: 0.1em;
 }
 .dgh-map-when { color: var(--dgh-gold-soft); font-size: var(--dg-fs-72); margin-bottom: 0.35rem; }
-.dgh-map-legend-towns { display: flex; flex-direction: row; align-items: center; margin-left: 0.7rem; color: var(--dgh-text-muted); font-size: var(--dg-fs-72); }
-.dgh-map-house { position: relative; width: 0.62rem; height: 0.5rem; margin: 0.3rem 0.3rem 0 0; background-color: #f6e8c8; }
-.dgh-map-legend-item { display: flex; flex-direction: row; align-items: center; margin-bottom: 0.15rem; color: var(--dgh-text-body); font-size: var(--dg-fs-72); }
+.dgh-map-legend-towns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0.7rem;
+    color: var(--dgh-text-muted);
+    font-size: var(--dg-fs-72);
+}
+.dgh-map-house {
+    position: relative;
+    width: 0.62rem;
+    height: 0.5rem;
+    margin: 0.3rem 0.3rem 0 0;
+    background-color: #f6e8c8;
+}
+.dgh-map-legend-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.15rem;
+    color: var(--dgh-text-body);
+    font-size: var(--dg-fs-72);
+}
 .dgh-map-legend-item.is-mine { color: var(--dgh-gold); font-weight: bold; }
 .dgh-map-legend-icon { width: 1.15rem; height: 1.15rem; margin: 0 0.3rem 0 0.3rem; }
 
@@ -1377,7 +1535,14 @@
 /* hover readout (population curve, ruler) */
 .dgh-tl-hover { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; }
 .dgh-tl-hover.is-hidden { display: none; }
-.dgh-tl-hover-line { position: absolute; top: 0; bottom: 0; left: -0.04rem; width: 0.08rem; background-color: rgba(255, 244, 214, 0.85); }
+.dgh-tl-hover-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -0.04rem;
+    width: 0.08rem;
+    background-color: rgba(255, 244, 214, 0.85);
+}
 .dgh-tl-hover-label {
     position: absolute;
     top: calc(0.1 * var(--dg-u));
@@ -1433,7 +1598,15 @@
     opacity: 0.6;
     cursor: pointer;
 }
-.dgh-tl-civ.is-active { opacity: 1; color: var(--dgh-text-title); border-top-color: var(--dgh-gold-soft); border-right-color: var(--dgh-gold-soft); border-bottom-color: var(--dgh-gold-soft); border-left-color: var(--dgh-gold-soft); background-color: rgba(243, 195, 76, 0.1); }
+.dgh-tl-civ.is-active {
+    opacity: 1;
+    color: var(--dgh-text-title);
+    border-top-color: var(--dgh-gold-soft);
+    border-right-color: var(--dgh-gold-soft);
+    border-bottom-color: var(--dgh-gold-soft);
+    border-left-color: var(--dgh-gold-soft);
+    background-color: rgba(243, 195, 76, 0.1);
+}
 .dgh-tl-civ.is-mine.is-active { color: var(--dgh-gold); }
 .dgh-tl-civ-icon { width: 1.1rem; height: 1.1rem; margin: 0 0.25rem 0 0.25rem; }
 .dgh-tl-war--rivals { opacity: 0.9; }
@@ -1510,8 +1683,8 @@
     background-image: linear-gradient(180deg, rgba(201, 138, 85, 0.12) 0%, rgba(0, 0, 0, 0.25) 60%);
 }
 /* The current game is marked by its MOST RECENT GAME pill, not by recolouring the frame: the frame
-   is the rank's medal color, and a gold override would erase the silver and bronze. (The old
-   whole-frame `border-color: var(--dgh-gold)` here never rendered anyway - it was a shorthand.) */
+   is the rank's medal color, and a gold override would erase the silver and bronze. (A whole-frame
+   `border-color` shorthand would not render here anyway.) */
 /* The podium place is a laurel wreath with its number inside - the same medal the in-game
    rankings podium wears. The wreath art is mostly transparent glow, so the box is generous and
    the number is nudged into the wreath's open center. */
@@ -1552,7 +1725,13 @@
     text-align: center;
 }
 .dgh-podium-civs { justify-content: center; margin: 0.2rem 0; }
-.dgh-podium-result { display: flex; flex-direction: row; align-items: center; color: var(--dgh-text-body); font-size: var(--dg-fs-85); }
+.dgh-podium-result {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--dgh-text-body);
+    font-size: var(--dg-fs-85);
+}
 .dgh-podium-result .dgh-mark { margin-right: 0.35rem; }
 .dgh-podium-figures {
     display: flex;
@@ -1580,5 +1759,10 @@
 .dgh-col-stack { display: flex; flex-direction: column; flex: 1 1 30rem; }
 .dgh-col-stack > .dgh-section { margin: 0 0.35rem 0.5rem; }
 .dgh-standing { display: flex; flex-direction: row; align-items: baseline; margin-bottom: 0.4rem; }
-.dgh-standing-rank { font-family: TitleFont, BodyFont, sans-serif; color: var(--dgh-gold); font-size: var(--dg-fs-185); margin-right: 0.8rem; }
+.dgh-standing-rank {
+    font-family: TitleFont, BodyFont, sans-serif;
+    color: var(--dgh-gold);
+    font-size: var(--dg-fs-185);
+    margin-right: 0.8rem;
+}
 .dgh-standing-note { color: var(--dgh-text-muted); font-size: var(--dg-fs-72); }

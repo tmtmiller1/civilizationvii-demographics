@@ -4,7 +4,7 @@
 // defensive `safeCall` wrapper, color coercion helpers, and the per-filter
 // line-dash table consumed by both the ring renderer and the filter pills.
 
-const DEMOGRAPHICS_DEBUG = false;
+import { debugLoggingOn, makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
  * One relationship edge between two ring nodes. `a`/`b` are player ids; the
@@ -15,14 +15,14 @@ const DEMOGRAPHICS_DEBUG = false;
  * @property {string} [color] Stroke color (hex or rgba).
  * @property {string} [label] Optional human-readable edge label.
  * @property {string} [filterKey] Filter category this edge belongs to.
- * @property {boolean} [dashed] Legacy dashed-line flag (suzerain edges).
+ * @property {boolean} [dashed] Dashed-line flag, set directly by suzerain edges.
  * @property {boolean} [directed] When set, render a→b direction chevrons.
  * @property {number} [width] Per-edge stroke width (currently ignored).
  * @property {number} [opacity] Per-edge stroke opacity (currently ignored).
  * @property {string|null} [_dashOverride] Per-tab dash-pattern override.
  */
 
-export const DBG = DEMOGRAPHICS_DEBUG;
+export const log = makeLogger("view-relations");
 
 // The ring SVG's measured pixels-per-viewBox-unit, published by the ring renderer
 // after it measures its laid-out size and read by the legend so a swatch draws
@@ -30,31 +30,17 @@ export const DBG = DEMOGRAPHICS_DEBUG;
 let _ringPxPerUnit = 0;
 /**
  * Publish the ring's measured pixels-per-viewBox-unit.
- * @param {number} v
+ * @param {number} pxPerUnit
  */
-export function setRingPxPerUnit(v) {
-  if (typeof v === "number" && isFinite(v) && v > 0) _ringPxPerUnit = v;
+export function setRingPxPerUnit(pxPerUnit) {
+  if (typeof pxPerUnit === "number" && isFinite(pxPerUnit) && pxPerUnit > 0) _ringPxPerUnit = pxPerUnit;
 }
 /**
  * Read the ring's measured pixels-per-viewBox-unit (0 until first measured).
- * @returns {number} Pixels per viewBox unit, or 0.
+ * @returns {number}
  */
 export function getRingPxPerUnit() {
   return _ringPxPerUnit;
-}
-/**
- * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a
- */
-export function dlog(...a) {
-  if (DBG) console.warn("[Demographics.view-relations]", ...a);
-}
-/**
- * Error logger (always emits).
- * @param {...*} a
- */
-export function derr(...a) {
-  console.error("[Demographics.view-relations]", ...a);
 }
 
 /**
@@ -70,49 +56,49 @@ export function hexToRgba(hex, alpha) {
   // Civ7's `UI.Player.getPrimaryColorValueAsString` can return 8-char hex
   // ("#AARRGGBB" or "#RRGGBBAA"); accept 6 or 8 chars and always take the
   // last 6 digits as RGB so an alpha-carrying value never renders opaque white.
-  const m = hex.match(/^#?([0-9a-fA-F]{6,8})$/);
-  if (!m) return "rgba(20, 16, 10, " + alpha + ")";
-  const rgbHex = m[1].slice(-6);
-  const n = parseInt(rgbHex, 16);
-  return `rgba(${(n >> 16) & 0xff}, ${(n >> 8) & 0xff}, ${n & 0xff}, ${alpha})`;
+  const match = hex.match(/^#?([0-9a-fA-F]{6,8})$/);
+  if (!match) return "rgba(20, 16, 10, " + alpha + ")";
+  const rgbHex = match[1].slice(-6);
+  const rgb = parseInt(rgbHex, 16);
+  return `rgba(${(rgb >> 16) & 0xff}, ${(rgb >> 8) & 0xff}, ${rgb & 0xff}, ${alpha})`;
 }
 
 /**
  * Normalize any Civ7 color string to a safe 6-char `#RRGGBB` hex, or `null`
  * when the value is useless (near-white, near-black, or unparseable). Used to
  * scrub `UI.Player.getPrimaryColorValueAsString` output before storing it.
- * @param {*} s
- * @returns {string|null} The normalized `#RRGGBB`, or `null` if unusable.
+ * @param {*} value
+ * @returns {string|null} `#RRGGBB`, or `null` if unusable.
  */
-export function normalizeCivColor(s) {
-  if (typeof s !== "string") return null;
-  const m = s.match(/^#?([0-9a-fA-F]{6,8})$/);
-  if (!m) return null;
-  const rgbHex = m[1].slice(-6);
-  const n = parseInt(rgbHex, 16);
-  const r = (n >> 16) & 0xff,
-    g = (n >> 8) & 0xff,
-    b = n & 0xff;
+export function normalizeCivColor(value) {
+  if (typeof value !== "string") return null;
+  const match = value.match(/^#?([0-9a-fA-F]{6,8})$/);
+  if (!match) return null;
+  const rgbHex = match[1].slice(-6);
+  const rgb = parseInt(rgbHex, 16);
+  const r = (rgb >> 16) & 0xff,
+    g = (rgb >> 8) & 0xff,
+    b = rgb & 0xff;
   if ((r + g + b) / 3 > 220) return null; // near-white = useless on parchment
   if ((r + g + b) / 3 < 12) return null; // near-black = also indistinguishable
   return "#" + rgbHex.toUpperCase();
 }
 
 /**
- * Invoke `fn` and return its result, logging and returning `fb` on throw.
+ * Invoke `fn` and return its result, logging and returning `fallback` on throw.
  * @template T
  * @param {string} label
  * @param {() => T} fn
- * @param {T} [fb] Fallback returned on throw.
- * @returns {T} `fn()` result, or `fb`. (When `fb` is omitted, `T` includes
+ * @param {T} [fallback] Returned on throw.
+ * @returns {T} `fn()` result, or `fallback`. (When `fallback` is omitted, `T` includes
  *   `undefined` at the call site, matching the thunk's own return type.)
  */
-export function safeCall(label, fn, fb) {
+export function safeCall(label, fn, fallback) {
   try {
     return fn();
   } catch (e) {
-    if (DBG) derr("safeCall(" + label + "):", e);
-    return /** @type {T} */ (fb);
+    if (debugLoggingOn()) log.error("safeCall(" + label + "):", e);
+    return /** @type {T} */ (fallback);
   }
 }
 
@@ -130,7 +116,7 @@ const CAT = {
   production: "#d97b2c", // production (vivid burnt orange)
   military: "#e8493c" // military (vivid red)
 };
-// `dash` is now a STYLE TOKEN, confined to the line vocabulary the renderer
+// `dash` is a STYLE TOKEN, confined to the line vocabulary the renderer
 // supports: "" (solid), "dashed", "dotted". Within one color category, agreements
 // are told apart by style; categories with a single agreement stay solid.
 /** @type {{ key: string, action: string, color: string, dash: string }[]} */
@@ -174,7 +160,7 @@ export const CS_AGREEMENT_TYPES = [
 
 /**
  * Title-case a DIPLOMACY_ACTION_* enum name as a readable fallback label.
- * @param {string} actionName The enum name.
+ * @param {string} actionName
  * @returns {string} e.g. "Cultural Exchange".
  */
 function titleCaseAction(actionName) {
@@ -182,14 +168,14 @@ function titleCaseAction(actionName) {
     .replace(/^DIPLOMACY_ACTION_/, "")
     .toLowerCase()
     .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 /**
  * Compose the engine's own localized name for a diplomacy action, or "" when
  * unavailable / unresolved.
  * @param {string} actionName The DIPLOMACY_ACTION_* enum name.
- * @returns {string} The composed name, or "".
+ * @returns {string} Empty when unresolved.
  */
 function composeDiplomacyName(actionName) {
   const info =
@@ -250,7 +236,7 @@ export function diplomacyActionLabel(actionName) {
 }
 
 // Per-filter line style token: solid (""), "dashed", "dotted"; directed edges
-// (via `e.directed`, not here) draw solid with animated arrow chevrons. Coherent
+// (via `edge.directed`, not here) draw solid with animated arrow chevrons. Coherent
 // ignores SVG stroke-dasharray, so the renderer synthesizes dashes/dots.
 /** @type {Record<string, string>} */
 export const LINE_DASH = {
@@ -270,14 +256,14 @@ export const LINE_DASH = {
   suzerain: "" // CS suzerainty: a standing bond → solid
 };
 // Fold in each individual agreement type's dash (per-action lines).
-for (const _a of AGREEMENT_TYPES) LINE_DASH[_a.key] = _a.dash;
+for (const agreement of AGREEMENT_TYPES) LINE_DASH[agreement.key] = agreement.dash;
 // ...and each City-State agreement type's dash (befriend / suzerain directives).
-for (const _c of CS_AGREEMENT_TYPES) LINE_DASH[_c.key] = _c.dash;
+for (const agreement of CS_AGREEMENT_TYPES) LINE_DASH[agreement.key] = agreement.dash;
 
 /**
  * Resolve an explicit per-edge dash override.
  * @param {Edge} edge
- * @returns {string|undefined} Override value, or undefined when absent.
+ * @returns {string|undefined} Undefined when absent.
  */
 function dashOverride(edge) {
   if (!edge) return undefined;
@@ -289,7 +275,7 @@ function dashOverride(edge) {
 /**
  * Resolve a dash pattern from filter key mapping.
  * @param {Edge} edge
- * @returns {string|undefined} Pattern string, or undefined when unmapped.
+ * @returns {string|undefined} Undefined when unmapped.
  */
 function dashByFilter(edge) {
   if (!edge || typeof edge.filterKey !== "string") return undefined;
@@ -302,8 +288,8 @@ function dashByFilter(edge) {
 /**
  * Resolve the line-STYLE token for an edge ("" solid / "dashed" / "dotted"),
  * honoring per-tab overrides, the `dashed` flag, then `LINE_DASH`.
- * @param {Edge} edge The edge to texture.
- * @returns {string} The style token (`""` = solid line).
+ * @param {Edge} edge
+ * @returns {string} `""` for a solid line.
  */
 export function dasharrayFor(edge) {
   if (!edge) return "";
@@ -314,7 +300,7 @@ export function dasharrayFor(edge) {
   if (override !== undefined) return override;
   const byFilter = dashByFilter(edge);
   if (byFilter !== undefined) return byFilter;
-  // `e.dashed` flag (suzerain edges set it directly).
+  // `edge.dashed` flag (suzerain edges set it directly).
   if (edge.dashed) return "dashed";
   return "";
 }

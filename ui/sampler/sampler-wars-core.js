@@ -14,6 +14,7 @@ import {
   closeEndedWars,
   collectActiveWars
 } from "/demographics/ui/sampler/sampler-wars-detect.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").WarHistory} WarHistory
@@ -23,15 +24,7 @@ import {
  * @typedef {import("/demographics/ui/sampler/sampler-wars.js").ActiveWar} ActiveWar
  */
 
-// Flip to true for local debugging (committed off, matching the rest of the mod).
-const DEMOGRAPHICS_DEBUG = false;
-/**
- * Informational logger; no-op unless DEMOGRAPHICS_DEBUG is set.
- * @param {...*} a Values to log.
- */
-function ilog(...a) {
-  if (DEMOGRAPHICS_DEBUG) console.warn("[Demographics.sampler]", ...a);
-}
+const log = makeLogger("sampler");
 
 /**
  * Merge the current live roster for one war side into cumulative participation.
@@ -42,34 +35,34 @@ function ilog(...a) {
  */
 function mergeWarParticipants(list, live, turn) {
   const livePids = new Set(live.map((r) => r.pid));
-  for (const r of live) {
-    const e = list.find((x) => x.pid === r.pid);
-    if (e) {
+  for (const member of live) {
+    const entry = list.find((x) => x.pid === member.pid);
+    if (entry) {
       // Don't overwrite e.civ / e.civTypeString: a player's civ changes each age, and these are
       // pinned to the war's start age (re-derived in migrateWarRecords from the start sample).
       // Refreshing them from the live (current-age) roster is what mislabeled cross-age wars.
-      e.leader = r.leader;
-      e.color = r.color;
-      e.isCS = r.isCS;
-      e.active = true;
-      delete e.leaveTurn;
+      entry.leader = member.leader;
+      entry.color = member.color;
+      entry.isCS = member.isCS;
+      entry.active = true;
+      delete entry.leaveTurn;
     } else {
       list.push({
-        pid: r.pid,
-        civ: r.civ,
-        leader: r.leader,
-        color: r.color,
-        civTypeString: r.civTypeString,
-        isCS: r.isCS,
+        pid: member.pid,
+        civ: member.civ,
+        leader: member.leader,
+        color: member.color,
+        civTypeString: member.civTypeString,
+        isCS: member.isCS,
         joinTurn: turn,
         active: true
       });
     }
   }
-  for (const e of list) {
-    if (!livePids.has(e.pid) && e.active) {
-      e.active = false;
-      e.leaveTurn = turn;
+  for (const entry of list) {
+    if (!livePids.has(entry.pid) && entry.active) {
+      entry.active = false;
+      entry.leaveTurn = turn;
     }
   }
   return list;
@@ -97,7 +90,7 @@ function updateExistingWar(existing, info, rosters, uid, turn) {
   if (typeof existing.endTurn === "number") {
     existing.endTurn = null;
     existing.endYear = null;
-    ilog("WAR REOPENED:", existing.name, "uid=", uid);
+    log.debug("WAR REOPENED:", existing.name, "uid=", uid);
   }
 }
 
@@ -181,8 +174,8 @@ function buildNewWar(args) {
  */
 function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
   const knownByID = new Map();
-  for (const w of wars) {
-    if (typeof w.warUniqueID === "number") knownByID.set(w.warUniqueID, w);
+  for (const war of wars) {
+    if (typeof war.warUniqueID === "number") knownByID.set(war.warUniqueID, war);
   }
   const chartTurn = typeof snapshot?.chartTurn === "number" ? snapshot.chartTurn : turn;
   for (const [uid, info] of activeWarsByID) {
@@ -206,7 +199,7 @@ function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
       turn
     });
     wars.push(newWar);
-    ilog(
+    log.debug(
       "WAR STARTED:",
       newWar.name,
       "uid=",
@@ -231,8 +224,8 @@ function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
 function readTurnDate() {
   try {
     if (typeof Game !== "undefined" && typeof Game.getTurnDate === "function") {
-      const s = Game.getTurnDate();
-      if (typeof s === "string" && s.length > 0) return s;
+      const date = Game.getTurnDate();
+      if (typeof date === "string" && date.length > 0) return date;
     }
   } catch (_) {
     // Game.getTurnDate() can throw before the game clock is ready.
@@ -242,13 +235,13 @@ function readTurnDate() {
 
 /**
  * Format an ordinal suffix for a positive integer.
- * @param {number} n The number.
+ * @param {number} n
  * @returns {string} e.g. "1st", "2nd", "3rd", "4th".
  */
 function ordinalSuffix(n) {
-  const s = ["th", "st", "nd", "rd"];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  const suffixes = ["th", "st", "nd", "rd"];
+  const lastTwo = n % 100;
+  return n + (suffixes[(lastTwo - 20) % 10] || suffixes[lastTwo] || suffixes[0]);
 }
 
 /**
@@ -259,11 +252,11 @@ function ordinalSuffix(n) {
  * @returns {WarHistory} The history to reconcile against.
  */
 function resolveWarHistory(history) {
-  const h = /** @type {WarHistory} */ (
+  const warHistory = /** @type {WarHistory} */ (
     history || DemographicsStorage.peek() || DemographicsStorage.load()
   );
-  if (!Array.isArray(h.wars)) h.wars = [];
-  return h;
+  if (!Array.isArray(warHistory.wars)) warHistory.wars = [];
+  return warHistory;
 }
 
 /**
@@ -277,9 +270,9 @@ function resolveWarHistory(history) {
 export function runWarTracker(snapshot, turn, history) {
   safeCall("warTracker", () => {
     const caller = history || null;
-    const h = resolveWarHistory(caller);
-    const wars = h.wars || [];
-    migrateWarRecords(snapshot, wars, h.samples);
+    const warHistory = resolveWarHistory(caller);
+    const wars = warHistory.wars || [];
+    migrateWarRecords(snapshot, wars, warHistory.samples);
     const gameYear = readTurnDate();
     const allPlayers = typeof Players?.getAlive === "function" ? Players.getAlive() : null;
     if (!Array.isArray(allPlayers)) return;
@@ -292,6 +285,6 @@ export function runWarTracker(snapshot, turn, history) {
     reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn);
     closeEndedWars(wars, activeWarsByID, gameYear, turn);
     // Threaded path: the caller owns the single per-turn save. Standalone: persist now.
-    if (!caller) DemographicsStorage.save(h);
+    if (!caller) DemographicsStorage.save(warHistory);
   });
 }

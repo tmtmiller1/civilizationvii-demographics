@@ -3,16 +3,15 @@
         <fxs-header class="demographics-title relative font-title text-xl uppercase text-secondary"
                     filigree-style="h4" title="LOC_DEMOGRAPHICS_TITLE"></fxs-header>
         <div class="demographics-body relative flex flex-col flex-auto px-6 pb-6">
-            <!-- TOP-LEVEL view tab bar (Historical Data / WorldRankingsAllCivs / Relations / Options) -->
+            <!-- Top-level view tab bar -->
             <div class="demographics-view-tab-host w-full"></div>
             <!-- The currently-active view renders into this host -->
             <div class="demographics-view-host w-full flex flex-col flex-auto"></div>
-            <!-- Multiplayer analytics-governance policy banner (P0.1); shown only when constrained.
-                 Below the view host so views that don't render it themselves (Rankings / Relations)
-                 show it at the BOTTOM, matching the Historical Data tabs. -->
+            <!-- Policy-banner host, left empty: the analytics-governance banner renders in the
+                 frame header (_renderPolicyBanner in screen/screen-demographics.js). -->
             <div class="demographics-policy-banner-host w-full"></div>
         </div>
-        <fxs-close-button data-ia-close
+        <fxs-close-button data-dg-close
             data-audio-group-ref="audio-screen-unlocks"
             data-audio-activate-ref="data-audio-close-selected"
             data-audio-press-ref="data-audio-close-press"></fxs-close-button>

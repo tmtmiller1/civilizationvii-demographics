@@ -6,14 +6,9 @@
 // Everything is read defensively and clamped, so a missing read yields the
 // neutral factor 1.
 
-const DBG = false;
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.hardware]", ...a);
-}
+const log = makeLogger("hardware");
 
 /** Cached: hardware doesn't change within a session. @type {number|null} */
 let _capability = null;
@@ -91,7 +86,7 @@ export function capabilityFactor() {
     f = 1;
   }
   _capability = clamp(f, 0.4, 1.5);
-  dlog("capabilityFactor =", _capability);
+  log.debug("capabilityFactor =", _capability);
   return _capability;
 }
 

@@ -4,9 +4,17 @@
 // civ's rank by Score on a reversed y-axis) and the 100%-stacked share areas. Both reuse
 // buildSeriesFromHistory, then transform the sampled values into ranks / shares.
 
-import { localeFontFamily, t } from "/demographics/ui/core/demographics-i18n.js";
+import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { coerceKeySet } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
+import {
+  AXIS_BORDER_COLOR,
+  AXIS_COLOR,
+  axisTitle,
+  chartFontFamily,
+  civLegendOpts,
+  GRID_COLOR
+} from "/demographics/ui/screen-demographics/charts/shared/chart-style.js";
 import {
   applyEngineChartDefaults,
   buildChartCanvas,
@@ -19,31 +27,19 @@ import { buildSeriesFromHistory } from "/demographics/ui/screen-demographics/cha
 import { buildLineLegend } from "/demographics/ui/screen-demographics/charts/line/chart-line-legend.js";
 import { makeTooltipExternal } from "/demographics/ui/screen-demographics/charts/line/chart-line-tooltip.js";
 
-// Styling tokens copied from chart-line-config.js so both chart families read
-// identically (Chart.js canvas needs literals, not CSS vars).
-const AXIS_COLOR = "#e5d2ac";
-const GRID = "rgba(133, 135, 140, 0.25)";
-const AXIS_BORDER = "#85878C";
-
-/** @returns {string} The engine chart font family, with a safe fallback chain. */
-function fontFamily() {
-  return (typeof Chart !== "undefined" && Chart.defaults?.font?.family) || localeFontFamily("body");
-}
-
-/** @param {number} size @returns {Record<string, *>} A Chart.js font block. */
+/**
+ * @param {number} size
+ * @returns {Record<string, *>} A Chart.js font block.
+ */
 function tickFont(size) {
-  return { family: fontFamily(), size };
+  return { family: chartFontFamily(), size };
 }
 
-/** @param {string} text @returns {Record<string, *>} Axis-title opts matching the line chart. */
-function axisTitle(text) {
-  return {
-    display: !!text, text, color: AXIS_COLOR,
-    font: { family: fontFamily(), size: 18, weight: "600" }
-  };
-}
-
-/** @param {HTMLElement} host @param {string} msg Append a centered empty-state. */
+/**
+ * Append a centered empty-state.
+ * @param {HTMLElement} host
+ * @param {string} msg
+ */
 function emptyState(host, msg) {
   const el = document.createElement("div");
   el.className = "demographics-empty font-body text-base";
@@ -51,28 +47,38 @@ function emptyState(host, msg) {
   host.appendChild(el);
 }
 
-/** @param {*} color @param {number} a Alpha 0-1. @returns {string} An rgba() string. */
-function withAlpha(color, a) {
-  if (typeof color !== "string") return "rgba(255,255,255," + a + ")";
+/**
+ * @param {*} color
+ * @param {number} alpha 0-1.
+ * @returns {string} An rgba() string.
+ */
+function withAlpha(color, alpha) {
+  if (typeof color !== "string") return "rgba(255,255,255," + alpha + ")";
   const rgb = color.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i);
-  if (rgb) return "rgba(" + rgb[1] + "," + rgb[2] + "," + rgb[3] + "," + a + ")";
+  if (rgb) return "rgba(" + rgb[1] + "," + rgb[2] + "," + rgb[3] + "," + alpha + ")";
   const hex = color.replace("#", "");
-  if (hex.length !== 6) return "rgba(255,255,255," + a + ")";
-  const n = parseInt(hex, 16);
-  return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+  if (hex.length !== 6) return "rgba(255,255,255," + alpha + ")";
+  const packed = parseInt(hex, 16);
+  return "rgba(" + ((packed >> 16) & 255) + "," + ((packed >> 8) & 255) + "," + (packed & 255) + "," + alpha + ")";
 }
 
-/** The x-axis (time) block, identical to the line chart's. @returns {Record<string, *>} */
+/**
+ * The x-axis (time) block, identical to the line chart's.
+ * @returns {Record<string, *>}
+ */
 function xAxis() {
   return {
     type: "linear",
     title: axisTitle(t("LOC_DEMOGRAPHICS_AXIS_TIME")),
     ticks: {
-      color: AXIS_COLOR, font: tickFont(17), maxRotation: 0, autoSkipPadding: 30,
-      callback: (/** @type {number} */ v) => String(Math.round(v))
+      color: AXIS_COLOR,
+      font: tickFont(17),
+      maxRotation: 0,
+      autoSkipPadding: 30,
+      callback: (/** @type {number} */ turn) => String(Math.round(turn))
     },
-    grid: { color: GRID },
-    border: { color: AXIS_BORDER }
+    grid: { color: GRID_COLOR },
+    border: { color: AXIS_BORDER_COLOR }
   };
 }
 
@@ -81,17 +87,23 @@ function xAxis() {
  * @param {string} title
  * @param {(v:number)=>string} tickCb The tick label formatter.
  * @param {Record<string, *>} bounds reverse/min/max/stacked/stepSize flags.
- * @returns {Record<string, *>} The y-axis options.
+ * @returns {Record<string, *>}
  */
 function yAxis(title, tickCb, bounds) {
-  const b = bounds || {};
+  const flags = bounds || {};
   const ticks = { color: AXIS_COLOR, font: tickFont(17), callback: tickCb };
-  if (b.stepSize) Object.assign(ticks, { stepSize: b.stepSize, precision: 0 });
-  const axis = { type: "linear", title: axisTitle(title), ticks, grid: { color: GRID }, border: { color: AXIS_BORDER } };
-  if (b.reverse) Object.assign(axis, { reverse: true });
-  if (typeof b.min === "number") Object.assign(axis, { min: b.min });
-  if (typeof b.max === "number") Object.assign(axis, { max: b.max });
-  if (b.stacked) Object.assign(axis, { stacked: true });
+  if (flags.stepSize) Object.assign(ticks, { stepSize: flags.stepSize, precision: 0 });
+  const axis = {
+    type: "linear",
+    title: axisTitle(title),
+    ticks,
+    grid: { color: GRID_COLOR },
+    border: { color: AXIS_BORDER_COLOR }
+  };
+  if (flags.reverse) Object.assign(axis, { reverse: true });
+  if (typeof flags.min === "number") Object.assign(axis, { min: flags.min });
+  if (typeof flags.max === "number") Object.assign(axis, { max: flags.max });
+  if (flags.stacked) Object.assign(axis, { stacked: true });
   return axis;
 }
 
@@ -115,24 +127,19 @@ function pluginsOpts(fmtY, metricMeta) {
 
 /**
  * The `options` shape both charts share.
- * @param {Record<string, *>} plugins @param {Record<string, *>} scales
+ * @param {Record<string, *>} plugins
+ * @param {Record<string, *>} scales
  * @returns {Record<string, *>} The Chart.js `options`.
  */
 function baseOptions(plugins, scales) {
   return {
-    responsive: false, maintainAspectRatio: false, animation: false, normalized: true,
+    responsive: false,
+    maintainAspectRatio: false,
+    animation: false,
+    normalized: true,
     interaction: { mode: "index", intersect: false, axis: "x" },
-    plugins, scales
-  };
-}
-
-/** @param {*} opts @returns {Record<string, *>} Legend callbacks bound to the render ctx. */
-function legendOpts(opts) {
-  return {
-    hiddenCivs: opts.hiddenCivs,
-    onToggleVisibility: (/** @type {string} */ k) => opts.onToggleCiv && opts.onToggleCiv(k),
-    onSetAllHidden: (/** @type {boolean} */ h, /** @type {string[]} */ keys) =>
-      opts.onSetAllHidden && opts.onSetAllHidden(h, keys)
+    plugins,
+    scales
   };
 }
 
@@ -141,7 +148,7 @@ function legendOpts(opts) {
  * @param {HTMLElement} host
  * @param {*} options
  * @param {string} metricId The source metric id to build series from.
- * @returns {{opts:*, W:number, H:number, hidden:Set<string>, series:*[]}|null} Prepared, or null.
+ * @returns {{opts:*, width:number, height:number, hidden:Set<string>, series:*[]}|null} Prepared, or null.
  */
 function prepare(host, options, metricId) {
   teardownExistingChart(host);
@@ -156,30 +163,48 @@ function prepare(host, options, metricId) {
   const opts = options || {};
   const built = buildSeriesFromHistory(opts.history, metricId);
   return {
-    opts, W: opts.width || 1400, H: opts.height || 600,
-    hidden: coerceKeySet(opts.hiddenCivs), series: built.series
+    opts,
+    width: opts.width || 1400,
+    height: opts.height || 600,
+    hidden: coerceKeySet(opts.hiddenCivs),
+    series: built.series
   };
 }
 
 /**
  * Mount a prepared Chart.js config with the shared legend + canvas wrap.
- * @param {HTMLElement} host @param {*} prep @param {Record<string, *>[]} datasets @param {Record<string, *>} config
+ * @param {HTMLElement} host
+ * @param {*} prep The result of prepare().
+ * @param {Record<string, *>[]} datasets
+ * @param {Record<string, *>} config
  */
 function mount(host, prep, datasets, config) {
-  const { renderW, renderH } = computeRenderSize(prep.opts, prep.W, prep.H);
-  const legend = buildLineLegend(datasets, legendOpts(prep.opts));
+  const { renderW, renderH } = computeRenderSize(prep.opts, prep.width, prep.height);
+  const legend = buildLineLegend(datasets, civLegendOpts(prep.opts));
   const { wrap, canvas } = buildChartCanvas(renderW, renderH, legend);
   host.appendChild(wrap);
   tryCreateChart(canvas, config, host);
 }
 
-/** @param {*} s @param {{x:number,y:number}[]} data @param {Set<string>} hidden @param {Record<string,*>} extra */
-function baseDataset(s, data, hidden, extra) {
-  const color = safeTextColor(s.color) || s.color;
+/**
+ * @param {*} civSeries One civ's series from buildSeriesFromHistory.
+ * @param {{x:number,y:number}[]} data
+ * @param {Set<string>} hidden
+ * @param {Record<string,*>} extra
+ */
+function baseDataset(civSeries, data, hidden, extra) {
+  const color = safeTextColor(civSeries.color) || civSeries.color;
   return {
-    label: s.name, leaderType: s.leaderType, leaderTypeString: s.leaderTypeString,
-    data, borderColor: color, backgroundColor: color, tension: 0, spanGaps: true,
-    hidden: hidden.has(s.leaderType), ...extra
+    label: civSeries.name,
+    leaderType: civSeries.leaderType,
+    leaderTypeString: civSeries.leaderTypeString,
+    data,
+    borderColor: color,
+    backgroundColor: color,
+    tension: 0,
+    spanGaps: true,
+    hidden: hidden.has(civSeries.leaderType),
+    ...extra
   };
 }
 
@@ -193,23 +218,23 @@ function baseDataset(s, data, hidden, extra) {
 function buildRanks(series) {
   /** @type {Map<number, {key:string, v:number}[]>} */
   const byTurn = new Map();
-  for (const s of series) {
-    for (const p of s.points) {
-      if (typeof p.v !== "number" || !isFinite(p.v)) continue;
-      let arr = byTurn.get(p.t);
-      if (!arr) byTurn.set(p.t, (arr = []));
-      arr.push({ key: s.leaderType, v: p.v });
+  for (const civSeries of series) {
+    for (const point of civSeries.points) {
+      if (typeof point.v !== "number" || !isFinite(point.v)) continue;
+      let entries = byTurn.get(point.t);
+      if (!entries) byTurn.set(point.t, (entries = []));
+      entries.push({ key: civSeries.leaderType, v: point.v });
     }
   }
   const ranks = new Map();
   let maxRank = 1;
-  for (const [turn, arr] of byTurn) {
-    arr.sort((a, b) => b.v - a.v);
-    arr.forEach((e, i) => {
+  for (const [turn, entries] of byTurn) {
+    entries.sort((a, b) => b.v - a.v);
+    entries.forEach((entry, i) => {
       if (i + 1 > maxRank) maxRank = i + 1;
-      let pts = ranks.get(e.key);
-      if (!pts) ranks.set(e.key, (pts = []));
-      pts.push({ x: turn, y: i + 1 });
+      let points = ranks.get(entry.key);
+      if (!points) ranks.set(entry.key, (points = []));
+      points.push({ x: turn, y: i + 1 });
     });
   }
   return { ranks, maxRank };
@@ -217,7 +242,8 @@ function buildRanks(series) {
 
 /**
  * Render the Power Race bump chart (rank by Score over time).
- * @param {HTMLElement} host @param {*} options
+ * @param {HTMLElement} host
+ * @param {*} options
  * @returns {void}
  */
 export function renderPowerRace(host, options) {
@@ -225,8 +251,10 @@ export function renderPowerRace(host, options) {
   if (!prep) return;
   if (prep.series.length < 2) return emptyState(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES"));
   const { ranks, maxRank } = buildRanks(prep.series);
-  const datasets = prep.series.map((s) => baseDataset(
-    s, (ranks.get(s.leaderType) || []).sort((a, b) => a.x - b.x), prep.hidden,
+  const datasets = prep.series.map((civSeries) => baseDataset(
+    civSeries,
+    (ranks.get(civSeries.leaderType) || []).sort((a, b) => a.x - b.x),
+    prep.hidden,
     { borderWidth: 2.6, pointRadius: 3, pointHoverRadius: 5 }
   ));
   const scales = {
@@ -235,56 +263,75 @@ export function renderPowerRace(host, options) {
       { reverse: true, min: 1, max: maxRank, stepSize: 1 })
   };
   const plugins = pluginsOpts((v) => "#" + Math.round(v), { id: "power_race" });
-  mount(host, prep, datasets, { type: "line", data: { datasets }, options: { ...baseOptions(plugins, scales), parsing: false } });
+  mount(host, prep, datasets, {
+    type: "line",
+    data: { datasets },
+    options: { ...baseOptions(plugins, scales), parsing: false }
+  });
 }
 
 // Population Share (100%-stacked area)
 
-/** @param {*[]} series @returns {number[]} The sorted union of sampled turns. */
+/**
+ * @param {*[]} series
+ * @returns {number[]} The sorted union of sampled turns.
+ */
 function sortedTurns(series) {
-  const set = new Set();
-  for (const s of series) for (const p of s.points) {
-    if (typeof p.v === "number" && isFinite(p.v)) set.add(p.t);
+  const turns = new Set();
+  for (const civSeries of series) {
+    for (const point of civSeries.points) {
+      if (typeof point.v === "number" && isFinite(point.v)) turns.add(point.t);
+    }
   }
-  return [...set].sort((a, b) => a - b);
+  return [...turns].sort((a, b) => a - b);
 }
 
 /**
  * Per-turn world totals (sum of positive values across civs).
- * @param {*[]} series The per-civ series. @returns {Map<number, number>} turn → total.
+ * @param {*[]} series The per-civ series.
+ * @returns {Map<number, number>} turn → total.
  */
 function turnTotals(series) {
   const totals = new Map();
-  for (const s of series) for (const p of s.points) {
-    if (typeof p.v === "number" && isFinite(p.v) && p.v > 0) totals.set(p.t, (totals.get(p.t) || 0) + p.v);
+  for (const civSeries of series) {
+    for (const point of civSeries.points) {
+      if (typeof point.v === "number" && isFinite(point.v) && point.v > 0) {
+        totals.set(point.t, (totals.get(point.t) || 0) + point.v);
+      }
+    }
   }
   return totals;
 }
 
 /**
  * Build one civ's share band, aligned to the shared turn axis (0 where absent).
- * @param {*} s The civ series. @param {number[]} turns Shared turn axis.
- * @param {Map<number, number>} totals turn → world total. @param {Set<string>} hidden Hidden keys.
+ * @param {*} civSeries
+ * @param {number[]} turns Shared turn axis.
+ * @param {Map<number, number>} totals turn → world total.
+ * @param {Set<string>} hidden Hidden keys.
  * @returns {Record<string, *>} The Chart.js dataset.
  */
-function shareDataset(s, turns, totals, hidden) {
-  const vByTurn = new Map();
-  for (const p of s.points) if (typeof p.v === "number" && isFinite(p.v)) vByTurn.set(p.t, p.v);
+function shareDataset(civSeries, turns, totals, hidden) {
+  const valueByTurn = new Map();
+  for (const point of civSeries.points) {
+    if (typeof point.v === "number" && isFinite(point.v)) valueByTurn.set(point.t, point.v);
+  }
   const data = turns.map((turn) => {
-    const tot = totals.get(turn) || 0;
-    const v = vByTurn.get(turn) || 0;
-    return { x: turn, y: tot > 0 ? (v / tot) * 100 : 0 };
+    const total = totals.get(turn) || 0;
+    const value = valueByTurn.get(turn) || 0;
+    return { x: turn, y: total > 0 ? (value / total) * 100 : 0 };
   });
-  const color = safeTextColor(s.color) || s.color;
+  const color = safeTextColor(civSeries.color) || civSeries.color;
   return {
-    ...baseDataset(s, data, hidden, { borderWidth: 1.4, pointRadius: 0, pointHoverRadius: 4, fill: true }),
+    ...baseDataset(civSeries, data, hidden, { borderWidth: 1.4, pointRadius: 0, pointHoverRadius: 4, fill: true }),
     backgroundColor: withAlpha(color, 0.8)
   };
 }
 
 /**
  * Render the Population Share 100%-stacked area.
- * @param {HTMLElement} host @param {*} options
+ * @param {HTMLElement} host
+ * @param {*} options
  * @returns {void}
  */
 export function renderPopShareArea(host, options) {
@@ -293,10 +340,14 @@ export function renderPopShareArea(host, options) {
   const turns = sortedTurns(prep.series);
   if (turns.length < 2 || !prep.series.length) return emptyState(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES"));
   const totals = turnTotals(prep.series);
-  const datasets = prep.series.map((s) => shareDataset(s, turns, totals, prep.hidden));
+  const datasets = prep.series.map((civSeries) => shareDataset(civSeries, turns, totals, prep.hidden));
   const scales = {
     x: xAxis(),
-    y: yAxis(t("LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE"), (v) => Math.round(v) + "%", { min: 0, max: 100, stacked: true })
+    y: yAxis(t("LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE"), (v) => Math.round(v) + "%", {
+      min: 0,
+      max: 100,
+      stacked: true
+    })
   };
   const plugins = pluginsOpts((v) => Math.round(v) + "%", { id: "pop_share_area" });
   mount(host, prep, datasets, { type: "line", data: { datasets }, options: baseOptions(plugins, scales) });
@@ -306,7 +357,8 @@ export function renderPopShareArea(host, options) {
  * Render the Land Area Share 100%-stacked area (each civ's share of world owned
  * territory over time). Identical shape to the Population Share chart, sourced from
  * the `land` metric instead.
- * @param {HTMLElement} host @param {*} options
+ * @param {HTMLElement} host
+ * @param {*} options
  * @returns {void}
  */
 export function renderLandShareArea(host, options) {
@@ -315,10 +367,14 @@ export function renderLandShareArea(host, options) {
   const turns = sortedTurns(prep.series);
   if (turns.length < 2 || !prep.series.length) return emptyState(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES"));
   const totals = turnTotals(prep.series);
-  const datasets = prep.series.map((s) => shareDataset(s, turns, totals, prep.hidden));
+  const datasets = prep.series.map((civSeries) => shareDataset(civSeries, turns, totals, prep.hidden));
   const scales = {
     x: xAxis(),
-    y: yAxis(t("LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE"), (v) => Math.round(v) + "%", { min: 0, max: 100, stacked: true })
+    y: yAxis(t("LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE"), (v) => Math.round(v) + "%", {
+      min: 0,
+      max: 100,
+      stacked: true
+    })
   };
   const plugins = pluginsOpts((v) => Math.round(v) + "%", { id: "land_share_area" });
   mount(host, prep, datasets, { type: "line", data: { datasets }, options: baseOptions(plugins, scales) });

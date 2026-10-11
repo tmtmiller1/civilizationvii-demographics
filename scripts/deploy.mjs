@@ -16,7 +16,7 @@ const SHIP = [
   /^ui\/(?!dev\/).+\.(js|html|css)$/, /^images\/.+\.(svg|png)$/, /^text\/[a-z_]+\/ModText\.xml$/
 ];
 
-/** @returns {string[]} Relative paths under dir. */
+/** @returns {string[]} */
 function list(dir, base = dir) {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
@@ -25,14 +25,21 @@ function list(dir, base = dir) {
   });
 }
 
-const shipped = list(root).filter((f) => !f.startsWith("node_modules") && !f.startsWith("dist") && SHIP.some((re) => re.test(f))).sort();
+const shipped = list(root)
+  .filter((f) => !f.startsWith("node_modules") && !f.startsWith("dist") && SHIP.some((re) => re.test(f)))
+  .sort();
 const deployed = list(target).sort();
 
 if (process.argv.includes("--check")) {
-  const stale = shipped.filter((f) => !deployed.includes(f) || !fs.readFileSync(path.join(root, f)).equals(fs.readFileSync(path.join(target, f))));
+  const stale = shipped.filter(
+    (f) => !deployed.includes(f) || !fs.readFileSync(path.join(root, f)).equals(fs.readFileSync(path.join(target, f)))
+  );
   const extra = deployed.filter((f) => !shipped.includes(f));
   if (stale.length || extra.length) {
-    console.log(`deploy:check FAILED\n  missing or stale: ${stale.join(", ") || "none"}\n  not in ship set: ${extra.join(", ") || "none"}`);
+    console.log(
+      `deploy:check FAILED\n  missing or stale: ${stale.join(", ") || "none"}\n` +
+        `  not in ship set: ${extra.join(", ") || "none"}`
+    );
     process.exit(1);
   }
   console.log(`deploy:check ok (${shipped.length} files match)`);

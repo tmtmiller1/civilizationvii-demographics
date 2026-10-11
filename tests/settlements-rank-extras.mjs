@@ -3,6 +3,7 @@
 //         holy badge, wonder completion tooltip, end-of-age pills).
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
+import { installMemoryLocalStorage } from "./_engine-stubs.mjs";
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -10,12 +11,7 @@ globalThis.Locale = { compose: (k, ...a) => [String(k).replace(/^LOC_/, ""), ...
 globalThis.GameContext = { localPlayerID: 1 };
 globalThis.Configuration = { getGame: () => ({ startSeed: "seed1" }) };
 globalThis.UI = { getIconURL: (type) => "blp:" + type };
-const storage = new Map();
-globalThis.localStorage = {
-  getItem: (k) => (storage.has(k) ? storage.get(k) : null),
-  setItem: (k, v) => storage.set(k, String(v)),
-  removeItem: (k) => storage.delete(k)
-};
+installMemoryLocalStorage();
 
 // Wonder completion years: only an observed completion is dated
 const { wonderCompletionYears, annotateWonderYears } = await import(
@@ -105,7 +101,7 @@ Game.age = "AGE_EXPLORATION";
 assert.deepEqual(readAgeArchive(null), []);
 assert.deepEqual(readAgeArchive({ settleAges: "junk" }), []);
 
-// Hardening: a null/junk entry in `top` is dropped, a record written without
+// Damaged archives: a null/junk entry in `top` is dropped, a record written without
 // outputs/ranks/wonders rehydrates with empty defaults (the showcase dereferences
 // all three), and an entry holding only nulls is not an archived age.
 hist.settleAges.AGE_ANTIQUITY.top = [null, { name: "Bare", composite: 1, owner: { pid: 2 } }, "junk"];
@@ -291,7 +287,7 @@ assert.equal(trendCalls, 0, "an archived record has no trend glyph");
 const { renderCivRankingPanel } = await import(
   "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js"
 );
-const yieldCols = SETTLEMENT_OUTPUTS.filter((c) => c.composite && c.yt);
+const yieldCols = SETTLEMENT_OUTPUTS.filter((c) => c.composite && c.yieldType);
 const civSettle = (pid, out, isMajor = true) => ({
   owner: { pid, isMajor, leaderName: "L" + pid, civName: "C" + pid, met: true },
   populationEstimate: 1000, outputs: out

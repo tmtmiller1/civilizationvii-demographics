@@ -1,4 +1,5 @@
 import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
+import { orFallback } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
 /**
  * A civ "profile": the latest non-empty value of each identity field folded
@@ -39,33 +40,16 @@ import { METRICS } from "/demographics/ui/metrics/demographics-metrics.js";
  */
 
 /**
- * Invoke `fn` and return its result, or `fb` if it throws.
- * @template T
- * @param {() => T} fn
- * @param {T} [fb] Fallback returned on throw.
- * @returns {T|undefined} `fn()` result, or `fb`.
- */
-function safeCall(fn, fb) {
-  try {
-    return fn();
-  } catch (_) {
-    // Defensive engine-boundary wrapper - `fn` reads GameContext.localPlayerID
-    // / localObserverID, which can throw; return the fallback.
-    return fb;
-  }
-}
-
-/**
  * Resolve the local player id from the engine `GameContext`, defensively.
  * @returns {number|undefined} Local player (or observer) id, if numeric.
  */
 function getLocalId() {
-  return safeCall(() => {
+  return orFallback(() => {
     if (typeof GameContext !== "undefined" && GameContext) {
-      const v = GameContext.localPlayerID;
-      if (typeof v === "number") return v;
-      const o = GameContext.localObserverID;
-      if (typeof o === "number") return o;
+      const playerId = GameContext.localPlayerID;
+      if (typeof playerId === "number") return playerId;
+      const observerId = GameContext.localObserverID;
+      if (typeof observerId === "number") return observerId;
     }
     return undefined;
   });
@@ -74,13 +58,13 @@ function getLocalId() {
 /**
  * Create a fresh, empty `CivProfile` for a player id.
  * @param {string} pid
- * @param {CivSample} ps The first per-civ sample seen for this pid.
- * @returns {CivProfile} A blank profile seeded with the stable leader key.
+ * @param {CivSample} civSample The first per-civ sample seen for this pid.
+ * @returns {CivProfile} Seeded with the stable leader key.
  */
-export function makeBlankProfile(pid, ps) {
+export function makeBlankProfile(pid, civSample) {
   return {
     pid,
-    leaderKey: String(ps?.leaderType ?? "pid:" + pid),
+    leaderKey: String(civSample?.leaderType ?? "pid:" + pid),
     leaderName: undefined,
     civName: undefined,
     civNames: [],
@@ -99,52 +83,52 @@ export function makeBlankProfile(pid, ps) {
  * @param {Record<string, *>} metrics
  */
 export function mergeProfileMetrics(profile, metrics) {
-  for (const k of Object.keys(metrics)) {
-    const v = metrics[k];
-    if (typeof v === "number" && isFinite(v)) profile.latest[k] = v;
+  for (const metricId of Object.keys(metrics)) {
+    const value = metrics[metricId];
+    if (typeof value === "number" && isFinite(value)) profile.latest[metricId] = value;
   }
 }
 
 /**
- * Return `v` when it is a non-empty string, otherwise `undefined`. Mirrors the
+ * Return `value` when it is a non-empty string, otherwise `undefined`. Mirrors the
  * `typeof x === "string" && x.length > 0` guard used across the sample fold.
- * @param {*} v
- * @returns {string|undefined} The string if non-empty, else `undefined`.
+ * @param {*} value
+ * @returns {string|undefined}
  */
-export function nonEmptyString(v) {
-  return typeof v === "string" && v.length > 0 ? v : undefined;
+export function nonEmptyString(value) {
+  return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
 /**
  * Fold one sample's leader-name and civ-name identity fields into a profile,
  * tracking distinct civ names in first-seen order.
  * @param {CivProfile} profile
- * @param {CivSample} ps
+ * @param {CivSample} civSample
  */
-export function mergeCivNames(profile, ps) {
-  const leaderName = nonEmptyString(ps?.leaderName);
+export function mergeCivNames(profile, civSample) {
+  const leaderName = nonEmptyString(civSample?.leaderName);
   if (leaderName) profile.leaderName = leaderName;
-  const civName = nonEmptyString(ps?.civName);
+  const civName = nonEmptyString(civSample?.civName);
   if (civName) {
     profile.civName = civName;
-    const arr = profile.civNames;
-    if (!arr.includes(civName)) arr.push(civName);
+    const civNames = profile.civNames;
+    if (!civNames.includes(civName)) civNames.push(civName);
   }
 }
 
 /**
  * Fold one sample's engine type strings and civ colors into a profile.
  * @param {CivProfile} profile
- * @param {CivSample} ps
+ * @param {CivSample} civSample
  */
-export function mergeCivTypesAndColors(profile, ps) {
-  const leaderTypeString = nonEmptyString(ps?.leaderTypeString);
+export function mergeCivTypesAndColors(profile, civSample) {
+  const leaderTypeString = nonEmptyString(civSample?.leaderTypeString);
   if (leaderTypeString) profile.leaderTypeString = leaderTypeString;
-  const civTypeString = nonEmptyString(ps?.civTypeString);
+  const civTypeString = nonEmptyString(civSample?.civTypeString);
   if (civTypeString) profile.civTypeString = civTypeString;
-  const primaryColor = nonEmptyString(ps?.primaryColor);
+  const primaryColor = nonEmptyString(civSample?.primaryColor);
   if (primaryColor) profile.primaryColor = primaryColor;
-  const secondaryColor = nonEmptyString(ps?.secondaryColor);
+  const secondaryColor = nonEmptyString(civSample?.secondaryColor);
   if (secondaryColor) profile.secondaryColor = secondaryColor;
 }
 
@@ -152,32 +136,32 @@ export function mergeCivTypesAndColors(profile, ps) {
  * Fold one per-civ sample over an existing profile, overwriting each identity
  * field only when the newer sample carries a non-empty value.
  * @param {CivProfile} profile
- * @param {CivSample} ps
+ * @param {CivSample} civSample
  */
-export function mergeCivSample(profile, ps) {
-  mergeCivNames(profile, ps);
-  mergeCivTypesAndColors(profile, ps);
-  if (typeof ps?.met === "boolean") profile.met = ps.met;
-  mergeProfileMetrics(profile, ps?.metrics || {});
+export function mergeCivSample(profile, civSample) {
+  mergeCivNames(profile, civSample);
+  mergeCivTypesAndColors(profile, civSample);
+  if (typeof civSample?.met === "boolean") profile.met = civSample.met;
+  mergeProfileMetrics(profile, civSample?.metrics || {});
 }
 
 /**
  * Build a `{ pid -> profile }` map by folding every newer non-empty field over
  * the older one across the full history.
  * @param {DemoHistory|undefined} history
- * @returns {Record<string, CivProfile>} Profiles keyed by player id.
+ * @returns {Record<string, CivProfile>} Keyed by player id.
  */
 export function buildCivProfiles(history) {
   /** @type {Record<string, CivProfile>} */
   const profiles = {};
   // A repaired/foreign blob can carry a non-array `samples`; treat it as no history.
   const samples = Array.isArray(history?.samples) ? history.samples : [];
-  for (const s of samples) {
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
-      const ps = s.players[pid];
-      if (!profiles[pid]) profiles[pid] = makeBlankProfile(pid, ps);
-      mergeCivSample(profiles[pid], ps);
+  for (const sample of samples) {
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
+      const civSample = sample.players[pid];
+      if (!profiles[pid]) profiles[pid] = makeBlankProfile(pid, civSample);
+      mergeCivSample(profiles[pid], civSample);
     }
   }
   return profiles;
@@ -188,26 +172,26 @@ export function buildCivProfiles(history) {
  * `metricId`. Ranks are 1-based and ties share a rank.
  * @param {Record<string, CivProfile>} profiles
  * @param {string} metricId
- * @returns {RankResult} The rank map and the count of ranked civs.
+ * @returns {RankResult}
  */
 export function computeRanks(profiles, metricId) {
-  /** @type {{ pid: string, v: number }[]} */
+  /** @type {{ pid: string, value: number }[]} */
   const entries = [];
   for (const pid of Object.keys(profiles)) {
-    const v = profiles[pid].latest?.[metricId];
-    if (typeof v === "number" && isFinite(v)) entries.push({ pid, v });
+    const value = profiles[pid].latest?.[metricId];
+    if (typeof value === "number" && isFinite(value)) entries.push({ pid, value });
   }
-  entries.sort((a, b) => b.v - a.v);
+  entries.sort((a, b) => b.value - a.value);
   const ranks = new Map();
   /** @type {number|undefined} */
-  let lastV;
+  let lastValue;
   let lastRank = 0;
-  entries.forEach((e, i) => {
-    if (e.v !== lastV) {
+  entries.forEach((entry, i) => {
+    if (entry.value !== lastValue) {
       lastRank = i + 1;
-      lastV = e.v;
+      lastValue = entry.value;
     }
-    ranks.set(e.pid, lastRank);
+    ranks.set(entry.pid, lastRank);
   });
   return { ranks, total: entries.length };
 }
@@ -218,12 +202,12 @@ export function computeRanks(profiles, metricId) {
  * net migration, say) has no leader, so nothing is highlighted for it.
  * @param {{ ranks: Map<string, number>, total: number }|undefined} info The metric's ranks.
  * @param {string} pid
- * @returns {boolean} True when the civ leads the metric.
+ * @returns {boolean}
  */
 export function leadsMetric(info, pid) {
   if (!info || info.ranks.get(pid) !== 1) return false;
   let firsts = 0;
-  for (const r of info.ranks.values()) if (r === 1) firsts++;
+  for (const rank of info.ranks.values()) if (rank === 1) firsts++;
   return firsts < info.ranks.size;
 }
 
@@ -233,7 +217,7 @@ export function leadsMetric(info, pid) {
  * @param {WorldRankingsAllCivsCtx} ctx
  * @param {string} key
  * @param {boolean} fallback Value used when reading throws or is unavailable.
- * @returns {boolean} The coerced setting value.
+ * @returns {boolean}
  */
 export function readBoolSetting(ctx, key, fallback) {
   try {
@@ -250,12 +234,12 @@ export function readBoolSetting(ctx, key, fallback) {
  * @param {DemoHistory|undefined} history
  */
 export function stripEliminatedCivs(profiles, history) {
-  const elim =
+  const eliminated =
     history && history.eliminated && typeof history.eliminated === "object"
       ? history.eliminated
       : {};
   for (const pid of Object.keys(profiles)) {
-    if (elim[pid] || elim[Number(pid)]) {
+    if (eliminated[pid] || eliminated[Number(pid)]) {
       delete profiles[pid];
     }
   }
@@ -263,8 +247,8 @@ export function stripEliminatedCivs(profiles, history) {
 
 /** Diplomacy-category metric ids - the spoiler-gated set (computed once). */
 const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
-  .filter((m) => m.category === "diplomacy")
-  .map((m) => m.id);
+  .filter((metric) => metric.category === "diplomacy")
+  .map((metric) => metric.id);
 
 /**
  * Spoiler guard (display-time): strip diplomacy-category metric values from the profiles of
@@ -274,9 +258,9 @@ const DIPLOMACY_METRIC_IDS = /** @type {MetricDef[]} */ (METRICS)
  */
 export function stripUnmetDiplomacy(profiles) {
   for (const pid of Object.keys(profiles)) {
-    const p = profiles[pid];
-    if (p.met !== false) continue;
-    for (const id of DIPLOMACY_METRIC_IDS) delete p.latest[id];
+    const profile = profiles[pid];
+    if (profile.met !== false) continue;
+    for (const id of DIPLOMACY_METRIC_IDS) delete profile.latest[id];
   }
 }
 
@@ -315,20 +299,20 @@ export function pickLocalPid(profiles, allPids) {
  * @param {Record<string, CivProfile>} profiles
  * @param {string[]} allPids
  * @param {string} localPid The local-column pid to exclude.
- * @returns {string[]} The sorted non-local pids.
+ * @returns {string[]}
  */
 export function sortOtherPids(profiles, allPids, localPid) {
-  const scoreOf = (/** @type {string} */ p) => {
-    const v = profiles[p]?.latest?.score;
-    return typeof v === "number" && isFinite(v) ? v : -Infinity;
+  const scoreOf = (/** @type {string} */ pid) => {
+    const score = profiles[pid]?.latest?.score;
+    return typeof score === "number" && isFinite(score) ? score : -Infinity;
   };
   return allPids
-    .filter((p) => p !== localPid)
+    .filter((pid) => pid !== localPid)
     .sort((a, b) => {
-      const d = scoreOf(b) - scoreOf(a); // descending score
-      if (d !== 0) return d;
-      const na = profiles[a].leaderName || a;
-      const nb = profiles[b].leaderName || b;
-      return na.localeCompare(nb);
+      const scoreDiff = scoreOf(b) - scoreOf(a); // descending score
+      if (scoreDiff !== 0) return scoreDiff;
+      const nameA = profiles[a].leaderName || a;
+      const nameB = profiles[b].leaderName || b;
+      return nameA.localeCompare(nameB);
     });
 }

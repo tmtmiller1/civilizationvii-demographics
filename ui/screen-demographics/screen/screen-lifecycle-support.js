@@ -5,7 +5,10 @@
 // class owns when each runs.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { teardownExistingChart, reclaimOrphanedCharts } from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
+import {
+  teardownExistingChart,
+  reclaimOrphanedCharts
+} from "/demographics/ui/screen-demographics/charts/line/chart-line.js";
 
 /**
  * Whether an `engine-input` event is the finish of a Cancel / Escape action (`isCancelInput()` or
@@ -65,7 +68,7 @@ export function destroyChartsUnder(root) {
     destroyed++;
   }
   // Hosts already detached by an earlier view/page swap are not under `root` and so are invisible
-  // to the walk above; without this, closing the screen reclaimed none of them.
+  // to the walk above; without this, closing the screen would reclaim none of them.
   return destroyed + reclaimOrphanedCharts();
 }
 
@@ -75,8 +78,8 @@ export function destroyChartsUnder(root) {
  * @returns {HTMLElement}
  */
 export function renderFailedFallback() {
-  const msg = document.createElement("div");
-  msg.className = "demographics-empty demographics-view-render-failed font-body text-base";
-  msg.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED");
-  return msg;
+  const message = document.createElement("div");
+  message.className = "demographics-empty demographics-view-render-failed font-body text-base";
+  message.textContent = t("LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED");
+  return message;
 }

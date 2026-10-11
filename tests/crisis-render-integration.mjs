@@ -98,7 +98,12 @@ const dirtyHistory = {
   ],
   ageBoundaries: [{ age: "AGE_EXPLORATION" }],
   crisisSnapshots: {
-    AGE_ANTIQUITY: [null, 9, { pid: 1, leaderType: "LEADER_ME", color: "#224466", cost: { popLost: 3 } }, { pid: 2, cost: null }],
+    AGE_ANTIQUITY: [
+      null,
+      9,
+      { pid: 1, leaderType: "LEADER_ME", color: "#224466", cost: { popLost: 3 } },
+      { pid: 2, cost: null }
+    ],
     AGE_EXPLORATION: "not-an-array"
   }
 };
@@ -106,7 +111,10 @@ const host5 = document.createElement("div");
 host5._rect.width = 1000; host5._rect.height = 700;
 renderCrisisStages(host5, { history: dirtyHistory });
 assert.ok(host5.children.length > 0, "dirty snapshot elements must not abort the Crises page");
-assert.ok(host5.querySelector(".demographics-crisis-overall"), "the cross-age overall block (the snapshot reader) rendered");
+assert.ok(
+  host5.querySelector(".demographics-crisis-overall"),
+  "the cross-age overall block (the snapshot reader) rendered"
+);
 
 delete globalThis.document;
 delete globalThis.requestAnimationFrame;

@@ -23,7 +23,7 @@ const SAMPLES = [
 /**
  * A war record whose side-A roster was (wrongly) stamped with the current-age civ, as an older
  * build would have left an existing save.
- * @returns {object} The war record.
+ * @returns {object}
  */
 function corruptedWar() {
   return {

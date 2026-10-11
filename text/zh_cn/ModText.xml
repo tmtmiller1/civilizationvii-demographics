@@ -2089,17 +2089,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="zh_Hans_CN">
             <Text>标准</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="zh_Hans_CN">
-            <Text>分析师</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="zh_Hans_CN">
             <Text>仅显示核心统计页面；高级图表、关系网络和调节控件均被隐藏。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="zh_Hans_CN">
             <Text>显示所有图表和标签页；高级存储与采样控件保持隐藏。</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="zh_Hans_CN">
-            <Text>全部内容，包括存储上限、抽稀和采样率控件。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="zh_Hans_CN">
             <Text>时代成就进度：各文明的遗产路径雷达图。</Text>
@@ -2158,7 +2152,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="zh_Hans_CN"><Text>在历史图表线条上标记每座奇观建成的回合。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="zh_Hans_CN"><Text>在 Emigration 难民图表上标记每场战争开始的回合。需要配套模组 Emigration。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="zh_Hans_CN"><Text>在 Emigration 难民图表上标记每次灾害发生的回合。需要配套模组 Emigration。</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="zh_Hans_CN"><Text>界面显示的详细程度。基础仅包含核心统计页面；标准会加入所有图表和标签页；分析师还会显示存储、抽稀和采样率控制。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="zh_Hans_CN"><Text>界面显示的详细程度。基础仅包含核心统计页面；标准会加入所有图表和标签页。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="zh_Hans_CN"><Text>以 3 回合移动平均绘制历史线条，让趋势更清晰。底层数据保持不变。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="zh_Hans_CN"><Text>在图表和排名中继续显示已消亡的文明，而不是将其移除。</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="zh_Hans_CN"><Text>启用“电影视角”按钮，从热门城市列表中平移镜头浏览定居点。</Text></Replace>
@@ -2496,7 +2490,13 @@
             <Text>人口</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="zh_Hans_CN">
-            <Text>称号</Text>
+            <Text>荣誉称号</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="zh_Hans_CN">
+            <Text>“{1_Title}”</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="zh_Hans_CN">
+            <Text>（荣誉称号：“{1_Title}”）</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="zh_Hans_CN">
             <Text>结果</Text>

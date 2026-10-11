@@ -13,7 +13,7 @@
 
 /**
  * Probe game-setup config for the specific age-crisis event type.
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @returns {string | undefined} Crisis event type, or undefined on miss.
  */
 export function probeCrisisEventType(safeCall) {
@@ -111,7 +111,7 @@ function readAgeProgress(out) {
 
 /**
  * Sample game-wide age + crisis context once per snapshot.
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @returns {GlobalAgeContext} Assembled global age context.
  */
 export function getGlobalAgeContext(safeCall) {
@@ -134,7 +134,7 @@ export function getGlobalAgeContext(safeCall) {
 
 /**
  * Read current game turn defensively.
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @returns {number | undefined} Current turn, or undefined.
  */
 export function getCurrentTurn(safeCall) {
@@ -148,7 +148,7 @@ export function getCurrentTurn(safeCall) {
 
 /**
  * Read in-game date label for current turn.
- * @param {(label: string, fn: () => any) => any} safeCall Defensive call wrapper.
+ * @param {(label: string, fn: () => any) => any} safeCall
  * @returns {string | undefined} Date label, or undefined.
  */
 export function readGameYear(safeCall) {

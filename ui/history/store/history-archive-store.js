@@ -6,8 +6,16 @@
 // every read is untrusted: the store writes only a value it read that looks like a settings root,
 // then reads back and marks the session "unverified" when its games are not there.
 
-import { dlog, derr, safe } from "/demographics/ui/history/core/history-log.js";
-import { emptySlice, fitSlice, isSlice, mergeSlices, upsert, hideGame, sliceTexts } from "/demographics/ui/history/store/history-archive.js";
+import { log, safe } from "/demographics/ui/history/core/history-log.js";
+import {
+  emptySlice,
+  fitSlice,
+  hideGame,
+  isSlice,
+  mergeSlices,
+  sliceTexts,
+  upsert
+} from "/demographics/ui/history/store/history-archive.js";
 import { repairStore, storeRows } from "/demographics/ui/core/demographics-storage-repair.js";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 
@@ -21,12 +29,12 @@ const state = { slice: emptySlice(), status: "empty", loaded: false };
 
 /**
  * Whether a parsed value is shaped like the shared settings root.
- * @param {*} v
+ * @param {*} value
  * @returns {boolean}
  */
-export function looksLikeSettingsRoot(v) {
-  if (!v || typeof v !== "object" || Array.isArray(v)) return false;
-  return Object.keys(v).every((k) => !!v[k] && typeof v[k] === "object" && !Array.isArray(v[k]));
+export function looksLikeSettingsRoot(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  return Object.keys(value).every((k) => !!value[k] && typeof value[k] === "object" && !Array.isArray(value[k]));
 }
 
 /**
@@ -35,8 +43,8 @@ export function looksLikeSettingsRoot(v) {
  */
 function readRaw() {
   try {
-    const v = localStorage.getItem(ROOT_KEY);
-    return typeof v === "string" && v.length > 0 ? v : null;
+    const raw = localStorage.getItem(ROOT_KEY);
+    return typeof raw === "string" && raw.length > 0 ? raw : null;
   } catch (_) {
     // getItem can throw in some Coherent UI contexts; the caller must not treat that as empty.
     return undefined;
@@ -55,8 +63,8 @@ function emptyReadIsAbsentKey() {
   if (rows <= 0) return true;
   return safe(() => {
     for (let i = 0; i < rows; i += 1) {
-      const k = localStorage.key(i);
-      if (k === ROOT_KEY || k === null || k === undefined) return false;
+      const key = localStorage.key(i);
+      if (key === ROOT_KEY || key === null || key === undefined) return false;
     }
     return true;
   }, false);
@@ -110,7 +118,7 @@ export function loadArchive() {
   const { root, status } = readRoot();
   state.status = status;
   if (status === "ok" && root[SLICE_ID]) mergeSlices(state.slice, root[SLICE_ID]);
-  dlog("archive loaded", status, Object.keys(state.slice.games).length);
+  log.debug("archive loaded", status, Object.keys(state.slice.games).length);
   return state.slice;
 }
 
@@ -138,7 +146,7 @@ export function persistArchive() {
   try {
     localStorage.setItem(ROOT_KEY, JSON.stringify(next));
   } catch (e) {
-    derr("archive write failed", e);
+    log.error("archive write failed", e);
     return false;
   }
   return verifyWrite();
@@ -159,7 +167,7 @@ function verifyWrite() {
 
 /**
  * Add or refresh one campaign's record and persist.
- * @param {ArchiveRecord} rec The record.
+ * @param {ArchiveRecord} rec
  * @returns {boolean} Whether the stored archive now holds it.
  */
 export function saveRecord(rec) {
@@ -213,11 +221,11 @@ export function repairStorage() {
     state.status = "ok";
     // The settings module may have gone read-only on the same broken store; it can write again.
     safe(() => DemographicsSettings.resetPersistenceStatus?.(), undefined);
-    dlog("storage repaired", result.rowsBefore, "->", result.rowsAfter);
+    log.debug("storage repaired", result.rowsBefore, "->", result.rowsAfter);
   } else {
     // The store was emptied even when the write back failed, so nothing here is readable now.
     state.status = result.error === "no-store" ? "unavailable" : "unverified";
-    derr("storage repair failed:", result.error);
+    log.error("storage repair failed:", result.error);
   }
   return result;
 }

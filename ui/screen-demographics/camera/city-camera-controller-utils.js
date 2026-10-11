@@ -7,27 +7,27 @@ import { DemographicsSettings } from "/demographics/ui/core/demographics-setting
 
 /**
  * Clamp a number into [lo, hi]; returns `lo` for a non-finite input.
- * @param {number} v
+ * @param {number} value
  * @param {number} lo
  * @param {number} hi
  * @returns {number}
  */
-export function clamp(v, lo, hi) {
-  if (typeof v !== "number" || !isFinite(v)) return lo;
-  return Math.max(lo, Math.min(hi, v));
+export function clamp(value, lo, hi) {
+  if (typeof value !== "number" || !isFinite(value)) return lo;
+  return Math.max(lo, Math.min(hi, value));
 }
 
 /**
  * Read a topCities.* setting with a call-site default (the authoritative default).
  * @param {string} key
- * @param {*} dflt
+ * @param {*} fallback
  * @returns {*} The stored value or the default.
  */
-export function cfg(key, dflt) {
+export function cfg(key, fallback) {
   try {
-    return DemographicsSettings.getSetting(key, dflt);
+    return DemographicsSettings.getSetting(key, fallback);
   } catch (_) {
-    return dflt;
+    return fallback;
   }
 }
 
@@ -65,16 +65,16 @@ export function cameraReady() {
 
 /**
  * Resolve a camera enum member (InterpolationFunc / KeyframeFlag), or undefined.
- * @param {string} ns The enum's global name.
+ * @param {string} enumName The enum's global name.
  * @param {string} member
  * @returns {*} The enum value, or undefined.
  */
-export function enumVal(ns, member) {
+export function enumVal(enumName, member) {
   try {
-    const g = ns === "InterpolationFunc"
+    const enumObject = enumName === "InterpolationFunc"
       ? (typeof InterpolationFunc !== "undefined" ? InterpolationFunc : null)
       : (typeof KeyframeFlag !== "undefined" ? KeyframeFlag : null);
-    return g ? g[member] : undefined;
+    return enumObject ? enumObject[member] : undefined;
   } catch (_) {
     return undefined;
   }
@@ -103,13 +103,14 @@ export function isEscape(e) {
 
 /**
  * Classify an engine-input event.
- * @param {*} d The event detail.
+ * @param {*} detail The event detail.
  * @returns {string} "exit" | "replay" | "".
  */
-export function classifyInput(d) {
-  if (!d || !d.name) return "";
-  if (d.name === "cancel" || d.name === "keyboard-escape" || d.name === "mousebutton-right") return "exit";
-  if (d.name === "mousebutton-left" || d.name === "touch-tap" || d.name === "accept") return "replay";
+export function classifyInput(detail) {
+  if (!detail || !detail.name) return "";
+  const name = detail.name;
+  if (name === "cancel" || name === "keyboard-escape" || name === "mousebutton-right") return "exit";
+  if (name === "mousebutton-left" || name === "touch-tap" || name === "accept") return "replay";
   return "";
 }
 
@@ -128,12 +129,12 @@ export function consumeEvent(e) {
 
 /**
  * Whether this input should be debounced.
- * @param {*} s
+ * @param {*} flow The active flow state (stamped with `lastInputAt`).
  * @returns {boolean} True to ignore (debounced).
  */
-export function inputDebounced(s) {
+export function inputDebounced(flow) {
   const now = nowMs();
-  if (s.lastInputAt && now - s.lastInputAt < 500) return true;
-  s.lastInputAt = now;
+  if (flow.lastInputAt && now - flow.lastInputAt < 500) return true;
+  flow.lastInputAt = now;
   return false;
 }

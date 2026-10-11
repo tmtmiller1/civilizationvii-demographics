@@ -22,12 +22,12 @@ import {
 
 /**
  * Format a settlement net for the bar tooltip ("+2" / "−1" / "0").
- * @param {number} n
+ * @param {number} net
  * @returns {string}
  */
-function barVal(n) {
-  if (n > 0) return "+" + n;
-  if (n < 0) return "−" + Math.abs(n);
+function formatBarNet(net) {
+  if (net > 0) return "+" + net;
+  if (net < 0) return "−" + Math.abs(net);
   return "0";
 }
 
@@ -44,17 +44,17 @@ function fillBarTip(tip, civs, label, blp) {
   if (blp) head.appendChild(buildCostIcon(blp));
   head.appendChild(document.createTextNode(label));
   tip.appendChild(head);
-  for (const c of civs) {
+  for (const civ of civs) {
     const row = document.createElement("div");
     row.className = "demographics-war-graph-hovertip-row";
     const dot = document.createElement("span");
     dot.className = "demographics-war-graph-hovertip-dot";
-    dot.style.backgroundColor = c.color;
+    dot.style.backgroundColor = civ.color;
     row.appendChild(dot);
-    row.appendChild(document.createTextNode(c.name || ""));
+    row.appendChild(document.createTextNode(civ.name || ""));
     const val = document.createElement("span");
     val.className = "demographics-war-graph-hovertip-val";
-    val.textContent = barVal(c.net);
+    val.textContent = formatBarNet(civ.net);
     row.appendChild(val);
     tip.appendChild(row);
   }
@@ -72,7 +72,8 @@ function buildHoverTipHeader(turn, head) {
   el.className = "demographics-war-graph-hovertip-head";
   if (head && head.blp) el.appendChild(buildCostIcon(head.blp));
   const yLabel = head ? head.yLabel : "";
-  el.appendChild(document.createTextNode(t("LOC_DEMOGRAPHICS_WONDER_TURN", turn) + (yLabel ? " · " + yLabel : "")));
+  const text = t("LOC_DEMOGRAPHICS_WONDER_TURN", turn) + (yLabel ? " · " + yLabel : "");
+  el.appendChild(document.createTextNode(text));
   return el;
 }
 
@@ -102,13 +103,13 @@ function buildSeriesHoverRow(series, value) {
  * @param {HTMLElement} tip
  * @param {number} turn
  * @param {{ name?: string, color: string, points: { x: number,
- *   y: number }[] }[]} series The series.
+ *   y: number }[] }[]} series
  */
 function appendSeriesHoverRows(tip, turn, series) {
-  for (const s of series) {
-    const pt = s.points.find((p) => p.x === turn);
+  for (const line of series) {
+    const pt = line.points.find((p) => p.x === turn);
     if (!pt) continue;
-    tip.appendChild(buildSeriesHoverRow(s, pt.y));
+    tip.appendChild(buildSeriesHoverRow(line, pt.y));
   }
 }
 
@@ -121,17 +122,17 @@ function appendSeriesHoverRows(tip, turn, series) {
  */
 function appendCrisisHoverRow(tip, turn, markers) {
   if (!markers || !markers.length) return;
-  const mk = markers.find((m) => m.x === turn && m.label);
-  if (!mk) return;
+  const marker = markers.find((m) => m.x === turn && m.label);
+  if (!marker) return;
   const row = document.createElement("div");
   row.className = "demographics-war-graph-hovertip-row";
   const dot = document.createElement("span");
   dot.className = "demographics-war-graph-hovertip-dot";
-  dot.style.backgroundColor = mk.color;
+  dot.style.backgroundColor = marker.color;
   row.appendChild(dot);
   const txt = document.createElement("span");
-  txt.style.color = mk.color;
-  txt.textContent = mk.label || "";
+  txt.style.color = marker.color;
+  txt.textContent = marker.label || "";
   row.appendChild(txt);
   tip.appendChild(row);
 }
@@ -141,7 +142,7 @@ function appendCrisisHoverRow(tip, turn, markers) {
  * @param {HTMLElement} tip
  * @param {number} turn
  * @param {{ name?: string, color: string, points: { x: number,
- *   y: number }[] }[]} series The series.
+ *   y: number }[] }[]} series
  * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
  * @param {{ x: number, color: string, label?: string }[]} [markers] Optional crisis markers.
  */
@@ -158,21 +159,21 @@ function fillHoverTip(tip, turn, series, head, markers) {
  * stay on-screen.
  * @param {HTMLElement} tip Already filled, so its width is meaningful.
  * @param {*} ev The mouse event.
- * @param {DOMRect} cRect The cell's bounding rect (the positioned container the tip lives in).
+ * @param {DOMRect} cellRect The cell's bounding rect (the positioned container the tip lives in).
  */
-function placeTip(tip, ev, cRect) {
+function placeTip(tip, ev, cellRect) {
   const GAP = 14;
   tip.style.display = "block"; // ensure it's laid out before measuring its size
   const tipW = tip.offsetWidth || 0;
   const tipH = tip.offsetHeight || 0;
-  const viewW = (typeof window !== "undefined" && window.innerWidth) || cRect.right;
-  const viewH = (typeof window !== "undefined" && window.innerHeight) || cRect.bottom;
+  const viewW = (typeof window !== "undefined" && window.innerWidth) || cellRect.right;
+  const viewH = (typeof window !== "undefined" && window.innerHeight) || cellRect.bottom;
   // Work in the cell's local px throughout: clientX/Y and the rect are visual, while the tip's
   // offsetWidth/Height and the style we write are local (the frame may be transform-scaled).
-  const localX = toLocalPx(ev.clientX - cRect.left);
-  const localY = toLocalPx(ev.clientY - cRect.top);
-  const roomRight = toLocalPx(viewW - cRect.left);
-  const roomDown = toLocalPx(viewH - cRect.top);
+  const localX = toLocalPx(ev.clientX - cellRect.left);
+  const localY = toLocalPx(ev.clientY - cellRect.top);
+  const roomRight = toLocalPx(viewW - cellRect.left);
+  const roomDown = toLocalPx(viewH - cellRect.top);
   // Default to the right of / below the cursor; flip when that would run past
   // the viewport edge so right-side and lower-row graphs stay on-screen.
   const flipLeft = localX + GAP + tipW > roomRight;
@@ -193,12 +194,12 @@ function placeTip(tip, ev, cRect) {
  * @param {*} ctx The hover context (svg, cross, cell, tip, turns, series, bounds, head, markers).
  */
 function onHoverMove(ev, ctx) {
-  const sRect = ctx.svg.getBoundingClientRect();
-  if (!sRect.width) return;
+  const svgRect = ctx.svg.getBoundingClientRect();
+  if (!svgRect.width) return;
   const innerW = MINI_W - PAD_L - PAD_R;
   const xSpan = ctx.bounds.xMax - ctx.bounds.xMin || 1;
-  const vx = ((ev.clientX - sRect.left) / sRect.width) * MINI_W;
-  const frac = Math.min(1, Math.max(0, (vx - PAD_L) / innerW));
+  const viewBoxX = ((ev.clientX - svgRect.left) / svgRect.width) * MINI_W;
+  const frac = Math.min(1, Math.max(0, (viewBoxX - PAD_L) / innerW));
   const turn = nearestTurn(ctx.turns, ctx.bounds.xMin + frac * xSpan);
   const xPx = (PAD_L + ((turn - ctx.bounds.xMin) / xSpan) * innerW).toFixed(1);
   ctx.cross.setAttribute("x1", xPx);
@@ -233,7 +234,6 @@ export function attachBarHover(cell, civs, label, blp) {
  * @param {HTMLElement} cell The chart cell (positioned container).
  * @param {SVGElement} svg The chart SVG (gets the crosshair line).
  * @param {{ series: *[], bounds: *, yLabel: string, blp?: string, markers?: * }} hover
- *   The hover data.
  */
 export function attachHover(cell, svg, hover) {
   const turns = collectTurns(hover.series);
@@ -270,11 +270,24 @@ export function attachHover(cell, svg, hover) {
 }
 
 /**
- * @returns {HTMLElement} The "no data recorded" placeholder element.
+ * Build the "no data recorded" placeholder for a graph cell.
+ * @returns {HTMLElement}
  */
 export function buildNoData() {
   const none = document.createElement("div");
   none.className = "demographics-war-graph-nodata";
   none.textContent = t("LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA");
   return none;
+}
+
+/**
+ * Append a centered empty-state message to a war or crisis graphs host.
+ * @param {HTMLElement} host
+ * @param {string} msg
+ */
+export function appendGraphsEmpty(host, msg) {
+  const el = document.createElement("div");
+  el.className = "demographics-war-graphs-empty";
+  el.textContent = msg;
+  host.appendChild(el);
 }

@@ -1,10 +1,30 @@
 import assert from "node:assert/strict";
 import {
-  recordTags, buildRecord, upsert, emptySlice, hideGame, mergeSlices, fitSlice, supersedes, downsample, isSlice, pickHighlights,
-  sliceTexts, pruneTexts, isNewerRecord, localStats, rivalsOf,
+  recordTags,
+  buildRecord,
+  upsert,
+  emptySlice,
+  hideGame,
+  mergeSlices,
+  fitSlice,
+  supersedes,
+  downsample,
+  isSlice,
+  pickHighlights,
+  sliceTexts,
+  pruneTexts,
+  isNewerRecord,
+  localStats,
+  rivalsOf,
   HIGHLIGHTS_CAP
 } from "/demographics/ui/history/store/history-archive.js";
-import { newCampaign, ensureAge, appendEvents, appendSample, upsertPlayer } from "/demographics/ui/history/store/history-campaign.js";
+import {
+  newCampaign,
+  ensureAge,
+  appendEvents,
+  appendSample,
+  upsertPlayer
+} from "/demographics/ui/history/store/history-campaign.js";
 import { pstate, world, buggyStorage } from "./_history-fixtures.mjs";
 
 const setup = { speed: "S", difficulty: "D", mapSize: "M", mapScript: "x.js", startAge: "AGE_ANTIQUITY" };
@@ -14,7 +34,15 @@ function campaign(id = "g1", turns = 30) {
   const doc = newCampaign({ id, seed: 7, now: 1000, setup, local: 0 });
   ensureAge(doc, "AGE_ANTIQUITY", 1);
   ensureAge(doc, "AGE_ANTIQUITY", turns);
-  const idn = (leader, civ) => ({ leader, leaderName: "LOC_" + leader, civ, civName: "LOC_" + civ, color: "#c00", color2: "#0c0", human: leader === "LA" });
+  const idn = (leader, civ) => ({
+    leader,
+    leaderName: "LOC_" + leader,
+    civ,
+    civName: "LOC_" + civ,
+    color: "#c00",
+    color2: "#0c0",
+    human: leader === "LA"
+  });
   upsertPlayer(doc, 0, idn("LA", "CIV_ROME"), { age: "AGE_ANTIQUITY", turn: 1 });
   upsertPlayer(doc, 1, idn("LB", "CIV_EGYPT"), { age: "AGE_ANTIQUITY", turn: 1 });
   appendEvents(doc, [
@@ -28,7 +56,10 @@ function campaign(id = "g1", turns = 30) {
     { t: 10, a: 0, k: "met", p: 1, q: 0 }
   ]);
   appendSample(doc, world(1, { 0: pstate({ cities: { a: "A" } }), 1: pstate() }));
-  const last = world(turns, { 0: pstate({ cities: { a: "A", b: "B", c: "C" }, population: 12, popScaled: 1200000, wonders: ["W"] }), 1: pstate() });
+  const last = world(turns, {
+    0: pstate({ cities: { a: "A", b: "B", c: "C" }, population: 12, popScaled: 1200000, wonders: ["W"] }),
+    1: pstate()
+  });
   appendSample(doc, last);
   doc.last = last;
   return doc;
@@ -41,7 +72,15 @@ function campaign(id = "g1", turns = 30) {
   assert.equal(rec.leader, "LA");
   assert.equal(rec.turns, 30);
   assert.deepEqual(rec.stats, {
-    settlements: 3, peakSettlements: 3, population: 12, populationScaled: 1200000, wonders: 1, triumphs: 1, captured: 1, wars: 1, religion: "LOC_REL"
+    settlements: 3,
+    peakSettlements: 3,
+    population: 12,
+    populationScaled: 1200000,
+    wonders: 1,
+    triumphs: 1,
+    captured: 1,
+    wars: 1,
+    religion: "LOC_REL"
   });
   assert.deepEqual(rec.rivals, [[1, "LB", "LOC_LB", "CIV_EGYPT", "LOC_CIV_EGYPT", "#c00", 0, 1, "#0c0"]]);
   assert.equal(rec.color2, "#0c0", "the secondary banner color is kept for readable colors at the main menu");
@@ -115,7 +154,12 @@ function campaign(id = "g1", turns = 30) {
 // Maps go first: the oldest games lose their maps before any game is evicted.
 {
   const slice = emptySlice();
-  const bigMap = { w: 40, h: 25, r: "1x1000", f: Array.from({ length: 16 }, (_, i) => [i, "0x" + (i + 1) + ".-1x" + (999 - i), [[i, 0]]]) };
+  const bigMap = {
+    w: 40,
+    h: 25,
+    r: "1x1000",
+    f: Array.from({ length: 16 }, (_, i) => [i, "0x" + (i + 1) + ".-1x" + (999 - i), [[i, 0]]])
+  };
   for (let i = 0; i < 4; i++) {
     const r = buildRecord(campaign("m" + i));
     r.updated = i;
@@ -128,7 +172,10 @@ function campaign(id = "g1", turns = 30) {
   assert.ok(!slice.games.m0.map, "the oldest game's map dropped");
   assert.ok(slice.games.m3.map, "the newest game keeps its map");
   // Past every map, the other civilizations' timeline tracks go next, oldest game first.
-  for (const r of Object.values(slice.games)) { delete r.map; r.tl.r = { m: Array.from({ length: 200 }, (_, i) => [i, "wonder", 1, -1, "LOC_X", ""]), f: [], w: [], s: {} }; }
+  for (const r of Object.values(slice.games)) {
+    delete r.map;
+    r.tl.r = { m: Array.from({ length: 200 }, (_, i) => [i, "wonder", 1, -1, "LOC_X", ""]), f: [], w: [], s: {} };
+  }
   const withTracks = JSON.stringify(slice).length;
   const oneTrack = JSON.stringify(slice.games.m0.tl.r).length;
   assert.deepEqual(fitSlice(slice, withTracks - oneTrack), []);
@@ -152,7 +199,12 @@ function campaign(id = "g1", turns = 30) {
 // is never evicted, even though unfinished games otherwise go first.
 {
   const slice = emptySlice();
-  const bigMap = { w: 40, h: 25, r: "1x1000", f: Array.from({ length: 16 }, (_, i) => [i, "0x" + (i + 1) + ".-1x" + (999 - i), [[i, 0]]]) };
+  const bigMap = {
+    w: 40,
+    h: 25,
+    r: "1x1000",
+    f: Array.from({ length: 16 }, (_, i) => [i, "0x" + (i + 1) + ".-1x" + (999 - i), [[i, 0]]])
+  };
   for (let i = 0; i < 6; i++) {
     const r = buildRecord(campaign("p" + i));
     r.updated = i;

@@ -22,11 +22,11 @@ function isMajorVsMajor(war) {
 function majorPidsForWar(war) {
   return /** @type {number[]} */ ([])
     .concat(majorsOnSide(war.sideACivs), majorsOnSide(war.sideBCivs))
-    .map((r) => {
-      if (typeof r === "object" && r !== null && "pid" in r) {
-        return Number(/** @type {{ pid: * }} */ (r).pid);
+    .map((entry) => {
+      if (typeof entry === "object" && entry !== null && "pid" in entry) {
+        return Number(/** @type {{ pid: * }} */ (entry).pid);
       }
-      return Number(r);
+      return Number(entry);
     });
 }
 
@@ -53,7 +53,7 @@ export function filterGanttWars(wars, showActiveOnly, filterPid) {
  * @param {*[]} filtered
  * @param {{ min: number, max: number }|null} turnRange
  * @param {number} latestTurn
- * @returns {{ xMin: number, xMax: number }} Raw span.
+ * @returns {{ xMin: number, xMax: number }} Raw span (Infinity/-Infinity when no war is in range).
  */
 function ganttWarSpan(filtered, turnRange, latestTurn) {
   let xMin = Infinity;
@@ -117,11 +117,11 @@ export function computeGanttDomain(filtered, turnRange, latestTurn, samples) {
  * Legibility floor for the timeline's horizontal density. The Gantt fills its host and only grows
  * wider than it when the turn span would otherwise compress below this many px per turn.
  *
- * This was 14, which made a 226-turn game 3284px wide: wider than the host at every resolution
+ * A floor of 14 would make a 226-turn game 3284px wide: wider than the host at every resolution
  * (the reference's host is ~2500px), and the host does not scroll horizontally, so the last wars,
- * the final crisis label and the age marker were clipped off the right edge with no way to reach
- * them (826 visual px past the frame at 720p; also clipped at 2880x1800). At 4 px/turn a war bar
- * is still a clear stripe and its label sits over it; anything denser than that is a long game
+ * the final crisis label and the age marker would be clipped off the right edge with no way to
+ * reach them (826 visual px past the frame at 720p; also clipped at 2880x1800). At 4 px/turn a war
+ * bar is still a clear stripe and its label sits over it; anything denser than that is a long game
  * where scrolling is the right answer.
  */
 const GANTT_MIN_PX_PER_TURN = 4;
@@ -142,10 +142,10 @@ export const CRISIS_LABEL_ROWS = 3;
 /**
  * Vertical room the crisis labels need at the top of the plot, in chart pixels.
  *
- * They used to be drawn over the first bars, which reads fine at the reference, where the war-name
- * labels are short enough to end well left of the first crisis. It does not hold anywhere else:
- * text is boosted relative to the layout below MIN_TYPE_VISUAL, so at 1280x720 the first two war
- * names run right under "CRISIS BEGINS" and "CRISIS INTENSIFIES". Reserving a band puts the bars
+ * Drawing them over the first bars reads fine only at the reference, where the war-name labels are
+ * short enough to end well left of the first crisis. It does not hold anywhere else: text is
+ * boosted relative to the layout below MIN_TYPE_VISUAL, so at 1280x720 the first two war names
+ * would run right under "CRISIS BEGINS" and "CRISIS INTENSIFIES". Reserving a band puts the bars
  * below the labels at every resolution instead of relying on the names being short.
  * @param {number} onsets How many crisis onsets are in the window.
  * @param {number} [boost] Type boost (1 at the reference); read from the ladder when omitted.
@@ -154,8 +154,8 @@ export const CRISIS_LABEL_ROWS = 3;
 export function crisisBandHeight(onsets, boost) {
   if (!(onsets > 0)) return 0;
   const rows = Math.min(CRISIS_LABEL_ROWS, Math.max(1, Math.round(onsets)));
-  const b = typeof boost === "number" && boost > 0 ? boost : typeBoost();
-  return Math.ceil(rows * CRISIS_LABEL_ROW * b) + 6;
+  const scale = typeof boost === "number" && boost > 0 ? boost : typeBoost();
+  return Math.ceil(rows * CRISIS_LABEL_ROW * scale) + 6;
 }
 
 /**
@@ -181,6 +181,7 @@ function warStripeCount(war) {
 }
 
 /**
+ * A war's bar height: the base height plus one stripe step per belligerent beyond two, capped.
  * @param {*} war
  * @returns {number} Height in px.
  */
@@ -246,6 +247,6 @@ export function buildGanttLayout(width, minHeight, wars, dom, crisisBand) {
     rowTops,
     rowHeights,
     barH: GANTT_BAR_H,
-    xOf: (t) => padL + ((t - dom.xMin) / (dom.xMax - dom.xMin || 1)) * innerW
+    xOf: (turn) => padL + ((turn - dom.xMin) / (dom.xMax - dom.xMin || 1)) * innerW
   };
 }

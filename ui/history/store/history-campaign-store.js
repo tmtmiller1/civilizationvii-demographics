@@ -3,7 +3,7 @@
 // Loads and saves the CampaignDoc in the save file's GameConfiguration store, the one store that is
 // known to survive saving, loading, age transitions and a restart. One JSON string under one key.
 
-import { derr, safe } from "/demographics/ui/history/core/history-log.js";
+import { log, safe } from "/demographics/ui/history/core/history-log.js";
 import { CAMPAIGN_VERSION, isCampaign } from "/demographics/ui/history/store/history-campaign.js";
 
 export const CAMPAIGN_KEY = "Demographics__history-campaign-v1";
@@ -21,7 +21,8 @@ export const CAMPAIGN_REJECTED_KEY = CAMPAIGN_KEY + "__rejected";
  * @returns {string}
  */
 export function campaignRejectedKey(version) {
-  return typeof version === "number" && isFinite(version) ? CAMPAIGN_REJECTED_KEY + "_v" + version : CAMPAIGN_REJECTED_KEY;
+  if (typeof version === "number" && isFinite(version)) return CAMPAIGN_REJECTED_KEY + "_v" + version;
+  return CAMPAIGN_REJECTED_KEY;
 }
 
 /**
@@ -45,7 +46,7 @@ function writeValue(key, value) {
     Configuration.editGame().setValue(key, value);
     return true;
   } catch (e) {
-    derr("could not write " + key + " into the game configuration", e);
+    log.error("could not write " + key + " into the game configuration", e);
     return false;
   }
 }
@@ -67,10 +68,12 @@ function parseCampaign(raw) {
   } catch (e) {
     return { doc: null, problem: "not valid JSON (" + e + ")", version: undefined };
   }
-  const v = parsed && typeof parsed === "object" ? parsed.v : undefined;
-  const version = typeof v === "number" ? v : undefined;
+  const storedVersion = parsed && typeof parsed === "object" ? parsed.v : undefined;
+  const version = typeof storedVersion === "number" ? storedVersion : undefined;
   if (isCampaign(parsed)) return { doc: parsed, problem: "", version };
-  const problem = v === CAMPAIGN_VERSION ? "not a campaign document" : "version " + v + " is not " + CAMPAIGN_VERSION;
+  const problem = storedVersion === CAMPAIGN_VERSION
+    ? "not a campaign document"
+    : "version " + storedVersion + " is not " + CAMPAIGN_VERSION;
   return { doc: null, problem, version };
 }
 
@@ -85,10 +88,10 @@ function parkCampaign(raw, primary, mayWrite) {
   const slot = campaignRejectedKey(primary.version);
   const what = "stored campaign is " + (primary.doc ? "an older schema" : primary.problem);
   if (!mayWrite) {
-    derr(what + "; this client may not write the campaign, so it is left in place (bytes=" + raw.length + ")");
+    log.error(what + "; this client may not write the campaign, so it is left in place (bytes=" + raw.length + ")");
     return;
   }
-  derr(what + "; parking it under " + slot + " (bytes=" + raw.length + ")");
+  log.error(what + "; parking it under " + slot + " (bytes=" + raw.length + ")");
   writeValue(slot, raw);
 }
 
@@ -112,10 +115,10 @@ function readParkedCampaign() {
 function restoreParkedCampaign(parked, mayWrite) {
   const slot = campaignRejectedKey(CAMPAIGN_VERSION);
   if (!mayWrite) {
-    derr("using the parked campaign from " + slot + " in memory; this client may not write it back");
+    log.error("using the parked campaign from " + slot + " in memory; this client may not write it back");
     return;
   }
-  derr("restoring the parked campaign from " + slot + " (bytes=" + parked.raw.length + ")");
+  log.error("restoring the parked campaign from " + slot + " (bytes=" + parked.raw.length + ")");
   if (writeValue(CAMPAIGN_KEY, parked.raw)) writeValue(slot, "");
 }
 
@@ -162,7 +165,7 @@ export function saveCampaign(doc) {
     Configuration.editGame().setValue(CAMPAIGN_KEY, JSON.stringify(doc));
     return true;
   } catch (e) {
-    derr("could not write the campaign into the game configuration", e);
+    log.error("could not write the campaign into the game configuration", e);
     return false;
   }
 }

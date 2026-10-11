@@ -1,24 +1,10 @@
 // history-log.js
 //
-// Logging and defensive-call helpers shared by every module. console.warn / console.error reach
-// Logs/UI.log; console.log does not. DBG stays false in shipped code.
+// The history modules' logger and defensive-call helper.
 
-const DBG = false;
-const TAG = "[Demographics.history]";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-/**
- * @param {...*} a
- */
-export function dlog(...a) {
-  if (DBG) console.warn(TAG, ...a);
-}
-
-/**
- * @param {...*} a
- */
-export function derr(...a) {
-  console.error(TAG, ...a);
-}
+export const log = makeLogger("history");
 
 /**
  * Run an engine touch and return its value, or the fallback when it throws or returns undefined.

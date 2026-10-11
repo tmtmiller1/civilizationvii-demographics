@@ -9,9 +9,9 @@
  */
 export function renderHallOfFameTab(content) {
   import("/demographics/ui/history/views/history-app.js")
-    .then((m) => {
+    .then((historyApp) => {
       if (content.isConnected === false) return;
-      m.renderHallOfFame(content, { mode: "game" });
+      historyApp.renderHallOfFame(content, { mode: "game" });
     })
-    .catch((e) => console.error("[Demographics.settlements] Hall of Fame failed to load:", e));
+    .catch((error) => console.error("[Demographics.settlements] Hall of Fame failed to load:", error));
 }

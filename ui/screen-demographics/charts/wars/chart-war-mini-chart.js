@@ -5,7 +5,7 @@
 import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { t, turnPlain } from "/demographics/ui/core/demographics-i18n.js";
 
-import { fmt, seriesBounds } from "/demographics/ui/screen-demographics/charts/wars/chart-war-series.js";
+import { formatCompact, seriesBounds } from "/demographics/ui/screen-demographics/charts/wars/chart-war-series.js";
 
 export const MINI_W = 340;
 export const MINI_H = 200;
@@ -16,19 +16,19 @@ export const PAD_B = 28;
 
 /**
  * Build the polyline `points` string for one series under the given bounds.
- * @param {{ points: { x: number, y: number }[] }} s
- * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b
- * @returns {string} The SVG points attribute.
+ * @param {{ points: { x: number, y: number }[] }} series
+ * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} bounds
+ * @returns {string} The SVG `points` attribute.
  */
-function polyPoints(s, b) {
+function polyPoints(series, bounds) {
   const innerW = MINI_W - PAD_L - PAD_R;
   const innerH = MINI_H - PAD_T - PAD_B;
-  const xSpan = b.xMax - b.xMin || 1;
-  const ySpan = b.yMax - b.yMin || 1;
-  return s.points
+  const xSpan = bounds.xMax - bounds.xMin || 1;
+  const ySpan = bounds.yMax - bounds.yMin || 1;
+  return series.points
     .map((pt) => {
-      const px = PAD_L + ((pt.x - b.xMin) / xSpan) * innerW;
-      const py = PAD_T + innerH - ((pt.y - b.yMin) / ySpan) * innerH;
+      const px = PAD_L + ((pt.x - bounds.xMin) / xSpan) * innerW;
+      const py = PAD_T + innerH - ((pt.y - bounds.yMin) / ySpan) * innerH;
       return px.toFixed(1) + "," + py.toFixed(1);
     })
     .join(" ");
@@ -40,14 +40,14 @@ function polyPoints(s, b) {
  * bounds are skipped.
  * @param {SVGElement} svg
  * @param {{ x: number, color: string }[]} markers
- * @param {{ xMin: number, xMax: number }} b
+ * @param {{ xMin: number, xMax: number }} bounds
  */
-function drawGraphMarkers(svg, markers, b) {
+function drawGraphMarkers(svg, markers, bounds) {
   const innerW = MINI_W - PAD_L - PAD_R;
-  const xSpan = b.xMax - b.xMin || 1;
-  for (const m of markers) {
-    if (m.x < b.xMin || m.x > b.xMax) continue;
-    const px = (PAD_L + ((m.x - b.xMin) / xSpan) * innerW).toFixed(1);
+  const xSpan = bounds.xMax - bounds.xMin || 1;
+  for (const marker of markers) {
+    if (marker.x < bounds.xMin || marker.x > bounds.xMax) continue;
+    const px = (PAD_L + ((marker.x - bounds.xMin) / xSpan) * innerW).toFixed(1);
     svg.appendChild(
       svgEl("line", {
         class: "demographics-war-graph-crisis-marker",
@@ -55,7 +55,7 @@ function drawGraphMarkers(svg, markers, b) {
         x2: px,
         y1: PAD_T,
         y2: MINI_H - PAD_B,
-        stroke: m.color,
+        stroke: marker.color,
         "stroke-width": "1.4",
         // No stroke-dasharray: Coherent ignores it. Marker color is the differentiator.
         "stroke-opacity": "0.85"
@@ -67,11 +67,11 @@ function drawGraphMarkers(svg, markers, b) {
 /**
  * Build the mini line-chart SVG for one metric.
  * @param {{ color: string, points: { x: number, y: number }[] }[]} seriesList Per-civ series.
- * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b
+ * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} bounds
  * @param {{ x: number, color: string }[]} [markers] Crisis-stage markers.
  * @returns {SVGElement}
  */
-export function buildMiniSvg(seriesList, b, markers) {
+export function buildMiniSvg(seriesList, bounds, markers) {
   const svg = svgEl("svg", {
     class: "demographics-war-graph-svg",
     viewBox: "0 0 " + MINI_W + " " + MINI_H,
@@ -86,14 +86,14 @@ export function buildMiniSvg(seriesList, b, markers) {
       y2: MINI_H - PAD_B
     })
   );
-  if (markers && markers.length) drawGraphMarkers(svg, markers, b);
-  for (const s of seriesList) {
-    if (!s.points.length) continue;
+  if (markers && markers.length) drawGraphMarkers(svg, markers, bounds);
+  for (const series of seriesList) {
+    if (!series.points.length) continue;
     svg.appendChild(
       svgEl("polyline", {
         class: "demographics-war-graph-line",
-        points: polyPoints(s, b),
-        stroke: s.color
+        points: polyPoints(series, bounds),
+        stroke: series.color
       })
     );
   }
@@ -157,18 +157,18 @@ export function buildPlot(svg, labels) {
 
 /**
  * Axis-text overlay values for a zero-centered bar chart: the rotated Y title,
- * the +m / −m corner ticks, and no X axis (the bars aren't a time series).
+ * the +extent / −extent corner ticks, and no X axis (the bars aren't a time series).
  * @param {string} yLabel
- * @param {number} m The symmetric y-extent.
+ * @param {number} extent The symmetric y-extent.
  * @returns {{ yLabel: string, xLabel: string, yTop: string, yBottom: string,
  *   xLeft: string, xRight: string }}
  */
-export function barLabels(yLabel, m) {
+export function barLabels(yLabel, extent) {
   return {
     yLabel,
     xLabel: "",
-    yTop: "+" + fmt(m),
-    yBottom: "−" + fmt(m),
+    yTop: "+" + formatCompact(extent),
+    yBottom: "−" + formatCompact(extent),
     xLeft: "",
     xRight: ""
   };
@@ -178,18 +178,18 @@ export function barLabels(yLabel, m) {
  * Axis-text overlay values for a line chart: the rotated Y title, the y max/min
  * corner ticks, the "Time (turns)" X title, and the T-min / T-max end ticks.
  * @param {string} yLabel
- * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} b
+ * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} bounds
  * @returns {{ yLabel: string, xLabel: string, yTop: string, yBottom: string,
  *   xLeft: string, xRight: string }}
  */
-export function lineLabels(yLabel, b) {
+export function lineLabels(yLabel, bounds) {
   return {
     yLabel,
     xLabel: t("LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN"),
-    yTop: fmt(b.yMax),
-    yBottom: fmt(b.yMin),
-    xLeft: turnPlain(b.xMin),
-    xRight: turnPlain(b.xMax)
+    yTop: formatCompact(bounds.yMax),
+    yBottom: formatCompact(bounds.yMin),
+    xLeft: turnPlain(bounds.xMin),
+    xRight: turnPlain(bounds.xMax)
   };
 }
 
@@ -197,14 +197,14 @@ export function lineLabels(yLabel, b) {
  * Widen the x-bounds so any marker sitting at (or past) an edge gets a little
  * breathing room, so a crisis that begins right at the chart's start renders
  * a few turns in from the left edge instead of being clipped on the axis.
- * @param {{ xMin: number, xMax: number }} b Mutated.
+ * @param {{ xMin: number, xMax: number }} bounds Mutated.
  * @param {{ x: number }[]} markers
  */
-function expandBoundsForMarkers(b, markers) {
+function expandBoundsForMarkers(bounds, markers) {
   const pad = 3;
-  for (const m of markers) {
-    if (m.x < b.xMin + pad) b.xMin = m.x - pad;
-    if (m.x > b.xMax - pad) b.xMax = m.x + pad;
+  for (const marker of markers) {
+    if (marker.x < bounds.xMin + pad) bounds.xMin = marker.x - pad;
+    if (marker.x > bounds.xMax - pad) bounds.xMax = marker.x + pad;
   }
 }
 
@@ -217,34 +217,35 @@ function expandBoundsForMarkers(b, markers) {
  * @param {{ x: number, color: string, label?: string }[]} [markers] Crisis-stage markers.
  * @param {{ xMin: number, xMax: number }} [xDomain] A shared x-domain to use for the X axis
  *   (so a set of charts share one time scale); the Y axis still comes from the series.
- * @returns {{ svg: SVGElement, hover: *, labels: * } | null} The chart, or null.
+ * @returns {{ svg: SVGElement, hover: *, labels: * } | null}
  */
 export function buildLineChartFromSeries(seriesList, yLabelLoc, markers, xDomain) {
-  const sb = seriesBounds(seriesList);
-  if (!sb) return null;
-  const b = xDomain
-    ? { xMin: xDomain.xMin, xMax: xDomain.xMax, yMin: sb.yMin, yMax: sb.yMax }
-    : sb;
-  if (markers && markers.length) expandBoundsForMarkers(b, markers);
+  const dataBounds = seriesBounds(seriesList);
+  if (!dataBounds) return null;
+  const bounds = xDomain
+    ? { xMin: xDomain.xMin, xMax: xDomain.xMax, yMin: dataBounds.yMin, yMax: dataBounds.yMax }
+    : dataBounds;
+  if (markers && markers.length) expandBoundsForMarkers(bounds, markers);
   const yLabel = t(yLabelLoc || "");
   return {
-    svg: buildMiniSvg(seriesList, b, markers),
-    hover: { series: seriesList, bounds: b, yLabel, markers },
-    labels: lineLabels(yLabel, b)
+    svg: buildMiniSvg(seriesList, bounds, markers),
+    hover: { series: seriesList, bounds, yLabel, markers },
+    labels: lineLabels(yLabel, bounds)
   };
 }
 
 /**
  * Build a zero-centered bar chart with one bar per civ (gains above the line,
- * losses below), scaled symmetrically to ±m so zero sits in the center.
+ * losses below), scaled symmetrically to ±extent so zero sits in the center.
  * @param {{ color: string, net: number }[]} civs Per-civ net values.
- * @param {number} m The symmetric y-extent (>= 1).
+ * @param {number} extent The symmetric y-extent (>= 1).
  * @returns {SVGElement}
  */
-export function buildCivBarSvg(civs, m) {
+export function buildCivBarSvg(civs, extent) {
   const innerW = MINI_W - PAD_L - PAD_R;
   const innerH = MINI_H - PAD_T - PAD_B;
-  const yPx = (/** @type {number} */ v) => PAD_T + innerH - ((v + m) / (2 * m)) * innerH;
+  const yPx = (/** @type {number} */ value) =>
+    PAD_T + innerH - ((value + extent) / (2 * extent)) * innerH;
   const zeroY = yPx(0);
   const svg = svgEl("svg", {
     class: "demographics-war-graph-svg",
@@ -254,15 +255,15 @@ export function buildCivBarSvg(civs, m) {
   const slotW = innerW / civs.length;
   const barW = Math.max(2, slotW * 0.55);
   for (let i = 0; i < civs.length; i++) {
-    const yv = yPx(civs[i].net);
+    const barY = yPx(civs[i].net);
     if (civs[i].net !== 0) {
       svg.appendChild(
         svgEl("rect", {
           class: "demographics-war-graph-bar",
           x: (PAD_L + i * slotW + (slotW - barW) / 2).toFixed(1),
-          y: Math.min(zeroY, yv).toFixed(1),
+          y: Math.min(zeroY, barY).toFixed(1),
           width: barW.toFixed(1),
-          height: Math.max(0.5, Math.abs(yv - zeroY)).toFixed(1),
+          height: Math.max(0.5, Math.abs(barY - zeroY)).toFixed(1),
           fill: civs[i].color
         })
       );

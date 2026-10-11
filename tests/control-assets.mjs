@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { ROOT, stripComments } from "./_fs-helpers.mjs";
 
 // Controls.define asset gate: the HTML/CSS the two screens hand to Controls.define (as
 // "fs://game/demographics/<path>") must (1) exist on disk under the mod and (2) be declared in
@@ -11,13 +11,11 @@ import { fileURLToPath } from "node:url";
 // Extraction is a regex over the comment-stripped source (the first `Controls.define(` call and
 // its balanced argument list), so no engine stub or loader is needed.
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MOD = "demographics";
 const SCREENS = [
   "ui/screen-demographics/screen/screen-demographics.js",
   "ui/history/screen/screen-hall-of-fame.js"
 ];
-const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/[^\n]*/g, "$1");
 
 /** The balanced argument text of the first `Controls.define(` in `code`, or null. */
 function defineArgs(code) {
@@ -39,7 +37,11 @@ const groups = [...modinfo.matchAll(/<ActionGroup id="([^"]+)"[\s\S]*?<\/ActionG
     const sec = g[0].match(new RegExp(`<${tag}>[\\s\\S]*?</${tag}>`));
     return sec ? [...sec[0].matchAll(/<Item(?:\s+locale="[^"]+")?>([^<]+)<\/Item>/g)].map((m) => m[1]) : [];
   };
-  return { id: g[1], scripts: new Set([...items("UIScripts"), ...items("ImportFiles")]), imports: new Set(items("ImportFiles")) };
+  return {
+    id: g[1],
+    scripts: new Set([...items("UIScripts"), ...items("ImportFiles")]),
+    imports: new Set(items("ImportFiles"))
+  };
 });
 assert.ok(groups.length > 0, "modinfo has no ActionGroup");
 
@@ -66,11 +68,19 @@ for (const screen of SCREENS) {
     const inMod = u.slice(MOD.length + 1);
     if (!fs.existsSync(path.join(ROOT, inMod))) failures.push(`${screen}: asset ${inMod} does not exist on disk`);
     for (const g of declaring) {
-      if (!g.imports.has(inMod)) failures.push(`${screen}: asset ${inMod} is not in <ImportFiles> of ActionGroup "${g.id}" (which declares the screen)`);
+      if (!g.imports.has(inMod))
+        failures.push(
+          `${screen}: asset ${inMod} is not in <ImportFiles> of ActionGroup "${g.id}" (which declares the screen)`
+        );
     }
   }
-  console.log(`control-assets: ${screen} -> ${styles.length} stylesheet(s), ${content.length} content page(s); declared in ${declaring.map((g) => g.id).join(", ") || "NO group"}`);
+  console.log(
+    `control-assets: ${screen} -> ${styles.length} stylesheet(s), ${content.length} content page(s); ` +
+      `declared in ${declaring.map((g) => g.id).join(", ") || "NO group"}`
+  );
 }
 
 assert.equal(failures.length, 0, `${failures.length} Controls.define asset problem(s):\n  ${failures.join("\n  ")}`);
-console.log(`control-assets harness passed (${assets} asset path(s) across ${SCREENS.length} screen(s) exist and are declared)`);
+console.log(
+  `control-assets harness passed (${assets} asset path(s) across ${SCREENS.length} screen(s) exist and are declared)`
+);

@@ -10,16 +10,16 @@ import {
   mergeCost,
   toTableCols
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
-import { _snapshotCrisisCost } from "/demographics/ui/sampler/sampler-age-boundary.js";
+import { snapshotCrisisCost } from "/demographics/ui/sampler/sampler-age-boundary.js";
 
 const AGE = "AGE_ANTIQUITY";
 
 /**
  * One Antiquity sample: a single player (pid 7) reporting a crisis stage and raw population.
  * @param {number} turn Age-local turn.
- * @param {number} stage Crisis display stage.
- * @param {number} pop Raw population.
- * @returns {object} The sample.
+ * @param {number} stage
+ * @param {number} pop
+ * @returns {object}
  */
 function S(turn, stage, pop) {
   return {
@@ -62,7 +62,7 @@ function testDecimationBlanksTheLossLive() {
 function testSnapshotPersistsDenseTotals() {
   // Mirrors the age boundary: snapshot while dense, then heavily decimate.
   const h = { samples: DENSE.slice() };
-  _snapshotCrisisCost(h, AGE);
+  snapshotCrisisCost(h, AGE);
   assert.ok(h.crisisSnapshots && h.crisisSnapshots[AGE], "snapshot stored for the finished age");
   const snapCol = h.crisisSnapshots[AGE].find((x) => x.pid === 7);
   assert.equal(snapCol.cost.popLost, 200); // frozen at the dense value, survives later decimation

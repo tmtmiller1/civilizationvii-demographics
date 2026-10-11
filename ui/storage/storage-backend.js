@@ -14,12 +14,12 @@ function engineHashAvailable() {
 
 /**
  * Warn once when the engine hash API is missing.
- * @param {(...a: any[]) => void} derr Error logger.
+ * @param {(...a: any[]) => void} logError
  */
-function warnNoEngineHash(derr) {
+function warnNoEngineHash(logError) {
   if (noHashWarned) return;
   noHashWarned = true;
-  derr(
+  logError(
     "Database.makeHash unavailable; history persistence is disabled this session " +
       "(no fallback hash is used, to avoid silently desyncing from engine keys). " +
       "In-memory history still works until the UI reloads."
@@ -77,7 +77,7 @@ function playerRuntimeAvailable() {
  * Resolve per-player Tutorial property store.
  * @param {{
  *   catalogScope: string,
- *   derr?: (...a: any[]) => void
+ *   logError?: (...a: any[]) => void
  * }} options Resolver options.
  * @returns {{
  *   pid: number,
@@ -87,10 +87,10 @@ function playerRuntimeAvailable() {
  */
 export function getPlayerStore(options) {
   const catalogScope = options.catalogScope;
-  const derr = options.derr || (() => {});
+  const logError = options.logError || (() => {});
   try {
     if (!engineHashAvailable()) {
-      warnNoEngineHash(derr);
+      warnNoEngineHash(logError);
       return null;
     }
     if (!playerRuntimeAvailable()) return null;
@@ -105,7 +105,7 @@ export function getPlayerStore(options) {
       write: (key, val) => tutorial.setProperty(dbHash("_" + catalogScope + "__" + key), val)
     };
   } catch (e) {
-    derr("getPlayerStore threw:", e);
+    logError("getPlayerStore threw:", e);
     return null;
   }
 }
@@ -128,7 +128,7 @@ function configApiAvailable() {
  * plain strings; handles are fetched fresh per call.
  * @param {{
  *   catalogScope: string,
- *   derr?: (...a: any[]) => void
+ *   logError?: (...a: any[]) => void
  * }} options Resolver options.
  * @returns {{
  *   pid: number,
@@ -138,7 +138,7 @@ function configApiAvailable() {
  */
 export function getConfigStore(options) {
   const catalogScope = options.catalogScope;
-  const derr = options.derr || (() => {});
+  const logError = options.logError || (() => {});
   try {
     if (!configApiAvailable()) return null;
     /**
@@ -159,7 +159,7 @@ export function getConfigStore(options) {
       }
     };
   } catch (e) {
-    derr("getConfigStore threw:", e);
+    logError("getConfigStore threw:", e);
     return null;
   }
 }
@@ -168,7 +168,7 @@ export function getConfigStore(options) {
  * Resolve global GameTutorial fallback store.
  * @param {{
  *   catalogScope: string,
- *   derr?: (...a: any[]) => void
+ *   logError?: (...a: any[]) => void
  * }} options Resolver options.
  * @returns {{
  *   pid: number,
@@ -178,10 +178,10 @@ export function getConfigStore(options) {
  */
 export function getGlobalStore(options) {
   const catalogScope = options.catalogScope;
-  const derr = options.derr || (() => {});
+  const logError = options.logError || (() => {});
   try {
     if (!engineHashAvailable()) {
-      warnNoEngineHash(derr);
+      warnNoEngineHash(logError);
       return null;
     }
     if (typeof GameTutorial === "undefined") return null;
@@ -198,7 +198,7 @@ export function getGlobalStore(options) {
         GameTutorial.setProperty(dbHash("_" + catalogScope + "__" + key), val)
     };
   } catch (e) {
-    derr("getGlobalStore threw:", e);
+    logError("getGlobalStore threw:", e);
     return null;
   }
 }

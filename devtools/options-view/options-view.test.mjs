@@ -1,8 +1,9 @@
 // Dev-only harness for the unshipped Options view kept under devtools/options-view (see README.md).
-// Run from the mod root:  node --loader ./tests/loader.mjs ./devtools/options-view/options-view.test.mjs
+// Run from the mod root: npm run dev:options-view
 // Not part of `npm run verify`: the view is not in the modinfo and no screen mounts it.
 import assert from "node:assert/strict";
 import { createFakeDocument } from "../../tests/_dom-stub.mjs";
+import { installMemoryLocalStorage, makeSettings } from "../../tests/_engine-stubs.mjs";
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -12,20 +13,7 @@ globalThis.GameContext = { localPlayerID: 1 };
 globalThis.Configuration = { getGame: () => ({ getValue: () => "full", startSeed: "seed1" }) };
 globalThis.Audio = { playSound: () => {} };
 
-const storage = new Map();
-globalThis.localStorage = {
-  getItem: (k) => (storage.has(k) ? storage.get(k) : null),
-  setItem: (k, v) => storage.set(k, String(v)),
-  removeItem: (k) => storage.delete(k)
-};
-
-function makeSettings() {
-  const data = {};
-  return {
-    getSetting: (k, d) => (Object.prototype.hasOwnProperty.call(data, k) ? data[k] : d),
-    setSetting: (k, v) => { data[k] = v; }
-  };
-}
+installMemoryLocalStorage();
 
 // view renders
 const { render: renderOptions } = await import("./view-options.js");

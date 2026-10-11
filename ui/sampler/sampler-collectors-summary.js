@@ -13,7 +13,7 @@ const _memo = new Map();
 
 /**
  * Current game turn, defensively (0 when unavailable).
- * @returns {number} The turn.
+ * @returns {number}
  */
 function currentTurn() {
   try {
@@ -49,8 +49,8 @@ function memoByPlayer(datasetId, scope, delta) {
  * Stamp Game.Summary-sourced metrics onto a player's ctx: `tourism` (city-scope
  * sum) and `greatPeople` (player-scope cumulative). No-op when Summary is
  * unavailable or the civ has no such data yet.
- * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx The context.
- * @param {Pid} id The player id.
+ * @param {import("/demographics/ui/sampler/sampler-collectors-core.js").PlayerCtx} ctx
+ * @param {Pid} id
  */
 export function collectSummaryMetrics(ctx, id) {
   if (!summaryAvailable()) return;
@@ -68,7 +68,7 @@ export function collectSummaryMetrics(ctx, id) {
 /**
  * Write `map`'s value for `id` onto `ctx[field]` when it is a finite number.
  * @param {*} ctx The per-player context.
- * @param {Pid} id The player id.
+ * @param {Pid} id
  * @param {string} field The ctx field to set.
  * @param {Map<number, number>} map The per-player value map.
  */

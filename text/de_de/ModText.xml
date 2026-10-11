@@ -2089,17 +2089,11 @@
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="de_DE">
             <Text>Standard</Text>
         </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST" Language="de_DE">
-            <Text>Experte</Text>
-        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="de_DE">
             <Text>Nur die Kernstatistikseiten; erweiterte Diagramme, das Beziehungsnetz und Feineinstellungen sind ausgeblendet.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="de_DE">
             <Text>Alle Diagramme und Tabs; erweiterte Speicher- und Abtasteinstellungen bleiben ausgeblendet.</Text>
-        </Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_TIER_ANALYST_DESC" Language="de_DE">
-            <Text>Alles, einschließlich Speicherlimit, Ausdünnung und Abtastrate.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="de_DE">
             <Text>Zeitalter-Triumphfortschritt: das Vermächtnispfad-Radar jeder Zivilisation.</Text>
@@ -2158,7 +2152,7 @@
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="de_DE"><Text>Markiert auf den Verlaufsdiagrammen die Runde, in der jedes Wunder fertiggestellt wurde.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="de_DE"><Text>Markiert im Flüchtlingsdiagramm von Emigration die Runde, in der jeder Krieg begann. Erfordert das Begleit-Mod Emigration.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="de_DE"><Text>Markiert im Flüchtlingsdiagramm von Emigration die Runde, in der jede Katastrophe eintrat. Erfordert das Begleit-Mod Emigration.</Text></Replace>
-        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="de_DE"><Text>Wie viel des Bildschirms angezeigt wird. Basis zeigt nur die Kern-Statistikseiten, Standard ergänzt alle Diagramme und Tabs, Analyst zeigt zusätzlich Speicher-, Ausdünnungs- und Abtastraten-Optionen.</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="de_DE"><Text>Wie viel des Bildschirms angezeigt wird. Basis zeigt nur die Kern-Statistikseiten, Standard ergänzt alle Diagramme und Tabs.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="de_DE"><Text>Zeichnet die Verlaufslinien als gleitenden 3-Runden-Durchschnitt, damit Trends klarer erkennbar sind. Die zugrunde liegenden Daten bleiben unverändert.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="de_DE"><Text>Hält ausgeschiedene Zivilisationen in Diagrammen und Ranglisten sichtbar, statt sie zu entfernen.</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="de_DE"><Text>Aktiviert die Schaltfläche „Filmische Ansicht“, die die Kamera über eine Siedlung aus der Liste der Top-Städte schwenkt.</Text></Replace>
@@ -2496,7 +2490,13 @@
             <Text>Bevölkerung</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="de_DE">
-            <Text>Titel</Text>
+            <Text>Ehrentitel</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="de_DE">
+            <Text>„{1_Title}“</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="de_DE">
+            <Text>(Ehrentitel: „{1_Title}“)</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="de_DE">
             <Text>Ergebnis</Text>

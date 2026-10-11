@@ -34,9 +34,9 @@ import {
 
 /**
  * Build the history-sample-cap dropdown row.
- * @param {*} ctx Render context.
- * @param {StorageControlDeps} deps Control dependencies.
- * @returns {HTMLElement} The cap dropdown-row.
+ * @param {*} ctx
+ * @param {StorageControlDeps} deps
+ * @returns {HTMLElement}
  */
 function buildHistoryCapControl(ctx, deps) {
   const capOpts = [
@@ -61,7 +61,7 @@ function buildHistoryCapControl(ctx, deps) {
 
 /**
  * Build the effective cap + speed hint under the cap dropdown.
- * @returns {HTMLElement} The cap hint element.
+ * @returns {HTMLElement}
  */
 function buildHistoryCapHint() {
   const hint = document.createElement("div");
@@ -97,9 +97,9 @@ function buildHistoryCapHint() {
 
 /**
  * Build the polling-rate dropdown row.
- * @param {*} ctx Render context.
- * @param {StorageControlDeps} deps Control dependencies.
- * @returns {HTMLElement} The polling dropdown-row.
+ * @param {*} ctx
+ * @param {StorageControlDeps} deps
+ * @returns {HTMLElement}
  */
 function buildPollingControl(ctx, deps) {
   const pollOpts = [
@@ -119,7 +119,7 @@ function buildPollingControl(ctx, deps) {
 
 /**
  * Build the polling-rate hint.
- * @returns {HTMLElement} The polling hint element.
+ * @returns {HTMLElement}
  */
 function buildPollingHint() {
   const pollHint = document.createElement("div");
@@ -130,8 +130,8 @@ function buildPollingHint() {
 
 /**
  * Build the decimation status line.
- * @param {*} ctx Render context.
- * @returns {HTMLElement} The status hint element.
+ * @param {*} ctx
+ * @returns {HTMLElement}
  */
 function buildDecimationStatus(ctx) {
   const hint = document.createElement("div");
@@ -152,9 +152,9 @@ function buildDecimationStatus(ctx) {
 
 /**
  * Append storage controls in display order.
- * @param {HTMLElement} wrap The options container.
- * @param {*} ctx Render context.
- * @param {StorageControlDeps} deps Control dependencies.
+ * @param {HTMLElement} wrap
+ * @param {*} ctx
+ * @param {StorageControlDeps} deps
  */
 export function appendStorageControlsPanel(wrap, ctx, deps) {
   wrap.appendChild(buildHistoryCapControl(ctx, deps));

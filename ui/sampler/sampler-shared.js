@@ -1,11 +1,14 @@
 // sampler-shared.js
 //
-// Leaf utilities shared by the sampler and every per-civ collector: the debug
+// Leaf utilities shared by the sampler and every per-civ collector: the runtime debug
 // flag and loggers, the defensive call wrapper, and the player-handle accessors.
 // This module imports nothing from the sampler, so it can never take part in an
 // import cycle (which can turn fatal when a UIScript changes evaluation order).
 // The kill switch stays in demographics-sampler.js and is installed here via
 // setSamplerErrorHandler().
+
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+import { safeNum } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 
 let debugEnabled = false;
 
@@ -26,29 +29,11 @@ export function isSamplerDebug() {
   return debugEnabled;
 }
 
-/**
- * Verbose debug logger; no-op unless sampler debug is enabled.
- * @param {...*} a Values to log.
- */
-export function vlog(...a) {
-  if (debugEnabled) console.warn("[Demographics.sampler]", ...a);
-}
+/** The sampler's logger. Its debug output follows the runtime switch above, not the mod-wide one. */
+export const log = makeLogger("sampler", isSamplerDebug);
 
-/**
- * Informational logger; no-op unless sampler debug is enabled.
- * @param {...*} a Values to log.
- */
-export function ilog(...a) {
-  if (debugEnabled) console.warn("[Demographics.sampler]", ...a);
-}
-
-/**
- * Error logger; always emits.
- * @param {...*} a Values to log.
- */
-export function elog(...a) {
-  console.error("[Demographics.sampler]", ...a);
-}
+/** The collectors' logger. Its debug output follows the mod-wide switch, independent of the sampler's. */
+export const collectorLog = makeLogger("sampler");
 
 /** @type {((label: string, e: *) => void) | null} */
 let errorHandler = null;
@@ -57,7 +42,7 @@ let errorHandler = null;
  * Install the sampler's error-budget handler (its kill switch). Called once by
  * demographics-sampler.js at module load; until then a thrown accessor is
  * swallowed and logged but not counted.
- * @param {(label: string, e: *) => void} fn The handler.
+ * @param {(label: string, e: *) => void} fn
  * @returns {void}
  */
 export function setSamplerErrorHandler(fn) {
@@ -69,19 +54,19 @@ export function setSamplerErrorHandler(fn) {
  * failure toward the kill switch). Never throws.
  * @template T
  * @param {string} label A label for logging/error attribution.
- * @param {() => T} fn Thunk to invoke.
+ * @param {() => T} fn
  * @returns {T | undefined} The result of `fn`, or undefined on error.
  */
 export function safeCall(label, fn) {
   try {
-    if (debugEnabled) vlog("about to call", label);
+    if (debugEnabled) log.debug("about to call", label);
     const v = fn();
     if (debugEnabled)
-      vlog(label, "returned", typeof v, Array.isArray(v) ? "[len=" + v.length + "]" : "");
+      log.debug(label, "returned", typeof v, Array.isArray(v) ? "[len=" + v.length + "]" : "");
     return v;
   } catch (e) {
     if (errorHandler) errorHandler(label, e);
-    else elog("error in", label, "(before kill switch installed):", e);
+    else log.error("error in", label, "(before kill switch installed):", e);
     return undefined;
   }
 }
@@ -99,14 +84,14 @@ export function getLocalPlayerID() {
       if (typeof o === "number") return o;
     }
   } catch (e) {
-    elog("getLocalPlayerID threw:", e);
+    log.error("getLocalPlayerID threw:", e);
   }
   return undefined;
 }
 
 /**
  * Get a player library handle defensively.
- * @param {Pid} id The player id.
+ * @param {Pid} id
  * @returns {*} The player handle, or undefined.
  */
 export function getPlayer(id) {
@@ -116,27 +101,10 @@ export function getPlayer(id) {
   });
 }
 
-/**
- * Coerce to a finite number, or undefined.
- * @param {*} v Candidate value.
- * @returns {number | undefined} `v` if it is a finite number, else undefined.
- */
-export function safeNum(v) {
-  return typeof v === "number" && isFinite(v) ? v : undefined;
-}
+// The collectors import safeNum from here with the other sampler helpers.
+export { safeNum };
 
 // collector utilities
-
-/** Collector debug flag, independent of the sampler's verbose flag. */
-const COLLECTOR_DBG = false;
-
-/**
- * Collector debug logger, no-op unless {@link COLLECTOR_DBG} is set.
- * @param {...*} a Values to log.
- */
-export function dlog(...a) {
-  if (COLLECTOR_DBG) console.warn("[Demographics.sampler]", ...a);
-}
 
 /**
  * Resolve a `YieldTypes` enum member defensively.
@@ -159,7 +127,7 @@ export function yieldEnum(key) {
 /**
  * Read a player's net yield for `key`, defensively.
  * @param {*} stats The player Stats handle.
- * @param {string} key The yield key.
+ * @param {string} key
  * @param {Pid} pid The player id (for error attribution).
  * @returns {number|undefined} The net yield, or undefined.
  */
@@ -176,10 +144,10 @@ export function netYield(stats, key, pid) {
 /**
  * Read a finite numeric property off an engine handle, defensively.
  * @param {*} obj The handle.
- * @param {string} prop The property name.
+ * @param {string} prop
  * @returns {number|undefined} The finite number, or undefined.
  */
-export function _readFiniteProp(obj, prop) {
+export function readFiniteProp(obj, prop) {
   try {
     const v = obj[prop];
     if (typeof v === "number" && isFinite(v)) return v;

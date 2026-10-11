@@ -1,20 +1,21 @@
 import assert from "node:assert/strict";
 
-import { createFakeDocument } from "./_dom-stub.mjs";
+import { createFakeDocument, findByClass } from "./_dom-stub.mjs";
+import { snapshotGlobals } from "./_engine-stubs.mjs";
 
-const saved = {
-  document: globalThis.document,
-  window: globalThis.window,
-  requestAnimationFrame: globalThis.requestAnimationFrame,
-  performance: globalThis.performance,
-  GameContext: globalThis.GameContext,
-  Players: globalThis.Players,
-  Configuration: globalThis.Configuration,
-  Locale: globalThis.Locale,
-  UI: globalThis.UI,
-  Audio: globalThis.Audio,
-  GameInfo: globalThis.GameInfo
-};
+const restoreGlobals = snapshotGlobals([
+  "document",
+  "window",
+  "requestAnimationFrame",
+  "performance",
+  "GameContext",
+  "Players",
+  "Configuration",
+  "Locale",
+  "UI",
+  "Audio",
+  "GameInfo"
+]);
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -83,16 +84,6 @@ const { makeNodeSelectionWriter } = await import(
   "/demographics/ui/screen-demographics/views/relations/relations-settings.js"
 );
 
-function findByClass(root, cls) {
-  const queue = [root];
-  while (queue.length > 0) {
-    const cur = queue.shift();
-    if (typeof cur.className === "string" && cur.className.split(/\s+/).includes(cls)) return cur;
-    queue.push(...(cur.children || []));
-  }
-  return null;
-}
-
 function testRelationsRenderIntegration() {
   const writeNodeSelection = makeNodeSelectionWriter();
   writeNodeSelection("civ", new Set([1, 2, 999]));
@@ -113,9 +104,21 @@ function testRelationsRenderIntegration() {
         {
           turn: 1,
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
-            "2": { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#446688", met: true },
-            "3": { leaderName: "CS", civName: "CityState", leaderTypeString: "LEADER_CS", primaryColor: "#557799", met: true }
+            1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
+            2: {
+              leaderName: "Other",
+              civName: "Han",
+              leaderTypeString: "LEADER_OTHER",
+              primaryColor: "#446688",
+              met: true
+            },
+            3: {
+              leaderName: "CS",
+              civName: "CityState",
+              leaderTypeString: "LEADER_CS",
+              primaryColor: "#557799",
+              met: true
+            }
           }
         }
       ]
@@ -152,7 +155,11 @@ function testRelationsRenderIntegration() {
   assert.ok(caption, "caption should exist");
 
   topBar.dispatch("tab-selected", { detail: { selectedItem: { id: "civ" } } });
-  assert.equal(String(caption.textContent).includes("FOCUS_HINT"), true, "multi-focus caption should show the localized focus hint");
+  assert.equal(
+    String(caption.textContent).includes("FOCUS_HINT"),
+    true,
+    "multi-focus caption should show the localized focus hint"
+  );
   const clearFocusBtn = findByClass(host, "demographics-relations-clear-focus-btn");
   assert.ok(clearFocusBtn, "clear-focus button should render for active focus");
   clearFocusBtn.dispatch("click");
@@ -171,7 +178,7 @@ function testRenderClearsHostAndHandlesTabBarBuildError() {
         {
           turn: 1,
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true }
+            1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true }
           }
         }
       ]
@@ -210,8 +217,14 @@ function testResizeAndOverlayFallbackBranches() {
         {
           turn: 1,
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
-            "2": { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#446688", met: true }
+            1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
+            2: {
+              leaderName: "Other",
+              civName: "Han",
+              leaderTypeString: "LEADER_OTHER",
+              primaryColor: "#446688",
+              met: true
+            }
           }
         }
       ]
@@ -290,8 +303,14 @@ function testTopTabPersistThrowStillRepaints() {
         {
           turn: 1,
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
-            "2": { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#446688", met: true }
+            1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
+            2: {
+              leaderName: "Other",
+              civName: "Han",
+              leaderTypeString: "LEADER_OTHER",
+              primaryColor: "#446688",
+              met: true
+            }
           }
         }
       ]
@@ -321,8 +340,14 @@ function twoPlayerCtx(settingsOverride) {
         {
           turn: 1,
           players: {
-            "1": { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
-            "2": { leaderName: "Other", civName: "Han", leaderTypeString: "LEADER_OTHER", primaryColor: "#446688", met: true }
+            1: { leaderName: "Me", civName: "Rome", leaderTypeString: "LEADER_ME", primaryColor: "#224466", met: true },
+            2: {
+              leaderName: "Other",
+              civName: "Han",
+              leaderTypeString: "LEADER_OTHER",
+              primaryColor: "#446688",
+              met: true
+            }
           }
         }
       ]
@@ -486,15 +511,5 @@ try {
   testRenderPrologueThrowShowsFallback();
   console.log("relations-render-integration harness passed");
 } finally {
-  globalThis.document = saved.document;
-  globalThis.window = saved.window;
-  globalThis.requestAnimationFrame = saved.requestAnimationFrame;
-  globalThis.performance = saved.performance;
-  globalThis.GameContext = saved.GameContext;
-  globalThis.Players = saved.Players;
-  globalThis.Configuration = saved.Configuration;
-  globalThis.Locale = saved.Locale;
-  globalThis.UI = saved.UI;
-  globalThis.Audio = saved.Audio;
-  globalThis.GameInfo = saved.GameInfo;
+  restoreGlobals();
 }

@@ -13,7 +13,16 @@ document.createElement = (tag) => {
   const node = baseCreate(tag);
   if (String(tag).toLowerCase() === "canvas") {
     const noop = () => {};
-    node.getContext = () => ({ clearRect: noop, beginPath: noop, moveTo: noop, lineTo: noop, closePath: noop, fill: noop, stroke: noop, arc: noop });
+    node.getContext = () => ({
+      clearRect: noop,
+      beginPath: noop,
+      moveTo: noop,
+      lineTo: noop,
+      closePath: noop,
+      fill: noop,
+      stroke: noop,
+      arc: noop
+    });
   }
   return node;
 };
@@ -23,7 +32,9 @@ console.error = (...a) => errors.push(a.map(String).join(" "));
 
 const { newCampaign, ensureAge, upsertPlayer, appendEvents, appendSample, EVENTS_CAP, SERIES_CAP } =
   await import("/demographics/ui/history/store/history-campaign.js");
-const { buildRecord, upsert, emptySlice, fitSlice, SLICE_BYTE_CAP } = await import("/demographics/ui/history/store/history-archive.js");
+const { buildRecord, upsert, emptySlice, fitSlice, SLICE_BYTE_CAP } = await import(
+  "/demographics/ui/history/store/history-archive.js"
+);
 const { addFrame, rle, DOC_FRAMES_CAP } = await import("/demographics/ui/history/model/history-map.js");
 
 /** Deterministic pseudo-random numbers. */
@@ -33,16 +44,35 @@ const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 214748364
 const AGES = ["AGE_ANTIQUITY", "AGE_EXPLORATION", "AGE_MODERN"];
 const TURNS = 250;
 const PLAYERS = 12;
-const KINDS = ["found", "capture", "razed", "wonder", "war", "peace", "religion", "triumph", "met", "crisis", "disaster", "civ"];
+const KINDS = [
+  "found",
+  "capture",
+  "razed",
+  "wonder",
+  "war",
+  "peace",
+  "religion",
+  "triumph",
+  "met",
+  "crisis",
+  "disaster",
+  "civ"
+];
 const LONG = "LOC_CITY_NAME_A_VERY_LONG_SETTLEMENT_NAME_FOR_THE_WORST_CASE_";
 
 /**
  * A maxed-out campaign.
  * @param {string} id
- * @returns {CampaignDoc} Campaign.
+ * @returns {CampaignDoc}
  */
 function marathon(id) {
-  const doc = newCampaign({ id, seed: 1, now: 1, setup: { speed: "LOC_S", difficulty: "LOC_D", mapSize: "LOC_M", mapScript: "x.js", startAge: AGES[0] }, local: 0 });
+  const doc = newCampaign({
+    id,
+    seed: 1,
+    now: 1,
+    setup: { speed: "LOC_S", difficulty: "LOC_D", mapSize: "LOC_M", mapScript: "x.js", startAge: AGES[0] },
+    local: 0
+  });
   const W = 60;
   const H = 38;
   doc.map = { w: W, h: H, terrain: rle(Array.from({ length: W * H }, () => (rnd() < 0.4 ? 0 : 1))), frames: [] };
@@ -51,31 +81,69 @@ function marathon(id) {
   AGES.forEach((age, a) => {
     for (let pid = 0; pid < PLAYERS; pid++) {
       const civ = "CIVILIZATION_" + pid + "_" + a;
-      upsertPlayer(doc, pid, { leader: "LEADER_" + pid, leaderName: "LOC_LEADER_" + pid, civ, civName: "LOC_" + civ, color: "#" + (100000 + pid * 55555).toString(16).slice(0, 6), human: pid === 0 }, { age, turn: 1 });
+      upsertPlayer(
+        doc,
+        pid,
+        {
+          leader: "LEADER_" + pid,
+          leaderName: "LOC_LEADER_" + pid,
+          civ,
+          civName: "LOC_" + civ,
+          color: "#" + (100000 + pid * 55555).toString(16).slice(0, 6),
+          human: pid === 0
+        },
+        { age, turn: 1 }
+      );
     }
     for (let t = 1; t <= TURNS; t++) {
       ensureAge(doc, age, t);
       const events = Array.from({ length: 4 }, () => {
         const k = KINDS[Math.floor(rnd() * KINDS.length)];
-        return { t, a, k, p: Math.floor(rnd() * PLAYERS), q: Math.floor(rnd() * PLAYERS), n: LONG + Math.floor(rnd() * 1e6), x: "WONDER_X_" + t, d: t + " CE" };
+        return {
+          t,
+          a,
+          k,
+          p: Math.floor(rnd() * PLAYERS),
+          q: Math.floor(rnd() * PLAYERS),
+          n: LONG + Math.floor(rnd() * 1e6),
+          x: "WONDER_X_" + t,
+          d: t + " CE"
+        };
       });
-      appendEvents(doc, /** @type {HnrEvent[]} */ (events));
-      /** @type {Record<string, HnrPlayerState>} */
+      appendEvents(doc, /** @type {HistoryEvent[]} */ (events));
+      /** @type {Record<string, HistoryPlayerState>} */
       const players = {};
       for (let pid = 0; pid < PLAYERS; pid++) {
         const cities = Object.fromEntries(Array.from({ length: 40 }, (_, c) => [c + "," + pid, LONG + c]));
-        players[String(pid)] = pstate({ cities, population: t * 3, popScaled: t * 1e5 * (pid + 1), mig: pid === 0 ? { i: (mi += 500), o: (mo += 300) } : undefined });
+        players[String(pid)] = pstate({
+          cities,
+          population: t * 3,
+          popScaled: t * 1e5 * (pid + 1),
+          mig: pid === 0 ? { i: (mi += 500), o: (mo += 300) } : undefined
+        });
       }
       const w = world(t, players, { age });
       appendSample(doc, w);
       doc.last = w;
       if (t % 3 === 0) {
         const owners = Array.from({ length: W * H }, () => (rnd() < 0.5 ? -1 : Math.floor(rnd() * PLAYERS)));
-        addFrame(doc.map, { t, a, o: rle(owners), c: Array.from({ length: 200 }, (_, i) => [i * 11 % (W * H), i % PLAYERS]) });
+        addFrame(doc.map, {
+          t,
+          a,
+          o: rle(owners),
+          c: Array.from({ length: 200 }, (_, i) => [(i * 11) % (W * H), i % PLAYERS])
+        });
       }
     }
   });
-  doc.outcome = { status: "victory", victory: "VICTORY_X", name: "LOC_VICTORY_X", winner: 0, turn: TURNS, cls: "VICTORY_CLASS_SCIENCE" };
+  doc.outcome = {
+    status: "victory",
+    victory: "VICTORY_X",
+    name: "LOC_VICTORY_X",
+    winner: 0,
+    turn: TURNS,
+    cls: "VICTORY_CLASS_SCIENCE"
+  };
   return doc;
 }
 
@@ -115,11 +183,18 @@ assert.ok(withTimeline >= 12, "a full archive keeps timelines (" + withTimeline 
 assert.ok(byAge.slice(0, withTimeline).every((r) => r.tl), "and keeps them for the most recent games");
 
 // Rendering the fullest pages.
-globalThis.Configuration = { getGame: () => ({ getValue: () => JSON.stringify(doc) }), getUser: () => ({ uiFontScale: 1 }) };
+globalThis.Configuration = {
+  getGame: () => ({ getValue: () => JSON.stringify(doc) }),
+  getUser: () => ({ uiFontScale: 1 })
+};
 globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ "demographics-halloffame": slice }) });
 const { renderHallOfFame, render } = await import("/demographics/ui/history/views/history-app.js");
 const { viewState } = await import("/demographics/ui/history/views/history-state.js");
-const timed = (/** @type {() => void} */ fn) => { const s = Date.now(); fn(); return Date.now() - s; };
+const timed = (/** @type {() => void} */ fn) => {
+  const s = Date.now();
+  fn();
+  return Date.now() - s;
+};
 const ms = {};
 for (const tab of ["overview", "games", "leaders", "civs", "records"]) {
   viewState.hofTab = tab;
@@ -136,12 +211,24 @@ ms.liveTimeline = timed(() => render(document.createElement("div"), { history: {
 viewState.tab = "chronicle";
 ms.chronicle = timed(() => render(document.createElement("div"), { history: {}, settings: {} }));
 
-console.log(JSON.stringify({
-  docKB: Math.round(docBytes / 1024), buildMs, recKB: Math.round(recBytes / 1024), recMs,
-  tlParts: Object.fromEntries(Object.entries(rec.tl || {}).map(([k, v]) => [k, part(v)])),
-  recParts: { tl: part(rec.tl), tlRivals: part(rec.tl?.r), map: part(rec.map), highlights: part(rec.highlights), rivals: part(rec.rivals) },
-  slice: { kept, evicted: evicted.length, withMap, withRivals, KB: Math.round(sliceBytes / 1024), fitMs }, renderMs: ms
-}));
+console.log(
+  JSON.stringify({
+    docKB: Math.round(docBytes / 1024),
+    buildMs,
+    recKB: Math.round(recBytes / 1024),
+    recMs,
+    tlParts: Object.fromEntries(Object.entries(rec.tl || {}).map(([k, v]) => [k, part(v)])),
+    recParts: {
+      tl: part(rec.tl),
+      tlRivals: part(rec.tl?.r),
+      map: part(rec.map),
+      highlights: part(rec.highlights),
+      rivals: part(rec.rivals)
+    },
+    slice: { kept, evicted: evicted.length, withMap, withRivals, KB: Math.round(sliceBytes / 1024), fitMs },
+    renderMs: ms
+  })
+);
 assert.deepEqual(errors, [], "no errors logged");
 
 // Budgets: the save-file blob, one record, and the work done on every turn.

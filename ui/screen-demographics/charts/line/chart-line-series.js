@@ -116,10 +116,10 @@ function leaderDisplayName(leaderType, pid) {
   if (!leaderType) return tPlayerFallback(pid);
   const resolved = lookupLeaderName(leaderType);
   if (resolved) return resolved;
-  const s = String(leaderType);
+  const typeText = String(leaderType);
   // Avoid surfacing a raw numeric hash as the display name.
-  if (/^-?\d+$/.test(s)) return tPlayerFallback(pid);
-  return s.replace(/^LEADER_/, "").replace(/_/g, " ");
+  if (/^-?\d+$/.test(typeText)) return tPlayerFallback(pid);
+  return typeText.replace(/^LEADER_/, "").replace(/_/g, " ");
 }
 
 /**
@@ -130,30 +130,30 @@ function leaderDisplayName(leaderType, pid) {
 function collectPidSet(samples) {
   /** @type {Set<string>} */
   const pidSet = new Set();
-  for (const s of samples) {
-    if (s && s.players) {
-      for (const k of Object.keys(s.players)) pidSet.add(k);
+  for (const sample of samples) {
+    if (sample && sample.players) {
+      for (const pidKey of Object.keys(sample.players)) pidSet.add(pidKey);
     }
   }
   return Array.from(pidSet);
 }
 
-  /**
-   * Resolve one metric point from a sample/player row.
-   * @param {*} sample
-   * @param {*} playerSample One player's row from that sample.
-   * @param {string} metricId
-   * @param {Map<string, number>} ageOffsets Per-age offsets.
-   * @param {AgeBoundary[]} ageBoundariesLocal
-   * @returns {{ t: number, v: number }|null} Point, or null when unavailable.
-   */
-  function metricPoint(sample, playerSample, metricId, ageOffsets, ageBoundariesLocal) {
-    const value = playerSample?.metrics ? playerSample.metrics[metricId] : undefined;
-    if (typeof value !== "number" || !isFinite(value)) return null;
-    const x = sampleX(sample, ageOffsets, ageBoundariesLocal);
-    if (typeof x !== "number") return null;
-    return { t: x, v: value };
-  }
+/**
+ * Resolve one metric point from a sample/player row.
+ * @param {*} sample
+ * @param {*} playerSample One player's row from that sample.
+ * @param {string} metricId
+ * @param {Map<string, number>} ageOffsets Per-age offsets.
+ * @param {AgeBoundary[]} ageBoundariesLocal
+ * @returns {{ t: number, v: number }|null}
+ */
+function metricPoint(sample, playerSample, metricId, ageOffsets, ageBoundariesLocal) {
+  const value = playerSample?.metrics ? playerSample.metrics[metricId] : undefined;
+  if (typeof value !== "number" || !isFinite(value)) return null;
+  const x = sampleX(sample, ageOffsets, ageBoundariesLocal);
+  if (typeof x !== "number") return null;
+  return { t: x, v: value };
+}
 
 // Metrics the game resets at an age boundary (population is slashed on age rollover), so their raw
 // series dips at each boundary as an artifact. The dip is bridged on the displayed line only.
@@ -163,12 +163,12 @@ const AGE_RESET_BRIDGED_METRICS = new Set(["population"]);
  * The chart x-positions of age boundaries: each later age starts at its cumulative offset (the first
  * age starts at 0, which is not a boundary). Sorted ascending.
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
- * @returns {number[]} Boundary x-positions.
+ * @returns {number[]}
  */
 function ageBoundaryXs(ageOffsets) {
   if (!ageOffsets || typeof ageOffsets.values !== "function") return [];
   return Array.from(ageOffsets.values())
-    .filter((v) => typeof v === "number" && isFinite(v) && v > 0)
+    .filter((offset) => typeof offset === "number" && isFinite(offset) && offset > 0)
     .sort((a, b) => a - b);
 }
 
@@ -176,7 +176,9 @@ function ageBoundaryXs(ageOffsets) {
  * Index of the last point at or before x (−1 if none). Points are ascending by `t`. Inclusive because
  * a prior age's final sample sits exactly at the boundary x (its max local turn equals the next age's
  * cumulative offset), and that peak is the value we bridge from.
- * @param {{t:number}[]} points Points. @param {number} x Threshold. @returns {number} Index or −1.
+ * @param {{t:number}[]} points
+ * @param {number} x
+ * @returns {number} Index, or −1.
  */
 function lastIndexAtOrBefore(points, x) {
   let i = -1;
@@ -192,15 +194,17 @@ function lastIndexAtOrBefore(points, x) {
  * proportion to how far the running-max has climbed back toward the peak, so a genuine post-boundary
  * loss still appears as a real drop. Taking the first post-boundary sample as the trough under-corrects
  * under sparse sampling, which is the safe failure. Mutates; only raises.
- * @param {{t:number,v:number}[]} points Points (mutated). @param {number} i Pre-boundary peak index.
- * @param {number} segEnd Segment-end x. @param {number} vPre Pre-boundary value.
+ * @param {{t:number,v:number}[]} points Mutated.
+ * @param {number} i Pre-boundary peak index.
+ * @param {number} segEnd Segment-end x.
+ * @param {number} preBoundaryValue
  */
-function applyResetOffset(points, i, segEnd, vPre) {
+function applyResetOffset(points, i, segEnd, preBoundaryValue) {
   const trough = points[i + 1].v;
-  const drop = vPre - trough; // the mechanic's reset magnitude (conservative: first post-boundary sample)
+  const drop = preBoundaryValue - trough; // the mechanic's reset magnitude (conservative: first post-boundary sample)
   if (drop <= 0) return;
   let runningMax = trough;
-  for (let k = i + 1; k < points.length && points[k].t < segEnd && points[k].v < vPre; k++) {
+  for (let k = i + 1; k < points.length && points[k].t < segEnd && points[k].v < preBoundaryValue; k++) {
     if (points[k].v > runningMax) runningMax = points[k].v;
     const offset = drop * (1 - Math.max(0, Math.min(1, (runningMax - trough) / drop)));
     const lifted = points[k].v + offset;
@@ -211,31 +215,32 @@ function applyResetOffset(points, i, segEnd, vPre) {
 /**
  * Bridge one age boundary's dip in place (if there is one). The first point after the boundary (within
  * the segment) must dip below the pre-boundary value to qualify.
- * @param {{t:number,v:number}[]} points Points (mutated). @param {number} bx Boundary x.
+ * @param {{t:number,v:number}[]} points Mutated.
+ * @param {number} boundaryX
  * @param {number} segEnd Segment-end x (next boundary or Infinity).
  */
-function bridgeOneBoundary(points, bx, segEnd) {
-  const i = lastIndexAtOrBefore(points, bx);
+function bridgeOneBoundary(points, boundaryX, segEnd) {
+  const i = lastIndexAtOrBefore(points, boundaryX);
   if (i < 0 || i + 1 >= points.length) return;
   const next = points[i + 1];
-  const vPre = points[i].v;
-  if (!(next.t < segEnd) || next.v >= vPre) return; // no reset dip in this segment
-  applyResetOffset(points, i, segEnd, vPre);
+  const preBoundaryValue = points[i].v;
+  if (!(next.t < segEnd) || next.v >= preBoundaryValue) return; // no reset dip in this segment
+  applyResetOffset(points, i, segEnd, preBoundaryValue);
 }
 
 /**
  * Bridge the post-boundary dip in a reset-prone series by adding back the mechanic's instantaneous
  * reset as a regrowth-tapered offset (see {@link applyResetOffset}), preserving any genuine loss.
  * Capped to the same age segment; only raises points; raw samples untouched.
- * @param {{t:number,v:number}[]} points The series points.
+ * @param {{t:number,v:number}[]} points Mutated in place.
  * @param {number[]} boundaryXs Age boundary x-positions (ascending).
- * @returns {{t:number,v:number}[]} The bridged points.
+ * @returns {{t:number,v:number}[]} The same array, bridged in place.
  */
 function bridgeAgeResetDips(points, boundaryXs) {
   if (!Array.isArray(points) || points.length < 3 || !boundaryXs.length) return points;
-  for (let m = 0; m < boundaryXs.length; m++) {
-    const segEnd = m + 1 < boundaryXs.length ? boundaryXs[m + 1] : Infinity;
-    bridgeOneBoundary(points, boundaryXs[m], segEnd);
+  for (let i = 0; i < boundaryXs.length; i++) {
+    const segEnd = i + 1 < boundaryXs.length ? boundaryXs[i + 1] : Infinity;
+    bridgeOneBoundary(points, boundaryXs[i], segEnd);
   }
   return points;
 }
@@ -267,16 +272,16 @@ function foldPidSamples(samples, pid, metricId, opts) {
     secondaryColor: null,
     metFlag: undefined
   };
-  for (const s of samples) {
+  for (const sample of samples) {
     // A persisted stream can hold a null sample; skip it (collectPidSet does the same).
-    if (!s) continue;
-    const ps = s.players && s.players[pid];
-    if (!ps) continue;
-    mergePidIdentity(fold, ps);
+    if (!sample) continue;
+    const civSample = sample.players && sample.players[pid];
+    if (!civSample) continue;
+    mergePidIdentity(fold, civSample);
     // "From first contact" mode: drop points taken while still unmet. Met /
     // unknown → kept. In back-fill mode this is skipped entirely (full history).
-    if (fromContactOnly && ps.met === false) continue;
-    const point = metricPoint(s, ps, metricId, ageOffsets, ageBoundariesLocal);
+    if (fromContactOnly && civSample.met === false) continue;
+    const point = metricPoint(sample, civSample, metricId, ageOffsets, ageBoundariesLocal);
     if (point) fold.points.push(point);
   }
   // Smooth the mechanical age-reset dip on reset-prone metrics so the displayed line bridges the
@@ -292,15 +297,15 @@ function foldPidSamples(samples, pid, metricId, opts) {
  * string (distinct from the raw `leaderType` hash) resolves the leader portrait
  * <fxs-icon> in the tooltip.
  * @param {PidFold} fold Mutated.
- * @param {CivSample|*} ps One civ's sample.
+ * @param {CivSample|*} civSample One civ's sample.
  */
-function mergeLeaderTypeString(fold, ps) {
+function mergeLeaderTypeString(fold, civSample) {
   if (
     !fold.leaderTypeString &&
-    typeof ps.leaderTypeString === "string" &&
-    ps.leaderTypeString.length > 0
+    typeof civSample.leaderTypeString === "string" &&
+    civSample.leaderTypeString.length > 0
   ) {
-    fold.leaderTypeString = ps.leaderTypeString;
+    fold.leaderTypeString = civSample.leaderTypeString;
   }
 }
 
@@ -308,16 +313,16 @@ function mergeLeaderTypeString(fold, ps) {
  * Merge the latest non-empty banner colors into the fold. The latest color wins
  * because civilization swaps at age transitions change banner colors.
  * @param {PidFold} fold Mutated.
- * @param {CivSample|*} ps One civ's sample.
+ * @param {CivSample|*} civSample One civ's sample.
  */
-function mergeBannerColors(fold, ps) {
-  if (typeof ps.primaryColor === "string" && ps.primaryColor.length > 0) {
-    fold.primaryColor = ps.primaryColor;
+function mergeBannerColors(fold, civSample) {
+  if (typeof civSample.primaryColor === "string" && civSample.primaryColor.length > 0) {
+    fold.primaryColor = civSample.primaryColor;
   }
   // Secondary is used as a readable fallback line color when the primary banner
   // color is near-black (see preferReadableColor).
-  if (typeof ps.secondaryColor === "string" && ps.secondaryColor.length > 0) {
-    fold.secondaryColor = ps.secondaryColor;
+  if (typeof civSample.secondaryColor === "string" && civSample.secondaryColor.length > 0) {
+    fold.secondaryColor = civSample.secondaryColor;
   }
 }
 
@@ -325,18 +330,18 @@ function mergeBannerColors(fold, ps) {
  * Merge one civ sample's identity fields into a pid fold: first non-null
  * leader type / leader name, latest non-empty banner colors, latest met flag.
  * @param {PidFold} fold Mutated.
- * @param {CivSample|*} ps One civ's sample.
+ * @param {CivSample|*} civSample One civ's sample.
  */
-function mergePidIdentity(fold, ps) {
-  if (!fold.leaderType && ps.leaderType !== undefined && ps.leaderType !== null) {
-    fold.leaderType = ps.leaderType;
+function mergePidIdentity(fold, civSample) {
+  if (!fold.leaderType && civSample.leaderType !== undefined && civSample.leaderType !== null) {
+    fold.leaderType = civSample.leaderType;
   }
-  mergeLeaderTypeString(fold, ps);
-  if (!fold.leaderName && typeof ps.leaderName === "string" && ps.leaderName.length > 0) {
-    fold.leaderName = ps.leaderName;
+  mergeLeaderTypeString(fold, civSample);
+  if (!fold.leaderName && typeof civSample.leaderName === "string" && civSample.leaderName.length > 0) {
+    fold.leaderName = civSample.leaderName;
   }
-  mergeBannerColors(fold, ps);
-  if (typeof ps.met === "boolean") fold.metFlag = ps.met; // latest wins
+  mergeBannerColors(fold, civSample);
+  if (typeof civSample.met === "boolean") fold.metFlag = civSample.met; // latest wins
 }
 
 /**
@@ -348,8 +353,8 @@ function mergePidIdentity(fold, ps) {
 function liveCivNameFallback(pid) {
   try {
     if (typeof Players?.get !== "function") return [];
-    const p = Players.get(Number(pid));
-    const live = p?.civilizationName;
+    const player = Players.get(Number(pid));
+    const live = player?.civilizationName;
     if (typeof live !== "string" || live.length === 0) return [];
     const composed = composeLocale(live);
     if (composed && composed.length > 0) return [composed];
@@ -401,8 +406,8 @@ function seriesColor(primaryColor, secondaryColor, idx) {
  * @param {Snapshot[]} samples
  * @param {string} pid
  * @param {number} idx Index for palette fallback.
- * @param {PidFold} fold The pid's accumulated fold.
- * @param {Record<string, *>} eliminatedMap The history eliminated map.
+ * @param {PidFold} fold
+ * @param {Record<string, *>} eliminatedMap `history.eliminated`, keyed by pid.
  * @returns {ChartSeries}
  */
 function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
@@ -458,7 +463,7 @@ function resolveUnmetGateModes() {
  * X positions are derived from a freshly computed age-offset table.
  * @param {DemoHistory|*} history The persisted history blob.
  * @param {string} metricId
- * @returns {SeriesResult} The series list and sample count.
+ * @returns {SeriesResult}
  */
 function buildSeriesFromHistory(history, metricId) {
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
@@ -506,10 +511,10 @@ function buildSeriesFromHistory(history, metricId) {
  * @param {ChartSeries[]} series The built series (mutated in place).
  */
 function finalizeSeriesColors(series) {
-  const lifted = series.map((s) => safeTextColor(s.color));
+  const lifted = series.map((entry) => safeTextColor(entry.color));
   const finalColors = deconflictColors(lifted);
-  series.forEach((s, i) => {
-    s.color = finalColors[i];
+  series.forEach((entry, i) => {
+    entry.color = finalColors[i];
   });
 }
 

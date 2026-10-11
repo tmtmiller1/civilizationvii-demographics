@@ -6,6 +6,8 @@
 // <div>, and a CSS rule `.ssb__button-icon.demographics { background-image }`
 // paints a file-shipped SVG (Coherent ignores data: URIs in fs:// stylesheets).
 
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
+
 /**
  * The vanilla subsystem-dock panel handle passed to a decorator factory. Only
  * the surface this decorator touches is modeled; the rest is the untyped
@@ -26,21 +28,9 @@
  * @property {string} focusedAudio Focus-cue audio ref.
  */
 
-const DBG = false;
-/**
- * @param {...*} a
- */
-function dlog(...a) {
-  if (DBG) console.warn("[Demographics.dock]", ...a);
-}
-/**
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.dock]", ...a);
-}
+const log = makeLogger("dock");
 
-dlog("module evaluating");
+log.debug("module evaluating");
 
 const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 
@@ -71,7 +61,7 @@ function injectIconStyle() {
     ` mask-repeat: no-repeat;` +
     ` }`;
   document.head.appendChild(style);
-  dlog("icon style injected (mask + flat tint)");
+  log.debug("icon style injected (mask + flat tint)");
 }
 
 /**
@@ -83,21 +73,21 @@ export class DemographicsDockDecorator {
    * @param {SubSystemDockPanel} val
    */
   constructor(val) {
-    dlog("constructor called; panel keys:", val ? Object.keys(val).slice(0, 10) : "(no val)");
+    log.debug("constructor called; panel keys:", val ? Object.keys(val).slice(0, 10) : "(no val)");
     /** @type {SubSystemDockPanel} */
     this._panel = val;
   }
 
   beforeAttach() {
-    dlog("beforeAttach");
+    log.debug("beforeAttach");
   }
 
   afterAttach() {
-    dlog("afterAttach: about to call this._panel.addButton");
+    log.debug("afterAttach: about to call this._panel.addButton");
     try {
       injectIconStyle();
     } catch (e) {
-      derr("injectIconStyle threw:", e);
+      log.error("injectIconStyle threw:", e);
     }
     this._addDockButton();
   }
@@ -107,11 +97,11 @@ export class DemographicsDockDecorator {
       // The dock re-attaching or another mod re-initializing it could fire this twice.
       // There is exactly one subsystem dock, so a document-wide check is correct.
       if (typeof document !== "undefined" && document.querySelector(".demographics-dock-button")) {
-        dlog("dock button already present; skipping duplicate");
+        log.debug("dock button already present; skipping duplicate");
         return;
       }
       if (!this._panel || typeof this._panel.addButton !== "function") {
-        derr("panel.addButton missing; aborting");
+        log.error("panel.addButton missing; aborting");
         return;
       }
       const btn = this._panel.addButton({
@@ -122,44 +112,44 @@ export class DemographicsDockDecorator {
         audio: "data-audio-tab-selected",
         focusedAudio: "data-audio-focus-small"
       });
-      dlog("addButton returned:", btn ? btn.tagName : btn);
+      log.debug("addButton returned:", btn ? btn.tagName : btn);
     } catch (e) {
-      derr("addButton THREW:", e);
+      log.error("addButton THREW:", e);
     }
   }
 
   beforeDetach() {
-    dlog("beforeDetach");
+    log.debug("beforeDetach");
   }
   afterDetach() {
-    dlog("afterDetach");
+    log.debug("afterDetach");
   }
 
   // dynamic-imports the context manager so this module has no import-time engine dependency
   openScreen() {
-    dlog("button activated; about to push screen-demographics");
+    log.debug("button activated; about to push screen-demographics");
     try {
       import("/core/ui/context-manager/context-manager.js")
         .then((m) => {
           const ContextManager = /** @type {any} */ (m.default || m.ContextManager || m);
           ContextManager.push("screen-demographics", { singleton: true, createMouseGuard: true });
-          dlog("ContextManager.push returned");
+          log.debug("ContextManager.push returned");
         })
-        .catch((e) => derr("context-manager import failed:", e));
+        .catch((e) => log.error("context-manager import failed:", e));
     } catch (e) {
-      derr("openScreen threw:", e);
+      log.error("openScreen threw:", e);
     }
   }
 }
 
 try {
   if (typeof Controls !== "undefined" && typeof Controls.decorate === "function") {
-    dlog("about to call Controls.decorate('panel-sub-system-dock', factory)");
+    log.debug("about to call Controls.decorate('panel-sub-system-dock', factory)");
     Controls.decorate("panel-sub-system-dock", (val) => new DemographicsDockDecorator(val));
-    dlog("decorator registered");
+    log.debug("decorator registered");
   } else {
-    derr("Controls.decorate unavailable; skipping registration");
+    log.error("Controls.decorate unavailable; skipping registration");
   }
 } catch (e) {
-  derr("Controls.decorate THREW:", e);
+  log.error("Controls.decorate THREW:", e);
 }

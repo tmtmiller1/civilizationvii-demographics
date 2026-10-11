@@ -10,15 +10,10 @@ import {
   nearestByTurn
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { localYear, turnLabel } from "/demographics/ui/core/demographics-i18n.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-/**
- * Local error logger so axis-formatter callbacks surface bugs in UI.log
- * without taking a dependency on chart-line.js's own `derr`.
- * @param {...*} a Values to log.
- */
-function derr(...a) {
-  console.error("[Demographics.chart-line-axis]", ...a);
-}
+// Axis-formatter callbacks log their own failures so a bug there still reaches UI.log.
+const log = makeLogger("chart-line-axis");
 
 // A sample's "global" X-axis position is computed deterministically from
 // (age, localTurn): each age's samples land right after the previous age's.
@@ -26,14 +21,14 @@ function derr(...a) {
 // any number of ages plot correctly with no hardcoded age list.
 
 /**
- * Infer a sample's age type. Trusts explicit `s.age`; legacy samples without
+ * Infer a sample's age type. Trusts explicit `sample.age`; legacy samples without
  * it predate age-tagging and are treated as Antiquity.
- * @param {Snapshot|*} s
+ * @param {Snapshot|*} sample
  * @param {AgeBoundary[]} [_ageBoundaries] Unused (kept for call-site parity).
  * @returns {string}
  */
-function inferSampleAge(s, _ageBoundaries) {
-  if (s && typeof s.age === "string") return s.age;
+function inferSampleAge(sample, _ageBoundaries) {
+  if (sample && typeof sample.age === "string") return sample.age;
   // Samples without `age` can only be antiquity; bucketing them via the
   // ageBoundaries table would collapse them into the latest age.
   return "AGE_ANTIQUITY";
@@ -42,18 +37,18 @@ function inferSampleAge(s, _ageBoundaries) {
 /**
  * Infer a sample's age-local turn. Uses explicit `localTurn`, else the stored
  * `turn` (age-local for legacy samples), else `null`.
- * @param {Snapshot|*} s
+ * @param {Snapshot|*} sample
  * @param {string} [_age] Unused (kept for call-site parity).
  * @param {AgeBoundary[]} [_ageBoundaries] Unused (kept for call-site parity).
- * @returns {number|null} The age-local turn, or `null`.
+ * @returns {number|null}
  */
-function inferLocalTurn(s, _age, _ageBoundaries) {
+function inferLocalTurn(sample, _age, _ageBoundaries) {
   // Explicit localTurn when present, else the stored turn (age-local for
   // legacy samples). Age-local turns are 1-based positive integers.
-  if (s && typeof s.localTurn === "number" && isFinite(s.localTurn) && s.localTurn > 0) {
-    return s.localTurn;
-  }
-  if (s && typeof s.turn === "number" && isFinite(s.turn) && s.turn > 0) return s.turn;
+  if (!sample) return null;
+  const { localTurn, turn } = sample;
+  if (typeof localTurn === "number" && isFinite(localTurn) && localTurn > 0) return localTurn;
+  if (typeof turn === "number" && isFinite(turn) && turn > 0) return turn;
   return null;
 }
 
@@ -92,17 +87,17 @@ export function computeAgeOffsets(samples, ageBoundaries) {
   const maxLocalByAge = new Map();
   /** @type {string[]} */
   const order = [];
-  for (const s of samples) {
-    foldAgeLocalMax(maxLocalByAge, order, s, ageBoundaries);
+  for (const sample of samples) {
+    foldAgeLocalMax(maxLocalByAge, order, sample, ageBoundaries);
   }
   // `offsets` is built in first-appearance order, so its key iteration order is
   // chronological; downstream consumers such as ageTurnFromX rely on that.
   /** @type {Map<string, number>} */
   const offsets = new Map();
-  let cum = 0;
+  let cumulative = 0;
   for (const age of order) {
-    offsets.set(age, cum);
-    cum += maxLocalByAge.get(age) || 0;
+    offsets.set(age, cumulative);
+    cumulative += maxLocalByAge.get(age) || 0;
   }
   return { offsets, maxLocalByAge };
 }
@@ -113,7 +108,7 @@ export function computeAgeOffsets(samples, ageBoundaries) {
  * @param {Snapshot|*} sample
  * @param {Map<string, number>} offsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} ageBoundaries
- * @returns {number|undefined} The chart-X position, or `undefined`.
+ * @returns {number|undefined}
  */
 export function sampleX(sample, offsets, ageBoundaries) {
   if (!sample) return undefined;
@@ -121,10 +116,10 @@ export function sampleX(sample, offsets, ageBoundaries) {
     return sample.chartTurn;
   }
   const age = inferSampleAge(sample, ageBoundaries);
-  const lt = inferLocalTurn(sample, age, ageBoundaries);
-  const off = offsets.get(age);
-  if (typeof lt === "number" && off !== undefined) {
-    return off + lt;
+  const localTurn = inferLocalTurn(sample, age, ageBoundaries);
+  const offset = offsets.get(age);
+  if (typeof localTurn === "number" && offset !== undefined) {
+    return offset + localTurn;
   }
   // Unknown ages and malformed local turns fall back to stored turn so the
   // sample is still plottable, even if age-aware continuity is unavailable.
@@ -149,47 +144,47 @@ export function sampleX(sample, offsets, ageBoundaries) {
 /**
  * Build the chart-X → year and chart-X → age maps from the sample stream,
  * plus a live entry for the current engine turn.
- * @param {Snapshot[]} samps
+ * @param {Snapshot[]} samples
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} boundaries
- * @returns {TurnMaps} The year and age maps.
+ * @returns {TurnMaps}
  */
-export function buildTurnMaps(samps, ageOffsets, boundaries) {
+export function buildTurnMaps(samples, ageOffsets, boundaries) {
   /** @type {Map<number, string>} */
   const turnYearMap = new Map();
   /** @type {Map<number, TurnAgeInfo>} */
   const turnAgeMap = new Map();
-  for (const s of samps) {
-    if (!s) continue;
-    const x = sampleX(s, ageOffsets, boundaries);
+  for (const sample of samples) {
+    if (!sample) continue;
+    const x = sampleX(sample, ageOffsets, boundaries);
     if (typeof x !== "number") continue;
-    if (typeof s.gameYear === "string" && s.gameYear.length > 0) {
-      turnYearMap.set(x, s.gameYear);
+    if (typeof sample.gameYear === "string" && sample.gameYear.length > 0) {
+      turnYearMap.set(x, sample.gameYear);
     }
-    const inferredAge = inferSampleAge(s, boundaries);
-    const inferredLT = inferLocalTurn(s, inferredAge, boundaries);
-    if (typeof inferredLT === "number") {
-      turnAgeMap.set(x, { age: inferredAge, localTurn: inferredLT });
+    const inferredAge = inferSampleAge(sample, boundaries);
+    const inferredLocalTurn = inferLocalTurn(sample, inferredAge, boundaries);
+    if (typeof inferredLocalTurn === "number") {
+      turnAgeMap.set(x, { age: inferredAge, localTurn: inferredLocalTurn });
     }
   }
   // The live entry is keyed by chart-X like the samples, so offset Game.turn
   // (which is age-local) by the current age's offset. Otherwise, in a
   // multi-age set, the current-turn year lands back in the Antiquity X-region.
-  addLiveTurnYear(turnYearMap, currentAgeXOffset(samps, ageOffsets, boundaries));
+  addLiveTurnYear(turnYearMap, currentAgeXOffset(samples, ageOffsets, boundaries));
   return { turnYearMap, turnAgeMap };
 }
 
 /**
  * The chart-X offset of the current age (the latest sample's age), for placing
  * the live current-turn entry; 0 when there are no samples.
- * @param {Snapshot[]} samps
+ * @param {Snapshot[]} samples
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} boundaries
- * @returns {number} The current age's chart-X offset.
+ * @returns {number}
  */
-function currentAgeXOffset(samps, ageOffsets, boundaries) {
-  for (let i = samps.length - 1; i >= 0; i--) {
-    if (samps[i]) return ageOffsets.get(inferSampleAge(samps[i], boundaries)) || 0;
+function currentAgeXOffset(samples, ageOffsets, boundaries) {
+  for (let i = samples.length - 1; i >= 0; i--) {
+    if (samples[i]) return ageOffsets.get(inferSampleAge(samples[i], boundaries)) || 0;
   }
   return 0;
 }
@@ -197,18 +192,18 @@ function currentAgeXOffset(samps, ageOffsets, boundaries) {
 /**
  * X-axis tick / Y-axis tick formatter pair.
  * @typedef {Object} AxisFormatters
- * @property {(v: number) => string} fmtX X-axis tick formatter.
- * @property {(v: number) => string} fmtY Y-axis tick formatter.
+ * @property {(value: number) => string} fmtX
+ * @property {(value: number) => string} fmtY
  */
 
 /**
  * Build the X / Y axis tick formatters bound to the supplied turn maps and
  * metric metadata. Honors the shared {@link getXAxisMode} setting.
- * @param {TurnMaps} maps The chart-X → year/age maps.
+ * @param {TurnMaps} maps
  * @param {*} metricMeta The metric metadata (for Y formatting).
  * @param {Map<string, number>} [ageOffsets] Per-age cumulative offsets.
  * @param {Map<string, number>} [maxLocalByAge] Per-age max local turn spans.
- * @returns {AxisFormatters} The formatter pair.
+ * @returns {AxisFormatters}
  */
 export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) {
   const { turnYearMap, turnAgeMap } = maps;
@@ -222,59 +217,59 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
   const ageTurnFromX = (x) => {
     if (!ageOffsets) return null;
     for (const age of ageOffsets.keys()) {
-      const off = ageOffsets.get(age);
-      if (typeof off !== "number") continue;
+      const offset = ageOffsets.get(age);
+      if (typeof offset !== "number") continue;
       const max = maxLocalByAge && (maxLocalByAge.get(age) || 0);
       if (!max) continue;
-      const start = off + 1;
-      const end = off + max;
+      const start = offset + 1;
+      const end = offset + max;
       if (x >= start && x <= end) {
-        return { age, localTurn: x - off };
+        return { age, localTurn: x - offset };
       }
     }
     return null;
   };
   /**
    * Format a chart-X as an age-relative turn label ("A12", "E1", "T-N").
-   * @param {number} t The chart-X position.
+   * @param {number} chartX
    * @returns {string}
    */
-  const ageTurnLabel = (t) => {
-    const info = ageTurnFromX(t) || nearestByTurn(turnAgeMap, t);
-    return info ? turnLabel(info.localTurn, info.age) : turnLabel(t);
+  const ageTurnLabel = (chartX) => {
+    const info = ageTurnFromX(chartX) || nearestByTurn(turnAgeMap, chartX);
+    return info ? turnLabel(info.localTurn, info.age) : turnLabel(chartX);
   };
   /**
    * Format a chart-X tick per the active axis mode.
-   * @param {number} v The chart-X value.
+   * @param {number} value The chart-X value.
    * @returns {string}
    */
-  const fmtX = (v) => {
-    const t = Math.round(v);
-    const y = localYear(nearestByTurn(turnYearMap, t));
-    const ageLbl = ageTurnLabel(t);
+  const fmtX = (value) => {
+    const turn = Math.round(value);
+    const year = localYear(nearestByTurn(turnYearMap, turn));
+    const ageLabel = ageTurnLabel(turn);
     const mode = getXAxisMode();
-    if (mode === "turn") return ageLbl;
-    if (mode === "year") return y || ageLbl;
-    return y ? ageLbl + " / " + y : ageLbl;
+    if (mode === "turn") return ageLabel;
+    if (mode === "year") return year || ageLabel;
+    return year ? ageLabel + " / " + year : ageLabel;
   };
   /**
    * Format a Y tick using the metric's formatter when available.
-   * @param {number} v
+   * @param {number} value
    * @returns {string}
    */
-  const fmtY = (v) => {
+  const fmtY = (value) => {
     if (metricMeta && typeof metricMeta.format === "function") {
       try {
-        const s = metricMeta.format(v);
-        if (typeof s === "string") return s;
+        const formatted = metricMeta.format(value);
+        if (typeof formatted === "string") return formatted;
       } catch (e) {
-        derr("fmtY: metric.format threw:", e);
+        log.error("fmtY: metric.format threw:", e);
       }
     }
-    if (typeof v === "number" && isFinite(v)) {
-      return Number.isInteger(v) ? String(v) : v.toFixed(1);
+    if (typeof value === "number" && isFinite(value)) {
+      return Number.isInteger(value) ? String(value) : value.toFixed(1);
     }
-    return String(v);
+    return String(value);
   };
   return { fmtX, fmtY };
 }

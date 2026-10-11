@@ -24,7 +24,7 @@ import { escapeHtml } from "/demographics/ui/screen-demographics/charts/shared/c
  * Read the `showWonderMarkers` setting; defaults off on the Crisis Stage
  * chart, on elsewhere.
  * @param {string} metricId
- * @returns {boolean} Whether wonder markers should be shown.
+ * @returns {boolean}
  */
 export function shouldShowWonders(metricId) {
   const wonderDefault = metricId === "crisis_stage" ? false : true;
@@ -43,7 +43,7 @@ export function shouldShowWonders(metricId) {
  * @param {Snapshot[]} samples
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} boundaries
- * @param {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => (number|undefined)} sampleX
+ * @param {(sample: Snapshot, offsets: Map<string, number>, boundaries: AgeBoundary[]) => (number|undefined)} sampleX
  *   Sample → chart-X position resolver (provided by chart-line.js).
  * @returns {Map<string, WonderEvent[]>} pid → detected wonder events.
  */
@@ -54,11 +54,11 @@ export function collectWonderEvents(samples, ageOffsets, boundaries, sampleX) {
   const seenTypesByPid = new Map(); // pid → Set of types seen so far
   /** @type {Set<string>} */
   const sampledPids = new Set(); // pids we've ever observed in any sample
-  for (const s of samples) {
-    if (!s?.players) continue;
-    for (const pid of Object.keys(s.players)) {
-      const ps = s.players[pid];
-      const types = Array.isArray(ps?.wonderTypes) ? ps.wonderTypes : null;
+  for (const sample of samples) {
+    if (!sample?.players) continue;
+    for (const pid of Object.keys(sample.players)) {
+      const samplePlayer = sample.players[pid];
+      const types = Array.isArray(samplePlayer?.wonderTypes) ? samplePlayer.wonderTypes : null;
       // "First sample for this civ" is whether we've ever sampled this civ at
       // all, not whether we've seen a wonderTypes array for them; otherwise a
       // civ's very first mid-run wonder would be treated as a seed and dropped.
@@ -69,7 +69,7 @@ export function collectWonderEvents(samples, ageOffsets, boundaries, sampleX) {
           wonderEventsByPid,
           seenTypesByPid,
           pid,
-          s,
+          sample,
           types,
           isFirstSample,
           ageOffsets,
@@ -88,21 +88,21 @@ export function collectWonderEvents(samples, ageOffsets, boundaries, sampleX) {
  *   wonderEventsByPid: Map<string, WonderEvent[]>,
  *   seenTypesByPid: Map<string, Set<string>>,
  *   pid: string,
- *   s: Snapshot,
+ *   sample: Snapshot,
  *   types: string[],
  *   isFirstSample: boolean,
  *   ageOffsets: Map<string, number>,
  *   boundaries: AgeBoundary[],
- *   sampleX: (s: Snapshot, off: Map<string, number>,
- *     b: AgeBoundary[]) => (number|undefined),
- * }} params Fold inputs.
+ *   sampleX: (sample: Snapshot, offsets: Map<string, number>,
+ *     boundaries: AgeBoundary[]) => (number|undefined),
+ * }} params
  */
 function foldWonderTypes(params) {
   const {
     wonderEventsByPid,
     seenTypesByPid,
     pid,
-    s,
+    sample,
     types,
     isFirstSample,
     ageOffsets,
@@ -117,22 +117,22 @@ function foldWonderTypes(params) {
   if (isFirstSample) {
     // Seed-only: these were pre-existing when the sampler first observed
     // this civ. Don't emit.
-    for (const t of types) seen.add(t);
+    for (const wonderType of types) seen.add(wonderType);
     return;
   }
-  for (const t of types) {
-    if (seen.has(t)) continue;
-    seen.add(t);
+  for (const wonderType of types) {
+    if (seen.has(wonderType)) continue;
+    seen.add(wonderType);
     let events = wonderEventsByPid.get(pid);
     if (!events) {
       events = [];
       wonderEventsByPid.set(pid, events);
     }
-    const wx = sampleX(s, ageOffsets, boundaries);
+    const chartX = sampleX(sample, ageOffsets, boundaries);
     events.push({
-      turn: typeof wx === "number" ? wx : s.turn,
-      year: s.gameYear || "",
-      wonderType: t
+      turn: typeof chartX === "number" ? chartX : sample.turn,
+      year: sample.gameYear || "",
+      wonderType
     });
   }
 }
@@ -146,7 +146,7 @@ function foldWonderTypes(params) {
  * @param {Snapshot[]} samples
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} boundaries
- * @param {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => (number|undefined)} sampleX
+ * @param {(sample: Snapshot, offsets: Map<string, number>, boundaries: AgeBoundary[]) => (number|undefined)} sampleX
  *   Sample → chart-X position resolver (provided by chart-line.js).
  * @returns {Map<string, WonderEvent[]>} pid → detected destruction events.
  */
@@ -155,9 +155,9 @@ export function collectWonderDestructions(samples, ageOffsets, boundaries, sampl
   const lastSeen = new Map(); // wonderType → last sample it stood (pid + X + year)
   /** @type {Set<string>} */
   let presentInFinal = new Set(); // ends as the final sample's global type set
-  for (const s of samples) {
-    if (!s?.players) continue;
-    presentInFinal = foldSamplePresence(s, ageOffsets, boundaries, sampleX, lastSeen);
+  for (const sample of samples) {
+    if (!sample?.players) continue;
+    presentInFinal = foldSamplePresence(sample, ageOffsets, boundaries, sampleX, lastSeen);
   }
   return emitWonderDestructions(lastSeen, presentInFinal);
 }
@@ -165,27 +165,27 @@ export function collectWonderDestructions(samples, ageOffsets, boundaries, sampl
 /**
  * Fold one sample's wonder presence into `lastSeen` (mutated) and return the set
  * of wonder types present anywhere in this sample.
- * @param {Snapshot} s
+ * @param {Snapshot} sample
  * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
  * @param {AgeBoundary[]} boundaries
- * @param {(s: Snapshot, off: Map<string, number>, b: AgeBoundary[]) => (number|undefined)} sampleX
+ * @param {(sample: Snapshot, offsets: Map<string, number>, boundaries: AgeBoundary[]) => (number|undefined)} sampleX
  *   Sample → chart-X position resolver.
  * @param {Map<string, { pid: string, turn: number|*, year: string }>} lastSeen
  *   wonderType → last-seen record (mutated).
  * @returns {Set<string>} The wonder types present in this sample.
  */
-function foldSamplePresence(s, ageOffsets, boundaries, sampleX, lastSeen) {
+function foldSamplePresence(sample, ageOffsets, boundaries, sampleX, lastSeen) {
   const present = new Set();
-  const players = s.players;
+  const players = sample.players;
   if (!players) return present;
-  const wx = sampleX(s, ageOffsets, boundaries);
-  const turn = typeof wx === "number" ? wx : s.turn;
+  const chartX = sampleX(sample, ageOffsets, boundaries);
+  const turn = typeof chartX === "number" ? chartX : sample.turn;
   for (const pid of Object.keys(players)) {
     const types = players[pid]?.wonderTypes;
     if (!Array.isArray(types)) continue;
-    for (const t of types) {
-      present.add(t);
-      lastSeen.set(t, { pid, turn, year: s.gameYear || "" });
+    for (const wonderType of types) {
+      present.add(wonderType);
+      lastSeen.set(wonderType, { pid, turn, year: sample.gameYear || "" });
     }
   }
   return present;
@@ -202,14 +202,14 @@ function foldSamplePresence(s, ageOffsets, boundaries, sampleX, lastSeen) {
 function emitWonderDestructions(lastSeen, presentInFinal) {
   /** @type {Map<string, WonderEvent[]>} */
   const out = new Map();
-  for (const [t, info] of lastSeen) {
-    if (presentInFinal.has(t)) continue; // still standing in the latest sample
+  for (const [wonderType, info] of lastSeen) {
+    if (presentInFinal.has(wonderType)) continue; // still standing in the latest sample
     let events = out.get(info.pid);
     if (!events) {
       events = [];
       out.set(info.pid, events);
     }
-    events.push({ turn: info.turn, year: info.year, wonderType: t, kind: "destroyed" });
+    events.push({ turn: info.turn, year: info.year, wonderType, kind: "destroyed" });
   }
   return out;
 }
@@ -229,16 +229,16 @@ export function mergeWonderEvents(wonderEventsByPid, destructionsByPid) {
 }
 
 /**
- * Resolve the engine icon URL for a wonder event, mutating `ev.iconUrl`.
- * @param {WonderEvent} ev Mutated.
+ * Resolve the engine icon URL for a wonder event, mutating `wonderEvent.iconUrl`.
+ * @param {WonderEvent} wonderEvent Mutated.
  */
-function resolveWonderIcon(ev) {
+function resolveWonderIcon(wonderEvent) {
   try {
     if (typeof UI !== "undefined" && typeof UI.getIconURL === "function") {
-      ev.iconUrl = UI.getIconURL(ev.wonderType, "WONDER");
+      wonderEvent.iconUrl = UI.getIconURL(wonderEvent.wonderType, "WONDER");
     }
   } catch (_) {
-    // UI.getIconURL may be absent or throw; leave ev.iconUrl unset (event dropped upstream).
+    // UI.getIconURL may be absent or throw; leave wonderEvent.iconUrl unset (event dropped upstream).
   }
 }
 
@@ -291,37 +291,37 @@ function bestWonderDescription(info) {
 
 /**
  * Resolve display name + flavor description for a wonder event, mutating it.
- * @param {WonderEvent} ev Mutated.
+ * @param {WonderEvent} wonderEvent Mutated.
  */
-function resolveWonderMeta(ev) {
+function resolveWonderMeta(wonderEvent) {
   try {
     const info =
       typeof GameInfo !== "undefined" &&
       GameInfo.Constructibles &&
       typeof GameInfo.Constructibles.lookup === "function"
-        ? GameInfo.Constructibles.lookup(ev.wonderType)
+        ? GameInfo.Constructibles.lookup(wonderEvent.wonderType)
         : null;
-    ev.wonderName = resolveWonderName(ev.wonderType, info);
+    wonderEvent.wonderName = resolveWonderName(wonderEvent.wonderType, info);
     // Flavor / mechanical description. Civ7's Constructibles table carries
     // Description (short mechanical line) and Tooltip (richer text); prefer
     // the longer of the two when both compose successfully.
     const best = bestWonderDescription(info);
     if (best.text) {
-      ev.wonderDescription = best.text;
-      ev.wonderDescriptionHtml = stylizeLocaleTag(best.tag);
+      wonderEvent.wonderDescription = best.text;
+      wonderEvent.wonderDescriptionHtml = stylizeLocaleTag(best.tag);
     }
   } catch (_) {
     // GameInfo.Constructibles.lookup may be absent or throw; fall back to the raw type as name.
-    ev.wonderName = ev.wonderType;
+    wonderEvent.wonderName = wonderEvent.wonderType;
   }
 }
 
 /**
  * Resolve a wonder's display name from its Constructibles row, falling back to
  * a humanized type string.
- * @param {string} wonderType The engine constructible type.
+ * @param {string} wonderType
  * @param {*} info The Constructibles lookup row (or null).
- * @returns {string} The display name.
+ * @returns {string}
  */
 function resolveWonderName(wonderType, info) {
   if (info && info.Name && typeof Locale?.compose === "function") {
@@ -343,13 +343,13 @@ export function resolveWonderEvents(wonderEventsByPid) {
   for (const [pid, events] of wonderEventsByPid) {
     /** @type {WonderEvent[]} */
     const kept = [];
-    for (const ev of events) {
-      if (!ev.wonderType) continue;
-      resolveWonderIcon(ev);
+    for (const wonderEvent of events) {
+      if (!wonderEvent.wonderType) continue;
+      resolveWonderIcon(wonderEvent);
       // Only drop events where the engine returned no icon URL at all.
-      if (!ev.iconUrl) continue;
-      resolveWonderMeta(ev);
-      kept.push(ev);
+      if (!wonderEvent.iconUrl) continue;
+      resolveWonderMeta(wonderEvent);
+      kept.push(wonderEvent);
     }
     if (kept.length === 0) wonderEventsByPid.delete(pid);
     else wonderEventsByPid.set(pid, kept);
@@ -387,20 +387,21 @@ function ensureWonderTip(state, wrap) {
  * @param {{
  *   state: WonderTipState,
  *   wrap: HTMLElement,
- *   ev: WonderEvent,
+ *   wonderEvent: WonderEvent,
  *   civLabel: string,
  *   iconLeft: number,
  *   iconTop: number,
  *   iconSize: number,
- * }} params Tooltip inputs.
+ * }} params
  */
 function showWonderTip(params) {
-  const { state, wrap, ev, civLabel, iconLeft, iconTop, iconSize } = params;
+  const { state, wrap, wonderEvent, civLabel, iconLeft, iconTop, iconSize } = params;
   const tip = ensureWonderTip(state, wrap);
-  const yearStr = ev.year ? " · " + localYear(ev.year) : "";
+  const yearStr = wonderEvent.year ? " · " + localYear(wonderEvent.year) : "";
   // Game-authored text: `wonderDescriptionHtml` is already the engine's own markup (icons, tips),
   // so it goes in unescaped; the escaped plain string is the fallback when stylize gave nothing.
-  const descBody = ev.wonderDescriptionHtml || (ev.wonderDescription ? escapeHtml(ev.wonderDescription) : "");
+  const plainDesc = wonderEvent.wonderDescription;
+  const descBody = wonderEvent.wonderDescriptionHtml || (plainDesc ? escapeHtml(plainDesc) : "");
   const descHtml = descBody
     ? '<div style="margin-top:0.4rem;color:rgb(160,146,120);">' + descBody + "</div>"
     : "";
@@ -408,20 +409,20 @@ function showWonderTip(params) {
   // raze turn/year; the civ line then reads as who held it (its builder, unless
   // it was captured first). Built events keep their original "Built by" line.
   const destroyedHtml =
-    ev.kind === "destroyed"
+    wonderEvent.kind === "destroyed"
       ? '<div style="color:rgb(214,138,92);font-weight:700;font-size:0.8rem;' +
         'letter-spacing:0.02rem;margin-bottom:0.15rem;">' +
         escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_DESTROYED")) +
         ' · ' +
-        escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_TURN", ev.turn)) +
+        escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_TURN", wonderEvent.turn)) +
         escapeHtml(yearStr) +
         "</div>"
       : "";
   const turnHtml =
-    ev.kind === "destroyed"
+    wonderEvent.kind === "destroyed"
       ? ""
       : '<div style="color:rgb(150,134,110);font-size:0.74rem;">' +
-        escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_TURN", ev.turn)) +
+        escapeHtml(t("LOC_DEMOGRAPHICS_WONDER_TURN", wonderEvent.turn)) +
         escapeHtml(yearStr) +
         "</div>";
   tip.innerHTML =
@@ -431,7 +432,7 @@ function showWonderTip(params) {
     "letter-spacing:0.02rem;margin-bottom:0.3rem;" +
     "border-bottom:1px solid rgba(204,188,163,0.2);" +
     'padding-bottom:0.3rem;">' +
-    escapeHtml(ev.wonderName || t("LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME")) +
+    escapeHtml(wonderEvent.wonderName || t("LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME")) +
     "</div>" +
     destroyedHtml +
     '<div><span style="color:#e5d2ac;">' +
@@ -589,105 +590,105 @@ const WONDER_ICON_SIZE = 28;
 /**
  * Find the data point on a dataset nearest to a wonder event's turn, within a
  * small tolerance.
- * @param {Record<string, *>} ds
+ * @param {Record<string, *>} dataset
  * @param {number|*} turn The event's chart-X turn.
  * @returns {{ x: number, y: number }|null}
  */
-function findEventDataPoint(ds, turn) {
-  let dp = ds.data.find((/** @type {*} */ p) => p && p.x === turn);
-  if (!dp) {
+function findEventDataPoint(dataset, turn) {
+  let dataPoint = dataset.data.find((/** @type {*} */ point) => point && point.x === turn);
+  if (!dataPoint) {
     let bestDist = 3;
-    for (const p of ds.data) {
-      if (!p) continue;
-      const d = Math.abs(p.x - turn);
-      if (d < bestDist) {
-        bestDist = d;
-        dp = p;
+    for (const point of dataset.data) {
+      if (!point) continue;
+      const dist = Math.abs(point.x - turn);
+      if (dist < bestDist) {
+        bestDist = dist;
+        dataPoint = point;
       }
     }
   }
-  return dp || null;
+  return dataPoint || null;
 }
 
 /**
  * Create (and wire hover) a wonder marker element for an event.
  * @param {WonderTipState} tipState
  * @param {HTMLElement} wrap
- * @param {WonderEvent} ev
+ * @param {WonderEvent} wonderEvent
  * @param {string} civLabel
  * @returns {HTMLElement}
  */
-function createWonderMarker(tipState, wrap, ev, civLabel) {
-  const mk = document.createElement("div");
-  mk.className = "demographics-wonder-marker demographics-line-wonder-marker";
+function createWonderMarker(tipState, wrap, wonderEvent, civLabel) {
+  const marker = document.createElement("div");
+  marker.className = "demographics-wonder-marker demographics-line-wonder-marker";
   // Only real per-wonder icons reach this code path; events without a
   // specific icon are pre-filtered upstream, so no generic fallback is
   // stacked. Per-event icon URL stays inline (dynamic).
-  if (ev.kind === "destroyed") {
+  if (wonderEvent.kind === "destroyed") {
     // A destroyed wonder reads as "lost": a faded copy of the wonder icon with
     // a burning raze badge. The wonder image goes on a child div so its
     // fade/grayscale doesn't bleed onto the badge; the badge image is a constant in CSS.
-    mk.classList.add("demographics-line-wonder-marker--destroyed");
+    marker.classList.add("demographics-line-wonder-marker--destroyed");
     const icon = document.createElement("div");
     icon.className = "demographics-line-wonder-destroyed-icon";
-    icon.style.backgroundImage = "url('" + ev.iconUrl + "')";
-    mk.appendChild(icon);
+    icon.style.backgroundImage = "url('" + wonderEvent.iconUrl + "')";
+    marker.appendChild(icon);
     const badge = document.createElement("div");
     badge.className = "demographics-line-wonder-raze-badge";
-    mk.appendChild(badge);
+    marker.appendChild(badge);
   } else {
-    mk.style.backgroundImage = "url('" + ev.iconUrl + "')";
+    marker.style.backgroundImage = "url('" + wonderEvent.iconUrl + "')";
   }
   // Custom hover tooltip; native `title` doesn't render in Coherent. Anchor
   // the tip to the icon's position read at hover time (the marker may have
   // been repositioned since this listener was attached).
-  mk.addEventListener("mouseenter", () => {
+  marker.addEventListener("mouseenter", () => {
     showWonderTip({
       state: tipState,
       wrap,
-      ev,
+      wonderEvent,
       civLabel,
-      iconLeft: mk.offsetLeft,
-      iconTop: mk.offsetTop,
+      iconLeft: marker.offsetLeft,
+      iconTop: marker.offsetTop,
       iconSize: WONDER_ICON_SIZE
     });
   });
-  mk.addEventListener("mouseleave", () => hideWonderTip(tipState));
-  return mk;
+  marker.addEventListener("mouseleave", () => hideWonderTip(tipState));
+  return marker;
 }
 
 /**
  * Render/update markers for one dataset's wonder events, tracking rendered
  * keys for later garbage collection.
  * @param {Record<string, *>} ctx Shared marker pass context.
- * @param {Record<string, *>} ds
+ * @param {Record<string, *>} dataset
  * @param {WonderEvent[]} events The dataset civ's events.
  * @param {number} pid
  */
-function renderDatasetWonderMarkers(ctx, ds, events, pid) {
+function renderDatasetWonderMarkers(ctx, dataset, events, pid) {
   const { wrap, xScale, yScale, offX, offY, wonderMarkerEls, renderedKeys, tipState } = ctx;
-  for (const ev of events) {
-    if (ev.turn < xScale.min || ev.turn > xScale.max) continue;
-    const dp = findEventDataPoint(ds, ev.turn);
-    if (!dp) continue;
-    const x = xScale.getPixelForValue(ev.turn);
-    const y = yScale.getPixelForValue(dp.y);
+  for (const wonderEvent of events) {
+    if (wonderEvent.turn < xScale.min || wonderEvent.turn > xScale.max) continue;
+    const dataPoint = findEventDataPoint(dataset, wonderEvent.turn);
+    if (!dataPoint) continue;
+    const x = xScale.getPixelForValue(wonderEvent.turn);
+    const y = yScale.getPixelForValue(dataPoint.y);
     const leftPx = offX + x - WONDER_ICON_SIZE / 2;
     const topPx = offY + y - WONDER_ICON_SIZE / 2;
-    const key = pid + ":" + (ev.kind === "destroyed" ? "d" : "b") + ":" + ev.turn;
+    const key = pid + ":" + (wonderEvent.kind === "destroyed" ? "d" : "b") + ":" + wonderEvent.turn;
     renderedKeys.add(key);
-    const mk = getOrCreateWonderMarker({
+    const marker = getOrCreateWonderMarker({
       wonderMarkerEls,
       key,
       tipState,
       wrap,
-      ev,
-      dsLabel: ds.label
+      wonderEvent,
+      datasetLabel: dataset.label
     });
     // Update position only: rewriting the entire style string would
     // invalidate the browser's hover state and cause a blink.
-    if (mk.style.left !== leftPx + "px") mk.style.left = leftPx + "px";
-    if (mk.style.top !== topPx + "px") mk.style.top = topPx + "px";
+    if (marker.style.left !== leftPx + "px") marker.style.left = leftPx + "px";
+    if (marker.style.top !== topPx + "px") marker.style.top = topPx + "px";
   }
 }
 
@@ -698,27 +699,27 @@ function renderDatasetWonderMarkers(ctx, ds, events, pid) {
  *   key: string,
  *   tipState: WonderTipState,
  *   wrap: HTMLElement,
- *   ev: WonderEvent,
- *   dsLabel: string|*,
- * }} params Marker inputs.
- * @returns {HTMLElement} The (existing or created) marker element.
+ *   wonderEvent: WonderEvent,
+ *   datasetLabel: string|*,
+ * }} params
+ * @returns {HTMLElement}
  */
 function getOrCreateWonderMarker(params) {
-  const { wonderMarkerEls, key, tipState, wrap, ev, dsLabel } = params;
+  const { wonderMarkerEls, key, tipState, wrap, wonderEvent, datasetLabel } = params;
   /** @type {HTMLElement|null|undefined} */
-  let mk = wonderMarkerEls.get(key);
-  if (mk && !mk.isConnected) {
+  let marker = wonderMarkerEls.get(key);
+  if (marker && !marker.isConnected) {
     // DOM was wiped by something external (panel reattach); drop our
     // reference and recreate below.
     wonderMarkerEls.delete(key);
-    mk = null;
+    marker = null;
   }
-  if (!mk) {
-    mk = createWonderMarker(tipState, wrap, ev, dsLabel || t("LOC_DEMOGRAPHICS_CIV_UNKNOWN"));
-    wrap.appendChild(mk);
-    wonderMarkerEls.set(key, mk);
+  if (!marker) {
+    marker = createWonderMarker(tipState, wrap, wonderEvent, datasetLabel || t("LOC_DEMOGRAPHICS_CIV_UNKNOWN"));
+    wrap.appendChild(marker);
+    wonderMarkerEls.set(key, marker);
   }
-  return mk;
+  return marker;
 }
 
 /**
@@ -747,7 +748,7 @@ function gcWonderMarkers(wonderMarkerEls, renderedKeys) {
  * @param {Map<string, WonderEvent[]>} wonderEventsByPid
  * @param {Map<string, HTMLElement>} wonderMarkerEls
  * @param {WonderTipState} tipState
- * @returns {Record<string, *>} The Chart.js plugin object.
+ * @returns {Record<string, *>} The Chart.js plugin.
  */
 export function makeWonderMarkersPlugin(
   allSeries,
@@ -758,15 +759,15 @@ export function makeWonderMarkersPlugin(
   return {
     id: "demographicsWonderMarkers",
     /**
-     * @param {*} c The Chart instance.
+     * @param {*} chart
      */
-    afterDatasetsDraw(c) {
-      const wrap = c.canvas.parentNode;
+    afterDatasetsDraw(chart) {
+      const wrap = chart.canvas.parentNode;
       if (!wrap) return;
-      const xScale = c.scales.x;
-      const yScale = c.scales.y;
+      const xScale = chart.scales.x;
+      const yScale = chart.scales.y;
       if (!xScale || !yScale) return;
-      const datasets = c.data.datasets || [];
+      const datasets = chart.data.datasets || [];
       // Track which keys we render this pass; anything in the map but not in
       // this set at the end gets removed.
       const renderedKeys = new Set();
@@ -774,14 +775,14 @@ export function makeWonderMarkersPlugin(
         wrap,
         xScale,
         yScale,
-        offX: c.canvas.offsetLeft,
-        offY: c.canvas.offsetTop,
+        offX: chart.canvas.offsetLeft,
+        offY: chart.canvas.offsetTop,
         wonderMarkerEls,
         renderedKeys,
         tipState
       };
-      for (let di = 0; di < datasets.length; di++) {
-        renderOneDatasetWonders(passCtx, datasets[di], allSeries, wonderEventsByPid);
+      for (let i = 0; i < datasets.length; i++) {
+        renderOneDatasetWonders(passCtx, datasets[i], allSeries, wonderEventsByPid);
       }
       // Garbage-collect any markers that no longer correspond to a visible
       // event (e.g. dataset hidden by user click, or scale panned to exclude
@@ -794,17 +795,17 @@ export function makeWonderMarkersPlugin(
 /**
  * Render wonder markers for a single dataset (resolving its pid + events).
  * @param {Record<string, *>} passCtx Shared marker pass context.
- * @param {Record<string, *>} ds
+ * @param {Record<string, *>} dataset
  * @param {Array<{ leaderType: *, pid?: number }>} allSeries The series list (for pid lookup).
  * @param {Map<string, WonderEvent[]>} wonderEventsByPid
  */
-function renderOneDatasetWonders(passCtx, ds, allSeries, wonderEventsByPid) {
-  if (!ds || ds.hidden) return;
-  const series = allSeries.find((s) => s.leaderType === ds.leaderType);
+function renderOneDatasetWonders(passCtx, dataset, allSeries, wonderEventsByPid) {
+  if (!dataset || dataset.hidden) return;
+  const series = allSeries.find((entry) => entry.leaderType === dataset.leaderType);
   const pid = series?.pid;
   if (typeof pid !== "number") return;
   const events =
     wonderEventsByPid.get(String(pid)) || wonderEventsByPid.get(/** @type {*} */ (pid));
   if (!events || events.length === 0) return;
-  renderDatasetWonderMarkers(passCtx, ds, events, pid);
+  renderDatasetWonderMarkers(passCtx, dataset, events, pid);
 }

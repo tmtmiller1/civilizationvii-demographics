@@ -96,7 +96,7 @@ function testPreferReadableColorMissingInputs() {
 }
 
 function testDarkGreyAboveOldBandIsLifted() {
-  // Alexander regression: a dark gray bright enough to clear the old luminance
+  // Alexander-style dark gray: a gray bright enough to clear the old luminance
   // band (~#4a4a4a, luminance 74) must still be lifted to a clearly visible tone.
   const out = safeTextColor("#4a4a4a");
   assert.notEqual(out.toLowerCase(), "#4a4a4a", "dark gray must not pass through unchanged");

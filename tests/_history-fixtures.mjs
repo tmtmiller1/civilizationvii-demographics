@@ -2,8 +2,8 @@
 
 /**
  * A player state with sensible defaults.
- * @param {Partial<HnrPlayerState>} over Overrides.
- * @returns {HnrPlayerState} State.
+ * @param {Partial<HistoryPlayerState>} over
+ * @returns {HistoryPlayerState}
  */
 export function pstate(over = {}) {
   return {
@@ -23,9 +23,9 @@ export function pstate(over = {}) {
 /**
  * A world state.
  * @param {number} turn
- * @param {Record<string, HnrPlayerState>} players
- * @param {Partial<HnrWorldState>} over Overrides.
- * @returns {HnrWorldState} State.
+ * @param {Record<string, HistoryPlayerState>} players
+ * @param {Partial<HistoryWorldState>} over
+ * @returns {HistoryWorldState}
  */
 export function world(turn, players, over = {}) {
   return { turn, age: "AGE_ANTIQUITY", date: "T" + turn, players, victories: [], ...over };
@@ -44,8 +44,8 @@ export const NAMER = {
 /**
  * A localStorage that reproduces the Civilization VII 1.5.0 GameFace bug: getItem returns the value
  * of the first key in sort order no matter which key is asked for. Writes land correctly.
- * @param {Record<string, string>} [initial] Initial contents.
- * @returns {Storage & {dump: () => Record<string, string>}} Storage.
+ * @param {Record<string, string>} [initial]
+ * @returns {Storage & {dump: () => Record<string, string>}}
  */
 export function buggyStorage(initial = {}) {
   const data = new Map(Object.entries(initial));
@@ -68,5 +68,32 @@ export function installEchoLocale() {
   globalThis.Locale = {
     compose: (key, ...args) => (args.length ? key + "|" + args.join("|") : key),
     toNumber: (n) => String(n)
+  };
+}
+
+/**
+ * A minimal valid Hall of Fame archive record.
+ * @param {string} id
+ * @param {number} [turns]
+ */
+export function archiveRecord(id, turns = 40) {
+  return {
+    v: 1,
+    id,
+    created: 1,
+    updated: turns,
+    local: 0,
+    leader: "L",
+    leaderName: "",
+    color: "",
+    civs: [],
+    setup: {},
+    turns,
+    ages: ["AGE_ANTIQUITY"],
+    outcome: { status: "in_progress", victory: "", winner: -1, turn: 0 },
+    stats: { triumphs: 0 },
+    rivals: [],
+    highlights: [],
+    spark: { tri: [], set: [] }
   };
 }

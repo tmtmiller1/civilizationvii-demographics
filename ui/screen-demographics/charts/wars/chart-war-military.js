@@ -35,7 +35,7 @@ export function milSeriesFor(view, mode, isLoss, belligerents) {
 
 /**
  * Whether a roster entry is a city-state participant not yet seen.
- * @param {*} entry One roster entry.
+ * @param {*} entry
  * @param {Set<number>} seen
  * @returns {boolean}
  */
@@ -46,9 +46,10 @@ function includeCsParticipant(entry, seen) {
 }
 
 /**
+ * Record a city-state participant as seen and add its series descriptor (read from `minors`).
  * @param {{ pid: number, name: string, color: string, fromMinors: boolean }[]} out
  * @param {Set<number>} seen
- * @param {*} entry One roster entry.
+ * @param {*} entry
  */
 function pushCsParticipant(out, seen, entry) {
   seen.add(entry.pid);
@@ -83,9 +84,9 @@ function csParticipants(war) {
   const seen = new Set();
   /** @type {{ pid: number, name: string, color: string, fromMinors: boolean }[]} */
   const out = [];
-  for (const e of rosters) {
-    if (!includeCsParticipant(e, seen)) continue;
-    pushCsParticipant(out, seen, e);
+  for (const entry of rosters) {
+    if (!includeCsParticipant(entry, seen)) continue;
+    pushCsParticipant(out, seen, entry);
   }
   return out;
 }
@@ -99,8 +100,8 @@ function csParticipants(war) {
  */
 function cumulativeSeries(view, isLoss) {
   return sideGroups(view.war)
-    .map((g) => sumGroupSeries(g, view.win, isLoss))
-    .filter((s) => s.points.length);
+    .map((group) => sumGroupSeries(group, view.win, isLoss))
+    .filter((series) => series.points.length);
 }
 
 /**
@@ -108,11 +109,11 @@ function cumulativeSeries(view, isLoss) {
  * { pid, fromMinors }), dropping empty sides.
  * @param {*} war
  * @returns {{ label: string, color: string,
- *   members: { pid: number, fromMinors: boolean }[] }[]} The groups.
+ *   members: { pid: number, fromMinors: boolean }[] }[]}
  */
 function sideGroups(war) {
   return [buildSideGroup(war.sideACivs), buildSideGroup(war.sideBCivs)].filter(
-    (g) => g.members.length
+    (group) => group.members.length
   );
 }
 
@@ -121,18 +122,18 @@ function sideGroups(war) {
  * flagged fromMinors), labeled + colored by the side's lead major civ.
  * @param {*[]} roster A war side's roster.
  * @returns {{ label: string, color: string,
- *   members: { pid: number, fromMinors: boolean }[] }} The group.
+ *   members: { pid: number, fromMinors: boolean }[] }}
  */
 function buildSideGroup(roster) {
   const members = [];
   let color = null;
   let lead = null;
-  for (const e of roster || []) {
-    if (!e || typeof e.pid !== "number") continue;
-    members.push({ pid: e.pid, fromMinors: !!e.isCS });
-    if (!e.isCS && !color) {
-      color = e.color;
-      lead = e.civ;
+  for (const entry of roster || []) {
+    if (!entry || typeof entry.pid !== "number") continue;
+    members.push({ pid: entry.pid, fromMinors: !!entry.isCS });
+    if (!entry.isCS && !color) {
+      color = entry.color;
+      lead = entry.civ;
     }
   }
   const label = lead
@@ -145,63 +146,63 @@ function buildSideGroup(roster) {
  * Sum a side group's members into one series: per turn, the sum of standing
  * power (level) or of each member's loss-since-window-start (loss, negated).
  * @param {{ label: string, color: string,
- *   members: { pid: number, fromMinors: boolean }[] }} g
+ *   members: { pid: number, fromMinors: boolean }[] }} group
  * @param {Snapshot[]} win
  * @param {boolean} isLoss
  * @returns {{ name: string, color: string, points: { x: number, y: number }[] }}
  */
-function sumGroupSeries(g, win, isLoss) {
-  const base = isLoss ? groupLossBaselines(g, win) : new Map();
+function sumGroupSeries(group, win, isLoss) {
+  const baselines = isLoss ? groupLossBaselines(group, win) : new Map();
   const points = [];
-  for (const s of win) {
-    if (typeof s.turn !== "number") continue;
+  for (const sample of win) {
+    if (typeof sample.turn !== "number") continue;
     let sum = 0;
     let any = false;
-    for (const mbr of g.members) {
-      const c = memberContribution(s, mbr, isLoss, base);
-      if (c === null) continue;
-      sum += c;
+    for (const member of group.members) {
+      const contribution = memberContribution(sample, member, isLoss, baselines);
+      if (contribution === null) continue;
+      sum += contribution;
       any = true;
     }
-    if (any) points.push({ x: s.turn, y: isLoss ? -sum : sum });
+    if (any) points.push({ x: sample.turn, y: isLoss ? -sum : sum });
   }
-  return { name: g.label, color: g.color, points };
+  return { name: group.label, color: group.color, points };
 }
 
 /**
  * One member's contribution to a side's cumulative series at a sample: its
  * standing power (level), or its loss accrued since the window baseline.
- * @param {*} s
- * @param {{ pid: number, fromMinors: boolean }} mbr
+ * @param {*} sample
+ * @param {{ pid: number, fromMinors: boolean }} member
  * @param {boolean} isLoss Whether to compute loss (vs level).
- * @param {Map<number, number>} base Per-member loss baselines (loss mode only).
+ * @param {Map<number, number>} baselines Per-member loss baselines (loss mode only).
  * @returns {number | null} The contribution, or null when no data.
  */
-function memberContribution(s, mbr, isLoss, base) {
-  if (!isLoss) return metricAt(s, mbr.pid, "milpower", mbr.fromMinors);
-  const v = metricAt(s, mbr.pid, "milLostCum", mbr.fromMinors);
-  const b0 = base.get(mbr.pid);
-  if (v === null || b0 === undefined) return null;
-  return v - b0;
+function memberContribution(sample, member, isLoss, baselines) {
+  if (!isLoss) return metricAt(sample, member.pid, "milpower", member.fromMinors);
+  const value = metricAt(sample, member.pid, "milLostCum", member.fromMinors);
+  const baseline = baselines.get(member.pid);
+  if (value === null || baseline === undefined) return null;
+  return value - baseline;
 }
 
 /**
  * Each member's first in-window cumulative-loss value (the baseline subtracted so
  * losses count only what accrued during the displayed window).
- * @param {{ members: { pid: number, fromMinors: boolean }[] }} g
+ * @param {{ members: { pid: number, fromMinors: boolean }[] }} group
  * @param {Snapshot[]} win
  * @returns {Map<number, number>} pid -> baseline milLostCum.
  */
-function groupLossBaselines(g, win) {
-  const base = new Map();
-  for (const mbr of g.members) {
-    for (const s of win) {
-      const v = metricAt(s, mbr.pid, "milLostCum", mbr.fromMinors);
-      if (v !== null) {
-        base.set(mbr.pid, v);
+function groupLossBaselines(group, win) {
+  const baselines = new Map();
+  for (const member of group.members) {
+    for (const sample of win) {
+      const value = metricAt(sample, member.pid, "milLostCum", member.fromMinors);
+      if (value !== null) {
+        baselines.set(member.pid, value);
         break;
       }
     }
   }
-  return base;
+  return baselines;
 }

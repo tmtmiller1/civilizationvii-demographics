@@ -11,7 +11,7 @@
 // "Great Britain"), which is what this test exists to catch.
 //
 // Values below are the game's own en_us LOC_CIVILIZATION_*_NAME / _ADJECTIVE
-// pairs, audited against Civilization VII 1.5.0 including the Babylon / England /
+// pairs, checked against Civilization VII 1.5.0 including the Babylon / England /
 // Gaul DLC.
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -46,7 +46,7 @@ const SAMPLES = [
 
 /**
  * The adjective the namer produces for a civ given only its display name.
- * @param {string} displayName The game's LOC_CIVILIZATION_*_NAME text.
+ * @param {string} displayName
  * @returns {string|null} The adjective, or null when the name could not be parsed.
  */
 function fallbackAdjective(displayName) {

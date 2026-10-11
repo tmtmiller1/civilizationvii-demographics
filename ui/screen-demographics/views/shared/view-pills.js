@@ -16,8 +16,8 @@ function buttonStyle(on, variant) {
   // Type sizes come from the `--dg-fs-*` ladder (published from the player's Font Size setting by
   // screen-demographics.js) rather than literal rem, so these pills track that setting and the
   // density stylesheet's compaction the same way the CSS-class pills do. `--dg-fs-78` / `--dg-fs-100`
-  // are the ladder steps matching the sizes these pills already used, so the default look is
-  // unchanged. Single-arg var() only; Coherent's parser rejects the two-arg fallback form.
+  // are the ladder steps for these pills' default sizes. Single-arg var() only; Coherent's parser
+  // rejects the two-arg fallback form.
   if (variant === "filter") {
     return "cursor:pointer;padding:0.18rem 0.55rem;border-radius:0.2rem;font-size:var(--dg-fs-78);"
       + "text-transform:uppercase;letter-spacing:0.06em;border:1px solid rgba(201,162,76,0.4);"
@@ -34,7 +34,7 @@ function buttonStyle(on, variant) {
  * Build a pill-row selector.
  * @param {{key:*, label:string, marker?:string}[]} items The choices. An item's optional
  *   `marker` appends a small badge (e.g. "+") after the label to flag a drill-down.
- * @param {*} activeKey The currently-selected key.
+ * @param {*} activeKey
  * @param {(key:*)=>void} onPick Called with the chosen key when a different pill is clicked.
  * @param {string} [variant] "filter" → flat boxed filter buttons (vs the default rounded pills).
  * @returns {HTMLElement}
@@ -47,18 +47,20 @@ export function pillRow(items, activeKey, onPick, variant) {
   // this same style.cssText path. See the row-gap note at the top of
   // screen-demographics-base.css.
   row.style.cssText = "display:flex;gap:0.4rem 0.4rem;justify-content:center;margin:0.3rem 0;flex-wrap:wrap;";
-  for (const it of items) {
-    const b = document.createElement("div");
-    b.textContent = it.label;
-    b.style.cssText = buttonStyle(it.key === activeKey, variant);
-    if (it.marker) {
+  for (const item of items) {
+    const button = document.createElement("div");
+    button.textContent = item.label;
+    button.style.cssText = buttonStyle(item.key === activeKey, variant);
+    if (item.marker) {
       const badge = document.createElement("span");
-      badge.textContent = it.marker;
+      badge.textContent = item.marker;
       badge.style.cssText = "margin-left:0.3rem;font-weight:bold;";
-      b.appendChild(badge);
+      button.appendChild(badge);
     }
-    b.addEventListener("click", () => { if (it.key !== activeKey) onPick(it.key); });
-    row.appendChild(b);
+    button.addEventListener("click", () => {
+      if (item.key !== activeKey) onPick(item.key);
+    });
+    row.appendChild(button);
   }
   return row;
 }

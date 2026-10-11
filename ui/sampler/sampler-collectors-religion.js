@@ -57,7 +57,7 @@ function aggregateReligion(known) {
 
 /**
  * Aggregate per-religion followers (settlements + population) across all cities.
- * @param {(label:string, fn:()=>any)=>any} safeCall Defensive call wrapper.
+ * @param {(label:string, fn:()=>any)=>any} safeCall
  * @returns {Record<string, {s:number, p:number}>|null} rel map, or null.
  */
 export function collectReligionSnapshot(safeCall) {
@@ -74,7 +74,7 @@ export function collectReligionSnapshot(safeCall) {
 /**
  * Compute + attach the per-turn religion map onto a snapshot (no-op when empty).
  * @param {*} snapshot The sampler snapshot (mutated).
- * @param {(label:string, fn:()=>any)=>any} safeCall Defensive call wrapper.
+ * @param {(label:string, fn:()=>any)=>any} safeCall
  */
 export function attachReligionSnapshot(snapshot, safeCall) {
   const rel = collectReligionSnapshot(safeCall);

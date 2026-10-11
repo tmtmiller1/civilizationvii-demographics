@@ -8,14 +8,14 @@ import { serializePayload } from "/demographics/ui/storage/storage-retention.js"
  * Read raw payload text from a store.
  * @param {{ read: (key: string) => string | null }} store Active store.
  * @param {string} payloadKey Store payload key.
- * @param {(...a: any[]) => void} derr Error logger.
+ * @param {(...a: any[]) => void} logError
  * @returns {string | null} Raw payload or null.
  */
-export function readRaw(store, payloadKey, derr) {
+export function readRaw(store, payloadKey, logError) {
   try {
     return store.read(payloadKey);
   } catch (e) {
-    derr("store.read threw:", e);
+    logError("store.read threw:", e);
     return null;
   }
 }
@@ -83,16 +83,16 @@ function canPark(store, payloadKey) {
  * @param {string | undefined} payloadKey Store payload key.
  * @param {string} raw The unusable payload text.
  * @param {Rejection} rejection Why the payload was rejected.
- * @param {(...a: any[]) => void} derr Error logger.
+ * @param {(...a: any[]) => void} logError
  */
-function parkRejected(store, payloadKey, raw, rejection, derr) {
+function parkRejected(store, payloadKey, raw, rejection, logError) {
   if (!raw || !canPark(store, payloadKey)) return;
   const key = rejectedKey(/** @type {string} */ (payloadKey), rejection.storedVersion);
-  derr("load: " + rejection.reason + "; parking the stored payload under " + key + " (bytes=" + raw.length + ")");
+  logError("load: " + rejection.reason + "; parking the stored payload under " + key + " (bytes=" + raw.length + ")");
   try {
     /** @type {(key: string, value: string) => void} */ (store.write)(key, raw);
   } catch (e) {
-    derr("load: park store.write threw:", e);
+    logError("load: park store.write threw:", e);
   }
 }
 
@@ -106,7 +106,7 @@ function parkRejected(store, payloadKey, raw, rejection, derr) {
  * @property {number} version Current schema version.
  * @property {(value: any, version: number) => boolean} [isValid] Schema validator.
  * @property {(value: any) => any} [normalize] Optional-field normalizer.
- * @property {(...a: any[]) => void} derr Error logger.
+ * @property {(...a: any[]) => void} logError Error logger.
  */
 
 /**
@@ -116,10 +116,10 @@ function parkRejected(store, payloadKey, raw, rejection, derr) {
  * @returns {any | null} The restorable history, or null.
  */
 function readRestorable(options) {
-  const { store, payloadKey, seed, version, isValid, normalize, derr } = options;
+  const { store, payloadKey, seed, version, isValid, normalize, logError } = options;
   if (typeof isValid !== "function" || !canPark(store, payloadKey)) return null;
   const slot = rejectedKey(/** @type {string} */ (payloadKey), version);
-  const raw = readRaw(/** @type {any} */ (store), slot, derr);
+  const raw = readRaw(/** @type {any} */ (store), slot, logError);
   if (!raw) return null;
   let parsed = null;
   try {
@@ -139,16 +139,16 @@ function readRestorable(options) {
  * @param {any} restored The history read by {@link readRestorable}.
  */
 function commitRestore(options, restored) {
-  const { store, version, derr } = options;
+  const { store, version, logError } = options;
   const payloadKey = /** @type {string} */ (options.payloadKey);
   const write = /** @type {(key: string, value: string) => void} */ (store.write);
   const slot = rejectedKey(payloadKey, version);
-  derr("load: restoring the parked payload from " + slot + " (samples=" + restored.samples.length + ")");
+  logError("load: restoring the parked payload from " + slot + " (samples=" + restored.samples.length + ")");
   try {
     write(payloadKey, serializePayload(restored));
     write(slot, "");
   } catch (e) {
-    derr("load: restore store.write threw:", e);
+    logError("load: restore store.write threw:", e);
   }
 }
 
@@ -172,19 +172,21 @@ export function restoreRejected(options) {
  *   seed: string | number,
  *   store: { pid: number, write: (key: string, value: string) => void },
  *   payloadKey: string,
- *   dlog: (...a: any[]) => void,
- *   derr: (...a: any[]) => void
+ *   logDebug: (...a: any[]) => void,
+ *   logError: (...a: any[]) => void
  * }} options Recovery options.
  * @returns {any | null} The recovered mirror, or null when there is nothing usable.
  */
 function recoverMem(options) {
-  const { mem, seed, store, payloadKey, dlog, derr } = options;
+  const { mem, seed, store, payloadKey, logDebug, logError } = options;
   if (!mem || !mem.samples || mem.samples.length === 0) return null;
   if (seedMismatch(mem.seed, seed)) {
-    derr("load: persistent empty; _mem is for a different game (mem=" + mem.seed + " current=" + seed + "), not recovering");
+    logError(
+      "load: persistent empty; _mem is for a different game (mem=" + mem.seed + " current=" + seed + "), not recovering"
+    );
     return null;
   }
-  dlog(
+  logDebug(
     "load: persistent empty, recovering from _mem (samples=" +
       mem.samples.length +
       " pid=" +
@@ -194,7 +196,7 @@ function recoverMem(options) {
   try {
     store.write(payloadKey, serializePayload(mem));
   } catch (e) {
-    derr("_loadEmpty: recovery store.write threw:", e);
+    logError("_loadEmpty: recovery store.write threw:", e);
   }
   return mem;
 }
@@ -211,18 +213,18 @@ function recoverMem(options) {
  *   emptyHistory: (seed: string | number, version: number) => any,
  *   isValid?: (value: any, version: number) => boolean,
  *   normalize?: (value: any) => any,
- *   dlog: (...a: any[]) => void,
- *   derr: (...a: any[]) => void
+ *   logDebug: (...a: any[]) => void,
+ *   logError: (...a: any[]) => void
  * }} options Recovery options.
  * @returns {any} Recovered in-memory history, restored parked history, or new empty history.
  */
 export function loadEmpty(options) {
-  const { seed, version, store, emptyHistory, dlog } = options;
+  const { seed, version, store, emptyHistory, logDebug } = options;
   const mem = recoverMem(options);
   if (mem) return mem;
   const restored = restoreRejected(options);
   if (restored) return restored;
-  dlog("load: no existing history (pid=" + store.pid + ")");
+  logDebug("load: no existing history (pid=" + store.pid + ")");
   return emptyHistory(seed, version);
 }
 
@@ -276,8 +278,8 @@ function parseStored(raw, isValid, version) {
  * @property {(value: any, version: number) => boolean} isValid Schema validator.
  * @property {(value: any) => any} normalize Optional-field normalizer.
  * @property {(parsed: any, store: { pid: number }) => any} preferMemWhenNewer Mirror reconciler.
- * @property {(...a: any[]) => void} dlog Debug logger.
- * @property {(...a: any[]) => void} derr Error logger.
+ * @property {(...a: any[]) => void} logDebug Debug logger.
+ * @property {(...a: any[]) => void} logError Error logger.
  */
 
 /**
@@ -286,13 +288,13 @@ function parseStored(raw, isValid, version) {
  * recover it; then, if the current version's slot holds a payload this code can use, that one
  * is restored over the primary key. Otherwise the primary key is left as it is (the next save
  * overwrites it) and the load falls back to the mirror or an empty history.
- * @param {ParseOptions} options Parse options.
+ * @param {ParseOptions} options
  * @param {Rejection} rejection Why the stored payload is unusable.
  * @returns {any} The restored, mirrored, or empty history.
  */
 function rejectStored(options, rejection) {
-  const { raw, mem, seed, version, store, payloadKey, emptyHistory, preferMemWhenNewer, derr } = options;
-  parkRejected(store, payloadKey, raw, rejection, derr);
+  const { raw, mem, seed, version, store, payloadKey, emptyHistory, preferMemWhenNewer, logError } = options;
+  parkRejected(store, payloadKey, raw, rejection, logError);
   const restored = restoreRejected(options);
   if (restored) return preferMemWhenNewer(restored, store);
   return mem || emptyHistory(seed, version);
@@ -303,28 +305,28 @@ function rejectStored(options, rejection) {
  * written by an older mod copy after a newer copy's data was parked. When the current
  * version's slot holds a payload this code can use, park the older primary under its own
  * slot and restore the parked one; otherwise keep the older primary.
- * @param {ParseOptions} options Parse options.
+ * @param {ParseOptions} options
  * @param {any} parsed The usable older-version history.
  * @returns {any} The restored history, or `parsed`.
  */
 function supersedeOlder(options, parsed) {
-  const { raw, version, store, payloadKey, derr } = options;
+  const { raw, version, store, payloadKey, logError } = options;
   if (!(parsed.version < version)) return parsed;
   const restored = readRestorable(options);
   if (!restored) return parsed;
   const reason = "history version " + parsed.version + " is superseded by parked version " + version;
-  parkRejected(store, payloadKey, raw, { reason, storedVersion: parsed.version }, derr);
+  parkRejected(store, payloadKey, raw, { reason, storedVersion: parsed.version }, logError);
   commitRestore(options, restored);
   return restored;
 }
 
 /**
  * Parse and validate a raw payload.
- * @param {ParseOptions} options Parse options.
+ * @param {ParseOptions} options
  * @returns {any} Parsed/reconciled history.
  */
 export function loadParsed(options) {
-  const { raw, mem, seed, version, store, emptyHistory, isValid, normalize, preferMemWhenNewer, dlog, derr } =
+  const { raw, mem, seed, version, store, emptyHistory, isValid, normalize, preferMemWhenNewer, logDebug, logError } =
     options;
 
   const candidate = parseStored(raw, isValid, version);
@@ -336,13 +338,13 @@ export function loadParsed(options) {
   // New-game guard: a known stored seed that differs from the current game's means this payload
   // belongs to a different game. Prefer the current game's in-memory mirror, else start fresh.
   if (seedMismatch(parsed.seed, seed)) {
-    derr("load: seed mismatch (stored=" + parsed.seed + " current=" + seed + "), resetting for new game");
+    logError("load: seed mismatch (stored=" + parsed.seed + " current=" + seed + "), resetting for new game");
     return mem && String(mem.seed) === String(seed) ? mem : emptyHistory(seed, version);
   }
 
   normalize(parsed);
   const reconciled = preferMemWhenNewer(supersedeOlder(options, parsed), store);
-  dlog(
+  logDebug(
     "load: ok pid=" +
       store.pid +
       " samples=" +

@@ -5,7 +5,7 @@
 // portraits and empty states. Styling lives in styles/screen-demographics-history.css under the .dgh- prefix.
 
 import { el, onActivate } from "/demographics/ui/history/core/history-dom.js";
-import { num, t } from "/demographics/ui/history/core/history-text.js";
+import { formatNumber, t } from "/demographics/ui/history/core/history-text.js";
 
 /**
  * A native tab bar.
@@ -54,7 +54,10 @@ export function pillRow(items, active, onPick, variant = "") {
  * @returns {HTMLElement}
  */
 export function section(title, body, cls = "") {
-  return el("div", { cls: "dgh-section " + cls }, [title ? el("div", { cls: "dgh-section-title", text: title }) : null, ...body]);
+  return el("div", { cls: "dgh-section " + cls }, [
+    title ? el("div", { cls: "dgh-section-title", text: title }) : null,
+    ...body
+  ]);
 }
 
 /**
@@ -79,8 +82,8 @@ export function pageHead(title, note = "") {
  * @returns {HTMLElement}
  */
 export function statTile(value, label, icon = null) {
-  const v = el("div", { cls: "dgh-stat-value", text: value });
-  const head = icon ? el("div", { cls: "dgh-stat-head" }, [icon, v]) : v;
+  const valueEl = el("div", { cls: "dgh-stat-value", text: value });
+  const head = icon ? el("div", { cls: "dgh-stat-head" }, [icon, valueEl]) : valueEl;
   return el("div", { cls: "dgh-stat" }, [head, el("div", { cls: "dgh-stat-label", text: label })]);
 }
 
@@ -98,9 +101,11 @@ export function statTile(value, label, icon = null) {
  * @returns {HTMLElement}
  */
 export function table(columns, rows, opts = {}) {
-  const head = el("div", { cls: "dgh-tr dgh-thead" }, columns.map((c) => el("div", { cls: "dgh-td " + (c.cls || ""), text: c.label })));
+  const head = el("div", { cls: "dgh-tr dgh-thead" }, columns.map((column) =>
+    el("div", { cls: "dgh-td " + (column.cls || ""), text: column.label })));
   const body = rows.map((cells, i) => {
-    const tr = el("div", { cls: "dgh-tr" + (opts.onRow ? " is-clickable" : "") + (opts.highlight?.(i) ? " is-mine" : "") });
+    const cls = "dgh-tr" + (opts.onRow ? " is-clickable" : "") + (opts.highlight?.(i) ? " is-mine" : "");
+    const tr = el("div", { cls });
     cells.forEach((cell, j) => tr.appendChild(cellEl(cell, columns[j]?.cls || "")));
     if (opts.onRow) onActivate(tr, () => opts.onRow?.(i));
     return tr;
@@ -136,18 +141,18 @@ export function civChip(name, color, civType = "") {
 
 /**
  * The civilizations a leader led, in order, each with its emblem: "[emblem] Rome → [emblem] Normans".
- * @param {HnrCivSpan[]} civs Spans, oldest first.
- * @param {(span: HnrCivSpan) => string} nameOf Localized name of a span.
+ * @param {HistoryCivSpan[]} civs Spans, oldest first.
+ * @param {(span: HistoryCivSpan) => string} nameOf Localized name of a span.
  * @param {string} [cls] Extra class (size variant).
  * @returns {HTMLElement}
  */
 export function civProgression(civs, nameOf, cls = "") {
   const row = el("div", { cls: "dgh-progression " + cls });
-  civs.forEach((c, i) => {
+  civs.forEach((span, i) => {
     if (i > 0) row.appendChild(el("div", { cls: "dgh-progression-arrow", text: "→" }));
     row.appendChild(el("div", { cls: "dgh-progression-step" }, [
-      civIcon(c.civ, "dgh-civ-icon dgh-progression-icon"),
-      el("div", { cls: "dgh-progression-name", text: nameOf(c) })
+      civIcon(span.civ, "dgh-civ-icon dgh-progression-icon"),
+      el("div", { cls: "dgh-progression-name", text: nameOf(span) })
     ]));
   });
   return row;
@@ -223,8 +228,9 @@ const TROPHY_FILE = "fs://game/popup_laurels.png";
  */
 export function laurelMedal(place, cls = "") {
   const file = LAUREL_FILES[place] || TROPHY_FILE;
-  return el("div", { cls: ("dgh-medal dgh-medal--" + place + " " + cls).trim(), style: { backgroundImage: "url('" + file + "')" } }, [
-    el("div", { cls: "dgh-medal-num", text: num(place) })
+  const medalCls = ("dgh-medal dgh-medal--" + place + " " + cls).trim();
+  return el("div", { cls: medalCls, style: { backgroundImage: "url('" + file + "')" } }, [
+    el("div", { cls: "dgh-medal-num", text: formatNumber(place) })
   ]);
 }
 
@@ -240,7 +246,7 @@ export function trophyIcon(cls = "dgh-trophy-icon") {
 /**
  * A small marker for a game's result: the victory's icon, a red disc for a defeat, a hollow ring
  * for a game in progress, a gray disc for a game that ended without a recorded winner.
- * @param {HnrOutcome} outcome
+ * @param {HistoryOutcome} outcome
  * @returns {HTMLElement}
  */
 export function outcomeMark(outcome) {
@@ -276,7 +282,7 @@ export function emptyState(text) {
  * @returns {HTMLElement}
  */
 export function textButton(label, fn, cls = "") {
-  const b = el("div", { cls: "dgh-button " + cls, text: t(label) });
-  onActivate(b, fn);
-  return b;
+  const button = el("div", { cls: "dgh-button " + cls, text: t(label) });
+  onActivate(button, fn);
+  return button;
 }

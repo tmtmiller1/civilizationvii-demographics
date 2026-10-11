@@ -108,4 +108,5 @@ for (const k of Object.keys(fromCss)) {
 }
 assert.deepEqual(drift, [], `the type ladder has drifted between CSS and JS: ${drift.join(" | ")}`);
 
-console.log(`history-css harness passed (${FILES.length} stylesheets swept, ${Object.keys(fromJs).length} ladder steps agree with JS)`);
+const steps = Object.keys(fromJs).length;
+console.log(`history-css harness passed (${FILES.length} stylesheets swept, ${steps} ladder steps agree with JS)`);

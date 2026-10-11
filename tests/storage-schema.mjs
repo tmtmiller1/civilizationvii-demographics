@@ -32,8 +32,8 @@ function commonLoadOptions(raw) {
     isValid,
     normalize,
     preferMemWhenNewer: (parsed) => parsed,
-    dlog: () => {},
-    derr: () => {}
+    logDebug: () => {},
+    logError: () => {}
   };
 }
 
@@ -68,8 +68,8 @@ function testLoadEmptyRecoveryWritesEnvelope() {
     },
     payloadKey: "json",
     emptyHistory,
-    dlog: () => {},
-    derr: () => {}
+    logDebug: () => {},
+    logError: () => {}
   });
 
   assert.equal(recovered.samples.length, 1, "recovery should return in-memory history");

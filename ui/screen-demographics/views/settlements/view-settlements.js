@@ -13,7 +13,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
-import { div, fmt, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { div, formatRounded, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import {
   SETTLEMENT_OUTPUTS,
@@ -23,23 +23,24 @@ import {
   startInstant,
   launchCinematic
 } from "/demographics/ui/screen-demographics/camera/city-camera-controller.js";
-import * as ViewWorldRankingsAllCivs from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js";
-import { renderCivRankingPanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js";
-import { renderShowcasePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
+import * as ViewWorldRankingsAllCivs
+  from "/demographics/ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js";
+import {
+  renderCivRankingPanel
+} from "/demographics/ui/screen-demographics/views/settlements/view-settlements-civranking.js";
+import {
+  renderShowcasePanel
+} from "/demographics/ui/screen-demographics/views/settlements/view-settlements-showcase.js";
 import { renderTablePanel } from "/demographics/ui/screen-demographics/views/settlements/view-settlements-table.js";
 import { annotateWonderYears } from "/demographics/ui/screen-demographics/settlements/settlements-wonder-years.js";
 import { readAgeArchive } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
 import { renderHallOfFameTab } from "/demographics/ui/screen-demographics/views/settlements/settlements-halloffame.js";
+import { buildSectionTitle } from "/demographics/ui/screen-demographics/views/shared/section-title.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 const TOP_N = 25;
 
-/**
- * Error logger (always emits).
- * @param {...*} a
- */
-function derr(...a) {
-  console.error("[Demographics.settlements]", ...a);
-}
+const log = makeLogger("settlements");
 
 /**
  * Mutable render state for the Settlements view.
@@ -63,7 +64,7 @@ function derr(...a) {
  * @param {*} settings The settings surface.
  * @param {string} key
  * @param {*} fallback The default.
- * @returns {*} The stored value or the default.
+ * @returns {*}
  */
 function getSetting(settings, key, fallback) {
   try {
@@ -92,19 +93,19 @@ function setSetting(settings, key, value) {
  * Whether a settlement's identity should be obscured: "hide unmet players"
  * (showUnmetNames === false, the default) is active AND the owner is unmet.
  * Masks only when `met === false`, never on an unknown met state.
- * @param {SettleState} st
- * @param {*} s The settlement.
- * @returns {boolean} True when the settlement should be masked.
+ * @param {SettleState} state
+ * @param {*} settlement
+ * @returns {boolean}
  */
-function isMasked(st, s) {
-  return !st.showUnmetNames && !!s && !!s.owner && s.owner.met === false;
+function isMasked(state, settlement) {
+  return !state.showUnmetNames && !!settlement && !!settlement.owner && settlement.owner.met === false;
 }
 
 /**
  * A masked owner identity: generic "Unmet" names, no portrait type, no banner
  * colors (so the civ's color can't be read off the accent).
  * @param {*} owner The real owner identity.
- * @returns {*} The masked owner.
+ * @returns {*}
  */
 function maskOwner(owner) {
   return {
@@ -124,13 +125,13 @@ function maskOwner(owner) {
  * A display clone of a settlement with its identity (name + owner) obscured and
  * every quantitative field intact. `masked` is stamped so builders can suppress
  * the "View on map" affordance.
- * @param {*} s The settlement.
- * @returns {*} The masked settlement.
+ * @param {*} settlement
+ * @returns {*}
  */
-function maskSettlement(s) {
-  return Object.assign({}, s, {
+function maskSettlement(settlement) {
+  return Object.assign({}, settlement, {
     name: t("LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME"),
-    owner: maskOwner(s.owner),
+    owner: maskOwner(settlement.owner),
     masked: true
   });
 }
@@ -138,12 +139,12 @@ function maskSettlement(s) {
 /**
  * Resolve the display settlement for a render: the masked clone when the
  * "hide unmet players" option applies, otherwise the settlement unchanged.
- * @param {SettleState} st
- * @param {*} s The settlement.
+ * @param {SettleState} state
+ * @param {*} settlement
  * @returns {*}
  */
-function displayOf(st, s) {
-  return isMasked(st, s) ? maskSettlement(s) : s;
+function displayOf(state, settlement) {
+  return isMasked(state, settlement) ? maskSettlement(settlement) : settlement;
 }
 
 /**
@@ -188,65 +189,67 @@ function cameraButton(active, labelKey, onClick, disabledTipKey) {
 /**
  * Whether the camera (fly-to / fly-by) is forbidden for a settlement: its owner
  * is unmet, or its city center is still in fog. Independent of "hide unmet names".
- * @param {*} s The settlement.
- * @returns {boolean} True when the camera must stay disabled.
+ * @param {*} settlement
+ * @returns {boolean}
  */
-function cameraForbidden(s) {
-  return !!(s.owner && s.owner.met === false) || s.explored === false;
+function cameraForbidden(settlement) {
+  return !!(settlement.owner && settlement.owner.met === false) || settlement.explored === false;
 }
 
 /**
  * The tooltip LOC key explaining WHY the camera is disabled for a settlement.
- * @param {*} s The settlement.
+ * @param {*} settlement
  * @returns {string}
  */
-function cameraDisabledTip(s) {
-  if (s.owner && s.owner.met === false) return "LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP";
+function cameraDisabledTip(settlement) {
+  if (settlement.owner && settlement.owner.met === false) return "LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP";
   return "LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP";
 }
 
 /**
  * The "View on map" button - an instant snap to the city. Grayed-out
  * for an unmet civ; null when there is no readable location to view.
- * @param {*} s The settlement.
+ * @param {*} settlement
  * @returns {HTMLElement|null} The button, or null.
  */
-function buildMapButton(s) {
-  if (!cameraForbidden(s) && !s.location) return null;
-  return cameraButton(!cameraForbidden(s) && !!s.location, "LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP",
-    () => startInstant(s), cameraDisabledTip(s));
+function buildMapButton(settlement) {
+  if (!cameraForbidden(settlement) && !settlement.location) return null;
+  const active = !cameraForbidden(settlement) && !!settlement.location;
+  return cameraButton(active, "LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP",
+    () => startInstant(settlement), cameraDisabledTip(settlement));
 }
 
 /**
  * The dedicated "Cinematic" button (default on; hidden when the cinematic option
  * is turned off). Grayed-out for an unmet civ. The wonders already carry their
  * observed completion years (annotateWonderYears), so the tour can caption them.
- * @param {*} s The settlement.
- * @param {SettleState} st
+ * @param {*} settlement
+ * @param {SettleState} state
  * @returns {HTMLElement|null} The button, or null.
  */
-function buildCinematicButton(s, st) {
-  if (getSetting(st.settings, "topCities.cinematicEnabled", true) !== true) return null;
-  if (!cameraForbidden(s) && !s.location) return null;
-  return cameraButton(!cameraForbidden(s) && !!s.location, "LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW",
-    () => launchCinematic(s), cameraDisabledTip(s));
+function buildCinematicButton(settlement, state) {
+  if (getSetting(state.settings, "topCities.cinematicEnabled", true) !== true) return null;
+  if (!cameraForbidden(settlement) && !settlement.location) return null;
+  const active = !cameraForbidden(settlement) && !!settlement.location;
+  return cameraButton(active, "LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW",
+    () => launchCinematic(settlement), cameraDisabledTip(settlement));
 }
 
 /**
  * Build the camera action row: "View on map" + (default) "Cinematic". Null when
  * neither button applies, and always for an archived end-of-age record (the
  * settlement may have been razed or changed hands since).
- * @param {*} s The settlement.
- * @param {SettleState} st
+ * @param {*} settlement
+ * @param {SettleState} state
  * @returns {HTMLElement|null} The button row, or null.
  */
-function buildCameraButtons(s, st) {
-  if (s.archived) return null;
+function buildCameraButtons(settlement, state) {
+  if (settlement.archived) return null;
   const row = div("demographics-settle-mapbtns");
-  const map = buildMapButton(s);
+  const map = buildMapButton(settlement);
   if (map) row.appendChild(map);
-  const cine = buildCinematicButton(s, st);
-  if (cine) row.appendChild(cine);
+  const cinematic = buildCinematicButton(settlement, state);
+  if (cinematic) row.appendChild(cinematic);
   return row.firstChild ? row : null;
 }
 
@@ -258,8 +261,8 @@ function buildCameraButtons(s, st) {
  */
 function buildOwnerAvatar(owner) {
   const wrap = div("demographics-settle-avatar");
-  const bg = owner.readable || owner.primary;
-  if (bg) wrap.style.backgroundColor = bg;
+  const background = owner.readable || owner.primary;
+  if (background) wrap.style.backgroundColor = background;
   if (owner.secondary) wrap.style.borderColor = owner.secondary;
   if (owner.leaderType) {
     const portrait = document.createElement("fxs-icon");
@@ -270,7 +273,7 @@ function buildOwnerAvatar(owner) {
   } else {
     const initial = (owner.leaderName || owner.civName || "?").trim().charAt(0).toUpperCase() || "?";
     const el = div("demographics-settle-avatar-initial", initial);
-    if (bg) el.style.color = safeTextColor(bg);
+    if (background) el.style.color = safeTextColor(background);
     wrap.appendChild(el);
   }
   return wrap;
@@ -320,9 +323,9 @@ function buildTypeBadge(isTown) {
  */
 function buildTrendGlyph(trend) {
   const dir = trend && typeof trend.dir === "number" ? trend.dir : 0;
-  const cls = dir > 0 ? "up" : dir < 0 ? "down" : "flat";
-  const g = div("demographics-settle-trend demographics-settle-trend-" + cls);
-  return g;
+  const direction = dir > 0 ? "up" : dir < 0 ? "down" : "flat";
+  const glyph = div("demographics-settle-trend demographics-settle-trend-" + direction);
+  return glyph;
 }
 
 
@@ -351,17 +354,17 @@ function buildLaurelMedal(place) {
 
 /**
  * Build a compact icon+value strip of every output for a settlement.
- * @param {*} s The settlement.
+ * @param {*} settlement
  * @returns {HTMLElement}
  */
-function buildOutputStrip(s) {
+function buildOutputStrip(settlement) {
   const strip = div("demographics-settle-outputs");
   // An archived record from an older build may carry no outputs map.
-  const o = s.outputs || {};
+  const outputs = settlement.outputs || {};
   for (const col of SETTLEMENT_OUTPUTS) {
     const item = div("demographics-settle-output");
     item.appendChild(iconEl(col.icon, "demographics-settle-yield-icon"));
-    item.appendChild(div("demographics-settle-output-val", fmt(o[col.id])));
+    item.appendChild(div("demographics-settle-output-val", formatRounded(outputs[col.id])));
     strip.appendChild(item);
   }
   return strip;
@@ -386,10 +389,10 @@ function buildListHeader(nameKey) {
  * Render the artistic Top-25 showcase: the top-3 podium, then the full ranked
  * list (1-25, so the top 3 also appear in the graphed list), with a red "Top 10"
  * divider between ranks 10 and 11.
- * @param {SettleState} st
+ * @param {SettleState} state
  */
-function renderShowcase(st) {
-  renderShowcasePanel(st, {
+function renderShowcase(state) {
+  renderShowcasePanel(state, {
     topN: TOP_N,
     safePlaySound,
     displayOf,
@@ -402,7 +405,7 @@ function renderShowcase(st) {
     buildListHeader,
     buildEmpty,
     buildTrendGlyph,
-    archive: readAgeArchive(st.history)
+    archive: readAgeArchive(state.history)
   });
 }
 
@@ -411,10 +414,10 @@ function renderShowcase(st) {
 /**
  * Render the Civilization Ranking sub-view: a podium + ranked list of major
  * civs by cumulative settlement score (mirrors the Top-25 settlements showcase).
- * @param {SettleState} st
+ * @param {SettleState} state
  */
-function renderCivRanking(st) {
-  renderCivRankingPanel(st, {
+function renderCivRanking(state) {
+  renderCivRankingPanel(state, {
     buildEmpty,
     buildSectionTitle,
     buildListHeader,
@@ -429,29 +432,11 @@ function renderCivRanking(st) {
 // detail table (filter + sortable + category leaders)
 
 /**
- * Build a stylized section title with flanking filigree (mimics the elaborate
- * Civ VII menu headers).
- * @param {string} key The title LOC key.
- * @returns {HTMLElement}
- */
-function buildSectionTitle(key) {
-  const wrap = div("demographics-settle-section-title");
-  // Both flourishes stay in the DOM: the ranking-list heading lays them out LEFT and RIGHT of the
-  // title (symmetric), while the podium column stacks them ABOVE and BELOW. The podium's top one is
-  // hidden in CSS (.demographics-settle-split-left ... :first-child) - it spent a row over both
-  // "Greatest" headings for no information.
-  wrap.appendChild(iconEl("blp:header_filigree", "demographics-settle-section-fil"));
-  wrap.appendChild(div("demographics-settle-section-title-text font-title", t(key)));
-  wrap.appendChild(iconEl("blp:header_filigree", "demographics-settle-section-fil demographics-settle-section-fil-r"));
-  return wrap;
-}
-
-/**
  * Render the detail table (filter + leaders strip + sortable rows).
- * @param {SettleState} st
+ * @param {SettleState} state
  */
-function renderTable(st) {
-  renderTablePanel(st, {
+function renderTable(state) {
+  renderTablePanel(state, {
     topN: TOP_N,
     setSetting,
     safePlaySound,
@@ -497,25 +482,25 @@ const SUBTABS = [
  * Build the sub-view selector as a native fxs-tab-bar - a 2nd-order major tab
  * bar styled like the Historical Data page tabs (rather than minor pills), so
  * Top 25 / All Settlements / Town Advisor read as co-equal major tabs.
- * @param {SettleState} st
+ * @param {SettleState} state
  * @returns {HTMLElement}
  */
-function buildSubTabs(st) {
+function buildSubTabs(state) {
   const host = div("demographics-settle-tabhost demographics-page-tab-host w-full");
   const bar = document.createElement("fxs-tab-bar");
   bar.classList.add("demographics-page-tabs", "w-full", "font-title", "text-sm");
   bar.setAttribute("data-audio-group-ref", "audio-screen-unlocks");
   bar.setAttribute("tab-item-class", "font-title text-base");
-  bar.setAttribute("tab-items", JSON.stringify(SUBTABS.map((s) => ({ id: s.id, label: s.label }))));
-  const idx = Math.max(0, SUBTABS.findIndex((s) => s.id === st.subTab));
+  bar.setAttribute("tab-items", JSON.stringify(SUBTABS.map((tab) => ({ id: tab.id, label: tab.label }))));
+  const idx = Math.max(0, SUBTABS.findIndex((tab) => tab.id === state.subTab));
   bar.setAttribute("selected-tab-index", String(idx));
   bar.addEventListener("tab-selected", (event) => {
     const id = /** @type {*} */ (event)?.detail?.selectedItem?.id;
-    if (!id || (id === st.subTab && !st.detail)) return;
-    st.subTab = id;
-    st.detail = null; // leaving any open city dossier when switching sub-tabs
-    setSetting(st.settings, "settlementsSubTab", id);
-    rerenderContent(st);
+    if (!id || (id === state.subTab && !state.detail)) return;
+    state.subTab = id;
+    state.detail = null; // leaving any open city dossier when switching sub-tabs
+    setSetting(state.settings, "settlementsSubTab", id);
+    rerenderContent(state);
   });
   host.appendChild(bar);
   return host;
@@ -525,61 +510,57 @@ function buildSubTabs(st) {
  * Clear and re-render the active sub-view into the content host. Every handler
  * re-renders through this boundary, so a throwing sub-view leaves a visible
  * "render failed" notice instead of a blank panel.
- * @param {SettleState} st
+ * @param {SettleState} state
  */
-function rerenderContent(st) {
-  while (st.content.firstChild) st.content.removeChild(st.content.firstChild);
+function rerenderContent(state) {
+  while (state.content.firstChild) state.content.removeChild(state.content.firstChild);
   try {
-    renderSubView(st);
+    renderSubView(state);
   } catch (e) {
-    derr("sub-view render threw (subTab=" + st.subTab + "):", e);
-    st.content.appendChild(buildRenderFailed());
+    log.error("sub-view render threw (subTab=" + state.subTab + "):", e);
+    state.content.appendChild(buildRenderFailed());
   }
 }
 
 /**
  * Render the active sub-view into the (already cleared) content host.
- * @param {SettleState} st
+ * @param {SettleState} state
  */
-function renderSubView(st) {
-  if (st.subTab === "halloffame") return renderHallOfFameTab(st.content);
+function renderSubView(state) {
+  if (state.subTab === "halloffame") return renderHallOfFameTab(state.content);
   // Civilizations = the per-civ All Civilizations matrix (built from sampled
-  // history); the other two are the live settlement rankings. (The old per-city
-  // detail dossier was folded into the Top-25 rows , no separate view.)
-  if (st.subTab === "civranking") {
-    renderCivRanking(st);
-  } else if (st.subTab === "civilizations") {
-    // The All-Civ view clears st.content on a FULL render only; its sort and Rank/Value
+  // history); the other tabs are the live settlement rankings.
+  if (state.subTab === "civranking") {
+    renderCivRanking(state);
+  } else if (state.subTab === "civilizations") {
+    // The All-Civ view clears state.content on a FULL render only; its sort and Rank/Value
     // updates happen in place, so afterRender fires on entry rather than on every click.
-    ViewWorldRankingsAllCivs.render(st.content, {
-      history: st.history,
-      settings: st.settings,
-      afterRender: () => insertOptionsToolbar(st)
+    ViewWorldRankingsAllCivs.render(state.content, {
+      history: state.history,
+      settings: state.settings,
+      afterRender: () => insertOptionsToolbar(state)
     });
-  } else if (st.subTab === "table") renderTable(st);
-  else renderShowcase(st);
-  insertOptionsToolbar(st);
+  } else if (state.subTab === "table") renderTable(state);
+  else renderShowcase(state);
+  insertOptionsToolbar(state);
 }
 
 /**
  * Insert the Options button (a right-aligned `.demographics-chart-toolbar`) directly below the
  * `.demographics-settle-filters` pill row, or at the top of the content when there is none.
- * @param {SettleState} st
+ * @param {SettleState} state
  */
-function insertOptionsToolbar(st) {
+function insertOptionsToolbar(state) {
   try {
-    // Idempotent: drop any existing toolbar first so repeat calls (e.g. the
-    // All-Civ view's afterRender on each internal sort/toggle) never stack copies.
-    // The Options button lives in the frame header now (screen-demographics.js); this view no
-    // longer adds a toolbar row for it. Kept as a cleanup so no stale row from an older render
-    // survives a re-render.
-    const prior = st.content.querySelector(".demographics-chart-toolbar");
+    // The Options button lives in the frame header (screen-demographics.js), so this view adds
+    // no toolbar row; this only removes a stale one so it cannot survive a re-render. Safe to
+    // repeat (the All-Civ view's afterRender calls it on each internal sort/toggle).
+    const prior = state.content.querySelector(".demographics-chart-toolbar");
     if (prior) prior.remove();
   } catch (e) {
-    // querySelector/remove/insertBefore can throw on a detached host (see
-    // history-csv.js showCsvToast); the content renders without its Options
-    // button rather than blanking.
-    derr("insertOptionsToolbar threw:", e);
+    // querySelector/remove can throw on a detached host (see history-csv.js
+    // showCsvToast); log and keep the rendered content rather than blanking.
+    log.error("insertOptionsToolbar threw:", e);
   }
 }
 
@@ -593,9 +574,9 @@ export function render(host, ctx) {
   let subTab = getSetting(settings, "settlementsSubTab", "civranking");
   // Coerce a stale/removed sub-tab (e.g. the removed "towns"/"advisor") to the
   // default Civilization Ranking view.
-  if (!SUBTABS.some((s) => s.id === subTab)) subTab = "civranking";
+  if (!SUBTABS.some((tab) => tab.id === subTab)) subTab = "civranking";
   /** @type {SettleState} */
-  const st = {
+  const state = {
     settings,
     history: ctx?.history,
     board: buildSettlementBoard(),
@@ -608,10 +589,10 @@ export function render(host, ctx) {
     showcaseAge: "now",
     showUnmetNames: getSetting(settings, "showUnmetNames", false) === true
   };
-  annotateWonderYears(st.board.settlements, st.history);
+  annotateWonderYears(state.board.settlements, state.history);
   const wrap = div("demographics-settle-view");
-  wrap.appendChild(buildSubTabs(st));
-  wrap.appendChild(st.content);
+  wrap.appendChild(buildSubTabs(state));
+  wrap.appendChild(state.content);
   host.appendChild(wrap);
-  rerenderContent(st);
+  rerenderContent(state);
 }

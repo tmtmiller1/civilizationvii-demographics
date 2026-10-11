@@ -21,7 +21,9 @@ const cap = await import("/demographics/ui/history/capture/history-capture.js");
 
 // 2. isNetworkMultiplayer reads the engine flag; hotseat reports false there.
 {
-  globalThis.Configuration = { getGame: () => ({ isHotseat: true, isAnyMultiplayer: true, isNetworkMultiplayer: false }) };
+  globalThis.Configuration = {
+    getGame: () => ({ isHotseat: true, isAnyMultiplayer: true, isNetworkMultiplayer: false })
+  };
   assert.equal(cap.isNetworkMultiplayer(), false);
   assert.equal(cap.isHost(), true, "hotseat counts as hosting");
   globalThis.Configuration = { getGame: () => ({ isNetworkMultiplayer: true }) };

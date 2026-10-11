@@ -19,14 +19,13 @@
 
 import { tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { scaleCityPopulationAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
-import {
-  getFounded,
-  getCityTrend
-} from "/demographics/ui/screen-demographics/settlements/settlements-trace.js";
-import { applyPopulationVarianceAndEnsureUnique } from "/demographics/ui/screen-demographics/settlements/settlements-population-variance.js";
+import { getFounded, getCityTrend } from "/demographics/ui/screen-demographics/settlements/settlements-trace.js";
+import { applyPopulationVarianceAndEnsureUnique }
+  from "/demographics/ui/screen-demographics/settlements/settlements-population-variance.js";
 import { attachHolyCities } from "/demographics/ui/screen-demographics/settlements/settlements-holy.js";
 import { localHasMet } from "/demographics/ui/screen-demographics/settlements/settlements-met.js";
 import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
+import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
  * One settlement's resolved owner identity for graphical display.
@@ -81,47 +80,49 @@ import { preferReadableColor, safeTextColor } from "/demographics/ui/core/civ-co
  */
 
 /**
- * The output columns shown/ranked for each settlement. `yt` is the YieldTypes
+ * The output columns shown/ranked for each settlement. `yieldType` is the YieldTypes
  * enum key (null for handle-read columns), `composite` flags outputs folded into
  * the overall score and `weight` is their relative contribution (yields 1,
  * wonders 2). Population, happiness and influence are ranked as columns but
  * excluded from the composite because they are not per-settlement economic output.
- * @type {Array<{ id: string, yt: string|null, label: string, icon: string,
+ * @type {Array<{ id: string, yieldType: string|null, label: string, icon: string,
  *   composite: boolean, weight: number }>}
  */
 export const SETTLEMENT_OUTPUTS = [
-  { id: "population", yt: null, label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP", icon: "blp:Yield_Population", composite: false, weight: 0 },
-  { id: "food", yt: "YIELD_FOOD", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD", icon: "blp:Yield_Food", composite: true, weight: 1 },
-  { id: "production", yt: "YIELD_PRODUCTION", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD", icon: "blp:Yield_Production", composite: true, weight: 1 },
-  { id: "gold", yt: "YIELD_GOLD", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD", icon: "blp:Yield_Gold", composite: true, weight: 1 },
-  { id: "science", yt: "YIELD_SCIENCE", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE", icon: "blp:Yield_Science", composite: true, weight: 1 },
-  { id: "culture", yt: "YIELD_CULTURE", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE", icon: "blp:Yield_Culture", composite: true, weight: 1 },
+  { id: "population", yieldType: null, label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP",
+    icon: "blp:Yield_Population", composite: false, weight: 0 },
+  { id: "food", yieldType: "YIELD_FOOD", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD",
+    icon: "blp:Yield_Food", composite: true, weight: 1 },
+  { id: "production", yieldType: "YIELD_PRODUCTION", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD",
+    icon: "blp:Yield_Production", composite: true, weight: 1 },
+  { id: "gold", yieldType: "YIELD_GOLD", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD",
+    icon: "blp:Yield_Gold", composite: true, weight: 1 },
+  { id: "science", yieldType: "YIELD_SCIENCE", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE",
+    icon: "blp:Yield_Science", composite: true, weight: 1 },
+  { id: "culture", yieldType: "YIELD_CULTURE", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE",
+    icon: "blp:Yield_Culture", composite: true, weight: 1 },
   // Influence uses the engine's lowercase icon key (yield-icons.xml maps
   // YIELD_DIPLOMACY -> blp:yield_influence, unlike the capitalized Yield_* keys).
-  { id: "influence", yt: "YIELD_DIPLOMACY", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE", icon: "blp:yield_influence", composite: false, weight: 0 },
-  { id: "wonders", yt: null, label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS", icon: "blp:fonticon_wonders", composite: true, weight: 2 },
-  { id: "happiness", yt: "YIELD_HAPPINESS", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY", icon: "blp:Yield_Happiness", composite: false, weight: 0 }
+  { id: "influence", yieldType: "YIELD_DIPLOMACY", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE",
+    icon: "blp:yield_influence", composite: false, weight: 0 },
+  { id: "wonders", yieldType: null, label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS",
+    icon: "blp:fonticon_wonders", composite: true, weight: 2 },
+  { id: "happiness", yieldType: "YIELD_HAPPINESS", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY",
+    icon: "blp:Yield_Happiness", composite: false, weight: 0 }
 ];
 
-const DBG = false;
-/**
- * Debug logger, no-op unless {@link DBG}.
- * @param {...*} a
- */
-function slog(...a) {
-  if (DBG) console.warn("[Demographics.settlements]", ...a);
-}
+const log = makeLogger("settlements");
 
 /**
  * Resolve a YieldTypes enum value for a `YIELD_*` key, or undefined.
- * @param {string} key The yield enum key.
- * @returns {number|string|undefined} The enum value, or undefined.
+ * @param {string} key
+ * @returns {number|string|undefined}
  */
 function yieldEnum(key) {
   try {
     if (typeof YieldTypes !== "undefined" && YieldTypes != null) {
-      const v = YieldTypes[key];
-      if (typeof v === "number" || typeof v === "string") return v;
+      const value = YieldTypes[key];
+      if (typeof value === "number" || typeof value === "string") return value;
     }
   } catch (_) {
     // YieldTypes[key] can throw if the enum global is absent; treat as unavailable.
@@ -164,7 +165,7 @@ function gameInfoTable(name) {
 /**
  * Look up a GameInfo row by raw type (numeric hash or string), defensively.
  * @param {*} table The GameInfo table (e.g. GameInfo.Leaders).
- * @param {*} raw The raw type value.
+ * @param {*} raw
  * @returns {*} The row, or null.
  */
 function lookupRow(table, raw) {
@@ -181,14 +182,14 @@ function lookupRow(table, raw) {
 /**
  * Read one player's banner color via the named UI.Player accessor.
  * @param {number} pid
- * @param {string} fn The accessor method name.
- * @returns {string|undefined} The color string, or undefined.
+ * @param {string} accessorName The UI.Player method name.
+ * @returns {string|undefined}
  */
-function playerColor(pid, fn) {
+function playerColor(pid, accessorName) {
   try {
-    if (typeof UI !== "undefined" && UI.Player && typeof UI.Player[fn] === "function") {
-      const c = UI.Player[fn](pid);
-      if (typeof c === "string" && c.length > 0) return c;
+    if (typeof UI !== "undefined" && UI.Player && typeof UI.Player[accessorName] === "function") {
+      const color = UI.Player[accessorName](pid);
+      if (typeof color === "string" && color.length > 0) return color;
     }
   } catch (_) {
     // UI.Player.get*ColorValueAsString can throw for an unresolved player.
@@ -201,16 +202,16 @@ function playerColor(pid, fn) {
  * or undefined when neither yields a usable LEADER_* string.
  * @param {*} leaderRow The GameInfo.Leaders row (or null).
  * @param {*} rawLeader The raw leader type off the handle.
- * @returns {string|undefined} The canonical leader type, or undefined.
+ * @returns {string|undefined}
  */
 function canonicalLeaderType(leaderRow, rawLeader) {
-  const s =
+  const leaderType =
     typeof leaderRow?.LeaderType === "string"
       ? leaderRow.LeaderType
       : typeof rawLeader === "string"
         ? rawLeader
         : undefined;
-  return s && /^LEADER_/.test(s) ? s : undefined;
+  return leaderType && /^LEADER_/.test(leaderType) ? leaderType : undefined;
 }
 
 /**
@@ -228,7 +229,7 @@ function rawType(handle, keyA, keyB) {
  * Resolve a settlement owner's display identity from a live player handle.
  * @param {number} pid The owner player id.
  * @param {*} handle The player handle.
- * @returns {SettlementOwner} The resolved owner identity.
+ * @returns {SettlementOwner}
  */
 function resolveOwner(pid, handle) {
   const rawLeader = rawType(handle, "leaderType", "LeaderType");
@@ -256,13 +257,13 @@ function resolveOwner(pid, handle) {
 
 /**
  * Resolve one constructible handle by component id.
- * @param {*} cid
+ * @param {*} componentId
  * @returns {*|null}
  */
-function constructibleById(cid) {
+function constructibleById(componentId) {
   if (typeof Constructibles === "undefined") return null;
   if (typeof Constructibles.getByComponentID !== "function") return null;
-  return Constructibles.getByComponentID(cid);
+  return Constructibles.getByComponentID(componentId);
 }
 
 /**
@@ -281,7 +282,7 @@ function constructibleInfo(type) {
  * secondary)). Falls back to the raw primary when the helpers can't resolve.
  * @param {string|undefined} primary
  * @param {string|undefined} secondary
- * @returns {string|undefined} The readable accent color.
+ * @returns {string|undefined}
  */
 function readableAccent(primary, secondary) {
   try {
@@ -295,15 +296,15 @@ function readableAccent(primary, secondary) {
 /**
  * Read one net yield off a settlement's Yields handle.
  * @param {*} yields The city.Yields handle.
- * @param {string|null} ytKey The YieldTypes enum key.
+ * @param {string|null} yieldTypeKey The YieldTypes enum key.
  * @returns {number} The yield value (0 when unreadable).
  */
-function readYield(yields, ytKey) {
-  if (!ytKey || !yields || typeof yields.getNetYield !== "function") return 0;
-  const yt = yieldEnum(ytKey);
-  if (yt === undefined) return 0;
+function readYield(yields, yieldTypeKey) {
+  if (!yieldTypeKey || !yields || typeof yields.getNetYield !== "function") return 0;
+  const yieldEnumValue = yieldEnum(yieldTypeKey);
+  if (yieldEnumValue === undefined) return 0;
   try {
-    const raw = yields.getNetYield(yt);
+    const raw = yields.getNetYield(yieldEnumValue);
     return typeof raw === "number" && isFinite(raw) ? raw : 0;
   } catch (_) {
     // city.Yields.getNetYield can throw for a stale handle; treat as 0.
@@ -313,7 +314,7 @@ function readYield(yields, ytKey) {
 
 /**
  * Read one output column's value off a settlement handle.
- * @param {{ id: string, yt: string|null }} col The output descriptor.
+ * @param {{ id: string, yieldType: string|null }} col The output descriptor.
  * @param {*} city The city/town handle.
  * @param {*} yields The city.Yields handle.
  * @returns {number}
@@ -321,7 +322,7 @@ function readYield(yields, ytKey) {
 function readOutput(col, city, yields) {
   if (col.id === "population") return readPopulation(city);
   if (col.id === "wonders") return readWonders(city);
-  return readYield(yields, col.yt);
+  return readYield(yields, col.yieldType);
 }
 
 /**
@@ -344,10 +345,10 @@ function readOutputs(city) {
  */
 function readWonders(city) {
   try {
-    const con = city?.Constructibles;
-    if (con && typeof con.getNumWonders === "function") {
-      const n = con.getNumWonders();
-      if (typeof n === "number" && isFinite(n)) return n;
+    const constructibles = city?.Constructibles;
+    if (constructibles && typeof constructibles.getNumWonders === "function") {
+      const count = constructibles.getNumWonders();
+      if (typeof count === "number" && isFinite(count)) return count;
     }
   } catch (_) {
     // city.Constructibles.getNumWonders() can throw for a stale handle; treat as 0.
@@ -363,25 +364,25 @@ function readWonders(city) {
 function readPopulation(city) {
   try {
     if (typeof city?.population === "number" && isFinite(city.population)) return city.population;
-    const u = typeof city?.urbanPopulation === "number" ? city.urbanPopulation : 0;
-    const r = typeof city?.ruralPopulation === "number" ? city.ruralPopulation : 0;
-    return u + r;
+    const urban = typeof city?.urbanPopulation === "number" ? city.urbanPopulation : 0;
+    const rural = typeof city?.ruralPopulation === "number" ? city.ruralPopulation : 0;
+    return urban + rural;
   } catch (_) {
     return 0;
   }
 }
 
 /**
- * Read a city's urban or rural sub-population defensively (0 when unreadable). Used as a real-signal
- * input for population-estimate variation (urban:rural ratio).
+ * Read a city's urban or rural sub-population defensively (0 when unreadable). Used as a
+ * real-signal input for population-estimate variation (urban:rural ratio).
  * @param {*} city
  * @param {"urbanPopulation"|"ruralPopulation"} prop
  * @returns {number} The value (0 on miss/throw).
  */
 function readSubPopulation(city, prop) {
   try {
-    const v = city?.[prop];
-    return typeof v === "number" && isFinite(v) ? v : 0;
+    const value = city?.[prop];
+    return typeof value === "number" && isFinite(value) ? value : 0;
   } catch (_) {
     return 0;
   }
@@ -393,14 +394,12 @@ function readSubPopulation(city, prop) {
  * @param {number} pid
  * @param {*} city
  * @param {number} idx The index fallback.
- * @returns {string} The stable key.
+ * @returns {string}
  */
 function settlementKey(pid, city, idx) {
   try {
     const loc = city?.location;
-    if (loc && typeof loc.x === "number" && typeof loc.y === "number") {
-      return pid + ":" + loc.x + "," + loc.y;
-    }
+    if (loc && typeof loc.x === "number" && typeof loc.y === "number") return pid + ":" + loc.x + "," + loc.y;
   } catch (_) {
     // location access can throw; fall back to the index.
   }
@@ -419,7 +418,7 @@ function settlementKey(pid, city, idx) {
  * Build one settlement record from a city handle (no composite/ranks yet).
  * @param {*} city The city/town handle.
  * @param {number} pid
- * @param {SettlementOwner} owner The resolved owner identity.
+ * @param {SettlementOwner} owner
  * @param {number} idx The index within the owner's list.
  * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
  * @returns {Settlement|null} The record, or null when unreadable.
@@ -443,12 +442,7 @@ function buildSettlement(city, pid, owner, idx, lite) {
     population,
     urban: readSubPopulation(city, "urbanPopulation"),
     rural: readSubPopulation(city, "ruralPopulation"),
-    populationEstimate: scaleCityPopulationAt(
-      population,
-      currentTurn(),
-      currentAgeType(),
-      currentAgeProgressPct()
-    ),
+    populationEstimate: scaleCityPopulationAt(population, currentTurn(), currentAgeType(), currentAgeProgressPct()),
     owner,
     outputs: readOutputs(city),
     wonders: readWonderList(city),
@@ -467,7 +461,7 @@ function buildSettlement(city, pid, owner, idx, lite) {
 /**
  * Read a settlement's plot location {x,y} for the map camera, or null.
  * @param {*} city
- * @returns {{x: number, y: number}|null} The location, or null.
+ * @returns {{x: number, y: number}|null}
  */
 function readLocation(city) {
   try {
@@ -484,15 +478,15 @@ function readLocation(city) {
  * tile is revealed (the camera gate). Defaults to true on any uncertainty so
  * the camera isn't grayed out spuriously.
  * @param {*} city
- * @returns {boolean} True when the city center is revealed.
+ * @returns {boolean}
  */
 function readExplored(city) {
   try {
     const pid = typeof GameContext !== "undefined" ? GameContext.localPlayerID : undefined;
     if (!canQueryReveal(pid)) return true;
-    const c = city && city.location;
-    if (!c || typeof c.x !== "number") return true;
-    return tileRevealed(pid, c.x, c.y);
+    const loc = city && city.location;
+    if (!loc || typeof loc.x !== "number") return true;
+    return tileRevealed(pid, loc.x, loc.y);
   } catch (_) {
     return true; // never block the camera on a query failure
   }
@@ -524,12 +518,12 @@ function tileRevealed(pid, x, y) {
  * struct used to re-resolve a live handle (`Cities.get`) and to target the
  * camera (`UI.Player.lookAtID`). Returns null when unreadable.
  * @param {*} city
- * @returns {*} The ComponentID, or null.
+ * @returns {*}
  */
 function readComponentId(city) {
   try {
-    const cid = city?.id;
-    if (cid && typeof cid === "object") return cid;
+    const componentId = city?.id;
+    if (componentId && typeof componentId === "object") return componentId;
   } catch (_) {
     // city.id access can throw for a stale handle; treat as unknown.
   }
@@ -555,7 +549,7 @@ function plotKey(city) {
 /**
  * Boolean engine read, false on throw.
  * @param {() => *} fn
- * @returns {boolean} The boolean, or false.
+ * @returns {boolean}
  */
 function safeBool(fn) {
   try {
@@ -573,8 +567,8 @@ function safeBool(fn) {
  */
 function safeStr(fn) {
   try {
-    const v = fn();
-    return typeof v === "string" ? v : "";
+    const value = fn();
+    return typeof value === "string" ? value : "";
   } catch (_) {
     return "";
   }
@@ -596,9 +590,7 @@ function currentTurn() {
 export function currentAgeType() {
   try {
     if (typeof Game === "undefined" || Game.age === undefined) return undefined;
-    if (typeof GameInfo === "undefined" || typeof GameInfo?.Ages?.lookup !== "function") {
-      return undefined;
-    }
+    if (typeof GameInfo === "undefined" || typeof GameInfo?.Ages?.lookup !== "function") return undefined;
     const row = GameInfo.Ages.lookup(Game.age);
     return row?.AgeType || undefined;
   } catch (_) {
@@ -607,17 +599,17 @@ export function currentAgeType() {
   }
 }
 
-function ageProgressValue(/** @type {*} */ apm, /** @type {string} */ method) {
-  if (!apm || typeof apm[method] !== "function") return undefined;
-  const value = apm[method]();
+function ageProgressValue(/** @type {*} */ ageProgress, /** @type {string} */ method) {
+  if (!ageProgress || typeof ageProgress[method] !== "function") return undefined;
+  const value = ageProgress[method]();
   return typeof value === "number" && isFinite(value) ? value : undefined;
 }
 
 function currentAgeProgressPct() {
   try {
-    const apm = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
-    const cur = ageProgressValue(apm, "getCurrentAgeProgressionPoints");
-    const max = ageProgressValue(apm, "getMaxAgeProgressionPoints");
+    const ageProgress = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
+    const cur = ageProgressValue(ageProgress, "getCurrentAgeProgressionPoints");
+    const max = ageProgressValue(ageProgress, "getMaxAgeProgressionPoints");
     if (cur === undefined || max === undefined || max <= 0) return undefined;
     return (cur / max) * 100;
   } catch (_) {
@@ -638,31 +630,29 @@ function readWonderList(city) {
    *   location: {x: number, y: number}|null}>}
    */
   const out = [];
-  const con = city?.Constructibles;
-  const ids = safeBool(() => typeof con?.getIdsOfClass === "function")
-    ? safeArr(() => con.getIdsOfClass("WONDER"))
-    : [];
-  for (const id of ids) {
-    const w = resolveWonder(id);
-    if (w) out.push(w);
+  for (const id of constructibleIds(city, "WONDER")) {
+    const wonder = resolveWonder(id);
+    if (wonder) out.push(wonder);
   }
   return out;
 }
 
 /**
  * A settlement's placed constructible component ids of a class ([] when unreadable).
- * @param {*} city The city handle. @param {string} className The class.
+ * @param {*} city
+ * @param {string} className
  * @returns {*[]}
  */
 function constructibleIds(city, className) {
-  const con = city?.Constructibles;
-  return safeBool(() => typeof con?.getIdsOfClass === "function")
-    ? safeArr(() => con.getIdsOfClass(className)) : [];
+  const constructibles = city?.Constructibles;
+  return safeBool(() => typeof constructibles?.getIdsOfClass === "function")
+    ? safeArr(() => constructibles.getIdsOfClass(className)) : [];
 }
 
 /**
  * Count a settlement's constructibles of a class (DISTRICT / BUILDING / WONDER).
- * @param {*} city The city handle. @param {string} className The class.
+ * @param {*} city
+ * @param {string} className
  * @returns {number}
  */
 function countConstructibleClass(city, className) {
@@ -678,8 +668,8 @@ function countConstructibleClass(city, className) {
  */
 function readConstructibleNames(city, className) {
   const out = [];
-  for (const cid of constructibleIds(city, className)) {
-    const name = constructibleName(cid);
+  for (const componentId of constructibleIds(city, className)) {
+    const name = constructibleName(componentId);
     if (name) out.push(name);
   }
   return out;
@@ -689,13 +679,13 @@ function readConstructibleNames(city, className) {
  * One placed constructible's localized display name, or "" when the handle or
  * its table row is unreadable (a stale component id can make either lookup
  * throw; guarded per entry like resolveWonder so one bad id skips one name).
- * @param {*} cid
+ * @param {*} componentId
  * @returns {string} The name, or "".
  */
-function constructibleName(cid) {
+function constructibleName(componentId) {
   try {
-    const c = constructibleById(cid);
-    const info = c && constructibleInfo(c.type);
+    const constructible = constructibleById(componentId);
+    const info = constructible && constructibleInfo(constructible.type);
     if (!info) return "";
     const name = (info.Name && compose(info.Name)) || info.ConstructibleType;
     return typeof name === "string" ? name : "";
@@ -714,39 +704,47 @@ function constructibleName(cid) {
  */
 function readWonderInProgress(city) {
   try {
-    const bq = city && city.BuildQueue;
-    if (!bq || bq.isEmpty) return null;
-    const hash = bq.currentProductionTypeHash;
+    const buildQueue = city && city.BuildQueue;
+    if (!buildQueue || buildQueue.isEmpty) return null;
+    const hash = buildQueue.currentProductionTypeHash;
     const info = constructibleInfo(hash);
     if (!info || info.ConstructibleClass !== "WONDER") return null;
     const name = (info.Name && compose(info.Name)) || info.ConstructibleType;
-    return { type: info.ConstructibleType, name, percent: pctVal(bq, hash), turnsLeft: turnsVal(bq) };
+    const percent = percentComplete(buildQueue, hash);
+    return { type: info.ConstructibleType, name, percent, turnsLeft: turnsLeftOf(buildQueue) };
   } catch (_) {
     return null;
   }
 }
 
-/** @param {*} bq @param {*} hash @returns {number|null} Percent complete (0-100), clamped. */
-function pctVal(bq, hash) {
-  const pct = Number(bq.getPercentComplete(hash));
+/**
+ * @param {*} buildQueue
+ * @param {*} hash
+ * @returns {number|null} Percent complete (0-100), clamped.
+ */
+function percentComplete(buildQueue, hash) {
+  const pct = Number(buildQueue.getPercentComplete(hash));
   return isFinite(pct) ? Math.max(0, Math.min(100, Math.round(pct))) : null;
 }
 
-/** @param {*} bq @returns {number|null} Turns left, or null. */
-function turnsVal(bq) {
-  const t = Number(bq.currentTurnsLeft);
-  return isFinite(t) && t >= 0 ? t : null;
+/**
+ * @param {*} buildQueue
+ * @returns {number|null}
+ */
+function turnsLeftOf(buildQueue) {
+  const turns = Number(buildQueue.currentTurnsLeft);
+  return isFinite(turns) && turns >= 0 ? turns : null;
 }
 
 /**
  * Array engine read, [] on throw/non-array.
  * @param {() => *} fn
- * @returns {Array<*>} The array, or [].
+ * @returns {Array<*>}
  */
 function safeArr(fn) {
   try {
-    const v = fn();
-    return Array.isArray(v) ? v : [];
+    const value = fn();
+    return Array.isArray(value) ? value : [];
   } catch (_) {
     return [];
   }
@@ -756,22 +754,22 @@ function safeArr(fn) {
  * Resolve one wonder ComponentID to { type, icon, nameKey, location }, or null
  * when it is not a complete wonder / unresolvable. `location` (the wonder's plot)
  * lets the camera tour fly to individual wonders.
- * @param {*} cid The constructible ComponentID.
+ * @param {*} componentId The constructible ComponentID.
  * @returns {{type: string, icon: string, nameKey: string,
  *   location: {x: number, y: number}|null}|null}
  */
-function resolveWonder(cid) {
+function resolveWonder(componentId) {
   try {
-    const c = constructibleById(cid);
-    if (!c || !c.complete) return null;
-    const info = constructibleInfo(c.type);
+    const constructible = constructibleById(componentId);
+    if (!constructible || !constructible.complete) return null;
+    const info = constructibleInfo(constructible.type);
     const type = info && info.ConstructibleType;
     if (typeof type !== "string") return null;
     return {
       type,
       icon: wonderIconUrl(type),
       nameKey: info.Name || type,
-      location: readLocation(c)
+      location: readLocation(constructible)
     };
   } catch (_) {
     return null;
@@ -796,7 +794,7 @@ function wonderIconUrl(type) {
 
 /**
  * Defensively read the alive-player list.
- * @returns {Array<*>|null} The player handles, or null.
+ * @returns {Array<*>|null}
  */
 function alivePlayers() {
   try {
@@ -809,18 +807,18 @@ function alivePlayers() {
 
 /**
  * Append one player's settlement records to `list`.
- * @param {*} p The player handle.
+ * @param {*} player The player handle.
  * @param {Settlement[]} list The accumulating list (mutated).
  * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
  */
-function gatherPlayerSettlements(p, list, lite) {
-  const pid = typeof p?.id === "number" ? p.id : undefined;
+function gatherPlayerSettlements(player, list, lite) {
+  const pid = typeof player?.id === "number" ? player.id : undefined;
   if (typeof pid !== "number") return;
-  // p.Cities.getCities() returns city handles directly (not ComponentIDs), so
+  // player.Cities.getCities() returns city handles directly (not ComponentIDs), so
   // each element is used as-is - no Cities.get() lookup.
-  const cities = playerCities(p);
+  const cities = playerCities(player);
   if (!cities.length) return;
-  const owner = resolveOwner(pid, p);
+  const owner = resolveOwner(pid, player);
   for (let i = 0; i < cities.length; i++) {
     const rec = buildSettlement(cities[i], pid, owner, i, lite);
     if (rec) list.push(rec);
@@ -837,27 +835,27 @@ function gatherSettlements(lite) {
   const list = [];
   const players = alivePlayers();
   if (!Array.isArray(players)) return list;
-  for (const p of players) if (p) gatherPlayerSettlements(p, list, lite);
+  for (const player of players) if (player) gatherPlayerSettlements(player, list, lite);
   applyPopulationVarianceAndEnsureUnique(list);
   attachHolyCities(list);
-  slog("gathered", list.length, "settlements");
+  log.debug("gathered", list.length, "settlements");
   return list;
 }
 
 /**
  * Read a player's settlement handles (getCities returns handles, not ids).
- * @param {*} p The player handle.
+ * @param {*} player
  * @returns {Array<*>} The city/town handles (empty when unreadable).
  */
-function playerCities(p) {
+function playerCities(player) {
   try {
-    const cities = p?.Cities;
+    const cities = player?.Cities;
     if (cities && typeof cities.getCities === "function") {
       const list = cities.getCities();
       if (Array.isArray(list)) return list;
     }
   } catch (_) {
-    // p.Cities.getCities() can throw mid age-transition; treat as none.
+    // player.Cities.getCities() can throw mid age-transition; treat as none.
   }
   return [];
 }
@@ -872,8 +870,8 @@ function computeComposite(list) {
   const cols = SETTLEMENT_OUTPUTS.filter((c) => c.composite);
   const max = maxByOutput(list, cols);
   let totalWeight = 0;
-  for (const c of cols) totalWeight += c.weight || 1;
-  for (const s of list) s.composite = compositeOf(s, cols, max, totalWeight);
+  for (const col of cols) totalWeight += col.weight || 1;
+  for (const settlement of list) settlement.composite = compositeOf(settlement, cols, max, totalWeight);
 }
 
 /**
@@ -885,28 +883,28 @@ function computeComposite(list) {
 function maxByOutput(list, cols) {
   /** @type {Record<string, number>} */
   const max = {};
-  for (const c of cols) {
-    let m = 0;
-    for (const s of list) m = Math.max(m, s.outputs[c.id] || 0);
-    max[c.id] = m;
+  for (const col of cols) {
+    let best = 0;
+    for (const settlement of list) best = Math.max(best, settlement.outputs[col.id] || 0);
+    max[col.id] = best;
   }
   return max;
 }
 
 /**
  * One settlement's weighted, normalized composite score (0-100).
- * @param {Settlement} s The settlement.
+ * @param {Settlement} settlement
  * @param {Array<{ id: string, weight: number }>} cols The composite columns.
  * @param {Record<string, number>} max
  * @param {number} totalWeight
  * @returns {number}
  */
-function compositeOf(s, cols, max, totalWeight) {
+function compositeOf(settlement, cols, max, totalWeight) {
   let sum = 0;
-  for (const c of cols) {
-    const m = max[c.id];
-    const v = Math.max(0, s.outputs[c.id] || 0);
-    sum += (m > 0 ? v / m : 0) * (c.weight || 1);
+  for (const col of cols) {
+    const colMax = max[col.id];
+    const value = Math.max(0, settlement.outputs[col.id] || 0);
+    sum += (colMax > 0 ? value / colMax : 0) * (col.weight || 1);
   }
   return totalWeight > 0 ? (sum / totalWeight) * 100 : 0;
 }
@@ -926,14 +924,14 @@ function computeRanks(list) {
 
 /**
  * The sortable numeric value of a settlement for a given output/composite key.
- * @param {Settlement} s The settlement.
+ * @param {Settlement} settlement
  * @param {string} key The output id, or "composite".
  * @returns {number}
  */
-export function valueOf(s, key) {
-  if (key === "composite") return s.composite;
-  const v = s.outputs[key];
-  return typeof v === "number" ? v : 0;
+export function valueOf(settlement, key) {
+  if (key === "composite") return settlement.composite;
+  const value = settlement.outputs[key];
+  return typeof value === "number" ? value : 0;
 }
 
 /**
@@ -948,7 +946,7 @@ export function valueOf(s, key) {
 /**
  * Gather, score, and rank every settlement in the world.
  * @param {BoardOptions} [opts] Build options (`lite` for the sampler's archive).
- * @returns {SettlementBoard} The scored + ranked board.
+ * @returns {SettlementBoard}
  */
 export function buildSettlementBoard(opts) {
   const settlements = gatherSettlements(!!(opts && opts.lite));
@@ -959,14 +957,7 @@ export function buildSettlementBoard(opts) {
   const leaders = {};
   const keys = ["composite", ...SETTLEMENT_OUTPUTS.map((c) => c.id)];
   for (const key of keys) {
-    let best = null;
-    for (const s of settlements) {
-      if (s.ranks[key] === 1) {
-        best = s;
-        break;
-      }
-    }
-    leaders[key] = best;
+    leaders[key] = settlements.find((settlement) => settlement.ranks[key] === 1) || null;
   }
   return { settlements, leaders };
 }

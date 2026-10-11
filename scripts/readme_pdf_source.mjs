@@ -38,8 +38,8 @@ function stage(src) {
 
 /**
  * Escape the characters pandoc reads as markup inside a caption.
- * @param {string} s Caption text.
- * @returns {string} Caption.
+ * @param {string} s
+ * @returns {string}
  */
 function caption(s) {
   return s
@@ -54,7 +54,7 @@ function caption(s) {
 /**
  * The gallery table as one image per line, each with its caption.
  * @param {string} table The `<table>...</table>` block.
- * @returns {string} Markdown.
+ * @returns {string}
  */
 function gallery(table) {
   const cells = [...table.matchAll(/<td[^>]*>(.*?)<\/td>/gs)];

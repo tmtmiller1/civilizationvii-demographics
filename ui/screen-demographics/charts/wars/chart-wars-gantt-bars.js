@@ -7,49 +7,52 @@ import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-
 import { majorsOnSide } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 /**
+ * The latest sampled primary color for a pid, newest sample first, with a neutral fallback.
  * @param {*[]} samples
  * @param {*} pid
- * @returns {string} The latest sampled primary color for the pid.
+ * @returns {string}
  */
 function currentPrimaryColor(samples, pid) {
   for (let i = samples.length - 1; i >= 0; i--) {
-    const ps = samples[i]?.players?.[pid];
-    if (ps && typeof ps.primaryColor === "string" && ps.primaryColor.length > 0) {
-      return ps.primaryColor;
+    const samplePlayer = samples[i]?.players?.[pid];
+    if (samplePlayer && typeof samplePlayer.primaryColor === "string" && samplePlayer.primaryColor.length > 0) {
+      return samplePlayer.primaryColor;
     }
   }
   return "#9aa8c8";
 }
 
 /**
+ * A stripe's fill: the civ's current primary color, else its roster color, else the side fallback.
  * @param {*} stripe
  * @param {number} idx
  * @param {*[]} samples
- * @param {*} sem Semantic palette.
- * @returns {string} The stripe's fill color.
+ * @param {*} palette Semantic palette (getSemantic).
+ * @returns {string}
  */
-function resolveStripeFill(stripe, idx, samples, sem) {
+function resolveStripeFill(stripe, idx, samples, palette) {
   return (
     (typeof stripe.pid === "number" && currentPrimaryColor(samples, stripe.pid)) ||
     stripe.color ||
-    (idx % 2 === 0 ? sem.sideA_fallback : sem.sideB_fallback)
+    (idx % 2 === 0 ? palette.sideA_fallback : palette.sideB_fallback)
   );
 }
 
 /**
+ * The war's major participants as stripes, or two side-colored placeholders when it has none.
  * @param {*} war
- * @param {*} sem Semantic palette.
- * @returns {*[]} The war's participant stripes.
+ * @param {*} palette Semantic palette (getSemantic).
+ * @returns {*[]}
  */
-function resolveWarStripes(war, sem) {
+function resolveWarStripes(war, palette) {
   const participants = /** @type {any[]} */ ([]).concat(
     majorsOnSide(war.sideACivs),
     majorsOnSide(war.sideBCivs)
   );
   if (participants.length > 0) return participants;
   return [
-    { pid: null, color: sem.sideA_fallback },
-    { pid: null, color: sem.sideB_fallback }
+    { pid: null, color: palette.sideA_fallback },
+    { pid: null, color: palette.sideB_fallback }
   ];
 }
 
@@ -59,7 +62,7 @@ function resolveWarStripes(war, sem) {
  * @param {Object} args
  * @param {*[]} args.stripes
  * @param {*[]} args.samples
- * @param {*} args.sem Semantic palette.
+ * @param {*} args.palette Semantic palette (getSemantic).
  * @param {number} args.x1 Left x.
  * @param {number} args.baseY Top y.
  * @param {number} args.barW
@@ -67,11 +70,11 @@ function resolveWarStripes(war, sem) {
  * @param {boolean} args.isClosed
  */
 function drawWarBarStripes(svg, args) {
-  const { stripes, samples, sem, x1, baseY, barW, barH, isClosed } = args;
+  const { stripes, samples, palette, x1, baseY, barW, barH, isClosed } = args;
   const stripeH = barH / stripes.length;
 
   stripes.forEach((stripe, idx) => {
-    const fill = resolveStripeFill(stripe, idx, samples, sem);
+    const fill = resolveStripeFill(stripe, idx, samples, palette);
     svg.appendChild(
       svgEl("rect", {
         x: x1,
@@ -84,13 +87,13 @@ function drawWarBarStripes(svg, args) {
     );
   });
 
-  for (let s = 1; s < stripes.length; s++) {
+  for (let i = 1; i < stripes.length; i++) {
     svg.appendChild(
       svgEl("line", {
         x1: x1,
         x2: x1 + barW,
-        y1: baseY + s * stripeH,
-        y2: baseY + s * stripeH,
+        y1: baseY + i * stripeH,
+        y2: baseY + i * stripeH,
         stroke: "rgba(28, 20, 8, 0.55)",
         "stroke-width": "0.7"
       })
@@ -101,10 +104,10 @@ function drawWarBarStripes(svg, args) {
 /**
  * Draw the right-edge marker for one bar.
  * @param {SVGElement} svg
- * @param {{ isClosed:boolean, x2:number, baseY:number, barH:number, sem:* }} m
+ * @param {{ isClosed:boolean, x2:number, baseY:number, barH:number, palette:* }} marker
  */
-function drawWarBarEndMarker(svg, m) {
-  const { isClosed, x2, baseY, barH, sem } = m;
+function drawWarBarEndMarker(svg, marker) {
+  const { isClosed, x2, baseY, barH, palette } = marker;
   if (isClosed) {
     svg.appendChild(
       svgEl("line", {
@@ -124,7 +127,7 @@ function drawWarBarEndMarker(svg, m) {
       cx: x2,
       cy: baseY + barH / 2,
       r: 5,
-      fill: sem.ongoing_marker,
+      fill: palette.ongoing_marker,
       stroke: "#1c1408",
       "stroke-width": "0.5"
     })
@@ -148,11 +151,11 @@ function appendTailGradient(svg, id, color) {
  * Draw an ongoing war's fading tail.
  * @param {SVGElement} svg
  * @param {{
- *   stripes:*[], samples:*[], sem:*, xStart:number, xEnd:number, baseY:number, barH:number
+ *   stripes:*[], samples:*[], palette:*, xStart:number, xEnd:number, baseY:number, barH:number
  * }} args
  */
 function drawWarBarTail(svg, args) {
-  const { stripes, samples, sem, xStart, xEnd, baseY, barH } = args;
+  const { stripes, samples, palette, xStart, xEnd, baseY, barH } = args;
   const tailW = xEnd - xStart;
   if (tailW <= 1) return;
 
@@ -169,7 +172,7 @@ function drawWarBarTail(svg, args) {
 
   const stripeH = barH / stripes.length;
   stripes.forEach((stripe, idx) => {
-    const fill = resolveStripeFill(stripe, idx, samples, sem);
+    const fill = resolveStripeFill(stripe, idx, samples, palette);
     const gradId = "demo-wartail-" + Math.round(baseY) + "-" + idx;
     appendTailGradient(svg, gradId, fill);
     svg.appendChild(
@@ -193,7 +196,7 @@ function drawWarBarTail(svg, args) {
  *   dom:{xMin:number,xMax:number},
  *   stripes:*[],
  *   samples:*[],
- *   sem:*,
+ *   palette:*,
  *   x1:number,
  *   x2:number,
  *   baseY:number,
@@ -203,14 +206,14 @@ function drawWarBarTail(svg, args) {
  * @returns {number} Hover hit width.
  */
 function drawWarTailOrEnd(svg, args) {
-  const { isClosed, L, dom, stripes, samples, sem, x1, x2, baseY, barH, barW } = args;
+  const { isClosed, L, dom, stripes, samples, palette, x1, x2, baseY, barH, barW } = args;
   if (isClosed) {
-    drawWarBarEndMarker(svg, { isClosed, x2, baseY, barH, sem });
+    drawWarBarEndMarker(svg, { isClosed, x2, baseY, barH, palette });
     return barW;
   }
 
   const xTail = L.xOf(dom.xMax);
-  drawWarBarTail(svg, { stripes, samples, sem, xStart: x2, xEnd: xTail, baseY, barH });
+  drawWarBarTail(svg, { stripes, samples, palette, xStart: x2, xEnd: xTail, baseY, barH });
   return Math.max(barW, xTail - x1);
 }
 
@@ -229,19 +232,19 @@ function drawWarTailOrEnd(svg, args) {
 function drawWarBar(svg, war, row, ctx) {
   const { baseY, barH } = row;
   const { L, dom, latestTurn, samples } = ctx;
-  const sTurn = war.startTurn;
+  const startTurn = war.startTurn;
   const isClosed = typeof war.endTurn === "number";
-  const eTurn = isClosed ? war.endTurn : latestTurn;
-  const x1 = L.xOf(Math.max(sTurn, dom.xMin));
-  const x2 = L.xOf(Math.min(eTurn, dom.xMax));
-  const sem = getSemantic();
-  const stripes = resolveWarStripes(war, sem);
+  const endTurn = isClosed ? war.endTurn : latestTurn;
+  const x1 = L.xOf(Math.max(startTurn, dom.xMin));
+  const x2 = L.xOf(Math.min(endTurn, dom.xMax));
+  const palette = getSemantic();
+  const stripes = resolveWarStripes(war, palette);
   const barW = Math.max(2, x2 - x1);
 
   drawWarBarStripes(svg, {
     stripes,
     samples,
-    sem,
+    palette,
     x1,
     baseY,
     barW,
@@ -267,7 +270,7 @@ function drawWarBar(svg, war, row, ctx) {
     dom,
     stripes,
     samples,
-    sem,
+    palette,
     x1,
     x2,
     baseY,
@@ -291,14 +294,14 @@ function drawWarBar(svg, war, row, ctx) {
  * @returns {*[]} Bar rects.
  */
 export function drawWarBars(svg, filtered, ctx) {
-  const { L, dom, tr, latestTurn, samples } = ctx;
+  const { L, dom, tr: turnRange, latestTurn, samples } = ctx;
   /** @type {*[]} */
   const barRects = [];
   const barCtx = { L, dom, latestTurn, samples };
   for (let i = 0; i < filtered.length; i++) {
     const war = filtered[i];
-    const eTurn = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
-    if (tr && (eTurn < tr.min || war.startTurn > tr.max)) continue;
+    const endTurn = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
+    if (turnRange && (endTurn < turnRange.min || war.startTurn > turnRange.max)) continue;
     barRects.push(
       drawWarBar(
         svg,

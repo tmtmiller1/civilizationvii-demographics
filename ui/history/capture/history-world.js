@@ -1,6 +1,6 @@
 // history-world.js
 //
-// Reads the live game into a plain HnrWorldState: every major player's settlements, wonders,
+// Reads the live game into a plain HistoryWorldState: every major player's settlements, wonders,
 // Triumphs, religion, wars and population, plus claimed victories. This is the only capture module
 // that touches the engine; history-diff.js compares two states without it. Every engine call is wrapped
 // in safe() because handles go stale mid age-transition and some calls throw for dead players.
@@ -58,48 +58,48 @@ export function everMajors() {
 
 /**
  * Leader and civilization identity for one player, as type strings plus LOC name tags.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @returns {{leader:string, leaderName:string, civ:string, civName:string, color:string, color2:string,
  *   human:boolean}}
  */
-export function playerIdentity(p) {
-  const leaderRow = infoRow("Leaders", p.leaderType);
-  const civRow = infoRow("Civilizations", p.civilizationType);
+export function playerIdentity(player) {
+  const leaderRow = infoRow("Leaders", player.leaderType);
+  const civRow = infoRow("Civilizations", player.civilizationType);
   return {
     leader: leaderRow?.LeaderType || "",
     leaderName: leaderRow?.Name || "",
     civ: civRow?.CivilizationType || "",
     civName: civRow?.Name || "",
-    ...playerColors(p),
-    human: !!safe(() => p.isHuman, false)
+    ...playerColors(player),
+    human: !!safe(() => player.isHuman, false)
   };
 }
 
 /**
  * A player's primary and secondary banner colors.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @returns {{color:string, color2:string}} "" when unknown.
  */
-function playerColors(p) {
+function playerColors(player) {
   return {
-    color: String(safe(() => UI.Player.getPrimaryColorValueAsString(p.id), "") || ""),
-    color2: String(safe(() => UI.Player.getSecondaryColorValueAsString(p.id), "") || "")
+    color: String(safe(() => UI.Player.getPrimaryColorValueAsString(player.id), "") || ""),
+    color2: String(safe(() => UI.Player.getSecondaryColorValueAsString(player.id), "") || "")
   };
 }
 
 /**
  * The player's settlements keyed by map location.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @returns {Record<string, string>} "x,y" -> settlement name (LOC tag or text).
  */
-export function readCities(p) {
+export function readCities(player) {
   /** @type {Record<string, string>} */
   const out = {};
-  const list = safe(() => p.Cities?.getCities?.(), []) || [];
-  for (const c of list) {
-    const loc = safe(() => c.location, null);
+  const list = safe(() => player.Cities?.getCities?.(), []) || [];
+  for (const city of list) {
+    const loc = safe(() => city.location, null);
     if (!loc) continue;
-    out[loc.x + "," + loc.y] = String(safe(() => c.name, "") || "");
+    out[loc.x + "," + loc.y] = String(safe(() => city.name, "") || "");
   }
   return out;
 }
@@ -108,24 +108,26 @@ export function readCities(p) {
  * The player's population in Demographics' real-world scale: the sum over its settlements of the
  * same per-settlement growth curve the Population chart and the Settlements board use (summed per
  * settlement because the curve is super-linear).
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @param {{age:string, agePct:number|undefined}} ctx
  * @returns {number}
  */
-export function readScaledPopulation(p, ctx) {
-  const list = safe(() => p.Cities?.getCities?.(), []) || [];
+export function readScaledPopulation(player, ctx) {
+  const list = safe(() => player.Cities?.getCities?.(), []) || [];
   let sum = 0;
-  for (const c of list) sum += safe(() => scaleCityPopulationAt(readCitySize(c), undefined, ctx.age, ctx.agePct), 0);
+  for (const city of list) {
+    sum += safe(() => scaleCityPopulationAt(readCitySize(city), undefined, ctx.age, ctx.agePct), 0);
+  }
   return Math.round(sum);
 }
 
 /**
  * Completed wonders owned by the player, as ConstructibleType strings.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @returns {string[]} Sorted.
  */
-export function readWonders(p) {
-  const comps = safe(() => p.Constructibles?.getWonders?.(p.id), []) || [];
+export function readWonders(player) {
+  const comps = safe(() => player.Constructibles?.getWonders?.(player.id), []) || [];
   /** @type {string[]} */
   const out = [];
   for (const wc of comps) {
@@ -157,12 +159,12 @@ function legacyRows(age) {
 
 /**
  * Triumphs this player has earned in the current age.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @param {string} age
  * @returns {string[]} Sorted.
  */
-export function readTriumphs(p, age) {
-  const leg = safe(() => p.Legacies, null);
+export function readTriumphs(player, age) {
+  const leg = safe(() => player.Legacies, null);
   if (!leg || typeof leg.isTriggered !== "function") return [];
   return legacyRows(age)
     .filter((r) => safe(() => leg.isTriggered(r.LegacyType), false))
@@ -184,11 +186,11 @@ export function legacyBlurb(type, age) {
 
 /**
  * The display name of the religion this player founded, or "".
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @returns {string} Custom name, LOC tag, or "".
  */
-export function readReligion(p) {
-  const rel = safe(() => p.Religion, null);
+export function readReligion(player) {
+  const rel = safe(() => player.Religion, null);
   if (!rel) return "";
   const type = safe(() => rel.getReligionType?.(), null);
   if (type == null || type === -1) return "";
@@ -198,11 +200,11 @@ export function readReligion(p) {
 
 /**
  * The engine type of the religion a player founded ("RELIGION_BUDDHISM"), for its icon, or "".
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @returns {string}
  */
-export function readReligionType(p) {
-  const type = safe(() => p.Religion?.getReligionType?.(), null);
+export function readReligionType(player) {
+  const type = safe(() => player.Religion?.getReligionType?.(), null);
   if (type == null || type === -1) return "";
   return String(infoRow("Religions", type)?.ReligionType || "");
 }
@@ -210,14 +212,14 @@ export function readReligionType(p) {
 /**
  * Major players this player is at war with. Independents are excluded on purpose: the engine
  * reports every Independent Power as "at war" at all times.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @param {number[]} majorIds Ids of living majors.
  * @returns {number[]} Sorted.
  */
-export function readWars(p, majorIds) {
-  const dip = safe(() => p.Diplomacy, null);
+export function readWars(player, majorIds) {
+  const dip = safe(() => player.Diplomacy, null);
   if (!dip || typeof dip.isAtWarWith !== "function") return [];
-  return majorIds.filter((q) => q !== p.id && safe(() => dip.isAtWarWith(q), false)).sort((a, b) => a - b);
+  return majorIds.filter((q) => q !== player.id && safe(() => dip.isAtWarWith(q), false)).sort((a, b) => a - b);
 }
 
 /**
@@ -233,27 +235,37 @@ export function readVictories() {
 
 /**
  * Read one player's state.
- * @param {PlayerLibrary} p
+ * @param {PlayerLibrary} player
  * @param {{age:string, agePct:number|undefined, local:any, majorIds:number[]}} ctx
- * @returns {HnrPlayerState}
+ * @returns {HistoryPlayerState}
  */
-export function readPlayer(p, ctx) {
-  const alive = !!safe(() => p.isAlive, false);
-  const met = p.id === ctx.local?.id || !!safe(() => ctx.local?.Diplomacy?.hasMet(p.id), false);
-  const base = { alive, civ: playerIdentity(p).civ, met };
+export function readPlayer(player, ctx) {
+  const alive = !!safe(() => player.isAlive, false);
+  const met = player.id === ctx.local?.id || !!safe(() => ctx.local?.Diplomacy?.hasMet(player.id), false);
+  const base = { alive, civ: playerIdentity(player).civ, met };
   if (!alive) {
-    return { ...base, cities: {}, wonders: [], triumphs: [], religion: "", religionType: "", wars: [], population: 0, popScaled: 0 };
+    return {
+      ...base,
+      cities: {},
+      wonders: [],
+      triumphs: [],
+      religion: "",
+      religionType: "",
+      wars: [],
+      population: 0,
+      popScaled: 0
+    };
   }
   return {
     ...base,
-    cities: readCities(p),
-    wonders: readWonders(p),
-    triumphs: readTriumphs(p, ctx.age),
-    religion: readReligion(p),
-    religionType: readReligionType(p),
-    wars: readWars(p, ctx.majorIds),
-    population: Number(safe(() => p.Stats?.totalPopulation, 0)) || 0,
-    popScaled: readScaledPopulation(p, ctx)
+    cities: readCities(player),
+    wonders: readWonders(player),
+    triumphs: readTriumphs(player, ctx.age),
+    religion: readReligion(player),
+    religionType: readReligionType(player),
+    wars: readWars(player, ctx.majorIds),
+    population: Number(safe(() => player.Stats?.totalPopulation, 0)) || 0,
+    popScaled: readScaledPopulation(player, ctx)
   };
 }
 
@@ -266,17 +278,17 @@ export function readPlayer(p, ctx) {
 export function readMigration(pid) {
   const api = /** @type {*} */ (globalThis).EmigrationData;
   if (!api || typeof api.grossInCumFor !== "function") return undefined;
-  const n = (/** @type {string} */ f) => Number(safe(() => api[f]?.(pid), 0)) || 0;
+  const count = (/** @type {string} */ method) => Number(safe(() => api[method]?.(pid), 0)) || 0;
   return {
-    i: Math.max(0, n("grossInCumFor") - n("internalInCumFor")),
-    o: Math.max(0, n("grossOutCumFor") - n("internalOutCumFor"))
+    i: Math.max(0, count("grossInCumFor") - count("internalInCumFor")),
+    o: Math.max(0, count("grossOutCumFor") - count("internalOutCumFor"))
   };
 }
 
 /**
  * Read the whole world.
  * @param {number} localId
- * @returns {HnrWorldState}
+ * @returns {HistoryWorldState}
  */
 export function readWorld(localId) {
   const majors = everMajors();
@@ -287,9 +299,9 @@ export function readWorld(localId) {
     local: safe(() => Players.get(localId), null),
     majorIds: majors.filter((p) => safe(() => p.isAlive, false)).map((p) => p.id)
   };
-  /** @type {Record<string, HnrPlayerState>} */
+  /** @type {Record<string, HistoryPlayerState>} */
   const players = {};
-  for (const p of majors) players[String(p.id)] = readPlayer(p, ctx);
+  for (const player of majors) players[String(player.id)] = readPlayer(player, ctx);
   const mine = players[String(localId)];
   const mig = mine?.alive ? readMigration(localId) : undefined;
   if (mine && mig) mine.mig = mig;

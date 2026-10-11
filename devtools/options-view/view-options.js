@@ -21,10 +21,7 @@ import {
 import {
   TIER_ORDER,
   TIER_BASIC,
-  TIER_STANDARD,
-  getTier,
-  showCameraOptionsInTier,
-  showStorageOptionsInTier
+  getTier
 } from "/demographics/ui/core/demographics-tiers.js";
 import {
   appendStorageControlsPanel
@@ -85,7 +82,7 @@ import {
 const DBG = false;
 /**
  * Debug logger, no-op unless {@link DBG} is set.
- * @param {...*} a Values to log.
+ * @param {...*} a
  */
 function dlog(...a) {
   if (DBG) console.warn("[Demographics.view-options]", ...a);
@@ -94,12 +91,12 @@ function dlog(...a) {
 /**
  * Build a labeled toggle row backed by an `fxs-checkbox` wired to a persisted
  * setting. On change the new boolean is written and `onChange` (if any) is run.
- * @param {string} label Row label text.
- * @param {string} key Setting key to read/write.
+ * @param {string} label
+ * @param {string} key
  * @param {boolean} dflt Default value when the setting is unset.
- * @param {OptionsSettings} settings Persisted-setting accessor.
+ * @param {OptionsSettings} settings
  * @param {(value: boolean) => void} [onChange] Optional post-write callback.
- * @returns {HTMLElement} The toggle-row element.
+ * @returns {HTMLElement}
  */
 function makeToggle(label, key, dflt, settings, onChange) {
   const wrap = document.createElement("div");
@@ -131,15 +128,14 @@ function makeToggle(label, key, dflt, settings, onChange) {
 /**
  * Build an `fxs-button` wired to `handler` on both activation and click, with
  * the shared "options" audio group.
- * @param {string} label Button caption.
- * @param {(event: Event) => void} handler Activation/click handler.
- * @returns {HTMLElement} The button element.
+ * @param {string} label
+ * @param {(event: Event) => void} handler
+ * @returns {HTMLElement}
  */
 function makeButton(label, handler) {
   const btn = document.createElement("fxs-button");
   btn.setAttribute("caption", label);
-  // Audio cue group - Enhancements.md #1. fxs-button auto-emits primary
-  // button-press / activate sounds when given a group ref.
+  // fxs-button auto-emits the primary button-press / activate sounds when given an audio group ref.
   btn.setAttribute("data-audio-group-ref", "options");
   btn.className = "demographics-option-button";
   btn.addEventListener("action-activate", handler);
@@ -149,7 +145,7 @@ function makeButton(label, handler) {
 
 /**
  * Remove every child of `host` so the view can be rebuilt from scratch.
- * @param {HTMLElement} host The view host element.
+ * @param {HTMLElement} host
  */
 function clearHost(host) {
   while (host.firstChild) host.removeChild(host.firstChild);
@@ -157,7 +153,7 @@ function clearHost(host) {
 
 /**
  * Build the "Options" heading element.
- * @returns {HTMLElement} The heading element.
+ * @returns {HTMLElement}
  */
 function buildHeading() {
   const heading = document.createElement("div");
@@ -168,8 +164,8 @@ function buildHeading() {
 
 /**
  * Build an uppercase section subheading (the same style the camera section uses).
- * @param {string} text The heading text.
- * @returns {HTMLElement} The subheading element.
+ * @param {string} text
+ * @returns {HTMLElement}
  */
 function buildSubheading(text) {
   const h = document.createElement("div");
@@ -180,8 +176,8 @@ function buildSubheading(text) {
 
 /**
  * Localized label for an analytics-governance policy id.
- * @param {string} policy A policy id.
- * @returns {string} The display label.
+ * @param {string} policy
+ * @returns {string}
  */
 function policyOptionLabel(policy) {
   if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
@@ -194,7 +190,7 @@ function policyOptionLabel(policy) {
  * Apply a chosen analytics policy: persist the local preference, keep the
  * `hideUnmetStats` / `showUnmetNames` keys in lockstep, push the host ceiling
  * in multiplayer when hosting, and reload so the banner + views reflect it.
- * @param {OptionsCtx} ctx Render context.
+ * @param {OptionsCtx} ctx
  * @param {string} mode The chosen policy id.
  */
 function applyAnalyticsPolicy(ctx, mode) {
@@ -211,7 +207,7 @@ function applyAnalyticsPolicy(ctx, mode) {
  * Build the analytics-visibility policy dropdown: how much comparative data the
  * screen exposes. In multiplayer a host's choice also writes the GameConfiguration
  * ceiling for all players; a non-host only constrains their own view.
- * @param {OptionsCtx} ctx Render context.
+ * @param {OptionsCtx} ctx
  * @returns {HTMLElement} The policy-control element (dropdown row + optional hint).
  */
 function buildAnalyticsPolicyControl(ctx) {
@@ -241,8 +237,8 @@ function buildAnalyticsPolicyControl(ctx) {
  * Build the "on first contact" reveal-mode dropdown (a sub-row of the spoiler
  * toggle): reveal a civ's full back-history when met, or only track it forward
  * from first contact. Maps to the `backfillMetHistory` boolean.
- * @param {OptionsCtx} ctx Render context.
- * @returns {HTMLElement} The dropdown-row element.
+ * @param {OptionsCtx} ctx
+ * @returns {HTMLElement}
  */
 function buildRevealModeControl(ctx) {
   const opts = [
@@ -266,8 +262,8 @@ function buildRevealModeControl(ctx) {
  * Toggles do not call ctx.requestReload() (except colorblind): a reload would
  * destroy the in-flight checkbox mid-event, and other settings take effect on the
  * next open. "Spoilers" writes `hideUnmetStats = value` and `showUnmetNames = !value`.
- * @param {HTMLElement} wrap The options container to append into.
- * @param {OptionsCtx} ctx Render context.
+ * @param {HTMLElement} wrap
+ * @param {OptionsCtx} ctx
  */
 function appendToggles(wrap, ctx) {
   wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING")));
@@ -305,8 +301,8 @@ function appendToggles(wrap, ctx) {
  * Append the Top Cities camera section: the pseudo-cinematic toggle and the
  * flyby controls (toggle + length preset + subtle rotate), both on by default.
  * Settings live under the `topCities.*` namespace of the Demographics settings slice.
- * @param {HTMLElement} wrap The options container to append into.
- * @param {OptionsCtx} ctx Render context.
+ * @param {HTMLElement} wrap
+ * @param {OptionsCtx} ctx
  */
 function appendCameraOptions(wrap, ctx) {
   wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING")));
@@ -330,8 +326,8 @@ function appendCameraOptions(wrap, ctx) {
 /**
  * Build the flyby-length preset dropdown (Short / Medium), persisting the
  * preset id under `topCities.flybyPreset`.
- * @param {OptionsCtx} ctx Render context.
- * @returns {HTMLElement} The dropdown-row element.
+ * @param {OptionsCtx} ctx
+ * @returns {HTMLElement}
  */
 function buildFlybyPresetControl(ctx) {
   const opts = [
@@ -350,11 +346,11 @@ function buildFlybyPresetControl(ctx) {
 /**
  * Build a labeled `fxs-dropdown` row: a label cell plus the dropdown, with the
  * shared "options" audio group and a wired selection-change handler.
- * @param {string} labelText Row label text.
- * @param {DropdownOption[]} opts The dropdown options.
+ * @param {string} labelText
+ * @param {DropdownOption[]} opts
  * @param {number} selectedIdx Initially selected item index.
- * @param {(index: number) => void} onSelect Selection-change callback.
- * @returns {HTMLElement} The dropdown-row element.
+ * @param {(index: number) => void} onSelect
+ * @returns {HTMLElement}
  */
 function buildDropdownRow(labelText, opts, selectedIdx, onSelect) {
   const row = document.createElement("div");
@@ -382,8 +378,8 @@ function buildDropdownRow(labelText, opts, selectedIdx, onSelect) {
 /**
  * Append the adaptive-cap dropdown + hint, the disable-decimation toggle, and
  * the polling-rate dropdown + hint to `wrap`, in their fixed display order.
- * @param {HTMLElement} wrap The options container to append into.
- * @param {OptionsCtx} ctx Render context.
+ * @param {HTMLElement} wrap
+ * @param {OptionsCtx} ctx
  */
 function appendStorageControls(wrap, ctx) {
   appendStorageControlsPanel(wrap, ctx, {
@@ -394,7 +390,7 @@ function appendStorageControls(wrap, ctx) {
 
 /**
  * Build kill-switch recovery controls when sampling is paused.
- * @param {OptionsCtx} ctx Render context.
+ * @param {OptionsCtx} ctx
  * @returns {HTMLElement} The paused-state row (empty when sampler is active).
  */
 function buildSamplerRecoveryRow(ctx) {
@@ -403,8 +399,8 @@ function buildSamplerRecoveryRow(ctx) {
 
 /**
  * Build the button row (refresh, clear history, reset war history).
- * @param {OptionsCtx} ctx Render context.
- * @returns {HTMLElement} The button-row element.
+ * @param {OptionsCtx} ctx
+ * @returns {HTMLElement}
  */
 function buildButtonRow(ctx) {
   return buildButtonRowPanel(ctx, { makeButton });
@@ -412,8 +408,8 @@ function buildButtonRow(ctx) {
 
 /**
  * Build the session-info footer line (sample count, schema version, backend).
- * @param {OptionsCtx} ctx Render context.
- * @returns {HTMLElement} The session-info element.
+ * @param {OptionsCtx} ctx
+ * @returns {HTMLElement}
  */
 function buildSessionInfo(ctx) {
   const info = document.createElement("div");
@@ -446,7 +442,7 @@ function historyBackendName() {
  * The LOC tag describing whether settings changed this session are reaching storage. The settings
  * module goes read-only for a session when the shared store returned another mod's data, could
  * not be read, or did not read back what was written; until now that was only a console line.
- * @param {OptionsCtx} ctx Render context.
+ * @param {OptionsCtx} ctx
  * @returns {string} A LOC tag.
  */
 function settingsPersistenceTag(ctx) {
@@ -480,9 +476,9 @@ export function render(host, ctx) {
   wrap.appendChild(buildHeading());
   appendInterfaceTier(wrap, ctx);
   appendToggles(wrap, ctx);
-  // UI complexity tiers: progressive disclosure of advanced control groups.
-  if (showCameraOptionsInTier()) appendCameraOptions(wrap, ctx);
-  if (showStorageOptionsInTier()) appendStorageControls(wrap, ctx);
+  // A development view: the camera and storage tuning groups are always shown.
+  appendCameraOptions(wrap, ctx);
+  appendStorageControls(wrap, ctx);
   wrap.appendChild(buildSamplerRecoveryRow(ctx));
   wrap.appendChild(buildButtonRow(ctx));
   wrap.appendChild(buildSessionInfo(ctx));
@@ -490,32 +486,30 @@ export function render(host, ctx) {
 
 /**
  * Localized label for a UI complexity tier id.
- * @param {string} tier A tier id.
- * @returns {string} The display label.
+ * @param {string} tier
+ * @returns {string}
  */
 function tierOptionLabel(tier) {
   if (tier === TIER_BASIC) return t("LOC_DEMOGRAPHICS_TIER_BASIC");
-  if (tier === TIER_STANDARD) return t("LOC_DEMOGRAPHICS_TIER_STANDARD");
-  return t("LOC_DEMOGRAPHICS_TIER_ANALYST");
+  return t("LOC_DEMOGRAPHICS_TIER_STANDARD");
 }
 
 /**
  * Localized one-line description for a UI complexity tier id.
- * @param {string} tier A tier id.
- * @returns {string} The description.
+ * @param {string} tier
+ * @returns {string}
  */
 function tierDescription(tier) {
   if (tier === TIER_BASIC) return t("LOC_DEMOGRAPHICS_TIER_BASIC_DESC");
-  if (tier === TIER_STANDARD) return t("LOC_DEMOGRAPHICS_TIER_STANDARD_DESC");
-  return t("LOC_DEMOGRAPHICS_TIER_ANALYST_DESC");
+  return t("LOC_DEMOGRAPHICS_TIER_STANDARD_DESC");
 }
 
 /**
  * Append the "Interface" section: the UI complexity tier dropdown plus a live
  * description of the chosen tier. Changing it reloads so the disclosed
  * pages / tabs / controls update immediately.
- * @param {HTMLElement} wrap The options container to append into.
- * @param {OptionsCtx} ctx Render context.
+ * @param {HTMLElement} wrap
+ * @param {OptionsCtx} ctx
  */
 function appendInterfaceTier(wrap, ctx) {
   wrap.appendChild(buildSubheading(t("LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING")));

@@ -1,6 +1,7 @@
 // Covers: view-worldrankings-allcivs.js, worldrankings-allcivs-render.js, worldrankings-allcivs-table.js
 import assert from "node:assert/strict";
 import { createFakeDocument } from "./_dom-stub.mjs";
+import { installMemoryLocalStorage, makeSettings } from "./_engine-stubs.mjs";
 
 const { document } = createFakeDocument();
 globalThis.document = document;
@@ -10,27 +11,14 @@ globalThis.GameContext = { localPlayerID: 1 };
 globalThis.Configuration = { getGame: () => ({ getValue: () => "full", startSeed: "seed1" }) };
 globalThis.Audio = { playSound: () => {} };
 
-const storage = new Map();
-globalThis.localStorage = {
-  getItem: (k) => (storage.has(k) ? storage.get(k) : null),
-  setItem: (k, v) => storage.set(k, String(v)),
-  removeItem: (k) => storage.delete(k)
-};
-
-function makeSettings() {
-  const data = {};
-  return {
-    getSetting: (k, d) => (Object.prototype.hasOwnProperty.call(data, k) ? data[k] : d),
-    setSetting: (k, v) => { data[k] = v; }
-  };
-}
+installMemoryLocalStorage();
 
 // view-worldrankings
 const { render: renderRankings } = await import(
   "/demographics/ui/screen-demographics/views/worldrankings-allcivs/view-worldrankings-allcivs.js"
 );
 
-const { buildCivColumn, buildLabelColumn, buildGhostCivColumn, formatMetricValue, METRIC_ICONS } = await import(
+const { formatMetricValue, METRIC_ICONS } = await import(
   "/demographics/ui/screen-demographics/views/worldrankings-allcivs/worldrankings-allcivs-render.js"
 );
 

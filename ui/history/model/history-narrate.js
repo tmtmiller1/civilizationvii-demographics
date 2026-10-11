@@ -3,6 +3,11 @@
 // Turns chronicle events into sentences in the player's language, and summarizes an age. The same
 // templates serve the live campaign and archived games through a Cast: a small lookup from player
 // id to the civilization name to use at a given age.
+//
+// Chronicle event records (HistoryEvent) keep one-letter keys because every event is stored in the
+// save, and long keys would grow it for nothing. The keys:
+//   t turn · a age index into CampaignDoc.ages · k kind · p acting player · q other player
+//   n display name (LOC tag or literal text) · x engine type string · d date label at the time
 
 import { t, typeName, victoryName } from "/demographics/ui/history/core/history-text.js";
 import { gameColors } from "/demographics/ui/history/views/history-colors.js";
@@ -19,9 +24,9 @@ import { gameColors } from "/demographics/ui/history/views/history-colors.js";
 
 /**
  * The civilization span a player held in an age (or their latest before it).
- * @param {HnrCivSpan[]} civs
+ * @param {HistoryCivSpan[]} civs
  * @param {string} age
- * @returns {HnrCivSpan|null}
+ * @returns {HistoryCivSpan|null}
  */
 export function spanFor(civs, age) {
   if (!civs || civs.length === 0) return null;
@@ -41,8 +46,8 @@ export function castFromDoc(doc, visibility = "met") {
     .map(Number)
     .sort((a, b) => Number(b === doc.local) - Number(a === doc.local) || a - b);
   const colors = gameColors(pids.map((pid) => {
-    const p = doc.players[String(pid)];
-    return { pid, primary: p.color, secondary: p.color2 };
+    const player = doc.players[String(pid)];
+    return { pid, primary: player.color, secondary: player.color2 };
   }));
   const met = (/** @type {number} */ pid) =>
     pid === doc.local ||
@@ -51,14 +56,14 @@ export function castFromDoc(doc, visibility = "met") {
   return {
     local: doc.local,
     civName: (pid, age) => {
-      const p = doc.players[String(pid)];
-      const s = spanFor(p?.civs || [], age);
-      if (s) return typeName(s.name, s.civ);
-      return p ? typeName(p.leaderName, p.leader) : "";
+      const player = doc.players[String(pid)];
+      const span = spanFor(player?.civs || [], age);
+      if (span) return typeName(span.name, span.civ);
+      return player ? typeName(player.leaderName, player.leader) : "";
     },
     leaderName: (pid) => {
-      const p = doc.players[String(pid)];
-      return p ? typeName(p.leaderName, p.leader) : "";
+      const player = doc.players[String(pid)];
+      return player ? typeName(player.leaderName, player.leader) : "";
     },
     known: met,
     color: (pid) => colors.get(pid) || "",
@@ -72,6 +77,7 @@ export function castFromDoc(doc, visibility = "met") {
  * @returns {Cast}
  */
 export function castFromRecord(rec) {
+  // A rival row is [pid, leader, leaderName, civ, civName, color, elimTurn, triumphs, color2].
   const rivals = Array.isArray(rec.rivals) ? rec.rivals : [];
   const rival = (/** @type {number} */ pid) => rivals.find((r) => r[0] === pid);
   const colors = gameColors([
@@ -82,14 +88,18 @@ export function castFromRecord(rec) {
     local: rec.local,
     civName: (pid, age) => {
       if (pid === rec.local) {
-        const s = spanFor(rec.civs, age);
-        return s ? typeName(s.name, s.civ) : "";
+        const span = spanFor(rec.civs, age);
+        return span ? typeName(span.name, span.civ) : "";
       }
-      const r = rival(pid);
-      if (!r) return "";
-      return r[3] ? typeName(r[4], r[3]) : typeName(r[2], r[1]);
+      const entry = rival(pid);
+      if (!entry) return "";
+      return entry[3] ? typeName(entry[4], entry[3]) : typeName(entry[2], entry[1]);
     },
-    leaderName: (pid) => (pid === rec.local ? typeName(rec.leaderName, rec.leader) : typeName(rival(pid)?.[2] || "", rival(pid)?.[1] || "")),
+    leaderName: (pid) => {
+      if (pid === rec.local) return typeName(rec.leaderName, rec.leader);
+      const entry = rival(pid);
+      return typeName(entry?.[2] || "", entry?.[1] || "");
+    },
     known: () => true,
     color: (pid) => colors.get(pid) || "",
     civType: (pid, age) => (pid === rec.local ? spanFor(rec.civs, age)?.civ || "" : rival(pid)?.[3] || "")
@@ -104,12 +114,12 @@ export function castFromRecord(rec) {
  * @returns {string}
  */
 function party(cast, pid, age) {
-  const n = pid != null && pid >= 0 ? cast.civName(pid, age) : "";
-  return n || t("LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
+  const name = pid != null && pid >= 0 ? cast.civName(pid, age) : "";
+  return name || t("LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
 }
 
 /** Sentence template per event kind. */
-const TEMPLATES = /** @type {Record<HnrEventKind, string>} */ ({
+const TEMPLATES = /** @type {Record<HistoryEventKind, string>} */ ({
   found: "LOC_DEMOGRAPHICS_HIST_EV_FOUND",
   capture: "LOC_DEMOGRAPHICS_HIST_EV_CAPTURE",
   razed: "LOC_DEMOGRAPHICS_HIST_EV_RAZED",
@@ -129,55 +139,55 @@ const TEMPLATES = /** @type {Record<HnrEventKind, string>} */ ({
 
 /**
  * Template arguments for an event, in {1_..}{2_..}{3_..} order.
- * @param {HnrEvent} e
+ * @param {HistoryEvent} event
  * @param {Cast} cast
  * @param {string} age Age type of the event.
  * @returns {string[]}
  */
-export function eventArgs(e, cast, age) {
-  const P = party(cast, e.p, age);
-  const Q = party(cast, e.q, age);
-  const N = t(e.n || "");
-  const typed = typeName(e.n || "", e.x || "");
+export function eventArgs(event, cast, age) {
+  const actor = party(cast, event.p, age);
+  const other = party(cast, event.q, age);
+  const name = t(event.n || "");
+  const typed = typeName(event.n || "", event.x || "");
   /** @type {Record<string, string[]>} */
   const byKind = {
-    capture: [P, N, Q],
-    razed: [N, Q],
-    war: [P, Q],
-    peace: [P, Q],
+    capture: [actor, name, other],
+    razed: [name, other],
+    war: [actor, other],
+    peace: [actor, other],
     age: [typed],
-    civ: [cast.leaderName(e.p), typed],
-    met: [P],
-    victory: [P, victoryName(e.x || "", e.n || "")],
-    wonder: [P, typed],
-    triumph: [P, typed],
-    crisis: [N || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED"), String(e.q ?? "")],
-    disaster: [N || t("LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED"), P]
+    civ: [cast.leaderName(event.p), typed],
+    met: [actor],
+    victory: [actor, victoryName(event.x || "", event.n || "")],
+    wonder: [actor, typed],
+    triumph: [actor, typed],
+    crisis: [name || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED"), String(event.q ?? "")],
+    disaster: [name || t("LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED"), actor]
   };
-  return byKind[e.k] || [P, N];
+  return byKind[event.k] || [actor, name];
 }
 
 /**
  * The sentence for an event.
- * @param {HnrEvent} e
+ * @param {HistoryEvent} event
  * @param {Cast} cast
  * @param {string} age Age type of the event.
  * @returns {string}
  */
-export function eventText(e, cast, age) {
-  return t(TEMPLATES[e.k] || "LOC_DEMOGRAPHICS_HIST_EV_GENERIC", ...eventArgs(e, cast, age));
+export function eventText(event, cast, age) {
+  return t(TEMPLATES[event.k] || "LOC_DEMOGRAPHICS_HIST_EV_GENERIC", ...eventArgs(event, cast, age));
 }
 
 /**
  * Whether the local player may see an event (no spoilers about civilizations not yet met).
- * @param {HnrEvent} e
+ * @param {HistoryEvent} event
  * @param {Cast} cast
  * @returns {boolean}
  */
-export function eventVisible(e, cast) {
-  if (e.k === "age" || e.k === "victory" || e.k === "crisis") return true;
+export function eventVisible(event, cast) {
+  if (event.k === "age" || event.k === "victory" || event.k === "crisis") return true;
   const ok = (/** @type {number|undefined} */ pid) => pid == null || pid < 0 || cast.known(pid);
-  return ok(e.p) && ok(e.q);
+  return ok(event.p) && ok(event.q);
 }
 
 /**
@@ -195,14 +205,14 @@ export function eventVisible(e, cast) {
 
 /**
  * Summarize the local player's age from its events.
- * @param {HnrEvent[]} events Events of one age.
+ * @param {HistoryEvent[]} events Events of one age.
  * @param {Cast} cast
  * @param {string} age
  * @returns {AgeSummary}
  */
 export function summarizeAge(events, cast, age) {
   const me = cast.local;
-  const mine = (/** @type {HnrEventKind} */ k) => events.filter((e) => e.k === k && e.p === me);
+  const mine = (/** @type {HistoryEventKind} */ k) => events.filter((e) => e.k === k && e.p === me);
   return {
     age,
     founded: mine("found").length,
