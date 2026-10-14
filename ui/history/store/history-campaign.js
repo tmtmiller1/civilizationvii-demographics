@@ -265,10 +265,7 @@ function paddedSeries(series, pid, at) {
   return ps;
 }
 
-/**
- * Remove the newest sample from every array.
- * @param {HistorySeries} series Mutated.
- */
+/** @param {HistorySeries} series Mutated. */
 function dropLastSample(series) {
   series.turns.pop();
   for (const ps of Object.values(series.by)) {
@@ -309,10 +306,8 @@ export function applyOutcome(doc, events, teamOf) {
 }
 
 /**
- * Whether an event is the local player's elimination in a game not yet decided.
  * @param {CampaignDoc} doc
  * @param {HistoryEvent} event
- * @returns {boolean}
  */
 function isLocalDefeat(doc, event) {
   return event.k === "elim" && event.p === doc.local && doc.outcome.status === "in_progress";

@@ -161,21 +161,14 @@ export function localStats(doc) {
 }
 
 /**
- * Settlements the local player holds in the latest state, else the last sampled count.
  * @param {HistoryPlayerState|null} state
  * @param {HistoryPlayerSeries} ps
- * @returns {number}
  */
 function settlementsHeld(state, ps) {
   return state ? Object.keys(state.cities || {}).length : lastOf(ps.set);
 }
 
-/**
- * Wonders the local player holds in the latest state (0 without one, or for a state that carries
- * no wonder list).
- * @param {HistoryPlayerState|null} state
- * @returns {number}
- */
+/** @param {HistoryPlayerState|null} state */
 function wondersHeld(state) {
   return state && Array.isArray(state.wonders) ? state.wonders.length : 0;
 }
@@ -191,11 +184,7 @@ function localPopulation(state, ps) {
   return { population: lastOf(ps.pop), populationScaled: lastOf(ps.pops || []) };
 }
 
-/**
- * Last element of a number array, or 0.
- * @param {number[]} arr
- * @returns {number}
- */
+/** @param {number[]} arr */
 function lastOf(arr) {
   return arr.length ? arr[arr.length - 1] || 0 : 0;
 }
@@ -375,7 +364,6 @@ export function pruneTexts(slice) {
   for (const tag of Object.keys(slice.texts)) if (!used.has(tag)) delete slice.texts[tag];
 }
 
-/** Byte size of a value as stored. */
 const sizeOf = (/** @type {*} */ x) => JSON.stringify(x).length;
 
 /**

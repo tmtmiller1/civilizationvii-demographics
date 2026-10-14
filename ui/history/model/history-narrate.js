@@ -107,18 +107,15 @@ export function castFromRecord(rec) {
 }
 
 /**
- * Name of a party to an event, or the "independent people" fallback.
  * @param {Cast} cast
  * @param {number|undefined} pid
  * @param {string} age
- * @returns {string}
  */
 function party(cast, pid, age) {
   const name = pid != null && pid >= 0 ? cast.civName(pid, age) : "";
   return name || t("LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE");
 }
 
-/** Sentence template per event kind. */
 const TEMPLATES = /** @type {Record<HistoryEventKind, string>} */ ({
   found: "LOC_DEMOGRAPHICS_HIST_EV_FOUND",
   capture: "LOC_DEMOGRAPHICS_HIST_EV_CAPTURE",

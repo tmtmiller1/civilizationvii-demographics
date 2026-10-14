@@ -38,11 +38,7 @@ export function visibleRecords(records, opts = {}) {
     .sort((a, b) => b.updated - a.updated);
 }
 
-/**
- * Sort weight of an outcome (lower first).
- * @param {HistoryStatus} status
- * @returns {number}
- */
+/** @param {HistoryStatus} status */
 function outcomeWeight(status) {
   return status === "victory" ? 0 : status === "defeat" || status === "ended" ? 1 : 2;
 }
@@ -111,10 +107,9 @@ export function titleIndex(rec, best) {
 }
 
 /**
- * Count values by key.
  * @template T
  * @param {T[]} items
- * @param {(item:T) => string} key Key function ("" skipped).
+ * @param {(item:T) => string} key
  * @returns {Map<string, number>}
  */
 function tally(items, key) {
@@ -126,11 +121,7 @@ function tally(items, key) {
   return counts;
 }
 
-/**
- * Key with the highest count (ties: first seen).
- * @param {Map<string, number>} counts
- * @returns {string} Key, or "".
- */
+/** @param {Map<string, number>} counts */
 function topKey(counts) {
   let best = "";
   let most = 0;
@@ -179,7 +170,6 @@ export function overview(records) {
  */
 
 /**
- * Fold one record into a group row.
  * @param {Map<string, GroupRow & {turnSum:number}>} rows Accumulator.
  * @param {string} key
  * @param {string} name LOC tag.
@@ -247,11 +237,9 @@ export const byCivilization = (r) => r.civs.map((c) => ({ key: c.civ, name: c.na
  */
 
 /**
- * Best game by a figure.
  * @param {ArchiveRecord[]} records
  * @param {(r:ArchiveRecord) => number} val
  * @param {boolean} [lowest] Pick the lowest instead of the highest.
- * @returns {ArchiveRecord|null} The game, or null when every figure is 0.
  */
 function bestBy(records, val, lowest = false) {
   let best = null;

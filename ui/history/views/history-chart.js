@@ -66,10 +66,8 @@ export function points(ys, count, yMax) {
 }
 
 /**
- * The plot SVG: grid, markers, lines.
  * @param {ChartSpec} spec
  * @param {number} yMax Axis maximum.
- * @returns {Element}
  */
 function plotSvg(spec, yMax) {
   const root = svg("svg", { viewBox: `0 0 ${VIEW_W} ${VIEW_H}`, preserveAspectRatio: "none", class: "dgh-chart-svg" });
@@ -96,10 +94,8 @@ function plotSvg(spec, yMax) {
 }
 
 /**
- * HTML overlays: y ticks and age marker labels.
  * @param {ChartSpec} spec
  * @param {number} yMax Axis maximum.
- * @returns {HTMLElement[]} Overlay elements.
  */
 function overlays(spec, yMax) {
   const out = [];

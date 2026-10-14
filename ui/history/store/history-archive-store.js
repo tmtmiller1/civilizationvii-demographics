@@ -152,10 +152,6 @@ export function persistArchive() {
   return verifyWrite();
 }
 
-/**
- * Read back after a write and confirm our games are present.
- * @returns {boolean}
- */
 function verifyWrite() {
   const { root, status } = readRoot();
   const ids = Object.keys(state.slice.games);

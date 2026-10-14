@@ -41,7 +41,6 @@ const ZOOMS = [1, 2, 4, 8];
 const PLAY_TICKS = 300;
 const PLAY_MS = 40;
 
-/** Milestone kinds in legend order, with their legend labels. */
 const MARK_LEGEND = [
   ["victory", "LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY"],
   ["wonder", "LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS"],
@@ -119,21 +118,17 @@ export function beats(tl, cast) {
 }
 
 /**
- * "date: text", or the text alone without a date.
  * @param {string} date
  * @param {string} text
- * @returns {string}
  */
 function dated(date, text) {
   return (date ? date + ": " : "") + text;
 }
 
 /**
- * A war's caption: yours against the enemy, or two other civilizations against each other.
  * @param {Cast} cast
  * @param {Timeline["wars"][number]} war
  * @param {string} age
- * @returns {string}
  */
 function warText(cast, war, age) {
   if (war.a != null && war.a !== cast.local) {
@@ -142,11 +137,7 @@ function warText(cast, war, age) {
   return t("LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH", partyName(cast, war.other, age));
 }
 
-/**
- * A crisis stage's caption.
- * @param {Timeline["crises"][number]} stage
- * @returns {string}
- */
+/** @param {Timeline["crises"][number]} stage */
 function crisisText(stage) {
   const name = t(stage.n) || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED");
   return name + ", " + t("LOC_DEMOGRAPHICS_HIST_TL_STAGE", stage.stage);
@@ -205,11 +196,7 @@ function lanesFor(tl, win, cast, zoom, cache) {
   ].filter((x) => !!x).map((x) => /** @type {import("./history-timeline-lanes.js").Lane} */ (x));
 }
 
-/**
- * The legend of what this timeline shows.
- * @param {Timeline} tl
- * @returns {HTMLElement}
- */
+/** @param {Timeline} tl */
 function legend(tl) {
   const present = new Set(tl.marks.map((mark) => mark.k));
   const item = (/** @type {string} */ swatch, /** @type {string} */ label) =>
@@ -308,10 +295,8 @@ export function timelineGraphic(tl, cast, opts = {}) {
 }
 
 /**
- * The civilizations picked for a game: the saved pick for this game, else just your own.
  * @param {string} key Game id.
  * @param {Cast} cast
- * @returns {Set<number>}
  */
 function shownCivs(key, cast) {
   const pick = viewState.tlCivs;
@@ -365,7 +350,6 @@ function civFilter(tl, cast, shown, key, redraw) {
 }
 
 /**
- * Build the controls, labels, canvas and caption into the root.
  * @param {HTMLElement} root Emptied first.
  * @param {Timeline} tl
  * @param {Cast} cast
@@ -415,8 +399,6 @@ function clearExcept(node, keep) {
 }
 
 /**
- * Mouse behavior of the lanes: the ruler seeks on click, and the ruler and population lane show a
- * readout that follows the mouse.
  * @param {Timeline} tl
  * @param {AxisWindow} win
  * @param {{key:string, node:HTMLElement}[]} lanes
@@ -434,11 +416,9 @@ function wireLanes(tl, win, lanes, player, cast) {
 }
 
 /**
- * Population at a position: yours alone, or each shown civilization's when rivals are shown.
  * @param {Timeline} tl Timeline (focused).
  * @param {Cast} cast
  * @param {number} at
- * @returns {string}
  */
 function populationsAt(tl, cast, at) {
   const lines = tl.lines || [];
@@ -472,7 +452,6 @@ export function valueAt(curve, at) {
 }
 
 /**
- * A readout that follows the mouse across a lane: a hairline and a label naming what is under it.
  * @param {HTMLElement} lane
  * @param {AxisWindow} win
  * @param {(at:number) => string} textAt Label for a position.
@@ -525,7 +504,6 @@ function onActivateAt(target, fn) {
  */
 
 /**
- * Playback: a cursor with a veil over the future and a caption naming the latest event.
  * @param {Timeline} tl
  * @param {Cast} cast
  * @param {AxisWindow} win
@@ -601,12 +579,10 @@ function follow(viewport, canvas, percent) {
 }
 
 /**
- * The control row: age window, zoom, pan and play.
  * @param {Timeline} tl
  * @param {Player} player
  * @param {HTMLElement} viewport Scroll box.
  * @param {{redraw: () => void, stop: () => void}} fx
- * @returns {HTMLElement}
  */
 function controls(tl, player, viewport, fx) {
   const ages = [

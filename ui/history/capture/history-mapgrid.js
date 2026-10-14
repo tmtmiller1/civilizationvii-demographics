@@ -47,7 +47,6 @@ export function gridWidth(worldWidth) {
 
 /**
  * The world's size and the grid it is sampled to.
- * @returns {{w:number, h:number, gw:number, gh:number}|null} null without a map.
  */
 function dims() {
   const width = Number(safe(() => GameplayMap.getGridWidth(), 0));

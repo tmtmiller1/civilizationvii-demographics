@@ -28,11 +28,9 @@ export function lineageOrder(doc, known) {
 }
 
 /**
- * One cell: the civilization held in an age, a "fallen" marker, or nothing.
  * @param {HistoryPlayer} player
  * @param {HistoryAge} age
  * @param {string} color Readable display color.
- * @returns {HTMLElement}
  */
 function cell(player, age, color) {
   const span = (player.civs || []).find((c) => c.age === age.age);

@@ -99,11 +99,7 @@ export function ageCard(doc, idx, cast) {
   ], "dgh-age-card");
 }
 
-/**
- * The counted facts of an age summary, one chip each (dimmed at zero).
- * @param {import("../model/history-narrate.js").AgeSummary} summary
- * @returns {HTMLElement}
- */
+/** @param {import("../model/history-narrate.js").AgeSummary} summary */
 function factChips(summary) {
   const facts = [
     [summary.founded, "LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED"],
@@ -121,11 +117,7 @@ function factChips(summary) {
   ));
 }
 
-/**
- * Named detail lines for an age summary (wonders, religion, fallen civilizations).
- * @param {import("../model/history-narrate.js").AgeSummary} summary
- * @returns {HTMLElement[]}
- */
+/** @param {import("../model/history-narrate.js").AgeSummary} summary */
 function namedLines(summary) {
   /** @type {Array<[string, string]>} */
   const lines = [
@@ -140,10 +132,8 @@ function namedLines(summary) {
 }
 
 /**
- * The filter controls.
  * @param {CampaignDoc} doc
  * @param {() => void} rerender
- * @returns {HTMLElement[]}
  */
 function controls(doc, rerender) {
   const set = (/** @type {Partial<import("./history-state.js").ViewState>} */ patch) => {
@@ -170,11 +160,9 @@ function controls(doc, rerender) {
 }
 
 /**
- * The grouped feed.
  * @param {CampaignDoc} doc
  * @param {HistoryEvent[]} events Visible events.
  * @param {import("../model/history-narrate.js").Cast} cast
- * @returns {HTMLElement[]}
  */
 function feed(doc, events, cast) {
   const order = doc.ages.map((_, i) => i);

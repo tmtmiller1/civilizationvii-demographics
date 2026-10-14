@@ -117,7 +117,6 @@ export function positionOf(spans, ages, ageIndex, turn) {
 }
 
 /**
- * Age bands, named and dated from each age's opening event.
  * @param {HistoryAge[]} ages
  * @param {AgeSpan[]} spans
  * @param {HistoryEvent[]} events
@@ -131,10 +130,8 @@ function ageBands(ages, spans, events) {
 }
 
 /**
- * The other party of an event involving the local player, or -1.
  * @param {HistoryEvent} event
  * @param {number} local
- * @returns {number}
  */
 function otherParty(event, local) {
   if (event.p === local) return event.q ?? -1;
@@ -169,7 +166,6 @@ export function warIntervals(events, local, pos, spans) {
 }
 
 /**
- * Apply one event to the open wars.
  * @param {HistoryEvent} event
  * @param {number} other The other party when the local player is involved, else -1.
  * @param {{open: Map<number, {from:number, a:number, d:string}>, close: (other:number, to:number) => void,
@@ -240,29 +236,17 @@ export function milestones(events, local, pos, iconOf = () => "") {
   }));
 }
 
-/**
- * The sample turns of a campaign (empty for a document without them).
- * @param {CampaignDoc} doc
- * @returns {number[]}
- */
+/** @param {CampaignDoc} doc */
 function seriesTurns(doc) {
   return doc.series.turns || [];
 }
 
-/**
- * The local player's series, if the campaign has one.
- * @param {CampaignDoc} doc
- * @returns {HistoryPlayerSeries|undefined}
- */
+/** @param {CampaignDoc} doc */
 function localSeries(doc) {
   return (doc.series.by || {})[String(doc.local)];
 }
 
-/**
- * The local player's scaled population per sample (empty when never recorded).
- * @param {CampaignDoc} doc
- * @returns {number[]} People per sample.
- */
+/** @param {CampaignDoc} doc */
 function localPops(doc) {
   return localSeries(doc)?.pops || [];
 }
@@ -430,7 +414,6 @@ function closeRivalWar(io, pair, to) {
 }
 
 /**
- * Apply one event to the rivals' open wars.
  * @param {RivalWarIo} io
  * @param {HistoryEvent} event
  * @param {number} local
@@ -456,11 +439,9 @@ function closeWarsOf(io, event) {
 }
 
 /**
- * Whether two players are both civilizations other than the local player.
  * @param {number} first
  * @param {number} second
  * @param {number} local
- * @returns {boolean}
  */
 function isRivalPair(first, second, local) {
   return first >= 0 && second >= 0 && first !== local && second !== local;
@@ -505,7 +486,6 @@ export function rivalDeeds(events, local, pos, iconOf = () => "") {
 }
 
 /**
- * One rival milestone.
  * @param {HistoryEvent} event
  * @param {(event: HistoryEvent) => number} pos
  * @param {IconOf} iconOf
@@ -606,11 +586,7 @@ export function packTimeline(tl) {
   };
 }
 
-/**
- * The value when it is an array, else an empty one.
- * @param {*} value
- * @returns {any[]}
- */
+/** @param {*} value */
 const arr = (value) => (Array.isArray(value) ? value : []);
 
 /**
@@ -639,11 +615,7 @@ export function unpackTimeline(packed) {
   };
 }
 
-/**
- * Compact form of the rival tracks.
- * @param {RivalTracks} rivals
- * @returns {*}
- */
+/** @param {RivalTracks} rivals */
 function packRivals(rivals) {
   /** @type {Record<string, number[][]>} */
   const curves = {};

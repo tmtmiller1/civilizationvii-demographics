@@ -116,7 +116,6 @@ function hex(context, x, y, side) {
 }
 
 /**
- * Paint one frame.
  * @param {HTMLCanvasElement} canvas
  * @param {MapView} mapView
  * @param {MapFrame} frame
@@ -146,7 +145,6 @@ export function cellLayers(owner, terrain, colorOf) {
 }
 
 /**
- * Paint every cell: terrain, then the holder's color over it.
  * @param {CanvasRenderingContext2D} context
  * @param {HexLayout} layout
  * @param {MapView} mapView
@@ -173,7 +171,6 @@ function paintCells(context, layout, mapView, frame, colorOf) {
 }
 
 /**
- * Paint the settlements of shown civilizations as ringed dots.
  * @param {CanvasRenderingContext2D} context
  * @param {HexLayout} layout
  * @param {MapView} mapView
@@ -220,7 +217,6 @@ export function holders(mapView, frame) {
 }
 
 /**
- * Fill the legend for a frame: title, when, and who holds land (most first, ten at most).
  * @param {HTMLElement} legend Emptied first.
  * @param {MapView} mapView
  * @param {MapFrame} frame
@@ -237,11 +233,9 @@ function fillLegend(legend, mapView, frame, cast, labels) {
 }
 
 /**
- * One holder's legend entry: color dot, emblem, name and settlement count.
  * @param {{pid:number, towns:number}} holder
  * @param {Cast} cast
  * @param {string} age
- * @returns {HTMLElement}
  */
 function legendItem(holder, cast, age) {
   const civ = cast.civType(holder.pid, age);

@@ -44,10 +44,8 @@ import { openGame, viewState } from "/demographics/ui/history/views/history-stat
 /** @typedef {import("./view-hof.js").HofCtx} HofCtx */
 
 /**
- * A game's civilizations, in order, with their emblems.
  * @param {ArchiveRecord} rec
  * @param {string} [cls] Size variant.
- * @returns {HTMLElement}
  */
 function progressionOf(rec, cls = "") {
   return civProgression(rec.civs, (c) => typeName(c.name, c.civ), cls);
@@ -165,11 +163,7 @@ function fateText(elim) {
   return elim ? t("LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED", elim) : t("LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED");
 }
 
-/**
- * Rivals table for a game.
- * @param {ArchiveRecord} rec
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord} rec */
 function rivalsTable(rec) {
   const cast = castFromRecord(rec);
   const cols = [
@@ -192,10 +186,8 @@ function rivalsTable(rec) {
 }
 
 /**
- * Header block of the detail page.
  * @param {ArchiveRecord} rec
  * @param {number} best Most Triumphs in any game.
- * @returns {HTMLElement}
  */
 function detailHeader(rec, best) {
   return el("div", { cls: "dgh-detail-head" }, [
@@ -231,11 +223,7 @@ function detailTop(rec, best, ctx) {
   ]);
 }
 
-/**
- * Figures of one game.
- * @param {ArchiveRecord} rec
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord} rec */
 function detailTiles(rec) {
   const stat = (/** @type {keyof ArchiveRecord["stats"]} */ key) => formatNumber(statOf(rec, key));
   return el("div", { cls: "dgh-tiles" }, [
@@ -249,12 +237,7 @@ function detailTiles(rec) {
   ]);
 }
 
-/**
- * The game's timeline, with the territory map and the rivals above it. A record without a timeline
- * shows the rivals alone.
- * @param {ArchiveRecord} rec
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord} rec */
 function timelineSection(rec) {
   const rivals = el("div", { cls: "dgh-rivals" }, [
     el("div", { cls: "dgh-map-title", text: t("LOC_DEMOGRAPHICS_HIST_RIVALS") }),
@@ -267,10 +250,8 @@ function timelineSection(rec) {
 }
 
 /**
- * The Scaled / Civ toggle for the figures, shown when the game has scaled population.
  * @param {ArchiveRecord} rec
  * @param {HofCtx} ctx
- * @returns {HTMLElement|null}
  */
 function numberToggle(rec, ctx) {
   if (!statOf(rec, "populationScaled")) return null;
@@ -301,12 +282,7 @@ function ageNameTag(ageType) {
   return stem ? "LOC_AGE_" + stem + "_NAME" : "";
 }
 
-/**
- * The game's highlights across the page, grouped by age: date, a tag naming the kind of event, the
- * other civilization's emblem and the sentence.
- * @param {ArchiveRecord} rec
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord} rec */
 function highlightsSection(rec) {
   const title = t("LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS");
   const highlights = Array.isArray(rec.highlights) ? rec.highlights : [];
@@ -333,12 +309,10 @@ function highlightsSection(rec) {
 }
 
 /**
- * One highlight.
  * @param {HistoryEvent} event
  * @param {import("../model/history-narrate.js").Cast} cast
  * @param {string} age
  * @param {number} local
- * @returns {HTMLElement}
  */
 function highlightRow(event, cast, age, local) {
   const other = event.p === local ? event.q : event.p;
@@ -384,10 +358,8 @@ function triumphBlurb(event) {
 }
 
 /**
- * The remove button: first click arms it, the second removes the game.
  * @param {ArchiveRecord} rec
  * @param {HofCtx} ctx
- * @returns {HTMLElement}
  */
 function removeButton(rec, ctx) {
   let armed = false;
