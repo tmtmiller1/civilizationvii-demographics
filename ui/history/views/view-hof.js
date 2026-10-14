@@ -233,12 +233,7 @@ function repairActions(ctx) {
   return el("div", { cls: "dgh-repair-actions" }, [go, cancel]);
 }
 
-/**
- * One labeled paragraph of the repair panel.
- * @param {string} headTag
- * @param {string} bodyTag
- * @returns {HTMLElement}
- */
+/** @param {string} headTag @param {string} bodyTag */
 function repairPara(headTag, bodyTag) {
   return el("div", { cls: "dgh-repair-block" }, [
     el("div", { cls: "dgh-repair-h", text: t(headTag) }),
@@ -263,7 +258,6 @@ function repairPanel(ctx) {
 }
 
 /**
- * Make an element open and close the repair sheet.
  * @param {HTMLElement} trigger
  * @param {HTMLElement} panel
  */
@@ -377,10 +371,9 @@ function settingsNote() {
 }
 
 /**
- * Render the selected Hall of Fame section.
  * @param {HTMLElement} body
  * @param {ArchiveRecord[]} records
- * @param {ArchiveRecord[]} all Every record.
+ * @param {ArchiveRecord[]} all
  * @param {HofCtx} ctx
  */
 function renderSection(body, records, all, ctx) {

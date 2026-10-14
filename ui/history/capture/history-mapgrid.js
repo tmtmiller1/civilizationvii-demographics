@@ -58,10 +58,9 @@ function dims() {
 }
 
 /**
- * Sample the world onto the grid.
  * @param {{w:number, h:number, gw:number, gh:number}} grid
- * @param {(x:number, y:number) => number} fn Value of a plot.
- * @returns {number[]} Values, row by row.
+ * @param {(x:number, y:number) => number} fn
+ * @returns {number[]}
  */
 function sample(grid, fn) {
   const out = new Array(grid.gw * grid.gh);

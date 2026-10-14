@@ -32,12 +32,7 @@ export function addSavedTexts(texts) {
   }
 }
 
-/**
- * Whether composed text is an unresolved tag.
- * @param {string} text Composed text.
- * @param {string} key
- * @returns {boolean}
- */
+/** @param {string} text @param {string} key */
 function unresolved(text, key) {
   return !text || text === key || text.startsWith("LOC_");
 }

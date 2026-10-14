@@ -32,12 +32,7 @@ const CIVS_COL = 4;
  * @typedef {import("./view-hof.js").HofCtx} HofCtx
  */
 
-/**
- * The civilizations a game's leader led, with emblems.
- * @param {ArchiveRecord} rec
- * @param {string} cls Size variant.
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord} rec @param {string} cls */
 function progression(rec, cls) {
   return civProgression(rec.civs, (c) => typeName(c.name, c.civ), cls);
 }

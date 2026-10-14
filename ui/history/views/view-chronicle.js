@@ -58,11 +58,9 @@ export function filteredEvents(doc, cast) {
 }
 
 /**
- * A single feed row.
  * @param {HistoryEvent} event
  * @param {import("../model/history-narrate.js").Cast} cast
  * @param {string} age
- * @returns {HTMLElement}
  */
 function eventRow(event, cast, age) {
   const mine = event.p === cast.local || event.q === cast.local;

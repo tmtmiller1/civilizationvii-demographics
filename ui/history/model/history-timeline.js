@@ -96,12 +96,7 @@ function spanOf(spans, ageIndex) {
   return spans[ageIndex] || spans[spans.length - 1] || { from: 0, len: 1 };
 }
 
-/**
- * Axis position of the end of an age.
- * @param {AgeSpan[]} spans
- * @param {number} ageIndex
- * @returns {number}
- */
+/** @param {AgeSpan[]} spans @param {number} ageIndex */
 function ageEndOf(spans, ageIndex) {
   const span = spanOf(spans, ageIndex);
   return span.from + span.len;
@@ -424,9 +419,8 @@ export function rivalWars(events, local, pos, spans) {
  */
 
 /**
- * End an open war between two rivals.
  * @param {RivalWarIo} io
- * @param {string} pair Pair key.
+ * @param {string} pair
  * @param {number} to
  */
 function closeRivalWar(io, pair, to) {
@@ -452,9 +446,8 @@ function rivalWarStep(io, event, local) {
 }
 
 /**
- * End every open rival war of an eliminated civilization.
  * @param {RivalWarIo} io
- * @param {HistoryEvent} event Elimination.
+ * @param {HistoryEvent} event
  */
 function closeWarsOf(io, event) {
   for (const [pair, war] of io.open) {
