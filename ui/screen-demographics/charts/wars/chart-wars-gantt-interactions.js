@@ -78,10 +78,7 @@ function hitTestBars(barRects, svgX, svgY) {
   return null;
 }
 
-/**
- * Hide the Gantt tooltip and clear hover state.
- * @param {{ tooltip: HTMLElement, shownWar: * }} state
- */
+/** @param {{ tooltip: HTMLElement, shownWar: * }} state */
 function hideGanttTooltip(state) {
   state.tooltip.style.display = "none";
   state.shownWar = null;

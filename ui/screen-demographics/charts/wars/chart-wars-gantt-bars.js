@@ -135,7 +135,6 @@ function drawWarBarEndMarker(svg, marker) {
 }
 
 /**
- * Append one tail gradient definition.
  * @param {SVGElement} svg
  * @param {string} id
  * @param {string} color

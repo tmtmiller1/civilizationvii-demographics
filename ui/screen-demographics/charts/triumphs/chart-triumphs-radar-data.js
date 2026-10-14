@@ -92,11 +92,7 @@ function radarCivName(src, pid) {
   return inlineLabel(src.leaderName, src.civName);
 }
 
-/**
- * Read a snapshot row's per-axis triumph counts into a fresh zeroed values map.
- * @param {Record<string, *>} row
- * @returns {Record<string, number>}
- */
+/** @param {Record<string, *>} row @returns {Record<string, number>} */
 function radarValuesFromRow(row) {
   const values = radarEmptyValues();
   for (const key of RADAR_AXIS_KEYS) {

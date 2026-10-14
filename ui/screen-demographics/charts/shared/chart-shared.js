@@ -91,10 +91,8 @@ function sampleCivName(sample, pid) {
 }
 
 /**
- * Whether a civ history list should append the candidate name.
  * @param {string[]} list
  * @param {string} name
- * @returns {boolean}
  */
 function shouldAppendCivName(list, name) {
   if (!name) return false;

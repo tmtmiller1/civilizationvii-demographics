@@ -217,10 +217,8 @@ function addRosterEntry(entry, coloring, aMap, bMap) {
 }
 
 /**
- * Build the merged war's display name from each side's major civ names.
- * @param {*[]} aCivs Side A roster.
- * @param {*[]} bCivs Side B roster.
- * @returns {string}
+ * @param {*[]} aCivs
+ * @param {*[]} bCivs
  */
 function mergedName(aCivs, bCivs) {
   return (majorCivNames(aCivs) || "Side A") + " vs " + (majorCivNames(bCivs) || "Side B") + " War";

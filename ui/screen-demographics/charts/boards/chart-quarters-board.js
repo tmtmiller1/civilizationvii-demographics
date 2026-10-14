@@ -22,7 +22,7 @@ const engineApi = /** @type {*} */ (globalThis);
 /** @type {Set<string>|null} Cached BUILDING types tagged UNIQUE (civ unique buildings). */
 let cachedUniqueTypes = null;
 
-/** @returns {Set<string>} The set of civ Unique building types. */
+/** @returns {Set<string>} */
 function uniqueBuildingTypes() {
   if (cachedUniqueTypes) return cachedUniqueTypes;
   const set = new Set();
@@ -34,10 +34,7 @@ function uniqueBuildingTypes() {
   return cachedUniqueTypes;
 }
 
-/**
- * @param {*} type
- * @returns {string} Localized constructible name.
- */
+/** @param {*} type */
 function constructibleName(type) {
   const info = orFallback(() => engineApi.GameInfo.Constructibles.lookup(type), null);
   if (!info) return String(type);
@@ -159,10 +156,7 @@ function readCityQuarters(city, pid) {
 
 // Rendering
 
-/**
- * @param {{name:string, amount:number}[]} yields
- * @returns {string} A compact yield string.
- */
+/** @param {{name:string, amount:number}[]} yields */
 function yieldStr(yields) {
   return yields.map((entry) => "+" + Math.round(entry.amount) + " " + entry.name).join(" · ");
 }

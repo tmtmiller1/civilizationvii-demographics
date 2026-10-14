@@ -35,8 +35,7 @@ function readSampleCrisisStage(sample) {
 }
 
 /**
- * The higher valid crisis stage of the running max and a candidate.
- * @param {number|undefined} best Running max stage.
+ * @param {number|undefined} best
  * @param {*} candidate
  * @returns {number|undefined}
  */

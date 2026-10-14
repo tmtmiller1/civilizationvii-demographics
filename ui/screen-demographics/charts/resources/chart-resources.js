@@ -43,11 +43,7 @@ const RESOURCE_BANDS = [
   { id: "resources_treasure", label: t("LOC_DEMOGRAPHICS_RESOURCE_TREASURE"), color: "#f3c34c" }
 ];
 
-/**
- * Whether a metrics object carries any numeric resource-class value.
- * @param {Record<string, *>} metrics One civ's metrics.
- * @returns {boolean}
- */
+/** @param {Record<string, *>} metrics */
 function hasResourceMetric(metrics) {
   return (
     typeof metrics.resources_total === "number" ||
@@ -231,9 +227,8 @@ function computeStackDomain(points, bands) {
 }
 
 /**
- * @param {Record<string, number>} values Per-band values.
+ * @param {Record<string, number>} values
  * @param {StackBand[]} bands
- * @returns {number} The stacked total.
  */
 function sumBands(values, bands) {
   let stack = 0;

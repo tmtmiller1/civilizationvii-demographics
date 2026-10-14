@@ -58,9 +58,6 @@ function buildLegendRow(dataset, opts) {
   return row;
 }
 
-/**
- * @returns {HTMLElement} The legend's "Legend" title.
- */
 function buildLegendTitle() {
   const title = document.createElement("div");
   title.className = "demographics-line-legend-title";

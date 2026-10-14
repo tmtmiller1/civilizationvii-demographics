@@ -88,12 +88,7 @@ const REFUGEE_METRIC_IDS = new Set([
   "emig_refugees_in", "emig_refugees_in_pts"   // Refugees (Arrived), same war/disaster onset markers
 ]);
 
-/**
- * Whether crisis-marker collection should no-op.
- * @param {string} metricId
- * @param {DemoHistory|*} history
- * @returns {boolean}
- */
+/** @param {string} metricId @param {DemoHistory|*} history */
 function shouldSkipCrisisMarkers(metricId, history) {
   if (metricId === "crisis_stage") return true;
   if (REFUGEE_METRIC_IDS.has(metricId)) return true;
@@ -132,9 +127,9 @@ function detectCrisisOnset(sample, prevHolder, ctx) {
 }
 
 /**
- * @param {*} players Sample players map.
+ * @param {*} players
  * @param {string} pid
- * @returns {number|undefined} The player's crisis stage, when present.
+ * @returns {number|undefined}
  */
 function playerCrisisStage(players, pid) {
   const value = players[pid]?.metrics?.crisis_stage;

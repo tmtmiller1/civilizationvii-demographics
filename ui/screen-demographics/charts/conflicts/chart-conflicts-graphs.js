@@ -91,12 +91,7 @@ function resolveWar(wars, id) {
   return wars.length ? wars[wars.length - 1] : null;
 }
 
-/**
- * Whether a roster entry is a unique major participant row.
- * @param {*} entry
- * @param {Set<number>} seen
- * @returns {boolean}
- */
+/** @param {*} entry @param {Set<number>} seen */
 function includeMajorParticipant(entry, seen) {
   if (!entry || entry.isCS) return false;
   if (typeof entry.pid !== "number") return false;
@@ -284,7 +279,6 @@ function buildPlainMetricCell(metric, participants, win) {
   return cell;
 }
 
-/** The three filter modes for the military graphs. */
 const MIL_FILTER_MODES = [
   { id: "belligerents", label: "LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS" },
   { id: "cs", label: "LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS" },

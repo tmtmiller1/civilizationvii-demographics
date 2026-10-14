@@ -362,9 +362,9 @@ const RADAR_CY = VH / 2 + 6;
 const RADAR_RADIUS = 200;
 
 /**
- * @param {number} i The dimension index.
+ * @param {number} i
  * @param {number} radius
- * @returns {{x:number, y:number}} Radar vertex.
+ * @returns {{x:number, y:number}}
  */
 function radarPoint(i, radius) {
   const angle = (-90 + (i * 360) / RADAR_DIMS.length) * (Math.PI / 180);

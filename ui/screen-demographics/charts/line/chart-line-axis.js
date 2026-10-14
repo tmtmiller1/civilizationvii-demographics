@@ -238,11 +238,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
     const info = ageTurnFromX(chartX) || nearestByTurn(turnAgeMap, chartX);
     return info ? turnLabel(info.localTurn, info.age) : turnLabel(chartX);
   };
-  /**
-   * Format a chart-X tick per the active axis mode.
-   * @param {number} value The chart-X value.
-   * @returns {string}
-   */
+  /** @param {number} value */
   const fmtX = (value) => {
     const turn = Math.round(value);
     const year = localYear(nearestByTurn(turnYearMap, turn));

@@ -47,11 +47,7 @@ import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded
 // X-axis = turn (with year ticks). Bars colored by the attacker's primary
 // color; named with the ordinal-style label the sampler generates.
 
-/**
- * The filter-dropdown label for one roster participant: "Leader, Civ", or just the civ.
- * @param {*} roster One roster participant.
- * @returns {string}
- */
+/** @param {*} roster */
 function warCivLabel(roster) {
   return roster.leader ? roster.leader + ", " + roster.civ : roster.civ;
 }
