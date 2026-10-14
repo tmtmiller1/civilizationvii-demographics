@@ -21,7 +21,6 @@ let _wildcardById = null;
 /** @type {Map<string, Set<string>>|null} ConstructibleType → its tags. */
 let _tagMap = null;
 
-/** Index Constructible_Adjacencies rows by their ConstructibleType. */
 function indexAdjRules() {
   _rulesByType = new Map();
   for (const row of orFallback(() => engine.GameInfo.Constructible_Adjacencies, []) || []) {
@@ -31,7 +30,6 @@ function indexAdjRules() {
   }
 }
 
-/** Index TypeTags as ConstructibleType → Set of tags. */
 function indexTags() {
   _tagMap = new Map();
   for (const row of orFallback(() => engine.GameInfo.TypeTags, []) || []) {
@@ -47,7 +45,6 @@ function hasTag(type, tag) {
   return !!(tags && tags.has(tag));
 }
 
-/** Build the static-rule indices from GameInfo (idempotent). */
 function buildIndices() {
   if (_rulesByType) return;
   indexAdjRules();
@@ -276,11 +273,10 @@ function ruleCount(yieldChange, loc, neighborLocs, wild) {
 }
 
 /**
- * One adjacency rule's yield for a building at a location, or null.
  * @param {*} city
  * @param {*} rule A Constructible_Adjacencies row.
  * @param {*} loc
- * @param {{x:number,y:number}[]} neighborLocs Precomputed neighbors.
+ * @param {{x:number,y:number}[]} neighborLocs
  * @returns {{yield:string, amount:number}|null}
  */
 function ruleAmount(city, rule, loc, neighborLocs) {
@@ -295,12 +291,10 @@ function ruleAmount(city, rule, loc, neighborLocs) {
 }
 
 /**
- * A building's adjacency yields at a location, as yieldType → amount.
  * @param {*} city
  * @param {string} type The building ConstructibleType.
- * @param {*} loc The building's tile.
- * @param {{x:number,y:number}[]} neighborLocs Precomputed neighbors.
- * @returns {Record<string, number>} yieldType → amount.
+ * @param {*} loc
+ * @param {{x:number,y:number}[]} neighborLocs
  */
 function buildingAdjacency(city, type, loc, neighborLocs) {
   const out = /** @type {Record<string, number>} */ ({});

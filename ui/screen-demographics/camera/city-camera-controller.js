@@ -64,9 +64,6 @@ function isToken(token) {
 
 // Camera primitives. All of them guard, because the engine surface can be absent.
 
-/**
- * Save the current camera zoom (records `didSaveZoom` for guarded restore).
- */
 function saveCamera() {
   try {
     if (typeof Camera !== "undefined" && typeof Camera.saveCameraZoom === "function") {
@@ -78,10 +75,7 @@ function saveCamera() {
   }
 }
 
-/**
- * Snap the camera to a plot (instant mode).
- * @param {{x: number, y: number}} loc
- */
+/** @param {{x: number, y: number}} loc */
 function lookAtInstant(loc) {
   try {
     if (typeof Camera !== "undefined" && typeof Camera.lookAtPlot === "function") {
@@ -92,10 +86,7 @@ function lookAtInstant(loc) {
   }
 }
 
-/**
- * Submit one camera keyframe, filling func/writeMask defensively.
- * @param {*} frame The keyframe (focus/zoom/tilt/duration/end).
- */
+/** @param {*} frame The keyframe (focus/zoom/tilt/duration/end). */
 function addKf(frame) {
   try {
     if (typeof Camera === "undefined" || typeof Camera.addKeyframe !== "function") return;
@@ -155,8 +146,7 @@ function emergencyKeyframe() {
 }
 
 /**
- * Compute the city framing via the engine's plot-fit, or null.
- * @param {*[]} plots The city's purchased plots.
+ * @param {*[]} plots
  * @returns {{x: number, y: number, z: number}|null}
  */
 function calcFocus(plots) {
@@ -173,10 +163,7 @@ function calcFocus(plots) {
 
 // Screen open/close (dynamic import, as the dock decorator does)
 
-/**
- * Resolve the engine context manager and invoke `fn` with it.
- * @param {(contextManager: *) => void} fn Callback receiving the ContextManager.
- */
+/** @param {(contextManager: *) => void} fn */
 function withContextManager(fn) {
   import("/core/ui/context-manager/context-manager.js")
     .then((imported) => fn(/** @type {*} */ (imported.default || imported.ContextManager || imported)))
@@ -220,8 +207,7 @@ function suspendPopups(flowState) {
 
 /**
  * Resume the popup/notification queue suspended by {@link suspendPopups}, letting
- * any popups that arrived during the cinematic surface now. No-op unless we were
- * the ones who suspended it.
+ * any popups that arrived during the cinematic surface now.
  * @param {*} flowState The flow state flagged by suspendPopups.
  */
 function resumePopups(flowState) {
@@ -349,7 +335,6 @@ function disableWorldInput() {
   }
 }
 
-/** Re-enable engine world input. */
 function enableWorldInput() {
   try {
     window.dispatchEvent(new CustomEvent("ui-enable-world-input"));
@@ -358,10 +343,7 @@ function enableWorldInput() {
   }
 }
 
-/**
- * Dispatch a bare window CustomEvent (defensive).
- * @param {string} name
- */
+/** @param {string} name */
 function fireWindowEvent(name) {
   try {
     window.dispatchEvent(new CustomEvent(name));
@@ -382,14 +364,10 @@ function showCityBanners() {
   fireWindowEvent("ui-show-city-banners");
 }
 
-/**
- * Hide the floating unit flags/icons during the cinematic. Restored on teardown.
- */
 function hideUnitFlags() {
   fireWindowEvent("ui-hide-unit-flags");
 }
 
-/** Re-show the unit flags/icons. */
 function showUnitFlags() {
   fireWindowEvent("ui-show-unit-flags");
 }
@@ -435,11 +413,9 @@ function bindInterrupts(token) {
 }
 
 /**
- * Handle an engine-input event during the cinematic: debounced, armed-gated; a
- * click replays, cancel exits. Consumes the event so nothing else reacts.
  * @param {*} flow
  * @param {number} token
- * @param {*} e The engine-input event.
+ * @param {*} e
  */
 function handleCinematicInput(flow, token, e) {
   if (!flow.armed || !isToken(token)) return;
@@ -457,8 +433,7 @@ function handleCinematicInput(flow, token, e) {
 /**
  * Whether replay input should be ignored because it likely came from overlay UI.
  * @param {*} flow
- * @param {string} kind Classified input kind.
- * @returns {boolean} True when replay should be ignored.
+ * @param {string} kind
  */
 function ignoreUiReplay(flow, kind) {
   if (kind !== "replay") return false;
@@ -466,10 +441,7 @@ function ignoreUiReplay(flow, kind) {
   return nowMs() - flow.uiClickAt < 400;
 }
 
-/**
- * Detach the active flow's interrupt listeners.
- * @param {*} flow
- */
+/** @param {*} flow */
 function unbindInterrupts(flow) {
   try {
     if (flow.onKey) window.removeEventListener("keydown", flow.onKey, true);
@@ -515,12 +487,8 @@ export function teardownActiveCinematic(reason) {
 }
 
 /**
- * Run the full teardown sequence for a flow: timers, interrupts, overlay, the
- * shot camera, fireworks, clutter layers, FoV, world input/banners/flags, the
- * saved camera (emergency keyframe on failure), and reopen the screen, except after an
- * "interrupt" teardown.
  * @param {*} flow
- * @param {string} reason The teardown reason.
+ * @param {string} reason
  */
 function restoreFromCinematic(flow, reason) {
   clearTimers(flow);
@@ -554,8 +522,6 @@ export function isCinematicActive() {
 // Animation
 
 /**
- * Cinematic wrapper: run the single-shot cinematic approach through
- * `cinematic-tour.js` using controller-owned state and utilities.
  * @param {{focus: {x: number, y: number}, zoom: number}} frame
  * @param {number} token
  */
@@ -571,9 +537,8 @@ function runPseudoCinematic(frame, token) {
 }
 
 /**
- * Flyby wrapper: run the flyby/tour through `cinematic-tour.js`.
  * @param {*} target
- * @param {{focus: {x: number, y: number}, zoom: number}|null} frame The fallback frame.
+ * @param {{focus: {x: number, y: number}, zoom: number}|null} frame
  * @param {number} token
  */
 function runFlyby(target, frame, token) {
@@ -711,11 +676,7 @@ export function startFlyby(target) {
   return true;
 }
 
-/**
- * lookAtInstant variant that reports success (for fallback chaining).
- * @param {{x: number, y: number}} loc
- * @returns {boolean} Always true once the call is attempted.
- */
+/** @param {{x: number, y: number}} loc */
 function lookAtInstantReturn(loc) {
   lookAtInstant(loc);
   return true;

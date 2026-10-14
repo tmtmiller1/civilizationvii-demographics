@@ -41,8 +41,7 @@ function compactOwner(owner) {
 }
 
 /**
- * A compact, serializable copy of one ranked settlement.
- * @param {*} settlement The live settlement record.
+ * @param {*} settlement
  * @returns {*}
  */
 function compactSettlement(settlement) {
@@ -85,11 +84,7 @@ export function recordSettlementAge(history, turn, year) {
   return true;
 }
 
-/**
- * The display name of an age type ("Antiquity Age"), or the raw type.
- * @param {string} age The age type.
- * @returns {string}
- */
+/** @param {string} age */
 function ageName(age) {
   try {
     const row = typeof GameInfo !== "undefined" ? GameInfo.Ages.lookup(age) : null;
@@ -120,31 +115,17 @@ function rehydrate(record) {
   });
 }
 
-/**
- * Whether one `top` slot is a usable record object (not null/junk).
- * @param {*} record
- * @returns {boolean}
- */
+/** @param {*} record */
 function isRecord(record) {
   return !!record && typeof record === "object";
 }
 
-/**
- * Whether an archive entry holds at least one recorded settlement (a null/junk
- * entry in `top` does not count).
- * @param {*} entry The archive entry.
- * @returns {boolean}
- */
+/** @param {*} entry */
 function hasStandings(entry) {
   return !!entry && Array.isArray(entry.top) && entry.top.some(isRecord);
 }
 
-/**
- * The renderable records of an archive entry: null/junk entries dropped, the
- * rest rehydrated.
- * @param {*} entry The archive entry (has standings).
- * @returns {Array<*>}
- */
+/** @param {*} entry The archive entry (has standings). */
 function entryTop(entry) {
   return entry.top.filter(isRecord).map(rehydrate);
 }

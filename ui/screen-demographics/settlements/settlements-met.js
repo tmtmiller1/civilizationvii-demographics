@@ -4,10 +4,6 @@
 // board (settlements-data.js) and the end-of-age archive, which re-reads it at
 // render so a civ met after an age ended is no longer masked.
 
-/**
- * Resolve local player id from GameContext.
- * @returns {number|undefined}
- */
 function localPlayerId() {
   if (typeof GameContext === "undefined") return undefined;
   return GameContext.localPlayerID;

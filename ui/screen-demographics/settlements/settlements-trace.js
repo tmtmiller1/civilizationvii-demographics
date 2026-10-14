@@ -37,7 +37,6 @@ let cache = null;
 const pendingExact = new Map();
 
 /**
- * The value as a usable trace, or null.
  * @param {*} value
  * @returns {Trace|null}
  */
@@ -46,11 +45,7 @@ function asTrace(value) {
     value.pop && typeof value.pop === "object" ? value : null;
 }
 
-/**
- * The trace for the current game: the cached copy, else the one on the saved
- * history (read once), else an empty one.
- * @returns {Trace}
- */
+/** @returns {Trace} */
 function currentTrace() {
   const seed = getGameSeed();
   if (cache && cache.seed === seed) return cache.trace;
@@ -60,11 +55,7 @@ function currentTrace() {
   return trace;
 }
 
-/**
- * Plot key "x,y" for a city handle, or null.
- * @param {*} city
- * @returns {string|null}
- */
+/** @param {*} city */
 function locKey(city) {
   const key = orFallback(() => {
     const loc = city?.location;
@@ -78,31 +69,20 @@ function locKey(city) {
 /** @type {((data: *) => void) | null} */
 let addedHandlerRef = null;
 
-/**
- * Resolve a city id from a CityAddedToMap payload.
- * @param {*} data
- * @returns {*}
- */
+/** @param {*} data */
 function cityIdFromAddedEvent(data) {
   if (!data || typeof data !== "object") return null;
   return data.cityID || data.city || null;
 }
 
-/**
- * Resolve a city handle from a city id.
- * @param {*} cityId
- * @returns {*} City handle or null.
- */
+/** @param {*} cityId */
 function cityFromId(cityId) {
   if (!cityId) return null;
   if (typeof Cities === "undefined" || typeof Cities.get !== "function") return null;
   return Cities.get(cityId);
 }
 
-/**
- * Hold an exact founding stamp for one location key until the next sample.
- * @param {string} loc
- */
+/** @param {string} loc */
 function noteExactFounding(loc) {
   if (pendingExact.has(loc) || currentTrace().founded[loc]) return;
   const turn = orFallback(() => (typeof Game !== "undefined" ? Game.turn : undefined), undefined);
@@ -113,11 +93,7 @@ function noteExactFounding(loc) {
   pendingExact.set(loc, { turn: typeof turn === "number" ? turn : -1, year: year || "", exact: true });
 }
 
-/**
- * CityAddedToMap handler: stamp an exact founding turn/year for the new
- * settlement's plot (only if not already recorded).
- * @param {*} data The event payload (carries cityID).
- */
+/** @param {*} data */
 function onCityAdded(data) {
   orFallback(() => {
     const city = cityFromId(cityIdFromAddedEvent(data));
@@ -154,10 +130,6 @@ export function stopFoundingTracker() {
 
 // per-sample recording
 
-/**
- * Light read of every alive player's settlements: { locId, pop } only.
- * @returns {Array<{locId: string, pop: number}>}
- */
 function readAllSettlements() {
   const players = orFallback(
     () => (typeof Players !== "undefined" && Players.getAlive ? Players.getAlive() : null),
@@ -204,10 +176,9 @@ export function recordSettlementTrace(history, turn, year) {
 }
 
 /**
- * Append a settlement's population to its rolling window (dedupe same turn, cap).
- * @param {*} blob The trace blob (mutated).
+ * @param {*} blob
  * @param {{locId: string, pop: number}} settlement
- * @param {number} turn The sample turn.
+ * @param {number} turn
  */
 function foldPop(blob, settlement, turn) {
   const popWindow = blob.pop[settlement.locId] || (blob.pop[settlement.locId] = []);
@@ -243,11 +214,7 @@ export function getFounded(locId) {
   return currentTrace().founded[locId] || pendingExact.get(locId) || null;
 }
 
-/**
- * Convert growth rate into direction bucket.
- * @param {number} rate
- * @returns {number} 1 rising, -1 falling, 0 flat.
- */
+/** @param {number} rate */
 function trendDirection(rate) {
   if (rate > 0.001) return 1;
   if (rate < -0.001) return -1;

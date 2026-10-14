@@ -324,11 +324,9 @@ export function poiVignette(poi, index, approachCaption) {
 }
 
 /**
- * Non-tour cinematic fallbacks, tried in priority order.
  * @param {*} target
  * @param {*} flowState
  * @param {*} ctx
- * @returns {boolean} True when a fallback path succeeded.
  */
 function applyFlybyFallback(target, flowState, ctx) {
   if (ctx.lookAtComponent(target.componentId)) {
@@ -494,8 +492,8 @@ function isTop3(target) {
  * @param {{delay: (ms: number) => Promise<void>,
  *   isToken: (token: number) => boolean,
  *   updateFlybyProgress: (state: *, i: number, n: number) => void,
- *   updateNowShowing: (caption: *) => void}} deps Dependencies.
- * @returns {Promise<"done"|"aborted">} Outcome.
+ *   updateNowShowing: (caption: *) => void}} deps
+ * @returns {Promise<"done"|"aborted">}
  */
 async function runTour(shots, token, flowState, deps) {
   for (let index = 0; index < shots.length; index++) {
@@ -519,11 +517,10 @@ async function runTour(shots, token, flowState, deps) {
 }
 
 /**
- * Timeout watchdog for tour playback.
  * @param {Array<*>} shots
  * @param {number} token
  * @param {*} flowState
- * @param {(token: number) => boolean} isToken Token validator.
+ * @param {(token: number) => boolean} isToken
  * @param {(reason: string) => void} teardownActiveCinematic
  */
 function startTourWatchdog(

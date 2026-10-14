@@ -5,7 +5,6 @@
 // capture stays undated rather than showing a guessed build year.
 
 /**
- * Fold one sample into the running wonder-year state.
  * @param {{ years: Map<string, string>, held: Set<string>, sampled: Set<string> }} acc
  *   years: type → completion year; held: types any civ has held; sampled: pids seen.
  * @param {*} sample
