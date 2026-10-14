@@ -122,11 +122,7 @@ function leaderDisplayName(leaderType, pid) {
   return typeText.replace(/^LEADER_/, "").replace(/_/g, " ");
 }
 
-/**
- * Collect every player-id key that appears in any sample.
- * @param {Snapshot[]} samples
- * @returns {string[]} Distinct pid keys.
- */
+/** @param {Snapshot[]} samples @returns {string[]} */
 function collectPidSet(samples) {
   /** @type {Set<string>} */
   const pidSet = new Set();
@@ -139,11 +135,10 @@ function collectPidSet(samples) {
 }
 
 /**
- * Resolve one metric point from a sample/player row.
  * @param {*} sample
- * @param {*} playerSample One player's row from that sample.
+ * @param {*} playerSample
  * @param {string} metricId
- * @param {Map<string, number>} ageOffsets Per-age offsets.
+ * @param {Map<string, number>} ageOffsets
  * @param {AgeBoundary[]} ageBoundariesLocal
  * @returns {{ t: number, v: number }|null}
  */
@@ -388,11 +383,9 @@ function leaderOnlyLabel(leaderName, leaderType, pid) {
 }
 
 /**
- * The final series color from the sampled banner colors.
  * @param {*} primaryColor
  * @param {*} secondaryColor
- * @param {number} idx Palette index.
- * @returns {string}
+ * @param {number} idx
  */
 function seriesColor(primaryColor, secondaryColor, idx) {
   if (typeof primaryColor === "string" && primaryColor.length > 0) {

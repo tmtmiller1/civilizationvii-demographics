@@ -257,11 +257,9 @@ function safeComposeLocaleTag(tag) {
 }
 
 /**
- * Whether a composed wonder description candidate beats the current best.
  * @param {string} composed
  * @param {string} rawTag
  * @param {string} best
- * @returns {boolean}
  */
 function shouldUseWonderDescription(composed, rawTag, best) {
   if (!composed) return false;

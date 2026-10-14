@@ -14,11 +14,7 @@ function isMajorVsMajor(war) {
   return majorsOnSide(war.sideACivs).length > 0 && majorsOnSide(war.sideBCivs).length > 0;
 }
 
-/**
- * The major-civ pids participating in one war.
- * @param {*} war
- * @returns {number[]}
- */
+/** @param {*} war @returns {number[]} */
 function majorPidsForWar(war) {
   return /** @type {number[]} */ ([])
     .concat(majorsOnSide(war.sideACivs), majorsOnSide(war.sideBCivs))
@@ -171,11 +167,7 @@ export function computeGanttWidth(viewportW, dom) {
   return Math.round(innerW + GANTT_PAD_LR);
 }
 
-/**
- * Belligerent major count for one war.
- * @param {*} war
- * @returns {number}
- */
+/** @param {*} war */
 function warStripeCount(war) {
   return Math.max(2, majorsOnSide(war.sideACivs).length + majorsOnSide(war.sideBCivs).length);
 }

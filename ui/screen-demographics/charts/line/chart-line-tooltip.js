@@ -6,11 +6,7 @@
 
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 
-/**
- * Ensure the HTML-overlay line-chart tooltip element exists in `wrap`.
- * @param {HTMLElement} wrap
- * @returns {HTMLElement}
- */
+/** @param {HTMLElement} wrap */
 function ensureChartTooltipEl(wrap) {
   let tip = /** @type {HTMLElement|null} */ (wrap.querySelector(".demographics-chart-tooltip"));
   if (!tip) {

@@ -520,10 +520,7 @@ function buildCSStat(val, mode) {
   return el;
 }
 
-/**
- * Append a thin horizontal divider to the tooltip.
- * @param {HTMLElement} tooltip
- */
+/** @param {HTMLElement} tooltip */
 function appendDivider(tooltip) {
   const divider = document.createElement("div");
   divider.className = "demographics-wars-tooltip-divider";

@@ -307,12 +307,7 @@ function wonderProgressRow(wonder) {
 
 // By-type breakdowns (per-civ bar charts)
 
-/**
- * A bordered panel column for a per-civ card.
- * @param {string} minWidth CSS length.
- * @param {string} maxWidth CSS length.
- * @returns {HTMLElement}
- */
+/** @param {string} minWidth @param {string} maxWidth */
 function cardBox(minWidth, maxWidth) {
   return board.box(
     "flex:0 0 auto;min-width:" + minWidth + ";max-width:" + maxWidth + ";display:flex;flex-direction:column;" +
@@ -422,7 +417,7 @@ function tallyCity(city, meta) {
   }
 }
 
-/** @param {Map<*, *>} meta Add each alive player's cities' majority religion. */
+/** @param {Map<*, *>} meta */
 function tallyReligion(meta) {
   for (const player of Players.getAlive() || []) {
     if (!player || !player.Cities || typeof player.Cities.getCities !== "function") continue;
@@ -694,11 +689,7 @@ function sizeClassRange(i) {
   return i === SIZE_CLASS_TOPS.length ? floor + "+" : floor + "–" + SIZE_CLASS_TOPS[i];
 }
 
-/**
- * Fold a city into the size-class counts.
- * @param {*} city
- * @param {number[]} counts
- */
+/** @param {*} city @param {number[]} counts */
 function bucketCity(city, counts) {
   try {
     const pop = city && city.population;
@@ -758,7 +749,6 @@ function cityName(city) {
  */
 
 /**
- * Add a city's urbanization row.
  * @param {*} city
  * @param {UrbanRow[]} rows
  */
