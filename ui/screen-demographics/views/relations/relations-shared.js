@@ -150,7 +150,7 @@ export const AGREEMENT_TYPES = [
  * @type {{ key: string, action: string, color: string, dash: string }[]}
  */
 // All CS agreements are directed (major → CS), so they render as solid lines with
-// animated arrow chevrons and are told apart by color; the `dash` token is unused
+// arrow chevrons and are told apart by color; the `dash` token is unused
 // for directed edges but kept solid for consistency.
 export const CS_AGREEMENT_TYPES = [
   { key: "befriend", action: "DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN", color: CAT.influence, dash: "" },
