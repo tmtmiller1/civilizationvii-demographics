@@ -100,19 +100,16 @@ function mountOneWarLabel(wrap, rect, env) {
 }
 
 /**
- * Mount the per-bar war-name labels into the canvas.
  * @param {HTMLElement} wrap
  * @param {*[]} barRects
  * @param {{ nameOverride: Map<*, string>, turnYearMap: Map<number, string>,
- *   latestTurn: number, W: number, H: number }} env war naming, year map, latest
- *   turn and canvas dimensions (passed straight through to mountOneWarLabel).
+ *   latestTurn: number, W: number, H: number }} env
  */
 function mountConflictLabels(wrap, barRects, env) {
   for (const rect of barRects) mountOneWarLabel(wrap, rect, env);
 }
 
 /**
- * Mount the Gantt X-tick HTML labels (year and/or turn per axis mode).
  * @param {HTMLElement} wrap
  * @param {{ t: number, x: number, year: string|null }[]} tickPositions
  * @param {*} L
@@ -136,7 +133,6 @@ function mountGanttXTicks(wrap, tickPositions, L, W, H) {
 }
 
 /**
- * Mount the Gantt's "Time" and "Conflicts" axis titles.
  * @param {HTMLElement} wrap
  * @param {*} L
  * @param {number} W Canvas width.
@@ -159,11 +155,9 @@ function mountGanttAxisTitles(wrap, L, W, H) {
 }
 
 /**
- * Mount the "Present" label atop the current-turn (yellow) line, when that turn
- * is in range.
  * @param {HTMLElement} wrap
  * @param {*} L
- * @param {number} latestTurn The latest sampled turn.
+ * @param {number} latestTurn
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
  */

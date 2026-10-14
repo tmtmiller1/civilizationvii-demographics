@@ -84,11 +84,9 @@ export function formatMagnitude(n) {
 }
 
 /**
- * Build one participant's metric series across the samples in a window.
  * @param {Snapshot[]} windowSamples Samples inside the participant's active window.
  * @param {Pid | string} pid
  * @param {string} metricId Metric key (e.g. "milpower").
- * @returns {number[]} The participant's values (samples lacking the value skipped).
  */
 function participantMetricSeries(windowSamples, pid, metricId) {
   const series = [];
@@ -301,11 +299,9 @@ export function buildCostIcon(blp) {
 }
 
 /**
- * Reduce a participant's metric series to its cost contribution.
  * @param {number[]} series The metric series over the participation window.
  * @param {"drawdown" | "net" | "losses"} mode Single largest dip, signed net
  *   change, or cumulative sum of all declines.
- * @returns {number | null} The contribution, or null when fewer than two points.
  */
 function reduceCostSeries(series, mode) {
   if (series.length < 2) return null;
@@ -345,13 +341,9 @@ function militaryLossFigure(win, pid) {
 }
 
 /**
- * Reduce one cost metric to its figure for a participant over its war window,
- * dispatching on the metric's mode: `milpower` is special-cased, `accrued`/`spent`
- * read a counter's increase, everything else flows through {@link reduceCostSeries}.
  * @param {Snapshot[]} win The samples inside the participation window.
  * @param {Pid | string} pid
  * @param {{ id: string, mode: string, series?: string }} metric A COST_METRICS entry.
- * @returns {number | null} The figure, or null when no data.
  */
 function participantMetricFigure(win, pid, metric) {
   if (metric.id === "milpower") return militaryLossFigure(win, pid);
@@ -367,11 +359,7 @@ function participantMetricFigure(win, pid, metric) {
   );
 }
 
-/**
- * The last finite value of a series (its "level"), or null when empty.
- * @param {number[]} series
- * @returns {number | null}
- */
+/** @param {number[]} series */
 function lastFinite(series) {
   return series.length ? series[series.length - 1] : null;
 }
@@ -462,11 +450,10 @@ export function participantCost(samples, participant, warStart, warEnd) {
 
 /**
  * The scaled "soldiers killed" figure beside a raw units-lost count, evaluated at the war's end era
- * (the last window sample's turn, or the war end). null when no units were lost.
+ * (the last window sample's turn, or the war end).
  * @param {Snapshot[]} win The participant's window samples.
  * @param {number|null} rawUnits The raw units-lost figure.
  * @param {number} warEnd The war's end turn (fallback era).
- * @returns {number|null} The scaled figure, or null.
  */
 function scaledCasualtyFigure(win, rawUnits, warEnd) {
   if (typeof rawUnits !== "number" || rawUnits <= 0) return null;

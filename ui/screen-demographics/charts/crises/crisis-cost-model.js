@@ -118,11 +118,7 @@ export function participantIdentity(pid, samples) {
   return { leaderType: undefined, color: undefined };
 }
 
-/**
- * The crisis groups within one age's samples (start/end windows).
- * @param {Snapshot[]} ageSamples Samples already filtered to one age.
- * @returns {{ start:number, end:number, sample:Snapshot }[]}
- */
+/** @param {Snapshot[]} ageSamples Samples already filtered to one age. */
 function ageCrisisGroups(ageSamples) {
   const onsets = crisisStageOnsets(ageSamples);
   if (!onsets.length) return [];

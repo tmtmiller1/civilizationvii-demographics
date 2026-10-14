@@ -203,12 +203,7 @@ export function boardColumn(name, color, count, items) {
   return col;
 }
 
-/**
- * One board-column row: a plain string, or a `{title, sub}` pair (title in ink over a
- * muted sub-line).
- * @param {string | {title:string, sub?:string}} item
- * @returns {HTMLElement}
- */
+/** @param {string | {title:string, sub?:string}} item */
 function boardColumnItem(item) {
   const base = "padding:0.333rem 0.667rem;border-bottom:1px solid rgba(0,0,0,0.18)";
   if (typeof item === "string") {

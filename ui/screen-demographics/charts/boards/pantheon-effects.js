@@ -24,10 +24,7 @@ export const YIELD_CATEGORIES = [
   { key: "influence", label: "LOC_YIELD_DIPLOMACY", color: "#199e70", yields: ["YIELD_DIPLOMACY", "YIELD_INFLUENCE"] }
 ];
 
-/**
- * YIELD_* type → category key. Built once from YIELD_CATEGORIES.
- * @type {Record<string,string>}
- */
+/** @type {Record<string,string>} */
 const YIELD_TO_CATEGORY = (() => {
   /** @type {Record<string,string>} */
   const categoryOf = {};
@@ -73,11 +70,7 @@ export function effectText(def) {
   }
 }
 
-/**
- * The modifier ids a belief grants (via BeliefModifiers).
- * @param {string} beliefType The belief type id (e.g. "BELIEF_...").
- * @returns {string[]} Modifier ids (possibly empty).
- */
+/** @param {string} beliefType The belief type id (e.g. "BELIEF_..."). */
 function modifierIdsForBelief(beliefType) {
   try {
     if (typeof GameInfo === "undefined" || !GameInfo.BeliefModifiers) return [];
@@ -89,11 +82,7 @@ function modifierIdsForBelief(beliefType) {
   }
 }
 
-/**
- * The engine EffectType for a modifier id (via Modifiers → DynamicModifiers).
- * @param {string} modifierId
- * @returns {string} The effect type, or "" when unresolved.
- */
+/** @param {string} modifierId */
 function effectTypeFor(modifierId) {
   try {
     const modifier = GameInfo.Modifiers.find((/** @type {*} */ row) => row && row.ModifierId === modifierId);
@@ -107,11 +96,7 @@ function effectTypeFor(modifierId) {
   }
 }
 
-/**
- * A modifier's arguments as a Name→Value map.
- * @param {string} modifierId
- * @returns {Record<string,string>}
- */
+/** @param {string} modifierId */
 function argsFor(modifierId) {
   /** @type {Record<string,string>} */
   const out = {};

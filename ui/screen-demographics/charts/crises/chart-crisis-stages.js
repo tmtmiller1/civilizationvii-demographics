@@ -33,11 +33,7 @@ import {
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-cost-model.js";
 import { localYear, t, turnPlain } from "/demographics/ui/core/demographics-i18n.js";
 
-/**
- * Build a turn -> game-year lookup from the samples (for the year/both span modes).
- * @param {Snapshot[]} samples
- * @returns {Map<number, string>} Turn -> game-year string.
- */
+/** @param {Snapshot[]} samples */
 function buildYearMap(samples) {
   /** @type {Map<number, string>} */
   const map = new Map();
@@ -51,13 +47,11 @@ function buildYearMap(samples) {
 
 /**
  * Format a stage's turn span per the shared X-axis time-unit mode: turns
- * ("T98 – T112"), game years ("100 BCE – 60 BCE"), or both. Falls back to turns
- * when no year data is available.
+ * ("T98 – T112"), game years ("100 BCE – 60 BCE"), or both.
  * @param {number} start The stage's first turn.
  * @param {number} end The stage's last turn.
  * @param {Map<number, string>} yearMap Turn -> game-year string.
  * @param {string} mode The time-unit mode ("turn" / "year" / "both").
- * @returns {string}
  */
 function formatStageSpan(start, end, yearMap, mode) {
   const turns = turnPlain(start) + " – " + turnPlain(end);
@@ -102,11 +96,9 @@ function buildStageBar(segment, idx, seed, spanText) {
 }
 
 /**
- * Live per-civ cost-table columns over [start, end] (computed from the samples).
  * @param {Snapshot[]} samples
  * @param {number} start
  * @param {number} end
- * @returns {*[]}
  */
 function liveCrisisCols(samples, start, end) {
   return crisisParticipants(samples, start, end).map((participant) => ({
@@ -135,11 +127,9 @@ function costSection(cols, samples) {
 }
 
 /**
- * Build a live per-civ cost-table section over [start, end].
  * @param {Snapshot[]} samples
  * @param {number} start
  * @param {number} end
- * @returns {HTMLElement}
  */
 function buildCostSection(samples, start, end) {
   return costSection(liveCrisisCols(samples, start, end), samples);
@@ -160,11 +150,9 @@ function cumulativeCols(group, ctx) {
 }
 
 /**
- * Build one stage block: the colored bar plus that stage's own per-civ cost table.
  * @param {{ stage: number, start: number, end: number, sample: Snapshot }} segment
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
- *   mode: string }} ctx Render context.
- * @returns {HTMLElement}
+ *   mode: string }} ctx
  */
 function buildStageBlock(segment, ctx) {
   const idx = Math.max(0, Math.min(3, segment.stage - 1));
@@ -203,13 +191,9 @@ function buildCumulativeBlock(group, ctx) {
 }
 
 /**
- * Build one crisis group: a title header (the crisis's flavor name, which differs
- * per age), its per-stage blocks, then a cumulative-impact block summing the whole
- * crisis (shown whenever the crisis has more than one stage).
  * @param {{ segments:any[], start:number, end:number, sample:Snapshot }} group The crisis run.
  * @param {{ samples: Snapshot[], seed: string, yearMap: Map<number,string>,
- *   mode: string }} ctx Render context.
- * @returns {HTMLElement}
+ *   mode: string }} ctx
  */
 function buildCrisisGroup(group, ctx) {
   const wrap = document.createElement("div");
@@ -254,11 +238,8 @@ function ageOverallCols(age, ctx) {
 }
 
 /**
- * Aggregate every participant's cost across all ages' crises into cost-table columns: each age's
- * cumulative (snapshot or live) merged by pid.
- * @param {{ sample: Snapshot }[]} groups The crisis groups.
+ * @param {{ sample: Snapshot }[]} groups
  * @param {{ samples:Snapshot[], crisisSnapshots?:Record<string, *[]> }} ctx
- * @returns {*[]}
  */
 function aggregateOverallCols(groups, ctx) {
   const ages = [...new Set(groups.map((g) => sampleAgeKey(g.sample)))];
@@ -286,10 +267,8 @@ function buildOverallBlock(groups, ctx) {
 }
 
 /**
- * Append the overall cross-age cumulative block, but only once crises exist in
- * at least two distinct ages (i.e. after the Exploration crisis occurs).
- * @param {HTMLElement} panel The page panel.
- * @param {{ sample: Snapshot, start: number, end: number }[]} groups The crisis groups.
+ * @param {HTMLElement} panel
+ * @param {{ sample: Snapshot, start: number, end: number }[]} groups
  * @param {{ samples: Snapshot[] }} ctx
  */
 function appendOverallBlock(panel, groups, ctx) {
@@ -298,11 +277,7 @@ function appendOverallBlock(panel, groups, ctx) {
   panel.appendChild(buildOverallBlock(groups, ctx));
 }
 
-/**
- * The persisted per-age crisis-cost snapshots from the history blob (empty when none).
- * @param {*} history
- * @returns {Record<string, *[]>} Age key → cumulative cost columns.
- */
+/** @param {*} history */
 function historyCrisisSnapshots(history) {
   return (history && history.crisisSnapshots) || {};
 }

@@ -14,11 +14,7 @@ const PAD_R = 12;
 const PAD_T = 16;
 const PAD_B = 34;
 
-/**
- * Resolve a religion $hash (string key) to a display name + readable color.
- * @param {string} hashKey
- * @returns {{name:string, color:string}}
- */
+/** @param {string} hashKey */
 function religionMeta(hashKey) {
   try {
     if (typeof GameInfo !== "undefined" && GameInfo.Religions) {
@@ -36,10 +32,8 @@ function religionMeta(hashKey) {
 }
 
 /**
- * Build per-religion point series + domain bounds from the history `rel` maps.
- * @param {*} history The persisted history blob.
+ * @param {*} history
  * @param {"s"|"p"} key The follower key (settlements or population).
- * @returns {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}}
  */
 function collectSeries(history, key) {
   /** @type {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} */
@@ -50,11 +44,9 @@ function collectSeries(history, key) {
 }
 
 /**
- * Fold one sample's `rel` map into the series accumulator, in place.
  * @param {*} sample
  * @param {"s"|"p"} key
  * @param {{series: Map<string, {x:number, y:number}[]>, minX:number, maxX:number, maxY:number}} acc
- *   The accumulator (mutated).
  */
 function foldRelSample(sample, key, acc) {
   const followers = sample && sample.rel;
@@ -76,11 +68,9 @@ function foldRelSample(sample, key, acc) {
 }
 
 /**
- * Map a data point to SVG viewport coordinates.
  * @param {number} x Data x (chart turn).
  * @param {number} y
  * @param {{minX:number, maxX:number, maxY:number}} domain
- * @returns {{px:number, py:number}} Viewport coords.
  */
 function project(x, y, domain) {
   const spanX = domain.maxX - domain.minX || 1;
@@ -90,7 +80,6 @@ function project(x, y, domain) {
 }
 
 /**
- * Append the axis frame + min/max labels to the SVG.
  * @param {SVGElement} svg
  * @param {{minX:number, maxX:number, maxY:number}} domain
  */
@@ -107,11 +96,9 @@ function appendAxes(svg, domain) {
 }
 
 /**
- * Append one religion's polyline; return its legend meta.
  * @param {SVGElement} svg
  * @param {{hash:string, pts:{x:number, y:number}[]}} entry
  * @param {{minX:number, maxX:number, maxY:number}} domain
- * @returns {{name:string, color:string}} Legend meta for the series.
  */
 function appendSeries(svg, entry, domain) {
   const meta = religionMeta(entry.hash);
@@ -135,9 +122,8 @@ function appendSeries(svg, entry, domain) {
 }
 
 /**
- * Render a religion time-series line chart into `host`.
  * @param {HTMLElement} host
- * @param {*} history The persisted history blob.
+ * @param {*} history
  * @param {"s"|"p"} key
  */
 function renderReligionLines(host, history, key) {

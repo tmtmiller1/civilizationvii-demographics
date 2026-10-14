@@ -83,12 +83,10 @@ function loadCompareCivs(history, metricIds) {
 }
 
 /**
- * Build one clickable legend row (portrait + colored dot + name), `is-hidden`
- * when the civ is filtered off. Matches the line / Legacy Path radar legend.
+ * Matches the line / Legacy Path radar legend.
  * @param {CompareCiv} civ
  * @param {boolean} isHidden
  * @param {((k:string)=>void)|null} onToggle
- * @returns {HTMLElement}
  */
 function compareLegendRow(civ, isHidden, onToggle) {
   const row = document.createElement("div");
@@ -112,7 +110,6 @@ function compareLegendRow(civ, isHidden, onToggle) {
 }
 
 /**
- * Mount the filtering legend overlay (title + one clickable row per civ).
  * @param {HTMLElement} wrap
  * @param {{forEach:(cb:(c:CompareCiv)=>void)=>void}} civs Map or array of civs.
  * @param {Set<string>} hidden
@@ -147,12 +144,7 @@ function groupThousands(value) {
   return parts.join(".");
 }
 
-/**
- * A linear metric axis (x or y) styled like the line chart: gold ticks + title,
- * faint gridlines, gray border, starting at 0, grouped-thousand tick labels.
- * @param {string} title
- * @returns {Record<string, *>} The Chart.js axis options.
- */
+/** @param {string} title */
 function metricAxis(title) {
   return {
     type: "linear",
@@ -169,11 +161,9 @@ function metricAxis(title) {
 }
 
 /**
- * The civs that have a finite value on both axes (the plottable set).
  * @param {Map<string, CompareCiv>} civs
  * @param {string} xMetric
  * @param {string} yMetric
- * @returns {CompareCiv[]}
  */
 function scatterPlottable(civs, xMetric, yMetric) {
   return [...civs.values()].filter(
@@ -182,13 +172,12 @@ function scatterPlottable(civs, xMetric, yMetric) {
 }
 
 /**
- * Build one civ's single-point scatter dataset. Identity/color carried through so
+ * Identity/color carried through so
  * the shared legend, hidden-toggle, and tooltip work exactly like the line chart.
  * @param {CompareCiv} civ
  * @param {string} xMetric
  * @param {string} yMetric
  * @param {Set<string>} hidden
- * @returns {Record<string, *>} The Chart.js dataset.
  */
 function scatterDataset(civ, xMetric, yMetric, hidden) {
   const color = safeTextColor(civ.color) || civ.color;
@@ -208,8 +197,6 @@ function scatterDataset(civ, xMetric, yMetric, hidden) {
 }
 
 /**
- * Append one labeled value line ("<axis title> …… <value>") to the tooltip, the
- * value in the civ color, mirroring the line-chart tooltip's per-row value cell.
  * @param {HTMLElement} tip
  * @param {string} title
  * @param {number} value
@@ -231,8 +218,6 @@ function appendScatterTipVal(tip, title, value, color) {
 }
 
 /**
- * Fill the tooltip for the hovered civ: the standard leader portrait + color dot +
- * name row, then the two axis value lines.
  * @param {HTMLElement} tip
  * @param {*} dataPoint The Chart.js data point.
  * @param {string} xTitle
@@ -255,8 +240,6 @@ function fillScatterTip(tip, dataPoint, xTitle, yTitle) {
 }
 
 /**
- * Build the Chart.js `tooltip.external` handler: the same dark chrome the line
- * chart uses, showing the hovered civ + both axis values.
  * @param {string} xTitle
  * @param {string} yTitle
  * @returns {(context:*) => void}
@@ -282,12 +265,7 @@ function makeScatterTooltipExternal(xTitle, yTitle) {
   };
 }
 
-/**
- * Resolve the scatter's axis metrics and (localized) titles from options, applying the
- * Science-vs-Military "Fingerprint" defaults.
- * @param {*} opts Options (xMetric/yMetric/xTitle/yTitle).
- * @returns {{ xMetric: string, yMetric: string, xTitle: string, yTitle: string }}
- */
+/** @param {*} opts Options (xMetric/yMetric/xTitle/yTitle). */
 function scatterAxisSpec(opts) {
   return {
     xMetric: opts.xMetric || "science_yield",
@@ -348,7 +326,6 @@ export function renderCivScatter(host, opts) {
 
 // Radar (Archetype)
 
-/** Radar dimensions: metric id → axis label. */
 const RADAR_DIMS = [
   { metric: "science_yield", label: "LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" },
   { metric: "milpower", label: "LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" },
@@ -395,10 +372,9 @@ function radarFrame(svg) {
 }
 
 /**
- * Append one civ's normalized radar polygon.
  * @param {SVGElement} svg
  * @param {CompareCiv} civ
- * @param {number[]} maxes Per-dim maxima.
+ * @param {number[]} maxes
  */
 function radarPolygon(svg, civ, maxes) {
   const points = RADAR_DIMS.map((dim, i) => {

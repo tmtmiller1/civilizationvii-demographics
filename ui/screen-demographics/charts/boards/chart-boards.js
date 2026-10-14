@@ -23,11 +23,7 @@ import {
   estimateYields
 } from "/demographics/ui/screen-demographics/charts/boards/pantheon-effects.js";
 
-/**
- * The players map of the most recent sample, or {} when history is empty.
- * @param {*} history The persisted history blob.
- * @returns {Record<string, any>}
- */
+/** @param {*} history */
 function latestPlayers(history) {
   try {
     const samples = history && Array.isArray(history.samples) ? history.samples : [];
@@ -61,11 +57,8 @@ function titleCaseFromType(type) {
 }
 
 /**
- * The game's localized name for a type id, or null when the table, the row, its Name, or the
- * Locale lookup is missing or comes back blank.
  * @param {string} table The GameInfo table.
  * @param {string} type
- * @returns {string | null}
  */
 function localizedTypeName(table, type) {
   try {
@@ -83,7 +76,6 @@ function localizedTypeName(table, type) {
 // Wonders board + races
 
 /**
- * Fold one player's wonderTypes into the first-seen-turn accumulator.
  * @param {*} player A sample player.
  * @param {number} turn The chart turn.
  * @param {Map<string, Map<string, number>>} out
@@ -101,8 +93,7 @@ function foldWonderPlayer(player, turn, out, pid) {
 }
 
 /**
- * For each civ, the chart-turn each wonder type first appeared.
- * @param {*} history The persisted history blob.
+ * @param {*} history
  * @returns {Map<string, Map<string, number>>} pid → (type → first chartTurn).
  */
 function wonderFirstTurns(history) {
@@ -127,10 +118,8 @@ function foldSample(sample, out, samples) {
 }
 
 /**
- * Wonder labels for one civ, in completion order, annotated with the turn.
  * @param {string[]} types Wonder ConstructibleType ids.
  * @param {Map<string, number>} [turns] type → first chart-turn.
- * @returns {string[]}
  */
 function wonderLabels(types, turns) {
   const items = types.map((type) => ({
@@ -168,8 +157,7 @@ export function renderWondersBoard(host, opts) {
 }
 
 /**
- * Pivot the per-civ first-turns into the earliest builder of each wonder.
- * @param {Map<string, Map<string, number>>} firstTurns pid → (type → turn).
+ * @param {Map<string, Map<string, number>>} firstTurns
  * @returns {Map<string, {pid:string, turn:number}>}
  */
 function wonderWinners(firstTurns) {
@@ -220,10 +208,8 @@ export function renderWonderRaces(host, opts) {
 }
 
 /**
- * Completed-wonder rows (first builder + turn), earliest first.
  * @param {*} history
  * @param {Record<string, any>} players
- * @returns {*[]}
  */
 function completedWonderRows(history, players) {
   const rows = [];
@@ -290,11 +276,8 @@ function appendWonderSection(host, title, rows, rowFn) {
 }
 
 /**
- * One in-progress wonder row: a progress bar (how close) with the wonder name,
- * the building civ + settlement, and turns-left.
  * @param {{name:string, civ:string, settlement:string, color:string, percent:number|null,
  *   turnsLeft:number|null}} wonder
- * @returns {HTMLElement}
  */
 function wonderProgressRow(wonder) {
   const percentText = wonder.percent != null ? wonder.percent + "%" : "—";
@@ -334,10 +317,8 @@ function byTypeColumn(column) {
 }
 
 /**
- * Reduce one civ's by-type map to sorted {name, n} items + a total.
  * @param {Map<string, number>} byType
  * @param {string} lookup The GameInfo table for name resolution.
- * @returns {{total:number, items:{name:string, n:number}[]}}
  */
 function byTypeItems(byType, lookup) {
   let total = 0;
@@ -351,11 +332,9 @@ function byTypeItems(byType, lookup) {
 }
 
 /**
- * One column per civ the spoiler guard lets through that has at least one type.
  * @param {Map<*, Map<string, number>>} counts pid → (type → count).
  * @param {Record<string, any>} players The latest sample's players (labels/colors).
  * @param {string} lookup The GameInfo table for name resolution.
- * @returns {{name:string, color:string, total:number, items:{name:string, n:number}[]}[]}
  */
 function byTypeColumns(counts, players, lookup) {
   const cols = [];
@@ -386,10 +365,6 @@ export function renderByTypeBoard(host, opts) {
 
 // Religion standings (bars)
 
-/**
- * Build the religion → row map from GameInfo.Religions.
- * @returns {Map<*, *>} hash → {name, color, settlements:0, pop:0}.
- */
 function buildReligionMeta() {
   const meta = new Map();
   if (typeof GameInfo === "undefined" || !GameInfo.Religions || typeof Locale === "undefined") return meta;
@@ -472,11 +447,8 @@ export function renderReligionStandings(host, _opts) {
  */
 
 /**
- * One chosen pantheon's entry from a belief handle, or null when the handle isn't a
- * lookupable pantheon belief (wrong class, no name, unavailable).
  * @param {*} ref A pantheon belief handle (from player.Religion.getPantheons()).
- * @param {*} canLookup Whether GameInfo.Beliefs.lookup is available.
- * @returns {PantheonEntry|null}
+ * @param {*} canLookup
  */
 function pantheonEntryFromRef(ref, canLookup) {
   const def = canLookup ? GameInfo.Beliefs.lookup(ref) : null;
@@ -489,11 +461,7 @@ function pantheonEntryFromRef(ref, canLookup) {
   return { name, effect: effectText(def), yields: estimate.yields, conditional: estimate.conditional };
 }
 
-/**
- * The raw pantheon belief handles a live player has chosen, or null when unavailable.
- * @param {*} player A live player (from Players.getAlive()).
- * @returns {*} The belief handles (array-like), or null.
- */
+/** @param {*} player A live player (from Players.getAlive()). */
 function pantheonRefsFor(player) {
   try {
     return player && player.Religion && typeof player.Religion.getPantheons === "function"
@@ -503,12 +471,7 @@ function pantheonRefsFor(player) {
   }
 }
 
-/**
- * The pantheon beliefs a live player has chosen, each with its name, effect text, and
- * an estimated flat-yield breakdown.
- * @param {*} player A live player (from Players.getAlive()).
- * @returns {PantheonEntry[]} Chosen pantheons (empty if none / unavailable).
- */
+/** @param {*} player A live player (from Players.getAlive()). */
 function pantheonEntriesFor(player) {
   /** @type {PantheonEntry[]} */
   const out = [];
@@ -537,11 +500,8 @@ function pantheonEntriesFor(player) {
  */
 
 /**
- * One civ's pantheon row from a live player, labeled/colored from the latest sample,
- * with a per-civ flat-yield total, or null when the player has no pantheon.
  * @param {*} player A live player (from Players.getAlive()).
  * @param {*} samplePlayers The latest sample's player map (for civ names/colors).
- * @returns {PantheonRow|null}
  */
 function pantheonRowFor(player, samplePlayers) {
   const pantheons = pantheonEntriesFor(player);
@@ -557,12 +517,7 @@ function pantheonRowFor(player, samplePlayers) {
   return { label: civLabel(samplePlayer, pid), color: board.civColor(samplePlayer), pantheons, yields, conditional };
 }
 
-/**
- * Collect each major civ's chosen pantheons from live game state, labeled/colored
- * from the latest sample's player map, with a per-civ flat-yield total.
- * @param {*} history The persisted history blob (for civ names/colors).
- * @returns {PantheonRow[]} One entry per civ that has a pantheon.
- */
+/** @param {*} history The persisted history blob (for civ names/colors). */
 function collectPantheonRows(history) {
   try {
     if (typeof Players === "undefined") return [];
@@ -619,11 +574,8 @@ export function renderReligionPantheonYields(host, opts) {
 }
 
 /**
- * One civ's estimated-yield card: identity header + a labeled colored bar per yield
- * category (zero categories omitted), plus a note when conditional effects exist.
  * @param {PantheonRow} civRow
  * @param {number} max The shared per-category max.
- * @returns {HTMLElement}
  */
 function pantheonYieldCard(civRow, max) {
   const card = cardBox("15rem", "20rem");
@@ -655,7 +607,6 @@ function pantheonYieldCard(civRow, max) {
  */
 const SIZE_CLASS_TOPS = [5, 10, 15, 20];
 const SIZE_CLASS_COUNT = SIZE_CLASS_TOPS.length + 1;
-/** Settlements smaller than this stay out of the Most-Urbanized ranking. */
 const URBAN_RANK_MIN_POP = 5;
 const URBAN_PRIOR = 6;
 

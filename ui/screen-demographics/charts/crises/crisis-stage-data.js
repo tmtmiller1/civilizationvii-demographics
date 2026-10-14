@@ -64,12 +64,9 @@ export function crisisStageOnsets(samples) {
 }
 
 /**
- * Fold one sample into the onset accumulator: reset the running max at age
- * changes, disarm across real age transitions until a pre-crisis reading
- * confirms this age's baseline, then record each genuine new-high onset.
  * @param {Snapshot|*} sample
- * @param {{ last: number, age: *, armed: boolean }} state Detection state (mutated).
- * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets Accumulator.
+ * @param {{ last: number, age: *, armed: boolean }} state
+ * @param {{ stage: number, turn: number, sample: Snapshot }[]} onsets
  */
 function onsetStep(sample, state, onsets) {
   if (!sample) return;
@@ -97,12 +94,9 @@ function handleAgeChange(sample, state) {
 }
 
 /**
- * Whether this sample is a genuine new-high crisis onset: armed, strictly above
- * the running max, at least stage 1, and turn-stamped.
- * @param {{ last: number, armed: boolean }} state Detection state.
- * @param {number} raw The sample's crisis stage.
+ * @param {{ last: number, armed: boolean }} state
+ * @param {number} raw
  * @param {Snapshot|*} sample
- * @returns {boolean}
  */
 function isNewOnset(state, raw, sample) {
   return state.armed && raw > state.last && raw >= 1 && typeof sample.turn === "number";

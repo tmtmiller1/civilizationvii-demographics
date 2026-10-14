@@ -53,10 +53,8 @@ function warCivLabel(roster) {
 }
 
 /**
- * Stable sort for war-civ option entries.
  * @param {{ isCS: boolean, label: string }} a
  * @param {{ isCS: boolean, label: string }} b
- * @returns {number}
  */
 function compareWarCivOptions(a, b) {
   if (a.isCS !== b.isCS) return a.isCS ? 1 : -1;
@@ -102,13 +100,10 @@ export function collectWarCivOptions(history) {
  */
 
 /**
- * Draw the Gantt background, year grid + ticks. Returns the tick positions for
- * HTML overlays.
  * @param {SVGElement} svg
  * @param {GanttLayout} L
  * @param {{ xMin: number, xMax: number }} dom
- * @param {Map<number, string>} turnYearMap chart-turn → year map.
- * @returns {{ t: number, x: number, year: string|null }[]}
+ * @param {Map<number, string>} turnYearMap
  */
 function drawGanttGrid(svg, L, dom, turnYearMap) {
   // Scale tick count to the (possibly very wide, scrollable) plot so a long
@@ -144,12 +139,10 @@ function drawGanttGrid(svg, L, dom, turnYearMap) {
  */
 
 /**
- * Draw the vertical "current turn" marker: a dashed yellow line across the plot
- * at the latest sampled turn (where the solid bars end and the future tails begin).
  * @param {SVGElement} svg
  * @param {GanttLayout} L
  * @param {{ xMin: number, xMax: number }} dom
- * @param {number} latestTurn The latest sampled turn.
+ * @param {number} latestTurn
  */
 function drawCurrentTurnLine(svg, L, dom, latestTurn) {
   if (!isFinite(latestTurn) || latestTurn < dom.xMin || latestTurn > dom.xMax) return;
@@ -276,15 +269,11 @@ function ganttCrisisOnsets(samples) {
 }
 
 /**
- * Assemble the shared overlay environment: the year map plus the crisis-onset
- * and age markers (mapped onto the continuous chart turn), the game seed, and
- * the canvas geometry: the bundle every overlay mounter and the SVG builder read.
  * @param {Snapshot[]} samples
  * @param {number} latestTurn The latest sampled (continuous) turn.
  * @param {number} W Canvas width.
  * @param {number} H Canvas height.
  * @param {{ xMin: number, xMax: number }} dom
- * @returns {*}
  */
 function buildGanttOverlayEnv(samples, latestTurn, W, H, dom) {
   const turnYearMap = ganttTurnYearMap(samples);
@@ -328,13 +317,10 @@ function latestChartTurn(samples) {
 }
 
 /**
- * Resolve a war endpoint on the continuous timeline: the recorded chart turn,
- * else the year-mapped chart turn, else the raw age-local value.
  * @param {number|undefined} chartVal Recorded chart turn (if any).
  * @param {string|null|undefined} year The endpoint's game-year label.
  * @param {number|null|undefined} localVal The age-local turn fallback.
  * @param {Map<string, number>} yearToChart game-year → chartTurn.
- * @returns {number|null} The global turn, or null.
  */
 function pickGlobalTurn(chartVal, year, localVal, yearToChart) {
   if (typeof chartVal === "number") return chartVal;
@@ -378,12 +364,7 @@ function ganttTurnYearMap(samples) {
   return map;
 }
 
-/**
- * Detect age-transition markers on the continuous chart turn (where a sample's
- * age differs from the previous one).
- * @param {Snapshot[]} samples
- * @returns {{ turn: number, label: string }[]}
- */
+/** @param {Snapshot[]} samples */
 function collectGanttAgeMarkers(samples) {
   /** @type {Record<string, string>} */
   const names = {
@@ -408,7 +389,6 @@ function collectGanttAgeMarkers(samples) {
 }
 
 /**
- * Draw the age-transition vertical lines (purple long-dash, like the line charts).
  * @param {SVGElement} svg
  * @param {GanttLayout} L
  * @param {{ xMin: number, xMax: number }} dom
@@ -435,12 +415,8 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
 }
 
 /**
- * Load, remap-to-global-chartTurn, merge, sort, and filter the war set.
  * @param {HTMLElement} host The view host (for empty-state notices).
  * @param {*} opts
- * @returns {{ wars: any[], merged: any[], filtered: any[], latestTurn: number,
- *   samples: Snapshot[], filterPid: number|null, showActiveOnly: boolean }|null}
- *   The prepared data, or null when there is nothing to draw.
  */
 function prepareConflictsTimelineData(host, opts) {
   // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
@@ -476,14 +452,11 @@ function prepareConflictsTimelineData(host, opts) {
 }
 
 /**
- * Build the Gantt SVG (background grid + ticks + war bars).
- * @param {*[]} filtered The filtered wars.
+ * @param {*[]} filtered
  * @param {GanttLayout} L
  * @param {{ xMin: number, xMax: number }} dom
- * @param {{ min: number, max: number }|null} turnRange Time-range filter, or null.
+ * @param {{ min: number, max: number }|null} turnRange
  * @param {*} env Shared environment (turnYearMap, latestTurn, samples, W, H).
- * @returns {{ svg: SVGElement, barRects: BarRect[],
- *   tickPositions: { t: number, x: number, year: string|null }[] }}
  */
 function buildGanttSvg(filtered, L, dom, turnRange, env) {
   const { turnYearMap, latestTurn, samples, W, H } = env;
@@ -505,8 +478,6 @@ function buildGanttSvg(filtered, L, dom, turnRange, env) {
 }
 
 /**
- * Build the Gantt wrap and mount all HTML overlays (x-ticks, axis titles,
- * war labels) plus the hover tooltip.
  * @param {SVGElement} svg
  * @param {Object} env Shared environment.
  * @param {*[]} env.merged The full merged war set (for naming).
@@ -522,7 +493,6 @@ function buildGanttSvg(filtered, L, dom, turnRange, env) {
  * @param {{ stage: number, turn: number, sample: Snapshot }[]} env.crisisOnsets
  * @param {{ turn: number, label: string }[]} env.ageMarkers Age-transition markers.
  * @param {string} env.crisisSeed The game seed (for crisis names).
- * @returns {HTMLElement}
  */
 function mountGanttWrap(svg, env) {
   const { barRects, turnYearMap, latestTurn, samples, W, H } = env;

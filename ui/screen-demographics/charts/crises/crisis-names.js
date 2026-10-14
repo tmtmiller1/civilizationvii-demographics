@@ -371,11 +371,7 @@ const CRISIS_FALLBACK_BY_AGE = {
   }
 };
 
-/**
- * FNV-1a-ish 32-bit string hash, used to seed deterministic crisis-name picks.
- * @param {string} text
- * @returns {number} An unsigned 32-bit hash.
- */
+/** @param {string} text */
 function hashString(text) {
   let hash = 2166136261 >>> 0; // FNV-1a-ish
   for (let i = 0; i < text.length; i++) {
@@ -386,7 +382,6 @@ function hashString(text) {
 }
 
 /**
- * Pick an array element by seed modulo length.
  * @template T
  * @param {T[]} arr
  * @param {number} seed
@@ -396,12 +391,7 @@ function pickSeeded(arr, seed) {
   return arr[seed % arr.length];
 }
 
-/**
- * Resolve the `{ names, arcs }` LOC-key entry for a crisis sample, tolerating
- * the flat-array shape. Entries hold `LOC_DEMOGRAPHICS_CRISIS_*` tags.
- * @param {Snapshot|*} sample
- * @returns {{ names: string[], arcs: string[][] }}
- */
+/** @param {Snapshot|*} sample */
 function resolveCrisisEntry(sample) {
   const type = sample && sample.crisisEventType;
   const entry = crisisTemplateEntry(type, sample && sample.age);
@@ -412,10 +402,8 @@ function resolveCrisisEntry(sample) {
 }
 
 /**
- * The template entry for a crisis type, else the age's fallback, else the generic "The Crisis" pool.
  * @param {*} type Crisis event type.
  * @param {*} age Sample age tag.
- * @returns {*[] | { names: string[], arcs: string[][] }} A flat name array or a `{ names, arcs }` entry.
  */
 function crisisTemplateEntry(type, age) {
   return (
@@ -427,21 +415,13 @@ function crisisTemplateEntry(type, age) {
   );
 }
 
-/**
- * The single-pick name pool of a template entry (the array itself for the flat shape).
- * @param {*[] | { names?: string[] }} entry
- * @returns {string[]}
- */
+/** @param {*[] | { names?: string[] }} entry */
 function crisisEntryNames(entry) {
   if (Array.isArray(entry)) return entry;
   return entry.names || ["LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS"];
 }
 
-/**
- * The multi-stage arcs of a template entry (none for the flat shape).
- * @param {*[] | { arcs?: string[][] }} entry
- * @returns {string[][]}
- */
+/** @param {*[] | { arcs?: string[][] }} entry */
 function crisisEntryArcs(entry) {
   if (Array.isArray(entry)) return [];
   return entry.arcs || [];
