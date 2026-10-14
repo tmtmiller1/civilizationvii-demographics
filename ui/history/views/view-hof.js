@@ -46,12 +46,9 @@ export const HOF_TABS = [
  *   (own screen only). When present the filter is mounted there instead of on the section row.
  */
 
-/** A finite number, or 0. */
 const numOr0 = (/** @type {*} */ v) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
-/** A plain object, or an empty one. */
 const objOf = (/** @type {*} */ value) =>
   /** @type {Record<string, any>} */ (value && typeof value === "object" && !Array.isArray(value) ? value : {});
-/** An array, or an empty one. */
 const arrOf = (/** @type {*} */ v) => (Array.isArray(v) ? v : []);
 
 /**
@@ -94,7 +91,6 @@ export function hofRecords(live) {
 }
 
 /**
- * The Hall of Fame section selector: a tab bar on its own screen, a pill row inside Demographics.
  * @param {HofCtx} ctx
  * @returns {HTMLElement}
  */
@@ -242,7 +238,6 @@ function repairPara(headTag, bodyTag) {
 }
 
 /**
- * The repair sheet: a title, why it is needed, what the button does, and the two-click button.
  * Starts folded; {@link wireToggle} opens it.
  * @param {HofCtx} ctx
  * @returns {HTMLElement}
@@ -282,10 +277,6 @@ function blockedBanner() {
   ]);
 }
 
-/**
- * What the last repair did, once one has been run this session.
- * @returns {HTMLElement|null} Note, or null when none has run.
- */
 function repairOutcomeNote() {
   if (!lastRepair) return null;
   return el("div", {
@@ -295,12 +286,9 @@ function repairOutcomeNote() {
 }
 
 /**
- * The footer when the archive could not be read: what is wrong, what the last repair did, and,
- * when a repair could help, the way out.
  * @param {string} status
  * @param {HTMLElement|null} done Outcome of the last repair, if any.
  * @param {HofCtx} ctx
- * @returns {HTMLElement}
  */
 function blockedNote(status, done, ctx) {
   // "foreign": the game handed back another mod's saved data instead of the shared settings (a game
@@ -324,12 +312,7 @@ function blockedNote(status, done, ctx) {
   return el("div", { cls: "dgh-storage" }, kids);
 }
 
-/**
- * Footer describing whether the archive could be read this session, and, when it could not, the
- * way out.
- * @param {HofCtx} ctx
- * @returns {HTMLElement|null}
- */
+/** @param {HofCtx} ctx */
 function storageNote(ctx) {
   const status = archiveStatus();
   const done = repairOutcomeNote();

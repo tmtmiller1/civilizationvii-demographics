@@ -28,11 +28,9 @@
 const ids = (state) => Object.keys(state.players);
 
 /**
- * An event stamped with the new state's turn, age index and date.
  * @param {HistoryWorldState} next
  * @param {number} ageIdx
  * @param {Omit<HistoryEvent, "t"|"a"|"d">} fields The event body.
- * @returns {HistoryEvent}
  */
 function stamp(next, ageIdx, fields) {
   /** @type {HistoryEvent} */

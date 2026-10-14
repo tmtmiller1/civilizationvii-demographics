@@ -139,7 +139,6 @@ export function readSetup() {
 
 /**
  * A seed that identifies this campaign's map across ages and reloads.
- * @returns {number} Seed, or 0.
  */
 function campaignSeed() {
   const mapSeed = Number(safe(() => Configuration.getMap().mapSeed, 0));
@@ -263,12 +262,7 @@ function crisisEvent(doc, world, ageIdx) {
   return { t: world.turn, a: ageIdx, k: "crisis", p: -1, q: stage, x: crisis.type, n: name, d: world.date };
 }
 
-/**
- * The major player whose land a disaster struck: the owner of its epicenter, else of the nearest
- * owned plot around it.
- * @param {{x:number, y:number}} loc Epicenter.
- * @returns {number} Player id, or -1 for unclaimed land.
- */
+/** @param {{x:number, y:number}} loc Epicenter. */
 function disasterOwner(loc) {
   const majors = new Set(everMajors().map((player) => player.id));
   const at = (/** @type {number} */ x, /** @type {number} */ y) => Number(safe(() => GameplayMap.getOwner(x, y), -1));
@@ -345,10 +339,7 @@ function markBaseline(doc, world) {
   }
 }
 
-/**
- * Save the campaign and refresh its archive record.
- * @param {CampaignDoc} doc
- */
+/** @param {CampaignDoc} doc */
 function persist(doc) {
   if (mayStoreCampaign({ network: isNetworkMultiplayer(), host: isHost() })) saveCampaign(doc);
   const rec = buildRecord(doc);
@@ -386,7 +377,6 @@ export function rememberTriumphWords(doc, events) {
 }
 
 /**
- * Store one Triumph's words, if they are not stored already and the game can still read them.
  * @param {CampaignDoc} doc Campaign (mutated).
  * @param {string} type
  * @param {string} age Age the Triumph was earned in.
@@ -406,7 +396,6 @@ function rememberOneTriumph(doc, type, age) {
 }
 
 /**
- * Register an engine listener and remember it for teardown.
  * @param {string} name
  * @param {Handler} fn
  */

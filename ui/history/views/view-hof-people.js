@@ -14,10 +14,8 @@ import { gameCard } from "/demographics/ui/history/views/view-hof-games.js";
 /** @typedef {import("../model/history-hof.js").GroupRow} GroupRow */
 
 /**
- * One figure on a card.
  * @param {string} value Already formatted.
  * @param {string} label LOC tag.
- * @returns {HTMLElement}
  */
 function figure(value, label) {
   return el("div", { cls: "dgh-fact" }, [
@@ -76,12 +74,9 @@ function recordLegend(row) {
 }
 
 /**
- * A card for one leader or civilization: emblem, name, win rate over finished games, that rate as a
- * bar with both parts named and given their share, then the figures.
  * @param {HTMLElement} icon Portrait or emblem.
  * @param {string} name Localized name.
  * @param {GroupRow} row
- * @returns {HTMLElement}
  */
 function groupCard(icon, name, row) {
   const rate = row.finished ? Math.round((100 * row.wins) / row.finished) : 0;
@@ -111,7 +106,6 @@ function groupCard(icon, name, row) {
 }
 
 /**
- * A tab of one card per tallied leader or civilization.
  * @param {HTMLElement} host
  * @param {GroupRow[]} rows Tallied rows, already in display order.
  * @param {(key: string) => HTMLElement} iconFor The card icon for a row key.

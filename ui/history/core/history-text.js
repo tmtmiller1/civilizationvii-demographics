@@ -76,7 +76,6 @@ export function formatNumber(value) {
   return text ? String(text) : String(Math.round(finite));
 }
 
-/** Engine type prefixes prettyType strips. */
 const TYPE_PREFIX = /^(CIVILIZATION|LEADER|BUILDING|WONDER|VICTORY|AGE|LEGACY|GAMESPEED|DIFFICULTY|MAPSIZE)_/;
 
 /**

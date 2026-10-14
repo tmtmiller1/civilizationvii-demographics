@@ -25,21 +25,15 @@ export function campaignRejectedKey(version) {
   return CAMPAIGN_REJECTED_KEY;
 }
 
-/**
- * Read one string value from the current game's configuration.
- * @param {string} key
- * @returns {string} The value, or "" when absent or not a string.
- */
+/** @param {string} key */
 function readValue(key) {
   const raw = safe(() => Configuration.getGame().getValue(key), null);
   return typeof raw === "string" ? raw : "";
 }
 
 /**
- * Write one string value into the current game's configuration.
  * @param {string} key
  * @param {string} value The value ("" clears it as far as this module is concerned).
- * @returns {boolean} True when the write call succeeded.
  */
 function writeValue(key, value) {
   try {
@@ -57,7 +51,6 @@ function writeValue(key, value) {
  */
 
 /**
- * Parse stored campaign text against the current schema.
  * @param {string} raw Stored text.
  * @returns {StoredCampaign} The document (or why the text is unusable) and the version read off it.
  */
@@ -95,10 +88,6 @@ function parkCampaign(raw, primary, mayWrite) {
   writeValue(slot, raw);
 }
 
-/**
- * Read the current version's parked slot when it holds a campaign this version can use.
- * @returns {{doc: CampaignDoc, raw: string}|null} The parked document and its text, or null.
- */
 function readParkedCampaign() {
   const raw = readValue(campaignRejectedKey(CAMPAIGN_VERSION));
   if (!raw) return null;
@@ -122,12 +111,7 @@ function restoreParkedCampaign(parked, mayWrite) {
   if (writeValue(CAMPAIGN_KEY, parked.raw)) writeValue(slot, "");
 }
 
-/**
- * Whether the caller allows writes to the game configuration during a load. Defaults to true; a
- * predicate that throws counts as "no".
- * @param {{mayWrite?: () => boolean}} [opts]
- * @returns {boolean}
- */
+/** @param {{mayWrite?: () => boolean}} [opts] */
 function resolveMayWrite(opts) {
   if (!opts || typeof opts.mayWrite !== "function") return true;
   return !!safe(opts.mayWrite, false);

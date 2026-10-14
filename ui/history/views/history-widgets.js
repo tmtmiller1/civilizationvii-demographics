@@ -159,11 +159,9 @@ export function civProgression(civs, nameOf, cls = "") {
 }
 
 /**
- * An engine-drawn icon.
  * @param {string} id A leader, civilization or victory class type.
  * @param {string} cls
  * @param {string} [context] Icon context (e.g. "LEADER").
- * @returns {HTMLElement}
  */
 function engineIcon(id, cls, context = "") {
   const icon = el("fxs-icon", { cls });

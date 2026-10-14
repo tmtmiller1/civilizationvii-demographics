@@ -75,11 +75,7 @@ export function playerIdentity(player) {
   };
 }
 
-/**
- * A player's primary and secondary banner colors.
- * @param {PlayerLibrary} player
- * @returns {{color:string, color2:string}} "" when unknown.
- */
+/** @param {PlayerLibrary} player */
 function playerColors(player) {
   return {
     color: String(safe(() => UI.Player.getPrimaryColorValueAsString(player.id), "") || ""),
@@ -139,10 +135,7 @@ export function readWonders(player) {
   return out.sort();
 }
 
-/**
- * The current age's Legacies (Triumphs) rows, cached per age.
- * @type {{age:string, rows:any[]}|null}
- */
+/** @type {{age:string, rows:any[]}|null} */
 let _legacyCache = null;
 
 /**

@@ -37,11 +37,7 @@ function progression(rec, cls) {
   return civProgression(rec.civs, (c) => typeName(c.name, c.civ), cls);
 }
 
-/**
- * A slim strip of totals: games, victories, win rate, turns, Triumphs.
- * @param {ArchiveRecord[]} records
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord[]} records */
 function totals(records) {
   const sums = overview(records);
   const rate = sums.finished ? Math.round((100 * sums.victories) / sums.finished) : 0;
@@ -55,13 +51,11 @@ function totals(records) {
 }
 
 /**
- * One podium place: rank, portrait, honorific, leader, civilizations, result and figures.
  * @param {ArchiveRecord} rec
  * @param {number} rank 1-3.
  * @param {number} best Most Triumphs in any game (the honorific scale).
  * @param {string} currentId
  * @param {HofCtx} ctx
- * @returns {HTMLElement}
  */
 function podiumCard(rec, rank, best, currentId, ctx) {
   const current = rec.id === currentId;
@@ -103,13 +97,11 @@ function podium(top, best, currentId, ctx) {
 }
 
 /**
- * A compact ranked table (rank, honorific, leader, civilizations, result, turns, Triumphs).
  * @param {{rec: ArchiveRecord, rank: number}[]} rows Games with their ranks.
  * @param {number} best Honorific scale.
  * @param {string} currentId Current game (highlighted).
  * @param {HofCtx} ctx
  * @param {boolean} [narrow] Leave out the civilizations (for the side column).
- * @returns {HTMLElement}
  */
 function rankTable(rows, best, currentId, ctx, narrow = false) {
   const all = [
@@ -144,11 +136,9 @@ function rankTable(rows, best, currentId, ctx, narrow = false) {
 }
 
 /**
- * The current game at its rank, between the games just above and below it.
  * @param {import("../model/history-hof.js").Standing["current"]} cur
  * @param {number} best Honorific scale.
  * @param {HofCtx} ctx
- * @returns {HTMLElement|null}
  */
 function currentInContext(cur, best, ctx) {
   if (!cur) return null;
@@ -170,11 +160,7 @@ function currentInContext(cur, best, ctx) {
   ], "dgh-col dgh-standing-section");
 }
 
-/**
- * Victories by type, as bars.
- * @param {ArchiveRecord[]} records
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord[]} records */
 function victoriesByType(records) {
   const sums = overview(records);
   const rows = sums.victoriesByType.map(([type, count]) => {

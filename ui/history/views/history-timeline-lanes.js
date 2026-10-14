@@ -41,11 +41,9 @@ export function turnToPercent(win, at) {
 }
 
 /**
- * Whether an interval shows in the window.
  * @param {AxisWindow} win
  * @param {number} from
  * @param {number} to
- * @returns {boolean}
  */
 function overlapsWindow(win, from, to) {
   return to > win.from && from < win.to;
@@ -141,10 +139,8 @@ function placeItem(className, box, tooltip, children = [], reuse) {
 }
 
 /**
- * The reuse slot for an item, when the caller has a cache.
  * @param {ItemCache|undefined} cache
  * @param {string} key
- * @returns {{cache: ItemCache, key: string}|undefined}
  */
 function reuseSlot(cache, key) {
   return cache ? { cache, key } : undefined;
@@ -223,13 +219,11 @@ export function ageHeader(tl, win, cast, cache) {
 }
 
 /**
- * One age's band in the header.
  * @param {Timeline} tl
  * @param {Timeline["ages"][number]} age
  * @param {AxisWindow} win
  * @param {Cast} cast
  * @param {ItemCache} [cache]
- * @returns {HTMLElement}
  */
 function ageBand(tl, age, win, cast, cache) {
   const index = tl.ages.indexOf(age);
@@ -275,13 +269,11 @@ export function warLane(tl, win, cast, cache) {
 }
 
 /**
- * A war of yours.
  * @param {Timeline["wars"][number]} war
  * @param {ItemBox} box
  * @param {Cast} cast
  * @param {string} age
  * @param {ItemCache} [cache]
- * @returns {HTMLElement}
  */
 function warPill(war, box, cast, age, cache) {
   const name = partyName(cast, war.other, age);
@@ -301,13 +293,11 @@ function warPill(war, box, cast, age, cache) {
 }
 
 /**
- * A war between two other civilizations.
  * @param {Timeline["wars"][number]} war War (`a` against `other`).
  * @param {ItemBox} box
  * @param {Cast} cast
  * @param {string} age
  * @param {ItemCache} [cache]
- * @returns {HTMLElement}
  */
 function rivalWarPill(war, box, cast, age, cache) {
   const attacker = /** @type {number} */ (war.a);
@@ -367,11 +357,9 @@ export function crisisLane(tl, win, cache) {
 }
 
 /**
- * One crisis: its stage segments and its name.
  * @param {Timeline["crises"]} crisis Stages of one crisis.
  * @param {AxisWindow} win
  * @param {ItemCache} [cache]
- * @returns {HTMLElement[]}
  */
 function crisisItems(crisis, win, cache) {
   const name = t(crisis[0].n) || t("LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED");
@@ -424,7 +412,6 @@ export function milestoneLanes(tl, win, cast, cache) {
 }
 
 /**
- * One kind's lane.
  * @param {{key:string, label:string}} group
  * @param {Timeline["marks"]} marks Its milestones in the window.
  * @param {Timeline} tl
@@ -455,10 +442,8 @@ function markLane(group, marks, tl, win, ctx) {
 }
 
 /**
- * Paint a game icon into a disc.
  * @param {HTMLElement} disc
  * @param {string} icon Texture path ("" leaves the disc's own fill).
- * @returns {HTMLElement}
  */
 function iconDisc(disc, icon) {
   const url = icon ? "url('" + icon + "')" : "";
