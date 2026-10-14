@@ -20,11 +20,6 @@ const _nodeSelectionCache = new Map();
 /** @type {string|null} */
 let _cacheGameToken = null;
 
-/**
- * Best-effort per-game token (the configured game seed) used to scope the
- * in-memory caches to a single game/save.
- * @returns {string|null} Null when unavailable.
- */
 function currentGameToken() {
   try {
     if (typeof Configuration !== "undefined" && typeof Configuration.getGame === "function") {
@@ -130,22 +125,14 @@ export function readCsViewerPid(settings, localId, metIds) {
   return csViewerPid;
 }
 
-/**
- * Persisted-setting key for a top-tab filter set.
- * @param {string} topTab
- * @returns {string}
- */
+/** @param {string} topTab */
 function filterKeyForState(topTab) {
   // Versioned keys: when the filter vocabulary changes, a fresh key resets everyone
   // to all-on rather than leaving new pills stale-off.
   return topTab === "civ" ? "relationsCivFilters2" : "relationsCsFilters3";
 }
 
-/**
- * Default all-on filter key list for a top tab.
- * @param {string} topTab
- * @returns {string[]}
- */
+/** @param {string} topTab */
 function defaultFiltersFor(topTab) {
   return filtersForView(topTab).map((filter) => filter.key);
 }

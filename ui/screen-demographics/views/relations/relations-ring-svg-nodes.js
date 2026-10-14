@@ -78,11 +78,8 @@ import { orderedNames } from "/demographics/ui/core/player-label.js";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 /**
- * Resolve a ring node's display name: "Leader, Civilization" for majors, the
- * CS name for city-states, falling back to "P<id>".
  * @param {NodeInfo} info
- * @param {number} id Player id.
- * @returns {string}
+ * @param {number} id
  */
 function nodeDisplayName(info, id) {
   if (info.isCityState) return info.csName || "CS-" + id;
@@ -171,12 +168,10 @@ export function nodeRadius(isViewer, isCs, density) {
 }
 
 /**
- * Resolve the ring-node stroke width from viewer, CS, selection, and density.
  * @param {boolean} isViewer
  * @param {boolean} isCs
  * @param {boolean} isSelected
- * @param {number} density The ring density factor.
- * @returns {number} Stroke width in SVG units.
+ * @param {number} density
  */
 function nodeStrokeWidth(isViewer, isCs, isSelected, density) {
   // CS rings are a thin colored band on the OUTER edge of the type icon; major
@@ -186,11 +181,7 @@ function nodeStrokeWidth(isViewer, isCs, isSelected, density) {
   return base + Math.max(0, (1 - density) * 0.2);
 }
 
-/**
- * Append the node's base circle, including the CS inset disc.
- * @param {Element} node The node group.
- * @returns {number}
- */
+/** @param {Element} node */
 function appendNodeCircle(node) {
   const r = Number(node.getAttribute("data-r")) || 8;
   const isViewer = node.getAttribute("data-viewer") === "1";
@@ -215,13 +206,11 @@ function appendNodeCircle(node) {
 }
 
 /**
- * Queue a leader portrait overlay for later pixel-space placement.
  * @param {NodeInfo} info
  * @param {{x: number, y: number}} pos
  * @param {number} r
  * @param {PortraitPlacement[]} portraitsToPlace
  * @param {boolean} isSelected
- * @returns {PortraitPlacement|null} Null when nothing was queued.
  */
 function queueLeaderPortrait(info, pos, r, portraitsToPlace, isSelected) {
   if (!info.leaderTypeString) return null;
@@ -284,11 +273,10 @@ function queueNodeLabel(node, pos, r, portraitsToPlace) {
 }
 
 /**
- * Apply the stashed props + data-* attributes to a ring node group.
- * @param {*} node The node <g> element (carries __info/__label/__initial).
- * @param {{ id: number, pos: {x: number, y: number}, info: NodeInfo }} nodeData Node specifics.
+ * @param {*} node
+ * @param {{ id: number, pos: {x: number, y: number}, info: NodeInfo }} nodeData
  * @param {{ positions: Map<number, {x: number, y: number}>, density: number,
- *   cx: number, cy: number, viewBoxH: number }} geo Ring geometry.
+ *   cx: number, cy: number, viewBoxH: number }} geo
  * @param {RingRenderCtx} ctx
  */
 function configureNodeElement(node, nodeData, geo, ctx) {
@@ -312,11 +300,9 @@ function configureNodeElement(node, nodeData, geo, ctx) {
 }
 
 /**
- * Focus mode: when a node is selected, everything outside its relationship
- * neighborhood fades back so the selected node's web reads clearly.
- * @param {Element} node The node group.
- * @param {number} id Player id.
- * @param {Set<number>|null|undefined} focusNodes The bright set, or null.
+ * @param {Element} node
+ * @param {number} id
+ * @param {Set<number>|null|undefined} focusNodes
  */
 function applyFocusDim(node, id, focusNodes) {
   const dimmed = !!(focusNodes && !focusNodes.has(id));

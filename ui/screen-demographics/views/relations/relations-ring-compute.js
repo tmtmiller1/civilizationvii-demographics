@@ -31,11 +31,7 @@ const ATTITUDE_FILTER_KEYS = new Set([
   "hostile"
 ]);
 
-/**
- * Whether any attitude-family filter is active.
- * @param {Set<string>} activeSet
- * @returns {boolean} True when any attitude key is active.
- */
+/** @param {Set<string>} activeSet */
 function hasActiveAttitudeFilter(activeSet) {
   for (const key of ATTITUDE_FILTER_KEYS) {
     if (activeSet.has(key)) return true;
@@ -44,13 +40,11 @@ function hasActiveAttitudeFilter(activeSet) {
 }
 
 /**
- * Mask unmet major-civ labels with "Unmet Civilization" placeholders.
- * Mutates `names` in place.
  * @param {number} viewerPid
  * @param {number[]} metIds
  * @param {Record<string, *>} names
  * @param {{ showUnmetNames: boolean, localId: number|undefined,
- *   history: DemoHistory|undefined }} ctx Masking toggle + local id + history.
+ *   history: DemoHistory|undefined }} ctx
  */
 function applyMetMaskForMajors(viewerPid, metIds, names, ctx) {
   const { showUnmetNames, localId, history } = ctx;
@@ -68,7 +62,6 @@ function applyMetMaskForMajors(viewerPid, metIds, names, ctx) {
 }
 
 /**
- * Build set of met city-state ids from resolved node data.
  * @param {number[]} csIds
  * @param {Record<string, *>} names
  * @returns {Set<number>}
@@ -151,10 +144,8 @@ export function applyCivEdgeOverrides(edges) {
 }
 
 /**
- * Filter edges by active filter keys.
  * @param {*[]} edges
  * @param {Set<string>} activeSet
- * @returns {*[]}
  */
 function filterEdgesByActiveSet(edges, activeSet) {
   return edges.filter((edge) => !!edge.filterKey && activeSet.has(edge.filterKey));

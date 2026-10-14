@@ -75,11 +75,7 @@ function hashStr(text) {
   return hash >>> 0;
 }
 
-/**
- * Sorted undirected pair key for an edge ("min|max").
- * @param {Edge} edge
- * @returns {string}
- */
+/** @param {Edge} edge */
 function pairKey(edge) {
   return Number(edge.a) < Number(edge.b) ? edge.a + "|" + edge.b : edge.b + "|" + edge.a;
 }
@@ -225,13 +221,9 @@ function quadTangent(curve, s) {
 }
 
 /**
- * Append one straight solid sub-segment as a `<line>` (used for dash runs and
- * chevron wings). `extra` optionally adds an animation class + per-element delay
- * (for the flowing-chevron effect on directed edges).
  * @param {Element} svg
- * @param {string} color Stroke color.
+ * @param {string} color
  * @param {{x1: number, y1: number, x2: number, y2: number, opacity?: number}} pts
- *   Segment endpoints and (optional) stroke opacity.
  */
 function appendDashSeg(svg, color, pts) {
   const seg = document.createElementNS(SVG_NS, "line");
@@ -248,7 +240,6 @@ function appendDashSeg(svg, color, pts) {
 }
 
 /**
- * Append one small filled dot (`<circle>`), the unit of a dotted line.
  * @param {Element} svg
  * @param {string} color
  * @param {{x: number, y: number}} point
@@ -278,7 +269,6 @@ function logDashOnce(e, dash) {
 }
 
 /**
- * Append a solid curved edge as a single quadratic `<path>`.
  * @param {Element} svg
  * @param {Edge} edge
  * @param {{p0: *, c: *, p1: *}} curve
@@ -307,8 +297,6 @@ const DASH_OFF = 1.8;
 const DOT_SPACING = 2.3;
 
 /**
- * Render a dashed curved edge: sample the bezier finely and emit a `<line>` for
- * each step whose midpoint falls in an "on" run of the fixed dash cycle.
  * @param {Element} svg
  * @param {Edge} edge
  * @param {{p0: *, c: *, p1: *, len: number}} curve
@@ -359,11 +347,10 @@ function appendDottedCurve(svg, edge, curve, opacity) {
 }
 
 /**
- * Dispatch a non-directed edge to the right renderer for its style token.
  * @param {Element} svg
  * @param {Edge} edge
  * @param {{p0: *, c: *, p1: *, len: number}} curve
- * @param {string} style Style token ("" solid / "dashed" / "dotted").
+ * @param {string} style
  * @param {number} opacity
  */
 function appendStyledCurve(svg, edge, curve, style, opacity) {
@@ -379,9 +366,8 @@ const CHEVRON_ANGLE = 0.62; // radians, wing half-spread
 const CHEVRON_PARAMS = [0.42, 0.62]; // parameters along the curve to place chevrons at
 
 /**
- * Append one direction chevron at parameter s, pointing along the tangent (→ b).
  * @param {Element} svg
- * @param {string} color Stroke color.
+ * @param {string} color
  * @param {{p0: *, c: *, p1: *}} curve
  * @param {number} s
  * @param {number} opacity
@@ -408,7 +394,6 @@ function appendOneChevron(svg, color, curve, s, opacity) {
 }
 
 /**
- * Append static direction chevrons along a directed edge's curve (a → b).
  * @param {Element} svg
  * @param {Edge} edge
  * @param {{p0: *, c: *, p1: *}} curve
@@ -454,13 +439,10 @@ function offsetChord(fromPt, toPt, offset) {
 }
 
 /**
- * Render one edge of a pair-group: trim it to the two node circles, slide it
- * sideways by its perpendicular offset, bow it by its curve fraction, then draw
- * it (directed edges solid with chevrons; others per their style).
  * @param {Element} svg
  * @param {EdgeGeo} entry
  * @param {{ frac: number, perpOff: number, opacity: number, radii: ?Map<number, number>,
- *   records: ?EdgeRecord[] }} cfg Per-edge config (curve, lane offset, opacity, radii, records).
+ *   records: ?EdgeRecord[] }} cfg
  */
 function renderGroupEdge(svg, entry, cfg) {
   const { e: edge, pa: fromPos, pb: toPos } = entry;
@@ -497,11 +479,7 @@ function renderGroupEdge(svg, entry, cfg) {
   }
 }
 
-/**
- * Sample a curve into points (viewBox coords) for the hover distance test.
- * @param {{p0: *, c: *, p1: *}} curve
- * @returns {{x: number, y: number}[]}
- */
+/** @param {{p0: *, c: *, p1: *}} curve */
 function sampleCurve(curve) {
   /** @type {{x: number, y: number}[]} */
   const pts = [];
@@ -510,11 +488,7 @@ function sampleCurve(curve) {
   return pts;
 }
 
-/**
- * Prettify a filter key into a fallback label ("open_borders" → "Open Borders").
- * @param {string} [key]
- * @returns {string}
- */
+/** @param {string} [key] */
 function prettyKey(key) {
   if (!key) return "";
   return key.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());

@@ -6,10 +6,8 @@ import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 import { log } from "/demographics/ui/screen-demographics/views/relations/relations-shared.js";
 
 /**
- * Resolve selected viewer index from dropdown event payload.
  * @param {*} event
  * @param {number} itemCount
- * @returns {number|null} Null when invalid.
  */
 function viewerSelectionIndex(event, itemCount) {
   const selectedIndex = /** @type {*} */ (event)?.detail?.selectedIndex;
@@ -19,7 +17,6 @@ function viewerSelectionIndex(event, itemCount) {
 }
 
 /**
- * Persist selected CS viewer pid to settings (best effort).
  * @param {*} renderState
  * @param {number} pid
  */
@@ -47,10 +44,7 @@ function onViewerSelectionChange(renderState, items, event) {
   renderState.repaint();
 }
 
-/**
- * Append the "Viewer" label before the CS-viewer dropdown.
- * @param {HTMLElement} viewerHost
- */
+/** @param {HTMLElement} viewerHost */
 function appendViewerLabel(viewerHost) {
   const label = document.createElement("div");
   label.className = "demographics-relations-viewer-label font-body text-xs";
