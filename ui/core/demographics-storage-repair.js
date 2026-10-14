@@ -40,11 +40,7 @@ function safe(fn, fallback) {
   }
 }
 
-/**
- * A short reason string for a thrown value.
- * @param {*} e
- * @returns {string}
- */
+/** @param {*} e */
 function reason(e) {
   return String((e && e.message) || e);
 }

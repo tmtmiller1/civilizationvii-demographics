@@ -140,7 +140,6 @@ function addPauseButton(container) {
 }
 
 /**
- * The pause-menu button container within a node, if present.
  * @param {HTMLElement} node
  * @returns {HTMLElement|null}
  */
@@ -180,7 +179,6 @@ export function isResultScreen(node) {
 }
 
 /**
- * The action row a node either is or contains, if any.
  * @param {HTMLElement} node
  * @returns {HTMLElement|null}
  */

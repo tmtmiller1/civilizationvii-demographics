@@ -185,7 +185,6 @@ function _mergeUnitStatRow(statsByType, row) {
   }
 }
 
-/** Formation classes counted as "military" for power. */
 const MILITARY_FORMATIONS = new Set([
   "FORMATION_CLASS_LAND_COMBAT",
   "FORMATION_CLASS_NAVAL",
