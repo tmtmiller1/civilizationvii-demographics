@@ -1,5 +1,5 @@
 [h1]Demographics[/h1]
-[b]Version 2.8.2. For Civilization VII 1.5.0.[/b] Settings now survive a restart: the mod carries the Tower Settings Keeper.
+[b]Version 2.8.3. For Civilization VII 1.5.0.[/b] Settings now survive a restart: the mod carries the Tower Settings Keeper.
 Demographics adds graphs, civilization rankings, global relations, war history, campaign history and a Hall of Fame to Civilization VII. It records every civilization's figures each turn and shows them as charts, rankings, relationship views and war history, so you can see how the world changes over a game.
 It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and builds on Slothoth's Global Relations panel (Civ VII) with more diplomacy and filtering.
 [b]The Mod Includes:[/b]
