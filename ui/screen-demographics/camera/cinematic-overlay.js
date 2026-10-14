@@ -465,8 +465,8 @@ export function buildCongrats(settlement) {
 /**
  * Append the flyby caption + flavor sub-line elements to the card and stash them
  * on the flow state so the tour can update them per shot.
- * @param {HTMLElement} card The overlay card.
- * @param {*} flowState The active flow state (may be undefined).
+ * @param {HTMLElement} card
+ * @param {*} flowState
  */
 function appendFlybyCaption(card, flowState) {
   const caption = div("demographics-map-overlay-caption", "");

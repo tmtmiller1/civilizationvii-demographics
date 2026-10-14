@@ -5,11 +5,7 @@
 
 import { finiteOrZero } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
-/**
- * A stable uint hash for deterministic per-settlement variance.
- * @param {string} key The stable settlement key.
- * @returns {number} Unsigned hash.
- */
+/** @param {string} key */
 function hashKey(key) {
   let hash = 2166136261;
   for (let i = 0; i < key.length; i++) {
@@ -19,11 +15,7 @@ function hashKey(key) {
   return hash >>> 0;
 }
 
-/**
- * Clamp to [-1, 1].
- * @param {number} x
- * @returns {number}
- */
+/** @param {number} x */
 function clampUnit(x) {
   return x < -1 ? -1 : x > 1 ? 1 : x;
 }

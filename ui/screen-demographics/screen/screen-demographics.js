@@ -74,11 +74,9 @@ const VIEW_TABS = [
 const HUB_VIEWS = new Set(["statistics", "migration", "geopolitics"]);
 
 /**
- * Run `fn`, returning its result, or `fallback` if it throws. Never throws.
  * @template T
  * @param {() => T} fn
- * @param {T} [fallback] Returned if `fn` throws.
- * @returns {T | undefined}
+ * @param {T} [fallback]
  */
 function safeCall(fn, fallback) {
   try {
@@ -141,7 +139,6 @@ class ScreenDemographics extends Panel {
   /** @type {Record<string, string>} Per-metric remembered time filters. */
   timeFiltersByMetric = {};
 
-  /** Panel lifecycle: configure audio cues before attach. */
   onInitialize() {
     log.debug("onInitialize");
     super.onInitialize?.();
@@ -159,10 +156,6 @@ class ScreenDemographics extends Panel {
     }
   }
 
-  /**
-   * Panel lifecycle: wire the close button then lazily import the data
-   * modules, restore state, build the tab bar, and render the active view.
-   */
   onAttach() {
     log.debug("onAttach");
     super.onAttach();
@@ -241,7 +234,6 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /** Wire the template's close button to {@link ScreenDemographics#close}. */
   _wireCloseButton() {
     safeCall(() => {
       const closeBtn = this.Root.querySelector("[data-dg-close]");
@@ -256,10 +248,6 @@ class ScreenDemographics extends Panel {
     });
   }
 
-  /**
-   * Lazily import the storage/chart/sampler/settings modules, then restore
-   * state, ensure a sample exists, and render. Errors are logged, not thrown.
-   */
   _loadModulesThenRender() {
     Promise.all([
       import("/demographics/ui/storage/demographics-storage.js"),
@@ -283,11 +271,6 @@ class ScreenDemographics extends Panel {
       .catch((e) => log.error("module import REJECTED:", e));
   }
 
-  /**
-   * Restore the active view / metric / page / time-filter state from
-   * persisted settings. Migrates the legacy scalar time filter into the
-   * per-metric map.
-   */
   _restoreState() {
     // Always open to Global Statistics → Yields Per Turn, ignoring the stored view on each open;
     // activeMetric "score" isn't on the Yields page, so it coerces to that page's first metric.
@@ -317,7 +300,6 @@ class ScreenDemographics extends Panel {
   /**
    * Read and clear the one-shot "return view" override written by a sub-flow (e.g. the
    * Top-Cities cinematic teardown), so the screen lands back where it launched exactly once.
-   * Never throws.
    * @returns {string|null} The override view id (e.g. "rankings"), or null.
    */
   _takePendingReturnView() {
@@ -352,7 +334,6 @@ class ScreenDemographics extends Panel {
       (byMetric ? "all" : this.settings.getSetting("activeTimeFilter", "all"));
   }
 
-  /** Restore the resources / triumphs / radar-age viewer selections. */
   _restoreViewerPids() {
     const viewerPid = this.settings.getSetting("resourcesViewerPid", null);
     this.resourcesViewerPid = typeof viewerPid === "number" ? viewerPid : null;
@@ -360,7 +341,6 @@ class ScreenDemographics extends Panel {
     this.crisisGraphsAge = this.settings.getSetting("crisisGraphsAge", "latest");
   }
 
-  /** Restore the wars-Gantt filter / city-state / active-only flags. */
   _restoreConflictsState() {
     const filterPid = this.settings.getSetting("warsFilterPid", null);
     this.warsFilterPid = typeof filterPid === "number" ? filterPid : null;
@@ -370,7 +350,6 @@ class ScreenDemographics extends Panel {
     this.warGraphsWarId = typeof warId === "number" ? warId : null;
   }
 
-  /** Restore the hidden-civ set, coercing legacy numeric entries to strings. */
   _restoreHiddenCivs() {
     const hidden = this.settings.getSetting("hiddenCivs", []);
     // Stored values are strings (we normalize to String for the Set
@@ -378,7 +357,6 @@ class ScreenDemographics extends Panel {
     this.hiddenCivs = new Set((Array.isArray(hidden) ? hidden : []).map((entry) => String(entry)));
   }
 
-  /** Load the history blob from storage into {@link ScreenDemographics#history}. */
   _loadHistory() {
     if (this.storage && typeof this.storage.load === "function") {
       this.history = this.storage.load() || this.history;
@@ -401,10 +379,6 @@ class ScreenDemographics extends Panel {
     }
   }
 
-  /**
-   * Build the `fxs-tab-bar` view selector, wire its `tab-selected` listener,
-   * and append it to the template host.
-   */
   buildTopTabs() {
     const host = this.Root.querySelector(".demographics-view-tab-host");
     if (!host) {
@@ -417,10 +391,6 @@ class ScreenDemographics extends Panel {
     log.debug("view tab bar built; active=", this.activeView);
   }
 
-  /**
-   * Create and configure the `fxs-tab-bar` view selector (items, selection, nav hints, listener).
-   * @returns {HTMLElement} The configured tab bar.
-   */
   _makeViewTabBar() {
     const tabBar = document.createElement("fxs-tab-bar");
     tabBar.classList.add("demographics-view-tabs", "w-full", "font-title", "text-sm");
@@ -468,21 +438,14 @@ class ScreenDemographics extends Panel {
     return visibleTabs;
   }
 
-  /**
-   * Companion top-level panel view tabs (e.g. Emigration), from the registered external panels
-   * flagged `topLevel`. Empty when no such companion is installed.
-   * @returns {ViewTab[]} Tab descriptors.
-   */
+  /** @returns {ViewTab[]} */
   _topLevelPanelTabs() {
     return EXTERNAL_PANELS
       .filter((panel) => panel && panel.topLevel)
       .map((panel) => ({ id: panel.id, label: panel.pageLabel || panel.title || panel.id }));
   }
 
-  /**
-   * Apply nav-help class hints to the tab bar on non-mobile experiences.
-   * @param {HTMLElement} tabBar
-   */
+  /** @param {HTMLElement} tabBar */
   _applyTabBarNavHints(tabBar) {
     try {
       if (
@@ -500,11 +463,7 @@ class ScreenDemographics extends Panel {
     }
   }
 
-  /**
-   * Handle a `tab-selected` event: switch the active view, persist it, and
-   * re-render. Ignores re-selection of the current view.
-   * @param {*} event The `tab-selected` CustomEvent.
-   */
+  /** @param {*} event */
   _onViewTabSelected(event) {
     const id = event?.detail?.selectedItem?.id;
     if (!id || id === this.activeView) return;
@@ -523,7 +482,6 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Reload the history from storage (if available) and re-render the view.
    * Wired into views as their `requestReload` callback.
    */
   _reload() {
@@ -533,10 +491,6 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /**
-   * Clear the view host and render the view selected by `activeView`. View
-   * render errors are logged, not thrown.
-   */
   renderActiveView() {
     // The Historical Data view and companion top-level panels render the policy banner inside the
     // view; every other view shows it via the banner-host below the view host. Either way the
@@ -583,10 +537,7 @@ class ScreenDemographics extends Panel {
     alignOptionsHeaderButton(this.Root.querySelector(".demographics-frame"));
   }
 
-  /**
-   * Render the active view into `host`, dispatching on `activeView`.
-   * @param {HTMLElement} host The cleared view-host element.
-   */
+  /** @param {HTMLElement} host The cleared view-host element. */
   _dispatchView(host) {
     // A companion top-level panel (e.g. a legacy Emigration): render the history machinery pinned
     // to that panel's page (its sub-tabs + native charts), with no page-tab row.
@@ -607,7 +558,7 @@ class ScreenDemographics extends Panel {
    * Render a lazily-imported tab, importing its module on first open and caching it. The render
    * is skipped if the user switched tabs before the import resolved, and re-clears the host first.
    * @param {HTMLElement} host The cleared view-host element.
-   * @param {string} id The active view id ("worldrankings-allcivs" | "relations").
+   * @param {string} id
    */
   _renderLazyView(host, id) {
     const args = { history: this.history, settings: this.settings };
@@ -666,8 +617,7 @@ class ScreenDemographics extends Panel {
   }
 
   /**
-   * Set a state field, persist the value under a settings key, and re-render.
-   * @param {string} field The instance field name to assign.
+   * @param {string} field
    * @param {string} settingKey
    * @param {*} value
    */
@@ -717,10 +667,7 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /**
-   * Toggle a leader key in the hidden-civs set, persist the set, and re-render.
-   * @param {string} leaderKey
-   */
+  /** @param {string} leaderKey */
   toggleCiv(leaderKey) {
     if (!leaderKey) return;
     const key = String(leaderKey);
@@ -747,10 +694,6 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /**
-   * Panel lifecycle: detach the tab-bar listener and flush buffered storage
-   * writes so closing the panel saves all in-flight samples.
-   */
   onDetach() {
     log.debug("onDetach");
     // stop options from poking a closed screen

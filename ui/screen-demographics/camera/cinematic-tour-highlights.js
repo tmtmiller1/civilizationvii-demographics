@@ -230,8 +230,7 @@ function pushDistrictPois(pois, target) {
 }
 
 /**
- * Append natural-wonder and rich-plot POIs.
- * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
+ * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois
  * @param {*} target
  */
 function pushTerrainPois(pois, target) {

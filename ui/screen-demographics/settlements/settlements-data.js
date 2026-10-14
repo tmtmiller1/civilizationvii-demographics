@@ -113,11 +113,7 @@ export const SETTLEMENT_OUTPUTS = [
 
 const log = makeLogger("settlements");
 
-/**
- * Resolve a YieldTypes enum value for a `YIELD_*` key, or undefined.
- * @param {string} key
- * @returns {number|string|undefined}
- */
+/** @param {string} key */
 function yieldEnum(key) {
   try {
     if (typeof YieldTypes !== "undefined" && YieldTypes != null) {
@@ -131,11 +127,9 @@ function yieldEnum(key) {
 }
 
 /**
- * Localize a tag/string via Locale.compose, returning the input unchanged when
- * Locale is unavailable or throws.
- * @param {*} tag The tag or plain string.
+ * @param {*} tag
  * @param {...*} args
- * @returns {string} The composed string ("" for falsy input).
+ * @returns {string}
  */
 function compose(tag, ...args) {
   if (!tag) return "";
@@ -149,11 +143,7 @@ function compose(tag, ...args) {
   return typeof tag === "string" ? tag : "";
 }
 
-/**
- * Defensively read a GameInfo table by name (the global may be absent).
- * @param {string} name The table name (e.g. "Leaders").
- * @returns {*} The table, or null.
- */
+/** @param {string} name */
 function gameInfoTable(name) {
   try {
     return typeof GameInfo !== "undefined" && GameInfo ? GameInfo[name] : null;
@@ -166,7 +156,6 @@ function gameInfoTable(name) {
  * Look up a GameInfo row by raw type (numeric hash or string), defensively.
  * @param {*} table The GameInfo table (e.g. GameInfo.Leaders).
  * @param {*} raw
- * @returns {*} The row, or null.
  */
 function lookupRow(table, raw) {
   try {
@@ -180,10 +169,8 @@ function lookupRow(table, raw) {
 }
 
 /**
- * Read one player's banner color via the named UI.Player accessor.
  * @param {number} pid
  * @param {string} accessorName The UI.Player method name.
- * @returns {string|undefined}
  */
 function playerColor(pid, accessorName) {
   try {
@@ -215,20 +202,17 @@ function canonicalLeaderType(leaderRow, rawLeader) {
 }
 
 /**
- * Read a raw type value off a handle, trying two property spellings.
- * @param {*} handle The player handle.
+ * @param {*} handle
  * @param {string} keyA
  * @param {string} keyB
- * @returns {*} The raw value, or undefined.
  */
 function rawType(handle, keyA, keyB) {
   return handle?.[keyA] ?? handle?.[keyB];
 }
 
 /**
- * Resolve a settlement owner's display identity from a live player handle.
- * @param {number} pid The owner player id.
- * @param {*} handle The player handle.
+ * @param {number} pid
+ * @param {*} handle
  * @returns {SettlementOwner}
  */
 function resolveOwner(pid, handle) {
@@ -286,10 +270,8 @@ function readableAccent(primary, secondary) {
 }
 
 /**
- * Read one net yield off a settlement's Yields handle.
  * @param {*} yields The city.Yields handle.
  * @param {string|null} yieldTypeKey The YieldTypes enum key.
- * @returns {number} The yield value (0 when unreadable).
  */
 function readYield(yields, yieldTypeKey) {
   if (!yieldTypeKey || !yields || typeof yields.getNetYield !== "function") return 0;
@@ -305,11 +287,9 @@ function readYield(yields, yieldTypeKey) {
 }
 
 /**
- * Read one output column's value off a settlement handle.
- * @param {{ id: string, yieldType: string|null }} col The output descriptor.
+ * @param {{ id: string, yieldType: string|null }} col
  * @param {*} city The city/town handle.
  * @param {*} yields The city.Yields handle.
- * @returns {number}
  */
 function readOutput(col, city, yields) {
   if (col.id === "population") return readPopulation(city);
@@ -317,11 +297,7 @@ function readOutput(col, city, yields) {
   return readYield(yields, col.yieldType);
 }
 
-/**
- * Read one settlement handle's per-output values.
- * @param {*} city The city/town handle.
- * @returns {Record<string, number>} Output id → value (0 when unreadable).
- */
+/** @param {*} city The city/town handle. */
 function readOutputs(city) {
   /** @type {Record<string, number>} */
   const out = {};
@@ -330,11 +306,7 @@ function readOutputs(city) {
   return out;
 }
 
-/**
- * Read a settlement's completed-wonder count off its Constructibles handle.
- * @param {*} city The city/town handle.
- * @returns {number} The wonder count (0 when unreadable).
- */
+/** @param {*} city The city/town handle. */
 function readWonders(city) {
   try {
     const constructibles = city?.Constructibles;
@@ -348,11 +320,7 @@ function readWonders(city) {
   return 0;
 }
 
-/**
- * Read a settlement's total population, falling back to urban+rural.
- * @param {*} city The city/town handle.
- * @returns {number} The population (0 when unreadable).
- */
+/** @param {*} city The city/town handle. */
 function readPopulation(city) {
   try {
     if (typeof city?.population === "number" && isFinite(city.population)) return city.population;
@@ -365,11 +333,10 @@ function readPopulation(city) {
 }
 
 /**
- * Read a city's urban or rural sub-population defensively (0 when unreadable). Used as a
+ * Used as a
  * real-signal input for population-estimate variation (urban:rural ratio).
  * @param {*} city
  * @param {"urbanPopulation"|"ruralPopulation"} prop
- * @returns {number} The value (0 on miss/throw).
  */
 function readSubPopulation(city, prop) {
   try {
@@ -450,11 +417,7 @@ function buildSettlement(city, pid, owner, idx, lite) {
   };
 }
 
-/**
- * Read a settlement's plot location {x,y} for the map camera, or null.
- * @param {*} city
- * @returns {{x: number, y: number}|null}
- */
+/** @param {*} city */
 function readLocation(city) {
   try {
     const loc = city?.location;
@@ -484,21 +447,15 @@ function readExplored(city) {
   }
 }
 
-/**
- * Whether the reveal-state API can be queried for the given player.
- * @param {*} pid
- * @returns {boolean}
- */
+/** @param {*} pid */
 function canQueryReveal(pid) {
   return pid !== undefined && typeof GameplayMap !== "undefined" && !!GameplayMap.getRevealedState;
 }
 
 /**
- * Whether a tile is revealed (not in fog) for the player.
  * @param {*} pid
  * @param {number} x
  * @param {number} y
- * @returns {boolean}
  */
 function tileRevealed(pid, x, y) {
   const hidden = typeof RevealedStates !== "undefined" ? RevealedStates.HIDDEN : 0;
@@ -508,7 +465,7 @@ function tileRevealed(pid, x, y) {
 /**
  * Read a settlement's ComponentID (`city.id`) - a serializable {owner,id,type}
  * struct used to re-resolve a live handle (`Cities.get`) and to target the
- * camera (`UI.Player.lookAtID`). Returns null when unreadable.
+ * camera (`UI.Player.lookAtID`).
  * @param {*} city
  * @returns {*}
  */
@@ -538,11 +495,7 @@ function plotKey(city) {
   return null;
 }
 
-/**
- * Boolean engine read, false on throw.
- * @param {() => *} fn
- * @returns {boolean}
- */
+/** @param {() => *} fn */
 function safeBool(fn) {
   try {
     return !!fn();
@@ -630,10 +583,8 @@ function readWonderList(city) {
 }
 
 /**
- * A settlement's placed constructible component ids of a class ([] when unreadable).
  * @param {*} city
  * @param {string} className
- * @returns {*[]}
  */
 function constructibleIds(city, className) {
   const constructibles = city?.Constructibles;
@@ -728,11 +679,7 @@ function turnsLeftOf(buildQueue) {
   return isFinite(turns) && turns >= 0 ? turns : null;
 }
 
-/**
- * Array engine read, [] on throw/non-array.
- * @param {() => *} fn
- * @returns {Array<*>}
- */
+/** @param {() => *} fn */
 function safeArr(fn) {
   try {
     const value = fn();
@@ -768,11 +715,7 @@ function resolveWonder(componentId) {
   }
 }
 
-/**
- * The engine icon URL for a wonder constructible type ("" when unavailable).
- * @param {string} type The ConstructibleType.
- * @returns {string} The icon URL, or "".
- */
+/** @param {string} type */
 function wonderIconUrl(type) {
   try {
     if (typeof UI !== "undefined" && typeof UI.getIconURL === "function") {
@@ -795,9 +738,8 @@ function alivePlayers() {
 }
 
 /**
- * Append one player's settlement records to `list`.
- * @param {*} player The player handle.
- * @param {Settlement[]} list The accumulating list (mutated).
+ * @param {*} player
+ * @param {Settlement[]} list
  * @param {boolean} [lite] Skip the drill-down-only reads (see BoardOptions).
  */
 function gatherPlayerSettlements(player, list, lite) {
@@ -864,10 +806,8 @@ function computeComposite(list) {
 }
 
 /**
- * The maximum value of each composite output across all settlements.
- * @param {Settlement[]} list The settlement records.
- * @param {Array<{ id: string }>} cols The composite output columns.
- * @returns {Record<string, number>} Output id → max value.
+ * @param {Settlement[]} list
+ * @param {Array<{ id: string }>} cols
  */
 function maxByOutput(list, cols) {
   /** @type {Record<string, number>} */

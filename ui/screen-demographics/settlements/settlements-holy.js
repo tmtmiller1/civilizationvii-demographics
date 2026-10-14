@@ -12,11 +12,7 @@ import { orFallback } from "/demographics/ui/screen-demographics/screen/guarded-
  * @typedef {{ religionName: string, icon: string }} HolyInfo
  */
 
-/**
- * The GameInfo religion row for a player's founded religion, or null.
- * @param {*} religion The player's Religion library.
- * @returns {*}
- */
+/** @param {*} religion The player's Religion library. */
 function religionRow(religion) {
   const type = orFallback(() => religion.getReligionType(), null);
   if (type == null || typeof GameInfo === "undefined") return null;
@@ -24,7 +20,6 @@ function religionRow(religion) {
 }
 
 /**
- * The holy-city marker for one player's founded religion, or null.
  * @param {*} player
  * @returns {{ cityName: string, info: HolyInfo }|null}
  */
