@@ -30,12 +30,8 @@ function wireLegendRowToggle(row, dataset, opts) {
 }
 
 /**
- * Build one legend row: leader portrait + colored dot + civ name, clickable to
- * toggle the civ. Reflects muted (legend-toggled off), focused, and eliminated
- * state.
  * @param {Record<string, *>} dataset
- * @param {*} opts The render options (carries onToggleCiv).
- * @returns {HTMLElement}
+ * @param {*} opts
  */
 function buildLegendRow(dataset, opts) {
   const row = document.createElement("div");

@@ -5,11 +5,7 @@
 import { majorsOnSide } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { typeBoost } from "/demographics/ui/core/demographics-font-ladder.js";
 
-/**
- * Whether a war pits at least one major civ on each side.
- * @param {*} war
- * @returns {boolean}
- */
+/** @param {*} war */
 function isMajorVsMajor(war) {
   return majorsOnSide(war.sideACivs).length > 0 && majorsOnSide(war.sideBCivs).length > 0;
 }
@@ -45,7 +41,6 @@ export function filterGanttWars(wars, showActiveOnly, filterPid) {
 }
 
 /**
- * Compute min start / max end turn across in-range wars.
  * @param {*[]} filtered
  * @param {{ min: number, max: number }|null} turnRange
  * @param {number} latestTurn
@@ -65,12 +60,10 @@ function ganttWarSpan(filtered, turnRange, latestTurn) {
 }
 
 /**
- * Extend the right edge to include the current turn and future tail room for ongoing wars.
  * @param {*[]} filtered
  * @param {number} xMin
  * @param {number} xMax
  * @param {number} latestTurn
- * @returns {number} Extended right edge.
  */
 function extendDomainFuture(filtered, xMin, xMax, latestTurn) {
   let max = xMax;
@@ -172,11 +165,7 @@ function warStripeCount(war) {
   return Math.max(2, majorsOnSide(war.sideACivs).length + majorsOnSide(war.sideBCivs).length);
 }
 
-/**
- * A war's bar height: the base height plus one stripe step per belligerent beyond two, capped.
- * @param {*} war
- * @returns {number} Height in px.
- */
+/** @param {*} war */
 function barHeightFor(war) {
   return Math.min(
     GANTT_BAR_H_MAX,

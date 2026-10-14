@@ -12,7 +12,6 @@
 import { civDroppedByPolicy } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 
 /**
- * The numeric pids of a roster array.
  * @param {*} civs A side roster (entries with a `pid`).
  * @returns {number[]}
  */
@@ -32,10 +31,8 @@ function warPids(war) {
 }
 
 /**
- * A war's [start, end] turn window; an ongoing war ends at latestTurn.
  * @param {*} war
  * @param {number} latestTurn
- * @returns {{ s: number, e: number }}
  */
 function warWindowOf(war, latestTurn) {
   const start = typeof war.startTurn === "number" ? war.startTurn : 0;
@@ -44,31 +41,23 @@ function warWindowOf(war, latestTurn) {
 }
 
 /**
- * Whether two inclusive [s,e] windows overlap.
  * @param {{ s: number, e: number }} a
  * @param {{ s: number, e: number }} b
- * @returns {boolean}
  */
 function windowsOverlap(a, b) {
   return a.s <= b.e && b.s <= a.e;
 }
 
 /**
- * Whether two pid sets intersect.
  * @param {Set<number>} a
  * @param {Set<number>} b
- * @returns {boolean}
  */
 function setsIntersect(a, b) {
   for (const pid of a) if (b.has(pid)) return true;
   return false;
 }
 
-/**
- * A tiny union-find over array indices.
- * @param {number} count
- * @returns {{ find: (x: number) => number, union: (a: number, b: number) => void }}
- */
+/** @param {number} count */
 function makeUF(count) {
   const parent = Array.from({ length: count }, (_, i) => i);
   const find = (/** @type {number} */ x) => {
@@ -85,11 +74,8 @@ function makeUF(count) {
 }
 
 /**
- * Group wars into connected components: two wars link when their windows overlap
- * and they share a participant.
  * @param {*[]} wars
  * @param {number} latestTurn
- * @returns {number[][]} Components as arrays of war indices.
  */
 function warComponents(wars, latestTurn) {
   const count = wars.length;
@@ -182,11 +168,8 @@ function colorComponent(componentWars) {
 }
 
 /**
- * Union every component war's roster entries into two side maps by color
- * (earliest joinTurn wins on duplicate pids).
- * @param {*[]} componentWars The component's wars.
+ * @param {*[]} componentWars
  * @param {{ colorOf: (pid: number) => number, refColor: number }} coloring
- * @returns {{ a: *[], b: *[] }}
  */
 function mergeRosters(componentWars, coloring) {
   /** @type {Map<number, *>} */
@@ -202,12 +185,10 @@ function mergeRosters(componentWars, coloring) {
 }
 
 /**
- * Place one roster entry into the A or B side map by its color, keeping the
- * earliest joinTurn on duplicate pids.
  * @param {*} entry
  * @param {{ colorOf: (pid: number) => number, refColor: number }} coloring
- * @param {Map<number, *>} aMap Side A accumulator.
- * @param {Map<number, *>} bMap Side B accumulator.
+ * @param {Map<number, *>} aMap
+ * @param {Map<number, *>} bMap
  */
 function addRosterEntry(entry, coloring, aMap, bMap) {
   if (typeof entry.pid !== "number") return;
@@ -224,11 +205,7 @@ function mergedName(aCivs, bCivs) {
   return (majorCivNames(aCivs) || "Side A") + " vs " + (majorCivNames(bCivs) || "Side B") + " War";
 }
 
-/**
- * The "&"-joined, sorted major civ names of a roster (city-states excluded).
- * @param {*} civs A side roster.
- * @returns {string} The joined names ("" when none).
- */
+/** @param {*} civs */
 function majorCivNames(civs) {
   return (civs || [])
     .filter((/** @type {*} */ entry) => !entry.isCS)
@@ -238,11 +215,9 @@ function majorCivNames(civs) {
 }
 
 /**
- * Assemble one merged war record from a component's wars + its coloring.
- * @param {*[]} componentWars The component's wars.
+ * @param {*[]} componentWars
  * @param {{ colorOf: (pid: number) => number, refColor: number }} coloring
  * @param {number} latestTurn
- * @returns {*}
  */
 function buildMergedWar(componentWars, coloring, latestTurn) {
   const byStart = componentWars.slice().sort((x, y) => (x.startTurn || 0) - (y.startTurn || 0));
@@ -325,10 +300,8 @@ export function policyVisibleWars(wars, samples) {
 }
 
 /**
- * Whether a side had a major civ before the spoiler guard and has none after it.
  * @param {*} before The side's roster as persisted.
  * @param {*[]} after The gated roster.
- * @returns {boolean}
  */
 function lostEveryMajor(before, after) {
   const isMajor = (/** @type {*} */ entry) => !!entry && !entry.isCS;
@@ -336,11 +309,8 @@ function lostEveryMajor(before, after) {
 }
 
 /**
- * One war after the spoiler guard: the war itself when nothing is hidden, a copy without the
- * hidden majors, or null when a side is left with no major civ.
  * @param {*} war
  * @param {(pid: *) => boolean} hidden Whether a civ is hidden by the policy.
- * @returns {*|null}
  */
 function gateWar(war, hidden) {
   const removed = new Set();

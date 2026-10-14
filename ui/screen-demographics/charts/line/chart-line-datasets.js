@@ -22,11 +22,8 @@ import {
  */
 
 /**
- * `hex` with `alpha` applied, as an `rgba()` string. Accepts #rgb, #rrggbb, rgb() and
- * rgba(); anything else falls back to translucent white. Used to dim muted/backgrounded lines.
  * @param {*} hex
  * @param {number} alpha Alpha (0-1).
- * @returns {string}
  */
 function colorWithAlpha(hex, alpha) {
   if (typeof hex !== "string") return "rgba(255,255,255," + alpha + ")";
@@ -135,12 +132,9 @@ function resolveMetricMeta(metricId) {
 }
 
 /**
- * Build the single donor line that represents a `global` metric: the longest series'
- * points under the metric's localized name.
  * @param {ChartSeries[]} allSeries Non-empty.
  * @param {*} metricMeta
  * @param {string} metricId
- * @returns {ChartSeries}
  */
 function globalDonorLine(allSeries, metricMeta, metricId) {
   const donor =

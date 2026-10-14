@@ -83,7 +83,6 @@ export function collectWonderEvents(samples, ageOffsets, boundaries, sampleX) {
 }
 
 /**
- * Fold one sample's wonder-type list into the running seen-set + event map.
  * @param {{
  *   wonderEventsByPid: Map<string, WonderEvent[]>,
  *   seenTypesByPid: Map<string, Set<string>>,
@@ -163,16 +162,13 @@ export function collectWonderDestructions(samples, ageOffsets, boundaries, sampl
 }
 
 /**
- * Fold one sample's wonder presence into `lastSeen` (mutated) and return the set
- * of wonder types present anywhere in this sample.
  * @param {Snapshot} sample
- * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
+ * @param {Map<string, number>} ageOffsets
  * @param {AgeBoundary[]} boundaries
  * @param {(sample: Snapshot, offsets: Map<string, number>, boundaries: AgeBoundary[]) => (number|undefined)} sampleX
- *   Sample → chart-X position resolver.
  * @param {Map<string, { pid: string, turn: number|*, year: string }>} lastSeen
  *   wonderType → last-seen record (mutated).
- * @returns {Set<string>} The wonder types present in this sample.
+ * @returns {Set<string>}
  */
 function foldSamplePresence(sample, ageOffsets, boundaries, sampleX, lastSeen) {
   const present = new Set();
@@ -192,12 +188,8 @@ function foldSamplePresence(sample, ageOffsets, boundaries, sampleX, lastSeen) {
 }
 
 /**
- * Emit a destruction event for every wonder seen at some point but absent from
- * the final sample, keyed by the civ that last held it.
  * @param {Map<string, { pid: string, turn: number|*, year: string }>} lastSeen
- *   wonderType → last-seen record.
- * @param {Set<string>} presentInFinal Types still standing in the final sample.
- * @returns {Map<string, WonderEvent[]>} pid → destruction events.
+ * @param {Set<string>} presentInFinal
  */
 function emitWonderDestructions(lastSeen, presentInFinal) {
   /** @type {Map<string, WonderEvent[]>} */
@@ -228,10 +220,7 @@ export function mergeWonderEvents(wonderEventsByPid, destructionsByPid) {
   }
 }
 
-/**
- * Resolve the engine icon URL for a wonder event, mutating `wonderEvent.iconUrl`.
- * @param {WonderEvent} wonderEvent Mutated.
- */
+/** @param {WonderEvent} wonderEvent Mutated. */
 function resolveWonderIcon(wonderEvent) {
   try {
     if (typeof UI !== "undefined" && typeof UI.getIconURL === "function") {
@@ -242,11 +231,7 @@ function resolveWonderIcon(wonderEvent) {
   }
 }
 
-/**
- * Compose a localization tag, returning the raw tag on compose failure.
- * @param {string} tag
- * @returns {string}
- */
+/** @param {string} tag */
 function safeComposeLocaleTag(tag) {
   try {
     if (typeof Locale?.compose === "function") return Locale.compose(tag);
@@ -267,11 +252,7 @@ function shouldUseWonderDescription(composed, rawTag, best) {
   return composed.length > best.length;
 }
 
-/**
- * Resolve the longest composable flavor description from a Constructibles row.
- * @param {*} info The Constructibles lookup row (or null).
- * @returns {{ text: string, tag: string }} The best description and the tag it came from.
- */
+/** @param {*} info The Constructibles lookup row (or null). */
 function bestWonderDescription(info) {
   const candidates = [info?.Description, info?.Tooltip].filter(Boolean);
   let best = "";
@@ -287,10 +268,7 @@ function bestWonderDescription(info) {
   return { text: best, tag: bestTag };
 }
 
-/**
- * Resolve display name + flavor description for a wonder event, mutating it.
- * @param {WonderEvent} wonderEvent Mutated.
- */
+/** @param {WonderEvent} wonderEvent Mutated. */
 function resolveWonderMeta(wonderEvent) {
   try {
     const info =
@@ -315,8 +293,6 @@ function resolveWonderMeta(wonderEvent) {
 }
 
 /**
- * Resolve a wonder's display name from its Constructibles row, falling back to
- * a humanized type string.
  * @param {string} wonderType
  * @param {*} info The Constructibles lookup row (or null).
  * @returns {string}
@@ -365,10 +341,8 @@ export function resolveWonderEvents(wonderEventsByPid) {
  */
 
 /**
- * Ensure the singleton wonder hover-tooltip exists and is attached to `wrap`.
  * @param {WonderTipState} state Mutated.
  * @param {HTMLElement} wrap
- * @returns {HTMLElement}
  */
 function ensureWonderTip(state, wrap) {
   if (state.wonderTip && state.wonderTip.isConnected) return state.wonderTip;
@@ -381,7 +355,6 @@ function ensureWonderTip(state, wrap) {
 }
 
 /**
- * Show the wonder hover-tooltip for an event, anchored to the icon.
  * @param {{
  *   state: WonderTipState,
  *   wrap: HTMLElement,
@@ -450,7 +423,6 @@ function showWonderTip(params) {
  */
 
 /**
- * Place the tip against its icon now, then again on the next frame.
  * @param {WonderTipState} state The tip state wrapper (its re-place token is bumped).
  * @param {WonderIconAnchor} icon
  */
@@ -471,11 +443,8 @@ function placeWonderTip(state, icon) {
 }
 
 /**
- * Resolve the size to place the tip from: its own box once GameFace has laid it out, otherwise the
- * size measured on a previous show.
  * @param {HTMLElement} wonderTip
  * @param {{ w: number, h: number }|null|undefined} lastSize Size measured on a previous show.
- * @returns {{ tipW: number, tipH: number, measured: boolean }} The size and where it came from.
  */
 function resolveWonderTipSize(wonderTip, lastSize) {
   // GameFace lays an element out a frame after it is shown, so on the tick that reveals the tip
@@ -490,14 +459,10 @@ function resolveWonderTipSize(wonderTip, lastSize) {
 }
 
 /**
- * Compute the tooltip's left/top placement relative to the icon, clamped
- * inside the chart wrap.
  * @param {HTMLElement} wonderTip
- * @param {HTMLElement|*} wrap For clamping.
+ * @param {HTMLElement|*} wrap
  * @param {WonderIconAnchor} icon
  * @param {{ w: number, h: number }|null|undefined} lastSize Size measured on a previous show.
- * @returns {{ left: number, top: number, tipW: number, tipH: number, measured: boolean }}
- *   The placement, the size it was computed from, and whether that size came off the element now.
  */
 function computeWonderTipPlacement(wonderTip, wrap, icon, lastSize) {
   const GAP_X = 18;
@@ -521,7 +486,6 @@ function computeWonderTipPlacement(wonderTip, wrap, icon, lastSize) {
 }
 
 /**
- * Apply the connecting arrow's edge + color to a wonder tooltip.
  * @param {*} wonderTip Carries a custom `.arrow` child.
  * @param {number} left The tip's resolved left (px).
  * @param {number} iconLeft px.
@@ -552,7 +516,6 @@ function applyWonderTipArrow(wonderTip, left, iconLeft, tipW, tipH) {
 }
 
 /**
- * Position the wonder tooltip near its icon and draw the connecting arrow.
  * @param {WonderTipState} state
  * @param {WonderIconAnchor} icon
  */
@@ -573,10 +536,7 @@ function positionWonderTip(state, icon) {
   applyWonderTipArrow(wonderTip, left, icon.left, tipW, tipH);
 }
 
-/**
- * Hide the wonder hover-tooltip.
- * @param {WonderTipState} state
- */
+/** @param {WonderTipState} state */
 function hideWonderTip(state) {
   // Bump the token so a re-place frame queued by the show cannot move a tip that is now hidden.
   state.placeToken = (state.placeToken || 0) + 1;
@@ -586,11 +546,8 @@ function hideWonderTip(state) {
 const WONDER_ICON_SIZE = 28;
 
 /**
- * Find the data point on a dataset nearest to a wonder event's turn, within a
- * small tolerance.
  * @param {Record<string, *>} dataset
- * @param {number|*} turn The event's chart-X turn.
- * @returns {{ x: number, y: number }|null}
+ * @param {number|*} turn
  */
 function findEventDataPoint(dataset, turn) {
   let dataPoint = dataset.data.find((/** @type {*} */ point) => point && point.x === turn);
@@ -609,12 +566,10 @@ function findEventDataPoint(dataset, turn) {
 }
 
 /**
- * Create (and wire hover) a wonder marker element for an event.
  * @param {WonderTipState} tipState
  * @param {HTMLElement} wrap
  * @param {WonderEvent} wonderEvent
  * @param {string} civLabel
- * @returns {HTMLElement}
  */
 function createWonderMarker(tipState, wrap, wonderEvent, civLabel) {
   const marker = document.createElement("div");
@@ -656,11 +611,9 @@ function createWonderMarker(tipState, wrap, wonderEvent, civLabel) {
 }
 
 /**
- * Render/update markers for one dataset's wonder events, tracking rendered
- * keys for later garbage collection.
- * @param {Record<string, *>} ctx Shared marker pass context.
+ * @param {Record<string, *>} ctx
  * @param {Record<string, *>} dataset
- * @param {WonderEvent[]} events The dataset civ's events.
+ * @param {WonderEvent[]} events
  * @param {number} pid
  */
 function renderDatasetWonderMarkers(ctx, dataset, events, pid) {
@@ -691,7 +644,6 @@ function renderDatasetWonderMarkers(ctx, dataset, events, pid) {
 }
 
 /**
- * Reuse the cached marker for a key, recreating it when its DOM was wiped.
  * @param {{
  *   wonderMarkerEls: Map<string, HTMLElement>,
  *   key: string,
@@ -700,7 +652,6 @@ function renderDatasetWonderMarkers(ctx, dataset, events, pid) {
  *   wonderEvent: WonderEvent,
  *   datasetLabel: string|*,
  * }} params
- * @returns {HTMLElement}
  */
 function getOrCreateWonderMarker(params) {
   const { wonderMarkerEls, key, tipState, wrap, wonderEvent, datasetLabel } = params;
@@ -721,9 +672,8 @@ function getOrCreateWonderMarker(params) {
 }
 
 /**
- * Garbage-collect markers no longer rendered this pass.
  * @param {Map<string, HTMLElement>} wonderMarkerEls
- * @param {Set<string>} renderedKeys Keys rendered this pass.
+ * @param {Set<string>} renderedKeys
  */
 function gcWonderMarkers(wonderMarkerEls, renderedKeys) {
   for (const [key, el] of wonderMarkerEls) {
@@ -791,10 +741,9 @@ export function makeWonderMarkersPlugin(
 }
 
 /**
- * Render wonder markers for a single dataset (resolving its pid + events).
- * @param {Record<string, *>} passCtx Shared marker pass context.
+ * @param {Record<string, *>} passCtx
  * @param {Record<string, *>} dataset
- * @param {Array<{ leaderType: *, pid?: number }>} allSeries The series list (for pid lookup).
+ * @param {Array<{ leaderType: *, pid?: number }>} allSeries
  * @param {Map<string, WonderEvent[]>} wonderEventsByPid
  */
 function renderOneDatasetWonders(passCtx, dataset, allSeries, wonderEventsByPid) {

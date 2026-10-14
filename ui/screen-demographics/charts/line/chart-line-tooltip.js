@@ -19,10 +19,8 @@ function ensureChartTooltipEl(wrap) {
 }
 
 /**
- * Sort tooltip data points to match the chart/legend dataset order.
  * @param {*} tooltip The Chart.js tooltip model.
  * @param {*} chart
- * @returns {*[]}
  */
 function sortTooltipDataPoints(tooltip, chart) {
   /** @type {*[]} */
@@ -114,12 +112,10 @@ function appendAttribution(row, metricMeta, dataset, color) {
 }
 
 /**
- * Build the horizontal top line of a tooltip row: leader icon + civ name + value.
  * @param {*} dataset
  * @param {*} dataPoint One Chart.js tooltip data point.
  * @param {(value: number) => string} fmtY
- * @param {string} color The row's (lifted) text color.
- * @returns {HTMLElement}
+ * @param {string} color
  */
 function buildTooltipTopLine(dataset, dataPoint, fmtY, color) {
   const top = document.createElement("div");
@@ -142,12 +138,9 @@ function buildTooltipTopLine(dataset, dataPoint, fmtY, color) {
 }
 
 /**
- * Build one tooltip row: a vertical stack of the top line (icon + civ + value) and, below it, the
- * optional source-attribution line.
  * @param {*} dataPoint One Chart.js tooltip data point.
  * @param {(value: number) => string} fmtY
- * @param {*} [metricMeta] May carry a tooltipAttribution callback.
- * @returns {HTMLElement}
+ * @param {*} [metricMeta]
  */
 function buildTooltipRow(dataPoint, fmtY, metricMeta) {
   const dataset = dataPoint.dataset;
@@ -206,8 +199,6 @@ function measuredSize(tip) {
 }
 
 /**
- * Set the tooltip's left/top for a caret: right of the cursor, or left of it when the box would
- * pass the wrap's right edge, then clamped inside the wrap.
  * @param {HTMLElement} tip
  * @param {{ x: number, y: number }} caret The cursor point, in wrap pixels.
  * @param {{ w: number, h: number }} size

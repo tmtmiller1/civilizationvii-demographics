@@ -57,11 +57,9 @@ function ensureTooltipHost(state) {
 }
 
 /**
- * Hit-test a point (in SVG coords) against the war bar rects.
  * @param {*} barRects
  * @param {number} svgX
  * @param {number} svgY
- * @returns {*} The war under the point, or null when none.
  */
 function hitTestBars(barRects, svgX, svgY) {
   for (const rect of barRects) {
@@ -147,10 +145,8 @@ function placeAxis(cursor, size, min, max) {
 }
 
 /**
- * Position the Gantt tooltip near the cursor with right-edge and bottom-edge flip, clamped to its
- * host and scaled down when it would not fit at all.
  * @param {{ wrap: HTMLElement, host: HTMLElement|null, tooltip: HTMLElement }} state
- * @param {*} ev Mouse event.
+ * @param {*} ev
  * @param {*} rect SVG client rect.
  */
 function positionGanttTooltip(state, ev, rect) {
@@ -168,8 +164,7 @@ function positionGanttTooltip(state, ev, rect) {
 }
 
 /**
- * Handle one Gantt hover move event.
- * @param {*} ev Mouse event.
+ * @param {*} ev
  * @param {{
  *   wrap: HTMLElement,
  *   host: HTMLElement|null,
@@ -192,8 +187,7 @@ function onGanttHoverMove(ev, state) {
 }
 
 /**
- * The hover-move body: hit-test the bars under the cursor and show/position the tooltip.
- * @param {*} ev Mouse event.
+ * @param {*} ev
  * @param {*} state Hover state (see onGanttHoverMove).
  */
 function ganttHoverMoveBody(ev, state) {

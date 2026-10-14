@@ -66,12 +66,7 @@ import {
  * @property {boolean|undefined} metFlag Latest `met` flag.
  */
 
-/**
- * Resolve the engine's localized leader name for a leader type, or `null`
- * when GameInfo has no usable row.
- * @param {*} leaderType Engine LeaderType string or hash.
- * @returns {string|null}
- */
+/** @param {*} leaderType Engine LeaderType string or hash. */
 function lookupLeaderName(leaderType) {
   try {
     if (
@@ -88,12 +83,7 @@ function lookupLeaderName(leaderType) {
   return null;
 }
 
-/**
- * Compose a leader Name tag, falling back to the raw tag if Locale is absent
- * or throws.
- * @param {string} name The leader Name tag.
- * @returns {string}
- */
+/** @param {string} name */
 function composeLeaderName(name) {
   if (typeof Locale !== "undefined" && typeof Locale.compose === "function") {
     try {
@@ -106,11 +96,8 @@ function composeLeaderName(name) {
 }
 
 /**
- * Compose a friendly leader display name from a leader type, falling back
- * to `"Player <pid>"` for missing/numeric-hash types.
  * @param {*} leaderType Engine LeaderType string or hash.
- * @param {*} pid Player id (for the fallback label).
- * @returns {string}
+ * @param {*} pid
  */
 function leaderDisplayName(leaderType, pid) {
   if (!leaderType) return tPlayerFallback(pid);
@@ -208,8 +195,6 @@ function applyResetOffset(points, i, segEnd, preBoundaryValue) {
 }
 
 /**
- * Bridge one age boundary's dip in place (if there is one). The first point after the boundary (within
- * the segment) must dip below the pre-boundary value to qualify.
  * @param {{t:number,v:number}[]} points Mutated.
  * @param {number} boundaryX
  * @param {number} segEnd Segment-end x (next boundary or Infinity).
@@ -322,10 +307,8 @@ function mergeBannerColors(fold, civSample) {
 }
 
 /**
- * Merge one civ sample's identity fields into a pid fold: first non-null
- * leader type / leader name, latest non-empty banner colors, latest met flag.
  * @param {PidFold} fold Mutated.
- * @param {CivSample|*} civSample One civ's sample.
+ * @param {CivSample|*} civSample
  */
 function mergePidIdentity(fold, civSample) {
   if (!fold.leaderType && civSample.leaderType !== undefined && civSample.leaderType !== null) {
@@ -339,12 +322,7 @@ function mergePidIdentity(fold, civSample) {
   if (typeof civSample.met === "boolean") fold.metFlag = civSample.met; // latest wins
 }
 
-/**
- * Live fallback for the civ-name list when history rows carry no civName:
- * pull `player.civilizationName` directly from the engine.
- * @param {string} pid
- * @returns {string[]} A single-element civ-name list, or empty on failure.
- */
+/** @param {string} pid */
 function liveCivNameFallback(pid) {
   try {
     if (typeof Players?.get !== "function") return [];
@@ -359,22 +337,15 @@ function liveCivNameFallback(pid) {
   return [];
 }
 
-/**
- * Compose a localization tag via `Locale.compose`, or echo it when Locale is
- * unavailable.
- * @param {string} tag
- * @returns {string}
- */
+/** @param {string} tag */
 function composeLocale(tag) {
   return typeof Locale?.compose === "function" ? Locale.compose(tag) : tag;
 }
 
 /**
- * The leader-only display text for one series.
- * @param {string|null} leaderName Folded leader name.
- * @param {*} leaderType Raw leader-type value.
+ * @param {string|null} leaderName
+ * @param {*} leaderType
  * @param {string} pid
- * @returns {string}
  */
 function leaderOnlyLabel(leaderName, leaderType, pid) {
   if (leaderName) return leaderName;
@@ -395,13 +366,11 @@ function seriesColor(primaryColor, secondaryColor, idx) {
 }
 
 /**
- * Build one {@link ChartSeries} from a pid's folded state.
  * @param {Snapshot[]} samples
  * @param {string} pid
  * @param {number} idx Index for palette fallback.
  * @param {PidFold} fold
  * @param {Record<string, *>} eliminatedMap `history.eliminated`, keyed by pid.
- * @returns {ChartSeries}
  */
 function buildSeriesEntry(samples, pid, idx, fold, eliminatedMap) {
   const {

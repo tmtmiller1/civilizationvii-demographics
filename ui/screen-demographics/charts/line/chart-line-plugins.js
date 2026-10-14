@@ -35,12 +35,9 @@ export function makeFocusGlowPlugin() {
 }
 
 /**
- * Return a focused, visible dataset's point elements (>=2), or `null` when the
- * dataset shouldn't glow.
  * @param {*} chart
  * @param {Record<string, *>} dataset
- * @param {number} i The dataset index.
- * @returns {{ x: number, y: number, skip?: boolean }[]|null}
+ * @param {number} i
  */
 function focusedGlowElems(chart, dataset, i) {
   if (!dataset || !dataset._focused || dataset.hidden) return null;
@@ -52,11 +49,9 @@ function focusedGlowElems(chart, dataset, i) {
 }
 
 /**
- * Stroke one focused line's translucent glow path.
  * @param {*} ctx2
  * @param {Record<string, *>} dataset
- * @param {{ x: number, y: number, skip?: boolean }[]} elems The dataset's
- *   point elements.
+ * @param {{ x: number, y: number, skip?: boolean }[]} elems
  */
 function strokeGlowPath(ctx2, dataset, elems) {
   ctx2.save();
@@ -231,10 +226,9 @@ export function makeCapLimitLinePlugin(metricId) {
 }
 
 /**
- * Draw the y=100 cap-line label at the right edge.
  * @param {*} chart
  * @param {*} ctx2
- * @param {{ left: number, right: number, y: number }} pos Line geometry.
+ * @param {{ left: number, right: number, y: number }} pos
  */
 function drawCapLimitLabel(chart, ctx2, pos) {
   ctx2.font = "11px " + chartFontFamily(chart);
