@@ -82,10 +82,8 @@ function radarEmptyValues() {
 }
 
 /**
- * Compose a civ display name from leader/civ fields ("Leader (Civ)").
  * @param {*} src Carries leaderName/civName.
- * @param {string} pid For the fallback.
- * @returns {string}
+ * @param {string} pid
  */
 function radarCivName(src, pid) {
   if (!src || !src.leaderName) return tPlayerFallback(pid);
@@ -101,11 +99,7 @@ function radarValuesFromRow(row) {
   return values;
 }
 
-/**
- * Build the civ map from a frozen per-age legacy snapshot.
- * @param {Record<string, *>} snapshot pid → row.
- * @returns {Map<string, RadarCiv>}
- */
+/** @param {Record<string, *>} snapshot pid → row. */
 function loadRadarCivsFromSnapshot(snapshot) {
   /** @type {Map<string, RadarCiv>} */
   const out = new Map();
@@ -131,12 +125,7 @@ function loadRadarCivsFromSnapshot(snapshot) {
   return out;
 }
 
-/**
- * Build the civ map for the current age by folding sample max-values, then
- * overriding with a live `player.Legacies` pull.
- * @param {Snapshot[]} samples
- * @returns {Map<string, RadarCiv>}
- */
+/** @param {Snapshot[]} samples */
 function loadRadarCivsCurrent(samples) {
   /** @type {Map<string, RadarCiv>} */
   const civs = new Map();
@@ -156,12 +145,10 @@ function loadRadarCivsCurrent(samples) {
 }
 
 /**
- * Fold one civ's sample into the radar civ map (create-on-first-seen, then
- * take the per-axis max; triumph counts are non-decreasing per age).
- * @param {Map<string, RadarCiv>} civs Mutated.
+ * @param {Map<string, RadarCiv>} civs
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  * @param {string} pid
- * @param {CivSample|*} player One civ's sample.
+ * @param {CivSample|*} player
  */
 function foldRadarSample(civs, pidOrder, pid, player) {
   // A persisted sample can hold a null player-state; there is nothing to fold.
@@ -188,9 +175,8 @@ function foldRadarSample(civs, pidOrder, pid, player) {
 }
 
 /**
- * Merge per-axis values into a target, keeping the max of each finite value.
- * @param {Record<string, number>} target Mutated.
- * @param {Record<string, *>} src Numeric or not.
+ * @param {Record<string, number>} target
+ * @param {Record<string, *>} src
  */
 function mergeMaxAxes(target, src) {
   for (const key of RADAR_AXIS_KEYS) {
@@ -201,11 +187,7 @@ function mergeMaxAxes(target, src) {
   }
 }
 
-/**
- * Tally one alive major's triggered triumphs by axis from `player.Legacies`.
- * @param {*} legacies The player's Legacies accessor.
- * @returns {Record<string, number>} Per-axis triggered counts.
- */
+/** @param {*} legacies The player's Legacies accessor. */
 function tallyLiveTriumphs(legacies) {
   const counts = radarEmptyValues();
   try {
@@ -228,9 +210,7 @@ function tallyLiveTriumphs(legacies) {
 }
 
 /**
- * Override radar civ values with a live `player.Legacies` triumph pull for
- * every alive major (creating civ entries that lack samples).
- * @param {Map<string, RadarCiv>} civs Mutated.
+ * @param {Map<string, RadarCiv>} civs
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
  */
 function liveRadarPull(civs, pidOrder) {
@@ -246,10 +226,6 @@ function liveRadarPull(civs, pidOrder) {
   }
 }
 
-/**
- * Whether the Test-of-Time Legacies + alive-majors API is available.
- * @returns {boolean} True when both GameInfo.Legacies and the player API exist.
- */
 function legaciesApiAvailable() {
   return (
     typeof GameInfo !== "undefined" &&
@@ -260,12 +236,10 @@ function legaciesApiAvailable() {
 }
 
 /**
- * Merge one alive major's live triumph counts into the radar civ map,
- * creating the civ entry when it has no samples yet.
- * @param {Map<string, RadarCiv>} civs Mutated.
+ * @param {Map<string, RadarCiv>} civs
  * @param {string[]} pidOrder Insertion order (mutated, for palette).
- * @param {number} pid The major's pid.
- * @param {Record<string, number>} counts The per-axis triggered counts.
+ * @param {number} pid
+ * @param {Record<string, number>} counts
  */
 function mergeLiveMajorTriumphs(civs, pidOrder, pid, counts) {
   // Alive majors may not have samples yet if the storage was reset.
@@ -286,10 +260,8 @@ function mergeLiveMajorTriumphs(civs, pidOrder, pid, counts) {
 }
 
 /**
- * Resolve the baseline radar civ map from the selected age source.
  * @param {ChartOptions|*} opts
  * @param {Snapshot[]} samples
- * @returns {Map<string, RadarCiv>}
  */
 function radarSourceCivs(opts, samples) {
   const snapshots =

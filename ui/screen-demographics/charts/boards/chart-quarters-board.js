@@ -106,9 +106,8 @@ function orphanNote(type) {
 }
 
 /**
- * Fold one constructible into the per-tile building groups.
  * @param {*} id A constructible component id.
- * @param {Map<string, *>} tiles tile-key → group.
+ * @param {Map<string, *>} tiles
  */
 function foldConstructible(id, tiles) {
   const constructible = orFallback(() => engineApi.Constructibles.getByComponentID(id), null);
@@ -120,10 +119,8 @@ function foldConstructible(id, tiles) {
 }
 
 /**
- * A settlement's quarters (building groups per tile) + any lone unique buildings.
- * @param {*} city The city handle.
- * @param {number} pid The owner id.
- * @returns {{quarters:*[], orphans:string[]}}
+ * @param {*} city
+ * @param {number} pid
  */
 function readCityQuarters(city, pid) {
   const ids = orFallback(() => city.Constructibles.getIds(), null);

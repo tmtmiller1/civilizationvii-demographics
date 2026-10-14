@@ -36,7 +36,6 @@ function tickFont(size) {
 }
 
 /**
- * Append a centered empty-state.
  * @param {HTMLElement} host
  * @param {string} msg
  */
@@ -62,10 +61,6 @@ function withAlpha(color, alpha) {
   return "rgba(" + ((packed >> 16) & 255) + "," + ((packed >> 8) & 255) + "," + (packed & 255) + "," + alpha + ")";
 }
 
-/**
- * The x-axis (time) block, identical to the line chart's.
- * @returns {Record<string, *>}
- */
 function xAxis() {
   return {
     type: "linear",
@@ -83,11 +78,9 @@ function xAxis() {
 }
 
 /**
- * A y-axis block matching the line chart, with per-chart bounds/behaviour.
  * @param {string} title
- * @param {(v:number)=>string} tickCb The tick label formatter.
- * @param {Record<string, *>} bounds reverse/min/max/stacked/stepSize flags.
- * @returns {Record<string, *>}
+ * @param {(v:number)=>string} tickCb
+ * @param {Record<string, *>} bounds
  */
 function yAxis(title, tickCb, bounds) {
   const flags = bounds || {};
@@ -112,7 +105,6 @@ function yAxis(title, tickCb, bounds) {
  * the same HTML external tooltip the line chart uses.
  * @param {(v:number)=>string} fmtY The value formatter.
  * @param {Record<string, *>} metricMeta Minimal metric meta for the tooltip.
- * @returns {Record<string, *>}
  */
 function pluginsOpts(fmtY, metricMeta) {
   return {
@@ -126,10 +118,8 @@ function pluginsOpts(fmtY, metricMeta) {
 }
 
 /**
- * The `options` shape both charts share.
  * @param {Record<string, *>} plugins
  * @param {Record<string, *>} scales
- * @returns {Record<string, *>} The Chart.js `options`.
  */
 function baseOptions(plugins, scales) {
   return {
@@ -144,11 +134,9 @@ function baseOptions(plugins, scales) {
 }
 
 /**
- * Shared render prologue: teardown, clear, Chart guard, defaults, options read.
  * @param {HTMLElement} host
  * @param {*} options
- * @param {string} metricId The source metric id to build series from.
- * @returns {{opts:*, width:number, height:number, hidden:Set<string>, series:*[]}|null} Prepared, or null.
+ * @param {string} metricId
  */
 function prepare(host, options, metricId) {
   teardownExistingChart(host);
@@ -172,7 +160,6 @@ function prepare(host, options, metricId) {
 }
 
 /**
- * Mount a prepared Chart.js config with the shared legend + canvas wrap.
  * @param {HTMLElement} host
  * @param {*} prep The result of prepare().
  * @param {Record<string, *>[]} datasets
@@ -286,11 +273,7 @@ function sortedTurns(series) {
   return [...turns].sort((a, b) => a - b);
 }
 
-/**
- * Per-turn world totals (sum of positive values across civs).
- * @param {*[]} series The per-civ series.
- * @returns {Map<number, number>} turn → total.
- */
+/** @param {*[]} series */
 function turnTotals(series) {
   const totals = new Map();
   for (const civSeries of series) {
@@ -304,12 +287,10 @@ function turnTotals(series) {
 }
 
 /**
- * Build one civ's share band, aligned to the shared turn axis (0 where absent).
  * @param {*} civSeries
- * @param {number[]} turns Shared turn axis.
- * @param {Map<number, number>} totals turn → world total.
- * @param {Set<string>} hidden Hidden keys.
- * @returns {Record<string, *>} The Chart.js dataset.
+ * @param {number[]} turns
+ * @param {Map<number, number>} totals
+ * @param {Set<string>} hidden
  */
 function shareDataset(civSeries, turns, totals, hidden) {
   const valueByTurn = new Map();

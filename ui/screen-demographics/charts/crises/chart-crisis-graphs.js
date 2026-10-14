@@ -38,10 +38,7 @@ import { clearHost } from "/demographics/ui/screen-demographics/screen/dom-helpe
  */
 const SERIES_KEY = { milpowerLevel: "milpower", milpower: "milLostCum" };
 
-/**
- * Y-axis unit (LOC tag) per crisis-cost metric id; reused from the war graphs.
- * @type {Record<string, string>}
- */
+/** @type {Record<string, string>} */
 const Y_LABEL = {
   milpowerLevel: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH",
   milpower: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH",
@@ -143,10 +140,8 @@ const hiddenKeys = new Set();
 const _rawSeriesCache = new WeakMap();
 
 /**
- * Parse (or reuse a cached) per-civ series for one metric out of `history`.
  * @param {*} history
- * @param {string} seriesKey The metric series id.
- * @returns {any[]} The raw per-civ series.
+ * @param {string} seriesKey
  */
 function rawSeriesFor(history, seriesKey) {
   if (!history || typeof history !== "object") {
@@ -192,15 +187,11 @@ function canonicalRoster(history) {
 const PRE_CRISIS_LEAD = 8;
 
 /**
- * Build one metric's per-civ series (points mapped to chart-X/Y), colored from
- * the canonical roster, filtered to the civs not toggled off, and clipped to the
- * shared x-domain start (so the long pre-crisis run isn't plotted).
  * @param {{ series: string }} metric The crisis graph metric.
  * @param {*} history
- * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
+ * @param {Map<string, { name: string, color: string }>} rosterMap
  * @param {number|undefined} minX The earliest chart-X to keep (or undefined for all).
  * @param {number|undefined} maxX The latest chart-X to keep (or undefined for all).
- * @returns {{ name: string, color: string, points: { x: number, y: number }[] }[]}
  */
 function seriesFor(metric, history, rosterMap, minX, maxX) {
   const raw = rawSeriesFor(history, metric.series);
@@ -258,13 +249,10 @@ function crisisAxis(history, scopeAge) {
 }
 
 /**
- * The chart-X range to plot: the whole game for "all", or just the samples of
- * one age when scoped to a single crisis.
  * @param {Snapshot[]} samples
  * @param {Map<string, number>} offsets
  * @param {*[]} boundaries
  * @param {string} scopeAge "all" or the age type to isolate.
- * @returns {{ lo: number, hi: number }}
  */
 function scopeXRange(samples, offsets, boundaries, scopeAge) {
   const scoped =
@@ -275,11 +263,9 @@ function scopeXRange(samples, offsets, boundaries, scopeAge) {
 }
 
 /**
- * The min/max chart-X across all samples.
  * @param {Snapshot[]} samples
- * @param {Map<string, number>} offsets The age offsets.
- * @param {*[]} boundaries The age boundary table.
- * @returns {{ lo: number, hi: number }} The chart-X range (Infinity/-Infinity when empty).
+ * @param {Map<string, number>} offsets
+ * @param {*[]} boundaries
  */
 function sampleXRange(samples, offsets, boundaries) {
   let lo = Infinity;
@@ -294,14 +280,10 @@ function sampleXRange(samples, offsets, boundaries) {
 }
 
 /**
- * Build the crisis-stage onset markers (chart-X, stage color, stage label) and
- * the earliest onset's chart-X.
  * @param {Snapshot[]} samples
  * @param {Map<string, number>} offsets
  * @param {*[]} boundaries
  * @param {string} scopeAge "all", or an age type to keep only that crisis's onsets.
- * @returns {{ markers: { x: number, color: string, label: string }[],
- *   firstOnset: number }}
  */
 function buildCrisisMarkers(samples, offsets, boundaries, scopeAge) {
   const markers = [];
@@ -334,12 +316,10 @@ function buildCellHead(metric) {
 }
 
 /**
- * Build one metric cell: head, then the line chart (or a no-data note).
  * @param {*} metric The crisis graph metric.
  * @param {*} history
- * @param {Map<string, { name: string, color: string }>} rosterMap Key -> identity.
+ * @param {Map<string, { name: string, color: string }>} rosterMap
  * @param {{ markers: *[], xDomain: * }} axis The shared markers + x-domain.
- * @returns {HTMLElement}
  */
 function buildCell(metric, history, rosterMap, axis) {
   const cell = document.createElement("div");
@@ -378,11 +358,8 @@ function buildFillerCell() {
 }
 
 /**
- * Build one clickable legend item (swatch + name); clicking toggles that civ
- * across every graph and re-renders.
  * @param {{ key: string, name: string, color: string }} civ
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement}
  */
 function buildLegendItem(civ, onChange) {
   const item = document.createElement("span");
@@ -402,10 +379,8 @@ function buildLegendItem(civ, onChange) {
 }
 
 /**
- * Build the "All" / "None" bulk-select controls.
  * @param {{ key: string }[]} roster
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement}
  */
 function buildLegendControls(roster, onChange) {
   const row = document.createElement("div");
@@ -430,11 +405,8 @@ function buildLegendControls(roster, onChange) {
 }
 
 /**
- * Build the shared header: a title, the All/None controls, and the single
- * interactive civ legend that governs every graph at once.
  * @param {{ key: string, name: string, color: string }[]} roster
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement}
  */
 function buildHeader(roster, onChange) {
   const head = document.createElement("div");
@@ -452,7 +424,6 @@ function buildHeader(roster, onChange) {
 }
 
 /**
- * Render (or re-render) the Crisis Graphs panel into `host`.
  * @param {HTMLElement} host
  * @param {{ history?: *, crisisAge?: * }} opts
  */
@@ -482,7 +453,6 @@ function renderInto(host, opts) {
 }
 
 /**
- * The key -> display map the crisis graph cells read.
  * @param {{ key: string, name: string, color: string }[]} roster
  * @returns {Map<string, { name: string, color: string }>}
  */
@@ -491,11 +461,9 @@ function buildCrisisRosterMap(roster) {
 }
 
 /**
- * Build the crisis graph panel shell (container + header).
  * @param {HTMLElement} host
  * @param {{ history?: * }} opts
  * @param {{ key: string, name: string, color: string }[]} roster
- * @returns {HTMLElement}
  */
 function buildCrisisPanel(host, opts, roster) {
   const panel = document.createElement("div");
@@ -505,11 +473,9 @@ function buildCrisisPanel(host, opts, roster) {
 }
 
 /**
- * Build the crisis graph grid and add filler cells for a stable 3-up layout.
  * @param {*} history
  * @param {Map<string, { name: string, color: string }>} rosterMap
  * @param {*} axis Shared axis domain.
- * @returns {HTMLElement}
  */
 function buildCrisisGrid(history, rosterMap, axis) {
   const grid = document.createElement("div");

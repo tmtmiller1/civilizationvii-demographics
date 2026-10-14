@@ -75,9 +75,8 @@ export function collectResourceCivOptions(history) {
 }
 
 /**
- * Record a civ as a resource-stack option when it has a resource metric.
- * @param {Map<string, { pid: string, label: string }>} seen Mutated.
- * @param {CivSample|*} player One civ's sample.
+ * @param {Map<string, { pid: string, label: string }>} seen
+ * @param {CivSample|*} player
  * @param {string} pid
  */
 function foldResourceCivOption(seen, player, pid) {
@@ -114,21 +113,12 @@ function foldResourceCivOption(seen, player, pid) {
  * @property {(v: number) => number} yOf Value → pixel y.
  */
 
-/**
- * Resolve the band set: `opts.bands` when non-empty, else the resource bands.
- * @param {StackOptions|*} opts
- * @returns {StackBand[]}
- */
+/** @param {StackOptions|*} opts */
 function resolveStackBands(opts) {
   return Array.isArray(opts.bands) && opts.bands.length > 0 ? opts.bands : RESOURCE_BANDS;
 }
 
-/**
- * Resolve the target pid whose resources to chart: explicit `viewerPid`, else
- * the local player, else `null` (first civ per sample).
- * @param {ChartOptions|*} opts
- * @returns {string|null} The target pid key, or `null`.
- */
+/** @param {ChartOptions|*} opts */
 function resolveStackTargetPid(opts) {
   if (opts.viewerPid !== undefined && opts.viewerPid !== null) return String(opts.viewerPid);
   const localPid = resolveLocalPid();
@@ -136,12 +126,9 @@ function resolveStackTargetPid(opts) {
 }
 
 /**
- * Build the per-turn stack rows for the target civ across the bands. Rows with
- * no positive band value are skipped.
  * @param {Snapshot[]} samples
  * @param {string|null} targetPid The target pid (or null → first civ per row).
  * @param {StackBand[]} bands
- * @returns {StackPoint[]}
  */
 function buildStackPoints(samples, targetPid, bands) {
   /** @type {StackPoint[]} */
@@ -169,12 +156,9 @@ function stackTurnOf(sample) {
 }
 
 /**
- * Build one stack row from a metrics object, or `null` when no band is
- * positive.
  * @param {number|*} turn
- * @param {Record<string, *>} metrics One civ's metrics.
+ * @param {Record<string, *>} metrics
  * @param {StackBand[]} bands
- * @returns {StackPoint|null}
  */
 function buildStackRow(turn, metrics, bands) {
   /** @type {StackPoint} */
@@ -189,8 +173,7 @@ function buildStackRow(turn, metrics, bands) {
 }
 
 /**
- * Clamp the stack rows to a time range in place, when one is set.
- * @param {StackPoint[]} points The stack rows (mutated).
+ * @param {StackPoint[]} points
  * @param {ChartOptions|*} opts
  */
 function clampStackPoints(points, opts) {
@@ -204,10 +187,8 @@ function clampStackPoints(points, opts) {
 }
 
 /**
- * Compute the stack chart's x/y domain from the rows.
  * @param {StackPoint[]} points
  * @param {StackBand[]} bands
- * @returns {{ xMin: number, xMax: number, yMax: number }}
  */
 function computeStackDomain(points, bands) {
   let xMin = Infinity,
@@ -237,7 +218,6 @@ function sumBands(values, bands) {
 }
 
 /**
- * Build the stack-chart layout (pads, plot size, x/y mappers).
  * @param {number} width Canvas width.
  * @param {number} height Canvas height.
  * @param {{ xMin: number, xMax: number, yMax: number }} domain
@@ -265,7 +245,6 @@ function buildStackLayout(width, height, domain) {
 }
 
 /**
- * Draw the stacked-area band polygons bottom-up.
  * @param {SVGElement} svg
  * @param {StackPoint[]} points
  * @param {StackBand[]} bands
@@ -308,11 +287,8 @@ function drawStackBands(svg, points, bands, layout) {
 }
 
 /**
- * Build the stack chart's band legend as a horizontal row shown on top of the chart (matching the
- * other graphs). Each item is a color dot + the band label and its latest value.
  * @param {StackBand[]} bands
  * @param {StackPoint[]} points
- * @returns {HTMLElement}
  */
 function buildStackLegendTop(bands, points) {
   const row = document.createElement("div");
@@ -386,17 +362,8 @@ export function renderResourcesStack(host, options) {
 }
 
 /**
- * Prepare host/options/band setup for a stack render pass.
  * @param {HTMLElement} host
  * @param {StackOptions|undefined} options
- * @returns {{
- *   hostEl: HTMLElement,
- *   opts: StackOptions,
- *   bands: StackBand[],
- *   width: number,
- *   height: number,
- *   samples: Snapshot[],
- * }|null} Prepared setup.
  */
 function prepareResourcesStackRender(host, options) {
   if (!host) return null;
@@ -410,10 +377,8 @@ function prepareResourcesStackRender(host, options) {
 }
 
 /**
- * Renders the empty notice when there are no samples.
  * @param {HTMLElement} host
  * @param {Snapshot[]} samples
- * @returns {boolean} True when rendering can continue.
  */
 function guardSamplesPresent(host, samples) {
   if (samples.length > 0) return true;
@@ -422,10 +387,8 @@ function guardSamplesPresent(host, samples) {
 }
 
 /**
- * Renders the empty notice when filtering left no stack points.
  * @param {HTMLElement} host
  * @param {StackPoint[]} points
- * @returns {boolean} True when rendering can continue.
  */
 function guardPointsPresent(host, points) {
   if (points.length > 0) return true;
@@ -434,14 +397,11 @@ function guardPointsPresent(host, points) {
 }
 
 /**
- * Build the chart wrap and mount the SVG + axis titles + x-tick labels +
- * band legend overlays.
  * @param {SVGElement} svg
  * @param {StackOptions} opts For yAxisLabel.
  * @param {{ tickPositions: { t: number, x: number, year: string|null, labelY: number }[] }} data
  *   The x-tick positions (the band legend mounts on top of the chart, outside this wrap).
  * @param {{ L: StackLayout, W: number, H: number }} dims Layout + canvas size.
- * @returns {HTMLElement}
  */
 function mountStackWrap(svg, opts, data, dims) {
   const { tickPositions } = data;
@@ -478,15 +438,11 @@ function mountStackWrap(svg, opts, data, dims) {
 }
 
 /**
- * Build the stack chart SVG (background grid, X-ticks, band polygons).
  * @param {Snapshot[]} samples
  * @param {StackPoint[]} points
  * @param {StackBand[]} bands
  * @param {{ L: StackLayout, dom: { xMin: number, xMax: number, yMax: number },
  *   W: number, H: number }} dims Layout, domain, and canvas size.
- * @returns {{ svg: SVGElement, tickPositions: { t: number, x: number,
- *   year: string|null, labelY: number }[] }}
- *   The SVG and the x-tick positions for HTML overlays.
  */
 function buildStackSvg(samples, points, bands, dims) {
   const { L: layout, dom: domain, W: width, H: height } = dims;

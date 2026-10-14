@@ -211,10 +211,9 @@ export function mountStackAxisTitles(wrap, opts) {
  */
 
 /**
- * Append a turn sub-label to an x-tick container.
  * @param {HTMLElement} div
  * @param {number} turn
- * @param {boolean} parenthesize Whether to use `(T-n)` format.
+ * @param {boolean} parenthesize
  */
 function appendTickTurn(div, turn, parenthesize) {
   const turnEl = document.createElement("div");

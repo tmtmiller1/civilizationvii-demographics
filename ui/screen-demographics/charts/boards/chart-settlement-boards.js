@@ -34,12 +34,9 @@ function onBoard(settlement) {
 }
 
 /**
- * Group all settlements by owner, tallying `field` and (optionally) capturing the
- * per-settlement type list from `typesField` for drill-down.
  * @param {*[]} settlements
  * @param {string} field The count field.
  * @param {string} [typesField] The type-list field.
- * @returns {CivColumn[]}
  */
 function groupByCiv(settlements, field, typesField) {
   /** @type {Map<string, CivColumn>} */
@@ -71,12 +68,7 @@ function aggregate(names) {
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 }
 
-/**
- * One settlement row: "Name" + count. When `types` is present, the row is
- * clickable and toggles an indented list of the settlement's building types.
- * @param {{name:string, count:number, types:string[]|null}} item
- * @returns {HTMLElement} The row (wrapper).
- */
+/** @param {{name:string, count:number, types:string[]|null}} item */
 function settlementRow(item) {
   const drill = Array.isArray(item.types) && item.types.length > 0;
   const wrap = board.box("border-bottom:1px solid rgba(0,0,0,0.18)");

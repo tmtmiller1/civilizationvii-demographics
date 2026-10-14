@@ -41,10 +41,7 @@ import {
 import { clearHost } from "/demographics/ui/screen-demographics/screen/dom-helpers.js";
 import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
-/**
- * Y-axis title (unit) per COST_METRICS id; the X axis is always the turn.
- * @type {Record<string, string>}
- */
+/** @type {Record<string, string>} */
 const Y_LABEL = {
   milpower: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH",
   cityWarNetCum: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES",
@@ -78,10 +75,8 @@ function safeRerender(what, fn) {
 }
 
 /**
- * Resolve the war to display: the one matching `id`, else the most recent war.
  * @param {*[]} wars The history war list.
  * @param {*} id The selected warUniqueID (or null).
- * @returns {*} The war record, or null when there are no wars.
  */
 function resolveWar(wars, id) {
   if (typeof id === "number") {
@@ -112,11 +107,7 @@ function pushMajorParticipant(out, seen, entry) {
   });
 }
 
-/**
- * The war's major participants (both sides), de-duplicated by pid.
- * @param {*} war
- * @returns {{ pid: number, name: string, color: string }[]}
- */
+/** @param {*} war */
 function warParticipants(war) {
   const rosters = /** @type {any[]} */ ([]).concat(war.sideACivs || [], war.sideBCivs || []);
   const seen = new Set();
@@ -129,11 +120,7 @@ function warParticipants(war) {
   return out;
 }
 
-/**
- * A cell head: cost icon + metric title.
- * @param {*} metric A COST_METRICS entry.
- * @returns {HTMLElement}
- */
+/** @param {*} metric A COST_METRICS entry. */
 function buildCellHead(metric) {
   const head = document.createElement("div");
   head.className = "demographics-war-graph-cell-head";
@@ -151,12 +138,9 @@ function buildCellHead(metric) {
 }
 
 /**
- * Build one metric cell. The two military graphs get a 3-way filter (belligerent
- * civs / city-state allies / cumulative allied); the rest are plain.
  * @param {*} metric A COST_METRICS entry.
  * @param {{ war: *, participants: { pid: number, name: string,
  *   color: string }[], win: Snapshot[] }} view
- * @returns {HTMLElement}
  */
 function buildMetricCell(metric, view) {
   if (MIL_GRAPH_IDS.has(metric.id)) return buildMilitaryCell(metric, view);
@@ -164,7 +148,6 @@ function buildMetricCell(metric, view) {
   return buildPlainMetricCell(metric, visibleParticipants(view.participants), view.win);
 }
 
-/** The two casualties-graph representation modes: raw unit count vs scaled "soldiers killed". */
 const CAS_MODES = [
   { id: "units", label: "LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS", y: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" },
   { id: "scaled", label: "LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED", y: "LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" }
@@ -174,12 +157,10 @@ const CAS_MODES = [
 const casMode = /** @type {Record<string, string>} */ ({});
 
 /**
- * Build the casualties graph cell: head, a 2-way Units / Scaled toggle, then a body
- * that re-renders in place. "Scaled" multiplies the loss line by the era's
+ * "Scaled" multiplies the loss line by the era's
  * soldiers-per-unit factor (scaleCasualties), matching the war tooltip's estimate.
  * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
- * @returns {HTMLElement}
  */
 function buildCasualtyCell(metric, view) {
   const cell = document.createElement("div");
@@ -194,12 +175,9 @@ function buildCasualtyCell(metric, view) {
 }
 
 /**
- * Build the 2-way Units ↔ Scaled toggle pills for the casualties graph; clicking re-renders the
- * body.
  * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body The chart body to re-render.
- * @returns {HTMLElement}
  */
 function buildCasToggle(metric, view, body) {
   const row = document.createElement("div");
@@ -221,9 +199,6 @@ function buildCasToggle(metric, view, body) {
 }
 
 /**
- * Render (or re-render) the casualties chart for the chosen representation. "scaled" multiplies
- * every loss-line value by scaleCasualties at the war-end era (a constant, so the shape is
- * unchanged).
  * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body
@@ -256,12 +231,9 @@ function renderCasualtyChart(metric, view, body, mode) {
 }
 
 /**
- * Build a plain (non-military) metric cell: head, then the mini chart (or a
- * no-data note).
  * @param {*} metric A COST_METRICS entry.
  * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win The windowed samples.
- * @returns {HTMLElement}
  */
 function buildPlainMetricCell(metric, participants, win) {
   const cell = document.createElement("div");
@@ -292,7 +264,6 @@ const milFilterMode = /** @type {Record<string, string>} */ ({});
 const hiddenWarCivs = new Set();
 
 /**
- * Filter a participant list to those not hidden via the legend.
  * @param {{ pid: number }[]} participants
  * @returns {*[]}
  */
@@ -311,11 +282,8 @@ function pruneHiddenWarCivs(participants) {
 }
 
 /**
- * Build a military graph cell: head, a 3-way filter row, then a chart body that
- * re-renders in place when the filter changes.
  * @param {*} metric A COST_METRICS entry (milpower / milpowerLevel).
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
- * @returns {HTMLElement}
  */
 function buildMilitaryCell(metric, view) {
   const cell = document.createElement("div");
@@ -330,12 +298,9 @@ function buildMilitaryCell(metric, view) {
 }
 
 /**
- * Build the 3-way filter pill row for a military graph; clicking re-renders the
- * chart body in place and remembers the choice.
  * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body The chart body to re-render.
- * @returns {HTMLElement}
  */
 function buildMilFilter(metric, view, body) {
   const row = document.createElement("div");
@@ -357,7 +322,6 @@ function buildMilFilter(metric, view, body) {
 }
 
 /**
- * Render (or re-render) a military graph's chart body for the chosen filter mode.
  * @param {*} metric The COST_METRICS entry.
  * @param {{ war: *, participants: *[], win: Snapshot[] }} view
  * @param {HTMLElement} body
@@ -383,15 +347,9 @@ function renderMilChart(metric, view, body, mode) {
 }
 
 /**
- * Build the "cities gained/lost" chart: one zero-centered bar per participant,
- * its height the net cities won (above) or lost (below) through capture, read
- * from `cityWarNetCum`. Returns null when no civ has capture data.
  * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win The windowed samples.
  * @param {string} metricId The cumulative metric key ("cityWarNetCum").
- * @returns {{ svg: SVGElement, civs: { name: string, color: string,
- *   net: number }[], m: number } | null}
- *   The chart, per-civ nets, and symmetric extent, or null.
  */
 function buildSettlementsBars(participants, win, metricId) {
   const civs = [];
@@ -455,12 +413,10 @@ const EXTRA_GRAPHS = [
   }
 ];
 
-/** Every graph descriptor by id (cost metrics + extras), for explicit ordering. */
 const GRAPH_BY_ID = /** @type {Record<string, any>} */ ({});
 for (const metric of COST_METRICS) GRAPH_BY_ID[metric.id] = metric;
 for (const metric of EXTRA_GRAPHS) GRAPH_BY_ID[metric.id] = metric;
 
-/** War Graphs display order: three rows of three. */
 const GRAPH_ORDER = [
   "milpowerLevel", // Military Power
   "milpower", // Military Power Lost
@@ -474,7 +430,6 @@ const GRAPH_ORDER = [
   "crops" // Crop Yield Lost
 ];
 
-/** The ordered War Graphs list. */
 const GRAPH_METRICS = GRAPH_ORDER.map((id) => GRAPH_BY_ID[id]).filter(Boolean);
 
 /**
@@ -508,12 +463,10 @@ function buildChart(metric, participants, win) {
 }
 
 /**
- * Resolve one metric's series list by graph spec kind.
  * @param {*} spec A GRAPH_SPEC entry.
  * @param {{ pid: number, name: string, color: string }[]} participants
  * @param {Snapshot[]} win Windowed samples.
  * @param {string} metricId
- * @returns {*[]}
  */
 function buildMetricSeries(spec, participants, win, metricId) {
   if (spec?.kind === "loss") {
@@ -538,11 +491,8 @@ function metricTitle(metric) {
 }
 
 /**
- * Build the "All" / "None" bulk-select controls that show or hide every
- * belligerent civ at once across all war graphs.
  * @param {{ pid: number }[]} participants
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement}
  */
 function buildLegendControls(participants, onChange) {
   const row = document.createElement("div");
@@ -567,11 +517,8 @@ function buildLegendControls(participants, onChange) {
 }
 
 /**
- * Build one clickable legend item (swatch + name); clicking toggles that civ's
- * lines across the per-civ graphs and re-renders.
  * @param {{ pid: number, name: string, color: string }} participant
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement}
  */
 function buildLegendItem(participant, onChange) {
   const item = document.createElement("span");
@@ -591,12 +538,9 @@ function buildLegendItem(participant, onChange) {
 }
 
 /**
- * Build the header: the war name, the All/None controls, and the interactive
- * participant legend that governs the per-civ graphs.
  * @param {{ war: *, participants: { pid: number, name: string,
  *   color: string }[], warName?: string }} view
  * @param {() => void} onChange Re-render callback.
- * @returns {HTMLElement}
  */
 function buildHeader(view, onChange) {
   const head = document.createElement("div");
@@ -613,11 +557,7 @@ function buildHeader(view, onChange) {
   return head;
 }
 
-/**
- * The latest sampled turn (0 when there are no samples).
- * @param {Snapshot[]} samples The (null-free) sample stream.
- * @returns {number}
- */
+/** @param {Snapshot[]} samples The (null-free) sample stream. */
 function latestSampleTurn(samples) {
   if (!samples.length) return 0;
   const turn = samples[samples.length - 1].turn;
@@ -625,13 +565,8 @@ function latestSampleTurn(samples) {
 }
 
 /**
- * Resolve the selected war and its participant/window data, or null when there
- * are no wars to show.
  * @param {*} history The history blob (carries `wars` + `samples`).
  * @param {*} selectedWarId The selected warUniqueID (or null).
- * @returns {{ war: *, warName: string, participants: { pid: number,
- *   name: string, color: string }[], win: Snapshot[] } | null}
- *   The view data, or null.
  */
 function buildWarView(history, selectedWarId) {
   // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
