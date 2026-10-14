@@ -57,11 +57,7 @@ const log = makeLogger("camera");
 let state = null;
 let tokenCounter = 0;
 
-/**
- * Whether `token` is still the active flow's token.
- * @param {number} token
- * @returns {boolean}
- */
+/** @param {number} token */
 function isToken(token) {
   return !!state && state.token === token;
 }
@@ -382,7 +378,6 @@ function hideCityBanners() {
   fireWindowEvent("ui-hide-city-banners");
 }
 
-/** Re-show the in-game city banners. */
 function showCityBanners() {
   fireWindowEvent("ui-show-city-banners");
 }
@@ -493,10 +488,7 @@ function unbindInterrupts(flow) {
 
 // Teardown (single, idempotent)
 
-/**
- * Clear any pending timers on the flow state.
- * @param {*} flow
- */
+/** @param {*} flow */
 function clearTimers(flow) {
   try {
     if (flow.watchdog) clearTimeout(flow.watchdog);
@@ -603,7 +595,6 @@ function runFlyby(target, frame, token) {
 }
 
 /**
- * Mount the cinematic overlay for the active flow.
  * @param {*} target
  * @param {string} mode
  */

@@ -203,7 +203,7 @@ export function visitableWonders(target) {
 }
 
 /**
- * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
+ * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois
  * @param {*} target
  */
 function pushWonderPois(pois, target) {
@@ -216,7 +216,7 @@ function pushWonderPois(pois, target) {
 }
 
 /**
- * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois POI accumulator.
+ * @param {Array<{loc: {x: number, y: number}, cap: *}>} pois
  * @param {*} target
  */
 function pushDistrictPois(pois, target) {

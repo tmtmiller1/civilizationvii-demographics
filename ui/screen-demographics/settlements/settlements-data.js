@@ -255,22 +255,14 @@ function resolveOwner(pid, handle) {
   };
 }
 
-/**
- * Resolve one constructible handle by component id.
- * @param {*} componentId
- * @returns {*|null}
- */
+/** @param {*} componentId @returns {*|null} */
 function constructibleById(componentId) {
   if (typeof Constructibles === "undefined") return null;
   if (typeof Constructibles.getByComponentID !== "function") return null;
   return Constructibles.getByComponentID(componentId);
 }
 
-/**
- * Resolve Constructibles table info for a constructible type.
- * @param {*} type
- * @returns {*|null}
- */
+/** @param {*} type @returns {*|null} */
 function constructibleInfo(type) {
   const table = gameInfoTable("Constructibles");
   if (!table || typeof table.lookup !== "function") return null;
@@ -792,10 +784,7 @@ function wonderIconUrl(type) {
   return "";
 }
 
-/**
- * Defensively read the alive-player list.
- * @returns {Array<*>|null}
- */
+/** @returns {Array<*>|null} */
 function alivePlayers() {
   try {
     return typeof Players !== "undefined" && Players.getAlive ? Players.getAlive() : null;

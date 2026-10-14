@@ -677,10 +677,7 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /**
-   * Toggle a leader key in the focused-civs set and re-render.
-   * @param {string} leaderKey
-   */
+  /** @param {string} leaderKey */
   _toggleFocusCiv(leaderKey) {
     if (!leaderKey) return;
     const key = String(leaderKey);
@@ -689,7 +686,6 @@ class ScreenDemographics extends Panel {
     this.renderActiveView();
   }
 
-  /** Clear all focused civs and re-render. */
   _clearFocus() {
     this.focusedCivs.clear();
     this.renderActiveView();

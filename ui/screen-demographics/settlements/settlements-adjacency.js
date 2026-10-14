@@ -41,11 +41,7 @@ function indexTags() {
   }
 }
 
-/**
- * @param {string} type
- * @param {string} tag
- * @returns {boolean} Whether the type carries the tag.
- */
+/** @param {string} type @param {string} tag */
 function hasTag(type, tag) {
   const tags = _tagMap && _tagMap.get(type);
   return !!(tags && tags.has(tag));
@@ -70,7 +66,7 @@ function buildIndices() {
 
 /**
  * @param {*} loc
- * @returns {{x:number,y:number}[]} The plot's adjacent locations.
+ * @returns {{x:number,y:number}[]}
  */
 function neighbors(loc) {
   const out = [];
@@ -203,7 +199,6 @@ function constructiblesAt(loc) {
  * @param {*} yieldChange
  * @param {{type:string, cls:string}} constructible
  * @param {*} wild
- * @returns {boolean} Whether one neighbor constructible matches the rule.
  */
 function constructibleMatches(yieldChange, constructible, wild) {
   if (yieldChange.AdjacentConstructible && constructible.type === yieldChange.AdjacentConstructible) return true;

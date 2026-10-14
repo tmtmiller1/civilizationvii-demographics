@@ -146,21 +146,14 @@ function buildBandCandidates(band) {
     .sort((a, b) => a.candidate - b.candidate || a.key.localeCompare(b.key));
 }
 
-/**
- * @param {Array<{candidate: number}>} candidates
- * @param {number} minAllowed Minimum legal starting value.
- */
+/** @param {Array<{candidate: number}>} candidates @param {number} minAllowed */
 function liftCandidatesToMin(candidates, minAllowed) {
   if (!candidates.length || candidates[0].candidate >= minAllowed) return;
   const delta = minAllowed - candidates[0].candidate;
   for (const item of candidates) item.candidate += delta;
 }
 
-/**
- * @param {number} candidate Starting candidate value.
- * @param {Set<number>} used
- * @returns {number}
- */
+/** @param {number} candidate @param {Set<number>} used */
 function claimUniquePopulation(candidate, used) {
   let value = candidate;
   while (value <= 0 || used.has(value)) value++;
