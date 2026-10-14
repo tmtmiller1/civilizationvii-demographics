@@ -76,8 +76,8 @@ function seatsOnEllipse(ids, rx, ry, cx, cy) {
 
 /**
  * Compute the ring's geometry (viewBox, center, radii, density, positions)
- * from the node count. Large rings (20+ nodes) elongate into a horizontal oval
- * so each node keeps legible arc-length.
+ * from the node count. Past 12 nodes the ring stretches into a horizontal oval,
+ * fully stretched at 24, so each node keeps legible arc-length.
  * @param {number[]} ringIds
  * @returns {RingGeometry}
  */

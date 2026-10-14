@@ -162,7 +162,7 @@ function drawCurrentTurnLine(svg, L, dom, latestTurn) {
 }
 
 /**
- * Draw the crisis stage-onset overlay lines: a dashed vertical line at each
+ * Draw the crisis stage-onset overlay lines: a solid vertical line at each
  * onset turn, colored by stage, the same markers the historical line charts
  * draw. (Labels are mounted as HTML overlays; see mountCrisisLabels.)
  * @param {SVGElement} svg
