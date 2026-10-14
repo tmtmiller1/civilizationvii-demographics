@@ -13,11 +13,7 @@ function localPlayerId() {
   return GameContext.localPlayerID;
 }
 
-/**
- * Resolve local player's diplomacy handle.
- * @param {number} localId
- * @returns {*|null}
- */
+/** @param {number} localId @returns {*|null} */
 function localDiplomacy(localId) {
   if (typeof Players === "undefined" || !Players.get) return null;
   return Players.get(localId)?.Diplomacy || null;
