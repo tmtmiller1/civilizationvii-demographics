@@ -63,11 +63,10 @@ const UNIT_LOC = {
 };
 
 /**
- * Localize a metric's unit string. Word-units resolve through {@link UNIT_LOC};
- * symbols and any unmapped value pass through unchanged (t() returns the key on
- * a miss, so a missing translation still falls back to the English literal).
+ * Word-units resolve through {@link UNIT_LOC}; symbols and any unmapped value pass through
+ * unchanged (t() returns the key on a miss, so a missing translation still falls back to the
+ * English literal).
  * @param {string|undefined} unit The registry unit string.
- * @returns {string} The localized (or literal) unit.
  */
 function localizedUnit(unit) {
   if (!unit) return "";
@@ -77,12 +76,7 @@ function localizedUnit(unit) {
   return localized && localized !== key ? localized : unit;
 }
 
-/**
- * The Y-axis title for a metric: its localized name plus the localized unit in
- * parentheses (e.g. "Military Power (strength)", "Crop Yield (food / turn)").
- * @param {*} metricMeta
- * @returns {string}
- */
+/** @param {*} metricMeta */
 function yAxisTitle(metricMeta) {
   if (!metricMeta) return "";
   const key = metricMeta.id ? "LOC_DEMOGRAPHICS_METRIC_" + String(metricMeta.id).toUpperCase() : "";
@@ -146,11 +140,7 @@ export function buildLineChartConfig(parts) {
   };
 }
 
-/**
- * The absolute y-value of a chart data point, or 0 when missing/non-finite.
- * @param {*} point A {x, y} data point.
- * @returns {number}
- */
+/** @param {*} point */
 function pointAbsY(point) {
   return point && typeof point.y === "number" && isFinite(point.y) ? Math.abs(point.y) : 0;
 }
@@ -173,10 +163,8 @@ function symmetricYBound(datasets) {
 }
 
 /**
- * Build the Chart.js `options.plugins` block (legend / tooltip / title).
  * @param {AxisFormatters} formatters
  * @param {*} [metricMeta]
- * @returns {Record<string, *>}
  */
 function buildChartPluginsOpts(formatters, metricMeta) {
   const { fmtX, fmtY } = formatters;
@@ -199,11 +187,9 @@ function buildChartPluginsOpts(formatters, metricMeta) {
 }
 
 /**
- * Build the Chart.js `options.scales` block (linear x + y axes).
  * @param {*} metricMeta
  * @param {AxisFormatters} formatters
  * @param {number|null} [symBound] Symmetric y half-range for a diverging bar chart (null = auto).
- * @returns {Record<string, *>}
  */
 function buildChartScalesOpts(metricMeta, formatters, symBound) {
   const { fmtX, fmtY } = formatters;

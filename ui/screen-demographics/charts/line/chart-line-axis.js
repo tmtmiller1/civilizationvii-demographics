@@ -21,11 +21,10 @@ const log = makeLogger("chart-line-axis");
 // any number of ages plot correctly with no hardcoded age list.
 
 /**
- * Infer a sample's age type. Trusts explicit `sample.age`; legacy samples without
- * it predate age-tagging and are treated as Antiquity.
+ * Trusts explicit `sample.age`; legacy samples without it predate age-tagging and are treated as
+ * Antiquity.
  * @param {Snapshot|*} sample
  * @param {AgeBoundary[]} [_ageBoundaries] Unused (kept for call-site parity).
- * @returns {string}
  */
 function inferSampleAge(sample, _ageBoundaries) {
   if (sample && typeof sample.age === "string") return sample.age;
@@ -35,12 +34,9 @@ function inferSampleAge(sample, _ageBoundaries) {
 }
 
 /**
- * Infer a sample's age-local turn. Uses explicit `localTurn`, else the stored
- * `turn` (age-local for legacy samples), else `null`.
  * @param {Snapshot|*} sample
  * @param {string} [_age] Unused (kept for call-site parity).
  * @param {AgeBoundary[]} [_ageBoundaries] Unused (kept for call-site parity).
- * @returns {number|null}
  */
 function inferLocalTurn(sample, _age, _ageBoundaries) {
   // Explicit localTurn when present, else the stored turn (age-local for
@@ -175,12 +171,9 @@ export function buildTurnMaps(samples, ageOffsets, boundaries) {
 }
 
 /**
- * The chart-X offset of the current age (the latest sample's age), for placing
- * the live current-turn entry; 0 when there are no samples.
  * @param {Snapshot[]} samples
- * @param {Map<string, number>} ageOffsets Per-age cumulative offsets.
+ * @param {Map<string, number>} ageOffsets
  * @param {AgeBoundary[]} boundaries
- * @returns {number}
  */
 function currentAgeXOffset(samples, ageOffsets, boundaries) {
   for (let i = samples.length - 1; i >= 0; i--) {
@@ -209,9 +202,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
   const { turnYearMap, turnAgeMap } = maps;
 
   /**
-   * Resolve a deterministic age/local-turn pair from chart-X using known
-   * age-offset spans. Returns null when X falls outside known spans.
-   * @param {number} x Chart-X value.
+   * @param {number} x
    * @returns {TurnAgeInfo|null}
    */
   const ageTurnFromX = (x) => {
@@ -248,11 +239,7 @@ export function makeAxisFormatters(maps, metricMeta, ageOffsets, maxLocalByAge) 
     if (mode === "year") return year || ageLabel;
     return year ? ageLabel + " / " + year : ageLabel;
   };
-  /**
-   * Format a Y tick using the metric's formatter when available.
-   * @param {number} value
-   * @returns {string}
-   */
+  /** @param {number} value */
   const fmtY = (value) => {
     if (metricMeta && typeof metricMeta.format === "function") {
       try {

@@ -31,11 +31,8 @@ export function buildCostTable(cols, metrics, samples, vsAt) {
 }
 
 /**
- * Resolve a participant's leader-icon type + primary color from the latest
- * sample that carries the pid.
  * @param {Pid|string} pid
  * @param {Snapshot[]} samples
- * @returns {{ leaderType: string|null, color: string|null }}
  */
 function participantIdentity(pid, samples) {
   for (let i = samples.length - 1; i >= 0; i--) {
@@ -72,10 +69,8 @@ function buildCombatantPortrait(leaderType) {
 }
 
 /**
- * Build one leader's header cell: the leader portrait above a civ-color dot.
  * @param {*} entry The roster participant entry.
- * @param {Snapshot[]} samples For icon/color.
- * @returns {HTMLElement}
+ * @param {Snapshot[]} samples
  */
 function buildLeaderHeadCell(entry, samples) {
   const identity = participantIdentity(entry.pid, samples);
@@ -96,12 +91,9 @@ function buildLeaderHeadCell(entry, samples) {
 }
 
 /**
- * Build one leader's value cell for a metric: the stat icon + the value (with
- * the allied-total parenthetical on the Military Power / Power Lost rows).
  * @param {*} metric The cost-metric descriptor.
  * @param {*} cost The participant's per-metric figures (keyed by metric.key).
  * @param {{ power: number, lost: number }|null} csTotals The side's CS totals, or null.
- * @returns {HTMLElement}
  */
 function buildValueCell(metric, cost, csTotals) {
   const fig = formatCostFigure(cost[metric.key], metric.mode);
@@ -154,12 +146,9 @@ export function buildVsCell(text) {
 }
 
 /**
- * Build the header row: an empty label spacer, then a portrait/dot cell per
- * leader (with the vs divider inserted between the two sides).
- * @param {*[]} cols The leader columns.
+ * @param {*[]} cols
  * @param {Snapshot[]} samples
  * @param {number} vsAt The column index the vs divider precedes (-1 for none).
- * @returns {HTMLElement}
  */
 function buildTableHeadRow(cols, samples, vsAt) {
   const row = document.createElement("div");
@@ -173,22 +162,17 @@ function buildTableHeadRow(cols, samples, vsAt) {
 }
 
 /**
- * Build a column's header cell (a major leader's portrait + color dot).
  * @param {*} column A cost-table column (`entry` is its roster participant).
- * @param {Snapshot[]} samples For leader identity.
- * @returns {HTMLElement}
+ * @param {Snapshot[]} samples
  */
 function headCellFor(column, samples) {
   return buildLeaderHeadCell(column.entry, samples);
 }
 
 /**
- * Build one metric row: the prose label, then each leader's icon+value cell
- * (with the vs spacer between the two sides).
  * @param {*} metric The cost-metric descriptor.
- * @param {*[]} cols The leader columns.
+ * @param {*[]} cols
  * @param {number} vsAt The column index the vs divider precedes (-1 for none).
- * @returns {HTMLElement}
  */
 function buildTableMetricRow(metric, cols, vsAt) {
   const row = document.createElement("div");
@@ -202,13 +186,9 @@ function buildTableMetricRow(metric, cols, vsAt) {
 }
 
 /**
- * The allied-total parenthetical for a metric row: " (major + side CS)" on the
- * Military Power and Power Lost rows when the side has city-state allies; ""
- * otherwise.
  * @param {*} metric The cost-metric descriptor.
  * @param {*} cost The participant's per-metric figures.
  * @param {{ power: number, lost: number }|null} csTotals The side's CS totals, or null.
- * @returns {string}
  */
 function alliedSuffix(metric, cost, csTotals) {
   if (!csTotals) return "";

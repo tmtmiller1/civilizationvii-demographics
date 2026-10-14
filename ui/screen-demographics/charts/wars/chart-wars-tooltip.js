@@ -47,14 +47,12 @@ function warDurationTurns(war, startTurn, endTurn, latestTurn) {
 }
 
 /**
- * Build the structured tooltip body for a war.
  * @param {*} war
  * @param {Object} ctx Shared Gantt context.
  * @param {Map<*, string>} ctx.nameOverride war → display label.
  * @param {Map<number, string>} ctx.turnYearMap chart-turn → year map.
  * @param {number} ctx.latestTurn
  * @param {Snapshot[]} ctx.samples
- * @returns {Record<string, *>}
  */
 function buildWarTooltipBody(war, ctx) {
   const { nameOverride, turnYearMap, latestTurn, samples } = ctx;
@@ -98,21 +96,14 @@ function buildWarTooltipBody(war, ctx) {
   };
 }
 
-/**
- * Filter a war-side roster to its city-state / independent (non-major) entries.
- * @param {*[]} roster A war side's roster.
- * @returns {*[]}
- */
+/** @param {*[]} roster */
 function csOnSide(roster) {
   return (roster || []).filter((entry) => entry && entry.isCS);
 }
 
 /**
- * Sum a side's city-state allies' Military Power and Military Power lost over the
- * war window (nulls treated as 0), for the allied-total parentheticals.
- * @param {*[]} csList The side's city-state entries.
- * @param {Snapshot[]} win The war-window samples.
- * @returns {{ power: number, lost: number }} The summed CS power + power lost.
+ * @param {*[]} csList
+ * @param {Snapshot[]} win
  */
 function csSideTotals(csList, win) {
   let power = 0;
@@ -124,11 +115,7 @@ function csSideTotals(csList, win) {
   return { power, lost };
 }
 
-/**
- * The "declared by" line for a war (its major declarer, else "unknown").
- * @param {*} war
- * @returns {string}
- */
+/** @param {*} war */
 function warDeclaredBy(war) {
   if (!war.declaredBy || war.declaredBy.isCS) return t("LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN");
   return war.declaredBy.leader ? war.declaredBy.leader + ", " + war.declaredBy.civ : war.declaredBy.civ;
@@ -171,7 +158,6 @@ export function renderWarTooltip(tooltip, war, ctx) {
   tooltip.appendChild(buildTooltipKey());
 }
 
-/** The three sign-key entries (color class + sign glyph + label). */
 const SIGN_KEY_ITEMS = [
   { cls: "is-gain", sign: "+", label: "LOC_DEMOGRAPHICS_WARS_KEY_GAIN" },
   { cls: "is-loss", sign: "−", label: "LOC_DEMOGRAPHICS_WARS_KEY_LOSS" },
@@ -179,11 +165,9 @@ const SIGN_KEY_ITEMS = [
 ];
 
 /**
- * Append one sign-key entry (an optional separator, the colored sign glyph, and
- * its label) to the key row.
  * @param {HTMLElement} key
  * @param {{ cls: string, sign: string, label: string }} item
- * @param {boolean} withSep Whether to prepend a "·" separator.
+ * @param {boolean} withSep
  */
 function appendKeyItem(key, item, withSep) {
   if (withSep) {
@@ -202,11 +186,6 @@ function appendKeyItem(key, item, withSep) {
   key.appendChild(label);
 }
 
-/**
- * Build the compact sign-key footer: "+ gain · − loss ·, no data", each sign in
- * the same color the cost figures use.
- * @returns {HTMLElement}
- */
 function buildTooltipKey() {
   const key = document.createElement("div");
   key.className = "demographics-wars-tooltip-key";
@@ -214,11 +193,7 @@ function buildTooltipKey() {
   return key;
 }
 
-/**
- * Build the centered tooltip header (title + timeline subtitle + status pill).
- * @param {*} tip The tooltip body model.
- * @returns {HTMLElement}
- */
+/** @param {*} tip The tooltip body model. */
 function buildTooltipHead(tip) {
   const head = document.createElement("div");
   head.className = "demographics-wars-tooltip-head";
@@ -240,12 +215,10 @@ function buildTooltipHead(tip) {
 }
 
 /**
- * Append the city-state allies table (own divider + header) when present. CS
- * allies get their own table below the majors, same column-with-labels layout.
  * @param {HTMLElement} tooltip
  * @param {*} tip The tooltip body model.
  * @param {Snapshot[]} samples
- * @param {Snapshot[]} win The war-window samples.
+ * @param {Snapshot[]} win
  */
 function appendCsAllies(tooltip, tip, samples, win) {
   const csTable = buildCSTable(tip, samples, win);
@@ -280,12 +253,7 @@ function pushSideCols(cols, majors, csList, ctx) {
   }
 }
 
-/**
- * A city-state's current suzerain pid (live), via player.Influence.getSuzerain();
- * -1 when it has no suzerain or the lookup throws.
- * @param {*} pid The city-state pid.
- * @returns {number}
- */
+/** @param {*} pid The city-state pid. */
 function liveSuzerain(pid) {
   try {
     const player = typeof Players !== "undefined" && Players.get ? Players.get(Number(pid)) : null;
@@ -337,11 +305,7 @@ function csDisplayName(ally) {
   }
 }
 
-/**
- * The live Locale-composed independent-power name for a pid, or null.
- * @param {*} pid The city-state pid.
- * @returns {string|null}
- */
+/** @param {*} pid The city-state pid. */
 function csLiveName(pid) {
   const player = typeof Players !== "undefined" && Players.get ? Players.get(Number(pid)) : null;
   if (!player || !player.name) return null;
@@ -363,11 +327,9 @@ function csTypeIconOf(ally) {
 }
 
 /**
- * Build the per-side columns table: side A's columns, a "vs", then side B's.
  * @param {*} tip The tooltip body (see {@link buildWarTooltipBody}).
  * @param {Snapshot[]} samples
- * @param {Snapshot[]} win The war-window samples.
- * @returns {HTMLElement}
+ * @param {Snapshot[]} win
  */
 function buildSidesEl(tip, samples, win) {
   /** @type {*[]} */
@@ -419,13 +381,10 @@ function csSuzerainColumns(tip) {
 }
 
 /**
- * Build one row of the city-states table: an empty label spacer (to align with
- * the majors' label column), then each major column's i-th city-state cell.
- * @param {{ entry: *, css: *[] }[]} cols The major columns + their CS lists.
+ * @param {{ entry: *, css: *[] }[]} cols
  * @param {number} vsAt The column index the "vs" spacer precedes (-1 for none).
  * @param {number} i The row (ally) index.
- * @param {Snapshot[]} win The war-window samples.
- * @returns {HTMLElement}
+ * @param {Snapshot[]} win
  */
 function buildCSRow(cols, vsAt, i, win) {
   const row = document.createElement("div");
@@ -465,12 +424,9 @@ function buildCSLabelCell() {
 }
 
 /**
- * Build one city-state ally cell: its type icon + real name, then its Military
- * Power (Current) and Military Power (Lost) figures stacked. An absent ally (a
- * column with fewer allies than this row index) yields an empty spacer cell.
+ * An absent ally (a column with fewer allies than this row index) yields an empty spacer cell.
  * @param {*} cs The city-state entry, or undefined.
- * @param {Snapshot[]} win The war-window samples.
- * @returns {HTMLElement}
+ * @param {Snapshot[]} win
  */
 function buildCSAllyCell(cs, win) {
   const cell = document.createElement("div");
@@ -482,11 +438,7 @@ function buildCSAllyCell(cs, win) {
   return cell;
 }
 
-/**
- * Build a city-state ally's name row: its type icon (or colored dot) + name.
- * @param {*} cs The city-state entry.
- * @returns {HTMLElement}
- */
+/** @param {*} cs */
 function buildCSAllyName(cs) {
   const name = document.createElement("div");
   name.className = "demographics-wars-tooltip-cs-ally-name";
@@ -506,10 +458,8 @@ function buildCSAllyName(cs) {
 }
 
 /**
- * Build one stacked city-state stat figure (Military Power current / lost).
  * @param {number|null} val
  * @param {string} mode "level" / "losses".
- * @returns {HTMLElement}
  */
 function buildCSStat(val, mode) {
   const fig = formatCostFigure(val, mode);

@@ -97,12 +97,9 @@ function shouldSkipCrisisMarkers(metricId, history) {
 }
 
 /**
- * Detect a crisis stage onset on one sample, advancing the running `prev`
- * stage. Returns a marker on onset, else `null`.
  * @param {Snapshot|*} sample
  * @param {{ prev: number }} prevHolder Running previous-stage holder (mutated).
- * @param {CrisisCtx} ctx Age offsets/boundaries + seed + sampleX resolver.
- * @returns {CrisisMarker[]}
+ * @param {CrisisCtx} ctx
  */
 function detectCrisisOnset(sample, prevHolder, ctx) {
   const raw = readSampleCrisisStage(sample);
@@ -137,12 +134,7 @@ function playerCrisisStage(players, pid) {
   return value;
 }
 
-/**
- * Read the global crisis_stage display value off any one player's metrics in a
- * sample.
- * @param {Snapshot|*} sample
- * @returns {number|undefined} The display stage.
- */
+/** @param {Snapshot|*} sample */
 function readSampleCrisisStage(sample) {
   // crisis_stage is a global value stamped on every player's metrics, but scan
   // every row and pick the highest numeric stage so a single stale lower value
@@ -159,11 +151,9 @@ function readSampleCrisisStage(sample) {
 }
 
 /**
- * Build one {@link CrisisMarker} for a stage onset.
- * @param {Snapshot} sample The onset sample.
- * @param {number} raw The display stage value.
- * @param {CrisisCtx} ctx Age offsets/boundaries + seed + sampleX resolver.
- * @returns {CrisisMarker}
+ * @param {Snapshot} sample
+ * @param {number} raw
+ * @param {CrisisCtx} ctx
  */
 function makeCrisisMarker(sample, raw, ctx) {
   const { ageOffsets, boundaries, gameSeedStr, sampleX } = ctx;
@@ -215,12 +205,9 @@ export function collectAgeMarkers(history, ageOffsets) {
 }
 
 /**
- * Measure a crisis marker's label pill (text lines + box size).
  * @param {*} ctx2
  * @param {CrisisMarker} marker
  * @param {string} family
- * @returns {{ stageText: string, nameText: string, pillW: number,
- *   pillH: number }}
  */
 function measureCrisisPill(ctx2, marker, family) {
   const stageText = marker.label + (marker.year ? " · " + localYear(marker.year) : "");
@@ -258,13 +245,10 @@ export function maxCrisisPillWidth(chart, markers) {
 }
 
 /**
- * Build per-marker draw layouts: for each in-range marker resolve its pixel x,
- * pill size, left/right-flipped label box, and a vertical lane so labels whose
- * pills would overlap horizontally stack instead of hiding one another.
  * @param {*} ctx2
  * @param {CrisisMarker[]} markers
  * @param {*} xScale The Chart.js x scale.
- * @param {number} right Plot-area right edge.
+ * @param {number} right
  * @param {string} family
  * @returns {{ marker: CrisisMarker, x: number, dx: number, lane: number,
  *   pillW: number, pillH: number, stageText: string, nameText: string }[]}
@@ -285,8 +269,6 @@ function layoutCrisisMarkers(ctx2, markers, xScale, right, family) {
 }
 
 /**
- * Assign each layout a vertical lane (greedy interval partitioning by the pill's
- * horizontal box) so overlapping labels stack down instead of colliding.
  * @param {{ x: number, dx: number, pillW: number, lane: number }[]}
  *   items Layouts (sorted by x; mutated).
  */
@@ -303,12 +285,10 @@ function assignCrisisLanes(items) {
 }
 
 /**
- * Draw one crisis marker layout: its vertical line + the two-line label pill at
- * its assigned lane.
  * @param {*} ctx2
  * @param {*} layout The marker layout (from {@link layoutCrisisMarkers}).
- * @param {number} top Plot-area top.
- * @param {number} bottom Plot-area bottom.
+ * @param {number} top
+ * @param {number} bottom
  * @param {string} family
  */
 function drawCrisisMarkerLayout(ctx2, layout, top, bottom, family) {
@@ -330,11 +310,9 @@ function drawCrisisMarkerLayout(ctx2, layout, top, bottom, family) {
 }
 
 /**
- * Draw a crisis marker's label pill: a dark background, the stage text in the
- * marker color, and (when present) the formal crisis name in cream below.
  * @param {*} ctx2 The 2D canvas context (already saved/translated by caller).
  * @param {*} layout The per-marker layout (x/dx/lane/pill size/text/color).
- * @param {number} stackY The lane-stacked y offset.
+ * @param {number} stackY
  * @param {string} family
  */
 function drawCrisisLabel(ctx2, layout, stackY, family) {
@@ -434,8 +412,7 @@ function strokeAgeLine(ctx2, marker, x, top, bottom) {
 }
 
 /**
- * Draw an age boundary's label pill (purple chrome), flipping left near the
- * right edge. Anchored to the bottom of the plot so it never collides with the
+ * Anchored to the bottom of the plot so it never collides with the
  * crisis labels, which stack from the top.
  * @param {*} ctx2
  * @param {AgeMarker} marker
@@ -497,13 +474,10 @@ export function shouldShowDisasterMarkers() {
 }
 
 /**
- * Resolve an event's chart-X: its recorded continuous chart turn, else its year-mapped chart turn,
- * else the raw age-local value (last resort, only when its year wasn't a sampled year).
  * @param {number|undefined} chartVal Recorded continuous chart turn, if any.
  * @param {string|null|undefined} year The event's game-year label.
  * @param {number|null|undefined} localVal Age-local turn fallback.
  * @param {Map<string, number>} yearToChart game-year → chartTurn.
- * @returns {number|null} The chart-X, or null.
  */
 function resolveEventX(chartVal, year, localVal, yearToChart) {
   if (typeof chartVal === "number" && isFinite(chartVal)) return chartVal;
@@ -618,14 +592,11 @@ export function collectRefugeeEventMarkers(metricId, history) {
 }
 
 /**
- * Build per-marker draw layouts: pixel x, single-line pill size, left/right-flipped label box, and
- * a vertical lane so labels whose pills would overlap stack instead of hiding one another.
  * @param {*} ctx2
  * @param {{turn:number,label:string,year:string,color:string}[]} markers
  * @param {*} xScale The Chart.js x scale.
- * @param {number} right Plot-area right edge.
+ * @param {number} right
  * @param {string} family
- * @returns {*[]}
  */
 function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
   const items = [];
@@ -643,10 +614,7 @@ function layoutRefugeeMarkers(ctx2, markers, xScale, right, family) {
   return items;
 }
 
-/**
- * Greedy vertical-lane assignment (by each pill's horizontal box) so overlapping labels stack down.
- * @param {*[]} items Layouts (sorted by x; mutated).
- */
+/** @param {*[]} items Layouts (sorted by x; mutated). */
 function assignRefugeeLanes(items) {
   /** @type {number[]} */
   const laneRight = [];
@@ -660,12 +628,10 @@ function assignRefugeeLanes(items) {
 }
 
 /**
- * Draw one refugee event marker: a dashed vertical line in its color + a single-line "name · year"
- * pill (dark background, colored left accent bar, cream text) at its assigned lane.
  * @param {*} ctx2
  * @param {*} layout The marker layout (from {@link layoutRefugeeMarkers}).
- * @param {number} top Plot-area top.
- * @param {number} bottom Plot-area bottom.
+ * @param {number} top
+ * @param {number} bottom
  * @param {string} family
  */
 function drawRefugeeMarkerLayout(ctx2, layout, top, bottom, family) {
@@ -685,11 +651,9 @@ function drawRefugeeMarkerLayout(ctx2, layout, top, bottom, family) {
 }
 
 /**
- * Draw a refugee marker's label pill (dark background, colored left accent bar, cream "name ·
- * year").
  * @param {*} ctx2 The 2D canvas context (already saved by the caller).
- * @param {*} layout The per-marker layout (x/dx/pill size/text/color).
- * @param {number} stackY The lane-stacked y offset.
+ * @param {*} layout
+ * @param {number} stackY
  * @param {string} family
  */
 function drawRefugeeLabel(ctx2, layout, stackY, family) {

@@ -20,11 +20,7 @@ import {
   PAD_T
 } from "/demographics/ui/screen-demographics/charts/wars/chart-war-mini-chart.js";
 
-/**
- * Format a settlement net for the bar tooltip ("+2" / "−1" / "0").
- * @param {number} net
- * @returns {string}
- */
+/** @param {number} net */
 function formatBarNet(net) {
   if (net > 0) return "+" + net;
   if (net < 0) return "−" + Math.abs(net);
@@ -32,10 +28,9 @@ function formatBarNet(net) {
 }
 
 /**
- * Populate the bar tooltip with every civ's net settlements.
  * @param {HTMLElement} tip
- * @param {{ name: string, color: string, net: number }[]} civs Per-civ nets.
- * @param {string} label The header text.
+ * @param {{ name: string, color: string, net: number }[]} civs
+ * @param {string} label
  * @param {string} [blp] The metric's guide cost-icon BLP.
  */
 function fillBarTip(tip, civs, label, blp) {
@@ -61,11 +56,8 @@ function fillBarTip(tip, civs, label, blp) {
 }
 
 /**
- * Build the hover tooltip header: the metric's guide cost-icon (when known) plus
- * "Turn N · <metric>".
  * @param {number} turn
- * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
- * @returns {HTMLElement}
+ * @param {{ yLabel?: string, blp?: string }} head
  */
 function buildHoverTipHeader(turn, head) {
   const el = document.createElement("div");
@@ -78,10 +70,8 @@ function buildHoverTipHeader(turn, head) {
 }
 
 /**
- * Build one series/value row for the hover tooltip.
  * @param {{ name?: string, color: string }} series
- * @param {number} value The series value at the hovered turn.
- * @returns {HTMLElement}
+ * @param {number} value
  */
 function buildSeriesHoverRow(series, value) {
   const row = document.createElement("div");
@@ -99,7 +89,6 @@ function buildSeriesHoverRow(series, value) {
 }
 
 /**
- * Append one row per series that has a point at the hovered turn.
  * @param {HTMLElement} tip
  * @param {number} turn
  * @param {{ name?: string, color: string, points: { x: number,
@@ -114,8 +103,6 @@ function appendSeriesHoverRows(tip, turn, series) {
 }
 
 /**
- * Add a crisis-stage row to the hover tooltip when the hovered turn lands on a
- * crisis-stage onset.
  * @param {HTMLElement} tip
  * @param {number} turn
  * @param {{ x: number, color: string, label?: string }[]|undefined} markers
@@ -138,13 +125,12 @@ function appendCrisisHoverRow(tip, turn, markers) {
 }
 
 /**
- * Populate the hover tooltip with each civ's value at the hovered turn.
  * @param {HTMLElement} tip
  * @param {number} turn
  * @param {{ name?: string, color: string, points: { x: number,
  *   y: number }[] }[]} series
- * @param {{ yLabel?: string, blp?: string }} head Metric label + cost-icon BLP.
- * @param {{ x: number, color: string, label?: string }[]} [markers] Optional crisis markers.
+ * @param {{ yLabel?: string, blp?: string }} head
+ * @param {{ x: number, color: string, label?: string }[]} [markers]
  */
 function fillHoverTip(tip, turn, series, head, markers) {
   while (tip.firstChild) tip.removeChild(tip.firstChild);
@@ -154,11 +140,8 @@ function fillHoverTip(tip, turn, series, head, markers) {
 }
 
 /**
- * Position the hover tooltip near the cursor, flipping it to the left of the cursor when a
- * right-side placement would overflow the viewport's right edge, so tooltips on right-side graphs
- * stay on-screen.
  * @param {HTMLElement} tip Already filled, so its width is meaningful.
- * @param {*} ev The mouse event.
+ * @param {*} ev
  * @param {DOMRect} cellRect The cell's bounding rect (the positioned container the tip lives in).
  */
 function placeTip(tip, ev, cellRect) {
@@ -188,9 +171,7 @@ function placeTip(tip, ev, cellRect) {
 }
 
 /**
- * Move handler: snap to the nearest turn, position the crosshair, and fill the
- * tooltip with each civ's value there.
- * @param {*} ev The mouse event.
+ * @param {*} ev
  * @param {*} ctx The hover context (svg, cross, cell, tip, turns, series, bounds, head, markers).
  */
 function onHoverMove(ev, ctx) {

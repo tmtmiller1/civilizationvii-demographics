@@ -15,10 +15,8 @@ export const PAD_T = 8;
 export const PAD_B = 28;
 
 /**
- * Build the polyline `points` string for one series under the given bounds.
  * @param {{ points: { x: number, y: number }[] }} series
  * @param {{ xMin: number, xMax: number, yMin: number, yMax: number }} bounds
- * @returns {string} The SVG `points` attribute.
  */
 function polyPoints(series, bounds) {
   const innerW = MINI_W - PAD_L - PAD_R;
@@ -35,9 +33,6 @@ function polyPoints(series, bounds) {
 }
 
 /**
- * Draw vertical crisis-stage marker lines (dashed, stage-colored) at each
- * marker's chart-X, mirroring the war-timeline overlay. Markers outside the
- * bounds are skipped.
  * @param {SVGElement} svg
  * @param {{ x: number, color: string }[]} markers
  * @param {{ xMin: number, xMax: number }} bounds
@@ -103,8 +98,7 @@ export function buildMiniSvg(seriesList, bounds, markers) {
 }
 
 /**
- * One absolutely-positioned HTML axis-text overlay (a corner tick or the X title), skipped when
- * empty. HTML rather than SVG text so the plot SVG's non-uniform stretch doesn't distort it.
+ * HTML rather than SVG text so the plot SVG's non-uniform stretch doesn't distort it.
  * @param {HTMLElement} plot The positioned plot container.
  * @param {string} text "" skips it.
  * @param {string} suffix The position-class suffix (e.g. "ytop", "xtitle").

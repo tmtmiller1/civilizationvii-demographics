@@ -205,10 +205,8 @@ function viewportSize(fallbackW, fallbackH) {
 }
 
 /**
- * Clamp one render dimension to the caller's hint when the hint is meaningful.
  * @param {number} render
  * @param {*} hint
- * @returns {number}
  */
 function clampRenderByHint(render, hint) {
   if (typeof hint !== "number") return render;
@@ -263,18 +261,15 @@ function foldXBounds(bounds, point) {
  */
 
 /**
- * Mount the Chart.js instance into `host`, logging on success and rendering a
- * fallback message on failure.
  * @param {Object} parts
  * @param {*} parts.host The chart host (carries the engine `_demographicsChart`).
  * @param {*} parts.canvas
- * @param {Record<string, *>} parts.config The Chart.js config.
- * @param {Record<string, *>[]} parts.datasets The datasets (for logging).
- * @param {string} parts.metricId The metric id (for logging).
- * @param {number} parts.sampleCount The sample count (for logging).
- * @param {number} parts.W Final width (for logging).
- * @param {number} parts.H Final height (for logging).
- * @returns {*} The Chart instance, or `null` on failure.
+ * @param {Record<string, *>} parts.config
+ * @param {Record<string, *>[]} parts.datasets
+ * @param {string} parts.metricId
+ * @param {number} parts.sampleCount
+ * @param {number} parts.W
+ * @param {number} parts.H
  */
 function mountLineChart(parts) {
   const { host, canvas, config, datasets, metricId, sampleCount, W, H } = parts;
@@ -291,7 +286,6 @@ function mountLineChart(parts) {
 }
 
 /**
- * Append a standard empty-state message to the chart host.
  * @param {*} host
  * @param {string} locKey
  */
@@ -332,7 +326,6 @@ export function tryCreateChart(canvas, config, host) {
 }
 
 /**
- * Emit the standard chart-mounted debug line.
  * @param {{
  *   chart: *,
  *   datasets: Record<string, *>[],
@@ -391,11 +384,8 @@ function logChartMounted(args) {
  */
 
 /**
- * Build all per-render chart data: series (with settings applied), datasets,
- * axis formatters, and the age-offset context for markers.
  * @param {ChartOptions} opts
  * @param {string} metricId
- * @returns {ChartPrep}
  */
 function prepareChartData(opts, metricId) {
   const muted = coerceKeySet(opts.hiddenCivs);
@@ -432,13 +422,9 @@ function prepareChartData(opts, metricId) {
 }
 
 /**
- * Build the ordered Chart.js plugin set (focus glow, wonder markers, hover
- * crosshair, crisis markers, age markers, cap-limit line) for one render.
  * @param {ChartOptions} opts
  * @param {string} metricId
  * @param {ChartPrep} prep
- * @returns {{ plugins: Record<string, *>[], crisisMarkers: Record<string, *>[] }}
- *   The ordered plugin instances plus the collected crisis markers.
  */
 function buildChartPluginSet(opts, metricId, prep) {
   const { allSeries, ageOffsets, boundaries } = prep;
@@ -588,7 +574,6 @@ export function renderChart(host, options) {
 }
 
 /**
- * Prepare host/options and apply shared pre-render chart setup.
  * @param {HTMLElement} host
  * @param {ChartOptions|undefined} options
  * @returns {{ hostEl: HTMLElement, opts: ChartOptions, W: number, H: number,
@@ -620,7 +605,6 @@ function prepareLineChartRender(host, options) {
 }
 
 /**
- * Build plugins/canvas/config and mount a prepared line chart.
  * @param {{
  *   host: HTMLElement,
  *   opts: ChartOptions,
@@ -635,7 +619,6 @@ function prepareLineChartRender(host, options) {
  *   renderW: number,
  *   renderH: number,
  * }} args
- * @returns {{ canvas: HTMLElement, chart: * }|null}
  */
 function mountPreparedLineChart(args) {
   const {
@@ -698,12 +681,9 @@ function alignLegendToPlot(chart, legendEl) {
 }
 
 /**
- * Build the per-civ legend for a metric, nudging it right (wide-Y variant) when
- * the metric's Y-axis labels are wide. Returns null when there are no datasets.
  * @param {*[]} datasets
  * @param {*} opts
  * @param {string} metricId
- * @returns {HTMLElement|null}
  */
 function buildLegendForMetric(datasets, opts, metricId) {
   if (!datasets.length) return null;

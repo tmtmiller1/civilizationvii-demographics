@@ -7,10 +7,8 @@ import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-
 import { majorsOnSide } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 
 /**
- * The latest sampled primary color for a pid, newest sample first, with a neutral fallback.
  * @param {*[]} samples
  * @param {*} pid
- * @returns {string}
  */
 function currentPrimaryColor(samples, pid) {
   for (let i = samples.length - 1; i >= 0; i--) {
@@ -23,12 +21,10 @@ function currentPrimaryColor(samples, pid) {
 }
 
 /**
- * A stripe's fill: the civ's current primary color, else its roster color, else the side fallback.
  * @param {*} stripe
  * @param {number} idx
  * @param {*[]} samples
  * @param {*} palette Semantic palette (getSemantic).
- * @returns {string}
  */
 function resolveStripeFill(stripe, idx, samples, palette) {
   return (
@@ -39,10 +35,8 @@ function resolveStripeFill(stripe, idx, samples, palette) {
 }
 
 /**
- * The war's major participants as stripes, or two side-colored placeholders when it has none.
  * @param {*} war
  * @param {*} palette Semantic palette (getSemantic).
- * @returns {*[]}
  */
 function resolveWarStripes(war, palette) {
   const participants = /** @type {any[]} */ ([]).concat(
@@ -57,7 +51,6 @@ function resolveWarStripes(war, palette) {
 }
 
 /**
- * Draw one bar's participant stripes.
  * @param {SVGElement} svg
  * @param {Object} args
  * @param {*[]} args.stripes
@@ -102,7 +95,6 @@ function drawWarBarStripes(svg, args) {
 }
 
 /**
- * Draw the right-edge marker for one bar.
  * @param {SVGElement} svg
  * @param {{ isClosed:boolean, x2:number, baseY:number, barH:number, palette:* }} marker
  */
@@ -147,7 +139,6 @@ function appendTailGradient(svg, id, color) {
 }
 
 /**
- * Draw an ongoing war's fading tail.
  * @param {SVGElement} svg
  * @param {{
  *   stripes:*[], samples:*[], palette:*, xStart:number, xEnd:number, baseY:number, barH:number
@@ -187,7 +178,6 @@ function drawWarBarTail(svg, args) {
 }
 
 /**
- * Draw the tail for an ongoing war or the end marker for a concluded one.
  * @param {SVGElement} svg
  * @param {{
  *   isClosed:boolean,
@@ -217,16 +207,11 @@ function drawWarTailOrEnd(svg, args) {
 }
 
 /**
- * Draw one war bar and return its hover rect.
  * @param {SVGElement} svg
  * @param {*} war
- * @param {{ baseY:number, barH:number }} row Row geometry.
+ * @param {{ baseY:number, barH:number }} row
  * @param {{ L:any, dom:{xMin:number,xMax:number}, latestTurn:number, samples:*[] }}
- *   ctx Shared context.
- * @returns {{
- *   war:*, x:number, y:number, w:number, h:number,
- *   x2:number, isClosed:boolean, hitW:number
- * }}
+ *   ctx
  */
 function drawWarBar(svg, war, row, ctx) {
   const { baseY, barH } = row;
