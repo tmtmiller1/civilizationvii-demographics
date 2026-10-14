@@ -94,10 +94,8 @@ function buildToolbarLabel(text) {
 }
 
 /**
- * Whether a wars dropdown option matches the current filter pid.
  * @param {{ pid: number|null, label?: string }} option
  * @param {*} warsFilterPid
- * @returns {boolean}
  */
 function warsOptionMatchesFilter(option, warsFilterPid) {
   if (option.pid === null) return warsFilterPid == null;

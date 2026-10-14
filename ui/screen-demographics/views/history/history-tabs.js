@@ -166,7 +166,6 @@ function pageHasVisibleContent(page, ctx, activePage) {
 }
 
 /**
- * Append the advanced-page contextual description caption, if any.
  * @param {HTMLElement} pageHost
  * @param {string} activePage
  */

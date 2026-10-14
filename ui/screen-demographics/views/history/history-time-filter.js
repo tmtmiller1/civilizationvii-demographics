@@ -83,7 +83,6 @@ function buildTurnYearMap(history) {
 }
 
 /**
- * Convert one sample into a chart-space sample row.
  * @param {*} sample
  * @param {Map<string, number>} offsets
  * @param {AgeBoundary[]} boundaries

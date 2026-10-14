@@ -9,11 +9,7 @@ import {
   POLICY_MET
 } from "/demographics/ui/core/demographics-governance.js";
 
-/**
- * The localized label for an analytics-governance policy.
- * @param {string} policy
- * @returns {string}
- */
+/** @param {string} policy */
 function policyLabel(policy) {
   if (policy === POLICY_DISABLED) return t("LOC_DEMOGRAPHICS_POLICY_DISABLED");
   if (policy === POLICY_OWN) return t("LOC_DEMOGRAPHICS_POLICY_OWN");

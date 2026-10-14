@@ -300,11 +300,7 @@ function buildOwnerCell(owner) {
   return cell;
 }
 
-/**
- * Build the City/Town status badge.
- * @param {boolean} isTown
- * @returns {HTMLElement}
- */
+/** @param {boolean} isTown */
 function buildTypeBadge(isTown) {
   const key = isTown ? "LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" : "LOC_DEMOGRAPHICS_SETTLEMENTS_CITY";
   const badge = div(

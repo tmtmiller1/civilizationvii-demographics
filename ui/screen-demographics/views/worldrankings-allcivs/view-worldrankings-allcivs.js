@@ -257,7 +257,6 @@ function renderMatrix(host, profiles, allPids, ctx, showUnmetNames) {
 }
 
 /**
- * Build the matrix wrapper + strip and mount the interactive columns into `host`.
  * @param {HTMLElement} host
  * @param {Record<string, *>} profiles
  * @param {{ localPid: string, otherPids: string[] }} pids
