@@ -158,11 +158,7 @@ export const CS_AGREEMENT_TYPES = [
   { key: "cs_bolster_military", action: "DIPLOMACY_ACTION_CS_BOLSTER_MILITARY", color: CAT.military, dash: "" }
 ];
 
-/**
- * Title-case a DIPLOMACY_ACTION_* enum name as a readable fallback label.
- * @param {string} actionName
- * @returns {string} e.g. "Cultural Exchange".
- */
+/** @param {string} actionName */
 function titleCaseAction(actionName) {
   return String(actionName || "")
     .replace(/^DIPLOMACY_ACTION_/, "")
@@ -171,12 +167,7 @@ function titleCaseAction(actionName) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-/**
- * Compose the engine's own localized name for a diplomacy action, or "" when
- * unavailable / unresolved.
- * @param {string} actionName The DIPLOMACY_ACTION_* enum name.
- * @returns {string} Empty when unresolved.
- */
+/** @param {string} actionName */
 function composeDiplomacyName(actionName) {
   const info =
     typeof GameInfo !== "undefined" && GameInfo.DiplomacyActions
@@ -260,11 +251,7 @@ for (const agreement of AGREEMENT_TYPES) LINE_DASH[agreement.key] = agreement.da
 // ...and each City-State agreement type's dash (befriend / suzerain directives).
 for (const agreement of CS_AGREEMENT_TYPES) LINE_DASH[agreement.key] = agreement.dash;
 
-/**
- * Resolve an explicit per-edge dash override.
- * @param {Edge} edge
- * @returns {string|undefined} Undefined when absent.
- */
+/** @param {Edge} edge */
 function dashOverride(edge) {
   if (!edge) return undefined;
   if (typeof edge._dashOverride === "string") return edge._dashOverride;
@@ -272,11 +259,7 @@ function dashOverride(edge) {
   return undefined;
 }
 
-/**
- * Resolve a dash pattern from filter key mapping.
- * @param {Edge} edge
- * @returns {string|undefined} Undefined when unmapped.
- */
+/** @param {Edge} edge */
 function dashByFilter(edge) {
   if (!edge || typeof edge.filterKey !== "string") return undefined;
   if (!Object.prototype.hasOwnProperty.call(LINE_DASH, edge.filterKey)) {

@@ -17,7 +17,6 @@ import { resolveMet } from "/demographics/ui/screen-demographics/views/relations
 const UNMET_GRAY = "#7d7d7d";
 
 /**
- * Assign target[field] = value when value is a non-empty string.
  * @param {Record<string, *>} target
  * @param {string} field
  * @param {*} value
@@ -29,7 +28,6 @@ function assignIfNonEmpty(target, field, value) {
 }
 
 /**
- * Fold one civ sample into the running name map.
  * @param {Record<string, Record<string, *>>} map
  * @param {string} pid
  * @param {*} samplePlayer
@@ -63,11 +61,7 @@ export function buildNameMap(history) {
   return map;
 }
 
-/**
- * Resolve a CS primary color via UI.Player accessor.
- * @param {number} pid
- * @returns {string} Empty when unavailable.
- */
+/** @param {number} pid */
 function resolveCsPrimaryColor(pid) {
   return safeCall(
     "resolveCsPrimaryColor(" + pid + ")",
@@ -83,9 +77,8 @@ function resolveCsPrimaryColor(pid) {
 }
 
 /**
- * Compose a locale key safely; return raw key on failure.
- * @param {string} key Locale key or raw string.
- * @returns {string} Composed string, or `key` unchanged.
+ * @param {string} key
+ * @returns {string}
  */
 function localeComposeSafe(key) {
   if (typeof Locale?.compose === "function") {
@@ -101,9 +94,8 @@ function localeComposeSafe(key) {
 }
 
 /**
- * Resolve CS name from GameInfo.Civilizations row.
- * @param {*} cityState CS player handle.
- * @returns {string|null} The composed/raw name, or null.
+ * @param {*} cityState
+ * @returns {string|null}
  */
 function csNameFromCivType(cityState) {
   try {
@@ -118,11 +110,7 @@ function csNameFromCivType(cityState) {
   return null;
 }
 
-/**
- * Resolve a city-state display name.
- * @param {number} pid
- * @returns {string}
- */
+/** @param {number} pid */
 function resolveCsName(pid) {
   return safeCall(
     "resolveCsName(" + pid + ")",
@@ -138,18 +126,6 @@ function resolveCsName(pid) {
   );
 }
 
-/**
- * The neutral all-gray visuals used for unmet city-states.
- * @returns {{
- *   csType: null,
- *   typeMeta: null,
- *   safePrimary: null,
- *   csColor: string,
- *   typeLabel: null,
- *   typeColor: string,
- *   typeIcon: null
- * }}
- */
 function unmetCsVisuals() {
   return {
     csType: null,
@@ -163,7 +139,6 @@ function unmetCsVisuals() {
 }
 
 /**
- * Resolve CS visual fields for met/unmet state.
  * @param {number} id
  * @param {boolean} csIsMet
  * @returns {{

@@ -40,7 +40,6 @@ export function isMetMajor(id, localPid, localDiplomacy) {
 }
 
 /**
- * Append id to output when it qualifies as a met major.
  * @param {number[]} out
  * @param {number} id
  * @param {number} localPid
@@ -86,10 +85,6 @@ export function getMetMajorIds(localPid) {
   );
 }
 
-/**
- * Collect alive player ids via `getAliveIds()` when available.
- * @returns {number[]}
- */
 function collectAliveIdsPrimary() {
   /** @type {number[]} */
   let ids = [];
@@ -104,10 +99,6 @@ function collectAliveIdsPrimary() {
   return ids;
 }
 
-/**
- * Collect alive player ids via `getAlive()` iterator fallback.
- * @returns {number[]}
- */
 function collectAliveIdsFallback() {
   /** @type {number[]} */
   const ids = [];

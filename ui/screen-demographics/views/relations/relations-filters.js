@@ -19,10 +19,7 @@ import {
 } from "/demographics/ui/screen-demographics/views/relations/relations-ring-svg-edges.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 
-/**
- * Per-topTab visual overrides for relation filters.
- * @type {Record<string, { color: string, dash: string|undefined }>}
- */
+/** @type {Record<string, { color: string, dash: string|undefined }>} */
 const CS_FILTER_OVERRIDES = {
   // CS-specific: suzerainty solid bright gold; CS trade gold (directed → solid +
   // chevrons, so the token is moot). Friendly/unfriendly inherit the shared
@@ -57,10 +54,7 @@ export const FILTER_GROUPS = [
   { key: "agreements", label: "LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" }
 ];
 
-/**
- * Resolve the civ-tab filter definitions.
- * @returns {FilterDef[]} In display order.
- */
+/** @returns {FilterDef[]} */
 function civFilters() {
   return [
     { key: "war", label: t("LOC_DEMOGRAPHICS_RELATIONS_AT_WAR"), kind: "attitude", group: "politics" },
@@ -94,10 +88,7 @@ function civFilters() {
   ];
 }
 
-/**
- * Resolve the city-state-tab filter definitions.
- * @returns {FilterDef[]} In display order.
- */
+/** @returns {FilterDef[]} */
 function cityStateFilters() {
   return [
     { key: "suzerain", label: t("LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY"), kind: "political", group: "politics" },
@@ -200,10 +191,8 @@ function buildAllToggleRow(onToggleAll) {
 }
 
 /**
- * Build one clickable all-toggle link span.
  * @param {string} labelLoc
  * @param {() => void} onClick
- * @returns {HTMLElement}
  */
 function buildAllToggleLink(labelLoc, onClick) {
   const link = document.createElement("span");
@@ -227,10 +216,6 @@ const SWATCH_VB_H = 4; // swatch viewBox height in (ring) units
 // (GameFace has no reliable getComputedStyle) and cached for the session.
 let _remPxCache = 0;
 
-/**
- * Measure the on-screen px length of 1rem at the current Interface Size.
- * @returns {number} Falls back to 16 if unmeasurable.
- */
 function remPx() {
   if (_remPxCache > 0) return _remPxCache;
   try {
@@ -282,11 +267,7 @@ function buildFilterSwatch(filterDef) {
   return svg;
 }
 
-/**
- * Resolve the dash pattern used for a filter's legend swatch.
- * @param {FilterDef} filterDef
- * @returns {string} Empty for solid lines.
- */
+/** @param {FilterDef} filterDef */
 function resolveSwatchDashPattern(filterDef) {
   if (filterDef._dashOverride !== undefined) return filterDef._dashOverride || "";
   return LINE_DASH[filterDef.key] || "";
@@ -304,8 +285,7 @@ function resolveSwatchDashPattern(filterDef) {
 function wireFilterPill(pill, filterDef, active, onToggle) {
   let lastFired = 0;
   /**
-   * Build a de-bounced event handler for one event name.
-   * @param {string} evName For logging.
+   * @param {string} evName
    * @returns {(ev: *) => void}
    */
   const fire = (evName) => (ev) => {
@@ -329,11 +309,9 @@ function wireFilterPill(pill, filterDef, active, onToggle) {
 }
 
 /**
- * Build a single filter pill (swatch + label) wired to `onToggle`.
  * @param {FilterDef} filterDef
  * @param {Set<string>} activeSet
  * @param {(key: string) => void} onToggle
- * @returns {HTMLElement}
  */
 function buildFilterPill(filterDef, activeSet, onToggle) {
   const active = activeSet.has(filterDef.key);

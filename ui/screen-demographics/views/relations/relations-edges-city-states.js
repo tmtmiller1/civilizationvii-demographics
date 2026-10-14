@@ -41,11 +41,7 @@ function canResolveCsBonusType() {
   return !!GameInfo.CityStateBonuses;
 }
 
-/**
- * Find the `GameInfo.CityStateBonuses` row whose `$hash` matches `bonusHash`.
- * @param {number} bonusHash
- * @returns {*} Matching row, or `null`.
- */
+/** @param {number} bonusHash */
 function findBonusRow(bonusHash) {
   /** @type {*} */
   let row = null;
@@ -69,9 +65,8 @@ function findBonusRow(bonusHash) {
 }
 
 /**
- * Pass 1: classify a CS by its assigned bonus.
  * @param {number} pid
- * @returns {string|null} The `CityStateType` string.
+ * @returns {string|null}
  */
 function csTypeFromBonus(pid) {
   if (!canResolveCsBonusType()) return null;
@@ -88,11 +83,7 @@ function canResolveIndependentCsType() {
   return !!GameInfo.Independents;
 }
 
-/**
- * Find the `GameInfo.Independents` row matching a civ adjective.
- * @param {string} adjective
- * @returns {*} Matching row, or `null`.
- */
+/** @param {string} adjective */
 function findIndependentRow(adjective) {
   /** @type {*} */
   let match = null;
@@ -118,9 +109,8 @@ function findIndependentRow(adjective) {
 }
 
 /**
- * Pass 2: classify a CS from `GameInfo.Independents`.
  * @param {number} pid
- * @returns {string|null} The `CityStateType` string.
+ * @returns {string|null}
  */
 function csTypeFromIndependents(pid) {
   if (!canResolveIndependentCsType()) return null;
@@ -194,11 +184,7 @@ export function csTypeMeta(typeStr) {
   return { label: t(meta.label), color: meta.color, icon: meta.icon };
 }
 
-/**
- * Read a city-state's suzerain id defensively.
- * @param {*} cityState
- * @returns {number} Suzerain id, or `-1`.
- */
+/** @param {*} cityState */
 function readSuzerain(cityState) {
   const influence = cityState?.Influence;
   if (!influence || typeof influence.getSuzerain !== "function") return -1;
@@ -212,9 +198,8 @@ function readSuzerain(cityState) {
 }
 
 /**
- * Read a CS suzerain id via optional chaining, defaulting to `-1`.
  * @param {*} cityState
- * @returns {number} Suzerain id, or `-1`.
+ * @returns {number}
  */
 function readSuzerainLoose(cityState) {
   try {
@@ -307,8 +292,6 @@ function resolveCsAgreementLookups() {
  */
 
 /**
- * Match one CS diplomacy event against the agreement lookups and append a
- * major -> CS edge (deduped on major + CS + action) if it qualifies.
  * @param {Edge[]} edges
  * @param {*} ev
  * @param {number} csId
@@ -353,12 +336,10 @@ export function buildCsAgreementEdges(metIds, csIds, localPid) {
 }
 
 /**
- * Resolve a CS attitude category from one major toward the CS.
  * @param {*} major
  * @param {number} majorPid
  * @param {number} csId
  * @param {number} suzerainId
- * @returns {string|null} Attitude key or `null`.
  */
 function csAttitudeCatFor(major, majorPid, csId, suzerainId) {
   const rel = getRelationship(major, csId);
@@ -373,12 +354,10 @@ function csAttitudeCatFor(major, majorPid, csId, suzerainId) {
 }
 
 /**
- * Append attitude edges between majors and one CS.
  * @param {Edge[]} edges
  * @param {number[]} majors
  * @param {number} csId
  * @param {number} suzerainId
- * @returns {boolean} True when any edge was emitted.
  */
 function appendCsAttitudeForCs(edges, majors, csId, suzerainId) {
   let anyEmitted = false;

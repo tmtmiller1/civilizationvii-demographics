@@ -41,10 +41,9 @@ import { getAttitudeColors } from "/demographics/ui/core/demographics-palette.js
 // diplomatic queries
 
 /**
- * Whether `player` has an alliance with player `otherPid`, defensively.
  * @param {*} player
  * @param {number} otherPid
- * @returns {boolean} True when an alliance is reported.
+ * @returns {boolean}
  */
 function hasAlliance(player, otherPid) {
   return safeCall(
@@ -184,11 +183,7 @@ export function resolveEventOther(ev, sourcePid) {
   return other;
 }
 
-/**
- * Build undirected alliance edges among the met-major ring.
- * @param {number[]} metIds
- * @returns {Edge[]}
- */
+/** @param {number[]} metIds */
 function buildAllianceEdges(metIds) {
   /** @type {Edge[]} */
   const edges = [];
@@ -207,11 +202,7 @@ function buildAllianceEdges(metIds) {
   return edges;
 }
 
-/**
- * Build undirected at-war edges among the met-major ring.
- * @param {number[]} metIds
- * @returns {Edge[]}
- */
+/** @param {number[]} metIds */
 function buildWarEdges(metIds) {
   /** @type {Edge[]} */
   const edges = [];
@@ -230,12 +221,10 @@ function buildWarEdges(metIds) {
 }
 
 /**
- * Resolve one diplomacy event into an undirected action edge pair.
  * @param {*} ev
  * @param {number} sourcePid
  * @param {number|undefined} actionType
  * @param {Set<number>} metSet
- * @returns {{ a: number, b: number }|null} Pair, or null when non-matching.
  */
 function actionPairFromEvent(ev, sourcePid, actionType, metSet) {
   if (!ev || ev.actionType !== actionType) return null;
@@ -246,9 +235,7 @@ function actionPairFromEvent(ev, sourcePid, actionType, metSet) {
 }
 
 /**
- * Orient an edge so `a` is the initiating player when the event exposes one
- * (used for directed actions like denounce: denouncer → denounced).
- * @param {Edge} edge Mutated in place.
+ * @param {Edge} edge
  * @param {*} ev
  * @param {Set<number>} metSet
  */
@@ -263,15 +250,12 @@ function orientByInitiator(edge, ev, metSet) {
 }
 
 /**
- * Build edges for a single diplomatic action type queried via `getPlayerEvents`,
- * deduping reciprocal events with a sorted pair key. When `directed`, each edge
- * is oriented initiator → target and flagged so the renderer draws chevrons.
+ * When `directed`, each edge is oriented initiator → target and flagged so the renderer draws chevrons.
  * @param {number[]} metIds
  * @param {number|undefined} actionType The `DIPLOMACY_ACTION_*` int to match.
  * @param {string} color
- * @param {string} filterKey Filter key to tag edges with.
+ * @param {string} filterKey
  * @param {boolean} [directed]
- * @returns {Edge[]}
  */
 function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
   /** @type {Edge[]} */
@@ -299,12 +283,7 @@ function buildActionTypeEdges(metIds, actionType, color, filterKey, directed) {
   return edges;
 }
 
-/**
- * Pre-resolve an agreement-type list into engine int + color + per-action key
- * lookups, skipping entries with no runtime `DiplomacyActionTypes` int.
- * @param {{ key: string, action: string, color: string }[]} actionList
- * @returns {ActionLookup[]}
- */
+/** @param {{ key: string, action: string, color: string }[]} actionList */
 function resolveEndeavorLookups(actionList) {
   /** @type {ActionLookup[]} */
   const lookups = [];
@@ -319,11 +298,7 @@ function resolveEndeavorLookups(actionList) {
   return lookups;
 }
 
-/**
- * Format an endeavor action name into a human-readable edge label.
- * @param {string} name The `DIPLOMACY_ACTION_*` name.
- * @returns {string} The lower-cased, spaced label.
- */
+/** @param {string} name */
 function endeavorLabel(name) {
   return name
     .replace(/^DIPLOMACY_ACTION_/, "")
@@ -358,13 +333,10 @@ function buildAgreementEdges(metIds) {
 }
 
 /**
- * Match one diplomacy event against the agreement lookups and append an edge
- * (deduped on sorted pair + action type) if it qualifies, tagged with the
- * matched action's own per-action filter key.
- * @param {Edge[]} edges Accumulator to push into.
+ * @param {Edge[]} edges
  * @param {Set<string>} seen
  * @param {*} ev
- * @param {number} sourcePid The player whose events list `ev` came from.
+ * @param {number} sourcePid
  * @param {{ metIds: number[], lookups: ActionLookup[] }} ctx
  */
 function pushOneEndeavorEdge(edges, seen, ev, sourcePid, ctx) {
@@ -389,11 +361,7 @@ function pushOneEndeavorEdge(edges, seen, ev, sourcePid, ctx) {
   });
 }
 
-/**
- * Resolve a `DiplomacyActionTypes` enum int by name, defensively.
- * @param {string} name The `DIPLOMACY_ACTION_*` enum name.
- * @returns {number|undefined} The action-type int, or `undefined`.
- */
+/** @param {string} name */
 function actionTypeByName(name) {
   return typeof DiplomacyActionTypes !== "undefined" ? DiplomacyActionTypes[name] : undefined;
 }
@@ -463,7 +431,6 @@ export function tradeRouteCount(trade, toPid) {
 }
 
 /**
- * Expand all positive trade-route edges for one source pid.
  * @param {Edge[]} edges
  * @param {*} trade
  * @param {number} fromPid
@@ -524,10 +491,8 @@ const DECLARED_STANCES = [
 ];
 
 /**
- * The attitude category key for a directed (a → b) relationship.
  * @param {*} player
  * @param {number} otherPid
- * @returns {string}
  */
 function pairAttitudeKey(player, otherPid) {
   const declared = DECLARED_STANCES.find(([, holds]) => holds(player, otherPid));
@@ -570,9 +535,8 @@ const POLITICAL_EVENT_FILTER_KEYS = ["openborders", "denounced"];
  */
 
 /**
- * Resolve major-player and trade handles once for the civ-ring passes.
  * @param {number[]} metIds
- * @param {number|undefined} localPid Local player id to force-include.
+ * @param {number|undefined} localPid
  * @returns {CivPairContext}
  */
 function resolveCivPairContext(metIds, localPid) {
@@ -591,12 +555,11 @@ function resolveCivPairContext(metIds, localPid) {
 }
 
 /**
- * Append directional trade edges for one unordered major-major pair.
- * @param {Edge[]} edges Accumulator to push into.
+ * @param {Edge[]} edges
  * @param {number} pidA
  * @param {number} pidB
- * @param {*} tradeA Trade handle for `pidA` (or null).
- * @param {*} tradeB Trade handle for `pidB` (or null).
+ * @param {*} tradeA
+ * @param {*} tradeB
  */
 function appendPairTradeEdges(edges, pidA, pidB, tradeA, tradeB) {
   if (tradeA) {
@@ -630,10 +593,8 @@ function appendPairTradeEdges(edges, pidA, pidB, tradeA, tradeB) {
 }
 
 /**
- * Fused civ pair pass: one i<j loop computes attitude (optional) and trade.
  * @param {CivPairContext} ctx
  * @param {boolean} includeAttitude
- * @returns {Edge[]}
  */
 function buildPairwiseCivEdges(ctx, includeAttitude) {
   /** @type {Edge[]} */

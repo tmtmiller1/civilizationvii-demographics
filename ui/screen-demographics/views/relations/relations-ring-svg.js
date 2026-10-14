@@ -117,7 +117,6 @@ function computeRingGeometry(ringIds) {
 }
 
 /**
- * Append one queued portrait/icon overlay div, positioned in pixel coords.
  * @param {HTMLElement} wrap The ring wrap (overlay parent).
  * @param {PortraitPlacement} placement
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
@@ -176,8 +175,7 @@ function createPortraitDiv(placement, onNodeToggle) {
 }
 
 /**
- * Push the current geometry and focus state onto a portrait overlay.
- * @param {HTMLElement} div The portrait element.
+ * @param {HTMLElement} div
  * @param {PortraitPlacement} placement
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
@@ -212,8 +210,7 @@ function createNodeLabelDiv(placement) {
 }
 
 /**
- * Push the current geometry and dim state onto a node label.
- * @param {HTMLElement} div The label element.
+ * @param {HTMLElement} div
  * @param {PortraitPlacement} placement
  * @param {{contentLeft: number, contentTop: number, scale: number}} layout
  *   Letterboxed content offset + viewBox→pixel scale.
@@ -225,9 +222,8 @@ function positionNodeLabel(div, placement, layout) {
 }
 
 /**
- * Wire a portrait overlay's click-to-toggle-focus (no-op without a handler/pid).
- * @param {HTMLElement} div The portrait div.
- * @param {PortraitPlacement} placement The placement (carries pid).
+ * @param {HTMLElement} div
+ * @param {PortraitPlacement} placement
  * @param {(pid: number) => void} [onNodeToggle]
  */
 function wirePortraitClick(div, placement, onNodeToggle) {
@@ -268,11 +264,7 @@ function fillPortraitContent(div, placement) {
   div.appendChild(icon);
 }
 
-/**
- * Build one absolutely-positioned hex-token layer div.
- * @param {string} className
- * @returns {HTMLElement}
- */
+/** @param {string} className */
 function hexLayer(className) {
   const el = document.createElement("div");
   el.className = className;
@@ -451,10 +443,6 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
     log.debug("placed " + portraitsToPlace.length + " portraits @scale=" + scale.toFixed(2));
   }
   const paintOverlays = guardedFrame("paintOverlays", paintOverlaysNow);
-  /**
-   * Position every queued overlay, deferring a frame if layout isn't ready.
-   * (Guarded below: the retry path re-enters this as a rAF / timeout callback.)
-   */
   function placePortraitsNow() {
     if (portraitsToPlace.length === 0) return;
     // Liveness guard: a newer repaint detached this wrap → stop (don't paint into
@@ -478,12 +466,8 @@ function makePlacePortraits(wrap, svg, portraitsToPlace, viewBox, opts) {
 }
 
 /**
- * Create the ring's root <svg>: a viewBox sized to the geometry with
- * 'xMidYMid meet' (uniform scale + letterbox, so shapes stay proportional
- * regardless of the element's pixel size).
  * @param {number} viewBoxW
  * @param {number} viewBoxH
- * @returns {SVGElement} Not yet mounted.
  */
 function createRingSvgRoot(viewBoxW, viewBoxH) {
   const svg = /** @type {SVGElement} */ (document.createElementNS(SVG_NS, "svg"));
@@ -583,10 +567,7 @@ function renderRingInteractive(svg, geo, names, edges, opts) {
   setupEdgeHover(opts.wrap, svg, geo, edgeRecords, createEdgeTooltip(opts.wrap));
 }
 
-/**
- * Append the "no civilizations" empty-state notice to the ring wrap.
- * @param {HTMLElement} wrap The ring wrap.
- */
+/** @param {HTMLElement} wrap */
 function appendEmptyRing(wrap) {
   const empty = document.createElement("div");
   empty.className = "demographics-empty font-body text-base";
@@ -676,10 +657,8 @@ function distToPts(pts, pt) {
 }
 
 /**
- * The edge record nearest a point, within HOVER_DIST; null when none qualify.
  * @param {*[]} records
  * @param {{x: number, y: number}} pt The query point (viewBox coords).
- * @returns {*} Null when none qualify.
  */
 function nearestEdge(records, pt) {
   let best = null;
@@ -738,8 +717,6 @@ function setupEdgeHover(wrap, svg, geo, records, tooltip) {
 }
 
 /**
- * Draw the ring's edges (grouped by undirected pair into parallel offset lines)
- * then its nodes.
  * @param {Element} svg
  * @param {RingGeometry} geo
  * @param {Record<string, NodeInfo>} names
@@ -779,13 +756,8 @@ function buildNodeRadii(geo, names, ringCtx) {
 }
 
 /**
- * Compute the focus sets that drive click-to-focus dimming. When one or more
- * nodes are selected, the selected nodes plus their direct edge neighbors stay
- * bright and everything else fades back.
  * @param {Edge[]} edges
  * @param {Set<number>|undefined} selectedNodeIds
- * @returns {{ selected: Set<number>|null, nodes: Set<number>|null }} The active
- *   selection (null when none) and the bright set (selection + neighbors).
  */
 function computeFocus(edges, selectedNodeIds) {
   const selected = selectedNodeIds && selectedNodeIds.size ? selectedNodeIds : null;
