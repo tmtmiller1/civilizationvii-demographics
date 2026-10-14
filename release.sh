@@ -169,6 +169,16 @@ SIZE="$(du -h "$ZIP_PATH" | cut -f1)"
 # workshop_item.vdf template ready to use with steamcmd. The .vdf needs absolute
 # paths so we build them off $(pwd).
 #
+# The default manifest (workshop_item.vdf) carries NO previewfile line. The
+# Demographics item (3737200066) was created in June 2026 and its preview lives in
+# Steam's legacy cloud storage; steamcmd cannot overwrite a preview stored there
+# and Steam rejects the whole update with "Access Denied" the moment it reaches
+# "Uploading preview image...". Every upload with a preview line has failed this
+# way (7 and 11 October 2026); every upload without one has succeeded, and the
+# existing thumbnail stays as it is. To change the thumbnail, edit the item on
+# the Workshop page in a browser. workshop_item_with_preview.vdf is still
+# written in case Steam ever migrates the item off legacy storage.
+#
 # Prefer the branded preview card (docs/workshop-preview.svg: dark frame + logo
 # + wordmark) over the bare 64px icon, since the card reads far better in the
 # Steam Workshop grid. Falls back to the raw icon if the card is absent.
@@ -187,7 +197,7 @@ if [ -f "$PREVIEW_SRC" ]; then
 fi
 
 VDF_PATH="$DIST_DIR/workshop_item.vdf"
-VDF_NOPREVIEW_PATH="$DIST_DIR/workshop_item_no_preview.vdf"
+VDF_WITHPREVIEW_PATH="$DIST_DIR/workshop_item_with_preview.vdf"
 ABS_CONTENT="$(cd "$TARGET_DIR" && pwd)"
 ABS_PREVIEW=""
 [ -f "$PREVIEW_OUT" ] && ABS_PREVIEW="$(cd "$DIST_DIR" && pwd)/preview.png"
@@ -233,16 +243,16 @@ fi
     echo "}" >> "$out_path"
 }
 
-write_workshop_vdf "$VDF_PATH" yes
-write_workshop_vdf "$VDF_NOPREVIEW_PATH" no
+write_workshop_vdf "$VDF_PATH" no
+write_workshop_vdf "$VDF_WITHPREVIEW_PATH" yes
 
 # Persist the id so it's durable across `rm -rf dist` on future runs.
 if [ -n "$PUBLISHED_FILE_ID" ]; then
     printf '%s\n' "$PUBLISHED_FILE_ID" > "$WORKSHOP_ID_FILE"
 fi
 
-echo "==> Workshop manifest written: $VDF_PATH"
-echo "==> Workshop no-preview manifest written: $VDF_NOPREVIEW_PATH"
+echo "==> Workshop manifest written (no preview, the one to upload): $VDF_PATH"
+echo "==> Workshop with-preview manifest written (not for this item, see release.sh): $VDF_WITHPREVIEW_PATH"
 if [ -n "$PUBLISHED_FILE_ID" ]; then
     echo "    UPDATE mode: publishedfileid $PUBLISHED_FILE_ID (existing item)"
 else
@@ -262,11 +272,9 @@ echo "  2. Upload (Steam Guard prompt will appear on first login):"
 echo "       ~/steamcmd/steamcmd.sh +login <yourSteamLogin> \\"
 echo "           +workshop_build_item $(cd "$DIST_DIR" && pwd)/workshop_item.vdf +quit"
 echo ""
-echo ""
-echo "     If Steam rejects the preview upload with Access Denied, upload with:"
-echo "       ~/steamcmd/steamcmd.sh +login <yourSteamLogin> \\
-"
-echo "           +workshop_build_item $(cd "$DIST_DIR" && pwd)/workshop_item_no_preview.vdf +quit"
+echo "     This manifest has no previewfile line on purpose: Steam refuses a new"
+echo "     preview for this item (Access Denied at 'Uploading preview image...')."
+echo "     The current thumbnail is kept. Change it from the Workshop page in a browser."
 if [ -z "$PUBLISHED_FILE_ID" ]; then
 echo "  3. The first run prints a publishedfileid. Save it so future runs UPDATE"
 echo "     the existing item instead of creating a duplicate:"
