@@ -3,6 +3,10 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
+==== 2.8.3 | 2026-10-14 | src 8127a78b0b7f | gen 10eeb7c8918d ====
+[b]Version 2.8.3 · 14 October 2026[/b]
+The license now says that Civilization VII and its art and data belong to Firaxis and 2K. The mod itself plays exactly as in 2.8.2.
+
 ==== 2.8.2 | 2026-10-11 | src 0c6510ff2ba8 | gen 2e7b5af2efc0 ====
 [b]Version 2.8.2 · 11 October 2026[/b]
 Tooltips that stay on screen at the right of a graph, boards that read more easily, clearer Hall of Fame honorifics, and a simpler Complexity setting.

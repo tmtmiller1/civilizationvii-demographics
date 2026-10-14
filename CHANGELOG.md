@@ -5,6 +5,11 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
+## [2.8.3] - 2026-10-14
+
+The license now says that Civilization VII and its art and data belong to Firaxis and 2K. The mod itself plays exactly
+as in 2.8.2.
+
 ## [2.8.2] - 2026-10-11
 
 Tooltips that stay on screen at the right of a graph, boards that read more easily, clearer Hall of Fame
