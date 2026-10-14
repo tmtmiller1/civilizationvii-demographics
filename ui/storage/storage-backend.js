@@ -35,10 +35,6 @@ function dbHash(text) {
   return Database.makeHash(text);
 }
 
-/**
- * Resolve the local player id.
- * @returns {number}
- */
 function resolveLocalPid() {
   return typeof GameContext.localObserverID !== "undefined" && GameContext.localObserverID >= 0
     ? GameContext.localObserverID
@@ -61,10 +57,6 @@ function hasTutorialBag(player) {
   );
 }
 
-/**
- * Whether player-store runtime globals are available.
- * @returns {boolean}
- */
 function playerRuntimeAvailable() {
   return (
     typeof GameContext !== "undefined" &&
@@ -110,10 +102,6 @@ export function getPlayerStore(options) {
   }
 }
 
-/**
- * Whether the GameConfiguration key-value API is available.
- * @returns {boolean}
- */
 function configApiAvailable() {
   return (
     typeof Configuration !== "undefined" &&

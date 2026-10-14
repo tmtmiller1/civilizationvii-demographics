@@ -96,10 +96,7 @@ function readAge() {
   return row?.AgeType?.replace(/^AGE_/, "").toLowerCase();
 }
 
-/**
- * Read the current game's speed / map / age for the CSV provenance header.
- * @returns {{ gameSpeed: string, mapType: string, currentAge: string }}
- */
+/** @returns {{ gameSpeed: string, mapType: string, currentAge: string }} */
 function readGameContext() {
   return {
     gameSpeed: safeLabel(readGameSpeed),

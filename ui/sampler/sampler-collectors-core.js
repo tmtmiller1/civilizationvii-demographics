@@ -461,11 +461,9 @@ export function buildPlayerCtx(id) {
 }
 
 /**
- * Collect a civ's identity: met status, raw/canonical leader+civ types, display
- * names, and banner colors.
- * @param {PlayerCtx} ctx The context to fill.
+ * @param {PlayerCtx} ctx
  * @param {Pid} id
- * @param {*} player The player handle.
+ * @param {*} player
  */
 function collectIdentity(ctx, id, player) {
   collectMet(ctx, id, player);
@@ -498,11 +496,9 @@ function collectEconomy(ctx, id, player, stats) {
 }
 
 /**
- * Collect a civ's military power, triumphs, victory points, diplomatic approval,
- * and resource categories.
- * @param {PlayerCtx} ctx The context to fill.
+ * @param {PlayerCtx} ctx
  * @param {Pid} id
- * @param {*} player The player handle.
+ * @param {*} player
  */
 function collectPowerAndCivics(ctx, id, player) {
   collectMilitaryPower(ctx, id, player);

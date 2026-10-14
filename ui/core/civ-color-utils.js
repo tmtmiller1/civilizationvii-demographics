@@ -58,11 +58,9 @@ function parseColorChannels(input) {
 }
 
 /**
- * Format RGB channels as `#RRGGBB`.
  * @param {number} r
  * @param {number} g
  * @param {number} b
- * @returns {string}
  */
 function toHexColor(r, g, b) {
   /** @param {number} n */

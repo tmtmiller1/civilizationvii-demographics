@@ -89,11 +89,7 @@ function readSampleCapOverride(logError) {
   }
 }
 
-/**
- * Convert numeric override into cap/source pair.
- * @param {number} override
- * @returns {{ cap: number, source: string }} Effective cap.
- */
+/** @param {number} override @returns {{ cap: number, source: string }} */
 function capFromNumber(override) {
   if (override < 0) return { cap: Infinity, source: "user:unlimited" };
   return { cap: Math.min(override, HARD_MAX_SAMPLES), source: "user:" + override };
