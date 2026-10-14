@@ -204,13 +204,7 @@ function renderRelationsPage(host, ctx) {
 // catalogue so history-pages.js stays a leaf and the history import cycle stays broken.
 setPageRenderer("relations", renderRelationsPage);
 
-/**
- * Resolve a synthetic metric's display meta, localizing its title/subtitle
- * (stored as `LOC_*` keys) at render time. The non-displayed `label` field is
- * passed through unchanged.
- * @param {string} id
- * @returns {SyntheticMeta|null} Null when not synthetic.
- */
+/** @param {string} id */
 function resolveSyntheticMeta(id) {
   const raw = SYNTHETIC_METRICS[id];
   if (!raw) return null;
@@ -255,11 +249,7 @@ function mergeExternalPageMetrics() {
   return PAGES;
 }
 
-/**
- * Index of the last page belonging to `hub`, or -1.
- * @param {string} hub
- * @returns {number}
- */
+/** @param {string} hub */
 function lastHubPageIndex(hub) {
   let lastIdx = -1;
   PAGES.forEach((p, i) => {
@@ -268,12 +258,6 @@ function lastHubPageIndex(hub) {
   return lastIdx;
 }
 
-/**
- * Fold companion-registered hub pages (registerHubPages) into PAGES, in registration
- * order, contiguous with their hub. Idempotent: a page already present (by id) is skipped.
- * Inserted after the hub's last current page (so they group cleanly after the host's own
- * pages, e.g. Migration's Population anchor).
- */
 function mergeHubPages() {
   for (const hubPage of EXTERNAL_HUB_PAGES) {
     if (PAGES.some((p) => p.id === hubPage.page.id)) continue;
@@ -291,7 +275,6 @@ const GROUP_SEL_KEY = "historyGroupSel";
 /** @type {Record<string, *>|null} */
 let groupSelCache = null;
 
-/** The persisted per-group selection map (lazily loaded from settings). */
 function groupSelAll() {
   if (groupSelCache) return groupSelCache;
   let stored = null;
@@ -306,9 +289,8 @@ function groupSelAll() {
 }
 
 /**
- * Set + persist one group's selection.
- * @param {string} id The group id.
- * @param {*} selection {metric, view} for 2D groups; a metric id for flat groups.
+ * @param {string} id
+ * @param {*} selection
  */
 function setGroupSel(id, selection) {
   groupSelAll()[id] = selection;
@@ -333,7 +315,6 @@ export function resetGroupSelections() {
   }
 }
 
-/** Every member metric id of a group (2D members×views, or a flat metricIds list). */
 function groupMemberIds(/** @type {*} */ group) {
   if (Array.isArray(group.members) && Array.isArray(group.views)) {
     return group.members
@@ -363,13 +344,10 @@ function mergeMetricGroups() {
 }
 
 /**
- * If `activeMetric` is a metric group, append its toggle(s) to `host` and return the metric id to
- * actually chart; otherwise return `activeMetric` unchanged. Supports 2D (members × views, two
- * toggles) and flat (metricIds, one toggle) groups.
  * @param {HTMLElement} host
  * @param {*} ctx
- * @param {string} activeMetric Active metric/group id.
- * @returns {string} The metric id to chart.
+ * @param {string} activeMetric
+ * @returns {string}
  */
 function resolveGroupMember(host, ctx, activeMetric) {
   const group = EXTERNAL_METRIC_GROUPS.find((g) => g.id === activeMetric);
@@ -408,7 +386,6 @@ function setGroupView(group, memberIdx, viewId) {
   setGroupSel(group.id, { metric: memberIdx, view: viewId });
 }
 
-/** 2D group: a metric toggle (members) + a view toggle (views). Returns members[metric][view]. */
 function resolve2DGroup(
   /** @type {*} */ host,
   /** @type {*} */ ctx,
@@ -442,7 +419,6 @@ function resolve2DGroup(
   return member[viewId] || member[group.views[0].id];
 }
 
-/** Flat group: a single metric toggle over `metricIds`. Returns the selected metric id. */
 function resolveFlatGroup(
   /** @type {*} */ host,
   /** @type {*} */ group,
@@ -466,9 +442,7 @@ function resolveFlatGroup(
 // becomes its own page whose synthetic metric routes to the companion's render callback.
 
 /**
- * The metric ids a panel contributes: one synthetic per declared sub-tab (so each shows as a native
- * Demographics sub-tab), else a single id for the whole panel (a panel without sub-tabs).
- * @param {*} panel The external panel spec.
+ * @param {*} panel
  * @returns {string[]}
  */
 function panelMetricIds(panel) {
@@ -477,10 +451,7 @@ function panelMetricIds(panel) {
     : [panel.id];
 }
 
-/**
- * Register one synthetic metric per declared sub-tab of a multi-tab panel.
- * @param {*} panel The external panel spec (with `tabs`).
- */
+/** @param {*} panel */
 function registerPanelTabSynthetics(panel) {
   const fallbackTitle = panel.title || panel.pageLabel || panel.id;
   for (const tab of /** @type {*[]} */ (panel.tabs)) {
@@ -573,11 +544,8 @@ function resolvePageAndTabRow(host, ctx, opts, priorPageHost) {
 const TIME_FILTER_HIDDEN_FOR = new Set(["legacy_radar", "crisis_graphs", "crisis_stages"]);
 
 /**
- * External companion panel controls: a controls area the panel fills with its own pills (via
- * ctx.panelControls) plus the Options button, laid out as the same two centered rows every other
- * page uses.
  * @param {HTMLElement} row
- * @param {*} ctx Render context (receives `panelControls`).
+ * @param {*} ctx
  */
 function appendExternalPanelControls(row, ctx) {
   const panelControls = document.createElement("div");
@@ -589,12 +557,9 @@ function appendExternalPanelControls(row, ctx) {
 }
 
 /**
- * Build the combined controls row: the time-range filter pills and the chart toolbar. Either
- * side is omitted when not applicable (filter hidden for snapshot metrics; toolbar skipped for
- * external panels).
  * @param {HTMLElement} host
  * @param {*} ctx
- * @param {string} effective The metric being charted.
+ * @param {string} effective
  * @param {string} activeFilter
  */
 function buildControlsRow(host, ctx, effective, activeFilter) {
@@ -623,12 +588,9 @@ function buildControlsRow(host, ctx, effective, activeFilter) {
 }
 
 /**
- * Append the one metric-specific control for pages that have one: the War Graphs
- * "Pick war" dropdown (pinned far left), or the Population Scaled/Game toggle.
- * No-op for every other metric.
  * @param {HTMLElement} row
  * @param {*} ctx
- * @param {string} effective The charted metric id.
+ * @param {string} effective
  */
 function appendMetricSpecificControl(row, ctx, effective) {
   if (effective === "war_graphs") row.appendChild(buildWarGraphsPicker(ctx));
@@ -636,12 +598,8 @@ function appendMetricSpecificControl(row, ctx, effective) {
 }
 
 /**
- * The metric id actually charted for the Population page: swaps the scaled
- * `population` for its raw-Civ twin `population_civ` when the toggle is in "civ"
- * mode. Every other id passes through unchanged.
  * @param {*} ctx
- * @param {string} id The displayed metric id.
- * @returns {string} The metric id to chart.
+ * @param {string} id
  */
 function populationChartId(ctx, id) {
   if (id !== "population") return id;
@@ -670,10 +628,8 @@ function readTimelineNote(effective) {
 }
 
 /**
- * Append the bottom-center notes row: the analytics-governance policy banner and, on a companion
- * panel (Emigration), the timeline-detail note, side by side in one centered row, matching fonts.
  * @param {HTMLElement} host
- * @param {string} effective The metric/panel being rendered.
+ * @param {string} effective
  */
 function appendBottomNotes(host, effective) {
   // The policy banner is rendered once in the frame header (screen-demographics.js); this row
@@ -695,12 +651,9 @@ function appendBottomNotes(host, effective) {
 }
 
 /**
- * Render a custom (non-metric) page body, e.g. the Relations diplomacy view hosted as a Geopolitics
- * page. The page-tab row was already built by the caller.
  * @param {HTMLElement} host
  * @param {PageDef} page
  * @param {*} ctx
- * @returns {boolean} True when `page` is a render page and was handled.
  */
 function renderCustomPageBody(host, page, ctx) {
   if (typeof page.render !== "function") return false;
@@ -712,11 +665,9 @@ function renderCustomPageBody(host, page, ctx) {
 }
 
 /**
- * Render a metric page: metric tab row, group-member resolution, chart title/captions,
- * controls row, chart host, and bottom notes, the standard Historical-Data flow.
  * @param {HTMLElement} host
  * @param {*} ctx
- * @param {PageDef} page The active (metric) page.
+ * @param {PageDef} page
  */
 function renderMetricFlow(host, ctx, page) {
   const activeMetric = resolveVisibleActiveMetric(ctx, page);

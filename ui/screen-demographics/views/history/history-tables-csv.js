@@ -9,11 +9,7 @@ import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographi
 import { nameMergedWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
 import { t, tPlayerFallback } from "/demographics/ui/core/demographics-i18n.js";
 
-/**
- * Build a pid → display-name map from the latest sample's players.
- * @param {*[]} samples
- * @returns {Map<number, string>} pid → leader/civ name.
- */
+/** @param {*[]} samples */
 function pidNameMap(samples) {
   /** @type {Map<number, string>} */
   const map = new Map();
@@ -27,10 +23,8 @@ function pidNameMap(samples) {
 }
 
 /**
- * Join a war side's roster into a "; "-separated name list.
- * @param {*[]} side The side roster (entries with a `pid`).
+ * @param {*[]} side
  * @param {Map<number, string>} names
- * @returns {string}
  */
 function sideNames(side, names) {
   return (Array.isArray(side) ? side : [])

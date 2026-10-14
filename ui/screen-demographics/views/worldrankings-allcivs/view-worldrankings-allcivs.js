@@ -50,7 +50,6 @@ const VISIBLE_METRIC_COUNT = /** @type {*[]} */ (METRICS).filter(
 ).length;
 
 /**
- * Read the persisted layout override ("auto" | "table" | "matrix").
  * @param {WorldRankingsAllCivsCtx} ctx
  * @returns {string}
  */
@@ -94,10 +93,8 @@ function availableRemWidth(host) {
 }
 
 /**
- * Decide the layout for this render: the pinned setting, else the width test.
- * @param {HTMLElement} host The (cleared) view host.
+ * @param {HTMLElement} host
  * @param {WorldRankingsAllCivsCtx} ctx
- * @returns {"table"|"matrix"}
  */
 function chooseLayout(host, ctx) {
   const mode = readLayoutSetting(ctx);
@@ -108,9 +105,8 @@ function chooseLayout(host, ctx) {
 }
 
 /**
- * Resolve the persisted Scaled/Civ number mode.
  * @param {WorldRankingsAllCivsCtx} ctx
- * @returns {string} "scaled" or "civ".
+ * @returns {string}
  */
 function readNumberMode(ctx) {
   let mode;
@@ -139,8 +135,6 @@ function buildNumberModeToggle(mode, onPick) {
 }
 
 /**
- * Apply the persisted Scaled/Civ mode and, when there are paired metrics, mount the
- * toggle into `host` (re-rendering the view on change).
  * @param {HTMLElement} host
  * @param {WorldRankingsAllCivsCtx} ctx
  * @param {() => void} rerender
@@ -234,7 +228,6 @@ function renderBody(host, ctx) {
 }
 
 /**
- * Render the civs-as-columns matrix branch (the wide layout).
  * @param {HTMLElement} host
  * @param {Record<string, *>} profiles
  * @param {string[]} allPids
@@ -271,11 +264,7 @@ function mountMatrix(host, profiles, pids, ctx, showUnmetNames) {
   mountWorldRankingsAllCivsStrip(strip, profiles, pids, ctx, showUnmetNames);
 }
 
-/**
- * Build and post-process worldrankings-allcivs profiles from history/settings.
- * @param {WorldRankingsAllCivsCtx} ctx
- * @returns {Record<string, *>}
- */
+/** @param {WorldRankingsAllCivsCtx} ctx */
 function prepareProfiles(ctx) {
   const profiles = buildCivProfiles(ctx.history);
   if (!readBoolSetting(ctx, "showEliminatedCivs", true)) {

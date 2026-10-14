@@ -33,7 +33,6 @@ const CHART_TITLE_TOOLTIPS = {
 };
 
 /**
- * The label for a multi-tab panel's sub-tab id ("panelId::subId"), or null when `id` isn't one.
  * @param {string} id
  * @returns {string|null}
  */
@@ -150,13 +149,9 @@ function reusePageRow(host, priorPageHost, sig, onSelected) {
 }
 
 /**
- * Whether a page should appear in the page-tab row: render-pages and the active
- * page are always kept; a metric-page is kept only when at least one of its
- * metrics is currently visible, so empty categories auto-hide.
  * @param {*} page
- * @param {*} ctx The view context (carries `history`).
- * @param {string} activePage Never hidden.
- * @returns {boolean}
+ * @param {*} ctx
+ * @param {string} activePage
  */
 function pageHasVisibleContent(page, ctx, activePage) {
   if (!page) return false;
@@ -225,10 +220,8 @@ export function visibleMetricsForAge(metrics) {
 }
 
 /**
- * Whether any player in one sample has a finite value for `metricId`.
- * @param {*} sample One persisted sample ({ players: { pid: { metrics } } }).
+ * @param {*} sample
  * @param {string} metricId
- * @returns {boolean}
  */
 function sampleHasMetric(sample, metricId) {
   const players = sample && sample.players;
@@ -317,24 +310,15 @@ export function buildMetricTabRow(host, ctx, page, activeMetric) {
   }));
 }
 
-/**
- * Whether `pageId` is a companion panel shown as its own top-level view tab (Emigration). Such
- * pages have no page-tab row, so their section selector renders as a native tab bar instead of
- * pills.
- * @param {string} pageId
- * @returns {boolean}
- */
+/** @param {string} pageId */
 function isTopLevelPanelPage(pageId) {
   return EXTERNAL_PANELS.some((p) => p && p.topLevel && p.id === pageId);
 }
 
 /**
- * Build the section selector for a top-level panel page as a native `fxs-tab-bar` (the second row
- * of tabs, under the view-tab bar) instead of a pill row. Selecting a tab sets the active
- * metric/section.
  * @param {HTMLElement} host
  * @param {*} ctx
- * @param {{key:string,label:string}[]} items The section items (metric id + label).
+ * @param {{key:string,label:string}[]} items
  * @param {string} activeMetric
  */
 function buildSectionTabBar(host, ctx, items, activeMetric) {
@@ -416,13 +400,10 @@ export function buildChartTitle(host, activeMetric, metricObj, synthMeta) {
 }
 
 /**
- * Append the optional subtitle line under the chart title: synthetic metrics carry their own
- * `subtitle`; registered metrics opt in with a `LOC_DEMOGRAPHICS_METRIC_<ID>_SUBTITLE` key or a
- * plain `subtitle` string on the descriptor.
  * @param {HTMLElement} host
  * @param {string} activeMetric
- * @param {*} synthMeta The synthetic-metric meta, when the metric is synthetic.
- * @param {*} [metricObj] The metric descriptor (for a raw `subtitle` fallback).
+ * @param {*} synthMeta
+ * @param {*} [metricObj]
  */
 function appendChartSubtitle(host, activeMetric, synthMeta, metricObj) {
   let subtitle = "";

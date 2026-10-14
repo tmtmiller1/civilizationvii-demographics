@@ -64,11 +64,7 @@ function parseGameYear(text) {
   return era === "BCE" || era === "BC" ? -year : year;
 }
 
-/**
- * Build a turn → signed-year map from the history's samples.
- * @param {DemoHistory|undefined} history
- * @returns {Map<number, number>}
- */
+/** @param {DemoHistory|undefined} history */
 function buildTurnYearMap(history) {
   /** @type {Map<number, number>} */
   const turnYear = new Map();
@@ -101,11 +97,7 @@ function mapOneSampleToChart(sample, offsets, boundaries) {
  * @typedef {{ x: number, age: string, gameYear?: string }} ChartSample
  */
 
-/**
- * Build chart-X mapped samples sorted by X position.
- * @param {DemoHistory|undefined} history
- * @returns {ChartSample[]}
- */
+/** @param {DemoHistory|undefined} history */
 function mapSamplesToChartX(history) {
   const samples = history && Array.isArray(history.samples) ? history.samples : [];
   const boundaries = history && Array.isArray(history.ageBoundaries) ? history.ageBoundaries : [];
@@ -122,11 +114,8 @@ function mapSamplesToChartX(history) {
 }
 
 /**
- * Resolve the start turn of the current age from the history's age boundaries,
- * or `firstTurn` when none are recorded.
  * @param {DemoHistory|undefined} history
- * @param {number} firstTurn First sampled turn (fallback).
- * @returns {number}
+ * @param {number} firstTurn
  */
 function currentAgeStartTurn(history, firstTurn) {
   const mapped = mapSamplesToChartX(history);
@@ -137,14 +126,11 @@ function currentAgeStartTurn(history, firstTurn) {
 }
 
 /**
- * Compute the turn window for a year-relative filter (25/50/100/...), clamped
- * so it never reaches back past the start of the current age.
  * @param {DemoHistory|undefined} history
  * @param {Snapshot[]} chartSamples
  * @param {number} span
  * @param {number} firstTurn
  * @param {number} lastTurn
- * @returns {TurnRange|null} Null when no year data exists.
  */
 function computeYearRelativeRange(history, chartSamples, span, firstTurn, lastTurn) {
   const turnYear = buildTurnYearMap(history);
@@ -170,13 +156,10 @@ function computeYearRelativeRange(history, chartSamples, span, firstTurn, lastTu
 }
 
 /**
- * Compute the turn window for a named age filter ("age", "age1"..."age3")
- * from the history's age boundaries.
  * @param {DemoHistory|undefined} history
  * @param {string} filterId
  * @param {number} firstTurn
  * @param {number} lastTurn
- * @returns {TurnRange|null} Null for an unknown filter.
  */
 function computeAgeRange(history, filterId, firstTurn, lastTurn) {
   const mapped = mapSamplesToChartX(history);
@@ -190,11 +173,7 @@ function computeAgeRange(history, filterId, firstTurn, lastTurn) {
       starts.push({ age: sample.age, start: sample.x });
     }
   }
-  /**
-   * Resolve the [start, end] window for the age at boundary index `idx`.
-   * @param {number} idx
-   * @returns {TurnRange|null} Null when `idx` is out of range.
-   */
+  /** @param {number} idx */
   function ageRange(idx) {
     if (idx < 0) return null;
     if (idx >= starts.length) return null;
@@ -238,12 +217,9 @@ export function computeTurnRange(history, filterId) {
 }
 
 /**
- * Build an enabled filter pill wired to `onSelect`, marked active when its id
- * matches `activeFilter`.
  * @param {TimeFilterDef} f
  * @param {string} activeFilter
  * @param {(id: string) => void} [onSelect]
- * @returns {HTMLElement}
  */
 function buildEnabledFilterPill(f, activeFilter, onSelect) {
   const pill = document.createElement("div");

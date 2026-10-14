@@ -26,8 +26,6 @@ import { finiteOrZero } from "/demographics/ui/screen-demographics/screen/guarde
  */
 
 /**
- * Fold one settlement into its owner civ's cumulative aggregate (major civs
- * only). Sums composite score, settlement count, population, and every output.
  * @param {Record<string, *>} map
  * @param {*} settlement
  */
@@ -44,10 +42,8 @@ function aggregateCiv(map, settlement) {
 }
 
 /**
- * A fresh civ aggregate record.
  * @param {number} pid
  * @param {*} owner
- * @returns {*}
  */
 function newCivAgg(pid, owner) {
   return {
@@ -78,11 +74,7 @@ function civTotalOutput(outputs) {
   return total;
 }
 
-/**
- * Build the civilization ranking board.
- * @param {*[]} settlements The scored settlement list.
- * @returns {*[]} The ranked civ aggregates.
- */
+/** @param {*[]} settlements */
 function buildCivBoard(settlements) {
   /** @type {Record<string, *>} */
   const map = {};
@@ -115,11 +107,9 @@ function markOutputLeaders(civs) {
 }
 
 /**
- * Obscure an unmet civ's identity when "hide unmet players" is on.
  * @param {*} state
  * @param {*} civ
  * @param {CivRankingDeps} deps
- * @returns {*} The civ to render (masked clone when applicable).
  */
 function civDisplay(state, civ, deps) {
   if (state.showUnmetNames || !civ.owner || civ.owner.met !== false) return civ;
@@ -130,11 +120,7 @@ function civDisplay(state, civ, deps) {
   });
 }
 
-/**
- * Build a civ's score bar (fill = score% of the leader; owner-colored).
- * @param {*} civ
- * @returns {HTMLElement}
- */
+/** @param {*} civ */
 function buildCivScoreBar(civ) {
   const bar = div("demographics-settle-bar");
   const fill = div("demographics-settle-bar-fill");
@@ -145,11 +131,7 @@ function buildCivScoreBar(civ) {
   return bar;
 }
 
-/**
- * Build a civ meta line: total population + settlement count.
- * @param {*} civ
- * @returns {HTMLElement}
- */
+/** @param {*} civ */
 function buildCivMeta(civ) {
   const meta = div("demographics-settle-citymeta");
   const pop = div("demographics-settle-citypop");
@@ -187,12 +169,10 @@ function buildCivPodiumBody(civ, state, deps) {
 }
 
 /**
- * Build one civ podium card (gold/silver/bronze laurel + cumulative score).
  * @param {*} civ
  * @param {number} place
  * @param {*} state
  * @param {CivRankingDeps} deps
- * @returns {HTMLElement}
  */
 function buildCivPodiumCard(civ, place, state, deps) {
   civ = civDisplay(state, civ, deps);
@@ -215,11 +195,9 @@ function buildCivPodiumCard(civ, place, state, deps) {
 }
 
 /**
- * Build one civ ranked-list row.
  * @param {*} civ
  * @param {*} state
  * @param {CivRankingDeps} deps
- * @returns {HTMLElement}
  */
 function buildCivRow(civ, state, deps) {
   civ = civDisplay(state, civ, deps);
@@ -241,12 +219,10 @@ function buildCivRow(civ, state, deps) {
 }
 
 /**
- * Build the civ top-3 podium (visual order 2-1-3).
- * @param {*[]} top The top civ aggregates.
+ * @param {*[]} top
  * @param {*} state
  * @param {CivRankingDeps} deps
- * @param {boolean} [vertical] Stack gold→bronze top-to-bottom (left-column layout).
- * @returns {HTMLElement}
+ * @param {boolean} [vertical]
  */
 function buildCivPodium(top, state, deps, vertical) {
   const podium = div("demographics-settle-podium");

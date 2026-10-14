@@ -41,11 +41,9 @@ export function buildRadarSnapshotRow(ctx) {
 }
 
 /**
- * Build one radar snapshot selector pill.
  * @param {{ id: string, label: string }} opt
  * @param {string} active
  * @param {*} ctx
- * @returns {HTMLElement}
  */
 function buildRadarSnapshotPill(opt, active, ctx) {
   const haveSnap =
@@ -81,11 +79,7 @@ function appendWarsControls(toolbar, ctx) {
   toolbar.appendChild(buildWarsActiveOnlyPill(ctx));
 }
 
-/**
- * Build a standard toolbar label block.
- * @param {string} text
- * @returns {HTMLElement}
- */
+/** @param {string} text */
 function buildToolbarLabel(text) {
   const label = document.createElement("div");
   label.className = "demographics-chart-toolbar-label font-body text-xs";
@@ -103,10 +97,8 @@ function warsOptionMatchesFilter(option, warsFilterPid) {
 }
 
 /**
- * Build the wars civ-filter dropdown.
  * @param {Array<{ pid: number|null, label: string }>} dropdownOpts
  * @param {*} ctx
- * @returns {HTMLElement}
  */
 function buildWarsCivDropdown(dropdownOpts, ctx) {
   const dropdown = document.createElement("fxs-dropdown");
@@ -124,11 +116,7 @@ function buildWarsCivDropdown(dropdownOpts, ctx) {
   return dropdown;
 }
 
-/**
- * Build the wars active/all toggle pill.
- * @param {*} ctx
- * @returns {HTMLElement}
- */
+/** @param {*} ctx */
 function buildWarsActiveOnlyPill(ctx) {
   const activePill = document.createElement("div");
   activePill.className = "demographics-chart-time-filter-pill";
@@ -192,7 +180,6 @@ function appendClearFocus(toolbar, ctx) {
 }
 
 /**
- * Apply one step of x-axis mode rotation and request a chart reload.
  * @param {*} ctx
  * @param {string[]} modes
  * @param {string} mode
@@ -286,19 +273,14 @@ function appendWondersToggle(toolbar, ctx, activeMetric) {
   log.debug("wonders button mounted; activeMetric=" + activeMetric + " wondersOn=" + wondersOn);
 }
 
-/**
- * The Refugees graphs (Left/Arrived, both units), they carry the war/disaster event-marker toggles.
- */
 const REFUGEE_METRICS = new Set([
   "emig_refugees", "emig_refugees_pts", "emig_refugees_in", "emig_refugees_in_pts"
 ]);
 
 /**
- * Append one event-marker filter toggle (e.g. Wars / Disasters), mirroring the Wonders toggle:
- * reads a boolean setting (default ON), dims when off, flips + re-renders on click.
  * @param {HTMLElement} toolbar
  * @param {*} ctx
- * @param {string} key Setting key (showWarMarkers / showDisasterMarkers).
+ * @param {string} key
  * @param {string} label
  */
 function appendMarkerToggle(toolbar, ctx, key, label) {
@@ -327,7 +309,6 @@ function appendMarkerToggle(toolbar, ctx, key, label) {
 }
 
 /**
- * Append the Wars + Disasters event-marker filter toggles for the Refugees graphs.
  * @param {HTMLElement} toolbar
  * @param {*} ctx
  */
@@ -407,10 +388,8 @@ function appendCrisisGraphsControls(toolbar, ctx) {
 }
 
 /**
- * Build the Crisis Graphs scope dropdown.
  * @param {Array<{ id: string, label: string }>} opts
  * @param {*} ctx
- * @returns {HTMLElement}
  */
 function buildCrisisScopeDropdown(opts, ctx) {
   const dropdown = document.createElement("fxs-dropdown");
@@ -494,10 +473,8 @@ export function buildWarGraphsPicker(ctx) {
 }
 
 /**
- * Build the war-graphs war picker dropdown.
  * @param {Array<{ id: number, label: string }>} opts
  * @param {*} ctx
- * @returns {HTMLElement}
  */
 function buildWarGraphsDropdown(opts, ctx) {
   const dropdown = document.createElement("fxs-dropdown");

@@ -11,11 +11,9 @@ import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 const log = makeLogger("history-csv");
 
 /**
- * Show a transient toast in `host`, auto-removing after 4s. Replaces any prior
- * toast first.
  * @param {HTMLElement} host
  * @param {string} message
- * @param {boolean} success Green (success) vs orange (failure) styling.
+ * @param {boolean} success
  */
 function showCsvToast(host, message, success) {
   try {
@@ -75,11 +73,7 @@ const CSV_CATEGORY_ORDER = {
   age: ["age_progress", "crisis_stage"]
 };
 
-/**
- * Collect every metric id seen across all samples so the column set is stable.
- * @param {DemoHistory} history
- * @returns {Set<string>}
- */
+/** @param {DemoHistory} history */
 function collectMetricKeys(history) {
   /** @type {Set<string>} */
   const metricKeys = new Set();
@@ -94,12 +88,7 @@ function collectMetricKeys(history) {
   return metricKeys;
 }
 
-/**
- * Order the seen metric keys by category, then append any uncategorised keys
- * alphabetically so newly-introduced metrics survive.
- * @param {Set<string>} metricKeys
- * @returns {string[]}
- */
+/** @param {Set<string>} metricKeys */
 function orderMetricColumns(metricKeys) {
   /** @type {string[]} */
   const orderedMetricCols = [];
@@ -124,12 +113,7 @@ function orderMetricColumns(metricKeys) {
   return orderedMetricCols;
 }
 
-/**
- * Make a value CSV-safe: neutralize spreadsheet formula injection, then quote
- * when it contains a comma, quote, or newline.
- * @param {*} value
- * @returns {string}
- */
+/** @param {*} value */
 function csvCell(value) {
   if (value === null || value === undefined) return "";
   let text = String(value);
@@ -188,13 +172,10 @@ function buildCsvRowMap(history, metricCols) {
 }
 
 /**
- * Build the ordered cell array for one (turn, pid) CSV row: the seven identity
- * columns followed by one formatted value per metric column.
  * @param {Snapshot} sample
  * @param {string} pid
  * @param {CivSample} civSample
  * @param {string[]} metricCols
- * @returns {string[]}
  */
 function buildCsvRowCells(sample, pid, civSample, metricCols) {
   const cells = [
@@ -213,11 +194,6 @@ function buildCsvRowCells(sample, pid, civSample, metricCols) {
   return cells;
 }
 
-/**
- * Read the current game's speed / map / age for the CSV provenance header.
- * Each lookup is best-effort and defaults to "unknown".
- * @returns {{ gameSpeed: string, mapType: string, currentAge: string }}
- */
 function readCsvGameContext() {
   return {
     gameSpeed: readGameSpeedLabel(),
@@ -226,10 +202,6 @@ function readCsvGameContext() {
   };
 }
 
-/**
- * Best-effort read of the current game-speed label for the CSV header.
- * @returns {string} The lowercased speed type, or "unknown".
- */
 function readGameSpeedLabel() {
   try {
     if (typeof Configuration === "undefined" || !Configuration.getGame) return "unknown";
@@ -243,9 +215,8 @@ function readGameSpeedLabel() {
 }
 
 /**
- * Resolve a GameSpeed hash to its lowercased speed-type label via GameInfo.
  * @param {*} speedHash
- * @returns {string} The lowercased speed type, or "unknown".
+ * @returns {string}
  */
 function gameSpeedLabelFor(speedHash) {
   if (speedHash == null || typeof GameInfo === "undefined") return "unknown";
@@ -254,10 +225,6 @@ function gameSpeedLabelFor(speedHash) {
   return "unknown";
 }
 
-/**
- * Best-effort read of the current map-script label for the CSV header.
- * @returns {string} The map script string, or "unknown".
- */
 function readMapTypeLabel() {
   try {
     if (typeof Configuration !== "undefined" && Configuration.getMap) {
@@ -272,10 +239,7 @@ function readMapTypeLabel() {
   return "unknown";
 }
 
-/**
- * Best-effort read of the current age label for the CSV header.
- * @returns {string} The lowercased age type, or "unknown".
- */
+/** @returns {string} */
 function readCurrentAgeLabel() {
   try {
     if (typeof Game !== "undefined" && Game.age != null) {
@@ -290,12 +254,9 @@ function readCurrentAgeLabel() {
 }
 
 /**
- * Build the `#`-prefixed metadata header lines (provenance + game context) that
- * lead the CSV. Most importers honor `#` lines as comments.
  * @param {DemoHistory} history
- * @param {Map<string, string[]>} rowByKey Built row map (for counts).
+ * @param {Map<string, string[]>} rowByKey
  * @param {string[]} metricCols
- * @returns {string[]} The metadata header lines (excluding the column header).
  */
 function buildCsvMetaHeader(history, rowByKey, metricCols) {
   const metaTime = new Date().toISOString();
@@ -413,18 +374,10 @@ export function exportHistoryAsCsv(history, host) {
   );
 }
 
-/** Soft size threshold above which the full CSV log dump is skipped. */
 const CSV_SOFT_LIMIT = 2 * 1024 * 1024;
-/** Hard size threshold above which the export is refused outright. */
 const CSV_HARD_LIMIT = 8 * 1024 * 1024;
 
-/**
- * Build the full CSV document for `history`: collect + order columns, build the
- * deduplicated rows, prepend the metadata header, and join into one string.
- * @param {DemoHistory} history
- * @returns {{ csv: string, lines: string[], headers: string[] }} The CSV text,
- *   its line array, and the column-header array.
- */
+/** @param {DemoHistory} history */
 function buildCsvDocument(history) {
   const metricKeys = collectMetricKeys(history);
   const metricCols = orderMetricColumns(metricKeys);
@@ -456,7 +409,6 @@ function buildCsvDocument(history) {
 }
 
 /**
- * Log and toast a refusal for a CSV that exceeds the hard size limit.
  * @param {HTMLElement|undefined} host
  * @param {string} sizeMB
  */
@@ -506,9 +458,6 @@ function logCsvDump(csv, lineCount, sizeMB, clipboardOk) {
 }
 
 /**
- * Show the success / fallback toast for a completed CSV export. Accounts for
- * the 9-line meta header + the single column-header row when reporting the
- * data-row count.
  * @param {{
  *   host: HTMLElement|undefined,
  *   csv: string,

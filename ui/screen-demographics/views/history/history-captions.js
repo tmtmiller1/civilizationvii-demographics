@@ -92,11 +92,7 @@ function buildMetricInfoCaption(opts) {
   return wrap;
 }
 
-/**
- * Build the compact caption trigger.
- * @param {string} text
- * @returns {HTMLElement}
- */
+/** @param {string} text */
 function buildCaptionTrigger(text) {
   const trigger = document.createElement("div");
   trigger.className = "demographics-chart-caption-compact font-body text-xs";
@@ -104,11 +100,7 @@ function buildCaptionTrigger(text) {
   return trigger;
 }
 
-/**
- * Build the metric caption popover body.
- * @param {{ triggerText: string, title: string, bodyHtml: string }} opts
- * @returns {HTMLElement}
- */
+/** @param {{ triggerText: string, title: string, bodyHtml: string }} opts */
 function buildCaptionPopover(opts) {
   const popover = document.createElement("div");
   popover.className =
@@ -128,7 +120,6 @@ function buildCaptionPopover(opts) {
 }
 
 /**
- * Wire hover interactions for trigger and popover.
  * @param {HTMLElement} trigger
  * @param {HTMLElement} popover
  */

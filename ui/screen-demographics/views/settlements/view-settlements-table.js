@@ -41,10 +41,7 @@ import { setClass } from "/demographics/ui/screen-demographics/screen/dom-helper
  * }} TableUi
  */
 
-/**
- * The table filters, in display order.
- * @type {Array<{ id: string, label: string, test: (settlement: *) => boolean }>}
- */
+/** @type {Array<{ id: string, label: string, test: (settlement: *) => boolean }>} */
 const FILTERS = [
   { id: "all", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL", test: () => true },
   {
@@ -104,10 +101,7 @@ function buildFilterRow(state, deps, ui) {
   return row;
 }
 
-/**
- * The fixed leading columns of the table.
- * @type {Array<{ id: string, label: string }>}
- */
+/** @type {Array<{ id: string, label: string }>} */
 const FIXED_COLS = [
   { id: "rank", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" },
   { id: "owner", label: "LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" },
@@ -141,11 +135,9 @@ function buildSortHeader(state, key, inner, deps, ui) {
 }
 
 /**
- * Build the table header row.
  * @param {*} state
  * @param {TableDeps} deps
- * @param {TableUi} ui The panel's chrome handles.
- * @returns {HTMLElement}
+ * @param {TableUi} ui
  */
 function buildHeaderRow(state, deps, ui) {
   const row = div("demographics-settle-row demographics-settle-header");
@@ -176,13 +168,10 @@ function buildHeaderRow(state, deps, ui) {
 }
 
 /**
- * Build one output cell. The leading settlement's cell carries the gold leader
- * wash and a "World leader in <output>" tooltip.
  * @param {*} settlement
- * @param {{ id: string, label: string }} col The output column.
+ * @param {{ id: string, label: string }} col
  * @param {string} sortKey
  * @param {Record<string, number>} leads
- * @returns {HTMLElement}
  */
 function buildOutputCell(settlement, col, sortKey, leads) {
   const lead = col.id in leads && valueOf(settlement, col.id) === leads[col.id];
@@ -198,13 +187,11 @@ function buildOutputCell(settlement, col, sortKey, leads) {
 }
 
 /**
- * Build one settlement data row for the table.
  * @param {*} settlement
  * @param {number} rank The 1-based rank within the current sort.
  * @param {string} sortKey
  * @param {Record<string, number>} leads
  * @param {TableDeps} deps
- * @returns {HTMLElement}
  */
 function buildTableRow(settlement, rank, sortKey, leads, deps) {
   const row = div(rankedRowClass("demographics-settle-row demographics-settle-datarow", settlement, rank));
