@@ -12,21 +12,13 @@ import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 const log = makeLogger("sampler");
 
-/**
- * Whether the diplomacy API needed for war tracking is available.
- * @returns {boolean}
- */
 function diplomacyWarApiReady() {
   if (!Game?.Diplomacy) return false;
   if (typeof Game.Diplomacy.getPlayerEvents !== "function") return false;
   return typeof Game.Diplomacy.getDiplomaticEventData === "function";
 }
 
-/**
- * Read one player's diplomacy event list safely.
- * @param {*} pid Player id-like value.
- * @returns {*[] | null} Events array, or null when unavailable.
- */
+/** @param {*} pid Player id-like value. */
 function playerEvents(pid) {
   try {
     return Game.Diplomacy.getPlayerEvents(pid);

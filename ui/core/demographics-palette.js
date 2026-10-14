@@ -83,10 +83,6 @@ const SEMANTIC_COLORBLIND = {
   accent_gold: "#F0E442"
 };
 
-/**
- * Whether the user has enabled the CVD-safe (colorblind) palette.
- * @returns {boolean}
- */
 function isColorblindMode() {
   try {
     return !!DemographicsSettings.getSetting("colorblindMode", false);

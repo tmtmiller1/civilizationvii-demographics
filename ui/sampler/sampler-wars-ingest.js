@@ -14,10 +14,8 @@
  */
 
 /**
- * Coerce a heterogeneous list of player references (numbers or objects with
- * id/playerID/player) to a clean array of non-negative numeric pids.
  * @param {*} arr The raw list.
- * @returns {number[]} The extracted pids.
+ * @returns {number[]}
  */
 function asPidList(arr) {
   if (!Array.isArray(arr)) return [];
@@ -57,12 +55,9 @@ export function ingestWarEvent(ev, activeWarsByID) {
 }
 
 /**
- * Build the normalized active-war record from a uniqueID + event header. SideA
- * = initiator + supporters; SideB = target + opposers, with cross-membership
- * stripped to keep the bipartite split clean.
  * @param {*} uid The war uniqueID.
  * @param {*} header The diplomacy event header.
- * @returns {ActiveWar} The normalized war record.
+ * @returns {ActiveWar}
  */
 function normalizeWarRecord(uid, header) {
   const { supporters, opposers } = warEnvoyLists(uid);
@@ -83,11 +78,7 @@ function normalizeWarRecord(uid, header) {
   };
 }
 
-/**
- * Fetch a war's supporting + opposing players (with bonus envoys) defensively.
- * @param {*} uid The war uniqueID.
- * @returns {{ supporters: *[], opposers: *[] }} The raw lists (empty on error).
- */
+/** @param {*} uid The war uniqueID. */
 function warEnvoyLists(uid) {
   let supporters = [];
   let opposers = [];
@@ -107,10 +98,8 @@ function warEnvoyLists(uid) {
 }
 
 /**
- * Build one war-side participant Set from a seed pid + a raw participant list.
  * @param {number | null} seedPid The initiator/target pid (or null).
  * @param {*[]} participants The raw supporting/opposing list.
- * @returns {Set<number>} The participant set.
  */
 function buildWarSide(seedPid, participants) {
   const set = new Set();

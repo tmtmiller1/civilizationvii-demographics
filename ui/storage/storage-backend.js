@@ -4,18 +4,11 @@
 
 let noHashWarned = false;
 
-/**
- * Whether the engine hashing API is available.
- * @returns {boolean}
- */
 function engineHashAvailable() {
   return typeof Database !== "undefined" && typeof Database.makeHash === "function";
 }
 
-/**
- * Warn once when the engine hash API is missing.
- * @param {(...a: any[]) => void} logError
- */
+/** @param {(...a: any[]) => void} logError */
 function warnNoEngineHash(logError) {
   if (noHashWarned) return;
   noHashWarned = true;
@@ -26,11 +19,7 @@ function warnNoEngineHash(logError) {
   );
 }
 
-/**
- * Hash a key using engine hashing.
- * @param {string} text Input key text.
- * @returns {number} 32-bit hash.
- */
+/** @param {string} text */
 function dbHash(text) {
   return Database.makeHash(text);
 }
@@ -43,11 +32,7 @@ function resolveLocalPid() {
       : -1;
 }
 
-/**
- * Whether a player has a usable Tutorial property bag.
- * @param {*} player Player handle.
- * @returns {boolean}
- */
+/** @param {*} player Player handle. */
 function hasTutorialBag(player) {
   return !!(
     player &&

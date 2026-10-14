@@ -39,11 +39,6 @@ const ICON_URL = "fs://game/demographics/images/demographics-icon.svg";
 // rather than painting its own gradient + gold outline.
 const ICON_TINT = "#ecdfbf";
 
-/**
- * Inject the one-time `<style>` that paints our dock-button icon: a mask filled
- * with {@link ICON_TINT} so it matches the flat tint of the other dock icons.
- * Re-runs are a no-op once the style exists.
- */
 function injectIconStyle() {
   if (document.getElementById("demographics-dock-icon-style")) return;
   const style = document.createElement("style");

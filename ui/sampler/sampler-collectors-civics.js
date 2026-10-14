@@ -38,7 +38,6 @@ export function collectVictoryPoints(ctx, player) {
 }
 
 /**
- * Capture one Victories row's points into the matching `ctx` field.
  * @param {import("./sampler-collectors-core.js").PlayerCtx} ctx
  * @param {*} victories The player's Victories handle.
  * @param {*} row A GameInfo.Victories row.
@@ -58,12 +57,10 @@ function _captureVictoryRow(ctx, victories, row) {
 }
 
 /**
- * Score one other player's contribution to `id`'s diplomatic approval.
  * @param {*} dip The sampled player's Diplomacy handle.
  * @param {Pid} id
  * @param {*} other The other player handle.
  * @param {Record<string, number>} weightMajor Relationship-enum weight map.
- * @returns {{ major: number, cs: number }} This player's score contribution.
  */
 function scoreApprovalContribution(dip, id, other, weightMajor) {
   const out = { major: 0, cs: 0 };
@@ -88,10 +85,8 @@ function scoreApprovalContribution(dip, id, other, weightMajor) {
 }
 
 /**
- * City-state contribution: +2 when `id` is the CS's suzerain, else 0.
  * @param {*} other The city-state player handle.
  * @param {Pid} id
- * @returns {number} 2 if suzerain, else 0.
  */
 function _csSuzerainScore(other, id) {
   try {
@@ -107,11 +102,9 @@ function _csSuzerainScore(other, id) {
 }
 
 /**
- * Major-civ contribution: the weight for the relationship enum, or 0.
  * @param {*} dip The sampled player's Diplomacy handle.
  * @param {Pid} oid
  * @param {Record<string, number>} weightMajor Relationship-enum weight map.
- * @returns {number} The weighted score (0 if unknown).
  */
 function _majorRelationshipScore(dip, oid, weightMajor) {
   let rel;
@@ -147,11 +140,7 @@ export function collectDiplomaticApproval(ctx, id, player) {
   });
 }
 
-/**
- * Whether the diplomacy + relationship-enum APIs for approval scoring exist.
- * @param {*} dip The sampled player's Diplomacy handle.
- * @returns {boolean} True if hasMet + getRelationshipEnum + enums are present.
- */
+/** @param {*} dip The sampled player's Diplomacy handle. */
 function _approvalApiAvailable(dip) {
   return !!(
     dip &&
@@ -162,10 +151,8 @@ function _approvalApiAvailable(dip) {
 }
 
 /**
- * Sum the major + city-state approval contributions across alive players.
  * @param {*} dip The sampled player's Diplomacy handle.
  * @param {Pid} id
- * @returns {{ major: number, cs: number }} The summed scores.
  */
 function _sumApprovalScores(dip, id) {
   const Relationship = DiplomacyPlayerRelationships;
@@ -195,11 +182,7 @@ function _sumApprovalScores(dip, id) {
   return { major, cs: cityStateScore };
 }
 
-/**
- * Resolve a single ResourceEntry's class string.
- * @param {*} resource A ResourceEntry item.
- * @returns {*} The resource class string, or undefined.
- */
+/** @param {*} resource A ResourceEntry item. */
 function resolveResourceClass(resource) {
   const cls = resource?.classType;
   if (cls) return cls;
@@ -207,11 +190,7 @@ function resolveResourceClass(resource) {
   return _resourceClassByType(resType);
 }
 
-/**
- * Resolve a resource class string from a resource type/hash.
- * @param {*} resType The resource type/hash.
- * @returns {*} The class string, or undefined.
- */
+/** @param {*} resType The resource type/hash. */
 function _resourceClassByType(resType) {
   if (
     resType === undefined ||
@@ -265,11 +244,7 @@ export function collectResourceCategories(ctx, id, player) {
   });
 }
 
-/**
- * Resolve a ResourceEntry's count (positive finite count, else 1).
- * @param {*} resource A ResourceEntry item.
- * @returns {number} The count to add.
- */
+/** @param {*} resource A ResourceEntry item. */
 function _resourceCount(resource) {
   return typeof resource?.count === "number" && isFinite(resource.count) && resource.count > 0 ? resource.count : 1;
 }
@@ -280,10 +255,9 @@ function _resourceCount(resource) {
  */
 
 /**
- * Add `cnt` to the bucket matching `cls` (unknown bucket if unrecognized).
- * @param {ResourceCounts} counts The counts to mutate.
+ * @param {ResourceCounts} counts
  * @param {*} cls The resource class string.
- * @param {number} cnt The amount to add.
+ * @param {number} cnt
  */
 function _bucketResource(counts, cls, cnt) {
   if (cls === "RESOURCECLASS_BONUS") counts.bonus += cnt;

@@ -13,10 +13,8 @@
 const STORED_INDEPENDENT_NAMES = new Set(["Villages"]);
 
 /**
- * Compose a game row's name in the current language.
  * @param {string} table GameInfo table ("Civilizations" or "Leaders").
  * @param {string} type The row's type string.
- * @returns {string} The name, or "" when the row or its text is missing.
  */
 function composeRowName(table, type) {
   try {
@@ -29,11 +27,9 @@ function composeRowName(table, type) {
 }
 
 /**
- * The current-language name of a game row, cached per load.
  * @param {string} table GameInfo table ("Civilizations" or "Leaders").
  * @param {*} type The row's type string.
  * @param {Map<string, string>} cache Per-load cache, keyed by table and type.
- * @returns {string} The name, or "".
  */
 function rowName(table, type, cache) {
   if (typeof type !== "string" || !type) return "";
@@ -42,11 +38,7 @@ function rowName(table, type, cache) {
   return /** @type {string} */ (cache.get(key));
 }
 
-/**
- * The current-language "City-State" label for an independent stored under the English plural.
- * @param {Map<string, string>} cache Per-load cache.
- * @returns {string} The label, or "".
- */
+/** @param {Map<string, string>} cache Per-load cache. */
 function independentName(cache) {
   if (cache.has("indep")) return /** @type {string} */ (cache.get("indep"));
   const text = composeTag("LOC_DEMOGRAPHICS_CITY_STATE");
@@ -55,21 +47,15 @@ function independentName(cache) {
 }
 
 /**
- * Whether a typeless roster name is the engine's name for independents.
  * @param {*} name Stored civ name.
  * @param {Map<string, string>} cache Per-load cache.
- * @returns {boolean} True for an independent.
  */
 function isIndependentName(name, cache) {
   if (!cache.has("indepEngine")) cache.set("indepEngine", composeTag("LOC_CIVILIZATION_INDEPENDENT_NAME"));
   return STORED_INDEPENDENT_NAMES.has(name) || (!!name && name === cache.get("indepEngine"));
 }
 
-/**
- * Compose a tag, or "" when it does not resolve.
- * @param {string} tag LOC tag.
- * @returns {string} The text, or "".
- */
+/** @param {string} tag LOC tag. */
 function composeTag(tag) {
   try {
     const text = Locale.compose(tag);
@@ -80,7 +66,6 @@ function composeTag(tag) {
 }
 
 /**
- * Re-read one war roster entry's names from its types.
  * @param {*} entry Roster entry ({ civ, leader, civTypeString, leaderType, isCS }).
  * @param {Map<string, string>} cache Per-load cache.
  */
@@ -94,7 +79,6 @@ function localizeRosterEntry(entry, cache) {
 }
 
 /**
- * Re-read one sample player's names from its types.
  * @param {*} player Sample player ({ civName, leaderName, civTypeString, leaderTypeString }).
  * @param {Map<string, string>} cache Per-load cache.
  */
@@ -110,7 +94,6 @@ function localizeSamplePlayer(player, cache) {
 const rosterOf = (side) => (Array.isArray(side) ? side : []);
 
 /**
- * Re-read one war's roster names, and its declarer's from the matching roster entry.
  * @param {*} war War record.
  * @param {Map<string, string>} cache Per-load cache.
  */

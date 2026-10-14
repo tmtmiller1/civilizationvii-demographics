@@ -23,11 +23,6 @@ function clamp(n, lo, hi) {
   return Math.min(hi, Math.max(lo, n));
 }
 
-/**
- * The CPU-core contribution to the capability factor, from
- * `navigator.hardwareConcurrency` (neutral 1 when unavailable).
- * @returns {number}
- */
 function coreFactor() {
   const nav = /** @type {*} */ (globalThis).navigator;
   const cores = nav && typeof nav.hardwareConcurrency === "number" ? nav.hardwareConcurrency : 0;
@@ -39,10 +34,6 @@ function coreFactor() {
   return 1.25;
 }
 
-/**
- * Whether the active view experience is Mobile (best-effort; false off-engine).
- * @returns {boolean}
- */
 function isMobileExperience() {
   try {
     return (
@@ -56,11 +47,6 @@ function isMobileExperience() {
   }
 }
 
-/**
- * The device-memory + mobile contribution to the capability factor (neutral 1
- * when unavailable).
- * @returns {number}
- */
 function memoryAndFormFactor() {
   let f = 1;
   const nav = /** @type {*} */ (globalThis).navigator;
@@ -90,10 +76,6 @@ export function capabilityFactor() {
   return _capability;
 }
 
-/**
- * Best-effort count of major players in the game (for the game-size factor).
- * @returns {number} Player count, or 0 when unknown.
- */
 function majorPlayerCount() {
   try {
     if (typeof Players === "undefined") return 0;

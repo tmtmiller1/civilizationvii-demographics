@@ -51,10 +51,6 @@ export function effectivePolicyKeyFor(pid) {
   return EFFECTIVE_POLICY_KEY + "_P" + pid;
 }
 
-/**
- * The local seat's player id, or -1 when it cannot be read.
- * @returns {number}
- */
 function localPid() {
   try {
     if (typeof GameContext === "undefined") return -1;
@@ -67,7 +63,6 @@ function localPid() {
 }
 
 /**
- * A known policy id, or null when the value is unrecognized.
  * @param {*} v
  * @returns {string|null}
  */
@@ -255,9 +250,8 @@ export function bannerInfo() {
 }
 
 /**
- * The networked flag from the game configuration, or null when it does not say.
  * @param {*} g The game configuration handle.
- * @returns {boolean|null} null when unknown.
+ * @returns {boolean|null}
  */
 function configNetworked(g) {
   if (!g) return null;

@@ -25,7 +25,6 @@ export function hasStore() {
 }
 
 /**
- * Run an engine touch, returning the fallback when it throws.
  * @template T
  * @param {() => T} fn
  * @param {T} fallback
@@ -102,9 +101,7 @@ export function diagnose() {
  */
 
 /**
- * Why this repair must not run at all.
  * @param {*} slices Slice id -> slice.
- * @returns {string} Refusal reason, or "" when the repair may go ahead.
  */
 function refusal(slices) {
   if (!hasStore()) return "no-store";
@@ -126,11 +123,7 @@ function serialize(slices) {
   }
 }
 
-/**
- * Empty the store and write the payload as its only row.
- * @param {string} text
- * @returns {string} Error, or "" when both steps went through.
- */
+/** @param {string} text */
 function replaceStore(text) {
   try {
     localStorage.clear();

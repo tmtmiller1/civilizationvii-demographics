@@ -4,10 +4,6 @@
 
 import { reportBalanceSignals } from "/demographics/ui/core/demographics-telemetry.js";
 
-/**
- * A monotonic millisecond clock for debug timing; 0 if unavailable.
- * @returns {number} Milliseconds.
- */
 function nowMs() {
   try {
     const g = /** @type {*} */ (globalThis);

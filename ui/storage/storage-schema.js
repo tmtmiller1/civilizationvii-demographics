@@ -54,11 +54,9 @@ export function normalize(history) {
 }
 
 /**
- * Whether a sample belongs to the preserved tail bucket.
  * @param {any} sample Snapshot sample.
  * @param {string | null} latestAge Latest age label.
  * @param {number} latestBoundary Legacy turn cutoff.
- * @returns {boolean}
  */
 function isAfterDecimationCut(sample, latestAge, latestBoundary) {
   if (latestAge && sample && sample.age === latestAge) return true;

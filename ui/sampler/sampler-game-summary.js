@@ -89,11 +89,7 @@ export function datasetByPlayer(datasetId, turn, scope, delta) {
   return out;
 }
 
-/**
- * Fetch a dataset's sets defensively.
- * @param {string} datasetId
- * @returns {any[]} The sets (empty on absence/throw).
- */
+/** @param {string} datasetId */
 function getDataSetsSafe(datasetId) {
   try {
     const sets = Game.Summary.getDataSets(datasetId);
@@ -105,7 +101,6 @@ function getDataSetsSafe(datasetId) {
 }
 
 /**
- * Fold one dataset's contribution into the per-player accumulator, in place.
  * @param {*} ds One dataset ({owner, values}).
  * @param {Map<*, *>} objs
  * @param {Map<number, number>} out The accumulator (mutated).
@@ -141,10 +136,8 @@ export function byTypeCounts(datapointId) {
 }
 
 /**
- * Whether a datapoint is a usable numeric by-type entry for `datapointId`.
- * @param {*} dp One datapoint.
- * @param {string} datapointId The datapoint id to match.
- * @returns {boolean} True when usable.
+ * @param {*} dp
+ * @param {string} datapointId
  */
 function dpValid(dp, datapointId) {
   return (
@@ -154,7 +147,6 @@ function dpValid(dp, datapointId) {
 }
 
 /**
- * Fold one datapoint into the per-player by-type accumulator, in place.
  * @param {*} dp One datapoint ({ID, owner, type, value:{numeric}}).
  * @param {Map<*, *>} objs
  * @param {string} datapointId The datapoint id to match.

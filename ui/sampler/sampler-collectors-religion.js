@@ -6,7 +6,6 @@
 // can reconstruct history. Defensive; returns null when religion is unavailable.
 
 /**
- * Fold one city's majority religion into the per-religion accumulator.
  * @param {*} c A city handle.
  * @param {Set<*>} known The set of known religion $hash values.
  * @param {Record<string, {s:number, p:number}>} out The accumulator (mutated).
@@ -24,10 +23,6 @@ function foldCity(c, known, out) {
   }
 }
 
-/**
- * Build the set of known religion $hash values.
- * @returns {Set<*>} The hash set (empty when religion data is unavailable).
- */
 function knownReligionHashes() {
   const known = new Set();
   try {
@@ -40,11 +35,7 @@ function knownReligionHashes() {
   return known;
 }
 
-/**
- * Aggregate per-religion followers across all alive players' cities.
- * @param {Set<*>} known The known religion $hash set.
- * @returns {Record<string, {s:number, p:number}>} The rel map (possibly empty).
- */
+/** @param {Set<*>} known */
 function aggregateReligion(known) {
   /** @type {Record<string, {s:number, p:number}>} */
   const out = {};

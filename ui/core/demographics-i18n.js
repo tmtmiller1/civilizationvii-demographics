@@ -86,10 +86,8 @@ const TURN_FALLBACK = /** @type {Record<string, string>} */ ({
 });
 
 /**
- * Compose a turn-label tag, or its English form when the tag does not resolve.
  * @param {string} key
  * @param {number} turn
- * @returns {string}
  */
 function composeTurn(key, turn) {
   const s = t(key, turn);
