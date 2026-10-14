@@ -103,11 +103,7 @@ export function gameCard(rec, ctx) {
   return card;
 }
 
-/**
- * A result cell: the outcome marker and its label.
- * @param {ArchiveRecord} rec
- * @returns {HTMLElement}
- */
+/** @param {ArchiveRecord} rec */
 function resultCell(rec) {
   return el("div", { cls: "dgh-result-row" }, [
     outcomeMark(rec.outcome),

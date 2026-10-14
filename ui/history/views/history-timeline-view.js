@@ -405,7 +405,6 @@ function drawInto(root, tl, cast, play, fx) {
 }
 
 /**
- * Remove every child of `node` except the ones being kept across this redraw.
  * @param {HTMLElement} node
  * @param {Array<HTMLElement|null>} keep
  */

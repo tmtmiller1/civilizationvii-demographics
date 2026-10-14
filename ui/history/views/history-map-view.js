@@ -100,7 +100,6 @@ export function cellCenter(layout, grid, cell) {
 }
 
 /**
- * Trace a pointy-top hex path.
  * @param {CanvasRenderingContext2D} context
  * @param {number} x
  * @param {number} y

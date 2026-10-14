@@ -132,12 +132,7 @@ export function pickHighlights(doc) {
     .map((x) => x.e);
 }
 
-/**
- * Count the local player's events of a kind.
- * @param {CampaignDoc} doc
- * @param {HistoryEventKind} kind
- * @returns {number}
- */
+/** @param {CampaignDoc} doc @param {HistoryEventKind} kind */
 function countMine(doc, kind) {
   return doc.events.filter((e) => e.k === kind && (e.p === doc.local || e.q === doc.local)).length;
 }

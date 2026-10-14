@@ -51,12 +51,7 @@ function overlapsWindow(win, from, to) {
   return to > win.from && from < win.to;
 }
 
-/**
- * The age a position falls in, if any.
- * @param {Timeline} tl
- * @param {number} at
- * @returns {string}
- */
+/** @param {Timeline} tl @param {number} at */
 function ageAt(tl, at) {
   return tl.ages.find((age) => at >= age.from && at < age.from + age.len)?.age || "";
 }
@@ -172,7 +167,6 @@ function applyBox(item, box) {
 }
 
 /**
- * The box spanning an interval of the axis.
  * @param {AxisWindow} win
  * @param {number} from
  * @param {number} to

@@ -28,10 +28,9 @@ export const HISTORY_PAGES = [
 ];
 
 /**
- * The Timeline page for the game being played.
  * @param {HTMLElement} body
  * @param {CampaignDoc|null} doc
- * @param {"full"|"met"|"own"} visibility Analytics visibility.
+ * @param {"full"|"met"|"own"} visibility
  */
 function renderTimelinePage(body, doc, visibility) {
   if (!doc || !doc.ages.length) {
