@@ -31,11 +31,9 @@ function visibleMetrics() {
 }
 
 /**
- * Read a persisted setting defensively.
  * @param {*} ctx
  * @param {string} key
  * @param {*} fallback
- * @returns {*}
  */
 function getSetting(ctx, key, fallback) {
   try {
@@ -47,7 +45,6 @@ function getSetting(ctx, key, fallback) {
 }
 
 /**
- * Write a persisted setting (best-effort).
  * @param {*} ctx
  * @param {string} key
  * @param {*} value
@@ -61,7 +58,6 @@ function setSetting(ctx, key, value) {
 }
 
 /**
- * Resolve the active view mode ("rank"/"value").
  * @param {*} ctx
  * @returns {string}
  */
@@ -71,7 +67,6 @@ function readMode(ctx) {
 }
 
 /**
- * Resolve the active sort metric id, validated against the visible metrics.
  * @param {*} ctx
  * @param {*[]} metrics
  * @returns {string}
@@ -82,20 +77,16 @@ function readSortKey(ctx, metrics) {
 }
 
 /**
- * Whether to mask this civ's identity (unmet + names hidden).
  * @param {*} profile
  * @param {boolean} showUnmetNames
- * @returns {boolean}
  */
 function isMasked(profile, showUnmetNames) {
   return !showUnmetNames && profile.met === false;
 }
 
 /**
- * Latest finite metric value, or null.
  * @param {*} profile
  * @param {string} id
- * @returns {number|null}
  */
 function metricValue(profile, id) {
   const value = profile.latest?.[id];
@@ -103,10 +94,8 @@ function metricValue(profile, id) {
 }
 
 /**
- * Sort pids by a metric value, descending; civs missing the value sort last.
  * @param {Record<string, *>} profiles
  * @param {string} sortKey
- * @returns {string[]}
  */
 function sortPids(profiles, sortKey) {
   return Object.keys(profiles).sort((a, b) => {
@@ -120,10 +109,8 @@ function sortPids(profiles, sortKey) {
 }
 
 /**
- * Precompute per-metric ranks (pid -> rank).
  * @param {Record<string, *>} profiles
  * @param {*[]} metrics
- * @returns {Map<string, *>} metricId -> { ranks, total }.
  */
 function buildRanksCache(profiles, metrics) {
   const cache = new Map();
@@ -132,11 +119,9 @@ function buildRanksCache(profiles, metrics) {
 }
 
 /**
- * Rank of a pid for a metric, as a display string ("—" when unranked).
  * @param {Map<string, *>} cache
  * @param {string} metricId
  * @param {string} pid
- * @returns {string}
  */
 function rankOf(cache, metricId, pid) {
   const rank = cache.get(metricId)?.ranks.get(pid);
@@ -161,12 +146,10 @@ function dataRowClass(cache, sortKey, pid, isLocal) {
 }
 
 /**
- * The metric cell's text for the current view mode.
  * @param {*} profile
  * @param {*} metric
  * @param {string} mode
  * @param {Map<string, *>} cache
- * @returns {string}
  */
 function cellText(profile, metric, mode, cache) {
   if (mode === "rank") return rankOf(cache, metric.id, profile.pid);
@@ -202,10 +185,8 @@ function buildToggleRow(ui, onChange) {
 }
 
 /**
- * Build a non-sortable fixed header cell.
  * @param {string} cls
  * @param {string} label
- * @returns {HTMLElement}
  */
 function fixedHeader(cls, label) {
   const cell = div("demographics-settle-th " + cls);
@@ -238,11 +219,9 @@ function buildMetricHeader(metric, ui, onSort) {
 }
 
 /**
- * Build the table header row.
  * @param {*[]} metrics
  * @param {CivTableUi} ui
  * @param {(key: string) => void} onSort
- * @returns {HTMLElement}
  */
 function buildHeaderRow(metrics, ui, onSort) {
   const row = div("demographics-settle-row demographics-settle-header");
@@ -327,12 +306,9 @@ function buildCivCell(profile, masked) {
 }
 
 /**
- * Build one metric cell. The cell of the civ leading that metric carries the gold
- * leader wash and a "World leader in <metric>" tooltip.
  * @param {*} profile
  * @param {*} metric
  * @param {{ mode: string, sortKey: string, cache: Map<string, *> }} opts
- * @returns {HTMLElement}
  */
 function buildMetricCell(profile, metric, opts) {
   const lead = leadsMetric(opts.cache.get(metric.id), profile.pid);

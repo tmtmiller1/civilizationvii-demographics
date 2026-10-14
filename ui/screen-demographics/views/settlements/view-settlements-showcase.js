@@ -48,11 +48,7 @@ function wonderTooltip(wonder) {
   return name + " · " + t("LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT", localYear(wonder.year));
 }
 
-/**
- * Build the horizontal wonder-icon row beneath a city name.
- * @param {*} settlement
- * @returns {HTMLElement|null}
- */
+/** @param {*} settlement */
 function buildWonderRow(settlement) {
   const wonders = Array.isArray(settlement.wonders) ? settlement.wonders : [];
   const row = div("demographics-settle-wonders");
@@ -65,11 +61,7 @@ function buildWonderRow(settlement) {
   return row.firstChild ? row : null;
 }
 
-/**
- * The founded-year text, distinguishing exact from approximate foundings.
- * @param {*} settlement
- * @returns {string} The founded text (or "").
- */
+/** @param {*} settlement */
 function foundedText(settlement) {
   const founded = settlement.founded;
   if (!founded || !founded.year) return "";
@@ -82,10 +74,8 @@ function foundedText(settlement) {
 }
 
 /**
- * Build the city meta line.
  * @param {*} settlement
  * @param {ShowcaseDeps} deps
- * @returns {HTMLElement}
  */
 function buildCityMeta(settlement, deps) {
   const meta = div("demographics-settle-citymeta");
@@ -112,11 +102,9 @@ function buildScoreBar(settlement) {
 }
 
 /**
- * Build a podium card's body column (name / owner / meta + map & cinematic buttons).
  * @param {*} settlement
  * @param {*} state
  * @param {ShowcaseDeps} deps
- * @returns {HTMLElement}
  */
 function buildPodiumBody(settlement, state, deps) {
   const body = div("demographics-settle-podium-body");
@@ -138,12 +126,10 @@ function buildPodiumBody(settlement, state, deps) {
 }
 
 /**
- * Build one podium card for a top-3 settlement.
  * @param {*} settlement
  * @param {number} place
  * @param {*} state
  * @param {ShowcaseDeps} deps
- * @returns {HTMLElement}
  */
 function buildPodiumCard(settlement, place, state, deps) {
   settlement = deps.displayOf(state, settlement);
@@ -168,12 +154,9 @@ function buildPodiumCard(settlement, place, state, deps) {
 }
 
 /**
- * Build the showcase row's name line: name, City/Town, Capital, Holy City, and
- * the camera buttons.
  * @param {*} settlement
  * @param {*} state
  * @param {ShowcaseDeps} deps
- * @returns {HTMLElement}
  */
 function buildShowcaseNameRow(settlement, state, deps) {
   const nameRow = div("demographics-settle-list-namerow");
@@ -195,11 +178,9 @@ function buildShowcaseNameRow(settlement, state, deps) {
 }
 
 /**
- * Build the showcase row's middle column.
  * @param {*} settlement
  * @param {*} state
  * @param {ShowcaseDeps} deps
- * @returns {HTMLElement}
  */
 function buildShowcaseMid(settlement, state, deps) {
   const mid = div("demographics-settle-list-mid");
@@ -298,11 +279,9 @@ export function rankedRowClass(base, settlement, place) {
 }
 
 /**
- * Build one ranked-list row of the showcase.
  * @param {*} settlement
  * @param {*} state
  * @param {ShowcaseDeps} deps
- * @returns {HTMLElement}
  */
 function buildShowcaseRow(settlement, state, deps) {
   settlement = deps.displayOf(state, settlement);
@@ -346,11 +325,8 @@ function showcaseAges(deps) {
 }
 
 /**
- * The settlements the showcase ranks: the live board, or the archived end-of-age board picked in
- * the age pills.
  * @param {*} state
  * @param {ShowcaseDeps} deps
- * @returns {Array<*>} The ranked settlements.
  */
 function showcaseSource(state, deps) {
   const pick = showcaseAges(deps).find((entry) => entry.age === state.showcaseAge);

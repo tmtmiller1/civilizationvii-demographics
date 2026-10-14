@@ -20,7 +20,6 @@ import { effectivePolicy } from "/demographics/ui/core/demographics-governance.j
  */
 
 /**
- * Run fn, returning result or fallback on throw.
  * @template T
  * @param {() => T} fn
  * @param {(...a: any[]) => void} logError
@@ -62,10 +61,6 @@ function measureChartSize(chartHost) {
 let activeChartReflow = null;
 let chartResizeWired = false;
 
-/**
- * Install the one-time window-resize → chart re-fit hook (idempotent), rAF-
- * debounced so a resize drag coalesces to one re-render per frame.
- */
 function ensureChartResizeReflow() {
   if (chartResizeWired) return;
   if (typeof window === "undefined" || typeof window.addEventListener !== "function") return;
@@ -103,10 +98,6 @@ function routeChartRender(chartHost, ctx, activeMetric, turnRange, size) {
 /** @type {{ id: string|null, turn: number, host: HTMLElement|null, policy: string }} */
 let lastExternalRender = { id: null, turn: -1, host: null, policy: "" };
 
-/**
- * The current game turn (for external-panel render-skip invalidation), or -1 off-engine.
- * @returns {number}
- */
 function currentTurn() {
   try {
     return typeof Game !== "undefined" && typeof Game.turn === "number" ? Game.turn : -1;
@@ -115,10 +106,6 @@ function currentTurn() {
   }
 }
 
-/**
- * The effective analytics-visibility policy, defensively (for the render-skip key).
- * @returns {string} "" off-engine.
- */
 function safePolicy() {
   try {
     return effectivePolicy() || "";
@@ -127,12 +114,7 @@ function safePolicy() {
   }
 }
 
-/**
- * Resolve `activeMetric` to its owning external panel and (for multi-tab panels) the bare sub-tab
- * id, or null when it isn't an external panel/sub-tab.
- * @param {string} activeMetric A panel id, or "panelId::subId".
- * @returns {{panel:*, subId:(string|undefined)}|null}
- */
+/** @param {string} activeMetric */
 function findPanelFor(activeMetric) {
   for (const panel of EXTERNAL_PANELS) {
     if (activeMetric === panel.id) return { panel, subId: undefined };
@@ -148,13 +130,10 @@ function findPanelFor(activeMetric) {
 // policy, not on unrelated history-view state; skip the rebuild when none of those changed.
 
 /**
- * Whether the external panel is already rendered into this host for the same id, turn, and policy
- * (so the rebuild can be skipped).
  * @param {string} activeMetric
  * @param {number} turn
- * @param {string} policy Effective analytics-visibility policy.
+ * @param {string} policy
  * @param {HTMLElement} chartHost
- * @returns {boolean}
  */
 function extUnchanged(activeMetric, turn, policy, chartHost) {
   const last = lastExternalRender;
@@ -192,13 +171,11 @@ function tryRenderExternalPanel(chartHost, ctx, activeMetric) {
 }
 
 /**
- * Attempt synthetic metric rendering.
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
  * @param {TurnRange|null} turnRange
  * @param {{ width: number, height: number }} size
- * @returns {boolean}
  */
 function tryRenderSynthetic(chartHost, ctx, activeMetric, turnRange, size) {
   const { width, height } = size;
@@ -245,11 +222,7 @@ const BYTYPE_SPECS = {
   units_lost_type: { datapointId: "UnitsLostByType", lookup: "Units" }
 };
 
-/**
- * Per-settlement, per-civ boards: synthetic id → the settlement count field.
- * Districts / Buildings broken down by settlement, grouped by leader/civilization.
- * @type {Record<string, {field:string, typesField?:string, empty:string}>}
- */
+/** @type {Record<string, {field:string, typesField?:string, empty:string}>} */
 const SETTLEMENT_BOARDS = {
   buildings_type: {
     field: "buildings",
@@ -275,11 +248,7 @@ const BOARD_RENDERERS = {
   settlements_atlas: (chartMod, el) => chartMod.renderSettlementsAtlas(el, {})
 };
 
-/**
- * Two-axis "Fingerprint" scatters: synthetic id → the metric pair + axis titles.
- * Each renders every civ as a dot so the cloud shape reveals strategic archetypes.
- * @type {Record<string, {xMetric:string, yMetric:string, xTitle:string, yTitle:string}>}
- */
+/** @type {Record<string, {xMetric:string, yMetric:string, xTitle:string, yTitle:string}>} */
 const SCATTER_SPECS = {
   civ_scatter: {
     xMetric: "science_yield",
@@ -315,13 +284,10 @@ const FILTERABLE_TRENDS = {
 };
 
 /**
- * Attempt a filterable trend/compare chart (Power Race, Population Share, Power
- * Fingerprint): a Chart.js / SVG render wired to the shared civ-filter legend.
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
  * @param {{ width: number, height: number }} size
- * @returns {boolean}
  */
 function tryRenderTrend(chartHost, ctx, activeMetric, size) {
   const fnName = FILTERABLE_TRENDS[activeMetric];
@@ -339,13 +305,10 @@ function tryRenderTrend(chartHost, ctx, activeMetric, size) {
 }
 
 /**
- * Attempt plain-DOM / SVG board synthetic rendering (Wonders, by-type, Religion,
- * Atlas), plus the Chart.js civ scatters (which need the canvas size).
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
- * @param {{ width: number, height: number }} [size] Used by the scatters.
- * @returns {boolean}
+ * @param {{ width: number, height: number }} [size]
  */
 function tryRenderBoards(chartHost, ctx, activeMetric, size) {
   const chartMod = /** @type {*} */ (ctx.chartMod);
@@ -371,13 +334,10 @@ function tryRenderBoards(chartHost, ctx, activeMetric, size) {
 }
 
 /**
- * Attempt the constructible-based boards: Quarters (districts_type), the per-settlement
- * Buildings board, and the Game.Summary by-type breakdowns.
  * @param {*} chartMod
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
- * @returns {boolean}
  */
 function tryConstructibleBoards(chartMod, chartHost, ctx, activeMetric) {
   if (activeMetric === "districts_type" && typeof chartMod.renderQuartersBoard === "function") {
@@ -398,11 +358,9 @@ function tryConstructibleBoards(chartMod, chartHost, ctx, activeMetric) {
 }
 
 /**
- * Attempt crisis synthetic rendering.
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
- * @returns {boolean}
  */
 function tryRenderCrisis(chartHost, ctx, activeMetric) {
   const chartMod = /** @type {*} */ (ctx.chartMod);
@@ -421,13 +379,11 @@ function tryRenderCrisis(chartHost, ctx, activeMetric) {
 }
 
 /**
- * Attempt wars synthetic rendering.
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric
  * @param {TurnRange|null} turnRange
  * @param {{ width: number, height: number }} size
- * @returns {boolean}
  */
 function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
   const { width, height } = size;
@@ -455,7 +411,6 @@ function tryRenderWars(chartHost, ctx, activeMetric, turnRange, size) {
 }
 
 /**
- * Render standard line-chart metric.
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric

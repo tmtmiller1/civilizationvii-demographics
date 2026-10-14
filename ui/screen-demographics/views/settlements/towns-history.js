@@ -16,10 +16,6 @@ const KEY = "townTrendBuf";
 /** Max samples retained per town. */
 const CAP = 12;
 
-/**
- * The local player (or observer) id.
- * @returns {number|undefined}
- */
 function localPid() {
   return orFallback(() => {
     if (typeof GameContext === "undefined") return undefined;
@@ -30,11 +26,7 @@ function localPid() {
   }, undefined);
 }
 
-/**
- * Light read of one settlement id: { locId, pop } when it is a town, else null.
- * @param {*} id The settlement ComponentID.
- * @returns {{locId: string, pop: number}|null}
- */
+/** @param {*} id The settlement ComponentID. */
 function lightTownAt(id) {
   const city = orFallback(() => (typeof Cities !== "undefined" ? Cities.get(id) : null), null);
   if (!city || !orFallback(() => city.isTown, false)) return null;
@@ -43,10 +35,6 @@ function lightTownAt(id) {
   return { locId: loc.x + "," + loc.y, pop: orFallback(() => city.population, 0) || 0 };
 }
 
-/**
- * Cheap read of the local player's towns: just plot key + population.
- * @returns {Array<{locId: string, pop: number}>}
- */
 function readLightTowns() {
   const pid = localPid();
   if (typeof pid !== "number" || typeof Players === "undefined") return [];
@@ -63,7 +51,6 @@ function readLightTowns() {
 }
 
 /**
- * Load the buffer, resetting it when the game seed changed (new game).
  * @param {string} seed
  * @returns {{seed: string, byLoc: Record<string, Array<{t: number, pop: number}>>}}
  */

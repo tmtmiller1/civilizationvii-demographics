@@ -30,10 +30,8 @@ export function setMatrixNumberMode(mode) {
 }
 
 /**
- * Add a 2D metric group's scaled→civ member pairs into `map`, when the group
- * exposes both a "scaled" and a "civ" view.
- * @param {Map<string, string>} map Accumulator (mutated).
- * @param {*} group A registered metric group.
+ * @param {Map<string, string>} map
+ * @param {*} group
  */
 function addGroupPairs(map, group) {
   if (!Array.isArray(group.members) || !Array.isArray(group.views)) return;
@@ -43,9 +41,8 @@ function addGroupPairs(map, group) {
 }
 
 /**
- * Record one group member's scaled→civ id pair (when both are distinct strings).
- * @param {Map<string, string>} map Accumulator (mutated).
- * @param {*} member A group member ({scaled, civ, ...}).
+ * @param {Map<string, string>} map
+ * @param {*} member
  */
 function addMemberPair(map, member) {
   const scaledId = member && member.scaled;
@@ -146,9 +143,8 @@ export function buildLeaderAvatar(profile, sizeRem) {
 }
 
 /**
- * Check whether a leader type can resolve to a real portrait icon.
  * @param {*} leaderType
- * @returns {leaderType is string} True when the type looks like `LEADER_*`.
+ * @returns {leaderType is string}
  */
 function isLeaderPortraitType(leaderType) {
   return !!(leaderType && typeof leaderType === "string" && /^LEADER_/.test(leaderType));
@@ -303,11 +299,8 @@ export function formatMetricValue(metric, value) {
 }
 
 /**
- * Build the small value line: "(<icon> value)" in the small secondary style.
- * A missing value shows a bare "—" (no parens/icon).
  * @param {MetricDef} metric
  * @param {CivProfile} profile
- * @returns {HTMLElement}
  */
 function buildValueLine(metric, profile) {
   const line = document.createElement("div");
@@ -400,11 +393,7 @@ export function syncLabelResetButton(labelCol, opts) {
   if (btn) header.appendChild(btn);
 }
 
-/**
- * Build the label-column reset button when hidden civs exist.
- * @param {LabelColumnOpts|undefined} opts
- * @returns {HTMLElement|null} Null when no civs are hidden.
- */
+/** @param {LabelColumnOpts|undefined} opts */
 function buildLabelResetButton(opts) {
   if (!(opts && (opts.hiddenCount ?? 0) > 0 && typeof opts.onReset === "function")) {
     return null;
@@ -421,10 +410,7 @@ function buildLabelResetButton(opts) {
   return btn;
 }
 
-/**
- * Append all metric label rows to the label column.
- * @param {HTMLElement} col
- */
+/** @param {HTMLElement} col */
 function appendMetricLabelRows(col) {
   let rowIdx = 0;
   for (const metric of shownMetrics()) {

@@ -39,10 +39,6 @@ import { orFallback } from "/demographics/ui/screen-demographics/screen/guarded-
  * @property {number} total Count of civs with a numeric value.
  */
 
-/**
- * Resolve the local player id from the engine `GameContext`, defensively.
- * @returns {number|undefined} Local player (or observer) id, if numeric.
- */
 function getLocalId() {
   return orFallback(() => {
     if (typeof GameContext !== "undefined" && GameContext) {

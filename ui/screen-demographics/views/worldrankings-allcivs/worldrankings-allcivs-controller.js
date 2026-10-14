@@ -108,12 +108,7 @@ export function resetHidden(state) {
   updateStripColumns(state, wasHidden);
 }
 
-/**
- * The non-local pids in display order: visible civs first (in the sorted order), then the hidden
- * ones as thin "ghost" columns at the far right.
- * @param {StripState} state
- * @returns {string[]}
- */
+/** @param {StripState} state */
 function orderedOtherPids(state) {
   /** @type {string[]} */
   const visible = [];
@@ -152,10 +147,9 @@ function updateStripColumns(state, pids) {
 }
 
 /**
- * Replace one civ's column with a freshly built one at its new position.
  * @param {StripState} state
  * @param {string} pid
- * @param {string[]} ordered The target pid order.
+ * @param {string[]} ordered
  */
 function rebuildOneColumn(state, pid, ordered) {
   const prior = state.cols.get(pid);
@@ -252,10 +246,7 @@ export function renderStrip(state) {
   }
 }
 
-/**
- * Append every strip column to the (already cleared) strip (see `renderStrip`).
- * @param {StripState} state
- */
+/** @param {StripState} state */
 function appendStripColumns(state) {
   state.cols.clear();
   appendStickyColumns(state);
