@@ -38,10 +38,8 @@ export function pidInfo(snapshot, pid) {
 }
 
 /**
- * Resolve a war-roster civ type string from snapshot-first fallback logic.
  * @param {*} snapshotPlayer Snapshot player entry.
  * @param {number | string} pid
- * @returns {string | undefined} Civ type string, when available.
  */
 function resolveRosterCivTypeString(snapshotPlayer, pid) {
   if (typeof snapshotPlayer?.civTypeString === "string" && snapshotPlayer.civTypeString) {
@@ -51,10 +49,8 @@ function resolveRosterCivTypeString(snapshotPlayer, pid) {
 }
 
 /**
- * Read the live player handle to fill in a missing civ name and the CS flag.
  * @param {number | string} pid
  * @param {*} cachedCiv The civ name already known from the snapshot, if any.
- * @returns {{ civ: *, isCS: boolean }} The (possibly resolved) civ + CS flag.
  */
 function pidLiveInfo(pid, cachedCiv) {
   let civ = cachedCiv;
@@ -119,11 +115,7 @@ function civTypeStringFor(pid) {
  * @returns {boolean} True if the player should be treated as a city-state.
  */
 function detectCityState(player) {
-  /**
-   * Coerce a boolean-or-thunk player flag to a boolean (or undefined).
-   * @param {*} value The flag value (boolean, function, or other).
-   * @returns {boolean | undefined} The resolved flag, or undefined.
-   */
+  /** @param {*} value */
   function flag(value) {
     if (typeof value === "boolean") return value;
     if (typeof value === "function") {
@@ -203,8 +195,7 @@ export function findStartSample(samples, target) {
 }
 
 /**
- * Pin a roster entry's civ identity to the war's start age, read from the start sample. No-op when
- * that data isn't available (then the existing/current value stands).
+ * Pin a roster entry's civ identity to the war's start age, read from the start sample.
  * @param {WarParticipant} entry The roster entry (mutated).
  * @param {Record<string, *>|null} startPlayers pid → snapshot player at war start.
  */
@@ -259,10 +250,7 @@ function refreshActiveEntry(entry, snapshot) {
   if (!entry.civTypeString && info.civTypeString) entry.civTypeString = info.civTypeString;
 }
 
-/**
- * Migrate one war record from scalar sides to side arrays.
- * @param {WarRecord} war A history war record.
- */
+/** @param {WarRecord} war */
 function migrateWarRecord(war) {
   if (Array.isArray(war.sideA) && Array.isArray(war.sideB)) return;
   if (typeof war.aPid === "number" && typeof war.bPid === "number") {
@@ -277,10 +265,8 @@ function migrateWarRecord(war) {
 }
 
 /**
- * Whether player handle p is a formal ally (alliance or defensive pact).
  * @param {*} player A player handle.
  * @param {number} otherId The other major's pid.
- * @returns {boolean} True when allied or defensive-pacted.
  */
 function isAllyOrPact(player, otherId) {
   try {
@@ -300,7 +286,6 @@ function isAllyOrPact(player, otherId) {
 }
 
 /**
- * Append a side's belligerents' formal allies (major civs), in place.
  * @param {number[]} side The side pid list (mutated).
  * @param {number[]} otherSide The opposing side pid list.
  * @param {Map<number, *>} byId Player handle by pid.
@@ -344,11 +329,7 @@ export function augmentWarsWithAllies(activeWarsByID, allPlayers) {
   }
 }
 
-/**
- * Map each major to alive city-states it currently suzerains.
- * @param {*[]} allPlayers The alive players list.
- * @returns {Map<number, Set<number>>} suzerain pid -> city-state pids.
- */
+/** @param {*[]} allPlayers The alive players list. */
 function buildSuzerainMap(allPlayers) {
   /** @type {Map<number, Set<number>>} */
   const map = new Map();
@@ -361,11 +342,7 @@ function buildSuzerainMap(allPlayers) {
   return map;
 }
 
-/**
- * Read a city-state player's suzerain pid, or -1 when unavailable.
- * @param {*} player A player handle.
- * @returns {number} The suzerain pid, or -1.
- */
+/** @param {*} player A player handle. */
 function readSuzerain(player) {
   try {
     if (!player || player.isMinor !== true || typeof player.id !== "number") return -1;
@@ -379,7 +356,6 @@ function readSuzerain(player) {
 }
 
 /**
- * Append a side's suzerained city-states to that side pid list.
  * @param {number[]} sidePids The side pid list (mutated).
  * @param {Map<number, Set<number>>} csBySuzerain
  */

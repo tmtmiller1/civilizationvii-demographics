@@ -6,10 +6,8 @@ import { collectorLog, safeCall, safeNum } from "/demographics/ui/sampler/sample
 import { recordUnitStrength } from "/demographics/ui/sampler/sampler-war-events.js";
 
 /**
- * Sum completed wonders across a player's cities.
  * @param {*} cityList The city list (array/array-like) or undefined.
  * @param {Pid} id The player id (for log attribution).
- * @returns {number | undefined} Total wonders, or undefined if none readable.
  */
 function sumCityWonders(cityList, id) {
   if (!Array.isArray(cityList)) return undefined;
@@ -29,11 +27,7 @@ function sumCityWonders(cityList, id) {
   return anyOK ? total : undefined;
 }
 
-/**
- * Read one city's completed-wonder count off its Constructibles handle.
- * @param {*} city A city handle.
- * @returns {number | undefined} The finite count, or undefined if unreadable.
- */
+/** @param {*} city A city handle. */
 function _cityWonderCount(city) {
   const con = city?.Constructibles;
   if (!con || typeof con.getNumWonders !== "function") return undefined;
@@ -85,11 +79,7 @@ export function collectWonderTypes(ctx, id, player) {
   }
 }
 
-/**
- * Whether the player + global Constructibles wonder APIs are usable.
- * @param {*} playerCon The player's Constructibles handle.
- * @returns {boolean} True if getWonders + getByComponentID are callable.
- */
+/** @param {*} playerCon The player's Constructibles handle. */
 function _wonderApiAvailable(playerCon) {
   return !!(
     playerCon &&
@@ -99,11 +89,7 @@ function _wonderApiAvailable(playerCon) {
   );
 }
 
-/**
- * Look up a constructible's ConstructibleType string from its type/hash.
- * @param {*} type The constructible type/hash (con.type).
- * @returns {string | undefined} The ConstructibleType, or undefined.
- */
+/** @param {*} type The constructible type/hash (con.type). */
 function _constructibleTypeString(type) {
   const info =
     typeof GameInfo !== "undefined" &&
@@ -115,11 +101,7 @@ function _constructibleTypeString(type) {
   return typeof ct === "string" && ct.length > 0 ? ct : undefined;
 }
 
-/**
- * Resolve the ConstructibleType string for one completed, undamaged wonder.
- * @param {*} wc A wonder ComponentID.
- * @returns {string | undefined} The ConstructibleType, or undefined.
- */
+/** @param {*} wc A wonder ComponentID. */
 function _wonderComponentType(wc) {
   try {
     const con = Constructibles.getByComponentID(wc);
@@ -167,9 +149,7 @@ export function buildUnitStatsByType() {
 }
 
 /**
- * Merge one GameInfo.Unit_Stats row into the UnitType map.
  * @param {Map<string, { Combat: number, RangedCombat: number, score: number }>} statsByType
- *   The map to mutate.
  * @param {*} row A GameInfo.Unit_Stats row.
  */
 function _mergeUnitStatRow(statsByType, row) {
@@ -192,11 +172,8 @@ const MILITARY_FORMATIONS = new Set([
 ]);
 
 /**
- * Compute the combat strength of one unit.
  * @param {*} unit The unit handle.
  * @param {Map<string, { Combat: number, RangedCombat: number, score: number }>} statsByType
- *   Map from {@link buildUnitStatsByType}.
- * @returns {number} The unit's strength (0 if non-military or unreadable).
  */
 function unitStrength(unit, statsByType) {
   const utype = unit.type;
@@ -208,11 +185,8 @@ function unitStrength(unit, statsByType) {
 }
 
 /**
- * Resolve a unit def's combat strength from its Unit_Stats row.
  * @param {*} def A GameInfo.Units row.
  * @param {Map<string, { Combat: number, RangedCombat: number, score: number }>} statsByType
- *   Map from {@link buildUnitStatsByType}.
- * @returns {number} The strength (0 if none found).
  */
 function _defStrength(def, statsByType) {
   const utStr = def.UnitType;
@@ -333,10 +307,8 @@ export function tallyTriumphRow(ctx, legacies, row) {
 }
 
 /**
- * Whether a legacy is triggered for the player.
  * @param {*} legacies The player's Legacies handle.
  * @param {string} legacyType
- * @returns {boolean} True if triggered.
  */
 function _legacyTriggered(legacies, legacyType) {
   try {
@@ -347,10 +319,8 @@ function _legacyTriggered(legacies, legacyType) {
 }
 
 /**
- * Whether an untriggered legacy has non-zero progress.
  * @param {*} legacies The player's Legacies handle.
  * @param {string} legacyType
- * @returns {boolean} True if progress is in progress.
  */
 function _legacyInProgress(legacies, legacyType) {
   try {

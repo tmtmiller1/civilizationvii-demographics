@@ -36,12 +36,7 @@ export function csvCell(v) {
   return s;
 }
 
-/**
- * Format a number to remove floating-point noise: integers stay integer; floats
- * round to 2 decimals; values ≥1000 round to integers.
- * @param {*} v
- * @returns {string} "" for non-finite input.
- */
+/** @param {*} v */
 function formatCsvNumber(v) {
   if (!isFinite(v)) return "";
   if (Number.isInteger(v)) return String(v);
@@ -49,21 +44,12 @@ function formatCsvNumber(v) {
   return String(Math.round(v * 100) / 100);
 }
 
-/**
- * Numbers go through {@link formatCsvNumber}, everything else is CSV-escaped as a string.
- * @param {*} v
- * @returns {string}
- */
+/** @param {*} v */
 function formatCsvCell(v) {
   return typeof v === "number" ? formatCsvNumber(v) : csvCell(v);
 }
 
-/**
- * Best-effort read of a labeled game-context value, swallowing engine-boundary
- * throws and returning "unknown".
- * @param {() => string|undefined} fn
- * @returns {string}
- */
+/** @param {() => string|undefined} fn */
 function safeLabel(fn) {
   try {
     const v = fn();
@@ -73,10 +59,6 @@ function safeLabel(fn) {
   }
 }
 
-/**
- * The current game-speed type label (lowercased, GAMESPEED_ stripped).
- * @returns {string|undefined}
- */
 function readGameSpeed() {
   // Bare access (no optional chaining): any engine-boundary throw is caught by
   // safeLabel, which keeps this function's branch count under the lint cap.
@@ -87,10 +69,6 @@ function readGameSpeed() {
     : undefined;
 }
 
-/**
- * The current age type label (lowercased, AGE_ stripped).
- * @returns {string|undefined}
- */
 function readAge() {
   const row = Game?.age == null ? null : GameInfo?.Ages?.lookup?.(Game.age);
   return row?.AgeType?.replace(/^AGE_/, "").toLowerCase();
@@ -128,12 +106,11 @@ function buildMetaHeader(title, rowCount, colCount) {
 }
 
 /**
- * Show a transient toast in `host`, auto-removing after 4s. Replaces any prior
- * toast first. Toast chrome lives in the .demographics-csv-toast rule; only the
+ * Toast chrome lives in the .demographics-csv-toast rule; only the
  * success/failure tint is dynamic.
  * @param {HTMLElement} host
  * @param {string} message
- * @param {boolean} success Green (success) vs orange (failure) tint.
+ * @param {boolean} success
  */
 function showCsvToast(host, message, success) {
   try {
@@ -219,12 +196,10 @@ export function copyTableAsCsv(opts) {
 }
 
 /**
- * Copy a built CSV string to the clipboard (with a UI.log fallback) and show the
- * result toast, refusing oversized exports.
- * @param {HTMLElement|undefined} host Host for the confirmation toast.
+ * @param {HTMLElement|undefined} host
  * @param {string} csv
- * @param {number} rowCount For the toast.
- * @param {number} colCount For the toast.
+ * @param {number} rowCount
+ * @param {number} colCount
  */
 function deliverCsv(host, csv, rowCount, colCount) {
   const sizeMB = (csv.length / (1024 * 1024)).toFixed(1);

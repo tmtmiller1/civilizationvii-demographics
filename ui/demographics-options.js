@@ -47,7 +47,6 @@ function notifyLiveRefresh() {
 }
 
 /**
- * A plain checkbox setting under Mods → Demographics.
  * @param {string} id
  * @param {string} key The DemographicsSettings key.
  * @param {boolean} dflt
@@ -70,7 +69,6 @@ function registerCheckbox(id, key, dflt, text) {
 }
 
 /**
- * A dropdown setting whose selected index maps to `items[index].value`.
  * @param {string} id
  * @param {string} key The DemographicsSettings key.
  * @param {{value:*, label:string}[]} items Stored value + display label.

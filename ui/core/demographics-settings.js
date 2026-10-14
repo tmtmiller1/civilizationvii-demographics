@@ -114,10 +114,8 @@ const SCHEMA = {
 };
 
 /**
- * Coerce a value to a clamped integer, or undefined when non-numeric.
  * @param {*} value
  * @param {{ min?: number, max?: number }} spec
- * @returns {number|undefined}
  */
 function coerceInt(value, spec) {
   const num = typeof value === "number" ? value : Number(value);
@@ -148,13 +146,7 @@ const TYPE_VALIDATORS = {
   capOverride: (v) => coerceCapOverride(v)
 };
 
-/**
- * Validate + repair a settings bucket in place against {@link SCHEMA}: every
- * known key is type-checked / clamped, and reset to its default when invalid.
- * Unknown keys are left untouched. Mutates and returns `bucket`.
- * @param {SettingsBucket} bucket
- * @returns {SettingsBucket}
- */
+/** @param {SettingsBucket} bucket */
 function repairBucket(bucket) {
   for (const key of Object.keys(SCHEMA)) {
     if (!(key in bucket)) continue;
@@ -176,12 +168,7 @@ function repairBucket(bucket) {
 /** @type {Record<number, (slice: SettingsBucket) => SettingsBucket>} */
 const MIGRATIONS = {};
 
-/**
- * Upgrade a persisted slice from its stamped schema version to the current one,
- * running each registered migration in order, then re-stamp the version.
- * @param {SettingsBucket} slice Mutated.
- * @returns {SettingsBucket}
- */
+/** @param {SettingsBucket} slice */
 function migrateSlice(slice) {
   let from = typeof slice[SCHEMA_KEY] === "number" ? slice[SCHEMA_KEY] : 0;
   // A slice stamped by a newer build is left as it is: its keys are read but the
@@ -196,11 +183,7 @@ function migrateSlice(slice) {
   return slice;
 }
 
-/**
- * Migration, then repair.
- * @param {SettingsBucket} slice
- * @returns {SettingsBucket}
- */
+/** @param {SettingsBucket} slice */
 function normalizeSlice(slice) {
   const migrated = migrateSlice({ ...slice });
   return repairBucket(migrated);
@@ -229,7 +212,6 @@ function sliceToPersist(bucket) {
 }
 
 /**
- * Run `fn`; on any throw, log and return `fallback`.
  * @template T
  * @param {() => T} fn
  * @param {T} [fallback]
@@ -244,15 +226,11 @@ function safeCall(fn, fallback) {
   }
 }
 
-/**
- * Whether a usable `localStorage` is present in this UI context.
- * @returns {boolean}
- */
 function hasLocalStorage() {
   return safeCall(() => typeof localStorage !== "undefined" && localStorage !== null, false);
 }
 
-/** In-memory fallback bucket. @type {SettingsBucket} */
+/** @type {SettingsBucket} */
 let memoryBucket = { ...DEFAULTS };
 
 let _rootParseWarned = false;
@@ -290,10 +268,7 @@ function readRoot() {
   }
 }
 
-/**
- * Persist the top-level `modSettings` blob. No-op when storage is unavailable.
- * @param {SettingsRoot} root
- */
+/** @param {SettingsRoot} root */
 function writeRoot(root) {
   if (!hasLocalStorage()) return;
   const written = safeCall(() => {
@@ -356,13 +331,8 @@ function looksLikeSettingsRoot(parsed) {
 let _foreignRootWarned = false;
 let _clobberGuardWarned = false;
 
-/** Sentinel for "getItem threw", distinct from an empty read. */
 const READ_THREW = Symbol("read-threw");
 
-/**
- * Raw read of the shared root, telling a throw apart from an empty store.
- * @returns {string|null|typeof READ_THREW} The raw value, null when empty, READ_THREW on throw.
- */
 function readRawRoot() {
   try {
     const raw = localStorage.getItem(ROOT_KEY);
@@ -410,10 +380,9 @@ let _persistDisabled = /** @type {string|null} */ (null);
 let _persistStatus = "ok";
 
 /**
- * Stop persisting for the rest of the session and say why, once.
- * @param {string} reason Short reason for the log line.
+ * @param {string} reason
  * @param {PersistStatus} [status] Status to report to the Options footer.
- * @returns {{root: SettingsRoot, safe: boolean}} A refused write.
+ * @returns {{root: SettingsRoot, safe: boolean}}
  */
 function disablePersistence(reason, status = "read-failed") {
   if (!_persistDisabled) {
@@ -553,10 +522,7 @@ function checkSliceIntegrity(root) {
 // top-level key is purged on load (a restored save/backup could reintroduce one).
 const STRAY_KEY_RE = /^_*demographics[_-]/i;
 /**
- * Remove demographics-owned stray top-level localStorage keys (anything matching
- * {@link STRAY_KEY_RE} other than the shared `modSettings` root). A single bad
- * key here breaks every ModOptions-based mod's load.
- * @returns {void}
+ * A single bad key here breaks every ModOptions-based mod's load.
  */
 function purgeStrayTopLevelKeys() {
   if (!hasLocalStorage()) return;
@@ -608,19 +574,13 @@ function purgeStrayTopLevelKeys() {
  * }}
  */
 export const DemographicsSettings = {
-  /**
-   * The full effective settings slice (defaults overlaid with stored values).
-   * @returns {SettingsBucket} A fresh merged copy.
-   */
   getSettings() {
     // memoryBucket is authoritative; localStorage only tries to survive a reload
     return { ...DEFAULTS, ...memoryBucket };
   },
   /**
-   * Read one setting by key, falling back to `dflt` then the baked default.
    * @param {string} key
    * @param {*} [dflt]
-   * @returns {*}
    */
   getSetting(key, dflt) {
     const settings = this.getSettings();

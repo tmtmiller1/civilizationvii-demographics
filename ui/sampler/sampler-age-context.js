@@ -43,10 +43,7 @@ export function probeCrisisEventType(safeCall) {
   });
 }
 
-/**
- * Read crisis stage and trigger percentages into the output object.
- * @param {GlobalAgeContext} out Mutable output context.
- */
+/** @param {GlobalAgeContext} out */
 function readCrisisManager(out) {
   const cm = typeof Game !== "undefined" ? Game.CrisisManager : null;
   if (!cm) return;
@@ -62,10 +59,8 @@ function readCrisisManager(out) {
 }
 
 /**
- * Get the highest crisis-stage trigger percent currently exposed by the game.
  * @param {*} cm Crisis manager handle.
- * @param {number} seed Current max seed.
- * @returns {number} Highest trigger percent seen.
+ * @param {number} seed
  */
 function getCrisisStageMax(cm, seed) {
   let maxSeen = seed;
@@ -83,10 +78,7 @@ function getCrisisStageMax(cm, seed) {
   return maxSeen;
 }
 
-/**
- * Read age-progress percentage into the output object.
- * @param {GlobalAgeContext} out Mutable output context.
- */
+/** @param {GlobalAgeContext} out */
 function readAgeProgress(out) {
   const apm = typeof Game !== "undefined" ? Game.AgeProgressManager : null;
   if (!apm) return;

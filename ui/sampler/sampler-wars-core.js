@@ -27,11 +27,9 @@ import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 const log = makeLogger("sampler");
 
 /**
- * Merge the current live roster for one war side into cumulative participation.
  * @param {WarParticipant[]} list The cumulative side roster (mutated in place).
  * @param {WarRosterEntry[]} live The current live roster entries for this side.
  * @param {number} turn The current (age-local) turn.
- * @returns {WarParticipant[]} The same list, updated.
  */
 function mergeWarParticipants(list, live, turn) {
   const livePids = new Set(live.map((r) => r.pid));
@@ -69,7 +67,6 @@ function mergeWarParticipants(list, live, turn) {
 }
 
 /**
- * Update an existing history war record from freshly-enumerated war info.
  * @param {WarRecord} existing The history war record (mutated in place).
  * @param {ActiveWar} info The normalized active-war info.
  * @param {{ a: WarRosterEntry[], b: WarRosterEntry[] }} rosters Side A/B live rosters.
@@ -107,9 +104,8 @@ function updateExistingWar(existing, info, rosters, uid, turn) {
  */
 
 /**
- * Construct a brand-new history war record.
- * @param {BuildNewWarArgs} args New-war inputs.
- * @returns {WarRecord} The new war record.
+ * @param {BuildNewWarArgs} args
+ * @returns {WarRecord}
  */
 function buildNewWar(args) {
   const { wars, info, aRoster, bRoster, snapshot, gameYear, turn } = args;
@@ -165,7 +161,6 @@ function buildNewWar(args) {
 }
 
 /**
- * Reconcile the active war set against history.wars keyed by uniqueID.
  * @param {WarRecord[]} wars The history.wars array (mutated in place).
  * @param {Map<*, ActiveWar>} activeWarsByID Active wars keyed by uniqueID.
  * @param {Snapshot} snapshot The current snapshot.
@@ -217,10 +212,6 @@ function reconcileWars(wars, activeWarsByID, snapshot, gameYear, turn) {
   }
 }
 
-/**
- * Read the current turn's date label via Game.getTurnDate.
- * @returns {string | undefined} The date label, or undefined.
- */
 function readTurnDate() {
   try {
     if (typeof Game !== "undefined" && typeof Game.getTurnDate === "function") {

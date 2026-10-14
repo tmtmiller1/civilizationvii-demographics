@@ -125,9 +125,8 @@ import { collectSummaryMetrics } from "/demographics/ui/sampler/sampler-collecto
  */
 
 /**
- * Capture whether the local player has met `id` at sample time.
- * @param {PlayerCtx} ctx The context to mutate.
- * @param {Pid} id The player id being sampled.
+ * @param {PlayerCtx} ctx
+ * @param {Pid} id
  * @param {*} player The sampled player handle.
  */
 function collectMet(ctx, id, player) {
@@ -144,10 +143,8 @@ function collectMet(ctx, id, player) {
 }
 
 /**
- * Read whether `localP` has met `id` via Diplomacy.hasMet, or undefined.
  * @param {*} localP The local player handle.
- * @param {Pid} id The player id to test.
- * @returns {boolean|undefined} Met state, or undefined when unreadable.
+ * @param {Pid} id
  */
 function readHasMet(localP, id) {
   const diplomacy = localP?.Diplomacy;
@@ -160,10 +157,8 @@ function readHasMet(localP, id) {
 }
 
 /**
- * Read the raw leaderType / civilizationType off the player handle.
- * @param {PlayerCtx} ctx The context to mutate.
+ * @param {PlayerCtx} ctx
  * @param {*} player The sampled player handle.
- * @returns {{ rawLeader: *, rawCiv: * }} The raw values for downstream lookup.
  */
 function collectRawTypes(ctx, player) {
   let rawLeader = undefined;
@@ -202,10 +197,8 @@ export function composeLocaleTag(tag) {
 }
 
 /**
- * Try the table's `lookup()` with the raw value, then its string form.
  * @param {*} table A GameInfo table.
  * @param {*} raw The raw type value (hash or string).
- * @returns {*} The matching row, or null.
  */
 function _lookupRowDirect(table, raw) {
   if (typeof table.lookup !== "function" || raw === undefined || raw === null) {
@@ -222,11 +215,9 @@ function _lookupRowDirect(table, raw) {
 }
 
 /**
- * Iterate a GameInfo table for a row matching `$hash`/`Hash`/`typeField`.
  * @param {*} table A GameInfo table.
  * @param {*} raw The raw type value (hash or string).
  * @param {string} typeField The row's type field name.
- * @returns {*} The matching row, or null.
  */
 function _lookupRowByIteration(table, raw, typeField) {
   if (!table || typeof table[Symbol.iterator] !== "function") return null;
@@ -276,11 +267,7 @@ export function resolveDisplayName(row, typeField, raw, prefix, fallback) {
   return fallback;
 }
 
-/**
- * Resolve a raw player civ-name token into localized display text.
- * @param {*} value Raw player civ name/full-name token.
- * @returns {string|null} Localized display value, or null.
- */
+/** @param {*} value Raw player civ name/full-name token. */
 function localizedPlayerCivName(value) {
   if (typeof value !== "string" || value.length === 0) return null;
   return composeLocaleTag(value) || value;
@@ -320,11 +307,8 @@ export function resolveCivName(player, civRow, rawCiv) {
 }
 
 /**
- * Read one UI.Player color getter and return a non-empty string.
  * @param {Pid} id
  * @param {"getPrimaryColorValueAsString"|"getSecondaryColorValueAsString"} getter
- *   UI getter name.
- * @returns {string|undefined} Color string, when available.
  */
 function readUiPlayerColor(id, getter) {
   if (typeof UI === "undefined" || !UI.Player) return undefined;
@@ -335,8 +319,7 @@ function readUiPlayerColor(id, getter) {
 }
 
 /**
- * Resolve leader/civ display names + canonical type strings and store on ctx.
- * @param {PlayerCtx} ctx The context to mutate.
+ * @param {PlayerCtx} ctx
  * @param {Pid} id
  * @param {*} player The sampled player handle.
  * @param {*} rawLeader The raw leader type value.
@@ -381,8 +364,7 @@ export function canonicalTypeString(rowType, raw) {
 }
 
 /**
- * Capture the player's banner colors.
- * @param {PlayerCtx} ctx The context to mutate.
+ * @param {PlayerCtx} ctx
  * @param {Pid} id
  */
 function collectColors(ctx, id) {
@@ -473,9 +455,7 @@ function collectIdentity(ctx, id, player) {
 }
 
 /**
- * Collect a civ's economy: gold, cities/continent, tech+civic counts, yields,
- * trade routes, ongoing deals, wonders, and settlement cap.
- * @param {PlayerCtx} ctx The context to fill.
+ * @param {PlayerCtx} ctx
  * @param {Pid} id
  * @param {*} player The player handle.
  * @param {*} stats The player's Stats handle.

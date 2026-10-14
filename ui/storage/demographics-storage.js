@@ -57,11 +57,10 @@ import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 const log = makeLogger("storage");
 
 /**
- * Run `fn`, returning its result, or `fallback` if it throws. Never throws.
  * @template T
  * @param {() => T} fn
- * @param {T} fallback Value returned if `fn` throws.
- * @returns {T} The result of `fn`, or `fallback` on error.
+ * @param {T} fallback
+ * @returns {T}
  */
 function safeCall(fn, fallback) {
   try {
@@ -107,8 +106,6 @@ function pickPersistStore(options) {
  */
 const PERSISTENCE_MODE = "within_age";
 /**
- * Resolve the active persistence mode from settings, defaulting to
- * {@link PERSISTENCE_MODE}.
  * @returns {string} `"within_age"` or `"legacy_tutorial_bag"`.
  */
 function activePersistenceMode() {
@@ -122,12 +119,7 @@ function activePersistenceMode() {
 /** Yield-derived metric ids used to detect a premature (economy-not-ready) sample. */
 const YIELD_METRIC_IDS = ["gdp", "gpt", "crops", "production", "science", "culture"];
 
-/**
- * Sum |yield-metric| across all players in a sample, flagging whether any
- * yield metric was present at all.
- * @param {*} sample One sample.
- * @returns {{ total: number, seen: boolean }} The absolute yield total + seen flag.
- */
+/** @param {*} sample */
 function sumSampleYields(sample) {
   let total = 0;
   let seen = false;
@@ -209,9 +201,7 @@ class StorageImpl {
 
   /**
    * Whether the in-memory mirror is stamped with a known seed that differs from
-   * the current game's, so it must not be reconciled into this one. False when
-   * either seed is the "unknown" sentinel.
-   * @returns {boolean} True when _mem is for a different game.
+   * the current game's, so it must not be reconciled into this one.
    */
   _memIsForDifferentGame() {
     if (!this._mem || this._seed === "unknown") return false;
@@ -221,11 +211,8 @@ class StorageImpl {
   }
 
   /**
-   * Prefer the in-memory history when it has strictly more samples than the
-   * persisted payload, then write it back to storage for convergence.
-   * @param {StoredHistory} parsed Parsed persisted history.
-   * @param {PersistStore} store Active persistence store.
-   * @returns {StoredHistory} The authoritative history object.
+   * @param {StoredHistory} parsed
+   * @param {PersistStore} store
    */
   _preferMemWhenNewer(parsed, store) {
     const memSamples = this._mem?.samples?.length || 0;
@@ -250,9 +237,6 @@ class StorageImpl {
     return /** @type {StoredHistory} */ (this._mem);
   }
 
-  /**
-   * Lazily resolve the game seed and install engine flush hooks. Idempotent.
-   */
   _init() {
     if (this._initialized) {
       this._installEngineHooks();
@@ -264,9 +248,6 @@ class StorageImpl {
     log.debug("init: seed=", this._seed, "scope=", CATALOG_SCOPE);
   }
 
-  /**
-   * Refresh the seed from the active game configuration, if available.
-   */
   _refreshSeedFromConfiguration() {
     try {
       if (
@@ -284,10 +265,6 @@ class StorageImpl {
     }
   }
 
-  /**
-   * Install one-time flush hooks. `BeforeUnload` is always installed;
-   * `BeforeAgeTransition` only in `legacy_tutorial_bag` mode. Idempotent.
-   */
   _installEngineHooks() {
     if (this._hooksInstalled) return;
     if (typeof engine === "undefined" || typeof engine.on !== "function") return;
@@ -323,9 +300,6 @@ class StorageImpl {
     }
   }
 
-  /**
-   * Drain every storage-owned engine hook.
-   */
   _teardown() {
     if (typeof engine !== "undefined" && typeof engine.off === "function") {
       try {
@@ -348,20 +322,12 @@ class StorageImpl {
     this._hooksInstalled = false;
   }
 
-  /**
-   * Pick the best available persistence tier (per-player, else global).
-   * @returns {PersistStore | null}
-   */
   _pickStore() {
     const options = { catalogScope: CATALOG_SCOPE, logError: log.error };
     return pickPersistStore(options);
   }
 
-  /**
-   * Read the raw payload string from a store, swallowing read errors.
-   * @param {PersistStore} store Store to read from.
-   * @returns {string | null} The raw payload, or null on error/empty.
-   */
+  /** @param {PersistStore} store */
   _readRaw(store) {
     return readRaw(store, PAYLOAD_KEY, log.error);
   }
@@ -388,10 +354,8 @@ class StorageImpl {
   }
 
   /**
-   * Parse and validate a raw payload, reconciling it against `_mem`.
-   * @param {string} raw Raw payload string.
-   * @param {PersistStore} store Store the payload came from.
-   * @returns {StoredHistory} The reconciled history.
+   * @param {string} raw
+   * @param {PersistStore} store
    */
   _loadParsed(raw, store) {
     return loadParsed({
@@ -410,10 +374,7 @@ class StorageImpl {
     });
   }
 
-  /**
-   * Load the history from persistence, reconciling against the in-memory mirror.
-   * @returns {StoredHistory} The loaded (or recovered, or empty) history.
-   */
+  /** @returns {StoredHistory} */
   load() {
     this._init();
     const store = this._pickStore();
@@ -437,11 +398,7 @@ class StorageImpl {
     return localizeStoredNames(result);
   }
 
-  /**
-   * Validate, cap, mirror, and persist a history blob.
-   * @param {StoredHistory} history History to persist.
-   * @returns {boolean} True if written to a store, false otherwise.
-   */
+  /** @param {StoredHistory} history */
   save(history) {
     this._init();
     if (!this._prepareForSave(history)) return false;
@@ -454,11 +411,7 @@ class StorageImpl {
     return this._writeStorePayload(store, history);
   }
 
-  /**
-   * Validate + normalize + cap a history in place before persisting.
-   * @param {StoredHistory} history History to prepare (mutated).
-   * @returns {boolean} True when valid and ready to write.
-   */
+  /** @param {StoredHistory} history History to prepare (mutated). */
   _prepareForSave(history) {
     return prepareHistoryForSave(history, {
       version: VERSION,
@@ -483,12 +436,7 @@ class StorageImpl {
     return writeSerializedPayload(store, PAYLOAD_KEY, serialized, log.error);
   }
 
-  /**
-   * Serialize a history under the soft byte budget where possible, recording the
-   * final length and emitting the budget notices.
-   * @param {StoredHistory} history History to serialize (samples mutated when shrunk).
-   * @returns {string | null} The serialized payload, or null when stringify threw.
-   */
+  /** @param {StoredHistory} history History to serialize (samples mutated when shrunk). */
   _serializeWithinBudget(history) {
     let result;
     try {
@@ -520,8 +468,6 @@ class StorageImpl {
   }
 
   /**
-   * Log the byte-budget state of a serialized payload: once per session when the
-   * soft budget was crossed, on every save while the hard budget is exceeded.
    * @param {number} initialBytes Length before any tightening pass.
    * @param {number} finalBytes Length actually written.
    * @param {number} attempts Tightening passes run.
@@ -655,9 +601,6 @@ class StorageImpl {
     return history;
   }
 
-  /**
-   * Force-persist the in-memory mirror.
-   */
   flush() {
     if (this._mem) this.save(this._mem);
   }
@@ -672,9 +615,6 @@ class StorageImpl {
     return this._mem;
   }
 
-  /**
-   * Reset the history to empty, both in memory and in the active store.
-   */
   clear() {
     this._init();
     const empty = emptyHistory(this._seed, VERSION);
@@ -689,9 +629,6 @@ class StorageImpl {
     }
   }
 
-  /**
-   * Public teardown entry point for external lifecycle drains.
-   */
   teardown() {
     this._teardown();
   }

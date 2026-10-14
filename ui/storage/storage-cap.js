@@ -31,11 +31,7 @@ export const ADAPTIVE_DEFAULTS_BY_SPEED = {
 /** Sample cap used when game speed cannot be detected. */
 const FALLBACK_DEFAULT = 2000;
 
-/**
- * Read game speed type from hash through GameInfo lookup.
- * @param {*} hash Game.gameSpeed hash.
- * @returns {string | null} Speed type, or null.
- */
+/** @param {*} hash Game.gameSpeed hash. */
 function gameSpeedTypeFromHash(hash) {
   if (
     hash !== undefined &&
@@ -50,10 +46,6 @@ function gameSpeedTypeFromHash(hash) {
   return null;
 }
 
-/**
- * Read game speed type from engine globals/getters.
- * @returns {string | null} Speed type, or null.
- */
 function lookupGameSpeedType() {
   if (typeof Game === "undefined") return null;
   const candidate =
@@ -76,9 +68,8 @@ export function detectGameSpeedType() {
 }
 
 /**
- * Read raw sample cap override setting.
  * @param {(...a: any[]) => void} logError
- * @returns {number | string} Override value, or "auto".
+ * @returns {number | string}
  */
 function readSampleCapOverride(logError) {
   try {
@@ -95,11 +86,7 @@ function capFromNumber(override) {
   return { cap: Math.min(override, HARD_MAX_SAMPLES), source: "user:" + override };
 }
 
-/**
- * Convert non-auto string override into cap/source pair.
- * @param {string} override
- * @returns {{ cap: number, source: string } | null} Effective cap or null.
- */
+/** @param {string} override */
 function capFromString(override) {
   const parsed = parseInt(override, 10);
   if (isFinite(parsed) && parsed !== 0) {

@@ -131,36 +131,25 @@ function hslBaseChannels(hp, c, x) {
 }
 
 /**
- * Minimum readable HSL lightness for a color of the given saturation. Grays
- * need a higher floor than saturated colors.
  * @param {number} s Saturation [0,1].
- * @returns {number} Lightness floor [0,1].
  */
 function minLightnessFor(s) {
   const t = Math.min(1, Math.max(0, s));
   return MIN_LIGHTNESS_GREY + (MIN_LIGHTNESS_SATURATED - MIN_LIGHTNESS_GREY) * t;
 }
 
-/**
- * Whether a parsed color is a dark, nearly-colorless grey/black. Lifting one of
- * those only yields a dull gray, so the civ's secondary color is preferred.
- * @param {{ r: number, g: number, b: number }} c
- * @returns {boolean}
- */
+/** @param {{ r: number, g: number, b: number }} c */
 function isDarkGrey(c) {
   const { s, l } = rgbToHsl(c.r, c.g, c.b);
   return l < DARK_GREY_MAX_LIGHTNESS && s < DARK_GREY_MAX_SATURATION;
 }
 
 /**
- * Format RGB channels back into the same syntax the source color used,
- * preserving any rgba alpha suffix.
  * @param {number} r
  * @param {number} g
  * @param {number} b
  * @param {"hex"|"rgba"} src
  * @param {string} alpha Alpha suffix (e.g. ",0.5") or "".
- * @returns {string}
  */
 function formatColor(r, g, b, src, alpha) {
   if (src === "rgba" && alpha) {
@@ -223,7 +212,6 @@ export function preferReadableColor(primaryColor, secondaryColor) {
  * perceptual approximation good enough to flag "too similar" line colors.
  * @param {{ r: number, g: number, b: number }} a
  * @param {{ r: number, g: number, b: number }} b
- * @returns {number} 0 = identical, larger = more different.
  */
 function channelDistance(a, b) {
   const rmean = (a.r + b.r) / 2;
@@ -262,10 +250,8 @@ export function arbitraryColor(index) {
 }
 
 /**
- * Minimum distance from a parsed color to any already-accepted color.
  * @param {{ r: number, g: number, b: number }} c
  * @param {Array<{ r: number, g: number, b: number }>} accepted
- * @returns {number} Smallest distance (Infinity when none accepted yet).
  */
 function minDistanceTo(c, accepted) {
   let min = Infinity;
@@ -277,13 +263,8 @@ function minDistanceTo(c, accepted) {
 }
 
 /**
- * Search the arbitrary palette for a color well-separated from all accepted
- * colors. Returns the first candidate that clears the threshold, or the
- * best-separated one found within the scan budget.
  * @param {Array<{ r: number, g: number, b: number }>} accepted
- * @param {number} startIdx First arbitrary index to try.
- * @returns {{ color: string, parsed: { r: number, g: number, b: number }, nextIdx: number }}
- *   The chosen color, its channels, and the next unused arbitrary index.
+ * @param {number} startIdx
  */
 function pickArbitraryDistinct(accepted, startIdx) {
   let idx = startIdx;

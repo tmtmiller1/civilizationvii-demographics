@@ -80,11 +80,7 @@ const OVERTIME_CEILING_RATE = 1.0; // base ceilings per full extra age of overti
 const OVERTIME_EASE = 0.1; // smoothstep-ease the onset over the first 10% of overtime fraction (C¹)
 const OVERTIME_MAX = 5; // hard cap on the multiplier; bounds the absolute worst case
 
-/**
- * Smoothstep on [0,1].
- * @param {number} x
- * @returns {number}
- */
+/** @param {number} x */
 function smoothstep(x) {
   const clamped = Math.max(0, Math.min(1, x));
   return clamped * clamped * (3 - 2 * clamped);

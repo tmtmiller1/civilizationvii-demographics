@@ -20,9 +20,7 @@ const MIN_CIVS = 3;
 let _lastReportTurn = -999;
 
 /**
- * Collect each major player's `score` metric from a snapshot.
  * @param {*} snapshot The sampler snapshot ({ players: { pid: { metrics } } }).
- * @returns {{pid:string, score:number}[]}
  */
 function scoresFromSnapshot(snapshot) {
   const players = snapshot && snapshot.players ? snapshot.players : null;
@@ -37,11 +35,7 @@ function scoresFromSnapshot(snapshot) {
   return out;
 }
 
-/**
- * The median of a numeric list (0 for empty).
- * @param {number[]} nums
- * @returns {number}
- */
+/** @param {number[]} nums */
 function median(nums) {
   if (!nums.length) return 0;
   const s = [...nums].sort((a, b) => a - b);

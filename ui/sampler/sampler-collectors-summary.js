@@ -11,10 +11,6 @@ let _memoTurn = -1;
 /** @type {Map<string, Map<number, number>>} datasetKey → (pid → value). */
 const _memo = new Map();
 
-/**
- * Current game turn, defensively (0 when unavailable).
- * @returns {number}
- */
 function currentTurn() {
   try {
     return typeof Game !== "undefined" && typeof Game.turn === "number" ? Game.turn : 0;
@@ -66,11 +62,10 @@ export function collectSummaryMetrics(ctx, id) {
 }
 
 /**
- * Write `map`'s value for `id` onto `ctx[field]` when it is a finite number.
- * @param {*} ctx The per-player context.
+ * @param {*} ctx
  * @param {Pid} id
- * @param {string} field The ctx field to set.
- * @param {Map<number, number>} map The per-player value map.
+ * @param {string} field
+ * @param {Map<number, number>} map
  */
 function stampPlayer(ctx, id, field, map) {
   const v = map.get(id);

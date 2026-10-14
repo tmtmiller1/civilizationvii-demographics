@@ -99,12 +99,7 @@ let razeHandlerRef = null;
 /** @type {((data: *) => void) | null} */
 let prodHandlerRef = null;
 
-/**
- * Extract a numeric unit id from a unit id that may be a raw number or a
- * ComponentID-like object ({ owner, id, type }).
- * @param {*} uid The unit id / ComponentID.
- * @returns {number | null} The numeric unit id, or null.
- */
+/** @param {*} uid The unit id / ComponentID. */
 function unitIdOf(uid) {
   if (typeof uid === "number") return uid;
   if (uid && typeof uid.id === "number") return uid.id;
@@ -112,10 +107,8 @@ function unitIdOf(uid) {
 }
 
 /**
- * Build the cache key for a unit.
  * @param {number} owner
  * @param {number} id
- * @returns {string} The `owner:id` key.
  */
 function unitKey(owner, id) {
   return owner + ":" + id;
@@ -154,11 +147,7 @@ export function getCumulativeUnitsLost(pid) {
   return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
-/**
- * Location key ("x,y") for a city handle's plot, or null if unreadable.
- * @param {*} loc A { x, y } location.
- * @returns {string | null} The key, or null.
- */
+/** @param {*} loc A { x, y } location. */
 function locKey(loc) {
   if (!loc || typeof loc.x !== "number" || typeof loc.y !== "number") return null;
   return loc.x + "," + loc.y;
@@ -224,11 +213,7 @@ export function getCumulativeWarLand(pid) {
   return typeof casualties === "number" && isFinite(casualties) ? casualties : 0;
 }
 
-/**
- * Read purchased plots for a city id, or null.
- * @param {*} cityID City component id.
- * @returns {*|null} Purchased plots payload.
- */
+/** @param {*} cityID City component id. */
 function cityPurchasedPlots(cityID) {
   if (typeof Cities === "undefined" || typeof Cities.get !== "function") return null;
   const city = Cities.get(cityID);
@@ -236,11 +221,7 @@ function cityPurchasedPlots(cityID) {
   return city.getPurchasedPlots();
 }
 
-/**
- * Resolve a purchased-plots payload length.
- * @param {*} plots Purchased plots payload.
- * @returns {number|null} Plot count when finite, else null.
- */
+/** @param {*} plots Purchased plots payload. */
 function purchasedPlotCount(plots) {
   if (Array.isArray(plots)) return plots.length;
   const count = plots?.length;
@@ -281,11 +262,8 @@ function resolveEventCity(data) {
 }
 
 /**
- * Read a city's plot location from its handle, falling back to any location
- * carried on the event payload if the handle is unavailable.
  * @param {*} cityID The city ComponentID.
  * @param {*} data The event payload (may carry `location`).
- * @returns {*} A { x, y } location, or null.
  */
 function cityLocationOf(cityID, data) {
   try {
@@ -298,8 +276,6 @@ function cityLocationOf(cityID, data) {
 }
 
 /**
- * Apply one side of a capture to the net-captures and net-territory tallies:
- * `sign` is +1 for the captor, -1 for the prior owner.
  * @param {number} pid
  * @param {number} sign +1 (gained) or -1 (lost).
  * @param {number} land The captured city's territory in km².
@@ -337,11 +313,7 @@ function onCityTransfered(data) {
   }
 }
 
-/**
- * CityRazingStarted handler: charge one permanently-razed settlement to the
- * victim: the civ the city was captured from, else its last-known owner.
- * @param {*} data The event payload.
- */
+/** @param {*} data The event payload. */
 function onCityRazingStarted(data) {
   try {
     const ev = resolveEventCity(data);
@@ -379,9 +351,8 @@ function pickUnitField(data) {
 }
 
 /**
- * Resolve the killed unit's owner + id from a UnitKilledInCombat payload.
  * @param {*} data The event payload.
- * @returns {{ owner: number, id: number } | null} The victim id, or null.
+ * @returns {{ owner: number, id: number } | null}
  */
 function resolveKilledUnit(data) {
   if (!data) return null;
@@ -391,11 +362,7 @@ function resolveKilledUnit(data) {
   return id === null ? null : { owner: cid.owner, id };
 }
 
-/**
- * UnitKilledInCombat handler: add the dead unit's cached strength to its owner's
- * cumulative casualty total.
- * @param {*} data The event payload.
- */
+/** @param {*} data The event payload. */
 function onUnitKilledInCombat(data) {
   try {
     const victim = resolveKilledUnit(data);
@@ -445,7 +412,6 @@ export function seedWarEventsFromHistory(samples) {
 }
 
 /**
- * Seed both cumulative counters for one pid from its stored metrics.
  * @param {string} pid The player id (object key).
  * @param {*} metrics The stored per-player metrics (may be undefined).
  */
@@ -459,8 +425,7 @@ function seedOnePlayer(pid, metrics) {
 }
 
 /**
- * Seed one pid's cumulative total into a counter map from a stored value.
- * @param {Map<number, number>} into The counter map (casualtyByPid / razedByPid).
+ * @param {Map<number, number>} into
  * @param {string} pid The player id (object key).
  * @param {*} value The stored cumulative value.
  */
@@ -475,10 +440,6 @@ function seedOnePid(into, pid, value) {
  * @type {Set<string> | null}
  */
 let _militaryConstructibles = null;
-/**
- * Return cached military-related constructible types from TypeTags.
- * @returns {Set<string>} Set of constructible type ids tagged for military use.
- */
 function militaryConstructibleSet() {
   if (_militaryConstructibles) return _militaryConstructibles;
   const set = new Set();
@@ -497,7 +458,6 @@ function militaryConstructibleSet() {
 /** Constructible tags that count as military for "production directed to war". */
 const MILITARY_CONSTRUCTIBLE_TAGS = new Set(["MILITARY", "FORTIFICATION", "UNIT_FORTIFICATION"]);
 
-/** Unit formation classes that count as military. */
 const MILITARY_FORMATIONS = new Set([
   "FORMATION_CLASS_LAND_COMBAT",
   "FORMATION_CLASS_NAVAL",
@@ -525,10 +485,8 @@ function decodeProduced(kind, item) {
 }
 
 /**
- * Look up a GameInfo definition row by item id from the named table, defensively.
  * @param {string} tbl The GameInfo table name ("Units" / "Constructibles").
  * @param {*} item The productionItem id.
- * @returns {*} The definition row, or null.
  */
 function lookupDef(tbl, item) {
   try {
@@ -540,11 +498,9 @@ function lookupDef(tbl, item) {
 }
 
 /**
- * Read the production cost of a produced item from its city's Production handle.
  * @param {*} cityID The city ComponentID.
  * @param {string} table "UNIT" or "CONSTRUCTIBLE".
  * @param {*} typeStr The unit/constructible type string.
- * @returns {number | null} The production cost, or null.
  */
 function producedCost(cityID, table, typeStr) {
   if (!typeStr) return null;
@@ -559,21 +515,13 @@ function producedCost(cityID, table, typeStr) {
   }
 }
 
-/**
- * Production-cost accessor method name per production table.
- * @type {Record<string, string>}
- */
+/** @type {Record<string, string>} */
 const COST_FN_BY_TABLE = {
   UNIT: "getUnitProductionCost",
   CONSTRUCTIBLE: "getConstructibleProductionCost"
 };
 
-/**
- * Whether a decoded produced item counts as military (military-formation unit,
- * or a constructible tagged MILITARY / FORTIFICATION).
- * @param {{ table: string, typeStr: *, formation: * } | null} dec Decoded item.
- * @returns {boolean} True when military.
- */
+/** @param {{ table: string, typeStr: *, formation: * } | null} dec */
 function isMilitaryProduced(dec) {
   if (!dec) return false;
   if (dec.table === "UNIT") return MILITARY_FORMATIONS.has(dec.formation);
@@ -581,11 +529,8 @@ function isMilitaryProduced(dec) {
 }
 
 /**
- * Resolve a CityProductionCompleted payload to the military-production credit it
- * earns: { owner, cost, typeStr }, or null when the item isn't military / has no
- * resolvable cost / owner.
  * @param {*} data The event payload.
- * @returns {{ owner: number, cost: number, typeStr: * } | null} The credit, or null.
+ * @returns {{ owner: number, cost: number, typeStr: * } | null}
  */
 function militaryProductionCredit(data) {
   if (!data || data.canceled) return null;
@@ -598,11 +543,7 @@ function militaryProductionCredit(data) {
   return { owner, cost, typeStr: dec.typeStr };
 }
 
-/**
- * CityProductionCompleted handler: credit a finished military item's production
- * cost to the city owner's cumulative "directed to war" total.
- * @param {*} data The event payload.
- */
+/** @param {*} data The event payload. */
 function onCityProductionCompleted(data) {
   try {
     const credit = militaryProductionCredit(data);
@@ -684,10 +625,8 @@ export function stopWarEventTracker() {
 }
 
 /**
- * Unsubscribe one handler from an engine event.
  * @param {string} event The engine event name.
  * @param {((data: *) => void) | null} ref The bound ref to remove.
- * @returns {null} Always null, for reassignment.
  */
 function unsubscribe(event, ref) {
   if (ref && typeof engine !== "undefined" && typeof engine.off === "function") {

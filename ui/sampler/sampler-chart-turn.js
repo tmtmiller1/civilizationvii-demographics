@@ -4,30 +4,19 @@
 
 import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
 
-/**
- * Coerce a value to a finite number, or null.
- * @param {*} v Candidate value.
- * @returns {number|null}
- */
+/** @param {*} v */
 function finiteOrNull(v) {
   return typeof v === "number" && isFinite(v) ? v : null;
 }
 
-/**
- * Resolve a positive, finite age-local turn, defaulting to 1.
- * @param {*} localTurn Candidate local turn.
- * @returns {number} Positive finite turn.
- */
+/** @param {*} localTurn */
 function positiveLocalTurn(localTurn) {
   const n = finiteOrNull(localTurn);
   return n !== null && n > 0 ? n : 1;
 }
 
 /**
- * Extract the latest sample chart-turn / age / local-turn state.
  * @param {*[]} samps Non-empty sample stream.
- * @returns {{ chartTurn: number, age: (string|null), localTurn: (number|null) }}
- *   Latest chart state.
  */
 function lastSampleChartState(samps) {
   const last = samps[samps.length - 1] || {};
@@ -39,11 +28,9 @@ function lastSampleChartState(samps) {
 }
 
 /**
- * Whether the current sample continues the same age as the previous sample.
- * @param {string|null} lastAge Last sample age.
- * @param {string|undefined} ageType Current age type.
- * @param {number|null} lastLocal Last sample local turn.
- * @returns {boolean} True for same-age continuation.
+ * @param {string|null} lastAge
+ * @param {string|undefined} ageType
+ * @param {number|null} lastLocal
  */
 function isSameAgeContinuation(lastAge, ageType, lastLocal) {
   return !!(lastAge && ageType && lastAge === ageType && typeof lastLocal === "number");

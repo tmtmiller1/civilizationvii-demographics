@@ -152,9 +152,6 @@ let _ageHandlerRef = null;
 /** @type {{ label: string, stack: string } | null} */
 let firstException = null;
 
-/**
- * Drain every sampler-owned engine subscription.
- */
 function _teardown() {
   if (typeof engine !== "undefined" && typeof engine.off === "function") {
     try {
@@ -176,11 +173,7 @@ function _teardown() {
   stopWarEventTracker();
 }
 
-/**
- * Build a full stack string from any thrown value.
- * @param {*} err The thrown value.
- * @returns {string} Best-effort stack/message text.
- */
+/** @param {*} err */
 function fullErrorStack(err) {
   if (err && typeof err.stack === "string" && err.stack.length > 0) {
     return err.stack;
@@ -261,10 +254,6 @@ function seedNodeBaselinesForSample(ageType) {
   }
 }
 
-/**
- * Build and persist one sampling snapshot when enough major civs are alive.
- * @returns {Snapshot | null} The recorded snapshot, or null when skipped.
- */
 function doSample() {
   const localTurn = getCurrentTurn(safeCall) ?? -1;
   const ids = getAliveMajorIds(safeCall);
@@ -337,7 +326,7 @@ function recordSettlementHistory(history, built, localTurn) {
 }
 
 /**
- * Persist the snapshot, run the war tracker, and log sample timing. A committed
+ * A committed
  * sample (append + save both succeeded) restarts the kill-switch count.
  * @param {Snapshot} snapshot
  * @param {number} turn The sample turn.
@@ -358,8 +347,6 @@ function finalizeSample(snapshot, turn, tStart, minorCount) {
 }
 
 /**
- * PlayerTurnActivated handler: samples the local player's turn, honoring the
- * kill switch and the configured polling cadence.
  * @param {*} data The event payload (carries `player`/`playerID`).
  */
 function onPlayerTurnActivated(data) {
@@ -461,8 +448,7 @@ function runKickoff() {
 }
 
 /**
- * Register the PlayerTurnActivated + PlayerAgeTransitionComplete handlers and
- * schedule the deferred resume kickoff. Assumes state has already been reset.
+ * Assumes state has already been reset.
  */
 function registerSamplerHandlers() {
   const ageBoundaryDeps = buildAgeBoundaryDeps({

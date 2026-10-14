@@ -88,11 +88,9 @@ function openScreen(focusView) {
 }
 
 /**
- * A native-styled button element wired to open the screen.
  * @param {string} id
  * @param {string} label
- * @param {string} [focusView] A landing view id for the click.
- * @returns {HTMLElement}
+ * @param {string} [focusView]
  */
 function makeButton(id, label, focusView) {
   const b = document.createElement("div");
@@ -107,10 +105,7 @@ function makeButton(id, label, focusView) {
   return b;
 }
 
-/**
- * Put the button in the results screen's action row, once.
- * @param {HTMLElement} screen
- */
+/** @param {HTMLElement} screen */
 function addResultsButton(screen) {
   if (!screen || screen.querySelector("#" + RESULTS_BTN_ID)) return;
   // Only ever place the button in the screen's own action row; falling back to
@@ -128,10 +123,7 @@ function addResultsButton(screen) {
   row.insertBefore(makeButton(RESULTS_BTN_ID, t("LOC_MOD_DEMOGRAPHICS_NAME"), "rankings"), row.firstChild);
 }
 
-/**
- * Put the button in the pause-menu button container, once.
- * @param {HTMLElement} container
- */
+/** @param {HTMLElement} container */
 function addPauseButton(container) {
   if (!container || container.querySelector("#" + PAUSE_BTN_ID)) return;
   const btn = makeButton(PAUSE_BTN_ID, t("LOC_MOD_DEMOGRAPHICS_NAME"));
@@ -149,11 +141,7 @@ function findPauseContainer(node) {
   return found instanceof HTMLElement ? found : null;
 }
 
-/**
- * Add the pause button to the container a node brought in; when the node is (or contains)
- * the pause menu itself and the container is missing, report the miss once.
- * @param {HTMLElement} node
- */
+/** @param {HTMLElement} node */
 function addPauseButtonFor(node) {
   const pause = findPauseContainer(node);
   if (pause) {
@@ -204,10 +192,7 @@ function resultScreenFor(node) {
   return owner instanceof HTMLElement ? owner : null;
 }
 
-/**
- * Add whichever button a newly mounted node makes room for.
- * @param {*} node A mutation-added node.
- */
+/** @param {*} node */
 function onNodeAdded(node) {
   if (!(node instanceof HTMLElement)) return;
   try {

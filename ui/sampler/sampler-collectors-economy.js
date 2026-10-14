@@ -12,10 +12,6 @@ import {
 import { recordCity } from "/demographics/ui/sampler/sampler-war-events.js";
 import { scaleCityPopulationAt } from "/demographics/ui/metrics/demographics-metrics-helpers.js";
 
-/**
- * Resolve the `NODE_STATE_FULLY_UNLOCKED` enum value once.
- * @returns {*} The enum value, or undefined if unavailable.
- */
 function _resolveFullyUnlockedState() {
   try {
     if (
@@ -32,10 +28,8 @@ function _resolveFullyUnlockedState() {
 }
 
 /**
- * Resolve a single tree node's state for `pid`.
  * @param {*} nodeType The node type/hash.
  * @param {Pid} pid
- * @returns {*} The engine node-state value, or undefined.
  */
 function _nodeState(nodeType, pid) {
   if (
@@ -49,10 +43,8 @@ function _nodeState(nodeType, pid) {
 }
 
 /**
- * Fallback completion check used when the FULLY_UNLOCKED enum is unavailable.
  * @param {*} nodeType The node type/hash.
  * @param {Pid} pid
- * @returns {boolean} True if the node looks fully unlocked.
  */
 function _nodeUnlockedByDepth(nodeType, pid) {
   const nd =
@@ -65,11 +57,9 @@ function _nodeUnlockedByDepth(nodeType, pid) {
 }
 
 /**
- * Decide whether a single tree node is fully unlocked for `pid`.
  * @param {*} node A tree node (object or raw type).
  * @param {Pid} pid
  * @param {*} fullyUnlocked The resolved FULLY_UNLOCKED enum, or undefined.
- * @returns {boolean} True if the node is fully unlocked for `pid`.
  */
 function _nodeIsFullyUnlocked(node, pid, fullyUnlocked) {
   const nodeType = node?.nodeType ?? node?.type ?? node;
@@ -81,11 +71,9 @@ function _nodeIsFullyUnlocked(node, pid, fullyUnlocked) {
 }
 
 /**
- * Count nodes in a single tree object that are fully unlocked for `pid`.
  * @param {*} tree A tree object exposing a `nodes` array.
  * @param {Pid} pid
  * @param {string} treeKind "Techs" or "Culture" (for log attribution).
- * @returns {number} The count of fully-unlocked nodes (0 if none/unknown).
  */
 function countNodesInTree(tree, pid, treeKind) {
   if (!tree || !Array.isArray(tree.nodes)) return 0;
@@ -104,10 +92,6 @@ function countNodesInTree(tree, pid, treeKind) {
 /** @type {string | undefined} */
 let _cachedAgeType;
 
-/**
- * Resolve the current age type from live engine globals.
- * @returns {string | undefined} The age type, or undefined.
- */
 function lookupCurrentAgeType() {
   if (typeof Game === "undefined") return undefined;
   if (Game.age === undefined) return undefined;
@@ -147,10 +131,7 @@ export function resetAgeCaches() {
 }
 
 /**
- * Collect every `ProgressionTree` type matching `systemType` in the current
- * age, caching per (systemType, age).
  * @param {string} systemType e.g. "SYSTEM_TECH" or "SYSTEM_CULTURE".
- * @returns {string[]} The matching `ProgressionTreeType` strings.
  */
 function getTreesForSystem(systemType) {
   const age = getCurrentAgeType();
@@ -176,11 +157,9 @@ function getTreesForSystem(systemType) {
 }
 
 /**
- * Whether a ProgressionTrees row matches the requested system + current age.
  * @param {*} row A GameInfo.ProgressionTrees row.
  * @param {string} systemType e.g. "SYSTEM_TECH".
  * @param {string | undefined} age The current age type (or undefined for any).
- * @returns {boolean} True if the row should be collected.
  */
 function _treeRowMatches(row, systemType, age) {
   if (!row) return false;
@@ -190,10 +169,8 @@ function _treeRowMatches(row, systemType, age) {
 }
 
 /**
- * Count fully-unlocked nodes for a player across all trees of a branch.
  * @param {Pid} pid
  * @param {string} treeKind "Techs" or "Culture".
- * @returns {number | undefined} Total count, or undefined if no tree found.
  */
 function countCompletedNodes(pid, treeKind) {
   const systemType = treeKind === "Culture" ? "SYSTEM_CULTURE" : "SYSTEM_TECH";
@@ -221,10 +198,8 @@ function countCompletedNodes(pid, treeKind) {
 }
 
 /**
- * Sum total owned tiles across a player's cities/towns.
  * @param {*} cityList The array (or array-like) of city handles.
  * @param {Pid} pid The player id (for log attribution).
- * @returns {number | undefined} Total tiles, or undefined if none readable.
  */
 function sumOwnedTiles(cityList, pid) {
   if (!Array.isArray(cityList)) return undefined;
@@ -244,11 +219,7 @@ function sumOwnedTiles(cityList, pid) {
   return anyOK ? total : undefined;
 }
 
-/**
- * Whether a city handle is the player's capital (defensively).
- * @param {*} city A city handle.
- * @returns {boolean} True for the capital.
- */
+/** @param {*} city A city handle. */
 function _isCapital(city) {
   try {
     return !!city && city.isCapital === true;
@@ -257,11 +228,7 @@ function _isCapital(city) {
   }
 }
 
-/**
- * The continent type under a player's capital (or first city), or undefined.
- * @param {*} cityList The player's city list.
- * @returns {number | undefined} The continent type, or undefined.
- */
+/** @param {*} cityList The player's city list. */
 function _capitalContinent(cityList) {
   const loc = _capitalLoc(cityList);
   if (!loc) return undefined;
@@ -276,9 +243,8 @@ function _capitalContinent(cityList) {
 }
 
 /**
- * The capital's (or first city's) plot location, or null when unreadable.
  * @param {*} cityList The player's city list.
- * @returns {{ x: number, y: number } | null} The location, or null.
+ * @returns {{ x: number, y: number } | null}
  */
 function _capitalLoc(cityList) {
   if (!Array.isArray(cityList) || !cityList.length) return null;
@@ -288,11 +254,7 @@ function _capitalLoc(cityList) {
   return loc;
 }
 
-/**
- * Count purchased plots for one city.
- * @param {*} city A city handle.
- * @returns {number | undefined} The plot count, or undefined if unreadable.
- */
+/** @param {*} city A city handle. */
 function _cityPlotCount(city) {
   if (!city || typeof city.getPurchasedPlots !== "function") return undefined;
   const plots = city.getPurchasedPlots();
@@ -466,11 +428,7 @@ export function setNodeBaselineByPid(map) {
   _nodeBaselineByPid = map && typeof map === "object" ? map : null;
 }
 
-/**
- * Resolve one pid's cumulative tech/civic baseline, defaulting to zeros.
- * @param {Pid} id
- * @returns {{ techs: number, civics: number }} Prior-age completed-node totals.
- */
+/** @param {Pid} id */
 function nodeBaselineFor(id) {
   const baselines = _nodeBaselineByPid;
   const baseline = baselines ? baselines[String(id)] || baselines[/** @type {*} */ (id)] : undefined;
@@ -497,8 +455,6 @@ export function computeNodeBaselines(samples, currentAge) {
 }
 
 /**
- * Fold one prior-age sample's per-pid tech/civic counts into the running max
- * baseline. No-ops for the current age, untagged, or player-less samples.
  * @param {Record<string, { techs: number, civics: number }>} out Baseline map (mutated).
  * @param {*} sample One persisted sample.
  * @param {string} currentAge The age being sampled now.
@@ -512,8 +468,7 @@ function foldNodeBaselineSample(out, sample, currentAge) {
 }
 
 /**
- * Raise a pid's running tech/civic baseline to the max seen so far. Reads the stored metric keys
- * (`metrics.techs` / `metrics.civics`), not the `*Count` ctx field names.
+ * Reads the stored metric keys (`metrics.techs` / `metrics.civics`), not the `*Count` ctx field names.
  * @param {{ techs: number, civics: number }} cur The pid's baseline (mutated).
  * @param {*} metrics One sample's metric map for that pid.
  */

@@ -15,10 +15,8 @@ const log = makeLogger("bootstrap");
 log.debug("loaded; debug=", debugLoggingOn());
 
 /**
- * Dynamic-import the engine contract guard and log a one-line status report.
  * Never rejects: a missing module is logged and swallowed so the rest of
  * bootstrap proceeds; individual features still self-gate via `featureAvailable()`.
- * @returns {Promise<void>}
  */
 function checkContracts() {
   return /** @type {Promise<*>} */ (import("/demographics/ui/core/demographics-contracts.js"))
@@ -47,11 +45,6 @@ function loadDecorator() {
     });
 }
 
-/**
- * Dynamic-import the sampler module and invoke its `startSampler` export.
- * Never rejects: a missing export or thrown start is logged and swallowed.
- * @returns {Promise<void>}
- */
 function startSampler() {
   log.debug("about to dynamic-import demographics-sampler.js");
   return /** @type {Promise<*>} */ (import("/demographics/ui/sampler/demographics-sampler.js"))
@@ -74,8 +67,7 @@ function startSampler() {
 }
 
 /**
- * Start the campaign chronicle capture (History tab + Hall of Fame). Isolated like the sampler:
- * a failure here never affects the rest of Demographics.
+ * Start the campaign chronicle capture (History tab + Hall of Fame).
  */
 function startHistory() {
   import("/demographics/ui/history/capture/history-capture.js")

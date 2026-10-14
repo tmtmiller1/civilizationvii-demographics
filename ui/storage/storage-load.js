@@ -54,11 +54,8 @@ export function rejectedKey(payloadKey, version) {
 }
 
 /**
- * Whether a store can take part in parking/restoring: it needs both accessors
- * and a payload key to derive the sibling key from.
  * @param {{ read?: Function, write?: Function }} store Active store.
  * @param {string | undefined} payloadKey Store payload key.
- * @returns {boolean} True when parking and restoring are possible.
  */
 function canPark(store, payloadKey) {
   return (
@@ -133,8 +130,6 @@ function readRestorable(options) {
 }
 
 /**
- * Write a restorable parked payload back to the primary key and clear its slot.
- * Never throws.
  * @param {RejectedOptions} options Rejected-payload options.
  * @param {any} restored The history read by {@link readRestorable}.
  */
@@ -243,12 +238,9 @@ function seedMismatch(storedSeed, seed) {
 }
 
 /**
- * Parse stored payload text and check it against the current schema.
  * @param {string} raw Raw payload text.
  * @param {(value: any, version: number) => boolean} isValid Schema validator.
  * @param {number} version Current schema version.
- * @returns {{ history: any, problem: string | null, storedVersion: number | undefined }}
- *   The candidate, why it is unusable (null when usable), and the version read off it.
  */
 function parseStored(raw, isValid, version) {
   let history = null;

@@ -19,11 +19,7 @@ const CONTRACTS = {
   settlements: ["Constructibles", "GameplayMap"]
 };
 
-/**
- * Whether a dotted global path resolves to a defined, non-null value.
- * @param {string} path
- * @returns {boolean}
- */
+/** @param {string} path */
 function present(path) {
   try {
     let cur = /** @type {*} */ (typeof globalThis !== "undefined" ? globalThis : undefined);
