@@ -175,10 +175,8 @@ export function viewerHasMet(viewerPid, otherPid) {
 }
 
 /**
- * Read the snapshot-recorded `met` field for `pid` from the latest sample.
  * @param {DemoHistory|undefined} history
  * @param {string|number} pid
- * @returns {boolean|undefined}
  */
 function latestSampleMet(history, pid) {
   const samples = Array.isArray(history?.samples) ? history.samples : [];

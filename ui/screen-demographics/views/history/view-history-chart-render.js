@@ -85,7 +85,6 @@ function ensureChartResizeReflow() {
 }
 
 /**
- * Route rendering to synthetic or standard chart paths.
  * @param {HTMLElement} chartHost
  * @param {*} ctx
  * @param {string} activeMetric

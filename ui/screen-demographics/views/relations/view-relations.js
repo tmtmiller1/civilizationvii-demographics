@@ -176,10 +176,8 @@ function buildScaffold(host) {
 }
 
 /**
- * Create a `<div>` with a class, append it to `parent`, and return it.
  * @param {HTMLElement} parent
  * @param {string} className
- * @returns {HTMLElement}
  */
 function addChild(parent, className) {
   const el = document.createElement("div");

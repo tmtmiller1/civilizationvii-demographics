@@ -176,10 +176,7 @@ export function pillColorFor(key, topTab) {
  */
 
 
-/**
- * Append a "·" separator span to a control row.
- * @param {HTMLElement} row
- */
+/** @param {HTMLElement} row */
 function appendCtrlSep(row) {
   const separator = document.createElement("span");
   separator.textContent = "·";

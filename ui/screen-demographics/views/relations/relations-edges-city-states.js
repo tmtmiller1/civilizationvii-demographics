@@ -34,10 +34,6 @@ import {
  * @property {string|null} [_dashOverride] Per-tab dash-pattern override.
  */
 
-/**
- * Whether the city-state bonus lookup surface is available.
- * @returns {boolean}
- */
 function canResolveCsBonusType() {
   if (!Game?.CityStates) return false;
   if (typeof Game.CityStates.getBonusType !== "function") return false;
@@ -86,10 +82,6 @@ function csTypeFromBonus(pid) {
   return null;
 }
 
-/**
- * Whether the independent-city-state lookup surface is available.
- * @returns {boolean}
- */
 function canResolveIndependentCsType() {
   if (typeof Players?.get !== "function") return false;
   if (typeof GameInfo === "undefined") return false;

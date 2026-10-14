@@ -154,11 +154,7 @@ function isLeaderPortraitType(leaderType) {
   return !!(leaderType && typeof leaderType === "string" && /^LEADER_/.test(leaderType));
 }
 
-/**
- * Build one leader portrait icon element.
- * @param {string} leaderType
- * @returns {HTMLElement}
- */
+/** @param {string} leaderType */
 function buildLeaderPortrait(leaderType) {
   const portrait = document.createElement("fxs-icon");
   portrait.setAttribute("data-icon-id", leaderType);

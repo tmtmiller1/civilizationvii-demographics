@@ -221,7 +221,6 @@ function resolveSyntheticMeta(id) {
 }
 
 /**
- * Build and append the chart host, then route chart rendering.
  * @param {HTMLElement} host
  * @param {HistoryCtx} ctx
  * @param {string} activeMetric

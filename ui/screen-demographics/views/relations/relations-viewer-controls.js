@@ -32,7 +32,6 @@ function persistViewerPid(renderState, pid) {
 }
 
 /**
- * Handle CS viewer dropdown selection changes.
  * @param {*} renderState
  * @param {{ pid: number }[]} items
  * @param {*} event

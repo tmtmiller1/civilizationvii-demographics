@@ -41,11 +41,7 @@ import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlem
  * }} ShowcaseUi
  */
 
-/**
- * The wonder icon's tooltip: its name, plus the completion year when one was observed.
- * @param {{ nameKey?: string, year?: string }} wonder
- * @returns {string}
- */
+/** @param {{ nameKey?: string, year?: string }} wonder */
 function wonderTooltip(wonder) {
   const name = t(wonder.nameKey || "");
   if (!wonder.year) return name;
@@ -104,11 +100,7 @@ function buildCityMeta(settlement, deps) {
   return meta;
 }
 
-/**
- * Build a civ-colored composite score bar.
- * @param {*} settlement
- * @returns {HTMLElement}
- */
+/** @param {*} settlement */
 function buildScoreBar(settlement) {
   const bar = div("demographics-settle-bar");
   const fill = div("demographics-settle-bar-fill");
@@ -346,7 +338,6 @@ function fillPodium(podium, top, state, deps, vertical) {
 }
 
 /**
- * The archived ages the age pills offer.
  * @param {ShowcaseDeps} deps
  * @returns {Array<{ age: string, label: string, year: string, top: Array<*> }>}
  */
