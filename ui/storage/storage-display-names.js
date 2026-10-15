@@ -108,6 +108,20 @@ function localizeWar(war, cache) {
   if (src.leader && by.leader) by.leader = src.leader;
 }
 
+/** @param {*} list A saved list. @returns {*[]} Its entries, or []. */
+const listOf = (list) => (Array.isArray(list) ? list : []);
+
+/**
+ * A Partisans rising pins its civs the same way a war roster does (sampler-risings.js).
+ * @param {*} rising Saved rising record.
+ * @param {Map<string, string>} cache Per-load cache.
+ */
+function localizeRising(rising, cache) {
+  if (!rising || typeof rising !== "object") return;
+  localizeRosterEntry(rising.ownerCiv, cache);
+  localizeRosterEntry(rising.otherCiv, cache);
+}
+
 /**
  * Re-read the stored civilization and leader names of a loaded history in the current language.
  * Mutates `history` in place; names with no type beside them, or no row in the game, are kept.
@@ -121,6 +135,7 @@ export function localizeStoredNames(history) {
   for (const sample of Array.isArray(history.samples) ? history.samples : []) {
     for (const player of Object.values((sample && sample.players) || {})) localizeSamplePlayer(player, cache);
   }
-  for (const war of Array.isArray(history.wars) ? history.wars : []) localizeWar(war, cache);
+  for (const war of listOf(history.wars)) localizeWar(war, cache);
+  for (const rising of listOf(history.risings)) localizeRising(rising, cache);
   return history;
 }

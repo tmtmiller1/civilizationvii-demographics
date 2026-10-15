@@ -80,7 +80,7 @@ function mountOneWarLabel(wrap, rect, env) {
   const { nameOverride, turnYearMap, latestTurn, W, H } = env;
   const { war, x, y, h } = rect;
   const xRight = x + (rect.hitW ?? rect.w);
-  const label = conflictLabelText(war, nameOverride, turnYearMap, latestTurn);
+  const label = war.isRising ? war.title : conflictLabelText(war, nameOverride, turnYearMap, latestTurn);
   const div = document.createElement("div");
   div.className = "demographics-chart-war-label demographics-wars-label";
   // Per-bar geometry stays dynamic (pixel-derived percentages).
@@ -93,7 +93,7 @@ function mountOneWarLabel(wrap, rect, env) {
   }
   // The name sits in a neutral box so it stays readable over any banner color.
   const box = document.createElement("span");
-  box.className = "demographics-wars-label-box";
+  box.className = "demographics-wars-label-box" + (war.isRising ? " is-rising" : "");
   box.textContent = label;
   div.appendChild(box);
   wrap.appendChild(div);

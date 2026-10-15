@@ -2425,5 +2425,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="ja_JP"><Text>近{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="ja_JP"><Text>T-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="ja_JP"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="ja_JP">
+            <Text>{2_Place}の{1_Adjective}忠誠派蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="ja_JP">
+            <Text>{1_Place}の蜂起</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="ja_JP">
+            <Text>{1_Place}が文化によって{2_Civ}に帰属した後、{3_Civ}に忠誠を誓う人々が武器を取った。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="ja_JP">
+            <Text>{1_Place}が文化によって{2_Civ}に帰属した後、かつての支配者に忠誠を誓う人々が武器を取った。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="ja_JP">
+            <Text>{1_Place}で長年続いた不満。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="ja_JP">
+            <Text>{3_Civ}との戦争中、{1_Civ}の「{2_Policy}」に反発して立ち上がった。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="ja_JP">
+            <Text>戦争中、{1_Civ}の「{2_Policy}」に反発して立ち上がった。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="ja_JP">
+            <Text>{2_Civ}との戦争中、{1_Civ}による住民の扱いに反発して立ち上がった。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="ja_JP">
+            <Text>戦争中、{1_Civ}による住民の扱いに反発して立ち上がった。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="ja_JP">
+            <Text>鎮圧された。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="ja_JP">
+            <Text>自然に収まった。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="ja_JP">
+            <Text>{1_Place}は焼き払われた。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="ja_JP">
+            <Text>時代の終わりとともに終結した。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="ja_JP">
+            <Text>現在も継続中。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="ja_JP">
+            <Text>支配者: {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="ja_JP">
+            <Text>{1_Name}が勃発した。{2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="ja_JP">
+            <Text>{1_Name}が終結した。{2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="ja_JP">
+            <Text>蜂起</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -2425,5 +2425,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="pt_BR"><Text>M{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="pt_BR"><Text>T-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="pt_BR"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="pt_BR">
+            <Text>Levante legalista {1_Adjective} em {2_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="pt_BR">
+            <Text>Levante de {1_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="pt_BR">
+            <Text>Depois que {1_Place} se juntou a {2_Civ} pela cultura, pessoas leais a {3_Civ} pegaram em armas.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="pt_BR">
+            <Text>Depois que {1_Place} se juntou a {2_Civ} pela cultura, pessoas leais aos antigos governantes pegaram em armas.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="pt_BR">
+            <Text>Anos de descontentamento em {1_Place}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="pt_BR">
+            <Text>Levantaram-se contra a política "{2_Policy}" de {1_Civ} durante sua guerra contra {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="pt_BR">
+            <Text>Levantaram-se contra a política "{2_Policy}" de {1_Civ} durante uma de suas guerras.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="pt_BR">
+            <Text>Levantaram-se contra o tratamento que {1_Civ} dava a seus moradores durante sua guerra contra {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="pt_BR">
+            <Text>Levantaram-se contra o tratamento que {1_Civ} dava a seus moradores durante uma de suas guerras.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="pt_BR">
+            <Text>Reprimido.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="pt_BR">
+            <Text>Perdeu força sozinho.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="pt_BR">
+            <Text>{1_Place} foi incendiada.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="pt_BR">
+            <Text>Terminou com a era.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="pt_BR">
+            <Text>Ainda em andamento.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="pt_BR">
+            <Text>Nas mãos de {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="pt_BR">
+            <Text>{1_Name} começou. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="pt_BR">
+            <Text>{1_Name} terminou. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="pt_BR">
+            <Text>Levantes</Text>
+        </Replace>
     </LocalizedText>
 </Database>

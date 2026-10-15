@@ -14,6 +14,7 @@ import {
   closeEndedWars,
   collectActiveWars
 } from "/demographics/ui/sampler/sampler-wars-detect.js";
+import { runRisingsTracker } from "/demographics/ui/sampler/sampler-risings.js";
 import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 /**
@@ -254,6 +255,7 @@ function resolveWarHistory(history) {
  * Build connected components of currently-at-war pairs and reconcile against
  * open wars in history.wars. With `history` passed, war records are mutated in
  * place and the caller commits the save; without it, this loads and saves itself.
+ * The threaded pass also folds in the Partisans mod's risings (sampler-risings.js).
  * @param {Snapshot} snapshot The just-recorded snapshot.
  * @param {number} turn The current turn.
  * @param {WarHistory} [history] The in-progress history to mutate in place.
@@ -278,4 +280,5 @@ export function runWarTracker(snapshot, turn, history) {
     // Threaded path: the caller owns the single per-turn save. Standalone: persist now.
     if (!caller) DemographicsStorage.save(warHistory);
   });
+  if (history) runRisingsTracker(snapshot, turn, history);
 }

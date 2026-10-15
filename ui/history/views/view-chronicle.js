@@ -13,6 +13,7 @@ import {
   summarizeAge,
   spanFor
 } from "/demographics/ui/history/model/history-narrate.js";
+import { isRisingEvent } from "/demographics/ui/history/model/history-risings-narrate.js";
 import { pillRow, section, emptyState, textButton } from "/demographics/ui/history/views/history-widgets.js";
 import { viewState, LIMIT_STEP } from "/demographics/ui/history/views/history-state.js";
 
@@ -25,8 +26,20 @@ export const FILTERS = /** @type {Record<string, HistoryEventKind[]>} */ ({
   war: ["war", "peace", "capture", "elim"],
   faith: ["religion"],
   triumphs: ["triumph"],
-  world: ["age", "civ", "met", "elim", "victory", "crisis", "disaster"]
+  world: ["age", "civ", "met", "elim", "victory", "crisis", "disaster"],
+  risings: ["rising", "risingEnd"]
 });
+
+/**
+ * The filter keys to offer. "risings" appears only once the chronicle holds a Partisans rising, so
+ * games without that mod keep the usual row of filters.
+ * @param {CampaignDoc} doc
+ * @returns {string[]}
+ */
+export function filterKeys(doc) {
+  const hasRisings = doc.events.some(isRisingEvent);
+  return Object.keys(FILTERS).filter((key) => key !== "risings" || hasRisings);
+}
 
 /**
  * Display name of an age, from the age event that opened it.
@@ -144,7 +157,7 @@ function controls(doc, rerender) {
     { key: "all", label: t("LOC_DEMOGRAPHICS_HIST_ALL_AGES") },
     ...doc.ages.map((age) => ({ key: age.age, label: ageName(doc, age.age) }))
   ];
-  const filters = Object.keys(FILTERS)
+  const filters = filterKeys(doc)
     .map((key) => ({ key, label: t("LOC_DEMOGRAPHICS_HIST_FILTER_" + key.toUpperCase()) }));
   const order = [
     { key: "new", label: t("LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST") },

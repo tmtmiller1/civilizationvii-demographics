@@ -1,9 +1,9 @@
 // chart-conflicts-timeline.js
 //
-// The conflicts Gantt timeline (one bar per major-vs-major war):
-// collectWarCivOptions + renderConflictsTimeline and their private filtering,
-// layout, bar-drawing, war-naming, tooltip, and hover helpers (romanize,
-// parseYear, casualty estimate, etc).
+// The conflicts Gantt timeline (one bar per major-vs-major war, plus a thinner
+// hatched row per Partisans rising when that mod has recorded any):
+// collectWarCivOptions + renderConflictsTimeline and their private layout,
+// grid, marker and hover helpers. The data step is chart-conflicts-timeline-data.js.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import {
@@ -11,23 +11,20 @@ import {
   SVG_NS,
   svgEl,
   historySamples,
-  appendEmptyNotice,
   resolveTurnRange,
-  nearestByTurn,
-  buildYearToChartTurn
+  nearestByTurn
 } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import {
   buildStackGridConfig,
   drawStackGrid,
   drawStackXTicks
 } from "/demographics/ui/screen-demographics/charts/shared/chart-stack-grid.js";
-import { mergeWars, policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
+import { policyVisibleWars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-merge.js";
 import {
   buildGanttLayout,
   crisisBandHeight,
   computeGanttDomain,
-  computeGanttWidth,
-  filterGanttWars
+  computeGanttWidth
 } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-domain.js";
 import { drawWarBars } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-gantt-bars.js";
 import {
@@ -42,6 +39,10 @@ import {
   crisisStageOnsets
 } from "/demographics/ui/screen-demographics/charts/crises/crisis-stage-data.js";
 import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
+import {
+  prepareConflictsTimelineData
+} from "/demographics/ui/screen-demographics/charts/conflicts/chart-conflicts-timeline-data.js";
+import { collectRisingCivOptions } from "/demographics/ui/screen-demographics/charts/conflicts/chart-risings-data.js";
 
 // Wars Gantt: one horizontal bar per war, stacked vertically by start turn.
 // X-axis = turn (with year ticks). Bars colored by the attacker's primary
@@ -62,14 +63,26 @@ function compareWarCivOptions(a, b) {
 }
 
 /**
- * List every civ that has appeared in any war, sorted majors-first then by
- * label, for the conflicts-page filter dropdown.
+ * List every civ that has appeared in any war, or had a Partisans rising
+ * against it, sorted majors-first then by label, for the conflicts-page filter dropdown.
  * @param {DemoHistory|*} history The history blob.
  * @returns {{ pid: *, isCS: boolean, label: string }[]}
  */
 export function collectWarCivOptions(history) {
-  const wars = policyVisibleWars(history && history.wars, historySamples(history));
+  const samples = historySamples(history);
   const seen = new Map();
+  addWarRosterOptions(seen, policyVisibleWars(history && history.wars, samples));
+  for (const option of collectRisingCivOptions(history, samples)) {
+    if (!seen.has(option.pid)) seen.set(option.pid, option);
+  }
+  return Array.from(seen.values()).sort(compareWarCivOptions);
+}
+
+/**
+ * @param {Map<*, { pid: *, isCS: boolean, label: string }>} seen Filled in place, first sighting wins.
+ * @param {*[]} wars Spoiler-guarded wars.
+ */
+function addWarRosterOptions(seen, wars) {
   for (const war of wars) {
     if (!war) continue;
     const allRosters = /** @type {any[]} */ ([]).concat(war.sideACivs || [], war.sideBCivs || []);
@@ -82,7 +95,6 @@ export function collectWarCivOptions(history) {
       });
     }
   }
-  return Array.from(seen.values()).sort(compareWarCivOptions);
 }
 
 /**
@@ -294,55 +306,6 @@ function buildGanttOverlayEnv(samples, latestTurn, W, H, dom) {
 }
 
 /**
- * Prepared Gantt data: the sorted wars, the filtered subset, and filter flags.
- * @typedef {Object} GanttPrep
- * @property {*[]} wars The sorted war list.
- * @property {*[]} merged The full merged war set (for naming).
- * @property {*[]} filtered The filtered subset.
- * @property {number} latestTurn The latest sampled turn.
- * @property {Snapshot[]} samples The sample stream.
- * @property {number|null} filterPid Active civ filter, or null.
- * @property {boolean} showActiveOnly Whether concluded wars are hidden.
- */
-
-/**
- * Latest continuous (cross-age) chart turn from the samples.
- * @param {Snapshot[]} samples
- * @returns {number}
- */
-function latestChartTurn(samples) {
-  if (!samples.length) return 0;
-  const last = samples[samples.length - 1] || {};
-  return typeof last.chartTurn === "number" ? last.chartTurn : (last.turn ?? 0);
-}
-
-/**
- * @param {number|undefined} chartVal Recorded chart turn (if any).
- * @param {string|null|undefined} year The endpoint's game-year label.
- * @param {number|null|undefined} localVal The age-local turn fallback.
- * @param {Map<string, number>} yearToChart game-year → chartTurn.
- */
-function pickGlobalTurn(chartVal, year, localVal, yearToChart) {
-  if (typeof chartVal === "number") return chartVal;
-  if (year && yearToChart.has(year)) return /** @type {number} */ (yearToChart.get(year));
-  return typeof localVal === "number" ? localVal : null;
-}
-
-/**
- * Return a copy of a war with its start/end turns remapped to the continuous
- * (cross-age) chart turn, so the whole Gantt pipeline plots on one timeline.
- * @param {*} war
- * @param {Map<string, number>} yearToChart game-year → chartTurn.
- * @returns {*}
- */
-function toGlobalTurns(war, yearToChart) {
-  const start = pickGlobalTurn(war.startChartTurn, war.startYear, war.startTurn, yearToChart);
-  const ended = typeof war.endTurn === "number";
-  const end = ended ? pickGlobalTurn(war.endChartTurn, war.endYear, war.endTurn, yearToChart) : null;
-  return { ...war, startTurn: start, endTurn: end };
-}
-
-/**
  * chart-turn → game-year map for the Gantt x-ticks (the shared buildStackTurnYears
  * keys by the age-local turn, which doesn't match the Gantt's continuous x).
  * @param {Snapshot[]} samples
@@ -412,43 +375,6 @@ function drawGanttAgeMarkers(svg, L, dom, markers) {
       })
     );
   }
-}
-
-/**
- * @param {HTMLElement} host The view host (for empty-state notices).
- * @param {*} opts
- */
-function prepareConflictsTimelineData(host, opts) {
-  // Persisted arrays: drop null elements (a null war / sample) before anything dereferences them.
-  /** @type {any[]} */
-  const samples = historySamples(opts.history).filter(Boolean);
-  // Spoiler guard first: a hidden civ must not reach the bars, the tooltips or the naming.
-  const rawWars = policyVisibleWars(opts.history && opts.history.wars, samples);
-  if (rawWars.length === 0) {
-    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS"));
-    return null;
-  }
-  // Plot on the continuous chart turn so ages don't overlap; remap each war's
-  // age-local start/end onto it before anything else sees them.
-  const latestTurn = latestChartTurn(samples);
-  const yearToChart = buildYearToChartTurn(samples);
-  const wars = rawWars.map((w) => toGlobalTurns(w, yearToChart));
-  // Collapse concurrent, overlapping wars that share a belligerent into single
-  // multi-front wars before anything else, so the whole view (bars, tooltip,
-  // naming) sees one war per front-group.
-  const merged = mergeWars(wars, latestTurn);
-  merged.sort((a, b) => (a.startTurn || 0) - (b.startTurn || 0));
-  // Filter pipeline: city states are dropped, since this is a major-civ engagement
-  // timeline. Coalition wars between two majors still show, but only major
-  // civs are rendered as bars.
-  const filterPid = typeof opts.filterPid === "number" ? opts.filterPid : null;
-  const showActiveOnly = !!opts.activeOnly;
-  const filtered = filterGanttWars(merged, showActiveOnly, filterPid);
-  if (filtered.length === 0) {
-    appendEmptyNotice(host, t("LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH"));
-    return null;
-  }
-  return { wars, merged, filtered, latestTurn, samples, filterPid, showActiveOnly };
 }
 
 /**

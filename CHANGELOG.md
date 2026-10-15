@@ -5,6 +5,13 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
+## [Unreleased]
+
+- With Partisans, its risings show on the Conflicts timeline as thin hatched bars in the owner's colour, named by place
+  ("Mutsu Uprising", or "Greek Loyalist Rising at Mutsu" after a culture flip). The tooltip says why the people rose
+  and how it ended. The Chronicle tells when a rising starts and ends, under a Risings filter. Both follow the same
+  rules as wars about which civilizations you've met, and past risings stay on the timeline if Partisans is removed.
+
 ## [2.8.3] - 2026-10-14
 
 The license now says that Civilization VII and its art and data belong to Firaxis and 2K. The mod itself plays exactly

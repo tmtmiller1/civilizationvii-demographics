@@ -2425,5 +2425,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="it_IT"><Text>M{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="it_IT"><Text>T-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="it_IT"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="it_IT">
+            <Text>Moto lealista {1_Adjective} a {2_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="it_IT">
+            <Text>Moto di {1_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="it_IT">
+            <Text>Dopo che {1_Place} si è unita a {2_Civ} per la cultura, persone fedeli a {3_Civ} hanno preso le armi.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="it_IT">
+            <Text>Dopo che {1_Place} si è unita a {2_Civ} per la cultura, persone fedeli ai vecchi governanti hanno preso le armi.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="it_IT">
+            <Text>Anni di malcontento a {1_Place}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="it_IT">
+            <Text>Insorti contro la politica "{2_Policy}" di {1_Civ} durante la sua guerra con {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="it_IT">
+            <Text>Insorti contro la politica "{2_Policy}" di {1_Civ} durante una delle sue guerre.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="it_IT">
+            <Text>Insorti contro il modo in cui {1_Civ} trattava i suoi abitanti durante la sua guerra con {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="it_IT">
+            <Text>Insorti contro il modo in cui {1_Civ} trattava i suoi abitanti durante una delle sue guerre.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="it_IT">
+            <Text>Represso.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="it_IT">
+            <Text>Spentosi da solo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="it_IT">
+            <Text>{1_Place} è stata data alle fiamme.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="it_IT">
+            <Text>Terminato con l'era.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="it_IT">
+            <Text>Ancora in corso.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="it_IT">
+            <Text>In mano a {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="it_IT">
+            <Text>È scoppiato il {1_Name}. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="it_IT">
+            <Text>Il {1_Name} è terminato. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="it_IT">
+            <Text>Rivolte</Text>
+        </Replace>
     </LocalizedText>
 </Database>

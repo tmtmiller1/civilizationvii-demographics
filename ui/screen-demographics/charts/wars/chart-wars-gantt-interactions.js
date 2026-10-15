@@ -3,6 +3,7 @@
 // Wars Gantt hover tooltip creation, hit-testing, and pointer interaction flow.
 
 import { renderWarTooltip } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-tooltip.js";
+import { renderRisingTooltip } from "/demographics/ui/screen-demographics/charts/conflicts/chart-risings-tooltip.js";
 import { toLocalPx } from "/demographics/ui/core/demographics-font-ladder.js";
 
 // Visual scale applied to the tooltip in CSS (.demographics-wars-tooltip); used
@@ -206,7 +207,8 @@ function ganttHoverMoveBody(ev, state) {
   ensureTooltipHost(state);
   if (war !== state.shownWar) {
     state.tooltip.style.display = "block";
-    renderWarTooltip(state.tooltip, war, state.ctx);
+    if (war.isRising) renderRisingTooltip(state.tooltip, war, state.ctx);
+    else renderWarTooltip(state.tooltip, war, state.ctx);
     state.shownWar = war;
   }
   positionGanttTooltip(state, ev, rect);

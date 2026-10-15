@@ -56,6 +56,18 @@
     color: #f7ecc8;
     text-shadow: 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.6);
 }
+/* A Partisans rising's name: smaller and lighter beside the war names, over its thinner hatched
+   row, with a muted border so it reads as a different kind of event. Never italic: the UI engine
+   lays italic text out at zero height and draws nothing. */
+.demographics-wars-label-box.is-rising {
+    font-weight: 500;
+    font-size: var(--dg-fs-72);
+    border-top-color: rgba(170, 152, 124, 0.35);
+    border-right-color: rgba(170, 152, 124, 0.35);
+    border-bottom-color: rgba(170, 152, 124, 0.35);
+    border-left-color: rgba(170, 152, 124, 0.35);
+    color: rgb(226, 214, 190);
+}
 /* Crisis stage-onset overlay label (atop the solid stage-colored line): a
    two-line pill - stage label in the stage color, crisis name below in cream. */
 .demographics-wars-crisis-label {
@@ -234,6 +246,18 @@
     text-align: center;
     color: rgb(150, 134, 110);
     font-size: var(--dg-fs-72);
+}
+/* A rising's cause and outcome lines, under the divider where a war shows its cost table. */
+.demographics-rising-tooltip-line {
+    text-align: center;
+    color: rgb(214, 200, 174);
+    font-size: var(--dg-fs-72);
+    line-height: 1.35;
+    max-width: 22rem;
+}
+.demographics-rising-tooltip-line.is-outcome {
+    margin-top: calc(0.3 * var(--dg-u));
+    color: rgb(176, 165, 146);
 }
 .demographics-wars-tooltip-divider {
     height: 1px;

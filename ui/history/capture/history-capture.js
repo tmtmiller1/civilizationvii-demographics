@@ -31,6 +31,7 @@ import { saveRecord } from "/demographics/ui/history/store/history-archive-store
 import { live } from "/demographics/ui/history/capture/history-live.js";
 import { newCrisisState, crisisStep } from "/demographics/ui/history/capture/history-crisis.js";
 import { captureMap } from "/demographics/ui/history/capture/history-mapgrid.js";
+import { risingEvents } from "/demographics/ui/history/capture/history-risings.js";
 import { flavorCrisisName } from "/demographics/ui/screen-demographics/charts/crises/crisis-names.js";
 import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded-reads.js";
 
@@ -213,8 +214,7 @@ export function recordWorld(doc, local, world) {
     events.push({ t: world.turn, a: ageIdx, k: "age", p: -1, x: world.age, n: NAMER.age(world.age), d: world.date });
     markBaseline(doc, world);
   }
-  const crisis = crisisEvent(doc, world, ageIdx);
-  if (crisis) events.push(crisis);
+  events.push(...worldEvents(doc, world, ageIdx));
   appendEvents(doc, events);
   rememberTriumphWords(doc, events);
   noteTriumphs(doc, ageIdx, world);
@@ -224,6 +224,20 @@ export function recordWorld(doc, local, world) {
   doc.last = world;
   doc.updated = Date.now();
   return events.length;
+}
+
+/**
+ * Events read from the world rather than diffed: a crisis stage onset, and Partisans risings when
+ * that mod is loaded (history-risings.js).
+ * @param {CampaignDoc} doc Mutated (detection state).
+ * @param {HistoryWorldState} world
+ * @param {number} ageIdx
+ * @returns {HistoryEvent[]}
+ */
+function worldEvents(doc, world, ageIdx) {
+  const crisis = crisisEvent(doc, world, ageIdx);
+  const risings = safe(() => risingEvents(doc, world, ageIdx), []);
+  return crisis ? [crisis, ...risings] : risings;
 }
 
 /**

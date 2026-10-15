@@ -75,6 +75,16 @@ try {
       },
       null,
       { sideACivs: 5 }
+    ],
+    risings: [
+      {
+        id: 1,
+        ownerCiv: { civ: "Great Britain", civTypeString: "CIVILIZATION_GREAT_BRITAIN", leader: "Augustus",
+          leaderType: "LEADER_AUGUSTUS" },
+        otherCiv: { civ: "Mongolia", civTypeString: "CIVILIZATION_MONGOLIA" }
+      },
+      null,
+      { id: 2 }
     ]
   };
   assert.equal(localizeStoredNames(h), h);
@@ -91,6 +101,10 @@ try {
   assert.deepEqual(w.declaredBy, { pid: 0, civ: "대영제국", leader: "아우구스투스" });
   assert.equal(w._nameKeyA, "Great Britain", "recurrence keys are not touched");
   assert.equal(w.name, "1st Great Britain vs Villages War");
+  assert.deepEqual(h.risings[0].ownerCiv, {
+    civ: "대영제국", civTypeString: "CIVILIZATION_GREAT_BRITAIN", leader: "아우구스투스", leaderType: "LEADER_AUGUSTUS"
+  }, "a Partisans rising's civs follow the language too");
+  assert.equal(h.risings[0].otherCiv.civ, "몽골");
   assert.equal(localizeStoredNames(null), null);
 
   globalThis.GameInfo = undefined; // main menu / tests: nothing to read, nothing changes

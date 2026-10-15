@@ -2837,5 +2837,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="pl_PL"><Text>N{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="pl_PL"><Text>T-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="pl_PL"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="pl_PL">
+            <Text>Powstanie lojalistów w mieście {2_Place} ({1_Adjective})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="pl_PL">
+            <Text>Powstanie w mieście {1_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="pl_PL">
+            <Text>Gdy miasto {1_Place} dzięki kulturze przyłączyło się do cywilizacji {2_Civ}, ludzie wierni cywilizacji {3_Civ} chwycili za broń.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="pl_PL">
+            <Text>Gdy miasto {1_Place} dzięki kulturze przyłączyło się do cywilizacji {2_Civ}, ludzie wierni dawnym władcom chwycili za broń.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="pl_PL">
+            <Text>Lata niezadowolenia w mieście {1_Place}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="pl_PL">
+            <Text>Powstali przeciw polityce „{2_Policy}” cywilizacji {1_Civ} podczas jej wojny z cywilizacją {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="pl_PL">
+            <Text>Powstali przeciw polityce „{2_Policy}” cywilizacji {1_Civ} podczas jednej z jej wojen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="pl_PL">
+            <Text>Powstali przeciw temu, jak cywilizacja {1_Civ} traktowała mieszkańców podczas wojny z cywilizacją {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="pl_PL">
+            <Text>Powstali przeciw temu, jak cywilizacja {1_Civ} traktowała mieszkańców podczas jednej ze swoich wojen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="pl_PL">
+            <Text>Stłumione.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="pl_PL">
+            <Text>Wygasło samo.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="pl_PL">
+            <Text>Miasto {1_Place} zostało spalone.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="pl_PL">
+            <Text>Zakończyło się wraz z erą.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="pl_PL">
+            <Text>Nadal trwa.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="pl_PL">
+            <Text>Właściciel: {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="pl_PL">
+            <Text>Wybuchło: {1_Name}. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="pl_PL">
+            <Text>Zakończyło się: {1_Name}. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="pl_PL">
+            <Text>Powstania</Text>
+        </Replace>
 </LocalizedText>
 </Database>
