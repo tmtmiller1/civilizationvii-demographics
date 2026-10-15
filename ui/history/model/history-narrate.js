@@ -11,6 +11,7 @@
 
 import { t, typeName, victoryName } from "/demographics/ui/history/core/history-text.js";
 import { gameColors } from "/demographics/ui/history/views/history-colors.js";
+import { isRisingEvent, risingArgs } from "/demographics/ui/history/model/history-risings-narrate.js";
 
 /**
  * @typedef {Object} Cast
@@ -131,7 +132,9 @@ const TEMPLATES = /** @type {Record<HistoryEventKind, string>} */ ({
   met: "LOC_DEMOGRAPHICS_HIST_EV_MET",
   victory: "LOC_DEMOGRAPHICS_HIST_EV_VICTORY",
   crisis: "LOC_DEMOGRAPHICS_HIST_EV_CRISIS",
-  disaster: "LOC_DEMOGRAPHICS_HIST_EV_DISASTER"
+  disaster: "LOC_DEMOGRAPHICS_HIST_EV_DISASTER",
+  rising: "LOC_DEMOGRAPHICS_HIST_EV_RISING",
+  risingEnd: "LOC_DEMOGRAPHICS_HIST_EV_RISING_END"
 });
 
 /**
@@ -142,6 +145,16 @@ const TEMPLATES = /** @type {Record<HistoryEventKind, string>} */ ({
  * @returns {string[]}
  */
 export function eventArgs(event, cast, age) {
+  return isRisingEvent(event) ? risingArgs(event, cast, age) : standardArgs(event, cast, age);
+}
+
+/**
+ * @param {HistoryEvent} event
+ * @param {Cast} cast
+ * @param {string} age
+ * @returns {string[]}
+ */
+function standardArgs(event, cast, age) {
   const actor = party(cast, event.p, age);
   const other = party(cast, event.q, age);
   const name = t(event.n || "");
@@ -184,6 +197,8 @@ export function eventText(event, cast, age) {
 export function eventVisible(event, cast) {
   if (event.k === "age" || event.k === "victory" || event.k === "crisis") return true;
   const ok = (/** @type {number|undefined} */ pid) => pid == null || pid < 0 || cast.known(pid);
+  // A rising shows with its owner; its other civ is left unnamed while unmet (history-risings-narrate.js).
+  if (isRisingEvent(event)) return ok(event.p);
   return ok(event.p) && ok(event.q);
 }
 

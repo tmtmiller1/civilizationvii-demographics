@@ -15,7 +15,7 @@ export const SERIES_CAP = 360;
  * of the least important kind still present are dropped first.
  * @type {HistoryEventKind[]}
  */
-export const DROP_ORDER = ["met", "found", "peace", "war", "razed", "capture", "religion", "triumph", "wonder"];
+export const DROP_ORDER = ["met", "risingEnd", "rising", "found", "peace", "war", "razed", "capture", "religion", "triumph", "wonder"];
 
 /**
  * A fresh document.

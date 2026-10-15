@@ -2982,5 +2982,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="fr_FR"><Text>M{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="fr_FR"><Text>T-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="fr_FR"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="fr_FR">
+            <Text>Soulèvement loyaliste {1_Adjective} à {2_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="fr_FR">
+            <Text>Soulèvement de {1_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="fr_FR">
+            <Text>Après que {1_Place} a rejoint {2_Civ} par la culture, des habitants fidèles à {3_Civ} ont pris les armes.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="fr_FR">
+            <Text>Après que {1_Place} a rejoint {2_Civ} par la culture, des habitants fidèles à leurs anciens dirigeants ont pris les armes.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="fr_FR">
+            <Text>Des années de mécontentement à {1_Place}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="fr_FR">
+            <Text>Soulèvement contre la politique « {2_Policy} » de {1_Civ} pendant sa guerre contre {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="fr_FR">
+            <Text>Soulèvement contre la politique « {2_Policy} » de {1_Civ} pendant l'une de ses guerres.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="fr_FR">
+            <Text>Soulèvement contre la façon dont {1_Civ} traitait ses habitants pendant sa guerre contre {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="fr_FR">
+            <Text>Soulèvement contre la façon dont {1_Civ} traitait ses habitants pendant l'une de ses guerres.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="fr_FR">
+            <Text>Réprimé.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="fr_FR">
+            <Text>Retombé de lui-même.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="fr_FR">
+            <Text>{1_Place} a été incendiée.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="fr_FR">
+            <Text>Terminé avec l'ère.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="fr_FR">
+            <Text>Toujours en cours.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="fr_FR">
+            <Text>Aux mains de {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="fr_FR">
+            <Text>{1_Name} a éclaté. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="fr_FR">
+            <Text>{1_Name} a pris fin. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="fr_FR">
+            <Text>Soulèvements</Text>
+        </Replace>
     </LocalizedText>
 </Database>

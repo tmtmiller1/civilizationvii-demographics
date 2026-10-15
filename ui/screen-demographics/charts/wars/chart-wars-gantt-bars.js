@@ -5,6 +5,7 @@
 import { getSemantic } from "/demographics/ui/core/demographics-palette.js";
 import { svgEl } from "/demographics/ui/screen-demographics/charts/shared/chart-shared.js";
 import { majorsOnSide } from "/demographics/ui/screen-demographics/charts/wars/chart-wars-naming.js";
+import { drawRisingBar } from "/demographics/ui/screen-demographics/charts/conflicts/chart-risings-bars.js";
 
 /**
  * @param {*[]} samples
@@ -265,7 +266,8 @@ function drawWarBar(svg, war, row, ctx) {
 }
 
 /**
- * Draw every war bar and return the hover hit rectangles.
+ * Draw every war bar (and every Partisans rising row mixed in with them) and return the hover hit
+ * rectangles.
  * @param {SVGElement} svg
  * @param {*[]} filtered
  * @param {{
@@ -286,14 +288,8 @@ export function drawWarBars(svg, filtered, ctx) {
     const war = filtered[i];
     const endTurn = typeof war.endTurn === "number" ? war.endTurn : latestTurn;
     if (turnRange && (endTurn < turnRange.min || war.startTurn > turnRange.max)) continue;
-    barRects.push(
-      drawWarBar(
-        svg,
-        war,
-        { baseY: L.rowTops[i], barH: L.rowHeights[i] },
-        barCtx
-      )
-    );
+    const slot = { baseY: L.rowTops[i], barH: L.rowHeights[i] };
+    barRects.push(war.isRising ? drawRisingBar(svg, war, slot, barCtx) : drawWarBar(svg, war, slot, barCtx));
   }
   return barRects;
 }

@@ -77,6 +77,10 @@
                     <Item>ui/history/store/history-campaign-store.js</Item>
                     <Item>ui/history/store/history-campaign.js</Item>
                     <Item>ui/core/civ-color-utils.js</Item>
+                    <Item>ui/core/demographics-risings-contract.js</Item>
+                    <Item>ui/core/demographics-risings-text.js</Item>
+                    <Item>ui/history/capture/history-risings.js</Item>
+                    <Item>ui/history/model/history-risings-narrate.js</Item>
                     <Item>ui/core/demographics-font-ladder.js</Item>
                     <Item>ui/metrics/metrics-format.js</Item>
                     <Item>ui/history/capture/history-live.js</Item>
@@ -134,6 +138,8 @@
                     <Item>ui/sampler/sampler-collectors-religion.js</Item>
                     <Item>ui/sampler/sampler-wars-detect.js</Item>
                     <Item>ui/sampler/sampler-wars-ingest.js</Item>
+                    <Item>ui/sampler/sampler-risings.js</Item>
+                    <Item>ui/sampler/sampler-risings-place.js</Item>
                     <Item>ui/sampler/sampler-wars-augment.js</Item>
                     <Item>ui/sampler/sampler-wars-core.js</Item>
                     <Item>ui/sampler/sampler-wars.js</Item>
@@ -232,6 +238,8 @@
                     <Item>ui/screen-demographics/views/relations/relations-ring-compute.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-ring-svg.js</Item>
                     <Item>ui/core/civ-color-utils.js</Item>
+                    <Item>ui/core/demographics-risings-contract.js</Item>
+                    <Item>ui/core/demographics-risings-text.js</Item>
                     <Item>ui/core/demographics-font-ladder.js</Item>
                     <Item>ui/screen-demographics/charts/crises/chart-crisis-graphs.js</Item>
                     <Item>ui/screen-demographics/charts/line/chart-line-axis.js</Item>
@@ -269,6 +277,10 @@
                     <Item>ui/sampler/sampler-turn-handler.js</Item>
                     <Item>ui/screen-demographics/camera/city-camera-controller-utils.js</Item>
                     <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-timeline-overlays.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-conflicts-timeline-data.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-risings-data.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-risings-bars.js</Item>
+                    <Item>ui/screen-demographics/charts/conflicts/chart-risings-tooltip.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-war-graphs-hover.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-wars-gantt-bars.js</Item>
                     <Item>ui/screen-demographics/charts/wars/chart-wars-gantt-domain.js</Item>
@@ -319,6 +331,8 @@
                     <Item>ui/history/views/history-timeline-lanes.js</Item>
                     <Item>ui/history/views/history-timeline-view.js</Item>
                     <Item>ui/history/capture/history-crisis.js</Item>
+                    <Item>ui/history/capture/history-risings.js</Item>
+                    <Item>ui/history/model/history-risings-narrate.js</Item>
                     <Item>ui/history/capture/history-mapgrid.js</Item>
                     <Item>ui/history/views/history-colors.js</Item>
                     <Item>ui/history/views/history-chart.js</Item>

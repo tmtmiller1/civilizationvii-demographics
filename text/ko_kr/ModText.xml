@@ -2425,5 +2425,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="ko_KR"><Text>근{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="ko_KR"><Text>{1_Turn}턴</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="ko_KR"><Text>{1_Turn}턴</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="ko_KR">
+            <Text>{2_Place}의 {1_Adjective} 충성파 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="ko_KR">
+            <Text>{1_Place} 봉기</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="ko_KR">
+            <Text>{1_Place}이(가) 문화로 {2_Civ}에 편입된 뒤, {3_Civ}에 충성하는 사람들이 무기를 들었습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="ko_KR">
+            <Text>{1_Place}이(가) 문화로 {2_Civ}에 편입된 뒤, 옛 지배자에게 충성하는 사람들이 무기를 들었습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="ko_KR">
+            <Text>{1_Place}에서 여러 해 이어진 불만.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="ko_KR">
+            <Text>{3_Civ}과(와)의 전쟁 중 {1_Civ}의 '{2_Policy}'에 맞서 일어났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="ko_KR">
+            <Text>전쟁 중 {1_Civ}의 '{2_Policy}'에 맞서 일어났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="ko_KR">
+            <Text>{2_Civ}과(와)의 전쟁 중 {1_Civ}이(가) 주민을 대한 방식에 맞서 일어났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="ko_KR">
+            <Text>전쟁 중 {1_Civ}이(가) 주민을 대한 방식에 맞서 일어났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="ko_KR">
+            <Text>진압되었습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="ko_KR">
+            <Text>저절로 잦아들었습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="ko_KR">
+            <Text>{1_Place}이(가) 불타 없어졌습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="ko_KR">
+            <Text>시대가 끝나며 함께 끝났습니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="ko_KR">
+            <Text>아직 진행 중입니다.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="ko_KR">
+            <Text>소유: {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="ko_KR">
+            <Text>{1_Name}이(가) 일어났습니다. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="ko_KR">
+            <Text>{1_Name}이(가) 끝났습니다. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="ko_KR">
+            <Text>봉기</Text>
+        </Replace>
     </LocalizedText>
 </Database>

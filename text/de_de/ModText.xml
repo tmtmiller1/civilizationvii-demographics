@@ -2982,5 +2982,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="de_DE"><Text>M{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="de_DE"><Text>R-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="de_DE"><Text>R{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="de_DE">
+            <Text>{1_Adjective}-loyalistischer Aufstand in {2_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="de_DE">
+            <Text>Aufstand in {1_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="de_DE">
+            <Text>Nachdem sich {1_Place} durch Kultur {2_Civ} angeschlossen hatte, griffen Menschen, die {3_Civ} treu waren, zu den Waffen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="de_DE">
+            <Text>Nachdem sich {1_Place} durch Kultur {2_Civ} angeschlossen hatte, griffen Menschen, die den alten Herrschern treu waren, zu den Waffen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="de_DE">
+            <Text>Jahrelange Unzufriedenheit in {1_Place}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="de_DE">
+            <Text>Aufbegehren gegen die Politik „{2_Policy}“ von {1_Civ} während des Kriegs gegen {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="de_DE">
+            <Text>Aufbegehren gegen die Politik „{2_Policy}“ von {1_Civ} während eines Kriegs.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="de_DE">
+            <Text>Aufbegehren gegen die Behandlung der Bewohner durch {1_Civ} während des Kriegs gegen {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="de_DE">
+            <Text>Aufbegehren gegen die Behandlung der Bewohner durch {1_Civ} während eines Kriegs.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="de_DE">
+            <Text>Niedergeschlagen.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="de_DE">
+            <Text>Von selbst abgeflaut.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="de_DE">
+            <Text>{1_Place} wurde niedergebrannt.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="de_DE">
+            <Text>Endete mit dem Zeitalter.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="de_DE">
+            <Text>Noch im Gange.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="de_DE">
+            <Text>Im Besitz von {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="de_DE">
+            <Text>{1_Name} brach aus. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="de_DE">
+            <Text>{1_Name} endete. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="de_DE">
+            <Text>Aufstände</Text>
+        </Replace>
     </LocalizedText>
 </Database>

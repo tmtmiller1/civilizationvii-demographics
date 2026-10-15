@@ -498,4 +498,4 @@ export function conflictLabelText(war, nameOverride, turnYearMap, latestTurn) {
   return displayName + "  ·  " + yrLabel;
 }
 
-export { warDurationYears, buildContinentMap };
+export { warDurationYears, buildContinentMap, civAdjective };

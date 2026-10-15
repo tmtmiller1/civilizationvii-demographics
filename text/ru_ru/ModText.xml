@@ -2425,5 +2425,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="ru_RU"><Text>С{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="ru_RU"><Text>Х-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="ru_RU"><Text>Х{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="ru_RU">
+            <Text>Восстание лоялистов в городе {2_Place} ({1_Adjective})</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="ru_RU">
+            <Text>Восстание в городе {1_Place}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="ru_RU">
+            <Text>После того как город {1_Place} благодаря культуре перешёл под власть державы {2_Civ}, люди, верные державе {3_Civ}, взялись за оружие.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="ru_RU">
+            <Text>После того как город {1_Place} благодаря культуре перешёл под власть державы {2_Civ}, люди, верные прежним правителям, взялись за оружие.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="ru_RU">
+            <Text>Годы недовольства в городе {1_Place}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="ru_RU">
+            <Text>Восстали против политики «{2_Policy}» державы {1_Civ} во время её войны с державой {3_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="ru_RU">
+            <Text>Восстали против политики «{2_Policy}» державы {1_Civ} во время одной из её войн.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="ru_RU">
+            <Text>Восстали против того, как держава {1_Civ} обращалась с жителями во время войны с державой {2_Civ}.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="ru_RU">
+            <Text>Восстали против того, как держава {1_Civ} обращалась с жителями во время одной из своих войн.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="ru_RU">
+            <Text>Подавлено.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="ru_RU">
+            <Text>Утихло само.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="ru_RU">
+            <Text>Город {1_Place} сожжён.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="ru_RU">
+            <Text>Завершилось с концом эпохи.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="ru_RU">
+            <Text>Всё ещё продолжается.</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="ru_RU">
+            <Text>Владелец: {1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="ru_RU">
+            <Text>Началось: {1_Name}. {2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="ru_RU">
+            <Text>Завершилось: {1_Name}. {2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="ru_RU">
+            <Text>Восстания</Text>
+        </Replace>
     </LocalizedText>
 </Database>

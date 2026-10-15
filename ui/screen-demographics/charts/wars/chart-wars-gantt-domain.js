@@ -119,6 +119,8 @@ const GANTT_BAR_H = 24;
 const GANTT_BAR_H_MAX = 64;
 const GANTT_PER_STRIPE = 7;
 const GANTT_ROW_GAP = 10;
+/** A Partisans rising row is thinner than any war bar so the two kinds read apart at a glance. */
+const GANTT_RISING_H = 14;
 
 /**
  * Height of one staggered crisis-label row, in the chart's own (unscaled) pixels, at the reference
@@ -165,8 +167,9 @@ function warStripeCount(war) {
   return Math.max(2, majorsOnSide(war.sideACivs).length + majorsOnSide(war.sideBCivs).length);
 }
 
-/** @param {*} war */
+/** @param {*} war A war, or a rising row (chart-risings-data.js). */
 function barHeightFor(war) {
+  if (war && war.isRising) return GANTT_RISING_H;
   return Math.min(
     GANTT_BAR_H_MAX,
     GANTT_BAR_H + Math.max(0, warStripeCount(war) - 2) * GANTT_PER_STRIPE

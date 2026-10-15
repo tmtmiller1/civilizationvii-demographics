@@ -3232,5 +3232,59 @@
         <Row Tag="LOC_DEMOGRAPHICS_TURN_SHORT">
             <Text>T{1_Turn}</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST">
+            <Text>{1_Adjective} Loyalist Rising at {2_Place}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING">
+            <Text>{1_Place} Uprising</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP">
+            <Text>After {1_Place} joined {2_Civ} by culture, people loyal to {3_Civ} took up arms.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED">
+            <Text>After {1_Place} joined {2_Civ} by culture, people loyal to its old rulers took up arms.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY">
+            <Text>Years of unhappiness in {1_Place}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY">
+            <Text>Rose against {1_Civ}'s {2_Policy} during its war with {3_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED">
+            <Text>Rose against {1_Civ}'s {2_Policy} during one of its wars.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE">
+            <Text>Rose against how {1_Civ} treated its residents during its war with {2_Civ}.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED">
+            <Text>Rose against how {1_Civ} treated its residents during one of its wars.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED">
+            <Text>Put down.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME">
+            <Text>Died down.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED">
+            <Text>{1_Place} was burned.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE">
+            <Text>Ended with the age.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING">
+            <Text>Still under way.</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY">
+            <Text>Held by {1_Civ}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING">
+            <Text>{1_Name} broke out. {2_Cause}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END">
+            <Text>{1_Name} ended. {2_Outcome}</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS">
+            <Text>Risings</Text>
+        </Row>
     </EnglishText>
 </Database>

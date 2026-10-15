@@ -2982,5 +2982,59 @@
         <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="zh_Hans_CN"><Text>近{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="zh_Hans_CN"><Text>T-{1_Turn}</Text></Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="zh_Hans_CN"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="zh_Hans_CN">
+            <Text>{2_Place}{1_Adjective}效忠派起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="zh_Hans_CN">
+            <Text>{1_Place}起义</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="zh_Hans_CN">
+            <Text>{1_Place}因文化归入{2_Civ}后，效忠{3_Civ}的人们拿起了武器。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="zh_Hans_CN">
+            <Text>{1_Place}因文化归入{2_Civ}后，效忠旧统治者的人们拿起了武器。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="zh_Hans_CN">
+            <Text>{1_Place}多年来民怨不断。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="zh_Hans_CN">
+            <Text>在与{3_Civ}交战期间，起来反抗{1_Civ}的“{2_Policy}”。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="zh_Hans_CN">
+            <Text>在一场战争期间，起来反抗{1_Civ}的“{2_Policy}”。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="zh_Hans_CN">
+            <Text>在与{2_Civ}交战期间，起来反抗{1_Civ}对待居民的方式。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="zh_Hans_CN">
+            <Text>在一场战争期间，起来反抗{1_Civ}对待居民的方式。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="zh_Hans_CN">
+            <Text>已被镇压。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="zh_Hans_CN">
+            <Text>逐渐平息。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="zh_Hans_CN">
+            <Text>{1_Place}被焚毁。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="zh_Hans_CN">
+            <Text>随时代结束而终结。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="zh_Hans_CN">
+            <Text>仍在进行。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="zh_Hans_CN">
+            <Text>所属：{1_Civ}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="zh_Hans_CN">
+            <Text>{1_Name}爆发。{2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="zh_Hans_CN">
+            <Text>{1_Name}结束。{2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="zh_Hans_CN">
+            <Text>起义</Text>
+        </Replace>
     </LocalizedText>
 </Database>

@@ -24,7 +24,11 @@ declare global {
     | "met"
     | "victory"
     | "crisis"
-    | "disaster";
+    | "disaster"
+    /** A Partisans rising broke out (history-risings.js packs the cause into x). */
+    | "rising"
+    /** A Partisans rising ended (x is "cause|outcome"). */
+    | "risingEnd";
 
   /** One chronicle entry; see the key legend at the top of this file. */
   interface HistoryEvent {
@@ -197,6 +201,8 @@ declare global {
     crisis?: HistoryCrisisState;
     /** Territory map frames. */
     map?: HistoryMapGrid;
+    /** Partisans risings the chronicle has told, by Partisans id: 1 began, 2 ended. */
+    ris?: Record<string, number>;
   }
 
   /**

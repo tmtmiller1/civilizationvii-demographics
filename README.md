@@ -231,6 +231,11 @@ text has its own, higher one, so nothing shrinks past reading size. 2880x1800 re
 - With *Emigration*: Demographics hosts its tab and charts. If late-game turns feel heavy with both mods on, raise
   Emigration's *How often migration runs* (Options → Mods → Emigration → Advanced, Pacing group). It changes how
   often migration updates, not what it does. Demographics' own sampling adapts to the machine and the game by itself.
+- With *Partisans*: each rising shows on the War Timeline as a thinner, hatched bar in the color of the civilization
+  the people rose against, named for its settlement, with a tooltip that says why it began and how it ended. The
+  Chronicle notes when a rising breaks out and when it ends, under its own **Risings** filter. Risings follow the same
+  spoiler rules as wars, and your own always show. Demographics keeps its own record of them, so past risings stay on
+  the timeline if you later remove Partisans.
 - Carries the [Tower Settings Keeper](https://github.com/tmtmiller1/civilizationvii_tower-settings-keeper), so its
   settings, and other mods' settings in the shared entry, survive a restart (below).
 - Translated into German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian and
