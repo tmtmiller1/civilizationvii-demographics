@@ -7,7 +7,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
-import { div, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { buildNameLine, div, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { METRICS, localizedMetricName } from "/demographics/ui/metrics/demographics-metrics.js";
@@ -297,8 +297,8 @@ function buildCivCell(profile, masked) {
     );
   } else {
     const [primary, secondary] = orderedNames(profile.leaderName, profile.civName);
-    names.appendChild(div("demographics-settle-owner-leader", primary || "—"));
-    if (secondary) names.appendChild(div("demographics-settle-owner-civ", secondary));
+    names.appendChild(buildNameLine("demographics-settle-owner-leader", primary || "—"));
+    if (secondary) names.appendChild(buildNameLine("demographics-settle-owner-civ", secondary));
   }
   owner.appendChild(names);
   cell.appendChild(owner);

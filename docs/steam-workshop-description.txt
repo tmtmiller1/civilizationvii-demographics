@@ -38,9 +38,10 @@ It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and build
 [*]A ranked board of the world's largest cities and towns with owner, population, output, wonders and gold, silver and bronze medals.
 [*]View on map flies the camera to any settlement; Cinematic view orbits its quarters and wonders and finishes with fireworks. The camera style and length are set in Options.
 [/list]
-[h2]Pairs with Emigration[/h2]
+[h2]Pairs with Emigration and Partisans[/h2]
 [list]
 [*]With the [b]Emigration[/b] companion mod installed, Demographics hosts its Emigration tab and migration charts beside Population. Without it nothing changes.
+[*]With [b]Partisans[/b] installed, each rising shows on the War Timeline as a thin hatched bar in the color of the civilization the people rose against, named for its settlement, with a tooltip that says why it began and how it ended. The Chronicle tells when each rising starts and ends, under its own Risings filter. Risings follow the same spoiler rules as wars, and past risings stay on the timeline if you remove Partisans.
 [/list]
 [h2]Languages[/h2]
 English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian and Simplified Chinese, each with its own number formatting.
@@ -48,7 +49,6 @@ English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian P
 [list]
 [*]Recorded history is kept in each save; the Hall of Fame is kept on your computer.
 [*]The screen scales to the resolution it is played at. At 1280x720, the smallest supported resolution, some pages are tight: everything is readable, but column headings and long leader names can be cut off.
-[*]Triumph card progress overlays are a separate companion mod: triumphs-progress-overlay.
 [*]Readable, unminified source.
 [/list]
 [h2]A Civilization VII bug, and the workaround for it[/h2]
@@ -71,5 +71,5 @@ This mod is developed with [url=https://github.com/tmtmiller1/civilizationvii_to
 [/list]
 [h2]Special Thanks[/h2]
 [list]
-[*][b]Potato McWhisky[/b], for teaching me to love again, Civilization-wise (Civ VI), after growing up as a Civilization II, IV, and V player. Making this mod is an act of faith that the community will eventually help make Civilization VII as good as the previous entries.
+[*][b]Potato McWhisky[/b], for teaching me to love again, Civilization-wise (Civ VI), after growing up as a Civilization II, IV, and V player.
 [/list]

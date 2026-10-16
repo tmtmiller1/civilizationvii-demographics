@@ -241,7 +241,9 @@ export const METRICS = [
     unit: "reputation"
   },
   {
-    // Scaled population: raw^1.11 × 90000 × 1.009^turn (monotonic turn).
+    // Scaled population: the sum of the civ's settlements, each valued by scaleCityPopulationAt for
+    // its size and the age it is in (the sampler's populationScaled). The turn plays no part; each
+    // age has its own growth formula, blended in from the previous age's over its first quarter.
     id: "population",
     label: "Population",
     title: "Population (scaled millions)",

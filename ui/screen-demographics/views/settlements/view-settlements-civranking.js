@@ -3,7 +3,7 @@
 // Civilization-ranking sub-view rendering for the Settlements view.
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
-import { div, formatRounded, formatPopulation, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { buildNameLine, div, formatRounded, formatPopulation, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
 import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 import {
@@ -156,12 +156,15 @@ function buildCivMeta(civ) {
  */
 function buildCivPodiumBody(civ, state, deps) {
   const body = div("demographics-settle-podium-body");
-  body.appendChild(div("demographics-settle-podium-name", civ.name));
+  body.appendChild(buildNameLine("demographics-settle-podium-name", civ.name));
   if (civ.capital) {
     const capName = civ.masked ? t("LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME") : civ.capital.name;
-    body.appendChild(div("demographics-settle-podium-civ", t("LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF", capName)));
+    const capLine = t("LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF", capName);
+    body.appendChild(buildNameLine("demographics-settle-podium-civ", capLine));
   }
-  body.appendChild(div("demographics-settle-podium-owner", orderedNames(civ.owner.leaderName, civ.owner.civName)[1]));
+  body.appendChild(
+    buildNameLine("demographics-settle-podium-owner", orderedNames(civ.owner.leaderName, civ.owner.civName)[1])
+  );
   body.appendChild(buildCivMeta(civ));
   const cams = civ.capital ? deps.buildCameraButtons(civ.capital, state) : null;
   if (cams) body.appendChild(cams);
@@ -209,7 +212,7 @@ function buildCivRow(civ, state, deps) {
   row.appendChild(deps.buildOwnerAvatar(civ.owner));
   const mid = div("demographics-settle-list-mid");
   const nameRow = div("demographics-settle-list-namerow");
-  nameRow.appendChild(div("demographics-settle-list-name", civ.name));
+  nameRow.appendChild(buildNameLine("demographics-settle-list-name", civ.name));
   mid.appendChild(nameRow);
   mid.appendChild(buildCivMeta(civ));
   mid.appendChild(buildCivScoreBar(civ));

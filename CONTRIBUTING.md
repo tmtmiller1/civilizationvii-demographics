@@ -117,6 +117,37 @@ text/<locale>/ModText.xml     localized strings (11 locales)
 devtools/                     development-only views and probes, never shipped
 ```
 
+## Screen size and small screens
+
+The screen is laid out once against a 2880x1800 reference and drawn through one `transform: scale(s)`, with `s` taken
+from the window height and kept between 0.7 and 1.3 (`ui/core/demographics-font-ladder.js`). Text has its own floor:
+below a 0.82 scale the type ladder is boosted so text never draws smaller than it would at 0.82. Size spacing,
+portraits and icons in `--dg-u`, which follows the layout, and a box that exists to hold a word in `--dg-t`, which
+follows the text.
+
+Every window under 1260 px tall sits at the 0.7 floor, so 1920x1080, 1600x900, 1366x768 and 1280x720 all draw text at
+the same size and only the frame's own size changes: 2633 local px wide at 1080p, 1755 at 720p. The boards that split
+their width between many columns run out of room for their words first. A layout scale below 0.7 doesn't fix that:
+the columns share a fixed slice of the screen and the text in them can't shrink, so it buys only a few percent per
+column at 720p while it shrinks the portraits, icons and chart labels that don't follow the type floor.
+
+So the small-screen lower bound is about content, not scale. When the frame's own width is under 2000 local px
+(1366x768, 1280x720, 1280x800 and windows that size), `applyVisualScale` puts the `dg-compact` class on the frame, and
+the last block of `screen-demographics-density.css` makes room on the boards:
+
+- names and headings step down one size, never below body text;
+- portraits beside names in the ranked lists and tables drop, and the row's color stripe and the names stay;
+- Settlement Rank by Yield drops its Type column, since the All, Cities and Towns chips still split them;
+- table column headings wrap onto two lines at one size, with shrink-to-fit only as a last resort;
+- the Civilization Rank by Yield grid's row headings drop their icons;
+- a name that can still be cut shows its full text as a tooltip (`buildNameLine`, `applyCompactTooltip`).
+
+1920x1080 and larger look exactly as before, for four reasons: `isCompactViewport` is false for any window at least
+1920x1080, the scale and frame-size formulas haven't changed, every rule in the small-screen block is scoped to
+`.dg-compact`, and the tooltips are only added with it. `tests/compact-layout.mjs` checks all four, including a sweep of
+window sizes from 1920x1080 to 5120x2880. A new small-screen rule goes in that block, scoped the same way, without a
+`font-family` (the Chinese, Japanese and Korean font lists come from the generated locale stylesheet).
+
 ## Trying a change in game
 
 The game runs plain copies from its Mods folder, not the repo. `node scripts/deploy.mjs` replaces `Mods/demographics`

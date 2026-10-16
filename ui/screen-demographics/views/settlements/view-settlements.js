@@ -13,7 +13,7 @@
 
 import { t } from "/demographics/ui/core/demographics-i18n.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
-import { div, formatRounded, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { buildNameLine, div, formatRounded, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { safeTextColor } from "/demographics/ui/core/civ-color-utils.js";
 import {
   SETTLEMENT_OUTPUTS,
@@ -268,9 +268,9 @@ function buildOwnerCell(owner) {
   // name and ".-owner-civ" the leader. The leader line only shows when there is
   // a distinct civ name above it.
   const primary = owner.civName || owner.leaderName || "—";
-  names.appendChild(div("demographics-settle-owner-leader", primary));
+  names.appendChild(buildNameLine("demographics-settle-owner-leader", primary));
   if (owner.civName && owner.leaderName) {
-    names.appendChild(div("demographics-settle-owner-civ", owner.leaderName));
+    names.appendChild(buildNameLine("demographics-settle-owner-civ", owner.leaderName));
   }
   cell.appendChild(names);
   return cell;
