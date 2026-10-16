@@ -10,7 +10,7 @@ settlements, the diplomacy between them, every war and crisis, and the story of 
 of Fame ranks every campaign you have played, and opens from the main menu too.
 
 The mod samples every civilization each turn and builds everything it shows from those samples. It only reads the
-game: no yields, balance or AI behavior are changed.
+game, so yields, balance and the AI play exactly as they would without it.
 
 <p align="center">
   <a href="docs/screenshots/01-yields-gold-per-turn.jpg"><img src="docs/screenshots/01-yields-gold-per-turn.jpg" width="880" alt="Gold per turn for every civilization across Antiquity and Exploration, with crisis stages, wonders, and the age change marked on the timeline"></a>
@@ -212,11 +212,12 @@ The game's own **Font Size** setting scales every page of the screen.
 The screen is drawn as one uniformly scaled frame against a 2880x1800 reference, so the same layout reaches every
 display rather than filling the screen at one resolution and crowding it at another. The scale has a lower bound and
 text has its own, higher one, so nothing shrinks past reading size. 2880x1800 renders at full size; 3840x2160,
-2560x1440, 1920x1080, 1600x900 and 1366x768 approximate it.
+2560x1440, 1920x1080 and 1600x900 approximate it. 1366x768 and 1280x720, the smallest supported size, get a
+small-screen layout that makes room for names on the ranking boards (see Known limits).
 
 ## Compatibility
 
-- Does not replace base-game files and changes no gameplay data.
+- Adds its own screen and reads the game from there; base-game files and gameplay data stay as they are.
 - Every read from the game is defensive: a missing or changed field means missing data, not a crash. A view that
   fails says "Chart failed to render" in its own panel, and the rest of the screen keeps working.
 - The mod's CSS custom properties start with `--dg-`, so it styles only its own screen and leaves other mods'
@@ -323,17 +324,19 @@ War costs (the tables per combatant) and crisis costs (the stage and cumulative 
 out the same way: each figure is one participant's series over its active window, from the turn it joined to the turn
 it left or the war or age ended, reduced by a mode chosen per figure.
 
-- **Losses** (Strength Lost, Population, Crop and Production Lost): the sum of every turn-over-turn decline, with
-  rises ignored so ordinary growth never hides a loss. Population Lost reads raw population, not the scaled chart
-  value, so neither the people scaling nor the age-change smoothing on the Population chart can hide a real drop.
+- **Losses** (Population, Crop and Production Lost): the sum of every turn-over-turn decline, with rises ignored so
+  ordinary growth never hides a loss. Population Lost reads raw population, not the scaled chart value, so neither
+  the people scaling nor the age-change smoothing on the Population chart can hide a real drop.
 - **Net** (Settlements, Land): `last − first` over the window, signed (`+gained` / `-lost`). These count cities and
   territory that changed hands by capture, so a war from before the tracking began reads "-" rather than a
   misleading 0.
 - **Accrued / Spent** (Settlements Razed, Production Directed to War, Refugees): the increase of a running counter
   over the window.
 - **Level** (current Military Power): the last sampled value, a standing figure rather than a flow.
-- **Casualties** (Military Strength Lost) use the engine's running units-killed counter when it is present, and fall
-  back to the decline of the standing army for older saves.
+- **Casualties** (Strength Lost): the combat strength of every unit killed in combat, which the mod adds up itself as
+  the game reports each kill, so rebuilding the army doesn't hide a loss. A unit built and killed within one turn is
+  missed, because the mod never saw its strength. History recorded before the mod counted kills falls back to the
+  decline of the standing army.
 
 A crisis's cumulative cost sums its stages. Because losses are sums of per-turn dips, they need dense samples, so each
 finished age's cumulative cost is captured when that age ends and stays accurate after old samples are thinned.
@@ -365,21 +368,25 @@ dropped; the game being played is always kept whole.
 
 ## Known limits
 
-- At 1280x720, the smallest supported resolution, the layout has reached its lower bound while the text has not, so
-  some pages are tight: everything is reachable and readable, but column headings and long leader names can be cut
-  off. Higher resolutions are unaffected.
+- At 1366x768 and smaller, down to 1280x720, the smallest supported size, text stays as large as at 1920x1080, so the
+  ranking boards switch to a small-screen layout to fit it. Names and headings there are one size smaller, the
+  portraits beside names in the ranked lists and tables give their room to the names, Settlement Rank by Yield drops
+  its Type column (the All, Cities and Towns buttons still split them), and table column headings wrap onto two
+  lines. A long name can still end in "...", and hovering it shows it in full. 1600x900 and larger look the same as
+  before. Not yet watched in game.
 - History starts when the mod is first active in a game. A game it is added to part-way through has no record of the
   turns before.
-- Losses are inferred from sampled figures, not read from the game, so a loss on a heavily thinned stretch of a long
-  game can be under-counted or read "-".
+- Population, Crop and Production losses are inferred from how sampled figures moved, not read from the game, so a
+  loss on a heavily thinned stretch of a long game can be under-counted or read "-". Strength Lost counts units as
+  they're killed, so thinning doesn't under-count it.
 
 ---
 
 ## For mod authors: the companion API
 
 Other mods can add to the screen through an optional, load-order-independent API on
-`globalThis.DemographicsMetricsAPI`. It does nothing unless another mod calls it, and Demographics takes no
-dependency on the caller.
+`globalThis.DemographicsMetricsAPI`. It only acts when another mod calls it, and Demographics runs the same with or
+without that mod installed.
 
 - **`registerMetric(spec)`**: add a per-civilization line-chart metric that is sampled, stored and charted like the
   mod's own. A spec may include a `tooltipAttribution(ctx)` callback whose returned string is shown as a source line

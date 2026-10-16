@@ -171,9 +171,9 @@ export function scalePopulationAt(raw, _turn, ctx) {
   return settlements * scaleCityPopulationAt(avg, _turn, ageType, ageProgressPct);
 }
 
-// A military unit represents roughly this many soldiers (a legion/regiment/division), growing
-// with the era exactly like population does, so "war dead" reads in the same scaled-people units
-// as population.
+// A military unit represents roughly this many soldiers (a legion/regiment/division), so "war dead"
+// reads in people, as population does. The soldier count grows with the turn (below), while
+// population is valued per age by scaleCityPopulationAt, so the two curves differ in shape.
 const SOLDIERS_PER_UNIT = 1000;
 
 // The era multiplier on soldiers-per-unit (a Modern division dwarfs an ancient legion) is 1.009^turn,

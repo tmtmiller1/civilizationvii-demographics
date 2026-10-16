@@ -7,6 +7,7 @@ import {
 } from "/demographics/ui/metrics/demographics-metrics.js";
 import { safePlaySound } from "/demographics/ui/core/demographics-audio.js";
 import { iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { applyCompactTooltip } from "/demographics/ui/core/demographics-font-ladder.js";
 import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 import {
@@ -174,6 +175,7 @@ export function buildCivHeaderText(text, profile, maskAsUnmet) {
     ? t("LOC_DEMOGRAPHICS_UNMET_CIV")
     : orderedNames(profile.leaderName, profile.civName)[0] ||
       tPlayerFallback(profile.pid);
+  applyCompactTooltip(primary, primary.textContent);
   text.appendChild(primary);
 
   if (maskAsUnmet) {
@@ -199,6 +201,7 @@ function appendCivNameRows(text, profile) {
     const leader = document.createElement("div");
     leader.className = "demographics-worldrankings-allcivs-civ-header-civ font-body text-sm";
     leader.textContent = orderedNames(profile.leaderName, profile.civName)[1];
+    applyCompactTooltip(leader, leader.textContent);
     text.appendChild(leader);
   }
 

@@ -11,7 +11,7 @@
    tall at 720p and 133.3rem at 2160p, a 3x range, not a fixed ~60rem at every design resolution.
    Every constant below is derived from that range.
 
-   Two layers:
+   Three layers:
 
      1. Continuous scale: `--dg-u`, one unit published by demographics-font-ladder.js as
         (viewportHeight / 1800) rem, bounded to [0.8, 1.3]. Resolution-sensitive metrics are written
@@ -38,9 +38,12 @@
         Thresholds derived from a fixed 60rem viewport (53.9 / 43.9) would never fire micro at any
         real resolution, and would fire compact only below 873px.
 
+     3. Small-screen layout: rules under the frame's `.dg-compact` class, at the end of this sheet.
+        The class is set from JS for frames narrower than 2000 local px (1366x768 and smaller) and
+        is never set at 1920x1080 or above.
+
    @media with rem units is supported and fires correctly. `matchMedia` does not exist in GameFace,
-   so breakpoints cannot be queried from JS. Only spacing / font-size is touched, never the flex
-   structure or what is shown. */
+   so breakpoints cannot be queried from JS, which is why the small-screen layout is a class. */
 
 /* Floor active: viewport ≤ 78rem (1920x1200 down to 720p)
    The visual scale is pinned at its 0.7 floor once the viewport is under 1260px (77.8rem), so from
@@ -526,4 +529,72 @@
 .demographics-screen .demographics-wars-age-label,
 .demographics-screen .demographics-wars-now-label {
     font-size: var(--dg-fs-72);
+}
+
+/* Small screens: the frame carries .dg-compact
+   Set by demographics-font-ladder.js (isCompactViewport) when the frame's own layout is narrower
+   than 2000px: 1366x768, 1280x720, 1280x800 and other windows that size, never 1920x1080 or above.
+   Text keeps its 0.82 floor while the layout stops at 0.7, so on these screens the boards that share
+   their width between many columns run out of room for their words. A smaller layout scale wouldn't
+   help: those columns split a fixed share of the screen and the text in them can't shrink, so it
+   would only make portraits, icons and chart labels smaller. These rules make room instead. Names
+   that can still be cut carry their full text as a tooltip (applyCompactTooltip). Every selector in
+   this block names .dg-compact; tests/compact-layout.mjs fails the build on one that doesn't, and on
+   a font-family here (the CJK lists in the locale stylesheet must keep applying). */
+
+/* Ranked lists (Top 25 Settlements, Civilization Ranking): the row's color stripe and the civ line
+   under the name already say whose it is, so the portrait gives its width to the name. The header
+   spacer stands over the portrait and goes with it. */
+.demographics-screen .dg-compact .demographics-settle-list-row > .demographics-settle-avatar,
+.demographics-screen .dg-compact .demographics-settle-head-spacer {
+    display: none;
+}
+.demographics-screen .dg-compact .demographics-settle-list-name {
+    font-size: var(--dg-fs-140);
+}
+/* Podium cards: names one step smaller, and the leader line on one line like the two above it. */
+.demographics-screen .dg-compact .demographics-settle-split-left .demographics-settle-podium-name {
+    font-size: var(--dg-fs-140);
+}
+.demographics-screen .dg-compact .demographics-settle-split-left .demographics-settle-podium-civ {
+    font-size: var(--dg-fs-105);
+}
+.demographics-screen .dg-compact .demographics-settle-split-left .demographics-settle-podium-owner {
+    font-size: var(--dg-fs-95);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+/* Tables (Settlement Rank by Yield, and Civilization Rank by Yield as a table). The owner names keep
+   their place and lose the portrait beside them. Type (City / Town) is the least used column, and the
+   All / Cities / Towns chips above the table still split the two, so it drops. Column headings use
+   the recipe the civilization table already uses: one size, up to two lines, and the engine's
+   shrink-to-fit only as a last resort. */
+.demographics-screen .dg-compact .demographics-settle-owner > .demographics-settle-avatar,
+.demographics-screen .dg-compact .demographics-settle-col-type {
+    display: none;
+}
+.demographics-screen .dg-compact .demographics-settle-th-label {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+    max-height: 2.4em;
+    overflow: hidden;
+    coh-font-fit-mode: shrink;
+    text-align: center;
+    line-height: 1.15;
+}
+
+/* Civilization Rank by Yield as a matrix: the civilization and leader names over each column step
+   down a size, and the row headings drop their icons so the metric names get the label column. */
+.demographics-screen .dg-compact .demographics-worldrankings-allcivs-civ-header-leader {
+    font-size: var(--dg-fs-100);
+}
+.demographics-screen .dg-compact .demographics-worldrankings-allcivs-civ-header-civ {
+    font-size: var(--dg-fs-85);
+}
+.demographics-screen .dg-compact .demographics-worldrankings-allcivs-metric-icon {
+    display: none;
 }

@@ -3,7 +3,7 @@
 // Showcase (Top-25) rendering for the Settlements view.
 
 import { localYear, t } from "/demographics/ui/core/demographics-i18n.js";
-import { div, formatRounded, formatPopulation, iconEl } from "/demographics/ui/core/ui-helpers.js";
+import { buildNameLine, div, formatRounded, formatPopulation, iconEl } from "/demographics/ui/core/ui-helpers.js";
 import { orderedNames } from "/demographics/ui/core/player-label.js";
 import { SETTLEMENT_OUTPUTS } from "/demographics/ui/screen-demographics/settlements/settlements-data.js";
 
@@ -108,16 +108,16 @@ function buildScoreBar(settlement) {
  */
 function buildPodiumBody(settlement, state, deps) {
   const body = div("demographics-settle-podium-body");
-  body.appendChild(div("demographics-settle-podium-name", settlement.name));
+  body.appendChild(buildNameLine("demographics-settle-podium-name", settlement.name));
   // Three-line ownership hierarchy: Settlement (primary) / Civilization /
   // Leader (smallest). Each line shows only when present so masked/unowned
   // rows aren't left blank.
   const [podPrimary, podSecondary] = orderedNames(settlement.owner.leaderName, settlement.owner.civName);
   if (podPrimary) {
-    body.appendChild(div("demographics-settle-podium-civ", podPrimary));
+    body.appendChild(buildNameLine("demographics-settle-podium-civ", podPrimary));
   }
   if (podSecondary) {
-    body.appendChild(div("demographics-settle-podium-owner", podSecondary));
+    body.appendChild(buildNameLine("demographics-settle-podium-owner", podSecondary));
   }
   body.appendChild(buildCityMeta(settlement, deps));
   const cams = deps.buildCameraButtons(settlement, state);
@@ -160,7 +160,7 @@ function buildPodiumCard(settlement, place, state, deps) {
  */
 function buildShowcaseNameRow(settlement, state, deps) {
   const nameRow = div("demographics-settle-list-namerow");
-  nameRow.appendChild(div("demographics-settle-list-name", settlement.name));
+  nameRow.appendChild(buildNameLine("demographics-settle-list-name", settlement.name));
   nameRow.appendChild(deps.buildTypeBadge(settlement.isTown));
   if (settlement.isCapital) {
     nameRow.appendChild(
@@ -190,7 +190,7 @@ function buildShowcaseMid(settlement, state, deps) {
   // say which civ a lesser-known settlement belongs to.
   const [listPrimary] = orderedNames(settlement.owner.leaderName, settlement.owner.civName);
   if (listPrimary) {
-    mid.appendChild(div("demographics-settle-list-civ", listPrimary));
+    mid.appendChild(buildNameLine("demographics-settle-list-civ", listPrimary));
   }
   const wonderRow = buildWonderRow(settlement);
   if (wonderRow) mid.appendChild(wonderRow);

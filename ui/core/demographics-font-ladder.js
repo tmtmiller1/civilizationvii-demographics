@@ -90,16 +90,110 @@ export function fontScale() {
  */
 export function visualScale() {
   try {
-    const h = document?.documentElement?.clientHeight;
-    if (!h || !Number.isFinite(h) || h <= 0) return 1;
-    return Math.max(MIN_VISUAL_SCALE, Math.min(MAX_VISUAL_SCALE, h / REFERENCE_VIEWPORT_H));
+    return scaleForHeight(document?.documentElement?.clientHeight);
   } catch (_) {
     return 1;
   }
 }
 
+/**
+ * The visual scale for a viewport height, bounded by {@link MIN_VISUAL_SCALE} / {@link MAX_VISUAL_SCALE}.
+ * 1 when the height is missing or not a positive number.
+ * @param {*} height Viewport height in px.
+ * @returns {number}
+ */
+export function scaleForHeight(height) {
+  if (typeof height !== "number" || !Number.isFinite(height) || height <= 0) return 1;
+  return Math.max(MIN_VISUAL_SCALE, Math.min(MAX_VISUAL_SCALE, height / REFERENCE_VIEWPORT_H));
+}
+
+/** The frame's share of the viewport, in vw / vh, before the scale is applied. */
+const FRAME_VW = 96;
+const FRAME_VH = 94;
+
+/**
+ * The frame's own (local) layout size for a viewport: what the pages are laid out in before the
+ * transform draws them at the visual scale.
+ * @param {number} width Viewport width in px.
+ * @param {number} height Viewport height in px.
+ * @returns {{ width: number, height: number, scale: number }}
+ */
+export function frameLayoutSize(width, height) {
+  const scale = scaleForHeight(height);
+  return { width: (width * FRAME_VW) / 100 / scale, height: (height * FRAME_VH) / 100 / scale, scale };
+}
+
+/**
+ * Small-screen layout. Text has its own floor ({@link MIN_TYPE_VISUAL}), so below 1080p it can't shrink
+ * with the screen, and the boards that share their width between many columns run out of room for
+ * their words. Below this local frame width the frame carries the `dg-compact` class, and the density
+ * stylesheet's small-screen block makes room: display names and headings step down a size, list
+ * portraits and low-value columns drop, and column headings wrap to two lines. The value sits between
+ * 1366x768 (1873 local px wide) and 1600x900 (2194).
+ */
+export const COMPACT_FRAME_WIDTH = 2000;
+
+/**
+ * Windows at least this large always get the full layout, so 1080p and up look exactly as they did
+ * before the small-screen layout existed.
+ */
+export const FULL_LAYOUT_MIN_W = 1920;
+export const FULL_LAYOUT_MIN_H = 1080;
+
+/**
+ * Whether a viewport gets the small-screen layout. Never true at or above 1920x1080.
+ * @param {*} width Viewport width in px.
+ * @param {*} height Viewport height in px.
+ * @returns {boolean}
+ */
+export function isCompactViewport(width, height) {
+  const isSize = (/** @type {*} */ v) => typeof v === "number" && Number.isFinite(v) && v > 0;
+  if (!isSize(width) || !isSize(height)) return false;
+  if (width >= FULL_LAYOUT_MIN_W && height >= FULL_LAYOUT_MIN_H) return false;
+  return frameLayoutSize(width, height).width < COMPACT_FRAME_WIDTH;
+}
+
+/** The frame class the density stylesheet's small-screen block is keyed on. */
+export const COMPACT_CLASS = "dg-compact";
+
 // set by applyVisualScale; 1 until then
 let _appliedVisualScale = 1;
+// set by applyVisualScale; false until then
+let _isCompact = false;
+
+/**
+ * Whether the screen is currently drawn with the small-screen layout (see {@link COMPACT_FRAME_WIDTH}).
+ * @returns {boolean}
+ */
+export function isCompactLayout() {
+  return _isCompact;
+}
+
+/**
+ * Give a name that may be cut short on a small screen its full text as a tooltip. Only in the
+ * small-screen layout, so larger screens keep the hover behavior they had.
+ * @param {HTMLElement|null|undefined} el
+ * @param {*} text
+ * @returns {void}
+ */
+export function applyCompactTooltip(el, text) {
+  if (!_isCompact || !el || typeof el.setAttribute !== "function") return;
+  if (typeof text !== "string" || !text) return;
+  el.setAttribute("data-tooltip-content", text);
+}
+
+/**
+ * Read the viewport and set the small-screen state. Off when the viewport can't be read.
+ * @returns {boolean}
+ */
+function readCompactViewport() {
+  try {
+    const root = document?.documentElement;
+    return isCompactViewport(root?.clientWidth, root?.clientHeight);
+  } catch (_) {
+    return false;
+  }
+}
 
 /**
  * The scale the screen is currently drawn at. JS that converts a measured (visual) rect into a
@@ -126,15 +220,21 @@ export function toLocalPx(px) {
  * 1/s its size, then shrink (or grow) it visually by s. Text, padding, chart, legend and overlays
  * all scale together, so the layout is the reference layout at every resolution. GameFace has no
  * `zoom`, and per-declaration CSS scaling could not keep hundreds of independent metrics and
- * JS-positioned overlays consistent, so the transform is the mechanism.
+ * JS-positioned overlays consistent, so the transform is the mechanism. Also sets the small-screen
+ * class ({@link COMPACT_CLASS}) on the frame when {@link isCompactViewport} says so.
  * @param {HTMLElement} frame
  * @returns {number} The scale applied.
  */
 export function applyVisualScale(frame) {
   const s = visualScale();
   _appliedVisualScale = s;
+  _isCompact = readCompactViewport();
   if (!frame || !frame.style) return s;
-  const w = (96 / s).toFixed(4), h = (94 / s).toFixed(4);
+  if (frame.classList) {
+    if (_isCompact) frame.classList.add(COMPACT_CLASS);
+    else frame.classList.remove(COMPACT_CLASS);
+  }
+  const w = (FRAME_VW / s).toFixed(4), h = (FRAME_VH / s).toFixed(4);
   frame.style.width = w + "vw";
   frame.style.height = h + "vh";
   frame.style.maxWidth = w + "vw";

@@ -2,6 +2,7 @@
 // Shared lightweight DOM/format helpers used across Demographics views.
 
 import { formatCount } from "/demographics/ui/metrics/metrics-format.js";
+import { applyCompactTooltip } from "/demographics/ui/core/demographics-font-ladder.js";
 
 /**
  * @param {string} cls
@@ -12,6 +13,19 @@ export function div(cls, text) {
   const el = document.createElement("div");
   el.className = cls;
   if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+/**
+ * A one-line name (a settlement, civilization or leader) that the small-screen layout may cut short.
+ * On a small screen it carries its full text as a tooltip.
+ * @param {string} cls
+ * @param {string} text
+ * @returns {HTMLElement}
+ */
+export function buildNameLine(cls, text) {
+  const el = div(cls, text);
+  applyCompactTooltip(el, text);
   return el;
 }
 

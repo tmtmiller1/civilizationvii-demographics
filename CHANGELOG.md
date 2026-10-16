@@ -7,10 +7,24 @@ section below by `scripts/steam-changelog.mjs`.
 
 ## [Unreleased]
 
-- With Partisans, its risings show on the Conflicts timeline as thin hatched bars in the owner's colour, named by place
-  ("Mutsu Uprising", or "Greek Loyalist Rising at Mutsu" after a culture flip). The tooltip says why the people rose
-  and how it ended. The Chronicle tells when a rising starts and ends, under a Risings filter. Both follow the same
-  rules as wars about which civilizations you've met, and past risings stay on the timeline if Partisans is removed.
+Risings from the Partisans mod, on the War Timeline and in the Chronicle, and a small-screen layout for the ranking
+boards.
+
+### Added
+- With Partisans, its risings show on the War Timeline (Conflicts tab) as thin hatched bars in the owner's color, named
+  by place ("Mutsu Uprising", or "Greek Loyalist Rising at Mutsu" after a culture flip). The tooltip says why the
+  people rose and how it ended. The Chronicle tells when a rising starts and ends, under a Risings filter. Both follow
+  the same rules as wars about which civilizations you've met, and past risings stay on the timeline if Partisans is
+  removed.
+
+### Changed
+- A small-screen layout for 1366x768 and smaller. Text there stays as large as at 1920x1080, so the ranking boards ran
+  out of room for it, and at 1280x720 column headings and long civilization and leader names were cut off. On those
+  screens the names and headings on the boards are now one size smaller, and the portraits beside names in the Top 25
+  Settlements and Civilization Ranking lists and in the tables make way for the names. Settlement Rank by Yield drops
+  its Type column (the All, Cities and Towns buttons still split them) and wraps its column headings onto two lines,
+  and in the Civilization Rank by Yield grid the row headings drop their icons. A name that still doesn't fit shows in full when
+  you hover it. 1600x900 and larger look exactly as before. This is the layout change 2.7.3 said was next.
 
 ## [2.8.3] - 2026-10-14
 
