@@ -79,6 +79,12 @@ assert.deepEqual(placeRisingTurn(100, "AGE_ANTIQUITY", place), { chartTurn: 100,
 assert.equal(placeRisingTurn(5, "AGE_MODERN", place), null, "an age with no samples can't be placed");
 assert.equal(previousAge(place), "AGE_ANTIQUITY");
 assert.equal(previousAge({ ...place, samples: samples.slice(2) }), null);
+const { nextAge } = await import("/demographics/ui/sampler/sampler-risings-place.js");
+assert.equal(nextAge("AGE_ANTIQUITY", place), "AGE_EXPLORATION", "the age after, from the samples");
+assert.equal(nextAge("AGE_ANTIQUITY", { ...place, samples: samples.slice(0, 2) }), "AGE_EXPLORATION",
+  "no sample of the new age yet: the current age");
+assert.equal(nextAge("AGE_EXPLORATION", place), null, "nothing after the current age");
+assert.equal(nextAge("", place), null);
 
 // Merge: new rows get chart turns, names and policy names; ends update in place.
 const ctx = {
@@ -107,26 +113,27 @@ assert.equal(list[0].outcome, "burned", "a changed outcome updates");
 assert.equal(list[0].endChartTurn, 120);
 assert.equal(list[0].endYear, "400 CE");
 
-// A rising tracked in its own age that ends with the age is closed on that age's samples.
+// A rising tracked in its own age that the age change ends: Partisans closes it on the new age's first pass, so the
+// end is placed on the new age's samples.
 const old = mergeRisings([], [good({ id: 9, start: 95 })], {
   ...ctx, chartTurn: 100, localTurn: 100, age: "AGE_ANTIQUITY", gameYear: "200 CE", samples: samples.slice(0, 2)
 });
 assert.equal(old[0].startChartTurn, 95);
-const closed = mergeRisings(old, [good({ id: 9, start: 95, end: 100, outcome: "age" })], ctx);
-assert.equal(closed[0].endChartTurn, 100, "placed against the earlier age's samples");
-assert.equal(closed[0].endYear, "200 CE");
+const closed = mergeRisings(old, [good({ id: 9, start: 95, end: 1, outcome: "age" })], ctx);
+assert.equal(closed[0].endChartTurn, 101, "placed on the next age's first turn");
+assert.equal(closed[0].endYear, "250 CE");
 
 // First sight of rows from an earlier age: everything up to the newest "ended with the age" row.
 const fresh = mergeRisings([], [
   good({ id: 1, start: 91, end: 93, outcome: "dispersed" }),
-  good({ id: 2, start: 96, end: 100, outcome: "age" }),
+  good({ id: 2, start: 96, end: 1, outcome: "age" }),
   good({ id: 3, start: 5, end: 9, outcome: "time" })
 ], ctx);
 assert.deepEqual(fresh.map((r) => r.age), ["AGE_ANTIQUITY", "AGE_ANTIQUITY", "AGE_EXPLORATION"]);
 assert.deepEqual(fresh.map((r) => r.startChartTurn), [91, 96, 105]);
-assert.deepEqual(fresh.map((r) => r.endChartTurn), [93, 100, 109]);
+assert.deepEqual(fresh.map((r) => r.endChartTurn), [93, 101, 109]);
 const lateCtx = { ...ctx, samples: samples.slice(2) };
-const unplaced = mergeRisings([], [good({ id: 4, start: 40, end: 45, outcome: "age" })], lateCtx);
+const unplaced = mergeRisings([], [good({ id: 4, start: 40, end: 1, outcome: "age" })], lateCtx);
 assert.equal(unplaced[0].startChartTurn, undefined, "no samples of that age: kept but unplaced");
 assert.equal(unplaced[0].endChartTurn, undefined);
 
@@ -141,6 +148,46 @@ const namedGone = mergeRisings([], [good({ id: 7, start: 40, age: "AGE_ANTIQUITY
 assert.equal(namedGone[0].age, "");
 assert.equal(namedGone[0].startChartTurn, undefined);
 assert.equal(validateRising(good({ age: "nonsense" })).age, undefined, "an age that isn't an AgeType is dropped");
+
+// A rising the age change clears (block 2, G5): Partisans' turns restart each age, so the end is the new age's turn 1,
+// below the start. It still closes, on the new age's samples, and the owner keeps the civ it had in its own age.
+const g5Row = (over = {}) => ({
+  id: 1, at: "68,18", name: "Heijo", owner: 0, cause: "misery", ip: 40, start: 120, age: "AGE_ANTIQUITY", ...over
+});
+const cleared = validateRising(g5Row({ end: 1, outcome: "age" }));
+assert.equal(cleared.end, 1, "an age-cleared rising keeps its end in the next age");
+assert.equal(cleared.outcome, "age");
+assert.equal(validateRising(g5Row({ end: 1, outcome: "dispersed" })).end, undefined, "only the age change wraps");
+const g5Samples = [
+  { age: "AGE_ANTIQUITY", localTurn: 119, chartTurn: 119, gameYear: "275 BCE",
+    players: { 0: { civName: "Heian Japan", civTypeString: "CIVILIZATION_HEIAN", leaderName: "Himiko" } } },
+  { age: "AGE_ANTIQUITY", localTurn: 120, chartTurn: 120, gameYear: "250 BCE",
+    players: { 0: { civName: "Heian Japan", civTypeString: "CIVILIZATION_HEIAN", leaderName: "Himiko" } } },
+  { age: "AGE_EXPLORATION", localTurn: 1, chartTurn: 121, gameYear: "1 CE",
+    players: { 0: { civName: "Sengoku Japan", civTypeString: "CIVILIZATION_SENGOKU", leaderName: "Himiko" } } }
+];
+const g5Ctx = {
+  chartTurn: 121, localTurn: 1, age: "AGE_EXPLORATION", gameYear: "1 CE", samples: g5Samples,
+  resolveCiv: () => ({ civ: "Sengoku Japan", civTypeString: "CIVILIZATION_SENGOKU", leader: "Himiko" }),
+  resolvePolicyName: () => undefined
+};
+let g5 = mergeRisings([], [g5Row()], g5Ctx);
+assert.equal(g5[0].startChartTurn, 120);
+assert.deepEqual(g5[0].ownerCiv, { civ: "Heian Japan", civTypeString: "CIVILIZATION_HEIAN", leader: "Himiko" },
+  "the owner is named as it was in the rising's own age");
+const g5Next = { ...g5Ctx, chartTurn: 122, localTurn: 2, gameYear: "25 CE",
+  samples: [...g5Samples, { age: "AGE_EXPLORATION", localTurn: 2, chartTurn: 122, gameYear: "25 CE" }] };
+g5 = mergeRisings(g5, [g5Row({ end: 1, outcome: "age" })], g5Next);
+assert.equal(g5[0].end, 1);
+assert.equal(g5[0].outcome, "age");
+assert.equal(g5[0].endChartTurn, 121, "the end sits on the new age's first turn");
+assert.equal(g5[0].endYear, "1 CE");
+const g5Fresh = mergeRisings([], [g5Row({ end: 1, outcome: "age" })], g5Ctx);
+assert.equal(g5Fresh[0].endChartTurn, 121, "first seen already cleared: closed the same way");
+const g5Unnamed = mergeRisings([], [g5Row({ age: undefined, end: 1, outcome: "age" })], g5Ctx);
+assert.equal(g5Unnamed[0].age, "AGE_ANTIQUITY", "an older Partisans row cleared on this turn is the earlier age's");
+assert.equal(g5Unnamed[0].startChartTurn, 120);
+assert.equal(g5Unnamed[0].endChartTurn, 121);
 
 const capped = mergeRisings([null, "junk", { id: 1 }], many, ctx);
 assert.equal(capped.length, RISINGS_CAP);

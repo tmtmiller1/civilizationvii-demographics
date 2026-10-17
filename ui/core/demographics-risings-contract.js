@@ -30,7 +30,7 @@ const TRADITION_TYPE = /^[A-Z][A-Z0-9_]{0,95}$/;
  * @property {string} [policy] enclave: TraditionType of the host's treatment policy.
  * @property {number} ip Independent player that fielded the band.
  * @property {number} start Game.turn the band landed (age-local).
- * @property {number} [end] Game.turn it ended.
+ * @property {number} [end] Game.turn it ended. With the outcome "age" it's the next age's turn, often below `start`.
  * @property {"dispersed"|"time"|"burned"|"age"} [outcome]
  * @property {string} [age] the AgeType the rising began in (Partisans 1.0.0 builds after 2026-10-15 send it)
  */
@@ -69,11 +69,13 @@ function addOtherCiv(out, raw) {
 }
 
 /**
+ * Partisans' turns restart every age, and a rising the age change clears ends on the new age's first pass, so its end
+ * is usually below its start. Any other end before the start is junk.
  * @param {RisingRow} out Mutated.
  * @param {*} raw
  */
 function addEnd(out, raw) {
-  if (!isId(raw.end) || raw.end < out.start) return;
+  if (!isId(raw.end) || (raw.end < out.start && raw.outcome !== "age")) return;
   out.end = raw.end;
   if (OUTCOMES.has(raw.outcome)) out.outcome = raw.outcome;
 }

@@ -63,6 +63,14 @@ assert.deepEqual(ended.map((e) => [e.k, e.n, e.x]), [
 assert.deepEqual(risingEvents(doc, world(14), 0, [row({ id: 1, end: 12, outcome: "burned" })]), []);
 assert.deepEqual(doc.ris, { 1: 2 }, "ids Partisans no longer reports are forgotten");
 
+// The age change clears a rising on the new age's first pass: its end is the new age's turn 1, below its start, and
+// the chronicle still tells it ended with the age.
+const ageDoc = /** @type {*} */ ({ events: [] });
+risingEvents(ageDoc, world(119), 0, [row({ id: 4, name: "Heijo", cause: "misery", from: undefined, start: 120 })]);
+const ageEnd = risingEvents(ageDoc, { ...world(1), age: "AGE_EXPLORATION" }, 1,
+  [row({ id: 4, name: "Heijo", cause: "misery", from: undefined, start: 120, end: 1, outcome: "age" })]);
+assert.deepEqual(ageEnd.map((e) => [e.k, e.n, e.x]), [["risingEnd", "Heijo", "misery|age"]]);
+
 // Sentences, with Greece (2) met and Persia (3) unmet.
 const campaign = /** @type {*} */ ({
   local: 0,
