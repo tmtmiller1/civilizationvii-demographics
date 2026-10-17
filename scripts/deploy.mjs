@@ -13,7 +13,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(os.homedir(), "Library/Application Support/Civilization VII/Mods/demographics");
 const SHIP = [
   /^demographics\.modinfo$/, /^README\.md$/, /^LICENSE$/, /^CHANGELOG\.md$/,
-  /^ui\/(?!dev\/).+\.(js|html|css)$/, /^images\/.+\.(svg|png)$/, /^text\/[a-z_]+\/ModText\.xml$/
+  /^ui\/(?!dev\/).+\.(js|html|css)$/, /^images\/.+\.(svg|png)$/, /^text\/[a-z_]+\/ModText\.xml$/, /^history-corrections\/[a-z-]+-text\.xml$/
 ];
 
 /** @returns {string[]} */

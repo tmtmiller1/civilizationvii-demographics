@@ -150,6 +150,7 @@ ALLOW='^demographics/(demographics\.modinfo|README\.md|LICENSE|CHANGELOG\.md)$'
 ALLOW="$ALLOW"'|^demographics/ui/.+\.(js|html|css)$'
 ALLOW="$ALLOW"'|^demographics/images/.+\.(svg|png)$'
 ALLOW="$ALLOW"'|^demographics/text/[a-z_]+/ModText\.xml$'
+ALLOW="$ALLOW"'|^demographics/history-corrections/[a-z-]+-text\.xml$'
 UNEXPECTED="$(unzip -Z1 "$ZIP_PATH" | grep -vE '/$' | grep -vE "$ALLOW" || true)"
 if [ -n "$UNEXPECTED" ]; then
     echo "error: zip contains entries not on the allow-list:"
