@@ -26,7 +26,7 @@
  * @param {number} turn Age-local turn.
  * @returns {Snapshot|null} The sample of that age nearest to the turn.
  */
-function nearestAgeSample(samples, age, turn) {
+export function nearestAgeSample(samples, age, turn) {
   /** @type {Snapshot|null} */
   let best = null;
   let bestDist = Infinity;
@@ -85,4 +85,20 @@ export function previousAge(ctx) {
     if (typeof age === "string" && age && age !== ctx.age) return age;
   }
   return null;
+}
+
+/**
+ * The age that followed `age`: the first stored sample of another age after that age's last sample, else the current
+ * age when it's a different one.
+ * @param {string} age
+ * @param {RisingPlaceContext} ctx
+ * @returns {string|null} Null when nothing after that age is known yet.
+ */
+export function nextAge(age, ctx) {
+  if (!age) return null;
+  const ages = (ctx.samples || []).map((sample) => (sample && typeof sample.age === "string" ? sample.age : ""));
+  const last = ages.lastIndexOf(age);
+  const later = last >= 0 ? ages.slice(last + 1).find((other) => other && other !== age) : undefined;
+  if (later) return later;
+  return ctx.age && ctx.age !== age ? ctx.age : null;
 }

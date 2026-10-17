@@ -10,7 +10,12 @@ import {
   readPartisanRisings,
   validateRising
 } from "/demographics/ui/core/demographics-risings-contract.js";
-import { placeRisingTurn, previousAge } from "/demographics/ui/sampler/sampler-risings-place.js";
+import {
+  nearestAgeSample,
+  nextAge,
+  placeRisingTurn,
+  previousAge
+} from "/demographics/ui/sampler/sampler-risings-place.js";
 import { pidInfo } from "/demographics/ui/sampler/sampler-wars-augment.js";
 import { safeCall } from "/demographics/ui/sampler/sampler-shared.js";
 
@@ -56,16 +61,15 @@ function isStoredRising(rec) {
 
 /**
  * The index of the newest row that ended with an earlier age. Rows are oldest first, so every row
- * at or before it belongs to an earlier age too. A row that ended "with the age" on the current
- * turn is this age ending, not an earlier one.
+ * at or before it belongs to an earlier age too. Partisans closes those rows on the new age's first
+ * pass, so a row ended "with the age" always began in an earlier age, even when it ended this turn.
  * @param {(RisingRow|null)[]} rows
- * @param {RisingContext} ctx
  * @returns {number} -1 when there is none.
  */
-function lastEarlierAgeIndex(rows, ctx) {
+function lastEarlierAgeIndex(rows) {
   let found = -1;
   rows.forEach((row, i) => {
-    if (row && row.outcome === "age" && row.end !== ctx.localTurn) found = i;
+    if (row && row.outcome === "age") found = i;
   });
   return found;
 }
@@ -75,7 +79,9 @@ function lastEarlierAgeIndex(rows, ctx) {
  * @param {RisingContext} ctx
  */
 function placeEnd(rec, ctx) {
-  const placed = typeof rec.end === "number" ? placeRisingTurn(rec.end, rec.age, ctx) : null;
+  // The age change ends a rising on the next age's first pass, so that end is a turn of the next age.
+  const endAge = rec.outcome === "age" ? nextAge(rec.age, ctx) : rec.age;
+  const placed = typeof rec.end === "number" && endAge ? placeRisingTurn(rec.end, endAge, ctx) : null;
   const fallback = typeof rec.lastChartTurn === "number" ? rec.lastChartTurn : rec.startChartTurn;
   const chartTurn = placed ? placed.chartTurn : fallback;
   if (typeof chartTurn === "number") {
@@ -103,16 +109,49 @@ function applyEnd(rec, row, ctx) {
   if (changed || typeof rec.endChartTurn !== "number") placeEnd(rec, ctx);
 }
 
+/** Snapshot player fields copied onto a {@link RisingCiv}, beside the civ name. */
+const SAMPLE_CIV_FIELDS = [["civTypeString", "civTypeString"], ["leaderName", "leader"], ["leaderTypeString", "leaderType"]];
+
+/**
+ * A civ as the stored sample shows it.
+ * @param {Snapshot|null} sample
+ * @param {number} pid
+ * @returns {RisingCiv|undefined}
+ */
+function sampleCiv(sample, pid) {
+  const ps = sample && sample.players ? /** @type {*} */ (sample.players)[pid] : null;
+  if (!ps || typeof ps.civName !== "string" || !ps.civName) return undefined;
+  /** @type {RisingCiv} */
+  const civ = { civ: ps.civName };
+  for (const [from, to] of SAMPLE_CIV_FIELDS) {
+    if (typeof ps[from] === "string" && ps[from]) /** @type {*} */ (civ)[to] = ps[from];
+  }
+  return civ;
+}
+
+/**
+ * A civ named as it was in the rising's own age. A rising from an earlier age is read from that age's samples, since
+ * the live player has taken a new civ since; with no such sample the timeline uses a generic name.
+ * @param {RisingRecord} rec
+ * @param {number} pid
+ * @param {RisingContext} ctx
+ * @returns {RisingCiv|undefined}
+ */
+function civInOwnAge(rec, pid, ctx) {
+  if (rec.age === ctx.age) return ctx.resolveCiv(pid);
+  return rec.age ? sampleCiv(nearestAgeSample(ctx.samples, rec.age, rec.start), pid) : undefined;
+}
+
 /**
  * @param {RisingRecord} rec Mutated.
  * @param {RisingRow} row
  * @param {RisingContext} ctx
  */
 function addNames(rec, row, ctx) {
-  const ownerCiv = ctx.resolveCiv(row.owner);
+  const ownerCiv = civInOwnAge(rec, row.owner, ctx);
   if (ownerCiv) rec.ownerCiv = ownerCiv;
   const other = typeof row.from === "number" ? row.from : row.homeland;
-  const otherCiv = typeof other === "number" ? ctx.resolveCiv(other) : undefined;
+  const otherCiv = typeof other === "number" ? civInOwnAge(rec, other, ctx) : undefined;
   if (otherCiv) rec.otherCiv = otherCiv;
   const policyName = row.policy ? ctx.resolvePolicyName(row.policy) : undefined;
   if (policyName) rec.policyName = policyName;
@@ -193,7 +232,7 @@ export function mergeRisings(stored, incoming, ctx) {
   const list = Array.isArray(stored) ? stored.filter(isStoredRising) : [];
   const byId = new Map(list.map((rec) => [rec.id, rec]));
   const rows = (Array.isArray(incoming) ? incoming : []).map(validateRising);
-  const earlierUpTo = lastEarlierAgeIndex(rows, ctx);
+  const earlierUpTo = lastEarlierAgeIndex(rows);
   rows.forEach((row, i) => {
     if (!row) return;
     const known = byId.get(row.id);
