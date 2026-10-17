@@ -373,7 +373,7 @@ dropped; the game being played is always kept whole.
   portraits beside names in the ranked lists and tables give their room to the names, Settlement Rank by Yield drops
   its Type column (the All, Cities and Towns buttons still split them), and table column headings wrap onto two
   lines. A long name can still end in "...", and hovering it shows it in full. 1600x900 and larger look the same as
-  before. Not yet watched in game.
+  before.
 - History starts when the mod is first active in a game. A game it is added to part-way through has no record of the
   turns before.
 - Population, Crop and Production losses are inferred from how sampled figures moved, not read from the game, so a
