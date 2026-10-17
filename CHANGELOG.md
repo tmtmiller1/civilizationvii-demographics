@@ -5,7 +5,7 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
-## [Unreleased]
+## [2.9.0] - 2026-10-17
 
 Risings from the Partisans mod, on the War Timeline and in the Chronicle, and a small-screen layout for the ranking
 boards.
