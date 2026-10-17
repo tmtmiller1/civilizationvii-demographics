@@ -16,3 +16,26 @@ note.
   turn 120 and a `risingEnd` event `misery|age` at Exploration turn 2. Both sides read the same. The rising was
   started at 119 because one started at 120 only musters and is cleared as pending, so there's nothing to close.
   The drawn chart and the Chronicle page weren't opened; that's presentation and comes later.
+
+## Small-screen layout (Unreleased)
+
+- **2026-10-17, `lab4-D`, Modern seed 9001, fast setup, two turns in, windowed, render size set in
+  `GraphicsOptions.txt`.** Six games: the usual set (the 16 Tower mods' `Mods/` copies; Aging Warehouses and Settlement
+  Limit were also on in the 1366x768 game, which is where they registered) and Demographics alone, each at 1366x768,
+  1280x720 and 1600x900. The screen was opened by script (`ContextManager.push("screen-demographics")`, as the dock
+  button does) and the World Rankings pages picked through their tab bars. The page reported its own size each time
+  (`documentElement` 1366x768, 1280x720, 1600x900).
+  - 1366x768 and 1280x720, both sides alike: the frame carries `dg-compact`. Names on the ranked lists step down from
+    2.08rem to 1.82rem, and the matrix's civilization and leader names from 1.43rem to 1.30rem. The list portraits are
+    gone in Civilization Ranking (6 of 6) and Top 25 Settlements (25 of 25), and so is the header spacer over them;
+    the podium cards keep theirs. Settlement Rank by Yield shows no Type column (0 of 26 cells drawn) and no owner
+    portraits, with the All, Cities and Towns buttons above it, and the owner's civilization and leader read in full
+    on two lines. Civilization Rank by Yield drew as the matrix on every size; its row headings show no icons (0 of
+    20) and read larger in the space they leave. Every name line on the four pages carries its full text as
+    `data-tooltip-content` (15, 12, 59 and 50 of them), none was cut short, and the captures show none ending in "...".
+    The column headings fit on one line at both sizes in English, so the two-line wrap had nothing to do here.
+  - 1600x900, both sides alike: no `dg-compact`, portraits on every list and table row, the Type column with its
+    City pills, icons on the matrix's row headings, no hover text on names: the layout as before.
+  - Captures in `working_screenshots/demographics-small-screen/` (`u` the usual set, `v` Demographics alone, then the
+    size and the page). The drawn hover tooltip needs a real mouse and wasn't seen; the matrix's cells sit tight
+    against their row lines at every size, 1600x900 included, so that isn't the small-screen layout's doing.

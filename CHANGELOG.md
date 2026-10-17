@@ -15,7 +15,9 @@ boards.
   by place ("Mutsu Uprising", or "Greek Loyalist Rising at Mutsu" after a culture flip). The tooltip says why the
   people rose and how it ended. The Chronicle tells when a rising starts and ends, under a Risings filter. Both follow
   the same rules as wars about which civilizations you've met, and past risings stay on the timeline if Partisans is
-  removed.
+  removed. A rising the age change cuts short stops at the change: its bar ends on the new age's first turn, its
+  tooltip says "Ended with the age.", the Chronicle tells that it ended with the age, and it stays under the
+  civilization it rose against in the age it began.
 
 ### Changed
 - A small-screen layout for 1366x768 and smaller. Text there stays as large as at 1920x1080, so the ranking boards ran
