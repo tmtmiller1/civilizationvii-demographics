@@ -54,7 +54,8 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 /**
  * Seat `ids` at equal angles around an ellipse centered at `(cx, cy)`. The first id sits at the
  * top and the rest follow clockwise (SVG y grows downward). A lone node sits at the right-hand
- * end of the x-axis instead, level with the center.
+ * end of the x-axis instead, level with the center. The ring layout started from the one in
+ * Slothoth's Global Relations Panel (see docs/provenance.md).
  * @param {number[]} ids Node ids in seating order.
  * @param {number} rx Ellipse x-radius.
  * @param {number} ry Ellipse y-radius.

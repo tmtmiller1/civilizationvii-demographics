@@ -5,7 +5,15 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
-## [Unreleased]
+## [2.9.1] - 2026-10-17
+
+### Changed
+- License: from this version the mod is under the Tower Mod License 1.0, in LICENSE. You can still play it, read the
+  code and change your own copy for your own games. Reuploading it, reusing its code in other projects and using it
+  to train AI need my written permission. Earlier versions stay under MIT, and `ui/core/settings-keeper.js` stays
+  MIT so other mods can keep embedding it.
+- Credits: the modinfo names robk's InfoAddict as the design this mod follows, and the relations ring credits
+  Slothoth's Global Relations Panel again. docs/provenance.md shows what came from each.
 
 ### Added
 - Carries Civilopedia History Corrections. With Civilopedia Expanded: Independents on, six East Asian history pages

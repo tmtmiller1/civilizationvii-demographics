@@ -447,6 +447,14 @@ historians in different countries disagree, and a few factual errors are fixed. 
 they are. The text is in `history-corrections/`, in English, Simplified Chinese and Traditional Chinese. Every Tower mod
 that carries it writes the same text, so running several of them together is fine.
 
+Those paragraphs were replaced because they didn't hold up. Some repeated Chinese state historiography as settled
+fact, or recast a question most historians consider answered as still open. Some got basic dates and places wrong. And
+the Oirat page called a genocide, the Qing destruction of most of the Dzungar people in 1755-1757, a "pacification."
+I'm not leaving that in place. More corrections to Civilopedia Expanded may be added at any time, in any update.
+Corrections may also be added for any other mod whose text I judge, in my sole discretion, to be bigoted,
+genocide-denying or otherwise historically inaccurate. Running this mod alongside any of them means you accept those
+replacements, including any added later. Switch this mod off and their pages read as their authors wrote them.
+
 ## Credits
 
 Built by Tower. The History tab and the Hall of Fame come from Tower's History & Rankings mod.
@@ -456,4 +464,23 @@ Slothoth's Global Relations panel for Civilization VII. Thanks to Slothoth also 
 across ages, to AndySafik for the Polish translation and playtest feedback, to renouf for bug reports, and to the
 Civilization modding community for documentation, samples and testing.
 
-MIT license. See [LICENSE](LICENSE).
+## License
+
+Up to version 2.9.0 this mod was MIT, and copies of those versions stay MIT. Versions after 2.9.0 are under the Tower
+Mod License 1.0 in [LICENSE](LICENSE), written in plain English.
+
+You're welcome to play it, read the code to see how it works, and change your own copy for your own games. If you'd
+like to reupload it, put parts of it in your own mod, or use it some other way, ask me first: open an issue here or
+message Tower on Steam. `ui/core/settings-keeper.js` stays MIT so other mods can keep embedding it.
+
+I don't want this mod's code, text or art used to train AI models, collected into AI training sets, or handed to AI
+tools to copy into other projects, and the license doesn't allow it without my written permission. I also reserve the
+rights to text and data mining of this work under Article 4(3) of the EU's Directive 2019/790.
+
+Where this mod's design comes from, and exactly what it shares with the mods that inspired it, is written up in
+[docs/provenance.md](docs/provenance.md).
+
+Because the source is on GitHub, GitHub and its affiliates (Microsoft included) have their own license to it under
+GitHub's Terms of Service, and since April 2026 that covers training their AI. Valve and Take-Two have the rights
+their own terms give them. Sid Meier's Civilization VII and its assets belong to Firaxis Games and 2K. Material from
+other people is listed in [LICENSE](LICENSE).
