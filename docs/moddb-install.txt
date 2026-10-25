@@ -1,0 +1,19 @@
+On Steam, just subscribe on the Workshop. To install by hand, run the game once first, then:
+
+Windows
+1. Press Windows key + R, paste this and press Enter:
+%localappdata%\Firaxis Games\Sid Meier's Civilization VII
+2. Make a folder named Mods there if there isn't one.
+3. Right-click the zip, choose Extract All, and extract it into Mods.
+
+Mac
+1. In Finder, press Cmd + Shift + G, paste this and press Return:
+~/Library/Application Support/Civilization VII
+2. Make a folder named Mods there if there isn't one.
+3. Double-click the zip and drag the demographics folder into Mods.
+
+Both
+- You should end up with Mods/demographics/demographics.modinfo. If there's an extra folder in between, move the demographics folder up into Mods.
+- Start the game, open Additional Content, then Add-Ons, and switch Demographics on.
+- To update, delete the old demographics folder and install the new one. Your saves and Hall of Fame are kept.
+- Use the Workshop copy or this one, not both.

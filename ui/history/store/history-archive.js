@@ -12,6 +12,7 @@ import { buildTimeline, packTimeline } from "/demographics/ui/history/model/hist
 import { mapView, packMap } from "/demographics/ui/history/model/history-map.js";
 import { engineIcon } from "/demographics/ui/history/core/history-icons.js";
 import { castFromDoc, eventVisible } from "/demographics/ui/history/model/history-narrate.js";
+import { SHORT_GAME_TURNS } from "/demographics/ui/history/model/history-hof.js";
 
 export const ARCHIVE_SCHEMA = 1;
 export const RECORD_VERSION = 1;
@@ -20,6 +21,11 @@ export const RECORD_VERSION = 1;
  * shares one localStorage value with other mods' settings, so it stays well under a megabyte.
  */
 export const SLICE_BYTE_CAP = 512 * 1024;
+/**
+ * Unfinished games kept, the most recently played first. Every started game used to stay until the byte budget
+ * forced it out, so the slice sat near SLICE_BYTE_CAP, and every mod that reads the shared settings row parses it.
+ */
+export const UNFINISHED_KEEP = 20;
 /** Most highlights kept per record. */
 export const HIGHLIGHTS_CAP = 30;
 /** Points kept per sparkline. */
@@ -352,6 +358,36 @@ export function fitSlice(slice, cap = SLICE_BYTE_CAP) {
   if (evicted.length) pruneTexts(slice);
   if (newest && sizeOf(slice) > cap) stripParts([newest], sizeOf(slice), cap);
   return evicted;
+}
+
+/**
+ * Clear unfinished games the player has moved on from: any under SHORT_GAME_TURNS turns (the test loads the Hall
+ * of Fame already hides) and any past the UNFINISHED_KEEP most recently played. Finished games are never cleared,
+ * nor the most recently played game of all (the one being played), nor a record a later version wrote. A cleared
+ * game isn't marked hidden: its save still holds the whole history, so loading that save brings the entry back.
+ * @param {ArchiveSlice} slice Mutated.
+ * @returns {string[]} Cleared ids.
+ */
+export function pruneUnfinished(slice) {
+  const records = Object.values(slice.games).filter((rec) => isRecord(rec));
+  if (!records.length) return [];
+  const newest = records.reduce((a, b) => (b.updated > a.updated ? b : a));
+  const unfinished = records
+    .filter((rec) => rec.outcome.status === "in_progress")
+    .sort((a, b) => b.updated - a.updated);
+  /** @type {string[]} */
+  const cleared = [];
+  let kept = 0;
+  for (const rec of unfinished) {
+    if (rec.id === newest.id || (rec.turns >= SHORT_GAME_TURNS && kept < UNFINISHED_KEEP)) {
+      kept++;
+      continue;
+    }
+    delete slice.games[rec.id];
+    cleared.push(rec.id);
+  }
+  if (cleared.length) pruneTexts(slice);
+  return cleared;
 }
 
 /**

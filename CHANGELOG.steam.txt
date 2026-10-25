@@ -3,6 +3,14 @@ Generated from CHANGELOG.md by scripts/steam-changelog.mjs; release.sh uploads t
 To fix an old Workshop entry, paste the text under its ==== line into that entry's Edit box on the change-notes page.
 A block edited by hand is kept as-is. Delete a block to regenerate it from CHANGELOG.md.
 
+==== 2.10.0 | 2026-10-25 | src 86a2060943c6 | gen e4383b37fa43 ====
+[b]Version 2.10.0 · 25 October 2026[/b]
+A smaller Hall of Fame, so every mod that reads its settings loads faster, and Spoil Guard shared with companion mods from the first turn.
+
+[b]Changed[/b]
+• The Hall of Fame keeps every finished game and your 20 most recent unfinished games, and clears unfinished games under 20 turns once you start another. It used to keep every game you started, which slowed down every mod that reads its settings. Load a cleared game's save and play on, and its entry comes back.
+• Companion mods such as Emigration follow your Spoil Guard choice from the start of a game, without you opening the Demographics screen first.
+
 ==== 2.9.1 | 2026-10-17 | src e6dd3056f90e | gen f40a7961ffd4 ====
 [b]Version 2.9.1 · 17 October 2026[/b]
 

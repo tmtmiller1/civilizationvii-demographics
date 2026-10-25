@@ -47,6 +47,24 @@ function notifyLiveRefresh() {
 }
 
 /**
+ * Publish the visibility policy to GameConfiguration after Spoil Guard changes, so companion mods (Emigration)
+ * follow it without waiting for the Demographics screen to open. Only inside a game: on the main menu there's no
+ * game to publish to, and the governance module is loaded in game scope only.
+ */
+function publishPolicyInGame() {
+  try {
+    if (typeof UI === "undefined" || typeof UI.isInShell !== "function" || UI.isInShell()) return;
+  } catch (_) {
+    return; // can't tell where we are, so leave the published value alone
+  }
+  import("/demographics/ui/core/demographics-governance.js")
+    .then((m) => m.publishEffectivePolicy())
+    .catch(() => {
+      /* governance unavailable: companions keep reading the settings store */
+    });
+}
+
+/**
  * @param {string} id
  * @param {string} key The DemographicsSettings key.
  * @param {boolean} dflt
@@ -111,6 +129,7 @@ function registerHideUnmet() {
         hideUnmetStats: enabled,
         showUnmetNames: !enabled
       });
+      publishPolicyInGame();
       notifyLiveRefresh();
     },
     label: "LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS",

@@ -5,6 +5,18 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
+## [2.10.0] - 2026-10-25
+
+A smaller Hall of Fame, so every mod that reads its settings loads faster, and Spoil Guard shared with companion mods
+from the first turn.
+
+### Changed
+- The Hall of Fame keeps every finished game and your 20 most recent unfinished games, and clears unfinished games
+  under 20 turns once you start another. It used to keep every game you started, which slowed down every mod that
+  reads its settings. Load a cleared game's save and play on, and its entry comes back.
+- Companion mods such as Emigration follow your Spoil Guard choice from the start of a game, without you opening the
+  Demographics screen first.
+
 ## [2.9.1] - 2026-10-17
 
 ### Changed

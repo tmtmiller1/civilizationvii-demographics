@@ -13,7 +13,8 @@ import {
   archiveTexts,
   repairStorage
 } from "/demographics/ui/history/store/history-archive-store.js";
-import { buildRecord, emptySlice, isRecord, upsert } from "/demographics/ui/history/store/history-archive.js";
+import { buildRecord, emptySlice, isRecord, upsert, UNFINISHED_KEEP }
+  from "/demographics/ui/history/store/history-archive.js";
 import { visibleRecords } from "/demographics/ui/history/model/history-hof.js";
 import { emptyState, pillRow, tabBar, textButton } from "/demographics/ui/history/views/history-widgets.js";
 import { SHORT_GAME_TURNS } from "/demographics/ui/history/model/history-hof.js";
@@ -312,16 +313,38 @@ function blockedNote(status, done, ctx) {
   return el("div", { cls: "dgh-storage" }, kids);
 }
 
-/** @param {HofCtx} ctx */
-function storageNote(ctx) {
+/**
+ * How many games the Hall of Fame holds and which it keeps, so a list that got shorter after a new game
+ * explains itself (see pruneUnfinished).
+ * @param {ArchiveRecord[]} all Every record.
+ * @returns {HTMLElement|null} The line, or null with no games.
+ */
+function keepNote(all) {
+  if (!all.length) return null;
+  const unfinished = all.filter((rec) => rec.outcome.status === "in_progress").length;
+  // One short line; the rule itself is in the tooltip for anyone who wants it.
+  return el("div", {
+    cls: "dgh-note dgh-note--keep",
+    text: t("LOC_DEMOGRAPHICS_HIST_KEEP_NOTE", all.length - unfinished, unfinished, UNFINISHED_KEEP),
+    attrs: { "data-tooltip-content": t("LOC_DEMOGRAPHICS_HIST_KEEP_TIP", SHORT_GAME_TURNS) }
+  });
+}
+
+/**
+ * @param {HofCtx} ctx
+ * @param {ArchiveRecord[]} all Every record.
+ */
+function storageNote(ctx, all) {
   const status = archiveStatus();
   const done = repairOutcomeNote();
   const settingsLine = settingsNote();
   if (status === "ok" || status === "empty") {
-    // Nothing to say when storage is healthy. That a record also lives in each save only matters
-    // when the archive cannot be read, and the unreadable message below already says so, next to
-    // the repair the player can act on.
+    // When storage is healthy the note only says what's kept. That a record also lives in each save
+    // only matters when the archive cannot be read, and the unreadable message below already says so,
+    // next to the repair the player can act on.
     const kids = [];
+    const keepLine = keepNote(all);
+    if (keepLine) kids.push(keepLine);
     if (settingsLine) kids.push(settingsLine);
     if (done) kids.push(done);
     if (!kids.length) return null;
@@ -392,6 +415,6 @@ export function renderHof(host, ctx) {
   host.appendChild(body);
   if (!all.length) body.appendChild(emptyState(t("LOC_DEMOGRAPHICS_HIST_EMPTY_HOF")));
   else renderSection(body, records, all, ctx);
-  const note = storageNote(ctx);
+  const note = storageNote(ctx, all);
   if (note) host.appendChild(note);
 }

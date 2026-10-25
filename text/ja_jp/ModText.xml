@@ -2004,6 +2004,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="ja_JP">
             <Text>非表示：{2_Turns}ターン未満の未完了ゲーム {1_Count} 件</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="ja_JP">
+            <Text>保存：完了 {1_Finished} 件、未完了 {2_Unfinished} 件（最近の {3_Keep} 件を保持）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="ja_JP">
+            <Text>完了したゲームはずっと残ります。{1_Turns}ターン未満の未完了ゲームは、別のゲームを始めると消去されます。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ja_JP">
             <Text>勝利</Text>
         </Replace>

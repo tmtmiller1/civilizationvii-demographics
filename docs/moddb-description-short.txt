@@ -1,0 +1,9 @@
+Demographics adds a statistics and history screen to Civilization VII. See how your empire compares with your rivals, follow the wars and crises between them, and look back on how the world changed over the whole game, across all three ages. The game itself plays the same as without it.
+
+- Graphs for yields, economy, society, religion, land and military, with crises, age changes and wonders marked.
+- Populations from thousands to millions as the ages pass, GDP in dollars and territory in square kilometers.
+- World Rankings, a Top 25 Settlements board, and a Global Relations ring of wars, alliances and agreements.
+- A Chronicle, a timeline you can play back, and a territory map that replays each empire's growth.
+- A Hall of Fame that ranks your past games, each with a title from Augustus Caesar down to Ethelred the Unready.
+- War and crisis costs, a cinematic settlement view, CSV export and a colorblind palette.
+- 11 languages. Works with Emigration and Partisans.

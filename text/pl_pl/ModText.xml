@@ -2662,6 +2662,8 @@
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="pl_PL"><Text>Ukryj krótkie gry</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="pl_PL"><Text>Pokaż wszystkie gry</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="pl_PL"><Text>Ukryte: {1_Count} {1_Count : plural 1?nieukończona gra; other?nieukończonych gier;} poniżej {2_Turns} tur</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="pl_PL"><Text>Zapisane: ukończone: {1_Finished}, nieukończone: {2_Unfinished} (zostaje {3_Keep} ostatnich)</Text></Replace>
+		<Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="pl_PL"><Text>Ukończone gry zostają na stałe. Nieukończone gry poniżej {1_Turns} tur są usuwane, gdy zaczniesz kolejną grę.</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="pl_PL"><Text>Zwycięstwo</Text></Replace>
 		<Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="pl_PL"><Text>Zwycięstwo: {1_Victory}</Text></Replace>
 <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="pl_PL">

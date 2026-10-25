@@ -2561,6 +2561,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="es_ES">
             <Text>Ocultas: {1_Count} {1_Count : plural 1?partida sin terminar; other?partidas sin terminar;} de menos de {2_Turns} turnos</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="es_ES">
+            <Text>Guardadas: {1_Finished} terminadas, {2_Unfinished} sin terminar (se guardan las {3_Keep} más recientes)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="es_ES">
+            <Text>Las partidas terminadas se conservan siempre. Las partidas sin terminar de menos de {1_Turns} turnos se borran en cuanto empiezas otra partida.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="es_ES">
             <Text>Victoria</Text>
         </Replace>

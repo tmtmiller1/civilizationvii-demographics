@@ -2004,6 +2004,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="it_IT">
             <Text>Nascoste: {1_Count} {1_Count : plural 1?partita incompiuta; other?partite incompiute;} sotto i {2_Turns} turni</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="it_IT">
+            <Text>Salvate: {1_Finished} concluse, {2_Unfinished} incompiute (restano le {3_Keep} più recenti)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="it_IT">
+            <Text>Le partite concluse restano per sempre. Le partite incompiute sotto i {1_Turns} turni vengono eliminate appena inizi un'altra partita.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="it_IT">
             <Text>Vittoria</Text>
         </Replace>

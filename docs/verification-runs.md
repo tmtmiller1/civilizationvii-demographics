@@ -4,6 +4,24 @@ What's been seen working in a running game, with the run that showed it. Everyth
 the workspace's `WATCH_LIST.md`. This file stays out of the release notes: `CHANGELOG.md` feeds the Workshop change
 note.
 
+## Hall of Fame keep rule and Spoil Guard for companion mods (2.10.0)
+
+`dg-hof-1` (2026-10-25, lab, Antiquity seed 4242, Heian, the usual set with the working copy live, the owner's own
+settings store, which the lab put back afterwards):
+
+- **Spoil Guard published at the start.** At turn 1, with the Demographics screen never opened (the only elements on
+  the page were its launch button), `Configuration.getGame().getValue("DemographicsAnalyticsPolicyEffective_v1")`
+  read `met-civs-only`. Spoil Guard switched off through its own option handler (the Options model initialised as
+  the Options screen does, then `updateListener(info, false)`): `full`, the screen still closed; switched back on:
+  `met-civs-only`.
+- **Hall of Fame keep rule.** The store held 42 games: 22 finished (11 victories, 7 ended, 4 defeats) and 20
+  unfinished, the newest the test game at turn 1, every other unfinished one 24 turns or more. After a turn: still 20
+  unfinished, the test game at turn 2, the row 157,980 characters (157,947 before). The 310-game store from
+  2026-10-18 had already been cut down before this run, so the drop itself wasn't seen again. On World Rankings >
+  Hall of Fame the line read "Saved: 22 finished, 20 unfinished (latest 20 kept)", its tooltip "Finished games stay
+  for good. Unfinished games under 20 turns are cleared once you start another game."
+- Not seen: the line in a second language, and the main menu's Hall of Fame (the same view, read in game here).
+
 ## Risings ended by the age change (Unreleased)
 
 - **2026-10-17, `lab3-B` (usual set) and `lab3-Bv` (Demographics with Partisans only), Antiquity seed 4242, fast

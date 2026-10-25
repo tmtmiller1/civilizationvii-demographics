@@ -2004,6 +2004,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="ko_KR">
             <Text>숨김: {2_Turns}턴 미만의 미완료 게임 {1_Count}개</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="ko_KR">
+            <Text>저장됨: 완료 {1_Finished}개, 미완료 {2_Unfinished}개(최근 {3_Keep}개 보관)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="ko_KR">
+            <Text>완료한 게임은 계속 보관됩니다. {1_Turns}턴 미만의 미완료 게임은 다른 게임을 시작하면 지워집니다.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ko_KR">
             <Text>승리</Text>
         </Replace>

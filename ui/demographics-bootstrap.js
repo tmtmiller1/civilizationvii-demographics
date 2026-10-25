@@ -88,6 +88,23 @@ function startHistory() {
     });
 }
 
+/**
+ * Publish the visibility policy to GameConfiguration as the game starts, so companion mods (Emigration) read one
+ * shared value from the first turn instead of parsing the settings store until the Demographics screen opens.
+ * Never rejects.
+ * @returns {Promise<void>}
+ */
+function publishPolicy() {
+  return /** @type {Promise<*>} */ (import("/demographics/ui/core/demographics-governance.js"))
+    .then((mod) => {
+      mod.publishEffectivePolicy();
+      log.debug("visibility policy published:", mod.effectivePolicy());
+    })
+    .catch((e) => {
+      log.error("governance import REJECTED:", e);
+    });
+}
+
 // The engine HoF DB is not read here: every HallofFame.set* writer is undefined
 // in the UI sandbox, and getGames() returns [] mid-game (it commits on game-end).
 
@@ -105,6 +122,7 @@ try {
         loadDecorator();
         startSampler();
         startHistory();
+        publishPolicy();
       })
       .catch((e) => {
         log.error("engine.whenReady REJECTED:", e);
@@ -112,6 +130,7 @@ try {
         loadDecorator(); // best-effort fallback
         startSampler();
         startHistory();
+        publishPolicy();
       });
   } else {
     log.error("engine or engine.whenReady missing ; loading decorator immediately as fallback");
@@ -119,6 +138,7 @@ try {
     loadDecorator();
     startSampler();
     startHistory();
+    publishPolicy();
   }
 } catch (e) {
   log.error("bootstrap top-level threw:", e);

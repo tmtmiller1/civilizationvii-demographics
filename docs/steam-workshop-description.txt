@@ -1,5 +1,5 @@
 [h1]Demographics[/h1]
-[b]Version 2.9.0. For Civilization VII 1.5.0.[/b] With Partisans, risings show on the War Timeline and in the Chronicle, and the ranking boards fit small screens.
+[b]Version 2.10.0. For Civilization VII 1.5.0.[/b] The Hall of Fame keeps your finished games and your 20 most recent unfinished ones, so every mod that reads its settings loads faster, and Emigration follows your Spoil Guard choice from the first turn.
 Demographics adds graphs, civilization rankings, global relations, war history, campaign history and a Hall of Fame to Civilization VII. It records every civilization's figures each turn, so you can see how the world changes over a game. It only reads the game: balance, opponents and base-game files are untouched.
 It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and builds on Slothoth's Global Relations panel (Civ VII) with more diplomacy and filtering.
 [h2]Graphs and rankings[/h2]
@@ -21,7 +21,7 @@ It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and build
 [h2]Hall of Fame[/h2]
 [list]
 [*]Opens on your best games: a podium of your top three, the rest of your top ten, and the game you are playing at its rank.
-[*]Every campaign you played, ranked by result, Triumphs and speed, each with an honorific from Augustus Caesar down to Ethelred the Unready.
+[*]Every finished campaign and your 20 most recent unfinished ones, ranked by result, Triumphs and speed, each with an honorific from Augustus Caesar down to Ethelred the Unready.
 [*]Leader and civilization tallies with a win-rate bar, records, and a page per game with its map, rivals, timeline and highlights, where every Triumph says what it was earned for and what it gave.
 [*]Opens from World Rankings, the main menu and the end-of-game screen.
 [*]Hide short games or show all, on every page, with a count of what is hidden.

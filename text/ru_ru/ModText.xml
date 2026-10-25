@@ -2004,6 +2004,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="ru_RU">
             <Text>Скрыто: {1_Count} {1_Count : plural 1?незавершённая игра; other?незавершённых игр;} короче {2_Turns} ходов</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="ru_RU">
+            <Text>Сохранено: завершённых — {1_Finished}, незавершённых — {2_Unfinished} (хранятся {3_Keep} последних)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="ru_RU">
+            <Text>Завершённые игры хранятся всегда. Незавершённые игры короче {1_Turns} ходов удаляются, когда вы начинаете новую игру.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ru_RU">
             <Text>Победа</Text>
         </Replace>

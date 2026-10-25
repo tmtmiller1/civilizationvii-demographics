@@ -2004,6 +2004,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="pt_BR">
             <Text>Ocultas: {1_Count} {1_Count : plural 1?partida inacabada; other?partidas inacabadas;} com menos de {2_Turns} turnos</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="pt_BR">
+            <Text>Salvas: {1_Finished} concluídas, {2_Unfinished} inacabadas (as {3_Keep} mais recentes ficam)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="pt_BR">
+            <Text>Partidas concluídas ficam para sempre. Partidas inacabadas com menos de {1_Turns} turnos são apagadas quando você começa outra partida.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="pt_BR">
             <Text>Vitória</Text>
         </Replace>

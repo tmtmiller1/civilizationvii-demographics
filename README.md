@@ -141,7 +141,7 @@ age, in the leader's color, with the turn a line ended.
   top ten.
 - **Settlement Rank by Yield:** a sortable table of every settlement's population and yields, filterable to **All**,
   **Cities** or **Towns**.
-- **Hall of Fame:** every campaign played on this computer (below).
+- **Hall of Fame:** the campaigns played on this computer (below).
 
 Across the first four, places 1–3 carry a gold, silver or bronze wash, your own civilization and settlements are
 outlined in gold, and in the two tables the cell of whoever leads each column is highlighted in gold (hover it for the
@@ -149,8 +149,10 @@ category). Civilizations you have not met show as placeholders unless name revel
 
 ### Hall of Fame
 
-The Hall of Fame lists every campaign played on this computer, the current one included as it is played. The same
-view opens from the **Hall of Fame** button on the main menu, with no game loaded.
+The Hall of Fame lists the campaigns played on this computer, the current one included as it is played: every
+finished game, and your 20 most recent unfinished ones. An unfinished game under 20 turns is cleared once you start
+another; load its save and play on, and it comes back. The line at the foot of the list says how many of each it
+holds. The same view opens from the **Hall of Fame** button on the main menu, with no game loaded.
 
 **Best Games** opens first: your totals, a podium of your three best games, the rest of your top ten, and the game you
 are playing at its rank between the games just above and below it (from the main menu, your most recent game), with

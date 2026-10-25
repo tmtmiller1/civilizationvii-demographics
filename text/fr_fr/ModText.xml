@@ -2561,6 +2561,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="fr_FR">
             <Text>Masquées : {1_Count} {1_Count : plural 1?partie inachevée; other?parties inachevées;} de moins de {2_Turns} tours</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="fr_FR">
+            <Text>Enregistrées : {1_Finished} terminées, {2_Unfinished} inachevées (les {3_Keep} plus récentes sont gardées)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="fr_FR">
+            <Text>Les parties terminées sont conservées pour de bon. Les parties inachevées de moins de {1_Turns} tours sont effacées dès que vous commencez une autre partie.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="fr_FR">
             <Text>Victoire</Text>
         </Replace>

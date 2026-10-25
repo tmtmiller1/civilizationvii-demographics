@@ -9,7 +9,7 @@ It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and build
 [*]Global Relations: met civilizations and city-states in a ring, with wars, alliances, attitudes and agreements.
 [*]A timeline of every war, with each war's cost and its own graphs, and every crisis broken down stage by stage.
 [*]A History tab: a chronicle of your campaign, an interactive timeline with a territory map that replays your expansion, and a lineage of every leader.
-[*]A Hall of Fame ranking every campaign you have played, with a page for each game, also on the main menu.
+[*]A Hall of Fame ranking your finished campaigns and your 20 most recent unfinished ones, with a page for each game, also on the main menu.
 [*]Copy as CSV, a spoiler guard for civilizations you have not met, colorblind mode, smoothed lines, and a Basic mode.
 [/list]
 [b]Pairs with Emigration and Partisans:[/b]

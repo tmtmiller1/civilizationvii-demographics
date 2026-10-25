@@ -2561,6 +2561,12 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="zh_Hans_CN">
             <Text>已隐藏：{1_Count} 局不足 {2_Turns} 回合的未完成对局</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="zh_Hans_CN">
+            <Text>已保存：已完成 {1_Finished} 局，未完成 {2_Unfinished} 局（保留最近 {3_Keep} 局）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="zh_Hans_CN">
+            <Text>已完成的对局会一直保留。不足 {1_Turns} 回合的未完成对局会在你开始新对局时清除。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="zh_Hans_CN">
             <Text>胜利</Text>
         </Replace>

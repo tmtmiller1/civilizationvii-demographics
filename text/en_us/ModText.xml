@@ -2797,6 +2797,12 @@
         <Row Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN">
             <Text>Hidden: {1_Count} unfinished {1_Count : plural 1?game; other?games;} under {2_Turns} turns</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE">
+            <Text>Saved: {1_Finished} finished, {2_Unfinished} unfinished (latest {3_Keep} kept)</Text>
+        </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP">
+            <Text>Finished games stay for good. Unfinished games under {1_Turns} turns are cleared once you start another game.</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY">
             <Text>Victory</Text>
         </Row>

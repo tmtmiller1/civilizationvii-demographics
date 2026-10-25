@@ -13,6 +13,7 @@ import {
   hideGame,
   isSlice,
   mergeSlices,
+  pruneUnfinished,
   sliceTexts,
   upsert
 } from "/demographics/ui/history/store/history-archive.js";
@@ -118,7 +119,9 @@ export function loadArchive() {
   const { root, status } = readRoot();
   state.status = status;
   if (status === "ok" && root[SLICE_ID]) mergeSlices(state.slice, root[SLICE_ID]);
-  log.debug("archive loaded", status, Object.keys(state.slice.games).length);
+  // Cleared in memory here so the screen matches the rule at once; storage catches up on the next write.
+  const cleared = pruneUnfinished(state.slice);
+  log.debug("archive loaded", status, Object.keys(state.slice.games).length, "cleared", cleared.length);
   return state.slice;
 }
 
@@ -141,6 +144,7 @@ export function persistArchive() {
     return false;
   }
   if (root[SLICE_ID]) mergeSlices(state.slice, root[SLICE_ID]);
+  pruneUnfinished(state.slice);
   fitSlice(state.slice);
   const next = { ...root, [SLICE_ID]: state.slice };
   try {
@@ -207,6 +211,7 @@ export function archiveTexts() {
  */
 export function repairStorage() {
   loadArchive();
+  pruneUnfinished(state.slice);
   fitSlice(state.slice);
   const settings = safe(() => DemographicsSettings.sliceForStore(), null);
   /** @type {Record<string, object>} */
