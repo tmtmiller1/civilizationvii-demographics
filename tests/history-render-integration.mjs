@@ -594,6 +594,37 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
   settings.persistenceStatus = savedStatus;
 }
 
+// The settings line says the repair on this page fixes it, so the repair is there whenever the line is, even
+// with the archive readable (its own file isn't blocked by a broken shared store); one button, not two.
+{
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  const settings = (await import("/demographics/ui/core/demographics-settings.js")).default;
+  const savedStatus = settings.persistenceStatus;
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ x: { y: 1 } }) });
+  viewState.detail = null;
+  viewState.hofTab = "overview";
+  const render = () => {
+    const h = document.createElement("div");
+    renderHallOfFame(h, { mode: "shell" });
+    return h;
+  };
+  settings.persistenceStatus = () => "ok";
+  assert.equal(findAll(render(), "dgh-repair-toggle").length, 0, "no repair while settings persist");
+  settings.persistenceStatus = () => "unverified";
+  let h = render();
+  assert.equal(findAll(h, "dgh-repair-toggle").length, 1, "the repair sits under the settings line");
+  assert.equal(findAll(h, "dgh-repair-go").length, 1, "with its sheet");
+  settings.persistenceStatus = () => "unavailable";
+  assert.equal(findAll(render(), "dgh-repair-toggle").length, 0, "no repair when there is no storage at all");
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage({ modSettings: "{not json" });
+  settings.persistenceStatus = () => "unparseable";
+  h = render();
+  assert.equal(findAll(h, "dgh-repair-go").length, 1, "the blocked layout keeps its one repair sheet");
+  settings.persistenceStatus = savedStatus;
+}
+
 // Another mod's data in the way (a key sorting ahead of modSettings is read in its place): the note says so.
 {
   const store = await import("/demographics/ui/history/store/history-archive-store.js");

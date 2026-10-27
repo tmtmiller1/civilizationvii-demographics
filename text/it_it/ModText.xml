@@ -2344,10 +2344,10 @@
             <Text>Cosa fa questo pulsante</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="it_IT">
-            <Text>Svuota l'archivio condiviso e vi lascia una sola voce: la voce delle impostazioni condivisa usata dalla maggior parte delle mod con pannello opzioni. Questo include la mod Demographics, le sue impostazioni e le informazioni sulle partite precedenti necessarie a questa funzione. Quando la voce delle impostazioni condivisa è l'unica rimasta, è quella che il gioco restituisce, quindi le mod che la usano caricano e salvano le impostazioni normalmente da allora in poi. Una mod con una voce separata tutta sua verrebbe però danneggiata: ogni voce separata viene eliminata, compresa quella che veniva prima ed era quindi l'unica a funzionare davvero.</Text>
+            <Text>Svuota l'archivio condiviso e vi lascia una sola voce: la voce delle impostazioni condivisa usata dalla maggior parte delle mod con pannello opzioni. Demographics conserva le sue impostazioni e la sua Hall of Fame. Quando la voce delle impostazioni condivisa è l'unica rimasta, è quella che il gioco restituisce, quindi le mod che la usano caricano e salvano le impostazioni normalmente da allora in poi. Una mod con una voce separata tutta sua verrebbe però danneggiata: ogni voce separata viene eliminata, compresa quella che veniva prima ed era quindi l'unica a funzionare davvero.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="it_IT">
-            <Text>Se in seguito una mod riscrive la propria voce, l'elenco smette di aggiornarsi e questa riparazione viene proposta di nuovo.</Text>
+            <Text>Se in seguito una mod riscrive la propria voce, il salvataggio si interrompe e questa riparazione viene proposta di nuovo.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="it_IT">
             <Text>Ripara archivio: elimina i dati di un'altra mod</Text>
@@ -2359,7 +2359,7 @@
             <Text>Annulla</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="it_IT">
-            <Text>Archivio riparato. L'elenco delle partite precedenti della Hall of Fame viene di nuovo salvato su questo computer e le mod che tengono le impostazioni nella voce condivisa da ora in poi le salvano e le caricano correttamente.</Text>
+            <Text>Archivio riparato. Da ora in poi Demographics salva normalmente le sue impostazioni e la Hall of Fame, come le altre mod che tengono le impostazioni nella voce condivisa.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="it_IT">
             <Text>La riparazione non ha funzionato. Ogni partita resta salvata nel proprio salvataggio.</Text>
@@ -2389,7 +2389,7 @@
             <Text>Le impostazioni vengono salvate su questo computer.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="it_IT">
-            <Text>Le impostazioni modificate in questa sessione restano fino alla chiusura del gioco, ma non è stato possibile salvarle: l'archivio condiviso delle mod ha restituito i dati di un'altra mod, non è stato possibile leggerlo o non ha riletto quanto scritto. «Ripara archivio» nella pagina della Hall of Fame risolve il problema.</Text>
+            <Text>Le impostazioni modificate in questa sessione restano fino alla chiusura del gioco, ma non è stato possibile salvarle: l'archivio condiviso delle mod ha restituito i dati di un'altra mod, non è stato possibile leggerlo o non ha riletto quanto scritto. «Ripara archivio» in questa pagina risolve il problema.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="it_IT">
             <Text>Le impostazioni non possono essere salvate in questa sessione: l'archivio delle mod non è disponibile.</Text>

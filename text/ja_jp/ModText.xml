@@ -2344,10 +2344,10 @@
             <Text>このボタンが行うこと</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="ja_JP">
-            <Text>共有の保存領域を空にし、1つの項目だけを残します。オプション画面を持つほとんどのMODが使う共有の設定項目です。これにはDemographics MOD、その設定、そしてこの機能に必要な過去のゲーム情報が含まれます。共有の設定項目が唯一残った項目になると、ゲームはそれを返すので、それを使うMODは以後、設定を通常どおり読み書きできます。ただし独自の別項目を持つMODはこれによって壊れます。別項目はすべて削除され、名前順で最初にあった、つまり実際に唯一機能していた項目も含まれます。</Text>
+            <Text>共有の保存領域を空にし、1つの項目だけを残します。オプション画面を持つほとんどのMODが使う共有の設定項目です。Demographics MODの設定と殿堂はそのまま残ります。共有の設定項目が唯一残った項目になると、ゲームはそれを返すので、それを使うMODは以後、設定を通常どおり読み書きできます。ただし独自の別項目を持つMODはこれによって壊れます。別項目はすべて削除され、名前順で最初にあった、つまり実際に唯一機能していた項目も含まれます。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="ja_JP">
-            <Text>後で別のMODが自分の項目を再び書き込むと、一覧は更新されなくなり、この修復が再び提案されます。</Text>
+            <Text>後で別のMODが自分の項目を再び書き込むと、保存できなくなり、この修復が再び提案されます。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="ja_JP">
             <Text>保存領域を修復：別のMODの保存データを削除</Text>
@@ -2359,7 +2359,7 @@
             <Text>キャンセル</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="ja_JP">
-            <Text>保存領域を修復しました。殿堂の過去のゲーム一覧はこのコンピューターに再び保存され、共有項目に設定を保存するMODは以後正しく読み書きできます。</Text>
+            <Text>保存領域を修復しました。今後、Demographicsは設定と殿堂を通常どおり保存します。共有項目に設定を保存する他のMODも同様です。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="ja_JP">
             <Text>修復できませんでした。各ゲームはそれぞれのセーブデータに保存されたままです。</Text>
@@ -2389,7 +2389,7 @@
             <Text>設定はこのコンピューターに保存されます。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="ja_JP">
-            <Text>このセッションで変更した設定はゲームを閉じるまで保持されますが、保存できませんでした。MOD共有の保存領域が別のMODのデータを返したか、読み取れないか、書き込んだ内容を読み戻せませんでした。殿堂ページの「保存領域を修復」で解決できます。</Text>
+            <Text>このセッションで変更した設定はゲームを閉じるまで保持されますが、保存できませんでした。MOD共有の保存領域が別のMODのデータを返したか、読み取れないか、書き込んだ内容を読み戻せませんでした。このページの「保存領域を修復」で解決できます。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="ja_JP">
             <Text>このセッションでは設定を保存できません。MODの保存領域を利用できません。</Text>

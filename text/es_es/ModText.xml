@@ -2901,10 +2901,10 @@
             <Text>Qué hace este botón</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="es_ES">
-            <Text>Vacía el almacenamiento compartido y deja en él una sola entrada: la entrada de ajustes compartida que usan la mayoría de los mods con panel de opciones. Esto incluye el mod Demographics, sus ajustes y la información de partidas anteriores necesaria para esta función. Cuando la entrada de ajustes compartida es lo único que queda, es lo que el juego devuelve, así que los mods que la usan cargan y guardan sus ajustes con normalidad desde entonces. Sin embargo, un mod con una entrada propia y separada quedaría estropeado: todas las entradas separadas se borran, incluida la que iba primero y era, por tanto, la única que funcionaba de verdad.</Text>
+            <Text>Vacía el almacenamiento compartido y deja en él una sola entrada: la entrada de ajustes compartida que usan la mayoría de los mods con panel de opciones. Demographics conserva sus ajustes y su Salón de la Fama. Cuando la entrada de ajustes compartida es lo único que queda, es lo que el juego devuelve, así que los mods que la usan cargan y guardan sus ajustes con normalidad desde entonces. Sin embargo, un mod con una entrada propia y separada quedaría estropeado: todas las entradas separadas se borran, incluida la que iba primero y era, por tanto, la única que funcionaba de verdad.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="es_ES">
-            <Text>Si más adelante un mod vuelve a escribir su propia entrada, la lista deja de actualizarse y esta reparación se ofrece de nuevo.</Text>
+            <Text>Si más adelante un mod vuelve a escribir su propia entrada, se deja de guardar y esta reparación se ofrece de nuevo.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="es_ES">
             <Text>Reparar almacenamiento: borrar los datos de otro mod</Text>
@@ -2916,7 +2916,7 @@
             <Text>Cancelar</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="es_ES">
-            <Text>Almacenamiento reparado. La lista de partidas anteriores del Salón de la Fama vuelve a guardarse en este ordenador, y los mods que guardan sus ajustes en la entrada compartida los guardan y cargan correctamente a partir de ahora.</Text>
+            <Text>Almacenamiento reparado. A partir de ahora, Demographics guarda sus ajustes y su Salón de la Fama con normalidad, igual que los demás mods que guardan sus ajustes en la entrada compartida.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="es_ES">
             <Text>La reparación no ha funcionado. Cada partida sigue guardada en su propio archivo.</Text>
@@ -2946,7 +2946,7 @@
             <Text>Los ajustes se guardan en este equipo.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="es_ES">
-            <Text>Los ajustes cambiados en esta sesión se conservan hasta cerrar el juego, pero no se han podido guardar: el almacenamiento compartido de mods devolvió los datos de otro mod, no se pudo leer o no devolvió lo escrito. «Reparar almacenamiento» en la página del Salón de la Fama lo soluciona.</Text>
+            <Text>Los ajustes cambiados en esta sesión se conservan hasta cerrar el juego, pero no se han podido guardar: el almacenamiento compartido de mods devolvió los datos de otro mod, no se pudo leer o no devolvió lo escrito. «Reparar almacenamiento» en esta página lo soluciona.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="es_ES">
             <Text>Los ajustes no se pueden guardar en esta sesión: el almacenamiento de mods no está disponible.</Text>

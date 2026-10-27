@@ -38,6 +38,13 @@ const ENGINE_GLOBALS = {
   GameTutorial: "readonly",
   Chart: "readonly",
   HallofFame: "readonly",
+  // The save list, which names the user folder the Hall of Fame file lives in.
+  GameStateStorage: "readonly",
+  SaveLocationCategories: "readonly",
+  SaveLocationOptions: "readonly",
+  SaveLocations: "readonly",
+  SaveTypes: "readonly",
+  SaveFileTypes: "readonly",
   Loading: "readonly",
   Coherent: "readonly",
   Component: "readonly",
@@ -99,18 +106,13 @@ const NODE_GLOBALS = {
   performance: "readonly"
 };
 
-// Engine globals the dev probes use beyond what ui/ needs: lobby setup, save loading, and the events
+// Engine globals the dev probes use beyond what ui/ needs: lobby setup and the events
 // they fire to drive a game from a script.
 const PROBE_GLOBALS = {
   GameModeTypes: "readonly",
   ServerType: "readonly",
   SlotStatus: "readonly",
   GameSetup: "readonly",
-  SaveLocationCategories: "readonly",
-  SaveLocationOptions: "readonly",
-  SaveLocations: "readonly",
-  SaveTypes: "readonly",
-  SaveFileTypes: "readonly",
   MouseEvent: "readonly"
 };
 

@@ -2901,10 +2901,10 @@
             <Text>此按钮的作用</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="zh_Hans_CN">
-            <Text>清空共用存储，只留下一个条目：大多数带选项面板的模组使用的共用设置条目。其中包括 Demographics 模组、它的设置以及此功能所需的以往对局信息。一旦共用设置条目成为唯一剩下的内容，游戏返回的就是它，因此使用它的模组从此可以正常加载和保存设置。然而，使用独立自有条目的模组会因此损坏：所有独立条目都会被删除，包括原本排在最前、因而是唯一真正在正常工作的那一个。</Text>
+            <Text>清空共用存储，只留下一个条目：大多数带选项面板的模组使用的共用设置条目。Demographics 模组的设置和名人堂都会保留。一旦共用设置条目成为唯一剩下的内容，游戏返回的就是它，因此使用它的模组从此可以正常加载和保存设置。然而，使用独立自有条目的模组会因此损坏：所有独立条目都会被删除，包括原本排在最前、因而是唯一真正在正常工作的那一个。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="zh_Hans_CN">
-            <Text>如果以后有模组再次写入自己的条目，列表将停止更新，并会再次提供此修复。</Text>
+            <Text>如果以后有模组再次写入自己的条目，保存将会停止，并会再次提供此修复。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="zh_Hans_CN">
             <Text>修复存储：删除另一个模组的保存数据</Text>
@@ -2916,7 +2916,7 @@
             <Text>取消</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="zh_Hans_CN">
-            <Text>存储已修复。名人堂的以往对局列表可以重新保存在这台电脑上，把设置保存在共用条目中的模组从现在起会正常保存和加载。</Text>
+            <Text>存储已修复。从现在起，Demographics 会正常保存其设置和名人堂，把设置保存在共用条目中的其他模组也是如此。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="zh_Hans_CN">
             <Text>修复未成功。每场对局仍然保存在各自的存档中。</Text>
@@ -2946,7 +2946,7 @@
             <Text>设置会保存在这台电脑上。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="zh_Hans_CN">
-            <Text>本次会话中更改的设置会保留到游戏关闭，但无法保存：模组共享存储返回了另一个模组的数据、无法读取，或读回的内容与写入不一致。名人堂页面上的“修复存储”可以解决此问题。</Text>
+            <Text>本次会话中更改的设置会保留到游戏关闭，但无法保存：模组共享存储返回了另一个模组的数据、无法读取，或读回的内容与写入不一致。本页面上的“修复存储”可以解决此问题。</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="zh_Hans_CN">
             <Text>本次会话无法保存设置：模组存储不可用。</Text>

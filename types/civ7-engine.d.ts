@@ -104,9 +104,21 @@ declare global {
 
   const Database: {
     makeHash(text: string): number;
-    query(domain: string, sql: string): any;
+    query(domain: string, sql: string, ...args: any[]): any;
     [key: string]: any;
   };
+
+  /** Save files: the load screen's list queries answer through engine.on("FileListQueryResults"). */
+  const GameStateStorage: {
+    querySaveGameList(query: any): any;
+    closeFileListQuery(id: any): void;
+    [key: string]: any;
+  };
+  const SaveLocations: { [key: string]: number };
+  const SaveTypes: { [key: string]: number };
+  const SaveFileTypes: { [key: string]: number };
+  const SaveLocationCategories: { [key: string]: number };
+  const SaveLocationOptions: { [key: string]: number };
 
   const Network: {
     isHost?(): boolean;

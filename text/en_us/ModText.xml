@@ -3137,10 +3137,10 @@
             <Text>What this button does</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES">
-            <Text>Empties the shared storage and leaves one entry in it: the shared settings entry used by most mods with an options panel. This includes the Demographics mod, its settings and the past game information necessary for this feature. Once the shared settings entry is the only remaining item, it is what the game returns, so the mods that use it load and save their settings normally from then on. A mod with a separate entry of its own would, however, be broken by this: every separate entry is deleted, including the one that was sorting first and was therefore the only one actually working.</Text>
+            <Text>Empties the shared storage and leaves one entry in it: the shared settings entry used by most mods with an options panel. Demographics keeps its settings and its Hall of Fame. Once the shared settings entry is the only remaining item, it's what the game returns, so the mods that use it load and save their settings normally from then on. A mod with a separate entry of its own would, however, be broken by this: every separate entry is deleted, including the one that was sorting first and was therefore the only one actually working.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN">
-            <Text>If a mod writes its own entry again later, the list stops updating and this repair is offered again.</Text>
+            <Text>If a mod writes its own entry later, saving stops and this repair is offered again.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO">
             <Text>Repair storage: delete another mod's saved data</Text>
@@ -3152,7 +3152,7 @@
             <Text>Cancel</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK">
-            <Text>Storage repaired. The Hall of Fame's list of past games is saved on this computer again, and mods that keep their settings in the shared entry save and load them properly from now on.</Text>
+            <Text>Storage repaired. From now on Demographics saves its settings and Hall of Fame normally, and so do the other mods that keep their settings in the shared entry.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL">
             <Text>The repair did not work. Every game is still stored in its own save.</Text>
@@ -3182,7 +3182,7 @@
             <Text>Settings are saved on this computer.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED">
-            <Text>Settings changed in this session are kept until the game closes, but could not be saved: the shared mod storage returned another mod's data, could not be read, or did not read back what was written. Repair storage on the Hall of Fame page fixes this.</Text>
+            <Text>Settings changed in this session are kept until the game closes, but couldn't be saved: the shared mod storage returned another mod's data, couldn't be read, or didn't read back what was written. Repair storage on this page fixes it.</Text>
         </Row>
         <Row Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE">
             <Text>Settings cannot be saved in this session: mod storage is not available.</Text>

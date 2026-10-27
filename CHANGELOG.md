@@ -5,6 +5,20 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
+## [Unreleased]
+
+### Changed
+- The Hall of Fame's list of past games now lives in a file of its own, `demographics-halloffame.sqlite`, in the
+  game's user folder next to your saves, instead of the storage entry mods share for their settings. Other mods'
+  options load faster, since they no longer read through your Hall of Fame on the way, and a mod that clears that
+  storage can't wipe your list any more. Your list moves over by itself the first time you load. If the file can't
+  be used, the Hall of Fame stays where it was, as before.
+- If you go back to 2.10.0, its Hall of Fame shows no games. They're still in the file, and when you update again
+  they come back, together with any games 2.10.0 saved in the meantime.
+- When your Demographics settings can't be saved, the Repair mod storage button now sits under that note on the Hall
+  of Fame page. The repair's text now says it keeps your settings and Hall of Fame, and the line after a repair no
+  longer says the list of past games is saving again, since it was saving in its own file all along.
+
 ## [2.10.0] - 2026-10-25
 
 A smaller Hall of Fame, so every mod that reads its settings loads faster, and Spoil Guard shared with companion mods

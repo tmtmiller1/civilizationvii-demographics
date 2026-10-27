@@ -248,18 +248,24 @@ small-screen layout that makes room for names on the ranking boards (see Known l
 
 Civilization VII 1.5.0 has a bug in the storage mods use for their settings: whatever entry a mod asks for, the game
 returns whichever mod's entry sorts first. Only that one mod's data works. The entry that Demographics and most mod
-option panels share is never read back, so settings reset every launch and the Hall of Fame cannot read or save its
-list of past games (every game is still stored in its own save). It is a game bug for Firaxis to fix, and a
+option panels share is never read back, so settings reset every launch. It is a game bug for Firaxis to fix, and a
 reproduction is written up for their support portal.
+
+The Hall of Fame's list of past games is kept out of that storage, in a file of its own,
+`demographics-halloffame.sqlite`, in the game's user folder (`~/Library/Application Support/Civilization VII/` on a
+Mac, `%LOCALAPPDATA%\Firaxis Games\Sid Meier's Civilization VII\` on Windows), so the bug doesn't reach it. The mod
+finds that folder from the path of your newest save. If you have no save yet, or the file can't be opened or
+written, the list goes in the shared entry as it did up to 2.10.0, and the next launch tries the file again.
 
 Since 2.8.1 the mod carries the Tower Settings Keeper, which keeps every mod's settings inside the one entry the game
 reads correctly and puts a store another mod has disturbed back in order, without deleting anything.
 
-If the Hall of Fame still cannot read its list, a notice box on every Hall of Fame page names the bug, and clicking
-it opens **Repair mod storage**. The repair empties the storage and starts it again with one entry, the shared
-settings entry most mod option panels use, holding this mod's settings and past games. Being the only entry, it is
-what the game returns, so every mod that keeps its settings there loads and saves them normally from then on. A mod
-with a separate entry of its own is not helped: it could not read that entry before and still cannot.
+If the storage still can't be read, the Hall of Fame page says so: a notice box when its own list is blocked (only
+when the file can't be used), or a note that your settings aren't being saved. Either one leads to **Repair mod
+storage**. The repair empties the storage and starts it again with one entry, the shared settings entry most mod
+option panels use, holding this mod's settings (and its past games, when they aren't in their own file). Being the
+only entry, it is what the game returns, so the mods that keep their settings there load and save them normally from
+then on. A mod with a separate entry of its own isn't helped: it couldn't read that entry before and still can't.
 
 The repair permanently deletes the saved data of the one mod the game was reading for everyone, and clears what other
 mods had written but could never read back. Saved games, the history inside them, the game's own settings and every
@@ -358,8 +364,10 @@ time a build that can read it loads the save, so a save is safe to open in eithe
 
 ### The Hall of Fame record
 
-The Hall of Fame keeps one compact record per campaign in the shared `modSettings` entry, beside the settings, so it
-can be read from the main menu. Each save also carries its own campaign's record, which is added back to the Hall of
+The Hall of Fame keeps one compact record per campaign in `demographics-halloffame.sqlite`, its own file in the
+game's user folder, so it can be read from the main menu (or in the shared `modSettings` entry when the file can't be
+used; see the storage bug above). The first launch with a version that has the file moves the list there from
+`modSettings`. Each save also carries its own campaign's record, which is added back to the Hall of
 Fame whenever that save is played, and recording the same game again updates its one entry rather than adding
 another.
 

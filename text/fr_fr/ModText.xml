@@ -2901,10 +2901,10 @@
             <Text>Ce que fait ce bouton</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="fr_FR">
-            <Text>Vide le stockage partagé et n’y laisse qu’une entrée : l’entrée de réglages partagée qu’utilisent la plupart des mods à panneau d’options. Cela comprend le mod Demographics, ses réglages et les informations sur les parties passées nécessaires à cette fonction. Une fois l’entrée de réglages partagée seule restante, c’est elle que le jeu renvoie, donc les mods qui l’utilisent chargent et enregistrent ensuite leurs réglages normalement. Un mod ayant sa propre entrée séparée serait en revanche cassé par cette opération : chaque entrée séparée est supprimée, y compris celle qui venait en premier et qui était donc la seule à fonctionner réellement.</Text>
+            <Text>Vide le stockage partagé et n’y laisse qu’une entrée : l’entrée de réglages partagée qu’utilisent la plupart des mods à panneau d’options. Demographics conserve ses réglages et son Panthéon. Une fois l’entrée de réglages partagée seule restante, c’est elle que le jeu renvoie, donc les mods qui l’utilisent chargent et enregistrent ensuite leurs réglages normalement. Un mod ayant sa propre entrée séparée serait en revanche cassé par cette opération : chaque entrée séparée est supprimée, y compris celle qui venait en premier et qui était donc la seule à fonctionner réellement.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="fr_FR">
-            <Text>Si un mod réécrit plus tard sa propre entrée, la liste cesse de se mettre à jour et cette réparation est de nouveau proposée.</Text>
+            <Text>Si un mod réécrit plus tard sa propre entrée, l’enregistrement s’arrête et cette réparation est de nouveau proposée.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="fr_FR">
             <Text>Réparer le stockage : supprimer les données d’un autre mod</Text>
@@ -2916,7 +2916,7 @@
             <Text>Annuler</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="fr_FR">
-            <Text>Stockage réparé. La liste des parties passées du Panthéon est de nouveau enregistrée sur cet ordinateur, et les mods qui gardent leurs réglages dans l’entrée partagée les enregistrent et les chargent désormais correctement.</Text>
+            <Text>Stockage réparé. Désormais, Demographics enregistre normalement ses réglages et son Panthéon, comme les autres mods qui gardent leurs réglages dans l’entrée partagée.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="fr_FR">
             <Text>La réparation n’a pas fonctionné. Chaque partie reste stockée dans sa propre sauvegarde.</Text>
@@ -2946,7 +2946,7 @@
             <Text>Les paramètres sont enregistrés sur cet ordinateur.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="fr_FR">
-            <Text>Les paramètres modifiés pendant cette session sont conservés jusqu’à la fermeture du jeu, mais n’ont pas pu être enregistrés : le stockage partagé des mods a renvoyé les données d’un autre mod, n’a pas pu être lu ou n’a pas relu ce qui a été écrit. « Réparer le stockage » sur la page du Temple de la renommée corrige cela.</Text>
+            <Text>Les paramètres modifiés pendant cette session sont conservés jusqu’à la fermeture du jeu, mais n’ont pas pu être enregistrés : le stockage partagé des mods a renvoyé les données d’un autre mod, n’a pas pu être lu ou n’a pas relu ce qui a été écrit. « Réparer le stockage » sur cette page corrige cela.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="fr_FR">
             <Text>Les paramètres ne peuvent pas être enregistrés pendant cette session : le stockage des mods n’est pas disponible.</Text>

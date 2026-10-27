@@ -303,14 +303,33 @@ function blockedNote(status, done, ctx) {
   if (done) kids.push(done);
   if (panel) {
     if (status === "foreign") wireToggle(trigger, panel);
-    else {
-      const button = textButton("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX", () => {}, "dgh-repair-toggle");
-      wireToggle(button, panel);
-      kids.push(button);
-    }
+    else kids.push(repairButton(panel));
     kids.push(el("div", { cls: "dgh-options" }, [panel]));
   }
   return el("div", { cls: "dgh-storage" }, kids);
+}
+
+/**
+ * @param {HTMLElement} panel The repair sheet the button opens.
+ * @returns {HTMLElement}
+ */
+function repairButton(panel) {
+  const button = textButton("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX", () => {}, "dgh-repair-toggle");
+  wireToggle(button, panel);
+  return button;
+}
+
+/**
+ * The repair button and sheet under the settings line. With the archive in its own file the Hall of
+ * Fame reads fine on a broken shared store, but Demographics' settings still can't save, and the
+ * settings line points here for the repair.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement[]}
+ */
+function settingsRepair(ctx) {
+  if (settingsPersistence() === "unavailable") return [];
+  const panel = repairPanel(ctx);
+  return [repairButton(panel), el("div", { cls: "dgh-options" }, [panel])];
 }
 
 /**
@@ -345,7 +364,7 @@ function storageNote(ctx, all) {
     const kids = [];
     const keepLine = keepNote(all);
     if (keepLine) kids.push(keepLine);
-    if (settingsLine) kids.push(settingsLine);
+    if (settingsLine) kids.push(settingsLine, ...settingsRepair(ctx));
     if (done) kids.push(done);
     if (!kids.length) return null;
     return kids.length > 1 ? el("div", { cls: "dgh-storage" }, kids) : kids[0];
@@ -356,6 +375,19 @@ function storageNote(ctx, all) {
 }
 
 /**
+ * Whether Demographics' settings are reaching storage this session.
+ * @returns {string} "ok", or the settings module's reason they aren't.
+ */
+function settingsPersistence() {
+  try {
+    if (typeof DemographicsSettings.persistenceStatus === "function") return DemographicsSettings.persistenceStatus();
+  } catch (_) {
+    // A settings double without the accessor reports as saved.
+  }
+  return "ok";
+}
+
+/**
  * A line saying the mod's settings changed this session are not reaching storage, when that is so.
  * The settings module goes read-only for a session when the shared store returned another mod's
  * data, could not be read, or did not read back what was written; this is the one page players
@@ -363,12 +395,7 @@ function storageNote(ctx, all) {
  * @returns {HTMLElement|null} The note, or null while settings persist normally.
  */
 function settingsNote() {
-  let status = "ok";
-  try {
-    if (typeof DemographicsSettings.persistenceStatus === "function") status = DemographicsSettings.persistenceStatus();
-  } catch (_) {
-    // A settings double without the accessor reports as saved.
-  }
+  const status = settingsPersistence();
   if (status === "ok") return null;
   const tag = status === "unavailable"
     ? "LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE"

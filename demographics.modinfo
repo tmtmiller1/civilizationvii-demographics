@@ -94,6 +94,7 @@
                     <Item>ui/history/screen/history-open.js</Item>
                     <Item>ui/history/screen/screen-hall-of-fame.html</Item>
                     <Item>ui/history/screen/screen-hall-of-fame.js</Item>
+                    <Item>ui/history/store/history-archive-file.js</Item>
                     <Item>ui/history/store/history-archive-store.js</Item>
                     <Item>ui/history/store/history-archive.js</Item>
                     <Item>ui/history/store/history-campaign-store.js</Item>
@@ -341,6 +342,7 @@
                     <Item>ui/history/screen/history-open.js</Item>
                     <Item>ui/history/screen/screen-hall-of-fame.html</Item>
                     <Item>ui/history/screen/screen-hall-of-fame.js</Item>
+                    <Item>ui/history/store/history-archive-file.js</Item>
                     <Item>ui/history/store/history-archive-store.js</Item>
                     <Item>ui/history/store/history-archive.js</Item>
                     <Item>ui/history/store/history-campaign-store.js</Item>

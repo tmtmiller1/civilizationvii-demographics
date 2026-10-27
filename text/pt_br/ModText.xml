@@ -2344,10 +2344,10 @@
             <Text>O que este botão faz</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="pt_BR">
-            <Text>Esvazia o armazenamento compartilhado e deixa nele uma única entrada: a entrada de configurações compartilhada usada pela maioria dos mods com painel de opções. Isso inclui o mod Demographics, suas configurações e as informações de partidas anteriores necessárias a este recurso. Quando a entrada de configurações compartilhada é o único item restante, é ela que o jogo devolve, então os mods que a usam passam a carregar e salvar suas configurações normalmente. Um mod com uma entrada própria e separada, porém, seria quebrado por isso: toda entrada separada é apagada, inclusive a que vinha primeiro e era, portanto, a única que realmente funcionava.</Text>
+            <Text>Esvazia o armazenamento compartilhado e deixa nele uma única entrada: a entrada de configurações compartilhada usada pela maioria dos mods com painel de opções. O Demographics mantém suas configurações e seu Hall da Fama. Quando a entrada de configurações compartilhada é o único item restante, é ela que o jogo devolve, então os mods que a usam passam a carregar e salvar suas configurações normalmente. Um mod com uma entrada própria e separada, porém, seria quebrado por isso: toda entrada separada é apagada, inclusive a que vinha primeiro e era, portanto, a única que realmente funcionava.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="pt_BR">
-            <Text>Se mais tarde um mod gravar de novo a própria entrada, a lista deixa de ser atualizada e este reparo é oferecido novamente.</Text>
+            <Text>Se mais tarde um mod gravar de novo a própria entrada, o salvamento para e este reparo é oferecido novamente.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="pt_BR">
             <Text>Reparar armazenamento: apagar os dados de outro mod</Text>
@@ -2359,7 +2359,7 @@
             <Text>Cancelar</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="pt_BR">
-            <Text>Armazenamento reparado. A lista de partidas anteriores do Hall da Fama volta a ser salva neste computador, e os mods que guardam suas configurações na entrada compartilhada passam a salvá-las e carregá-las corretamente.</Text>
+            <Text>Armazenamento reparado. De agora em diante, o Demographics salva normalmente suas configurações e o Hall da Fama, assim como os outros mods que guardam suas configurações na entrada compartilhada.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="pt_BR">
             <Text>O reparo não funcionou. Cada partida continua guardada no próprio jogo salvo.</Text>
@@ -2389,7 +2389,7 @@
             <Text>As configurações são salvas neste computador.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="pt_BR">
-            <Text>As configurações alteradas nesta sessão são mantidas até o jogo fechar, mas não puderam ser salvas: o armazenamento compartilhado de mods devolveu os dados de outro mod, não pôde ser lido ou não leu de volta o que foi gravado. "Reparar armazenamento" na página do Hall da Fama resolve isso.</Text>
+            <Text>As configurações alteradas nesta sessão são mantidas até o jogo fechar, mas não puderam ser salvas: o armazenamento compartilhado de mods devolveu os dados de outro mod, não pôde ser lido ou não leu de volta o que foi gravado. "Reparar armazenamento" nesta página resolve isso.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="pt_BR">
             <Text>As configurações não podem ser salvas nesta sessão: o armazenamento de mods não está disponível.</Text>

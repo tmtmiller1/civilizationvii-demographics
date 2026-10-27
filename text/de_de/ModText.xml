@@ -2901,10 +2901,10 @@
             <Text>Was diese Schaltfläche tut</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="de_DE">
-            <Text>Leert den gemeinsamen Speicher und lässt einen Eintrag darin: den gemeinsamen Einstellungseintrag, den die meisten Mods mit Optionsmenü nutzen. Dazu gehört die Mod Demographics mit ihren Einstellungen und den für diese Funktion nötigen Informationen zu früheren Spielen. Sobald der gemeinsame Einstellungseintrag das Einzige ist, was übrig bleibt, liefert ihn das Spiel zurück, sodass die Mods, die ihn nutzen, ihre Einstellungen von da an normal laden und speichern. Eine Mod mit einem eigenen separaten Eintrag würde dadurch jedoch beschädigt: Jeder separate Eintrag wird gelöscht, auch derjenige, der alphabetisch zuerst kam und damit als Einziger tatsächlich funktioniert hat.</Text>
+            <Text>Leert den gemeinsamen Speicher und lässt einen Eintrag darin: den gemeinsamen Einstellungseintrag, den die meisten Mods mit Optionsmenü nutzen. Die Mod Demographics behält ihre Einstellungen und ihre Ruhmeshalle. Sobald der gemeinsame Einstellungseintrag das Einzige ist, was übrig bleibt, liefert ihn das Spiel zurück, sodass die Mods, die ihn nutzen, ihre Einstellungen von da an normal laden und speichern. Eine Mod mit einem eigenen separaten Eintrag würde dadurch jedoch beschädigt: Jeder separate Eintrag wird gelöscht, auch derjenige, der alphabetisch zuerst kam und damit als Einziger tatsächlich funktioniert hat.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="de_DE">
-            <Text>Schreibt später wieder eine Mod ihren eigenen Eintrag, wird die Liste nicht mehr aktualisiert, und diese Reparatur wird erneut angeboten.</Text>
+            <Text>Schreibt später wieder eine Mod ihren eigenen Eintrag, wird nicht mehr gespeichert, und diese Reparatur wird erneut angeboten.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="de_DE">
             <Text>Speicher reparieren: Daten einer anderen Mod löschen</Text>
@@ -2916,7 +2916,7 @@
             <Text>Abbrechen</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="de_DE">
-            <Text>Speicher repariert. Die Liste früherer Spiele der Ruhmeshalle wird auf diesem Computer wieder gespeichert, und Mods, die ihre Einstellungen im gemeinsamen Eintrag halten, speichern und laden sie von nun an richtig.</Text>
+            <Text>Speicher repariert. Von nun an speichert die Mod Demographics ihre Einstellungen und die Ruhmeshalle wieder normal, ebenso die anderen Mods, die ihre Einstellungen im gemeinsamen Eintrag halten.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="de_DE">
             <Text>Die Reparatur hat nicht funktioniert. Jedes Spiel bleibt in seinem eigenen Spielstand gespeichert.</Text>
@@ -2946,7 +2946,7 @@
             <Text>Einstellungen werden auf diesem Computer gespeichert.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="de_DE">
-            <Text>In dieser Sitzung geänderte Einstellungen bleiben bis zum Schließen des Spiels erhalten, konnten aber nicht gespeichert werden: Der gemeinsame Mod-Speicher lieferte die Daten einer anderen Mod, konnte nicht gelesen werden oder gab das Geschriebene nicht zurück. „Speicher reparieren“ auf der Ruhmeshallen-Seite behebt das.</Text>
+            <Text>In dieser Sitzung geänderte Einstellungen bleiben bis zum Schließen des Spiels erhalten, konnten aber nicht gespeichert werden: Der gemeinsame Mod-Speicher lieferte die Daten einer anderen Mod, konnte nicht gelesen werden oder gab das Geschriebene nicht zurück. „Speicher reparieren“ auf dieser Seite behebt das.</Text>
         </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="de_DE">
             <Text>Einstellungen können in dieser Sitzung nicht gespeichert werden: Der Mod-Speicher ist nicht verfügbar.</Text>
