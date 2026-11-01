@@ -324,6 +324,7 @@
                     <Item>ui/storage/storage-cap.js</Item>
                     <Item>ui/storage/storage-display-names.js</Item>
                     <Item>ui/storage/storage-load.js</Item>
+                    <Item>ui/storage/storage-pack.js</Item>
                     <Item>ui/storage/storage-retention.js</Item>
                     <Item>ui/storage/storage-schema.js</Item>
                     <Item>images/demographics-icon.svg</Item>

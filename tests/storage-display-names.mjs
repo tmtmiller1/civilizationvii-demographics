@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { displayNamesHistory } from "./fixtures/histories.mjs";
 
 // Stored names follow the current language on load (a game played in English and
 // reopened in Korean used to show "Great Britain → Mongolia → 몽골" in legends and dropdowns).
@@ -26,67 +27,7 @@ globalThis.Locale = { compose: (k) => TEXT[k] || k };
 const { localizeStoredNames } = await import("/demographics/ui/storage/storage-display-names.js");
 
 try {
-  const h = {
-    samples: [
-      {
-        players: {
-          0: {
-            civName: "Great Britain",
-            leaderName: "Augustus",
-            civTypeString: "CIVILIZATION_GREAT_BRITAIN",
-            leaderTypeString: "LEADER_AUGUSTUS"
-          }
-        }
-      },
-      {
-        players: {
-          0: {
-            civName: "몽골",
-            leaderName: "아우구스투스",
-            civTypeString: "CIVILIZATION_MONGOLIA",
-            leaderTypeString: "LEADER_AUGUSTUS"
-          },
-          1: { civName: "Kept", leaderName: "City-State", civTypeString: "CIVILIZATION_NOTEXT" },
-          2: null
-        }
-      },
-      null
-    ],
-    wars: [
-      {
-        name: "1st Great Britain vs Villages War",
-        _nameKeyA: "Great Britain",
-        sideACivs: [
-          {
-            pid: 0,
-            civ: "Great Britain",
-            leader: "Augustus",
-            civTypeString: "CIVILIZATION_GREAT_BRITAIN",
-            leaderType: "LEADER_AUGUSTUS"
-          }
-        ],
-        sideBCivs: [
-          { pid: 34, civ: "Villages", leader: "", isCS: true },
-          { pid: 40, civ: "Kumbi Saleh", leader: "", isCS: true },
-          { pid: 41, civ: "Villages", leader: "", isCS: false },
-          { pid: 42, civ: "촌락", leader: "", isCS: false }
-        ],
-        declaredBy: { pid: 0, civ: "Great Britain", leader: "Augustus" }
-      },
-      null,
-      { sideACivs: 5 }
-    ],
-    risings: [
-      {
-        id: 1,
-        ownerCiv: { civ: "Great Britain", civTypeString: "CIVILIZATION_GREAT_BRITAIN", leader: "Augustus",
-          leaderType: "LEADER_AUGUSTUS" },
-        otherCiv: { civ: "Mongolia", civTypeString: "CIVILIZATION_MONGOLIA" }
-      },
-      null,
-      { id: 2 }
-    ]
-  };
+  const h = displayNamesHistory();
   assert.equal(localizeStoredNames(h), h);
   assert.equal(h.samples[0].players[0].civName, "대영제국");
   assert.equal(h.samples[0].players[0].leaderName, "아우구스투스");

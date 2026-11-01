@@ -7,18 +7,13 @@ import assert from "node:assert/strict";
 // deterministic path asserted below.
 import { migrateWarRecords } from "/demographics/ui/sampler/sampler-wars-augment.js";
 
-const HAN = { civName: "Han", civTypeString: "CIVILIZATION_HAN" };
-const QAJAR = { civName: "Qajar", civTypeString: "CIVILIZATION_QAJAR" };
-const ROME = { civName: "Rome", civTypeString: "CIVILIZATION_ROME" };
+import { HAN, QAJAR, ROME, civSwitchSamples } from "./fixtures/histories.mjs";
 
 // Current (Modern-age) snapshot: player 7 is now Qajar, player 3 still Rome.
 const NOW = { players: { 7: QAJAR, 3: ROME } };
 
 /** Samples: player 7 was Han at the war's start (chartTurn 5), Qajar by the Modern era. */
-const SAMPLES = [
-  { chartTurn: 5, players: { 7: { ...HAN }, 3: { ...ROME } } },
-  { chartTurn: 200, players: { 7: { ...QAJAR }, 3: { ...ROME } } }
-];
+const SAMPLES = civSwitchSamples();
 
 /**
  * A war record whose side-A roster was (wrongly) stamped with the current-age civ, as an older

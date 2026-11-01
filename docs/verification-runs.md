@@ -4,6 +4,16 @@ What's been seen working in a running game, with the run that showed it. Everyth
 the workspace's `WATCH_LIST.md`. This file stays out of the release notes: `CHANGELOG.md` feeds the Workshop change
 note.
 
+## Packed history: the measurement gate (Unreleased)
+
+Design: [storage-memory-spec.md](storage-memory-spec.md) section 4. Before the packer was built, its rules were run
+in node over a real history payload (the gate in spec 4.7): the Demographics history read out of the turn-74
+autosave of lab run `2026-11-01T18-16-10` (Antiquity, seed 4242, Small map, six majors, 73 samples) with the private
+save reader. The envelope as the save held it was 673,155 characters; packed with the spec 4.2 rules it was 159,258,
+a 76.3 percent saving (9,221 to 2,182 characters a sample). The gate asked for 35 percent. The packer in
+`ui/storage/storage-pack.js` was built after this measurement; the in-game runs for the packed payload are on the
+workspace's `WATCH_LIST.md`, group 25.
+
 ## The Hall of Fame in a file of its own (Unreleased)
 
 Design: [archive-file-store.md](archive-file-store.md). Three lab launches on 2026-10-26, Antiquity seed 4242, quick

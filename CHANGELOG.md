@@ -12,6 +12,10 @@ section below by `scripts/steam-changelog.mjs`.
   settlements, yields, ages and Triumphs.
 
 ### Changed
+- Chart history takes about half the space in the save, so long games keep more turns before thinning. Measured
+  on a turn-74 Small-map save: 658 KB of history became 156 KB.
+- Going back to an older Demographics hides the current game's charts until this version is reinstalled; the
+  history isn't lost.
 - Ending a turn is shorter. The sampler reads your chart history from the save once per turn instead of three
   times, and it no longer writes a town trend buffer to the shared settings entry every turn (nothing read it).
 - The Demographics screen opens faster. It reads the sampler's copy of the chart history instead of parsing the

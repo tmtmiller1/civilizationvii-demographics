@@ -24,8 +24,13 @@ export function emptyHistory(seed, version) {
   };
 }
 
+/** The one older history schema the current code still reads: the unpacked shape of 2.10.0 and before. */
+const OLDEST_READABLE_VERSION = 1;
+
 /**
- * Check whether a parsed value matches the expected history schema shape.
+ * Check whether a parsed value matches the expected history schema shape. The current version and
+ * schema 1 are accepted; a schema 1 history is already the in-memory shape, and the first save
+ * restamps it (`prepareHistoryForSave`).
  * @param {*} history Candidate value.
  * @param {number} version Expected schema version.
  * @returns {boolean}
@@ -34,13 +39,14 @@ export function isValid(history, version) {
   return !!(
     history &&
     typeof history === "object" &&
-    history.version === version &&
+    (history.version === version || history.version === OLDEST_READABLE_VERSION) &&
     Array.isArray(history.samples)
   );
 }
 
 /**
- * Normalize optional history fields in place.
+ * Normalize optional history fields in place. Never touches `version`: the load path needs the
+ * stored version intact to tell an older save from the current one.
  * @param {any} history
  * @returns {any} The same history object.
  */

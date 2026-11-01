@@ -3,6 +3,7 @@
 // Load-path helper functions for demographics history persistence.
 
 import { serializePayload } from "/demographics/ui/storage/storage-retention.js";
+import { unpackHistory } from "/demographics/ui/storage/storage-pack.js";
 
 /**
  * Read raw payload text from a store.
@@ -21,17 +22,50 @@ export function readRaw(store, payloadKey, logError) {
 }
 
 /**
- * Extract the history payload from either an envelope ({v,data}) or a legacy raw
- * history blob, keeping backward compatibility for existing saves.
+ * The stored `data` object from either an envelope ({v,data}) or a legacy raw history blob.
  * @param {*} parsed Parsed JSON value.
- * @returns {*} Candidate history payload.
+ * @returns {*} The stored data, before any unpacking.
  */
-function payloadFromBlob(parsed) {
+function dataFromBlob(parsed) {
   if (!parsed || typeof parsed !== "object") return parsed;
   if (typeof parsed.v === "number" && parsed.data && typeof parsed.data === "object") {
     return parsed.data;
   }
   return parsed;
+}
+
+/**
+ * Whether stored data is a packed (schema 2) history that has to go through `unpackHistory`.
+ * @param {*} data The stored data object.
+ * @returns {boolean}
+ */
+function isPacked(data) {
+  return !!(data && typeof data === "object" && data.version === 2 && Array.isArray(data.roster));
+}
+
+/**
+ * Extract the in-memory history from stored text's parsed value: an envelope or a legacy raw
+ * blob, unpacked when it is a schema 2 payload. A packed payload whose shape isn't what
+ * storage-pack.js writes comes back as null, which `isValid` rejects, so the text is parked
+ * under its version's slot like any other unreadable payload.
+ * @param {*} parsed Parsed JSON value.
+ * @returns {*} Candidate history payload, or null for a malformed packed one.
+ */
+function payloadFromBlob(parsed) {
+  const data = dataFromBlob(parsed);
+  return isPacked(data) ? unpackHistory(data) : data;
+}
+
+/**
+ * Schema version stamped on stored data, read before unpacking so a malformed packed payload
+ * still parks under its own version's slot.
+ * @param {*} parsed Parsed JSON value.
+ * @returns {number | undefined}
+ */
+function storedVersionOf(parsed) {
+  const data = dataFromBlob(parsed);
+  const stored = data && typeof data === "object" ? data.version : undefined;
+  return typeof stored === "number" ? stored : undefined;
 }
 
 /** Suffix of the sibling key that parks a stored payload the running code could not use. */
@@ -244,16 +278,17 @@ function seedMismatch(storedSeed, seed) {
  */
 function parseStored(raw, isValid, version) {
   let history = null;
+  let storedVersion;
   try {
-    history = payloadFromBlob(JSON.parse(raw));
+    const parsed = JSON.parse(raw);
+    storedVersion = storedVersionOf(parsed);
+    history = payloadFromBlob(parsed);
   } catch (e) {
     return { history, problem: "JSON parse failed (" + e + ")", storedVersion: undefined };
   }
-  const stored = history && typeof history === "object" ? history.version : undefined;
-  const storedVersion = typeof stored === "number" ? stored : undefined;
   if (isValid(history, version)) return { history, problem: null, storedVersion };
   const problem =
-    stored === version ? "malformed history" : "history version " + stored + " is not " + version;
+    storedVersion === version ? "malformed history" : "history version " + storedVersion + " is not " + version;
   return { history, problem, storedVersion };
 }
 

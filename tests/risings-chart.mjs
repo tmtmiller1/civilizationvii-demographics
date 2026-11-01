@@ -7,6 +7,7 @@ import fs from "node:fs";
 
 import { createFakeDocument } from "./_dom-stub.mjs";
 import { setAnalyticsPolicy } from "./_engine-stubs.mjs";
+import { risingsChartSamples } from "./fixtures/histories.mjs";
 
 const EN = new Map(
   [...fs.readFileSync("text/en_us/ModText.xml", "utf8").matchAll(/Tag="(LOC_[A-Z0-9_]+)">\s*<Text>([^<]*)<\/Text>/g)]
@@ -67,18 +68,7 @@ const { collectWarCivOptions, renderConflictsTimeline } = await import(
 );
 
 // Local 0 (Rome), met 2 (Greece), unmet 3 (Persia).
-const player = (civ, met, color) => ({ civName: civ, met, primaryColor: color, secondaryColor: "#ffffff" });
-const samples = [
-  { age: "AGE_ANTIQUITY", localTurn: 40, chartTurn: 40, gameYear: "1000 BCE", players: {} },
-  {
-    age: "AGE_ANTIQUITY", localTurn: 60, chartTurn: 60, gameYear: "600 BCE",
-    players: {
-      0: player("Rome", true, "#aa0000"),
-      2: player("Greece", true, "#0000aa"),
-      3: player("Persia", false, "#00aa00")
-    }
-  }
-];
+const samples = risingsChartSamples();
 const civ = (name, type, leader) => ({ civ: name, civTypeString: type, leader });
 const ROME = civ("Rome", "CIVILIZATION_ROME", "Augustus");
 const GREECE = civ("Greece", "CIVILIZATION_GREECE", "Pericles");

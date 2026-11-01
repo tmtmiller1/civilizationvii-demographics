@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { continentSamples } from "./fixtures/histories.mjs";
 
 const savedLocale = globalThis.Locale;
 globalThis.Locale = {
@@ -35,32 +36,7 @@ globalThis.parseInt = () => NaN;
 assert.equal(parseYear("123 CE"), null);
 globalThis.parseInt = savedParseInt;
 
-const samples = [
-  {
-    turn: 10,
-    gameYear: "300 BCE",
-    players: {
-      1: { continent: 1 },
-      2: { continent: 1 },
-      3: { continent: 2 },
-      4: { continent: 2 },
-      5: { continent: 1 },
-      6: { continent: 2 }
-    }
-  },
-  {
-    turn: 400,
-    gameYear: "100 CE",
-    players: {
-      1: { continent: 1 },
-      2: { continent: 1 },
-      3: { continent: 2 },
-      4: { continent: 2 },
-      5: { continent: 1 },
-      6: { continent: 2 }
-    }
-  }
-];
+const samples = continentSamples();
 
 const continentMap = buildContinentMap(samples);
 assert.equal(continentMap.get(1), 1);

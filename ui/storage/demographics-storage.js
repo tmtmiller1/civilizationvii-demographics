@@ -53,8 +53,11 @@ import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 const log = makeLogger("storage");
 
 // schema
-/** Persisted history schema version. */
-const VERSION = 1;
+/**
+ * Persisted history schema version. Schema 2 is the packed shape in storage-pack.js (envelope 3 on
+ * disk); schema 1 payloads from older builds still load and are written back as 2 on the first save.
+ */
+const VERSION = 2;
 /** Hashing scope prefix; stable across all ages. */
 const CATALOG_SCOPE = "demographics-history-v1";
 /** Property-bag key under which the JSON payload is stored. */

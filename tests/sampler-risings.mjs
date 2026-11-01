@@ -2,6 +2,7 @@
 // junk API), per-row validation, the merge into history.risings (new rows, end and outcome updates,
 // earlier-age rows, the cap) and the chart-turn placement of raw Game.turn values.
 import assert from "node:assert/strict";
+import { ageChangeSamples, heianSengokuSamples } from "./fixtures/histories.mjs";
 
 const {
   RISINGS_CAP,
@@ -64,12 +65,7 @@ assert.deepEqual(
 assert.equal(validateRising(good({ outcome: "burned" })).outcome, undefined, "an outcome needs an end");
 
 // Placement on the chart-turn axis.
-const samples = [
-  { age: "AGE_ANTIQUITY", localTurn: 90, chartTurn: 90, gameYear: "100 CE" },
-  { age: "AGE_ANTIQUITY", localTurn: 100, chartTurn: 100, gameYear: "200 CE" },
-  { age: "AGE_EXPLORATION", localTurn: 1, chartTurn: 101, gameYear: "250 CE" },
-  { age: "AGE_EXPLORATION", localTurn: 20, chartTurn: 120, gameYear: "400 CE" }
-];
+const samples = ageChangeSamples();
 const place = { chartTurn: 120, localTurn: 20, age: "AGE_EXPLORATION", gameYear: "400 CE", samples };
 assert.deepEqual(placeRisingTurn(20, "AGE_EXPLORATION", place), { chartTurn: 120, year: "400 CE" });
 assert.deepEqual(placeRisingTurn(1, "AGE_EXPLORATION", place), { chartTurn: 101, year: "250 CE" });
@@ -158,14 +154,7 @@ const cleared = validateRising(g5Row({ end: 1, outcome: "age" }));
 assert.equal(cleared.end, 1, "an age-cleared rising keeps its end in the next age");
 assert.equal(cleared.outcome, "age");
 assert.equal(validateRising(g5Row({ end: 1, outcome: "dispersed" })).end, undefined, "only the age change wraps");
-const g5Samples = [
-  { age: "AGE_ANTIQUITY", localTurn: 119, chartTurn: 119, gameYear: "275 BCE",
-    players: { 0: { civName: "Heian Japan", civTypeString: "CIVILIZATION_HEIAN", leaderName: "Himiko" } } },
-  { age: "AGE_ANTIQUITY", localTurn: 120, chartTurn: 120, gameYear: "250 BCE",
-    players: { 0: { civName: "Heian Japan", civTypeString: "CIVILIZATION_HEIAN", leaderName: "Himiko" } } },
-  { age: "AGE_EXPLORATION", localTurn: 1, chartTurn: 121, gameYear: "1 CE",
-    players: { 0: { civName: "Sengoku Japan", civTypeString: "CIVILIZATION_SENGOKU", leaderName: "Himiko" } } }
-];
+const g5Samples = heianSengokuSamples();
 const g5Ctx = {
   chartTurn: 121, localTurn: 1, age: "AGE_EXPLORATION", gameYear: "1 CE", samples: g5Samples,
   resolveCiv: () => ({ civ: "Sengoku Japan", civTypeString: "CIVILIZATION_SENGOKU", leader: "Himiko" }),

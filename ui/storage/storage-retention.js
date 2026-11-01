@@ -2,16 +2,22 @@
 //
 // History-save preparation and sample-retention mutations.
 
-/** Persisted payload-envelope schema version. */
-const PAYLOAD_SCHEMA_VERSION = 2;
+import { packHistory } from "/demographics/ui/storage/storage-pack.js";
 
 /**
- * Serialize a history object as an envelope payload.
+ * Persisted payload-envelope version. Envelope 3 carries a packed history (schema 2, see
+ * storage-pack.js); envelope 2 carried the history as it is in memory (schema 1).
+ */
+const PAYLOAD_ENVELOPE_VERSION = 3;
+
+/**
+ * Serialize a history object as an envelope payload. Every write goes through here, so every
+ * write is packed; `parkRejected` in storage-load.js writes raw text and stays raw.
  * @param {object} history History object to serialize.
  * @returns {string} Serialized payload envelope.
  */
 export function serializePayload(history) {
-  return JSON.stringify({ v: PAYLOAD_SCHEMA_VERSION, data: history });
+  return JSON.stringify({ v: PAYLOAD_ENVELOPE_VERSION, data: packHistory(history) });
 }
 
 /**
@@ -32,6 +38,9 @@ export function prepareHistoryForSave(history, options) {
     logError("save: refusing to persist invalid history");
     return false;
   }
+  // A history read from an older save validates at its own version; from the first save on, the
+  // mirror and the store both carry the current one.
+  history.version = version;
   normalize(history);
   const eff = resolveEffectiveCap();
   if (isFinite(eff.cap) && history.samples.length > eff.cap) {

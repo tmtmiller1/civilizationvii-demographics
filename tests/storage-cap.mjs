@@ -9,7 +9,7 @@ import {
   resolveEffectiveCap
 } from "/demographics/ui/storage/storage-cap.js";
 import { DemographicsStorage } from "/demographics/ui/storage/demographics-storage.js";
-import { serializeWithinBudget } from "/demographics/ui/storage/storage-retention.js";
+import { serializePayload, serializeWithinBudget } from "/demographics/ui/storage/storage-retention.js";
 
 const savedGetSetting = DemographicsSettings.getSetting;
 const savedGame = globalThis.Game;
@@ -123,18 +123,18 @@ function testSaveByteBudget() {
   const small = mkBytesHistory(10, 100);
   assert.equal(DemographicsStorage.save(small), true);
   assert.equal(small.samples.length, 10, "under-budget history is untouched");
-  assert.equal(map.get(KEY).length, JSON.stringify({ v: 2, data: small }).length);
+  assert.equal(map.get(KEY).length, serializePayload(small).length);
   assert.equal(DemographicsStorage.decimationStatus().payloadBytes, map.get(KEY).length);
   assert.equal(errors.filter((e) => /budget/.test(e)).length, 0);
 
   // Over the soft budget: tightened before the write, soft notice once, hard notice never (fits).
   const big = mkBytesHistory(6000, 640);
-  const before = JSON.stringify({ v: 2, data: big }).length;
+  const before = serializePayload(big).length;
   assert.ok(before > PAYLOAD_SOFT_BYTES && before < PAYLOAD_HARD_BYTES, "fixture sits between soft and hard");
   assert.equal(DemographicsStorage.save(big), true);
   assert.ok(big.samples.length < 6000, "over-budget history is decimated further before the write");
   assert.ok(map.get(KEY).length <= PAYLOAD_SOFT_BYTES, "written payload fits the soft budget");
-  assert.equal(map.get(KEY).length, JSON.stringify({ v: 2, data: big }).length, "what was written is what was kept");
+  assert.equal(map.get(KEY).length, serializePayload(big).length, "what was written is what was kept");
   assert.equal(DemographicsStorage.decimationStatus().payloadBytes, map.get(KEY).length);
   assert.equal(errors.filter((e) => /soft budget/.test(e)).length, 1, "soft notice fires once");
   assert.equal(errors.filter((e) => /hard budget/.test(e)).length, 0);
