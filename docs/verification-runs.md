@@ -4,6 +4,41 @@ What's been seen working in a running game, with the run that showed it. Everyth
 the workspace's `WATCH_LIST.md`. This file stays out of the release notes: `CHANGELOG.md` feeds the Workshop change
 note.
 
+## Storage and memory work, one lab run (Unreleased)
+
+Design: [storage-memory-spec.md](storage-memory-spec.md). One lab game on 2026-11-01, Antiquity seed 4242, the
+usual set of mods with the working copy at 80c5c3a deployed to `Mods/demographics` and its debug switch on; probe
+scripts kept in the session scratchpad, readings in the run folder `~/.tower-bench/runs/2026-11-01T23-43-56/drive.log`.
+Thirty turns under `lab drive`, a save and load at turn 15, the screen opened once at turn 15 with the Rankings tab
+and its Hall of Fame sub-tab visited, then a quit to the main menu and the Hall of Fame opened there.
+
+- **Packed history (item 4).** From turn 1 the save's history value began `{"v":3,"data":{"version":2,"seed":4242`,
+  3,472 characters at turn 1 and 49,140 at turn 30 (about 1.3 KB a turn with six majors early in Antiquity). The
+  mirror reported version 2, and the stored and in-memory sample counts matched the turn every time they were read.
+- **Save and load.** The turn-15 save (`Network.saveGame`, then `Network.loadGame` from inside the game) came back
+  with 15 samples, the same count and bytes as before the load; UI.log shows the BeforeUnload flush, a fresh storage
+  init and one load of 15 samples.
+- **One history load per turn (item 2).** 16 `load: ok` lines over turns 1 to 15 (the kickoff plus one a turn) and 15
+  over turns 15 to 30. The sampler's `perf doSample` line at turn 16: total 18.0 ms, `majors+minors` 13.9,
+  `write` 0.2, `warTracker` 4.0.
+- **No per-turn settings write (item 1).** No `setSettings` line and no `townTrendBuf` anywhere in the run's log.
+- **Hall of Fame file cadence (item 3).** `Updated` on `demographics_hof.HallOfFame` changed at turns 1, 6 and 11,
+  then after the load at 15 and at 20, 25 and 30; unchanged on every other turn. The quit to the main menu landed on
+  a flush turn, so the unload flush had nothing to write; the main menu read the turn-30 row.
+- **Screen reads the mirror (item 6).** Opening the screen at turn 15 wrote no `load: ok` line; the Hall of Fame tab
+  drew the keep line and the games list over the mirror's data.
+- **One write per click (10.1).** The Rankings tab click wrote `setSettings settlementsSubTab,activeView` once. It
+  also wrote `setSettings historyGroupSel` from `resetGroupSelections` in view-history.js, a separate function the
+  spec didn't cover, so the click still costs two writes of the shared row. Folding that key into the handler's one
+  call is the follow-up.
+- **History-size line (10.3).** The in-game Hall of Fame read "Chart history in this save: 15 turns, 27 KB, up to
+  2,000 turns kept." The main-menu Hall of Fame (opened through its menu button) showed the keep line and no size
+  line.
+- No `[Demographics.*]` error line in the whole run.
+
+Not watched in this run: the every-other-mod-off side of each item, the downgrade to 2.10.0 and back (the registry
+switch is the owner's), and a chart-by-chart comparison with the previous build at the same seed.
+
 ## Packed history: the measurement gate (Unreleased)
 
 Design: [storage-memory-spec.md](storage-memory-spec.md) section 4. Before the packer was built, its rules were run
