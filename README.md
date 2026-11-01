@@ -241,8 +241,8 @@ small-screen layout that makes room for names on the ranking boards (see Known l
   the timeline if you later remove Partisans.
 - Carries the [Tower Settings Keeper](https://github.com/tmtmiller1/civilizationvii_tower-settings-keeper), so its
   settings, and other mods' settings in the shared entry, survive a restart (below).
-- Translated into German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian and
-  Simplified Chinese, with each language's own number formatting.
+- Translated into German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian,
+  Simplified Chinese and Traditional Chinese, with each language's own number formatting.
 
 ### The Civilization VII storage bug
 
@@ -430,7 +430,7 @@ ui/sampler/                    the per-turn sample of every civilization, wars, 
 ui/storage/                    recorded history in the save: format, loading, thinning, budget
 ui/screen-demographics/        the screen: charts, views, rankings, camera, stylesheets
 ui/history/                    the History tab, the Hall of Fame and its main-menu screen
-text/<lang>/ModText.xml        the text in each of 11 languages (see text/README.md)
+text/<lang>/ModText.xml        the text in each of 12 languages (see text/README.md)
 images/demographics-icon.svg   the dock button icon
 tests/                         the tests `npm run verify` runs (tests/run-all.mjs)
 types/                         type declarations for the engine and the mod

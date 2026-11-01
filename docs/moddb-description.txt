@@ -40,7 +40,7 @@ Works with Emigration and Partisans
 - With Partisans installed, uprisings show on the war timeline and in the Chronicle, with why each one started and how it ended.
 
 Languages
-English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian and Simplified Chinese, each with its own number formatting.
+English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian, Simplified Chinese and Traditional Chinese, each with its own number formatting.
 
 Installing
 If you play on Steam, subscribe on the Workshop and Steam installs and updates it for you:

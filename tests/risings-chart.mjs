@@ -214,7 +214,7 @@ assert.equal(renderConflictsTimeline(emptyHost, { history: { samples, wars: [], 
 const RISING_TAG = /^LOC_DEMOGRAPHICS_(RISING_|HIST_EV_RISING|HIST_FILTER_RISINGS)/;
 const RISING_KEYS = [...EN.keys()].filter((k) => RISING_TAG.test(k));
 assert.equal(RISING_KEYS.length, 18);
-for (const loc of ["de_de", "es_es", "fr_fr", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br", "ru_ru", "zh_cn"]) {
+for (const loc of ["de_de", "es_es", "fr_fr", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br", "ru_ru", "zh_cn", "zh_hk"]) {
   const xml = fs.readFileSync(`text/${loc}/ModText.xml`, "utf8");
   for (const key of RISING_KEYS) {
     const m = new RegExp(`Tag="${key}"[^>]*>\\s*<Text>([^<]*)</Text>`).exec(xml);

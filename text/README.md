@@ -10,9 +10,9 @@ resolved at runtime by `Locale.compose` (via the `t()` helper in
 | File | Contents |
 |------|----------|
 | `en_us/ModText.xml` | **Source of truth.** Authoritative English for every tag. |
-| `de_de/`, `es_es/`, `fr_fr/`, `it_it/`, `ja_jp/`, `ko_kr/`, `pl_pl/`, `pt_br/`, `ru_ru/`, `zh_cn/` | One `ModText.xml` per language. |
+| `de_de/`, `es_es/`, `fr_fr/`, `it_it/`, `ja_jp/`, `ko_kr/`, `pl_pl/`, `pt_br/`, `ru_ru/`, `zh_cn/`, `zh_hk/` | One `ModText.xml` per language. |
 
-The modinfo registers all 11 via `<UpdateText>` (`demographics.modinfo`).
+The modinfo registers all 12 via `<UpdateText>` (`demographics.modinfo`).
 
 ## Two file shapes
 
@@ -36,7 +36,7 @@ Every other locale uses a `LocalizedText` block with `Replace` + a `Language` at
 </Database>
 ```
 
-**`Language` attribute ≠ folder name.** Use the value below verbatim — note `zh_cn`:
+**`Language` attribute ≠ folder name.** Use the value below verbatim — note `zh_cn` and `zh_hk`:
 
 | Folder | `Language=` | Folder | `Language=` |
 |--------|-------------|--------|-------------|
@@ -44,7 +44,8 @@ Every other locale uses a `LocalizedText` block with `Replace` + a `Language` at
 | `es_es` | `es_ES` | `pt_br` | `pt_BR` |
 | `fr_fr` | `fr_FR` | `ru_ru` | `ru_RU` |
 | `it_it` | `it_IT` | `zh_cn` | **`zh_Hans_CN`** |
-| `ja_jp` | `ja_JP` | `ko_kr` | `ko_KR` |
+| `ja_jp` | `ja_JP` | `zh_hk` | **`zh_Hant_HK`** |
+| `ko_kr` | `ko_KR` | | |
 
 ## The tag-parity invariant
 
@@ -62,7 +63,7 @@ values against `en_us` (identical English text = untranslated placeholder).
 ## Adding a new string
 
 1. Add `<Row Tag="LOC_DEMOGRAPHICS_..."><Text>…</Text></Row>` to `en_us/ModText.xml`.
-2. Add a matching `<Replace Tag="…" Language="…"><Text>…</Text></Replace>` to **all 10**
+2. Add a matching `<Replace Tag="…" Language="…"><Text>…</Text></Replace>` to **all 11**
    other locales (English placeholder is fine to start).
 3. Reference it from code as `t("LOC_DEMOGRAPHICS_...")`.
 
@@ -104,7 +105,7 @@ check can use `isBaseGameLoc()` to tell "base-game key" apart from "missing mod 
 ```sh
 cd .. # mod root
 en=$(grep -oE 'Tag="[^"]+"' text/en_us/ModText.xml | sort -u)
-for loc in de_de es_es fr_fr it_it ja_jp ko_kr pl_pl pt_br ru_ru zh_cn; do
+for loc in de_de es_es fr_fr it_it ja_jp ko_kr pl_pl pt_br ru_ru zh_cn zh_hk; do
   diff <(echo "$en") <(grep -oE 'Tag="[^"]+"' text/$loc/ModText.xml | sort -u) \
     >/dev/null && echo "$loc OK" || echo "$loc DRIFT"
 done

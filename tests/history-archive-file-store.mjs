@@ -407,6 +407,64 @@ function assertWorksFromSettings(label) {
   assertWorksFromSettings("no local save");
 }
 
+// ---- a blocked store: the slice read from LocalStorage.sqlite by key -------------------------
+
+/**
+ * The game's own localStorage file, laid out as the engine writes it.
+ * @param {string} folder
+ * @param {Record<string, string>} rows key -> value
+ */
+function seedLocalStorageFile(folder, rows) {
+  const raw = new DatabaseSync(folder + fileModule.SETTINGS_FILE_NAME);
+  raw.exec('CREATE TABLE IF NOT EXISTS "Values"("id" TEXT NOT NULL, "key" TEXT NOT NULL, "value" TEXT NOT NULL, ' +
+    'PRIMARY KEY("id", "key")) WITHOUT ROWID');
+  for (const [k, v] of Object.entries(rows)) raw.prepare('INSERT OR REPLACE INTO "Values" VALUES (?, ?, ?)').run("fs://game", k, v);
+  raw.close();
+}
+
+assert.equal(
+  fileModule.readOnlyUri("/Users/x/Library/Application Support/Civilization VII/", "LocalStorage.sqlite"),
+  "file:/Users/x/Library/Application Support/Civilization VII/LocalStorage.sqlite?mode=ro"
+);
+assert.equal(
+  fileModule.readOnlyUri("C:\\Users\\x\\AppData\\Local\\Firaxis Games\\Civ 100%?#\\", "LocalStorage.sqlite"),
+  "file:///C:/Users/x/AppData/Local/Firaxis Games/Civ 100%25%3F%23/LocalStorage.sqlite?mode=ro"
+);
+
+// Another mod's key sorts first, so getItem never reaches modSettings; the slice still moves over.
+{
+  const folder = userFolder();
+  const settingsText = JSON.stringify({ ...OTHERS, [SLICE_ID]: slice("a", "b") });
+  seedLocalStorageFile(folder, { "!foreign": '{"zoomSpeed":3,"enabled":true}', modSettings: settingsText });
+  const lsBefore = fs.readFileSync(folder + fileModule.SETTINGS_FILE_NAME);
+  globalThis.localStorage = buggyStorage({ "!foreign": '{"zoomSpeed":3,"enabled":true}', modSettings: settingsText });
+  await loadPage(folder);
+  assert.deepEqual(ids(), ["a", "b"], "the games in the unreachable modSettings row");
+  assert.equal(store.archiveStatus(), "ok");
+  assert.deepEqual(fileGames(folder), ["a", "b"], "written to the file");
+  assert.equal(localStorage.dump().modSettings, settingsText, "a blocked store isn't written");
+  assert.ok(fs.readFileSync(folder + fileModule.SETTINGS_FILE_NAME).equals(lsBefore), "LocalStorage.sqlite untouched");
+  const attached = /** @type {*[]} */ (Database.query("config", "PRAGMA database_list")).map((r) => r.name);
+  assert.ok(!attached.includes(fileModule.SETTINGS_ALIAS), "detached after the read");
+
+  // A game deleted since stays deleted when the next page reads the same row again.
+  store.deleteRecord("a");
+  await loadPage(folder);
+  assert.deepEqual(ids(), ["b"]);
+  assert.deepEqual(fileGames(folder), ["b"]);
+}
+
+// No LocalStorage.sqlite in the folder: nothing is created there, and the file store carries on.
+{
+  const folder = userFolder();
+  globalThis.localStorage = buggyStorage({ "!foreign": '{"zoomSpeed":3}', modSettings: JSON.stringify(OTHERS) });
+  await loadPage(folder);
+  assert.ok(!fs.existsSync(folder + fileModule.SETTINGS_FILE_NAME), "read-only attach leaves no empty file");
+  assert.equal(store.archiveStatus(), "empty");
+  assert.ok(store.saveRecord(archiveRecord("c")));
+  assert.deepEqual(fileGames(folder), ["c"]);
+}
+
 // ---- repairStorage --------------------------------------------------------------------------
 
 {

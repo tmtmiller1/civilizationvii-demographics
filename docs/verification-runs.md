@@ -50,8 +50,71 @@ standing in for a player who already has one, and the owner's settings store wit
 - **Lab restore of an existing file.** The lab backed up `demographics-halloffame.sqlite` at start; after `lab stop`
   the file's dump matched the one placed before the run (the bytes differ: `.backup` rewrites the pages).
 
+`hof-B2` (2026-11-01, Demographics working copy and the usual set, the owner's settings store with the 42-game slice
+and no file, run `2026-11-01T20-08-27`): the first load moved the slice to the file again, as in `hof-A`. The same
+game also showed the UI attaching `LocalStorage.sqlite` by path and reading the `modSettings` row by key.
+
+`hof-C` (2026-11-01, the same store with a row `AAA_probe` = `{"zoomSpeed":3,"enabled":true}` added to
+`LocalStorage.sqlite` before launch, so `getItem("modSettings")` returns it):
+
+- **Before the fix** (runs `20-12-10` and `20-13-47`, English): the Hall of Fame listed only the test game. The 42
+  games never reached the file, and the repair then deleted the row that held them.
+- **A row that isn't JSON** (run `20-11-15`): `getItem` returned null for every key, the probe's own included.
+- **A row shaped like a settings root** (`{"probe-mod":{"x":1}}`, run `20-12-10`): Demographics took it for the root;
+  a settings save wrote `{probe-mod, demographics}` under `modSettings`.
+- **With the fix** (run `20-20-26`, German): the file held 42 games (the 2.10.0 keep rule dropped the oldest
+  unfinished one) and the keep line read "Gespeichert: 22 abgeschlossen, 20 unfertig (die letzten 20 bleiben)". The
+  rows Demographics read on disk didn't change; Tower Settings Keeper's blocked mode added its own row under the empty
+  key, as designed. `Updated` read 1793564451 (seconds; milliseconds had overflowed the engine's 32-bit binding to
+  -1732598118).
+- **Footer and Repair** (English in `20-13-47`, German in `20-20-26`): after a settings save the settings module
+  reported `read-failed`; the note read the new text with one Repair button under it and no red notice box; the
+  button opened the sheet with the new text; the first click armed it, the second repaired. The store held only
+  `demographics`, the file's payload and backup were byte for byte the same (42 games kept), and the line after read
+  "Storage repaired. From now on Demographics saves its settings and Hall of Fame normally…" / "Speicher repariert…".
+  One turn later the test game was in the file at turn 2.
+- **The other nine languages** (runs `21-50` to `21-56`, the same blocked seed, one launch each with `DisplayLanguage`
+  set in AppOptions.txt): es_ES, fr_FR, it_IT, ja_JP, ko_KR, pl_PL, pt_BR, ru_RU and zh_Hans_CN each showed the 42
+  games, the keep line, the settings note with one Repair button and no red box, the sheet's title, two headings and
+  paragraphs, the "again" line, the Repair and Cancel buttons, the armed text and the repaired line in that language,
+  with no raw `LOC_` tag; the repair left the file's payload and backup untouched and the store holding only
+  `demographics`. zh_Hant_HK, which the mod then had no text for, read in English throughout; after
+  `text/zh_hk/ModText.xml` was added (16:45, run `hof-C3`, the same seed and probe, plus the four main-menu captures)
+  it read in Traditional Chinese end to end: 42 games, keep line 已儲存：已完成 22 局…, the note, button, sheet, armed
+  text and repaired line, no raw tag, file and store as in the other languages; the drawn page used the game's
+  Traditional font with the sheet and the wrapped armed button inside the panel.
+- **The drawn page** (`hof-C2`, 16:09 to 16:51, Russian, Polish, German and French, one launch each): after
+  `exitToMainMenu`, a settings save and `openHallOfFame()`, the main menu's Hall of Fame was captured with
+  `screencapture -l` at four points (`working_screenshots/demographics-hof-languages-2026-11-01/`, `first-pass/` is
+  the earlier set). The note sits on one line under the keep line, the button under it; the sheet's title, headings and
+  paragraphs wrap inside the panel; Repair and Cancel fit on one row. In the first pass the armed "Click again" button
+  grew past the sheet's left edge in Russian and French (two Polish and German shots were stale frames of a covered
+  window; the DOM had the sheet open). `.dgh-repair-actions` now wraps and `.dgh-repair-go` shrinks to the sheet; in
+  the second pass the armed text wraps to two lines inside the panel with Cancel beneath it, in all four languages.
+  That pass also showed the open sheet growing the foot of the page and pushing the "rest of your top ten" table up
+  until its last rows were hidden, in every language.
+- **The sheet as a layer** (`hof-C4`, 17:10 to 17:45): the sheet now opens in `.dgh-repair-host`, a fixed
+  `100vw × 100vh` layer that dims the screen, so the page behind it keeps every row. Two earlier forms were watched
+  and dropped in one game kept open at the main menu (`UI.reloadUI` between tries, boxes read with
+  `getBoundingClientRect` a frame after each change): `top/right/bottom/left: 0` and then `width/height: 100%` on an
+  absolute layer inside `.dgh-app` both left the layer 89 px tall, the sheet's own height, because the engine resolves
+  a percentage against the flex-sized page as auto. With viewport units the layer measured 2880 × 1800 and the sheet
+  sat centered (English captures `en_US-2-sheet.png`, `en_US-3-armed.png`; Russian and Polish `*-3-armed.png` and
+  `*-4-after.png`, where the long armed text wraps to two lines inside the sheet with Cancel beneath, and the repaired
+  page behind it keeps all ten table rows). A click on the dimmed page closes the sheet (`scrimClosed: true` in the
+  DOM check) and the button reopens it. The captures of a covered window lag the DOM by one step now and then (a
+  "sheet" shot showing the note, the "after" shot showing the armed sheet); the DOM readings in the run logs are the
+  record of each step, the pictures show the layout.
+
+`hof-D` (2026-11-01, run `21-49`, English, the same store with a row the keeper can name in front: `!chronicle` =
+`{"v":1,"updated":1700000000000,"games":{}}`): Tower Settings Keeper logged "moved row "!chronicle" (42 bytes) out of
+the way" and "folded !chronicle into the root", then came up with root `modSettings`, rows 1. `getItem("modSettings")`
+then reached the real row, so the ordinary migration ran: the file held 42 games, the slice was gone from
+`modSettings`, the keeper's `__ls` served the chronicle row back, settings saved (`ok`), and the Hall of Fame showed the
+keep line with no note and no Repair button. The disk read of `hof-C` wasn't needed and didn't run.
+
 Not seen: Windows and the Steam Deck; a player with no local save; the store loading before the save list answers
-(tests only); the repair button under the settings line on a blocked store. All are on `WATCH_LIST.md`.
+(tests only). All are on `WATCH_LIST.md`.
 
 ## Hall of Fame keep rule and Spoil Guard for companion mods (2.10.0)
 

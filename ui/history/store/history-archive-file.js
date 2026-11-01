@@ -17,6 +17,9 @@ import { ARCHIVE_SCHEMA, isSlice } from "/demographics/ui/history/store/history-
 export const FILE_NAME = "demographics-halloffame.sqlite";
 export const ALIAS = "demographics_hof";
 export const QUERY_TIMEOUT_MS = 5000;
+/** The game's own localStorage file, in the same user folder; read only, by key. */
+export const SETTINGS_FILE_NAME = "LocalStorage.sqlite";
+export const SETTINGS_ALIAS = "demographics_ls";
 
 const DB = "config";
 const RESULTS_EVENT = "FileListQueryResults";
@@ -33,6 +36,9 @@ const WRITE_SQL =
   "Backup = CASE WHEN HallOfFame.Payload = excluded.Payload THEN HallOfFame.Backup ELSE HallOfFame.Payload END, " +
   "Payload = excluded.Payload, Schema = excluded.Schema, Updated = excluded.Updated";
 const READ_SQL = `SELECT Payload, Backup FROM ${TABLE} WHERE Id = 1`;
+
+/** The user folder the archive file was opened in, for the settings file read. */
+let openedFolder = /** @type {string|null} */ (null);
 
 /**
  * One statement on the config database.
@@ -137,13 +143,14 @@ export function findUserFolder(done, timeoutMs = QUERY_TIMEOUT_MS) {
 }
 
 /**
- * The file the alias is attached to on this page's connection.
+ * The file an alias is attached to on this page's connection.
+ * @param {string} [alias]
  * @returns {string|null} The file, or null when the alias isn't attached.
  */
-function attachedFile() {
+function attachedFile(alias = ALIAS) {
   const rows = query("PRAGMA database_list");
   for (const row of safe(() => Array.from(rows), [])) {
-    if (row && row.name === ALIAS) return String(row.file || "");
+    if (row && row.name === alias) return String(row.file || "");
   }
   return null;
 }
@@ -168,7 +175,42 @@ export function openFile(folder) {
     return false;
   }
   query(CREATE_SQL);
-  return Array.isArray(query(`SELECT count(*) AS n FROM ${TABLE}`));
+  const ok = Array.isArray(query(`SELECT count(*) AS n FROM ${TABLE}`));
+  if (ok) openedFolder = folder;
+  return ok;
+}
+
+/**
+ * A read-only SQLite URI for a file. Read-only mode never creates the file when it isn't there,
+ * where a plain ATTACH would leave an empty one behind.
+ * @param {string} folder The user folder, with its trailing separator.
+ * @param {string} name
+ * @returns {string}
+ */
+export function readOnlyUri(folder, name) {
+  const path = (folder + name).replace(/\\/g, "/").replace(/%/g, "%25").replace(/\?/g, "%3F").replace(/#/g, "%23");
+  return "file:" + (/^[A-Za-z]:/.test(path) ? "///" : "") + path + "?mode=ro";
+}
+
+/**
+ * The values stored on disk under a localStorage key, read from the game's own file by key. On
+ * 1.5.0 `getItem` returns whichever key sorts first (docs/civ7-storage-bug.md); the file still holds
+ * the right row, as the game last wrote it.
+ * @param {string} key
+ * @returns {string[]} The values (empty when the file can't be read).
+ */
+export function readStoredItem(key) {
+  if (!canQueryDatabase() || !openedFolder) return [];
+  if (attachedFile(SETTINGS_ALIAS) === null) {
+    query(`ATTACH DATABASE ?1 AS ${SETTINGS_ALIAS}`, readOnlyUri(openedFolder, SETTINGS_FILE_NAME));
+  }
+  const file = attachedFile(SETTINGS_ALIAS);
+  if (file === null) return [];
+  const rows = file.endsWith(SETTINGS_FILE_NAME) ? query(`SELECT value FROM ${SETTINGS_ALIAS}."Values" WHERE key = ?1`, key) : null;
+  query(`DETACH DATABASE ${SETTINGS_ALIAS}`);
+  return safe(() => Array.from(rows || []), [])
+    .map((row) => row && row.value)
+    .filter((value) => typeof value === "string" && value.length > 0);
 }
 
 /**
@@ -206,7 +248,8 @@ export function readFile() {
  */
 export function writeFile(slice) {
   const text = JSON.stringify(slice);
-  query(WRITE_SQL, ARCHIVE_SCHEMA, text, Date.now());
+  // Seconds: the engine binds integers as 32-bit, and milliseconds overflow.
+  query(WRITE_SQL, ARCHIVE_SCHEMA, text, Math.floor(Date.now() / 1000));
   const back = query(`SELECT Payload FROM ${TABLE} WHERE Id = 1`);
   return Array.isArray(back) && back.length === 1 && back[0].Payload === text;
 }

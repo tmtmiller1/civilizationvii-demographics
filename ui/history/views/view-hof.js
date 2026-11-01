@@ -256,14 +256,32 @@ function repairPanel(ctx) {
 /**
  * @param {HTMLElement} trigger
  * @param {HTMLElement} panel
+ * @param {HTMLElement} [host] A sheet host shown and hidden with the panel.
  */
-function wireToggle(trigger, panel) {
+function wireToggle(trigger, panel, host) {
   trigger.classList.add("dgh-options-toggle");
-  onActivate(trigger, () => {
-    const open = panel.classList.contains("is-hidden");
-    if (open) { panel.classList.remove("is-hidden"); trigger.classList.add("is-open"); }
-    else { panel.classList.add("is-hidden"); trigger.classList.remove("is-open"); }
-  });
+  const show = (/** @type {boolean} */ open) => {
+    for (const node of host ? [panel, host] : [panel]) {
+      if (open) node.classList.remove("is-hidden");
+      else node.classList.add("is-hidden");
+    }
+    if (open) trigger.classList.add("is-open");
+    else trigger.classList.remove("is-open");
+  };
+  onActivate(trigger, () => show(panel.classList.contains("is-hidden")));
+  // A click on the dimmed page around the sheet closes it, as Cancel does.
+  if (host) host.addEventListener("click", (ev) => { if (ev.target === host) show(false); });
+}
+
+/**
+ * The repair sheet in its host: a dimmed layer over the page, so opening the sheet never pushes
+ * the page's own content out of view. Both start hidden.
+ * @param {HofCtx} ctx
+ * @returns {{panel: HTMLElement, host: HTMLElement}}
+ */
+function repairSheet(ctx) {
+  const panel = repairPanel(ctx);
+  return { panel, host: el("div", { cls: "dgh-options dgh-repair-host is-hidden" }, [panel]) };
 }
 
 /**
@@ -295,27 +313,27 @@ function blockedNote(status, done, ctx) {
   // "foreign": the game handed back another mod's saved data instead of the shared settings (a game
   // storage bug: reads return the first key in sort order), so nothing is read or written.
   // "unavailable" means this context has no storage at all, which no repair can change.
-  const panel = status === "unavailable" ? null : repairPanel(ctx);
+  const sheet = status === "unavailable" ? null : repairSheet(ctx);
   let trigger;
   if (status === "foreign") trigger = blockedBanner();
   else trigger = el("div", { cls: "dgh-note dgh-note--warn", text: t("LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE") });
   const kids = [trigger];
   if (done) kids.push(done);
-  if (panel) {
-    if (status === "foreign") wireToggle(trigger, panel);
-    else kids.push(repairButton(panel));
-    kids.push(el("div", { cls: "dgh-options" }, [panel]));
+  if (sheet) {
+    if (status === "foreign") wireToggle(trigger, sheet.panel, sheet.host);
+    else kids.push(repairButton(sheet));
+    kids.push(sheet.host);
   }
   return el("div", { cls: "dgh-storage" }, kids);
 }
 
 /**
- * @param {HTMLElement} panel The repair sheet the button opens.
+ * @param {{panel: HTMLElement, host: HTMLElement}} sheet The repair sheet the button opens.
  * @returns {HTMLElement}
  */
-function repairButton(panel) {
+function repairButton(sheet) {
   const button = textButton("LOC_DEMOGRAPHICS_HIST_STORAGE_FIX", () => {}, "dgh-repair-toggle");
-  wireToggle(button, panel);
+  wireToggle(button, sheet.panel, sheet.host);
   return button;
 }
 
@@ -328,8 +346,8 @@ function repairButton(panel) {
  */
 function settingsRepair(ctx) {
   if (settingsPersistence() === "unavailable") return [];
-  const panel = repairPanel(ctx);
-  return [repairButton(panel), el("div", { cls: "dgh-options" }, [panel])];
+  const sheet = repairSheet(ctx);
+  return [repairButton(sheet), sheet.host];
 }
 
 /**

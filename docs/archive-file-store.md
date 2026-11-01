@@ -87,6 +87,17 @@ slice. Because every load merges, a player who goes back to 2.10.0, plays, and r
 Migration is the one write at load time. It happens once per install, plus once each time an older copy wrote the
 slice again.
 
+### A blocked store
+
+When another mod's key sorts ahead of `modSettings`, step 1 never reaches the slice: `getItem` hands back that key's
+value ([civ7-storage-bug.md](civ7-storage-bug.md)). The row is still on disk, though, as the game last wrote it. So
+when `readRoot` isn't `ok`, the store attaches the game's own `LocalStorage.sqlite` from the same user folder,
+read-only (`file:...?mode=ro`, so a missing file is never created), reads `"Values"` where `key = 'modSettings'`,
+detaches, and merges the slice it finds. Steps 3 and 4 run as above, except that `modSettings` isn't written: a
+blocked store is never written back. Each page load reads the row again while the store stays blocked; deleted games
+stay deleted (`hidden`), and the progress rule keeps the newer copy of each game. Without this, a player who pressed
+Repair on a blocked store lost every game that had never reached the file.
+
 ## When the file can't be used
 
 The session uses `modSettings` exactly as 2.10.0 does when any of these happens: the save list gives no path, or

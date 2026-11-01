@@ -833,6 +833,23 @@
 }
 .dgh-storage-banner--button:hover .dgh-storage-banner-cta { color: var(--dgh-text-title); }
 .dgh-storage .dgh-options { align-items: center; }
+/* The open sheet floats over the dimmed screen instead of growing the foot of the page, which
+   pushed the tables up and cut their last rows. */
+.dgh-repair-host {
+    /* Viewport units on purpose: a percentage height against the flex-sized page resolved to the
+       sheet's own height in the engine, leaving a strip at the top that clipped the sheet. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5;
+    margin: 0;
+    justify-content: center;
+    background-color: rgba(4, 6, 10, 0.72);
+}
+.dgh-repair-host.is-hidden { display: none; }
+.dgh-repair-host .dgh-repair { margin-top: 0; max-height: 92vh; overflow-y: auto; }
 .dgh-repair-toggle {
     opacity: 1;
     font-size: var(--dg-fs-95);
@@ -888,9 +905,14 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     margin-top: calc(0.9 * var(--dg-u));
 }
+/* The armed text is long in Russian and Polish: the button shrinks to the sheet and wraps inside it. */
 .dgh-repair-go {
+    flex: 0 1 auto;
+    min-width: 0;
+    text-align: center;
     font-size: var(--dg-fs-105);
     padding-top: calc(0.6 * var(--dg-u));
     padding-right: calc(1.6 * var(--dg-u));

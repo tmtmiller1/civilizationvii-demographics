@@ -58,6 +58,7 @@
                     <Item locale="pt_BR">text/pt_br/ModText.xml</Item>
                     <Item locale="ru_RU">text/ru_ru/ModText.xml</Item>
                     <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>
+                    <Item locale="zh_Hant_HK">text/zh_hk/ModText.xml</Item>
                 </UpdateText>
                 <UIScripts>
                     <!-- Tower Settings Keeper (same file as the standalone mod): one readable row for every mod's
@@ -384,6 +385,7 @@
                     <Item locale="pt_BR">text/pt_br/ModText.xml</Item>
                     <Item locale="ru_RU">text/ru_ru/ModText.xml</Item>
                     <Item locale="zh_Hans_CN">text/zh_cn/ModText.xml</Item>
+                    <Item locale="zh_Hant_HK">text/zh_hk/ModText.xml</Item>
                 </UpdateText>
             </Actions>
         </ActionGroup>

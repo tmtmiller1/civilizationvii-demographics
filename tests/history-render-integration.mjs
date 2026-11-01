@@ -645,9 +645,12 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
   const toggle = findAll(h, "dgh-options-toggle")[0];
   assert.ok(toggle, "the blocked note offers storage options");
   const panel = findAll(h, "dgh-options-panel")[0];
+  const host = findAll(h, "dgh-repair-host")[0];
   assert.ok(String(panel.className).includes("is-hidden"), "the repair starts folded away");
+  assert.ok(host && String(host.className).includes("is-hidden"), "and so does the layer it floats on");
   toggle.dispatch("click");
   assert.ok(!String(panel.className).includes("is-hidden"), "the toggle opens it");
+  assert.ok(!String(host.className).includes("is-hidden"), "layer and sheet show together");
 
   // The panel spells out what the repair does, deletes and leaves alone before any button.
   const panelText = texts(panel);

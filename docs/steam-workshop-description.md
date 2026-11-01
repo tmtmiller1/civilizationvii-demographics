@@ -44,7 +44,7 @@ It follows robk's InfoAddict (Civ V) and Gedemon's CivGraphs (Civ VI), and build
 [*]With [b]Partisans[/b] installed, each rising shows on the War Timeline as a thin hatched bar in the color of the civilization the people rose against, named for its settlement, with a tooltip that says why it began and how it ended. The Chronicle tells when each rising starts and ends, under its own Risings filter. Risings follow the same spoiler rules as wars, and past risings stay on the timeline if you remove Partisans.
 [/list]
 [h2]Languages[/h2]
-English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian and Simplified Chinese, each with its own number formatting.
+English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian, Simplified Chinese and Traditional Chinese, each with its own number formatting.
 [h2]Notes[/h2]
 [list]
 [*]Recorded history is kept in each save; the Hall of Fame is kept on your computer.

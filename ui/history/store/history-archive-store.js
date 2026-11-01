@@ -22,7 +22,7 @@ import {
   sliceTexts,
   upsert
 } from "/demographics/ui/history/store/history-archive.js";
-import { findUserFolder, openFile, readFile, writeFile } from "/demographics/ui/history/store/history-archive-file.js";
+import { findUserFolder, openFile, readFile, readStoredItem, writeFile } from "/demographics/ui/history/store/history-archive-file.js";
 import { repairStore, storeRows } from "/demographics/ui/core/demographics-storage-repair.js";
 import DemographicsSettings from "/demographics/ui/core/demographics-settings.js";
 
@@ -162,6 +162,19 @@ function readLegacySlice() {
 }
 
 /**
+ * The slice in modSettings as the game last wrote it to disk, for a session where `getItem` can't
+ * reach it (another mod's key sorts first). It stays in modSettings: a blocked store isn't written.
+ * @returns {ArchiveSlice|null}
+ */
+function readStoredSlice() {
+  for (const raw of readStoredItem(ROOT_KEY)) {
+    const slice = safe(() => JSON.parse(raw)?.[SLICE_ID], null);
+    if (isSlice(slice)) return slice;
+  }
+  return null;
+}
+
+/**
  * Read the file, and any slice still in modSettings, into memory. A slice found in modSettings is
  * moved to the file; `late` (the file arrived after the store loaded from modSettings) always
  * writes, so what this session saved there reaches the file too.
@@ -173,12 +186,24 @@ function loadFromFile(late) {
   const file = readFile();
   if (!file.ok) return useSettings("the archive file holds nothing this version can read");
   if (file.slice) mergeSlices(state.slice, file.slice);
-  const legacy = readLegacySlice();
-  if (legacy) mergeSlices(state.slice, legacy);
-  if (!late) state.status = file.found || legacy ? "ok" : "empty";
+  const old = mergeOldCopy();
+  if (!late) state.status = file.found || old.found ? "ok" : "empty";
   pruneUnfinished(state.slice);
-  if (legacy || late) moveToFile(!!legacy);
+  if (old.found || late) moveToFile(old.inSettings);
   return true;
+}
+
+/**
+ * Merge the slice modSettings still holds: read through `getItem`, or, when another key blocks
+ * that, from the row on disk.
+ * @returns {{found: boolean, inSettings: boolean}} Whether a slice was merged, and whether it came
+ *   through `getItem` (only then can it be taken out of modSettings).
+ */
+function mergeOldCopy() {
+  const legacy = readLegacySlice();
+  const old = legacy || readStoredSlice();
+  if (old) mergeSlices(state.slice, old);
+  return { found: !!old, inSettings: !!legacy };
 }
 
 /**

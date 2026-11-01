@@ -7,12 +7,22 @@ section below by `scripts/steam-changelog.mjs`.
 
 ## [Unreleased]
 
+### Added
+- Traditional Chinese (the game's zh_Hant_HK) joins the ten other translations, with the game's own terms for
+  settlements, yields, ages and Triumphs.
+
 ### Changed
 - The Hall of Fame's list of past games now lives in a file of its own, `demographics-halloffame.sqlite`, in the
   game's user folder next to your saves, instead of the storage entry mods share for their settings. Other mods'
   options load faster, since they no longer read through your Hall of Fame on the way, and a mod that clears that
   storage can't wipe your list any more. Your list moves over by itself the first time you load. If the file can't
   be used, the Hall of Fame stays where it was, as before.
+- That move also works when the game's storage bug has another mod's entry in the way. Your past games are read
+  straight from the game's storage file, so they reach the Hall of Fame instead of looking lost, and pressing Repair
+  afterwards doesn't take them with it.
+- The repair sheet now opens over the dimmed page instead of growing the foot of the page, which pushed the
+  Hall of Fame's tables up and hid their last rows. Clicking the page around it closes it, like Cancel. Its armed
+  "Click again" button wraps inside the sheet instead of running past its edge in the longer languages.
 - If you go back to 2.10.0, its Hall of Fame shows no games. They're still in the file, and when you update again
   they come back, together with any games 2.10.0 saved in the meantime.
 - When your Demographics settings can't be saved, the Repair mod storage button now sits under that note on the Hall

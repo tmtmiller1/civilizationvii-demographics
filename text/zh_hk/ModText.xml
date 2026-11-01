@@ -1,0 +1,3046 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database>
+    <LocalizedText>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_NAME" Language="zh_Hant_HK">
+            <Text>人口統計</Text>
+        </Replace>
+        <Replace Tag="LOC_MOD_DEMOGRAPHICS_DESCRIPTION" Language="zh_Hant_HK">
+            <Text>每回合圖表、文明排名、全球關係、戰爭歷史，以及每個已遇文明的凱旋挑戰進度。包含一項針對《文明帝國VII》錯誤的可選儲存修復；它會刪除另一個模組儲存的資料，只在你按下時執行，並會先說明會刪除什麼。</Text>
+        </Replace>
+        <Replace Tag="LOC_OPTIONS_GROUP_DEMOGRAPHICS" Language="zh_Hant_HK">
+            <Text>人口統計</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPEN" Language="zh_Hant_HK">
+            <Text>人口統計</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TITLE" Language="zh_Hant_HK">
+            <Text>人口統計</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SUBTITLE" Language="zh_Hant_HK">
+            <Text>分數隨時間變化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FOOTNOTE" Language="zh_Hant_HK">
+            <Text>逐回合記錄的世界歷史。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLOSE" Language="zh_Hant_HK">
+            <Text>關閉</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BODY" Language="zh_Hant_HK">
+            <Text>追蹤每個文明在整場遊戲中的變化。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE" Language="zh_Hant_HK">
+            <Text>分數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD" Language="zh_Hant_HK">
+            <Text>國庫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT" Language="zh_Hant_HK">
+            <Text>金幣 (GPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TOOLTIP" Language="zh_Hant_HK">
+            <Text>每回合淨金幣收入。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落隨時間變化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS" Language="zh_Hant_HK">
+            <Text>科技數量</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS" Language="zh_Hant_HK">
+            <Text>市政數量</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TOOLTIP" Language="zh_Hant_HK">
+            <Text>綜合實力分數，與勝利介面一致。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TOOLTIP" Language="zh_Hant_HK">
+            <Text>目前國庫餘額。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>擁有的城市和城鎮總數。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>當前時代科技樹中已完全研究的科技節點數量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>當前時代市政樹中已完全解鎖的市政節點數量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP" Language="zh_Hant_HK">
+            <Text>GDP</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TOOLTIP" Language="zh_Hant_HK">
+            <Text>根據每回合收益和已經過的回合數估算的經濟產出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION" Language="zh_Hant_HK">
+            <Text>生產力 (PPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TOOLTIP" Language="zh_Hant_HK">
+            <Text>每回合產生的生產力。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD" Language="zh_Hant_HK">
+            <Text>科技值 (SPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCIENCE_YIELD_TOOLTIP" Language="zh_Hant_HK">
+            <Text>每回合科技值，推動科技研究。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD" Language="zh_Hant_HK">
+            <Text>文化值 (CPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CULTURE_YIELD_TOOLTIP" Language="zh_Hant_HK">
+            <Text>每回合文化值，推動市政進度。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS" Language="zh_Hant_HK">
+            <Text>食物 (FPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>所有聚落每回合的淨食物產量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL" Language="zh_Hant_HK">
+            <Text>外交支持度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TOOLTIP" Language="zh_Hant_HK">
+            <Text>你與所有已遇文明以及你擔任宗主的城邦之間當前外交關係的概況。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION" Language="zh_Hant_HK">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TOOLTIP" Language="zh_Hant_HK">
+            <Text>按比例換算的現實世界人口，由公民總數以指數方式推算得出。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE" Language="zh_Hant_HK">
+            <Text>影響力 (IPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT" Language="zh_Hant_HK">
+            <Text>幸福感 (HPT)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TOOLTIP" Language="zh_Hant_HK">
+            <Text>每回合淨幸福感。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TOOLTIP" Language="zh_Hant_HK">
+            <Text>每回合產生的淨外交影響力。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS" Language="zh_Hant_HK">
+            <Text>進行中的協議</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>涉及該領袖的進行中外交行動、外交手段、制裁和諜報活動。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE" Language="zh_Hant_HK">
+            <Text>貿易路線</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TOOLTIP" Language="zh_Hant_HK">
+            <Text>從該玩家城市出發的活躍貿易路線數量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND" Language="zh_Hant_HK">
+            <Text>陸地面積</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TOOLTIP" Language="zh_Hant_HK">
+            <Text>擁有的領土總面積（平方公里），由所控制的六角格換算而來。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_HISTORY" Language="zh_Hant_HK">
+            <Text>歷史資料</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_WORLDRANKINGS_ALLCIVS" Language="zh_Hant_HK">
+            <Text>按收益排名的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_RELATIONS" Language="zh_Hant_HK">
+            <Text>全球關係</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_OPTIONS" Language="zh_Hant_HK">
+            <Text>選項</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY" Language="zh_Hant_HK">
+            <Text>經濟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POWER" Language="zh_Hant_HK"><Text>軟實力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_KNOWLEDGE" Language="zh_Hant_HK">
+            <Text>知識與影響力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGE" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RESOURCES" Language="zh_Hant_HK">
+            <Text>資源</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONFLICTS" Language="zh_Hant_HK">
+            <Text>衝突</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GANTT" Language="zh_Hant_HK">
+            <Text>戰爭時間軸</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LEGACY_RADAR" Language="zh_Hant_HK">
+            <Text>凱旋挑戰雷達圖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_RACE" Language="zh_Hant_HK">
+            <Text>競速</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_COMPLETION" Language="zh_Hant_HK">
+            <Text>完成度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRIUMPHS_STACK" Language="zh_Hant_HK">
+            <Text>凱旋挑戰隨時間變化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT" Language="zh_Hant_HK">
+            <Text>上限利用率</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TOOLTIP" Language="zh_Hant_HK">
+            <Text>該玩家已使用的聚落限制百分比。100% 表示已達上限。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS" Language="zh_Hant_HK">
+            <Text>時代進度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_AGE_PROGRESS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>當前時代距離結束的接近程度。對所有文明相同。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE" Language="zh_Hant_HK">
+            <Text>危機階段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGE_TOOLTIP" Language="zh_Hant_HK">
+            <Text>當前危機階段（0 = 無，3 = 危機頂峰）。全遊戲共用的數值。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_STACK" Language="zh_Hant_HK">
+            <Text>資源（按類型堆疊）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL" Language="zh_Hant_HK">
+            <Text>資源總數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS" Language="zh_Hant_HK">
+            <Text>加成</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE" Language="zh_Hant_HK">
+            <Text>帝國</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY" Language="zh_Hant_HK">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY" Language="zh_Hant_HK">
+            <Text>工廠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE" Language="zh_Hant_HK">
+            <Text>寶藏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER" Language="zh_Hant_HK">
+            <Text>軍事實力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TOOLTIP" Language="zh_Hant_HK">
+            <Text>該玩家所有軍事單位（陸軍、海軍和空軍編隊）的戰鬥力總和。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>該玩家在所有時代建造的奇觀總數。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NYI" Language="zh_Hant_HK">
+            <Text>（尚未實作）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VS_WORLD" Language="zh_Hant_HK">
+            <Text>對比世界</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_METRIC" Language="zh_Hant_HK">
+            <Text>指標</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VALUE" Language="zh_Hant_HK">
+            <Text>數值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK" Language="zh_Hant_HK">
+            <Text>排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_TOTALS_TITLE" Language="zh_Hant_HK">
+            <Text>總計與統計</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_VIEW_VALUE" Language="zh_Hant_HK">
+            <Text>數值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET" Language="zh_Hant_HK">
+            <Text>在圖例中顯示未遇文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH" Language="zh_Hant_HK">
+            <Text>平滑圖表線條</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED" Language="zh_Hant_HK">
+            <Text>顯示已淘汰文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CLEAR" Language="zh_Hant_HK">
+            <Text>清除歷史記錄</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REFRESH" Language="zh_Hant_HK">
+            <Text>立即重新整理取樣</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV" Language="zh_Hant_HK">
+            <Text>未遇文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CIV_TOOLTIP" Language="zh_Hant_HK">
+            <Text>你尚未遇見該文明。在選項中啟用「顯示未遇文明和城邦的名稱」以顯示真實名稱。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS" Language="zh_Hant_HK">
+            <Text>未遇城邦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNMET_CS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>你尚未遇見該城邦。在選項中啟用「顯示未遇文明和城邦的名稱」以顯示真實名稱。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES" Language="zh_Hant_HK">
+            <Text>顯示未遇文明和城邦的名稱</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_TOOLTIP" Language="zh_Hant_HK">
+            <Text>關閉時，未遇的文明和城邦在圖表、排名和全球關係中以通用的佔位名稱顯示。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PLAYER_FALLBACK" Language="zh_Hant_HK">
+            <Text>玩家 {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPHS_PROGRESS_HEADER" Language="zh_Hant_HK">
+            <Text>文明進度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIV_PROGRESS" Language="zh_Hant_HK">
+            <Text>尚無文明取得進度。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_MILITARISTIC" Language="zh_Hant_HK">
+            <Text>軍事</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_ECONOMIC" Language="zh_Hant_HK">
+            <Text>經濟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_DIPLOMATIC" Language="zh_Hant_HK">
+            <Text>外交</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_CULTURAL" Language="zh_Hant_HK">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_SCIENTIFIC" Language="zh_Hant_HK">
+            <Text>科學</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_EXPANSIONIST" Language="zh_Hant_HK">
+            <Text>擴張</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ATTR_OTHER" Language="zh_Hant_HK">
+            <Text>其他</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_SAMPLES" Language="zh_Hant_HK">
+            <Text>尚無取樣，進行一回合後重新開啟。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_UNMET_CIV" Language="zh_Hant_HK">
+            <Text>未遇文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_FALLBACK_NAME" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_BUILT_BY" Language="zh_Hant_HK">
+            <Text>建造者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_TURN" Language="zh_Hant_HK">
+            <Text>第 {1_Turn} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WONDER_DESTROYED" Language="zh_Hant_HK">
+            <Text>已摧毀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_PRE" Language="zh_Hant_HK"><Text>危機前</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_POINTS" Language="zh_Hant_HK"><Text>點</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD" Language="zh_Hant_HK"><Text>金幣</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_GOLD_PER_TURN" Language="zh_Hant_HK"><Text>金幣/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CITIES" Language="zh_Hant_HK"><Text>城市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TECHS" Language="zh_Hant_HK"><Text>科技</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FOOD_PER_TURN" Language="zh_Hant_HK"><Text>食物/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PRODUCTION_PER_TURN" Language="zh_Hant_HK"><Text>生產力/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SCIENCE_PER_TURN" Language="zh_Hant_HK"><Text>科技值/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CULTURE_PER_TURN" Language="zh_Hant_HK"><Text>文化值/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_HAPPINESS_PER_TURN" Language="zh_Hant_HK"><Text>幸福感/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_INFLUENCE_PER_TURN" Language="zh_Hant_HK"><Text>影響力/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_REPUTATION" Language="zh_Hant_HK"><Text>聲望</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_PEOPLE" Language="zh_Hant_HK"><Text>人</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_DEALS" Language="zh_Hant_HK"><Text>協議</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_ROUTES" Language="zh_Hant_HK"><Text>路線</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STRENGTH" Language="zh_Hant_HK"><Text>戰鬥力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WONDERS" Language="zh_Hant_HK"><Text>奇觀</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_RESOURCES" Language="zh_Hant_HK"><Text>資源</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_STAGE" Language="zh_Hant_HK"><Text>階段</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WORKS" Language="zh_Hant_HK"><Text>巨作</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOWNS" Language="zh_Hant_HK"><Text>城鎮</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_CAP" Language="zh_Hant_HK"><Text>上限</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_SETTLEMENTS" Language="zh_Hant_HK"><Text>聚落</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_TOURISM" Language="zh_Hant_HK"><Text>觀光值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_KILLS" Language="zh_Hant_HK"><Text>擊殺</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_LOSSES" Language="zh_Hant_HK"><Text>損失</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_FAITH" Language="zh_Hant_HK"><Text>信仰值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_BATTLES" Language="zh_Hant_HK"><Text>戰鬥</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_UNIT_WARS" Language="zh_Hant_HK"><Text>戰爭</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPOILERS_HEADING" Language="zh_Hant_HK"><Text>劇透</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISPLAY_HEADING" Language="zh_Hant_HK"><Text>顯示</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_INFO" Language="zh_Hant_HK"><Text>隱藏尚未遇到的文明的名稱、圖表以及外交和關係資料，讓介面不會提前劇透任何文明。預設開啟。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE" Language="zh_Hant_HK"><Text>首次接觸時的歷史</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_TRACK_FROM_MEET" Language="zh_Hant_HK"><Text>從首次接觸開始記錄</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_CUMULATIVE" Language="zh_Hant_HK"><Text>所有階段的累計影響</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_OVERALL" Language="zh_Hant_HK"><Text>所有時代的危機總體影響</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_BEGINS" Language="zh_Hant_HK">
+            <Text>危機開始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_INTENSIFIES" Language="zh_Hant_HK">
+            <Text>危機加劇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_CULMINATES" Language="zh_Hant_HK">
+            <Text>危機達到頂點</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_STAGE_ENDS" Language="zh_Hant_HK">
+            <Text>危機結束</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_ANTIQUITY_BEGINS" Language="zh_Hant_HK">
+            <Text>古典時代開始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_EXPLORATION_BEGINS" Language="zh_Hant_HK">
+            <Text>探索時代開始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_MODERN_BEGINS" Language="zh_Hant_HK">
+            <Text>近代開始</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LINE_CAP_LIMIT" Language="zh_Hant_HK">
+            <Text>上限 100%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHARTJS_MISSING" Language="zh_Hant_HK">
+            <Text>圖表不可用，Chart.js 未載入。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_CHART_RENDER_FAILED" Language="zh_Hant_HK">
+            <Text>圖表渲染失敗，參見 UI.log。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_BONUS" Language="zh_Hant_HK">
+            <Text>加成</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_EMPIRE" Language="zh_Hant_HK">
+            <Text>帝國</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_CITY" Language="zh_Hant_HK">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_FACTORY" Language="zh_Hant_HK">
+            <Text>工廠</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RESOURCE_TREASURE" Language="zh_Hant_HK">
+            <Text>寶藏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TIME" Language="zh_Hant_HK">
+            <Text>時間（回合 / 年份）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_RESOURCE_SAMPLES" Language="zh_Hant_HK">
+            <Text>尚無資源取樣，一旦你分配了第一項資源，圖表便會填充資料。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RESOURCES_ASSIGNED" Language="zh_Hant_HK">
+            <Text>已分配資源（數量）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_FALLBACK_NAME" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_COMMEMORATIVE" Language="zh_Hant_HK">
+            <Text>紀念性 · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_PILL_INSTANT" Language="zh_Hant_HK">
+            <Text>即時 · {1_Label}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_REWARD_LABEL" Language="zh_Hant_HK">
+            <Text>獎勵： </Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_PROGRESS" Language="zh_Hant_HK">
+            <Text>尚無進度。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_LEGACIES_API" Language="zh_Hant_HK">
+            <Text>凱旋挑戰資料不可用。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS_SAMPLED" Language="zh_Hant_HK">
+            <Text>尚無文明被取樣。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS_IN_AGE" Language="zh_Hant_HK">
+            <Text>{1_Age}中沒有可用的凱旋挑戰。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>沒有可用的凱旋挑戰。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_COMPLETION_HEADER" Language="zh_Hant_HK">
+            <Text>當前時代：{1_Age}。儲存格顯示已觸發 / 可用總數；進度條為已填充百分比。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_UNKNOWN" Language="zh_Hant_HK">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT_ONE" Language="zh_Hant_HK">
+            <Text>{1_Count} 項可用凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TRIUMPH_SECTION_COUNT" Language="zh_Hant_HK">
+            <Text>{1_Count} 項可用凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_TRIUMPHS_COUNT" Language="zh_Hant_HK">
+            <Text>凱旋挑戰（數量）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR_ONE" Language="zh_Hant_HK">
+            <Text>{1_Years} 年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_YR" Language="zh_Hant_HK">
+            <Text>{1_Years} 年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_CONFLICTS" Language="zh_Hant_HK">
+            <Text>衝突（每場戰爭一條）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NO_MAJOR_CIVS" Language="zh_Hant_HK">
+            <Text>（無主要文明）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING" Language="zh_Hant_HK">
+            <Text>進行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_GAIN" Language="zh_Hant_HK">
+            <Text>增加</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_LOSS" Language="zh_Hant_HK">
+            <Text>損失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_KEY_NODATA" Language="zh_Hant_HK">
+            <Text>無資料</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_CONCLUDED" Language="zh_Hant_HK">
+            <Text>已結束</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_STATUS_ONGOING" Language="zh_Hant_HK">
+            <Text>進行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_UNKNOWN" Language="zh_Hant_HK">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ATTACKERS" Language="zh_Hant_HK">
+            <Text>進攻方：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DEFENDERS" Language="zh_Hant_HK">
+            <Text>防禦方：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DECLARED_BY" Language="zh_Hant_HK">
+            <Text>宣戰方：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION" Language="zh_Hant_HK">
+            <Text>持續時間：{1_Years} 年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_DURATION_TURNS" Language="zh_Hant_HK">
+            <Text>{1_Turns} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_STRENGTH" Language="zh_Hant_HK">
+            <Text>實力 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_POP" Language="zh_Hant_HK">
+            <Text>人口 {1_Value}（換算）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_PRODUCTION" Language="zh_Hant_HK">
+            <Text>生產力 {1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_HEADER" Language="zh_Hant_HK">
+            <Text>戰爭期間的損耗</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_OBSERVED" Language="zh_Hant_HK">
+            <Text>（觀測到的變化）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS" Language="zh_Hant_HK">
+            <Text>尚無戰爭。一旦任何文明宣戰，時間軸便會填充資料。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_WARS_MATCH" Language="zh_Hant_HK">
+            <Text>沒有符合當前篩選條件的戰爭。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_NO_SAMPLES" Language="zh_Hant_HK">
+            <Text>尚無取樣，請先進行一回合。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_TOO_LARGE" Language="zh_Hant_HK">
+            <Text>CSV 過大（{1_SizeMB} MB）。請在選項中降低歷史取樣上限後重試。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_COPIED" Language="zh_Hant_HK">
+            <Text>已複製 · {1_Rows} 行 × {2_Cols} 列{3_SizeTag} · 貼上至 Excel / Sheets / .csv 檔案</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_CLIPBOARD_UNAVAILABLE" Language="zh_Hant_HK">
+            <Text>無法匯出到剪貼簿。CSV 已寫入 UI.log。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_CURRENT_AGE" Language="zh_Hant_HK">
+            <Text>當前時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE1" Language="zh_Hant_HK">
+            <Text>第一時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE2" Language="zh_Hant_HK">
+            <Text>第二時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_AGE3" Language="zh_Hant_HK">
+            <Text>第三時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_ALL_TIME" Language="zh_Hant_HK">
+            <Text>全部時段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_TITLE" Language="zh_Hant_HK">
+            <Text>跨時代圖表不可用</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_PILL_TOOLTIP" Language="zh_Hant_HK">
+            <Text>{1_Label} 篩選</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TRIGGER" Language="zh_Hant_HK">
+            <Text>ⓘ GDP：比較經濟估算  ·  懸停檢視詳情</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_TITLE" Language="zh_Hant_HK">
+            <Text>國內生產總值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_GDP_BODY" Language="zh_Hant_HK">
+            <Text>&lt;p&gt;根據每回合收益和已經過的回合數估算的經濟產出分數。&lt;/p&gt;&lt;p&gt;這是用來比較各文明隨時間變化的顯示指標，不會影響遊戲狀態。&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TRIGGER" Language="zh_Hant_HK">
+            <Text>ⓘ 外交支持：對外關係綜覽  ·  懸停檢視詳情</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_TITLE" Language="zh_Hant_HK">
+            <Text>外交支持度，國際聲譽</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CAPTION_APPROVAL_BODY" Language="zh_Hant_HK">
+            <Text>&lt;p&gt;你與已遇文明以及你擔任宗主的城邦之間當前外交關係的概況。&lt;/p&gt;&lt;p&gt;數值越高，關係越好；數值越低，表示敵對或交戰。這只是顯示用的指標。&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_CURRENT" Language="zh_Hant_HK">
+            <Text>當前</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE1" Language="zh_Hant_HK">
+            <Text>第一時代結束時</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_AGE2" Language="zh_Hant_HK">
+            <Text>第二時代結束時</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_SNAPSHOT" Language="zh_Hant_HK">
+            <Text>快照：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_SNAPSHOT_NONE_TOOLTIP" Language="zh_Hant_HK">
+            <Text>尚無快照，該時代尚未結束。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH" Language="zh_Hant_HK">
+            <Text>重新整理</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_REFRESH_TOOLTIP" Language="zh_Hant_HK">
+            <Text>重新整理凱旋挑戰進度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_MAJORS" Language="zh_Hant_HK">
+            <Text>所有主要文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_CIV" Language="zh_Hant_HK">
+            <Text>文明：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ONGOING_ONLY" Language="zh_Hant_HK">
+            <Text>僅進行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_ALL_WARS" Language="zh_Hant_HK">
+            <Text>所有戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWING" Language="zh_Hant_HK">
+            <Text>正在檢視：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS" Language="zh_Hant_HK">
+            <Text>清除聚焦（{1_Count}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_CLEAR_FOCUS_TOOLTIP" Language="zh_Hant_HK">
+            <Text>以完全不透明度顯示所有文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_BOTH" Language="zh_Hant_HK">
+            <Text>時間：兩者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TURN" Language="zh_Hant_HK">
+            <Text>時間：回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_YEAR" Language="zh_Hant_HK">
+            <Text>時間：年份</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_TIME_TOOLTIP" Language="zh_Hant_HK">
+            <Text>在回合數、遊戲內年份或兩者之間切換 X 軸時間單位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON" Language="zh_Hant_HK">
+            <Text>奇觀：開</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF" Language="zh_Hant_HK">
+            <Text>奇觀：關</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_ON_TOOLTIP" Language="zh_Hant_HK">
+            <Text>隱藏圖表曲線上的奇觀建成標記</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_WONDERS_OFF_TOOLTIP" Language="zh_Hant_HK">
+            <Text>顯示圖表曲線上的奇觀建成標記（在各文明完成奇觀的回合處顯示圖示）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV" Language="zh_Hant_HK">
+            <Text>複製為 CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CSV_BODY" Language="zh_Hant_HK">
+            <Text>&lt;p style="margin:0;"&gt;將所有文明的全部取樣回合以 CSV 格式複製到剪貼簿。貼上到 Excel、Sheets 或其他電子表格工具中即可儲存或分析資料。&lt;/p&gt;</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_COPY_CSV_TOOLTIP" Language="zh_Hant_HK">
+            <Text>將所有取樣歷史以 CSV 形式複製到剪貼簿，貼上至 Excel、Google Sheets 或 .csv 檔案</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_MILITARISTIC" Language="zh_Hant_HK">
+            <Text>軍事</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_CULTURAL" Language="zh_Hant_HK">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_ECONOMIC" Language="zh_Hant_HK">
+            <Text>經濟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_SCIENTIFIC" Language="zh_Hant_HK">
+            <Text>科學</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_EXPANSIONIST" Language="zh_Hant_HK">
+            <Text>擴張</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSTYPE_DIPLOMATIC" Language="zh_Hant_HK">
+            <Text>外交</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_ON" Language="zh_Hant_HK">
+            <Text>全部開啟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_POLITICS" Language="zh_Hant_HK">
+            <Text>政治與關係</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_REPUTATION" Language="zh_Hant_HK">
+            <Text>聲望</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_GROUP_AGREEMENTS" Language="zh_Hant_HK">
+            <Text>協議</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALL_OFF" Language="zh_Hant_HK">
+            <Text>全部關閉</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_ALL" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_NONE" Language="zh_Hant_HK">
+            <Text>無</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_RESET" Language="zh_Hant_HK">
+            <Text>重設</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_HIDE_TOOLTIP" Language="zh_Hant_HK">
+            <Text>{1_Label}（點選隱藏）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FILTER_SHOW_TOOLTIP" Language="zh_Hant_HK">
+            <Text>{1_Label}（點選顯示）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NO_CIVS" Language="zh_Hant_HK">
+            <Text>沒有可顯示的文明。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_LEADER" Language="zh_Hant_HK">
+            <Text>未遇領袖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_FALLBACK" Language="zh_Hant_HK">
+            <Text>玩家 {1_Pid}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_FORMERLY" Language="zh_Hant_HK">
+            <Text>（原名 {1_Names}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RANK_OF" Language="zh_Hant_HK">
+            <Text>排名 {1_Rank}/{2_Total}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET" Language="zh_Hant_HK">
+            <Text>重設（{1_Count} 個已隱藏）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_RESET_TOOLTIP" Language="zh_Hant_HK">
+            <Text>顯示所有已隱藏的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_UNMET_SHORT" Language="zh_Hant_HK">
+            <Text>未遇</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_HIDDEN_CLICK" Language="zh_Hant_HK">
+            <Text>（已隱藏，點選顯示）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_SHOW" Language="zh_Hant_HK">
+            <Text>點選顯示</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_CLICK_HIDE" Language="zh_Hant_HK">
+            <Text>點選隱藏</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RADAR_TITLE" Language="zh_Hant_HK">
+            <Text>凱旋挑戰雷達圖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_TITLE" Language="zh_Hant_HK">
+            <Text>凱旋挑戰隨時間變化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_TRIUMPHS_SUBTITLE" Language="zh_Hant_HK">
+            <Text>（累計數量，按屬性堆疊）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RESOURCES_TITLE" Language="zh_Hant_HK">
+            <Text>資源分配隨時間變化（堆疊面積圖）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WARS_TITLE" Language="zh_Hant_HK">
+            <Text>衝突時間軸</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_NYI" Language="zh_Hant_HK">
+            <Text>尚未實作。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPTIONS_HEADING" Language="zh_Hant_HK">
+            <Text>選項</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_UNMET_NAMES_SPOILER" Language="zh_Hant_HK">
+            <Text>顯示我尚未遇見的文明的真實名稱（劇透）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND" Language="zh_Hant_HK">
+            <Text>色盲模式</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_FULL" Language="zh_Hant_HK">
+            <Text>顯示已消亡的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS" Language="zh_Hant_HK">
+            <Text>戰爭標記</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS" Language="zh_Hant_HK">
+            <Text>災難標記</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS" Language="zh_Hant_HK">
+            <Text>奇觀標記</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_AUTO" Language="zh_Hant_HK">
+            <Text>自動（遊戲速度預設值）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_1000" Language="zh_Hant_HK">
+            <Text>1,000 個取樣</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_2500" Language="zh_Hant_HK">
+            <Text>2,500 個取樣</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_5000" Language="zh_Hant_HK">
+            <Text>5,000 個取樣</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_10000" Language="zh_Hant_HK">
+            <Text>10,000 個取樣 (可能降低效能)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED" Language="zh_Hant_HK">
+            <Text>無限制 (存檔非常大，可能降低效能)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_LABEL" Language="zh_Hant_HK">
+            <Text>歷史取樣上限：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SPEED_UNKNOWN" Language="zh_Hant_HK">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_UNLIMITED_VALUE" Language="zh_Hant_HK">
+            <Text>無限制</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAP_HINT" Language="zh_Hant_HK">
+            <Text>目前有效上限：{1_Cap}  ·  偵測到的遊戲速度：{2_Speed}  ·  硬性上限：{3_Ceiling}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_1" Language="zh_Hant_HK">
+            <Text>每回合（預設）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_2" Language="zh_Hant_HK">
+            <Text>每 2 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_5" Language="zh_Hant_HK">
+            <Text>每 5 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_10" Language="zh_Hant_HK">
+            <Text>每 10 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_25" Language="zh_Hant_HK">
+            <Text>每 25 回合 (圖表較粗略)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_LABEL" Language="zh_Hant_HK">
+            <Text>取樣頻率（效能）：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_POLL_HINT" Language="zh_Hant_HK">
+            <Text>數值越高，拍攝快照的頻率越低，模組每回合的工作量就越少，在較慢的電腦和長時間遊戲中較為輕量。更改在下一回合生效；現有取樣會保留。如果同時安裝了 Emigration 模組，請先調低這裡的頻率來減輕兩個模組合計的負擔，再調高 Emigration 的回合間隔。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DISABLE_DECIMATION" Language="zh_Hant_HK">
+            <Text>停用降取樣，達到上限後仍保留每個已記錄的回合。最好搭配較高的上限或無限制使用。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_CLEAR_HISTORY" Language="zh_Hant_HK">
+            <Text>清除所有已記錄的人口統計取樣？</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CONFIRM_RESET_WARS" Language="zh_Hant_HK">
+            <Text>清除所有已記錄的戰爭？取樣歷史和其他資料將被保留。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS" Language="zh_Hant_HK">
+            <Text>重設戰爭歷史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SESSION_INFO" Language="zh_Hant_HK">
+            <Text>取樣：{1_Samples}    架構：v{2_Schema}    後端：{3_Backend}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_AT_WAR" Language="zh_Hant_HK">
+            <Text>交戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ALLIANCE" Language="zh_Hant_HK">
+            <Text>結盟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HELPFUL" Language="zh_Hant_HK">
+            <Text>有幫助</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FRIENDLY" Language="zh_Hant_HK">
+            <Text>友善</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNFRIENDLY" Language="zh_Hant_HK">
+            <Text>不友好</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_HOSTILE" Language="zh_Hant_HK">
+            <Text>敵對</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_OPEN_BORDERS" Language="zh_Hant_HK">
+            <Text>開放邊境</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_DENOUNCED" Language="zh_Hant_HK">
+            <Text>譴責</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_RESEARCH" Language="zh_Hant_HK">
+            <Text>研究協議</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_ENDEAVORS" Language="zh_Hant_HK">
+            <Text>其他外交手段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TRADE_ROUTES" Language="zh_Hant_HK">
+            <Text>貿易路線</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_SUZERAINTY" Language="zh_Hant_HK">
+            <Text>宗主國地位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_UNMET_CS" Language="zh_Hant_HK">
+            <Text>未遇城邦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LABEL_VIEWER" Language="zh_Hant_HK">
+            <Text>檢視者：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PLAYER_YOU" Language="zh_Hant_HK">
+            <Text>你</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_VIEWER_YOU" Language="zh_Hant_HK">
+            <Text>{1_Name}（你）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CIV" Language="zh_Hant_HK">
+            <Text>環上節點 = 已遇主要文明。兩個文明之間的多條線 = 多重關係。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_CAPTION_CS" Language="zh_Hant_HK">
+            <Text>檢視者文明 ↔ 城邦關係。多條線 = 多重關係。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_EMPTY_OBSERVER" Language="zh_Hant_HK">
+            <Text>本機玩家不可用（觀察者模式）。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_MAJORS" Language="zh_Hant_HK">
+            <Text>主要文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_TAB_CITY_STATES" Language="zh_Hant_HK">
+            <Text>城邦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_SHARE_INNOVATIONS" Language="zh_Hant_HK">
+            <Text>共享創新</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_PIONEERING" Language="zh_Hant_HK">
+            <Text>先鋒</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_DIPLOMACY_ACTION_GIVE_INFLUENCE_TOKEN" Language="zh_Hant_HK">
+            <Text>和獨立軍交好</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_WITHDREW" Language="zh_Hant_HK">
+            <Text>T-{1_Turn} 退出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_WORLD" Language="zh_Hant_HK">
+            <Text>第{1_Roman}次世界大戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_GREAT" Language="zh_Hant_HK">
+            <Text>{1_A}對{2_B}大戰（另有{3_Extra}個文明參戰）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_REGIONAL" Language="zh_Hant_HK">
+            <Text>{1_A}對{2_B}地區戰爭（另有{3_Extra}個文明參戰）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_CENTURIES" Language="zh_Hant_HK">
+            <Text>{1_Base}（數世紀戰爭）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_YEARS" Language="zh_Hant_HK">
+            <Text>{1_Base}（{2_Years}年戰爭）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_TRIPARTITE" Language="zh_Hant_HK">
+            <Text>{1_A}–{2_B}–{3_C}三方戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_BILATERAL" Language="zh_Hant_HK">
+            <Text>{1_Ordinal}{2_A}–{3_B}戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_HUNDRED" Language="zh_Hant_HK">
+            <Text>{1_Base}（百年戰爭）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_LONG" Language="zh_Hant_HK">
+            <Text>{1_Base}（長期戰爭）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_1" Language="zh_Hant_HK">
+            <Text>第一次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_2" Language="zh_Hant_HK">
+            <Text>第二次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_3" Language="zh_Hant_HK">
+            <Text>第三次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_4" Language="zh_Hant_HK">
+            <Text>第四次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_5" Language="zh_Hant_HK">
+            <Text>第五次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ORDINAL_N" Language="zh_Hant_HK">
+            <Text>第{1_Num}次</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BRONZE_AGE_COLLAPSE" Language="zh_Hant_HK">
+            <Text>青銅時代崩潰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MIGRATION" Language="zh_Hant_HK">
+            <Text>大遷徙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_MIGRATIONS" Language="zh_Hant_HK">
+            <Text>民族遷徙時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_SEA_PEOPLES" Language="zh_Hant_HK">
+            <Text>海上民族來襲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_INVASIONS" Language="zh_Hant_HK">
+            <Text>蠻族入侵</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BARBARIAN_WARS" Language="zh_Hant_HK">
+            <Text>蠻族戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_HORDE" Language="zh_Hant_HK">
+            <Text>大部族</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COMING_OF_THE_HORSE_LORDS" Language="zh_Hant_HK">
+            <Text>草原領主來襲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_MARCH_OF_STRANGERS" Language="zh_Hant_HK">
+            <Text>異族遷徙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_DEVASTATION" Language="zh_Hant_HK">
+            <Text>毀滅之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_TURMOIL" Language="zh_Hant_HK">
+            <Text>動盪之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_COLLAPSE" Language="zh_Hant_HK">
+            <Text>邊疆崩潰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FRONTIER_WARS" Language="zh_Hant_HK">
+            <Text>邊疆戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_INVASIONS" Language="zh_Hant_HK">
+            <Text>北方入侵</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_INVASIONS" Language="zh_Hant_HK">
+            <Text>東方入侵</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆風暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省風暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_STEPPE" Language="zh_Hant_HK">
+            <Text>來自草原的風暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_COAST" Language="zh_Hant_HK">
+            <Text>海岸風暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_STORM_FROM_THE_HEARTLAND" Language="zh_Hant_HK">
+            <Text>腹地風暴</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_STEPPE" Language="zh_Hant_HK">
+            <Text>草原之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_COAST" Language="zh_Hant_HK">
+            <Text>海岸之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACK_OF_THE_HEARTLAND" Language="zh_Hant_HK">
+            <Text>腹地之劫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BORDER_RAIDS" Language="zh_Hant_HK">
+            <Text>邊疆突襲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆的淪陷</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ANTONINE_PLAGUE" Language="zh_Hant_HK">
+            <Text>安東尼瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_GALEN" Language="zh_Hant_HK">
+            <Text>蓋倫瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PESTILENCE" Language="zh_Hant_HK">
+            <Text>大瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_MORTALITY" Language="zh_Hant_HK">
+            <Text>大死亡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FEVER" Language="zh_Hant_HK">
+            <Text>大熱病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_PERISHING" Language="zh_Hant_HK">
+            <Text>大消亡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_YEARS" Language="zh_Hant_HK">
+            <Text>瘟疫之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_DYING_TIME" Language="zh_Hant_HK">
+            <Text>死亡時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_PESTILENCE" Language="zh_Hant_HK">
+            <Text>瘟疫時期</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_MORTALITY" Language="zh_Hant_HK">
+            <Text>死亡之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ASHES" Language="zh_Hant_HK">
+            <Text>灰燼之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SWEATING_SICKNESS" Language="zh_Hant_HK">
+            <Text>汗熱病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WASTING_PLAGUE" Language="zh_Hant_HK">
+            <Text>消耗性瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUMMER_PLAGUE" Language="zh_Hant_HK">
+            <Text>夏季瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WINTER_SICKNESS" Language="zh_Hant_HK">
+            <Text>冬季瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SILENT_DEATH" Language="zh_Hant_HK">
+            <Text>無聲的死亡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_BLACK_DEATH" Language="zh_Hant_HK">
+            <Text>黑死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RED_DEATH" Language="zh_Hant_HK">
+            <Text>紅死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREY_DEATH" Language="zh_Hant_HK">
+            <Text>灰死病</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ASHEN_DEATH" Language="zh_Hant_HK">
+            <Text>灰燼瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_STEPPE" Language="zh_Hant_HK">
+            <Text>草原瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_COAST" Language="zh_Hant_HK">
+            <Text>海岸瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PLAGUE_OF_THE_HEARTLAND" Language="zh_Hant_HK">
+            <Text>腹地瘟疫</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SERVILE_WARS" Language="zh_Hant_HK">
+            <Text>奴隸戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CIVIL_WARS" Language="zh_Hant_HK">
+            <Text>內戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_REVOLT" Language="zh_Hant_HK">
+            <Text>反叛之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEARS_OF_ANARCHY" Language="zh_Hant_HK">
+            <Text>無政府之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TYRANTS" Language="zh_Hant_HK">
+            <Text>僭主時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_USURPERS" Language="zh_Hant_HK">
+            <Text>篡位者時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PRETENDERS" Language="zh_Hant_HK">
+            <Text>偽王時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_WARLORDS" Language="zh_Hant_HK">
+            <Text>軍閥時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_THIRD_CENTURY" Language="zh_Hant_HK">
+            <Text>三世紀危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_SUCCESSION" Language="zh_Hant_HK">
+            <Text>繼承危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_LEGITIMACY" Language="zh_Hant_HK">
+            <Text>正統性危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_AUTHORITY" Language="zh_Hant_HK">
+            <Text>權威危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COLLAPSE_OF_AUTHORITY" Language="zh_Hant_HK">
+            <Text>權威崩潰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_FRACTURING" Language="zh_Hant_HK">
+            <Text>大分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SUNDERING" Language="zh_Hant_HK">
+            <Text>裂解</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_UNREST" Language="zh_Hant_HK">
+            <Text>大動盪</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SOLDIER_S_REVOLT" Language="zh_Hant_HK">
+            <Text>士兵叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PRETENDERS_WAR" Language="zh_Hant_HK">
+            <Text>偽王之戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_SUCCESSION" Language="zh_Hant_HK">
+            <Text>繼承戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_REVOLTS" Language="zh_Hant_HK">
+            <Text>行省叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_STEPPE" Language="zh_Hant_HK">
+            <Text>草原叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_COAST" Language="zh_Hant_HK">
+            <Text>海岸叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLT_OF_THE_HEARTLAND" Language="zh_Hant_HK">
+            <Text>腹地叛亂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REVOLUTIONS" Language="zh_Hant_HK">
+            <Text>革命時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_REFORM" Language="zh_Hant_HK">
+            <Text>改革時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REVOLUTIONARY_YEARS" Language="zh_Hant_HK">
+            <Text>革命之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_REVOLUTIONS" Language="zh_Hant_HK">
+            <Text>民族革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SPRING_OF_NATIONS" Language="zh_Hant_HK">
+            <Text>民族之春</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_LIBERTY" Language="zh_Hant_HK">
+            <Text>自由之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_YEAR_OF_THE_REPUBLIC" Language="zh_Hant_HK">
+            <Text>共和之年</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GLORIOUS_REVOLUTION" Language="zh_Hant_HK">
+            <Text>光榮革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_AWAKENING" Language="zh_Hant_HK">
+            <Text>大覺醒</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_MOVEMENT" Language="zh_Hant_HK">
+            <Text>改革運動</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_RISING" Language="zh_Hant_HK">
+            <Text>人民起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PEOPLE_S_REVOLUTION" Language="zh_Hant_HK">
+            <Text>人民革命</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NATIONAL_RISING" Language="zh_Hant_HK">
+            <Text>民族起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REPUBLICAN_RISING" Language="zh_Hant_HK">
+            <Text>共和起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_CROWN" Language="zh_Hant_HK">
+            <Text>王權危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_THE_REPUBLIC" Language="zh_Hant_HK">
+            <Text>共和危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_FALL_OF_THE_CROWN" Language="zh_Hant_HK">
+            <Text>王權隕落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CONSTITUTIONAL_CRISIS" Language="zh_Hant_HK">
+            <Text>憲政危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_STEPPE" Language="zh_Hant_HK">
+            <Text>草原起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_COAST" Language="zh_Hant_HK">
+            <Text>海岸起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RISINGS_IN_THE_HEARTLAND" Language="zh_Hant_HK">
+            <Text>腹地起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_GREAT_SCHISM" Language="zh_Hant_HK">
+            <Text>東西教會大分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_SCHISM" Language="zh_Hant_HK">
+            <Text>聖教分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_SCHISM" Language="zh_Hant_HK">
+            <Text>神殿分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PROVINCIAL_SCHISM" Language="zh_Hant_HK">
+            <Text>行省教會分裂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION" Language="zh_Hant_HK">
+            <Text>宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_COUNTER_REFORMATION" Language="zh_Hant_HK">
+            <Text>反宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORMATION_OF_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WARS_OF_RELIGION" Language="zh_Hant_HK">
+            <Text>宗教戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_HERESIES" Language="zh_Hant_HK">
+            <Text>異端時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_PROPHETS" Language="zh_Hant_HK">
+            <Text>先知時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_RELIGIOUS_UPHEAVAL" Language="zh_Hant_HK">
+            <Text>宗教動盪</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_FAITH" Language="zh_Hant_HK">
+            <Text>信仰危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_ORTHODOXY" Language="zh_Hant_HK">
+            <Text>正統危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_SACRED_WARS" Language="zh_Hant_HK">
+            <Text>聖戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_FAITHFUL" Language="zh_Hant_HK">
+            <Text>信徒之戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_WAR_OF_THE_PROPHETS" Language="zh_Hant_HK">
+            <Text>先知之戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_ICONOCLAST_CRISIS" Language="zh_Hant_HK">
+            <Text>聖像破壞危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TEMPLE_CRISIS" Language="zh_Hant_HK">
+            <Text>神殿危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_PILGRIM_WARS" Language="zh_Hant_HK">
+            <Text>朝聖者戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_NORTHERN_REFORMATION" Language="zh_Hant_HK">
+            <Text>北方宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_EASTERN_REFORMATION" Language="zh_Hant_HK">
+            <Text>東方宗教改革</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_FRONTIER" Language="zh_Hant_HK">
+            <Text>邊疆異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_PROVINCES" Language="zh_Hant_HK">
+            <Text>行省異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_STEPPE" Language="zh_Hant_HK">
+            <Text>草原異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_COAST" Language="zh_Hant_HK">
+            <Text>海岸異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_HERESY_OF_THE_HEARTLAND" Language="zh_Hant_HK">
+            <Text>腹地異端</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_AGE_OF_UPHEAVAL" Language="zh_Hant_HK">
+            <Text>動盪時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_TIME_OF_TROUBLES" Language="zh_Hant_HK">
+            <Text>混亂時期</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS_OF_EMPIRE" Language="zh_Hant_HK">
+            <Text>帝國危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_REFORM_CRISIS" Language="zh_Hant_HK">
+            <Text>改革危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_THE_CRISIS" Language="zh_Hant_HK">
+            <Text>危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_ON" Language="zh_Hant_HK">
+            <Text>歷史上限 {1_Cap}，較早的樣本會被精簡以適應容量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_OFF" Language="zh_Hant_HK">
+            <Text>歷史上限 {1_Cap}，尚未精簡。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_DECIMATION_DISABLED" Language="zh_Hant_HK">
+            <Text>已停用精簡，保留每個樣本。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_HIDE_UNMET_STATS" Language="zh_Hant_HK">
+            <Text>劇透保護</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CRISES" Language="zh_Hant_HK">
+            <Text>危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_TITLE" Language="zh_Hant_HK">
+            <Text>危機影響</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_STAGES" Language="zh_Hant_HK">
+            <Text>危機影響</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CRISIS_GRAPHS" Language="zh_Hant_HK">
+            <Text>危機影響圖表</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CRISIS_GRAPHS_TITLE" Language="zh_Hant_HK">
+            <Text>危機影響圖表</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_LEGEND" Language="zh_Hant_HK">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_EMPTY" Language="zh_Hant_HK">
+            <Text>尚未記錄任何資料。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_EMPTY_NONE" Language="zh_Hant_HK">
+            <Text>本時代尚未爆發任何危機。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_GLOSSARY" Language="zh_Hant_HK">
+            <Text>指南</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WAR_GRAPHS" Language="zh_Hant_HK">
+            <Text>戰爭影響</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_PICK" Language="zh_Hant_HK">
+            <Text>戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_EMPTY_NONE" Language="zh_Hant_HK">
+            <Text>尚無戰爭。一旦任何文明宣戰，便可在此繪製圖表。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NODATA" Language="zh_Hant_HK">
+            <Text>這場戰爭沒有記錄到資料。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_STRENGTH" Language="zh_Hant_HK">
+            <Text>軍事實力（損失）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落 失/得</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_RAZED" Language="zh_Hant_HK">
+            <Text>被夷為平地的聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_LAND" Language="zh_Hant_HK">
+            <Text>陸地面積損失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_POP" Language="zh_Hant_HK">
+            <Text>人口損失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_X_TURN" Language="zh_Hant_HK">
+            <Text>回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_STRENGTH" Language="zh_Hant_HK">
+            <Text>實力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_UNITS" Language="zh_Hant_HK"><Text>單位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_SOLDIERS" Language="zh_Hant_HK"><Text>士兵</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_UNITS" Language="zh_Hant_HK"><Text>單位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CAS_SCALED" Language="zh_Hant_HK"><Text>縮放</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CITIES" Language="zh_Hant_HK">
+            <Text>聚落（淨）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_RAZED" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_LAND" Language="zh_Hant_HK">
+            <Text>km²</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_POP" Language="zh_Hant_HK">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_CROPS" Language="zh_Hant_HK">
+            <Text>食物 / 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_PROD" Language="zh_Hant_HK">
+            <Text>生產力 / 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_Y_WARPROD" Language="zh_Hant_HK">
+            <Text>生產力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_MILPOWER" Language="zh_Hant_HK">
+            <Text>軍事實力（隨時間變化）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_T_WARPROD" Language="zh_Hant_HK">
+            <Text>投入戰爭的生產力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_BELLIGERENTS" Language="zh_Hant_HK">
+            <Text>參戰文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CS" Language="zh_Hant_HK">
+            <Text>城邦盟友</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_FILTER_CUMULATIVE" Language="zh_Hant_HK">
+            <Text>累計盟方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE" Language="zh_Hant_HK">
+            <Text>{1_Civ} 一方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_CUM_SIDE_UNKNOWN" Language="zh_Hant_HK">
+            <Text>盟方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_VS" Language="zh_Hant_HK">
+            <Text>對</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_NOW" Language="zh_Hant_HK">
+            <Text>現在（T-{1_Turn}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_ALLIES" Language="zh_Hant_HK">
+            <Text>城邦盟友</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_COMBINED" Language="zh_Hant_HK">
+            <Text>城邦（合計）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE" Language="zh_Hant_HK">
+            <Text>{1_Civ} 一方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_SIDE_UNKNOWN" Language="zh_Hant_HK">
+            <Text>盟方</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_CS_NONE" Language="zh_Hant_HK">
+            <Text>無</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_MILPOWER" Language="zh_Hant_HK">
+            <Text>軍事實力（當前）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_STRENGTH" Language="zh_Hant_HK">
+            <Text>軍事實力（損失）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_UNITS_LOST" Language="zh_Hant_HK">
+            <Text>損失的單位</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_UNITS_LOST" Language="zh_Hant_HK">
+            <Text>本場戰爭中你在戰鬥中陣亡的單位數（逐個計數：每毀滅一個單位計一），作為上方軍事實力的補充。提示中還會顯示陣亡士兵的縮放估計（每個單位≈隨時代增長的一支部隊），可與縮放人口指標比較。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_LAND" Language="zh_Hant_HK">
+            <Text>陸地面積</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_RAZED" Language="zh_Hant_HK">
+            <Text>被夷為平地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_POP" Language="zh_Hant_HK">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_CROPLOST" Language="zh_Hant_HK">
+            <Text>作物產量損失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_PRODLOST" Language="zh_Hant_HK">
+            <Text>生產力損失</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_WARPROD" Language="zh_Hant_HK">
+            <Text>投入戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_MILPOWER" Language="zh_Hant_HK">
+            <Text>戰爭結束時（若仍在進行則為最近一回合）你的常備軍事實力，即你軍隊的總戰鬥力。這是你軍力的規模，而非損失；下方的「軍事實力損失」才追蹤傷亡。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_STRENGTH" Language="zh_Hant_HK">
+            <Text>你在戰鬥中實際陣亡單位的戰鬥力，於每個單位死亡時按其基礎戰鬥力累加。這是真實的傷亡，補充建造替代單位絕不會掩蓋損失，且該數字並非由你常備軍隊的規模推算而來。在此追蹤機制出現之前進行的戰爭，則改用你軍隊總實力的淨下降值作為備用計算。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>透過佔領得失的淨聚落數：你佔領的一個聚落計 +1，被人從你手中奪走的計 −1。用移民建立新聚落不計入，只計實際易手的聚落。由於這是淨值，你失去後又奪回的聚落會抵消歸零。它由佔領事件記錄，因此在此機制加入之前進行的戰爭不顯示資料。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_RAZED" Language="zh_Hant_HK">
+            <Text>你有多少聚落被永久摧毀（夷為平地）。它計入城市被佔領之前的所有者（即你）名下，而非將它夷為平地的征服者名下。與佔領不同，佔領可透過奪回城市來逆轉，被夷為平地的城市則永久消失。僅記錄此追蹤機制加入之後進行的戰爭。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_LAND" Language="zh_Hant_HK">
+            <Text>戰爭中實際易手的領土，以平方公里計（每個地圖格位約 7,000 km²）。僅計入從敵方佔領或被敵方奪走的聚落的陸地；和平擴張與邊境增長不計入。正數表示你奪取了土地，負數表示你失去了土地。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_POP" Language="zh_Hant_HK">
+            <Text>你損失的總人口，由你人口下降的每一回合累加而得，人口增長的回合被忽略，因此正常增長絕不會掩蓋戰時損失。兩項侷限：它無法區分同一時段內是戰爭死亡還是饑荒，且你日後奪回的城市的人口，在其首次下降的回合仍計為損失。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_CROPLOST" Language="zh_Hant_HK">
+            <Text>食物中斷：你的作物產量（每回合淨食物）每下降一回合，該降幅便被累加（上升的回合被忽略，因此普通增長無法掩蓋它）。大幅下降源於被劫掠的農場和格位，以及城市被佔領或失守。它是各次降幅的總和，是中斷程度的代理指標，而非食物總量。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_PRODLOST" Language="zh_Hant_HK">
+            <Text>生產力中斷：你的每回合生產力每下降一回合，該降幅便被累加（上升的回合被忽略，因此普通經濟增長無法掩蓋它）。大幅下降源於被劫掠的格位以及城市被佔領或失守。它是各次降幅的總和，是中斷程度的代理指標，而非生產力總量。你主動投入戰爭的生產力會單獨在「投入戰爭」項下追蹤。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_WARPROD" Language="zh_Hant_HK">
+            <Text>你為戰爭投入的生產力：戰爭期間你完成的每個軍事單位以及軍事或防禦工事建築（城牆等）的生產力成本之和。平民單位、經濟建築和奇觀不計入。這是對戰爭的主動投入，而非損失，因此顯示為中性數字。其成本為建造該項目的城市中的有效成本，你的領袖、文明和政策折扣均已計入其中。用金幣或信仰直接購買的項目不計入，因為那屬於國庫而非生產力；項目之間溢出的生產力也不會被精確拆分。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L1" Language="zh_Hant_HK">
+            <Text>歷史會在每次時代轉換時重設。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L2" Language="zh_Hant_HK">
+            <Text>由於沒有資料持久化的方法，</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L3" Language="zh_Hant_HK">
+            <Text>單張圖表無法橫跨多個時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOOLTIP_CROSSAGE_L4" Language="zh_Hant_HK">
+            <Text>請使用目前時代或時代範圍篩選。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WAR_GRAPHS_TITLE" Language="zh_Hant_HK">
+            <Text>戰爭影響，各參戰方在所選戰爭中的軌跡</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY" Language="zh_Hant_HK">
+            <Text>顯示完整歷史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_BACKFILL_MET_HISTORY_HINT" Language="zh_Hant_HK">
+            <Text>開啟：遇見某文明時會在圖表上揭示其全部過往。關閉：曲線從首次接觸的那一刻開始。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_PAUSED" Language="zh_Hant_HK">
+            <Text>人口統計因引擎錯誤已暫停。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SAMPLER_REENABLE" Language="zh_Hant_HK">
+            <Text>重新啟用取樣</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_ALL" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_NONE" Language="zh_Hant_HK">
+            <Text>無</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_GRAPHS_SCOPE" Language="zh_Hant_HK">
+            <Text>危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_ALL" Language="zh_Hant_HK">
+            <Text>所有時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_ANTIQUITY" Language="zh_Hant_HK">
+            <Text>古典時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_EXPLORATION" Language="zh_Hant_HK">
+            <Text>探索時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CRISIS_SCOPE_AGE_MODERN" Language="zh_Hant_HK">
+            <Text>近代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_ALL" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_GRAPHS_NONE" Language="zh_Hant_HK">
+            <Text>無</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_TITLE" Language="zh_Hant_HK">
+            <Text>圖例</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_ALL" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_LEGEND_NONE" Language="zh_Hant_HK">
+            <Text>無</Text>
+        </Replace>
+            <!-- Settlements view -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_SHOWCASE" Language="zh_Hant_HK">
+            <Text>前25座聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_TABLE" Language="zh_Hant_HK">
+            <Text>按收益排名的聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_ALL" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_CITIES" Language="zh_Hant_HK">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FILTER_TOWNS" Language="zh_Hant_HK">
+            <Text>城鎮</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CITY" Language="zh_Hant_HK">
+            <Text>城市</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOWN" Language="zh_Hant_HK">
+            <Text>城鎮</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_EMPTY" Language="zh_Hant_HK">
+            <Text>沒有可顯示的聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_RANK" Language="zh_Hant_HK">
+            <Text>排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CITY_STATE" Language="zh_Hant_HK">
+            <Text>城邦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_OWNER" Language="zh_Hant_HK">
+            <Text>擁有者</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_NAME" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CIV" Language="zh_Hant_HK">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_TYPE" Language="zh_Hant_HK">
+            <Text>類型</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCORE" Language="zh_Hant_HK">
+            <Text>分數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_POP" Language="zh_Hant_HK">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_FOOD" Language="zh_Hant_HK">
+            <Text>食物</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_PROD" Language="zh_Hant_HK">
+            <Text>生產力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_GOLD" Language="zh_Hant_HK">
+            <Text>金幣</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_SCIENCE" Language="zh_Hant_HK">
+            <Text>科技值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_CULTURE" Language="zh_Hant_HK">
+            <Text>文化值</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_INFLUENCE" Language="zh_Hant_HK">
+            <Text>影響力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_WONDERS" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_COL_HAPPY" Language="zh_Hant_HK">
+            <Text>幸福感</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TOP10" Language="zh_Hant_HK">
+            <Text>前10名</Text>
+        </Replace>
+        <!-- Towns + Town Advisor tabs -->
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_TOWNS" Language="zh_Hant_HK">
+            <Text>城鎮</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_ADVISOR" Language="zh_Hant_HK">
+            <Text>城鎮顧問</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ADVISOR_TAB" Language="zh_Hant_HK">
+            <Text>顯示城鎮顧問分頁</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HEADING" Language="zh_Hant_HK">
+            <Text>城鎮</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_HINT" Language="zh_Hant_HK">
+            <Text>即時顯示你的城鎮，重心、規模與成長一目了然。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_EMPTY" Language="zh_Hant_HK">
+            <Text>你還沒有城鎮。建立或轉變一個聚落後會顯示在這裡。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_NAME" Language="zh_Hant_HK">
+            <Text>城鎮</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_POP" Language="zh_Hant_HK">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_FOCUS" Language="zh_Hant_HK">
+            <Text>重心</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_GROWTH" Language="zh_Hant_HK">
+            <Text>成長</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COL_TILES" Language="zh_Hant_HK">
+            <Text>格位 (食/產/漁)</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_FOCUS_NONE" Language="zh_Hant_HK">
+            <Text>尚無重心</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_GROWTH_TURNS" Language="zh_Hant_HK">
+            <Text>{1_Turns} 回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_TILES_FMT" Language="zh_Hant_HK">
+            <Text>{1_Food} / {2_Prod} / {3_Fish}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_COPY_CSV" Language="zh_Hant_HK">
+            <Text>複製 CSV</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HEADING" Language="zh_Hant_HK">
+            <Text>城鎮顧問</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_HINT" Language="zh_Hant_HK">
+            <Text>依據各城鎮的格位、規模與收益給出的啟發式建議。僅供參考，不會改變遊戲。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CARD_TITLE" Language="zh_Hant_HK">
+            <Text>{1_Name}（人口 {2_Pop}）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_CURRENT" Language="zh_Hant_HK">
+            <Text>目前重心</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_SUGGEST" Language="zh_Hant_HK">
+            <Text>建議重心</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE" Language="zh_Hant_HK">
+            <Text>升級為城市？</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_YES" Language="zh_Hant_HK">
+            <Text>推薦</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_UPGRADE_NO" Language="zh_Hant_HK">
+            <Text>保持城鎮</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FOOD" Language="zh_Hant_HK">
+            <Text>{1_Count} 個農場/牧場/種植園格位，適合食物。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_PRODUCTION" Language="zh_Hant_HK">
+            <Text>{1_Count} 個礦場/採石場/營地格位，適合生產。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FISHING" Language="zh_Hant_HK">
+            <Text>{1_Count} 個沿海/漁業格位，適合捕魚。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_HUB" Language="zh_Hant_HK">
+            <Text>中心位置連接 {1_Count} 個聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TRADE" Language="zh_Hant_HK">
+            <Text>金幣產量高，適合以貿易為重心。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_URBAN" Language="zh_Hant_HK">
+            <Text>人口眾多（{1_Count}），適合城市中心。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_FORT" Language="zh_Hant_HK">
+            <Text>邊境暴露（{1_Count} 處開放的邊界），適合堡壘。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_GENERIC" Language="zh_Hant_HK">
+            <Text>對該城鎮綜合最優。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_DEFAULT" Language="zh_Hant_HK">
+            <Text>暫無突出格位，繼續成長（食物）。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_TOO_SMALL" Language="zh_Hant_HK">
+            <Text>人口 {1_Pop} 低於 {2_Min}；先成長再轉變。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_NO_GOLD" Language="zh_Hant_HK">
+            <Text>需要 {1_Cost} 金幣；國庫有 {2_Gold}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_YES" Language="zh_Hant_HK">
+            <Text>人口 {1_Pop} 且負擔得起，城市可解鎖生產與區域。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_ADVISOR_EMPIRE" Language="zh_Hant_HK">
+            <Text>帝國：{1_Cities} 座城市，{2_Towns} 個城鎮 · 最弱的收益：{3_Need}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_EMPIRE_NEED" Language="zh_Hant_HK">
+            <Text>彌補帝國的{1_Yield}短缺。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ROLE" Language="zh_Hant_HK">
+            <Text>為平衡各城鎮的分工而選擇。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_ALT" Language="zh_Hant_HK">
+            <Text>備選方案：{1_Alt}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_UPG_MIX" Language="zh_Hant_HK">
+            <Text>城鎮偏多的帝國：{1_Towns} 個城鎮對 {2_Cities} 座城市。新城市可增加生產力和區域。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_GROW" Language="zh_Hant_HK">
+            <Text>人口正在成長；都市化會進一步放大成長。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TOWNS_RAT_TREND_STALL" Language="zh_Hant_HK">
+            <Text>人口停滯；相比專精，側重成長可能更有幫助。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED" Language="zh_Hant_HK">
+            <Text>建立於 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_APPROX" Language="zh_Hant_HK">
+            <Text>建立於約 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_LABEL" Language="zh_Hant_HK">
+            <Text>建立</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FOUNDED_UNKNOWN" Language="zh_Hant_HK">
+            <Text>未知</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_BACK" Language="zh_Hant_HK">
+            <Text>返回頂級聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL" Language="zh_Hant_HK">
+            <Text>首都</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CAPITAL_OF" Language="zh_Hant_HK">
+            <Text>首都：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY" Language="zh_Hant_HK">
+            <Text>聖城</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_HOLY_CITY_TOOLTIP" Language="zh_Hant_HK">
+            <Text>{1_Religion}的聖城</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WORLD_LEADER_TOOLTIP" Language="zh_Hant_HK">
+            <Text>{1_Category}世界第一</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_NOW" Language="zh_Hant_HK">
+            <Text>當前</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END" Language="zh_Hant_HK">
+            <Text>{1_Age}結束時</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_AGE_END_NOTE" Language="zh_Hant_HK">
+            <Text>該時代最後記錄的前10名聚落（{1_Year}）。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDERS_TITLE" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_NO_WONDERS" Language="zh_Hant_HK">
+            <Text>未記錄奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_UNMET_NAME" Language="zh_Hant_HK">
+            <Text>未知聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_VIEW_ON_MAP" Language="zh_Hant_HK">
+            <Text>在地圖上檢視</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNMET_TOOLTIP" Language="zh_Hant_HK">
+            <Text>不可用：你尚未遇見該文明。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_MAP_UNEXPLORED_TOOLTIP" Language="zh_Hant_HK">
+            <Text>不可用：你尚未發現該聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CINEMATIC_VIEW" Language="zh_Hant_HK">
+            <Text>電影視角</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PLAY_FLYBY" Language="zh_Hant_HK">
+            <Text>播放飛覽</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_LABEL" Language="zh_Hant_HK">
+            <Text>飛覽</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_FLYBY_TOURING" Language="zh_Hant_HK">
+            <Text>{1_City}的鳥瞰圖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CAMERA_HEADING" Language="zh_Hant_HK">
+            <Text>頂級聚落鏡頭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC" Language="zh_Hant_HK">
+            <Text>聚落電影視角</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY" Language="zh_Hant_HK">
+            <Text>聚落飛覽（實驗性）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE" Language="zh_Hant_HK">
+            <Text>輕微鏡頭旋轉</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET" Language="zh_Hant_HK">
+            <Text>飛覽時長</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_SHORT" Language="zh_Hant_HK">
+            <Text>短</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_MEDIUM" Language="zh_Hant_HK">
+            <Text>中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_WONDER_BUILT" Language="zh_Hant_HK">
+            <Text>建於 {1_Year}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_FOUNDED" Language="zh_Hant_HK">
+            <Text>建於 {1_Year}，至今繁榮昌盛。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_PLAIN" Language="zh_Hant_HK">
+            <Text>被譽為世界第{1_Ord}大聚落。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_1" Language="zh_Hant_HK">
+            <Text>1</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_2" Language="zh_Hant_HK">
+            <Text>2</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_3" Language="zh_Hant_HK">
+            <Text>3</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_4" Language="zh_Hant_HK">
+            <Text>4</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_5" Language="zh_Hant_HK">
+            <Text>5</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_6" Language="zh_Hant_HK">
+            <Text>6</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_7" Language="zh_Hant_HK">
+            <Text>7</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_8" Language="zh_Hant_HK">
+            <Text>8</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_9" Language="zh_Hant_HK">
+            <Text>9</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_10" Language="zh_Hant_HK">
+            <Text>10</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_11" Language="zh_Hant_HK">
+            <Text>11</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_12" Language="zh_Hant_HK">
+            <Text>12</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_13" Language="zh_Hant_HK">
+            <Text>13</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_14" Language="zh_Hant_HK">
+            <Text>14</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_15" Language="zh_Hant_HK">
+            <Text>15</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_16" Language="zh_Hant_HK">
+            <Text>16</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_17" Language="zh_Hant_HK">
+            <Text>17</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_18" Language="zh_Hant_HK">
+            <Text>18</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_19" Language="zh_Hant_HK">
+            <Text>19</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_20" Language="zh_Hant_HK">
+            <Text>20</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_21" Language="zh_Hant_HK">
+            <Text>21</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_22" Language="zh_Hant_HK">
+            <Text>22</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_23" Language="zh_Hant_HK">
+            <Text>23</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_24" Language="zh_Hant_HK">
+            <Text>24</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_ORDINAL_25" Language="zh_Hant_HK">
+            <Text>25</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_HOUSES_LIST" Language="zh_Hant_HK">
+            <Text>擁有{1_List}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CONGRATS_AND" Language="zh_Hant_HK">
+            <Text>、</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_NATURAL" Language="zh_Hant_HK">
+            <Text>自然奇觀點綴其疆域。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_POI_DISTRICT" Language="zh_Hant_HK">
+            <Text>其最為富庶的城區。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TABLE_TITLE" Language="zh_Hant_HK">
+            <Text>按收益排名的聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_PODIUM_TITLE" Language="zh_Hant_HK">
+            <Text>最偉大的聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_RANKING_TITLE" Language="zh_Hant_HK">
+            <Text>完整聚落排名</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_RANKINGS" Language="zh_Hant_HK">
+            <Text>世界排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVS" Language="zh_Hant_HK">
+            <Text>按收益排名的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_CIVRANK" Language="zh_Hant_HK">
+            <Text>文明排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_PODIUM_TITLE" Language="zh_Hant_HK">
+            <Text>最偉大的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_RANKING_TITLE" Language="zh_Hant_HK">
+            <Text>完整文明排名</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_CIV_SCORE_NOTE" Language="zh_Hant_HK">
+            <Text>此處的「得分」為文明的總產出，即其所有聚落的食物、生產力、金幣、科技值與文化值之和，並非勝利畫面中按不同方式計算的官方遊戲得分。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY" Language="zh_Hant_HK">
+            <Text>分析可見性</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_HOST_HINT" Language="zh_Hant_HK">
+            <Text>作為主機，此限制適用於本場遊戲所有玩家的對比分析。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_ANALYTICS_POLICY_CLIENT_HINT" Language="zh_Hant_HK">
+            <Text>主機設定本場遊戲分析的最大可見性；你可以進一步限制自己看到的範圍。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_DISABLED" Language="zh_Hant_HK">
+            <Text>停用（僅自己的文明）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_OWN" Language="zh_Hant_HK">
+            <Text>僅自己的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_MET" Language="zh_Hant_HK">
+            <Text>僅已會面的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_FULL" Language="zh_Hant_HK">
+            <Text>所有文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_HOST" Language="zh_Hant_HK">
+            <Text>主機分析策略：{1_Policy}。對比資料對所有玩家受限。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_POLICY_BANNER_LOCAL" Language="zh_Hant_HK">
+            <Text>分析策略：{1_Policy}。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_INTERFACE_HEADING" Language="zh_Hant_HK">
+            <Text>介面</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY" Language="zh_Hant_HK">
+            <Text>複雜度</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC" Language="zh_Hant_HK">
+            <Text>基礎</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD" Language="zh_Hant_HK">
+            <Text>標準</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_BASIC_DESC" Language="zh_Hant_HK">
+            <Text>僅顯示核心統計頁面；進階圖表、關係網路和調整控制項均被隱藏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TIER_STANDARD_DESC" Language="zh_Hant_HK">
+            <Text>顯示所有圖表和分頁；進階儲存與取樣控制項保持隱藏。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_AGE" Language="zh_Hant_HK">
+            <Text>時代凱旋挑戰進度：各文明的傳承路徑雷達圖。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_RESOURCES" Language="zh_Hant_HK">
+            <Text>按類別隨時間變化的資源分配。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CONFLICTS" Language="zh_Hant_HK">
+            <Text>戰爭時間軸（甘特圖）和各場戰爭的詳細圖表。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_DESC_CRISES" Language="zh_Hant_HK">
+            <Text>危機階段及其對各文明的代價。</Text>
+        </Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_WARS_COST_LBL_REFUGEES" Language="zh_Hant_HK"><Text>難民</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARS_GLOSSARY_REFUGEES" Language="zh_Hant_HK"><Text>在戰爭期間因圍城、劫掠或征服而流離失所、並在別處重新定居的人口。由 Emigration 模組在安裝時提供。</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_STATISTICS" Language="zh_Hant_HK"><Text>全球統計</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_MIGRATION" Language="zh_Hant_HK"><Text>遷徙</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_GEOPOLITICS" Language="zh_Hant_HK"><Text>地緣政治</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SCIENCE_CULTURE" Language="zh_Hant_HK"><Text>科技與文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SOCIETY" Language="zh_Hant_HK"><Text>社會</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_EXPANSION" Language="zh_Hant_HK"><Text>擴張</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION" Language="zh_Hant_HK"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_MILITARY" Language="zh_Hant_HK"><Text>軍事實力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_WARS" Language="zh_Hant_HK"><Text>戰爭</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELATIONS" Language="zh_Hant_HK"><Text>全球關係</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_AGREEMENTS" Language="zh_Hant_HK"><Text>協議</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GDP_TITLE" Language="zh_Hant_HK"><Text>國內生產總值（GDP）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GPT_TITLE" Language="zh_Hant_HK"><Text>每回合金幣（GPT）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_PRODUCTION_TITLE" Language="zh_Hant_HK"><Text>每回合生產力（PPT）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CROPS_TITLE" Language="zh_Hant_HK"><Text>作物產量（每回合食物）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TRADE_TITLE" Language="zh_Hant_HK"><Text>貿易路線數量隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TOTAL_TITLE" Language="zh_Hant_HK"><Text>資源總量隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_BONUS_TITLE" Language="zh_Hant_HK"><Text>加成資源隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_EMPIRE_TITLE" Language="zh_Hant_HK"><Text>帝國資源隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_CITY_TITLE" Language="zh_Hant_HK"><Text>城市資源隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_TREASURE_TITLE" Language="zh_Hant_HK"><Text>寶藏資源隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RESOURCES_FACTORY_TITLE" Language="zh_Hant_HK"><Text>工廠資源隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TECHS_TITLE" Language="zh_Hant_HK"><Text>科技數量隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIVICS_TITLE" Language="zh_Hant_HK"><Text>市政數量隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_HPT_TITLE" Language="zh_Hant_HK"><Text>幸福感隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_INFLUENCE_TITLE" Language="zh_Hant_HK"><Text>影響力隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_TITLE" Language="zh_Hant_HK"><Text>聚落隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_PCT_TITLE" Language="zh_Hant_HK"><Text>聚落上限利用率隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_TITLE" Language="zh_Hant_HK"><Text>領土面積隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_TITLE" Language="zh_Hant_HK"><Text>奇觀隨時間變化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCORE_TITLE" Language="zh_Hant_HK"><Text>得分隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GOLD_TITLE" Language="zh_Hant_HK"><Text>金幣儲備隨時間變化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_APPROVAL_TITLE" Language="zh_Hant_HK"><Text>外交支持度隨時間變化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_TITLE" Language="zh_Hant_HK"><Text>人口隨時間變化</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_METRIC_MILPOWER_TITLE" Language="zh_Hant_HK"><Text>軍事實力隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DEALS_TITLE" Language="zh_Hant_HK"><Text>協議（數量隨時間變化）</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_BTN_WAR_MARKERS" Language="zh_Hant_HK"><Text>戰爭</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BTN_DISASTER_MARKERS" Language="zh_Hant_HK"><Text>災難</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_OPT_REVEAL_MODE_INFO" Language="zh_Hant_HK"><Text>控制遇到新文明時的行為：在圖表中顯示其完整歷史，或僅從相遇時開始記錄。僅在劇透保護開啟時生效。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COLORBLIND_INFO" Language="zh_Hant_HK"><Text>為圖表線條和關係網路使用高對比度、色盲友好的配色。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WONDER_MARKERS_INFO" Language="zh_Hant_HK"><Text>在歷史圖表線條上標記每座奇觀建成的回合。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_WAR_MARKERS_INFO" Language="zh_Hant_HK"><Text>在 Emigration 難民圖表上標記每場戰爭開始的回合。需要配套模組 Emigration。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_DISASTER_MARKERS_INFO" Language="zh_Hant_HK"><Text>在 Emigration 難民圖表上標記每次災難發生的回合。需要配套模組 Emigration。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_COMPLEXITY_INFO" Language="zh_Hant_HK"><Text>介面顯示的詳細程度。基礎僅包含核心統計頁面；標準會加入所有圖表和分頁。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SMOOTH_INFO" Language="zh_Hant_HK"><Text>以 3 回合移動平均繪製歷史線條，讓趨勢更清晰。底層資料保持不變。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SHOW_ELIMINATED_INFO" Language="zh_Hant_HK"><Text>在圖表和排名中繼續顯示已消亡的文明，而不是將其移除。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_CINEMATIC_INFO" Language="zh_Hant_HK"><Text>啟用「電影視角」按鈕，從頂級城市列表中平移鏡頭瀏覽聚落。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_INFO" Language="zh_Hant_HK"><Text>自動在頂級聚落之間移動鏡頭。實驗性功能；若鏡頭異常請關閉。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_PRESET_INFO" Language="zh_Hant_HK"><Text>聚落飛覽在每座城市停留的時長。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_FLYBY_ROTATE_INFO" Language="zh_Hant_HK"><Text>飛覽鏡頭在每座聚落停留時加入輕微旋轉。</Text></Replace>
+            <Replace Tag="LOC_DEMOGRAPHICS_TAB_EMIGRATION" Language="zh_Hant_HK"><Text>移居</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV" Language="zh_Hant_HK"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POPULATION_CIV_TITLE" Language="zh_Hant_HK"><Text>人口隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CLEAR_FOCUS" Language="zh_Hant_HK"><Text>清除聚焦</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_RESOURCES_TIMELINE" Language="zh_Hant_HK"><Text>按類別劃分的資源隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_LEGACY_RADAR" Language="zh_Hant_HK"><Text>傳承路徑雷達圖</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_ARIA_CONFLICTS_TIMELINE" Language="zh_Hant_HK"><Text>衝突時間軸</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_25Y" Language="zh_Hant_HK"><Text>25年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_50Y" Language="zh_Hant_HK"><Text>50年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_100Y" Language="zh_Hant_HK"><Text>100年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_300Y" Language="zh_Hant_HK"><Text>300年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_500Y" Language="zh_Hant_HK"><Text>500年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_FILTER_1000Y" Language="zh_Hant_HK"><Text>1000年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RELATIONS_FOCUS_HINT" Language="zh_Hant_HK"><Text>（已聚焦{1_Count}個；點選圖示切換）</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_UNKNOWN_ADJ" Language="zh_Hant_HK"><Text>未知</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WARNAME_SINGLE" Language="zh_Hant_HK"><Text>第{1_Ordinal}次{2_Adjective}戰爭</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WAR_FALLBACK_NAME" Language="zh_Hant_HK"><Text>戰爭 #{1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_SCALED" Language="zh_Hant_HK"><Text>縮放</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_WORLDRANKINGS_ALLCIVS_NUM_CIV" Language="zh_Hant_HK"><Text>文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RATE_PER_TURN_SUFFIX" Language="zh_Hant_HK"><Text>/回合</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS" Language="zh_Hant_HK"><Text>巨作</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_WORKS_TOOLTIP" Language="zh_Hant_HK"><Text>當前陳列在你的建築和奇觀中的巨作。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES" Language="zh_Hant_HK"><Text>城市</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CITIES_TOOLTIP" Language="zh_Hant_HK"><Text>已升級為城市的聚落（不含城鎮）。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS" Language="zh_Hant_HK"><Text>城鎮</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOWNS_TOOLTIP" Language="zh_Hant_HK"><Text>尚未升級的聚落（城鎮）。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP" Language="zh_Hant_HK"><Text>上限隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENT_CAP_TOOLTIP" Language="zh_Hant_HK"><Text>在受到超出上限懲罰之前，你最多可擁有的聚落數量。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED" Language="zh_Hant_HK"><Text>征服的聚落</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_CONQUERED_TOOLTIP" Language="zh_Hant_HK"><Text>該文明累計以武力奪取的聚落數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT" Language="zh_Hant_HK"><Text>征服佔比 %</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CONQUEST_PCT_TOOLTIP" Language="zh_Hant_HK"><Text>該文明的聚落中以武力奪取的比例。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM" Language="zh_Hant_HK"><Text>觀光值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_TOURISM_TOOLTIP" Language="zh_Hant_HK"><Text>觀光值總計（文化勝利點數）；來自奇觀、特色改良設施、你擔任宗主的城邦以及慶典。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE" Language="zh_Hant_HK"><Text>偉人</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_GREAT_PEOPLE_TOOLTIP" Language="zh_Hant_HK"><Text>該文明累計獲得的偉人數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED" Language="zh_Hant_HK"><Text>擊殺單位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TOOLTIP" Language="zh_Hant_HK"><Text>該文明在戰鬥中累計擊殺的敵方單位數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST" Language="zh_Hant_HK"><Text>損失單位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TOOLTIP" Language="zh_Hant_HK"><Text>該文明在戰鬥中累計損失的單位數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_CIV_LEADER" Language="zh_Hant_HK"><Text>文明 → 領袖</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_NAMEORDER_LEADER_CIV" Language="zh_Hant_HK"><Text>領袖 → 文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDERS_BOARD" Language="zh_Hant_HK"><Text>奇觀一覽</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDERS_BOARD_TITLE" Language="zh_Hant_HK"><Text>已建奇觀 — 按文明</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_TRAINED_TYPE" Language="zh_Hant_HK"><Text>訓練的單位</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_TRAINED_TYPE_TITLE" Language="zh_Hant_HK"><Text>訓練的單位 — 按類型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_KILLED_TYPE" Language="zh_Hant_HK"><Text>各單位擊殺</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_KILLED_TYPE_TITLE" Language="zh_Hant_HK"><Text>擊殺的敵方單位 — 按你的單位類型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_UNITS_LOST_TYPE" Language="zh_Hant_HK"><Text>各單位損失</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_UNITS_LOST_TYPE_TITLE" Language="zh_Hant_HK"><Text>損失的單位 — 按類型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_BUILDINGS_TYPE" Language="zh_Hant_HK"><Text>建築</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_BUILDINGS_TYPE_TITLE" Language="zh_Hant_HK"><Text>已建建築 — 按類型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_DISTRICTS_TYPE" Language="zh_Hant_HK"><Text>城區</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_DISTRICTS_TYPE_TITLE" Language="zh_Hant_HK"><Text>已建區域 — 按類型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_STANDINGS" Language="zh_Hant_HK"><Text>宗教</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_STANDINGS_TITLE" Language="zh_Hant_HK"><Text>宗教排名 — 信仰的聚落</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_CONSTRUCTION" Language="zh_Hant_HK"><Text>建設</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_RELIGION" Language="zh_Hant_HK"><Text>宗教</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SETTLEMENTS_ATLAS" Language="zh_Hant_HK"><Text>聚落規模</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SETTLEMENTS_ATLAS_TITLE" Language="zh_Hant_HK"><Text>聚落規模分佈</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_SPREAD" Language="zh_Hant_HK"><Text>宗教傳播</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_SPREAD_TITLE" Language="zh_Hant_HK"><Text>宗教傳播 — 信仰的聚落隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_BY_POP" Language="zh_Hant_HK"><Text>按人口劃分的宗教</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_BY_POP_TITLE" Language="zh_Hant_HK"><Text>按人口劃分的宗教 — 信徒隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WONDER_RACES" Language="zh_Hant_HK"><Text>奇觀競賽</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_WONDER_RACES_TITLE" Language="zh_Hant_HK"><Text>奇觀競賽 — 每座奇觀的首建者</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RACE" Language="zh_Hant_HK"><Text>實力競賽</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RACE_TITLE" Language="zh_Hant_HK"><Text>實力競賽 — 分數排名隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POP_SHARE_AREA" Language="zh_Hant_HK"><Text>人口佔比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POP_SHARE_AREA_TITLE" Language="zh_Hant_HK"><Text>世界人口佔比隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_LAND_SHARE_AREA" Language="zh_Hant_HK"><Text>陸地面積佔比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_LAND_SHARE_AREA_TITLE" Language="zh_Hant_HK"><Text>世界陸地面積佔比隨時間變化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_CIV_SCATTER" Language="zh_Hant_HK"><Text>實力與科技</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_CIV_SCATTER_TITLE" Language="zh_Hant_HK"><Text>實力與科技</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_POWER_RADAR" Language="zh_Hant_HK"><Text>國力類型</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_POWER_RADAR_TITLE" Language="zh_Hant_HK"><Text>國力類型 — 所有文明對比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH" Language="zh_Hant_HK"><Text>信仰值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_FAITH_TOOLTIP" Language="zh_Hant_HK"><Text>該文明累計獲得的信仰總量。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS" Language="zh_Hant_HK"><Text>戰鬥</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_COMBATS_TOOLTIP" Language="zh_Hant_HK"><Text>該文明參與過的戰鬥次數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED" Language="zh_Hant_HK"><Text>主動宣戰</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_DECLARED_TOOLTIP" Language="zh_Hant_HK"><Text>該文明向其他文明宣戰的次數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED" Language="zh_Hant_HK"><Text>被動宣戰</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_WARS_RECEIVED_TOOLTIP" Language="zh_Hant_HK"><Text>其他文明向該文明宣戰的次數。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS" Language="zh_Hant_HK"><Text>發現的自然奇觀</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_NATURAL_WONDERS_TOOLTIP" Language="zh_Hant_HK"><Text>該文明已發現的自然奇觀。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_RANK" Language="zh_Hant_HK"><Text>排名</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AXIS_WORLD_SHARE" Language="zh_Hant_HK"><Text>世界佔比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_POPULATION_SHARE" Language="zh_Hant_HK"><Text>人口佔比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_YIELDS" Language="zh_Hant_HK"><Text>每回合收益</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_SETTLEMENTS_LAND" Language="zh_Hant_HK"><Text>領土與聚落</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_PAGE_ECONOMY_RESOURCES" Language="zh_Hant_HK"><Text>經濟與資源</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_WEALTH_CULTURE" Language="zh_Hant_HK"><Text>財富與文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_WEALTH_CULTURE_TITLE" Language="zh_Hant_HK"><Text>財富與文化 — 金幣與文化值收益對比</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_SCATTER_SOFT_POWER" Language="zh_Hant_HK"><Text>幸福感與影響力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_SCATTER_SOFT_POWER_TITLE" Language="zh_Hant_HK"><Text>幸福感與影響力</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS" Language="zh_Hant_HK"><Text>尚未建成任何奇觀。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_WONDERS_OR_BUILDING" Language="zh_Hant_HK"><Text>尚無已建成或在建的奇觀。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BREAKDOWN" Language="zh_Hant_HK"><Text>此分類尚無記錄資料。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_RELIGION" Language="zh_Hant_HK"><Text>尚無宗教傳播。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS_CHART" Language="zh_Hant_HK"><Text>沒有可繪製的聚落。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_SETTLEMENTS" Language="zh_Hant_HK"><Text>尚無聚落。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_BUILDINGS" Language="zh_Hant_HK"><Text>尚未建造任何建築。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_COMPARABLE" Language="zh_Hant_HK"><Text>尚無可比較的紀錄資料。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_UNDER_CONSTRUCTION" Language="zh_Hant_HK"><Text>建造中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_COMPLETED" Language="zh_Hant_HK"><Text>已完成</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_SETTLEMENT_SIZES" Language="zh_Hant_HK"><Text>聚落規模</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_SECTION_MOST_URBANIZED" Language="zh_Hant_HK"><Text>城市化程度最高</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_TURNS_LEFT" Language="zh_Hant_HK"><Text>{1_Turns}t</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_POP_SUFFIX" Language="zh_Hant_HK"><Text>人口 {1_Count}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_URBAN_PCT" Language="zh_Hant_HK"><Text>城市化 {1_Pct}%</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_RELIGION_FALLBACK" Language="zh_Hant_HK"><Text>宗教 {1_Id}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PLAYER_GENERIC" Language="zh_Hant_HK"><Text>玩家</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_SCIENCE" Language="zh_Hant_HK"><Text>科技值</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_MILITARY" Language="zh_Hant_HK"><Text>軍事</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_ECONOMY" Language="zh_Hant_HK"><Text>經濟</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_CULTURE" Language="zh_Hant_HK"><Text>文化</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_PEOPLE" Language="zh_Hant_HK"><Text>人口</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RADAR_AXIS_LAND" Language="zh_Hant_HK"><Text>領土</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_SCIENCE_PT" Language="zh_Hant_HK"><Text>科技值/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_MILITARY_POWER" Language="zh_Hant_HK"><Text>軍事實力 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_GOLD_PT" Language="zh_Hant_HK"><Text>金幣/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_CULTURE_PT" Language="zh_Hant_HK"><Text>文化值/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_INFLUENCE_PT" Language="zh_Hant_HK"><Text>影響力/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SCATTER_AXIS_HAPPINESS_PT" Language="zh_Hant_HK"><Text>幸福感/回合 →</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_QUARTERS" Language="zh_Hant_HK"><Text>尚未建成任何城區。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_QUARTER" Language="zh_Hant_HK"><Text>城區</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_DEVELOPING" Language="zh_Hant_HK"><Text>發展中</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ORPHAN_NEEDS" Language="zh_Hant_HK"><Text>{1_Name} — 需要 {2_Partner}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_UNIQUE_WARN" Language="zh_Hant_HK"><Text>特色：{1_Note}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_ADJACENCY_EST" Language="zh_Hant_HK"><Text>相鄰加成（估算）：{1_Yields}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CS_FALLBACK" Language="zh_Hant_HK"><Text>城邦 {1_Pid}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEON_YIELDS" Language="zh_Hant_HK"><Text>收益</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_TITLE" Language="zh_Hant_HK"><Text>萬神殿收益 — 各文明的預估加成</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEON_YIELDS_SUBTITLE" Language="zh_Hant_HK"><Text>根據各文明所選萬神殿預估的固定收益加成。百分比及條件性（按人口、按資源，…）效果不計入。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEON_YIELDS" Language="zh_Hant_HK"><Text>暫無可預估的固定萬神殿收益加成。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_PANTHEON_YIELDS_CONDITIONAL" Language="zh_Hant_HK"><Text>+ 條件性效果未計入</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_WAR" Language="zh_Hant_HK"><Text>戰爭</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_MARKER_DISASTER" Language="zh_Hant_HK"><Text>災難</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_GENERIC_BEGINS" Language="zh_Hant_HK"><Text>{1_Age}開始</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CIV_UNKNOWN" Language="zh_Hant_HK"><Text>未知</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_BOARD_NO_PANTHEONS" Language="zh_Hant_HK"><Text>尚未建立任何萬神殿。</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_METRIC_RELIGION_PANTHEONS" Language="zh_Hant_HK"><Text>信仰</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SYNTH_RELIGION_PANTHEONS_TITLE" Language="zh_Hant_HK"><Text>萬神殿 — 所選信條及其效果</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE" Language="zh_Hant_HK">
+            <Text>名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MENU_BUTTON" Language="zh_Hant_HK">
+            <Text>名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_CHRONICLE" Language="zh_Hant_HK">
+            <Text>編年史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TAB_LINEAGE" Language="zh_Hant_HK">
+            <Text>傳承</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_OVERVIEW" Language="zh_Hant_HK">
+            <Text>概覽</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RANKINGS" Language="zh_Hant_HK">
+            <Text>排行榜</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_LEADERS" Language="zh_Hant_HK">
+            <Text>領袖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_CIVS" Language="zh_Hant_HK">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_RECORDS" Language="zh_Hant_HK">
+            <Text>紀錄</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ALL_AGES" Language="zh_Hant_HK">
+            <Text>所有時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_ALL" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_MINE" Language="zh_Hant_HK">
+            <Text>你的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WONDERS" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WAR" Language="zh_Hant_HK">
+            <Text>戰爭與和平</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_FAITH" Language="zh_Hant_HK">
+            <Text>宗教</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_WORLD" Language="zh_Hant_HK">
+            <Text>世界</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_NEWEST" Language="zh_Hant_HK">
+            <Text>最新優先</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_ORDER_OLDEST" Language="zh_Hant_HK">
+            <Text>最早優先</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_MORE" Language="zh_Hant_HK">
+            <Text>顯示更多</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TURN_N" Language="zh_Hant_HK">
+            <Text>第{1_Turn}回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TURNS" Language="zh_Hant_HK">
+            <Text>{1_Count}回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_PERCENT" Language="zh_Hant_HK">
+            <Text>{1_Value}%</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_INDEPENDENT_PEOPLE" Language="zh_Hant_HK">
+            <Text>獨立軍勢力</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_UNMET" Language="zh_Hant_HK">
+            <Text>涉及尚未遇見的文明而隱藏的事件：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDDEN_LEADERS" Language="zh_Hant_HK">
+            <Text>尚未遇見而隱藏的領袖：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE" Language="zh_Hant_HK">
+            <Text>編年史將從你的下一回合開始。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EMPTY_HOF" Language="zh_Hant_HK">
+            <Text>尚無遊戲紀錄。你玩的每一場戰役都會加到這裡。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_FOUND" Language="zh_Hant_HK">
+            <Text>{1_Civ}建立了{2_Settlement}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CAPTURE" Language="zh_Hant_HK">
+            <Text>{1_Civ}從{3_Civ}手中奪取了{2_Settlement}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RAZED" Language="zh_Hant_HK">
+            <Text>{2_Civ}失去了{1_Settlement}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WONDER" Language="zh_Hant_HK">
+            <Text>{1_Civ}建成了{2_Wonder}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_WAR" Language="zh_Hant_HK">
+            <Text>{1_Civ}與{2_Civ}之間爆發了戰爭。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_PEACE" Language="zh_Hant_HK">
+            <Text>{1_Civ}與{2_Civ}締結和平。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RELIGION" Language="zh_Hant_HK">
+            <Text>{1_Civ}創立了{2_Religion}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_TRIUMPH" Language="zh_Hant_HK">
+            <Text>{1_Civ}完成了凱旋挑戰「{2_Triumph}」。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_ELIM" Language="zh_Hant_HK">
+            <Text>{1_Civ}已被消滅。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_AGE" Language="zh_Hant_HK">
+            <Text>新時代開始：{1_Age}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CIV" Language="zh_Hant_HK">
+            <Text>{1_Leader}現在領導{2_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_MET" Language="zh_Hant_HK">
+            <Text>首次遇到{1_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_VICTORY" Language="zh_Hant_HK">
+            <Text>{1_Civ}取得了勝利：{2_Victory}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_GENERIC" Language="zh_Hant_HK">
+            <Text>{1_Civ}：{2_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NARR_LEAD" Language="zh_Hant_HK">
+            <Text>{1_Leader}在這個時代領導了{2_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_FOUNDED" Language="zh_Hant_HK">
+            <Text>建立</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_CAPTURED" Language="zh_Hant_HK">
+            <Text>奪取</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_LOST" Language="zh_Hant_HK">
+            <Text>失去</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WONDERS" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FACT_WARS" Language="zh_Hant_HK">
+            <Text>戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_WONDERS" Language="zh_Hant_HK">
+            <Text>奇觀：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_RELIGION" Language="zh_Hant_HK">
+            <Text>創立的宗教：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINE_FALLEN" Language="zh_Hant_HK">
+            <Text>被消滅的文明：</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_TITLE" Language="zh_Hant_HK">
+            <Text>領袖及其領導的文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FALLEN" Language="zh_Hant_HK">
+            <Text>已覆滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_FELL_TURN" Language="zh_Hant_HK">
+            <Text>於第{1_Turn}回合被消滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_LEADER" Language="zh_Hant_HK">
+            <Text>領袖</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATION" Language="zh_Hant_HK">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_CIVILIZATIONS" Language="zh_Hant_HK">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_POPULATION" Language="zh_Hant_HK">
+            <Text>人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TITLE" Language="zh_Hant_HK">
+            <Text>榮譽稱號</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_QUOTED" Language="zh_Hant_HK">
+            <Text>「{1_Title}」</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HONORIFIC_LABELLED" Language="zh_Hant_HK">
+            <Text>（榮譽稱號：「{1_Title}」）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_RESULT" Language="zh_Hant_HK">
+            <Text>結果</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TURNS" Language="zh_Hant_HK">
+            <Text>回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_PLAYED" Language="zh_Hant_HK">
+            <Text>遊玩時間</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_TREND" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_FATE" Language="zh_Hant_HK">
+            <Text>結局</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_BEST_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>最多凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_COL_AVG_TURNS" Language="zh_Hant_HK">
+            <Text>平均回合數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_GAMES" Language="zh_Hant_HK">
+            <Text>遊戲局數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_VICTORIES" Language="zh_Hant_HK">
+            <Text>勝利次數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_WIN_RATE" Language="zh_Hant_HK">
+            <Text>勝率</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TURNS" Language="zh_Hant_HK">
+            <Text>已玩回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>完成的凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_PEAK_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>最多聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORIES_BY_TYPE" Language="zh_Hant_HK">
+            <Text>各類型勝利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_VICTORIES" Language="zh_Hant_HK">
+            <Text>尚未取得勝利。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FINEST_GAME" Language="zh_Hant_HK">
+            <Text>你的最佳遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LATEST_GAME" Language="zh_Hant_HK">
+            <Text>最近的遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANKING_RULE" Language="zh_Hant_HK">
+            <Text>按結果排名（勝利優先），其次比較所有時代完成的凱旋挑戰數，最後回合數少者優先。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIDE_SHORT" Language="zh_Hant_HK">
+            <Text>隱藏短局遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHOW_SHORT" Language="zh_Hant_HK">
+            <Text>顯示所有遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SHORT_HIDDEN" Language="zh_Hant_HK">
+            <Text>已隱藏：{1_Count} 局不足 {2_Turns} 回合的未完成遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_NOTE" Language="zh_Hant_HK">
+            <Text>已儲存：已完成 {1_Finished} 局，未完成 {2_Unfinished} 局（保留最近 {3_Keep} 局）</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="zh_Hant_HK">
+            <Text>已完成的遊戲會一直保留。不足 {1_Turns} 回合的未完成遊戲會在你開始新遊戲時清除。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="zh_Hant_HK">
+            <Text>勝利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY_BY" Language="zh_Hant_HK">
+            <Text>勝利：{1_Victory}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_DOMINATION" Language="zh_Hant_HK">
+            <Text>稱霸世界</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_CULTURAL" Language="zh_Hant_HK">
+            <Text>文化</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_ECONOMIC" Language="zh_Hant_HK">
+            <Text>經濟</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_MILITARY" Language="zh_Hant_HK">
+            <Text>軍事</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_VICTORY_SCIENTIFIC" Language="zh_Hant_HK">
+            <Text>科技</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_DEFEAT" Language="zh_Hant_HK">
+            <Text>落敗</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_ENDED" Language="zh_Hant_HK">
+            <Text>已結束</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_IN_PROGRESS" Language="zh_Hant_HK">
+            <Text>進行中</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_DESTROYED" Language="zh_Hant_HK">
+            <Text>於第{1_Turn}回合被消滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_SURVIVED" Language="zh_Hant_HK">
+            <Text>倖存</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK" Language="zh_Hant_HK">
+            <Text>返回</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_GAME" Language="zh_Hant_HK">
+            <Text>從名人堂中移除</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_CONFIRM" Language="zh_Hant_HK">
+            <Text>再點選一次即可移除</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TREND_TITLE" Language="zh_Hant_HK">
+            <Text>整局遊戲中的凱旋挑戰與聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HIGHLIGHTS" Language="zh_Hant_HK">
+            <Text>重大時刻</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_HIGHLIGHTS" Language="zh_Hant_HK">
+            <Text>本局遊戲沒有記錄重大時刻。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RIVALS" Language="zh_Hant_HK">
+            <Text>對手</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_RIVALS" Language="zh_Hant_HK">
+            <Text>本局遊戲沒有記錄對手。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CIVS_NOTE" Language="zh_Hant_HK">
+            <Text>你領導過的每個文明都會計入，無論你在哪個時代領導它。勝率與進度條僅統計已結束的遊戲。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_WON" Language="zh_Hant_HK">
+            <Text>勝利：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_NOT_WON" Language="zh_Hant_HK">
+            <Text>未獲勝：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NO_FINISHED" Language="zh_Hant_HK">
+            <Text>沒有已結束的遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STAT_ATTEMPTS" Language="zh_Hant_HK">
+            <Text>嘗試次數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_FOR" Language="zh_Hant_HK">
+            <Text>獲得條件</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TRIUMPH_GAVE" Language="zh_Hant_HK">
+            <Text>效果</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_UNFINISHED" Language="zh_Hant_HK">
+            <Text>進行中：{1_Count}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LEADERS_NOTE" Language="zh_Hant_HK">
+            <Text>你玩過的每位領袖。勝率與進度條僅統計已結束的遊戲。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORDS_NOTE" Language="zh_Hant_HK">
+            <Text>保持每項紀錄的那局遊戲。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_NOTE" Language="zh_Hant_HK">
+            <Text>你最出色的幾局，以及最近一局所處的位置。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>最多凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_WONDERS" Language="zh_Hant_HK">
+            <Text>最多奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>最大帝國</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_CAPTURED" Language="zh_Hant_HK">
+            <Text>奪取聚落最多</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_FASTEST" Language="zh_Hant_HK">
+            <Text>最快勝利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECORD_LONGEST" Language="zh_Hant_HK">
+            <Text>最長遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_UNREADABLE" Language="zh_Hant_HK">
+            <Text>本次遊戲執行期間無法從儲存空間讀取以往的遊戲。每場遊戲仍保存在各自的存檔中。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_1" Language="zh_Hant_HK">
+            <Text>奧古斯都</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_2" Language="zh_Hant_HK">
+            <Text>居魯士大帝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_3" Language="zh_Hant_HK">
+            <Text>查理曼</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_4" Language="zh_Hant_HK">
+            <Text>漢摩拉比</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_5" Language="zh_Hant_HK">
+            <Text>拉美西斯二世</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_6" Language="zh_Hant_HK">
+            <Text>阿育王</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_7" Language="zh_Hant_HK">
+            <Text>哈特謝普蘇特</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_8" Language="zh_Hant_HK">
+            <Text>查士丁尼</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_9" Language="zh_Hant_HK">
+            <Text>阿爾弗雷德大帝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_10" Language="zh_Hant_HK">
+            <Text>路易十六</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_11" Language="zh_Hant_HK">
+            <Text>諾頓皇帝</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TITLE_12" Language="zh_Hant_HK">
+            <Text>倉促王埃塞爾雷德</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_LINEAGE_GONE" Language="zh_Hant_HK">
+            <Text>在紀錄開始前已被消滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FATE_BEFORE" Language="zh_Hant_HK">
+            <Text>在紀錄開始前已被消滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_SINCE_PARTIAL" Language="zh_Hant_HK">
+            <Text>自{1_Date}起記錄。本時代更早的事件未被記錄。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_SETTLEMENTS_TAB_HOF" Language="zh_Hant_HK">
+            <Text>名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TAB_CAMPAIGN_HISTORY" Language="zh_Hant_HK">
+            <Text>歷史</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RECENT_GAMES" Language="zh_Hant_HK">
+            <Text>最近的遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_SCALED" Language="zh_Hant_HK">
+            <Text>換算人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_POP_CIV" Language="zh_Hant_HK">
+            <Text>文明人口</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BACK_TO_HOF" Language="zh_Hant_HK">
+            <Text>返回名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_CRISIS" Language="zh_Hant_HK">
+            <Text>危機第{2_Stage}階段：{1_Name}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_CRISIS_UNNAMED" Language="zh_Hant_HK">
+            <Text>時代危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TITLE" Language="zh_Hant_HK">
+            <Text>時間軸</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_AGES" Language="zh_Hant_HK">
+            <Text>時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CRISES" Language="zh_Hant_HK">
+            <Text>危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MILESTONES" Language="zh_Hant_HK">
+            <Text>里程碑</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_WAR_WITH" Language="zh_Hant_HK">
+            <Text>與{1_Civ}的戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_POP_REACHED" Language="zh_Hant_HK">
+            <Text>人口達到{1_Value}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_STAGE" Language="zh_Hant_HK">
+            <Text>第{1_Stage}階段</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_DISASTER" Language="zh_Hant_HK">
+            <Text>{1_Name}襲擊了{2_Civ}。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_DISASTER_UNNAMED" Language="zh_Hant_HK">
+            <Text>自然災難</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_DISASTERS" Language="zh_Hant_HK">
+            <Text>災難</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION_LANE" Language="zh_Hant_HK">
+            <Text>遷徙</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_MIGRATION" Language="zh_Hant_HK">
+            <Text>遷入 {1_In}，遷出 {2_Out}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ARRIVED" Language="zh_Hant_HK">
+            <Text>遷入</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_LEFT" Language="zh_Hant_HK">
+            <Text>遷出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_TURN" Language="zh_Hant_HK">
+            <Text>{1_Turn}回合</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_AGES" Language="zh_Hant_HK">
+            <Text>所有時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PLAY" Language="zh_Hant_HK">
+            <Text>播放</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_PAUSE" Language="zh_Hant_HK">
+            <Text>暫停</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_GAME_OPTIONS" Language="zh_Hant_HK">
+            <Text>遊戲選項</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_REMOVE_NOTE" Language="zh_Hant_HK">
+            <Text>移除遊戲會從這台電腦的名人堂中刪除它的紀錄，而且無法復原。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_SETTLEMENTS" Language="zh_Hant_HK">
+            <Text>聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_NTH_SETTLEMENT" Language="zh_Hant_HK">
+            <Text>第{1_N}個聚落</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_VICTORY" Language="zh_Hant_HK">
+            <Text>勝利</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_ELIM" Language="zh_Hant_HK">
+            <Text>覆滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_AGE" Language="zh_Hant_HK">
+            <Text>新時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WONDER" Language="zh_Hant_HK">
+            <Text>奇觀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RELIGION" Language="zh_Hant_HK">
+            <Text>宗教</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CAPTURE" Language="zh_Hant_HK">
+            <Text>征服</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_RAZED" Language="zh_Hant_HK">
+            <Text>夷為平地</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_TRIUMPH" Language="zh_Hant_HK">
+            <Text>凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_WAR" Language="zh_Hant_HK">
+            <Text>戰爭</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_PEACE" Language="zh_Hant_HK">
+            <Text>和平</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CRISIS" Language="zh_Hant_HK">
+            <Text>危機</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_CIV" Language="zh_Hant_HK">
+            <Text>新文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_DISASTER" Language="zh_Hant_HK">
+            <Text>災難</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_FOUND" Language="zh_Hant_HK">
+            <Text>建立</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_KIND_MET" Language="zh_Hant_HK">
+            <Text>接觸</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_MAP_TITLE" Language="zh_Hant_HK">
+            <Text>領土</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CIVS" Language="zh_Hant_HK">
+            <Text>文明</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ONLY_MINE" Language="zh_Hant_HK">
+            <Text>僅我的</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_ALL_CIVS" Language="zh_Hant_HK">
+            <Text>全部</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_RIVAL_WAR" Language="zh_Hant_HK">
+            <Text>戰爭：{1_Civ}對{2_Other}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_CONQUESTS" Language="zh_Hant_HK">
+            <Text>征服</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_TL_FATES" Language="zh_Hant_HK">
+            <Text>勝利與覆滅</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_BLOCKED_H" Language="zh_Hant_HK">
+            <Text>《文明帝國VII》的一個錯誤擋住了名人堂</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX" Language="zh_Hant_HK">
+            <Text>有一個暫時的解決方法。點選這裡閱讀說明。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_TITLE" Language="zh_Hant_HK">
+            <Text>修復模組儲存空間：請先閱讀</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY_H" Language="zh_Hant_HK">
+            <Text>為什麼需要這樣做</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_WHY" Language="zh_Hant_HK">
+            <Text>《文明帝國VII》1.5.0 有一個錯誤：每當某個模組要讀取自己儲存的資料時，不管是哪個模組在讀，遊戲回傳的都是按名稱排序最前面的那個條目。只有那一個模組的資料能正常運作。這是要由 Firaxis 修正的錯誤；在那之前，這個按鈕是唯一的解決方法。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES_H" Language="zh_Hant_HK">
+            <Text>此按鈕的作用</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_DOES" Language="zh_Hant_HK">
+            <Text>清空共用儲存空間，只留下一個條目：大多數有選項面板的模組所使用的共用設定條目。Demographics 的設定和名人堂都會保留。一旦共用設定條目成為唯一剩下的項目，遊戲回傳的就是它，所以使用它的模組從此都能正常載入和儲存設定。不過，自己另有獨立條目的模組會因此壞掉：所有獨立條目都會被刪除，包括原本排在最前面、因此是唯一真正能正常運作的那一個。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_AGAIN" Language="zh_Hant_HK">
+            <Text>如果之後有模組再寫入自己的條目，儲存會停止，並會再次提供這項修復。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_GO" Language="zh_Hant_HK">
+            <Text>修復儲存空間：刪除另一個模組儲存的資料</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CONFIRM" Language="zh_Hant_HK">
+            <Text>再點選一次即刪除該模組儲存的資料並修復。此操作無法復原。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_CANCEL" Language="zh_Hant_HK">
+            <Text>取消</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_OK" Language="zh_Hant_HK">
+            <Text>儲存空間已修復。從現在起，Demographics 會正常儲存設定和名人堂，把設定存在共用條目中的其他模組也一樣。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_STORAGE_FIX_FAIL" Language="zh_Hant_HK">
+            <Text>修復沒有成功。每場遊戲仍保存在各自的存檔中。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HOF_BEST" Language="zh_Hant_HK">
+            <Text>最佳遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_BEST_TITLE" Language="zh_Hant_HK">
+            <Text>你最出色的遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_NEXT_BEST" Language="zh_Hant_HK">
+            <Text>前十名的其餘遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_THIS_GAME" Language="zh_Hant_HK">
+            <Text>本局遊戲</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_RANK_OF" Language="zh_Hant_HK">
+            <Text>第{1_Rank}名，共{2_Total}局</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_IN_TOP_TEN" Language="zh_Hant_HK">
+            <Text>位列你的前十名。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_N_TRIUMPHS" Language="zh_Hant_HK">
+            <Text>{1_Count} 項凱旋挑戰</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_SAVED" Language="zh_Hant_HK">
+            <Text>設定會儲存在這台電腦上。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NOT_SAVED" Language="zh_Hant_HK">
+            <Text>本次遊戲執行期間更改的設定會保留到遊戲關閉為止，但無法儲存：模組共用儲存空間回傳了另一個模組的資料、無法讀取，或讀回的內容和寫入的不一致。本頁面上的「修復儲存空間」可以解決這個問題。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_SETTINGS_NO_STORAGE" Language="zh_Hant_HK">
+            <Text>本次遊戲執行期間無法儲存設定：模組儲存空間無法使用。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_OPT_RESET_WARS_ARMED" Language="zh_Hant_HK">
+            <Text>清除所有已記錄的戰爭？</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_TITLE" Language="zh_Hant_HK">
+            <Text>人口統計 CSV 匯出</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_PAGE" Language="zh_Hant_HK">
+            <Text>頁面：{1_Title}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_EXPORTED" Language="zh_Hant_HK">
+            <Text>匯出時間：{1_Time}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTEXT" Language="zh_Hant_HK">
+            <Text>遊戲速度：{1_Speed} · 地圖：{2_Map} · 目前時代：{3_Age}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COVERAGE" Language="zh_Hant_HK">
+            <Text>覆蓋範圍：回合 {1_First}→{2_Last} · 涵蓋回合數：{3_Turns} · 文明數：{4_Civs} · 行數：{5_Rows} · 指標數：{6_Metrics}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_CONTENTS" Language="zh_Hant_HK">
+            <Text>內容：行數：{1_Rows} · 列數：{2_Columns}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_FORMAT" Language="zh_Hant_HK">
+            <Text>格式：整數為精確值；小於 1000 的小數保留 2 位，1000 及以上四捨五入為整數</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_SORTING" Language="zh_Hant_HK">
+            <Text>排序：每個回合的每位玩家各佔一行（turn, pid），按升序排列</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_CSV_META_COLUMNS" Language="zh_Hant_HK">
+            <Text>列按類別分組：身份 → 分數 → 經濟 → 收益 → 軍事 → 知識 → 帝國 → 凱旋挑戰 → 資源 → 時代</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_BCE" Language="zh_Hant_HK"><Text>西元前{1_Year}年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_YEAR_CE" Language="zh_Hant_HK"><Text>西元{1_Year}年</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_ANTIQUITY" Language="zh_Hant_HK"><Text>古{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_EXPLORATION" Language="zh_Hant_HK"><Text>探{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_AGE_TURN_MODERN" Language="zh_Hant_HK"><Text>近{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_DASH" Language="zh_Hant_HK"><Text>T-{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_TURN_SHORT" Language="zh_Hant_HK"><Text>T{1_Turn}</Text></Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_LOYALIST" Language="zh_Hant_HK">
+            <Text>{2_Place}{1_Adjective}效忠派起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_NAME_UPRISING" Language="zh_Hant_HK">
+            <Text>{1_Place}起義</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP" Language="zh_Hant_HK">
+            <Text>{1_Place}因文化歸入{2_Civ}後，效忠{3_Civ}的人們拿起了武器。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_FLIP_UNNAMED" Language="zh_Hant_HK">
+            <Text>{1_Place}因文化歸入{2_Civ}後，效忠舊統治者的人們拿起了武器。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_MISERY" Language="zh_Hant_HK">
+            <Text>{1_Place}多年來民怨不斷。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY" Language="zh_Hant_HK">
+            <Text>在與{3_Civ}交戰期間，起來反抗{1_Civ}的「{2_Policy}」。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_POLICY_UNNAMED" Language="zh_Hant_HK">
+            <Text>在一場戰爭期間，起來反抗{1_Civ}的「{2_Policy}」。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE" Language="zh_Hant_HK">
+            <Text>在與{2_Civ}交戰期間，起來反抗{1_Civ}對待居民的方式。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_CAUSE_ENCLAVE_UNNAMED" Language="zh_Hant_HK">
+            <Text>在一場戰爭期間，起來反抗{1_Civ}對待居民的方式。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_DISPERSED" Language="zh_Hant_HK">
+            <Text>已被鎮壓。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_TIME" Language="zh_Hant_HK">
+            <Text>逐漸平息。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_BURNED" Language="zh_Hant_HK">
+            <Text>{1_Place}被焚毀。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_AGE" Language="zh_Hant_HK">
+            <Text>隨時代結束而終結。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_OUTCOME_ONGOING" Language="zh_Hant_HK">
+            <Text>仍在進行。</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_RISING_HELD_BY" Language="zh_Hant_HK">
+            <Text>由{1_Civ}控制</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING" Language="zh_Hant_HK">
+            <Text>{1_Name}爆發。{2_Cause}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_EV_RISING_END" Language="zh_Hant_HK">
+            <Text>{1_Name}結束。{2_Outcome}</Text>
+        </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_FILTER_RISINGS" Language="zh_Hant_HK">
+            <Text>起義</Text>
+        </Replace>
+    </LocalizedText>
+</Database>
