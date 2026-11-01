@@ -2,8 +2,6 @@
 //
 // Chart-turn progression helpers for demographics-sampler.
 
-import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
-
 /** @param {*} v */
 function finiteOrNull(v) {
   return typeof v === "number" && isFinite(v) ? v : null;
@@ -43,18 +41,12 @@ function isSameAgeContinuation(lastAge, ageType, lastLocal) {
  * boundaries it advances by at least one turn.
  * @param {string | undefined} ageType Current age type.
  * @param {number} localTurn Current age-local turn.
+ * @param {*} history The loaded history; anything without a `samples` array counts as empty.
  * @returns {number} Monotonic chart turn.
  */
-export function computeChartTurn(ageType, localTurn) {
+export function computeChartTurn(ageType, localTurn, history) {
   const lt = positiveLocalTurn(localTurn);
-  /** @type {*} */
-  let h = null;
-  try {
-    h = DemographicsStorage.load();
-  } catch (_) {
-    return lt;
-  }
-  const samps = h && Array.isArray(h.samples) ? h.samples : [];
+  const samps = history && Array.isArray(history.samples) ? history.samples : [];
   if (samps.length === 0) return lt;
   const { chartTurn, age, localTurn: lastLocal } = lastSampleChartState(samps);
   if (isSameAgeContinuation(age, ageType, lastLocal)) {

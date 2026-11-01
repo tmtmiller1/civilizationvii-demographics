@@ -2803,6 +2803,9 @@
         <Row Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP">
             <Text>Finished games stay for good. Unfinished games under {1_Turns} turns are cleared once you start another game.</Text>
         </Row>
+        <Row Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE">
+            <Text>Chart history in this save: {1_Count} turns, {2_Kb} KB, up to {3_Cap} turns kept.</Text>
+        </Row>
         <Row Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY">
             <Text>Victory</Text>
         </Row>

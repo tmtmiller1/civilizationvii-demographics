@@ -2010,6 +2010,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="ko_KR">
             <Text>완료한 게임은 계속 보관됩니다. {1_Turns}턴 미만의 미완료 게임은 다른 게임을 시작하면 지워집니다.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="ko_KR">
+            <Text>이 저장 파일의 차트 기록: {1_Count}턴, {2_Kb} KB, 최대 {3_Cap}턴까지 보관.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ko_KR">
             <Text>승리</Text>
         </Replace>

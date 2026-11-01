@@ -7,7 +7,7 @@
 
 import { el, clear } from "/demographics/ui/history/core/history-dom.js";
 import { log } from "/demographics/ui/history/core/history-log.js";
-import { liveCampaign } from "/demographics/ui/history/capture/history-live.js";
+import { live, liveCampaign } from "/demographics/ui/history/capture/history-live.js";
 import { tabBar } from "/demographics/ui/history/views/history-widgets.js";
 import { viewState } from "/demographics/ui/history/views/history-state.js";
 import { renderChronicle } from "/demographics/ui/history/views/view-chronicle.js";
@@ -138,7 +138,7 @@ export function renderHallOfFame(host, opts) {
     const inGame = opts.mode === "game";
     renderHof(body, {
       live: inGame ? liveCampaign() : null, rerender, embedded: inGame, priorSectionBar,
-      filterHost: opts.filterHost || null
+      filterHost: opts.filterHost || null, historySize: inGame ? live.historySize : null
     });
   } catch (e) {
     renderFailed(host, "hall of fame render failed", e);

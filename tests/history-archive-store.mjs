@@ -140,3 +140,86 @@ const store = await import("/demographics/ui/history/store/history-archive-store
 }
 
 console.log("history-archive-store harness passed");
+
+// 12. noteRecord only changes memory; flushArchive writes once and a second flush with nothing new
+//     writes nothing; saveRecord still writes at once.
+{
+  store._resetForTests();
+  const base = buggyStorage();
+  let writes = 0;
+  globalThis.localStorage = Object.assign(Object.create(base), {
+    setItem(k, v) {
+      writes += 1;
+      return base.setItem(k, v);
+    }
+  });
+  store.noteRecord(archiveRecord("a", 10));
+  assert.equal(writes, 0, "noteRecord writes nothing");
+  assert.equal(store.allRecords().find((r) => r.id === "a").turns, 10, "the view sees the record at once");
+  assert.equal(store.flushArchive(), true);
+  assert.equal(writes, 1, "flushArchive writes once");
+  assert.equal(JSON.parse(base.dump().modSettings)["demographics-halloffame"].games.a.turns, 10);
+  assert.equal(store.flushArchive(), true);
+  assert.equal(writes, 1, "nothing new, nothing written");
+  store.noteRecord(archiveRecord("a", 12));
+  store.noteRecord(archiveRecord("b", 3));
+  assert.equal(writes, 1, "two notes, still no write");
+  assert.equal(store.flushArchive(), true);
+  assert.equal(writes, 2, "one write carries both");
+  assert.equal(store.saveRecord(archiveRecord("c")), true);
+  assert.equal(writes, 3, "saveRecord writes at once");
+  assert.equal(store.flushArchive(), true);
+  assert.equal(writes, 3, "saveRecord left nothing pending");
+}
+
+// 13. A flush that fails keeps the record pending, so the next flush tries again.
+{
+  store._resetForTests();
+  const foreign = JSON.stringify({ "!other": { a: 1 }, modSettings: "{}" });
+  globalThis.localStorage = buggyStorage({ "!other-archive": foreign, modSettings: JSON.stringify({ x: { y: 1 } }) });
+  store.noteRecord(archiveRecord("a"));
+  assert.equal(store.flushArchive(), false, "a foreign store refuses the write");
+  globalThis.localStorage = buggyStorage({ modSettings: JSON.stringify({ x: { y: 1 } }) });
+  assert.equal(store.flushArchive(), true, "the pending record is written once the store reads fine");
+  assert.ok(JSON.parse(localStorage.dump().modSettings)["demographics-halloffame"].games.a);
+}
+
+console.log("history-archive-store cadence cases passed");
+
+// 14. writeFile with the slice already serialized writes the same row as writeFile without it, and
+//     fitSliceText hands back the text of the slice as it stands after fitting.
+{
+  const fileModule = await import("/demographics/ui/history/store/history-archive-file.js");
+  const { fitSliceText } = await import("/demographics/ui/history/store/history-archive.js");
+  /** @type {any[][]} */
+  const inserts = [];
+  let payload = "";
+  globalThis.Database = {
+    query(_name, sql, ...args) {
+      if (/^INSERT INTO/.test(sql)) {
+        inserts.push(args);
+        payload = args[1];
+        return [];
+      }
+      if (/^SELECT Payload FROM/.test(sql)) return [{ Payload: payload }];
+      return [];
+    }
+  };
+  const slice = { __schema: 1, games: { a: archiveRecord("a") }, hidden: {}, texts: {} };
+  assert.equal(fileModule.writeFile(slice), true);
+  const { text, evicted } = fitSliceText(slice);
+  assert.deepEqual(evicted, []);
+  assert.equal(text, JSON.stringify(slice), "a slice within budget serializes once, unchanged");
+  assert.equal(fileModule.writeFile(slice, text), true);
+  assert.equal(inserts.length, 2);
+  assert.equal(inserts[0][0], inserts[1][0], "same schema");
+  assert.equal(inserts[0][1], inserts[1][1], "same payload with and without the text given");
+  const games = Object.fromEntries([..."abcdefgh"].map((id) => [id, archiveRecord(id)]));
+  const big = { __schema: 1, games, hidden: {}, texts: {} };
+  const fitted = fitSliceText(big, 600);
+  assert.ok(fitted.evicted.length > 0, "an over-budget slice loses games");
+  assert.equal(fitted.text, JSON.stringify(big), "the text is the slice after fitting");
+  delete globalThis.Database;
+}
+
+console.log("history-archive-store writeFile text case passed");

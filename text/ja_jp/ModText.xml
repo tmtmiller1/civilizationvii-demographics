@@ -2010,6 +2010,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="ja_JP">
             <Text>完了したゲームはずっと残ります。{1_Turns}ターン未満の未完了ゲームは、別のゲームを始めると消去されます。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="ja_JP">
+            <Text>このセーブのグラフ履歴：{1_Count} ターン、{2_Kb} KB、最大 {3_Cap} ターンまで保持。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ja_JP">
             <Text>勝利</Text>
         </Replace>

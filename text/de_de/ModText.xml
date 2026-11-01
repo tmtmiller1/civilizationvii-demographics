@@ -2567,6 +2567,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="de_DE">
             <Text>Abgeschlossene Partien bleiben dauerhaft. Unfertige Partien unter {1_Turns} Runden werden entfernt, sobald Sie eine neue Partie beginnen.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="de_DE">
+            <Text>Diagrammverlauf in diesem Spielstand: {1_Count} Runden, {2_Kb} KB, bis zu {3_Cap} Runden werden behalten.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="de_DE">
             <Text>Sieg</Text>
         </Replace>

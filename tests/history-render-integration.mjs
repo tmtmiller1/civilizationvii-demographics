@@ -557,6 +557,43 @@ assert.ok(texts(empty).includes("LOC_DEMOGRAPHICS_HIST_EMPTY_CHRONICLE"));
   }
 }
 
+// The history-size line: in game, with the sampler's storage reporting samples, the storage note says how
+// much chart history the save holds; at the main menu, and before anything is recorded, there is no line.
+{
+  const store = await import("/demographics/ui/history/store/history-archive-store.js");
+  store._resetForTests();
+  globalThis.localStorage = buggyStorage();
+  const sizeDoc = newCampaign({ id: "size-1", seed: 1, now: 1, setup: {}, local: 0 });
+  ensureAge(sizeDoc, "AGE_ANTIQUITY", 1);
+  upsertPlayer(sizeDoc, 0, idn("LEADER_X", "CIV_X"), { age: "AGE_ANTIQUITY", turn: 1 });
+  const sizeRec = buildRecord(sizeDoc);
+  sizeRec.turns = 40;
+  store.saveRecord(sizeRec);
+  viewState.hofTab = "overview";
+  viewState.showShort = false;
+  live.historySize = () => ({ samples: 120, payloadBytes: 950000, cap: 2000 });
+  const inGame = document.createElement("div");
+  renderHallOfFame(inGame, { mode: "game" });
+  assert.ok(texts(inGame).includes("LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE|120|928|2000"), "size line in game");
+  assert.equal(findAll(inGame, "dgh-note--size").length, 1, "one size line");
+  const shell = document.createElement("div");
+  renderHallOfFame(shell, { mode: "shell" });
+  assert.ok(!texts(shell).includes("LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE"), "no size line at the main menu");
+  live.historySize = () => ({ samples: 0, payloadBytes: 0, cap: 2000 });
+  const fresh = document.createElement("div");
+  renderHallOfFame(fresh, { mode: "game" });
+  assert.ok(!texts(fresh).includes("LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE"), "no line before the first sample");
+  live.historySize = () => ({ samples: 3, payloadBytes: 4096, cap: Infinity });
+  const uncapped = document.createElement("div");
+  renderHallOfFame(uncapped, { mode: "game" });
+  assert.ok(texts(uncapped).includes("LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE|3|4|3"), "no cap: the count stands in");
+  live.historySize = null;
+  const none = document.createElement("div");
+  renderHallOfFame(none, { mode: "game" });
+  assert.ok(!texts(none).includes("LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE"), "no provider, no line");
+  assert.deepEqual(errors, []);
+}
+
 // Settings that stopped persisting this session: the Hall of Fame storage note carries a line about it,
 // in both the healthy-archive and the blocked-archive layouts, and nothing while settings persist.
 {

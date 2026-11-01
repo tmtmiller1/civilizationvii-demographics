@@ -2567,6 +2567,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="zh_Hans_CN">
             <Text>已完成的对局会一直保留。不足 {1_Turns} 回合的未完成对局会在你开始新对局时清除。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="zh_Hans_CN">
+            <Text>此存档中的图表历史：{1_Count} 回合，{2_Kb} KB，最多保留 {3_Cap} 回合。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="zh_Hans_CN">
             <Text>胜利</Text>
         </Replace>

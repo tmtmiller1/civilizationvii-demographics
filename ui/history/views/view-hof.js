@@ -45,6 +45,8 @@ export const HOF_TABS = [
  * @property {HTMLElement|null} [priorSectionBar] The previous render's section tab bar (own screen only).
  * @property {HTMLElement|null} [filterHost] The screen's title-line slot for the short-games filter
  *   (own screen only). When present the filter is mounted there instead of on the section row.
+ * @property {(() => {samples: number, payloadBytes: number, cap: number}|null)|null} [historySize] In game, the
+ *   chart history the save holds (from the sampler's storage); null at the main menu.
  */
 
 const numOr0 = (/** @type {*} */ v) => (typeof v === "number" && Number.isFinite(v) ? v : 0);
@@ -368,6 +370,28 @@ function keepNote(all) {
 }
 
 /**
+ * How much chart history the current save holds, so a question about save size can be answered from
+ * this page. Only in game, and only once the sampler has recorded something.
+ * @param {HofCtx} ctx
+ * @returns {HTMLElement|null}
+ */
+function historySizeNote(ctx) {
+  let size = null;
+  try {
+    size = typeof ctx.historySize === "function" ? ctx.historySize() : null;
+  } catch (_) {
+    // A storage module that can't answer leaves the line out.
+  }
+  if (!size || typeof size.samples !== "number" || !(size.samples > 0)) return null;
+  const kb = Math.round(numOr0(size.payloadBytes) / 1024);
+  const cap = typeof size.cap === "number" && Number.isFinite(size.cap) ? size.cap : size.samples;
+  return el("div", {
+    cls: "dgh-note dgh-note--size",
+    text: t("LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE", size.samples, kb, cap)
+  });
+}
+
+/**
  * @param {HofCtx} ctx
  * @param {ArchiveRecord[]} all Every record.
  */
@@ -382,6 +406,8 @@ function storageNote(ctx, all) {
     const kids = [];
     const keepLine = keepNote(all);
     if (keepLine) kids.push(keepLine);
+    const sizeLine = historySizeNote(ctx);
+    if (sizeLine) kids.push(sizeLine);
     if (settingsLine) kids.push(settingsLine, ...settingsRepair(ctx));
     if (done) kids.push(done);
     if (!kids.length) return null;

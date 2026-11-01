@@ -9,12 +9,16 @@ import { retentionScale } from "/demographics/ui/core/demographics-hardware.js";
 export const HARD_MAX_SAMPLES = 50000;
 
 /**
- * Serialized-payload byte budget. No engine limit on a GameConfiguration value is
- * known; the soft budget triggers extra sample tightening before the write, the
- * hard budget only escalates the log line (the current game is never dropped).
+ * Serialized-payload byte budget. Measured 2026-11-01 in a lab game: a 6 MB
+ * GameConfiguration value was fine for two turns, a 24 MB value hung the game.
+ * The soft budget triggers extra sample tightening before the write; the hard
+ * budget only escalates the log line (the current game is never dropped).
  */
 export const PAYLOAD_SOFT_BYTES = 3 * 1024 * 1024;
-/** Serialized-payload size above which every save logs an error; see PAYLOAD_SOFT_BYTES. */
+/**
+ * Serialized-payload size above which every save logs an error; see PAYLOAD_SOFT_BYTES.
+ * The largest value seen working; the game hung at four times this size.
+ */
 export const PAYLOAD_HARD_BYTES = 6 * 1024 * 1024;
 
 /** Floor on the auto-derived cap so a weak-hardware scale never starves history. */

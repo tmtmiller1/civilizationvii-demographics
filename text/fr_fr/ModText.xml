@@ -2567,6 +2567,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="fr_FR">
             <Text>Les parties terminées sont conservées pour de bon. Les parties inachevées de moins de {1_Turns} tours sont effacées dès que vous commencez une autre partie.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="fr_FR">
+            <Text>Historique des graphiques dans cette sauvegarde : {1_Count} tours, {2_Kb} Ko, jusqu'à {3_Cap} tours conservés.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="fr_FR">
             <Text>Victoire</Text>
         </Replace>

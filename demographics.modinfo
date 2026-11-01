@@ -251,7 +251,6 @@
                     <Item>ui/screen-demographics/camera/cinematic-tour-highlights.js</Item>
                     <Item>ui/screen-demographics/camera/city-camera-controller.js</Item>
                     <Item>ui/screen-demographics/camera/city-map-view.js</Item>
-                    <Item>ui/screen-demographics/views/settlements/towns-history.js</Item>
                     <Item>ui/screen-demographics/views/relations/view-relations.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-shared.js</Item>
                     <Item>ui/screen-demographics/views/relations/relations-edges.js</Item>

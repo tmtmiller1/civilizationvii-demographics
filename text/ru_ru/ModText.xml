@@ -2010,6 +2010,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="ru_RU">
             <Text>Завершённые игры хранятся всегда. Незавершённые игры короче {1_Turns} ходов удаляются, когда вы начинаете новую игру.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="ru_RU">
+            <Text>История графиков в этом сохранении: {1_Count} ходов, {2_Kb} КБ, хранится до {3_Cap} ходов.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="ru_RU">
             <Text>Победа</Text>
         </Replace>

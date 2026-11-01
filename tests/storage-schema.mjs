@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 
 import { loadEmpty, loadParsed } from "/demographics/ui/storage/storage-load.js";
 import { emptyHistory, isValid, normalize } from "/demographics/ui/storage/storage-schema.js";
-import { writeStorePayload } from "/demographics/ui/storage/storage-retention.js";
 
 function mkHistory() {
   return {
@@ -87,31 +86,9 @@ function testEmptyHistoryCarriesSeed() {
   assert.ok(isValid(empty, 1), "an empty history should validate");
 }
 
-function testWriteStorePayloadWritesEnvelope() {
-  const history = mkHistory();
-  /** @type {string | null} */
-  let written = null;
-  const ok = writeStorePayload(
-    {
-      write: (_key, value) => {
-        written = value;
-      }
-    },
-    "json",
-    history,
-    () => {}
-  );
-
-  assert.equal(ok, true, "writeStorePayload should report success");
-  assert.ok(written, "writeStorePayload should write data");
-  const payload = parseWrittenEnvelope(written || "{}");
-  assert.equal(payload.seed, "seed-a", "envelope data should include history content");
-}
-
 testLegacyPayloadStillLoads();
 testEnvelopePayloadLoads();
 testLoadEmptyRecoveryWritesEnvelope();
 testEmptyHistoryCarriesSeed();
-testWriteStorePayloadWritesEnvelope();
 
 console.log("storage-schema harness passed");

@@ -2567,6 +2567,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="zh_Hant_HK">
             <Text>已完成的遊戲會一直保留。不足 {1_Turns} 回合的未完成遊戲會在你開始新遊戲時清除。</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="zh_Hant_HK">
+            <Text>此存檔中的圖表歷史：{1_Count} 回合，{2_Kb} KB，最多保留 {3_Cap} 回合。</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="zh_Hant_HK">
             <Text>勝利</Text>
         </Replace>

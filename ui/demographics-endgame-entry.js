@@ -68,10 +68,13 @@ function openScreen(focusView) {
   try {
     if (focusView) {
       try {
-        DemographicsSettings.setSetting("pendingReturnView", focusView);
         // From the results screen, World Rankings opens on the Hall of Fame so the finished game
-        // is seen in its ranking.
-        if (focusView === "rankings") DemographicsSettings.setSetting("settlementsSubTab", "halloffame");
+        // is seen in its ranking. One write of the shared row for both keys.
+        DemographicsSettings.setSettings(
+          focusView === "rankings"
+            ? { pendingReturnView: focusView, settlementsSubTab: "halloffame" }
+            : { pendingReturnView: focusView }
+        );
       } catch (_) {
         /* settings unavailable → opens on the default view */
       }

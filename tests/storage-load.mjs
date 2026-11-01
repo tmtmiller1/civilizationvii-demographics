@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 
 import { loadEmpty, loadParsed, readRaw, rejectedKey } from "/demographics/ui/storage/storage-load.js";
 import { emptyHistory, isValid, normalize } from "/demographics/ui/storage/storage-schema.js";
-import { serializePayload, writeStorePayload } from "/demographics/ui/storage/storage-retention.js";
+import { serializePayload, writeSerializedPayload } from "/demographics/ui/storage/storage-retention.js";
 
 const KEY = "json";
 /** Unversioned slot: JSON garbage with no readable version. */
@@ -122,7 +122,7 @@ function testNewerVersionParksAndSaveLeavesItAlone() {
   assert.ok(logged.some((l) => /version 2 is not 1/.test(l) && /bytes=\d+/.test(l)), "logError names reason and bytes");
 
   // (b) A later save writes the primary key and leaves the parked payload alone.
-  assert.equal(writeStorePayload(store, KEY, mkHistory(), () => {}), true);
+  assert.equal(writeSerializedPayload(store, KEY, serializePayload(mkHistory()), () => {}), true);
   assert.notEqual(store.read(KEY), newer, "save should overwrite the primary key");
   assert.equal(store.read(REJECTED_V2), newer, "save should not touch the rejected slot");
 }
@@ -139,7 +139,7 @@ function testDowngradeUpgradeRoundTrip() {
   assert.equal(store.read(REJECTED_V2), v2Text, "v1 build parks the v2 payload under the v2 slot");
   assert.equal(store.read(KEY), v2Text, "v1 build's load leaves the primary alone");
   const v1Data = mkHistory("seed-a");
-  assert.equal(writeStorePayload(store, KEY, v1Data, () => {}), true);
+  assert.equal(writeSerializedPayload(store, KEY, serializePayload(v1Data), () => {}), true);
   const v1Text = store.read(KEY);
   assert.equal(store.read(REJECTED_V2), v2Text, "v1 build's save leaves the v2 slot alone");
 

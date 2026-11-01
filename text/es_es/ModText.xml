@@ -2567,6 +2567,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="es_ES">
             <Text>Las partidas terminadas se conservan siempre. Las partidas sin terminar de menos de {1_Turns} turnos se borran en cuanto empiezas otra partida.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="es_ES">
+            <Text>Historial de gráficos en esta partida guardada: {1_Count} turnos, {2_Kb} KB, se conservan hasta {3_Cap} turnos.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="es_ES">
             <Text>Victoria</Text>
         </Replace>

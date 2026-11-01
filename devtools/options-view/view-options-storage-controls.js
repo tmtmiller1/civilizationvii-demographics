@@ -8,7 +8,7 @@ import {
   resolveEffectiveCap,
   detectGameSpeedType,
   HARD_MAX_SAMPLES
-} from "/demographics/ui/storage/demographics-storage.js";
+} from "/demographics/ui/storage/storage-cap.js";
 
 /**
  * @typedef {{ id: string, label: string }} DropdownOption

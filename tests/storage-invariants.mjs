@@ -17,7 +17,15 @@ import { listJs, rel, ROOT, UI_DIR } from "./_fs-helpers.mjs";
 //       demographics-owned strays) and the storage-repair module;
 //   (d) nobody writes a literal empty root (`"{}"` / `JSON.stringify({})`) under ROOT_KEY;
 //   (e) every write of ROOT_KEY is preceded, in the same function body, by a read of it
-//       (`getItem(ROOT_KEY` or a call to a read helper named readRoot / readRootForWrite).
+//       (`getItem(ROOT_KEY` or a call to a read helper named readRoot / readRootForWrite);
+//   (f) no `setSettings(` call under ui/sampler/: the sampler never writes the shared row;
+//   (g) no `history.samples =`, `.samples.push(` or `.samples.splice(` outside ui/storage/ and
+//       ui/sampler/: views share the sampler's in-memory history and only read it;
+//   (h) no function body under ui/ holds more than one `setSetting(` call; a handler that changes
+//       several keys makes one `setSettings(` call, so a click pays for one write of the shared row.
+//
+// (h) uses the same brace-matching helper as (e), with the same limits; the method definition in
+// demographics-settings.js is not a call and is skipped.
 //
 // (e) is a best-effort textual check with these documented limits:
 //   - the "enclosing function" is found by brace matching over a copy of the source with comments
@@ -244,6 +252,52 @@ for (const abs of listJs(UI_DIR)) {
     }
     sites.push(`${where} setItem(${key}) ${verdict}`);
     if (verdict.startsWith("FAIL")) failures.push(`(e) ${where}: ${verdict.slice(6)}`);
+  }
+}
+
+// (f) (g) (h): per-file source scans over the same blanked text.
+const SETTINGS_WRITE = /\bsetSettings\s*\(/g;
+const SAMPLES_MUTATION = /\bhistory\.samples\s*=[^=]|\.samples\.push\s*\(|\.samples\.splice\s*\(/g;
+const SINGLE_SETTING_WRITE = /\bsetSetting\s*\(/g;
+const MUTATION_ALLOWED = /^ui\/(storage|sampler)\//;
+for (const abs of listJs(UI_DIR)) {
+  const file = rel(abs);
+  const text = blankComments(fs.readFileSync(abs, "utf8"));
+  const struct = blankStrings(text);
+  let m;
+  if (file.startsWith("ui/sampler/")) {
+    while ((m = SETTINGS_WRITE.exec(struct)) !== null) {
+      failures.push(
+        `(f) ${file}:${lineOf(text, m.index)}: the sampler must not write the shared row (setSettings)`
+      );
+    }
+  }
+  if (!MUTATION_ALLOWED.test(file)) {
+    while ((m = SAMPLES_MUTATION.exec(struct)) !== null) {
+      failures.push(
+        `(g) ${file}:${lineOf(text, m.index)}: assigns into history.samples outside ui/storage/ and ui/sampler/`
+      );
+    }
+  }
+  const bodies = functionBodies(struct);
+  const perBody = new Map();
+  while ((m = SINGLE_SETTING_WRITE.exec(struct)) !== null) {
+    const open = m.index + m[0].length - 1;
+    const closeParen = matchBracket(struct, open);
+    if (closeParen > 0 && /^\s*\{/.test(struct.slice(closeParen + 1))) continue; // a definition, not a call
+    const fn = enclosing(bodies, m.index);
+    const key = fn ? `${fn.name}@${fn.open}` : "<top-level>";
+    const entry = perBody.get(key) || { name: fn ? fn.name : "<top-level>", lines: [] };
+    entry.lines.push(lineOf(text, m.index));
+    perBody.set(key, entry);
+  }
+  for (const entry of perBody.values()) {
+    if (entry.lines.length > 1) {
+      failures.push(
+        `(h) ${file}: ${entry.name}() calls setSetting( ${entry.lines.length} times ` +
+          `(lines ${entry.lines.join(", ")}); use one setSettings( call`
+      );
+    }
   }
 }
 

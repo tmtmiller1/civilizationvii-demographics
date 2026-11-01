@@ -7,8 +7,12 @@
 import { safe } from "/demographics/ui/history/core/history-log.js";
 import { loadCampaign } from "/demographics/ui/history/store/history-campaign-store.js";
 
-/** @type {{doc: CampaignDoc|null}} */
-export const live = { doc: null };
+/**
+ * `historySize` is set by the capture loop while a game runs: it reports the chart history the
+ * save holds (sample count, bytes, cap) for the Hall of Fame's size line. Null at the main menu.
+ * @type {{doc: CampaignDoc|null, historySize: (() => {samples: number, payloadBytes: number, cap: number})|null}}
+ */
+export const live = { doc: null, historySize: null };
 
 /**
  * The live campaign for the in-game views (loaded from the save on demand).

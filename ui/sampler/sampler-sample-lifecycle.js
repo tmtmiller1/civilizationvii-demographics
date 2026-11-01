@@ -1,7 +1,7 @@
 // sampler-sample-lifecycle.js
 //
-// Lifecycle helpers for one demographics sample pass: timing, aux-history
-// recording, persistence, and finalize bookkeeping.
+// Lifecycle helpers for one demographics sample pass: timing, persistence, and
+// finalize bookkeeping.
 
 /**
  * High-resolution timestamp in ms (0 when unavailable).
@@ -36,38 +36,18 @@ export function logSampleTiming(logDebug, t, counts) {
 }
 
 /**
- * Record auxiliary town history for one sample pass in a single batched settings write, so the
- * shared `modSettings` store is parsed + stringified once per turn. Settlement founding/trend
- * history rides the saved history blob instead (see finalizeSampleLifecycle).
- * @param {(label: string, fn: () => any) => any} safeCall
- * @param {{
- *   recordLocalTownsNow: (chartTurn: number) => ({key: string, value: *}|null),
- *   setSettings: (entries: Record<string, *>) => void
- * }} aux Aux recorders + batched persistence.
- * @param {number} chartTurn Monotonic chart turn.
- */
-export function recordAuxHistory(safeCall, aux, chartTurn) {
-  /** @type {Record<string, *>} */
-  const entries = {};
-  const towns = safeCall("recordLocalTownsNow", () => aux.recordLocalTownsNow(chartTurn));
-  if (towns && towns.key) entries[towns.key] = towns.value;
-  if (Object.keys(entries).length) {
-    safeCall("persistAuxHistory", () => aux.setSettings(entries));
-  }
-}
-
-/**
  * Append one snapshot without persisting and return the in-progress history, so
  * the caller can batch war tracking into a single per-turn save (see
  * {@link commitSample}). Returns null on append failure.
  * @param {{ appendSample: (snapshot: any, opts?: any) => any }} storage History storage API.
  * @param {(label: string, e: any) => void} tripIfTooMany Error counter/kill-switch hook.
  * @param {*} snapshot Snapshot to append.
+ * @param {*} [history] The history already loaded this pass, so the append skips its own load.
  * @returns {*} The updated history, or null on failure.
  */
-export function persistSnapshot(storage, tripIfTooMany, snapshot) {
+export function persistSnapshot(storage, tripIfTooMany, snapshot, history) {
   try {
-    return storage.appendSample(snapshot, { persist: false });
+    return storage.appendSample(snapshot, { persist: false, history });
   } catch (e) {
     tripIfTooMany("DemographicsStorage.appendSample", e);
     return null;
@@ -101,7 +81,8 @@ export function commitSample(storage, tripIfTooMany, history) {
  * @param {number} minorCount Number of sampled minors.
  * @param {{
  *   perfNow: () => number,
- *   persistSnapshot: (snapshot: any) => any,
+ *   history?: any,
+ *   persistSnapshot: (snapshot: any, history?: any) => any,
  *   runWarTracker: (snapshot: any, turn: number, history: any) => void,
  *   recordSettlementHistory: (history: any, snapshot: any) => void,
  *   commitSample: (history: any) => number,
@@ -116,7 +97,7 @@ export function finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, deps
   const tWork = deps.perfNow();
   // One parse + one save per turn: append (no write) → war tracking and the
   // settlement trace + end-of-age archive mutate the same blob → one commit persists all.
-  const history = deps.persistSnapshot(snapshot);
+  const history = deps.persistSnapshot(snapshot, deps.history);
   const tWrite = deps.perfNow();
   deps.runWarTracker(snapshot, turn, history);
   deps.recordSettlementHistory(history, snapshot);

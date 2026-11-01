@@ -40,11 +40,11 @@ const LAZY_CHART_METRICS = new Set(["wars_gantt", "war_graphs"]);
 // so these aliases name the fields without pinning a structural shape.
 /**
  * @typedef {*} SettingsModule The demographics-settings surface
- *   (`getSetting`/`setSetting`).
+ *   (`getSetting`/`setSetting`/`setSettings`).
  */
 /**
  * @typedef {*} StorageModule The demographics-storage singleton
- *   (`load`/`flush`).
+ *   (`loadForView`/`load`/`flush`).
  */
 /**
  * @typedef {*} SamplerModule The demographics-sampler surface (`sampleNow`).
@@ -358,8 +358,8 @@ class ScreenDemographics extends Panel {
   }
 
   _loadHistory() {
-    if (this.storage && typeof this.storage.load === "function") {
-      this.history = this.storage.load() || this.history;
+    if (this.storage && typeof this.storage.loadForView === "function") {
+      this.history = this.storage.loadForView() || this.history;
     }
     log.debug("history loaded; sample count=", this.history.samples?.length || 0);
   }
@@ -373,7 +373,7 @@ class ScreenDemographics extends Panel {
       log.debug("history empty ; forcing on-demand sampleNow()");
       safeCall(() => {
         this.sampler.sampleNow();
-        if (this.storage?.load) this.history = this.storage.load() || this.history;
+        if (this.storage?.loadForView) this.history = this.storage.loadForView() || this.history;
         log.debug("post-sampleNow sample count=", this.history.samples?.length || 0);
       });
     }
@@ -476,8 +476,12 @@ class ScreenDemographics extends Panel {
     this.activeMetric = "";
     safeCall(() => ViewHistory.resetGroupSelections());
     // Rankings always opens on its first sub-tab (Civilization Ranking), not a stale prior sub-tab.
-    if (id === "rankings") safeCall(() => this.settings.setSetting("settlementsSubTab", "civranking"));
-    safeCall(() => this.settings.setSetting("activeView", id));
+    // One settings write for the click: every setSetting is a full read and rewrite of the shared row.
+    safeCall(() =>
+      this.settings.setSettings(
+        id === "rankings" ? { settlementsSubTab: "civranking", activeView: id } : { activeView: id }
+      )
+    );
     this.renderActiveView();
   }
 
@@ -486,7 +490,7 @@ class ScreenDemographics extends Panel {
    */
   _reload() {
     safeCall(() => {
-      if (this.storage?.load) this.history = this.storage.load() || this.history;
+      if (this.storage?.loadForView) this.history = this.storage.loadForView() || this.history;
     });
     this.renderActiveView();
   }
@@ -662,8 +666,9 @@ class ScreenDemographics extends Panel {
     this.activeTimeFilter = id;
     if (!this.timeFiltersByMetric) this.timeFiltersByMetric = {};
     this.timeFiltersByMetric[this.activeMetric] = id;
-    safeCall(() => this.settings.setSetting("activeTimeFilter", id));
-    safeCall(() => this.settings.setSetting("timeFiltersByMetric", this.timeFiltersByMetric));
+    safeCall(() =>
+      this.settings.setSettings({ activeTimeFilter: id, timeFiltersByMetric: this.timeFiltersByMetric })
+    );
     this.renderActiveView();
   }
 

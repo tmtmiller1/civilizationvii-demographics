@@ -27,8 +27,9 @@ import {
 import { loadCampaign, saveCampaign } from "/demographics/ui/history/store/history-campaign-store.js";
 import { buildRecord, recordTags } from "/demographics/ui/history/store/history-archive.js";
 import { t, legacyWhyKey, legacyWhatKey, plainText } from "/demographics/ui/history/core/history-text.js";
-import { saveRecord } from "/demographics/ui/history/store/history-archive-store.js";
+import { flushArchive, noteRecord, saveRecord } from "/demographics/ui/history/store/history-archive-store.js";
 import { live } from "/demographics/ui/history/capture/history-live.js";
+import DemographicsStorage from "/demographics/ui/storage/demographics-storage.js";
 import { newCrisisState, crisisStep } from "/demographics/ui/history/capture/history-crisis.js";
 import { captureMap } from "/demographics/ui/history/capture/history-mapgrid.js";
 import { risingEvents } from "/demographics/ui/history/capture/history-risings.js";
@@ -38,10 +39,16 @@ import { getGameSeed } from "/demographics/ui/screen-demographics/screen/guarded
 /** @typedef {(...args: any[]) => void} Handler */
 /**
  * @type {{started: boolean, listeners: Array<[string, Handler]>, errors: number, lastTurn: number,
- *   lastAge: string}}
+ *   lastAge: string, lastFlushTurn: number}}
  */
-const state = { started: false, listeners: [], errors: 0, lastTurn: -1, lastAge: "" };
+const state = { started: false, listeners: [], errors: 0, lastTurn: -1, lastAge: "", lastFlushTurn: -Infinity };
 const MAX_ERRORS = 25;
+/**
+ * Local turns between writes of the Hall of Fame file. The record is refreshed in memory every
+ * turn; the file (a read, merge and rewrite of up to 512 KB) is written this often, on every forced
+ * reason, and when the page unloads.
+ */
+export const HOF_FILE_EVERY = 5;
 
 /** @type {import("./history-diff.js").Namer} */
 const NAMER = {
@@ -190,11 +197,17 @@ export function sampleNow(reason) {
     if (!shouldSampleTurn(state, world.turn, world.age, reason)) return;
     const eventCount = recordWorld(doc, local, world);
     safe(() => captureMap(doc, doc.ages.length - 1, world.turn, reason !== "turn"), false);
-    persist(doc);
+    persist(doc, reason, world.turn);
     log.debug("sample", reason, "events", eventCount);
   } catch (e) {
     state.errors++;
     log.error("sample failed (" + reason + ")", e);
+    if (state.errors === MAX_ERRORS) {
+      log.error(
+        "chronicle capture stopped for this session after " + MAX_ERRORS +
+          " errors; the Hall of Fame record keeps its last state"
+      );
+    }
   }
 }
 
@@ -353,13 +366,25 @@ function markBaseline(doc, world) {
   }
 }
 
-/** @param {CampaignDoc} doc */
-function persist(doc) {
+/**
+ * Save the campaign into the game configuration every time, and refresh the Hall of Fame record:
+ * written to the archive file on a forced reason or every HOF_FILE_EVERY turns, otherwise only in
+ * memory until the next flush.
+ * @param {CampaignDoc} doc
+ * @param {string} reason Why the sample was taken.
+ * @param {number} turn The local turn sampled.
+ */
+function persist(doc, reason, turn) {
   if (mayStoreCampaign({ network: isNetworkMultiplayer(), host: isHost() })) saveCampaign(doc);
   const rec = buildRecord(doc);
   if (!rec) return;
   rec.texts = { ...savedTextsFor(rec), ...(doc.texts || {}) };
-  saveRecord(rec);
+  if (reason !== "turn" || turn - state.lastFlushTurn >= HOF_FILE_EVERY) {
+    saveRecord(rec);
+    state.lastFlushTurn = turn;
+  } else {
+    noteRecord(rec);
+  }
 }
 
 /**
@@ -424,6 +449,7 @@ function listen(name, fn) {
 export function startCapture() {
   if (state.started) return;
   state.started = true;
+  live.historySize = () => DemographicsStorage.decimationStatus();
   listen("PlayerTurnActivated", (/** @type {any} */ data) => {
     if (data && data.player === localId()) sampleNow("turn");
   });
@@ -443,6 +469,8 @@ export function startCapture() {
  * from its BeforeUnload hook.
  */
 export function stopCapture() {
+  safe(() => flushArchive(), false);
+  live.historySize = null;
   const off = safe(() => (typeof engine.off === "function" ? engine.off.bind(engine) : null), null);
   for (const [name, fn] of state.listeners) {
     if (off) safe(() => off(name, fn), undefined);
@@ -456,7 +484,9 @@ export function stopCapture() {
  */
 export function _resetForTests() {
   live.doc = null;
+  live.historySize = null;
   state.started = false;
   state.listeners = [];
   state.errors = 0;
+  state.lastFlushTurn = -Infinity;
 }

@@ -66,8 +66,7 @@ import {
   finalizeSampleLifecycle,
   logSampleTiming,
   perfNow,
-  persistSnapshot,
-  recordAuxHistory
+  persistSnapshot
 } from "/demographics/ui/sampler/sampler-sample-lifecycle.js";
 import {
   loadStoredSampleCount,
@@ -94,7 +93,6 @@ import {
   resetAgeBoundaryDebounce
 } from "/demographics/ui/sampler/sampler-age-boundary.js";
 import { runWarTracker } from "/demographics/ui/sampler/sampler-wars-core.js";
-import { recordLocalTownsNow } from "/demographics/ui/screen-demographics/views/settlements/towns-history.js";
 import { recordSettlementAge } from "/demographics/ui/screen-demographics/settlements/settlements-age-archive.js";
 import {
   startFoundingTracker,
@@ -241,10 +239,10 @@ setSamplerErrorHandler(tripIfTooMany);
  * Civics, and the score fallback stay continuous across the age boundary
  * instead of resetting to the new age's fresh tree (see computeNodeBaselines).
  * @param {string | undefined} ageType The age being sampled now.
+ * @param {*} priorHistory The history loaded for this sample pass.
  */
-function seedNodeBaselinesForSample(ageType) {
+function seedNodeBaselinesForSample(ageType, priorHistory) {
   try {
-    const priorHistory = DemographicsStorage.load();
     setNodeBaselineByPid(
       computeNodeBaselines(priorHistory ? priorHistory.samples : undefined, ageType)
     );
@@ -262,10 +260,12 @@ function doSample() {
     return null;
   }
   const tStart = perfNow();
+  // One load per pass: the baseline seed, the chart turn and the append all read this object.
+  const history = DemographicsStorage.load();
   const globalAge = getGlobalAgeContext(safeCall);
   const ageType = getCurrentAgeType();
-  seedNodeBaselinesForSample(ageType);
-  const chartTurn = computeChartTurn(ageType, localTurn);
+  seedNodeBaselinesForSample(ageType, history);
+  const chartTurn = computeChartTurn(ageType, localTurn, history);
   // Each sample carries localTurn (age-local Game.turn), age, chartTurn (a
   // monotonic chart-X turn that survives capping/decimation) and turn (mirrors
   // localTurn; the chart derives the global X at render time as
@@ -297,17 +297,7 @@ function doSample() {
   // Game-wide per-religion followers (settlements + population), for the Religion
   // Spread / By-Population line charts; stored apart from `players`.
   attachReligionSnapshot(snapshot, safeCall);
-  // Append the local player's town populations to the rolling trend window
-  // (independent of the sample stream; never throws the sample).
-  recordAuxHistory(
-    safeCall,
-    {
-      recordLocalTownsNow,
-      setSettings: (entries) => DemographicsSettings.setSettings(entries)
-    },
-    chartTurn
-  );
-  finalizeSample(snapshot, localTurn, tStart, minors ? Object.keys(minors).length : 0);
+  finalizeSample(snapshot, localTurn, tStart, minors ? Object.keys(minors).length : 0, history);
   return snapshot;
 }
 
@@ -332,12 +322,14 @@ function recordSettlementHistory(history, built, localTurn) {
  * @param {number} turn The sample turn.
  * @param {number} tStart The sample start time (perfNow).
  * @param {number} minorCount The number of sampled minors.
+ * @param {*} history The history loaded at the start of this pass.
  */
-function finalizeSample(snapshot, turn, tStart, minorCount) {
+function finalizeSample(snapshot, turn, tStart, minorCount, history) {
   const stored = finalizeSampleLifecycle(snapshot, turn, tStart, minorCount, {
     perfNow,
-    persistSnapshot: (builtSnapshot) =>
-      persistSnapshot(DemographicsStorage, tripIfTooMany, builtSnapshot),
+    history,
+    persistSnapshot: (builtSnapshot, loaded) =>
+      persistSnapshot(DemographicsStorage, tripIfTooMany, builtSnapshot, loaded),
     runWarTracker,
     recordSettlementHistory: (history, built) => recordSettlementHistory(history, built, turn),
     commitSample: (history) => commitSample(DemographicsStorage, tripIfTooMany, history),

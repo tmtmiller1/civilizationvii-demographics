@@ -12,6 +12,16 @@ section below by `scripts/steam-changelog.mjs`.
   settlements, yields, ages and Triumphs.
 
 ### Changed
+- Ending a turn is shorter. The sampler reads your chart history from the save once per turn instead of three
+  times, and it no longer writes a town trend buffer to the shared settings entry every turn (nothing read it).
+- The Demographics screen opens faster. It reads the sampler's copy of the chart history instead of parsing the
+  save's copy again.
+- The Hall of Fame file is written every five turns, and at once when a game ends, an age ends, you load a save or
+  leave to the main menu, instead of every turn. If the game closes between writes, the row catches up on the
+  next load.
+- Switching to the Rankings tab or changing a time filter saves your settings in one write instead of two.
+- The in-game Hall of Fame shows a line saying how many turns of chart history your save holds, how big it is, and
+  how many turns are kept at most.
 - The Hall of Fame's list of past games now lives in a file of its own, `demographics-halloffame.sqlite`, in the
   game's user folder next to your saves, instead of the storage entry mods share for their settings. Other mods'
   options load faster, since they no longer read through your Hall of Fame on the way, and a mod that clears that

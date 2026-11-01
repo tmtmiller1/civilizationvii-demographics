@@ -183,9 +183,15 @@ function migrateSlice(slice) {
   return slice;
 }
 
+// Keys an earlier build wrote that nothing reads any more. They leave the stored slice on the first
+// settings write of the session and never reach the in-memory bucket.
+const RETIRED_KEYS = ["townTrendBuf", "persistenceMode"];
+
 /** @param {SettingsBucket} slice */
 function normalizeSlice(slice) {
-  const migrated = migrateSlice({ ...slice });
+  const copy = { ...slice };
+  for (const key of RETIRED_KEYS) delete copy[key];
+  const migrated = migrateSlice(copy);
   return repairBucket(migrated);
 }
 

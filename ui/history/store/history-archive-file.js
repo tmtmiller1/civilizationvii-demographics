@@ -244,10 +244,10 @@ export function readFile() {
 /**
  * Write the archive in one statement and read it back.
  * @param {ArchiveSlice} slice
+ * @param {string} [text] The slice already serialized (fitSliceText), so it isn't serialized twice.
  * @returns {boolean} Whether the file now holds exactly what was written.
  */
-export function writeFile(slice) {
-  const text = JSON.stringify(slice);
+export function writeFile(slice, text = JSON.stringify(slice)) {
   // Seconds: the engine binds integers as 32-bit, and milliseconds overflow.
   query(WRITE_SQL, ARCHIVE_SCHEMA, text, Math.floor(Date.now() / 1000));
   const back = query(`SELECT Payload FROM ${TABLE} WHERE Id = 1`);

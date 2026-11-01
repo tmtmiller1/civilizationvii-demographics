@@ -2010,6 +2010,9 @@
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_KEEP_TIP" Language="pt_BR">
             <Text>Partidas concluídas ficam para sempre. Partidas inacabadas com menos de {1_Turns} turnos são apagadas quando você começa outra partida.</Text>
         </Replace>
+        <Replace Tag="LOC_DEMOGRAPHICS_HIST_HISTORY_SIZE" Language="pt_BR">
+            <Text>Histórico dos gráficos neste jogo salvo: {1_Count} turnos, {2_Kb} KB, até {3_Cap} turnos mantidos.</Text>
+        </Replace>
         <Replace Tag="LOC_DEMOGRAPHICS_HIST_RESULT_VICTORY" Language="pt_BR">
             <Text>Vitória</Text>
         </Replace>

@@ -346,10 +346,11 @@ export function hideGame(slice, id, now) {
  * first, oldest first). The most recently updated game is kept whole unless it alone exceeds the budget.
  * @param {ArchiveSlice} slice Mutated.
  * @param {number} [cap]
+ * @param {number} [measured] The slice's serialized length when the caller already has it.
  * @returns {string[]} Evicted ids.
  */
-export function fitSlice(slice, cap = SLICE_BYTE_CAP) {
-  let total = JSON.stringify(slice).length;
+export function fitSlice(slice, cap = SLICE_BYTE_CAP, measured) {
+  let total = typeof measured === "number" ? measured : JSON.stringify(slice).length;
   if (total <= cap) return [];
   const all = Object.values(slice.games).sort((a, b) => a.updated - b.updated);
   const newest = all[all.length - 1];
@@ -388,6 +389,20 @@ export function pruneUnfinished(slice) {
   }
   if (cleared.length) pruneTexts(slice);
   return cleared;
+}
+
+/**
+ * fitSlice, plus the text to write: the slice is serialized once when it already fits, which is
+ * nearly every write, and once more only after something had to go.
+ * @param {ArchiveSlice} slice Mutated.
+ * @param {number} [cap]
+ * @returns {{evicted: string[], text: string}} Evicted ids and the serialized slice as it now is.
+ */
+export function fitSliceText(slice, cap = SLICE_BYTE_CAP) {
+  const text = JSON.stringify(slice);
+  if (text.length <= cap) return { evicted: [], text };
+  const evicted = fitSlice(slice, cap, text.length);
+  return { evicted, text: JSON.stringify(slice) };
 }
 
 /**

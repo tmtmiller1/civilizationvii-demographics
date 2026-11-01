@@ -41,25 +41,6 @@ export function prepareHistoryForSave(history, options) {
 }
 
 /**
- * Serialize and write a history payload to a store.
- * @param {{ write: (key: string, value: string) => void }} store Persist store.
- * @param {string} payloadKey Store payload key.
- * @param {object} history
- * @param {(...a: any[]) => void} logError
- * @returns {boolean} True on successful write.
- */
-export function writeStorePayload(store, payloadKey, history, logError) {
-  let serialized;
-  try {
-    serialized = serializePayload(history);
-  } catch (e) {
-    logError("save: stringify threw:", e);
-    return false;
-  }
-  return writeSerializedPayload(store, payloadKey, serialized, logError);
-}
-
-/**
  * Write an already-serialized payload to a store.
  * @param {{ write: (key: string, value: string) => void }} store Persist store.
  * @param {string} payloadKey Store payload key.

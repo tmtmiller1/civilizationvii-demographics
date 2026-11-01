@@ -15,6 +15,7 @@ import { log, safe } from "/demographics/ui/history/core/history-log.js";
 import {
   emptySlice,
   fitSlice,
+  fitSliceText,
   hideGame,
   isSlice,
   mergeSlices,
@@ -37,8 +38,11 @@ export const SLICE_ID = "demographics-halloffame";
  * @typedef {"pending"|"file"|"settings"} ArchiveBackend
  */
 
-/** @type {{slice: ArchiveSlice, status: ArchiveStatus, loaded: boolean, backend: ArchiveBackend, session: number}} */
-const state = { slice: emptySlice(), status: "empty", loaded: false, backend: "pending", session: 0 };
+/**
+ * @type {{slice: ArchiveSlice, status: ArchiveStatus, loaded: boolean, backend: ArchiveBackend, session: number,
+ *   dirty: boolean}}
+ */
+const state = { slice: emptySlice(), status: "empty", loaded: false, backend: "pending", session: 0, dirty: false };
 
 /**
  * Whether a parsed value is shaped like the shared settings root.
@@ -221,8 +225,8 @@ function moveToFile(hasLegacy) {
  *   keeps to modSettings.
  */
 function writeArchiveFile() {
-  fitSlice(state.slice);
-  if (writeFile(state.slice)) {
+  const { text } = fitSliceText(state.slice);
+  if (writeFile(state.slice, text)) {
     state.status = "ok";
     return true;
   }
@@ -326,14 +330,36 @@ function verifyWrite() {
 }
 
 /**
- * Add or refresh one campaign's record and persist.
+ * Add or refresh one campaign's record in memory only. The in-game views read the slice, so they
+ * see it at once; the write waits for flushArchive (the capture loop flushes every few turns and
+ * on every forced sample).
+ * @param {ArchiveRecord} rec
+ */
+export function noteRecord(rec) {
+  loadArchive();
+  upsert(state.slice, rec);
+  state.dirty = true;
+}
+
+/**
+ * Write what noteRecord left unwritten. With nothing new it writes nothing.
+ * @returns {boolean} Whether the stored archive is up to date.
+ */
+export function flushArchive() {
+  if (!state.dirty) return true;
+  const ok = persistArchive();
+  if (ok) state.dirty = false;
+  return ok;
+}
+
+/**
+ * Add or refresh one campaign's record and persist at once.
  * @param {ArchiveRecord} rec
  * @returns {boolean} Whether the stored archive now holds it.
  */
 export function saveRecord(rec) {
-  loadArchive();
-  upsert(state.slice, rec);
-  return persistArchive();
+  noteRecord(rec);
+  return flushArchive();
 }
 
 /**
@@ -404,6 +430,7 @@ export function _resetForTests() {
   state.slice = emptySlice();
   state.status = "empty";
   state.loaded = false;
+  state.dirty = false;
   beginFileStore();
 }
 

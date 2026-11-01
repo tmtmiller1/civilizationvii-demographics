@@ -8,13 +8,9 @@
 // read-only fallback. A BeforeUnload flush writes the in-memory history before
 // a UI reload; per-turn saves cover the rest.
 
-import { DemographicsSettings } from "/demographics/ui/core/demographics-settings.js";
 import { localizeStoredNames } from "/demographics/ui/storage/storage-display-names.js";
 import {
-  ADAPTIVE_DEFAULTS_BY_SPEED,
   decimationDisabled,
-  detectGameSpeedType,
-  HARD_MAX_SAMPLES,
   PAYLOAD_HARD_BYTES,
   PAYLOAD_SOFT_BYTES,
   resolveEffectiveCap
@@ -56,21 +52,6 @@ import { makeLogger } from "/demographics/ui/core/demographics-log.js";
 
 const log = makeLogger("storage");
 
-/**
- * @template T
- * @param {() => T} fn
- * @param {T} fallback
- * @returns {T}
- */
-function safeCall(fn, fallback) {
-  try {
-    return fn();
-  } catch (e) {
-    log.error("safeCall:", e);
-    return fallback;
-  }
-}
-
 // schema
 /** Persisted history schema version. */
 const VERSION = 1;
@@ -100,21 +81,6 @@ function pickPersistStore(options) {
     write: (key, val) => config.write(key, val)
   };
 }
-/**
- * Default persistence mode. `legacy_tutorial_bag` additionally registers the
- * BeforeAgeTransition flush; opt in via the `persistenceMode` setting.
- */
-const PERSISTENCE_MODE = "within_age";
-/**
- * @returns {string} `"within_age"` or `"legacy_tutorial_bag"`.
- */
-function activePersistenceMode() {
-  return safeCall(
-    () => DemographicsSettings.getSetting("persistenceMode", PERSISTENCE_MODE),
-    PERSISTENCE_MODE
-  );
-}
-
 // storage singleton
 /** Yield-derived metric ids used to detect a premature (economy-not-ready) sample. */
 const YIELD_METRIC_IDS = ["gdp", "gpt", "crops", "production", "science", "culture"];
@@ -195,8 +161,6 @@ class StorageImpl {
     this._payloadSoftNotified = false;
     /** @type {(() => void) | null} BeforeUnload hook callback. */
     this._beforeUnloadHook = null;
-    /** @type {(() => void) | null} BeforeAgeTransition hook callback. */
-    this._beforeAgeTransitionHook = null;
   }
 
   /**
@@ -280,35 +244,18 @@ class StorageImpl {
         log.error("flush hook threw:", e);
       }
     };
-    if (activePersistenceMode() === "legacy_tutorial_bag") {
-      try {
-        this._beforeAgeTransitionHook = flush;
-        engine.on("BeforeAgeTransition", flush);
-      } catch (_) {
-        this._beforeAgeTransitionHook = null;
-        // engine.on() can throw if the event name is unknown in this build; the
-        // BeforeUnload hook below still covers most flush cases.
-      }
-    }
     try {
       this._beforeUnloadHook = flush;
       engine.on("BeforeUnload", flush);
     } catch (_) {
       this._beforeUnloadHook = null;
       // engine.on() can throw if the event name is unknown in this build; rely
-      // on per-turn saves if neither flush hook installs.
+      // on per-turn saves if the flush hook doesn't install.
     }
   }
 
   _teardown() {
     if (typeof engine !== "undefined" && typeof engine.off === "function") {
-      try {
-        if (this._beforeAgeTransitionHook) {
-          engine.off("BeforeAgeTransition", this._beforeAgeTransitionHook);
-        }
-      } catch (e) {
-        log.error("teardown BeforeAgeTransition off threw:", e);
-      }
       try {
         if (this._beforeUnloadHook) {
           engine.off("BeforeUnload", this._beforeUnloadHook);
@@ -317,7 +264,6 @@ class StorageImpl {
         log.error("teardown BeforeUnload off threw:", e);
       }
     }
-    this._beforeAgeTransitionHook = null;
     this._beforeUnloadHook = null;
     this._hooksInstalled = false;
   }
@@ -396,6 +342,24 @@ class StorageImpl {
     const result = this._loadParsed(raw, store);
     dropPrematureBoundarySamples(result);
     return localizeStoredNames(result);
+  }
+
+  /**
+   * The history for a view to read. Answers from the in-memory mirror when the
+   * store still holds a payload of the exact length the mirror last wrote or
+   * read, so opening the screen skips the parse and the localize pass; anything
+   * else goes through `load()`. The sampler never calls this.
+   * @returns {StoredHistory}
+   */
+  loadForView() {
+    this._init();
+    const store = this._pickStore();
+    const mem = this._mem;
+    if (store && mem && !this._memIsForDifferentGame()) {
+      const raw = this._readRaw(store);
+      if (typeof raw === "string" && raw.length === this._lastPayloadBytes) return mem;
+    }
+    return this.load();
   }
 
   /** @param {StoredHistory} history */
@@ -483,7 +447,7 @@ class StorageImpl {
     if (finalBytes > PAYLOAD_HARD_BYTES) {
       log.error(
         "save: payload " + finalBytes + " bytes still exceeds the hard budget " + PAYLOAD_HARD_BYTES +
-          " after " + attempts + " pass(es); writing anyway"
+          " after " + attempts + " pass(es); writing anyway. The game has hung at four times this size"
       );
     }
   }
@@ -554,19 +518,22 @@ class StorageImpl {
   }
 
   /**
-   * Current decimation + cap state, for read-only display in the Options panel.
-  * @returns {{
-  *   active: boolean,
-  *   firstTurn: number,
-  *   cap: number,
-  *   capSource: string,
-  *   disabled: boolean,
-  *   payloadBytes: number
-  * }}
+   * Current decimation + cap state, for read-only display (the Hall of Fame's
+   * history-size line, the dev Options view).
+   * @returns {{
+   *   active: boolean,
+   *   firstTurn: number,
+   *   cap: number,
+   *   capSource: string,
+   *   disabled: boolean,
+   *   payloadBytes: number,
+   *   samples: number
+   * }}
    *   `active` once downsampling has triggered; `firstTurn` is when; `cap` /
    *   `capSource` are the effective sample cap and where it came from;
    *   `disabled` reflects the user's "keep every sample" override;
-   *   `payloadBytes` is the length of the last payload serialized or read.
+   *   `payloadBytes` is the length of the last payload serialized or read;
+   *   `samples` is the mirror's sample count (0 before the first load).
    */
   decimationStatus() {
     const eff = resolveEffectiveCap(log.error);
@@ -576,7 +543,8 @@ class StorageImpl {
       cap: eff.cap,
       capSource: eff.source,
       disabled: decimationDisabled(log.error),
-      payloadBytes: this._lastPayloadBytes
+      payloadBytes: this._lastPayloadBytes,
+      samples: this._mem?.samples?.length ?? 0
     };
   }
 
@@ -584,12 +552,14 @@ class StorageImpl {
    * Append a snapshot to the history (dedupe, decimate) and return it. Persists
    * by default; `{ persist: false }` skips the write so the caller can batch
    * further mutations into one save per turn (the in-memory mirror is still updated).
+   * `opts.history` is a history the caller already loaded this pass; it is used
+   * instead of a fresh `load()` when it is valid and stamped with this game's seed.
    * @param {Snapshot} snapshot Snapshot to append.
-   * @param {{ persist?: boolean }} [opts] Append options.
+   * @param {{ persist?: boolean, history?: StoredHistory }} [opts] Append options.
    * @returns {StoredHistory} The updated history.
    */
   appendSample(snapshot, opts) {
-    const history = this.load();
+    const history = this._historyForAppend(opts && opts.history);
 
     this._insertSnapshot(history, snapshot);
 
@@ -599,6 +569,24 @@ class StorageImpl {
     if (!opts || opts.persist !== false) this.save(history);
     else this._mem = history;
     return history;
+  }
+
+  /**
+   * The history `appendSample` works on: the caller's copy when it is a valid
+   * history for this game (same seed rule as `_memIsForDifferentGame`), else a load.
+   * @param {StoredHistory | undefined} given The caller's loaded history, if any.
+   * @returns {StoredHistory}
+   */
+  _historyForAppend(given) {
+    if (!given || !isValid(given, VERSION)) return this.load();
+    this._init();
+    const givenSeed = given.seed;
+    const seedKnown = givenSeed !== undefined && givenSeed !== null && givenSeed !== "unknown";
+    if (seedKnown && this._seed !== "unknown" && String(givenSeed) !== String(this._seed)) {
+      log.debug("appendSample: given history is for seed " + givenSeed + ", loading instead");
+      return this.load();
+    }
+    return given;
   }
 
   flush() {
@@ -637,10 +625,4 @@ class StorageImpl {
 /** The history storage singleton. */
 const DemographicsStorage = new StorageImpl();
 export default DemographicsStorage;
-export {
-  DemographicsStorage,
-  resolveEffectiveCap,
-  detectGameSpeedType,
-  ADAPTIVE_DEFAULTS_BY_SPEED,
-  HARD_MAX_SAMPLES
-};
+export { DemographicsStorage };
