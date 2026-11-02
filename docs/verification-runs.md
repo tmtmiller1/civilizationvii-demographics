@@ -4,6 +4,50 @@ What's been seen working in a running game, with the run that showed it. Everyth
 the workspace's `WATCH_LIST.md`. This file stays out of the release notes: `CHANGELOG.md` feeds the Workshop change
 note.
 
+## Storage and memory work, every other mod off, old build against new (Unreleased)
+
+Three lab games on 2026-11-01, Antiquity seed 4242, every other mod off. Game A ran the working copy at 3c8ef3c
+(Wave A and B plus the one-write Rankings click), Game B ran the Workshop 2.10.0 copy through the same script, Game C
+ran the working copy again for the upgrade path. Each of A and B: 32 turns under `lab drive`, a save and load at turn
+15, the screen opened once at turn 15 (Rankings, then its Hall of Fame sub-tab), a quit to the main menu at turn 32
+with the Hall of Fame opened there. Counters wrapped `localStorage.setItem`, the history key's `getValue` and
+`JSON.parse` on strings over 2 KB, so the old build's numbers come from the same probes without its debug switch.
+Run folders `2026-11-02T00-37-07` (A), the two after it (B, C); probe scripts and logs in the session scratchpad.
+
+| Measure, six majors, Small | 2.10.0 (B) | New build (A) |
+| --- | --- | --- |
+| History value in the save at turn 15 / turn 30, characters | 105,896 / 210,017 | 25,125 / 43,926 |
+| History loads a turn (`getValue` on the key, probe reads removed) | 3 | 1 |
+| `JSON.parse` of a large string a turn | about 6 | about 1 |
+| Shared-row writes a turn (`setItem modSettings`) | 1 (`townTrendBuf`) | 0 |
+| Rankings tab click: writes / large parses / handler time | 3 / 9 / 31.4 ms | 1 / 0 / 3.6 ms |
+| Screen open: large parses / push to second frame | 1 / 37 ms | 0 / 34 ms |
+| `perf doSample` mean over turns 2 to 15: total / write phase | 13.0 ms / 0.6 ms | 12.9 ms / 0.1 ms |
+| `lab drive` wall time, turns 1 to 15 / 15 to 30 | 4.45 s / 4.78 s a turn | 3.47 s / 4.75 s a turn |
+
+The wall time per turn is dominated by the game's own AI turns and varies by a second between runs, so the two
+builds' drive times are the same within noise; the sampler's own cost at this payload size is also the same within a
+tenth of a millisecond. What changed is what the save carries (a fifth of the size at turn 30), the work a turn does
+on the shared settings row (one write gone) and on the history value (two loads and five parses gone), and what a
+click costs (one write instead of three, a tenth of the time). Those gaps widen with the payload: at turn 74 the old
+format was 673 KB (the gate measurement above).
+
+Chart data: the 30 samples of both builds at turn 30, six civs, eleven metrics (score, GDP, gold per turn,
+population, cities, science, culture, production, military, land, wonders) plus the civ name: 2,160 cells, all
+equal. The Rankings page text at turn 15 was the same in both.
+
+Also watched in Game A: the stale `townTrendBuf` key (seeded into the slice by hand at turn 1) was gone after the
+first click and an unknown key beside it stayed; the Rankings click wrote `activeView, settlementsSubTab,
+historyGroupSel` in one `setSettings` call; the quit at turn 32, two turns after a cadence write, made the unload
+flush write the Hall of Fame file (`Updated` moved at the quit); the size line read "15 turns, 25 KB, up to 2,000
+turns kept"; no error line.
+
+Downgrade and upgrade (Games B and C): 2.10.0 loading the new build's turn-15 save parked the schema 2 text under
+`json__rejected_v2` (25,125 characters), wrote a fresh schema 1 primary with one sample and showed one sample's worth
+of charts; that game was saved. The new build loading that save parked the schema 1 primary under `json__rejected_v1`
+(10,997 characters), restored the schema 2 payload (15 samples), cleared the `_v2` slot and logged both steps; its 15
+samples equal Game A's first 15 cell for cell.
+
 ## Storage and memory work, one lab run (Unreleased)
 
 Design: [storage-memory-spec.md](storage-memory-spec.md). One lab game on 2026-11-01, Antiquity seed 4242, the
