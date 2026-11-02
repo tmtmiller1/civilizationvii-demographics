@@ -268,9 +268,10 @@ Rules, exact:
 - Field order inside a sample is preserved except that `p` is written where `players` was.
 
 `unpackHistory` rebuilds `players[pid]` objects with the field order `buildSnapshotPlayer` uses, then `x` keys, so the
-unpacked object deep-equals `JSON.parse(JSON.stringify(original))` with one documented deviation: a metric value
-that was `NaN` or `Infinity` in memory is `null` after today's JSON round trip and absent after a pack round trip.
-No view reads a metric without a `typeof === "number"` check (ui/metrics, chart-line-series.js, chart-boards.js).
+unpacked object deep-equals `JSON.parse(JSON.stringify(original))`. A metric value that was `NaN` or `Infinity`
+in memory goes into `x.metrics`, not `v` (`v` holds finite numbers only), so JSON turns it into `null` on both
+paths and the key stays present; readers that walk `Object.keys(metrics)` (the CSV export, the all-civs profiles)
+see the same key set as before. (The first draft let it be absent after a pack round trip; built as above.)
 
 Where it plugs in:
 

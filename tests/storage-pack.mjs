@@ -8,29 +8,17 @@ import { allHistories } from "./fixtures/histories.mjs";
 
 const jsonTrip = (v) => JSON.parse(JSON.stringify(v));
 
-/** Drop metric values that are null, in place: a NaN or Infinity is null after the v1 JSON trip. */
-function dropNullMetrics(h) {
-  for (const s of (h && h.samples) || []) {
-    if (!s || !s.players || typeof s.players !== "object") continue;
-    for (const pl of Object.values(s.players)) {
-      if (!pl || typeof pl !== "object" || !pl.metrics || typeof pl.metrics !== "object") continue;
-      for (const k of Object.keys(pl.metrics)) if (pl.metrics[k] === null) delete pl.metrics[k];
-    }
-  }
-  return h;
-}
-
 const roundTrip = (h) => unpackHistory(jsonTrip(packHistory(h)));
-/** The round trip, compared after dropping null metrics (the one documented value deviation). */
-const comparable = (h) => dropNullMetrics(roundTrip(h));
+/** The round trip, compared whole: every metric value comes back as the v1 JSON trip gave it. */
+const comparable = (h) => roundTrip(h);
 
-/** What the v1 JSON round trip gives, with the two documented differences applied. */
+/** What the v1 JSON round trip gives, with the one documented difference applied. */
 function expected(h) {
   const e = jsonTrip(h);
   // `version` reads 2 after a pack round trip: the payload is schema 2 from then on, whatever the
   // in-memory history said (or didn't say).
   e.version = 2;
-  return dropNullMetrics(e);
+  return e;
 }
 
 const player = (over = {}) => ({
@@ -77,7 +65,7 @@ for (const [name, h] of allHistories()) {
   assert.deepEqual(packed.settleTrace, h.settleTrace);
   assert.equal("players" in packed.samples[0], false);
   const back = roundTrip(h);
-  assert.deepEqual(dropNullMetrics(jsonTrip(back)), expected(h));
+  assert.deepEqual(jsonTrip(back), expected(h));
   assert.deepEqual(Object.keys(back.samples[0].players[0]), Object.keys(player()), "buildSnapshotPlayer order");
   assert.ok(JSON.stringify(packed).length < JSON.stringify(h).length, "packed is smaller even at two samples");
   assert.equal(JSON.stringify(h), JSON.stringify(twoCivs()), "packing leaves the input alone");
@@ -140,7 +128,7 @@ for (const [name, h] of allHistories()) {
   assert.equal("w" in packed.samples[3].p[2], false);
   assert.deepEqual(w(4, 2), [], "an emptied list is written");
   const back = roundTrip(h);
-  assert.deepEqual(dropNullMetrics(jsonTrip(back)), expected(h));
+  assert.deepEqual(jsonTrip(back), expected(h));
   assert.deepEqual(back.samples[1].players[0].wonderTypes, ["W1"], "omitted w unpacks to the previous list");
   assert.deepEqual(back.samples[2].players[2].wonderTypes, ["W9"], "across a skipped sample too");
   assert.equal("wonderTypes" in back.samples[3].players[0], false, "0 unpacks to absent");
@@ -176,7 +164,7 @@ for (const [name, h] of allHistories()) {
   assert.deepEqual(packed.mk, ["score"], "only numbers enter the dictionary");
   const back = roundTrip(h);
   assert.equal(back.samples[0].players[0].metrics.nothing, null, "a stored null metric comes back as null");
-  assert.deepEqual(dropNullMetrics(jsonTrip(back)), expected(h));
+  assert.deepEqual(jsonTrip(back), expected(h));
   assert.deepEqual(
     Object.keys(back.samples[0].players[0]).slice(-5),
     ["civ", "leader", "isMajor", "eliminated", "extraList"],
@@ -193,14 +181,16 @@ for (const [name, h] of allHistories()) {
   assert.equal("x" in packHistory(history([sample(1, { 0: player() })])).samples[0].p[0], false);
 }
 
-// The documented deviation: NaN and Infinity metric values are absent after a pack round trip
-// (null after the v1 JSON round trip; no view reads a metric without a number check).
+// NaN and Infinity metric values come back as null, exactly as the v1 JSON round trip gave them:
+// they ride in x.metrics, not in v, so "absent" and "was not a number" stay different things.
 {
   const h = history([sample(1, { 0: player({ metrics: { score: NaN, gdp: Infinity, pop: -Infinity, ok: 1 } }) })]);
   const v1 = jsonTrip(h).samples[0].players[0].metrics;
   assert.deepEqual(v1, { score: null, gdp: null, pop: null, ok: 1 }, "today's JSON trip nulls them");
   const back = roundTrip(h).samples[0].players[0].metrics;
-  assert.deepEqual(back, { ok: 1 }, "pack trip drops them");
+  assert.deepEqual(back, v1, "pack trip gives the same nulls");
+  assert.deepEqual(Object.keys(back).sort(), Object.keys(v1).sort(), "the same key set, so a CSV column is not lost");
+  assert.deepEqual(packHistory(h).samples[0].p[0].v, [1], "only the finite number sits in v");
   assert.deepEqual(comparable(h), expected(h));
 }
 

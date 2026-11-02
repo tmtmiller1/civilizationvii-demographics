@@ -11,7 +11,7 @@
 //   p:      per player, { r: roster index, m: met, v: metric values by mk position, w: wonder list
 //           when it changed, x: anything else on the player object }
 //
-// `v` holds numbers only (anything else goes verbatim into `x.metrics`), trailing nulls trimmed, so
+// `v` holds finite numbers only (anything else goes verbatim into `x.metrics`), trailing nulls trimmed, so
 // a key the player doesn't have costs nothing. `w` is written when a player first appears and
 // whenever the list differs from that player's previous sample; `0` means the list went away.
 // Every other field of the history and of each sample is copied as it is. A player entry or a
@@ -158,7 +158,9 @@ function packMetrics(ctx, metrics, extra) {
   for (const name of Object.keys(metrics)) {
     const value = metrics[name];
     if (value === undefined) continue;
-    if (typeof value !== "number") {
+    // Finite numbers only: a NaN or Infinity rides in `x.metrics`, where JSON turns it into null,
+    // exactly what the unpacked schema 1 payload held for it.
+    if (typeof value !== "number" || !Number.isFinite(value)) {
       (extra.metrics || (extra.metrics = {}))[name] = value;
       continue;
     }
