@@ -4,6 +4,20 @@ What's been seen working in a running game, with the run that showed it. Everyth
 the workspace's `WATCH_LIST.md`. This file stays out of the release notes: `CHANGELOG.md` feeds the Workshop change
 note.
 
+## Hall of Fame game detail under the write cadence (Unreleased)
+
+One lab game on 2026-11-01, the working copy at 1487e43, every other mod off, Antiquity seed 4242, driven to turn 9
+so the Hall of Fame file (written at turns 1 and 6) sat behind the turn. The current game's detail page (map,
+timeline, rivals, highlights) was opened in game from the Hall of Fame's Games tab and again from the main menu
+after a quit.
+
+- In game at turn 9: the detail drew one map canvas with its legend ("Territory, Antiquity, T7"), the timeline, and
+  the record read 9 turns, 1 most settlements, 5.9K population. Both the record built from the live campaign and
+  the archive store's in-memory copy said 9 turns: `noteRecord` upserts the record every turn, so the views never
+  see the file's lag.
+- At the main menu after the quit: the same game, the same map frame and timeline, 9 turns (the quit's unload
+  flush wrote the file). The size line was absent there, as designed. No error line in the run.
+
 ## Storage and memory work, every other mod off, old build against new (Unreleased)
 
 Three lab games on 2026-11-01, Antiquity seed 4242, every other mod off. Game A ran the working copy at 3c8ef3c
