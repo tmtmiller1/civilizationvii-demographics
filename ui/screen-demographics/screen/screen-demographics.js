@@ -472,15 +472,14 @@ class ScreenDemographics extends Panel {
     // Open the new hub on its first page + first metric/member, not a stale prior selection, so
     // e.g. Migration always lands on "Population & Migration" → Population. (Resets in-memory; the
     // resolver picks the first visible page/metric.)
-    this.activePage = "";
-    this.activeMetric = "";
-    safeCall(() => ViewHistory.resetGroupSelections());
-    // Rankings always opens on its first sub-tab (Civilization Ranking), not a stale prior sub-tab.
-    // One settings write for the click: every setSetting is a full read and rewrite of the shared row.
+    this.activePage = this.activeMetric = "";
+    // Rankings opens on its first sub-tab; one write of the shared row per click, the reset folded in.
     safeCall(() =>
-      this.settings.setSettings(
-        id === "rankings" ? { settlementsSubTab: "civranking", activeView: id } : { activeView: id }
-      )
+      this.settings.setSettings({
+        activeView: id,
+        ...(id === "rankings" ? { settlementsSubTab: "civranking" } : {}),
+        ...ViewHistory.resetGroupSelections()
+      })
     );
     this.renderActiveView();
   }

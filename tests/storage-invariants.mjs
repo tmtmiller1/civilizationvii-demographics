@@ -22,10 +22,15 @@ import { listJs, rel, ROOT, UI_DIR } from "./_fs-helpers.mjs";
 //   (g) no `history.samples =`, `.samples.push(` or `.samples.splice(` outside ui/storage/ and
 //       ui/sampler/: views share the sampler's in-memory history and only read it;
 //   (h) no function body under ui/ holds more than one `setSetting(` call; a handler that changes
-//       several keys makes one `setSettings(` call, so a click pays for one write of the shared row.
+//       several keys makes one `setSettings(` call, so a click pays for one write of the shared row;
+//   (i) a function body that writes settings (`setSetting(` or `setSettings(`) does not also call a
+//       function whose own body writes settings, so a click can't pay for two writes through a helper.
 //
-// (h) uses the same brace-matching helper as (e), with the same limits; the method definition in
-// demographics-settings.js is not a call and is skipped.
+// (h) and (i) use the same brace-matching helper as (e), with the same limits; the method definitions
+// in demographics-settings.js are not calls and are skipped. (i) knows writer functions by name: every
+// named function body under ui/ that holds a settings write, matched as `name(` or `.name(` inside
+// another writing body, in any file (names are global, so a same-named non-writer elsewhere would be
+// a false positive, and a writer reached through an alias or a callback argument is not seen).
 //
 // (e) is a best-effort textual check with these documented limits:
 //   - the "enclosing function" is found by brace matching over a copy of the source with comments
@@ -255,15 +260,37 @@ for (const abs of listJs(UI_DIR)) {
   }
 }
 
-// (f) (g) (h): per-file source scans over the same blanked text.
+// (f) (g) (h) (i): per-file source scans over the same blanked text.
 const SETTINGS_WRITE = /\bsetSettings\s*\(/g;
 const SAMPLES_MUTATION = /\bhistory\.samples\s*=[^=]|\.samples\.push\s*\(|\.samples\.splice\s*\(/g;
 const SINGLE_SETTING_WRITE = /\bsetSetting\s*\(/g;
+const ANY_SETTING_WRITE = /\bsetSettings?\s*\(/g;
 const MUTATION_ALLOWED = /^ui\/(storage|sampler)\//;
+const SETTINGS_MODULE = "ui/core/demographics-settings.js";
+/** Whether the `setSetting(` / `setSettings(` match at `open` is a method definition, not a call. */
+function isDefinition(struct, open) {
+  const closeParen = matchBracket(struct, open);
+  return closeParen > 0 && /^\s*\{/.test(struct.slice(closeParen + 1));
+}
+/** Named function bodies under ui/ that write settings themselves (excluding the settings module). */
+const writerNames = new Set();
+/** @type {{file: string, text: string, struct: string, bodies: ReturnType<typeof functionBodies>}[]} */
+const scans = [];
 for (const abs of listJs(UI_DIR)) {
   const file = rel(abs);
   const text = blankComments(fs.readFileSync(abs, "utf8"));
   const struct = blankStrings(text);
+  const bodies = functionBodies(struct);
+  scans.push({ file, text, struct, bodies });
+  if (file === SETTINGS_MODULE) continue;
+  let w;
+  while ((w = ANY_SETTING_WRITE.exec(struct)) !== null) {
+    if (isDefinition(struct, w.index + w[0].length - 1)) continue;
+    const fn = enclosing(bodies, w.index);
+    if (fn && !fn.name.startsWith("<") && !/^setSettings?$/.test(fn.name)) writerNames.add(fn.name);
+  }
+}
+for (const { file, text, struct, bodies } of scans) {
   let m;
   if (file.startsWith("ui/sampler/")) {
     while ((m = SETTINGS_WRITE.exec(struct)) !== null) {
@@ -279,12 +306,10 @@ for (const abs of listJs(UI_DIR)) {
       );
     }
   }
-  const bodies = functionBodies(struct);
   const perBody = new Map();
   while ((m = SINGLE_SETTING_WRITE.exec(struct)) !== null) {
     const open = m.index + m[0].length - 1;
-    const closeParen = matchBracket(struct, open);
-    if (closeParen > 0 && /^\s*\{/.test(struct.slice(closeParen + 1))) continue; // a definition, not a call
+    if (isDefinition(struct, open)) continue; // a definition, not a call
     const fn = enclosing(bodies, m.index);
     const key = fn ? `${fn.name}@${fn.open}` : "<top-level>";
     const entry = perBody.get(key) || { name: fn ? fn.name : "<top-level>", lines: [] };
@@ -297,6 +322,28 @@ for (const abs of listJs(UI_DIR)) {
         `(h) ${file}: ${entry.name}() calls setSetting( ${entry.lines.length} times ` +
           `(lines ${entry.lines.join(", ")}); use one setSettings( call`
       );
+    }
+  }
+  if (file === SETTINGS_MODULE) continue;
+  const writingBodies = new Set();
+  while ((m = ANY_SETTING_WRITE.exec(struct)) !== null) {
+    if (isDefinition(struct, m.index + m[0].length - 1)) continue;
+    const fn = enclosing(bodies, m.index);
+    if (fn) writingBodies.add(fn);
+  }
+  for (const fn of writingBodies) {
+    const body = struct.slice(fn.open, fn.close);
+    for (const name of writerNames) {
+      if (name === fn.name) continue;
+      const call = new RegExp(`(?:^|[^\\w$.])\\.?${name}\\s*\\(`, "g");
+      let c;
+      while ((c = call.exec(body)) !== null) {
+        const at = fn.open + c.index + c[0].indexOf(name);
+        failures.push(
+          `(i) ${file}:${lineOf(text, at)}: ${fn.name}() writes settings and also calls ${name}(), ` +
+            `which writes them too; fold both into one setSettings( call`
+        );
+      }
     }
   }
 }

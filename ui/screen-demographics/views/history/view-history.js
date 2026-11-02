@@ -302,17 +302,15 @@ function setGroupSel(id, selection) {
 }
 
 /**
- * Reset every group's member selection to its default (member 0), called on a top-level
- * hub switch so a hub opens on its first page's first member. The Scaled/Civ view is bound
- * to NumberMode, so it's untouched.
+ * Reset every group's member selection to its default (member 0) in memory, called on a top-level
+ * hub switch so a hub opens on its first page's first member. The Scaled/Civ view is bound to
+ * NumberMode, so it's untouched. Returns the settings entry that persists the reset, so the caller
+ * folds it into its own write of the shared row instead of paying for a second one.
+ * @returns {Record<string, *>} `{ historyGroupSel: {} }`
  */
 export function resetGroupSelections() {
   groupSelCache = {};
-  try {
-    DemographicsSettings.setSetting(GROUP_SEL_KEY, groupSelCache);
-  } catch (_) {
-    /* settings unavailable → in-memory only */
-  }
+  return { [GROUP_SEL_KEY]: groupSelCache };
 }
 
 function groupMemberIds(/** @type {*} */ group) {
