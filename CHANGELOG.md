@@ -5,27 +5,25 @@ follows [Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning.
 The Steam Workshop change note for each release is generated from the matching
 section below by `scripts/steam-changelog.mjs`.
 
-## [Unreleased]
+## [3.0.0] - 2026-11-01
+
+The Hall of Fame moves into a file of its own, the chart history in your save shrinks to about a quarter of its size,
+and a turn ends with less work. Going back to 2.10.0 afterwards hides this version's data until you update again, so
+this is a major version.
 
 ### Added
 - Traditional Chinese (the game's zh_Hant_HK) joins the ten other translations, with the game's own terms for
   settlements, yields, ages and Triumphs.
+- The in-game Hall of Fame shows a line saying how many turns of chart history your save holds, how big it is, and
+  how many turns are kept at most.
 
 ### Changed
-- Chart history takes about half the space in the save, so long games keep more turns before thinning. Measured
-  on a turn-74 Small-map save: 658 KB of history became 156 KB.
-- Going back to an older Demographics hides the current game's charts until this version is reinstalled; the
-  history isn't lost.
+- Chart history takes about a quarter of the space in the save, so long games keep more turns before thinning. A
+  turn-30 Small-map save held 44 KB of history where 2.10.0 held 210 KB; a turn-74 save went from 658 KB to 156 KB.
 - Ending a turn is shorter. The sampler reads your chart history from the save once per turn instead of three
   times, and it no longer writes a town trend buffer to the shared settings entry every turn (nothing read it).
 - The Demographics screen opens faster. It reads the sampler's copy of the chart history instead of parsing the
   save's copy again.
-- The Hall of Fame file is written every five turns, and at once when a game ends, an age ends, you load a save or
-  leave to the main menu, instead of every turn. If the game closes between writes, the row catches up on the
-  next load.
-- Switching to the Rankings tab or changing a time filter saves your settings in one write instead of two.
-- The in-game Hall of Fame shows a line saying how many turns of chart history your save holds, how big it is, and
-  how many turns are kept at most.
 - The Hall of Fame's list of past games now lives in a file of its own, `demographics-halloffame.sqlite`, in the
   game's user folder next to your saves, instead of the storage entry mods share for their settings. Other mods'
   options load faster, since they no longer read through your Hall of Fame on the way, and a mod that clears that
@@ -34,14 +32,19 @@ section below by `scripts/steam-changelog.mjs`.
 - That move also works when the game's storage bug has another mod's entry in the way. Your past games are read
   straight from the game's storage file, so they reach the Hall of Fame instead of looking lost, and pressing Repair
   afterwards doesn't take them with it.
+- The Hall of Fame file is written every five turns, and at once when a game ends, an age ends, you load a save or
+  leave to the main menu, instead of every turn. If the game closes between writes, the row catches up on the
+  next load. The in-game pages always show the current turn.
+- Switching to the Rankings tab or changing a time filter saves your settings in one write instead of two or three.
 - The repair sheet now opens over the dimmed page instead of growing the foot of the page, which pushed the
   Hall of Fame's tables up and hid their last rows. Clicking the page around it closes it, like Cancel. Its armed
   "Click again" button wraps inside the sheet instead of running past its edge in the longer languages.
-- If you go back to 2.10.0, its Hall of Fame shows no games. They're still in the file, and when you update again
-  they come back, together with any games 2.10.0 saved in the meantime.
 - When your Demographics settings can't be saved, the Repair mod storage button now sits under that note on the Hall
   of Fame page. The repair's text now says it keeps your settings and Hall of Fame, and the line after a repair no
   longer says the list of past games is saving again, since it was saving in its own file all along.
+- Going back to 2.10.0: its Hall of Fame shows no games and the current game's charts are empty. Both are still
+  there, in the file and in the save, and they come back when you update again, together with any games 2.10.0
+  recorded in the meantime.
 
 ## [2.10.0] - 2026-10-25
 
